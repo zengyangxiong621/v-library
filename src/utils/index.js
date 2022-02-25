@@ -17,6 +17,24 @@ export function groupComponents (state, ids) {
   })
 }
 
+export function findNode (state, id) {
+  let temp = false
+  let node = state.find(item => item.id === id)
+  if (node) {
+    return node
+  }
+  for (let i = 0; i < state.length; i++) {
+    if (state[i].components.length > 0) {
+      temp = findNode(state[i].components, id)
+      if (temp) {
+        return temp
+      }
+    }
+  }
+  return temp
+}
+
+
 export function findParentNode (state, ids) {
   let arr = []
   let id = ids.shift()
@@ -45,28 +63,24 @@ export function calculateGroupPosition (state) {
     })
     xPositionList.sort((a, b) => a - b)
     yPositionList.sort((a, b) => a - b)
-    console.log('----------------------------')
-    console.log('xPositionList', xPositionList)
-    console.log('yPositionList', yPositionList)
     let minX = xPositionList[0]
     let minY = yPositionList[0]
     let maxX = xPositionList[xPositionList.length - 1]
     let maxY = yPositionList[yPositionList.length - 1]
-    console.log('minX', minX)
-    console.log('minY', minY)
-    console.log('----------------------------')
-
     next.style.width = maxX - minX
     next.style.height = maxY - minY
     next.defaultPosition.x = minX
     next.defaultPosition.y = minY
-    // console.log('--------------')
-    // console.log('maxX', maxX)
-    // console.log('minX', minX)
-    // console.log('maxY', maxY)
-    // console.log('minY', minY)
-    // console.log('next', next)
-    // console.log('--------------')
     return [[minX, maxX], [minY, maxY]]
   }, [[], []])
+}
+
+export function moveChildrenComponents (components, xMoveLength, yMoveLength) {
+  components.forEach(component => {
+    component.defaultPosition.x = component.defaultPosition.x + xMoveLength
+    component.defaultPosition.y = component.defaultPosition.y + yMoveLength
+    if (component.components?.length > 0) {
+      moveChildrenComponents(component.components, xMoveLength, yMoveLength)
+    }
+  })
 }

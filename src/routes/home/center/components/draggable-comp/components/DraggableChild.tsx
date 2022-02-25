@@ -31,6 +31,8 @@ interface Props {
 interface State {
   x: number,
   y: number,
+  originX?: number,
+  originY?: number
 }
 
 export class DraggableChild extends React.Component<Props, State> {
@@ -52,11 +54,18 @@ export class DraggableChild extends React.Component<Props, State> {
     this.state = {
       x: props.defaultPosition.x,
       y: props.defaultPosition.y,
+      originX: props.defaultPosition.x,
+      originY: props.defaultPosition.y,
     };
   }
 
   componentWillReceiveProps (nextProps: { defaultPosition: { x: number; y: number; }; }) {
-    this.setState({ x: nextProps.defaultPosition.x, y: nextProps.defaultPosition.y });
+    this.setState({
+      x: nextProps.defaultPosition.x,
+      y: nextProps.defaultPosition.y,
+      originX: nextProps.defaultPosition.x,
+      originY: nextProps.defaultPosition.y,
+    });
   }
 
   handleStart = (ev: DraggableEvent, b: DraggableData) => {
@@ -83,9 +92,9 @@ export class DraggableChild extends React.Component<Props, State> {
   };
 
   handleStop = (ev: DraggableEvent, b: DraggableData) => {
-    const { x, y } = this.state;
+    const { x, y, originX, originY } = this.state;
     this.props._stop!();
-    this.props.onStop!(ev, createCoreData(b, { x, y }));
+    this.props.onStop!(ev, createCoreData(b, { x, y, originX, originY }));
   };
 
   render () {
