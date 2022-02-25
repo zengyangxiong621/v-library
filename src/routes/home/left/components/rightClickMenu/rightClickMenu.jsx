@@ -1,22 +1,40 @@
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import './rightClickMenu.css'
 
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
 
-const RightClickMenu = ({dispatch, state, menuInfo, menuOptions}) => {
+const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu}) => {
+
   const generateIcon = (name) => (
     React.createElement(Icons[name], {
       style: {
       }
     })
   )
-  const menuItemClick = (operateName, id) => {
-    console.log('选中的操作', operateName);
+  const [isLock, setIsLock] = useState(operate.operateValue)
+  // useEffect(() => {
+  //   setIsLock(operate.operateValue)
+  // }, [operate.operateValue])
+
+  // 后端返回的数据里应该有 show、lock 属性
+  // 这里需要拿到 所选中 的treeNode中的lock或者show属性
+  const menuItemClick = (e,operateName) => {
+    e.stopPropagation()
+    dispatch({
+      type: 'operate/selectOperate',
+      payload: {
+        operateKey: operateName,
+        operateValue: !isLock,
+        ids: bar.key
+      }
+    })
+    setIsLock(!isLock)
+    // 点击后隐藏菜单
+    hideMenu()
   }
   const { x, y, id, isFolder } = menuInfo
   // console.log('x y id isFolders', x, y, id, isFolder);
-
   const menuRef = useRef(null)
   useEffect(() => {
     // 在光标与菜单之间加点距离，方便用户点击
@@ -31,7 +49,7 @@ const RightClickMenu = ({dispatch, state, menuInfo, menuOptions}) => {
     // const isOverflow = visualHeight - top > menuHeight
     const isOverflow = menuHeight + top > visualHeight
     if(isOverflow) {
-      recalculateY = 60
+      recalculateY = y - menuHeight
     }
     menuRef.current.style.position = 'fixed'
     menuRef.current.style.top = `${recalculateY}px`
@@ -45,10 +63,10 @@ const RightClickMenu = ({dispatch, state, menuInfo, menuOptions}) => {
             <div
             key={index}
             className={`menu-item ${item.disabled ? 'disabled-menu-item' : ''}`}
-            onClick={() => menuItemClick(item.name)}
+            onClick={(e) => menuItemClick(e, item.name)}
             >
-              { generateIcon(item.icon) }
-              <li className='menu-item-li'>{item.name}</li>
+              { isLock && item.anotherIcon ? generateIcon(item.anotherIcon) : generateIcon(item.icon) }
+              <li className='menu-item-li'>{ (isLock && item.anotherName) ? item.anotherName : item.name}</li>
             </div>
           )
         })
@@ -58,5 +76,5 @@ const RightClickMenu = ({dispatch, state, menuInfo, menuOptions}) => {
 }
 
 export default memo(connect(
-  state => state
+  ({bar, operate}) => ({bar, operate})
 )(RightClickMenu))

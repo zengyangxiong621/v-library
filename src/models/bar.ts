@@ -17,7 +17,7 @@ export default {
     draggableItems: [
       {
         id: '1-1',
-        parentId: 'parent',
+        parentId: '0',
         style: {
           width: '100%',
           height: '100%',

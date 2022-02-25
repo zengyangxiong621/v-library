@@ -17,21 +17,22 @@ import EveryTreeNode from './components/everyTreeNode'
 import ToolBar from './components/toolBar'
 import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 
-const x = 3
+const x = 4
 const y = 2
-const z = 1
+const z = 2
 const tData = []
 
-const generateData = (_level, _preKey, _tns) => {
-  const preKey = _preKey || '0'
+const generateData = (_level, lock, _preKey, _tns,) => {
+  const preKey = _preKey || '1'
   const tns = _tns || tData
 
   const children = []
-  for (let i = 0; i < x; i++) {
-    const id = `${ preKey }-${ i }`
-    tns.push({ title: id, id, icon: <SmileOutlined/>, scan: true })
+  for (let i = 1; i < x; i++) {
+    const key = `${preKey}-${i}`;
+    const parentId =  +preKey ===0 ? 'parent' : preKey
+    tns.push({ title: key,  id: key, parentId, icon: <SmileOutlined />, scan: true, lock });
     if (i < y) {
-      children.push(id)
+      children.push(key)
     }
   }
   if (_level < 0) {
@@ -40,14 +41,15 @@ const generateData = (_level, _preKey, _tns) => {
   const level = _level - 1
   children.forEach((key, index) => {
     tns[index].children = []
-    return generateData(level, key, tns[index].children)
+    return generateData(level, lock, key, tns[index].children)
   })
 }
-generateData(z)
+generateData(z, false)
 
-const Left = ({ dispatch, bar }) => {
+
+const Left = ({dispatch, bar, operate}) => {
   const [gData, setGData] = useState(tData)
-  const [expandedKeys, setExpandedKeys] = useState(['0-0', '0-0-0', '0-0-0-0'])
+  const [customExpandKeys, setCustomExpandKeys] = useState([])
 
   const [isMultipleTree, setIsMultipleTree] = useState(false)
 
@@ -56,7 +58,10 @@ const Left = ({ dispatch, bar }) => {
   const activeIconRef = useRef()
 
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
-
+    // 其它组件更改了选中的节点时触发
+    useEffect(() => {
+      setSelected(bar.key)
+    }, [ bar.key ])
   useEffect(() => {
     onkeydown = (e) => {
       if (e.key === 'Control') {
@@ -107,21 +112,17 @@ const Left = ({ dispatch, bar }) => {
     return () => {
       document.removeEventListener('click', (e) => ({}))
     }
-  }, [])
-  // 确保每次setSelected后selected都更新为最新的值
-  useEffect(() => {
-    setSelected(selected)
-  }, [selected])
+  }, []);
 
   // 获取当前点击的icon
   const getActiveIcon = (icon) => {
     activeIconRef.current = icon
     dispatch({
-      type: 'bar/selectOperate',
+      type: 'operate/selectOperate',
       payload: {
-        icon,
-        key: selected,
-      },
+        operate: icon,
+        // key: selected,
+      }
     })
   }
   //选择的树节点
@@ -182,7 +183,7 @@ const Left = ({ dispatch, bar }) => {
       },
     })
   }
-  // 节点展开
+  // 展开 / 收起 全部节点
   const onExpand = (expandedKeys, { expanded, node }) => {
     console.log('expandedKeys', expandedKeys)
     console.log('expanded', expanded)
@@ -263,6 +264,10 @@ const Left = ({ dispatch, bar }) => {
     //   type: ''
     // })
   })
+  // 点击右键菜单后，隐藏菜单
+  const hideMenu = () => {
+    setIsShowRightMenu(false)
+  }
   return (
     <div className="left-wrap">
       <header className="header">图层</header>
@@ -271,16 +276,20 @@ const Left = ({ dispatch, bar }) => {
       <Tree
         draggable
         blockNode
+        fieldNames={
+          {key : 'id',}
+        }
         multiple={ isMultipleTree }
         className="draggable-tree"
         switcherIcon={ <DownOutlined/> }
-        defaultExpandedKeys={ expandedKeys }
+        defaultExpandedKeys={ customExpandKeys }
         onDrop={ onDrop }
         onSelect={ onSelect }
         onRightClick={ onRightClick }
         treeData={ gData }
         selectedKeys={ selected }
         onExpand={ onExpand }
+        // expandedKeys={customExpandKeys}
         titleRender={ (nodeData) => {
           const { title, ...omitTitle } = nodeData
           return (<EveryTreeNode
@@ -295,15 +304,19 @@ const Left = ({ dispatch, bar }) => {
         <ToolBar needBottomBorder={ false } data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
         </ToolBar>
       </div>
-      { isShowRightMenu && <RightClickMenu menuInfo={ menuInfo } menuOptions={ menuOptions }/> }
+      { isShowRightMenu && <RightClickMenu menuInfo={ menuInfo } menuOptions={ menuOptions } hideMenu={hideMenu}/> }
     </div>
   )
 }
+
 const menuOptions = [
   {
     name: '锁定',
     icon: 'BranchesOutlined',
+    anotherName: '解锁',
+    anotherIcon: 'WifiOutlined',
     disabled: false,
+
   },
   {
     name: '成组6',
@@ -405,7 +418,6 @@ const menuOptions = [
     disabled: true,
   },
 ]
-
 const topBarIcons = [
   {
     title: '置顶',
@@ -449,5 +461,5 @@ const bottomBarIcons = [
 ]
 
 export default connect(
-  ({ bar }) => ({ bar }),
+  ({bar, operate}) => ({bar, operate})
 )(Left)

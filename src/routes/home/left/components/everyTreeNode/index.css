@@ -9,7 +9,7 @@
   flex: 1;
 }
 .icon-wrap {
-  min-width: 30px;
+  min-width: 20px;
 }
 .eyes-icon {
   display: none;
@@ -20,6 +20,11 @@
   align-items: center;
   width: 30px;
   height: 100%;
+}
+
+/* 锁的图标 */
+.lock-icon {
+  margin-right: 8px;
 }
 
 /* 自定义Input的背景色 */

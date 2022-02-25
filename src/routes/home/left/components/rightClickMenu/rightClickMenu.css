@@ -4,6 +4,7 @@
   padding: 8px 0;
   border: 1px solid #000;
   background-color: #232630;
+  z-index: 99999;
 }
 
 .menu-item {
@@ -22,6 +23,7 @@
 }
 
 .menu-item:hover {
+  cursor: pointer;
   background-color: #3a89fe;
 }
 

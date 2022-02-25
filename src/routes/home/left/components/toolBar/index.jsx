@@ -6,15 +6,8 @@ import { UpOutlined, DownOutlined } from '@ant-design/icons'
 
 import { connect } from 'dva'
 
-const ToolBar = ({ dispatch, bar, data, getActiveIcon, needBottomBorder=true }) => {
-  // useEffect(() => {
-  //   dispatch({
-  //     type: 'bar/fetch',
-  //     payload: {a:'a',b:'b'}
-  //   })
-  // }, [])
+const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, needBottomBorder=true }) => {
   const notBannedClick = bar.key.length > 0
-  console.log('isBannedClick', notBannedClick);
   return (
   <div className='ToolBar'  style={{
     borderBottom: needBottomBorder ?  '1px solid red' : ''
@@ -23,13 +16,27 @@ const ToolBar = ({ dispatch, bar, data, getActiveIcon, needBottomBorder=true }) 
         data.map(o => {
           return (
             <Tooltip  key={o.title} title={ o.title } color='white' placement='bottomRight'>
-              <span style={{ cursor: notBannedClick ? '' : 'not-allowed'}}>
+              {
+                o.title === '展开/收缩'
+                ?
                 <span
-                  onClick={() => getActiveIcon(o.title)}
+                  onClick={() => {
+                    getActiveIcon(o.title)
+                  }}
+                  className={`every-icon`}
+                >{React.createElement(o.icon)}
+                </span>
+                :
+                <span style={{ cursor: notBannedClick ? '' : 'not-allowed'}}>
+                <span
+                  onClick={() => {
+                    getActiveIcon(o.title)
+                  }}
                   className={`${notBannedClick ? '': 'banned-click'} every-icon`}
                 >{React.createElement(o.icon)}
                 </span>
               </span>
+              }
             </Tooltip>
           )
         })
@@ -40,5 +47,5 @@ const ToolBar = ({ dispatch, bar, data, getActiveIcon, needBottomBorder=true }) 
 
 
 export default memo(connect(
-  ({bar}) => ({bar})
+  ({bar, operate}) => ({bar, operate})
 )(ToolBar))

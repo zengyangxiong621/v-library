@@ -24,6 +24,16 @@ const Right = ({ dispatch, bar }) => {
     'alignmentSetting': AlignmentSetting,
   }
   useEffect(() => {
+    console.log('右边执行');
+    dispatch({
+      type: 'bar/selectedNode',
+      payload: {
+        key: [],
+        isFolder: true,
+      }
+    })
+  }, [])
+  useEffect(() => {
     //文件夹 -> 组配置           //多选 -> 对齐设置
     // 普通图层 -> 单个图层配置   // 什么都没选 -> 页面设置
     // const { isFolder, key } = bar

@@ -1,18 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import './index.css'
+import { connect } from 'dva'
 
 import { Input } from 'antd'
-import { EyeOutlined , EyeInvisibleOutlined } from '@ant-design/icons'
+import {
+  EyeOutlined , EyeInvisibleOutlined,
+  LockOutlined, UnlockOutlined,
+  HeatMapOutlined
+} from '@ant-design/icons'
 
 
-const EveryTreeNode = props => {
-  const { text, children, getCurrentMenuLocation } = props
+const EveryTreeNode = ({ operate, ...restPorps}) => {
+  const { text, children, getCurrentMenuLocation } = restPorps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(!!children)
   const [eyeIconShow, setEyeIconShow] =useState(true)
+  const [isShowLock, setIsShowLock] = useState(operate.operateValue)
+  console.log('isShowLock', operate.operateValue);
+  useEffect(() => {
+    setIsShowLock(operate.operateValue)
+  }, [operate.operateValue])
   // TODO delete
   const [ inputValue, setInputValue ] = useState(text)
-
   // 点击小眼睛图标切换状态
   const changeEyeIconState = (e) => {
     e.stopPropagation()
@@ -107,8 +116,17 @@ const EveryTreeNode = props => {
         }
       </div>
     </div>
+    <div className='lock-icon'>
+      {
+        isShowLock && <LockOutlined />
+      }
+    </div>
   </div>
   )
 }
 
-export default EveryTreeNode
+export default memo(
+  connect(
+    ({operate}) => ({operate})
+  )(EveryTreeNode)
+)
