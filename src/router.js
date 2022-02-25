@@ -11,7 +11,7 @@ const menuGlobal = [
     icon: 'user',
     path: '/',
     models: () => [import('./models/bar')], //models可多个
-    component: () => import('./routes/bar'),
+    component: () => import('./routes/home'),
   },
   {
     id: 'one',
