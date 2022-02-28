@@ -1,19 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 
-const Index = ({ onChooseEnd, chooseItemClass }) => {
+const ChooseArea = ({ onChooseEnd, chooseItemClass }) => {
   const areaRef = useRef(null)
   const [selectedItem, setSelectedItem] = useState([])
   const selectedList = useRef([])
   useEffect(() => {
     document.onmousedown = (e) => {
       console.log('onmousedown', e)
-      if (!e.target.className || typeof e.target.className !== 'string') {
-        return false
-      }
-      if (!(e.target.className.indexOf('draggable-container') !== -1)) {
-        return false
-      }
-      const chooseItems = document.querySelectorAll(`.${ chooseItemClass }`)
+      // if (e.target.className === 'inner') {
+      //   return
+      // }
+      // if (!e.target.className || typeof e.target.className !== 'string') {
+      //   return false
+      // }
+      // if (!(e.target.className.indexOf('draggable-container') !== -1)) {
+      //   return false
+      // }
+      // const chooseItems = document.querySelectorAll(`.${ chooseItemClass }`)
       // const chooseItemsPositions = [...chooseItems].map(item => {
       //   console.log('item', item.offsetParent)
       //   return {
@@ -31,6 +34,9 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
       // console.log('chooseItems', chooseItemsPositions)
       // console.log('---------------------------------')
       // e.preventDefault()
+      /*
+        初始化
+       */
       areaRef.current.style.display = 'none'
       areaRef.current.style.width = 0 + 'px'
       areaRef.current.style.height = 0 + 'px'
@@ -38,13 +44,16 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
       areaRef.current.style.height = 0
       // const pointPreX = e.clientX
       // const pointPreY = e.clientY
-      const pointPreX = e.layerX
-      const pointPreY = e.layerY
+      const pointPreX = e.clientX
+      const pointPreY = e.clientY
       const boxPreWidth = areaRef.current.offsetWidth
       const boxPreHeight = areaRef.current.offsetHeight
       let isMouseMove = false
       document.onmousemove = (ev) => {
         // 移动的时候让选区显示出来
+        console.log('----------------------')
+        console.log('ev', ev)
+        console.log('className', ev.target.className)
 
         isMouseMove = true
         areaRef.current.style.display = 'block'
@@ -52,12 +61,12 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
         let areaPosition = {}
         // const pointCurX = ev.clientX
         // const pointCurY = ev.clientY
-        const pointCurX = ev.layerX
-        const pointCurY = ev.layerY
+        const pointCurX = ev.clientX
+        const pointCurY = ev.clientY
         const boxCurWidth = (pointCurX - pointPreX) // 当前盒子的大小
         const boxCurHeight = (pointCurY - pointPreY)
         if (boxCurWidth >= 0 && boxCurHeight >= 0) {
-          areaRef.current.style.left = pointPreX + 'px'
+          areaRef.current.style.left = pointPreX - 300 + 'px'
           areaRef.current.style.top = pointPreY + 'px'
           areaRef.current.style.width = boxCurWidth + 'px'
           areaRef.current.style.height = boxCurHeight + 'px'
@@ -72,7 +81,7 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
             },
           }
         } else if (boxCurWidth < 0 && boxCurHeight > 0) {
-          areaRef.current.style.left = pointCurX + 'px'
+          areaRef.current.style.left = pointCurX - 300 + 'px'
           areaRef.current.style.top = pointPreY + 'px'
           areaRef.current.style.width = ~boxCurWidth + 'px'
           areaRef.current.style.height = boxCurHeight + 'px'
@@ -87,7 +96,7 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
             },
           }
         } else if (boxCurWidth > 0 && boxCurHeight < 0) {
-          areaRef.current.style.left = pointPreX + 'px'
+          areaRef.current.style.left = pointPreX - 300 + 'px'
           areaRef.current.style.top = pointCurY + 'px'
           areaRef.current.style.width = boxCurWidth + 'px'
           areaRef.current.style.height = ~boxCurHeight + 'px'
@@ -102,7 +111,7 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
             },
           }
         } else if (boxCurWidth < 0 && boxCurHeight < 0) {
-          areaRef.current.style.left = pointCurX + 'px'
+          areaRef.current.style.left = pointCurX - 300 + 'px'
           areaRef.current.style.top = pointCurY + 'px'
           areaRef.current.style.width = ~boxCurWidth + 'px'
           areaRef.current.style.height = ~boxCurHeight + 'px'
@@ -120,8 +129,7 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
         // console.log('areaPosition', areaPosition)
         // console.log('chooseItemsPositions', chooseItemsPositions)
         const temp = []
-        console.log('eeeeeeeeeeeeeeeeeeeeeee', e.target.className)
-        console.log('areaPosition', areaPosition)
+        // console.log('areaPosition', areaPosition)
         // chooseItemsPositions.forEach(item => {
         //   if (
         //     (
@@ -152,12 +160,13 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
         selectedList.current = temp
       }
       document.onmouseup = () => {
-        if (isMouseMove) {
-          onChooseEnd(selectedList.current)
-        } else {
-          selectedList.current = []
-          onChooseEnd(selectedList.current, isMouseMove)
-        }
+        console.log('起开')
+        // if (isMouseMove) {
+        //   onChooseEnd(selectedList.current)
+        // } else {
+        //   selectedList.current = []
+        //   onChooseEnd(selectedList.current, isMouseMove)
+        // }
         document.onmousemove = null
         document.onmouseup = null
       }
@@ -178,8 +187,9 @@ const Index = ({ onChooseEnd, chooseItemClass }) => {
         background: '#eaf7ff',
         useSelect: 'none',
         opacity: 0.4,
+        zIndex: 10000,
       } }>
     </div>
   )
 }
-export default Index
+export default ChooseArea

@@ -1,5 +1,11 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { selectSingleComponent, findParentNode, calculateGroupPosition } from '../utils';
+import {
+  selectSingleComponent,
+  findParentNode,
+  calculateGroupPosition,
+  findNode,
+  moveChildrenComponents,
+} from '../utils';
 
 interface IBarState {
   key: string[];
@@ -21,12 +27,11 @@ export default {
         style: {
           width: '100%',
           height: '100%',
-          cursor: 'move',
-          border: '1px solid gray',
           background: 'white',
+          border: '1px solid gray',
         },
         displayName: '分组0',
-        className: 'draggable-item',
+        className: 'draggable-container',
         active: false,
         disabled: true,
         isGroup: true,
@@ -39,8 +44,6 @@ export default {
             id: '1-1-2',
             parentId: '1-1',
             style: {
-              left: 0,
-              top: 0,
               width: 100,
               height: 100,
               cursor: 'move',
@@ -61,8 +64,8 @@ export default {
             id: '1-1-1',
             parentId: '1-1',
             style: {
-              width: 0,
-              height: 0,
+              width: 200,
+              height: 200,
               cursor: 'move',
               border: '1px solid gray',
             },
@@ -72,8 +75,8 @@ export default {
             disabled: true,
             isGroup: true,
             defaultPosition: {
-              x: 0,
-              y: 0,
+              x: 100,
+              y: 100,
             },
             components: [
               {
@@ -91,8 +94,8 @@ export default {
                 disabled: true,
                 isGroup: true,
                 defaultPosition: {
-                  x: 0,
-                  y: 0,
+                  x: 100,
+                  y: 100,
                 },
                 components: [
                   {
@@ -184,6 +187,192 @@ export default {
         ],
       },
     ],
+    draggableContainer: {
+      id: 'parent',
+      parentId: 'parent',
+      style: {
+        width: '100%',
+        height: '100%',
+        background: 'white',
+        position: 'relative',
+      },
+      defaultPosition: {
+        x: 0,
+        y: 0,
+      },
+      displayName: '画板本身',
+      className: 'draggable-parent-container',
+      limit: false,
+      disabled: true,
+      components: [
+        {
+          id: '1-1',
+          parentId: 'parent',
+          style: {
+            width: '100%',
+            height: '100%',
+            background: 'white',
+          },
+          displayName: '分组0',
+          className: 'draggable-container',
+          active: false,
+          disabled: true,
+          isGroup: true,
+          defaultPosition: {
+            x: 0,
+            y: 0,
+          },
+          components: [
+            {
+              id: '1-1-2',
+              parentId: '1-1',
+              style: {
+                left: 0,
+                top: 0,
+                width: 100,
+                height: 100,
+                cursor: 'move',
+                border: '1px solid gray',
+              },
+              displayName: '什么',
+              className: 'draggable-item',
+              active: false,
+              disabled: true,
+              isGroup: false,
+              defaultPosition: {
+                x: 0,
+                y: 0,
+              },
+              components: [],
+            },
+            {
+              id: '1-1-1',
+              parentId: '1-1',
+              style: {
+                width: 200,
+                height: 200,
+                cursor: 'move',
+                border: '1px solid gray',
+              },
+              displayName: '分组1',
+              className: 'draggable-item',
+              active: false,
+              disabled: false,
+              isGroup: true,
+              defaultPosition: {
+                x: 100,
+                y: 100,
+              },
+              components: [
+                {
+                  id: '1-1-1-1',
+                  parentId: '1-1-1',
+                  style: {
+                    width: 0,
+                    height: 0,
+                    cursor: 'move',
+                    background: '#c4cfeb',
+                  },
+                  displayName: '分组2',
+                  className: 'draggable-item',
+                  active: false,
+                  disabled: false,
+                  isGroup: true,
+                  defaultPosition: {
+                    x: 0,
+                    y: 0,
+                  },
+                  components: [
+                    {
+                      id: '1-1-1-1-1',
+                      parentId: '1-1-1-1',
+                      style: {
+                        width: 50,
+                        height: 50,
+                        cursor: 'move',
+                        background: '#3c68d6',
+                      },
+                      className: 'draggable-item',
+                      active: false,
+                      defaultPosition: {
+                        x: 100,
+                        y: 100,
+                      },
+                      components: [],
+                    }, {
+                      id: '1-1-1-1-2',
+                      parentId: '1-1-1-1',
+                      style: {
+                        width: 50,
+                        height: 50,
+                        cursor: 'move',
+                        background: '#3c68d6',
+                      },
+                      className: 'draggable-item',
+                      active: false,
+                      defaultPosition: {
+                        x: 100,
+                        y: 100,
+                      },
+                      components: [],
+                    }, {
+                      id: '1-1-1-1-3',
+                      parentId: '1-1-1-1',
+                      style: {
+                        width: 50,
+                        height: 50,
+                        cursor: 'move',
+                        background: '#3c68d6',
+                      },
+                      className: 'draggable-item',
+                      active: false,
+                      defaultPosition: {
+                        x: 100,
+                        y: 100,
+                      },
+                      components: [],
+                    },
+                  ],
+                },
+                {
+                  id: '1-1-1-2',
+                  parentId: '1-1-1',
+                  style: {
+                    width: 100,
+                    height: 100,
+                    cursor: 'move',
+                    background: '#aef4f4',
+                  },
+                  className: 'draggable-item',
+                  active: false,
+                  defaultPosition: {
+                    x: 100,
+                    y: 100,
+                  },
+                  components: [],
+                }, {
+                  id: '1-1-1-3',
+                  parentId: '1-1-1',
+                  style: {
+                    width: 100,
+                    height: 100,
+                    cursor: 'move',
+                    background: '#aef4f4',
+                  },
+                  className: 'draggable-item',
+                  active: false,
+                  defaultPosition: {
+                    x: 200,
+                    y: 200,
+                  },
+                  components: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   } as IBarState,
   subscriptions: {
     setup ({ dispatch, history }: { dispatch: any; history: any }) {
@@ -216,6 +405,9 @@ export default {
       return { ...state, ...action.payload };
     },
     selectedNode (state: IBarState, { payload }: any) {
+      console.log('payload', payload);
+      const items = state.draggableItems;
+      selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload };
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
@@ -244,6 +436,16 @@ export default {
       let childrenComponents = findParentNode(copyState.draggableItems, ids).filter((item: any) => item);
       calculateGroupPosition(childrenComponents.reverse());
       return copyState;
+    },
+    moveGroupPosition (state: IBarState, {
+      payload: {
+        id, xMoveLength, yMoveLength,
+      },
+    }: any) {
+      const node = findNode(state.draggableItems, id);
+      moveChildrenComponents(node.components, xMoveLength, yMoveLength);
+      console.log('node', node);
+      return { ...state };
     },
   },
 };

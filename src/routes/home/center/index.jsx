@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { connect } from 'dva'
 import './index.css'
 import { message, Button } from 'antd'
-// import ChooseArea from '../../../components/chooseArea'
+import ChooseArea from './components/ChooseArea'
 import CustomDraggable from './components/CustomDraggable'
+import { DraggableContainer, DraggableChild } from './components/draggable-comp'
 
 const containerStyle = {
   height: '100%',
@@ -15,6 +16,7 @@ const containerStyle = {
 function Center ({ bar, dispatch }) {
   // console.log('example', example)
   const draggableItems = bar.draggableItems
+  const draggableContainerData = bar.draggableContainer
   const [key, setKey] = useState(100)
   // useMemo(() => {
   //   console.log('example.selectedKeys', example.selectedKeys)
@@ -153,16 +155,19 @@ function Center ({ bar, dispatch }) {
   ])
   return (
     <div className="center-wrap">
-      <div className="rule-vertical" onClick={ (e) => handleRulerClick('vertical', e) }/>
-      <div className="rule-horizon" onClick={ (e) => handleRulerClick('horizon', e) }/>
-      <div className="setting">
-        {/*<Input value={ selectedInput } onInput={ (e) => setSelectedInput(e.target.value) }/>*/ }
-        {/*<Button onClick={ () => setSelect('1-1-1') }>设置1</Button>*/}
-        {/*<Button onClick={ () => setSelect('1-1-2') }>设置2</Button>*/}
-        {/*<Button onClick={ () => setSelect('1-2-1') }>合成组(1-2-1, 1-2-2)</Button>*/}
-        {/*<Button onClick={ () => setSelect('1-2-2') }>设置4</Button>*/}
-      </div>
+      {/*<div className="rule-vertical" onClick={ (e) => handleRulerClick('vertical', e) }/>*/ }
+      {/*<div className="rule-horizon" onClick={ (e) => handleRulerClick('horizon', e) }/>*/ }
+      {/*<ChooseArea/>*/ }
+      {/*<DraggableContainer style={ draggableContainerData.style } limit={ draggableContainerData.limit }>*/ }
+      {/*  <DraggableChild key={ draggableContainerData.id } defaultPosition={ draggableContainerData.defaultPosition }>*/ }
+      {/*    <div style={ draggableContainerData.style }>*/ }
+      {/*      <CustomDraggable components={ draggableContainerData.components } style={ containerStyle }/>*/ }
+      {/*    </div>*/ }
+      {/*  </DraggableChild>*/ }
+      {/*</DraggableContainer>*/ }
+
       <CustomDraggable components={ draggableItems } style={ containerStyle }/>
+
     </div>
 
 
