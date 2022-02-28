@@ -28,6 +28,7 @@ export default {
           width: '100%',
           height: '100%',
           background: 'white',
+          border: '1px solid gray',
         },
         displayName: '分组0',
         className: 'draggable-container',
@@ -404,6 +405,9 @@ export default {
       return { ...state, ...action.payload };
     },
     selectedNode (state: IBarState, { payload }: any) {
+      console.log('payload', payload);
+      const items = state.draggableItems;
+      selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload };
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
