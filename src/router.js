@@ -10,8 +10,8 @@ const menuGlobal = [
     name: 'home',
     icon: 'user',
     path: '/',
-    models: () => [import('./models/one')], //models可多个
-    component: () => import('./routes/pageOne'),
+    models: () => [import('./models/bar'), import('./models/operate')], //models可多个
+    component: () => import('./routes/home'),
   },
   {
     id: 'one',

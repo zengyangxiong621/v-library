@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
- 
+
 class Three extends Component {
   render() {
     return (
@@ -11,5 +11,5 @@ class Three extends Component {
     );
   }
 }
- 
+
 export default Three;

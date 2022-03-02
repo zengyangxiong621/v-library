@@ -1,0 +1,33 @@
+.RightClickMenu-wrap {
+  /* position: absolute; */
+  width: 130px;
+  padding: 8px 0;
+  border: 1px solid #000;
+  background-color: #232630;
+  z-index: 99999;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 26px;
+  color: #fff;
+  padding-left: 16px;
+  font-weight: 200;
+}
+
+.disabled-menu-item {
+  color: rgb(122, 115, 115);
+  pointer-events: none;
+}
+
+.menu-item:hover {
+  cursor: pointer;
+  background-color: #3a89fe;
+}
+
+.menu-item-li {
+  list-style: none;
+  margin-left: 8px;
+}

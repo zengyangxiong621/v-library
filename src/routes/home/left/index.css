@@ -1,0 +1,49 @@
+.left-wrap {
+  position: relative;
+  width: 300px;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 50px;
+  background-color: #232630;
+}
+
+/* header */
+.header {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  text-align: center;
+  background-color: #3d404d;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: inherit;
+  z-index: 9999;
+  background-color: #313239;
+}
+
+/* Tree */
+.ant-tree-list {
+  background-color: #232630;
+}
+
+.ant-tree .ant-tree-treenode {
+  color: #fff;
+  align-items: center !important;
+}
+
+/* 下面两个样式的顺序不能变 */
+.ant-tree .ant-tree-node-content-wrapper:hover {
+  background-color: #313239 !important;
+}
+.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+  background-color: #3a89fe !important;
+}
+
+.ant-tree-switcher {
+  align-self: center !important;
+}
