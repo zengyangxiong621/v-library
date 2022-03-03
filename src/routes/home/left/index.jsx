@@ -86,6 +86,7 @@ const Left = ({ dispatch, bar, operate }) => {
       }
     }
   }, [])
+<<<<<<< HEAD
   // 监听 树区域 以外的点击
   useEffect(() => {
     document.addEventListener('click', (e) => {
@@ -125,6 +126,39 @@ const Left = ({ dispatch, bar, operate }) => {
       document.removeEventListener('click', (e) => ({}))
     }
   }, [])
+=======
+  // useEffect(() => {
+  //   document.addEventListener('click', (e) => {
+  //     e.stopPropagation()
+  //     const {
+  //       target: { className },
+  //     } = e
+  //     // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
+  //     const tree = document.querySelector('.ant-tree')
+  //     // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
+  //     if (className && typeof className === 'string') {
+  //       const res = tree.querySelector(`.${ e.target.className }`)
+  //       if (!res) {
+  //         setSelected([])
+  //         dispatch({
+  //           type: 'bar/selectedNode',
+  //           payload: {
+  //             key: [],
+  //             isFolder: false,
+  //           },
+  //         })
+  //         // 取消右键菜单
+  //         setIsShowRightMenu(false)
+  //         // 将多选树改为单选树
+  //         setIsMultipleTree(false)
+  //       }
+  //     }
+  //   })
+  //   return () => {
+  //     document.removeEventListener('click', (e) => ({}))
+  //   }
+  // }, []);
+>>>>>>> aa83e74 (feat: 页面设置和组设置)
 
   /**
    *
