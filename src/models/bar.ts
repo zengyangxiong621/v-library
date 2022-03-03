@@ -5,33 +5,44 @@ import {
   calculateGroupPosition,
   findNode,
   moveChildrenComponents,
-} from '../utils';
+} from "../utils";
 
+import {
+  generateTreeData,
+  placeTop,
+  placeBottom,
+  moveUp,
+  moveDown,
+  remove,
+  lock,
+} from "../utils/sideBar";
 interface IBarState {
   key: string[];
   isFolder: boolean;
   operate: string;
+  treeData: any[];
   draggableItems: any;
 }
 
 export default {
-  namespace: 'bar',
+  namespace: "bar",
   state: {
     key: [],
     isFolder: false,
-    operate: '',
+    operate: "",
+    treeData: [],
     draggableItems: [
       {
-        id: '1-1',
-        parentId: '0',
+        id: "1-1",
+        parentId: "0",
         style: {
-          width: '100%',
-          height: '100%',
-          background: 'white',
-          border: '1px solid gray',
+          width: "100%",
+          height: "100%",
+          background: "white",
+          border: "1px solid gray",
         },
-        displayName: '分组0',
-        className: 'draggable-container',
+        displayName: "分组0",
+        className: "draggable-container",
         active: false,
         disabled: true,
         isGroup: true,
@@ -41,16 +52,16 @@ export default {
         },
         components: [
           {
-            id: '1-1-2',
-            parentId: '1-1',
+            id: "1-1-2",
+            parentId: "1-1",
             style: {
               width: 100,
               height: 100,
-              cursor: 'move',
-              border: '1px solid gray',
+              cursor: "move",
+              border: "1px solid gray",
             },
-            displayName: '什么',
-            className: 'draggable-item',
+            displayName: "什么",
+            className: "draggable-item",
             active: false,
             disabled: false,
             isGroup: false,
@@ -61,16 +72,16 @@ export default {
             components: [],
           },
           {
-            id: '1-1-1',
-            parentId: '1-1',
+            id: "1-1-1",
+            parentId: "1-1",
             style: {
               width: 200,
               height: 200,
-              cursor: 'move',
-              border: '1px solid gray',
+              cursor: "move",
+              border: "1px solid gray",
             },
-            displayName: '分组1',
-            className: 'draggable-item',
+            displayName: "分组1",
+            className: "draggable-item",
             active: false,
             disabled: true,
             isGroup: true,
@@ -80,16 +91,16 @@ export default {
             },
             components: [
               {
-                id: '1-1-1-1',
-                parentId: '1-1-1',
+                id: "1-1-1-1",
+                parentId: "1-1-1",
                 style: {
                   width: 0,
                   height: 0,
-                  cursor: 'move',
-                  background: '#c4cfeb',
+                  cursor: "move",
+                  background: "#c4cfeb",
                 },
-                displayName: '分组2',
-                className: 'draggable-item',
+                displayName: "分组2",
+                className: "draggable-item",
                 active: false,
                 disabled: true,
                 isGroup: true,
@@ -99,47 +110,49 @@ export default {
                 },
                 components: [
                   {
-                    id: '1-1-1-1-1',
-                    parentId: '1-1-1-1',
+                    id: "1-1-1-1-1",
+                    parentId: "1-1-1-1",
                     style: {
                       width: 50,
                       height: 50,
-                      cursor: 'move',
-                      background: '#3c68d6',
+                      cursor: "move",
+                      background: "#3c68d6",
                     },
-                    className: 'draggable-item',
+                    className: "draggable-item",
                     active: false,
                     defaultPosition: {
                       x: 100,
                       y: 100,
                     },
                     components: [],
-                  }, {
-                    id: '1-1-1-1-2',
-                    parentId: '1-1-1-1',
+                  },
+                  {
+                    id: "1-1-1-1-2",
+                    parentId: "1-1-1-1",
                     style: {
                       width: 50,
                       height: 50,
-                      cursor: 'move',
-                      background: '#3c68d6',
+                      cursor: "move",
+                      background: "#3c68d6",
                     },
-                    className: 'draggable-item',
+                    className: "draggable-item",
                     active: false,
                     defaultPosition: {
                       x: 100,
                       y: 100,
                     },
                     components: [],
-                  }, {
-                    id: '1-1-1-1-3',
-                    parentId: '1-1-1-1',
+                  },
+                  {
+                    id: "1-1-1-1-3",
+                    parentId: "1-1-1-1",
                     style: {
                       width: 50,
                       height: 50,
-                      cursor: 'move',
-                      background: '#3c68d6',
+                      cursor: "move",
+                      background: "#3c68d6",
                     },
-                    className: 'draggable-item',
+                    className: "draggable-item",
                     active: false,
                     defaultPosition: {
                       x: 100,
@@ -150,31 +163,32 @@ export default {
                 ],
               },
               {
-                id: '1-1-1-2',
-                parentId: '1-1-1',
+                id: "1-1-1-2",
+                parentId: "1-1-1",
                 style: {
                   width: 100,
                   height: 100,
-                  cursor: 'move',
-                  background: '#aef4f4',
+                  cursor: "move",
+                  background: "#aef4f4",
                 },
-                className: 'draggable-item',
+                className: "draggable-item",
                 active: false,
                 defaultPosition: {
                   x: 100,
                   y: 100,
                 },
                 components: [],
-              }, {
-                id: '1-1-1-3',
-                parentId: '1-1-1',
+              },
+              {
+                id: "1-1-1-3",
+                parentId: "1-1-1",
                 style: {
                   width: 100,
                   height: 100,
-                  cursor: 'move',
-                  background: '#aef4f4',
+                  cursor: "move",
+                  background: "#aef4f4",
                 },
-                className: 'draggable-item',
+                className: "draggable-item",
                 active: false,
                 defaultPosition: {
                   x: 200,
@@ -188,33 +202,33 @@ export default {
       },
     ],
     draggableContainer: {
-      id: 'parent',
-      parentId: 'parent',
+      id: "parent",
+      parentId: "parent",
       style: {
-        width: '100%',
-        height: '100%',
-        background: 'white',
-        position: 'relative',
+        width: "100%",
+        height: "100%",
+        background: "white",
+        position: "relative",
       },
       defaultPosition: {
         x: 0,
         y: 0,
       },
-      displayName: '画板本身',
-      className: 'draggable-parent-container',
+      displayName: "画板本身",
+      className: "draggable-parent-container",
       limit: false,
       disabled: true,
       components: [
         {
-          id: '1-1',
-          parentId: 'parent',
+          id: "1-1",
+          parentId: "parent",
           style: {
-            width: '100%',
-            height: '100%',
-            background: 'white',
+            width: "100%",
+            height: "100%",
+            background: "white",
           },
-          displayName: '分组0',
-          className: 'draggable-container',
+          displayName: "分组0",
+          className: "draggable-container",
           active: false,
           disabled: true,
           isGroup: true,
@@ -224,18 +238,18 @@ export default {
           },
           components: [
             {
-              id: '1-1-2',
-              parentId: '1-1',
+              id: "1-1-2",
+              parentId: "1-1",
               style: {
                 left: 0,
                 top: 0,
                 width: 100,
                 height: 100,
-                cursor: 'move',
-                border: '1px solid gray',
+                cursor: "move",
+                border: "1px solid gray",
               },
-              displayName: '什么',
-              className: 'draggable-item',
+              displayName: "什么",
+              className: "draggable-item",
               active: false,
               disabled: true,
               isGroup: false,
@@ -246,16 +260,16 @@ export default {
               components: [],
             },
             {
-              id: '1-1-1',
-              parentId: '1-1',
+              id: "1-1-1",
+              parentId: "1-1",
               style: {
                 width: 200,
                 height: 200,
-                cursor: 'move',
-                border: '1px solid gray',
+                cursor: "move",
+                border: "1px solid gray",
               },
-              displayName: '分组1',
-              className: 'draggable-item',
+              displayName: "分组1",
+              className: "draggable-item",
               active: false,
               disabled: false,
               isGroup: true,
@@ -265,16 +279,16 @@ export default {
               },
               components: [
                 {
-                  id: '1-1-1-1',
-                  parentId: '1-1-1',
+                  id: "1-1-1-1",
+                  parentId: "1-1-1",
                   style: {
                     width: 0,
                     height: 0,
-                    cursor: 'move',
-                    background: '#c4cfeb',
+                    cursor: "move",
+                    background: "#c4cfeb",
                   },
-                  displayName: '分组2',
-                  className: 'draggable-item',
+                  displayName: "分组2",
+                  className: "draggable-item",
                   active: false,
                   disabled: false,
                   isGroup: true,
@@ -284,47 +298,49 @@ export default {
                   },
                   components: [
                     {
-                      id: '1-1-1-1-1',
-                      parentId: '1-1-1-1',
+                      id: "1-1-1-1-1",
+                      parentId: "1-1-1-1",
                       style: {
                         width: 50,
                         height: 50,
-                        cursor: 'move',
-                        background: '#3c68d6',
+                        cursor: "move",
+                        background: "#3c68d6",
                       },
-                      className: 'draggable-item',
+                      className: "draggable-item",
                       active: false,
                       defaultPosition: {
                         x: 100,
                         y: 100,
                       },
                       components: [],
-                    }, {
-                      id: '1-1-1-1-2',
-                      parentId: '1-1-1-1',
+                    },
+                    {
+                      id: "1-1-1-1-2",
+                      parentId: "1-1-1-1",
                       style: {
                         width: 50,
                         height: 50,
-                        cursor: 'move',
-                        background: '#3c68d6',
+                        cursor: "move",
+                        background: "#3c68d6",
                       },
-                      className: 'draggable-item',
+                      className: "draggable-item",
                       active: false,
                       defaultPosition: {
                         x: 100,
                         y: 100,
                       },
                       components: [],
-                    }, {
-                      id: '1-1-1-1-3',
-                      parentId: '1-1-1-1',
+                    },
+                    {
+                      id: "1-1-1-1-3",
+                      parentId: "1-1-1-1",
                       style: {
                         width: 50,
                         height: 50,
-                        cursor: 'move',
-                        background: '#3c68d6',
+                        cursor: "move",
+                        background: "#3c68d6",
                       },
-                      className: 'draggable-item',
+                      className: "draggable-item",
                       active: false,
                       defaultPosition: {
                         x: 100,
@@ -335,31 +351,32 @@ export default {
                   ],
                 },
                 {
-                  id: '1-1-1-2',
-                  parentId: '1-1-1',
+                  id: "1-1-1-2",
+                  parentId: "1-1-1",
                   style: {
                     width: 100,
                     height: 100,
-                    cursor: 'move',
-                    background: '#aef4f4',
+                    cursor: "move",
+                    background: "#aef4f4",
                   },
-                  className: 'draggable-item',
+                  className: "draggable-item",
                   active: false,
                   defaultPosition: {
                     x: 100,
                     y: 100,
                   },
                   components: [],
-                }, {
-                  id: '1-1-1-3',
-                  parentId: '1-1-1',
+                },
+                {
+                  id: "1-1-1-3",
+                  parentId: "1-1-1",
                   style: {
                     width: 100,
                     height: 100,
-                    cursor: 'move',
-                    background: '#aef4f4',
+                    cursor: "move",
+                    background: "#aef4f4",
                   },
-                  className: 'draggable-item',
+                  className: "draggable-item",
                   active: false,
                   defaultPosition: {
                     x: 200,
@@ -375,76 +392,137 @@ export default {
     },
   } as IBarState,
   subscriptions: {
-    setup ({ dispatch, history }: { dispatch: any; history: any }) {
+    init({ dispatch }: any) {
+      const treeData = generateTreeData();
+      dispatch({
+        type: "initTreeData",
+        payload: treeData,
+      });
+    },
+    setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
       history.listen((location: any) => {
         // console.log("location", location);
       });
     },
-    onResize ({ dispatch, history }: any) {
-      window.onresize = (e) => {
-      };
+    onResize({ dispatch, history }: any) {
+      window.onresize = (e) => {};
     },
-    keyEvent ({ dispatch, history }: any) {
-      document.onkeydown = (e) => {
-      };
+    keyEvent({ dispatch, history }: any) {
+      document.onkeydown = (e) => {};
     },
   },
 
   effects: {
-    * fetch ({ payload }: any, { call, put }: any): any {
+    *fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
-      console.log('ssss', payload);
-      yield put({ type: 'selectedNode', payload });
+      yield put({ type: "selectedNode", payload });
     },
-
   },
 
   reducers: {
-    save (state: IBarState, action: any) {
-      return { ...state, ...action.payload };
+    initTreeData(state: IBarState, { payload }: any) {
+      return { ...state, treeData: payload };
     },
-    selectedNode (state: IBarState, { payload }: any) {
-      console.log('payload', payload);
+    selectedNode(state: IBarState, { payload }: any) {
       const items = state.draggableItems;
       selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload };
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
-    pushToSelectedNode (state: IBarState, { payload }: any) {
+    pushToSelectedNode(state: IBarState, { payload }: any) {
       const { key, isFolder } = payload;
       const newArr = [...(new Set(state.key.concat(key)) as any)];
       return { key: newArr, isFolder };
     },
     // 点击icon或者右键菜单里的操作
-    selectOperate (state: IBarState, { payload }: any) {
+    selectOperate(state: IBarState, { payload }: any) {
       return { ...state, ...payload };
     },
-    findNode (state: IBarState, { payload: { id, callback } }: any) {
+    findNode(state: IBarState, { payload: { id, callback } }: any) {
       callback(id);
       return { ...state };
     },
-    selectSingleNode (state: IBarState, { payload: id }: any) {
+    selectSingleNode(state: IBarState, { payload: id }: any) {
       const items = state.draggableItems;
       selectSingleComponent(items, id);
       return { ...state };
     },
-    testDrag (state: IBarState, { payload: { parentId } }: any) {
+    testDrag(state: IBarState, { payload: { parentId } }: any) {
       // console.log('parentId', parentId)
-      const ids = ['1-1', '1-1-1', '1-1-1-1'];
+      const ids = ["1-1", "1-1-1", "1-1-1-1"];
       const copyState: IBarState = JSON.parse(JSON.stringify(state));
-      let childrenComponents = findParentNode(copyState.draggableItems, ids).filter((item: any) => item);
+      let childrenComponents = findParentNode(
+        copyState.draggableItems,
+        ids
+      ).filter((item: any) => item);
       calculateGroupPosition(childrenComponents.reverse());
       return copyState;
     },
-    moveGroupPosition (state: IBarState, {
-      payload: {
-        id, xMoveLength, yMoveLength,
-      },
-    }: any) {
+    moveGroupPosition(
+      state: IBarState,
+      { payload: { id, xMoveLength, yMoveLength } }: any
+    ) {
       const node = findNode(state.draggableItems, id);
       moveChildrenComponents(node.components, xMoveLength, yMoveLength);
-      console.log('node', node);
+      // console.log("node", node);
+      return { ...state };
+    },
+    // 置顶
+    placedTop(state: IBarState, { payload }: any) {
+      const newTreeData = placeTop(state.treeData, payload.key);
+      console.log("newTree", newTreeData);
+      return { ...state, treeData: newTreeData };
+    },
+    // 置底
+    placeBottom(state: IBarState, { payload }: any) {
+      const newTreeData = placeBottom(state.treeData, payload.key);
+      return { ...state, treeData: newTreeData };
+    },
+    // 上移
+    moveUp(state: IBarState, { payload }: any) {
+      const newTree = moveUp(state.treeData, payload.key);
+      return { ...state, treeData: newTree };
+    },
+    // 下移
+    moveDown(state: IBarState, { payload }: any) {
+      const newTree = moveDown(state.treeData, payload.key);
+      return { ...state, treeData: newTree };
+    },
+    // 成组
+    group(state: IBarState, { payload }: any) {
+      console.log("成组");
+      return { ...state };
+    },
+    // 取消成组
+    cancelGroup(state: IBarState, { payload }: any) {
+      console.log("取消成组");
+      return { ...state };
+    },
+    // TODO 粘贴
+    paste(state: IBarState, { payload }: any) {
+      console.log("粘贴");
+      return { ...state };
+    },
+    // 锁定
+    lock(state: IBarState, { payload }: any) {
+      console.log('所', payload)
+      const newTree = lock(state.treeData, payload.key, payload.locked)
+      return { ...state, treeData: newTree };
+    },
+    // 删除
+    delete(state: IBarState, { payload }: any) {
+      console.log('删除', payload)
+      const newTree = remove(state.treeData, payload.key);
+      return { ...state, treeData: newTree };
+    },
+    // 复制
+    copy(state: IBarState, { payload }: any) {
+      return { ...state };
+    },
+    //单独显示图层
+    singleShowLayer(state: IBarState, { payload }: any) {
+      console.log("单独显示图层");
       return { ...state };
     },
   },

@@ -10,16 +10,11 @@ import {
 } from '@ant-design/icons'
 
 
-const EveryTreeNode = ({ operate, ...restPorps}) => {
-  const { text, children, getCurrentMenuLocation } = restPorps
+const EveryTreeNode = ({ bar, ...restPorps}) => {
+  const { text, children, getCurrentMenuLocation, lock } = restPorps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(!!children)
   const [eyeIconShow, setEyeIconShow] =useState(true)
-  const [isShowLock, setIsShowLock] = useState(operate.operateValue)
-  console.log('isShowLock', operate.operateValue);
-  useEffect(() => {
-    setIsShowLock(operate.operateValue)
-  }, [operate.operateValue])
   // TODO delete
   const [ inputValue, setInputValue ] = useState(text)
   // 点击小眼睛图标切换状态
@@ -32,11 +27,6 @@ const EveryTreeNode = ({ operate, ...restPorps}) => {
   const mouseRightClick = (e) => {
     e.persist()
     e.preventDefault()
-    if(isFolder) {
-      console.log('是文件夹啊');
-    } else {
-      // console.log('是单个图层啊');
-    }
     getCurrentMenuLocation({
       x: e.clientX,
       y: e.clientY,
@@ -55,7 +45,7 @@ const EveryTreeNode = ({ operate, ...restPorps}) => {
       cursor: 'all',
     })
   }
-  // 修改图层或者分组内容
+  // 修改图层或者分组名字
   const commonChangeContent = () => {
     // TODO 校验
     // 比如名字一样,不发请求
@@ -118,7 +108,7 @@ const EveryTreeNode = ({ operate, ...restPorps}) => {
     </div>
     <div className='lock-icon'>
       {
-        isShowLock && <LockOutlined />
+        lock && <LockOutlined />
       }
     </div>
   </div>
@@ -127,6 +117,6 @@ const EveryTreeNode = ({ operate, ...restPorps}) => {
 
 export default memo(
   connect(
-    ({operate}) => ({operate})
+    ({bar}) => ({bar})
   )(EveryTreeNode)
 )

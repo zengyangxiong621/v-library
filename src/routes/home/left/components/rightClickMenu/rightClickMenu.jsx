@@ -1,33 +1,44 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 import './rightClickMenu.css'
 
+import {
+  getLockStates,
+} from "../../../../../utils/sideBar";
+
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
 
 const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu}) => {
-
+  // 生成icon的函数
   const generateIcon = (name) => (
     React.createElement(Icons[name], {
-      style: {
-      }
+      style: {}
     })
   )
-  const [isLock, setIsLock] = useState(operate.operateValue)
-  // useEffect(() => {
-  //   setIsLock(operate.operateValue)
-  // }, [operate.operateValue])
+  const [isLock, setIsLock] = useState(false)
+  // 每次渲染右侧菜单，都需要确定此次是锁定还是解锁
+  useEffect(() => {
+    // 判断所选中的各个节点是否是lock状态
+    const lockInfo = getLockStates(bar.treeData, bar.key)
+    const finalLockState = lockInfo.some(item => item===false)
+    setIsLock(!finalLockState)
+  }, [bar.treeData, bar.key])
 
   // 后端返回的数据里应该有 show、lock 属性
   // 这里需要拿到 所选中 的treeNode中的lock或者show属性
   const menuItemClick = (e,operateName) => {
     e.stopPropagation()
+    // 先在前端改变锁定状态，再根据请求的结果来判断是否锁定成功
+    // TODO 发送请求
+    const customPayload = {
+        key: bar.key,
+    }
+    if(operateName === 'lock') {
+      customPayload.locked = !isLock
+    }
     dispatch({
-      type: 'operate/selectOperate',
-      payload: {
-        operateKey: operateName,
-        operateValue: !isLock,
-        ids: bar.key
-      }
+      type: `bar/${operateName}`,
+      payload: customPayload
     })
     setIsLock(!isLock)
     // 点击后隐藏菜单
@@ -63,9 +74,9 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
             <div
             key={index}
             className={`menu-item ${item.disabled ? 'disabled-menu-item' : ''}`}
-            onClick={(e) => menuItemClick(e, item.name)}
+            onClick={(e) => menuItemClick(e, item.key)}
             >
-              { isLock && item.anotherIcon ? generateIcon(item.anotherIcon) : generateIcon(item.icon) }
+              { isLock && item.anotherIcon ? React.createElement(Icons[item.anotherIcon]) : React.createElement(Icons[item.icon]) }
               <li className='menu-item-li'>{ (isLock && item.anotherName) ? item.anotherName : item.name}</li>
             </div>
           )

@@ -17,52 +17,19 @@ import EveryTreeNode from './components/everyTreeNode'
 import ToolBar from './components/toolBar'
 import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 
-const x = 4
-const y = 2
-const z = 2
-const tData = []
-
-const generateData = (_level, lock, _preKey, _tns,) => {
-  const preKey = _preKey || '1'
-  const tns = _tns || tData
-
-  const children = []
-  for (let i = 1; i < x; i++) {
-    const key = `${preKey}-${i}`;
-    const parentId =  +preKey ===0 ? 'parent' : preKey
-    tns.push({ title: key,  id: key, parentId, icon: <SmileOutlined />, scan: true, lock });
-    if (i < y) {
-      children.push(key)
-    }
-  }
-  if (_level < 0) {
-    return tns
-  }
-  const level = _level - 1
-  children.forEach((key, index) => {
-    tns[index].children = []
-    return generateData(level, lock, key, tns[index].children)
-  })
-}
-generateData(z, false)
-
 
 const Left = ({dispatch, bar, operate}) => {
-  const [gData, setGData] = useState(tData)
   const [customExpandKeys, setCustomExpandKeys] = useState([])
-
   const [isMultipleTree, setIsMultipleTree] = useState(false)
-
   const [selected, setSelected] = useState([])
-
   const activeIconRef = useRef()
-
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
-    // 其它组件更改了选中的节点时触发
-    useEffect(() => {
+// 其它组件更改了选中的节点时触发
+useEffect(() => {
       setSelected(bar.key)
-    }, [ bar.key ])
-  useEffect(() => {
+}, [ bar.key ])
+// 监听键盘Ctrl键按下与松开
+useEffect(() => {
     onkeydown = (e) => {
       if (e.key === 'Control') {
         setIsMultipleTree(true)
@@ -81,48 +48,52 @@ const Left = ({dispatch, bar, operate}) => {
       onkeyup = () => {
       }
     }
-  }, [])
-  // useEffect(() => {
-  //   document.addEventListener('click', (e) => {
-  //     e.stopPropagation()
-  //     const {
-  //       target: { className },
-  //     } = e
-  //     // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
-  //     const tree = document.querySelector('.ant-tree')
-  //     // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
-  //     if (className && typeof className === 'string') {
-  //       const res = tree.querySelector(`.${ e.target.className }`)
-  //       if (!res) {
-  //         setSelected([])
-  //         dispatch({
-  //           type: 'bar/selectedNode',
-  //           payload: {
-  //             key: [],
-  //             isFolder: false,
-  //           },
-  //         })
-  //         // 取消右键菜单
-  //         setIsShowRightMenu(false)
-  //         // 将多选树改为单选树
-  //         setIsMultipleTree(false)
-  //       }
-  //     }
-  //   })
-  //   return () => {
-  //     document.removeEventListener('click', (e) => ({}))
-  //   }
-  // }, []);
-
-  // 获取当前点击的icon
+}, [])
+useEffect(() => {
+    document.addEventListener('click', (e) => {
+      e.stopPropagation()
+      const {
+        target: { className },
+      } = e
+      // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
+      const tree = document.querySelector('.ant-tree')
+      // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
+      if (className && typeof className === 'string') {
+        const res = tree.querySelector(`.${ e.target.className }`)
+        if (!res) {
+          setSelected([])
+          dispatch({
+            type: 'bar/selectedNode',
+            payload: {
+              key: [],
+              isFolder: false,
+            },
+          })
+          // 取消右键菜单
+          setIsShowRightMenu(false)
+          // 将多选树改为单选树
+          setIsMultipleTree(false)
+        }
+      }
+    })
+    return () => {
+      document.removeEventListener('click', (e) => ({}))
+    }
+}, []);
+// 将树的数据放入redux中
+// useEffect(() => {
+//   dispatch({
+//     type: 'bar/initTreeData',
+//     payload: gData
+//   })
+// }, [gData])
+  // 获取点击的icon
   const getActiveIcon = (icon) => {
     activeIconRef.current = icon
+    console.log('iiiii;,', icon);
     dispatch({
-      type: 'operate/selectOperate',
-      payload: {
-        operate: icon,
-        // key: selected,
-      }
+      type: `bar/${icon}`,
+      payload: {}
     })
   }
   //选择的树节点
@@ -185,13 +156,12 @@ const Left = ({dispatch, bar, operate}) => {
   }
   // 展开 / 收起 全部节点
   const onExpand = (expandedKeys, { expanded, node }) => {
-    console.log('expandedKeys', expandedKeys)
-    console.log('expanded', expanded)
-    console.log('node', node)
+    // console.log('expandedKeys', expandedKeys)
+    // console.log('expanded', expanded)
+    // console.log('node', node)
   }
   //
   const onDrop = info => {
-    console.log('onDrop', info)
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
     const dropPos = info.node.pos.split('-')
@@ -207,7 +177,7 @@ const Left = ({dispatch, bar, operate}) => {
         }
       }
     }
-    const data = [...gData]
+    const data = bar.treeData
 
     // Find dragObject
     let dragObj
@@ -248,8 +218,10 @@ const Left = ({dispatch, bar, operate}) => {
         ar.splice(i + 1, 0, dragObj)
       }
     }
-
-    setGData(data)
+    dispatch({
+      type: 'bar/initTreeData',
+      payload: data
+    })
   }
 
   // 过去子组件传过来的X，Y值
@@ -286,7 +258,7 @@ const Left = ({dispatch, bar, operate}) => {
         onDrop={ onDrop }
         onSelect={ onSelect }
         onRightClick={ onRightClick }
-        treeData={ gData }
+        treeData={ bar.treeData }
         selectedKeys={ selected }
         onExpand={ onExpand }
         // expandedKeys={customExpandKeys}
@@ -312,150 +284,126 @@ const Left = ({dispatch, bar, operate}) => {
 const menuOptions = [
   {
     name: '锁定',
+    key: 'lock',
     icon: 'BranchesOutlined',
     anotherName: '解锁',
     anotherIcon: 'WifiOutlined',
     disabled: false,
+  },
+  {
+    name: '置顶',
+    key: 'placedTop',
+    icon: 'WifiOutlined',
+    disabled: false,
+  },
+  {
+    name: '置底',
+    key: 'placeBottom',
+    icon: 'WifiOutlined',
+    disabled: false,
+  },
+  {
+    name: '上移',
+    key: 'moveUp',
+    icon: 'WifiOutlined',
+    disabled: false,
+  },
+  {
+    name: '下移',
+    key: 'moveDown',
+    icon: 'WifiOutlined',
+    disabled: false,
+  },
+  {
+    name: '成组',
+    key: 'group',
+    icon: 'WifiOutlined',
+    disabled: false,
+  },
+  {
+    name: '取消成组',
+    key: 'cancelGroup',
+    icon: 'WifiOutlined',
+    disabled: false,
+  },
+  {
+    name: '复制',
+    key: 'copy',
+    icon: 'CopyOutlined',
+    disabled: false,
+  },
+  {
+    key: 'singleShowLayer',
+    name:'单独显示图层',
+    icon: 'QqOutlined',
+    disabled: false,
+  },
+  {
+    key: 'singleShowLayer',
+    name: '取消单独显示',
+    icon: 'WifiOutlined',
+    disabled: false,
+  },
+  {
+    name:'删除',
+    key: 'delete',
+    icon: 'PicCenterOutlined',
+  },
+  // {
+  //   name:'展开/收起',
+  //   key: 'spreadOrShrink',
+  //   icon: 'PicCenterOutlined',
+  // },
 
-  },
-  {
-    name: '成组6',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '取消成组1',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '复制',
-    icon: 'CopyOutlined',
-    disabled: false,
-  },
-  {
-    name: '粘贴',
-    icon: 'BranchesOutlined',
-    disabled: false,
-    onClick: function (e) {
-      console.log('menu1 粘贴')
-    },
-  },
-  {
-    name: '拷贝',
-    icon: 'AndroidOutlined',
-    disabled: false,
-    onClick: function (e) {
-      console.log('menu1 拷贝')
-    },
-  }, {
-    name: '成组5',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '取消成组1',
-    icon: 'WifiOutlined',
-    disabled: true,
-  },
-  {
-    name: '复制',
-    icon: 'CopyOutlined',
-    disabled: true,
-  },
-  {
-    name: '粘贴',
-    icon: 'BranchesOutlined',
-    disabled: true,
-    onClick: function (e) {
-      console.log('menu1 粘贴')
-    },
-  },
-  {
-    name: '拷贝',
-    icon: 'AndroidOutlined',
-    disabled: true,
-    onClick: function (e) {
-      console.log('menu1 拷贝')
-    },
-  }, {
-    name: '成组4',
-    icon: 'WifiOutlined',
-    disabled: true,
-  },
-  {
-    name: '取消成组1',
-    icon: 'WifiOutlined',
-    disabled: true,
-  },
-  {
-    name: '复制',
-    icon: 'CopyOutlined',
-    disabled: true,
-  },
-  {
-    name: '粘贴',
-    icon: 'BranchesOutlined',
-    disabled: true,
-    onClick: function (e) {
-      console.log('menu1 粘贴')
-    },
-  },
-  {
-    name: '拷贝',
-    icon: 'AndroidOutlined',
-    disabled: true,
-    onClick: function (e) {
-    },
-  }, {
-    name: '成组3',
-    icon: 'WifiOutlined',
-    disabled: true,
-  },
-  {
-    name: '取消成组1',
-    icon: 'WifiOutlined',
-    disabled: true,
-  },
+  // {
+  //   name: '粘贴',
+  //   key: 'paste',
+  //   icon: 'BranchesOutlined',
+  //   disabled: false,
+  // },
 ]
 const topBarIcons = [
   {
-    title: '置顶',
+    key: 'placedTop',
+    text:'置顶',
     icon: UpOutlined,
   },
   {
-    title: '置底',
+    key: 'placeBottom',
+    text:'置底',
     icon: DownOutlined,
   },
   {
-    title: '成组',
+    key: 'group',
+    text:'成组',
     icon: QqOutlined,
   },
   {
-    title: '打散',
-    icon: BugOutlined,
-  },
-  {
-    title: '展开/收缩',
+    key: 'spreadOrShrink',
+    text:'展开/收起',
     icon: PicCenterOutlined,
   },
 ]
 
 const bottomBarIcons = [
   {
-    title: '单独显示图层',
-    icon: UpOutlined,
-  },
-  {
-    title: '锁定',
-    icon: DownOutlined,
-  },
-  {
-    title: '复制',
+    key: 'singleShowLayer',
+    text:'单独显示图层',
     icon: QqOutlined,
   },
   {
-    title: '删除',
+    key: 'lock',
+    text:'锁定',
+    icon: BugOutlined,
+  },
+  {
+    key: 'copy',
+    text: '复制',
+    icon: QqOutlined,
+  },
+  {
+    text: '删除',
+    key: 'delete',
     icon: BugOutlined,
   },
 ]
