@@ -23,12 +23,12 @@ import { SketchPicker } from 'react-color'
 
 
 
-// const PageSetting = ({ dispatch, bar }) => {
-const PageSetting = (props) => {
+const PageSetting = ({ dispatch, page }) => {
+// const PageSetting = (props) => {
   const { Option } = Select;
   const formItemLayout = {
     labelCol: {
-      span: 6,
+      span: 8,
     },
     wrapperCol: {
       span: 14,
@@ -51,7 +51,7 @@ const PageSetting = (props) => {
   const sizeChange = (e) => {
     console.log('e', e)
     // dispatch({
-    //   type: 'pageSetting/sizeChange',
+    //   type: 'page/sizeChange',
     //   payload: {
     //     width: ,
     //     height: !isLock,
@@ -149,9 +149,7 @@ const PageSetting = (props) => {
   )
 }
 
-export default memo(PageSetting)
-
-// export default connect(
-//   ({ bar }) => ({ bar })
-// )(PageSetting)
+export default connect(({ page }) => ({
+  page,
+}))(PageSetting)
   

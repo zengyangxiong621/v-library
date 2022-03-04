@@ -30,3 +30,25 @@
 .zoom-set .ant-radio-wrapper > span:nth-child(2){
   color: #fff;
 }
+
+.custom-collapse{
+  background-color: #232630;
+  border:none;
+
+}
+.custom-collapse .ant-collapse-header{
+  color: #fff !important;
+  background-color: #3d404d !important;
+}
+
+.custom-collapse .ant-collapse-content{
+  background-color: #232630;
+  border:none;
+}
+
+.custom-collapse  > .ant-collapse-item{
+  border-bottom: 1px solid #3d404d;
+}
+.custom-collapse  > .ant-collapse-item:last-child{
+  border: none;
+}

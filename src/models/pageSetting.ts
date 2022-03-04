@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
-  namespace: 'pageSetting',
+  namespace: 'page',
   state: {
     width:'1920',
     height:'1080',
