@@ -1,3 +1,5 @@
+import { title } from "process";
+
 /**
  * description: 置顶
  */
@@ -126,33 +128,36 @@ const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
 };
 
 /**
- * description: 获取每一个被选中节点的锁定状态
+ * description: 获取每一个被选中节点的 锁定/单独显示图层 状态
  */
-const getLockStates: TPlaceGroup = (treeData, selectedNodes) => {
-  let res: string[] = []
-  const recursiveFn = (data: any, ids: string[]) => {
+
+type threeParams = (a: any[], b: string[], c: boolean) => any[];
+type threeParams2 = (a: any[], b: string[], c: string) => any[];
+const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
+  let res: string[] = [];
+  const recursiveFn = (data: any, ids: string[], field: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (ids.includes(item.id)) {
-        res.push(item.lock)
+        res.push(item[field]);
       } else if (item.children) {
-        recursiveFn(item.children, ids);
+        recursiveFn(item.children, ids, field);
       }
     }
   };
-  recursiveFn(treeData, selectedNodes)
+  recursiveFn(treeData, selectedNodes, field);
   return res;
 };
 /**
  * description: 锁定
  */
-const lock: (a: any[], b: string[], c: boolean) => any[] = (treeData, selectedNodes, targetLockState) => {
+const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        item.lock = targetLockState
+        item.lock = targetLockState;
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -165,6 +170,153 @@ const lock: (a: any[], b: string[], c: boolean) => any[] = (treeData, selectedNo
   return treeDataCopy;
 };
 
+/**
+ * description: 单独显示图层
+ */
+const singleShowLayer: threeParams = (
+  treeData,
+  selectedNodes,
+  SingleShowLayerState
+) => {
+  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const recursiveFn = (data: any, id: string) => {
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === id) {
+        item.singleShowLayer = SingleShowLayerState;
+        break;
+      } else if (item.children) {
+        recursiveFn(item.children, id);
+      }
+    }
+  };
+  for (let i = 0, len = selectedNodes.length; i < len; i++) {
+    recursiveFn(treeDataCopy, selectedNodes[i]);
+  }
+  return treeDataCopy;
+};
+
+/**
+ * description:  成组
+ */
+const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
+  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const newGroup = {
+    title: "分组",
+    id: `${lastRightClickKey}-temp`,
+    icon: "SmileOutlined",
+    isFolder: true,
+    scan: true,
+    lock: false,
+    singleShowLayer: false,
+    children: [],
+  };
+  let needPickItem: any = [];
+  const recursiveFn = (data: any, id: string, isDone: boolean) => {
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === id) {
+        data.splice(i, 1);
+        needPickItem.push(item);
+        // 处理到最后一个节点了
+        if (isDone) {
+          newGroup.children = needPickItem;
+          data.push(newGroup);
+        }
+        break;
+      } else if (item.children) {
+        recursiveFn(item.children, id, isDone);
+      }
+    }
+  };
+  for (let i = 0, len = selectedNodes.length; i < len; i++) {
+    let isDone = false;
+    if (i === len - 1) {
+      isDone = true;
+    }
+    recursiveFn(treeDataCopy, selectedNodes[i], isDone);
+  }
+  return treeDataCopy;
+};
+
+/**
+ * description: 取消成组
+ */
+const cancelGroup: TMoveUpOrDown = (treeData, selectedNodes) => {
+  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const recursiveFn = (data: any, id: string) => {
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === id) {
+        if (item.children) {
+          data.splice(i, 1);
+          item.children.forEach((x: any) => {
+            data.splice(i++, 0, x);
+          });
+        }
+        break;
+      } else if (item.children) {
+        recursiveFn(item.children, id);
+      }
+    }
+  };
+  for (let i = 0, len = selectedNodes.length; i < len; i++) {
+    recursiveFn(treeDataCopy, selectedNodes[i]);
+  }
+  return treeDataCopy;
+};
+/**
+ * description: 显示/关闭 重命名输入框
+ */
+const showInput: (a: any[], b: string[], c: boolean) => any[] = (
+  treeData,
+  node,
+  onOrOff
+) => {
+  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const recursiveFn = (data: any, id: string) => {
+    console.log('iddd', id)
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      // 点击其它地方，会清空已选择的nodeList[]
+      if(!id) {
+        item.showRenameInput = false
+      }
+      else if (item.id === id) {
+        item.showRenameInput = onOrOff;
+        break;
+      } else if (item.children) {
+        recursiveFn(item.children, id);
+      }
+    }
+  };
+  // if(node.length>1) return
+  recursiveFn(treeDataCopy, node[0]);
+  return treeDataCopy;
+};
+/**
+ * description: 重命名
+ */
+const reName: (a: any[], b: string[], c: string) => any[] = (
+  treeData,
+  node,
+  newName
+) => {
+  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const recursiveFn = (data: any, id: string) => {
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === id) {
+        item.title = newName;
+        break;
+      } else if (item.children) {
+        recursiveFn(item.children, id);
+      }
+    }
+  };
+  recursiveFn(treeDataCopy, node[0]);
+  return treeDataCopy;
+};
 /**
  * description: mock TreeData
  */
@@ -186,6 +338,8 @@ const generateTreeData: () => any = () => {
         icon: "SmileOutlined",
         scan: true,
         lock,
+        singleShowLayer: false,
+        showRenameInput: false,
       });
       if (i < 2) {
         children.push(key);
@@ -212,5 +366,10 @@ export {
   moveDown,
   remove,
   lock,
-  getLockStates,
+  getFieldStates,
+  singleShowLayer,
+  group,
+  cancelGroup,
+  reName,
+  showInput,
 };

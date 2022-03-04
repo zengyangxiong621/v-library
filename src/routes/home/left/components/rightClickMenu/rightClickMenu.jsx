@@ -2,26 +2,26 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import './rightClickMenu.css'
 
 import {
-  getLockStates,
+  getFieldStates,
 } from "../../../../../utils/sideBar";
 
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
 
 const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu}) => {
-  // 生成icon的函数
-  const generateIcon = (name) => (
-    React.createElement(Icons[name], {
-      style: {}
-    })
-  )
   const [isLock, setIsLock] = useState(false)
+  const [isSingleShow, setIsSingleShow] = useState(false)
   // 每次渲染右侧菜单，都需要确定此次是锁定还是解锁
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
-    const lockInfo = getLockStates(bar.treeData, bar.key)
+    const lockInfo = getFieldStates(bar.treeData, bar.key, 'lock')
     const finalLockState = lockInfo.some(item => item===false)
     setIsLock(!finalLockState)
+    // 判断所选中的各个节点是否是单独显示状态
+    const singleShowLayerInfo = getFieldStates(bar.treeData, bar.key, 'singleShowLayer')
+    const singleShowLayerState = singleShowLayerInfo.some(item => item === false)
+    setIsSingleShow(!singleShowLayerState)
+    console.log('singleShowLayerInfo', singleShowLayerInfo);
   }, [bar.treeData, bar.key])
 
   // 后端返回的数据里应该有 show、lock 属性
@@ -33,14 +33,25 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
     const customPayload = {
         key: bar.key,
     }
-    if(operateName === 'lock') {
-      customPayload.locked = !isLock
+    switch (operateName) {
+      case 'lock':
+        customPayload.locked = !isLock
+        break;
+      case 'singleShowLayer':
+        customPayload.singleShowLayer = !isSingleShow
+        break;
+      case 'reName':
+        customPayload.newName = 'abc'
+        customPayload.value = true
+        break;
+      default:
+        break;
     }
     dispatch({
       type: `bar/${operateName}`,
       payload: customPayload
     })
-    setIsLock(!isLock)
+    // setIsLock(!isLock)
     // 点击后隐藏菜单
     hideMenu()
   }
@@ -76,8 +87,11 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
             className={`menu-item ${item.disabled ? 'disabled-menu-item' : ''}`}
             onClick={(e) => menuItemClick(e, item.key)}
             >
-              { isLock && item.anotherIcon ? React.createElement(Icons[item.anotherIcon]) : React.createElement(Icons[item.icon]) }
-              <li className='menu-item-li'>{ (isLock && item.anotherName) ? item.anotherName : item.name}</li>
+              { ((isLock || isSingleShow) && item.anotherIcon) ? React.createElement(Icons[item.anotherIcon]) : React.createElement(Icons[item.icon]) }
+              <li className='menu-item-li'>
+                {
+                  ((isLock || isSingleShow) && item.anotherName) ? item.anotherName : item.name
+                }</li>
             </div>
           )
         })

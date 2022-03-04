@@ -15,11 +15,17 @@ import {
   moveDown,
   remove,
   lock,
+  singleShowLayer,
+  group,
+  cancelGroup,
+  reName,
+  showInput
 } from "../utils/sideBar";
 interface IBarState {
   key: string[];
   isFolder: boolean;
   operate: string;
+  lastRightClick: string;
   treeData: any[];
   draggableItems: any;
 }
@@ -29,6 +35,7 @@ export default {
   state: {
     key: [],
     isFolder: false,
+    lastRightClick: "",
     operate: "",
     treeData: [],
     draggableItems: [
@@ -468,6 +475,10 @@ export default {
       // console.log("node", node);
       return { ...state };
     },
+    // 多选时候，记录最后一次被右键点击的节点
+    saveLastRightClickKey(state: IBarState, { payload }: any) {
+      return { ...state, lastRightClick: payload };
+    },
     // 置顶
     placedTop(state: IBarState, { payload }: any) {
       const newTreeData = placeTop(state.treeData, payload.key);
@@ -491,13 +502,13 @@ export default {
     },
     // 成组
     group(state: IBarState, { payload }: any) {
-      console.log("成组");
-      return { ...state };
+      const newTree = group(state.treeData, payload.key, state.lastRightClick);
+      return { ...state, treeData: newTree };
     },
     // 取消成组
     cancelGroup(state: IBarState, { payload }: any) {
-      console.log("取消成组");
-      return { ...state };
+      const newTree = cancelGroup(state.treeData, payload.key);
+      return { ...state, treeData: newTree };
     },
     // TODO 粘贴
     paste(state: IBarState, { payload }: any) {
@@ -506,13 +517,12 @@ export default {
     },
     // 锁定
     lock(state: IBarState, { payload }: any) {
-      console.log('所', payload)
-      const newTree = lock(state.treeData, payload.key, payload.locked)
+      const newTree = lock(state.treeData, payload.key, payload.locked);
       return { ...state, treeData: newTree };
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      console.log('删除', payload)
+      console.log("删除", payload);
       const newTree = remove(state.treeData, payload.key);
       return { ...state, treeData: newTree };
     },
@@ -522,8 +532,26 @@ export default {
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
-      console.log("单独显示图层");
+      const newTree = singleShowLayer(
+        state.treeData,
+        payload.key,
+        payload.singleShowLayer
+      );
+      return { ...state, treeData: newTree };
+    },
+    // 隐藏
+    hidden(state: IBarState, { payload }: any) {
       return { ...state };
+    },
+    // 改变重命名输入框的显示状态
+    reName(state: IBarState, { payload }: any) {
+      const newTree = showInput(state.treeData,state.key,payload.value )
+      return { ...state, treeData: newTree };
+    },
+    // 真正改变名字的地方
+    changeName(state: IBarState, { payload }: any) {
+      const newTree = reName(state.treeData, state.key, payload.newName);
+      return { ...state, treeData: newTree };
     },
   },
 };

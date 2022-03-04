@@ -6,12 +6,19 @@ import { Input } from 'antd'
 import {
   EyeOutlined , EyeInvisibleOutlined,
   LockOutlined, UnlockOutlined,
-  HeatMapOutlined
+  HeatMapOutlined, CoffeeOutlined
 } from '@ant-design/icons'
 
 
-const EveryTreeNode = ({ bar, ...restPorps}) => {
-  const { text, children, getCurrentMenuLocation, lock } = restPorps
+
+const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
+  const sendDispatch = (modelName, payload,type = 'bar',) => {
+    dispatch({
+      type: `${type}/${modelName}`,
+      payload
+    })
+  }
+  const { text, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput } = restPorps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(!!children)
   const [eyeIconShow, setEyeIconShow] =useState(true)
@@ -35,12 +42,11 @@ const EveryTreeNode = ({ bar, ...restPorps}) => {
     })
     // console.log('右键', e);
   }
+  const inputRef = useRef()
   // 鼠标双击事件
-  const [ showInput, setShowInput ] = useState(false)
-  const inputRef = useRef(null)
-  const dClick = async(e) => {
+  const dClick = (e) => {
     e.stopPropagation()
-    await setShowInput(true)
+    sendDispatch('reName', {value: true})
     inputRef.current.focus({
       cursor: 'all',
     })
@@ -56,24 +62,44 @@ const EveryTreeNode = ({ bar, ...restPorps}) => {
     } else {
       console.log('不相等，可以更改');
     }
+    // 先对前端的树进行一次修改
+    sendDispatch('changeName', {
+      key: bar.key,
+      newName: inputValue,
+    })
     // 应该是发送请求改名，这里先暂时这样写
   }
   // input失焦
-  const oBlur = () => {
-    setShowInput(false)
+  const oBlur = (e) => {
+    e.stopPropagation()
+    dispatch({
+      type: 'bar/reName',
+      payload: {
+        value: false,
+      }
+    })
     commonChangeContent()
   }
-  const oFocus = () => {
+  const oFocus = (e) => {
+    e.stopPropagation()
     console.log('聚焦');
   }
   // 输入内容改变
   const oInputContent = (e) => {
+    e.stopPropagation()
     setInputValue(e.target.value)
   }
   // 回车亦可改分组名
   const oPressEnter = (e) => {
+    e.stopPropagation()
     setInputValue(e.target.value)
     inputRef.current.blur()
+    dispatch({
+      type: 'bar/reName',
+      payload: {
+        value: false,
+      }
+    })
   }
 
 
@@ -82,10 +108,12 @@ const EveryTreeNode = ({ bar, ...restPorps}) => {
     <div className='EveryTreeNode-wrap' onContextMenu={(e) => {
     mouseRightClick(e)
   }}>
-    <div>图片</div>
+    {
+      isFolder ? <CoffeeOutlined /> : <div>图片</div>
+    }
     <div className='title' onDoubleClick={(e) => dClick(e)}>
       {
-        showInput
+        showRenameInput
         ?
         <Input
           value={inputValue}
@@ -93,8 +121,9 @@ const EveryTreeNode = ({ bar, ...restPorps}) => {
           ref={inputRef}
           onChange={(e) => oInputContent(e)}
           onPressEnter={(e) => oPressEnter(e)}
-          onFocus={() => oFocus()}
-          onBlur={() => oBlur()}
+          onClickCapture={(e) => oFocus(e)}
+          onFocus={(e) => oFocus(e)}
+          onBlur={(e) => oBlur(e)}
         />
         : <span>{ text }</span>
       }
@@ -109,6 +138,9 @@ const EveryTreeNode = ({ bar, ...restPorps}) => {
     <div className='lock-icon'>
       {
         lock && <LockOutlined />
+      }
+      {
+        singleShowLayer && <EyeInvisibleOutlined />
       }
     </div>
   </div>

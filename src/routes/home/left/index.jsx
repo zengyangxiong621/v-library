@@ -49,6 +49,7 @@ useEffect(() => {
       }
     }
 }, [])
+// 监听 树区域 以外的点击
 useEffect(() => {
     document.addEventListener('click', (e) => {
       e.stopPropagation()
@@ -58,8 +59,10 @@ useEffect(() => {
       // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
       const tree = document.querySelector('.ant-tree')
       // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
+      console.log('e.target', e.target.className);
       if (className && typeof className === 'string') {
         const res = tree.querySelector(`.${ e.target.className }`)
+        console.log('res', res);
         if (!res) {
           setSelected([])
           dispatch({
@@ -68,6 +71,13 @@ useEffect(() => {
               key: [],
               isFolder: false,
             },
+          })
+          // 取消选中节点的输入框
+          dispatch({
+            type: 'bar/reName',
+            payload: {
+              value: false,
+            }
           })
           // 取消右键菜单
           setIsShowRightMenu(false)
@@ -152,6 +162,11 @@ useEffect(() => {
         key: t,
         isFolder,
       },
+    })
+    // 确认分组时点击的是哪个节点
+    dispatch({
+      type: `bar/saveLastRightClickKey`,
+      payload: key
     })
   }
   // 展开 / 收起 全部节点
@@ -336,18 +351,29 @@ const menuOptions = [
     key: 'singleShowLayer',
     name:'单独显示图层',
     icon: 'QqOutlined',
-    disabled: false,
-  },
-  {
-    key: 'singleShowLayer',
-    name: '取消单独显示',
-    icon: 'WifiOutlined',
+    anotherName: '取消单独显示',
+    anotherIcon: 'WifiOutlined',
     disabled: false,
   },
   {
     name:'删除',
     key: 'delete',
     icon: 'PicCenterOutlined',
+    disabled: false,
+  },
+  {
+    name:'重命名',
+    key: 'reName',
+    icon: 'PicCenterOutlined',
+    disabled: false,
+  },
+  {
+    key: 'hidden',
+    name:'隐藏',
+    icon: 'PicCenterOutlined',
+    anotherName: '取消单独显示',
+    anotherIcon: 'WifiOutlined',
+    disabled: false,
   },
   // {
   //   name:'展开/收起',
