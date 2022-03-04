@@ -1,0 +1,34 @@
+.SecondMenu-wrap {
+  display: none;
+  position: absolute;
+  top: -3px;
+  width: 130px;
+  left: 90px;
+  border: 1px solid #000;
+  background-color: #232630;
+}
+.SecondMenu-wrap:hover {
+  display: block;
+}
+
+.second-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 26px;
+  color: #fff;
+  padding-left: 16px;
+  font-weight: 200;
+}
+
+
+.second-menu-item:hover {
+  cursor: pointer;
+  background-color: #3a89fe;
+}
+
+.second-menu-item-li {
+  position: relative;
+  list-style: none;
+  margin-left: 8px;
+}

@@ -5,8 +5,8 @@ import { title } from "process";
  */
 type getMoveGroupType<T, U> = (a: T, b: U) => T;
 type TPlaceGroup = getMoveGroupType<any[], string[]>;
-type TMoveUpOrDown = getMoveGroupType<any[], string>;
 const placeTop: TPlaceGroup = (treeData, selectedNodes) => {
+  console.log("abc", selectedNodes);
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
@@ -59,15 +59,14 @@ const placeBottom: TPlaceGroup = (treeData, selectedNodes) => {
 /**
  * description: 上移
  */
+type TMoveUpOrDown = getMoveGroupType<any[], string[]>;
 const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        if (i !== 0) {
           data[i] = data.splice(i - 1, 1, data[i])[0];
-        }
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -275,14 +274,13 @@ const showInput: (a: any[], b: string[], c: boolean) => any[] = (
 ) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
-    console.log('iddd', id)
+    console.log("iddd", id);
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       // 点击其它地方，会清空已选择的nodeList[]
-      if(!id) {
-        item.showRenameInput = false
-      }
-      else if (item.id === id) {
+      if (!id) {
+        item.showRenameInput = false;
+      } else if (item.id === id) {
         item.showRenameInput = onOrOff;
         break;
       } else if (item.children) {

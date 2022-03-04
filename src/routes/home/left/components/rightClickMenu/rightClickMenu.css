@@ -1,7 +1,6 @@
 .RightClickMenu-wrap {
   /* position: absolute; */
   width: 130px;
-  padding: 8px 0;
   border: 1px solid #000;
   background-color: #232630;
   z-index: 99999;
@@ -10,7 +9,7 @@
 .menu-item {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   height: 26px;
   color: #fff;
   padding-left: 16px;
@@ -28,6 +27,16 @@
 }
 
 .menu-item-li {
+  position: relative;
   list-style: none;
+  flex: 1;
   margin-left: 8px;
+}
+/* hover显示二级菜单 */
+.li-hover:hover .SecondMenu-wrap {
+  display: block;
+}
+
+.right-icon {
+  margin-right: 10px;
 }

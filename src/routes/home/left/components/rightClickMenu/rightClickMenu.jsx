@@ -4,6 +4,7 @@ import './rightClickMenu.css'
 import {
   getFieldStates,
 } from "../../../../../utils/sideBar";
+import SecondMenu from './secondMenu'
 
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
@@ -81,17 +82,33 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
   <div className='RightClickMenu-wrap' ref={menuRef}>
       {
         menuOptions.map((item, index) => {
+          const { hasLevel } = item
           return (
             <div
             key={index}
-            className={`menu-item ${item.disabled ? 'disabled-menu-item' : ''}`}
+            className={
+            `menu-item
+            ${item.disabled && 'disabled-menu-item'}
+            ${hasLevel && 'li-hover'}`
+            }
             onClick={(e) => menuItemClick(e, item.key)}
             >
               { ((isLock || isSingleShow) && item.anotherIcon) ? React.createElement(Icons[item.anotherIcon]) : React.createElement(Icons[item.icon]) }
-              <li className='menu-item-li'>
+              <li className={`menu-item-li`}>
                 {
                   ((isLock || isSingleShow) && item.anotherName) ? item.anotherName : item.name
-                }</li>
+                }
+                {
+                  hasLevel && <SecondMenu data={item.children} />
+                }
+              </li>
+              {/* 右三角图标 */}
+              {
+                hasLevel && <span className='right-icon'>
+                {
+                  React.createElement(Icons.CaretRightOutlined)
+                }</span>
+              }
             </div>
           )
         })

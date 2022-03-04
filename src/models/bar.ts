@@ -481,23 +481,23 @@ export default {
     },
     // 置顶
     placedTop(state: IBarState, { payload }: any) {
-      const newTreeData = placeTop(state.treeData, payload.key);
+      const newTreeData = placeTop(state.treeData, state.key);
       console.log("newTree", newTreeData);
       return { ...state, treeData: newTreeData };
     },
     // 置底
     placeBottom(state: IBarState, { payload }: any) {
-      const newTreeData = placeBottom(state.treeData, payload.key);
+      const newTreeData = placeBottom(state.treeData, state.key);
       return { ...state, treeData: newTreeData };
     },
     // 上移
     moveUp(state: IBarState, { payload }: any) {
-      const newTree = moveUp(state.treeData, payload.key);
+      const newTree = moveUp(state.treeData, state.key);
       return { ...state, treeData: newTree };
     },
     // 下移
     moveDown(state: IBarState, { payload }: any) {
-      const newTree = moveDown(state.treeData, payload.key);
+      const newTree = moveDown(state.treeData, state.key);
       return { ...state, treeData: newTree };
     },
     // 成组
@@ -550,6 +550,7 @@ export default {
     },
     // 真正改变名字的地方
     changeName(state: IBarState, { payload }: any) {
+      console.log('pay', payload)
       const newTree = reName(state.treeData, state.key, payload.newName);
       return { ...state, treeData: newTree };
     },

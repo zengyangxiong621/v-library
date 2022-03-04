@@ -298,12 +298,54 @@ useEffect(() => {
 
 const menuOptions = [
   {
+    name: '图层排序',
+    key: '',
+    icon: 'BranchesOutlined',
+    disabled: false,
+    hasLevel: true,
+    children: [
+      {
+        name: '置顶1',
+        key: 'placedTop',
+        icon: 'WifiOutlined',
+        disabled: false,
+      },
+      {
+        name: '置底1',
+        key: 'placeBottom',
+        icon: 'WifiOutlined',
+        disabled: false,
+      },
+    ]
+  },
+  {
     name: '锁定',
     key: 'lock',
     icon: 'BranchesOutlined',
     anotherName: '解锁',
     anotherIcon: 'WifiOutlined',
     disabled: false,
+  },
+  {
+    name: '图层排序',
+    key: '',
+    icon: 'BranchesOutlined',
+    disabled: false,
+    hasLevel: true,
+    children: [
+      {
+        name: '上移',
+        key: 'moveUp',
+        icon: 'WifiOutlined',
+        disabled: false,
+      },
+      {
+        name: '下移',
+        key: 'moveDown',
+        icon: 'WifiOutlined',
+        disabled: false,
+      },
+    ]
   },
   {
     name: '置顶',
