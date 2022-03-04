@@ -66,7 +66,7 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-          data[i] = data.splice(i - 1, 1, data[i])[0];
+        data[i] = data.splice(i - 1, 1, data[i])[0];
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -148,7 +148,7 @@ const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
   return res;
 };
 /**
- * description: 锁定
+ * description: 锁定 / 解锁
  */
 const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
@@ -157,6 +157,28 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
       const item = data[i];
       if (item.id === id) {
         item.lock = targetLockState;
+        break;
+      } else if (item.children) {
+        recursiveFn(item.children, id);
+      }
+    }
+  };
+  for (let i = 0, len = selectedNodes.length; i < len; i++) {
+    recursiveFn(treeDataCopy, selectedNodes[i]);
+  }
+  return treeDataCopy;
+};
+
+/**
+ * description: 隐藏 / 显示
+ */
+const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
+  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const recursiveFn = (data: any, id: string) => {
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === id) {
+        item.scan = targetShowState;
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -364,6 +386,7 @@ export {
   moveDown,
   remove,
   lock,
+  hidden,
   getFieldStates,
   singleShowLayer,
   group,

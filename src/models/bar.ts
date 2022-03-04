@@ -19,7 +19,8 @@ import {
   group,
   cancelGroup,
   reName,
-  showInput
+  showInput,
+  hidden,
 } from "../utils/sideBar";
 interface IBarState {
   key: string[];
@@ -517,7 +518,7 @@ export default {
     },
     // 锁定
     lock(state: IBarState, { payload }: any) {
-      const newTree = lock(state.treeData, payload.key, payload.locked);
+      const newTree = lock(state.treeData, payload.key, payload.value);
       return { ...state, treeData: newTree };
     },
     // 删除
@@ -541,7 +542,9 @@ export default {
     },
     // 隐藏
     hidden(state: IBarState, { payload }: any) {
-      return { ...state };
+      // 此处只能用payload.key,因为eyes图标在没有任何节点被选中时也要能响应点击
+      const newTree = hidden(state.treeData, payload.key, payload.value)
+      return { ...state, treeData: newTree };
     },
     // 改变重命名输入框的显示状态
     reName(state: IBarState, { payload }: any) {

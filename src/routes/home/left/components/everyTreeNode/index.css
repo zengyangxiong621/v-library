@@ -8,9 +8,6 @@
 .title {
   flex: 1;
 }
-.icon-wrap {
-  min-width: 20px;
-}
 .eyes-icon {
   display: none;
 }
@@ -18,13 +15,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
   height: 100%;
 }
 
 /* 锁的图标 */
-.lock-icon {
+.icons-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-right: 8px;
+}
+.each-icon {
+  margin: 0 2px;
 }
 
 /* 自定义Input的背景色 */

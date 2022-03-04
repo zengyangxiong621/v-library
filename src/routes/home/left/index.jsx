@@ -327,7 +327,7 @@ const menuOptions = [
     disabled: false,
   },
   {
-    name: '图层排序',
+    name: '移动',
     key: '',
     icon: 'BranchesOutlined',
     disabled: false,
@@ -413,8 +413,8 @@ const menuOptions = [
     key: 'hidden',
     name:'隐藏',
     icon: 'PicCenterOutlined',
-    anotherName: '取消单独显示',
-    anotherIcon: 'WifiOutlined',
+    anotherName: '显示',
+    anotherIcon: 'NotificationOutlined',
     disabled: false,
   },
   // {
@@ -452,7 +452,6 @@ const topBarIcons = [
     icon: PicCenterOutlined,
   },
 ]
-
 const bottomBarIcons = [
   {
     key: 'singleShowLayer',

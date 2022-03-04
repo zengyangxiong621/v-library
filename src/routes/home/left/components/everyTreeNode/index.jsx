@@ -6,7 +6,7 @@ import { Input } from 'antd'
 import {
   EyeOutlined , EyeInvisibleOutlined,
   LockOutlined, UnlockOutlined,
-  HeatMapOutlined, CoffeeOutlined
+  HeatMapOutlined, CoffeeOutlined, ChromeOutlined
 } from '@ant-design/icons'
 
 
@@ -18,16 +18,23 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
       payload
     })
   }
-  const { text, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput } = restPorps
+  const { text, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan } = restPorps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(!!children)
-  const [eyeIconShow, setEyeIconShow] =useState(true)
+  // const [eyeIconShow, setEyeIconShow] =useState(true)
   // TODO delete
   const [ inputValue, setInputValue ] = useState(text)
   // 点击小眼睛图标切换状态
   const changeEyeIconState = (e) => {
     e.stopPropagation()
-    setEyeIconShow(!eyeIconShow)
+    console.log('scan',text);
+    dispatch({
+      type: 'bar/hidden',
+      payload: {
+        key: [text],
+        value: !scan
+      }
+    })
   }
 
   // 点击鼠标右键事件
@@ -128,20 +135,22 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
         : <span>{ text }</span>
       }
     </div>
-    <div className='icon-wrap'>
-      <div className='eyes-icon' onClick={(e) => changeEyeIconState(e)}>
-        {
-          eyeIconShow ? <EyeOutlined /> : <EyeInvisibleOutlined />
-        }
-      </div>
-    </div>
-    <div className='lock-icon'>
+    <div className='icons-wrap'>
+      <span className='each-icon'>
       {
         lock && <LockOutlined />
       }
+      </span>
+      <div className={`${ scan && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
+        {
+          scan ? <EyeOutlined /> : <EyeInvisibleOutlined />
+        }
+      </div>
+      <span className='each-icon'>
       {
-        singleShowLayer && <EyeInvisibleOutlined />
+        singleShowLayer && <ChromeOutlined />
       }
+      </span>
     </div>
   </div>
   )

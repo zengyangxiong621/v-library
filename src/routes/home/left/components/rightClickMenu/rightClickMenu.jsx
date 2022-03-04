@@ -12,17 +12,25 @@ import * as Icons from '@ant-design/icons'
 const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu}) => {
   const [isLock, setIsLock] = useState(false)
   const [isSingleShow, setIsSingleShow] = useState(false)
+  const [isShowOrHidden, setIsShowOrHidden] = useState(true)
   // 每次渲染右侧菜单，都需要确定此次是锁定还是解锁
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
     const lockInfo = getFieldStates(bar.treeData, bar.key, 'lock')
     const finalLockState = lockInfo.some(item => item===false)
     setIsLock(!finalLockState)
+
     // 判断所选中的各个节点是否是单独显示状态
     const singleShowLayerInfo = getFieldStates(bar.treeData, bar.key, 'singleShowLayer')
     const singleShowLayerState = singleShowLayerInfo.some(item => item === false)
     setIsSingleShow(!singleShowLayerState)
-    console.log('singleShowLayerInfo', singleShowLayerInfo);
+
+    // 判断所选中的各个节点是否是显示状态
+    // 只要有一个隐藏了就显示
+    const showOrHiddenInfo = getFieldStates(bar.treeData,bar.key,'scan')
+    const showOrHiddenState = showOrHiddenInfo.some(item => item === false)
+    setIsShowOrHidden(!showOrHiddenState)
+    console.log('scanOrHiddenInfo', showOrHiddenInfo);
   }, [bar.treeData, bar.key])
 
   // 后端返回的数据里应该有 show、lock 属性
@@ -36,7 +44,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
     }
     switch (operateName) {
       case 'lock':
-        customPayload.locked = !isLock
+        customPayload.value = !isLock
         break;
       case 'singleShowLayer':
         customPayload.singleShowLayer = !isSingleShow
@@ -44,6 +52,10 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
       case 'reName':
         customPayload.newName = 'abc'
         customPayload.value = true
+        break;
+      case 'hidden':
+        customPayload.value = !isShowOrHidden
+        customPayload.key = bar.key
         break;
       default:
         break;
@@ -93,10 +105,21 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
             }
             onClick={(e) => menuItemClick(e, item.key)}
             >
-              { ((isLock || isSingleShow) && item.anotherIcon) ? React.createElement(Icons[item.anotherIcon]) : React.createElement(Icons[item.icon]) }
+              {
+                // TODO 目前是三种双重状态，如果后续双重状态的选项太多,再封装一个组件
+                (item.key==='lock' && isLock) ||
+                (item.key==='singleShowLayer' && isSingleShow) ||
+                (item.key==='hidden' && !isShowOrHidden)
+                ? React.createElement(Icons[item.anotherIcon])
+                : React.createElement(Icons[item.icon])
+              }
               <li className={`menu-item-li`}>
                 {
-                  ((isLock || isSingleShow) && item.anotherName) ? item.anotherName : item.name
+                  (item.key==='lock' && isLock) ||
+                  (item.key==='singleShowLayer' && isSingleShow) ||
+                  (item.key==='hidden' && !isShowOrHidden)
+                  ? item.anotherName
+                  : item.name
                 }
                 {
                   hasLevel && <SecondMenu data={item.children} />
