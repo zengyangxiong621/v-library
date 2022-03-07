@@ -33,6 +33,10 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
                 {
                   item.name
                 }
+                {/* //TODO 递归组件样式需要隔离开
+                {
+                  item.children && <SecondMenu data={item.children}></SecondMenu>
+                } */}
               </div>
             </div>
         )

@@ -5,156 +5,167 @@ import { connect } from 'dva'
 import { Input } from 'antd'
 import {
   EyeOutlined , EyeInvisibleOutlined,
-  LockOutlined, UnlockOutlined,
-  HeatMapOutlined, CoffeeOutlined, ChromeOutlined
+  LockOutlined, CoffeeOutlined, ChromeOutlined
 } from '@ant-design/icons'
 
+class EveryTreeNode extends React.Component {
+  constructor(props) {
+    super(props)
+    // const {
+    //   // dispatch, bar,
+    //   // text, children,
+    //   //  getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan
+    //    } = props
+    this.state = {
+      isFolder: !!this.props.children,
+      inputValue: this.props.text,
+    }
+    this.inputRef = React.createRef()
+  }
 
-
-const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
-  const sendDispatch = (modelName, payload,type = 'bar',) => {
-    dispatch({
+  componentDidMount() {
+    console.log('abc', this.inputRef);
+  }
+  sendDispatch(modelName, payload,type = 'bar') {
+    this.props.dispatch({
       type: `${type}/${modelName}`,
       payload
     })
   }
-  const { text, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan } = restPorps
-  // 需要区分是单个图层还是文件夹
-  const [isFolder] = useState(!!children)
-  // const [eyeIconShow, setEyeIconShow] =useState(true)
-  // TODO delete
-  const [ inputValue, setInputValue ] = useState(text)
   // 点击小眼睛图标切换状态
-  const changeEyeIconState = (e) => {
+  changeEyeIconState(e) {
     e.stopPropagation()
-    console.log('scan',text);
-    dispatch({
+    this.props.dispatch({
       type: 'bar/hidden',
       payload: {
-        key: [text],
-        value: !scan
+        key: [this.state.text],
+        value: !this.props.scan
       }
     })
   }
 
   // 点击鼠标右键事件
-  const mouseRightClick = (e) => {
+  mouseRightClick(e) {
     e.persist()
     e.preventDefault()
-    getCurrentMenuLocation({
+    this.props.getCurrentMenuLocation({
       x: e.clientX,
       y: e.clientY,
-      id: text,
-      isFolder,
+      id: this.state.text,
+      isFolder: this.state.isFolder,
     })
     // console.log('右键', e);
   }
-  const inputRef = useRef()
   // 鼠标双击事件
-  const dClick = (e) => {
+  dClick(e){
     e.stopPropagation()
-    sendDispatch('reName', {value: true})
-    inputRef.current.focus({
+    this.sendDispatch('reName', {value: true})
+    this.inputRef.current.onFocus({
       cursor: 'all',
     })
   }
   // 修改图层或者分组名字
-  const commonChangeContent = () => {
+  commonChangeContent() {
     // TODO 校验
     // 比如名字一样,不发请求
-    console.log('text', text);
-    if(inputValue === text) {
+    console.log('text', this.text);
+    if(this.state.inputValue === this.text) {
       console.log('相等的啊');
       return
     } else {
       console.log('不相等，可以更改');
     }
     // 先对前端的树进行一次修改
-    sendDispatch('changeName', {
-      key: bar.key,
-      newName: inputValue,
+    this.sendDispatch('changeName', {
+      key: this.props.bar.key,
+      newName: this.state.inputValue,
     })
     // 应该是发送请求改名，这里先暂时这样写
   }
   // input失焦
-  const oBlur = (e) => {
+  oBlur = (e) => {
     e.stopPropagation()
-    dispatch({
+    this.props.dispatch({
       type: 'bar/reName',
       payload: {
         value: false,
       }
     })
-    commonChangeContent()
+    this.commonChangeContent()
   }
-  const oFocus = (e) => {
+  oFocus = (e) => {
     e.stopPropagation()
+    console.log('input', this.inputRef);
     console.log('聚焦');
   }
   // 输入内容改变
-  const oInputContent = (e) => {
+  oInputContent = (e) => {
     e.stopPropagation()
-    setInputValue(e.target.value)
+    this.setState({
+      inputValue: e.target.value
+    })
   }
   // 回车亦可改分组名
-  const oPressEnter = (e) => {
+  oPressEnter = (e) => {
     e.stopPropagation()
-    setInputValue(e.target.value)
-    inputRef.current.blur()
-    dispatch({
+    this.setState({
+      inputValue: e.target.value
+    })
+    this.props.dispatch({
       type: 'bar/reName',
       payload: {
         value: false,
       }
     })
   }
-
-
-
-  return (
-    <div className='EveryTreeNode-wrap' onContextMenu={(e) => {
-    mouseRightClick(e)
-  }}>
-    {
-      isFolder ? <CoffeeOutlined /> : <div>图片</div>
-    }
-    <div className='title' onDoubleClick={(e) => dClick(e)}>
+  render() {
+    return (
+      <div className='EveryTreeNode-wrap' onContextMenu={(e) => {
+      this.mouseRightClick(e)
+    }}>
       {
-        showRenameInput
-        ?
-        <Input
-          value={inputValue}
-          size='small'
-          ref={inputRef}
-          onChange={(e) => oInputContent(e)}
-          onPressEnter={(e) => oPressEnter(e)}
-          onClickCapture={(e) => oFocus(e)}
-          onFocus={(e) => oFocus(e)}
-          onBlur={(e) => oBlur(e)}
-        />
-        : <span>{ text }</span>
+        this.state.isFolder ? <CoffeeOutlined /> : <div>图片</div>
       }
-    </div>
-    <div className='icons-wrap'>
-      <span className='each-icon'>
-      {
-        lock && <LockOutlined />
-      }
-      </span>
-      <div className={`${ scan && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
-        {
-          scan ? <EyeOutlined /> : <EyeInvisibleOutlined />
-        }
+      <div className='title' onDoubleClick={(e) => this.dClick(e)}>
+          <Input
+            value={this.state.inputValue}
+            size='small'
+            style={{
+              display: this.props.showRenameInput ? 'block' : 'none'
+            }}
+            ref={this.inputRef}
+            onChange={(e) => this.oInputContent(e)}
+            onPressEnter={(e) => this.oPressEnter(e)}
+            onClickCapture={(e) => this.oFocus(e)}
+            onFocus={(e) => this.oFocus(e)}
+            onBlur={(e) => this.oBlur(e)}
+          />
+          <span style={{
+              display: this.props.showRenameInput ? 'none' : 'block'
+            }}>{ this.props.text }</span>
       </div>
-      <span className='each-icon'>
-      {
-        singleShowLayer && <ChromeOutlined />
-      }
-      </span>
+      <div className='icons-wrap'>
+        <span className='each-icon'>
+        {
+          this.props.lock && <LockOutlined />
+        }
+        </span>
+        <div className={`${ this.props.scan && 'eyes-icon'} each-icon`} onClick={(e) => this.changeEyeIconState(e)}>
+          {
+            this.scan ? <EyeOutlined /> : <EyeInvisibleOutlined />
+          }
+        </div>
+        <span className='each-icon'>
+        {
+          this.props.singleShowLayer && <ChromeOutlined />
+        }
+        </span>
+      </div>
     </div>
-  </div>
-  )
+    )
+  }
 }
+
 
 export default memo(
   connect(

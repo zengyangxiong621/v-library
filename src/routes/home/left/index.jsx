@@ -13,7 +13,7 @@ import {
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
 
-import EveryTreeNode from './components/everyTreeNode'
+import EveryTreeNode from './components/everyTreeNode/index1'
 import ToolBar from './components/toolBar'
 import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 
@@ -59,10 +59,8 @@ useEffect(() => {
       // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
       const tree = document.querySelector('.ant-tree')
       // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
-      console.log('e.target', e.target.className);
       if (className && typeof className === 'string') {
         const res = tree.querySelector(`.${ e.target.className }`)
-        console.log('res', res);
         if (!res) {
           setSelected([])
           dispatch({
@@ -90,17 +88,9 @@ useEffect(() => {
       document.removeEventListener('click', (e) => ({}))
     }
 }, []);
-// 将树的数据放入redux中
-// useEffect(() => {
-//   dispatch({
-//     type: 'bar/initTreeData',
-//     payload: gData
-//   })
-// }, [gData])
   // 获取点击的icon
   const getActiveIcon = (icon) => {
     activeIconRef.current = icon
-    console.log('iiiii;,', icon);
     dispatch({
       type: `bar/${icon}`,
       payload: {}
@@ -171,9 +161,6 @@ useEffect(() => {
   }
   // 展开 / 收起 全部节点
   const onExpand = (expandedKeys, { expanded, node }) => {
-    // console.log('expandedKeys', expandedKeys)
-    // console.log('expanded', expanded)
-    // console.log('node', node)
   }
   //
   const onDrop = info => {
@@ -184,7 +171,7 @@ useEffect(() => {
 
     const loop = (data, key, callback) => {
       for (let i = 0; i < data.length; i++) {
-        if (data[i].key === key) {
+        if (data[i].id === key) {
           return callback(data[i], i, data)
         }
         if (data[i].children) {
@@ -192,7 +179,7 @@ useEffect(() => {
         }
       }
     }
-    const data = bar.treeData
+    const data = [...bar.treeData]
 
     // Find dragObject
     let dragObj
@@ -238,7 +225,6 @@ useEffect(() => {
       payload: data
     })
   }
-
   // 过去子组件传过来的X，Y值
   const [isShowRightMenu, setIsShowRightMenu] = useState(false)
   const [menuInfo, setMenuInfo] = useState({ x: 0, y: 0, id: null, isFolder: false })

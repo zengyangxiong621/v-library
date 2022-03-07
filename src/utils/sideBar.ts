@@ -6,7 +6,6 @@ import { title } from "process";
 type getMoveGroupType<T, U> = (a: T, b: U) => T;
 type TPlaceGroup = getMoveGroupType<any[], string[]>;
 const placeTop: TPlaceGroup = (treeData, selectedNodes) => {
-  console.log("abc", selectedNodes);
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
@@ -26,7 +25,6 @@ const placeTop: TPlaceGroup = (treeData, selectedNodes) => {
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
     recursiveFn(treeDataCopy, selectedNodes[i]);
   }
-  // console.log('最终结果', parentNode)
   return treeDataCopy;
 };
 
@@ -296,7 +294,6 @@ const showInput: (a: any[], b: string[], c: boolean) => any[] = (
 ) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
-    console.log("iddd", id);
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       // 点击其它地方，会清空已选择的nodeList[]

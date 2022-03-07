@@ -483,7 +483,6 @@ export default {
     // 置顶
     placedTop(state: IBarState, { payload }: any) {
       const newTreeData = placeTop(state.treeData, state.key);
-      console.log("newTree", newTreeData);
       return { ...state, treeData: newTreeData };
     },
     // 置底
@@ -512,10 +511,9 @@ export default {
       return { ...state, treeData: newTree };
     },
     // TODO 粘贴
-    paste(state: IBarState, { payload }: any) {
-      console.log("粘贴");
-      return { ...state };
-    },
+    // paste(state: IBarState, { payload }: any) {
+    //   return { ...state };
+    // },
     // 锁定
     lock(state: IBarState, { payload }: any) {
       const newTree = lock(state.treeData, payload.key, payload.value);
@@ -523,7 +521,6 @@ export default {
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      console.log("删除", payload);
       const newTree = remove(state.treeData, payload.key);
       return { ...state, treeData: newTree };
     },
@@ -543,17 +540,16 @@ export default {
     // 隐藏
     hidden(state: IBarState, { payload }: any) {
       // 此处只能用payload.key,因为eyes图标在没有任何节点被选中时也要能响应点击
-      const newTree = hidden(state.treeData, payload.key, payload.value)
+      const newTree = hidden(state.treeData, payload.key, payload.value);
       return { ...state, treeData: newTree };
     },
     // 改变重命名输入框的显示状态
     reName(state: IBarState, { payload }: any) {
-      const newTree = showInput(state.treeData,state.key,payload.value )
+      const newTree = showInput(state.treeData, state.key, payload.value);
       return { ...state, treeData: newTree };
     },
     // 真正改变名字的地方
     changeName(state: IBarState, { payload }: any) {
-      console.log('pay', payload)
       const newTree = reName(state.treeData, state.key, payload.newName);
       return { ...state, treeData: newTree };
     },
