@@ -30,3 +30,45 @@
 .zoom-set .ant-radio-wrapper > span:nth-child(2){
   color: #fff;
 }
+
+/* 背景开始 */
+.color-swatch{
+  padding: 5px;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+  display: inline-block;
+  cursor: pointer;
+  vertical-align: top;
+  border: 1px solid #d9d9d9;
+  margin-right: 5px;
+}
+.color-dis{
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+}
+.color-popover{
+  position:absolute;
+  z-index: 2;
+  left: -40px;
+}
+
+.color-cover{
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+.size-input.ant-input-affix-wrapper{
+  width: 55px;
+  margin-left: 5px;
+  padding:2px 0;
+  background-color: #232630;
+}
+.size-input.ant-input-affix-wrapper .ant-input-suffix{
+  color: #fff;
+}
+
+/* 背景结束 */
+
