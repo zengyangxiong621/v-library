@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'dva'
+import React, {memo, useState, useEffect } from 'react';
 import './index.css'
 
 import {
@@ -17,7 +16,7 @@ import { SketchPicker } from 'react-color'
 
 
 
-const PageSetting = ({ dispatch, page }) => {
+const PageSetting = props => {
   const { Option } = Select;
   const formItemLayout = {
     labelCol: {
@@ -279,7 +278,5 @@ const PageSetting = ({ dispatch, page }) => {
   )
 }
 
-export default connect(({ page }) => ({
-  page,
-}))(PageSetting)
+export default memo(PageSetting)
 
