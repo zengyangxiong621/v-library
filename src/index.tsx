@@ -4,6 +4,7 @@ import './index.css';
 import "antd/dist/antd.css";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import './assets/fonts/iconfont.css'
 
 import dva from 'dva';
 import { createBrowserHistory } from 'history'
