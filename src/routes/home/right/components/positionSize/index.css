@@ -1,0 +1,14 @@
+.po-size-input{
+  width: 80px;
+}
+
+.po-size-input.ant-input-affix-wrapper{
+  width: 80px;
+  margin-left: 5px;
+  padding:2px 0;
+  background-color: #232630;
+}
+.po-size-input.ant-input-affix-wrapper .ant-input-suffix{
+  color: #fff;
+  padding-right: 4px;
+}
