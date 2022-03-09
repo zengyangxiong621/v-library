@@ -6,6 +6,7 @@
   "description": "",
   "glyphs": [
     {
+<<<<<<< HEAD
       "icon_id": "11976281",
       "name": "两端对齐",
       "font_class": "liangduanduiqi",
@@ -27,6 +28,8 @@
       "unicode_decimal": 58989
     },
     {
+=======
+>>>>>>> 258fc36 (feat: 对齐设置)
       "icon_id": "27938693",
       "name": "垂直居中",
       "font_class": "vertical",
