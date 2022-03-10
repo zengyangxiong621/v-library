@@ -209,11 +209,19 @@ const PageSetting = props => {
               <SketchPicker color={color.rgb} onChange={(e) => { handleBgcChange(e) }} />
             </div> : null}
             <Form.Item noStyle name="hex">
-              <Input defaultValue={color.hex} className="size-input" onBlur={(e) => { handleHexChange(e) }} />
+              <Input defaultValue={color.hex} className="input-hex" onBlur={(e) => { handleHexChange(e) }} />
             </Form.Item>
             <Form.Item noStyle name="opacity">
-              <Input defaultValue={color.opacity} className="size-input" suffix="%" onChange={(e) => { handleOpacityChange(e) }} />
+              <InputNumber defaultValue={color.opacity} className="size-input input-opacity" onChange={(e) => { handleOpacityChange(e) }} min={0}
+                max={100}
+                formatter={value => `${value}%`}
+                parser={value => value.replace('%', '')} />
             </Form.Item>
+            <Row>
+              <Col span={4} className="detail-txt">颜色</Col>
+              <Col span={11} className="detail-txt" style={{ textIndent: '4px' }}>Hex</Col>
+              <Col span={8} className="detail-txt" style={{ textIndent: '6px' }}>不透明度</Col>
+            </Row>
           </Form.Item>
           <Form.Item label="启用背景图">
             <Checkbox style={{ float: 'left' }} checked={openBgImg} onChange={onOpenBgImgChange}></Checkbox>

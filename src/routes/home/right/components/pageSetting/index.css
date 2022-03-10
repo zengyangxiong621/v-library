@@ -94,6 +94,23 @@
   line-height:17px;
   margin-top: 4px;
 }
+.sketch-picker{
+  background: #181b24 !important;
+  border: 1px solid #393b4a !important;
+  box-shadow: 0 6px 6px 0 rgb(0 0 0 / 30%) !important;
+}
+.input-hex{
+  padding:4px 11px;
+  width: 95px;
+  height: 32px;
+  background: #191B25;
+  border: 1px solid rgba(57,59,74,1);
+  border-radius: 3px;
+  margin-right: 8px;
+}
+.input-opacity{
+  width: 78px;
+}
 
 .zoom-set .ant-radio-wrapper > span:nth-child(2){
   color: #fff;
@@ -108,7 +125,7 @@
   background: #191B25;
   border: 1px solid rgba(57,59,74,1);
   border-radius: 3px;
-  margin-right: 5px;
+  margin-right: 8px;
 }
 .color-dis{
   width: 24px;
