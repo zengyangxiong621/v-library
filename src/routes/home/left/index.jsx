@@ -1,3 +1,4 @@
+
 /* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
@@ -5,31 +6,57 @@
 import React, { useState, useEffect, useMemo, useReducer, useRef, useCallback } from 'react'
 import './index.css'
 import { connect } from 'dva'
-// import Bus from '../../utils/events.js'
-
-import { Tree } from 'antd'
+/** 组件库相关 **/
+import { Tree, Menu, Dropdown } from 'antd'
 import {
   RightOutlined, SmileOutlined, DownOutlined,
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
 
+/** 自定义组件 **/
 import EveryTreeNode from './components/everyTreeNode/index1'
 import ToolBar from './components/toolBar'
 import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 
+/** 数据 || 方法 */
+import { menuOptions } from './Data/menuOptions'
+import { getTargetMenu } from '../left/components/rightClickMenu/getMenuNode'
 
-const Left = ({dispatch, bar, operate}) => {
+
+const Left = ({ dispatch, bar, operate }) => {
+  //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
+  const finalMenu = getTargetMenu(menuOptions)
+
   const [customExpandKeys, setCustomExpandKeys] = useState([])
   const [isMultipleTree, setIsMultipleTree] = useState(false)
   const [selected, setSelected] = useState([])
   const activeIconRef = useRef()
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
-// 其它组件更改了选中的节点时触发
-useEffect(() => {
-      setSelected(bar.key)
-}, [ bar.key ])
-// 监听键盘Ctrl键按下与松开
-useEffect(() => {
+  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
+
+  // 1、其它组件更改了选中的节点时触发
+  // 2、多选时不能重命名
+  // 3、判断选择的节点是否是文件夹
+  useEffect(() => {
+    //1
+    setSelected(bar.key)
+    // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
+    if (bar.key.length > 1) {
+      const newArr = customMenuOptions.map((item) => {
+        if (item.key === 'reName') {
+          return {
+            ...item,
+            disabled: true
+          }
+        }
+        return item
+      })
+      setCustomMenuOptions(newArr)
+    }
+
+  }, [bar.key])
+  // 监听键盘Ctrl键按下与松开
+  useEffect(() => {
     onkeydown = (e) => {
       if (e.key === 'Control') {
         setIsMultipleTree(true)
@@ -48,9 +75,9 @@ useEffect(() => {
       onkeyup = () => {
       }
     }
-}, [])
-// 监听 树区域 以外的点击
-useEffect(() => {
+  }, [])
+  // 监听 树区域 以外的点击
+  useEffect(() => {
     document.addEventListener('click', (e) => {
       e.stopPropagation()
       const {
@@ -60,7 +87,7 @@ useEffect(() => {
       const tree = document.querySelector('.ant-tree')
       // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
       if (className && typeof className === 'string') {
-        const res = tree.querySelector(`.${ e.target.className }`)
+        const res = tree.querySelector(`.${e.target.className}`)
         if (!res) {
           setSelected([])
           dispatch({
@@ -87,7 +114,14 @@ useEffect(() => {
     return () => {
       document.removeEventListener('click', (e) => ({}))
     }
-}, []);
+  }, []);
+
+  /**
+   *
+   * 方法
+   *
+   * */
+
   // 获取点击的icon
   const getActiveIcon = (icon) => {
     activeIconRef.current = icon
@@ -169,6 +203,8 @@ useEffect(() => {
     const dropPos = info.node.pos.split('-')
     const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1])
 
+    console.log('in', info);
+
     const loop = (data, key, callback) => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].id === key) {
@@ -225,7 +261,8 @@ useEffect(() => {
       payload: data
     })
   }
-  // 过去子组件传过来的X，Y值
+
+  // 获取子组件传过来的X，Y值
   const [isShowRightMenu, setIsShowRightMenu] = useState(false)
   const [menuInfo, setMenuInfo] = useState({ x: 0, y: 0, id: null, isFolder: false })
   const getCurrentMenuLocation = useCallback((menuInfo) => {
@@ -241,212 +278,89 @@ useEffect(() => {
   const hideMenu = () => {
     setIsShowRightMenu(false)
   }
+
   return (
     <div className="left-wrap">
       <header className="header">图层</header>
-      <ToolBar data={ topBarIcons } getActiveIcon={ getActiveIcon }>
+      <ToolBar data={topBarIcons} getActiveIcon={getActiveIcon}>
       </ToolBar>
+      {/*右键菜单Dropdown */}
+      {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
       <Tree
         draggable
         blockNode
         fieldNames={
-          {key : 'id',}
+          { key: 'id', }
         }
-        multiple={ isMultipleTree }
+        multiple={isMultipleTree}
         className="draggable-tree"
-        switcherIcon={ <DownOutlined/> }
-        defaultExpandedKeys={ customExpandKeys }
-        onDrop={ onDrop }
-        onSelect={ onSelect }
-        onRightClick={ onRightClick }
-        treeData={ bar.treeData }
-        selectedKeys={ selected }
-        onExpand={ onExpand }
+        switcherIcon={<DownOutlined />}
+        defaultExpandedKeys={customExpandKeys}
+        onDrop={onDrop}
+        // onDragStart={start}
+        // onDragEnd={() => console.log('onDragEnd')}
+        // onDragEnter={() => console.log('onDragEnter')}
+        // onDragLeave={() => console.log('onDragLeave')}
+        // onDragOver={() => console.log('onDragOver')}
+        onSelect={onSelect}
+        onRightClick={onRightClick}
+        treeData={bar.treeData}
+        selectedKeys={selected}
+        onExpand={onExpand}
         // expandedKeys={customExpandKeys}
-        titleRender={ (nodeData) => {
+        titleRender={(nodeData) => {
           const { title, ...omitTitle } = nodeData
           return (<EveryTreeNode
-            { ...omitTitle }
-            text={ title }
-            getCurrentMenuLocation={ getCurrentMenuLocation }
+            {...omitTitle}
+            text={title}
+            getCurrentMenuLocation={getCurrentMenuLocation}
           />)
         }
         }
       />
+      {/* </Dropdown> */}
       <div className="footer">
-        <ToolBar needBottomBorder={ false } data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
+        <ToolBar needBottomBorder={false} data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
-      { isShowRightMenu && <RightClickMenu menuInfo={ menuInfo } menuOptions={ menuOptions } hideMenu={hideMenu}/> }
+      {isShowRightMenu && <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
     </div>
   )
 }
-
-const menuOptions = [
-  {
-    name: '图层排序',
-    key: '',
-    icon: 'BranchesOutlined',
-    disabled: false,
-    hasLevel: true,
-    children: [
-      {
-        name: '置顶1',
-        key: 'placedTop',
-        icon: 'WifiOutlined',
-        disabled: false,
-      },
-      {
-        name: '置底1',
-        key: 'placeBottom',
-        icon: 'WifiOutlined',
-        disabled: false,
-      },
-    ]
-  },
-  {
-    name: '锁定',
-    key: 'lock',
-    icon: 'BranchesOutlined',
-    anotherName: '解锁',
-    anotherIcon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '移动',
-    key: '',
-    icon: 'BranchesOutlined',
-    disabled: false,
-    hasLevel: true,
-    children: [
-      {
-        name: '上移',
-        key: 'moveUp',
-        icon: 'WifiOutlined',
-        disabled: false,
-      },
-      {
-        name: '下移',
-        key: 'moveDown',
-        icon: 'WifiOutlined',
-        disabled: false,
-      },
-    ]
-  },
-  {
-    name: '置顶',
-    key: 'placedTop',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '置底',
-    key: 'placeBottom',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '上移',
-    key: 'moveUp',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '下移',
-    key: 'moveDown',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '成组',
-    key: 'group',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '取消成组',
-    key: 'cancelGroup',
-    icon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name: '复制',
-    key: 'copy',
-    icon: 'CopyOutlined',
-    disabled: false,
-  },
-  {
-    key: 'singleShowLayer',
-    name:'单独显示图层',
-    icon: 'QqOutlined',
-    anotherName: '取消单独显示',
-    anotherIcon: 'WifiOutlined',
-    disabled: false,
-  },
-  {
-    name:'删除',
-    key: 'delete',
-    icon: 'PicCenterOutlined',
-    disabled: false,
-  },
-  {
-    name:'重命名',
-    key: 'reName',
-    icon: 'PicCenterOutlined',
-    disabled: false,
-  },
-  {
-    key: 'hidden',
-    name:'隐藏',
-    icon: 'PicCenterOutlined',
-    anotherName: '显示',
-    anotherIcon: 'NotificationOutlined',
-    disabled: false,
-  },
-  // {
-  //   name:'展开/收起',
-  //   key: 'spreadOrShrink',
-  //   icon: 'PicCenterOutlined',
-  // },
-
-  // {
-  //   name: '粘贴',
-  //   key: 'paste',
-  //   icon: 'BranchesOutlined',
-  //   disabled: false,
-  // },
-]
+/**
+ * description:  不可变的配置
+ */
 const topBarIcons = [
   {
     key: 'placedTop',
-    text:'置顶',
+    text: '置顶',
     icon: UpOutlined,
   },
   {
     key: 'placeBottom',
-    text:'置底',
+    text: '置底',
     icon: DownOutlined,
   },
   {
     key: 'group',
-    text:'成组',
+    text: '成组',
     icon: QqOutlined,
   },
   {
     key: 'spreadOrShrink',
-    text:'展开/收起',
+    text: '展开/收起',
     icon: PicCenterOutlined,
   },
 ]
 const bottomBarIcons = [
   {
     key: 'singleShowLayer',
-    text:'单独显示图层',
+    text: '单独显示图层',
     icon: QqOutlined,
   },
   {
     key: 'lock',
-    text:'锁定',
+    text: '锁定',
     icon: BugOutlined,
   },
   {
@@ -462,5 +376,5 @@ const bottomBarIcons = [
 ]
 
 export default connect(
-  ({bar, operate}) => ({bar, operate})
+  ({ bar, operate }) => ({ bar, operate })
 )(Left)

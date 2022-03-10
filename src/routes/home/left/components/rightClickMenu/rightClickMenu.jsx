@@ -50,7 +50,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
         customPayload.singleShowLayer = !isSingleShow
         break;
       case 'reName':
-        customPayload.newName = 'abc'
+        // customPayload.newName = 'abc'
         customPayload.value = true
         break;
       case 'hidden':
@@ -73,7 +73,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
   const menuRef = useRef(null)
   useEffect(() => {
     // 在光标与菜单之间加点距离，方便用户点击
-    let recalculateX = x + 30
+    let recalculateX = x
     let recalculateY = y
     // 因为右侧菜单第一次渲染，因为首次渲染的元素在Tree的最底部，所以有一个默认的offsetTop（这里打印出来是521）
     // so,这里需要将鼠标的y轴坐标作为offsetTop

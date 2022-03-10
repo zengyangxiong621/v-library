@@ -7,9 +7,9 @@
   border: 1px solid #000;
   background-color: #232630;
 }
-.SecondMenu-wrap:hover {
+/* .SecondMenu-wrap:hover {
   display: block;
-}
+} */
 
 .second-menu-item {
   display: flex;
@@ -26,8 +26,16 @@
   cursor: pointer;
   background-color: #3a89fe;
 }
+/* 从SubMenu开始递归,所以从这儿开始设置样式  保证每个Item项 hover的时候，只显示下一级的菜单
+*/
+.second-menu-item:hover > .second-menu-item-li > .SecondMenu-wrap {
+  display: block;
+}
 
 .second-menu-item-li {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   position: relative;
   list-style: none;
   margin-left: 8px;

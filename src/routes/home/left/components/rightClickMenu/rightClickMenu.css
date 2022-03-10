@@ -33,10 +33,9 @@
   margin-left: 8px;
 }
 /* hover显示二级菜单 */
-.li-hover:hover .SecondMenu-wrap {
+.li-hover:hover > .menu-item-li > .SecondMenu-wrap {
   display: block;
 }
-
 .right-icon {
   margin-right: 10px;
 }

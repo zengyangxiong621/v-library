@@ -5,6 +5,7 @@ import { title } from "process";
  */
 type getMoveGroupType<T, U> = (a: T, b: U) => T;
 type TPlaceGroup = getMoveGroupType<any[], string[]>;
+
 const placeTop: TPlaceGroup = (treeData, selectedNodes) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
@@ -60,20 +61,32 @@ const placeBottom: TPlaceGroup = (treeData, selectedNodes) => {
 type TMoveUpOrDown = getMoveGroupType<any[], string[]>;
 const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
-  const recursiveFn = (data: any, id: string) => {
+  const recursiveFn = (data: any, ids: string[]) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
-      if (item.id === id) {
+      if (ids.includes(item.id)) {
         data[i] = data.splice(i - 1, 1, data[i])[0];
-        break;
       } else if (item.children) {
-        recursiveFn(item.children, id);
+        recursiveFn(item.children, ids);
       }
     }
   };
-  for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
-  }
+  recursiveFn(treeDataCopy, selectedNodes);
+  // const recursiveFn = (data: any, id: string) => {
+  //   console.log('移动的id', id)
+  //   for (let i = 0, len = data.length; i < len; i++) {
+  //     const item = data[i];
+  //     if (item.id === id) {
+  //       data[i] = data.splice(i - 1, 1, data[i])[0];
+  //       break;
+  //     } else if (item.children) {
+  //       recursiveFn(item.children, id);
+  //     }
+  //   }
+  // };
+  // for (let i = 0, len = selectedNodes.length; i < len; i++) {
+  //   recursiveFn(treeDataCopy, selectedNodes[i]);
+  // }
   return treeDataCopy;
 };
 
@@ -82,17 +95,17 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
  */
 const moveDown: TMoveUpOrDown = (treeData, selectedNodes) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
-  const recursiveFn = (data: any, id: string) => {
-    // 用for循环方便终止循环
+  const recursiveFn = (data: any, ids: string) => {
+    // 这里不能break
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
-      if (item.id === id) {
+      if (item.id === ids) {
         if (i < len - 1) {
-          data[i] = data.splice(i + 1, 1, data[i])[0];
+          data[i] = data.splice(i+1, 1, data[i])[0];
         }
-        break;
+        // break;
       } else if (item.children) {
-        recursiveFn(item.children, id);
+        recursiveFn(item.children, ids);
       }
     }
   };
@@ -348,6 +361,11 @@ const generateTreeData: () => any = () => {
     for (let i = 1; i < 4; i++) {
       const key = `${preKey}-${i}`;
       const parentId = +preKey === 0 ? "parent" : preKey;
+      let isFolder: boolean = false
+      if (i < 2) {
+        children.push(key);
+        isFolder = true
+      }
       tns.push({
         title: key,
         id: key,
@@ -357,10 +375,8 @@ const generateTreeData: () => any = () => {
         lock,
         singleShowLayer: false,
         showRenameInput: false,
+        isFolder,
       });
-      if (i < 2) {
-        children.push(key);
-      }
     }
     if (_level < 0) {
       return tns;
@@ -372,6 +388,7 @@ const generateTreeData: () => any = () => {
     });
   };
   generateData(2, false, "1", tData);
+  // console.log('前端树的数据', tData)
   return tData;
 };
 
@@ -391,3 +408,8 @@ export {
   reName,
   showInput,
 };
+
+
+// type fnA = (a: any[], b: string[]) => any[]
+// type fnB = (a: any[], b: string) => any[]
+// type fnC = (a: any[], b: string, c: boolean) => any[]

@@ -32,10 +32,12 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
       }
     })
   }
-
+  // 通过右键菜单打开重命名框的时候，需要给input聚焦,否则无法触发失焦事件，会导致选择了其它节点后,input框不消失的问题
   useEffect(() => {
-    console.log('input', inputRef.current);
-  }, [])
+      inputRef.current.focus({
+        cursor: 'all'
+      })
+  }, [showRenameInput])
   // 点击鼠标右键事件
   const mouseRightClick = (e) => {
     e.persist()
