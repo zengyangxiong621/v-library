@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import './index.css'
 
 import {
@@ -11,6 +11,7 @@ import {
   Checkbox,
   Space,
   message,
+  Row, Col
 } from 'antd';
 import { SketchPicker } from 'react-color'
 
@@ -19,12 +20,7 @@ import { SketchPicker } from 'react-color'
 const PageSetting = props => {
   const { Option } = Select;
   const formItemLayout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 14,
-    },
+    labelAlign: 'left'
   };
   const [form] = Form.useForm();
   const [width, setWidth] = useState('1920');
@@ -179,27 +175,30 @@ const PageSetting = props => {
           form={form}
           {...formItemLayout}
           onFinish={onFinish}
+          colon={false}
         >
           <Form.Item
             name="select"
             label="屏幕大小"
-            hasFeedback
           >
-            <Select placeholder="请选择" defaultValue="t1" onChange={sizeChange}>
-              <Option value="t1">1920*1080</Option>
-              <Option value="t2">1366*768</Option>
+            <Select className="custom-select" placeholder="请选择" defaultValue="t1" onChange={sizeChange}>
+              <Option value="t1">大屏推荐尺寸1920*1080</Option>
+              <Option value="t2">web最常见尺寸1366*768</Option>
+              <Option value="t3">web最小尺寸1024*768</Option>
+              <Option value="t4">自定义</Option>
             </Select>
-          </Form.Item>
-
-          <Form.Item label="位置尺寸" name="size">
             <Input.Group compact>
               <Form.Item noStyle name="sizeW">
-                <Input defaultValue={width} disabled className="size-input" style={{ marginRight: '5px' }} addonAfter="W" />
+                <InputNumber defaultValue={width} className="size-input" style={{ marginRight: '16px' }} />
               </Form.Item>
               <Form.Item noStyle name="sizeH">
-                <Input defaultValue={height} disabled className="size-input" addonAfter="H" />
+                <InputNumber defaultValue={height} className="size-input" />
               </Form.Item>
             </Input.Group>
+            <Row>
+              <Col span={12} className="detail-txt">宽度</Col>
+              <Col span={12} className="detail-txt" style={{ textIndent: '8px' }}>高度</Col>
+            </Row>
           </Form.Item>
           <Form.Item label="背景">
             <div className="color-swatch" onClick={selectBgc}>
