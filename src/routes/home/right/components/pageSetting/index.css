@@ -8,11 +8,13 @@
 
 .header{
   width: 100%;
-  height: 40px;
-  line-height: 40px;
-  color: #fff;
+  height: 36px;
+  line-height: 36px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 400;
   text-align: center;
-  background-color: #3d404d;
+  background-color: #373A4D;
 }
 .content{
   flex: 1;
