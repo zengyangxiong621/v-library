@@ -22,7 +22,6 @@ import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 import { menuOptions } from './Data/menuOptions'
 import { getTargetMenu } from '../left/components/rightClickMenu/getMenuNode'
 
-
 const Left = ({ dispatch, bar, operate }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
   const finalMenu = getTargetMenu(menuOptions)
@@ -129,10 +128,19 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
+    console.log('iconaaaa', icon);
+    const finalPayload = {}
+    switch (icon) {
+      case 'singleShowLayer':
+        finalPayload.singleShowLayer='negation'
+        break;
+      default:
+        break;
+    }
     activeIconRef.current = icon
     dispatch({
       type: `bar/${icon}`,
-      payload: {}
+      payload: finalPayload
     })
   }
   //选择的树节点
@@ -349,19 +357,34 @@ const Left = ({ dispatch, bar, operate }) => {
  */
 const topBarIcons = [
   {
+    key: 'moveUp',
+    text: '上移',
+    icon: 'icon-shangyi',
+  },
+  {
+    key: 'moveDown',
+    text: '下移',
+    icon: 'icon-xiayi',
+  },
+  {
     key: 'placedTop',
     text: '置顶',
-    icon: UpOutlined,
+    icon: 'icon-zhiding',
   },
   {
     key: 'placeBottom',
     text: '置底',
-    icon: DownOutlined,
+    icon: 'icon-zhidi',
   },
   {
     key: 'group',
     text: '成组',
-    icon: QqOutlined,
+    icon: 'icon-zuhe',
+  },
+  {
+    key: 'cancelGroup',
+    text: '取消成组',
+    icon: 'icon-quxiaozuhe',
   },
   // {
   //   key: 'spreadOrShrink',
@@ -373,22 +396,22 @@ const bottomBarIcons = [
   {
     key: 'singleShowLayer',
     text: '单独显示图层',
-    icon: QqOutlined,
-  },
-  {
-    key: 'lock',
-    text: '锁定',
-    icon: BugOutlined,
+    icon: 'icon-danduxianshi',
   },
   {
     key: 'copy',
     text: '复制',
-    icon: QqOutlined,
+    icon: 'icon-fuzhi',
+  },
+  {
+    key: 'lock',
+    text: '锁定',
+    icon: 'icon-suoding',
   },
   {
     text: '删除',
     key: 'delete',
-    icon: BugOutlined,
+    icon: 'icon-shanchuzu',
   },
 ]
 

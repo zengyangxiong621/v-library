@@ -10,32 +10,22 @@ const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, needBottomBorder
   const notBannedClick = bar.key.length > 0
   return (
   <div className='ToolBar'  style={{
-    borderBottom: needBottomBorder ?  '1px solid red' : ''
+    borderBottom: needBottomBorder ?  '1px solid black' : ''
   }}>
       {
         data.map(o => {
           return (
             <Tooltip  key={o.key} title={ o.text } color='white' placement='bottomRight'>
               {
-                o.key === 'spreadOrShrink'
-                ?
+                <div style={{ cursor: notBannedClick ? 'pointer' : 'not-allowed'}}>
                 <span
                   onClick={() => {
                     getActiveIcon(o.key)
                   }}
-                  className={`every-icon`}
-                >{React.createElement(o.icon)}
+                  className={`${notBannedClick ? '':'banned-click'} every-icon iconfont ${o.icon}`}
+                >
                 </span>
-                :
-                <span style={{ cursor: notBannedClick ? '' : 'not-allowed'}}>
-                <span
-                  onClick={() => {
-                    getActiveIcon(o.key)
-                  }}
-                  className={`${notBannedClick ? '': 'banned-click'} every-icon`}
-                >{React.createElement(o.icon)}
-                </span>
-              </span>
+              </div>
               }
             </Tooltip>
           )

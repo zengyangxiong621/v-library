@@ -1,4 +1,3 @@
-import { title } from "process";
 
 /**
  * description: 置顶
@@ -101,7 +100,7 @@ const moveDown: TMoveUpOrDown = (treeData, selectedNodes) => {
       const item = data[i];
       if (item.id === ids) {
         if (i < len - 1) {
-          data[i] = data.splice(i+1, 1, data[i])[0];
+          data[i] = data.splice(i + 1, 1, data[i])[0];
         }
         // break;
       } else if (item.children) {
@@ -141,7 +140,7 @@ const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
  * description: 获取每一个被选中节点的 锁定/单独显示图层 状态
  */
 
-type threeParams = (a: any[], b: string[], c: boolean) => any[];
+type threeParams = (a: any[], b: string[], c: boolean | string) => any[];
 type threeParams2 = (a: any[], b: string[], c: string) => any[];
 const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
   let res: string[] = [];
@@ -210,12 +209,13 @@ const singleShowLayer: threeParams = (
   selectedNodes,
   SingleShowLayerState
 ) => {
+  console.log('是否是无参数', SingleShowLayerState)
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        item.singleShowLayer = SingleShowLayerState;
+        SingleShowLayerState === 'negation' ? (item.singleShowLayer = !item.singleShowLayer) : (item.singleShowLayer = SingleShowLayerState)
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -234,7 +234,7 @@ const singleShowLayer: threeParams = (
 const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const newGroup = {
-    title: "分组",
+    name: "分组",
     id: `${lastRightClickKey}-temp`,
     icon: "SmileOutlined",
     isFolder: true,
@@ -337,7 +337,7 @@ const reName: (a: any[], b: string[], c: string) => any[] = (
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        item.title = newName;
+        item.name = newName;
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -359,18 +359,25 @@ const generateTreeData: () => any = () => {
 
     const children: any = [];
     for (let i = 1; i < 4; i++) {
-      const key = `${preKey}-${i}`;
+      let key = `${preKey}-${i}`
+      let prefix = ''
       const parentId = +preKey === 0 ? "parent" : preKey;
-      let isFolder: boolean = false
+      let isFolder: boolean = false;
       if (i < 2) {
         children.push(key);
-        isFolder = true
+        isFolder = true;
+        prefix = `group_`
+      } else {
+        prefix = `components_`
       }
       tns.push({
-        title: key,
-        id: key,
+        name: `${prefix}${key}`,
+        id: `${prefix}${key}`,
         parentId,
         icon: "SmileOutlined",
+        collapse: true, // 收缩
+        select: false,
+        hover: false,
         scan: true,
         lock,
         singleShowLayer: false,
@@ -388,7 +395,7 @@ const generateTreeData: () => any = () => {
     });
   };
   generateData(2, false, "1", tData);
-  // console.log('前端树的数据', tData)
+  console.log("前端树的数据", tData);
   return tData;
 };
 
@@ -408,7 +415,6 @@ export {
   reName,
   showInput,
 };
-
 
 // type fnA = (a: any[], b: string[]) => any[]
 // type fnB = (a: any[], b: string) => any[]

@@ -15,21 +15,21 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
       payload
     })
   }
-  const { title, id, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand } = restPorps
+  const { name, id, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand } = restPorps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(!!children)
   // 文件夹是展开了还是关闭了
   const isFolderExpand = Array.isArray(isExpand) && isExpand.includes(id)
   // const [eyeIconShow, setEyeIconShow] =useState(true)
   // TODO delete
-  const [ inputValue, setInputValue ] = useState(title)
+  const [ inputValue, setInputValue ] = useState(name)
   // 点击小眼睛图标切换状态
   const changeEyeIconState = (e) => {
     e.stopPropagation()
     dispatch({
       type: 'bar/hidden',
       payload: {
-        key: [title],
+        key: [name],
         value: !scan
       }
     })
@@ -47,7 +47,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
     getCurrentMenuLocation({
       x: e.clientX,
       y: e.clientY,
-      id: title,
+      id: name,
       isFolder,
     })
     // console.log('右键', e);
@@ -68,8 +68,8 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
   const commonChangeContent = () => {
     // TODO 校验
     // 比如名字一样,不发请求
-    console.log('title', title);
-    if(inputValue === title) {
+    console.log('name', name);
+    if(inputValue === name) {
       console.log('相等的啊');
       return
     } else {
@@ -118,6 +118,18 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
     })
   }
 
+  //点击单独显示图标
+  const singleShowLayerClick = (e) => {
+    e.stopPropagation()
+    dispatch({
+      type: 'bar/singleShowLayer',
+      payload: {
+        key: [name],
+        singleShowLayer: !singleShowLayer
+      }
+    })
+    console.log('singleShowLayerClick');
+  }
   return (
     <div className='EveryTreeNode-wrap' onContextMenu={(e) => {
     mouseRightClick(e)
@@ -143,7 +155,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
         />
         <span style={{
           display: showRenameInput ?  'none': 'block'
-        }}>{ title }</span>
+        }}>{ name }</span>
     </div>
     <div className='icons-wrap'>
       <span className='each-icon'>
@@ -158,7 +170,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
       </div>
       <span className='each-icon'>
       {
-        singleShowLayer && <ChromeOutlined />
+        singleShowLayer && <i className='iconfont icon-danduxianshi' onClickCapture={(e) => singleShowLayerClick(e)}></i>
       }
       </span>
     </div>

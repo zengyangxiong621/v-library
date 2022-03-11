@@ -502,12 +502,12 @@ export default {
     },
     // 成组
     group(state: IBarState, { payload }: any) {
-      const newTree = group(state.treeData, payload.key, state.lastRightClick);
+      const newTree = group(state.treeData, state.key, state.lastRightClick);
       return { ...state, treeData: newTree };
     },
     // 取消成组
     cancelGroup(state: IBarState, { payload }: any) {
-      const newTree = cancelGroup(state.treeData, payload.key);
+      const newTree = cancelGroup(state.treeData, state.key);
       return { ...state, treeData: newTree };
     },
     // TODO 粘贴
@@ -532,7 +532,7 @@ export default {
     singleShowLayer(state: IBarState, { payload }: any) {
       const newTree = singleShowLayer(
         state.treeData,
-        payload.key,
+        state.key,
         payload.singleShowLayer
       );
       return { ...state, treeData: newTree };

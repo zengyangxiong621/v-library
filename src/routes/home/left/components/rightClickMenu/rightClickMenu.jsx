@@ -60,6 +60,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
       default:
         break;
     }
+    console.log('ssss', customPayload);
     dispatch({
       type: `bar/${operateName}`,
       payload: customPayload
