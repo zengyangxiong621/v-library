@@ -413,3 +413,7 @@ export {
 // type fnA = (a: any[], b: string[]) => any[]
 // type fnB = (a: any[], b: string) => any[]
 // type fnC = (a: any[], b: string, c: boolean) => any[]
+
+// function fnA (a: any[], b: string[]) {}
+// function fnA (a: any[], b: string) {}
+// function fnA (a: any[], b: string, c: boolean) {}

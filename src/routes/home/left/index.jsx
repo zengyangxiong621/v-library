@@ -7,14 +7,14 @@ import React, { useState, useEffect, useMemo, useReducer, useRef, useCallback } 
 import './index.css'
 import { connect } from 'dva'
 /** 组件库相关 **/
-import { Tree, Menu, Dropdown } from 'antd'
+import { Tree, Menu, Dropdown, Button } from 'antd'
 import {
   RightOutlined, SmileOutlined, DownOutlined,
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
 
 /** 自定义组件 **/
-import EveryTreeNode from './components/everyTreeNode/index1'
+import EveryTreeNode from './components/everyTreeNode'
 import ToolBar from './components/toolBar'
 import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 
@@ -27,6 +27,8 @@ const Left = ({ dispatch, bar, operate }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
   const finalMenu = getTargetMenu(menuOptions)
 
+  const [inlineCollapsed, setInlineCollapsed] = useState(false)
+  const [isExpand, setIsExpand] = useState([])
   const [customExpandKeys, setCustomExpandKeys] = useState([])
   const [isMultipleTree, setIsMultipleTree] = useState(false)
   const [selected, setSelected] = useState([])
@@ -121,7 +123,10 @@ const Left = ({ dispatch, bar, operate }) => {
    * 方法
    *
    * */
-
+  // 收起 / 展开 菜单栏
+  const toggle = () => {
+    setInlineCollapsed(!inlineCollapsed)
+  }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
     activeIconRef.current = icon
@@ -194,7 +199,10 @@ const Left = ({ dispatch, bar, operate }) => {
     })
   }
   // 展开 / 收起 全部节点
-  const onExpand = (expandedKeys, { expanded, node }) => {
+  const myOnExpand = (expandedKeys, { expanded, node }) => {
+    setIsExpand(expandedKeys)
+    console.log('kes', expandedKeys);
+    console.log('isE', isExpand);
   }
   //
   const onDrop = info => {
@@ -280,51 +288,60 @@ const Left = ({ dispatch, bar, operate }) => {
   }
 
   return (
-    <div className="left-wrap">
-      <header className="header">图层</header>
-      <ToolBar data={topBarIcons} getActiveIcon={getActiveIcon}>
-      </ToolBar>
-      {/*右键菜单Dropdown */}
-      {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
-      <Tree
-        draggable
-        blockNode
-        fieldNames={
-          { key: 'id', }
-        }
-        multiple={isMultipleTree}
-        className="draggable-tree"
-        switcherIcon={<DownOutlined />}
-        defaultExpandedKeys={customExpandKeys}
-        onDrop={onDrop}
-        // onDragStart={start}
-        // onDragEnd={() => console.log('onDragEnd')}
-        // onDragEnter={() => console.log('onDragEnter')}
-        // onDragLeave={() => console.log('onDragLeave')}
-        // onDragOver={() => console.log('onDragOver')}
-        onSelect={onSelect}
-        onRightClick={onRightClick}
-        treeData={bar.treeData}
-        selectedKeys={selected}
-        onExpand={onExpand}
-        // expandedKeys={customExpandKeys}
-        titleRender={(nodeData) => {
-          const { title, ...omitTitle } = nodeData
-          return (<EveryTreeNode
-            {...omitTitle}
-            text={title}
-            getCurrentMenuLocation={getCurrentMenuLocation}
-          />)
-        }
-        }
-      />
-      {/* </Dropdown> */}
+    <Menu
+      mode="inline"
+      theme="dark"
+      className='left-menu'
+      inlineCollapsed={inlineCollapsed}>
+      <div className="left-wrap">
+        <div className='header'>
+          <header className="header-text">图层</header>
+          <div className='iconfont icon-jiacu'>ssdfsd</div>
+          <PicCenterOutlined onClickCapture={() => toggle()} style={{ cursor: 'pointer' }} />
+        </div>
+        <ToolBar data={topBarIcons} getActiveIcon={getActiveIcon}>
+        </ToolBar>
+        {/*右键菜单Dropdown */}
+
+
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
+        <Tree
+          draggable
+          blockNode
+          fieldNames={
+            { key: 'id', }
+          }
+          multiple={isMultipleTree}
+          switcherIcon={<DownOutlined />}
+          defaultExpandedKeys={customExpandKeys}
+          onDrop={onDrop}
+          // onDragStart={start}
+          // onDragEnd={() => console.log('onDragEnd')}
+          // onDragEnter={() => console.log('onDragEnter')}
+          // onDragLeave={() => console.log('onDragLeave')}
+          // onDragOver={() => console.log('onDragOver')}
+          onExpand={myOnExpand}
+          onSelect={onSelect}
+          onRightClick={onRightClick}
+          treeData={bar.treeData}
+          selectedKeys={selected}
+          titleRender={(nodeData) => {
+            return (<EveryTreeNode
+              {...nodeData}
+              isExpand={isExpand}
+              getCurrentMenuLocation={getCurrentMenuLocation}
+            />)
+          }
+          }
+        />
+        {/* </Dropdown> */}
+        {isShowRightMenu && <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
+      </div>
       <div className="footer">
         <ToolBar needBottomBorder={false} data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
-      {isShowRightMenu && <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
-    </div>
+    </Menu >
   )
 }
 /**
@@ -346,11 +363,11 @@ const topBarIcons = [
     text: '成组',
     icon: QqOutlined,
   },
-  {
-    key: 'spreadOrShrink',
-    text: '展开/收起',
-    icon: PicCenterOutlined,
-  },
+  // {
+  //   key: 'spreadOrShrink',
+  //   text: '展开/收起',
+  //   icon: PicCenterOutlined,
+  // },
 ]
 const bottomBarIcons = [
   {
