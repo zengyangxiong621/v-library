@@ -223,29 +223,29 @@ const PageSetting = props => {
               <Col span={8} className="detail-txt" style={{ textIndent: '6px' }}>不透明度</Col>
             </Row>
           </Form.Item>
-          <Form.Item label="启用背景图">
+          {/* <Form.Item label="启用背景图">
             <Checkbox style={{ float: 'left' }} checked={openBgImg} onChange={onOpenBgImgChange}></Checkbox>
-          </Form.Item>
-          {openBgImg ? <Form.Item label="背景图">
+          </Form.Item> */}
+          <Form.Item label="背景图">
             <Form.Item name="bgImage" valuePropName="fileList"
               getValueFromEvent={normFile} noStyle>
               <Upload
                 name="bgImage"
                 listType="picture-card"
-                className="avatar-uploader"
+                className="bg-uploader"
                 showUploadList={{ showRemoveIcon: true, showPreviewIcon: false }}
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 beforeUpload={beforeUpload}
                 onChange={handleBgChange}
                 onRemove={handleBgRemove}
               >
-                {!bgUrl && '上传文件'}
+                {!bgUrl && '点击这里进行修改'}
               </Upload>
             </Form.Item>
-          </Form.Item> : null}
+          </Form.Item>
           <Form.Item label="栅格间距" name="spacing">
             <Form.Item name="input-number" noStyle>
-              <InputNumber min={0} style={{ width: '100%' }} defaultValue={20} />
+              <InputNumber min={0} style={{ width: '100%' }} className="size-input" defaultValue={20} />
             </Form.Item>
           </Form.Item>
           <Form.Item name="zoom" label="缩放设置">
@@ -268,14 +268,14 @@ const PageSetting = props => {
               <Upload
                 name="cover"
                 listType="picture-card"
-                className="avatar-uploader"
+                className="bg-uploader"
                 showUploadList={{ showRemoveIcon: true, showPreviewIcon: false }}
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 beforeUpload={beforeUpload}
                 onChange={handleCoverChange}
                 onRemove={handleCoverRemove}
               >
-                {!coverUrl && '上传文件'}
+                {!coverUrl && '点击这里进行修改'}
               </Upload>
             </Form.Item>
           </Form.Item>

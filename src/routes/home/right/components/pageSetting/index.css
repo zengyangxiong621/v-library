@@ -112,6 +112,31 @@
   width: 78px;
 }
 
+.bg-uploader .ant-upload-select-picture-card,.bg-uploader .ant-upload-list-picture-card-container{
+  width: 221px;
+  height: 104px;
+  background: #191B25;
+  border: 1px solid rgba(57,59,74,1);
+  border-radius: 3px;
+}
+.bg-uploader .ant-upload-list-picture-card .ant-upload-list-item{
+  border: 1px solid rgba(57,59,74,1);
+}
+.bg-uploader .ant-upload{
+  font-size: 12px;
+  color: #868996;
+  font-weight: 400;
+}
+
+.zoom-set .ant-radio-inner{
+  background: #232630;
+  border: 1px solid rgba(92,95,123,1);
+}
+
+.zoom-set .ant-radio-input:focus + .ant-radio-inner{
+  box-shadow: none;
+}
+
 .zoom-set .ant-radio-wrapper > span:nth-child(2){
   color: #fff;
 }
