@@ -12,6 +12,7 @@ import {
   RightOutlined, SmileOutlined, DownOutlined,
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
+import { IconFont } from '../../../utils/useIcon'
 
 /** 自定义组件 **/
 import EveryTreeNode from './components/everyTreeNode'
@@ -132,7 +133,10 @@ const Left = ({ dispatch, bar, operate }) => {
     const finalPayload = {}
     switch (icon) {
       case 'singleShowLayer':
-        finalPayload.singleShowLayer='negation'
+        finalPayload.singleShowLayer = 'negation'
+        break;
+      case 'lock':
+        finalPayload.value = 'negation'
         break;
       default:
         break;
@@ -294,7 +298,6 @@ const Left = ({ dispatch, bar, operate }) => {
   const hideMenu = () => {
     setIsShowRightMenu(false)
   }
-
   return (
     <Menu
       mode="inline"
@@ -304,8 +307,7 @@ const Left = ({ dispatch, bar, operate }) => {
       <div className="left-wrap">
         <div className='header'>
           <header className="header-text">图层</header>
-          <div className='iconfont icon-jiacu'>ssdfsd</div>
-          <PicCenterOutlined onClickCapture={() => toggle()} style={{ cursor: 'pointer' }} />
+          <IconFont type="icon-tucengshouqi" onClickCapture={() => toggle()} style={{ cursor: 'pointer' }}></IconFont>
         </div>
         <ToolBar data={topBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>

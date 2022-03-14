@@ -162,11 +162,13 @@ const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
  */
 const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  console.log('targetLockState', targetLockState)
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        item.lock = targetLockState;
+        targetLockState === 'negation' ? (item.lock = !item.lock) :
+        (item.lock = targetLockState);
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -209,7 +211,6 @@ const singleShowLayer: threeParams = (
   selectedNodes,
   SingleShowLayerState
 ) => {
-  console.log('是否是无参数', SingleShowLayerState)
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
@@ -282,7 +283,8 @@ const cancelGroup: TMoveUpOrDown = (treeData, selectedNodes) => {
       if (item.id === id) {
         if (item.children) {
           data.splice(i, 1);
-          item.children.forEach((x: any) => {
+          // 取消成组需要倒序一下以保证成组前的顺序
+          item.children.reverse().forEach((x: any) => {
             data.splice(i++, 0, x);
           });
         }
@@ -423,3 +425,4 @@ export {
 // function fnA (a: any[], b: string[]) {}
 // function fnA (a: any[], b: string) {}
 // function fnA (a: any[], b: string, c: boolean) {}
+

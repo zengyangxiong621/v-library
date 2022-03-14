@@ -516,12 +516,12 @@ export default {
     // },
     // 锁定
     lock(state: IBarState, { payload }: any) {
-      const newTree = lock(state.treeData, payload.key, payload.value);
+      const newTree = lock(state.treeData, state.key, payload.value);
       return { ...state, treeData: newTree };
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      const newTree = remove(state.treeData, payload.key);
+      const newTree = remove(state.treeData, state.key);
       return { ...state, treeData: newTree };
     },
     // 复制

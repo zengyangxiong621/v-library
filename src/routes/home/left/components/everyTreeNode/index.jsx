@@ -1,15 +1,14 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
-import './index.css'
+import './index.less'
 import { connect } from 'dva'
 
 import { Input } from 'antd'
 import {
-  EyeOutlined , EyeInvisibleOutlined,
-  LockOutlined, CoffeeOutlined, ChromeOutlined
+  EyeOutlined, EyeInvisibleOutlined
 } from '@ant-design/icons'
 
-const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
-  const sendDispatch = (modelName, payload,type = 'bar',) => {
+const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
+  const sendDispatch = (modelName, payload, type = 'bar',) => {
     dispatch({
       type: `${type}/${modelName}`,
       payload
@@ -22,7 +21,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
   const isFolderExpand = Array.isArray(isExpand) && isExpand.includes(id)
   // const [eyeIconShow, setEyeIconShow] =useState(true)
   // TODO delete
-  const [ inputValue, setInputValue ] = useState(name)
+  const [inputValue, setInputValue] = useState(name)
   // 点击小眼睛图标切换状态
   const changeEyeIconState = (e) => {
     e.stopPropagation()
@@ -36,9 +35,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
   }
   // 通过右键菜单打开重命名框的时候，需要给input聚焦,否则无法触发失焦事件，会导致选择了其它节点后,input框不消失的问题
   useEffect(() => {
-      inputRef.current.focus({
-        cursor: 'all'
-      })
+    inputRef.current.focus({
+      cursor: 'all'
+    })
   }, [showRenameInput])
   // 点击鼠标右键事件
   const mouseRightClick = (e) => {
@@ -56,7 +55,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
   // 鼠标双击事件
   const dClick = (e) => {
     e.stopPropagation()
-    sendDispatch('reName', {value: true})
+    sendDispatch('reName', { value: true })
     // 同步的话,无法实现聚焦效果
     setTimeout(() => {
       inputRef.current.focus({
@@ -69,7 +68,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
     // TODO 校验
     // 比如名字一样,不发请求
     console.log('name', name);
-    if(inputValue === name) {
+    if (inputValue === name) {
       console.log('相等的啊');
       return
     } else {
@@ -128,18 +127,27 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
         singleShowLayer: !singleShowLayer
       }
     })
-    console.log('singleShowLayerClick');
+  }
+  // 点击锁定图标
+  const lockIconClick = (e) => {
+    e.stopPropagation()
+    dispatch({
+      type: `bar/lock`,
+      payload: {
+        value: !lock
+      }
+    })
   }
   return (
     <div className='EveryTreeNode-wrap' onContextMenu={(e) => {
-    mouseRightClick(e)
-  }}>
-    {
-      isFolder ?
-      isFolderExpand ? <div>展开</div> : <div>关闭</div>
-      : <div>图片</div>
-    }
-    <div className='title' onDoubleClick={(e) => dClick(e)}>
+      mouseRightClick(e)
+    }}>
+      {
+        isFolder ?
+          isFolderExpand ? <i className='iconfont icon-wenjianjia-zhankai set-margin' /> : <i className='iconfont icon-wenjianjiashouqi set-margin' />
+          : <div className='frame set-margin'></div>
+      }
+      <div className='title' onDoubleClick={(e) => dClick(e)}>
         <Input
           value={inputValue}
           size='small'
@@ -154,32 +162,32 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps}) => {
           onBlur={(e) => oBlur(e)}
         />
         <span style={{
-          display: showRenameInput ?  'none': 'block'
-        }}>{ name }</span>
-    </div>
-    <div className='icons-wrap'>
-      <span className='each-icon'>
-      {
-        lock && <LockOutlined />
-      }
-      </span>
-      <div className={`${ scan && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
-        {
-          scan ? <EyeOutlined /> : <EyeInvisibleOutlined />
-        }
+          display: showRenameInput ? 'none' : 'block'
+        }}>{name}</span>
       </div>
-      <span className='each-icon'>
-      {
-        singleShowLayer && <i className='iconfont icon-danduxianshi' onClickCapture={(e) => singleShowLayerClick(e)}></i>
-      }
-      </span>
+      <div className='icons-wrap'>
+        <span className='each-icon'>
+          {
+            lock && <i className='iconfont icon-suoding' onClickCapture={(e) => lockIconClick(e)}></i>
+          }
+        </span>
+        <div className={`${scan && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
+          {
+            scan ? <EyeOutlined /> : <EyeInvisibleOutlined />
+          }
+        </div>
+        <span className='each-icon'>
+          {
+            singleShowLayer && <i className='iconfont icon-danduxianshi' onClickCapture={(e) => singleShowLayerClick(e)}></i>
+          }
+        </span>
+      </div>
     </div>
-  </div>
   )
 }
 
 export default memo(
   connect(
-    ({bar}) => ({bar})
+    ({ bar }) => ({ bar })
   )(EveryTreeNode)
 )

@@ -4,12 +4,22 @@
   align-items: center;
   height: 45px;
   width: 100%;
+  padding-left: 2px;
 }
 .title {
   flex: 1;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+.frame {
+  width: 40px;
+  height: 25px;
+  text-align: center;
+  border: 1px rgb(204, 199, 199) solid;
+}
+.set-margin {
+  margin-right: 12px;
 }
 .eyes-icon {
   display: none;
