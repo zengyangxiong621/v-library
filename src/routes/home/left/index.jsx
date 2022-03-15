@@ -1,4 +1,3 @@
-
 /* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
@@ -57,7 +56,7 @@ const Left = ({ dispatch, bar, operate }) => {
         if (item.key === 'reName') {
           return {
             ...item,
-            disabled: true
+            disabled: true,
           }
         }
         return item
@@ -98,7 +97,7 @@ const Left = ({ dispatch, bar, operate }) => {
       const tree = document.querySelector('.ant-tree')
       // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
       if (className && typeof className === 'string') {
-        const res = tree.querySelector(`.${e.target.className}`)
+        const res = tree.querySelector(`.${ e.target.className }`)
         if (!res) {
           setSelected([])
           dispatch({
@@ -113,7 +112,7 @@ const Left = ({ dispatch, bar, operate }) => {
             type: 'bar/reName',
             payload: {
               value: false,
-            }
+            },
           })
           // 取消右键菜单
           setIsShowRightMenu(false)
@@ -125,43 +124,46 @@ const Left = ({ dispatch, bar, operate }) => {
     return () => {
       document.removeEventListener('click', (e) => ({}))
     }
-  }, []);
+  }, [])
 
   /**
    *
    * 方法
    *
    * */
-  // 收起 / 展开 菜单栏
+    // 收起 / 展开 菜单栏
   const toggle = () => {
-    setInlineCollapsed(!inlineCollapsed)
-  }
+      setInlineCollapsed(!inlineCollapsed)
+    }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
-    console.log('iconaaaa', icon);
+    console.log('iconaaaa', icon)
     const finalPayload = {}
     switch (icon) {
       case 'singleShowLayer':
         finalPayload.singleShowLayer = 'negation'
-        break;
+        break
       case 'lock':
         finalPayload.value = 'negation'
-        break;
+        break
       default:
-        break;
+        break
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${icon}`,
-      payload: finalPayload
+      type: `bar/${ icon }`,
+      payload: finalPayload,
     })
   }
   //选择的树节点
-  const onSelect = (curKey, e) => {
+  const onSelect = (curKey, e, node) => {
     // 和[selected,_]重了
     // const { selected } = e
-    console.log('e.selectedNodes', e.selectedNodes);
-    console.log('e.node', e.node);
+    e.selectedNodes.forEach(item => {
+      item.selected = true
+    })
+    console.log('e.selectedNodes', e.selectedNodes)
+    console.log('e.node', e.node)
     const isSelected = e.selected
     const { key } = e.node
     const isFolder = !!e.node.children
@@ -191,7 +193,7 @@ const Left = ({ dispatch, bar, operate }) => {
     // 中间画布需要node数组
     dispatch({
       type: 'bar/setNodeList',
-      payload: e.selectedNodes
+      payload: e.selectedNodes,
     })
     setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
@@ -223,14 +225,14 @@ const Left = ({ dispatch, bar, operate }) => {
     // 确认分组时点击的是哪个节点
     dispatch({
       type: `bar/saveLastRightClickKey`,
-      payload: key
+      payload: key,
     })
   }
   // 展开 / 收起 全部节点
   const myOnExpand = (expandedKeys, { expanded, node }) => {
     setIsExpand(expandedKeys)
-    console.log('kes', expandedKeys);
-    console.log('isE', isExpand);
+    console.log('kes', expandedKeys)
+    console.log('isE', isExpand)
   }
   //
   const onDrop = info => {
@@ -239,7 +241,7 @@ const Left = ({ dispatch, bar, operate }) => {
     const dropPos = info.node.pos.split('-')
     const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1])
 
-    console.log('in', info);
+    console.log('in', info)
 
     const loop = (data, key, callback) => {
       for (let i = 0; i < data.length; i++) {
@@ -294,7 +296,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     dispatch({
       type: 'bar/initTreeData',
-      payload: data
+      payload: data,
     })
   }
 
@@ -318,55 +320,57 @@ const Left = ({ dispatch, bar, operate }) => {
     <Menu
       mode="inline"
       theme="dark"
-      className='left-menu'
-      inlineCollapsed={inlineCollapsed}>
+      className="left-menu"
+      inlineCollapsed={ inlineCollapsed }>
       <div className="left-wrap">
-        <div className='header'>
+        <div className="header">
           <header className="header-text">图层</header>
-          <IconFont type="icon-tucengshouqi" onClickCapture={() => toggle()} style={{ cursor: 'pointer' }}></IconFont>
+          <IconFont type="icon-tucengshouqi" onClickCapture={ () => toggle() }
+                    style={ { cursor: 'pointer' } }></IconFont>
         </div>
-        <ToolBar data={topBarIcons} iconSize='14px' getActiveIcon={getActiveIcon}>
+        <ToolBar data={ topBarIcons } iconSize="14px" getActiveIcon={ getActiveIcon }>
         </ToolBar>
-        {/*右键菜单Dropdown */}
+        {/*右键菜单Dropdown */ }
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
         <Tree
           draggable
           blockNode
           fieldNames={
-            { key: 'id', }
+            { key: 'id' }
           }
-          multiple={isMultipleTree}
-          switcherIcon={<DownOutlined />}
-          defaultExpandedKeys={customExpandKeys}
-          onDrop={onDrop}
+          multiple={ isMultipleTree }
+          switcherIcon={ <DownOutlined/> }
+          defaultExpandedKeys={ customExpandKeys }
+          onDrop={ onDrop }
           // onDragStart={start}
           // onDragEnd={() => console.log('onDragEnd')}
           // onDragEnter={() => console.log('onDragEnter')}
           // onDragLeave={() => console.log('onDragLeave')}
           // onDragOver={() => console.log('onDragOver')}
-          onExpand={myOnExpand}
-          onSelect={onSelect}
-          onRightClick={onRightClick}
-          treeData={bar.treeData}
-          selectedKeys={selected}
-          titleRender={(nodeData) => {
+          onExpand={ myOnExpand }
+          onSelect={ onSelect }
+          onRightClick={ onRightClick }
+          treeData={ bar.treeData }
+          selectedKeys={ selected }
+          titleRender={ (nodeData) => {
             return (<EveryTreeNode
-              {...nodeData}
-              isExpand={isExpand}
-              getCurrentMenuLocation={getCurrentMenuLocation}
+              { ...nodeData }
+              isExpand={ isExpand }
+              getCurrentMenuLocation={ getCurrentMenuLocation }
             />)
           }
           }
         />
-        {/* </Dropdown> */}
-        {isShowRightMenu && <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
+        {/* </Dropdown> */ }
+        { isShowRightMenu &&
+        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
       </div>
       <div className="footer">
-        <ToolBar needBottomBorder={false} iconSize='14px' data={bottomBarIcons} getActiveIcon={getActiveIcon}>
+        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
         </ToolBar>
       </div>
-    </Menu >
+    </Menu>
   )
 }
 /**
@@ -433,5 +437,5 @@ const bottomBarIcons = [
 ]
 
 export default connect(
-  ({ bar, operate }) => ({ bar, operate })
+  ({ bar, operate }) => ({ bar, operate }),
 )(Left)

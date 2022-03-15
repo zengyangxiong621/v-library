@@ -382,7 +382,7 @@ const generateTreeData: () => any = () => {
         parentId,
         icon: "SmileOutlined",
         collapse: true, // 收缩
-        select: false,
+        selected: false,
         hover: false,
         scan: true,
         lock,

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
-
+import './index.css'
 const ScaleContainer = ({ children, onScaleEnd, isActive, ...props }) => {
   const handleScaleEnd = (x, y, width, height) => {
     onScaleEnd(x, y, width, height)
@@ -17,6 +17,7 @@ const ScaleContainer = ({ children, onScaleEnd, isActive, ...props }) => {
     const oldTop = boxRef.current.offsetTop
 
     document.onmousemove = function (ev) {
+      ev.stopPropagation()
       const oEv = ev
       let disY = (oldTop + (oEv.clientY - oldY)),
         disX = (oldLeft + (oEv.clientX - oldX))

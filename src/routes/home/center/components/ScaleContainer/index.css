@@ -1,0 +1,118 @@
+.box {
+  width: 100%;
+  height: 100%;
+  /*position: absolute;*/
+  /*top: 200px;*/
+  /*left: 200px;*/
+}
+
+/*四边*/
+.box .t,
+.box .b,
+.box .l,
+.box .r {
+  position: absolute;
+  z-index: 1;
+  background: red;
+}
+
+.box .l,
+.box .r {
+  width: 1px;
+  height: 100%;
+  cursor: col-resize;
+}
+
+.box .t,
+.box .b {
+  width: 100%;
+  height: 1px;
+  cursor: row-resize;
+}
+
+.box .t {
+  top: 0;
+  left: 0
+}
+
+.box .b {
+  bottom: 0;
+  left: 0;
+}
+
+.box .l {
+  left: 0;
+}
+
+.box .r {
+  right: 0;
+}
+
+/*四角*/
+.box .tl,
+.box .bl,
+.box .br,
+.box .tr {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  background: #fff;
+  border: 1px solid red;
+  border-radius: 50%;
+  z-index: 2;
+  cursor: nwse-resize
+}
+
+.box .tl,
+.box .bl {
+  left: -2px;
+}
+
+.box .tr,
+.box .br {
+  right: -2px;
+}
+
+.box .br,
+.box .bl {
+  bottom: -2px;
+}
+
+.box .tl,
+.box .tr {
+  top: -2px;
+}
+
+.box .tr,
+.box .bl {
+  cursor: nesw-resize;
+}
+
+/*内核*/
+.inner {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/*竖*/
+.rule-vertical {
+  width: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: pink;
+  z-index: 10000;
+}
+
+/*横*/
+.rule-horizon {
+  height: 20px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: green;
+  z-index: 10000;
+}
