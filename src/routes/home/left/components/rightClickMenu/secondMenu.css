@@ -1,7 +1,7 @@
 .SecondMenu-wrap {
   display: none;
   position: absolute;
-  top: -3px;
+  top: -14px;
   width: 130px;
   left: 90px;
   border: 1px solid #000;
@@ -36,6 +36,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   position: relative;
   list-style: none;
   margin-left: 8px;

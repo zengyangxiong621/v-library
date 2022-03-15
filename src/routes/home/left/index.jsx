@@ -160,6 +160,8 @@ const Left = ({ dispatch, bar, operate }) => {
   const onSelect = (curKey, e) => {
     // 和[selected,_]重了
     // const { selected } = e
+    console.log('e.selectedNodes', e.selectedNodes);
+    console.log('e.node', e.node);
     const isSelected = e.selected
     const { key } = e.node
     const isFolder = !!e.node.children
@@ -185,6 +187,11 @@ const Left = ({ dispatch, bar, operate }) => {
         key: curKey,
         isFolder,
       },
+    })
+    // 中间画布需要node数组
+    dispatch({
+      type: 'bar/setNodeList',
+      payload: e.selectedNodes
     })
     setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单

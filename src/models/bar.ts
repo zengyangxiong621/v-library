@@ -40,6 +40,7 @@ export default {
     lastRightClick: "",
     operate: "",
     treeData: [],
+    selectedComponentOrGroup: [],
     draggableItems: [
       {
         id: "1-1",
@@ -437,6 +438,10 @@ export default {
       const items = state.draggableItems;
       selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload };
+    },
+    // 选中节点时，保存住整个node对象
+    setNodeList(state: IBarState, { payload }: any){
+      return { ...state, selectedComponentOrGroup: payload}
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
     pushToSelectedNode(state: IBarState, { payload }: any) {
