@@ -2,12 +2,16 @@ import React, { memo, useState } from 'react'
 import './index.css'
 import PositionSize from '../positionSize'
 import LoadAnimation from '../loadAnimation'
+import TextStyleSetting from '../textStyleSetting'
+import AlignSetting from '../alignSetting'
+import OutsideShadowSetting from '../outsideShadow'
 
 import {
   Form,
   Collapse,
   Tabs,
-  Table
+  Table,
+  Switch 
 } from 'antd';
 
 
@@ -15,12 +19,7 @@ const SingleLayer = props => {
   const { Panel } = Collapse;
   const { TabPane } = Tabs;
   const formItemLayout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 14,
-    },
+    labelAlign: 'left'
   };
   const [size, setSize] = useState({
     x: 100,
@@ -75,19 +74,23 @@ const SingleLayer = props => {
 
   return (
     <div className="SingleLayer-wrap">
-      <h3 className="header">
-        组件设置
-      </h3>
       <div className="content">
-        <Tabs defaultActiveKey="1" type="card">
+        <Tabs defaultActiveKey="1" type="card" className="custom-tabs">
           <TabPane tab="样式" key="1">
-            <Form
-              className="custom-form"
-              name="validate_other"
-              {...formItemLayout}
-            >
+            <div className="component-wraper">
+              <h4>组件名称</h4>
+              <p>组件注释</p>
+            </div>
+            <div className="detail-setting">
               <PositionSize size={size} hideGlup={hideGlup} onPosSizeChange={onPosSizeChange} onHideGlupChange={onHideGlupChange}></PositionSize>
-            </Form>
+              <TextStyleSetting></TextStyleSetting>
+              <AlignSetting></AlignSetting>
+              <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
+                <Panel header="阴影" key="1" extra={<Switch defaultChecked />}>
+                  <OutsideShadowSetting></OutsideShadowSetting>
+                </Panel>
+              </Collapse>
+            </div>
           </TabPane>
           <TabPane tab="数据" key="2">
             <Table dataSource={dataSource} columns={columns} pagination={false} />

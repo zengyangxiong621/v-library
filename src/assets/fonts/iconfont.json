@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11976281",
+      "name": "两端对齐",
+      "font_class": "liangduanduiqi",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "249349",
+      "name": "LOCK",
+      "font_class": "lock",
+      "unicode": "e69e",
+      "unicode_decimal": 59038
+    },
+    {
+      "icon_id": "1433863",
+      "name": "unlock",
+      "font_class": "unlock",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
       "icon_id": "27938693",
       "name": "垂直居中",
       "font_class": "vertical",
