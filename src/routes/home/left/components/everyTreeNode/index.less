@@ -4,14 +4,50 @@
   align-items: center;
   height: 45px;
   width: 100%;
-  background-color: green;
-  .title {
-    background-color: red;
-  }
+  padding-left: 2px;
+}
+.title {
+  flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .frame {
   width: 40px;
   height: 25px;
   text-align: center;
-  border: 1px rgb(46, 11, 128) solid;
+  border: 1px rgb(204, 199, 199) solid;
+}
+.set-margin {
+  margin-right: 12px;
+}
+.set-icon-size {
+  font-size: 14px;
+}
+.eyes-icon {
+  display: none;
+}
+.ant-tree-node-content-wrapper:hover .eyes-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* 锁的图标 */
+.icons-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 8px;
+}
+.each-icon {
+  margin: 0 2px;
+}
+
+/* 自定义Input的背景色 */
+.ant-input {
+  padding: 2px 0 2px 8px;
+  color: #fff;
+  background-color: #24262e;
 }

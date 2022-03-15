@@ -144,7 +144,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     }}>
       {
         isFolder ?
-          isFolderExpand ? <i className='iconfont icon-wenjianjia-zhankai set-margin' /> : <i className='iconfont icon-wenjianjiashouqi set-margin' />
+          isFolderExpand ? <i className='iconfont icon-wenjianjia-zhankai set-margin' /> : <i className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
           : <div className='frame set-margin'></div>
       }
       <div className='title' onDoubleClick={(e) => dClick(e)}>

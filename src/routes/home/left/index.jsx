@@ -4,8 +4,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useMemo, useReducer, useRef, useCallback } from 'react'
-import './index.css'
+import './index.less'
 import { connect } from 'dva'
+import { useClickAway } from 'ahooks'
+
+
 /** 组件库相关 **/
 import { Tree, Menu, Dropdown, Button } from 'antd'
 import {
@@ -35,6 +38,12 @@ const Left = ({ dispatch, bar, operate }) => {
   const activeIconRef = useRef()
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
+
+  // TODO 想使用ahooks库,但是点击树节点的时候也会出现没点到树的效果
+  // const aRef = useRef()
+  // useClickAway(() => {
+  //   console.log('没点到树哦');
+  // }, [aRef])
 
   // 1、其它组件更改了选中的节点时触发
   // 2、多选时不能重命名
@@ -309,10 +318,9 @@ const Left = ({ dispatch, bar, operate }) => {
           <header className="header-text">图层</header>
           <IconFont type="icon-tucengshouqi" onClickCapture={() => toggle()} style={{ cursor: 'pointer' }}></IconFont>
         </div>
-        <ToolBar data={topBarIcons} getActiveIcon={getActiveIcon}>
+        <ToolBar data={topBarIcons} iconSize='14px' getActiveIcon={getActiveIcon}>
         </ToolBar>
         {/*右键菜单Dropdown */}
-
 
         {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
         <Tree
@@ -348,7 +356,7 @@ const Left = ({ dispatch, bar, operate }) => {
         {isShowRightMenu && <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
       </div>
       <div className="footer">
-        <ToolBar needBottomBorder={false} data={bottomBarIcons} getActiveIcon={getActiveIcon}>
+        <ToolBar needBottomBorder={false} iconSize='14px' data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
     </Menu >

@@ -1,4 +1,3 @@
-
 /**
  * description: 置顶
  */
@@ -136,6 +135,7 @@ const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
   return treeDataCopy;
 };
 
+
 /**
  * description: 获取每一个被选中节点的 锁定/单独显示图层 状态
  */
@@ -162,13 +162,14 @@ const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
  */
 const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
-  console.log('targetLockState', targetLockState)
+  console.log("targetLockState", targetLockState);
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        targetLockState === 'negation' ? (item.lock = !item.lock) :
-        (item.lock = targetLockState);
+        targetLockState === "negation"
+          ? (item.lock = !item.lock)
+          : (item.lock = targetLockState);
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -216,7 +217,9 @@ const singleShowLayer: threeParams = (
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        SingleShowLayerState === 'negation' ? (item.singleShowLayer = !item.singleShowLayer) : (item.singleShowLayer = SingleShowLayerState)
+        SingleShowLayerState === "negation"
+          ? (item.singleShowLayer = !item.singleShowLayer)
+          : (item.singleShowLayer = SingleShowLayerState);
         break;
       } else if (item.children) {
         recursiveFn(item.children, id);
@@ -299,6 +302,7 @@ const cancelGroup: TMoveUpOrDown = (treeData, selectedNodes) => {
   }
   return treeDataCopy;
 };
+
 /**
  * description: 显示/关闭 重命名输入框
  */
@@ -361,16 +365,16 @@ const generateTreeData: () => any = () => {
 
     const children: any = [];
     for (let i = 1; i < 4; i++) {
-      let key = `${preKey}-${i}`
-      let prefix = ''
+      let key = `${preKey}-${i}`;
+      let prefix = "";
       const parentId = +preKey === 0 ? "parent" : preKey;
       let isFolder: boolean = false;
       if (i < 2) {
         children.push(key);
         isFolder = true;
-        prefix = `group_`
+        prefix = `group_`;
       } else {
-        prefix = `components_`
+        prefix = `components_`;
       }
       tns.push({
         name: `${prefix}${key}`,
@@ -400,7 +404,29 @@ const generateTreeData: () => any = () => {
   console.log("前端树的数据", tData);
   return tData;
 };
-
+//#region
+/**
+ * description: 复制
+ */
+// const copy: TMoveUpOrDown = (treeData, selectedNodes) => {
+//   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+//   const recursiveFn = (data: any, id: string) => {
+//     for (let i = 0, len = data.length; i < len; i++) {
+//       const item = data[i];
+//       if (item.id === id) {
+//         data.splice(i, 0, 1);
+//         break;
+//       } else if (item.children) {
+//         recursiveFn(item.children, id);
+//       }
+//     }
+//   };
+//   for (let i = 0, len = selectedNodes.length; i < len; i++) {
+//     recursiveFn(treeDataCopy, selectedNodes[i]);
+//   }
+//   return treeDataCopy;
+// };
+//#endregion
 export {
   generateTreeData,
   placeTop,
@@ -408,6 +434,7 @@ export {
   moveUp,
   moveDown,
   remove,
+  // copy,
   lock,
   hidden,
   getFieldStates,
@@ -425,4 +452,3 @@ export {
 // function fnA (a: any[], b: string[]) {}
 // function fnA (a: any[], b: string) {}
 // function fnA (a: any[], b: string, c: boolean) {}
-

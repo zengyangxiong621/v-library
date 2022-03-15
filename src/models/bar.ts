@@ -14,6 +14,7 @@ import {
   moveUp,
   moveDown,
   remove,
+  // copy,
   lock,
   singleShowLayer,
   group,
@@ -526,7 +527,9 @@ export default {
     },
     // 复制
     copy(state: IBarState, { payload }: any) {
-      return { ...state };
+      // const newTree = copy(state.treeData, state.key);
+      // return { ...state, treeData: newTree };
+      return { ...state }
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
