@@ -45,7 +45,7 @@ const LoadAnimation = props => {
   return (
     <React.Fragment>
       <Form.Item label="动画类型" name="animationType">
-        <Select placeholder="请选择" defaultValue={animationType} onChange={animationTypeChange}>
+        <Select className="custom-select" placeholder="请选择" defaultValue={animationType} onChange={animationTypeChange}>
           <Option value="none">无</Option>
           <Option value="moveIn">移入</Option>
           <Option value="miniIn">移入(小)</Option>
@@ -57,7 +57,7 @@ const LoadAnimation = props => {
           <Checkbox style={{ float: 'left' }} checked={fadeOut} onChange={onFadeOutChange}></Checkbox>
         </Form.Item>
         <Form.Item label="速率" name="rate">
-          <Select placeholder="请选择" defaultValue={rate} onChange={rateChange}>
+          <Select className="custom-select" placeholder="请选择" defaultValue={rate} onChange={rateChange}>
             <Option value="uniform">匀速</Option>
             <Option value="mkm">慢快慢</Option>
             <Option value="dsks">低速开始</Option>
@@ -65,7 +65,7 @@ const LoadAnimation = props => {
           </Select>
         </Form.Item>
         <Form.Item label="方向" name="direction">
-          <Select placeholder="请选择" defaultValue={direction} onChange={directionChange}>
+          <Select className="custom-select" placeholder="请选择" defaultValue={direction} onChange={directionChange}>
             <Option value="leftToRight">从左至右</Option>
             <Option value="rightToLeft">从右至左</Option>
             <Option value="topToBottom">从上至下</Option>
@@ -73,10 +73,10 @@ const LoadAnimation = props => {
           </Select>
         </Form.Item>
         <Form.Item label="持续时间(ms)" name="duration">
-          <InputNumber min={0} style={{ width: '100%' }} defaultValue={duration} onChange={durationChange} />
+          <InputNumber className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={duration} onChange={durationChange} />
         </Form.Item>
         <Form.Item label="延时(ms)" name="delay">
-          <InputNumber min={0} style={{ width: '100%' }} defaultValue={delay} onChange={delayChange} />
+          <InputNumber  className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={delay} onChange={delayChange} />
         </Form.Item>
       </React.Fragment> : null}
     </React.Fragment>

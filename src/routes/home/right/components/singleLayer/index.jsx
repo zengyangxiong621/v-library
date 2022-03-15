@@ -39,6 +39,10 @@ const SingleLayer = props => {
     console.log('onHideGlupChange', val)
   }
 
+  const switchChange = (checked)=>{
+    console.log('switchChange', checked)
+  }
+
   const dataSource = [
     {
       key: '1',
@@ -86,7 +90,7 @@ const SingleLayer = props => {
               <TextStyleSetting></TextStyleSetting>
               <AlignSetting></AlignSetting>
               <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
-                <Panel header="阴影" key="1" extra={<Switch defaultChecked />}>
+                <Panel header="阴影" key="1" extra={<Switch defaultChecked onChange={switchChange} />}>
                   <OutsideShadowSetting></OutsideShadowSetting>
                 </Panel>
               </Collapse>
@@ -95,8 +99,8 @@ const SingleLayer = props => {
           <TabPane tab="数据" key="2">
             <Table dataSource={dataSource} columns={columns} pagination={false} />
           </TabPane>
-          <TabPane tab="交互" key="3">
-            <Form className="custom-form" {...formItemLayout}>
+          <TabPane tab="交互" key="3" style={{padding:'16px'}}>
+            <Form className="custom-form" {...formItemLayout} colon={false}>
               <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
                 <Panel header="载入动画" key="1">
                   <LoadAnimation></LoadAnimation>

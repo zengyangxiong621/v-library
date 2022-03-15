@@ -43,12 +43,7 @@ const GroupConfig = props => {
   }
 
   const formItemLayout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 14,
-    },
+    labelAlign: 'left'
   };
 
   const onPosSizeChange = (str, size) => {
@@ -75,6 +70,7 @@ const GroupConfig = props => {
           className="custom-form"
           form={form}
           {...formItemLayout}
+          colon={false}
           onFinish={onFinish}
         >
           <PositionSize size={size} hideGlup={hideGlup} onPosSizeChange={onPosSizeChange} onHideGlupChange={onHideGlupChange}></PositionSize>
