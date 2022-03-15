@@ -51,10 +51,11 @@ const Right = ({ dispatch, bar }) => {
   return (
   <div className='right-wrap'>
     {
-      reflect[whichShow].type()
-      // whichShow === 'groupConfig' ? <GroupConfig />
-      // : whichShow === 'singleLayer' ? <singleLayer />
-      // : <PageSetting />
+      // reflect[whichShow].type()
+      whichShow === 'groupConfig' ? <GroupConfig />
+      : whichShow === 'singleLayer' ? <SingleLayer />
+      : whichShow === 'pageSetting' ? <PageSetting />
+      : <AlignmentSetting />
     }
   </div>
   )
