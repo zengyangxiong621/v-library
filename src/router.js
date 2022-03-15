@@ -14,6 +14,24 @@ const menuGlobal = [
     component: () => import('./routes/home'),
   },
   {
+    id: 'dashboard',
+    pid: '0',
+    name: 'dashboard',
+    icon: 'dashboard',
+    path: '/dashboard',
+    models: () => [import('./models/dashboard')], // models可多个
+    component: () => import('./routes/dashboard.tsx')
+  },
+  {
+    id: 'test',
+    pid: '0',
+    name: 'test',
+    icon: 'test',
+    path: '/test',
+    models: () => [import('./models/test')], // models可多个
+    component: () => import('./routes/test.tsx')
+  },
+  {
     id: 'one',
     pid: '0',
     name: 'aaa页',
