@@ -135,7 +135,6 @@ const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
   return treeDataCopy;
 };
 
-
 /**
  * description: 获取每一个被选中节点的 锁定/单独显示图层 状态
  */
@@ -237,8 +236,9 @@ const singleShowLayer: threeParams = (
  */
 const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
-  const newGroup = {
+  const newGroup: any = {
     name: "分组",
+    title: "分组",
     id: `${lastRightClickKey}-temp`,
     icon: "SmileOutlined",
     isFolder: true,
@@ -256,7 +256,7 @@ const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
         needPickItem.push(item);
         // 处理到最后一个节点了
         if (isDone) {
-          newGroup.children = needPickItem;
+          newGroup.children.push(...needPickItem);
           data.push(newGroup);
         }
         break;

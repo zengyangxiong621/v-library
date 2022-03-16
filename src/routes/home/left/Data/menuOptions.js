@@ -24,35 +24,8 @@ export const menuOptions = [
             key: 'placedTop',
             icon: 'QqOutlined',
             disabled: false,
-            children: [
-              {
-                name: '1-1-1',
-                key: 'placedTop',
-                icon: 'QqOutlined',
-                disabled: false,
-                children: [
-                  {
-                    name: '1-1-1-1',
-                    key: 'placedTop',
-                    icon: 'WifiOutlined',
-                    disabled: false,
-                  },
-                ]
-              },
-              {
-                name: '置底1',
-                key: 'placeBottom',
-                icon: 'WifiOutlined',
-                disabled: false,
-              },
-            ]
-          },
-          {
-            name: '置底1',
-            key: 'placeBottom',
-            icon: 'WifiOutlined',
-            disabled: false,
-          },
+            children: []
+          }
         ]
       },
       {

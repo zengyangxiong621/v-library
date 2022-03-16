@@ -14,7 +14,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       payload
     })
   }
-  const { name, id, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand } = restPorps
+  const { name, id, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand, hover } = restPorps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(!!children)
   // 文件夹是展开了还是关闭了
@@ -139,7 +139,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     })
   }
   return (
-    <div className='EveryTreeNode-wrap' onContextMenu={(e) => {
+    <div className={`EveryTreeNode-wrap ${hover && 'every-tree-node-hover'}`} onContextMenu={(e) => {
       mouseRightClick(e)
     }}>
       {

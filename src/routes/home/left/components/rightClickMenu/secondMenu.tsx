@@ -35,7 +35,7 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
                 }
                 {/* //TODO 递归组件样式需要隔离开 */}
                 {
-                  item.children && <SecondMenu data={item.children}></SecondMenu>
+                  (item.children && item.children.length>0) && <SecondMenu data={item.children}></SecondMenu>
                 }
                 {/* 右三角图标 */}
                 {

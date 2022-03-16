@@ -30,6 +30,8 @@
 */
 .second-menu-item:hover > .second-menu-item-li > .SecondMenu-wrap {
   display: block;
+  position: absolute;
+  top: -7px;
 }
 
 .second-menu-item-li {
