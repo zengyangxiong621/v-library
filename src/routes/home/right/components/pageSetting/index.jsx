@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import React, { memo, useState, useEffect } from 'react';
-=======
-import { memo } from 'react'
-import { connect } from 'dva'
->>>>>>> dcc799e (feat: 页面设置和组设置)
 import './index.css'
 import BackgroundSetting from '../backgroundSetting'
 
@@ -22,26 +17,7 @@ import {
 
 
 
-import {
-  Form,
-  Select,
-  InputNumber,
-  Input,
-  Switch,
-  Radio,
-  Slider,
-  Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
-  Space
-} from 'antd';
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
-import { SketchPicker } from 'react-color'
 
-<<<<<<< HEAD
 const PageSetting = props => {
   const { Option } = Select;
   const formItemLayout = {
@@ -59,36 +35,12 @@ const PageSetting = props => {
     if (Array.isArray(e)) {
       return e;
     }
-=======
-
-
-// const PageSetting = ({ dispatch, bar }) => {
-const PageSetting = (props) => {
-  const { Option } = Select;
-  const formItemLayout = {
-    labelCol: {
-      span: 6,
-    },
-    wrapperCol: {
-      span: 14,
-    },
-  };
-
-  const normFile = (e) => {
-    console.log('Upload event:', e);
-
-    if (Array.isArray(e)) {
-      return e;
-    }
-
->>>>>>> dcc799e (feat: 页面设置和组设置)
     return e && e.fileList;
   };
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
   };
 
-<<<<<<< HEAD
   // 屏幕大小尺寸变化
   const sizeChange = (e) => {
     setWidth(e === 't1' ? '1920' : '1366')
@@ -136,21 +88,6 @@ const PageSetting = (props) => {
   }
   const handleCoverRemove = () => {
     setCoverUrl(null)
-=======
-  const sizeChange = (e) => {
-    console.log('e', e)
-    // dispatch({
-    //   type: 'pageSetting/sizeChange',
-    //   payload: {
-    //     width: ,
-    //     height: !isLock,
-    //   }
-    // })
-  }
-
-  const setColor = (e) => {
-    console.log('e', e)
->>>>>>> dcc799e (feat: 页面设置和组设置)
   }
   return (
     <div className="PageSetting-wrap">
@@ -160,21 +97,14 @@ const PageSetting = (props) => {
       <div className="content">
         <Form
           className="custom-form"
-<<<<<<< HEAD
           form={form}
           {...formItemLayout}
           onFinish={onFinish}
           colon={false}
-=======
-          name="validate_other"
-          {...formItemLayout}
-          onFinish={onFinish}
->>>>>>> dcc799e (feat: 页面设置和组设置)
         >
           <Form.Item
             name="select"
             label="屏幕大小"
-<<<<<<< HEAD
           >
             <Select className="custom-select" placeholder="请选择" defaultValue="t1" onChange={sizeChange}>
               <Option value="t1">大屏推荐尺寸1920*1080</Option>
@@ -221,48 +151,6 @@ const PageSetting = (props) => {
           <Form.Item label="栅格间距" name="spacing">
             <Form.Item name="input-number" noStyle>
               <InputNumber min={0} style={{ width: '100%' }} className="size-input" defaultValue={20} />
-=======
-            hasFeedback
-          >
-            <Select placeholder="请选择" defaultValue="t1" onChange={sizeChange}>
-              <Option value="t1">1920*1080</Option>
-              <Option value="t2">1366*768</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="位置尺寸">
-            <Input.Group compact>
-              <Form.Item name="width" noStyle>
-                <InputNumber disabled className="size-input" style={{ marginRight: '5px' }} addonAfter="W" />
-              </Form.Item>
-              <Form.Item name="height" noStyle>
-                <InputNumber disabled className="size-input" addonAfter="H" />
-              </Form.Item>
-            </Input.Group>
-          </Form.Item>
-          <Form.Item label="背景">
-            {/* <div style={styles.swatch} onClick={selectBgc}>
-              <div style={styles.color} />
-            </div>
-            {this.state.displayColorPicker ? <div style={styles.popover}>
-              <div style={styles.cover} onClick={this.handleClose} />
-              <SketchPicker color={this.state.color} onChange={this.handleBgcChange} />
-            </div> : null} */}
-          </Form.Item>
-          <Form.Item label="背景图">
-            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-              <Upload.Dragger name="files" action="/upload.do">
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">点击修改</p>
-              </Upload.Dragger>
-            </Form.Item>
-          </Form.Item>
-          <Form.Item label="栅格间距">
-            <Form.Item name="input-number" noStyle>
-              <InputNumber min={0} style={{ width: '100%' }} defaultValue={20} />
->>>>>>> dcc799e (feat: 页面设置和组设置)
             </Form.Item>
           </Form.Item>
           <Form.Item name="zoom" label="缩放设置">
@@ -281,7 +169,6 @@ const PageSetting = (props) => {
             </Radio.Group>
           </Form.Item>
           <Form.Item label="封面">
-<<<<<<< HEAD
             <Form.Item name="cover" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
               <Upload
                 name="cover"
@@ -295,14 +182,6 @@ const PageSetting = (props) => {
               >
                 {!coverUrl && '点击这里进行修改'}
               </Upload>
-=======
-            <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-              <Upload.Dragger name="files" action="/upload.do">
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-              </Upload.Dragger>
->>>>>>> dcc799e (feat: 页面设置和组设置)
             </Form.Item>
           </Form.Item>
         </Form>
@@ -313,10 +192,3 @@ const PageSetting = (props) => {
 
 export default memo(PageSetting)
 
-<<<<<<< HEAD
-=======
-// export default connect(
-//   ({ bar }) => ({ bar })
-// )(PageSetting)
-  
->>>>>>> dcc799e (feat: 页面设置和组设置)

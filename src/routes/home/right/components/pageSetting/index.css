@@ -8,7 +8,6 @@
 
 .header{
   width: 100%;
-<<<<<<< HEAD
   height: 36px;
   line-height: 36px;
   color: #ccc;
@@ -17,19 +16,11 @@
   text-align: center;
   background-color: #373A4D;
   margin:0;
-=======
-  height: 40px;
-  line-height: 40px;
-  color: #fff;
-  text-align: center;
-  background-color: #3d404d;
->>>>>>> dcc799e (feat: 页面设置和组设置)
 }
 .content{
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
-<<<<<<< HEAD
   padding: 16px;
 }
 .custom-form .ant-form-item{
@@ -144,15 +135,6 @@
 
 .zoom-set .ant-radio-input:focus + .ant-radio-inner{
   box-shadow: none;
-=======
-}
-.custom-form .ant-form-item-label > label{
-  color: #fff;
-}
-
-.size-input{
-  width: 80px;
->>>>>>> dcc799e (feat: 页面设置和组设置)
 }
 
 .zoom-set .ant-radio-wrapper > span:nth-child(2){
