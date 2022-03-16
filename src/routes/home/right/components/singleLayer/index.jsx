@@ -5,13 +5,14 @@ import LoadAnimation from '../loadAnimation'
 import TextStyleSetting from '../textStyleSetting'
 import AlignSetting from '../alignSetting'
 import OutsideShadowSetting from '../outsideShadow'
+import { EditableTable } from '../fieldMapTable'
+import ComponentCard from '../componentCard'
 
 import {
   Form,
   Collapse,
   Tabs,
-  Table,
-  Switch 
+  Switch
 } from 'antd';
 
 
@@ -39,53 +40,16 @@ const SingleLayer = props => {
     console.log('onHideGlupChange', val)
   }
 
-  const switchChange = (checked)=>{
+  const switchChange = (checked) => {
     console.log('switchChange', checked)
   }
-
-  const dataSource = [
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ];
-
-  const columns = [
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '年龄',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '住址',
-      dataIndex: 'address',
-      key: 'address',
-    },
-  ];
 
   return (
     <div className="SingleLayer-wrap">
       <div className="content">
         <Tabs defaultActiveKey="1" type="card" className="custom-tabs">
           <TabPane tab="样式" key="1">
-            <div className="component-wraper">
-              <h4>组件名称</h4>
-              <p>组件注释</p>
-            </div>
-            <div className="detail-setting">
+            <ComponentCard>
               <PositionSize size={size} hideGlup={hideGlup} onPosSizeChange={onPosSizeChange} onHideGlupChange={onHideGlupChange}></PositionSize>
               <TextStyleSetting></TextStyleSetting>
               <AlignSetting></AlignSetting>
@@ -94,19 +58,23 @@ const SingleLayer = props => {
                   <OutsideShadowSetting></OutsideShadowSetting>
                 </Panel>
               </Collapse>
-            </div>
+            </ComponentCard>
           </TabPane>
           <TabPane tab="数据" key="2">
-            <Table dataSource={dataSource} columns={columns} pagination={false} />
+            <ComponentCard>
+              <EditableTable />
+            </ComponentCard>
           </TabPane>
-          <TabPane tab="交互" key="3" style={{padding:'16px'}}>
-            <Form className="custom-form" {...formItemLayout} colon={false}>
-              <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
-                <Panel header="载入动画" key="1">
-                  <LoadAnimation></LoadAnimation>
-                </Panel>
-              </Collapse>
-            </Form>
+          <TabPane tab="交互" key="3">
+            <ComponentCard>
+              <Form className="custom-form" {...formItemLayout} colon={false}>
+                <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
+                  <Panel header="载入动画" key="1">
+                    <LoadAnimation></LoadAnimation>
+                  </Panel>
+                </Collapse>
+              </Form>
+            </ComponentCard>
           </TabPane>
         </Tabs>
       </div>
