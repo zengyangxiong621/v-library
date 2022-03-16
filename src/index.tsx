@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import "antd/dist/antd.css";
+import '../src/assets/iconfont/iconfont.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './assets/fonts/iconfont.css'

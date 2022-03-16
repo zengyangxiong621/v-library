@@ -15,6 +15,9 @@
   color: #3e535f;
   pointer-events: none;
 }
+.banned-hover {
+  cursor: not-allowed;
+}
 
 /* tooltip提示文字变为黑色 */
 .ant-tooltip-inner {

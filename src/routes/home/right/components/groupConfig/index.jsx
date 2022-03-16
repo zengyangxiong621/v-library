@@ -5,12 +5,23 @@ import LoadAnimation from '../loadAnimation'
 
 import {
   Form,
+  Select,
+  InputNumber,
   Input,
+  Switch,
+  Radio,
   Slider,
+  Button,
+  Upload,
+  Rate,
+  Checkbox,
   Row,
   Col,
-  Collapse,
+  Space,
+  Collapse
 } from 'antd';
+import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
+import { SketchPicker } from 'react-color'
 
 const GroupConfig = props => {
   const [form] = Form.useForm();
