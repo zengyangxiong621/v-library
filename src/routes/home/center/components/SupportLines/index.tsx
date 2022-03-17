@@ -6,14 +6,15 @@ import './index.css'
 let SupportLines: any = ({ bar, dispatch, cRef }: any) => {
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
-    handleSetPosition: (x: number, y: number) => {
-      setPosition({ x, y })
+    handleSetPosition: (left: number, top: number, display: string = 'block') => {
+      setStyle({ left, top, display })
     },
   }))
 
-  const [ position, setPosition ] = useState({
-    x: 200,
-    y: 200,
+  const [ style, setStyle ] = useState({
+    left: 0,
+    top: 0,
+    display: 'none',
   })
 
   // const handleSetPosition = (x?: number, y?: number) => {
@@ -23,13 +24,14 @@ let SupportLines: any = ({ bar, dispatch, cRef }: any) => {
   return (
     <div
       className="SupportLines"
-      style={ { position: 'absolute', left: position.x, top: position.y } }
+      style={ { position: 'absolute', ...style } }
     >
       <div className="v-line"/>
       <div className="h-line"/>
-      <div className="position-info" style={ { position: 'absolute', bottom: 20, right: 20 } }>
+      <div className="position-info"
+           style={ { position: 'absolute', bottom: 20, right: 20, color: 'red', fontSize: 16 } }>
         位置信息: {
-        position.x + ',' + position.y
+        style.left + ',' + style.top
       }
       </div>
     </div>

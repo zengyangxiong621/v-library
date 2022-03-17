@@ -185,6 +185,18 @@ export default {
       },
     ],
     componentLayers: [],
+    treeRef: null,
+    canvasConfigData: {
+      type: '',
+      config: {
+        scale: 0.4125,
+      },
+      style: {
+        width: 1920,
+        height: 1080,
+        background: '#21232E',
+      },
+    },
   } as IBarState,
   subscriptions: {
     init({ dispatch }: any) {
@@ -228,7 +240,14 @@ export default {
     },
     // 选中节点时，保存住整个node对象
     setNodeList(state: IBarState, { payload }: any) {
-      return { ...state, selectedComponentOrGroup: payload }
+      state.selectedComponentOrGroup.forEach(item => {
+        item.selected = false
+      })
+      state.selectedComponentOrGroup = payload
+      state.selectedComponentOrGroup.forEach(item => {
+        item.selected = true
+      })
+      return { ...state }
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
     pushToSelectedNode(state: IBarState, { payload }: any) {
@@ -296,6 +315,7 @@ export default {
     // 成组
     group(state: IBarState, { payload }: any) {
       const newTree = group(state.treeData, state.key, state.lastRightClick)
+      console.log('newTree', newTree)
       return { ...state, treeData: newTree }
     },
     // 取消成组
@@ -353,39 +373,7 @@ export default {
       return { ...state }
     },
     test(state: IBarState) {
-      const treeData = state.treeData
-      // const components = state.components;
-      // const fn = (arr: any) => {
-      //   let xPosition: Array<number> = [];
-      //   let yPosition: Array<number> = [];
-      //   arr.forEach((item: any) => {
-      //     if (item.id.indexOf('group') !== -1) {
-      //       if (item.components.length > 0) {
-      //         const [xArr, yArr] = fn(item.components);
-      //         xArr.sort();
-      //         yArr.sort();
-      //         item.conifg = {
-      //           position: {
-      //             x: xArr[0] || 0,
-      //             y: yArr[0] || 0,
-      //           },
-      //           style: {
-      //             width: (xArr[xArr.length - 1] - xArr[0]) || 0,
-      //             height: (yArr[yArr.length - 1] - yArr[0]) || 0,
-      //           },
-      //         };
-      //         xPosition = xPosition.concat(xArr);
-      //         yPosition = yPosition.concat(yArr);
-      //       }
-      //     } else {
-      //       item.config = components.find(it => it.id === item.id)?.config;
-      //       xPosition.push(item.config.position.x, item.config.position.x + item.config.style.width);
-      //       yPosition.push(item.config.position.y, item.config.position.y + item.config.style.height);
-      //     }
-      //   });
-      //   return [xPosition, yPosition];
-      // };
-      // fn(treeData);
+      console.log('gg ')
       return { ...state }
     },
     test2(state: IBarState) {
@@ -433,6 +421,7 @@ export default {
         state.selectedComponentOrGroup = [ layer ]
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
+      state.key = state.selectedComponentOrGroup.map(item => item.id)
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup)
       return {
         ...state,
@@ -441,17 +430,19 @@ export default {
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
       // 先将选中的 layer 的 select 状态清除
-      // state.selectedComponentOrGroup.forEach(layer => {
-      //   layer.selected = false
-      // })
-      // // 清空 selectedComponentOrGroup、selectedComponentIds、selectedComponents
-      // state.selectedComponentOrGroup.length = 0
-      // state.selectedComponentIds.length = 0
-      // state.selectedComponents.length = 0
-      // state.selectedComponentRefs = {}
-      // state.isSupportMultiple = false
-      // state.scaleDragData.style.display = 'none'
-      // state.supportLinesRef.handleSetPosition(0, 0)
+      state.selectedComponentOrGroup.forEach(layer => {
+        layer.selected = false
+      })
+      // 清空 selectedComponentOrGroup、selectedComponentIds、selectedComponents
+      state.selectedComponentOrGroup.length = 0
+      state.selectedComponentIds.length = 0
+      state.selectedComponents.length = 0
+      state.selectedComponentRefs = {}
+      state.isSupportMultiple = false
+      state.scaleDragData.style.display = 'none'
+      state.key.length = 0
+      state.isFolder = false
+      state.supportLinesRef.handleSetPosition(0, 0, 'none')
       return { ...state }
     },
   },

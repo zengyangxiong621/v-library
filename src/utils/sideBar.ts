@@ -239,7 +239,7 @@ const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
   const newGroup: any = {
     name: "分组",
     title: "分组",
-    id: `${lastRightClickKey}-temp`,
+    id: `group_${new Date().getTime()}`,
     icon: "SmileOutlined",
     isFolder: true,
     scan: true,

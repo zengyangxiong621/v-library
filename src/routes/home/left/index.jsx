@@ -37,7 +37,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const activeIconRef = useRef()
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
-
+  const treeRef = useRef(null)
   // TODO 想使用ahooks库,但是点击树节点的时候也会出现没点到树的效果
   // const aRef = useRef()
   // useClickAway(() => {
@@ -48,6 +48,7 @@ const Left = ({ dispatch, bar, operate }) => {
   // 2、多选时不能重命名
   // 3、判断选择的节点是否是文件夹
   useEffect(() => {
+
     //1
     setSelected(bar.key)
     // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
@@ -88,6 +89,7 @@ const Left = ({ dispatch, bar, operate }) => {
   }, [])
   // 监听 树区域 以外的点击
   useEffect(() => {
+    bar.treeRef = treeRef
     document.addEventListener('click', (e) => {
       e.stopPropagation()
       const {
@@ -95,17 +97,21 @@ const Left = ({ dispatch, bar, operate }) => {
       } = e
       // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
       const tree = document.querySelector('.ant-tree')
+
       // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
       if (className && typeof className === 'string') {
         const res = tree.querySelector(`.${ e.target.className }`)
         if (!res) {
           setSelected([])
+          // dispatch({
+          //   type: 'bar/selectedNode',
+          //   payload: {
+          //     key: [],
+          //     isFolder: false,
+          //   },
+          // })
           dispatch({
-            type: 'bar/selectedNode',
-            payload: {
-              key: [],
-              isFolder: false,
-            },
+            type: 'bar/clearAllStatus',
           })
           // 取消选中节点的输入框
           dispatch({
@@ -159,11 +165,6 @@ const Left = ({ dispatch, bar, operate }) => {
   const onSelect = (curKey, e, node) => {
     // 和[selected,_]重了
     // const { selected } = e
-    e.selectedNodes.forEach(item => {
-      item.selected = true
-    })
-    console.log('e.selectedNodes', e.selectedNodes)
-    console.log('e.node', e.node)
     const isSelected = e.selected
     const { key } = e.node
     const isFolder = !!e.node.children
@@ -325,43 +326,48 @@ const Left = ({ dispatch, bar, operate }) => {
       <div className="left-wrap">
         <div className="header">
           <header className="header-text">图层</header>
-          <IconFont type="icon-tucengshouqi" onClickCapture={ () => toggle() }
-                    style={ { cursor: 'pointer' } }></IconFont>
+          <IconFont
+            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
+            style={ { cursor: 'pointer' } }/>
         </div>
         <ToolBar data={ topBarIcons } iconSize="14px" getActiveIcon={ getActiveIcon }>
         </ToolBar>
         {/*右键菜单Dropdown */ }
 
         {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
-        <Tree
-          draggable
-          blockNode
-          fieldNames={
-            { key: 'id' }
-          }
-          multiple={ isMultipleTree }
-          switcherIcon={ <DownOutlined/> }
-          defaultExpandedKeys={ customExpandKeys }
-          onDrop={ onDrop }
-          // onDragStart={start}
-          // onDragEnd={() => console.log('onDragEnd')}
-          // onDragEnter={() => console.log('onDragEnter')}
-          // onDragLeave={() => console.log('onDragLeave')}
-          // onDragOver={() => console.log('onDragOver')}
-          onExpand={ myOnExpand }
-          onSelect={ onSelect }
-          onRightClick={ onRightClick }
-          treeData={ bar.treeData }
-          selectedKeys={ selected }
-          titleRender={ (nodeData) => {
-            return (<EveryTreeNode
-              { ...nodeData }
-              isExpand={ isExpand }
-              getCurrentMenuLocation={ getCurrentMenuLocation }
-            />)
-          }
-          }
-        />
+        <div>
+          <Tree
+            ref={ treeRef }
+            draggable
+            blockNode
+            fieldNames={
+              { key: 'id' }
+            }
+            multiple={ isMultipleTree }
+            switcherIcon={ <DownOutlined/> }
+            defaultExpandedKeys={ customExpandKeys }
+            onDrop={ onDrop }
+            // onDragStart={start}
+            // onDragEnd={() => console.log('onDragEnd')}
+            // onDragEnter={() => console.log('onDragEnter')}
+            // onDragLeave={() => console.log('onDragLeave')}
+            // onDragOver={() => console.log('onDragOver')}
+            onExpand={ myOnExpand }
+            onSelect={ onSelect }
+            onRightClick={ onRightClick }
+            treeData={ bar.treeData }
+            selectedKeys={ selected }
+            titleRender={ (nodeData) => {
+              return (<EveryTreeNode
+                { ...nodeData }
+                isExpand={ isExpand }
+                getCurrentMenuLocation={ getCurrentMenuLocation }
+              />)
+            }
+            }
+          />
+        </div>
+
         {/* </Dropdown> */ }
         { isShowRightMenu &&
         <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }

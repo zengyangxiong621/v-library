@@ -9,6 +9,7 @@ import SupportLines from './components/SupportLines'
 import * as React from 'react'
 import { Button } from 'antd'
 import { useClickAway, useKeyPress, useMouse } from 'ahooks'
+import Ruler from './components/Ruler'
 
 const Center = ({ bar, dispatch }: any) => {
   const draggableContainerRef = useRef(null)
@@ -17,6 +18,7 @@ const Center = ({ bar, dispatch }: any) => {
   const treeData = bar.treeData
   const isSupportMultiple = bar.isSupportMultiple
   let supportLinesRef = bar.supportLinesRef
+  const canvasConfigData = bar.canvasConfigData
   useEffect(() => {
     return () => {
 
@@ -53,7 +55,7 @@ const Center = ({ bar, dispatch }: any) => {
     dispatch({
       type: 'bar/clearAllStatus',
     })
-  }, draggableContainerRef)
+  }, [ draggableContainerRef, bar.treeRef ])
   // const mouse = useMouse(canvasRef);
   const mouse = 0
 
@@ -74,50 +76,72 @@ const Center = ({ bar, dispatch }: any) => {
   const handleSelect = () => {
     dispatch({
       type: 'bar/select',
-      payload: 'component_7'
+      payload: 'component_7',
     })
   }
   return (
     <div className="c-canvas" ref={ canvasRef }>
-      <div style={ { position: 'absolute', left: 0, top: 0 } }>
-        <Button onClick={ handleClick }>刷新</Button>
-        <Button onClick={ handleDelete }>删除</Button>
-        <Button onClick={ handleSelect }>选中</Button>
-      </div>
-      <ScaleDragCom/>
-      <SupportLines
-        key="support"
-        cRef={ (ref: any) => {
-          bar.supportLinesRef = ref
-          return supportLinesRef
+      <Ruler/>
+      <Ruler/>
+      <div
+        className="canvas-container"
+        style={ {
+          width: canvasConfigData.style.width * canvasConfigData.config.scale,
+          height: canvasConfigData.style.height * canvasConfigData.config.scale,
         } }
-      />
-      <div className="draggable-container" ref={ draggableContainerRef }>
-        <CustomDraggable mouse={ mouse } treeData={ treeData }/>
-      </div>
-      {
-        // draggableItems.map(item => {
-        //   return <Draggable cancel=".no-cursor" position={ item.position }
-        //                     onDrag={ (ev, data) => handleDrag(item, ev, data) }
-        //                     onStop={ (ev, data) => handleStop(item, ev, data) }>
-        //     <div className="box">
-        //       <strong className="no-cursor">
-        //         <div style={ { position: 'absolute', left: -item.position.x, top: -item.position.y } }>
-        //           {
-        //             item.components.map(component => {
-        //               return <Draggable>
-        //                 <div className="box" style={ { width: '50px', height: '50px' } }>{ component.id }</div>
-        //               </Draggable>
-        //             })
-        //           }
-        //         </div>
-        //       </strong>
-        //       <div>Dragging here works</div>
-        //     </div>
-        //   </Draggable>
-        // })
+      >
+        <div
+          className="canvas-screen"
+          style={ {
+            width: canvasConfigData.style.width,
+            height: canvasConfigData.style.height,
+            transform: `scale(${ canvasConfigData.config.scale })`,
+            background: canvasConfigData.style.background,
+          } }
+        >
+          <div className="draggable-wrapper">
+            <div style={ { position: 'absolute', left: 0, top: 0 } }>
+              <Button onClick={ handleClick }>刷新</Button>
+              <Button onClick={ handleDelete }>删除</Button>
+              <Button onClick={ handleSelect }>选中</Button>
+            </div>
+            <ScaleDragCom/>
+            <SupportLines
+              key="support"
+              cRef={ (ref: any) => {
+                bar.supportLinesRef = ref
+                return bar.supportLinesRef
+              } }
+            />
+            <div className="draggable-container" ref={ draggableContainerRef }>
+              <CustomDraggable mouse={ mouse } treeData={ treeData }/>
+            </div>
+            {
+              // draggableItems.map(item => {
+              //   return <Draggable cancel=".no-cursor" position={ item.position }
+              //                     onDrag={ (ev, data) => handleDrag(item, ev, data) }
+              //                     onStop={ (ev, data) => handleStop(item, ev, data) }>
+              //     <div className="box">
+              //       <strong className="no-cursor">
+              //         <div style={ { position: 'absolute', left: -item.position.x, top: -item.position.y } }>
+              //           {
+              //             item.components.map(component => {
+              //               return <Draggable>
+              //                 <div className="box" style={ { width: '50px', height: '50px' } }>{ component.id }</div>
+              //               </Draggable>
+              //             })
+              //           }
+              //         </div>
+              //       </strong>
+              //       <div>Dragging here works</div>
+              //     </div>
+              //   </Draggable>
+              // })
 
-      }
+            }
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

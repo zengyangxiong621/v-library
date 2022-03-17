@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { connect } from 'dva'
 import Draggable from 'react-draggable'
+import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
 import './index.css'
 
@@ -52,25 +53,21 @@ const CustomDraggable
         if(component) {
           xPositionList.push(component.config.position.x, component.config.position.x + component.config.style.width)
           yPositionList.push(component.config.position.y, component.config.position.y + component.config.style.height)
+        } else {
+          xPositionList.push(0)
+          yPositionList.push(0)
         }
       }
     })
     return [ xPositionList, yPositionList ]
   }
   const handleDrag = (ev: DraggableEvent, data: DraggableData, component: IComponent | ILayerGroup | undefined, config: IConfig) => {
-    console.log('bar.dragStatus', bar.dragStatus)
+    console.log('拖动')
     if(!component) {
       return
     }
-    // if('components' in component) {
-    //   // 小组移动
-    //   // console.log('component', component);
-    //   // console.log('data', data);
-    //   return
-    // }
     if(bar.dragStatus === '一组件') {
       // 单个组件移动
-      console.log('一组件')
       if('config' in component) {
         component.config.position.x = data.x
         component.config.position.y = data.y
@@ -79,32 +76,25 @@ const CustomDraggable
     }
     if(bar.dragStatus === '一分组') {
       // 小组移动
-      console.log('一分组')
-      console.log('config', config)
       supportLinesRef.handleSetPosition(data.x, data.y)
     }
     if(bar.dragStatus === '多个') {
-      console.log('多个')
       if(component.id in bar.selectedComponentRefs) {
         const xMoveLength = data.x - data.lastX
         const yMoveLength = data.y - data.lastY
-        console.log('selectedComponentRefs', bar.selectedComponentRefs)
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
-
         Object.values(bar.selectedComponentRefs).forEach((item: any) => {
-          // item.onDrag(window.event, { x: 0, y: 0 })
-          console.log('item.props.position.x + xMoveLength', item.props.position.x + xMoveLength)
-          item.props.position.x = item.props.position.x + xMoveLength
-          item.props.position.y = item.props.position.y + yMoveLength
+          item.handleSetPosition(item.position.x + xMoveLength, item.position.y + yMoveLength)
         })
       }
     }
-    console.log('---------------')
   }
   const handleStop = (ev: DraggableEvent, data: DraggableData, component: ILayerGroup | IComponent | undefined, config: IConfig) => {
+    console.log('停止')
     if(!component) {
       return
     }
+    supportLinesRef.handleSetPosition(0, 0, 'none')
     if('config' in component && bar.dragStatus === '一组件') {
       // 单个组件移动
       dispatch({
@@ -244,6 +234,7 @@ const CustomDraggable
     })
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
+    console.log('点击')
     e.stopPropagation()
     // if (component.select === true) {
     //   return;
@@ -285,6 +276,7 @@ const CustomDraggable
     <div className="c-custom-draggable">
       {
         treeData.map(layer => {
+          console.log('layer', layer)
           let config: IConfig = {
             position: {
               x: 0,
@@ -325,14 +317,15 @@ const CustomDraggable
           }
           return (
             <Draggable
-              ref={ ref => {
+              ref={ (ref: any) => {
                 allComponentRefs[layer.id] = ref
+                return allComponentRefs[layer.id]
               } }
               disabled={ layer.lock }
               cancel=".no-cancel" key={ layer.id } position={ config.position }
-              onStart={ (ev, data) => handleStart(ev, data, layer) }
-              onStop={ (ev, data) => handleStop(ev, data, isGroup ? group : component, config) }
-              onDrag={ (ev, data) => handleDrag(ev, data, isGroup ? group : component, config) }
+              onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer) }
+              onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, isGroup ? group : component, config) }
+              onDrag={ (ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, isGroup ? group : component, config) }
             >
               <div
                 // onClickCapture={(ev) => handleClick(ev, layer, config)}
@@ -350,8 +343,12 @@ const CustomDraggable
                   isGroup ? <div className="no-cancel">
                     { 'children' in layer && layer.children?.length > 0 ?
                       <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
-                        <CustomDraggable mouse={ mouse } bar={ bar } dispatch={ dispatch }
-                                         treeData={ layer.children }/>
+                        <CustomDraggable
+                          mouse={ mouse }
+                          bar={ bar }
+                          dispatch={ dispatch }
+                          treeData={ layer.children }
+                        />
                       </div>
                       : ''
                     }
