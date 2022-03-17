@@ -7,6 +7,7 @@ import AlignSetting from '../alignSetting'
 import OutsideShadowSetting from '../outsideShadow'
 import { EditableTable } from '../fieldMapTable'
 import ComponentCard from '../componentCard'
+import RotationAngle from '../rotationAngle'
 
 import {
   Form,
@@ -58,6 +59,7 @@ const SingleLayer = props => {
                   <OutsideShadowSetting></OutsideShadowSetting>
                 </Panel>
               </Collapse>
+              <RotationAngle />
             </ComponentCard>
           </TabPane>
           <TabPane tab="数据" key="2">
