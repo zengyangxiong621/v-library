@@ -100,7 +100,7 @@ const Left = ({ dispatch, bar, operate }) => {
 
       // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
       if (className && typeof className === 'string') {
-        const res = tree.querySelector(`.${ e.target.className }`)
+        const res = tree.querySelector(`.${e.target.className}`)
         if (!res) {
           setSelected([])
           // dispatch({
@@ -133,14 +133,12 @@ const Left = ({ dispatch, bar, operate }) => {
   }, [])
 
   /**
-   *
    * 方法
-   *
    * */
-    // 收起 / 展开 菜单栏
+  // 收起 / 展开 菜单栏
   const toggle = () => {
-      setInlineCollapsed(!inlineCollapsed)
-    }
+    setInlineCollapsed(!inlineCollapsed)
+  }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
     console.log('iconaaaa', icon)
@@ -157,7 +155,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${ icon }`,
+      type: `bar/${icon}`,
       payload: finalPayload,
     })
   }
@@ -165,8 +163,12 @@ const Left = ({ dispatch, bar, operate }) => {
   const onSelect = (curKey, e, node) => {
     // 和[selected,_]重了
     // const { selected } = e
+    e.selectedNodes.forEach(item => {
+      item.selected = true
+    })
     const isSelected = e.selected
     const { key } = e.node
+    console.log('key', key)
     const isFolder = !!e.node.children
     // 多选情况下，点击那个剩哪个
     if (!isSelected) {
@@ -232,8 +234,6 @@ const Left = ({ dispatch, bar, operate }) => {
   // 展开 / 收起 全部节点
   const myOnExpand = (expandedKeys, { expanded, node }) => {
     setIsExpand(expandedKeys)
-    console.log('kes', expandedKeys)
-    console.log('isE', isExpand)
   }
   //
   const onDrop = info => {
@@ -322,58 +322,51 @@ const Left = ({ dispatch, bar, operate }) => {
       mode="inline"
       theme="dark"
       className="left-menu"
-      inlineCollapsed={ inlineCollapsed }>
+      style={{
+      }}
+      inlineCollapsed={inlineCollapsed}>
       <div className="left-wrap">
         <div className="header">
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
-            style={ { cursor: 'pointer' } }/>
+            type="icon-tucengshouqi" onClickCapture={() => toggle()}
+            style={{ cursor: 'pointer' }} />
         </div>
-        <ToolBar data={ topBarIcons } iconSize="14px" getActiveIcon={ getActiveIcon }>
+        <ToolBar data={topBarIcons} iconSize="14px" getActiveIcon={getActiveIcon}>
         </ToolBar>
-        {/*右键菜单Dropdown */ }
+        {/*右键菜单Dropdown */}
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
-        <div>
-          <Tree
-            ref={ treeRef }
-            draggable
-            blockNode
-            fieldNames={
-              { key: 'id' }
-            }
-            multiple={ isMultipleTree }
-            switcherIcon={ <DownOutlined/> }
-            defaultExpandedKeys={ customExpandKeys }
-            onDrop={ onDrop }
-            // onDragStart={start}
-            // onDragEnd={() => console.log('onDragEnd')}
-            // onDragEnter={() => console.log('onDragEnter')}
-            // onDragLeave={() => console.log('onDragLeave')}
-            // onDragOver={() => console.log('onDragOver')}
-            onExpand={ myOnExpand }
-            onSelect={ onSelect }
-            onRightClick={ onRightClick }
-            treeData={ bar.treeData }
-            selectedKeys={ selected }
-            titleRender={ (nodeData) => {
-              return (<EveryTreeNode
-                { ...nodeData }
-                isExpand={ isExpand }
-                getCurrentMenuLocation={ getCurrentMenuLocation }
-              />)
-            }
-            }
-          />
-        </div>
-
-        {/* </Dropdown> */ }
-        { isShowRightMenu &&
-        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
+        <Tree
+          draggable
+          blockNode
+          fieldNames={
+            { key: 'id' }
+          }
+          multiple={isMultipleTree}
+          switcherIcon={<DownOutlined />}
+          defaultExpandedKeys={customExpandKeys}
+          onDrop={onDrop}
+          onExpand={myOnExpand}
+          onSelect={onSelect}
+          onRightClick={onRightClick}
+          treeData={bar.treeData}
+          selectedKeys={selected}
+          titleRender={(nodeData) => {
+            return (<EveryTreeNode
+              {...nodeData}
+              isExpand={isExpand}
+              getCurrentMenuLocation={getCurrentMenuLocation}
+            />)
+          }
+          }
+        />
+        {/* </Dropdown> */}
+        {isShowRightMenu &&
+          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
       </div>
       <div className="footer">
-        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
+        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
     </Menu>

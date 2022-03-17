@@ -1,0 +1,30 @@
+.EveryItem-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 5px 6px;
+  width: 100px;
+  height: 80px;
+  cursor: pointer;
+
+  .db-img {
+    width: 100px;
+    height: 60px;
+    border: 1px solid #ccc;
+    // box-shadow: 0 0 2px 2px;
+  }
+  .db-img:hover {
+    border: 1px solid rgb(55, 128, 238);
+  }
+
+  .db-text {
+    width: 95%;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}

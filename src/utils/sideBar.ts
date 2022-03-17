@@ -70,21 +70,6 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
     }
   };
   recursiveFn(treeDataCopy, selectedNodes);
-  // const recursiveFn = (data: any, id: string) => {
-  //   console.log('移动的id', id)
-  //   for (let i = 0, len = data.length; i < len; i++) {
-  //     const item = data[i];
-  //     if (item.id === id) {
-  //       data[i] = data.splice(i - 1, 1, data[i])[0];
-  //       break;
-  //     } else if (item.children) {
-  //       recursiveFn(item.children, id);
-  //     }
-  //   }
-  // };
-  // for (let i = 0, len = selectedNodes.length; i < len; i++) {
-  //   recursiveFn(treeDataCopy, selectedNodes[i]);
-  // }
   return treeDataCopy;
 };
 
