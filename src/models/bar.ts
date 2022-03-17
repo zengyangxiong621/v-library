@@ -197,6 +197,67 @@ export default {
         background: '#21232E',
       },
     },
+    pageConfigData: [
+      {
+        name: 'recommend',
+        displayName: '屏幕大小',
+        value: '0',
+        options: [
+          {
+            name: '大屏推荐尺寸1920*1080',
+            value: '0',
+          },
+          {
+            name: 'web最常见尺寸1366*768',
+            value: '1',
+          },
+          {
+            name: 'web最小尺寸1024*768',
+            value: '2',
+          },
+          {
+            name: '自定义',
+            value: '4',
+          },
+        ],
+        width: 1920,
+        height: 1080,
+      },
+      {
+        name: 'style',
+        displayName: '背景',
+        value: '#000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      },
+      {
+        name: 'background',
+        displayName: '背景图',
+        value: 'url', // 有背景图则返回背景图的url，没有背景图返回空或者null
+      },
+      {
+        name: 'grid',
+        displayName: '栅格间距',
+        value: 5,
+      },
+      {
+        name: 'zoom',
+        displayName: '缩放设置',
+        value: 0,
+        options: [
+          {
+            name: '按屏幕比例适配',
+            value: '0',
+          },
+          {
+            name: '强制铺满',
+            value: '1',
+          },
+          {
+            name: '原比例展示溢出滚动',
+            value: '2',
+          },
+        ],
+      },
+    ],
   } as IBarState,
   subscriptions: {
     init({ dispatch }: any) {

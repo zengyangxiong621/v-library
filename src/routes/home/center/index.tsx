@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 
-import './index.css'
+import './index.less'
 import Draggable from 'react-draggable'
 import CustomDraggable from './components/CustomDraggable'
 import ScaleDragCom from './components/ScaleDragCom'
@@ -19,9 +19,32 @@ const Center = ({ bar, dispatch }: any) => {
   const isSupportMultiple = bar.isSupportMultiple
   let supportLinesRef = bar.supportLinesRef
   const canvasConfigData = bar.canvasConfigData
+  const [ canvasSize, setCanvasSize ] = useState({
+    width: 0,
+    height: 0,
+  })
+  const calcCanvasSize = () => {
+    let getCurrentDocumentWidth = document.documentElement.clientWidth
+    const getCurrentDocumentHeight = document.documentElement.clientHeight
+    if(getCurrentDocumentWidth < 1366) {
+      getCurrentDocumentWidth = 1366
+    }
+    const width = getCurrentDocumentWidth - 40 - 300 - 333
+    canvasConfigData.config.scale = (width / canvasConfigData.style.width).toFixed(3)
+    const height = canvasConfigData.style.height * canvasConfigData.config.scale
+    setCanvasSize({
+      width,
+      height,
+    })
+  }
   useEffect(() => {
+    calcCanvasSize()
+    window.addEventListener('resize', (ev) => {
+      calcCanvasSize()
+    })
     return () => {
-
+      window.removeEventListener('resize', (ev) => {
+      })
     }
   }, [])
   const filterKey = [ 'ctrl', 'shift' ]
@@ -86,8 +109,9 @@ const Center = ({ bar, dispatch }: any) => {
       <div
         className="canvas-container"
         style={ {
-          width: canvasConfigData.style.width * canvasConfigData.config.scale,
-          height: canvasConfigData.style.height * canvasConfigData.config.scale,
+          ...canvasSize,
+          // width: canvasConfigData.style.width * canvasConfigData.config.scale,
+          // height: canvasConfigData.style.height * canvasConfigData.config.scale,
         } }
       >
         <div

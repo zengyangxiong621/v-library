@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
-import './index.css'
+import './index.less'
 import { connect } from 'dva'
 
 import { Input } from 'antd'

@@ -29,8 +29,8 @@ let SupportLines: any = ({ bar, dispatch, cRef }: any) => {
       <div className="v-line"/>
       <div className="h-line"/>
       <div className="position-info"
-           style={ { position: 'absolute', bottom: 20, right: 20, color: 'red', fontSize: 16 } }>
-        位置信息: {
+           style={ { position: 'absolute', bottom: 20, right: 20, color: 'red', fontSize: 22 } }>
+        {
         style.left + ',' + style.top
       }
       </div>

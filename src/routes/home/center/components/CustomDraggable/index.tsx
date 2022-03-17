@@ -61,8 +61,11 @@ const CustomDraggable
     })
     return [ xPositionList, yPositionList ]
   }
-  const handleDrag = (ev: DraggableEvent, data: DraggableData, component: IComponent | ILayerGroup | undefined, config: IConfig) => {
-    console.log('拖动')
+  const handleDrag = (ev: DraggableEvent | any, data: DraggableData, component: IComponent | ILayerGroup | undefined, config: IConfig) => {
+    console.log('组件位置', data.x)
+    // 向上取整
+    let aroundX = Math.ceil(data.x)
+    let aroundY = Math.ceil(data.y)
     if(!component) {
       return
     }
@@ -72,11 +75,11 @@ const CustomDraggable
         component.config.position.x = data.x
         component.config.position.y = data.y
       }
-      supportLinesRef.handleSetPosition(data.x, data.y)
+      supportLinesRef.handleSetPosition(aroundX, aroundY)
     }
     if(bar.dragStatus === '一分组') {
       // 小组移动
-      supportLinesRef.handleSetPosition(data.x, data.y)
+      supportLinesRef.handleSetPosition(aroundX, aroundY)
     }
     if(bar.dragStatus === '多个') {
       if(component.id in bar.selectedComponentRefs) {
@@ -97,6 +100,8 @@ const CustomDraggable
     supportLinesRef.handleSetPosition(0, 0, 'none')
     if('config' in component && bar.dragStatus === '一组件') {
       // 单个组件移动
+      component.config.position.x = Math.ceil(data.x)
+      component.config.position.y = Math.ceil(data.y)
       dispatch({
         type: 'bar/save',
         payload: {
@@ -249,8 +254,6 @@ const CustomDraggable
   }
   const handleDblClick = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     e.stopPropagation()
-    console.log()
-    console.log('双击')
   }
   const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     e.stopPropagation()
@@ -276,7 +279,6 @@ const CustomDraggable
     <div className="c-custom-draggable">
       {
         treeData.map(layer => {
-          console.log('layer', layer)
           let config: IConfig = {
             position: {
               x: 0,
@@ -317,6 +319,7 @@ const CustomDraggable
           }
           return (
             <Draggable
+              scale={ bar.canvasConfigData.config.scale }
               ref={ (ref: any) => {
                 allComponentRefs[layer.id] = ref
                 return allComponentRefs[layer.id]
