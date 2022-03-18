@@ -3,8 +3,6 @@ import './index.less'
 
 const EveryItem = (props: any) => {
   const { data } = props
-  console.log('da', data);
-
   return (
     <div className='EveryItem-wrap'>
       <div className='db-img'></div>

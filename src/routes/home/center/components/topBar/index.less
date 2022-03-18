@@ -13,6 +13,18 @@
   //去除 menu.Item 默认行高 并且 垂直居中
   align-items: center;
   line-height: normal;
+
+  .TopBar-submenu {
+    height: 100%;
+    line-height: 35px;
+    width: 68px;
+    padding: 0 20px 0 0 !important;
+    text-align: right;
+    color: #ccc;
+  }
+  .TopBar-submenu:hover {
+    background-color: #4B4D63;
+  }
 }
 .self-tooltip {
   width: 352px;
@@ -21,10 +33,19 @@
   color: #ccc;
   // padding-top: 10px;
 }
+.hasList-self-tooltip {
+  width: 456px;
+  height: 376px;
+  background: #22252e;
+  color: #ccc;
+  overflow: hidden;
+}
 
-.ant-menu-submenu:hover
-  > .ant-menu-submenu-title
-  > .ant-menu-submenu-expand-icon,
-.ant-menu-submenu:hover > .ant-menu-submenu-title {
-  color: #fff;
+
+// .ant-menu-light .ant-menu-submenu-title:hover {
+//   color: #fff;
+// }
+
+.ant-menu-horizontal > .ant-menu-item::after, .ant-menu-horizontal > .ant-menu-submenu::after {
+  display: none;
 }

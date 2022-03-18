@@ -18,10 +18,10 @@ const Header = props => {
   const getActiveIcon = (icon) => {
     console.log('当前的icon', icon);
     setActiveIcon(icon)
-    if(icon === 'zujian') {
+    if (icon === 'zujian') {
       console.log('zujian');
     }
-    if(icon === 'sucai') {
+    if (icon === 'sucai') {
       console.log('sucai');
     }
   }
@@ -40,8 +40,14 @@ const Header = props => {
         {
           centerIconArr.map(item => {
             return (
-              <NavigationItem getActiveIcon={getActiveIcon}
-                data={item} activeIcon={activeIcon} />
+              <div>
+                {
+                  item.icon === 'line' ? <div className='line'></div>
+                    :
+                    <NavigationItem getActiveIcon={getActiveIcon}
+                      data={item} activeIcon={activeIcon} />
+                }
+              </div>
             )
           })
         }
@@ -68,6 +74,9 @@ const centerIconArr = [
     text: '恢复'
   },
   {
+    icon: 'line',
+  },
+  {
     icon: 'zujian',
     text: '组件'
   },
@@ -82,6 +91,9 @@ const centerIconArr = [
   {
     icon: 'yinyongmianban',
     text: '引用面板'
+  },
+  {
+    icon: 'line',
   },
   {
     icon: 'xiangmuguolvqi',
