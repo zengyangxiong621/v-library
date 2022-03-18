@@ -9,6 +9,7 @@ import { EditableTable } from '../fieldMapTable'
 import ComponentCard from '../componentCard'
 import RotationAngle from '../rotationAngle'
 import ChartMarginSetting from '../chartMargin'
+import ChartRadiusSetting from '../chartRadius'
 
 import {
   Form,
@@ -62,6 +63,7 @@ const SingleLayer = props => {
               </Collapse>
               <RotationAngle />
               <ChartMarginSetting />
+              <ChartRadiusSetting/>
             </ComponentCard>
           </TabPane>
           <TabPane tab="数据" key="2">
