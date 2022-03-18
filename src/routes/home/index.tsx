@@ -35,7 +35,6 @@ function App() {
     }
     return ratio
   }
-
   const isScale = () => {
     let rate = detectZoom()
     console.log('rate', rate)
@@ -54,7 +53,6 @@ function App() {
     189: true, // -
   };
   useEffect(() => {
-
     // 覆盖ctrl||command + ‘+’/‘-’
     document.onkeydown = function (event) {
       const e = event || window.event;
@@ -101,6 +99,7 @@ function App() {
     // })
     return () => {
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -125,4 +124,4 @@ function App() {
 
 
 
-  export default App
+export default App
