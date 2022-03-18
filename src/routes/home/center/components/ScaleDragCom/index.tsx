@@ -56,8 +56,7 @@ const ScaleDragCom = ({ bar, dispatch }: any) => {
           onScaleEnd={ handleScaleEnd }
         >
           <div>
-            哈哈哈哈
-            <Button onClick={ handleClick }>设置</Button>
+
           </div>
         </ScaleContainer>
       </Draggable>
