@@ -60,7 +60,7 @@ const ChartStrokeSetting = props => {
         label="饼图描边"
       >
         <Form.Item name="lineType" noStyle>
-          <Select className="custom-select" defaultValue={stroke.lineType} style={{ width: '86px', marginRight: '8px',float: 'left'}}>
+          <Select className="custom-select" defaultValue={stroke.lineType} style={{ width: '86px', marginRight: '8px',float: 'left',marginBottom:0}}>
             <Option value="solid">实线</Option>
             <Option value="dotted">虚线</Option>
           </Select>
@@ -77,6 +77,11 @@ const ChartStrokeSetting = props => {
             <SketchPicker color={stroke.color} onChange={(e) => { handleBgcChange(e) }} />
           </div> : null}
         </Form.Item>
+      <Row style={{width: '100%'}}>
+        <Col span={10} className="detail-txt">线型</Col>
+        <Col span={10} className="detail-txt" style={{ textIndent: '4px' }}>粗细</Col>
+        <Col span={4} className="detail-txt" style={{ textIndent: '6px' }}>颜色</Col>
+      </Row>
       </Form.Item>
     </Form>
   )
