@@ -62,7 +62,6 @@ const CustomDraggable
     return [ xPositionList, yPositionList ]
   }
   const handleDrag = (ev: DraggableEvent | any, data: DraggableData, component: IComponent | ILayerGroup | undefined, config: IConfig) => {
-    console.log('组件位置', data.x)
     // 向上取整
     let aroundX = Math.ceil(data.x)
     let aroundY = Math.ceil(data.y)
