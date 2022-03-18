@@ -29,14 +29,31 @@ const Center = ({ bar, dispatch }: any) => {
     if(getCurrentDocumentWidth < 1366) {
       getCurrentDocumentWidth = 1366
     }
-    const width = getCurrentDocumentWidth - 40 - 300 - 333
-    canvasConfigData.config.scale = (width / canvasConfigData.style.width).toFixed(3)
+    const width = getCurrentDocumentWidth - 40 - 191 - 261
+    canvasConfigData.config.scale = Number((width / canvasConfigData.style.width).toFixed(3))
     const height = canvasConfigData.style.height * canvasConfigData.config.scale
     setCanvasSize({
       width,
       height,
     })
   }
+  useEffect(() => {
+    if(canvasConfigData.config.scale) {
+      console.log('scale', canvasConfigData.config.scale)
+      const width = Math.ceil(canvasConfigData.style.width * canvasConfigData.config.scale)
+      const height = Math.ceil(canvasConfigData.style.height * canvasConfigData.config.scale)
+      console.log('width', width)
+      setCanvasSize({
+        width,
+        height,
+      })
+      // canvasConfigData.style.width = canvasConfigData.style.width * canvasConfigData.config.scale
+    }
+    // canvasConfigData.style.width = canvasConfigData.style.width * canvasConfigData.config.scale
+    // canvasConfigData.style.height = canvasConfigData.style.height * canvasConfigData.config.scale
+    // console.log('canvasConfigData.style.height', canvasConfigData.style.height)
+  }, [ bar.canvasConfigData.config.scale ])
+
   useEffect(() => {
     calcCanvasSize()
     window.addEventListener('resize', (ev) => {
@@ -125,9 +142,9 @@ const Center = ({ bar, dispatch }: any) => {
         >
           <div className="draggable-wrapper">
             <div style={ { position: 'absolute', left: 0, top: 0 } }>
-              <Button onClick={ handleClick }>刷新</Button>
-              <Button onClick={ handleDelete }>删除</Button>
-              <Button onClick={ handleSelect }>选中</Button>
+              {/*<Button onClick={ handleClick }>刷新</Button>*/ }
+              {/*<Button onClick={ handleDelete }>删除</Button>*/ }
+              {/*<Button onClick={ handleSelect }>选中</Button>*/ }
             </div>
             <ScaleDragCom/>
             <SupportLines
@@ -166,12 +183,22 @@ const Center = ({ bar, dispatch }: any) => {
           </div>
         </div>
       </div>
+      <div style={ {
+        position: 'absolute',
+        bottom: '50px',
+        right: '20px',
+        color: '#999'
+      } }>
+          按住空格可拖拽画布 { canvasConfigData.style.width }*{ canvasConfigData.style.height }
+          { ' ' + Math.ceil(canvasConfigData.config.scale * 100) + '%' }
+      </div>
     </div>
   )
 }
 export default connect(({
                           bar,
-                        }: any,
+                        }
+                          : any,
 ) => (
   {
     bar,

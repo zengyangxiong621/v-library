@@ -4,9 +4,8 @@ import Draggable from 'react-draggable'
 import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
 import './index.css'
-
 import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
-import { layerComponentsFlat } from '../../../../../utils'
+import { deepClone, layerComponentsFlat } from '../../../../../utils'
 
 
 const CustomDraggable
@@ -61,8 +60,53 @@ const CustomDraggable
     })
     return [ xPositionList, yPositionList ]
   }
+  const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent) => {
+    setStartPosition({
+      x: data.x,
+      y: data.y,
+    })
+    selectedComponents = []
+    bar.dragStatus = '一组件'
+    if(selectedComponentOrGroup.length > 1) {
+      // 注意一下
+      // 选中多个组件、或者多个分组时
+      bar.dragStatus = '多个'
+      selectedComponents = components.filter(component => selectedComponentIds.includes(component.id))
+      Object.keys(allComponentRefs).forEach(key => {
+        if(selectedComponentIds.includes(key)) {
+          bar.selectedComponentRefs[key] = allComponentRefs[key]
+        }
+      })
+    } else {
+      // 当选中了一个分组时，或者没有选中时
+      if('children' in layer) {
+        bar.dragStatus = '一分组'
+        selectedComponentIds = layerComponentsFlat(layer.children)
+        selectedComponents = components.filter(component => selectedComponentIds.includes(component.id))
+      }
+    }
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        scaleDragData: {
+          position: {
+            x: 0,
+            y: 0,
+          },
+          style: {
+            display: 'none',
+            width: 0,
+            height: 0,
+          },
+        },
+        selectedComponents: selectedComponents,
+      },
+    })
+  }
+
   const handleDrag = (ev: DraggableEvent | any, data: DraggableData, component: IComponent | ILayerGroup | undefined, config: IConfig) => {
     // 向上取整
+    console.log('拖拽')
     let aroundX = Math.ceil(data.x)
     let aroundY = Math.ceil(data.y)
     if(!component) {
@@ -192,51 +236,7 @@ const CustomDraggable
       },
     })
   }
-  const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent) => {
-    setStartPosition({
-      x: data.x,
-      y: data.y,
-    })
-    selectedComponents = []
-    bar.dragStatus = '一组件'
-    if(selectedComponentOrGroup.length > 1) {
-      // 注意一下
-      // 选中多个组件、或者多个分组时
-      bar.dragStatus = '多个'
-      selectedComponents = components.filter(component => selectedComponentIds.includes(component.id))
-      Object.keys(allComponentRefs).forEach(key => {
-        if(selectedComponentIds.includes(key)) {
-          bar.selectedComponentRefs[key] = allComponentRefs[key]
-        }
-      })
-    } else {
-      // 当选中了一个分组时，或者没有选中时
-      if('children' in layer) {
-        bar.dragStatus = '一分组'
-        selectedComponentIds = layerComponentsFlat(layer.children)
-        console.log('selectedComponentIds', selectedComponentIds)
-        selectedComponents = components.filter(component => selectedComponentIds.includes(component.id))
-        console.log('selectedComponents', selectedComponents)
-      }
-    }
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        scaleDragData: {
-          position: {
-            x: 0,
-            y: 0,
-          },
-          style: {
-            display: 'none',
-            width: 0,
-            height: 0,
-          },
-        },
-        selectedComponents: selectedComponents,
-      },
-    })
-  }
+
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
     console.log('点击')
     e.stopPropagation()
@@ -277,7 +277,7 @@ const CustomDraggable
   return (
     <div className="c-custom-draggable">
       {
-        treeData.map(layer => {
+        deepClone(treeData).reverse().map((layer: ILayerGroup | ILayerComponent) => {
           let config: IConfig = {
             position: {
               x: 0,

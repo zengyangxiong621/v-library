@@ -13,7 +13,7 @@
 .box .r {
   position: absolute;
   z-index: 1;
-  background: #7070f0;
+  background: #2482FF;
 }
 
 .box .l,
@@ -57,7 +57,7 @@
   height: 10px;
   position: absolute;
   background: #fff;
-  border: 1px solid #7070f0;
+  border: 1px solid #2482FF;
   border-radius: 50%;
   z-index: 2;
   cursor: nwse-resize
@@ -102,7 +102,7 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background: pink;
+  background: #2482FF;
   z-index: 10000;
 }
 

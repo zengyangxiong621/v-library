@@ -28,11 +28,13 @@ let SupportLines: any = ({ bar, dispatch, cRef }: any) => {
     >
       <div className="v-line"/>
       <div className="h-line"/>
-      <div className="position-info"
-           style={ { position: 'absolute', bottom: 20, right: 20, color: 'red', fontSize: 22 } }>
+      <div
+        className="position-info"
+        style={ { position: 'absolute', bottom: 20, right: 20, color: '#b6b2b2', fontSize: 22 } }
+      >
         {
-        style.left + ',' + style.top
-      }
+          style.left + ',' + style.top
+        }
       </div>
     </div>
   )

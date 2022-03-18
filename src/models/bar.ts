@@ -189,12 +189,12 @@ export default {
     canvasConfigData: {
       type: '',
       config: {
-        scale: 0.4125,
+        scale: 0,
       },
       style: {
         width: 1920,
         height: 1080,
-        background: '#21232E',
+        background: '#222430',
       },
     },
     pageConfigData: [
@@ -434,7 +434,7 @@ export default {
       return { ...state }
     },
     test(state: IBarState) {
-      console.log('gg ')
+      console.log('test')
       return { ...state }
     },
     test2(state: IBarState) {

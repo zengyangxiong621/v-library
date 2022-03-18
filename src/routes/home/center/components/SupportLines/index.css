@@ -3,17 +3,17 @@
   bottom: 0;
   right: 0;
   width: 10000px;
-  height: 2px;
-  background-color: blue;
+  height: 1px;
+  border-top: 1px dashed #b6b2b2;
 }
 
 .SupportLines .h-line {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 2px;
   height: 10000px;
-  background-color: blue;
+  width: 1px;
+  border-left: 1px dashed #b6b2b2;
 }
 
 .SupportLines position-info {

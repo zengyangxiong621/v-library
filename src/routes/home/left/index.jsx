@@ -97,7 +97,6 @@ const Left = ({ dispatch, bar, operate }) => {
       } = e
       // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
       const tree = document.querySelector('.ant-tree')
-
       // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
       if (className && typeof className === 'string') {
         const res = tree.querySelector(`.${e.target.className}`)
