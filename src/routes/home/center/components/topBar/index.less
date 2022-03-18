@@ -1,0 +1,30 @@
+.TopBar-wrap {
+  box-sizing: content-box;
+  width: 100%;
+  height: 35px;
+  background-color: #3d404d;
+  color: #ccc;
+  border-left: 0.5px solid black;
+  border-right: 1px solid black;
+  margin-right: 1px;
+  border-top: 0;
+  border-bottom: 0;
+  display: flex;
+  //去除 menu.Item 默认行高 并且 垂直居中
+  align-items: center;
+  line-height: normal;
+}
+.self-tooltip {
+  width: 352px;
+  height: 376px;
+  background: #22252e;
+  color: #ccc;
+  // padding-top: 10px;
+}
+
+.ant-menu-submenu:hover
+  > .ant-menu-submenu-title
+  > .ant-menu-submenu-expand-icon,
+.ant-menu-submenu:hover > .ant-menu-submenu-title {
+  color: #fff;
+}
