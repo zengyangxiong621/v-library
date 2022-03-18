@@ -29,7 +29,7 @@ const Center = ({ bar, dispatch }: any) => {
     if(getCurrentDocumentWidth < 1366) {
       getCurrentDocumentWidth = 1366
     }
-    const width = getCurrentDocumentWidth - 40 - 191 - 261
+    const width = getCurrentDocumentWidth - 40 - 250 - 333
     canvasConfigData.config.scale = Number((width / canvasConfigData.style.width).toFixed(3))
     const height = canvasConfigData.style.height * canvasConfigData.config.scale
     setCanvasSize({

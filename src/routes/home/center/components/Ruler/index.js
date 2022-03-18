@@ -8,7 +8,7 @@ const Ruler = (props) => {
   }, [])
   return (
     <div className="Ruler">
-      GG
+      {/*GG*/}
     </div>
   )
 }
