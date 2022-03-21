@@ -11,6 +11,12 @@ import {
   Row, Col
 } from 'antd';
 
+const styleColor = {
+  "name": "styleColor",
+  "displayName": "背景",
+  "value": "#000" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+}
+
 const TextStyleSetting = props => {
   const { Option } = Select;
   const { CheckableTag } = Tag;
@@ -45,6 +51,11 @@ const TextStyleSetting = props => {
     console.log('rowSpaceChange')
   }
 
+  // 背景色变化
+  const styleColorChange = (val) => {
+    console.log(val)
+  }
+
 
   return (
     <Form
@@ -69,7 +80,7 @@ const TextStyleSetting = props => {
             <InputNumber defaultValue={fontSetting.fontSize} className="po-size-input" style={{width:'68px'}} onBlur={fontSizeChange} />
           </Form.Item>
         </Input.Group>
-        <BackgroundSetting/>
+        <BackgroundSetting data={styleColor} onChange={styleColorChange}/>
         <Input.Group compact style={{marginTop:'8px'}} className="fontBi">
           <Form.Item name="blod" noStyle>
             <CheckableTag

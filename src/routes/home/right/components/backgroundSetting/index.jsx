@@ -10,21 +10,54 @@ import {
 } from 'antd';
 import { SketchPicker } from 'react-color'
 
+const isHex = (str) => {
+  return str.startsWith('#')
+}
+const rgbToHex = (rgba) => {
+  const { r, g, b } = rgba
+  let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  return hex;
+}
+const hexToRgb = (hexValue) => {
+  const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  const hex = hexValue.replace(rgx, (m, r, g, b) => r + r + g + g + b + b);
+  const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const r = parseInt(rgb[1], 16);
+  const g = parseInt(rgb[2], 16);
+  const b = parseInt(rgb[3], 16);
+  return {
+    r,
+    g,
+    b
+  };
+}
+const getRgbaNum = (rgba) => {
+  let value = rgba.match(/(\d(\.\d+)?)+/g)
+  return {
+    r: value[0],
+    g: value[1],
+    b: value[2],
+    a: value[3]
+  }
+}
+
 const BackgroundSetting = props => {
   const [form] = Form.useForm();
   const formItemLayout = {
     labelAlign: 'left'
   };
+  const _data = props.data;
+
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [color, setColor] = useState({
-    hex: '#232630',
-    rgb: {
-      r: 35,
-      g: 38,
-      b: 48,
+    hex: isHex(_data.value) ? _data.value : rgbToHex(getRgbaNum(_data.value)),
+    rgb: isHex(_data.value) ? {
+      ...hexToRgb(_data.value),
       a: 1
+    } : {
+      ...getRgbaNum(_data.value)
     },
-    opacity: 100
+    opacity: isHex(_data.value) ? 100 : getRgbaNum(_data.value).a * 100
   });
   const handleBgcChange = (e) => {
     setColor({
@@ -36,9 +69,13 @@ const BackgroundSetting = props => {
       hex: e.hex,
       opacity: e.rgb.a * 100
     });
+    if(e.rgb.a===1){
+      props.onChange(e.hex)
+    }else{
+      props.onChange(`rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`)
+    }
   }
   const handleHexChange = (e) => {
-    console.log('e', e)
     const hexTmp = e.target.value
     const flag =
       /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hexTmp)
@@ -57,23 +94,14 @@ const BackgroundSetting = props => {
     form.setFieldsValue({
       hex,
     });
-  }
-  const hexToRgb = (hexValue) => {
-    const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    const hex = hexValue.replace(rgx, (m, r, g, b) => r + r + g + g + b + b);
-    const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    const r = parseInt(rgb[1], 16);
-    const g = parseInt(rgb[2], 16);
-    const b = parseInt(rgb[3], 16);
-    return {
-      r,
-      g,
-      b
-    };
+    if(color.opacity === 100){
+      props.onChange(hex)
+    }else{
+      props.onChange(`rgba(${rgb.r},${rgb.g},${rgb.b},${color.rgb.a})`)
+    }
   }
   const handleOpacityChange = (e) => {
-    const opacityTmp = e.target.value ? Number.parseInt(e.target.value) : 0
-    const opacity = opacityTmp > 100 ? 100 : opacityTmp < 0 ? 0 : opacityTmp
+    const opacity = e > 100 ? 100 : e < 0 ? 0 : e
     setColor({
       hex: color.hex,
       rgb: {
@@ -87,22 +115,21 @@ const BackgroundSetting = props => {
     form.setFieldsValue({
       opacity
     });
+    if(opacity === 100){
+      props.onChange(color.hex)
+    }else{
+      props.onChange(`rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${opacity / 100})`)
+    }
   }
   const selectBgc = () => {
     setDisplayColorPicker(!displayColorPicker)
   }
-
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-  };
-
 
   return (
     <Form
       className="custom-form"
       form={form}
       {...formItemLayout}
-      onFinish={onFinish}
       colon={false}
     >
       <div className="color-swatch" onClick={selectBgc}>
