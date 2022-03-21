@@ -5,6 +5,7 @@ import { connect } from 'dva'
 import './index.less'
 import { Layout } from 'antd'
 
+import { throttle } from '../../utils/index'
 
 import CustomHeader from './components/header/index'
 import Left from './left'
@@ -21,17 +22,17 @@ function App({ bar, dispatch }: any) {
       screen: any = window.screen,
       ua = navigator.userAgent.toLowerCase()
 
-    if(window.devicePixelRatio !== undefined) {
+    if (window.devicePixelRatio !== undefined) {
       ratio = window.devicePixelRatio
-    } else if(~ua.indexOf('msie')) {
-      if(screen.deviceXDPI && screen.logicalXDPI) {
+    } else if (~ua.indexOf('msie')) {
+      if (screen.deviceXDPI && screen.logicalXDPI) {
         ratio = screen.deviceXDPI / screen.logicalXDPI
       }
-    } else if(window.outerWidth !== undefined && window.innerWidth !== undefined) {
+    } else if (window.outerWidth !== undefined && window.innerWidth !== undefined) {
       ratio = window.outerWidth / window.innerWidth
     }
 
-    if(ratio) {
+    if (ratio) {
       ratio = Math.round(ratio * 100)
     }
     return ratio
@@ -39,7 +40,7 @@ function App({ bar, dispatch }: any) {
   const isScale = () => {
     let rate = detectZoom()
     console.log('rate', rate)
-    if(rate != 100) {
+    if (rate != 100) {
       //如何让页面的缩放比例自动为100,'transform':'scale(1,1)'没有用，又无法自动条用键盘事件，目前只能提示让用户如果想使用100%的比例手动去触发按ctrl+0
       // alert('当前页面不是100%显示，请按键盘ctrl+0恢复100%显示标准，以防页面显示错乱！')
     }
@@ -55,19 +56,19 @@ function App({ bar, dispatch }: any) {
   }
   useEffect(() => {
     // 覆盖ctrl||command + ‘+’/‘-’
-    document.onkeydown = function(event) {
+    document.onkeydown = function (event) {
       const e = event || window.event
       const ctrlKey = e.ctrlKey || e.metaKey
-      if(ctrlKey && keyCodeMap[e.keyCode]) {
+      if (ctrlKey && keyCodeMap[e.keyCode]) {
         e.preventDefault()
-      } else if(e.detail) { // Firefox
+      } else if (e.detail) { // Firefox
         event.returnValue = false
       }
     }
     // 覆盖鼠标滑动
     document.body.addEventListener('wheel', (e) => {
-      if(e.ctrlKey) {
-        if(e.deltaY < 0) {
+      if (e.ctrlKey) {
+        if (e.deltaY < 0) {
           console.log('滚')
           e.preventDefault()
           bar.canvasConfigData.config.scale = Number((bar.canvasConfigData.config.scale + 0.03).toFixed(3))
@@ -77,7 +78,7 @@ function App({ bar, dispatch }: any) {
           })
           return false
         }
-        if(e.deltaY > 0) {
+        if (e.deltaY > 0) {
           e.preventDefault()
           bar.canvasConfigData.config.scale = Number((bar.canvasConfigData.config.scale - 0.03).toFixed(3))
           dispatch({
@@ -93,18 +94,42 @@ function App({ bar, dispatch }: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // 拖动右边框改变右侧菜单栏的宽度
+  const dragEl: any = document.querySelector('.left-menu')
+  const changeWidth = throttle((e: any) => {
+    e.stopPropagation()
+    console.log('一次', e.pageX);
+    if (e.clientX > 180 && e.clientX < 300) {
+      dragEl.style.width = `${e.clientX}px`
+    }
+  }, 50)
+  const onMouseDown = (e: any) => {
+    document.addEventListener('mousemove', changeWidth)
+  }
+  document.addEventListener('mouseup', () => {
+    document.removeEventListener('mousemove', changeWidth)
+  })
+
+
   return (
     <Layout>
       <Header className="home-header">
-        <CustomHeader/>
+        <CustomHeader />
       </Header>
       <div className="p-home">
-        <Left/>
-        <div className="center-wrap">
-          <CenterHeaderBar/>
-          <Center/>
+        {/* 设置右边框可拖动 */}
+        <Left />
+        <div className='left-parent'
+          onMouseDownCapture={(e) => onMouseDown(e)}
+        // onMouseUp={(e) => onMouseUp(e)}
+        // onMouseMove={(e) => onMouseMove(e)}
+        >
         </div>
-        <Right/>
+        <div className="center-wrap">
+          <CenterHeaderBar />
+          <Center />
+        </div>
+        <Right />
       </div>
     </Layout>
   )
