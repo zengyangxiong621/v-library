@@ -10,6 +10,7 @@ import ComponentCard from '../componentCard'
 import RotationAngle from '../rotationAngle'
 import ChartMarginSetting from '../chartMargin'
 import ChartRadiusSetting from '../chartRadius'
+import ChartStrokeSetting from '../chartStroke'
 
 import {
   Form,
@@ -61,9 +62,7 @@ const SingleLayer = props => {
                   <OutsideShadowSetting></OutsideShadowSetting>
                 </Panel>
               </Collapse>
-              <RotationAngle />
-              <ChartMarginSetting />
-              <ChartRadiusSetting/>
+              <ChartStrokeSetting />
             </ComponentCard>
           </TabPane>
           <TabPane tab="数据" key="2">
