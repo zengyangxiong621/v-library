@@ -16,7 +16,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
   }
   const { name, id, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand, hover } = restPorps
   // 需要区分是单个图层还是文件夹
-  const [isFolder] = useState(!!children)
+  const [isFolder] = useState(Array.isArray(children) && children.length>0)
   // 文件夹是展开了还是关闭了
   const isFolderExpand = Array.isArray(isExpand) && isExpand.includes(id)
   // const [eyeIconShow, setEyeIconShow] =useState(true)
@@ -161,7 +161,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
           // onFocus={(e) => oFocus(e)}
           onBlur={(e) => oBlur(e)}
         />
-        <span style={{
+        <span className='title-text' style={{
           display: showRenameInput ? 'none' : 'block'
         }}>{name}</span>
       </div>

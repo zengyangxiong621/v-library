@@ -102,13 +102,6 @@ const Left = ({ dispatch, bar, operate }) => {
         const res = tree.querySelector(`.${e.target.className}`)
         if (!res) {
           setSelected([])
-          // dispatch({
-          //   type: 'bar/selectedNode',
-          //   payload: {
-          //     key: [],
-          //     isFolder: false,
-          //   },
-          // })
           dispatch({
             type: 'bar/clearAllStatus',
           })
@@ -241,8 +234,6 @@ const Left = ({ dispatch, bar, operate }) => {
     const dropPos = info.node.pos.split('-')
     const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1])
 
-    console.log('in', info)
-
     const loop = (data, key, callback) => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].id === key) {
@@ -264,9 +255,18 @@ const Left = ({ dispatch, bar, operate }) => {
 
     if (!info.dropToGap) {
       // Drop on the content
-      loop(data, dropKey, item => {
+      loop(data, dropKey, (item, index) => {
         item.children = item.children || []
         // where to insert 示例添加到头部，可以是随意位置
+        const newGroup = {
+          name: '分组',
+          id: `${index}${item}-temp`,
+          isFolder: true,
+          children: []
+        }
+        // newGroup.children.push(item)
+        // newGroup.children.push(dragObj)
+        // data.splice(index, 1, newGroup)
         item.children.unshift(dragObj)
       })
     } else if (
@@ -331,35 +331,39 @@ const Left = ({ dispatch, bar, operate }) => {
             type="icon-tucengshouqi" onClickCapture={() => toggle()}
             style={{ cursor: 'pointer' }} />
         </div>
-        <ToolBar data={topBarIcons} iconSize="14px" getActiveIcon={getActiveIcon}>
-        </ToolBar>
+        <div className='left-wrap-toolbar'>
+          <ToolBar data={topBarIcons} iconSize="14px" getActiveIcon={getActiveIcon}>
+          </ToolBar>
+        </div>
         {/*右键菜单Dropdown */}
 
         {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
-        <Tree
-          draggable
-          blockNode
-          fieldNames={
-            { key: 'id' }
-          }
-          multiple={isMultipleTree}
-          switcherIcon={<DownOutlined />}
-          defaultExpandedKeys={customExpandKeys}
-          onDrop={onDrop}
-          onExpand={myOnExpand}
-          onSelect={onSelect}
-          onRightClick={onRightClick}
-          treeData={bar.treeData}
-          selectedKeys={selected}
-          titleRender={(nodeData) => {
-            return (<EveryTreeNode
-              {...nodeData}
-              isExpand={isExpand}
-              getCurrentMenuLocation={getCurrentMenuLocation}
-            />)
-          }
-          }
-        />
+        <div className='left-wrap-tree'>
+          <Tree
+            draggable
+            blockNode
+            fieldNames={
+              { key: 'id' }
+            }
+            multiple={isMultipleTree}
+            switcherIcon={<DownOutlined />}
+            defaultExpandedKeys={customExpandKeys}
+            onDrop={onDrop}
+            onExpand={myOnExpand}
+            onSelect={onSelect}
+            onRightClick={onRightClick}
+            treeData={bar.treeData}
+            selectedKeys={selected}
+            titleRender={(nodeData) => {
+              return (<EveryTreeNode
+                {...nodeData}
+                isExpand={isExpand}
+                getCurrentMenuLocation={getCurrentMenuLocation}
+              />)
+            }
+            }
+          />
+        </div>
         {/* </Dropdown> */}
         {isShowRightMenu &&
           <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
