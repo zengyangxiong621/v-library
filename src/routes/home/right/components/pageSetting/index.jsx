@@ -15,7 +15,73 @@ import {
   Row, Col
 } from 'antd';
 
+const pageConfig = [
+  {
+    "name": "recommend",
+    "displayName": "屏幕大小",
+    "value": "0",
+    "options": [
+      {
+        "name": "大屏推荐尺寸1920*1080",
+        "value": "0"
+      },
+      {
+        "name": "web最常见尺寸1366*768",
+        "value": "1"
+      },
+      {
+        "name": "web最小尺寸1024*768",
+        "value": "2"
+      },
+      {
+        "name": "自定义",
+        "value": "4"
+      }
+    ],
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "name": "styleColor",
+    "displayName": "背景",
+    "value": "#000" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+  },
+  {
+    "name": "backgroundImg",
+    "displayName": "背景图",
+    "value": "" // 有背景图则返回背景图的url，没有背景图返回空或者null
+  },
+  {
+    "name": "gridSpacing",
+    "displayName": "栅格间距",
+    "value": 5
+  },
+  {
+    "name": "zoom",
+    "displayName": "缩放设置",
+    "value": "0",
+    "options": [
+      {
+        "name": "按屏幕比例适配",
+        "value": "0"
+      },
+      {
+        "name": "强制铺满",
+        "value": "1"
+      },
+      {
+        "name": "原比例展示溢出滚动",
+        "value": "2"
+      }
+    ]
+  }
+]
 
+const findItem = (name) => {
+  return pageConfig.find(item => {
+    return item.name === name
+  })
+}
 
 
 const PageSetting = props => {
@@ -23,13 +89,73 @@ const PageSetting = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
+  const recommendConfig = findItem('recommend')
+  const styleColor = findItem('styleColor')
+  const backgroundImg = findItem('backgroundImg')
+  const gridSpacing = findItem('gridSpacing')
+  const zoomConfig = findItem('zoom')
+
   const [form] = Form.useForm();
-  const [width, setWidth] = useState('1920');
-  const [height, setHeight] = useState('1080');
-  
-  const [openBgImg, setOpenBgImg] = useState(false);
-  const [bgUrl, setBgUrl] = useState(null);
+  const [recommend, setRecommend] = useState(recommendConfig.value)
+  const [width, setWidth] = useState(recommendConfig.width);
+  const [height, setHeight] = useState(recommendConfig.height);
+  const [bgUrl, setBgUrl] = useState(backgroundImg.value);
+  const [spacing, setSpacing] = useState(gridSpacing.value)
   const [coverUrl, setCoverUrl] = useState(null);
+
+  // 下拉框选择
+  const recommendChange = (e) => {
+    let _width = width;
+    let _height = height;
+    switch (e) {
+      case '0':
+        _width = 1920
+        _height = 1080
+        break;
+      case '1':
+        _width = 1366
+        _height = 768
+        break;
+      case '2':
+        _width = 1024
+        _height = 768
+        break;
+      case '4':
+        break;
+    }
+    setWidth(_width);
+    setHeight(_height);
+    setRecommend(e)
+    form.setFieldsValue({
+      width: _width,
+      height: _height
+    });
+    // todo 更新数据
+    recommendConfig.width = _width;
+    recommendConfig.height = _height;
+  }
+  // 屏幕大小尺寸变化
+  const sizeChange = (str, val) => {
+    if (str === 'width') {
+      setWidth(val);
+    } else {
+      setHeight(val);
+    }
+    setRecommend('4')
+    form.setFieldsValue({
+      recommend: '4',
+    });
+    // todo 更新数据
+    recommendConfig.width = width;
+    recommendConfig.height = height;
+  }
+
+  // 背景色变化
+  const styleColorChange = (val) => {
+    console.log(val)
+    // todo 更新数据
+    styleColor.value = val
+  }
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -37,22 +163,7 @@ const PageSetting = props => {
     }
     return e && e.fileList;
   };
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-  };
 
-  // 屏幕大小尺寸变化
-  const sizeChange = (e) => {
-    setWidth(e === 't1' ? '1920' : '1366')
-    setHeight(e === 't1' ? '1080' : '768')
-    form.setFieldsValue({
-      sizeW: e === 't1' ? '1920' : '1366',
-      sizeH: e === 't1' ? '1080' : '768'
-    });
-  }
-  const onOpenBgImgChange = (e) => {
-    setOpenBgImg(e.target.checked)
-  }
   const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
@@ -66,9 +177,11 @@ const PageSetting = props => {
   }
   const handleBgChange = (info) => {
     if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, imageUrl =>
+      getBase64(info.file.originFileObj, imageUrl => {
         setBgUrl(imageUrl)
-      );
+        // todo 更新数据
+        backgroundImg.value = imageUrl
+      });
     }
   }
   const getBase64 = (img, callback) => {
@@ -77,7 +190,22 @@ const PageSetting = props => {
     reader.readAsDataURL(img);
   }
   const handleBgRemove = () => {
-    setBgUrl(null)
+    setBgUrl('')
+    // todo 更新数据
+    backgroundImg.value = ''
+  }
+
+  // 栅格间距更新
+  const gridChange = (e) => {
+    setSpacing(e)
+    // todo 更新数据
+    gridSpacing.value = e
+  }
+
+  // 缩放设置更新
+  const zoomChange = (e) => {
+    // todo 更新数据
+    zoomConfig.value = e.target.value
   }
   const handleCoverChange = (info) => {
     if (info.file.status === 'done') {
@@ -99,24 +227,22 @@ const PageSetting = props => {
           className="custom-form"
           form={form}
           {...formItemLayout}
-          onFinish={onFinish}
           colon={false}
         >
           <Form.Item
-            name="select"
+            name="recommend"
             label="屏幕大小"
           >
-            <Select className="custom-select" placeholder="请选择" defaultValue="t1" onChange={sizeChange}>
-              <Option value="t1">大屏推荐尺寸1920*1080</Option>
-              <Option value="t2">web最常见尺寸1366*768</Option>
-              <Option value="t3">web最小尺寸1024*768</Option>
-              <Option value="t4">自定义</Option>
+            <Select className="custom-select" placeholder="请选择" value={recommend} onChange={recommendChange}>
+              {recommendConfig.options.map((item) => {
+                return <Option value={item.value} key={item.value}>{item.name}</Option>
+              })}
             </Select>
             <Input.Group compact>
-              <Form.Item noStyle name="sizeW">
-                <InputNumber defaultValue={width} className="size-input" style={{ marginRight: '16px' }} />
+              <Form.Item noStyle name="width">
+                <InputNumber defaultValue={width} className="size-input" style={{ marginRight: '16px' }} onChange={(value) => sizeChange('width', value)} />
               </Form.Item>
-              <Form.Item noStyle name="sizeH">
+              <Form.Item noStyle name="height">
                 <InputNumber defaultValue={height} className="size-input" />
               </Form.Item>
             </Input.Group>
@@ -126,7 +252,7 @@ const PageSetting = props => {
             </Row>
           </Form.Item>
           <Form.Item label="背景">
-            <BackgroundSetting></BackgroundSetting>
+            <BackgroundSetting data={styleColor} onChange={styleColorChange}></BackgroundSetting>
           </Form.Item>
           {/* <Form.Item label="启用背景图">
             <Checkbox style={{ float: 'left' }} checked={openBgImg} onChange={onOpenBgImgChange}></Checkbox>
@@ -150,21 +276,17 @@ const PageSetting = props => {
           </Form.Item>
           <Form.Item label="栅格间距" name="spacing">
             <Form.Item name="input-number" noStyle>
-              <InputNumber min={0} style={{ width: '100%' }} className="size-input" defaultValue={20} />
+              <InputNumber min={0} style={{ width: '100%' }} className="size-input" defaultValue={spacing} onChange={gridChange} />
             </Form.Item>
           </Form.Item>
           <Form.Item name="zoom" label="缩放设置">
-            <Radio.Group defaultValue="a" className="zoom-set">
+            <Radio.Group defaultValue={zoomConfig.value} className="zoom-set" onChange={zoomChange}>
               <Space direction="vertical">
-                <Radio value="a" style={{
-                  width: '100%',
-                }}>按屏幕比例适配</Radio>
-                <Radio value="b" style={{
-                  width: '100%',
-                }}>强制铺满</Radio>
-                <Radio value="c" style={{
-                  width: '100%',
-                }}>原比例展示溢出滚动</Radio>
+                {zoomConfig.options.map(item => {
+                  return <Radio value={item.value} key={item.value} style={{
+                    width: '100%',
+                  }}>{item.name}</Radio>
+                })}
               </Space>
             </Radio.Group>
           </Form.Item>
