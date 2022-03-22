@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.css'
 import BackgroundSetting from '../backgroundSetting'
+import { find } from '../../../../../utils/common'
 
 import {
   Form,
@@ -77,23 +78,16 @@ const pageConfig = [
   }
 ]
 
-const findItem = (name) => {
-  return pageConfig.find(item => {
-    return item.name === name
-  })
-}
-
-
 const PageSetting = props => {
   const { Option } = Select;
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const recommendConfig = findItem('recommend')
-  const styleColor = findItem('styleColor')
-  const backgroundImg = findItem('backgroundImg')
-  const gridSpacing = findItem('gridSpacing')
-  const zoomConfig = findItem('zoom')
+  const recommendConfig = find(pageConfig,'recommend')
+  const styleColor = find(pageConfig,'styleColor')
+  const backgroundImg = find(pageConfig,'backgroundImg')
+  const gridSpacing = find(pageConfig,'gridSpacing')
+  const zoomConfig = find(pageConfig,'zoom')
 
   const [form] = Form.useForm();
   const [recommend, setRecommend] = useState(recommendConfig.value)

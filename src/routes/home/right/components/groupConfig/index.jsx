@@ -1,75 +1,81 @@
 import React, { memo, useState } from 'react'
 import './index.css'
+import { find } from '../../../../../utils/common'
 import PositionSize from '../positionSize'
+import OpacitySetting from '../opacitySetting'
+import Checkbox from '../checkBox'
 import LoadAnimation from '../loadAnimation'
 
 import {
   Form,
-  Select,
-  InputNumber,
-  Input,
-  Switch,
-  Radio,
-  Slider,
-  Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
-  Space,
   Collapse
 } from 'antd';
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
-import { SketchPicker } from 'react-color'
+
+const groupConfig = [
+  {  // 该部分的位置尺寸设置，实际上是取得分组下第一个层的位置尺寸设置
+    "name": "dimension",
+    "displayName": "位置尺寸",
+    "config": {
+      "lock":true
+    },
+    "value": [
+      {
+        "name": "left",
+        "displayName": "X轴坐标",
+        "value": 100
+      },
+      {
+        "name": "top",
+        "displayName": "Y轴坐标",
+        "value": 100
+      },
+      {
+        "name": "width",
+        "displayName": "宽度",
+        "value": 100
+      },
+      {
+        "name": "height",
+        "displayName": "高度",
+        "value": 100
+      }
+    ]
+  },
+  {
+    "name": "hideDefault",
+    "displayName": "默认隐藏",
+    "value": false
+  },
+  {
+    "name": "opacity",
+    "displayName": "透明度",
+    "value": 0.7
+  }
+]
 
 const GroupConfig = props => {
   const [form] = Form.useForm();
-
   const { Panel } = Collapse;
-  const [opacityValue, setOpacityValue] = useState(100)
-  const [size, setSize] = useState({
-    x: 100,
-    y: 110,
-    w: 100,
-    h: 100,
-  });
-  const [hideGlup, setHideGlup] = useState(false)
 
-  const opacityChange = (e) => {
-    form.setFieldsValue({
-      opacityInput: e
-    })
-  }
-
-  const opacityValueChange = (e) => {
-    const value = e.target.value
-    const flag = isNaN(value)
-    const opacity = flag ? 0 : parseInt(value) > 100 ? 100 : parseInt(value) < 0 ? 0 : parseInt(value)
-    setOpacityValue(opacity)
-    form.setFieldsValue({
-      opacity,
-      opacityInput: opacity
-    })
-  }
+  const dimensionConfig = find(groupConfig, 'dimension')
+  const hideDefaultConfig = find(groupConfig, 'hideDefault')
+  const opacityConfig = find(groupConfig, 'opacity')
 
   const formItemLayout = {
     labelAlign: 'left'
   };
 
-  const onPosSizeChange = (str, size) => {
-    // todo  设置到组
-    console.log('onPosSizeChange', str, size)
+  const dimensionChange = (val) => {
+    console.log('dimensionChange', val)
   }
 
-  const onHideGlupChange = (val) => {
-    // todo  设置到组 
-    console.log('onHideGlupChange', val)
+  const hideDefaultChange = (val) => {
+    console.log('hideDefaultChange', val)
   }
 
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-  };
+  const opacityChange = (val) => {
+    console.log('opacityChange', val)
+  }
 
   return (
     <div className="GroupConfig-wrap">
@@ -82,32 +88,13 @@ const GroupConfig = props => {
           form={form}
           {...formItemLayout}
           colon={false}
-          onFinish={onFinish}
         >
-          <PositionSize size={size} hideGlup={hideGlup} onPosSizeChange={onPosSizeChange} onHideGlupChange={onHideGlupChange}></PositionSize>
-          <Form.Item label="透明度">
-            <Row>
-              <Col span={16}>
-                <Form.Item name="opacity" noStyle>
-                  <Slider
-                    min={0}
-                    max={100}
-                    tooltipVisible={false}
-                    onChange={opacityChange}
-                    defaultValue={typeof opacityValue === 'number' ? opacityValue : 0}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={4}>
-                <Form.Item name="opacityInput" noStyle>
-                  <Input style={{ width: '50px' }} defaultValue={opacityValue} className="size-input" suffix="%" onBlur={opacityValueChange} />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
+          <PositionSize data={dimensionConfig} onChange={dimensionChange}></PositionSize>
+          <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
+          <OpacitySetting data={opacityConfig} onChange={opacityChange} />
           <Collapse accordion className="custom-collapse">
             <Panel header="载入动画" key="1">
-              <LoadAnimation />
+              <LoadAnimation/>
             </Panel>
           </Collapse>
         </Form>

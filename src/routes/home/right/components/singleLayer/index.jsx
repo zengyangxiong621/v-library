@@ -7,10 +7,7 @@ import AlignSetting from '../alignSetting'
 import OutsideShadowSetting from '../outsideShadow'
 import { EditableTable } from '../fieldMapTable'
 import ComponentCard from '../componentCard'
-import RotationAngle from '../rotationAngle'
-import ChartMarginSetting from '../chartMargin'
-import ChartRadiusSetting from '../chartRadius'
-import ChartStrokeSetting from '../chartStroke'
+import Checkbox from '../checkBox'
 
 import {
   Form,
@@ -19,29 +16,56 @@ import {
   Switch
 } from 'antd';
 
-
 const SingleLayer = props => {
   const { Panel } = Collapse;
   const { TabPane } = Tabs;
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const [size, setSize] = useState({
-    x: 100,
-    y: 110,
-    w: 100,
-    h: 100,
-  });
-  const [hideGlup, setHideGlup] = useState(false)
 
-  const onPosSizeChange = (str, size) => {
-    // todo  设置到组
-    console.log('onPosSizeChange', str, size)
+  const dimensionConfig = {
+    "name": "dimension",
+    "displayName": "位置尺寸",
+    "type": "dimensionInputGroup",
+    config: {
+      lock:false
+    },
+    "value": [
+      {
+        "name": "left",
+        "displayName": "X轴坐标",
+        "value": 100
+      },
+      {
+        "name": "top",
+        "displayName": "Y轴坐标",
+        "value": 100
+      },
+      {
+        "name": "width",
+        "displayName": "宽度",
+        "value": 100
+      },
+      {
+        "name": "height",
+        "displayName": "高度",
+        "value": 100
+      }
+    ]
+  }
+  const hideDefaultConfig = {
+    "name": "hideDefault",
+    "displayName": "默认隐藏",
+    "type":"hideCheckBox",
+    "value": false
   }
 
-  const onHideGlupChange = (val) => {
-    // todo  设置到组 
-    console.log('onHideGlupChange', val)
+  const dimensionChange = (val) => {
+    console.log('dimensionChange', val)
+  }
+
+  const hideDefaultChange = (val) => {
+    console.log('hideDefaultChange', val)
   }
 
   const switchChange = (checked) => {
@@ -54,7 +78,8 @@ const SingleLayer = props => {
         <Tabs defaultActiveKey="1" type="card" className="custom-tabs">
           <TabPane tab="样式" key="1">
             <ComponentCard>
-              <PositionSize size={size} hideGlup={hideGlup} onPosSizeChange={onPosSizeChange} onHideGlupChange={onHideGlupChange}></PositionSize>
+              <PositionSize data={dimensionConfig} onChange={dimensionChange}></PositionSize>
+              <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
               <TextStyleSetting></TextStyleSetting>
               <AlignSetting></AlignSetting>
               <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
@@ -62,7 +87,6 @@ const SingleLayer = props => {
                   <OutsideShadowSetting></OutsideShadowSetting>
                 </Panel>
               </Collapse>
-              <ChartStrokeSetting />
             </ComponentCard>
           </TabPane>
           <TabPane tab="数据" key="2">
