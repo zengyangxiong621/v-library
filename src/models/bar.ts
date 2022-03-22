@@ -69,6 +69,7 @@ export default {
         y: 0,
       },
       style: {
+        display: 'none',
         width: 100,
         height: 100,
       },
@@ -433,8 +434,7 @@ export default {
       state.componentLayers = mergeComponentLayers(state.components, state.treeData)
       return { ...state }
     },
-    test(state: IBarState) {
-      console.log('test')
+    test(state: IBarState, { payload }: any) {
       return { ...state }
     },
     test2(state: IBarState) {

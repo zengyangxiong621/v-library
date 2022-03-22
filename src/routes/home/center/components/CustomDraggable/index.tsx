@@ -6,6 +6,7 @@ import * as React from 'react'
 import './index.css'
 import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
 import { deepClone, layerComponentsFlat } from '../../../../../utils'
+import { generateTreeData } from '../../../../../utils/sideBar'
 
 
 const CustomDraggable
@@ -49,6 +50,7 @@ const CustomDraggable
         }
       } else {
         let component = components.find(it => it.id === item.id)
+
         if(component) {
           xPositionList.push(component.config.position.x, component.config.position.x + component.config.style.width)
           yPositionList.push(component.config.position.y, component.config.position.y + component.config.style.height)
@@ -61,6 +63,7 @@ const CustomDraggable
     return [ xPositionList, yPositionList ]
   }
   const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent) => {
+
     setStartPosition({
       x: data.x,
       y: data.y,
@@ -106,7 +109,7 @@ const CustomDraggable
 
   const handleDrag = (ev: DraggableEvent | any, data: DraggableData, component: IComponent | ILayerGroup | undefined, config: IConfig) => {
     // 向上取整
-    console.log('拖拽')
+
     let aroundX = Math.ceil(data.x)
     let aroundY = Math.ceil(data.y)
     if(!component) {
@@ -136,7 +139,7 @@ const CustomDraggable
     }
   }
   const handleStop = (ev: DraggableEvent, data: DraggableData, component: ILayerGroup | IComponent | undefined, config: IConfig) => {
-    console.log('停止')
+
     if(!component) {
       return
     }
@@ -164,12 +167,13 @@ const CustomDraggable
       return
     }
     if(bar.dragStatus === '一分组') {
-      const xMoveLength = data.x - startPosition.x
-      const yMoveLength = data.y - startPosition.y
+      const xMoveLength = Math.ceil(data.x - startPosition.x)
+      const yMoveLength = Math.ceil(data.y - startPosition.y)
       selectedComponents.forEach((item: IComponent) => {
         item.config.position.x = item.config.position.x + xMoveLength
         item.config.position.y = item.config.position.y + yMoveLength
       })
+
       dispatch({
         type: 'bar/save',
         payload: {
@@ -238,11 +242,11 @@ const CustomDraggable
   }
 
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
-    console.log('点击')
+    console.log('bar', bar)
     e.stopPropagation()
-    // if (component.select === true) {
-    //   return;
-    // }
+    if(layer.selected) {
+      return
+    }
     dispatch({
       type: 'bar/selectComponentOrGroup',
       payload: {
@@ -256,28 +260,27 @@ const CustomDraggable
   }
   const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     e.stopPropagation()
-
     if(component.hover) {
       return
     }
     component.hover = true
-    dispatch({
-      type: 'bar/test',
-    })
-
+    // dispatch({
+    //   type: 'bar/test',
+    // })
   }
   const handleMouseOut = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     e.stopPropagation()
     component.hover = false
-    dispatch({
-      type: 'bar/test',
-    })
+    // dispatch({
+    //   type: 'bar/test',
+    // })
   }
+  // let copyTreeData = deepClone(treeData).reverse()
 
   return (
     <div className="c-custom-draggable">
       {
-        deepClone(treeData).reverse().map((layer: ILayerGroup | ILayerComponent) => {
+        treeData.map((layer: ILayerGroup | ILayerComponent) => {
           let config: IConfig = {
             position: {
               x: 0,
@@ -317,10 +320,13 @@ const CustomDraggable
             }
           }
           return (
-            <Draggable
+            <SingleDraggable
               scale={ bar.canvasConfigData.config.scale }
-              ref={ (ref: any) => {
-                allComponentRefs[layer.id] = ref
+              cRef={ (ref: any) => {
+                if (layer.id in allComponentRefs) {
+                } else {
+                  allComponentRefs[layer.id] = ref
+                }
                 return allComponentRefs[layer.id]
               } }
               disabled={ layer.lock }
@@ -333,8 +339,8 @@ const CustomDraggable
                 // onClickCapture={(ev) => handleClick(ev, layer, config)}
                 onClick={ (ev) => handleClick(ev, layer, config) }
                 onDoubleClick={ (ev) => handleDblClick(ev, layer) }
-                // onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
-                // onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
+                onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
+                onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
                 style={ {
                   ...config.style,
@@ -360,28 +366,9 @@ const CustomDraggable
                   { (isGroup ? group : component)?.id }
                 </div>
               </div>
-            </Draggable>
+            </SingleDraggable>
           )
         })
-      }
-      {/*      { components.map(component => {
-        return (
-          <Draggable cancel=".no-cursor" key={ component.id } position={ component.position }>
-            <div className="box" style={ component.style }>
-              <div className="no-cursor">
-                <div style={ { position: 'absolute', left: -component.position.x, top: -component.position.y } }>
-                  {
-                    component.children?.length > 0 ? <CustomDraggable components={ component.components }/> : ''
-                  }
-                </div>
-              </div>
-              <div style={ { width: '100%', height: '100%' } }>
-                { component.id }
-              </div>
-            </div>
-          </Draggable>
-        )
-      }) }*/
       }
     </div>
   )
