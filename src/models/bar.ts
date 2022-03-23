@@ -436,6 +436,47 @@ export default {
         ],
       },
     ],
+    groupConfig: [
+      {  
+        "name": "dimension",
+        "displayName": "位置尺寸",
+        "config": {
+          "lock":true
+        },
+        "value": [
+          {
+            "name": "left",
+            "displayName": "X轴坐标",
+            "value": 100
+          },
+          {
+            "name": "top",
+            "displayName": "Y轴坐标",
+            "value": 100
+          },
+          {
+            "name": "width",
+            "displayName": "宽度",
+            "value": 100
+          },
+          {
+            "name": "height",
+            "displayName": "高度",
+            "value": 100
+          }
+        ]
+      },
+      {
+        "name": "hideDefault",
+        "displayName": "默认隐藏",
+        "value": false
+      },
+      {
+        "name": "opacity",
+        "displayName": "透明度",
+        "value": 0.7
+      }
+    ]
   } as IBarState,
   subscriptions: {
     init({ dispatch }: any) {
