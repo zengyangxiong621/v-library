@@ -2,8 +2,8 @@ import React, { memo, useState } from 'react'
 import './index.css'
 import { find } from '../../../../../utils/common'
 import PositionSize from '../positionSize'
-import OpacitySetting from '../opacitySetting'
 import Checkbox from '../checkBox'
+import OpacitySetting from '../opacitySetting'
 import LoadAnimation from '../loadAnimation'
 
 import {
@@ -12,7 +12,7 @@ import {
 } from 'antd';
 
 const groupConfig = [
-  {  // 该部分的位置尺寸设置，实际上是取得分组下第一个层的位置尺寸设置
+  {  
     "name": "dimension",
     "displayName": "位置尺寸",
     "config": {
@@ -65,16 +65,9 @@ const GroupConfig = props => {
     labelAlign: 'left'
   };
 
-  const dimensionChange = (val) => {
-    console.log('dimensionChange', val)
-  }
-
-  const hideDefaultChange = (val) => {
-    console.log('hideDefaultChange', val)
-  }
-
-  const opacityChange = (val) => {
-    console.log('opacityChange', val)
+  const settingsChange = (val) => {
+    console.log(groupConfig)
+    // todo 更新数据
   }
 
   return (
@@ -89,9 +82,9 @@ const GroupConfig = props => {
           {...formItemLayout}
           colon={false}
         >
-          <PositionSize data={dimensionConfig} onChange={dimensionChange}></PositionSize>
-          <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
-          <OpacitySetting data={opacityConfig} onChange={opacityChange} />
+          <PositionSize data={dimensionConfig} onChange={settingsChange}></PositionSize>
+          <Checkbox data={hideDefaultConfig} onChange={settingsChange} />
+          <OpacitySetting data={opacityConfig} onChange={settingsChange} />
           <Collapse accordion className="custom-collapse">
             <Panel header="载入动画" key="1">
               <LoadAnimation/>

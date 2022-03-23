@@ -5,7 +5,6 @@ import {
   Form,
   Slider,
   InputNumber,
-  Row, Col
 } from 'antd';
 
 const OpacitySetting = props => {
@@ -13,13 +12,15 @@ const OpacitySetting = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const [opacityValue, setOpacityValue] = useState(props.data.value*100);
+  const _data = props.data
+  const [opacityValue, setOpacityValue] = useState(_data.value * 100);
 
   const opacityChange = (e) => {
     form.setFieldsValue({
-      opacity: e
+      opacityInput: e
     })
-    props.onChange(e/100)
+    _data.value = e / 100
+    props.onChange()
   }
   const opacityInputChange = (e) => {
     e.preventDefault()
@@ -28,7 +29,8 @@ const OpacitySetting = props => {
     form.setFieldsValue({
       opacity: value
     })
-    props.onChange(value/100)
+    _data.value = value / 100
+    props.onChange()
   }
 
   return (
@@ -40,7 +42,7 @@ const OpacitySetting = props => {
     >
       <Form.Item
         name="outside"
-        label="透明度"
+        label={_data.displayName}
       >
 
         <Form.Item name="opacity" noStyle>
@@ -49,11 +51,11 @@ const OpacitySetting = props => {
             tooltipVisible={false}
             onAfterChange={opacityChange}
             defaultValue={opacityValue}
-            style={{ width: '144px', marginRight: '8px',float:'left',marginLeft:0 }}
+            style={{ width: '144px', marginRight: '8px', float: 'left', marginLeft: 0 }}
           />
         </Form.Item>
 
-        <Form.Item name="opacity" noStyle>
+        <Form.Item name="opacityInput" noStyle>
           <InputNumber defaultValue={opacityValue} className="po-size-input input-radius" style={{ width: '67px' }} onBlur={opacityInputChange} />
         </Form.Item>
       </Form.Item>
