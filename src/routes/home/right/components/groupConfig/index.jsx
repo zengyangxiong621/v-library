@@ -1,6 +1,9 @@
 import React, { memo, useState } from 'react'
+import { connect } from 'dva'
 import './index.css'
+import { deepClone } from '../../../../../utils'
 import { find } from '../../../../../utils/common'
+
 import PositionSize from '../positionSize'
 import Checkbox from '../checkBox'
 import OpacitySetting from '../opacitySetting'
@@ -11,52 +14,12 @@ import {
   Collapse
 } from 'antd';
 
-const groupConfig = [
-  {  
-    "name": "dimension",
-    "displayName": "位置尺寸",
-    "config": {
-      "lock":true
-    },
-    "value": [
-      {
-        "name": "left",
-        "displayName": "X轴坐标",
-        "value": 100
-      },
-      {
-        "name": "top",
-        "displayName": "Y轴坐标",
-        "value": 100
-      },
-      {
-        "name": "width",
-        "displayName": "宽度",
-        "value": 100
-      },
-      {
-        "name": "height",
-        "displayName": "高度",
-        "value": 100
-      }
-    ]
-  },
-  {
-    "name": "hideDefault",
-    "displayName": "默认隐藏",
-    "value": false
-  },
-  {
-    "name": "opacity",
-    "displayName": "透明度",
-    "value": 0.7
-  }
-]
 
-const GroupConfig = props => {
+
+const GroupConfig = ({bar, dispatch ,...props }) => {
   const [form] = Form.useForm();
   const { Panel } = Collapse;
-
+  const groupConfig = deepClone(bar.groupConfig)
   const dimensionConfig = find(groupConfig, 'dimension')
   const hideDefaultConfig = find(groupConfig, 'hideDefault')
   const opacityConfig = find(groupConfig, 'opacity')
@@ -65,9 +28,14 @@ const GroupConfig = props => {
     labelAlign: 'left'
   };
 
-  const settingsChange = (val) => {
+  const settingsChange = () => {
     console.log(groupConfig)
-    // todo 更新数据
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        groupConfig
+      }
+    })
   }
 
   return (
@@ -96,5 +64,6 @@ const GroupConfig = props => {
   )
 }
 
-export default memo(GroupConfig)
-
+export default connect(({ bar }) => ({
+  bar
+}))(GroupConfig)
