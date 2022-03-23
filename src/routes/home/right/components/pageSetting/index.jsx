@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
+import { connect } from 'dva'
 import './index.css'
 import { find } from '../../../../../utils/common'
 import BackgroundColor from '../backgroundColor'
@@ -6,7 +7,7 @@ import PageSize from '../pageSize'
 import UploadImg from '../uploadImg'
 import CusInputNumber from '../cusInputNumber'
 import RadioGroup from '../radioGroup'
-
+import { deepClone } from '../../../../../utils'
 import { Form } from 'antd';
 
 const pageConfig = [
@@ -71,10 +72,11 @@ const pageConfig = [
   }
 ]
 
-const PageSetting = props => {
+const PageSetting = ({bar, dispatch ,...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
+  const pageConfig = deepClone(bar.pageConfig)
   const recommendConfig = find(pageConfig, 'recommend')
   const styleColorConfig = find(pageConfig, 'styleColor')
   const backgroundImg = find(pageConfig, 'backgroundImg')
@@ -84,7 +86,12 @@ const PageSetting = props => {
   const [form] = Form.useForm();
 
   const settingsChange = () => {
-    console.log(pageConfig)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        pageConfig
+      }
+    })
     // todo 更新数据
   }
 
@@ -111,5 +118,7 @@ const PageSetting = props => {
   )
 }
 
-export default memo(PageSetting)
+export default connect(({ bar }) => ({
+  bar
+}))(PageSetting)
 
