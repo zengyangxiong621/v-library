@@ -3,10 +3,38 @@ import { connect } from 'dva'
 import Draggable from 'react-draggable'
 import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
-import './index.css'
+import './index.less'
 import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
 import { deepClone, layerComponentsFlat } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
+import Text from '../Text'
+
+
+const STYLE = 'style'
+const DIMENSION = 'dimension'
+const LEFT = 'left'
+const TOP = 'top'
+const WIDTH = 'width'
+const HEIGHT = 'height'
+const HIDE_DEFAULT = 'hideDefault'
+const TEXT_STYLE = 'textStyle'
+const FONT_FAMILY = 'fontFamily'
+const FONT_SIZE = 'fontSize'
+const COLOR = 'color'
+const BOLD = 'bold'
+const ITALIC = 'italic'
+const LETTER_SPACING = 'letterSpacing'
+const LINE_HEIGHT = 'lineHeight'
+const ALIGN = 'align'
+const TEXT_ALIGN = 'textAlign'
+const TEXT_VERTICAL = 'textVertical'
+const SHADOW = 'shadow'
+const SHOW = 'show'
+
+
+enum STYLE_ENUM {
+  BOLD = 'fontBold'
+}
 
 
 const CustomDraggable
@@ -110,8 +138,12 @@ const CustomDraggable
     if(component && bar.dragStatus === '一组件') {
       // 单个组件移动
       if('config' in component) {
-        component.config.position.x = data.x
-        component.config.position.y = data.y
+        const style_config: any = component.config.find((item: any) => item.name === STYLE)
+        const style_dimension_config: any = style_config.value.find((item: any) => item.name === DIMENSION)
+        style_dimension_config.value.find((item: any) => item.name === LEFT).value = data.x
+        style_dimension_config.value.find((item: any) => item.name === TOP).value = data.y
+        // component.config.position.x = data.x
+        // component.config.position.y = data.y
       }
       supportLinesRef.handleSetPosition(aroundX, aroundY)
     }
@@ -152,10 +184,13 @@ const CustomDraggable
         config,
       },
     })
+
     if(component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
       // 单个组件移动
-      component.config.position.x = Math.ceil(data.x)
-      component.config.position.y = Math.ceil(data.y)
+      const style_config: any = component.config.find((item: any) => item.name === STYLE)
+      const style_dimension_config: any = style_config.value.find((item: any) => item.name === DIMENSION)
+      style_dimension_config.value.find((item: any) => item.name === LEFT).value = Math.ceil(data.x)
+      style_dimension_config.value.find((item: any) => item.name === TOP).value = Math.ceil(data.y)
       dispatch({
         type: 'bar/save',
         payload: {
@@ -170,7 +205,6 @@ const CustomDraggable
               height: config.style.height,
             },
           },
-          selectComponentOrGroup: [ layer ],
         },
       })
     } else if('children' in layer && bar.selectedComponentOrGroup.length === 1) {
@@ -308,6 +342,8 @@ const CustomDraggable
           let isGroup: boolean = ('children' in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
+          let style_config, staticData
+          // 群组
           if(isGroup && 'children' in layer) {
             group = layer
             let [ xPositionList, yPositionList ] = calcGroupPosition(layer.children)
@@ -328,9 +364,19 @@ const CustomDraggable
               },
             }
           } else {
+            // 组件
             component = components.find(item => item.id === layer.id)
             if(component) {
-              (config as any) = component.config
+              staticData = component.staticData
+              style_config = component.config.find((item: any) => item.name === STYLE)
+              const style_dimension_config = style_config.value.find((item: any) => item.name === DIMENSION)
+              Object.values(style_dimension_config.value).forEach((obj: any) => {
+                if([ TOP, LEFT ].includes(obj.name)) {
+                  config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+                } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
+                  config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+                }
+              })
             }
           }
           return (
@@ -374,11 +420,10 @@ const CustomDraggable
                       </div>
                       : ''
                     }
-                  </div> : ''
+                  </div> : <div style={ { width: '100%', height: '100%', color: 'red', fontSize: 16 } }>
+                    <Text styleConfig={ style_config } staticData={ staticData }/>
+                  </div>
                 }
-                <div style={ { width: '100%', height: '100%' } }>
-                  { layer.id }
-                </div>
               </div>
             </SingleDraggable>
           )
