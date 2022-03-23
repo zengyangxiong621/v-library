@@ -65,34 +65,10 @@ function App({ bar, dispatch }: any) {
         event.returnValue = false
       }
     }
-    // 覆盖鼠标滑动
-    document.body.addEventListener('wheel', (e) => {
-      if (e.ctrlKey) {
-        if (e.deltaY < 0) {
-          console.log('滚')
-          e.preventDefault()
-          bar.canvasConfigData.config.scale = Number((bar.canvasConfigData.config.scale + 0.03).toFixed(3))
-          console.log('bar.canvasConfigData.config.scale', bar.canvasConfigData.config.scale)
-          dispatch({
-            type: 'bar/test',
-          })
-          return false
-        }
-        if (e.deltaY > 0) {
-          e.preventDefault()
-          bar.canvasConfigData.config.scale = Number((bar.canvasConfigData.config.scale - 0.03).toFixed(3))
-          dispatch({
-            type: 'bar/test',
-          })
-          return false
-        }
-      }
-    }, { passive: false })
 
     return () => {
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      document.onkeydown = null
+    }}, [])
 
   // 拖动右边框改变右侧菜单栏的宽度
   const dragEl: any = document.querySelector('.left-menu')
