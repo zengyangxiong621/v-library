@@ -12,6 +12,7 @@ import { useClickAway, useKeyPress, useMouse } from 'ahooks'
 import Ruler from './components/Ruler'
 
 const Center = ({ bar, dispatch }: any) => {
+  const filterKey = [ 'ctrl', 'shift' ]
   const draggableContainerRef = useRef(null)
   const canvasRef = useRef(null)
   // let supportLinesRef: any = useRef(null)
@@ -19,10 +20,18 @@ const Center = ({ bar, dispatch }: any) => {
   const isSupportMultiple = bar.isSupportMultiple
   let supportLinesRef = bar.supportLinesRef
   const canvasConfigData = bar.canvasConfigData
-  const [ canvasSize, setCanvasSize ] = useState({
-    width: 0,
-    height: 0,
-  })
+
+  const findItem = (name: string) => {
+    return bar.pageConfig.find((item: any) => {
+      return item.name === name
+    })
+  }
+  const recommendConfig = findItem('recommend')
+  const styleColor = findItem('styleColor')
+  const backgroundImg = findItem('backgroundImg')
+  const gridSpacing = findItem('gridSpacing')
+  const zoomConfig = findItem('zoom')
+
   const calcCanvasSize = () => {
     let getCurrentDocumentWidth = document.documentElement.clientWidth
     const getCurrentDocumentHeight = document.documentElement.clientHeight
@@ -30,41 +39,77 @@ const Center = ({ bar, dispatch }: any) => {
       getCurrentDocumentWidth = 1366
     }
     const width = getCurrentDocumentWidth - 40 - 250 - 333
-    canvasConfigData.config.scale = Number((width / canvasConfigData.style.width).toFixed(3))
-    const height = canvasConfigData.style.height * canvasConfigData.config.scale
-    setCanvasSize({
-      width,
-      height,
+    const height = getCurrentDocumentHeight - 64 - 35 - 40
+    const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
+    console.log('canvasHeight: ', canvasHeight)
+    console.log('height: ', height)
+    if(canvasHeight > height) {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          canvasScaleValue: Number((height / recommendConfig.height).toFixed(3)),
+        },
+      })
+      return
+    }
+
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        canvasScaleValue: Number((width / recommendConfig.width).toFixed(3)),
+      },
     })
+    // const height = recommendConfig.height * bar.canvasScaleValue
+  }
+  const setCanvasScale = (e: any) => {
+    if(e.ctrlKey) {
+      if(e.deltaY < 0) {
+        console.log('滚', bar.canvasScaleValue)
+        e.preventDefault()
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            canvasScaleValue: Number((bar.canvasScaleValue + 0.03).toFixed(3)),
+          },
+        })
+        return false
+      }
+      if(e.deltaY > 0) {
+        console.log('滚', bar.canvasScaleValue)
+
+        e.preventDefault()
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            canvasScaleValue: Number((bar.canvasScaleValue - 0.03).toFixed(3)),
+          },
+        })
+        return false
+      }
+    }
   }
   useEffect(() => {
-    if(canvasConfigData.config.scale) {
-      console.log('scale', canvasConfigData.config.scale)
-      const width = Math.ceil(canvasConfigData.style.width * canvasConfigData.config.scale)
-      const height = Math.ceil(canvasConfigData.style.height * canvasConfigData.config.scale)
-      console.log('width', width)
-      setCanvasSize({
-        width,
-        height,
-      })
-      // canvasConfigData.style.width = canvasConfigData.style.width * canvasConfigData.config.scale
+    if(bar.canvasScaleValue) {
+      window.addEventListener('wheel', setCanvasScale, { passive: false })
     }
-    // canvasConfigData.style.width = canvasConfigData.style.width * canvasConfigData.config.scale
-    // canvasConfigData.style.height = canvasConfigData.style.height * canvasConfigData.config.scale
-    // console.log('canvasConfigData.style.height', canvasConfigData.style.height)
-  }, [ bar.canvasConfigData.config.scale ])
+    return () => {
+      window.removeEventListener('wheel', setCanvasScale)
+    }
+  }, [ bar.canvasScaleValue ])
+
+  useEffect(() => {
+    console.log('recommendConfig.value', recommendConfig)
+    calcCanvasSize()
+  }, [ recommendConfig.value ])
 
   useEffect(() => {
     calcCanvasSize()
-    window.addEventListener('resize', (ev) => {
-      calcCanvasSize()
-    })
+    window.addEventListener('resize', calcCanvasSize)
     return () => {
-      window.removeEventListener('resize', (ev) => {
-      })
+      window.removeEventListener('resize', calcCanvasSize)
     }
   }, [])
-  const filterKey = [ 'ctrl', 'shift' ]
+
   useKeyPress(filterKey, (event) => {
     if(event.type === 'keydown') {
       // 按下
@@ -99,26 +144,6 @@ const Center = ({ bar, dispatch }: any) => {
   // const mouse = useMouse(canvasRef);
   const mouse = 0
 
-  const handleClick = () => {
-    // console.log('supportLinesRef',  supportLinesRef.handleSetPosition)
-    supportLinesRef.handleSetPosition(100, 100)
-    // dispatch({
-    //   type: 'canvas/test',
-    //   payload: {},
-    // })
-  }
-  const handleDelete = () => {
-    dispatch({
-      type: 'bar/testDelete',
-      payload: {},
-    })
-  }
-  const handleSelect = () => {
-    dispatch({
-      type: 'bar/select',
-      payload: 'component_7',
-    })
-  }
   return (
     <div className="c-canvas" ref={ canvasRef }>
       <Ruler/>
@@ -126,18 +151,18 @@ const Center = ({ bar, dispatch }: any) => {
       <div
         className="canvas-container"
         style={ {
-          ...canvasSize,
-          // width: canvasConfigData.style.width * canvasConfigData.config.scale,
-          // height: canvasConfigData.style.height * canvasConfigData.config.scale,
+          width: recommendConfig.width * bar.canvasScaleValue,
+          height: recommendConfig.height * bar.canvasScaleValue,
         } }
       >
         <div
           className="canvas-screen"
           style={ {
-            width: canvasConfigData.style.width,
-            height: canvasConfigData.style.height,
-            transform: `scale(${ canvasConfigData.config.scale })`,
-            background: canvasConfigData.style.background,
+            width: recommendConfig.width,
+            height: recommendConfig.height,
+            transform: `scale(${ bar.canvasScaleValue })`,
+            backgroundColor: styleColor.value,
+            background: backgroundImg.value ? `url(${backgroundImg.value})` : styleColor.value
           } }
         >
           <div className="draggable-wrapper">
@@ -157,29 +182,6 @@ const Center = ({ bar, dispatch }: any) => {
             <div className="draggable-container" ref={ draggableContainerRef }>
               <CustomDraggable mouse={ mouse } treeData={ treeData }/>
             </div>
-            {
-              // draggableItems.map(item => {
-              //   return <Draggable cancel=".no-cursor" position={ item.position }
-              //                     onDrag={ (ev, data) => handleDrag(item, ev, data) }
-              //                     onStop={ (ev, data) => handleStop(item, ev, data) }>
-              //     <div className="box">
-              //       <strong className="no-cursor">
-              //         <div style={ { position: 'absolute', left: -item.position.x, top: -item.position.y } }>
-              //           {
-              //             item.components.map(component => {
-              //               return <Draggable>
-              //                 <div className="box" style={ { width: '50px', height: '50px' } }>{ component.id }</div>
-              //               </Draggable>
-              //             })
-              //           }
-              //         </div>
-              //       </strong>
-              //       <div>Dragging here works</div>
-              //     </div>
-              //   </Draggable>
-              // })
-
-            }
           </div>
         </div>
       </div>
@@ -187,10 +189,10 @@ const Center = ({ bar, dispatch }: any) => {
         position: 'absolute',
         bottom: '50px',
         right: '20px',
-        color: '#999'
+        color: '#999',
       } }>
-          按住空格可拖拽画布 { canvasConfigData.style.width }*{ canvasConfigData.style.height }
-          { ' ' + Math.ceil(canvasConfigData.config.scale * 100) + '%' }
+        按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
+        { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
       </div>
     </div>
   )
