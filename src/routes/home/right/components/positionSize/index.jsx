@@ -14,17 +14,20 @@ const PositionSize = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const config = props.data;
+  const _data = props.data;
+  const _left = find(_data, 'left')
+  const _top = find(_data, 'top')
+  const _width = find(_data, 'width')
+  const _height = find(_data, 'height')
   const [size, setSize] = useState({
-    left: find(config, 'left').value,
-    top: find(config, 'top').value,
-    width: find(config, 'width').value,
-    height: find(config, 'height').value,
+    left: _left.value,
+    top: _top.value,
+    width: _width.value,
+    height: _height.value,
   });
-  const [sizeLock, setSizeLock] = useState(config.config.lock)
+  const [sizeLock, setSizeLock] = useState(_data.config.lock)
 
   const posSizeChange = (str, e) => {
-    console.log(str, e)
     const value = parseInt(e.target.value)
     if (sizeLock && ['width', 'height'].includes(str)) {
       const proportion = size.width / size.height
@@ -35,15 +38,13 @@ const PositionSize = props => {
           width: value,
           height
         }
-        setSize(size)
+        setSize(sizeTmp)
         form.setFieldsValue({
           height,
-          width:value
+          width: value
         })
-        props.onChange({
-          size:sizeTmp,
-          lock: sizeLock
-        })
+        _width.value = value
+        _height.value = height
       } else {
         const width = parseInt(value * proportion)
         const sizeTmp = {
@@ -54,15 +55,13 @@ const PositionSize = props => {
         setSize(sizeTmp)
         form.setFieldsValue({
           width,
-          height:value
+          height: value
         })
-        props.onChange({
-          size:sizeTmp,
-          lock: sizeLock
-        })
+        _width.value = width
+        _height.value = value
       }
-    }else{
-      const sizeTmp ={
+    } else {
+      const sizeTmp = {
         ...size,
         [str]: value,
       }
@@ -70,20 +69,19 @@ const PositionSize = props => {
       form.setFieldsValue({
         [str]: value
       })
-      props.onChange({
-        size:sizeTmp,
-        lock: sizeLock
-      })
+      str === 'width' ? _width.value = value :
+        str === 'height' ? _height.value = value :
+          str === 'top' ? _top.value = value :
+            _left.value = value
     }
+    props.onChange()
   }
 
   const sizeLockChange = (e) => {
     e.preventDefault()
     setSizeLock(!sizeLock)
-    props.onChange({
-      size,
-      lock: !sizeLock
-    })
+    _data.config.lock = !sizeLock
+    props.onChange()
   }
 
   return (
@@ -94,7 +92,7 @@ const PositionSize = props => {
       {...formItemLayout}
       colon={false}
     >
-      <Form.Item label="位置尺寸">
+      <Form.Item label={_data.displayName}>
         <Input.Group compact style={{ marginBottom: '8px' }}>
           <Form.Item name="left" noStyle>
             <InputNumber defaultValue={size.left} className="po-size-input input-x" style={{ marginRight: '21px' }} onBlur={(e) => { posSizeChange('left', e) }} />

@@ -10,10 +10,13 @@ const CheckBox = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const [hideGlup, setHideGlup] = useState(props.data.value)
-  const onHideGlupChange = () => {
+  const _data = props.data;
+  const [hideGlup, setHideGlup] = useState(_data.value)
+  
+  const checkChange = () => {
     setHideGlup(!hideGlup)
-    props.onChange(!hideGlup)
+    _data.value = !hideGlup
+    props.onChange()
   }
 
   return (
@@ -23,8 +26,8 @@ const CheckBox = props => {
       {...formItemLayout}
       colon={false}
     >
-      <Form.Item label="默认隐藏" name="hideGlup">
-        <Checkbox style={{ float: 'left' }} checked={hideGlup} onChange={onHideGlupChange}></Checkbox>
+      <Form.Item label={_data.displayName} name={_data.name}>
+        <Checkbox style={{ float: 'left' }} checked={hideGlup} onChange={checkChange}></Checkbox>
       </Form.Item>
     </Form>
   )
