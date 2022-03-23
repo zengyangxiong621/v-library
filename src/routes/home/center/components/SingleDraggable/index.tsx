@@ -24,7 +24,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, ...props }: any) => {
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (x: number, y: number) => {
-      console.log('draggableRef', draggableRef.current)
+      // console.log('draggableRef', draggableRef.current)
       draggableRef.current.props.position.x = x
       draggableRef.current.props.position.y = y
       // props.position.x = x

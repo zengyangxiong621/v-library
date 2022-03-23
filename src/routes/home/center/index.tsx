@@ -19,7 +19,6 @@ const Center = ({ bar, dispatch }: any) => {
   const treeData = bar.treeData
   const isSupportMultiple = bar.isSupportMultiple
   let supportLinesRef = bar.supportLinesRef
-  const canvasConfigData = bar.canvasConfigData
 
   const findItem = (name: string) => {
     return bar.pageConfig.find((item: any) => {
@@ -31,7 +30,7 @@ const Center = ({ bar, dispatch }: any) => {
   const backgroundImg = findItem('backgroundImg')
   const gridSpacing = findItem('gridSpacing')
   const zoomConfig = findItem('zoom')
-
+  // 计算画布的大小
   const calcCanvasSize = () => {
     let getCurrentDocumentWidth = document.documentElement.clientWidth
     const getCurrentDocumentHeight = document.documentElement.clientHeight
@@ -61,44 +60,32 @@ const Center = ({ bar, dispatch }: any) => {
     })
     // const height = recommendConfig.height * bar.canvasScaleValue
   }
-  const setCanvasScale = (e: any) => {
+  // 计算画布的放大缩小
+  const calcCanvasScale = (e: any) => {
     if(e.ctrlKey) {
-      if(e.deltaY < 0) {
-        console.log('滚', bar.canvasScaleValue)
-        e.preventDefault()
-        dispatch({
-          type: 'bar/save',
-          payload: {
-            canvasScaleValue: Number((bar.canvasScaleValue + 0.03).toFixed(3)),
-          },
-        })
+      e.preventDefault()
+      console.log('bar.canvasScaleValue', bar.canvasScaleValue)
+      if(e.deltaY > 0 && bar.canvasScaleValue < 0.19) {
         return false
       }
-      if(e.deltaY > 0) {
-        console.log('滚', bar.canvasScaleValue)
-
-        e.preventDefault()
-        dispatch({
-          type: 'bar/save',
-          payload: {
-            canvasScaleValue: Number((bar.canvasScaleValue - 0.03).toFixed(3)),
-          },
-        })
-        return false
-      }
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          canvasScaleValue: Number((bar.canvasScaleValue + (e.deltaY > 0 ? -0.03 : 0.03)).toFixed(3)),
+        },
+      })
     }
   }
   useEffect(() => {
     if(bar.canvasScaleValue) {
-      window.addEventListener('wheel', setCanvasScale, { passive: false })
+      window.addEventListener('wheel', calcCanvasScale, { passive: false })
     }
     return () => {
-      window.removeEventListener('wheel', setCanvasScale)
+      window.removeEventListener('wheel', calcCanvasScale)
     }
   }, [ bar.canvasScaleValue ])
 
   useEffect(() => {
-    console.log('recommendConfig.value', recommendConfig)
     calcCanvasSize()
   }, [ recommendConfig.value ])
 
@@ -111,32 +98,18 @@ const Center = ({ bar, dispatch }: any) => {
   }, [])
 
   useKeyPress(filterKey, (event) => {
-    if(event.type === 'keydown') {
-      // 按下
-      if(isSupportMultiple) {
-        return
-      }
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          isSupportMultiple: true,
-        },
-      })
-      return
-    }
-    // 抬起
     dispatch({
       type: 'bar/save',
       payload: {
-        isSupportMultiple: false,
+        isSupportMultiple: event.type === 'keydown',
       },
     })
-    return
   }, {
     events: [ 'keydown', 'keyup' ],
   })
 
   useClickAway(() => {
+    console.log('呵呵哈哈哈')
     dispatch({
       type: 'bar/clearAllStatus',
     })
@@ -162,7 +135,7 @@ const Center = ({ bar, dispatch }: any) => {
             height: recommendConfig.height,
             transform: `scale(${ bar.canvasScaleValue })`,
             backgroundColor: styleColor.value,
-            background: backgroundImg.value ? `url(${backgroundImg.value})` : styleColor.value
+            background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
           } }
         >
           <div className="draggable-wrapper">

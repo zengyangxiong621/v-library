@@ -49,7 +49,8 @@ const ScaleDragCom = ({ bar, dispatch }: any) => {
   }
   return (
     <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
-      <Draggable ref={ scaleDragRef } onDrag={ handleDrag } onStop={ handleStop } position={ scaleDragData.position }>
+      <Draggable scale={ bar.canvasScaleValue } ref={ scaleDragRef } onDrag={ handleDrag } onStop={ handleStop }
+                 position={ scaleDragData.position }>
         <ScaleContainer
           style={ { ...scaleDragData.style } }
           isActive={ true }
