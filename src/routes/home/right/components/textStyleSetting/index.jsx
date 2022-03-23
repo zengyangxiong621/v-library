@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react'
 import './index.css'
-import BackgroundSetting from '../backgroundSetting';
+import BackgroundColor from '../backgroundColor';
 
 import {
   Form,
@@ -13,7 +13,7 @@ import {
 
 const styleColor = {
   "name": "styleColor",
-  "displayName": "背景",
+  "displayName": "",
   "value": "#000" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
 }
 
@@ -80,7 +80,7 @@ const TextStyleSetting = props => {
             <InputNumber defaultValue={fontSetting.fontSize} className="po-size-input" style={{width:'68px'}} onBlur={fontSizeChange} />
           </Form.Item>
         </Input.Group>
-        <BackgroundSetting data={styleColor} onChange={styleColorChange}/>
+        <BackgroundColor data={styleColor} onChange={styleColorChange}/>
         <Input.Group compact style={{marginTop:'8px'}} className="fontBi">
           <Form.Item name="blod" noStyle>
             <CheckableTag

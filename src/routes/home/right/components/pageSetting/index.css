@@ -127,16 +127,3 @@
   color: #868996;
   font-weight: 400;
 }
-
-.zoom-set .ant-radio-inner{
-  background: #232630;
-  border: 1px solid rgba(92,95,123,1);
-}
-
-.zoom-set .ant-radio-input:focus + .ant-radio-inner{
-  box-shadow: none;
-}
-
-.zoom-set .ant-radio-wrapper > span:nth-child(2){
-  color: #fff;
-}

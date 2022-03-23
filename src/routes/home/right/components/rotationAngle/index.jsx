@@ -1,6 +1,5 @@
 import React, { memo, useState } from 'react'
 import './index.css'
-import BackgroundSetting from '../backgroundSetting';
 
 import {
   Form,
