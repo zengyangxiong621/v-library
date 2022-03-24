@@ -36,6 +36,10 @@ const dataArr = [
   },
 ]
 
+const createComponent = () => {
+  
+}
+
 const Text = (props: any) => {
   // const { data } = props
   return (
@@ -43,7 +47,7 @@ const Text = (props: any) => {
       {
         dataArr.map((item: any, index: number) => {
           return (
-            <EveryItem data={item} />
+            <EveryItem data={item}  onClick={createComponent}/>
           )
         })
       }
