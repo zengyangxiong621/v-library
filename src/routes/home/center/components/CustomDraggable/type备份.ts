@@ -15,7 +15,19 @@ export type DraggableData = {
   node: any
 }
 
-export type IComponent = any
+export interface IComponent {
+  id: string;
+  name: string;
+  staticData?: any;
+  config: {
+    style?: any,
+    className?: string,
+    position: {
+      x: number,
+      y: number
+    }
+  },
+}
 
 export interface ILayerComponent {
   id: string,

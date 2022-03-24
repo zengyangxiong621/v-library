@@ -19,16 +19,20 @@ type DraggableData = {
   y: number
   node: any
 }
-const SingleDraggable = ({ bar, dispatch, onStop, cRef, ...props }: any) => {
+const SingleDraggable = ({ bar, dispatch, onStop, cRef, dimensionConfig, ...props }: any) => {
   const draggableRef: any = useRef(null)
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (x: number, y: number) => {
-      // console.log('draggableRef', draggableRef.current)
-      draggableRef.current.props.position.x = x
-      draggableRef.current.props.position.y = y
-      // props.position.x = x
-      // props.position.y = y
+      // draggableRef.current.props.position.x = x
+      // draggableRef.current.props.position.y = y
+      dimensionConfig.value.find((item: any) => item.name === 'left').value = x
+      dimensionConfig.value.find((item: any) => item.name === 'top').value = y
+      props.position.x = x
+      props.position.y = y
+      // dispatch({
+      //   type: 'bar/test',
+      // })
     },
     position: props.position,
   }))

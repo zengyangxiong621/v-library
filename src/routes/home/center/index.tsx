@@ -17,7 +17,6 @@ const Center = ({ bar, dispatch }: any) => {
   const canvasRef = useRef(null)
   // let supportLinesRef: any = useRef(null)
   const treeData = bar.treeData
-  const isSupportMultiple = bar.isSupportMultiple
   let supportLinesRef = bar.supportLinesRef
 
   const findItem = (name: string) => {
@@ -98,6 +97,9 @@ const Center = ({ bar, dispatch }: any) => {
   }, [])
 
   useKeyPress(filterKey, (event) => {
+    if(bar.isSupportMultiple) {
+      return
+    }
     dispatch({
       type: 'bar/save',
       payload: {
@@ -109,7 +111,6 @@ const Center = ({ bar, dispatch }: any) => {
   })
 
   useClickAway(() => {
-    console.log('呵呵哈哈哈')
     dispatch({
       type: 'bar/clearAllStatus',
     })
@@ -119,8 +120,8 @@ const Center = ({ bar, dispatch }: any) => {
 
   return (
     <div className="c-canvas" ref={ canvasRef }>
-      <Ruler/>
-      <Ruler/>
+      {/*<Ruler/>*/ }
+      {/*<Ruler/>*/ }
       <div
         className="canvas-container"
         style={ {

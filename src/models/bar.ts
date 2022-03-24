@@ -78,118 +78,303 @@ export default {
       {
         id: 'components_1-2',
         name: '组件1',
-        config: {
-          style: {
-            width: 200,
-            height: 200,
-          },
-          position: {
-            x: 200,
-            y: 200,
-          },
+        moduleName: 'text',
+        moduleVersion: '1.0',
+        staticData: {
+          data: [
+            {
+              text: '我是文字组件',
+            },
+          ],
+          fields: [
+            {
+              desc: '文本',
+              name: 'text',
+              value: 'text',
+            },
+          ],
         },
+        config: [
+          {
+            'name': 'style',
+            'displayName': '样式',
+            'value': [
+              {
+                'name': 'dimension',
+                'displayName': '位置尺寸',
+                'type': 'dimensionInputGroup',
+                'value': [
+                  {
+                    'name': 'left',
+                    'displayName': 'X轴坐标',
+                    'value': 100,
+                  },
+                  {
+                    'name': 'top',
+                    'displayName': 'Y轴坐标',
+                    'value': 100,
+                  },
+                  {
+                    'name': 'width',
+                    'displayName': '宽度',
+                    'value': 100,
+                  },
+                  {
+                    'name': 'height',
+                    'displayName': '高度',
+                    'value': 100,
+                  },
+                ],
+              },
+              {
+                'name': 'hideDefault',
+                'displayName': '默认隐藏',
+                'type': 'hideCheckBox',
+                'value': false,
+              },
+              {
+                'name': 'textStyle',
+                'displayName': '文本样式',
+                'type': 'textFullStyleGroup',
+                'value': [
+                  {
+                    'name': 'fontFamily',
+                    'displayName': '',
+                    'value': 'Microsoft Yahei',
+                  },
+                  {
+                    'name': 'fontSize',
+                    'displayName': '',
+                    'value': 32,
+                  },
+                  {
+                    'name': 'color',
+                    'displayName': '',
+                    'value': '#000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                  },
+                  {
+                    'name': 'bold',
+                    'displayName': '',
+                    'value': false,
+                  },
+                  {
+                    'name': 'italic',
+                    'displayName': '',
+                    'value': false,
+                  },
+                  {
+                    'name': 'letterSpacing',
+                    'displayName': '字距',
+                    'value': 0,
+                  },
+                  {
+                    'name': 'lineHeight',
+                    'displayName': '行距',
+                    'value': 48,
+                  },
+                ],
+              },
+              {
+                'name': 'align',
+                'displayName': '对齐方式',
+                'type': 'alignFull',
+                'value': [
+                  {
+                    'name': 'textAlign',
+                    'displayName': '水平对齐',
+                    'value': 'center', // left , center, right,bothEnds
+                  },
+                  {
+                    'name': 'textVertical',
+                    'displayName': '垂直对齐',
+                    'value': 'top', // top bottom vertical
+                  },
+                ],
+              },
+              {
+                'name': 'shadow',
+                'displayName': '阴影',
+                'type': 'shadowOutSide',
+                'value': [
+                  {
+                    'name': 'show',
+                    'displayName': '',
+                    'value': true,
+                  },
+                  {
+                    'name': 'shadow',
+                    'displayName': '外阴影',
+                    'value': {
+                      'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                      'vShadow': 0, // 垂直阴影的位置
+                      'hShadow': 0, // 水平阴影的位置
+                      'blur': 8, // 模糊的距离
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            'name': 'interaction',
+            'displayName': '交互',
+            'value': { // 该部分实际上来自于layers设置
+              'mountAnimation': { // 如果不存在载入动画，该项为null
+                'delay': 2, // 延迟
+                'direction': 'right', // 方向
+                'duration': 304, // 持续时间(ms)
+                'opacityOpen': true, // 渐隐渐现
+                'timingFunction': 'ease', // 速率
+                'type': 'slide', // 动画类型
+              },
+            },
+          },
+        ],
       },
       {
         id: 'components_1-3',
-        name: '组件2',
-        config: {
-          style: {
-            width: 100,
-            height: 100,
+        name: '组件1',
+        config: [
+          {
+            'name': 'style',
+            'displayName': '样式',
+            'value': [
+              {
+                'name': 'dimension',
+                'displayName': '位置尺寸',
+                'type': 'dimensionInputGroup',
+                'value': [
+                  {
+                    'name': 'left',
+                    'displayName': 'X轴坐标',
+                    'value': 200,
+                  },
+                  {
+                    'name': 'top',
+                    'displayName': 'Y轴坐标',
+                    'value': 200,
+                  },
+                  {
+                    'name': 'width',
+                    'displayName': '宽度',
+                    'value': 100,
+                  },
+                  {
+                    'name': 'height',
+                    'displayName': '高度',
+                    'value': 100,
+                  },
+                ],
+              },
+              {
+                'name': 'hideDefault',
+                'displayName': '默认隐藏',
+                'type': 'hideCheckBox',
+                'value': false,
+              },
+              {
+                'name': 'textStyle',
+                'displayName': '文本样式',
+                'type': 'textFullStyleGroup',
+                'value': [
+                  {
+                    'name': 'fontFamily',
+                    'displayName': '',
+                    'value': 'Microsoft Yahei',
+                  },
+                  {
+                    'name': 'fontSize',
+                    'displayName': '',
+                    'value': 32,
+                  },
+                  {
+                    'name': 'color',
+                    'displayName': '',
+                    'value': '#000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                  },
+                  {
+                    'name': 'bold',
+                    'displayName': '',
+                    'value': false,
+                  },
+                  {
+                    'name': 'italic',
+                    'displayName': '',
+                    'value': false,
+                  },
+                  {
+                    'name': 'letterSpacing',
+                    'displayName': '字距',
+                    'value': 0,
+                  },
+                  {
+                    'name': 'lineHeight',
+                    'displayName': '行距',
+                    'value': 48,
+                  },
+                ],
+              },
+              {
+                'name': 'align',
+                'displayName': '对齐方式',
+                'type': 'alignFull',
+                'value': [
+                  {
+                    'name': 'textAlign',
+                    'displayName': '水平对齐',
+                    'value': 'left', // left , center, right,bothEnds
+                  },
+                  {
+                    'name': 'textVertical',
+                    'displayName': '垂直对齐',
+                    'value': 'top', // top bottom vertical
+                  },
+                ],
+              },
+              {
+                'name': 'shadow',
+                'displayName': '阴影',
+                'type': 'shadowOutSide',
+                'value': [
+                  {
+                    'name': 'show',
+                    'displayName': '',
+                    'value': true,
+                  },
+                  {
+                    'name': 'shadow',
+                    'displayName': '外阴影',
+                    'value': {
+                      'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                      'vShadow': 0, // 垂直阴影的位置
+                      'hShadow': 0, // 水平阴影的位置
+                      'blur': 8, // 模糊的距离
+                    },
+                  },
+                ],
+              },
+            ],
           },
-          position: {
-            x: 100,
-            y: 100,
+          {
+            'name': 'interaction',
+            'displayName': '交互',
+            'value': { // 该部分实际上来自于layers设置
+              'mountAnimation': { // 如果不存在载入动画，该项为null
+                'delay': 2, // 延迟
+                'direction': 'right', // 方向
+                'duration': 304, // 持续时间(ms)
+                'opacityOpen': true, // 渐隐渐现
+                'timingFunction': 'ease', // 速率
+                'type': 'slide', // 动画类型
+              },
+            },
           },
-        },
-      },
-      {
-        id: 'components_1-1-1-1-2',
-        name: '组件3',
-        config: {
-          style: {
-            width: 50,
-            height: 50,
-          },
-          position: {
-            x: 300,
-            y: 300,
-          },
-        },
-      },
-      {
-        id: 'components_1-1-1-1-3',
-        name: '组件4',
-        config: {
-          style: {
-            width: 100,
-            height: 100,
-          },
-          position: {
-            x: 500,
-            y: 500,
-          },
-        },
-      },
-      {
-        id: 'components_1-1-1-2',
-        name: '组件5',
-        config: {
-          style: {
-            width: 100,
-            height: 100,
-          },
-          position: {
-            x: 400,
-            y: 400,
-          },
-        },
-      }, {
-        id: 'components_1-1-1-3',
-        name: '组件6',
-        config: {
-          style: {
-            width: 300,
-            height: 300,
-          },
-          position: {
-            x: 500,
-            y: 500,
-          },
-        },
-      }, {
-        id: 'components_1-1-2',
-        name: '组件7',
-        config: {
-          style: {
-            width: 300,
-            height: 300,
-          },
-          position: {
-            x: 0,
-            y: 500,
-          },
-        },
-      }, {
-        id: 'components_1-1-3',
-        name: '组件8',
-        config: {
-          style: {
-            width: 50,
-            height: 50,
-          },
-          position: {
-            x: 0,
-            y: 500,
-          },
-        },
+        ],
       },
     ],
     componentLayers: [],
     treeRef: null,
-    canvasScaleValue: {
-      value: 0
-    },
+    canvasScaleValue: 0,
     pageConfig: [
       {
         'name': 'recommend',
