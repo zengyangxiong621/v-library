@@ -13,7 +13,7 @@ const componentLib = {
   textFullStyleGroup:TextStyleSetting,
   color:ColorFullSetting,
   alignFull:AlignSetting,
-  shadow:ShadowSetting
+  shadow:ShadowSetting,
 }
 
 export default componentLib
