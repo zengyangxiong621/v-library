@@ -23,6 +23,7 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
   const dimensionConfig = find(groupConfig, 'dimension')
   const hideDefaultConfig = find(groupConfig, 'hideDefault')
   const opacityConfig = find(groupConfig, 'opacity')
+  const interactionConfig = find(groupConfig, 'interaction').value
 
   const formItemLayout = {
     labelAlign: 'left'
@@ -55,7 +56,7 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
           <OpacitySetting data={opacityConfig} onChange={settingsChange} />
           <Collapse accordion className="custom-collapse">
             <Panel header="载入动画" key="1">
-              <LoadAnimation/>
+              <LoadAnimation data={interactionConfig} onChange={settingsChange}/>
             </Panel>
           </Collapse>
         </Form>

@@ -96,12 +96,12 @@ export class EditableTable extends React.Component {
     this.columns = [
       {
         title: '字段',
-        dataIndex: 'field',
+        dataIndex: 'name',
         width: '30%',
       },
       {
         title: '映射',
-        dataIndex: 'map',
+        dataIndex: 'value',
         editable: true,
       },
       {
@@ -113,21 +113,8 @@ export class EditableTable extends React.Component {
       },
     ];
     this.state = {
-      dataSource: [
-        {
-          key: '0',
-          field: 'value',
-          map: '32',
-          status: true,
-        },
-        {
-          key: '1',
-          field: 'value',
-          map: '31',
-          status: false,
-        },
-      ],
-      count: 2,
+      dataSource: props.data.fields,
+      count: props.data.fields.length,
     };
   }
 
@@ -140,6 +127,8 @@ export class EditableTable extends React.Component {
     this.setState({
       dataSource: newData,
     });
+    this.props.data.fields = newData
+    this.props.onChange()
   };
 
   render() {

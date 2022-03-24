@@ -32,6 +32,9 @@
 .custom-form .ant-form-item-label > label{
   color: #ccc;
   font-size: 14px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
 }
 .custom-select{
   margin-bottom: 16px;

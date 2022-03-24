@@ -10,36 +10,63 @@ import {
 
 const LoadAnimation = props => {
   const { Option } = Select;
-
-  const [animationType, setAnimationType] = useState('none')
-  const [fadeOut, setFadeOut] = useState(false)
-  const [rate, setRate] = useState('uniform')
-  const [direction, setDirection] = useState('leftToRight')
-  const [duration, setDuration] = useState(300)
-  const [delay, setDelay] = useState(0)
+  const _data = props.data;
+  const [animationType, setAnimationType] = useState(_data?.mountAnimation?.type || null)
+  const [opacityOpen, setOpacityOpen] = useState(_data?.mountAnimation?.opacityOpen || false)
+  const [timingFunction, setTimingFunction] = useState(_data?.mountAnimation?.timingFunction || 'linear')
+  const [direction, setDirection] = useState(_data?.mountAnimation?.direction || 'left')
+  const [duration, setDuration] = useState(_data?.mountAnimation?.duration || 300)
+  const [delay, setDelay] = useState(_data?.mountAnimation?.delay || 0)
 
   const animationTypeChange = (value) => {
-    setAnimationType(value)
+    if (!animationType) {
+      _data.mountAnimation = {
+        "delay": 0,
+        "direction": "right",
+        "duration": 304,
+        "opacityOpen": true,
+        "timingFunction": "ease",
+        "type": value
+      }
+    } else {
+      value === 'none' ? _data.mountAnimation = null : _data.mountAnimation.type = value
+    }
+    setAnimationType(value === 'none' ? null : value)
+    props.onChange()
   }
 
-  const onFadeOutChange = (e) => {
-    setFadeOut(e.target.checked)
+  const opacityOpenChange = (e) => {
+    setOpacityOpen(e.target.checked)
+    _data.mountAnimation.opacityOpen = e.target.checked
+    props.onChange()
   }
 
-  const rateChange = (value) => {
-    setRate(value)
+  const timingFunctionChange = (value) => {
+    setTimingFunction(value)
+    _data.mountAnimation.timingFunction = value
+    props.onChange()
   }
 
   const directionChange = (value) => {
     setDirection(value)
+    _data.mountAnimation.direction = value
+    props.onChange()
   }
 
-  const durationChange = () => {
-    console.log('duration')
+  const durationChange = (e) => {
+    console.log('duration', e)
+    const value = parseInt(e.target.value)
+    setDuration(value)
+    _data.mountAnimation.duration = value
+    props.onChange()
   }
 
-  const delayChange = () => {
-    console.log('delay')
+  const delayChange = (e) => {
+    console.log('delay', e)
+    const value = parseInt(e.target.value)
+    setDuration(value)
+    _data.mountAnimation.delay = value
+    props.onChange()
   }
 
   return (
@@ -47,36 +74,37 @@ const LoadAnimation = props => {
       <Form.Item label="动画类型" name="animationType">
         <Select className="custom-select" placeholder="请选择" defaultValue={animationType} onChange={animationTypeChange}>
           <Option value="none">无</Option>
-          <Option value="moveIn">移入</Option>
-          <Option value="miniIn">移入(小)</Option>
+          <Option value="slide">移入</Option>
+          <Option value="slideSmall">移入(小)</Option>
           <Option value="wipe">划变</Option>
         </Select>
       </Form.Item>
-      {animationType !== "none" ? <React.Fragment>
-        <Form.Item name="fadeOut" label="渐隐渐现">
-          <Checkbox style={{ float: 'left' }} checked={fadeOut} onChange={onFadeOutChange}></Checkbox>
+      {animationType ? <React.Fragment>
+        <Form.Item name="opacityOpen" label="渐隐渐现">
+          <Checkbox style={{ float: 'left' }} checked={opacityOpen} onChange={opacityOpenChange}></Checkbox>
         </Form.Item>
-        <Form.Item label="速率" name="rate">
-          <Select className="custom-select" placeholder="请选择" defaultValue={rate} onChange={rateChange}>
-            <Option value="uniform">匀速</Option>
-            <Option value="mkm">慢快慢</Option>
-            <Option value="dsks">低速开始</Option>
-            <Option value="dsjs">低速结束</Option>
+        <Form.Item label="速率" name="timingFunction">
+          <Select className="custom-select" placeholder="请选择" defaultValue={timingFunction} onChange={timingFunctionChange}>
+            <Option value="linear">匀速</Option>
+            <Option value="ease">慢快慢</Option>
+            <Option value="ease-in">低速开始</Option>
+            <Option value="ease-out">低速结束</Option>
+            <Option value="ease-in-out">低速开始和结束</Option>
           </Select>
         </Form.Item>
         <Form.Item label="方向" name="direction">
           <Select className="custom-select" placeholder="请选择" defaultValue={direction} onChange={directionChange}>
-            <Option value="leftToRight">从左至右</Option>
-            <Option value="rightToLeft">从右至左</Option>
-            <Option value="topToBottom">从上至下</Option>
-            <Option value="bottomToTop">从下至上</Option>
+            <Option value="left">从左至右</Option>
+            <Option value="right">从右至左</Option>
+            <Option value="down">从上至下</Option>
+            <Option value="up">从下至上</Option>
           </Select>
         </Form.Item>
         <Form.Item label="持续时间(ms)" name="duration">
-          <InputNumber className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={duration} onChange={durationChange} />
+          <InputNumber className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={duration} onBlur={durationChange} />
         </Form.Item>
         <Form.Item label="延时(ms)" name="delay">
-          <InputNumber  className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={delay} onChange={delayChange} />
+          <InputNumber className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={delay} onBlur={delayChange} />
         </Form.Item>
       </React.Fragment> : null}
     </React.Fragment>
