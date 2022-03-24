@@ -82,9 +82,10 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
     const top = recalculateY
     const menuHeight = menuRef.current.clientHeight
     // 如果offsetTop + 元素本身高度 > 浏览器可视区域高度，将菜单上移
-    // const isOverflow = visualHeight - top > menuHeight
-    const isOverflow = menuHeight + top > visualHeight
-    if(isOverflow) {
+    // const isOverflowAtUnder = visualHeight - top > menuHeight
+    const isOverflowAtUnder = menuHeight + top > visualHeight
+    // const isOverflowAtTop =
+    if(isOverflowAtUnder) {
       recalculateY = y - menuHeight
     }
     menuRef.current.style.position = 'fixed'

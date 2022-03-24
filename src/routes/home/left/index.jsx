@@ -29,7 +29,6 @@ const Left = ({ dispatch, bar, operate }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
   const finalMenu = getTargetMenu(menuOptions)
 
-  const [inlineCollapsed, setInlineCollapsed] = useState(false)
   const [isExpand, setIsExpand] = useState([])
   const [customExpandKeys, setCustomExpandKeys] = useState([])
   const [isMultipleTree, setIsMultipleTree] = useState(false)
@@ -38,11 +37,27 @@ const Left = ({ dispatch, bar, operate }) => {
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
   const treeRef = useRef(null)
+  const topBarRef = useRef(null)
+  const bottomBarRef = useRef(null)
+  const headerRef = useRef(null)
   // TODO 想使用ahooks库,但是点击树节点的时候也会出现没点到树的效果
-  // const aRef = useRef()
-  // useClickAway(() => {
-  //   console.log('没点到树哦');
-  // }, [aRef])
+  useClickAway(() => {
+    setSelected([])
+    dispatch({
+      type: 'bar/clearAllStatus',
+    })
+    // 取消选中节点的输入框
+    dispatch({
+      type: 'bar/reName',
+      payload: {
+        value: false,
+      },
+    })
+    // 取消右键菜单
+    setIsShowRightMenu(false)
+    // 将多选树改为单选树
+    setIsMultipleTree(false)
+  }, [treeRef, topBarRef, headerRef, bottomBarRef])
 
   // 1、其它组件更改了选中的节点时触发
   // 2、多选时不能重命名
@@ -88,48 +103,51 @@ const Left = ({ dispatch, bar, operate }) => {
     }
   }, [])
   // 监听 树区域 以外的点击
-  useEffect(() => {
-    bar.treeRef = treeRef
-    document.addEventListener('click', (e) => {
-      e.stopPropagation()
-      const {
-        target: { className },
-      } = e
-      // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
-      const tree = document.querySelector('.ant-tree')
-      // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
-      if (className && typeof className === 'string') {
-        const res = tree.querySelector(`.${e.target.className}`)
-        if (!res) {
-          setSelected([])
-          dispatch({
-            type: 'bar/clearAllStatus',
-          })
-          // 取消选中节点的输入框
-          dispatch({
-            type: 'bar/reName',
-            payload: {
-              value: false,
-            },
-          })
-          // 取消右键菜单
-          setIsShowRightMenu(false)
-          // 将多选树改为单选树
-          setIsMultipleTree(false)
-        }
-      }
-    })
-    return () => {
-      document.removeEventListener('click', (e) => ({}))
-    }
-  }, [])
+  // useEffect(() => {
+  //   bar.treeRef = treeRef
+  //   document.addEventListener('click', (e) => {
+  //     e.stopPropagation()
+  //     const {
+  //       target: { className },
+  //     } = e
+  //     // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
+  //     const tree = document.querySelector('.ant-tree')
+  //     // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
+  //     if (className && typeof className === 'string') {
+  //       const res = tree.querySelector(`.${e.target.className}`)
+  //       if (!res) {
+  //         setSelected([])
+  //         dispatch({
+  //           type: 'bar/clearAllStatus',
+  //         })
+  //         // 取消选中节点的输入框
+  //         dispatch({
+  //           type: 'bar/reName',
+  //           payload: {
+  //             value: false,
+  //           },
+  //         })
+  //         // 取消右键菜单
+  //         setIsShowRightMenu(false)
+  //         // 将多选树改为单选树
+  //         setIsMultipleTree(false)
+  //       }
+  //     }
+  //   })
+  //   return () => {
+  //     document.removeEventListener('click', (e) => ({}))
+  //   }
+  // }, [])
 
   /**
    * 方法
    * */
   // 收起 / 展开 菜单栏
+  const [w, setW] = useState(250)
   const toggle = () => {
-    setInlineCollapsed(!inlineCollapsed)
+    const el = document.querySelector('.left-menu')
+    w === 188 ? setW(250) : setW(188)
+    el.style.width = `${w}px`
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
@@ -196,6 +214,8 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
+    event.stopPropagation()
+    console.log('右键点击了', event);
     const { children, key } = node
     const isFolder = !!children
     setIsMultipleTree(false)
@@ -253,23 +273,25 @@ const Left = ({ dispatch, bar, operate }) => {
       dragObj = item
     })
 
-    if (!info.dropToGap) {
-      // Drop on the content
-      loop(data, dropKey, (item, index) => {
-        item.children = item.children || []
-        // where to insert 示例添加到头部，可以是随意位置
-        const newGroup = {
-          name: '分组',
-          id: `${index}${item}-temp`,
-          isFolder: true,
-          children: []
-        }
-        // newGroup.children.push(item)
-        // newGroup.children.push(dragObj)
-        // data.splice(index, 1, newGroup)
-        item.children.unshift(dragObj)
-      })
-    } else if (
+    console.log('info.dropToGap', info.dropToGap);
+    // if (!info.dropToGap) {
+    //   // Drop on the content
+    //   loop(data, dropKey, (item, index) => {
+    //     item.children = item.children || []
+    //     // where to insert 示例添加到头部，可以是随意位置
+    //     const newGroup = {
+    //       name: '分组',
+    //       id: `${index}${item}-temp`,
+    //       isFolder: true,
+    //       children: []
+    //     }
+    //     // newGroup.children.push(item)
+    //     // newGroup.children.push(dragObj)
+    //     // data.splice(index, 1, newGroup)
+    //     item.children.unshift(dragObj)
+    //   })
+    // } else
+    if (
       (info.node.props.children || []).length > 0 && // Has children
       info.node.props.expanded && // Is expanded
       dropPosition === 1 // On the bottom gap
@@ -317,28 +339,29 @@ const Left = ({ dispatch, bar, operate }) => {
     setIsShowRightMenu(false)
   }
   return (
-    <Menu
-      mode="inline"
-      theme="dark"
-      className="left-menu"
-      style={{
-      }}
-      inlineCollapsed={inlineCollapsed}>
+    // <Menu
+    //   mode="inline"
+    //   theme="dark"
+    //   className="left-menu"
+    //   style={{
+    //   }}
+    //   inlineCollapsed={inlineCollapsed}>
+    <div className='left-menu'>
       <div className="left-wrap">
-        <div className="header">
+        <div className="header" ref={headerRef}>
           <header className="header-text">图层</header>
           <IconFont
             type="icon-tucengshouqi" onClickCapture={() => toggle()}
             style={{ cursor: 'pointer' }} />
         </div>
-        <div className='left-wrap-toolbar'>
-          <ToolBar data={topBarIcons} iconSize="14px" getActiveIcon={getActiveIcon}>
+        <div className='left-wrap-toolbar' ref={topBarRef}>
+          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
           </ToolBar>
         </div>
         {/*右键菜单Dropdown */}
 
         {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
-        <div className='left-wrap-tree'>
+        <div className='left-wrap-tree' ref={treeRef}>
           <Tree
             draggable
             blockNode
@@ -355,11 +378,13 @@ const Left = ({ dispatch, bar, operate }) => {
             treeData={bar.treeData}
             selectedKeys={selected}
             titleRender={(nodeData) => {
-              return (<EveryTreeNode
-                {...nodeData}
-                isExpand={isExpand}
-                getCurrentMenuLocation={getCurrentMenuLocation}
-              />)
+              return (<div>
+                <EveryTreeNode
+                  {...nodeData}
+                  isExpand={isExpand}
+                  getCurrentMenuLocation={getCurrentMenuLocation}
+                />
+              </div>)
             }
             }
           />
@@ -368,11 +393,12 @@ const Left = ({ dispatch, bar, operate }) => {
         {isShowRightMenu &&
           <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
       </div>
-      <div className="footer">
+      <div className="footer" ref={bottomBarRef}>
         <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
-    </Menu>
+    </div>
+    // </Menu>
   )
 }
 /**
@@ -441,3 +467,4 @@ const bottomBarIcons = [
 export default connect(
   ({ bar, operate }) => ({ bar, operate }),
 )(Left)
+
