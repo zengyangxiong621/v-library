@@ -437,7 +437,7 @@ export default {
       },
     ],
     groupConfig: [
-      {  
+      {
         "name": "dimension",
         "displayName": "位置尺寸",
         "config": {
@@ -655,7 +655,7 @@ export default {
         }
       }
     }
-    
+
   } as IBarState,
   subscriptions: {
     init({ dispatch }: any) {
@@ -898,6 +898,16 @@ export default {
       state.key.length = 0
       state.isFolder = false
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
+      return { ...state }
+    },
+    setComponentConfig(state: IBarState, { payload }: any) {
+      const componentConfig = payload
+      console.log('componentConfig', componentConfig)
+      const index = state.components.findIndex((item: any) => {
+        return item.id === componentConfig.id
+      })
+      state.components.splice(index, 1, componentConfig)
+      console.log('index', index)
       return { ...state }
     },
   },
