@@ -48,7 +48,7 @@ const Right = ({ dispatch, bar }) => {
 
   }, [ bar.isFolder, bar.key ])
   return (
-  <div className='right-wrap'>
+  <div className='right-wrap' id='right-wrap'>
     {
       // reflect[whichShow].type()
       whichShow === 'groupConfig' ? <GroupConfig />

@@ -1,13 +1,9 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.css'
+import { find } from '../../../../../utils/common'
 
 import {
   Form,
-  Input,
-  InputNumber,
-  Select,
-  Tag,
-  Row, Col
 } from 'antd';
 
 const AlignSetting = props => {
@@ -15,17 +11,23 @@ const AlignSetting = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const [align, SetAlign] = useState('left');
-  const [vertical, SetVertical] = useState('vertical');
+  const _data = props.data
+  const _align = find(_data, 'align', 'type')
+  const _vertical = find(_data, 'vertical', 'type')
+  const [align, SetAlign] = useState(_align.value);
+  const [vertical, SetVertical] = useState(_vertical.value);
 
 
   const alignmentChange = (str) => {
-    console.log('str', str)
     SetAlign(str)
+    _align.value = str
+    props.onChange()
   }
   const verticalChange = (str) => {
-    console.log('str', str)
     SetVertical(str)
+    _vertical.value = str
+    props.onChange()
+
   }
 
   return (
@@ -37,7 +39,7 @@ const AlignSetting = props => {
     >
       <Form.Item
         name="style"
-        label="对齐方式"
+        label={_data.displayName}
       >
         <div className="align">
           <span title="左对齐" className={align === 'left' ? 'align-active' : null} onClick={() => alignmentChange('left')}>

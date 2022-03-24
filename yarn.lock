@@ -8254,6 +8254,11 @@ rollup@^2.43.1:
   optionalDependencies:
     fsevents "~2.3.2"
 
+ruler.js@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/ruler.js/-/ruler.js-1.0.1.tgz#7ddee94a96a810f5c3f416e7bb03508f020af953"
+  integrity sha512-tiNCF6fkPheuIhhpYT1Jk2vFiKyqEdm9QBJR3a8nd4plREEPsTc/lYy7EedPNediBx912p4T1QHvN0SR3Hmmsg==
+
 run-parallel@^1.1.9:
   version "1.2.0"
   resolved "https://registry.npmmirror.com/run-parallel/-/run-parallel-1.2.0.tgz#66d1368da7bdf921eb9d95bd1a9229e7f21a43ee"

@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.css'
 import { SketchPicker } from 'react-color'
+import { isHex, rgbToHex, hexToRgb, getRgbaNum } from '../../../../../utils/color'
 
 import {
   Form,
@@ -14,19 +15,22 @@ const OutsideShadowSetting = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
+
+  const _data = props.data;
+
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [shadow, setShadow] = useState({
-    hex: '#232630',
-    rgb: {
-      r: 35,
-      g: 38,
-      b: 48,
+    hex: isHex(_data.value.color) ? _data.value.color : rgbToHex(getRgbaNum(_data.value.color)),
+    rgb: isHex(_data.value.color) ? {
+      ...hexToRgb(_data.value.color),
       a: 1
+    } : {
+      ...getRgbaNum(_data.value.color)
     },
-    x:0,
-    y:0,
-    dim:0,
-    extend:0,
+    hShadow: _data.value.hShadow || 0,
+    vShadow: _data.value.vShadow || 0,
+    blur: _data.value.blur || 0,
+    extend: _data.value.extend || 0,
   });
 
   const selectBgc = () => {
@@ -38,9 +42,21 @@ const OutsideShadowSetting = props => {
       hex: e.hex,
       rgb: e.rgb,
     })
+    if (e.rgb.a === 1) {
+      _data.value.color = e.hex
+    } else {
+      _data.value.color = `rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`
+    }
+    props.onChange()
   }
-  const shadowChange = ()=>{
-
+  const shadowChange = (field,e) => {
+    const value = parseInt(e.target.value)
+    setShadow({
+      ...shadow,
+      [field]: value,
+    })
+    _data.value[field] = value
+    props.onChange()
   }
 
 
@@ -53,7 +69,7 @@ const OutsideShadowSetting = props => {
     >
       <Form.Item
         name="outside"
-        label="外阴影"
+        label={_data.displayName}
       >
         <Input.Group compact style={{ marginTop: '8px' }} className="fontBi">
           <div className="color-swatch" onClick={selectBgc} style={{ marginRight: '8px' }}>
@@ -63,24 +79,24 @@ const OutsideShadowSetting = props => {
             <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
             <SketchPicker color={shadow.rgb} onChange={(e) => { handleBgcChange(e) }} />
           </div> : null}
-          <Form.Item name="x" noStyle>
-            <InputNumber  controls={false} defaultValue={shadow.x} className="po-size-input shadow-input" onBlur={shadowChange} />
+          <Form.Item name="hShadow" noStyle>
+            <InputNumber controls={false} defaultValue={shadow.hShadow} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('hShadow',e)} />
           </Form.Item>
-          <Form.Item name="y" noStyle>
-            <InputNumber  controls={false} defaultValue={shadow.y} className="po-size-input shadow-input" onBlur={shadowChange} />
+          <Form.Item name="vShadow" noStyle>
+            <InputNumber controls={false} defaultValue={shadow.vShadow} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('vShadow',e)} />
           </Form.Item>
-          <Form.Item name="dim" noStyle>
-            <InputNumber  controls={false} defaultValue={shadow.dim} className="po-size-input shadow-input" onBlur={shadowChange} />
+          <Form.Item name="blur" noStyle>
+            <InputNumber controls={false} defaultValue={shadow.blur} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('blur',e)} />
           </Form.Item>
           <Form.Item name="extend" noStyle>
-            <InputNumber  controls={false} defaultValue={shadow.extend} className="po-size-input shadow-input" onBlur={shadowChange} />
+            <InputNumber disabled controls={false} defaultValue={shadow.extend} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('extend',e)} />
           </Form.Item>
         </Input.Group>
         <Row>
-          <Col span={8} className="detail-txt" style={{ textIndent: '40px' }}>X</Col>
-          <Col span={4} className="detail-txt" style={{ textIndent: '12px' }}>Y</Col>
-          <Col span={6} className="detail-txt" style={{ textIndent: '22px' }}>模糊</Col>
-          <Col span={6} className="detail-txt" style={{ textIndent: '14px' }}>扩展</Col>
+          <Col span={8} className="detail-txt" style={{ textIndent: '44px' }}>X</Col>
+          <Col span={4} className="detail-txt" style={{ textIndent: '16px' }}>Y</Col>
+          <Col span={6} className="detail-txt" style={{ textIndent: '24px' }}>模糊</Col>
+          <Col span={6} className="detail-txt" style={{ textIndent: '16px' }}>扩展</Col>
         </Row>
       </Form.Item>
     </Form>

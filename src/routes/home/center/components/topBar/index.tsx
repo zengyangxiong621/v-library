@@ -1,12 +1,20 @@
-import { memo } from 'react'
+import React, { memo } from 'react'
 import './index.less'
-
+/**
+ * description: 组件导航栏菜单
+ */
 import Charts from './components/charts/index'
 import Map from './components/map/index'
 import Text from './components/text/index'
 import Assist from './components/assist/index'
 import Interaction from './components/interaction/index'
 import Other from './components/other/index'
+/**
+ * description: 素材导航栏菜单
+ */
+import DesignMaterial from './components/designMaterial'
+import ThmemResource from './components/thmemResource'
+import MyCollection from './components/myCollection'
 
 
 import { Menu } from 'antd'
@@ -15,44 +23,105 @@ const { SubMenu, Item } = Menu
 
 
 const TopBar = (props: any) => {
+  const { showTopBar, zujianORsucai } = props
+  const menuReflect: any = {
+    zujian: zujianMenu,
+    sucai: sucaiMenu
+  }
 
   return (
-    <div className='TopBar-wrap'>
+    <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
       <Menu className='TopBar-wrap' mode="horizontal">
-        <SubMenu className='TopBar-submenu' key="tb" title="图表">
-          {/* <div className='self-tooltip'> */}
-          <div className='hasList-self-tooltip' >
-            <Charts />
-          </div>
-        </SubMenu>
-        <SubMenu className='TopBar-submenu' key="dt" title="地图">
-          <div className='self-tooltip'>
-            <Map />
-          </div>
-        </SubMenu>
-        <SubMenu className='TopBar-submenu' key="wz" title="文字">
-          <div className='self-tooltip'>
-            <Text />
-          </div>
-        </SubMenu>
-        <SubMenu className='TopBar-submenu' key="fz" title="辅助">
-          <div className='self-tooltip'>
-            <Assist />
-          </div>
-        </SubMenu>
-        <SubMenu className='TopBar-submenu' key="jh" title="交互">
-          <div className='self-tooltip'>
-            <Interaction />
-          </div>
-        </SubMenu>
-        <SubMenu className='TopBar-submenu' key="qt" title="其它">
-          <div className='self-tooltip'>
-            <Other />
-          </div>
-        </SubMenu>
+        {
+          menuReflect[zujianORsucai].map((item: any) => {
+            return (
+              (<SubMenu className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && '88px' }} >
+                <div
+                  className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
+                >
+                  {React.createElement(item.component)}
+                </div>
+              </SubMenu>)
+            )
+          })
+        }
+
       </Menu>
     </div>
   )
 }
+
+/**
+ * description: 组件 、 素材 导航栏选项卡配置
+ */
+const zujianMenu = [
+  {
+    title: '图表',
+    key: 'chart',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: Charts,
+  },
+  {
+    title: '地图',
+    key: 'map',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Map
+  },
+  {
+    title: '文字',
+    key: 'text',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Text
+  },
+  {
+    title: '辅助',
+    key: 'assist',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Assist
+  },
+  {
+    title: '交互',
+    key: 'interaction',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: Interaction
+  },
+  {
+    title: '其他',
+    key: 'other',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Other
+  },
+
+]
+const sucaiMenu = [
+  {
+    title: '设计素材',
+    key: 'sujisucai',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: DesignMaterial,
+    customWidth: true,
+  }, {
+    title: '主题资源',
+    key: 'zhutiziyuan',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: ThmemResource,
+    customWidth: true,
+  }, {
+    title: '我的收藏',
+    key: 'wodeshoucang',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: MyCollection,
+    customWidth: true,
+  },
+]
 
 export default memo(TopBar)
