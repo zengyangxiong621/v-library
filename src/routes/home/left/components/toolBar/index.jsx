@@ -2,43 +2,53 @@ import React, { memo, useEffect } from 'react'
 import './index.css'
 
 import { Tooltip } from 'antd'
-import { UpOutlined, DownOutlined } from '@ant-design/icons'
+import { IconFont } from '../../../../../utils/useIcon'
 
 import { connect } from 'dva'
 
-const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, iconSize, needBottomBorder=true }) => {
+const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, iconSize, needBottomBorder = true }) => {
   const notBannedClick = bar.key.length > 0
   return (
-  <div className='ToolBar'  style={{
-    borderBottom: needBottomBorder ?  '1px solid black' : ''
-  }}>
+    <div className='ToolBar' style={{
+      borderBottom: needBottomBorder ? '1px solid black' : ''
+    }}>
       {
         data.map(o => {
           return (
-            <Tooltip  key={o.key} title={ o.text } color='white' placement='bottomRight'>
+            <Tooltip key={o.key} title={o.text} color='white' placement='bottomRight'>
               {
-                <div style={{ cursor: notBannedClick ? 'pointer' : 'not-allowed'}}>
-                <span
+                <div style={{ cursor: notBannedClick ? 'pointer' : 'not-allowed' }}>
+                  <IconFont
+                    type={o.icon}
+                    onClick={() => {
+                      getActiveIcon(o.key)
+                    }}
+                    style={{
+                      fontSize: iconSize //图标大小
+                    }}
+                    className={`${notBannedClick ? 'not-banned-click' : 'banned-click'} every-icon`}
+                  />
+                  {/* <span
                   onClick={() => {
                     getActiveIcon(o.key)
                   }}
                   style={{
                     fontSize:iconSize //图标大小
                   }}
-                  className={`${notBannedClick ? '':'banned-click'} every-icon iconfont ${o.icon}`}
+                  className={`${notBannedClick ? 'not-banned-click':'banned-click'} every-icon iconfont ${o.icon}`}
                 >
-                </span>
-              </div>
+                </span> */}
+                </div>
               }
             </Tooltip>
           )
         })
       }
-  </div>
+    </div>
   )
 }
 
 
 export default memo(connect(
-  ({bar, operate}) => ({bar, operate})
+  ({ bar, operate }) => ({ bar, operate })
 )(ToolBar))

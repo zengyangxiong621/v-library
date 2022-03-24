@@ -9,6 +9,7 @@ import NavigationItem from '../navigationItem/index'
 
 
 const Header = props => {
+  // const { showWhichBar } = props
   const [isRename, setIsRename] = useState(false)
   const [activeIcon, setActiveIcon] = useState(false)
   const toBack = () => {
@@ -16,13 +17,12 @@ const Header = props => {
   }
   // 获取当前活跃的按钮
   const getActiveIcon = (icon) => {
-    console.log('当前的icon', icon);
     setActiveIcon(icon)
     if (icon === 'zujian') {
-      console.log('zujian');
+      props.showWhichBar(icon)
     }
     if (icon === 'sucai') {
-      console.log('sucai');
+      props.showWhichBar(icon)
     }
   }
   return (
