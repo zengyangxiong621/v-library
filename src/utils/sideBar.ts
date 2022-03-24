@@ -343,7 +343,6 @@ const reName: (a: any[], b: string[], c: string) => any[] = (
  */
 const generateTreeData: () => any = () => {
   const tData: any = [];
-
   const generateData = (_level: any, lock: any, _preKey: any, _tns: any) => {
     const preKey = _preKey || "1";
     const tns = _tns || tData;
@@ -365,7 +364,6 @@ const generateTreeData: () => any = () => {
         name: `${prefix}${key}`,
         id: `${prefix}${key}`,
         parentId,
-        icon: "SmileOutlined",
         collapse: true, // 收缩
         selected: false,
         hover: false,

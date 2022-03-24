@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 // react-beautiful-dnd
 // ant
 import { connect } from 'dva'
 import './index.less'
 import { Layout } from 'antd'
 
-import { throttle } from '../../utils/index'
+import { useClickAway } from 'ahooks'
 
 import CustomHeader from './components/header/index'
 import Left from './left'
@@ -16,7 +16,20 @@ import CenterHeaderBar from '../home/center/components/topBar/index'
 const { Header } = Layout
 
 
+
+
+
 function App({ bar, dispatch }: any) {
+  // const trRef: any = useRef()
+  // useClickAway(() => {
+  //   console.log('没点到左边的');
+  //   dispatch({
+  //     type: 'bar/selectedNode',
+  //     payload: {
+  //       key: [],
+  //     },
+  //   })
+  // }, [trRef])
   const detectZoom = () => {
     let ratio = 0,
       screen: any = window.screen,
@@ -67,54 +80,66 @@ function App({ bar, dispatch }: any) {
     }
 
     return () => {
-      document.onkeydown = null
-    }}, [])
-
-  // 拖动右边框改变右侧菜单栏的宽度
-  const dragEl: any = document.querySelector('.left-menu')
-  const changeWidth = throttle((e: any) => {
-    e.stopPropagation()
-    console.log('一次', e.pageX);
-    if (e.clientX > 180 && e.clientX < 300) {
-      dragEl.style.width = `${e.clientX}px`
     }
-  }, 50)
-  const onMouseDown = (e: any) => {
-    document.addEventListener('mousemove', changeWidth)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  /**
+   * description:  是否显示中心画布上方的导航栏
+   */
+  const [showTopBar, setShowTopBar] = useState(false)
+  const [zujianORsucai, setZujianORsucai] = useState('zujian')
+  const showWhichBar = (whichBar: string) => {
+    setZujianORsucai(whichBar)
+    setShowTopBar(true)
   }
-  document.addEventListener('mouseup', () => {
-    document.removeEventListener('mousemove', changeWidth)
-  })
 
 
   return (
     <Layout>
       <Header className="home-header">
-        <CustomHeader />
+        <CustomHeader showWhichBar={showWhichBar} />
       </Header>
       <div className="p-home">
-        {/* 设置右边框可拖动 */}
-        <Left />
-        <div className='left-parent'
-          onMouseDownCapture={(e) => onMouseDown(e)}
-        // onMouseUp={(e) => onMouseUp(e)}
-        // onMouseMove={(e) => onMouseMove(e)}
+        <div className='home-left-wrap'
+        //  ref={trRef}
         >
+          <Left />
         </div>
         <div className="center-wrap">
-          <CenterHeaderBar />
+          <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
           <Center />
         </div>
         <Right />
       </div>
     </Layout>
   )
-  // const handleWheel = (ev: any) => {
-  //   // console.log('ev', ev)
-  // }
 }
 
 
 export default connect(({ bar }: any) => (
   { bar }
 ))(App)
+
+
+/**
+   * description: 左侧菜单栏拖动功能
+   */
+  // const dragEl: any = document.querySelector('.left-menu')
+  // // 拖动右边框改变右侧菜单栏的宽度
+  // const changeWidth = throttle((e: any) => {
+  //   console.log('eeeeeeeee', e);
+  //   console.log('dragEl', dragEl);
+  //   e.stopPropagation()
+  //   if (e.clientX > 180 && e.clientX < 300) {
+  //     dragEl.style.width = `${e.clientX}px`
+  //   }
+  // }, 0)
+  // const onMouseDown = (e: any) => {
+  //   const isLeftClick = e.button == 0
+  //   if (isLeftClick) {
+  //     document.addEventListener('mousemove', changeWidth)
+  //   }
+  //   document.addEventListener('mouseup', () => {
+  //     document.removeEventListener('mousemove', changeWidth)
+  //   })
+  // }

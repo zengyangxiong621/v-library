@@ -152,7 +152,7 @@ const Center = ({ bar, dispatch }: any) => {
                 return bar.supportLinesRef
               } }
             />
-            <div className="draggable-container" ref={ draggableContainerRef }>
+            <div className="draggable-container" id='draggable-container' ref={ draggableContainerRef }>
               <CustomDraggable mouse={ mouse } treeData={ treeData }/>
             </div>
           </div>

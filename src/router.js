@@ -23,6 +23,15 @@ const menuGlobal = [
     component: () => import('./routes/dashboard.tsx')
   },
   {
+    id: 'dataSource',
+    pid: '0',
+    name: 'dataSource',
+    icon: 'dataSource',
+    path: '/dataSource',
+    models: () => [], // models可多个
+    component: () => import('./routes/tempDataSource/index.tsx')
+  },
+  {
     id: 'test',
     pid: '0',
     name: 'test',
