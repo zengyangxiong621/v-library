@@ -22,7 +22,6 @@ const DataSource = (props: any) => {
   // 下拉框选择
   const selectChange = (value: any, option: any) => {
     setDataSourceType(value)
-    console.log('value', value);
   }
   // 按类型搜索
   const searchByType = (e: any) => {
@@ -70,6 +69,7 @@ const DataSource = (props: any) => {
           columns={columns}
           dataSource={data}
           pagination={paginationProps}
+          rowClassName='customRowClass'
         />
       </section>
       <AddDataSource visible={isShowModal} changeShowState={changeShowState} />
@@ -109,7 +109,7 @@ const columns = [
     title: '名称',
     dataIndex: 'name',
     key: 'name',
-    render: (text: any) => <a>{text}</a>,
+    render: (text: any) => <span>{text}</span>,
   },
   {
     title: '数据类型',

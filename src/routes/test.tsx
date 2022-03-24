@@ -18,9 +18,9 @@ type EChartsOption = echarts.ComposeOption<
   GridComponentOption | LineSeriesOption
 >;
 
-interface Props {}
+interface Props { }
 
-interface State {}
+interface State { }
 
 const mapStateToProps = (state: any) => {
   return state
@@ -32,10 +32,10 @@ class Test extends Component<Props, State> {
     super(props)
   }
 
-  componentDidMount(){    
+  componentDidMount() {
     // this.init()  
-    this.lazyInit()                                          
-  }  
+    this.lazyInit()
+  }
 
   lazyInit = () => {
     var chartDom = document.getElementById('echartsExample')!;
@@ -62,52 +62,52 @@ class Test extends Component<Props, State> {
 
     option && myChart.setOption(option);
   }
-  
+
   init = () => {
-    const ele: any = document.getElementById('echartsExample')                                                                              
-    const mychart = echarts.init(ele)                    
-    const option = {                                                                                               
-      title: {                                                                                                         
-        text: '某站点用户访问来源',                                                                     
-        subtext: '纯属虚构',                                                                                 
-        left: 'center'                                                                                             
-    },                                                                                                                 
-    tooltip: {                                                                                                       
-        trigger: 'item'                                                                                           
-    },                                                                                                                 
-    legend: {                                                                                                     
-        orient: 'vertical',                                                                                      
-        left: 'left',                                                                                                 
-    },                                                                                                                 
-    series: [                                                                                                      
-        {                                                                                                             
-            name: '访问来源',                                                                               
-            type: 'pie',                                                                                           
-            radius: '50%',                                                                                     
-            data: [                                                                                                
-                {value: 1048, name: '搜索引擎'},                                                   
-                {value: 735, name: '直接访问'},                                                     
-                {value: 580, name: '邮件营销'},                                                     
-                {value: 484, name: '联盟广告'},                                                     
-                {value: 300, name: '视频广告'}                                                      
-            ],                                                                                                        
-            emphasis: {                                                                                       
-                itemStyle: {                                                                                    
-                    shadowBlur: 10,                                                                        
-                    shadowOffsetX: 0,                                                                    
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'                                              
-                }                                                                                                    
-            }                                                                                                        
-        }                                                                                                            
-    ]                                                                                                                
-      }                                                                                                              
-    option && mychart.setOption(option)    
+    const ele: any = document.getElementById('echartsExample')
+    const mychart = echarts.init(ele)
+    const option = {
+      title: {
+        text: '某站点用户访问来源',
+        subtext: '纯属虚构',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+      },
+      series: [
+        {
+          name: '访问来源',
+          type: 'pie',
+          radius: '50%',
+          data: [
+            { value: 1048, name: '搜索引擎' },
+            { value: 735, name: '直接访问' },
+            { value: 580, name: '邮件营销' },
+            { value: 484, name: '联盟广告' },
+            { value: 300, name: '视频广告' }
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    }
+    option && mychart.setOption(option)
   }
 
   render() {
     return (
       <div className="">
-        <div id="echartsExample" className="echarts-example" style={{width:'800px',height:'400px'}}></div>
+        <div id="echartsExample" className="echarts-example" style={{ width: '800px', height: '400px' }}></div>
       </div>
     )
   }

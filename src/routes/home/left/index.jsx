@@ -57,7 +57,7 @@ const Left = ({ dispatch, bar, operate }) => {
     setIsShowRightMenu(false)
     // 将多选树改为单选树
     setIsMultipleTree(false)
-  }, [treeRef, topBarRef, headerRef, bottomBarRef])
+  }, [treeRef, topBarRef, headerRef, bottomBarRef, document.getElementById('right-wrap'), document.getElementById('draggable-container')])
 
   // 1、其它组件更改了选中的节点时触发
   // 2、多选时不能重命名
