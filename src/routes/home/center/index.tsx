@@ -3,7 +3,7 @@ import { connect } from 'dva'
 
 import './index.less'
 import Draggable from 'react-draggable'
-import CustomDraggable from './components/CustomDraggable/index1'
+import CustomDraggable from './components/CustomDraggable'
 import ScaleDragCom from './components/ScaleDragCom'
 import SupportLines from './components/SupportLines'
 import * as React from 'react'

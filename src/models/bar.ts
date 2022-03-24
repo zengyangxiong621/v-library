@@ -437,7 +437,7 @@ export default {
       },
     ],
     groupConfig: [
-      {  
+      {
         "name": "dimension",
         "displayName": "位置尺寸",
         "config": {
