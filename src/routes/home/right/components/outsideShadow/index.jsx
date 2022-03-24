@@ -14,6 +14,9 @@ const OutsideShadowSetting = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
+
+  const _data = props.data;
+  
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [shadow, setShadow] = useState({
     hex: '#232630',

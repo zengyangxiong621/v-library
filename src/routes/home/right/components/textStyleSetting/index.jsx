@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react'
 import './index.css'
-import BackgroundColor from '../backgroundColor';
+import BackgroundColor from '../colorFullSetting';
+import { find } from '../../../../../utils/common'
 
 import {
   Form,
@@ -24,38 +25,54 @@ const TextStyleSetting = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
+
+  const _data = props.data;
+  const _fontFamily = find(_data, 'fontFamily');
+  const _fontSize = find(_data, 'fontSize');
+  const _bold = find(_data, 'bold');
+  const _italic = find(_data, 'italic');
+  const _letterSpacing = find(_data, 'letterSpacing');
+  const _lineHeight = find(_data, 'lineHeight');
+  const _colorConfig = find(_data, 'color', 'type')
+
   const [fontSetting, setFontSetting] = useState({
-    fontFamily: 'a',
-    fontSize: 24,
-    blod: false,
-    italics: false,
-    wordSpace:100,
-    rowSpace:48
+    fontFamily: _fontFamily.value,
+    fontSize: _fontSize.value,
+    blod: _bold.value,
+    italic: _italic.value,
+    letterSpacing: _letterSpacing.value,
+    lineHeight: _lineHeight.value
   })
+
   const handleFontFamilyChange = (v) => {
-    console.log('handleFontFamilyChange', v)
+    _fontFamily.value = v
+    props.onChange()
   }
-  const fontSizeChange = () => {
-    console.log('fontSizeChange')
+  const fontSizeChange = (e) => {
+    const val = parseInt(e.target.value)
+    _fontSize.value = val
+    props.onChange()
   }
   const handleFontChange = (key, checked) => {
     setFontSetting({
       ...fontSetting,
       [key]: checked
     })
+    key === "blod" ?
+      _bold.value = checked :
+      _italic.value = checked;
+    props.onChange()
   }
-  const wordSpaceChange = ()=>{
-    console.log('wordSpaceChange')
+  const letterSpacingChange = (e) => {
+    const val = parseInt(e.target.value)
+    _letterSpacing.value = val
+    props.onChange()
   }
-  const rowSpaceChange = ()=>{
-    console.log('rowSpaceChange')
+  const lineHeightChange = (e) => {
+    const val = parseInt(e.target.value)
+    _lineHeight.value = val
+    props.onChange()
   }
-
-  // 背景色变化
-  const styleColorChange = (val) => {
-    console.log(val)
-  }
-
 
   return (
     <Form
@@ -66,22 +83,22 @@ const TextStyleSetting = props => {
     >
       <Form.Item
         name="style"
-        label="文本样式"
+        label={_data.displayName}
       >
-        <Input.Group compact style={{marginBottom:'8px'}}>
+        <Input.Group compact style={{ marginBottom: '8px' }}>
           <Form.Item name="fontFamily" noStyle>
             <Select className="font-select" defaultValue={fontSetting.fontFamily} style={{ width: 120 }} onChange={handleFontFamilyChange}>
-              <Option value="a">微软雅黑</Option>
-              <Option value="b">宋体</Option>
-              <Option value="c">黑体</Option>
+              <Option value="Microsoft Yahei">微软雅黑</Option>
+              <Option value="宋体">宋体</Option>
+              <Option value="SimHei">黑体</Option>
             </Select>
           </Form.Item>
           <Form.Item name="fontSize" noStyle>
-            <InputNumber defaultValue={fontSetting.fontSize} className="po-size-input" style={{width:'68px'}} onBlur={fontSizeChange} />
+            <InputNumber defaultValue={fontSetting.fontSize} className="po-size-input" style={{ width: '68px' }} onBlur={fontSizeChange} />
           </Form.Item>
         </Input.Group>
-        <BackgroundColor data={styleColor} onChange={styleColorChange}/>
-        <Input.Group compact style={{marginTop:'8px'}} className="fontBi">
+        <BackgroundColor data={_colorConfig} onChange={props.onChange} />
+        <Input.Group compact style={{ marginTop: '8px' }} className="fontBi">
           <Form.Item name="blod" noStyle>
             <CheckableTag
               checked={fontSetting.blod}
@@ -90,20 +107,20 @@ const TextStyleSetting = props => {
               B
             </CheckableTag>
           </Form.Item>
-          <Form.Item name="italics" noStyle>
+          <Form.Item name="italic" noStyle>
             <CheckableTag
-              checked={fontSetting.italics}
-              onChange={(checked) => handleFontChange('italics', checked)}
-              style={{fontStyle: 'italic'}}
+              checked={fontSetting.italic}
+              onChange={(checked) => handleFontChange('italic', checked)}
+              style={{ fontStyle: 'italic' }}
             >
               I
             </CheckableTag>
           </Form.Item>
-          <Form.Item name="wordSpace" noStyle>
-            <InputNumber defaultValue={fontSetting.wordSpace} style={{marginRight:'8px'}} className="po-size-input unit-input" onBlur={wordSpaceChange} />
+          <Form.Item name="letterSpacing" noStyle>
+            <InputNumber defaultValue={fontSetting.letterSpacing} style={{ marginRight: '8px' }} className="po-size-input unit-input" onBlur={letterSpacingChange} />
           </Form.Item>
-          <Form.Item name="rowSpace" noStyle>
-            <InputNumber defaultValue={fontSetting.rowSpace} className="po-size-input unit-input" onBlur={rowSpaceChange} />
+          <Form.Item name="lineHeight" noStyle>
+            <InputNumber defaultValue={fontSetting.lineHeight} className="po-size-input unit-input" onBlur={lineHeightChange} />
           </Form.Item>
         </Input.Group>
         <Row>
