@@ -24,9 +24,9 @@ const { SubMenu, Item } = Menu
 
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai } = props
-  const menuReflect: any = {
+  const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
     zujian: zujianMenu,
-    sucai: sucaiMenu
+    sucai: sucaiMenu,
   }
 
   return (
@@ -123,5 +123,18 @@ const sucaiMenu = [
     customWidth: true,
   },
 ]
+
+/**
+ * description: 类型定义
+ */
+type TMenuReflect<T> = {
+  [K: string] : T
+}
+type TComponentMenuItem = {
+  title: string,
+  key: string,
+  isSpecialDropMenu: boolean,
+  component: any
+}
 
 export default memo(TopBar)

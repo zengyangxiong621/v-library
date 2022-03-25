@@ -8,20 +8,19 @@ const { TextArea } = Input
 const { Dragger } = Upload
 
 
-const AddDataSource = (props: any) => {
-  const [addForm] = Form.useForm()
+const EditDataSource = (props: any) => {
+  const {
+    id,
+    baseUrl,
+    code, database, description, name, password, port, type, username
+  } = props.editDataSourceInfo
   const { visible, changeShowState } = props
 
-  const [curDataType, setCurDataType] = useState('')
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
 
   const [loading, setLoading] = useState()
 
-  // 获取到最新的curDataType
-  useEffect(() => {
-    setCurDataType(curDataType)
-  }, [curDataType])
 
   const getDataBaseList = () => {
     const res: any = [{
@@ -33,42 +32,21 @@ const AddDataSource = (props: any) => {
     }]
     setDataBaseList(res)
   }
-  // 新增数据源
-  // const obj = {
-  //   baseUrl: '',
-  //   code: '',
-  //   database: '', description: '', id: '', name: '', password: '', port: '', type: '', username: ''
-  // }
-  const handleOk = async () => {
-    alert('ok')
-    try {
-      const values: any = await addForm.validateFields()
-      console.log('value', values);
-      changeShowState('add')
-    } catch (error) {
-      console.log('error', error);
-    }
-
+  const handleOk = () => {
+    changeShowState('edit')
   }
   const handleCancel = () => {
-    changeShowState('add')
+    changeShowState('edit')
   }
-
-  const selectedChange = (val: any) => {
-    setCurDataType(val)
-  }
-
 
   return (
-    <div className='AddDataSource-wrap'>
+    <div className='EditDataSource-wrap'>
       <Modal
-        title="添加数据源"
+        title="编辑数据源"
         maskClosable={false}
         visible={visible}
-        okText="确定"
-        cancelText="取消"
-        onCancel={handleCancel}
         getContainer={false}
+        onCancel={handleCancel}
         confirmLoading={loading}
         footer={[
           <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel}>取消</Button>,
@@ -76,63 +54,50 @@ const AddDataSource = (props: any) => {
         ]}
       >
         <Form
-          name="addDataSource"
+          name="EditDataSource"
           labelCol={{
             span: 5,
           }}
-          form={addForm}
         >
           <Form.Item
             label="数据源类型"
             name="type"
-            rules={generateSingleRules(true, '请选择数据源类型')}
+            rules={[{ required: true }]}
           >
-            <Select className='setBackColor' onChange={selectedChange} placeholder="请选择数据源类型"
-              dropdownStyle={{ backgroundColor: '#232630' }}
-            >
-              {
-                dataSourceType.map((item: any) => (
-                  <Option key={item.value} value={item.value}>
-                    {item.label}
-                  </Option>
-                ))
-              }
-            </Select>
+            <Input className='setBackColor'
+              defaultValue={typeReflect[type]}
+              disabled>
+            </Input>
           </Form.Item>
           <Form.Item
             label="数据源名称"
             name='name'
-            // rules={generateSingleRules(true, '请输入数据源名称')}
-            rules={[{
-              required: true,
-              message: '数据源名称不能为空',
-            }]}
-          >
-            <Input className='setBackColor' placeholder='请输入数据源名称' autoComplete='off' />
+            rules={generateSingleRules(true, '请输入数据源名称')}>
+            <Input defaultValue={name} className='setBackColor' placeholder='请输入数据源名称' />
           </Form.Item>
           <Form.Item
             label="描述"
             name='description'
           >
             <TextArea
+              defaultValue={description}
               className="setBackColor"
               autoSize={{ minRows: 3, maxRows: 6 }}
-              placeholder="请输入" maxLength={300} />
+              placeholder="请输入" />
           </Form.Item>
           {/* CSV格式 */}
           {
-            curDataType === '0' && (
+            type === '0' && (
               <>
                 <Form.Item
                   label="编码格式"
                   name="code"
                   rules={generateSingleRules(true, '请选择编码格式')}
                 >
-                  <Radio.Group options={codeFormatOptions} />
+                  <Radio.Group defaultValue={code} options={codeFormatOptions} />
                 </Form.Item>
                 <Form.Item
                   label="上传文件"
-                  style={{ marginBottom: '40px' }}
                   name="scwj"
                   rules={generateSingleRules(true, '请选择要上传的文件')}
                 >
@@ -150,47 +115,39 @@ const AddDataSource = (props: any) => {
           }
           {/* API接口 */}
           {
-            curDataType === '1' && (
+            type === '1' && (
               <>
                 <Form.Item label="Base URL"
                   name='baseUrl'
                   rules={generateSingleRules(true, '请输入Base URL')}
                 >
-                  <Input className="setBackColor"></Input>
+                  <Input defaultValue={baseUrl} className="setBackColor"></Input>
                 </Form.Item>
               </>
             )
           }
           {/* MySQL数据库 */}
           {
-            curDataType === '2' && (
+            type === '2' && (
               <>
                 <Form.Item label="链接地址" name="ljdz" rules={generateSingleRules(true, '请输入链接地址')}>
-                  <Input className="setBackColor" placeholder='请输入' />
+                  <Input className="setBackColor"
+                    placeholder='请输入'
+                  />
                 </Form.Item>
-                <Form.Item label="端口" name="port" rules={[
-                  {
-                    required: true,
-                    validator(rule, value) {
-                      const reg = /^\d{1,}$/
-                      if (!reg.test(value)) {
-                        return Promise.reject(new Error('端口号只能由数字组成'))
-                      }
-                    }
-                  }
-                ]}>
-                  <Input className="setBackColor" placeholder='请输入数字' maxLength={10} />
+                <Form.Item label="端口" name="port" rules={generateSingleRules(true, '请输入端口')}>
+                  <Input defaultValue={port} className="setBackColor" placeholder='请输入' />
                 </Form.Item>
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
-                  <Input className="setBackColor" placeholder='请输入' />
+                  <Input defaultValue={username} className="setBackColor" placeholder='请输入' />
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
-                  <Input className="setBackColor" placeholder='请输入' />
+                  <Input defaultValue={password} className="setBackColor" placeholder='请输入' />
                 </Form.Item>
-                <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请选择数据库')}>
+                <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请输入')}>
                   <div className='dataBaseName'>
                     <div className='getDataListBtn' onClick={() => getDataBaseList()}>获取数据库列表</div>
-                    <Select disabled={Array.isArray(dataBaseList) && dataBaseList.length === 0} className='dataBaseName-Select setBackColor'>
+                    <Select defaultValue={database} className='dataBaseName-Select setBackColor'>
                       {
                         dataBaseList.map((item: any) => {
                           return <Option value={item.value} key={item.value}>{item.label}</Option>
@@ -208,7 +165,7 @@ const AddDataSource = (props: any) => {
   )
 }
 
-export default memo(AddDataSource)
+export default memo(EditDataSource)
 
 // 生成单个校验规则
 const generateSingleRules = (required: boolean, message: string | number): any[] => {
@@ -220,44 +177,33 @@ const generateSingleRules = (required: boolean, message: string | number): any[]
   ]
 }
 
-
-// 数据源类型
-const dataSourceType = [
-  {
-    label: 'CSV文件',
-    value: '0'
-  },
-  {
-    label: 'API接口',
-    value: '1'
-  },
-  {
-    label: 'MySQL数据库',
-    value: '2'
-  }
-]
+// 数据源映射
+const typeReflect: any = {
+  0: 'CSV文件',
+  1: 'API接口',
+  2: 'MYSQL数据库'
+}
 
 // 单选框 CSV类型- 编码格式
 const codeFormatOptions = [
   {
     label: '自动检测',
-    value: '自动检测',
+    value: '0',
   },
   {
     label: 'UTF-8',
-    value: 'UTF-8',
+    value: '1',
   },
   {
     label: 'GBK',
-    value: 'GBK',
+    value: '2',
   },
 ]
 
 // 上传框配置
 const uploadProps = {
   name: 'file',
-  multiple: false,
-  maxCount: 1,
+  multiple: true,
   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
   onChange(info: any) {
     const { status } = info.file;
@@ -274,5 +220,12 @@ const uploadProps = {
     console.log('Dropped files', e.dataTransfer.files);
   },
 };
-
+// 动态表单选项
+const formList = [
+  {
+    label: '编码格式',
+    name: 'bianmageshi',
+    // component: <Radio.Group options={plainOptions} onChange={this.onChange1} value={value1} />
+  }
+]
 

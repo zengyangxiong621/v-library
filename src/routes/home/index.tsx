@@ -101,7 +101,6 @@ function App({ bar, dispatch }: any) {
       </Header>
       <div className="p-home">
         <div className='home-left-wrap'
-        //  ref={trRef}
         >
           <Left />
         </div>

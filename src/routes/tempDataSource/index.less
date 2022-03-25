@@ -1,4 +1,4 @@
-@import '~antd/dist/antd.dark.css';
+@import "~antd/dist/antd.dark.css";
 .DataSource-wrap {
   padding: 16px 32px;
   background-color: #171a24;
@@ -34,6 +34,7 @@
 
     .search {
       display: flex;
+
     }
   }
   .table-wrap {
@@ -44,6 +45,18 @@
       font-size: 14px;
       font-weight: 400px;
     }
+
+    // 自定义表格头部的颜色
+    // th.customHeaderColor {
+    //   background-color: red;
+    // }
+    .ant-table-thead > tr > th {
+      background: #353B4E !important;
+    }
+    // 去除表头每列前的小竖线
+    .ant-table-thead > tr > th.ant-table-cell::before{
+      display: none;
+    }
     // antD组件库样式
     // .ant-table-wrapper {
     //   background-color: #171a24;
@@ -52,9 +65,9 @@
     //   background-color: #171a24;
     // }
     .customRowClass:nth-child(even) {
-      background-color:  rgba(53,59,78,0.50);;
+      background-color: rgba(53, 59, 78, 0.5);
     }
-    .customRowClass:nth-child(odd)  {
+    .customRowClass:nth-child(odd) {
       background-color: #171a24;
     }
   }
