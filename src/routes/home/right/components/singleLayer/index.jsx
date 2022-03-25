@@ -24,7 +24,7 @@ const SingleLayer = ({bar, dispatch ,...props })  => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
-
+  // console.log('componentConfigcomponentConfig', componentConfig)
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
   const dataConfig = componentConfig.staticData
@@ -33,10 +33,8 @@ const SingleLayer = ({bar, dispatch ,...props })  => {
   const settingsChange = () => {
     console.log(componentConfig)
     dispatch({
-      type: 'bar/save',
-      payload: {
-        componentConfig
-      }
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
     })
   }
 
