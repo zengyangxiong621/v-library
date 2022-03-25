@@ -41,6 +41,7 @@ interface IBarState {
   supportLinesRef: any;
   selectedComponents: any;
   scaleDragData: any;
+  componentConfig:any
 }
 
 export default {
@@ -1911,6 +1912,7 @@ export default {
     },
     setComponentConfig(state: IBarState, { payload }: any) {
       const componentConfig = payload
+      state.componentConfig = payload
       console.log('payload', payload)
       // console.log('componentConfig', componentConfig)
       const index = state.components.findIndex((item: any) => {
