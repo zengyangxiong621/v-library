@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { connect } from '../../../../../../../utils/connect';
 import './index.less'
 
 import EveryItem from '../everyItem/index'
@@ -36,18 +37,26 @@ const dataArr = [
   },
 ]
 
-const createComponent = () => {
-  
+const mapStateToProps = (state: any) => {
+  return state
+}
+
+const componentCreate = ({ dispatch}: any) => {
+  dispatch({
+    type: 'dashboardGlobal/create',
+    payload: {
+      test: '1111'
+    }
+  })
 }
 
 const Text = (props: any) => {
-  // const { data } = props
   return (
     <div className='Text-wrap'>
       {
         dataArr.map((item: any, index: number) => {
           return (
-            <EveryItem data={item}  onClick={createComponent}/>
+            <EveryItem data={item}  onClickFunc={ () => componentCreate(props) } />
           )
         })
       }
@@ -55,4 +64,5 @@ const Text = (props: any) => {
   )
 }
 
-export default memo(Text)
+export default connect(mapStateToProps)(Text);
+// export default memo(Text)

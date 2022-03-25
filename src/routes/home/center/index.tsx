@@ -12,7 +12,7 @@ import { useClickAway, useKeyPress, useMouse } from 'ahooks'
 import Ruler from './components/Ruler'
 
 const Center = ({ bar, dispatch }: any) => {
-  const filterKey = [ 'ctrl', 'shift' ]
+  const filterKey = ['ctrl', 'shift']
   const draggableContainerRef = useRef(null)
   const canvasRef = useRef(null)
   // let supportLinesRef: any = useRef(null)
@@ -33,7 +33,7 @@ const Center = ({ bar, dispatch }: any) => {
   const calcCanvasSize = () => {
     let getCurrentDocumentWidth = document.documentElement.clientWidth
     const getCurrentDocumentHeight = document.documentElement.clientHeight
-    if(getCurrentDocumentWidth < 1366) {
+    if (getCurrentDocumentWidth < 1366) {
       getCurrentDocumentWidth = 1366
     }
     const width = getCurrentDocumentWidth - 40 - 250 - 333
@@ -41,7 +41,7 @@ const Center = ({ bar, dispatch }: any) => {
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
     console.log('canvasHeight: ', canvasHeight)
     console.log('height: ', height)
-    if(canvasHeight > height) {
+    if (canvasHeight > height) {
       dispatch({
         type: 'bar/save',
         payload: {
@@ -61,10 +61,10 @@ const Center = ({ bar, dispatch }: any) => {
   }
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
-    if(e.ctrlKey) {
+    if (e.ctrlKey) {
       e.preventDefault()
       console.log('bar.canvasScaleValue', bar.canvasScaleValue)
-      if(e.deltaY > 0 && bar.canvasScaleValue < 0.19) {
+      if (e.deltaY > 0 && bar.canvasScaleValue < 0.19) {
         return false
       }
       dispatch({
@@ -76,17 +76,17 @@ const Center = ({ bar, dispatch }: any) => {
     }
   }
   useEffect(() => {
-    if(bar.canvasScaleValue) {
+    if (bar.canvasScaleValue) {
       window.addEventListener('wheel', calcCanvasScale, { passive: false })
     }
     return () => {
       window.removeEventListener('wheel', calcCanvasScale)
     }
-  }, [ bar.canvasScaleValue ])
+  }, [bar.canvasScaleValue])
 
   useEffect(() => {
     calcCanvasSize()
-  }, [ recommendConfig.value ])
+  }, [recommendConfig.value])
 
   useEffect(() => {
     calcCanvasSize()
@@ -97,7 +97,7 @@ const Center = ({ bar, dispatch }: any) => {
   }, [])
 
   useKeyPress(filterKey, (event) => {
-    if(bar.isSupportMultiple) {
+    if (bar.isSupportMultiple) {
       return
     }
     dispatch({
@@ -107,74 +107,74 @@ const Center = ({ bar, dispatch }: any) => {
       },
     })
   }, {
-    events: [ 'keydown', 'keyup' ],
+    events: ['keydown', 'keyup'],
   })
 
   useClickAway(() => {
     dispatch({
       type: 'bar/clearAllStatus',
     })
-  }, [ draggableContainerRef, bar.treeRef ])
+  }, [draggableContainerRef, bar.treeRef])
   // const mouse = useMouse(canvasRef);
   const mouse = 0
 
   return (
-    <div className="c-canvas" ref={ canvasRef }>
-      {/*<Ruler/>*/ }
-      {/*<Ruler/>*/ }
+    <div className="c-canvas" ref={canvasRef}>
+      {/*<Ruler/>*/}
+      {/*<Ruler/>*/}
       <div
         className="canvas-container"
-        style={ {
+        style={{
           width: recommendConfig.width * bar.canvasScaleValue,
           height: recommendConfig.height * bar.canvasScaleValue,
-        } }
+        }}
       >
         <div
           className="canvas-screen"
-          style={ {
+          style={{
             width: recommendConfig.width,
             height: recommendConfig.height,
-            transform: `scale(${ bar.canvasScaleValue })`,
+            transform: `scale(${bar.canvasScaleValue})`,
             backgroundColor: styleColor.value,
-            background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
-          } }
+            background: backgroundImg.value ? `url(${backgroundImg.value})` : styleColor.value,
+          }}
         >
           <div className="draggable-wrapper">
-            <div style={ { position: 'absolute', left: 0, top: 0 } }>
-              {/*<Button onClick={ handleClick }>刷新</Button>*/ }
-              {/*<Button onClick={ handleDelete }>删除</Button>*/ }
-              {/*<Button onClick={ handleSelect }>选中</Button>*/ }
+            <div style={{ position: 'absolute', left: 0, top: 0 }}>
+              {/*<Button onClick={ handleClick }>刷新</Button>*/}
+              {/*<Button onClick={ handleDelete }>删除</Button>*/}
+              {/*<Button onClick={ handleSelect }>选中</Button>*/}
             </div>
-            <ScaleDragCom/>
+            <ScaleDragCom />
             <SupportLines
               key="support"
-              cRef={ (ref: any) => {
+              cRef={(ref: any) => {
                 bar.supportLinesRef = ref
                 return bar.supportLinesRef
-              } }
+              }}
             />
-            <div className="draggable-container" id='draggable-container' ref={ draggableContainerRef }>
-              <CustomDraggable mouse={ mouse } treeData={ treeData }/>
+            <div className="draggable-container" id='draggable-container' ref={draggableContainerRef}>
+              <CustomDraggable mouse={mouse} treeData={treeData} />
             </div>
           </div>
         </div>
       </div>
-      <div style={ {
+      <div style={{
         position: 'absolute',
         bottom: '50px',
         right: '20px',
         color: '#999',
-      } }>
-        按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
-        { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
+      }}>
+        按住空格可拖拽画布 {recommendConfig.width}*{recommendConfig.height}
+        {' ' + Math.ceil(bar.canvasScaleValue * 100) + '%'}
       </div>
     </div>
   )
 }
 export default connect(({
-                          bar,
-                        }
-                          : any,
+  bar,
+}
+  : any,
 ) => (
   {
     bar,

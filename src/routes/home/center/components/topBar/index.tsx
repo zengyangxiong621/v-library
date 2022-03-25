@@ -1,5 +1,7 @@
 import React, { memo } from 'react'
 import './index.less'
+import { connect } from '../../../../../utils/connect';
+
 /**
  * description: 组件导航栏菜单
  */
@@ -20,7 +22,9 @@ import MyCollection from './components/myCollection'
 import { Menu } from 'antd'
 const { SubMenu, Item } = Menu
 
-
+const mapStateToProps = (state: any) => {
+  return state
+}
 
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai } = props
@@ -124,4 +128,5 @@ const sucaiMenu = [
   },
 ]
 
+// export default connect(mapStateToProps)(TopBar);
 export default memo(TopBar)
