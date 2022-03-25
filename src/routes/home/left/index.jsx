@@ -272,25 +272,6 @@ const Left = ({ dispatch, bar, operate }) => {
       arr.splice(index, 1)
       dragObj = item
     })
-
-    console.log('info.dropToGap', info.dropToGap);
-    // if (!info.dropToGap) {
-    //   // Drop on the content
-    //   loop(data, dropKey, (item, index) => {
-    //     item.children = item.children || []
-    //     // where to insert 示例添加到头部，可以是随意位置
-    //     const newGroup = {
-    //       name: '分组',
-    //       id: `${index}${item}-temp`,
-    //       isFolder: true,
-    //       children: []
-    //     }
-    //     // newGroup.children.push(item)
-    //     // newGroup.children.push(dragObj)
-    //     // data.splice(index, 1, newGroup)
-    //     item.children.unshift(dragObj)
-    //   })
-    // } else
     if (
       (info.node.props.children || []).length > 0 && // Has children
       info.node.props.expanded && // Is expanded

@@ -13,6 +13,8 @@
     padding-bottom: 6px;
     background-color: #232630;
 
+    overflow-y: auto;
+    overflow-x: hidden;
     // 兼容 fireFox 和 ie
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -45,16 +47,10 @@
     .left-wrap-tree {
       // height: calc(100% - 70px);
       // height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
     }
   }
-  .left-wrap-tree::-webkit-scrollbar {
+  .left-wrap::-webkit-scrollbar{
     display: none;
-    // width: 10px;
-    // height: 10px;
   }
   // .left-wrap-tree::-webkit-scrollbar-thumb {
   //   background-color: #232630;

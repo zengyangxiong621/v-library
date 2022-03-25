@@ -86,8 +86,12 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
     const isOverflowAtUnder = menuHeight + top > visualHeight
     // const isOverflowAtTop =
     if(isOverflowAtUnder) {
-      recalculateY = y - menuHeight
+      recalculateY = y - menuHeight < 0 ? 20 : y-menuHeight
+      // if(recalculateY < 0) {
+      //   recalculateY = 20
+      // }
     }
+    console.log('yyyyy;, ', recalculateY);
     menuRef.current.style.position = 'fixed'
     menuRef.current.style.top = `${recalculateY}px`
     menuRef.current.style.left = `${recalculateX}px`
