@@ -28,7 +28,7 @@
 }
 .color-popover{
   position:absolute;
-  z-index: 2;
+  z-index: 10000;
   left: -40px;
 }
 

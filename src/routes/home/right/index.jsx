@@ -17,6 +17,7 @@ import AlignmentSetting from './components/alignmentSetting'
 
 const Right = ({ dispatch, bar }) => {
   const [whichShow, setWhichShow] = useState('pageSetting')
+  const [key,setKey] = useState(bar.key.join(''))
   const reflect = {
     'groupConfig': GroupConfig,
     'singleLayer': SingleLayer,
@@ -38,6 +39,7 @@ const Right = ({ dispatch, bar }) => {
     // const { isFolder, key } = bar
     const isFolder = bar.isFolder
     const key = bar.key
+    setKey(key.join(''))
     if(isFolder) {
       setWhichShow('groupConfig')
     } else {
@@ -51,10 +53,10 @@ const Right = ({ dispatch, bar }) => {
   <div className='right-wrap' id='right-wrap'>
     {
       // reflect[whichShow].type()
-      whichShow === 'groupConfig' ? <GroupConfig />
-      : whichShow === 'singleLayer' ? <SingleLayer />
-      : whichShow === 'pageSetting' ? <PageSetting />
-      : <AlignmentSetting />
+      whichShow === 'groupConfig' ? <GroupConfig key={key}/>
+      : whichShow === 'singleLayer' ? <SingleLayer key={key} />
+      : whichShow === 'pageSetting' ? <PageSetting key={key} />
+      : <AlignmentSetting key={key} />
     }
   </div>
   )

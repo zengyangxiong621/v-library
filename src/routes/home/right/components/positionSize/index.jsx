@@ -1,4 +1,5 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState,useEffect } from 'react'
+import { connect } from 'dva'
 import './index.css'
 import { find } from '../../../../../utils/common'
 
@@ -9,7 +10,7 @@ import {
   Checkbox,
 } from 'antd';
 
-const PositionSize = props => {
+const PositionSize = ({bar, dispatch ,...props })  => {
   const [form] = Form.useForm();
   const formItemLayout = {
     labelAlign: 'left'
@@ -26,6 +27,26 @@ const PositionSize = props => {
     height: _height.value,
   });
   const [sizeLock, setSizeLock] = useState(_data.config.lock)
+
+  useEffect(() => {
+    if( bar.sizeChange.change) {
+      setSize(bar.sizeChange.config)
+      form.setFieldsValue({
+        ...bar.sizeChange.config
+      })
+    }
+    return () => {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          sizeChange: {
+            ...bar.sizeChange,
+            change: false
+          }
+        },
+      })
+    }
+  }, [ bar.sizeChange.change ])
 
   const posSizeChange = (str, e) => {
     const value = parseInt(e.target.value)
@@ -118,4 +139,7 @@ const PositionSize = props => {
   )
 }
 
-export default memo(PositionSize)
+// export default memo(PositionSize)
+export default connect(({ bar }) => ({
+  bar
+}))(PositionSize)
