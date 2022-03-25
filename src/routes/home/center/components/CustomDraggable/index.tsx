@@ -242,6 +242,20 @@ const CustomDraggable
           componentConfig: component,
         },
       })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          sizeChange:{
+            change:true,
+            config:{
+              left:Math.trunc(data.x),
+              top:Math.trunc(data.y),
+              width: config.style.width,
+              height: config.style.height,
+            }
+          }
+        }
+      })
     } else if('children' in layer && bar.selectedComponentOrGroup.length === 1) {
       // 单个组移动
       const xMoveLength = Math.ceil(data.x - startPosition.x)

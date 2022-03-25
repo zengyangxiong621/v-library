@@ -1,7 +1,6 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState,useEffect } from 'react'
 import { connect } from 'dva'
 import './index.css'
-import { find } from '../../../../../utils/common'
 import { deepClone } from '../../../../../utils'
 import LoadAnimation from '../loadAnimation'
 import { EditableTable } from '../fieldMapTable'
@@ -13,9 +12,7 @@ import {
   Form,
   Collapse,
   Tabs,
-  Switch
 } from 'antd';
-
 
 const SingleLayer = ({bar, dispatch ,...props })  => {
   const { Panel } = Collapse;
@@ -24,11 +21,10 @@ const SingleLayer = ({bar, dispatch ,...props })  => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
-  // console.log('componentConfigcomponentConfig', componentConfig)
+  console.log('componentConfigcomponentConfig', componentConfig)
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
   const dataConfig = componentConfig.staticData
-
 
   const settingsChange = () => {
     console.log(componentConfig)

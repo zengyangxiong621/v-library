@@ -1655,6 +1655,15 @@ export default {
         },
       },
     },
+    sizeChange:{
+      change:false,
+      config:{
+        left:100,
+        top:100,
+        width:100,
+        height: 100,
+      }
+    }
 
   } as IBarState,
   subscriptions: {
