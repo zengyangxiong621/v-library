@@ -25,9 +25,9 @@ const SingleLayer = ({bar, dispatch ,...props })  => {
   };
   const componentConfig = deepClone(bar.componentConfig)
 
-  const styleConfig = find(componentConfig.config, 'style').value
-  const interactionConfig = find(componentConfig.config, 'interaction').value
-  const dataConfig = find(componentConfig.config, 'data').value
+  const styleConfig = componentConfig.config
+  const interactionConfig = componentConfig.interaction
+  const dataConfig = componentConfig.staticData
 
 
   const settingsChange = () => {
