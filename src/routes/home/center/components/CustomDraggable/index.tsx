@@ -66,8 +66,8 @@ const CustomDraggable
       } else {
         let component = components.find(it => it.id === item.id)
         if(component) {
-          const style_config = component.config.find((item: any) => item.name === STYLE)
-          const style_dimension_config = style_config.value.find((item: any) => item.name === DIMENSION)
+          // const style_config = component.config.find((item: any) => item.name === STYLE)
+          const style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
           const config: IConfig = {
             position: {
               x: 0,
@@ -148,8 +148,8 @@ const CustomDraggable
     if(component && bar.dragStatus === '一组件') {
       // 单个组件移动
       if('config' in component) {
-        const style_config: any = component.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config: any = style_config.value.find((item: any) => item.name === DIMENSION)
+        // const style_config: any = component.config.find((item: any) => item.name === STYLE)
+        const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
         style_dimension_config.value.find((item: any) => item.name === LEFT).value = data.x
         style_dimension_config.value.find((item: any) => item.name === TOP).value = data.y
         // component.config.position.x = data.x
@@ -165,8 +165,8 @@ const CustomDraggable
       const xPositionList: number[] = []
       const yPositionList: number[] = []
       bar.selectedComponents.forEach((item: IComponent) => {
-        const style_config = item.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config = style_config.value.find((item: any) => item.name === DIMENSION)
+        // const style_config = item.config.find((item: any) => item.name === STYLE)
+        const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
         const config: IConfig = {
           position: {
             x: 0,
@@ -215,8 +215,8 @@ const CustomDraggable
 
     if(component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
       // 单个组件移动
-      const style_config: any = component.config.find((item: any) => item.name === STYLE)
-      const style_dimension_config: any = style_config.value.find((item: any) => item.name === DIMENSION)
+      // const style_config: any = component.config.find((item: any) => item.name === STYLE)
+      const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
       style_dimension_config.value.forEach((item: any) => {
         if(item.name === LEFT) {
           item.value = Math.ceil(data.x)
@@ -224,6 +224,7 @@ const CustomDraggable
           item.value = Math.ceil(data.y)
         }
       })
+      console.log('component', component)
       dispatch({
         type: 'bar/save',
         payload: {
@@ -246,8 +247,8 @@ const CustomDraggable
       const xMoveLength = Math.ceil(data.x - startPosition.x)
       const yMoveLength = Math.ceil(data.y - startPosition.y)
       bar.selectedComponents.forEach((item: IComponent) => {
-        const style_config = item.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config = style_config.value.find((item: any) => item.name === DIMENSION)
+        // const style_config = item.config.find((item: any) => item.name === STYLE)
+        const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
         style_dimension_config.value.forEach((item: any) => {
           if(item.name === LEFT) {
             item.value += xMoveLength
@@ -280,8 +281,8 @@ const CustomDraggable
       const yPositionList: Array<number> = []
       bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
       bar.selectedComponents.forEach((item: IComponent) => {
-        const style_config = item.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config = style_config.value.find((item: any) => item.name === DIMENSION)
+        // const style_config = item.config.find((item: any) => item.name === STYLE)
+        const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
         const config: IConfig = {
           position: {
             x: 0,
@@ -431,8 +432,9 @@ const CustomDraggable
             component = components.find(item => item.id === layer.id)
             if(component) {
               staticData = component.staticData
-              style_config = component.config.find((item: any) => item.name === STYLE)
-              style_dimension_config = style_config.value.find((item: any) => item.name === DIMENSION)
+              style_config = component.config
+              // style_config = component.config.find((item: any) => item.name === STYLE)
+              style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
               Object.values(style_dimension_config.value).forEach((obj: any) => {
                 if([ TOP, LEFT ].includes(obj.name)) {
                   config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
@@ -442,7 +444,6 @@ const CustomDraggable
               })
             }
           }
-          // console.log('config', config)
           return (
             <SingleDraggable
               dimensionConfig={ style_dimension_config }

@@ -7,14 +7,13 @@ import { cssConstantList, constantList, hh } from '../../constant'
 const Text = (props: any) => {
   const styleConfig = props.styleConfig || defaultStyleConfig
   const staticData = props.staticData || defaultStaticData
-  const style_align_config: any = styleConfig.value.find((item: any) => item.name === 'align')
+  const style_align_config: any = styleConfig.find((item: any) => item.name === 'align')
   const alignStyle = style_align_config.value.reduce((pre: any, cur: any) => {
     pre[cur.name] = cur.value
     return pre
   }, {})
-  // console.log('styleConfig', styleConfig)
 
-  const style = styleConfig.value.filter((item: any) => item.name !== 'dimension').reduce((pre: any, cur: any) => {
+  const style = styleConfig.filter((item: any) => item.name !== 'dimension').reduce((pre: any, cur: any) => {
     if(Array.isArray(cur.value)) {
       const obj = cur.value.reduce((p: any, c: any) => {
         p[c.name] = c.value
