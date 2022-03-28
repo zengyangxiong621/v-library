@@ -7,6 +7,7 @@ import {
   moveChildrenComponents,
   mergeComponentLayers,
   layerComponentsFlat,
+  calcGroupPosition,
 } from '../utils'
 
 import {
@@ -25,6 +26,7 @@ import {
   showInput,
   hidden,
 } from '../utils/sideBar'
+import { DIMENSION } from '../routes/home/center/constant'
 
 interface IBarState {
   key: string[];
@@ -41,7 +43,7 @@ interface IBarState {
   supportLinesRef: any;
   selectedComponents: any;
   scaleDragData: any;
-  componentConfig:any
+  componentConfig: any
 }
 
 export default {
@@ -1851,15 +1853,15 @@ export default {
         },
       },
     },
-    sizeChange:{
-      change:false,
-      config:{
-        left:100,
-        top:100,
-        width:100,
+    sizeChange: {
+      change: false,
+      config: {
+        left: 100,
+        top: 100,
+        width: 100,
         height: 100,
-      }
-    }
+      },
+    },
 
   } as IBarState,
   subscriptions: {
@@ -1911,6 +1913,60 @@ export default {
       state.selectedComponentOrGroup.forEach(item => {
         item.selected = true
       })
+      let xPositionList: number[] = []
+      let yPositionList: number[] = []
+      console.log('state.selectedComponentOrGroup.length', state.selectedComponentOrGroup.length)
+      if(state.selectedComponentOrGroup.length === 1) {
+        const firstLayer = state.selectedComponentOrGroup[0]
+        if('children' in firstLayer) {
+          // 单个组
+          const positionArr = calcGroupPosition(firstLayer.children, state.components)
+          xPositionList = positionArr[0]
+          yPositionList = positionArr[1]
+        } else {
+          // 单个组件
+          const component = state.components.find(component => component.id === firstLayer.id)
+          const dimensionConfig: any = component.config.find((item: any) => item.name === DIMENSION)
+          dimensionConfig.value.forEach((config: any) => {
+            if([ 'left', 'width' ].includes(config.name)) {
+              xPositionList.push(config.value)
+            } else if([ 'top', 'height' ].includes(config.name)) {
+              yPositionList.push(config.value)
+            }
+          })
+          state.scaleDragData = {
+            position: {
+              x: xPositionList[0],
+              y: yPositionList[0],
+            },
+            style: {
+              display: 'block',
+              width: xPositionList[1] ,
+              height: yPositionList[1],
+            },
+          }
+          return { ...state }
+        }
+      } else if(state.selectedComponentOrGroup.length > 1) {
+        state.selectedComponentOrGroup.forEach((layer: any) => {
+          const positionArr = calcGroupPosition(state.selectedComponentOrGroup, state.components)
+          xPositionList = positionArr[0]
+          yPositionList = positionArr[1]
+        })
+      }
+      xPositionList.sort((a, b) => a - b)
+      yPositionList.sort((a, b) => a - b)
+      state.scaleDragData = {
+        position: {
+          x: xPositionList[0],
+          y: yPositionList[0],
+        },
+        style: {
+          display: 'block',
+          width: xPositionList[xPositionList.length - 1] - xPositionList[0],
+          height: yPositionList[yPositionList.length - 1] - yPositionList[0],
+        },
+      }
       return { ...state }
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换

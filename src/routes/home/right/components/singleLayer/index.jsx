@@ -395,7 +395,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const dataConfig = componentConfig.staticData
 
   const settingsChange = () => {
-    console.log(componentConfig)
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig

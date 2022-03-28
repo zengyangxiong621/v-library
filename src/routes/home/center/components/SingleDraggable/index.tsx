@@ -43,7 +43,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, dimensionConfig, ...prop
   }
   return (
     <div>
-      <Draggable ref={draggableRef} onStop={handleStop} {...props}>
+      <Draggable ref={ draggableRef } onStop={ handleStop } { ...props }>
       </Draggable>
     </div>
   )

@@ -5,7 +5,7 @@ import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
 import './index.less'
 import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
-import { deepClone, layerComponentsFlat } from '../../../../../utils'
+import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
 import Text from '../Text'
 import {
@@ -50,48 +50,7 @@ const CustomDraggable
   const allComponentRefs = bar.allComponentRefs
   let supportLinesRef = bar.supportLinesRef
   const [ startPosition, setStartPosition ] = useState({ x: 0, y: 0 })
-  const judgeIsGroup = (value: ILayerComponent | ILayerGroup) => {
-    return value.id.indexOf('group') !== -1
-  }
-  const calcGroupPosition = (arr: Array<ILayerGroup | ILayerComponent>) => {
-    let xPositionList: Array<number> = []
-    let yPositionList: Array<number> = []
-    arr.forEach((item: any) => {
-      if(judgeIsGroup(item)) {
-        if('components' in item && item.components.length > 0) {
-          const [ xArr, yArr ] = calcGroupPosition(item.components)
-          xPositionList = xPositionList.concat(xArr)
-          yPositionList = yPositionList.concat(yArr)
-        }
-      } else {
-        let component = components.find(it => it.id === item.id)
-        if(component) {
-          // const style_config = component.config.find((item: any) => item.name === STYLE)
-          const style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-          const config: IConfig = {
-            position: {
-              x: 0,
-              y: 0,
-            },
-            style: {
-              width: 0,
-              height: 0,
-            },
-          }
-          Object.values(style_dimension_config.value).forEach((obj: any) => {
-            if([ TOP, LEFT ].includes(obj.name)) {
-              config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-            } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
-              config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
-            }
-          })
-          xPositionList.push(config.position.x, config.position.x + config.style.width)
-          yPositionList.push(config.position.y, config.position.y + config.style.height)
-        }
-      }
-    })
-    return [ xPositionList, yPositionList ]
-  }
+
 
   const calcSupportLinesPosition = () => {
 
@@ -245,16 +204,16 @@ const CustomDraggable
       dispatch({
         type: 'bar/save',
         payload: {
-          sizeChange:{
-            change:true,
-            config:{
-              left:Math.trunc(data.x),
-              top:Math.trunc(data.y),
+          sizeChange: {
+            change: true,
+            config: {
+              left: Math.trunc(data.x),
+              top: Math.trunc(data.y),
               width: config.style.width,
               height: config.style.height,
-            }
-          }
-        }
+            },
+          },
+        },
       })
     } else if('components' in layer && bar.selectedComponentOrGroup.length === 1) {
       // 单个组移动
@@ -424,7 +383,7 @@ const CustomDraggable
           // 群组
           if(isGroup && 'components' in layer) {
             group = layer
-            let [ xPositionList, yPositionList ] = calcGroupPosition((layer as any).components)
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.children, components)
             xPositionList = xPositionList.sort((a, b) => {
               return a - b
             })

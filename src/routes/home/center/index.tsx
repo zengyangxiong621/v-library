@@ -120,8 +120,8 @@ const Center = ({ bar, dispatch }: any) => {
 
   return (
     <div className="c-canvas" ref={ canvasRef }>
-      {/*<Ruler/>*/ }
-      {/*<Ruler/>*/ }
+      {/*<Ruler direction="horizon"/>*/}
+      <Ruler direction="vertical"/>
       <div
         className="canvas-container"
         style={ {
