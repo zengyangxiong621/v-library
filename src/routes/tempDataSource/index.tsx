@@ -3,7 +3,7 @@ import './index.less'
 import zhCN from 'antd/es/locale/zh_CN'
 
 import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal } from 'antd'
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { PlusOutlined, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 
 import AddDataSource from './components/addDataSource'
 import EditDataSource from './components/editDataSource'
@@ -51,6 +51,19 @@ const DataSource = (props: any) => {
     console.log(record);
     Modal.confirm({
       title: '删除数据源',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#e9535d',
+          border: 'none',
+          // marginLeft: '8px',
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          backgroundColor: '#3d404d'
+        }
+      },
+      icon: <ExclamationCircleFilled />,
       content: '删除后不可恢复，确认删除此数据源吗?',
       okText: '确定',
       cancelText: '取消',
@@ -70,8 +83,6 @@ const DataSource = (props: any) => {
     })
   }
   const editClick = (text: any, record: any) => {
-    console.log('text', text);
-    console.log('record', record);
     setIsShowEditModal(true)
     setEditDataSourceInfo(text)
   }
@@ -141,7 +152,7 @@ const DataSource = (props: any) => {
             <span>添加数据源</span>
           </div>
           <div className='search'>
-            <Select style={{minWidth: '120px'}} defaultValue="全部类型" onChange={selectChange}>
+            <Select style={{ minWidth: '120px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部类型" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
                   return (

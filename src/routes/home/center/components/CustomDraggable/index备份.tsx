@@ -33,8 +33,8 @@ const CustomDraggable
     let yPositionList: Array<number> = []
     arr.forEach((item) => {
       if(judgeIsGroup(item)) {
-        if('children' in item && item.children.length > 0) {
-          const [ xArr, yArr ] = calcGroupPosition(item.children)
+        if('components' in item && item.components.length > 0) {
+          const [ xArr, yArr ] = calcGroupPosition(item.components)
           xPositionList = xPositionList.concat(xArr)
           yPositionList = yPositionList.concat(yArr)
         }
@@ -76,9 +76,9 @@ const CustomDraggable
       })
     } else {
       // 当选中了一个分组时，或者没有选中时
-      if('children' in layer) {
+      if('components' in layer) {
         bar.dragStatus = '一分组'
-        selectedComponentIds = layerComponentsFlat(layer.children)
+        selectedComponentIds = layerComponentsFlat(layer.components)
       }
     }
     selectedComponents = components.filter(component => selectedComponentIds.includes(component.id))
@@ -173,7 +173,7 @@ const CustomDraggable
           selectComponentOrGroup: [ layer ],
         },
       })
-    } else if('children' in layer && bar.selectedComponentOrGroup.length === 1) {
+    } else if('components' in layer && bar.selectedComponentOrGroup.length === 1) {
       const xMoveLength = Math.ceil(data.x - startPosition.x)
       const yMoveLength = Math.ceil(data.y - startPosition.y)
       selectedComponents.forEach((item: IComponent) => {
@@ -305,12 +305,12 @@ const CustomDraggable
               height: 0,
             },
           }
-          let isGroup: boolean = ('children' in layer)
+          let isGroup: boolean = ('components' in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
-          if(isGroup && 'children' in layer) {
+          if(isGroup && 'components' in layer) {
             group = layer
-            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.children)
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.components)
             xPositionList = xPositionList.sort((a, b) => {
               return a - b
             })
@@ -363,13 +363,13 @@ const CustomDraggable
                 } }>
                 {
                   isGroup ? <div className="no-cancel">
-                    { 'children' in layer && layer.children?.length > 0 ?
+                    { 'components' in layer && layer.components?.length > 0 ?
                       <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
                         <CustomDraggable
                           mouse={ mouse }
                           bar={ bar }
                           dispatch={ dispatch }
-                          treeData={ layer.children }
+                          treeData={ layer.components }
                         />
                       </div>
                       : ''

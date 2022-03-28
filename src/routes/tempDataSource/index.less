@@ -57,18 +57,22 @@
     .ant-table-thead > tr > th.ant-table-cell::before{
       display: none;
     }
-    // antD组件库样式
-    // .ant-table-wrapper {
-    //   background-color: #171a24;
-    // }
-    // .ant-table-thead {
-    //   background-color: #171a24;
-    // }
+    // 奇偶 行不同背景色
     .customRowClass:nth-child(even) {
       background-color: rgba(53, 59, 78, 0.5);
     }
     .customRowClass:nth-child(odd) {
       background-color: #171a24;
+    }
+    // 分页器 ”共xx条” 显示在最左侧
+    .ant-pagination-total-text {
+      margin-right: auto;
+    }
+    .ant-pagination-item-active {
+      background-color: #2482FF;
+    }
+    .ant-pagination-item-active a {
+      color: #fff;
     }
   }
 }

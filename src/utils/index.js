@@ -7,7 +7,7 @@ export function selectSingleComponent(state, id) {
     } else {
       item.active = false;
     }
-    const t = selectSingleComponent(item.children, id);
+    const t = selectSingleComponent(item.components, id);
     if (t) {
       temp = t;
     }
@@ -30,7 +30,7 @@ export function selectMultiple(arr, ids) {
     } else {
       item.active = false;
     }
-    const t = selectMultiple(item.children, copyIds);
+    const t = selectMultiple(item.components, copyIds);
     if (t.length > 0) {
       temp = [...temp, ...t];
     }
@@ -327,8 +327,8 @@ export function insertMultipleComponents(arr, sourceIds, targetId) {
 export const layerComponentsFlat = (arr) => {
   return arr.reduce((pre, cur) => {
     return pre.concat(
-      cur.hasOwnProperty("children")
-        ? layerComponentsFlat(cur.children)
+      cur.hasOwnProperty("components")
+        ? layerComponentsFlat(cur.components)
         : cur.id
     );
   }, []);
