@@ -156,9 +156,10 @@ const CustomDraggable
         Object.values(bar.selectedComponentRefs).forEach((item: any) => {
           // todo 有问题
           // console.log('item', item.position)
-          console.log('-------------------')
-          item.handleSetPosition(item.position.x + xMoveLength, item.position.y + yMoveLength)
+          console.log('ref', item)
+          // item.handleSetPosition(item.position.x + xMoveLength, item.position.y + yMoveLength)
         })
+        console.log('---------')
       }
     }
   }
@@ -183,7 +184,6 @@ const CustomDraggable
           item.value = Math.ceil(data.y)
         }
       })
-      console.log('component', component)
       dispatch({
         type: 'bar/save',
         payload: {
@@ -286,9 +286,13 @@ const CustomDraggable
         const xMoveLength = data.x - data.lastX
         const yMoveLength = data.y - data.lastY
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
-        // Object.values(bar.selectedComponentRefs).forEach((item: any) => {
-        //   item.handleSetPosition(Math.ceil(item.position.x + xMoveLength), Math.ceil(item.position.y + yMoveLength))
-        // })
+        Object.values(bar.selectedComponentRefs).forEach((item: any) => {
+          // todo 有问题
+          // console.log('item', item.position)
+          console.log('-------------------')
+          item.handleSetPosition(item.position.x + xMoveLength, item.position.y + yMoveLength)
+        })
+
       }
       // 在dva里计算
       dispatch({
@@ -429,13 +433,16 @@ const CustomDraggable
                 return allComponentRefs[layer.id]
               } }
               disabled={ layer.lock }
-              cancel=".no-cancel" key={ layer.id } position={ config.position }
+              cancel=".no-cancel"
+              key={ layer.id }
+              position={ config.position }
               onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer) }
               onDrag={ (ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config) }
               onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
             >
               <div
                 // onClickCapture={(ev) => handleClick(ev, layer, config)}
+                data-id={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
                 onDoubleClick={ (ev) => handleDblClick(ev, layer) }
                 onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }

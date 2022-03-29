@@ -43,7 +43,8 @@ interface IBarState {
   supportLinesRef: any;
   selectedComponents: any;
   scaleDragData: any;
-  componentConfig: any
+  componentConfig: any,
+  isMultipleTree: boolean,
 }
 
 export default {
@@ -52,6 +53,7 @@ export default {
     key: [],
     isFolder: false,
     lastRightClick: '',
+    isMultipleTree: true,
     operate: '',
     treeData: [],
     selectedComponentOrGroup: [],
@@ -1904,6 +1906,17 @@ export default {
       // selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload }
     },
+    setSelectedKeys(state: IBarState, { payload }: any) {
+      // const items = state.draggableItems;
+      // selectSingleComponent(items, payload.key[0]);
+      state.key = payload
+      state.selectedComponents = state.components.filter((component) => {
+        return state.key.includes(component.id)
+      })
+      // todo 计算 dragScaleData
+      console.log('state.selectedComponents', state.selectedComponents)
+      return { ...state, ...payload }
+    },
     // 选中节点时，保存住整个node对象
     setNodeList(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup.forEach(item => {
@@ -1915,7 +1928,6 @@ export default {
       })
       let xPositionList: number[] = []
       let yPositionList: number[] = []
-      console.log('state.selectedComponentOrGroup.length', state.selectedComponentOrGroup.length)
       if(state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0]
         if('children' in firstLayer) {
@@ -1941,7 +1953,7 @@ export default {
             },
             style: {
               display: 'block',
-              width: xPositionList[1] ,
+              width: xPositionList[1],
               height: yPositionList[1],
             },
           }

@@ -1,60 +1,80 @@
 import { useState, useEffect, useRef } from 'react'
 import './index.less'
-// import { ruler } from './dist/ruler'
-// import './dist/ruler.min.css'
+import { connect } from 'dva'
 
-const Ruler = (props) => {
-  const direction = props.direction
-  const rulerRef = useRef(null)
+const Ruler = ({ bar }) => {
+  const recommendConfig = bar.pageConfig.find(item => item.name === 'recommend')
+  let [ruler, setRuler] = useState(null)
+
   useEffect(() => {
-    // drawRuler(rulerRef)
-    painter()
-
+    const temp = new rulerCanvas()
+    temp.painter(recommendConfig.width, recommendConfig.height)
+    ruler = setRuler(temp)
   }, [])
-  const painter = () => {
-
-    var canvasTop = document.getElementById('canvasTop')
-    var canvasLeft = document.getElementById('canvasLeft')
-
-    var contextTop = canvasTop.getContext('2d')
-    var contextLeft = canvasLeft.getContext('2d')
-
-    contextTop.beginPath()
-    for (var i = -100; i < 1920; i += 10) {
-
-      //顶部标尺线绘制
-      var y = (i % 50 == 0) ? 0 : 10
-      contextTop.moveTo(i + 20, y)
-      contextTop.lineTo(i + 20, 15)
-
-      //顶部标尺数字绘制
-      if (y == 0) {
-        contextTop.fillText(i.toString(), i + 22, 8)
-      }
-
-      //左侧标尺线绘制
-      contextLeft.save()
-      contextLeft.beginPath()
-
-      var x = (i % 50 == 0) ? 0 : 10
-      contextLeft.moveTo(x, i + 20)
-      contextLeft.lineTo(15, i + 20)
-
-      contextLeft.stroke()
-      contextLeft.closePath()
-
-      //左侧标尺数字绘制
-      contextLeft.beginPath()
-      if (x == 0) {
-        contextLeft.translate(9, i + 18)
-        contextLeft.rotate(270 * Math.PI / 180)
-        contextLeft.fillText(i.toString(), 0, 0)
-
-        contextLeft.closePath()
-        contextLeft.restore()
-      }
+  useEffect(() => {
+    if (ruler) {
+      ruler.clearCanvas()
+      ruler.painter(recommendConfig.width, recommendConfig.height)
     }
-    contextTop.stroke()
+  }, [recommendConfig])
+  const rulerCanvas = function () {
+    this.canvasTop = document.getElementById('canvasTop')
+    this.canvasLeft = document.getElementById('canvasLeft')
+    this.clearCanvas = () => {
+      const contextTop = this.canvasTop.getContext('2d')
+      const contextLeft = this.canvasLeft.getContext('2d')
+      contextTop.clearRect(0, 0, 1920, 20)
+      contextLeft.clearRect(0, 0, 20, 1147)
+    }
+    this.painter = (width, height) => {
+      const draggableWrapper = document.querySelector('.canvas-container')
+      console.log('draggableWrapper', draggableWrapper)
+      console.log('draggableWrapper', draggableWrapper.getBoundingClientRect())
+      // console.log('parent', draggableWrapper.offsetParent.getBoundingClientRect())
+      // console.log('offsetTop', draggableWrapper.offsetTop)
+      //
+      // console.log('offsetLeft', draggableWrapper.offsetLeft)
+      const contextTop = this.canvasTop.getContext('2d')
+      const contextLeft = this.canvasLeft.getContext('2d')
+      contextTop.beginPath()
+      for (let i = -100; i < width; i += 10) {
+
+        //顶部标尺线绘制, 比例尺
+        const y = (i % 50 === 0) ? 0 : 10
+        contextTop.moveTo(i + 50, y)
+        contextTop.lineTo(i + 50, 20)
+
+        //顶部标尺数字绘制
+        if (y === 0) {
+          contextTop.fillText(i.toString(), i + 52, 8)
+        }
+      }
+
+      for (let i = -100; i < height; i += 10) {
+        //左侧标尺线绘制
+        contextLeft.save()
+        contextLeft.beginPath()
+
+        const x = (i % 50 === 0) ? 0 : 10
+        contextLeft.moveTo(x, i + 20)
+        contextLeft.lineTo(15, i + 20)
+
+        contextLeft.stroke()
+        contextLeft.closePath()
+
+        //左侧标尺数字绘制
+        contextLeft.beginPath()
+        if (x === 0) {
+          contextLeft.translate(9, i + 18)
+          contextLeft.rotate(270 * Math.PI / 180)
+          contextLeft.fillText(i.toString(), 0, 0)
+
+          contextLeft.closePath()
+          contextLeft.restore()
+        }
+      }
+      contextTop.stroke()
+    }
   }
 
 
@@ -76,13 +96,17 @@ const Ruler = (props) => {
   return (
     <>
 
-      <canvas id="canvasTop" height="20" width="1920" style={ { position: 'absolute', left: 0, top: 0, background: 'white' } }>
+      <canvas id="canvasTop" height="20" width="1920"
+              style={ { position: 'absolute', left: 0, top: 0, background: 'white' } }>
         <p>Your browserdoes not support the canvas element!</p>
       </canvas>
-      <canvas id="canvasLeft" width="20" height="1080" style={ { position: 'absolute', left: 0, top: 0, background: 'white' } }>
+      <canvas id="canvasLeft" width="20" height="1080"
+              style={ { position: 'absolute', left: 0, top: 0, background: 'white' } }>
         <p>Your browserdoes not support the canvas element!</p>
       </canvas>
     </>
   )
 }
-export default Ruler
+export default connect(({ bar }) => ({
+  bar,
+}))(Ruler)

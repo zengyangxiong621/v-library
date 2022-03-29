@@ -31,7 +31,7 @@ const Left = ({ dispatch, bar, operate }) => {
 
   const [isExpand, setIsExpand] = useState([])
   const [customExpandKeys, setCustomExpandKeys] = useState([])
-  const [isMultipleTree, setIsMultipleTree] = useState(false)
+  const [isMultipleTree, setIsMultipleTree] = useState(bar.isMultipleTree)
   const [selected, setSelected] = useState([])
   const activeIconRef = useRef()
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
@@ -318,7 +318,7 @@ const Left = ({ dispatch, bar, operate }) => {
             onSelect={onSelect}
             onRightClick={onRightClick}
             treeData={bar.treeData}
-            selectedKeys={selected}
+            selectedKeys={bar.key}
             titleRender={(nodeData) => {
               return (<div>
                 <EveryTreeNode

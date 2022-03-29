@@ -6,6 +6,7 @@ import Draggable from 'react-draggable'
 import CustomDraggable from './components/CustomDraggable'
 import ScaleDragCom from './components/ScaleDragCom'
 import SupportLines from './components/SupportLines'
+import ChooseArea from './components/ChooseArea'
 import * as React from 'react'
 import { Button } from 'antd'
 import { useClickAway, useKeyPress, useMouse } from 'ahooks'
@@ -36,7 +37,8 @@ const Center = ({ bar, dispatch }: any) => {
     if(getCurrentDocumentWidth < 1366) {
       getCurrentDocumentWidth = 1366
     }
-    const width = getCurrentDocumentWidth - 40 - 250 - 333
+    console.log('(document.querySelector(\'.left-menu\') as any).clientWidth', (document.querySelector('.left-menu') as any).clientWidth)
+    const width = getCurrentDocumentWidth - 40 - (document.querySelector('.left-menu') as any).clientWidth - 333
     const height = getCurrentDocumentHeight - 64 - 35 - 40
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
     console.log('canvasHeight: ', canvasHeight)
@@ -120,8 +122,11 @@ const Center = ({ bar, dispatch }: any) => {
 
   return (
     <div className="c-canvas" ref={ canvasRef }>
-      {/*<Ruler direction="horizon"/>*/}
-      <Ruler direction="vertical"/>
+      <Ruler/>
+      <Button onClick={() => {
+        console.log('components', bar.components)
+      }
+      }>打印</Button>
       <div
         className="canvas-container"
         style={ {
@@ -153,7 +158,7 @@ const Center = ({ bar, dispatch }: any) => {
                 return bar.supportLinesRef
               } }
             />
-            <div className="draggable-container" id='draggable-container' ref={ draggableContainerRef }>
+            <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
               <CustomDraggable mouse={ mouse } treeData={ treeData }/>
             </div>
           </div>
