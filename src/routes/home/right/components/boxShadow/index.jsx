@@ -10,7 +10,7 @@ import {
   Row, Col
 } from 'antd';
 
-const OutsideShadowSetting = props => {
+const BoxShadow = props => {
   const [form] = Form.useForm();
   const formItemLayout = {
     labelAlign: 'left'
@@ -103,4 +103,4 @@ const OutsideShadowSetting = props => {
   )
 }
 
-export default memo(OutsideShadowSetting)
+export default memo(BoxShadow)

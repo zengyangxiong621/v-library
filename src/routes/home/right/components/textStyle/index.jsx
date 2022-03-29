@@ -18,7 +18,7 @@ const styleColor = {
   "value": "#000" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
 }
 
-const TextStyleSetting = props => {
+const TextStyle = props => {
   const { Option } = Select;
   const { CheckableTag } = Tag;
   const [form] = Form.useForm();
@@ -132,4 +132,4 @@ const TextStyleSetting = props => {
   )
 }
 
-export default memo(TextStyleSetting)
+export default memo(TextStyle)

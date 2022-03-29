@@ -1,19 +1,21 @@
 import PositionSize from './positionSize'
 import LoadAnimation from './loadAnimation'
-import TextStyleSetting from './textStyleSetting'
+import TextStyle from './textStyle'
 import AlignSetting from './alignSetting'
-import ShadowSetting from './shadow'
+import CusCollapse from './cusCollapse'
 import { EditableTable } from './fieldMapTable'
 import CheckBox from './checkBox'
 import ColorFullSetting from './colorFullSetting'
+import BoxShadow from './boxShadow'
 
 const componentLib = {
   dimensionGroup:PositionSize,
   checkBox:CheckBox,
-  textFullStyleGroup:TextStyleSetting,
+  textFullStyleGroup:TextStyle,
   color:ColorFullSetting,
   alignFull:AlignSetting,
-  shadow:ShadowSetting,
+  collapse:CusCollapse,
+  boxShadow:BoxShadow
 }
 
 export default componentLib
