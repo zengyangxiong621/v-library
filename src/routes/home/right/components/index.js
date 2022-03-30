@@ -7,6 +7,8 @@ import { EditableTable } from './fieldMapTable'
 import CheckBox from './checkBox'
 import ColorFullSetting from './colorFullSetting'
 import BoxShadow from './boxShadow'
+import Range from './range'
+import Rotate from './rotate'
 
 const componentLib = {
   dimensionGroup:PositionSize,
@@ -15,7 +17,9 @@ const componentLib = {
   color:ColorFullSetting,
   alignFull:AlignSetting,
   collapse:CusCollapse,
-  boxShadow:BoxShadow
+  boxShadow:BoxShadow,
+  range:Range,
+  rotate:Rotate
 }
 
 export default componentLib

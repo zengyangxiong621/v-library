@@ -1432,6 +1432,12 @@ export default {
         'name': 'gridSpacing',
         'displayName': '栅格间距',
         'value': 5,
+        type: 'number',
+        "config": {
+          "min": 0,
+          "step": 1,
+          suffix:'',  // 输入框后缀
+      }
       },
       {
         'name': 'zoom',
@@ -1457,6 +1463,7 @@ export default {
       {
         'name': 'dimension',
         'displayName': '位置尺寸',
+        'type':'dimensionGroup',
         'config': {
           'lock': true,
         },
@@ -1487,11 +1494,19 @@ export default {
         'name': 'hideDefault',
         'displayName': '默认隐藏',
         'value': false,
+        'type':'checkBox'
       },
       {
         'name': 'opacity',
         'displayName': '透明度',
         'value': 0.7,
+        'type':'range',
+        "config": {
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            'suffix':'%',  // 输入框后缀
+        }
       },
       {
         'name': 'interaction',

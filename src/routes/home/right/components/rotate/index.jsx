@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react'
 import './index.css'
+import CusInputNumber from '../cusInputNumber'
 
 import {
   Form,
@@ -8,24 +9,28 @@ import {
   Tag,
 } from 'antd';
 
-const RotationAngle = props => {
+const Rotate = props => {
   const { CheckableTag } = Tag;
   const [form] = Form.useForm();
   const formItemLayout = {
     labelAlign: 'left'
   };
+  const _data = props.data
+  const _angle = {
+    value: _data.value.angle
+  }
   const [rotaion, setRotaion] = useState({
-    angle: 0,
-    vertical: true,
-    horizontal: false
+    vertical: _data.value.direction === 'vertical',
+    horizontal: _data.value.direction === 'horizontal'
   })
   const angleChange = () => {
-    console.log('angleChange', rotaion)
+    _data.value.angle = _angle.value
+    props.onChange()
   }
   const handleDirectionChange = (key, checked) => {
+    _data.value.direction = key
     if (key === 'vertical') {
       setRotaion({
-        ...rotaion,
         [key]: checked,
         horizontal: !checked
       })
@@ -35,7 +40,6 @@ const RotationAngle = props => {
       })
     } else {
       setRotaion({
-        ...rotaion,
         [key]: checked,
         vertical: !checked
       })
@@ -44,6 +48,7 @@ const RotationAngle = props => {
         vertical: !checked
       })
     }
+    props.onChange()
   }
 
 
@@ -56,11 +61,11 @@ const RotationAngle = props => {
     >
       <Form.Item
         name="style"
-        label="旋转角度"
+        label={_data.displayName}
       >
         <Input.Group compact className="rotaion-angle">
           <Form.Item name="angle" noStyle>
-            <InputNumber defaultValue={rotaion.angle} style={{ marginRight: '8px', width: '141px' }} className="po-size-input unit-input" onBlur={angleChange} />
+            <CusInputNumber data={_angle} onChange={angleChange} style={{ marginRight: '8px', width: '141px' }} />
           </Form.Item>
           <Form.Item name="vertical" noStyle>
             <CheckableTag
@@ -73,7 +78,7 @@ const RotationAngle = props => {
           </Form.Item>
           <Form.Item name="horizontal" noStyle>
             <CheckableTag
-            style={{ marginRight: 0 }}
+              style={{ marginRight: 0 }}
               checked={rotaion.horizontal}
               onChange={(checked) => handleDirectionChange('horizontal', checked)}
             >
@@ -86,4 +91,4 @@ const RotationAngle = props => {
   )
 }
 
-export default memo(RotationAngle)
+export default memo(Rotate)
