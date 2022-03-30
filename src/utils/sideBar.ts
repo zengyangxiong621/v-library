@@ -63,7 +63,9 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (ids.includes(item.id)) {
-        data[i] = data.splice(i - 1, 1, data[i])[0];
+        if (i !== 0) {
+          data[i] = data.splice(i - 1, 1, data[i])[0];
+        }
       } else if (item.components) {
         recursiveFn(item.components, ids);
       }
@@ -79,14 +81,13 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
 const moveDown: TMoveUpOrDown = (treeData, selectedNodes) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, ids: string) => {
-    // 这里不能break
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === ids) {
-        if (i < len - 1) {
+        if (i < len-1) {
           data[i] = data.splice(i + 1, 1, data[i])[0];
+          break;
         }
-        // break;
       } else if (item.components) {
         recursiveFn(item.components, ids);
       }

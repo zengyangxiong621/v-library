@@ -1,7 +1,9 @@
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 
-import { Modal, Form, Select, Input, Radio, Upload, message, Button } from 'antd'
+import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
+
+import { useFetch } from '../../tool/useFetch'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -10,59 +12,128 @@ const { Dragger } = Upload
 
 const AddDataSource = (props: any) => {
   const [addForm] = Form.useForm()
-  const { visible, changeShowState } = props
+  const { visible, changeShowState, refreshTable } = props
 
   const [curDataType, setCurDataType] = useState('')
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
+  // 最终选择的数据库的名称
+  // const [selectDB, setSelectDB] = useState('')
+  // 上传的文件在后端存储的地址
+  const [fileUrl, setFileUrl] = useState('')
 
   const [loading, setLoading] = useState()
+  const [getDBListLoading, setGetDBListLoading] = useState(false)
 
   // 获取到最新的curDataType
   useEffect(() => {
     setCurDataType(curDataType)
   }, [curDataType])
-
-  const getDataBaseList = () => {
-    const res: any = [{
-      label: 'MySQL',
-      value: 'MySQL'
-    }, {
-      label: 'Oracle',
-      value: 'Oracle'
-    }]
-    setDataBaseList(res)
-  }
-  // 新增数据源
-  // const obj = {
-  //   baseUrl: '',
-  //   code: '',
-  //   database: '', description: '', id: '', name: '', password: '', port: '', type: '', username: ''
-  // }
-  const handleOk = async () => {
-    alert('ok')
-    try {
-      const values: any = await addForm.validateFields()
-      console.log('value', values);
-      changeShowState('add')
-    } catch (error) {
-      console.log('error', error);
+  /**
+   * description: 获取可选择的数据库名称列表
+   */
+  const getDataBaseList = async () => {
+    // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
+    const values = await addForm.validateFields(['port', 'username', 'password', 'host'])
+    // 通过表单实例方法拿到 需要的几个字段
+    // const values = addForm.getFieldsValue(['port', 'username', 'password', 'host'])
+    // 攒成目标参数
+    const finalParams = {
+      ...values,
+      dataBaseType: curDataType
     }
-
+    //！ 请求数据库列表
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [err, data] = await useFetch('/visual/datasource/queryDataBaseList', {
+      body: JSON.stringify(finalParams)
+    })
+    // data 只是个数组，处理成select需要的形式
+    const formatData = data.map((item: any) => ({
+      label: item,
+      value: item
+    }))
+    setDataBaseList(formatData)
   }
+  /**
+   * description: 新增数据源
+   */
+  const handleOk = async () => {
+    const values: any = await addForm.validateFields()
+    const { name, type, description, ...rest } = values
+    // 判断当前是否是数据库
+    const dataBaseOrNormal = dataTypeClassify.get(curDataType)
+    let finalType = type
+    let finalSourceConfig = rest
+    //如果是数据库类型的数据源的话，要加上 dataBaseType 字段
+    // 数据资源类型type 也要变成 'RDBMS'
+
+    if (dataBaseOrNormal === 'rdbms') {
+      finalSourceConfig.dataBaseType = curDataType
+      finalType = 'RDBMS'
+    }
+    if (dataBaseOrNormal === 'csv') {
+      finalSourceConfig.fileUrl = fileUrl
+    }
+    // 东拼西凑攒参数
+    const finalParams = {
+      workSpaceId: 1,
+      name,
+      type: finalType,
+      description,
+      [`${dataBaseOrNormal}SourceConfig`]: finalSourceConfig
+    }
+    console.log('value', finalParams);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [err, data] = await useFetch('/visual/datasource/add', {
+      body: JSON.stringify(finalParams)
+    })
+    console.log('添加Mysql数据源', data);
+    if (data) {
+      // 成功后  -关闭弹窗 -清除表单 -刷新表格
+      changeShowState('add')
+      addForm.resetFields()
+      refreshTable()
+    }
+  }
+
   const handleCancel = () => {
     changeShowState('add')
   }
-
+  // 选择数据源类型
   const selectedChange = (val: any) => {
     setCurDataType(val)
   }
+  // 选择数据库名
+  const selectDatabase = (val: any) => {
+    // setSelectDB(val)
+    addForm.setFieldsValue({ database: val })
+  }
 
 
+  // 上传框配置
+  const uploadProps = {
+    name: 'file',
+    multiple: false,
+    maxCount: 1,
+    action: 'http://10.202.233.230:9572/visual/file/upload',
+    onChange(info: any) {
+      const { status, response } = info.file;
+      if (status === 'done') {
+        message.success(`${info.file.name} 上传成功`);
+        setFileUrl(response.data)
+      } else if (status === 'error') {
+        message.error(`${info.file.name} 上传失败`);
+      }
+    },
+    // onDrop(e: any) {
+    //   console.log('Dropped files', e.dataTransfer.files);
+    // },
+  };
   return (
     <div className='AddDataSource-wrap'>
       <Modal
         title="添加数据源"
+        destroyOnClose
         maskClosable={false}
         visible={visible}
         okText="确定"
@@ -87,7 +158,8 @@ const AddDataSource = (props: any) => {
             name="type"
             rules={generateSingleRules(true, '请选择数据源类型')}
           >
-            <Select className='setBackColor' onChange={selectedChange} placeholder="请选择数据源类型"
+            <Select
+              className='setBackColor' onChange={selectedChange} placeholder="请选择数据源类型"
               dropdownStyle={{ backgroundColor: '#232630' }}
             >
               {
@@ -108,20 +180,22 @@ const AddDataSource = (props: any) => {
               message: '数据源名称不能为空',
             }]}
           >
-            <Input className='setBackColor' placeholder='请输入数据源名称' autoComplete='off' />
+            <Input
+              className='setBackColor' placeholder='请输入数据源名称' autoComplete='off' />
           </Form.Item>
           <Form.Item
             label="描述"
             name='description'
           >
             <TextArea
+              // value={baseParams.description}
               className="setBackColor"
               autoSize={{ minRows: 3, maxRows: 6 }}
               placeholder="请输入" maxLength={300} />
           </Form.Item>
           {/* CSV格式 */}
           {
-            curDataType === '0' && (
+            curDataType === 'CSV' && (
               <>
                 <Form.Item
                   label="编码格式"
@@ -133,7 +207,7 @@ const AddDataSource = (props: any) => {
                 <Form.Item
                   label="上传文件"
                   style={{ marginBottom: '40px' }}
-                  name="scwj"
+                  // name="fileUrl"
                   rules={generateSingleRules(true, '请选择要上传的文件')}
                 >
                   <div className="setBackColor"
@@ -150,47 +224,62 @@ const AddDataSource = (props: any) => {
           }
           {/* API接口 */}
           {
-            curDataType === '1' && (
+            curDataType === 'RESTFUL_API' && (
               <>
                 <Form.Item label="Base URL"
                   name='baseUrl'
                   rules={generateSingleRules(true, '请输入Base URL')}
                 >
-                  <Input className="setBackColor"></Input>
+                  <Input
+                    className="setBackColor" autoComplete='off' ></Input>
                 </Form.Item>
               </>
             )
           }
-          {/* MySQL数据库 */}
+          {/* MYSQL数据库 */}
           {
-            curDataType === '2' && (
+            curDataType === 'MYSQL' && (
               <>
-                <Form.Item label="链接地址" name="ljdz" rules={generateSingleRules(true, '请输入链接地址')}>
-                  <Input className="setBackColor" placeholder='请输入' />
+                <Form.Item label="链接地址" name="host" rules={generateSingleRules(true, '请输入链接地址')}>
+                  <Input className="setBackColor"
+                    // autoComplete='off'
+                    placeholder='请输入' />
                 </Form.Item>
                 <Form.Item label="端口" name="port" rules={[
                   {
                     required: true,
-                    validator(rule, value) {
-                      const reg = /^\d{1,}$/
-                      if (!reg.test(value)) {
-                        return Promise.reject(new Error('端口号只能由数字组成'))
-                      }
-                    }
+                    // validator(rule, value) {
+                    //   const reg = /^\d{1,}$/
+                    //   if (!reg.test(value)) {
+                    //     return Promise.reject(new Error('端口号只能由数字组成'))
+                    //   }
+                    // }
                   }
                 ]}>
-                  <Input className="setBackColor" placeholder='请输入数字' maxLength={10} />
+                  <Input
+                    autoComplete='off'
+                    className="setBackColor" placeholder='请输入数字' maxLength={10} />
                 </Form.Item>
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
-                  <Input className="setBackColor" placeholder='请输入' />
+                  <Input
+                    autoComplete='off'
+                    className="setBackColor" placeholder='请输入' />
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
-                  <Input className="setBackColor" placeholder='请输入' />
+                  <Input
+                    autoComplete='off'
+                    className="setBackColor" placeholder='请输入' />
                 </Form.Item>
                 <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请选择数据库')}>
                   <div className='dataBaseName'>
-                    <div className='getDataListBtn' onClick={() => getDataBaseList()}>获取数据库列表</div>
-                    <Select disabled={Array.isArray(dataBaseList) && dataBaseList.length === 0} className='dataBaseName-Select setBackColor'>
+                    <Spin spinning={getDBListLoading}>
+                      <div className='getDataListBtn' onClick={() => getDataBaseList()}>获取数据库列表</div>
+                    </Spin>
+                    <Select
+                      placeholder="请选择数据库"
+                      disabled={Array.isArray(dataBaseList) && dataBaseList.length === 0}
+                      onChange={selectDatabase}
+                      className='dataBaseName-Select setBackColor'>
                       {
                         dataBaseList.map((item: any) => {
                           return <Option value={item.value} key={item.value}>{item.label}</Option>
@@ -198,6 +287,34 @@ const AddDataSource = (props: any) => {
                       }
                     </Select>
                   </div>
+                </Form.Item>
+              </>
+            )
+          }
+          {/* JSON */}
+          {
+            curDataType === 'JSON' && (
+              <>
+                <Form.Item label="JSON URL"
+                  name='baseUrl'
+                  rules={generateSingleRules(true, '请输入Base URL')}
+                >
+                  <Input
+                    className="setBackColor" autoComplete='off' ></Input>
+                </Form.Item>
+              </>
+            )
+          }
+          {/* EXCEL */}
+          {
+            curDataType === 'EXCEL' && (
+              <>
+                <Form.Item label="EXCEL URL"
+                  name='baseUrl'
+                  rules={generateSingleRules(true, '请输入Base URL')}
+                >
+                  <Input
+                    className="setBackColor" autoComplete='off' ></Input>
                 </Form.Item>
               </>
             )
@@ -220,59 +337,67 @@ const generateSingleRules = (required: boolean, message: string | number): any[]
   ]
 }
 
-
-// 数据源类型
-const dataSourceType = [
+type TSelectOptionItems = {
+  label: string,
+  value: string,
+}
+// 可选择的数据源类型
+const dataSourceType: TSelectOptionItems[] = [
   {
     label: 'CSV文件',
-    value: '0'
+    value: 'CSV'
   },
   {
-    label: 'API接口',
-    value: '1'
+    label: 'POSTGRESQL',
+    value: 'POSTGRESQL',
   },
   {
-    label: 'MySQL数据库',
-    value: '2'
-  }
+    label: 'MYSQL',
+    value: 'MYSQL',
+  },
+  {
+    label: 'ES',
+    value: 'ES'
+  },
+  {
+    label: 'API',
+    value: 'RESTFUL_API',
+  },
+  {
+    label: 'JSON',
+    value: 'JSON',
+  },
+  {
+    label: 'EXCEL',
+    value: 'EXCEL',
+  },
 ]
+// 根据选择的数据源类型，来动态生成 []SourceConfig
+const dataTypeClassify: any = new Map([
+  ['CSV', 'csv'],
+  ['RESTFUL_API', 'api'],
+  ['JSON', 'json'],
+  ['EXCEL', 'excel'],
+  ['POSTGRESQL', 'rdbms'],
+  ['MYSQL', 'rdbms'],
+  ['ES', 'rdbms'],
+])
 
 // 单选框 CSV类型- 编码格式
-const codeFormatOptions = [
+const codeFormatOptions: TSelectOptionItems[] = [
   {
     label: '自动检测',
-    value: '自动检测',
+    value: '0',
   },
   {
     label: 'UTF-8',
-    value: 'UTF-8',
+    value: '1',
   },
   {
     label: 'GBK',
-    value: 'GBK',
+    value: '2',
   },
 ]
 
-// 上传框配置
-const uploadProps = {
-  name: 'file',
-  multiple: false,
-  maxCount: 1,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info: any) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e: any) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
 
 
