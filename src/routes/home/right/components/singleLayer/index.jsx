@@ -165,6 +165,16 @@ const componentConfig = {
         angle: 0, // 角度
         direction: 'horizontal' // 方向
       }
+    },
+    {
+      'name': 'xxx',
+      'displayName': '饼图描边',
+      type: 'border',
+      value: {
+        type: 'solid', // dotted 
+        width: 1,
+        color: '#000000' // rgba(0,0,0,0)
+      }
     }
   ],
   'dataConfig': {}, //数据源配置
@@ -210,7 +220,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const componentConfig = deepClone(bar.componentConfig)
+  // const componentConfig = deepClone(bar.componentConfig)
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
   const dataConfig = componentConfig.staticData

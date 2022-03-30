@@ -1463,30 +1463,46 @@ export default {
       {
         'name': 'dimension',
         'displayName': '位置尺寸',
-        'type':'dimensionGroup',
+        'type': 'dimensionGroup',
         'config': {
-          'lock': true,
+          'lock': false,
         },
         'value': [
           {
             'name': 'left',
             'displayName': 'X轴坐标',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'X'
+            }
           },
           {
             'name': 'top',
             'displayName': 'Y轴坐标',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'Y'
+            }
           },
           {
             'name': 'width',
             'displayName': '宽度',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'W'
+            }
           },
           {
             'name': 'height',
             'displayName': '高度',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'H'
+            }
           },
         ],
       },
