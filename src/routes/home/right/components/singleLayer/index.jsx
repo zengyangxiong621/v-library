@@ -175,6 +175,81 @@ const componentConfig = {
         width: 1,
         color: '#000000' // rgba(0,0,0,0)
       }
+    },
+    {
+      name: 'xxx',
+      displayName: 'xxx',
+      type: 'padding',
+      value: {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1
+      }
+    },
+    {
+      name: "xxx",
+      displayName: 'xxx',
+      type: 'select',
+      value: 'a',
+      options: [
+        {
+          name: 'a',
+          value: 'a'
+        },
+        {
+          name: 'b',
+          value: 'b'
+        },
+      ]
+    },
+    {
+      name: "xxx",
+      displayName: 'xxx',
+      type: 'chartText',
+      value: {
+        fontFamily: 'bolder',
+        fontSize: 12,
+        color: '#000000',
+        fontWeight: 'normal' // bold bolder lighter
+      }
+    },
+    {
+      name: "xxx",
+      displayName: 'xxx',
+      type: 'inputNumber2',
+      showDetail: true, // 是否展示下面的文字说明
+      value: [
+        {
+          name: 'a',
+          displayName: '粗细',
+          type: 'number',
+          value: 1,
+          config: {
+            min: 0,
+            suffix: 'px',  // 输入框后缀
+          }
+        },
+        {
+          name: 'b',
+          displayName: '长度',
+          type: 'number',
+          value: 20,
+          config: {
+            min: 0,
+            suffix: 'px',  // 输入框后缀
+          }
+        },
+      ]
+    },
+    {
+      name: "xxx",
+      displayName: 'xxx',
+      type: 'textStroke',
+      value: {
+        width: 1,
+        color: '#000000'
+      }
     }
   ],
   'dataConfig': {}, //数据源配置
@@ -220,7 +295,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  // const componentConfig = deepClone(bar.componentConfig)
+  const componentConfig = deepClone(bar.componentConfig)
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
   const dataConfig = componentConfig.staticData

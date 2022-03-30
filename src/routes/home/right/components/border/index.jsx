@@ -87,7 +87,7 @@ const Border = props => {
           <CusInputNumber
             data={_width}
             onChange={widthChange}
-            formStyle={{ marginRight: '8px', float: 'left', marginBottom: '-8px' }}
+            formStyle={{ marginRight: '8px', float: 'left', marginBottom: '-16px' }}
             style={{ width: '86px' }}
           />
         </Form.Item>

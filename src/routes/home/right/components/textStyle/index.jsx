@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react'
 import './index.css'
-import BackgroundColor from '../colorFullSetting';
+import Color from '../color';
 import { find } from '../../../../../utils/common'
 
 import {
@@ -11,12 +11,6 @@ import {
   Tag,
   Row, Col
 } from 'antd';
-
-const styleColor = {
-  "name": "styleColor",
-  "displayName": "",
-  "value": "#000" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-}
 
 const TextStyle = props => {
   const { Option } = Select;
@@ -97,8 +91,8 @@ const TextStyle = props => {
             <InputNumber defaultValue={fontSetting.fontSize} className="po-size-input" style={{ width: '68px' }} onBlur={fontSizeChange} />
           </Form.Item>
         </Input.Group>
-        <BackgroundColor data={_colorConfig} onChange={props.onChange} />
-        <Input.Group compact style={{ marginTop: '8px' }} className="fontBi">
+        <Color data={_colorConfig} onChange={props.onChange} style={{marginBottom:'-8px'}}/>
+        <Input.Group compact className="fontBi">
           <Form.Item name="blod" noStyle>
             <CheckableTag
               checked={fontSetting.blod}

@@ -71,7 +71,7 @@ const BoxShadow = props => {
         name="outside"
         label={_data.displayName}
       >
-        <Input.Group compact style={{ marginTop: '8px' }} className="fontBi">
+        <Input.Group compact className="fontBi">
           <div className="color-swatch" onClick={selectBgc} style={{ marginRight: '8px' }}>
             <div className="color-dis" style={{ background: `rgba(${shadow.rgb.r}, ${shadow.rgb.g}, ${shadow.rgb.b}, ${shadow.rgb.a})` }} />
           </div>

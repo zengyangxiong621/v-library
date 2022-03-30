@@ -65,7 +65,7 @@ const Rotate = props => {
       >
         <Input.Group compact className="rotaion-angle">
           <Form.Item name="angle" noStyle>
-            <CusInputNumber data={_angle} onChange={angleChange} style={{ marginRight: '8px', width: '141px' }} />
+            <CusInputNumber data={_angle} onChange={angleChange} formStyle={{marginBottom:'-16px'}} style={{ marginRight: '8px', width: '141px' }} />
           </Form.Item>
           <Form.Item name="vertical" noStyle>
             <CheckableTag

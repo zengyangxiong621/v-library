@@ -11,7 +11,7 @@ import {
 import { SketchPicker } from 'react-color'
 import { isHex, rgbToHex, hexToRgb, getRgbaNum } from '../../../../../utils/color'
 
-const BackgroundColor = props => {
+const Color = props => {
   const [form] = Form.useForm();
   const formItemLayout = {
     labelAlign: 'left'
@@ -106,6 +106,7 @@ const BackgroundColor = props => {
       form={form}
       {...formItemLayout}
       colon={false}
+      style={props.style}
     >
       <Form.Item label={_data.displayName}>
         <div className="color-swatch" onClick={selectBgc}>
@@ -134,4 +135,4 @@ const BackgroundColor = props => {
   )
 }
 
-export default memo(BackgroundColor)
+export default memo(Color)

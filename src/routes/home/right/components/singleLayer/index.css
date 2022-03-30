@@ -81,7 +81,7 @@
 .custom-collapse .ant-collapse-header{
   color: #ccc !important;
   background-color: #222430 !important;
-  padding: 12px 0 !important;
+  padding: 0 0 16px 0 !important;
   
 }
 
@@ -112,4 +112,18 @@
 .SingleLayer-wrap .ant-table-tbody > tr.ant-table-row:hover > td,.SingleLayer-wrap .ant-table-tbody > tr > td.ant-table-cell-row-hover{
   background-color:#3d404d;
   color: #fff;
+}
+
+
+/* 右侧设置隐藏滚动条 */
+.SingleLayer-wrap .ant-tabs-content::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
+}
+
+.SingleLayer-wrap .ant-tabs-content {
+  scrollbar-width: none; /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  overflow-x: hidden;
+  overflow-y: auto;
+  height:100%;
 }

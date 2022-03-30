@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import { connect } from 'dva'
 import './index.css'
 import { find } from '../../../../../utils/common'
-import BackgroundColor from '../colorFullSetting'
+import BackgroundColor from '../color'
 import PageSize from '../pageSize'
 import UploadImg from '../uploadImg'
 import CusInputNumber from '../cusInputNumber'

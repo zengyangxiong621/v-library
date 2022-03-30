@@ -109,27 +109,23 @@ const PositionSize = ({ bar, dispatch, ...props }) => {
     >
       <Form.Item label={_data.displayName}>
         <Input.Group compact>
-          <Form.Item name="left" noStyle style={{ marginRight: '21px' }}>
-            {/* <InputNumber defaultValue={size.left} className="po-size-input input-x" style={{ marginRight: '21px' }} onBlur={(e) => { posSizeChange('left', e) }} /> */}
+          <Form.Item name="left" noStyle>
             <CusInputNumber data={_leftCopy} onChange={leftChange} formStyle={{ float: 'left' }} />
           </Form.Item>
           <Form.Item name="top" noStyle>
-            {/* <InputNumber defaultValue={size.top} className="po-size-input input-y" onBlur={(e) => { posSizeChange('top', e) }} /> */}
             <CusInputNumber data={_topCopy} onChange={topChange} formStyle={{ float: 'right' }} />
           </Form.Item>
         </Input.Group>
         <Input.Group compact>
           <Form.Item name="width" noStyle>
-            {/* <InputNumber defaultValue={size.width} className="po-size-input input-w" style={{ marginRight: '2px' }} onBlur={(e) => { posSizeChange('width', e) }} /> */}
-            <CusInputNumber data={_widthCopy} onChange={widthChange} formStyle={{ float: 'left' }} />
+            <CusInputNumber data={_widthCopy} onChange={widthChange} formStyle={{ float: 'left',marginBottom:'-8px' }} />
           </Form.Item>
           <span className="size-lock" onClick={(e) => sizeLockChange(e)}>
             {sizeLock ? <i className="iconfont icon-lock"></i> :
               <i className="iconfont icon-unlock"></i>}
           </span>
           <Form.Item name="height" noStyle>
-            {/* <InputNumber defaultValue={size.height} className="po-size-input input-h" style={{ marginLeft: '3px' }} onBlur={(e) => { posSizeChange('height', e) }} /> */}
-            <CusInputNumber data={_heightCopy} onChange={heightChange} formStyle={{ float: 'right' }} />
+            <CusInputNumber data={_heightCopy} onChange={heightChange} formStyle={{ float: 'right',marginBottom:'-8px' }} />
           </Form.Item>
         </Input.Group>
       </Form.Item>
