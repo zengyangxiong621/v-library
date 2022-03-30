@@ -24,7 +24,8 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       if(![ 'c-canvas', 'draggable-wrapper' ].includes(e.target.className)) {
         return
       }
-      const reactDraggableDomList: any = document.querySelectorAll('.draggable-container>.c-custom-draggable>div>.react-draggable')
+      const reactDraggableDomList: any = document.querySelectorAll('.draggable-container .react-draggable')
+
       const reactDraggableDomPosition = [ ...reactDraggableDomList ].map(item => {
         const domInfo = item.getBoundingClientRect()
         return {
@@ -35,7 +36,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
           height: Math.ceil(domInfo.height),
         }
       })
-      e.preventDefault()
+      // e.preventDefault()
       /*
         初始化
        */
@@ -47,8 +48,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       let isMouseMove = false
       document.onmousemove = (ev: Event) => {
         // 移动的时候让选区显示出来
-        e.preventDefault()
-
         isMouseMove = true
         areaRef.current.style.display = 'block'
         // 取选区 div 的左上角、右下角坐标
@@ -124,11 +123,11 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         })
         selectedList.current = selectedIds
       }
-      document.onmouseup = (e) => {
-        e.preventDefault()
+      document.onmouseup = () => {
+        console.log('selectedList.current', selectedList.current)
         dispatch({
-          type: 'bar/chooseLayer',
-          payload: selectedList.current,
+          type: 'bar/setSelectedKeys',
+          payload: selectedList.current
         })
         hide()
         document.onmousemove = null

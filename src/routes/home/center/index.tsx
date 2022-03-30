@@ -65,7 +65,6 @@ const Center = ({ bar, dispatch }: any) => {
   const calcCanvasScale = (e: any) => {
     if(e.ctrlKey) {
       e.preventDefault()
-      console.log('bar.canvasScaleValue', bar.canvasScaleValue)
       if(e.deltaY > 0 && bar.canvasScaleValue < 0.19) {
         return false
       }
@@ -117,17 +116,13 @@ const Center = ({ bar, dispatch }: any) => {
       type: 'bar/clearAllStatus',
     })
   }, [ draggableContainerRef, bar.treeRef ])
-  // const mouse = useMouse(canvasRef);
-  const mouse = 0
-
+  const mouse = useMouse(canvasRef);
+  // const mouse = 0
   return (
-    <div className="c-canvas" ref={ canvasRef }>
+    <div className="c-canvas">
       <Ruler/>
-      <Button onClick={() => {
-        console.log('components', bar.components)
-      }
-      }>打印</Button>
       <div
+        ref={ canvasRef }
         className="canvas-container"
         style={ {
           width: recommendConfig.width * bar.canvasScaleValue,
@@ -150,7 +145,12 @@ const Center = ({ bar, dispatch }: any) => {
               {/*<Button onClick={ handleDelete }>删除</Button>*/ }
               {/*<Button onClick={ handleSelect }>选中</Button>*/ }
             </div>
-            <ScaleDragCom/>
+            <ScaleDragCom
+              mouse={mouse}
+              cRef={(ref: any) => {
+                bar.scaleDragCompRef = ref
+              }}
+            />
             <SupportLines
               key="support"
               cRef={ (ref: any) => {

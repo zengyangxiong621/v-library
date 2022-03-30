@@ -142,7 +142,7 @@ const Left = ({ dispatch, bar, operate }) => {
     const { key } = e.node
     const isFolder = !!e.node.children
     dispatch({
-      type: 'bar/setNodeList',
+      type: 'bar/setKeys',
       payload: e.selectedNodes,
     })
     // 多选情况下，点击那个剩哪个

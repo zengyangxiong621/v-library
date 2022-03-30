@@ -1,16 +1,17 @@
 import { IConfig, ILayerComponent, ILayerGroup } from '../routes/home/center/components/CustomDraggable/type'
 import { DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from '../routes/home/center/constant'
 
-export function selectSingleComponent(state, id) {
+export function findLayerById(layer, id) {
   let temp = null;
-  state.forEach((item) => {
+  layer.forEach((item) => {
     if (item.id === id) {
-      item.active = true;
       temp = item;
-    } else {
-      item.active = false;
+      return temp;
     }
-    const t = selectSingleComponent(item.components, id);
+    let t = null
+    if ('children' in layer) {
+      t = findLayerById(layer.components, id);
+    }
     if (t) {
       temp = t;
     }

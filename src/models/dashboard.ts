@@ -1,4 +1,3 @@
-import { selectSingleComponent } from "../utils";
 
 export default {
   namespace: 'dashboard',

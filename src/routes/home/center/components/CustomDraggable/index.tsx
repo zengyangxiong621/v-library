@@ -43,7 +43,7 @@ const CustomDraggable
        dispatch,
        treeData,
        mouse,
-     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse }) => {
+     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0 }) => {
   const components: Array<IComponent> = bar.components
   const scaleDragData = bar.scaleDragData
   const isSupportMultiple: boolean = bar.isSupportMultiple
@@ -108,9 +108,11 @@ const CustomDraggable
       // 单个组件移动
       if('config' in component) {
         // const style_config: any = component.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
-        style_dimension_config.value.find((item: any) => item.name === LEFT).value = data.x
-        style_dimension_config.value.find((item: any) => item.name === TOP).value = data.y
+
+        // const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
+        // style_dimension_config.value.find((item: any) => item.name === LEFT).value = data.x
+        // style_dimension_config.value.find((item: any) => item.name === TOP).value = data.y
+
         // component.config.position.x = data.x
         // component.config.position.y = data.y
       }
@@ -151,15 +153,20 @@ const CustomDraggable
       supportLinesRef.handleSetPosition(xPositionList[0], yPositionList[0])
       const xMoveLength = data.x - data.lastX
       const yMoveLength = data.y - data.lastY
+      Object.keys(bar.selectedComponentRefs).forEach(key => {
+        if (key.indexOf('group') !== -1) {
+          delete bar.selectedComponentRefs[key]
+        }
+      })
       if(layer.id in bar.selectedComponentRefs) {
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
         Object.values(bar.selectedComponentRefs).forEach((item: any) => {
           // todo 有问题
           // console.log('item', item.position)
-          console.log('ref', item)
-          // item.handleSetPosition(item.position.x + xMoveLength, item.position.y + yMoveLength)
+          console.log('-------------------')
+          // console.log('item', item.position)
+          item.handleSetPosition(xMoveLength, yMoveLength)
         })
-        console.log('---------')
       }
     }
   }
@@ -184,6 +191,7 @@ const CustomDraggable
           item.value = Math.ceil(data.y)
         }
       })
+      // console.log('component', component)
       dispatch({
         type: 'bar/save',
         payload: {
@@ -286,13 +294,9 @@ const CustomDraggable
         const xMoveLength = data.x - data.lastX
         const yMoveLength = data.y - data.lastY
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
-        Object.values(bar.selectedComponentRefs).forEach((item: any) => {
-          // todo 有问题
-          // console.log('item', item.position)
-          console.log('-------------------')
-          item.handleSetPosition(item.position.x + xMoveLength, item.position.y + yMoveLength)
-        })
-
+        // Object.values(bar.selectedComponentRefs).forEach((item: any) => {
+        //   item.handleSetPosition(Math.ceil(item.position.x + xMoveLength), Math.ceil(item.position.y + yMoveLength))
+        // })
       }
       // 在dva里计算
       dispatch({
@@ -433,9 +437,7 @@ const CustomDraggable
                 return allComponentRefs[layer.id]
               } }
               disabled={ layer.lock }
-              cancel=".no-cancel"
-              key={ layer.id }
-              position={ config.position }
+              cancel=".no-cancel" key={ layer.id } position={ config.position }
               onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer) }
               onDrag={ (ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config) }
               onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
@@ -450,7 +452,7 @@ const CustomDraggable
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
                 style={ {
                   ...config.style,
-                  border: '1px solid gray',
+                  // border: '1px solid gray',
                   visibility: !layer.scan ? 'hidden' : 'unset',
                 } }>
                 {
@@ -458,7 +460,7 @@ const CustomDraggable
                     { 'components' in layer && (layer as any).components?.length > 0 ?
                       <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
                         <CustomDraggable
-                          mouse={ mouse }
+                          mouse={ layer.selected ? mouse : 0 }
                           bar={ bar }
                           dispatch={ dispatch }
                           treeData={ (layer as any).components }

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import {
-  selectSingleComponent,
+  findLayerById,
   findParentNode,
   calculateGroupPosition,
   findNode,
@@ -41,6 +41,7 @@ interface IBarState {
   componentLayers: any;
   selectedComponentRefs: any;
   supportLinesRef: any;
+  scaleDragCompRef: any;
   selectedComponents: any;
   scaleDragData: any;
   componentConfig: any,
@@ -68,6 +69,7 @@ export default {
       y: 200,
     },
     supportLinesRef: null,
+    scaleDragCompRef: null,
     scaleDragData: {
       position: {
         x: 0,
@@ -1895,6 +1897,24 @@ export default {
       // eslint-disable-line
       yield put({ type: 'selectedNode', payload })
     },
+    * chooseLayer({ payload }: any, { call, put }: any): any {
+      yield put({
+        type: 'setSelectedKeys',
+        payload,
+      })
+      yield put({
+        type: 'calcDragScaleData',
+      })
+    },
+    * setKeys({ payload }: any, { call, put }: any): any {
+      yield put({
+        type: 'setNodeList',
+        payload,
+      })
+      yield put({
+        type: 'calcDragScaleData',
+      })
+    },
   },
 
   reducers: {
@@ -1902,30 +1922,20 @@ export default {
       return { ...state, treeData: payload }
     },
     selectedNode(state: IBarState, { payload }: any) {
-      // const items = state.draggableItems;
-      // selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload }
     },
     setSelectedKeys(state: IBarState, { payload }: any) {
-      // const items = state.draggableItems;
-      // selectSingleComponent(items, payload.key[0]);
       state.key = payload
-      state.selectedComponents = state.components.filter((component) => {
-        return state.key.includes(component.id)
-      })
-      // todo 计算 dragScaleData
-      console.log('state.selectedComponents', state.selectedComponents)
-      return { ...state, ...payload }
-    },
-    // 选中节点时，保存住整个node对象
-    setNodeList(state: IBarState, { payload }: any) {
-      state.selectedComponentOrGroup.forEach(item => {
-        item.selected = false
-      })
-      state.selectedComponentOrGroup = payload
+      state.selectedComponentOrGroup = state.key.reduce((pre: any, cur: string) => {
+        pre.push(findLayerById(state.treeData, cur))
+        return pre
+      }, [])
       state.selectedComponentOrGroup.forEach(item => {
         item.selected = true
       })
+      return { ...state, ...payload }
+    },
+    calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = []
       let yPositionList: number[] = []
       if(state.selectedComponentOrGroup.length === 1) {
@@ -1968,6 +1978,7 @@ export default {
       }
       xPositionList.sort((a, b) => a - b)
       yPositionList.sort((a, b) => a - b)
+      console.log('xPositionList积极', xPositionList)
       state.scaleDragData = {
         position: {
           x: xPositionList[0],
@@ -1979,6 +1990,19 @@ export default {
           height: yPositionList[yPositionList.length - 1] - yPositionList[0],
         },
       }
+      return {
+        ...state,
+      }
+    },
+    // 选中节点时，保存住整个node对象
+    setNodeList(state: IBarState, { payload }: any) {
+      state.selectedComponentOrGroup.forEach(item => {
+        item.selected = false
+      })
+      state.selectedComponentOrGroup = payload
+      state.selectedComponentOrGroup.forEach(item => {
+        item.selected = true
+      })
       return { ...state }
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
@@ -1996,8 +2020,6 @@ export default {
       return { ...state }
     },
     selectSingleNode(state: IBarState, { payload: id }: any) {
-      // const items = state.draggableItems;
-      // selectSingleComponent(items, id);
       return { ...state }
     },
     testDrag(state: IBarState, { payload: { parentId } }: any) {
@@ -2158,6 +2180,7 @@ export default {
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
       // 先将选中的 layer 的 select 状态清除
+      // todo 选区的时候会点击到这里
       state.selectedComponentOrGroup.forEach(layer => {
         layer.selected = false
       })
@@ -2167,7 +2190,8 @@ export default {
       state.selectedComponents.length = 0
       state.selectedComponentRefs = {}
       state.isSupportMultiple = false
-      state.scaleDragData.style.display = 'none'
+      // todo 选区的时候会点击到这里
+      // state.scaleDragData.style.display = 'none'
       state.key.length = 0
       state.isFolder = false
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
