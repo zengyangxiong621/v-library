@@ -13,11 +13,11 @@ class EveryTreeNode extends React.Component {
     super(props)
     // const {
     //   // dispatch, bar,
-    //   // text, children,
+    //   // text, components,
     //   //  getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan
     //    } = props
     this.state = {
-      isFolder: !!this.props.children,
+      isFolder: !!this.props.components,
       inputValue: this.props.text,
     }
     this.inputRef = React.createRef()

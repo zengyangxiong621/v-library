@@ -2,41 +2,95 @@ import { memo, useState, useRef, useEffect } from 'react'
 import './index.less'
 import zhCN from 'antd/es/locale/zh_CN'
 
-import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal } from 'antd'
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from 'antd'
+import { PlusOutlined, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 
 import AddDataSource from './components/addDataSource'
 import EditDataSource from './components/editDataSource'
+
+import { useFetch } from './tool/useFetch'
 
 const { Option } = Select
 
 
 const DataSource = (props: any) => {
   const [inputValue, setInputValue] = useState('')
-  const [dataSourceType, setDataSourceType] = useState('all')
+  const [dataSourceType, setDataSourceType] = useState(null)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
   const [isShowEditModal, setIsShowEditModal] = useState(false)
   const [editDataSourceInfo, setEditDataSourceInfo] = useState({})
+  const [pageInfo, setPageInfo] = useState({
+    pageNo: 1,
+    pageSize: 10,
+  })
+  const [totalElements, setTotalElements] = useState(0)
+  const [tableData, setTableData] = useState([])
+  const [tableLoading, setTableLoading] = useState(true)
+
+  /****** 每次请求回数据后，一起设置数据和页数 *******/
+  const resetTableInfo = (data: any) => {
+    setTableData(data.content)
+    setPageInfo({
+      pageNo: data.pageNo,
+      pageSize: data.pageSize,
+    })
+    setTotalElements(data.totalElements)
+  }
+  /**
+   * description: 根据不同的参数请求表格数据(首次加载、搜索、换页、调整每页显示的条数)
+   * params: 发送请求所需要的参数
+   */
+  //给个默认参数，初始化和刷新时方便一些
+  const defaultParams = {
+    spaceId: 1,
+    type: null,
+    name: null,
+    ...pageInfo,
+  }
+  const getTableData = async (differentParams: any = defaultParams) => {
+    setTableLoading(true)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [err, data] = await useFetch('/visual/datasource/list', {
+      body: JSON.stringify(differentParams)
+    })
+    // 请求完成，冲着表格的数据和页码信息
+    await resetTableInfo(data)
+    setTableLoading(false)
+  }
+  // 获取表格数据
+  useEffect(() => {
+    getTableData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // 保证每次拿到最新的dataSourceType值
   useEffect(() => {
     setDataSourceType(dataSourceType)
   }, [dataSourceType])
 
+
   // 下拉框选择
   const selectChange = (value: any, option: any) => {
     setDataSourceType(value)
   }
   // 按类型搜索
-  const searchByType = (e: any) => {
-    console.log('搜索参数', inputValue);
+  const searchByType = async (e: any) => {
+    // 整合搜索参数
+    const finalParams: any = {
+      spaceId: 1,
+      type: dataSourceType,
+      name: inputValue === '' ? null : inputValue,
+      pageNo: 1,
+      pageSize: pageInfo.pageSize,
+    }
+    getTableData(finalParams)
   }
 
   // 打开数据源弹窗
   const addDataSource = () => {
     setIsShowAddModal(true)
-    console.log('isShow', isShowAddModal);
   }
+  // 关闭数据源弹窗
   const changeShowState = (modalType: string) => {
     modalType === 'add'
       ?
@@ -44,42 +98,77 @@ const DataSource = (props: any) => {
       :
       setIsShowEditModal(false)
   }
+  // 刷新表格数据
+  const refreshTable = () => {
+    getTableData()
+  }
 
-  // 删除、编辑 操作
-  const delClick = (text: any, record: any) => {
-    console.log(text);
-    console.log(record);
+  /**********  删除、编辑 操作 *************/
+  const delClick = (dataSourceId: string) => {
     Modal.confirm({
       title: '删除数据源',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#e9535d',
+          border: 'none',
+          // marginLeft: '8px',
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          backgroundColor: '#3d404d'
+        }
+      },
+      icon: <ExclamationCircleFilled />,
       content: '删除后不可恢复，确认删除此数据源吗?',
       okText: '确定',
       cancelText: '取消',
       bodyStyle: {
         background: '#232630',
       },
-      onOk(close) {
-        console.log('删除了', close);
+      async onOk(close) {
         //TODO 发送删除数据源的请求
-        close()
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [err, data] = await useFetch(`/visual/datasource/delete?dataSourceId=${dataSourceId}`, {
+        })
+        if (data) {
+          close()
+          refreshTable()
+        } else {
+          message.error({ content: '删除失败', duration: 2 })
+        }
       },
       onCancel(close) {
-        console.log('拿到的行数据', text);
-        console.log('record', record);
         close()
       }
     })
   }
   const editClick = (text: any, record: any) => {
-    console.log('text', text);
-    console.log('record', record);
     setIsShowEditModal(true)
     setEditDataSourceInfo(text)
   }
-  // 数据源映射
-  const typeReflect: any = {
-    0: 'CSV文件',
-    1: 'API接口',
-    2: 'MYSQL数据库'
+  // 表格分页配置
+  const paginationProps = {
+    total: totalElements,
+    current: pageInfo.pageNo,
+    pageSize: pageInfo.pageSize,
+    pageSizeOptions: [10, 20, 30],
+    showTotal: (val: any) => `共${val}条`,
+
+    defaultCurrent: 1,
+    showQuickJumper: true,
+    showSizeChanger: true,
+    // locale: {},
+    onChange(page: number, pageSize: number) {
+      const finalParams: any = {
+        spaceId: 1,
+        type: dataSourceType,
+        name: inputValue === '' ? null : inputValue,
+        pageNo: page,
+        pageSize,
+      }
+      getTableData(finalParams)
+    },
   }
   // Table columns
   const columns = [
@@ -93,10 +182,7 @@ const DataSource = (props: any) => {
     {
       title: '数据类型',
       key: 'type',
-      render(text: any) {
-        const { type } = text
-        return (<>{typeReflect[type]}</>)
-      }
+      dataIndex: 'type',
     },
     {
       title: '描述',
@@ -106,9 +192,10 @@ const DataSource = (props: any) => {
     },
     {
       title: '修改时间',
-      key: 'time',
-      dataIndex: 'time',
+      key: 'updatedAt',
+      dataIndex: 'updatedAt',
       render: (time: any, data: any) => {
+        // const a = new Date(time)
         return (
           <>
             {time}
@@ -123,7 +210,7 @@ const DataSource = (props: any) => {
         return (
           <Space size="middle" >
             <span className='textInOperationColumn' onClickCapture={() => editClick(text, record)}>编辑</span>
-            <span className='textInOperationColumn' onClickCapture={() => delClick(text, record)}>删除</span>
+            <span className='textInOperationColumn' onClickCapture={() => delClick(record.id)}>删除</span>
           </Space>
         )
       }
@@ -141,16 +228,17 @@ const DataSource = (props: any) => {
             <span>添加数据源</span>
           </div>
           <div className='search'>
-            <Select style={{minWidth: '120px'}} defaultValue="全部类型" onChange={selectChange}>
+            <Select style={{ minWidth: '120px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部类型" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
                   return (
-                    <Option key={item.key} value={item.name}>{item.name}</Option>
+                    <Option key={item.key} value={item.key}>{item.name}</Option>
                   )
                 })
               }
             </Select>
             <Input placeholder="搜索"
+              allowClear
               maxLength={40}
               suffix={<SearchOutlined />}
               value={inputValue}
@@ -161,41 +249,31 @@ const DataSource = (props: any) => {
         </header>
         <section className='table-wrap'>
           <Table
+            loading={tableLoading}
             columns={columns}
-            dataSource={data}
+            dataSource={tableData}
             pagination={paginationProps}
             rowClassName='customRowClass'
           />
         </section>
         {/* 添加数据源的弹窗 */}
-        <AddDataSource visible={isShowAddModal} changeShowState={changeShowState} />
-        {/* 编辑数据源的弹窗 */}
-        <EditDataSource visible={isShowEditModal} editDataSourceInfo={editDataSourceInfo}
+        <AddDataSource
+          visible={isShowAddModal}
           changeShowState={changeShowState}
+          refreshTable={refreshTable}
+        />
+        {/* 编辑数据源的弹窗 */}
+        <EditDataSource
+          editDataSourceInfo={editDataSourceInfo}
+          visible={isShowEditModal}
+          changeShowState={changeShowState}
+          refreshTable={refreshTable}
         />
       </div>
     </ConfigProvider>
   )
 }
 
-// 表格分页配置
-const paginationProps = {
-  showTotal: (val: any) => `共${val}条`,
-  onChange(current: any) {
-    console.log('当前页码', current);
-  },
-  defaultCurrent: 1,
-  // current: 1,
-  showQuickJumper: true,
-  showSizeChanger: true,
-  pageSizeOptions: [10, 20, 30],
-  pageSize: 10,
-  total: 200,
-  locale: {},
-  onShowSizeChange: (current: number, pageSize: number) => {
-    console.log('每页展示数据条数');
-  }
-}
 
 // Table Mock Data
 const data = [
@@ -204,7 +282,7 @@ const data = [
     baseUrl: 'http://www.gs.com',
     code: '0',
     database: 'MySQL',
-    description: '螃蟹在剥我的壳',
+    description: '你站在桥上看风景',
     name: '无名数据源一',
     password: '123',
     port: '8080',
@@ -217,7 +295,7 @@ const data = [
     baseUrl: 'http://www.baidu.com',
     code: '1',
     database: 'YouSQL',
-    description: '笔记本在写我',
+    description: '看风景的人在楼上看你',
     name: '数据源名称2',
     password: '123',
     port: '80',
@@ -230,7 +308,7 @@ const data = [
     baseUrl: 'http://www.pua.cn',
     code: '2',
     database: 'HeSQL',
-    description: '漫天的我落在雪花上',
+    description: '明月装饰了你的窗子',
     name: '很纯粹的一个数据源',
     password: '123',
     port: '443',
@@ -238,37 +316,46 @@ const data = [
     username: 'cdb',
     time: '3333-33-33'
   },
+  {
+    id: '4',
+    baseUrl: 'http://www.pubg.cn',
+    code: '2',
+    database: 'ourSQL',
+    description: '你装饰了别人的梦',
+    name: '99k-数据源',
+    password: '123',
+    port: '443',
+    type: '2',
+    username: 'cdb',
+    time: '4444-44-44'
+  },
 ];
 
 // SelectOptions
 const selectOptions = [
   {
     name: '全部类型',
-    key: 'all',
+    key: null,
+  },
+  {
+    name: 'RDBMS',
+    key: 'RDBMS',
   },
   {
     name: 'API',
-    key: 'api',
+    key: 'RESTFUL_API',
   },
   {
-    name: 'MySQL',
-    key: 'mysql',
+    name: 'JSON',
+    key: 'JSON',
   },
   {
-    name: 'Oracle',
-    key: 'oracle',
+    name: 'CSV',
+    key: 'CSV'
   },
   {
-    name: 'SQL Server',
-    key: 'sqlServer',
-  },
-  {
-    name: 'Elasticsearch',
-    key: 'elasticsearch',
-  },
-  {
-    name: 'ClickHouser',
-    key: 'clickHouser',
+    name: 'EXCEL',
+    key: 'EXCEL',
   }
 ]
 export default memo(DataSource)

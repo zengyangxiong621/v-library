@@ -14,9 +14,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       payload
     })
   }
-  const { name, id, children, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand, hover } = restPorps
+  const { name, id, components, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand, hover } = restPorps
   // 需要区分是单个图层还是文件夹
-  const [isFolder] = useState(Array.isArray(children) && children.length>0)
+  const [isFolder] = useState(Array.isArray(components) && components.length>0)
   // 文件夹是展开了还是关闭了
   const isFolderExpand = Array.isArray(isExpand) && isExpand.includes(id)
   // const [eyeIconShow, setEyeIconShow] =useState(true)

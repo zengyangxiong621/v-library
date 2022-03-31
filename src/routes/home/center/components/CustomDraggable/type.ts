@@ -35,7 +35,7 @@ export interface ILayerGroup {
   collapse: boolean, // 是否展开
   selected: boolean,
   hover: boolean,
-  children: Array<ILayerComponent>
+  components: Array<ILayerComponent>
 }
 
 export interface IConfig {

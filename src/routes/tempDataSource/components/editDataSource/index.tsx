@@ -14,6 +14,8 @@ const EditDataSource = (props: any) => {
     baseUrl,
     code, database, description, name, password, port, type, username
   } = props.editDataSourceInfo
+  // 获取表单实例准备做校验
+  const [editForm] = Form.useForm()
   const { visible, changeShowState } = props
 
   // 通过后台获取到的数据库列表
@@ -32,7 +34,22 @@ const EditDataSource = (props: any) => {
     }]
     setDataBaseList(res)
   }
-  const handleOk = () => {
+  const handleOk = async () => {
+    try {
+      const values: any = await editForm.validateFields()
+      console.log('编辑表单里的数据', values);
+      // TODO 直接在这儿用value作为参数发送请求
+      fetch('http://127.0.0.1:8080/file/upload', {
+        method: 'POST',
+        body: values,
+      }).then((res) => {
+        console.log('res');
+      }).catch(err => console.log('ree', err)
+      )
+    } catch (error) {
+      console.log('编辑数据源表单里的错误', error);
+    }
+    // 关闭框框
     changeShowState('edit')
   }
   const handleCancel = () => {
@@ -55,6 +72,7 @@ const EditDataSource = (props: any) => {
       >
         <Form
           name="EditDataSource"
+          form={editForm}
           labelCol={{
             span: 5,
           }}
@@ -65,7 +83,8 @@ const EditDataSource = (props: any) => {
             rules={[{ required: true }]}
           >
             <Input className='setBackColor'
-              defaultValue={typeReflect[type]}
+              autoComplete='off'
+              defaultValue={type}
               disabled>
             </Input>
           </Form.Item>
@@ -73,7 +92,7 @@ const EditDataSource = (props: any) => {
             label="数据源名称"
             name='name'
             rules={generateSingleRules(true, '请输入数据源名称')}>
-            <Input defaultValue={name} className='setBackColor' placeholder='请输入数据源名称' />
+            <Input defaultValue={name} className='setBackColor' placeholder='请输入数据源名称' autoComplete='off' />
           </Form.Item>
           <Form.Item
             label="描述"
@@ -121,7 +140,7 @@ const EditDataSource = (props: any) => {
                   name='baseUrl'
                   rules={generateSingleRules(true, '请输入Base URL')}
                 >
-                  <Input defaultValue={baseUrl} className="setBackColor"></Input>
+                  <Input autoComplete='off' defaultValue={baseUrl} className="setBackColor"></Input>
                 </Form.Item>
               </>
             )
@@ -133,16 +152,17 @@ const EditDataSource = (props: any) => {
                 <Form.Item label="链接地址" name="ljdz" rules={generateSingleRules(true, '请输入链接地址')}>
                   <Input className="setBackColor"
                     placeholder='请输入'
+                    autoComplete='off'
                   />
                 </Form.Item>
                 <Form.Item label="端口" name="port" rules={generateSingleRules(true, '请输入端口')}>
-                  <Input defaultValue={port} className="setBackColor" placeholder='请输入' />
+                  <Input defaultValue={port} className="setBackColor" placeholder='请输入' autoComplete='off' />
                 </Form.Item>
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
-                  <Input defaultValue={username} className="setBackColor" placeholder='请输入' />
+                  <Input defaultValue={username} className="setBackColor" placeholder='请输入' autoComplete='off' />
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
-                  <Input defaultValue={password} className="setBackColor" placeholder='请输入' />
+                  <Input defaultValue={password} className="setBackColor" placeholder='请输入' autoComplete='off' />
                 </Form.Item>
                 <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请输入')}>
                   <div className='dataBaseName'>

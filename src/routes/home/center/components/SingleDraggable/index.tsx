@@ -26,6 +26,8 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, dimensionConfig, ...prop
     handleSetPosition: (x: number, y: number) => {
       // draggableRef.current.props.position.x = x
       // draggableRef.current.props.position.y = y
+      console.log(props.position);
+
       dimensionConfig.value.find((item: any) => item.name === 'left').value = x
       dimensionConfig.value.find((item: any) => item.name === 'top').value = y
       props.position.x = x
@@ -41,7 +43,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, dimensionConfig, ...prop
   }
   return (
     <div>
-      <Draggable ref={ draggableRef } onStop={ handleStop } { ...props }>
+      <Draggable ref={draggableRef} onStop={handleStop} {...props}>
       </Draggable>
     </div>
   )
