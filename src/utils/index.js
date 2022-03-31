@@ -1,13 +1,17 @@
-export function selectSingleComponent(state, id) {
+import { IConfig, ILayerComponent, ILayerGroup } from '../routes/home/center/components/CustomDraggable/type'
+import { DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from '../routes/home/center/constant'
+
+export function findLayerById(layer, id) {
   let temp = null;
-  state.forEach((item) => {
+  layer.forEach((item) => {
     if (item.id === id) {
-      item.active = true;
       temp = item;
-    } else {
-      item.active = false;
+      return temp;
     }
-    const t = selectSingleComponent(item.components, id);
+    let t = null
+    if ('children' in layer) {
+      t = findLayerById(layer.components, id);
+    }
     if (t) {
       temp = t;
     }
@@ -345,3 +349,48 @@ export const throttle = (fn, delay) => {
     }
   };
 };
+
+
+const judgeIsGroup = (value) => {
+  return value.id.indexOf('group') !== -1
+}
+
+export const calcGroupPosition = (arr, components) => {
+  let xPositionList = []
+  let yPositionList = []
+  arr.forEach((item) => {
+    if(judgeIsGroup(item)) {
+      if('children' in item && item.children.length > 0) {
+        const [ xArr, yArr ] = calcGroupPosition(item.children, components)
+        xPositionList = xPositionList.concat(xArr)
+        yPositionList = yPositionList.concat(yArr)
+      }
+    } else {
+      let component = components.find(it => it.id === item.id)
+      if(component) {
+        // const style_config = component.config.find((item: any) => item.name === STYLE)
+        const style_dimension_config = component.config.find((item) => item.name === DIMENSION)
+        const config = {
+          position: {
+            x: 0,
+            y: 0,
+          },
+          style: {
+            width: 0,
+            height: 0,
+          },
+        }
+        Object.values(style_dimension_config.value).forEach((obj) => {
+          if([ TOP, LEFT ].includes(obj.name)) {
+            config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+          } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
+            config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+          }
+        })
+        xPositionList.push(config.position.x, config.position.x + config.style.width)
+        yPositionList.push(config.position.y, config.position.y + config.style.height)
+      }
+    }
+  })
+  return [ xPositionList, yPositionList ]
+}

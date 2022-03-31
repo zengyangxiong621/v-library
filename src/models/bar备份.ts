@@ -1,6 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
 import {
-  selectSingleComponent,
   findParentNode,
   calculateGroupPosition,
   findNode,
@@ -289,7 +288,6 @@ export default {
     },
     selectedNode(state: IBarState, { payload }: any) {
       // const items = state.draggableItems;
-      // selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload }
     },
     // 选中节点时，保存住整个node对象
@@ -319,7 +317,6 @@ export default {
     },
     selectSingleNode(state: IBarState, { payload: id }: any) {
       // const items = state.draggableItems;
-      // selectSingleComponent(items, id);
       return { ...state }
     },
     testDrag(state: IBarState, { payload: { parentId } }: any) {

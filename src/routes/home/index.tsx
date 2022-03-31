@@ -12,6 +12,8 @@ import Left from './left'
 import Center from './center'
 import Right from './right'
 import CenterHeaderBar from '../home/center/components/topBar/index'
+import ChooseArea from './center/components/ChooseArea'
+import * as React from 'react'
 
 const { Header } = Layout
 
@@ -96,6 +98,8 @@ function App({ bar, dispatch }: any) {
 
   return (
     <Layout>
+      <ChooseArea/>
+
       <Header className="home-header">
         <CustomHeader showWhichBar={showWhichBar} />
       </Header>
