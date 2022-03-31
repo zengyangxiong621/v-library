@@ -127,8 +127,8 @@ const Center = ({ bar, dispatch }: any) => {
       type: 'bar/clearAllStatus',
     })
   }, [ draggableContainerRef, bar.treeRef ])
-  const mouse = useMouse(canvasRef)
-  // const mouse = 0
+  // const mouse = useMouse(canvasRef)
+  const mouse = 0
   return (
     <div className="c-canvas">
       <Ruler/>

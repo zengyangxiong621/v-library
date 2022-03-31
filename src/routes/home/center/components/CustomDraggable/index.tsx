@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 import Draggable from 'react-draggable'
 import SingleDraggable from '../SingleDraggable/index'
@@ -50,7 +50,7 @@ const CustomDraggable
   const allComponentRefs = bar.allComponentRefs
   let supportLinesRef = bar.supportLinesRef
   const [ startPosition, setStartPosition ] = useState({ x: 0, y: 0 })
-
+  const nodeRef = useRef(null)
 
   const calcSupportLinesPosition = () => {
 
@@ -68,11 +68,13 @@ const CustomDraggable
       // 注意一下
       // 选中多个组件、或者多个分组时
       bar.dragStatus = '多个'
-      Object.keys(allComponentRefs).forEach(key => {
-        if(bar.selectedComponentIds.includes(key)) {
-          bar.selectedComponentRefs[key] = allComponentRefs[key]
-        }
-      })
+      console.log('selectedComponentIds', bar.selectedComponentIds)
+      // bar.selectedComponentRefs
+      // Object.keys(allComponentRefs).forEach(key => {
+      //   if(bar.selectedComponentIds.includes(key)) {
+      //     bar.selectedComponentRefs[key] = allComponentRefs[key]
+      //   }
+      // })
     } else {
       // 当选中了一个分组时，或者没有选中时
       if('components' in layer) {
@@ -158,7 +160,7 @@ const CustomDraggable
         }
       })
       console.log('bar.selectedComponentRefs', bar.selectedComponentRefs)
-      console.log('是否在里面',layer.id in bar.selectedComponentRefs)
+      console.log('是否在里面', layer.id in bar.selectedComponentRefs)
       if(layer.id in bar.selectedComponentRefs) {
         bar.isSupportMultiple = true
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
@@ -431,6 +433,7 @@ const CustomDraggable
             <SingleDraggable
               dimensionConfig={ style_dimension_config }
               scale={ bar.canvasScaleValue }
+              nodeRef={ nodeRef }
               cRef={ (ref: any) => {
                 if(layer.id in allComponentRefs) {
                 } else {
@@ -445,6 +448,7 @@ const CustomDraggable
               onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
             >
               <div
+                ref={ nodeRef }
                 // onClickCapture={(ev) => handleClick(ev, layer, config)}
                 data-id={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
