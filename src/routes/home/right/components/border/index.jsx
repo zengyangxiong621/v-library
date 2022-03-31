@@ -47,7 +47,6 @@ const Border = props => {
   }
 
   const typeChange = (val) => {
-    console.log('val', val)
     setBorder({
       ...border,
       type: val

@@ -1,24 +1,20 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
-
-
 import {
   Form,
-  Radio,
+  Checkbox,
   Space,
 } from 'antd';
 
-
-const RadioGroup = props => {
+const CheckBoxGroup = props => {
+  const [form] = Form.useForm();
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const [form] = Form.useForm();
-  const _data = props.data
-
-  // 缩放设置更新
+  const _data = props.data;
+  
   const selectChange = (e) => {
-    _data.value = e.target.value
+    _data.value = e
     props.onChange()
   }
 
@@ -29,19 +25,17 @@ const RadioGroup = props => {
       {...formItemLayout}
       colon={false}
     >
-      <Form.Item name={_data.name} label={_data.displayName}>
-        <Radio.Group defaultValue={_data.value} className="zoom-set" onChange={selectChange}>
+      <Form.Item label={_data.displayName} name={_data.name}>
+        <Checkbox.Group defaultValue={_data.value} className="zoom-set" onChange={selectChange}>
           <Space direction={_data.direction || 'horizontal'}>
             {_data.options.map(item => {
-              return <Radio value={item.value} key={item.value} style={{float: 'left'}}>{item.name}</Radio>
+              return <Checkbox value={item.value} key={item.value}>{item.name}</Checkbox>
             })}
           </Space>
-        </Radio.Group>
+        </Checkbox.Group>
       </Form.Item>
     </Form>
-
   )
 }
 
-export default memo(RadioGroup)
-
+export default memo(CheckBoxGroup)

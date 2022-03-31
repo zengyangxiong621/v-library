@@ -1571,6 +1571,8 @@ export default {
         'name': 'zoom',
         'displayName': '缩放设置',
         'value': '0',
+        type:'radioGroup',
+        direction:'vertical', // 方向
         'options': [
           {
             'name': '按屏幕比例适配',

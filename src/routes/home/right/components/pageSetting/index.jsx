@@ -47,7 +47,7 @@ const PageSetting = ({bar, dispatch ,...props }) => {
           <PageSize data={recommendConfig} onChange={settingsChange} />
           <BackgroundColor data={styleColorConfig} onChange={settingsChange} />
           <UploadImg data={backgroundImg} onChange={settingsChange} />
-          <CusInputNumber data={gridSpacing} onChange={settingsChange} />
+          <CusInputNumber data={gridSpacing} onChange={settingsChange} style={{width:'100%'}} />
           <RadioGroup data={zoomConfig} onChange={settingsChange} />
         </Form>
       </div>

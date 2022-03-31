@@ -250,6 +250,100 @@ const componentConfig = {
         width: 1,
         color: '#000000'
       }
+    },
+    {
+      name: "xxx",
+      displayName: 'xxx',
+      type: 'radioGroup',
+      direction: 'horizontal', // 方向
+      value: 'a',
+      options: [
+        {
+          name: 'a',
+          value: 'a'
+        },
+        {
+          name: 'b',
+          value: 'b'
+        },
+      ]
+    },
+    {
+      name: "xxx",
+      displayName: 'xxx',
+      type: 'input',
+      value: 'a',
+    },
+    {
+      name: 'xxx',
+      displayName: 'xxx',
+      type: 'checkBoxGroup',
+      direction: 'horizontal', // 方向
+      value: ['a'],
+      options: [
+        {
+          name: 'a',
+          value: 'a'
+        },
+        {
+          name: 'b',
+          value: 'b'
+        },
+      ]
+    },
+    {
+      name: 'xxx',
+      dispalyName: 'xxx',
+      type: 'tabs',
+      activeKey: '1', // 默认选中第一项
+      options: [
+        {
+          key: '1',
+          name: 'tab1',
+          value: [
+            {
+              name: 'xxx',
+              displayName: 'xxx',
+              type: 'checkBoxGroup',
+              direction: 'horizontal', // 方向
+              value: ['a'],
+              options: [
+                {
+                  name: 'a',
+                  value: 'a'
+                },
+                {
+                  name: 'b',
+                  value: 'b'
+                },
+              ]
+            },
+          ]
+        },
+        {
+          key: '2',
+          name: 'tab2',
+          value: [
+            {
+              name: 'xxx',
+              displayName: 'xxx',
+              type: 'checkBoxGroup',
+              direction: 'horizontal', // 方向
+              value: ['a'],
+              options: [
+                {
+                  name: 'a',
+                  value: 'a'
+                },
+                {
+                  name: 'b',
+                  value: 'b'
+                },
+              ]
+            },
+          ]
+        }
+      ]
     }
   ],
   'dataConfig': {}, //数据源配置

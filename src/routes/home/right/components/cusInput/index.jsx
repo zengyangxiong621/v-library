@@ -3,20 +3,20 @@ import './index.less'
 
 import {
   Form,
-  InputNumber,
+  Input ,
 } from 'antd';
 
-const CusInputNumber = props => {
+const CusInput = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
   const [form] = Form.useForm();
   const _data = props.data
-  const [spacing, setSpacing] = useState(_data.value)
+  const [value, setValue] = useState(_data.value)
 
-  const gridChange = (e) => {
-    setSpacing(e)
-    _data.value = e
+  const valueChange = (e) => {
+    setValue(e.target.value)
+    _data.value = e.target.value
     props.onChange()
   }
 
@@ -29,12 +29,12 @@ const CusInputNumber = props => {
     >
       <Form.Item label={_data.displayName}>
         <Form.Item  name={_data.name} noStyle>
-          <InputNumber min={0} style={{ width: '100%' }} className="size-input" defaultValue={spacing} onChange={gridChange} />
+          <Input style={{ width: '100%' }} className="cus-input" defaultValue={value} onChange={valueChange} />
         </Form.Item>
       </Form.Item>
     </Form>
   )
 }
 
-export default memo(CusInputNumber)
+export default memo(CusInput)
 

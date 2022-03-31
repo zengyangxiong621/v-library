@@ -8,7 +8,7 @@ import {
   Col
 } from 'antd';
 import { SketchPicker } from 'react-color'
-import { isHex, rgbToHex, hexToRgb, getRgbaNum } from '../../../../../utils/color'
+import { hexToRgb } from '../../../../../utils/color'
 import CusInputNumber from '../cusInputNumber'
 
 const TextStroke = props => {
