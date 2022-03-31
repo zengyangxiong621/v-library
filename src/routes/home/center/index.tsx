@@ -98,7 +98,7 @@ const Center = ({ bar, dispatch }: any) => {
   }, [])
 
   useKeyPress(filterKey, (event) => {
-    if(bar.isSupportMultiple) {
+    if(event.type === 'keydown' && bar.isSupportMultiple) {
       return
     }
     dispatch({
@@ -107,6 +107,17 @@ const Center = ({ bar, dispatch }: any) => {
         isSupportMultiple: event.type === 'keydown',
       },
     })
+    // if(event.type === 'keydown') {
+    //
+    // }
+    // if(bar.selectedComponentOrGroup.length === 0 && event.type === 'keyup') {
+    //   dispatch({
+    //     type: 'bar/save',
+    //     payload: {
+    //       isSupportMultiple: false,
+    //     },
+    //   })
+    // }
   }, {
     events: [ 'keydown', 'keyup' ],
   })
@@ -116,7 +127,7 @@ const Center = ({ bar, dispatch }: any) => {
       type: 'bar/clearAllStatus',
     })
   }, [ draggableContainerRef, bar.treeRef ])
-  const mouse = useMouse(canvasRef);
+  const mouse = useMouse(canvasRef)
   // const mouse = 0
   return (
     <div className="c-canvas">
@@ -146,10 +157,10 @@ const Center = ({ bar, dispatch }: any) => {
               {/*<Button onClick={ handleSelect }>选中</Button>*/ }
             </div>
             <ScaleDragCom
-              mouse={mouse}
-              cRef={(ref: any) => {
+              mouse={ mouse }
+              cRef={ (ref: any) => {
                 bar.scaleDragCompRef = ref
-              }}
+              } }
             />
             <SupportLines
               key="support"

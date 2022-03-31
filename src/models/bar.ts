@@ -2149,6 +2149,7 @@ export default {
     }: any) {
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
+      console.log('state.isSupportMultiple', state.isSupportMultiple)
       if(state.isSupportMultiple) {
         // 多选
         layer.selected = true
@@ -2191,7 +2192,8 @@ export default {
       state.selectedComponentRefs = {}
       state.isSupportMultiple = false
       // todo 选区的时候会点击到这里
-      // state.scaleDragData.style.display = 'none'
+      state.scaleDragData.style.display = 'none'
+
       state.key.length = 0
       state.isFolder = false
       state.supportLinesRef.handleSetPosition(0, 0, 'none')

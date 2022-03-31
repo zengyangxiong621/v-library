@@ -126,7 +126,6 @@ const CustomDraggable
       const xPositionList: number[] = []
       const yPositionList: number[] = []
       bar.selectedComponents.forEach((item: IComponent) => {
-        // const style_config = item.config.find((item: any) => item.name === STYLE)
         const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
         const config: IConfig = {
           position: {
@@ -154,11 +153,14 @@ const CustomDraggable
       const xMoveLength = data.x - data.lastX
       const yMoveLength = data.y - data.lastY
       Object.keys(bar.selectedComponentRefs).forEach(key => {
-        if (key.indexOf('group') !== -1) {
+        if(key.indexOf('group') !== -1) {
           delete bar.selectedComponentRefs[key]
         }
       })
+      console.log('bar.selectedComponentRefs', bar.selectedComponentRefs)
+      console.log('是否在里面',layer.id in bar.selectedComponentRefs)
       if(layer.id in bar.selectedComponentRefs) {
+        bar.isSupportMultiple = true
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
         Object.values(bar.selectedComponentRefs).forEach((item: any) => {
           // todo 有问题
@@ -167,6 +169,8 @@ const CustomDraggable
           // console.log('item', item.position)
           item.handleSetPosition(xMoveLength, yMoveLength)
         })
+      } else {
+        bar.isSupportMultiple = false
       }
     }
   }
@@ -237,8 +241,6 @@ const CustomDraggable
             item.value += yMoveLength
           }
         })
-        // item.config.position.x = item.config.position.x + xMoveLength
-        // item.config.position.y = item.config.position.y + yMoveLength
       })
 
       dispatch({
@@ -452,7 +454,7 @@ const CustomDraggable
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
                 style={ {
                   ...config.style,
-                  // border: '1px solid gray',
+                  border: '1px solid gray',
                   visibility: !layer.scan ? 'hidden' : 'unset',
                 } }>
                 {
