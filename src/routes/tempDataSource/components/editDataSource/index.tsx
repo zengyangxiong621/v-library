@@ -84,7 +84,7 @@ const EditDataSource = (props: any) => {
           >
             <Input className='setBackColor'
               autoComplete='off'
-              defaultValue={typeReflect[type]}
+              defaultValue={type}
               disabled>
             </Input>
           </Form.Item>

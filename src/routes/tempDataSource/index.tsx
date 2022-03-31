@@ -42,7 +42,7 @@ const DataSource = (props: any) => {
    */
   //给个默认参数，初始化和刷新时方便一些
   const defaultParams = {
-    workSpaceId: 1,
+    spaceId: 1,
     type: null,
     name: null,
     ...pageInfo,
@@ -53,7 +53,6 @@ const DataSource = (props: any) => {
     const [err, data] = await useFetch('/visual/datasource/list', {
       body: JSON.stringify(differentParams)
     })
-    console.log('首次数据', data);
     // 请求完成，冲着表格的数据和页码信息
     await resetTableInfo(data)
     setTableLoading(false)
@@ -78,10 +77,10 @@ const DataSource = (props: any) => {
   const searchByType = async (e: any) => {
     // 整合搜索参数
     const finalParams: any = {
-      workSpaceId: 1,
+      spaceId: 1,
       type: dataSourceType,
       name: inputValue === '' ? null : inputValue,
-      pageNo: pageInfo.pageNo,
+      pageNo: 1,
       pageSize: pageInfo.pageSize,
     }
     getTableData(finalParams)
@@ -162,7 +161,7 @@ const DataSource = (props: any) => {
     // locale: {},
     onChange(page: number, pageSize: number) {
       const finalParams: any = {
-        workSpaceId: 1,
+        spaceId: 1,
         type: dataSourceType,
         name: inputValue === '' ? null : inputValue,
         pageNo: page,

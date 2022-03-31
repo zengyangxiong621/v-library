@@ -47,19 +47,33 @@
   .dataBaseName-Select {
     flex: 1;
   }
-
-  .getDataListBtn {
-    width: 122px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #232630;
-    color: rgba(36, 130, 255, 1);
-    border: 1px solid rgba(36, 130, 255, 1);
-    border-radius: 3px;
-    margin-right: 8px;
-    cursor: pointer;
-    user-select: none;
-  }
+}
+.getDataListBtn,
+.testConnect {
+  width: 122px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #232630;
+  color: rgba(36, 130, 255, 1);
+  border: 1px solid rgba(36, 130, 255, 1);
+  border-radius: 3px;
+  margin-right: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.testConnectWrap {
+  width: 122px;
+  height: 32px;
+}
+.testConnect {
+  margin-top: 8px;
+}
+.btnDisabled {
+  // background-color: green !important;
+  background-color: #343740 !important;
+  border: none !important;
+  color: #6d7070 !important;
+  pointer-events: none;
 }
