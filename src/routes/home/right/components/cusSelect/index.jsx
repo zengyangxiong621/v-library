@@ -38,7 +38,7 @@ const CusSelect = props => {
           className="custom-select"
           placeholder="请选择"
           defaultValue={select}
-          style={{ marginBottom: 0 }}
+          style={{ marginBottom: 0,...props.style }}
           onChange={selectChange}
         >
           {_data.options.map((item) => {
