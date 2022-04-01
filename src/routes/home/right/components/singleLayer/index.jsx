@@ -5,6 +5,7 @@ import { deepClone } from '../../../../../utils'
 import LoadAnimation from '../loadAnimation'
 import { EditableTable } from '../fieldMapTable'
 import ComponentCard from '../componentCard'
+import CodeEditor from '../codeEditor'
 
 import componentLib from '../index'
 
@@ -383,6 +384,39 @@ const componentConfig = {
   },
 }
 
+const codeData = {
+  readOnly: false,
+  language: 'javascript',
+  value: `function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }
+  function onLoad(editor) {
+    console.log("i've loaded");
+  }`,
+  showExpand:true
+};
+
 const SingleLayer = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
   const { TabPane } = Tabs;
@@ -422,6 +456,9 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           <TabPane tab="数据" key="2">
             <ComponentCard data={componentConfig}>
               <EditableTable data={dataConfig} onChange={settingsChange} />
+              <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
+                <CodeEditor data={codeData} onChange={settingsChange} />
+              </div>
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">
