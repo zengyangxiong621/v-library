@@ -1,4 +1,4 @@
-import { memo, useState, useRef, useEffect } from 'react'
+import { memo, useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import './index.less'
 import zhCN from 'antd/es/locale/zh_CN'
 
@@ -91,17 +91,18 @@ const DataSource = (props: any) => {
     setIsShowAddModal(true)
   }
   // 关闭数据源弹窗
-  const changeShowState = (modalType: string) => {
+  const changeShowState = useCallback((modalType: string) => {
     modalType === 'add'
       ?
       setIsShowAddModal(false)
       :
       setIsShowEditModal(false)
-  }
+  }, [])
   // 刷新表格数据
-  const refreshTable = () => {
+  const refreshTable = useCallback(() => {
     getTableData()
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   /**********  删除、编辑 操作 *************/
   const delClick = (dataSourceId: string) => {
