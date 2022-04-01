@@ -1939,11 +1939,12 @@ export default {
     calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = []
       let yPositionList: number[] = []
+      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup.length)
       if(state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0]
-        if('children' in firstLayer) {
+        if('components' in firstLayer) {
           // 单个组
-          const positionArr = calcGroupPosition(firstLayer.children, state.components)
+          const positionArr = calcGroupPosition(firstLayer.components, state.components)
           xPositionList = positionArr[0]
           yPositionList = positionArr[1]
         } else {
@@ -2199,7 +2200,7 @@ export default {
       state.selectedComponentRefs = {}
       state.isSupportMultiple = false
       // todo 选区的时候会点击到这里
-      state.scaleDragData.style.display = 'none'
+      // state.scaleDragData.style.display = 'none'
 
       state.key.length = 0
       state.isFolder = false

@@ -24,7 +24,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (xMoveLength: number, yMoveLength: number) => {
-      console.log('props', props)
+      // console.log('nodeRef', nodeRef.current.dataset)
       const x = draggableRef.current.props.position.x + xMoveLength
       const y = draggableRef.current.props.position.y + yMoveLength
       nodeRef.current.style.transform = `translate(${ x }px, ${ y }px)`
@@ -44,6 +44,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
       // })
     },
     position: props.position,
+    nodeRef: nodeRef
   }))
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
     dimensionConfig.value.find((item: any) => item.name === 'left').value = data.x
