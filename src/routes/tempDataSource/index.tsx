@@ -24,6 +24,7 @@ const DataSource = (props: any) => {
     pageNo: 1,
     pageSize: 10,
   })
+  const [tableMap, setTableMap] = useState({})
   const [totalElements, setTotalElements] = useState(0)
   const [tableData, setTableData] = useState([])
   const [tableLoading, setTableLoading] = useState(true)
@@ -47,6 +48,7 @@ const DataSource = (props: any) => {
     type: null,
     name: null,
     ...pageInfo,
+    map: tableMap,
   }
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
@@ -54,9 +56,16 @@ const DataSource = (props: any) => {
     const [err, data] = await useFetch('/visual/datasource/list', {
       body: JSON.stringify(differentParams)
     })
+    if (data) {
+      setTableLoading(false)
+    } else {
+      setTimeout(() => {
+        setTableLoading(false)
+      }, 3000);
+    }
+
     // 请求完成，冲着表格的数据和页码信息
     await resetTableInfo(data)
-    setTableLoading(false)
   }
   // 获取表格数据
   useEffect(() => {
@@ -68,7 +77,6 @@ const DataSource = (props: any) => {
   useEffect(() => {
     setDataSourceType(dataSourceType)
   }, [dataSourceType])
-
 
   // 下拉框选择
   const selectChange = (value: any) => {
@@ -83,6 +91,7 @@ const DataSource = (props: any) => {
       name: inputValue === '' ? null : inputValue,
       pageNo: 1,
       pageSize: pageInfo.pageSize,
+      map: tableMap
     }
     getTableData(finalParams)
   }
@@ -131,7 +140,7 @@ const DataSource = (props: any) => {
       async onOk(close) {
         //TODO 发送删除数据源的请求
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const [err, data] = await useFetch(`/visual/datasource/delete?dataSourceId=${dataSourceId}`, {
+        const [, data] = await useFetch(`/visual/datasource/delete?dataSourceId=${dataSourceId}`, {
         })
         if (data) {
           close()
@@ -149,12 +158,29 @@ const DataSource = (props: any) => {
     setIsShowEditModal(true)
     setEditDataSourceInfo(text)
   }
-  // 排序
-  const tableOnChange = (a: any, b: any, c:any, d: any) => {
-    console.log('a', a);
-    console.log('b', b);
-    console.log('c', c);
-    console.log('d', d);
+  // 表格排序
+  const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
+    // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
+    // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
+    const { field, order } = sorter
+    console.log('sort', sorter);
+    if (action === 'sort') {
+      setTableMap({
+        [field]: order
+      })
+      // 发送请求
+      // const finalParams: TDataSourceParams = {
+      //   spaceId: 1,
+      //   type: dataSourceType,
+      //   name: inputValue === '' ? null : inputValue,
+      //   ...pageInfo,
+      //   map: {
+      //     [field]: order
+      //   },
+      // }
+      // TODO 等后端做好排序，解封即可
+      // getTableData(finalParams)
+    }
   }
   // 表格分页配置
   const paginationProps = {
@@ -175,6 +201,7 @@ const DataSource = (props: any) => {
         name: inputValue === '' ? null : inputValue,
         pageNo: page,
         pageSize,
+        map: tableMap
       }
       getTableData(finalParams)
     },
@@ -185,24 +212,30 @@ const DataSource = (props: any) => {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
+      width: 250,
       className: 'customHeaderColor',
+      ellipsis: true,
       render: (text: any) => <span>{text}</span>,
     },
     {
       title: '数据类型',
       key: 'type',
+      ellipsis: true,
       dataIndex: 'type',
+      width: 250,
     },
     {
       title: '描述',
       dataIndex: 'description',
       key: 'description',
-      width: '490px',
+      ellipsis: true,
     },
     {
       title: '修改时间',
       key: 'updatedAt',
       sorter: true,
+      width: 300,
+      ellipsis: true,
       dataIndex: 'updatedAt',
       render: (time: any, data: any) => {
         // const a = new Date(time)
@@ -216,6 +249,8 @@ const DataSource = (props: any) => {
     {
       title: '操作',
       key: 'action',
+      ellipsis: true,
+      width: 200,
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
@@ -259,6 +294,7 @@ const DataSource = (props: any) => {
         </header>
         <section className='table-wrap'>
           <Table
+            scroll={{ y: 560 }}
             rowClassName='customRowClass'
             loading={tableLoading}
             columns={columns}
@@ -285,62 +321,6 @@ const DataSource = (props: any) => {
   )
 }
 
-
-// Table Mock Data
-const data = [
-  {
-    id: '1',
-    baseUrl: 'http://www.gs.com',
-    code: '0',
-    database: 'MySQL',
-    description: '你站在桥上看风景',
-    name: '无名数据源一',
-    password: '123',
-    port: '8080',
-    type: '0',
-    username: 'cdb',
-    time: '1111-11-11'
-  },
-  {
-    id: '2',
-    baseUrl: 'http://www.baidu.com',
-    code: '1',
-    database: 'YouSQL',
-    description: '看风景的人在楼上看你',
-    name: '数据源名称2',
-    password: '123',
-    port: '80',
-    type: '1',
-    username: 'cdb',
-    time: '2222-22-22',
-  },
-  {
-    id: '3',
-    baseUrl: 'http://www.pua.cn',
-    code: '2',
-    database: 'HeSQL',
-    description: '明月装饰了你的窗子',
-    name: '很纯粹的一个数据源',
-    password: '123',
-    port: '443',
-    type: '2',
-    username: 'cdb',
-    time: '3333-33-33'
-  },
-  {
-    id: '4',
-    baseUrl: 'http://www.pubg.cn',
-    code: '2',
-    database: 'ourSQL',
-    description: '你装饰了别人的梦',
-    name: '99k-数据源',
-    password: '123',
-    port: '443',
-    type: '2',
-    username: 'cdb',
-    time: '4444-44-44'
-  },
-];
 
 // SelectOptions
 const selectOptions = [

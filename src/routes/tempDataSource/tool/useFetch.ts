@@ -28,7 +28,6 @@ const DEFAULT_OPTIONS = {
     "Content-Type": "application/json",
   },
 };
-
 /**
  * description: 处理数据，对请求成功或者失败做统一处理
  * params:  @path -- 请求路径
@@ -39,7 +38,7 @@ export const useFetch = async (
   path: string,
   options: any,
   customErrObj?: object
-): Promise<[Error | null, any]> => {
+): Promise<[Error | null, any, any]> => {
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...options };
   // Fetch API 需要先转换一次格式
@@ -49,14 +48,24 @@ export const useFetch = async (
 
   let [err, data] = await catchErr(finalFetch, customErrObj);
   /**** 根据返回数据进行统一的处理(小拦截器) *****/
+  // 捕获发送请求时的错误
   if (err) {
-    message.error({ content: "请求错误", duration: 2 });
+    message.error({ content: "请求发送失败", duration: 2 });
     // 出错了需要终止程序的执行吗
     // throw Error('终止程序')
+  }
+  // 后端的返回码
+  let code = data.code;
+  // 请求成功发送出去，但是接口错误
+  if (code === 500) {
+    message.error({
+      content: "请求数据失败",
+      duration: 5,
+    });
   }
   if (data) {
     // data = data.data.content
     data = data.data;
   }
-  return [err, data];
+  return [err, data, code];
 };
