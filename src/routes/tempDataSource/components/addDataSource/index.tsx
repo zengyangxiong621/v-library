@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 
@@ -43,7 +44,7 @@ const AddDataSource = (props: any) => {
     }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/connectTest', {
+    const [, data] = await useFetch('/visual/datasource/connectTest', {
       body: JSON.stringify(finalParams)
     })
     setTestConnectLoading(false)
@@ -66,7 +67,7 @@ const AddDataSource = (props: any) => {
     //！ 请求数据库列表
     setGetDBListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/queryDataBaseList', {
+    const [, data] = await useFetch('/visual/datasource/queryDataBaseList', {
       body: JSON.stringify(finalParams)
     })
     setGetDBListLoading(false)
@@ -121,7 +122,7 @@ const AddDataSource = (props: any) => {
     }
     // 发送请求
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/add', {
+    const [, data] = await useFetch('/visual/datasource/add', {
       body: JSON.stringify(finalParams)
     })
     if (data) {
@@ -138,11 +139,11 @@ const AddDataSource = (props: any) => {
     changeShowState('add')
   }
   // 选择数据源类型
-  const selectedChange = (val: any) => {
+  const selectedChange = (val: string) => {
     setCurDataType(val)
   }
   // 选择数据库名
-  const selectDatabase = (val: any) => {
+  const selectDatabase = (val: string) => {
     addForm.setFieldsValue({ database: val })
     // 选择了数据库名，开放测试连接按钮
     setBtnDisabled(false)
@@ -155,7 +156,7 @@ const AddDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix: string = '', customProps?: any) => {
+  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
     let uploadProps = {
       name: 'file',
@@ -255,7 +256,7 @@ const AddDataSource = (props: any) => {
           >
             <TextArea
               // value={baseParams.description}
-              className="setBackColor"
+              className="setBackColor clearScroll"
               autoSize={{ minRows: 3, maxRows: 6 }}
               placeholder="请输入" maxLength={300} />
           </Form.Item>

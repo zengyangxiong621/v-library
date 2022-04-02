@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useEffect, useState } from 'react'
 import './index.less'
@@ -27,7 +26,6 @@ const EditDataSource = (props: any) => {
   } = props.editDataSourceInfo
   const { visible, changeShowState, refreshTable } = props
 
-  console.table('看一下props', props.editDataSourceInfo);
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
 
@@ -86,7 +84,7 @@ const EditDataSource = (props: any) => {
     }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/connectTest', {
+    const [, data] = await useFetch('/visual/datasource/connectTest', {
       body: JSON.stringify(finalParams)
     })
     setTestConnectLoading(false)
@@ -109,7 +107,7 @@ const EditDataSource = (props: any) => {
     //！ 请求数据库列表
     setGetDBListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/queryDataBaseList', {
+    const [, data] = await useFetch('/visual/datasource/queryDataBaseList', {
       body: JSON.stringify(finalParams)
     })
     setGetDBListLoading(false)
@@ -173,7 +171,7 @@ const EditDataSource = (props: any) => {
     // 发送请求
     setLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/update', {
+    const [, data] = await useFetch('/visual/datasource/update', {
       body: JSON.stringify(finalParams)
     })
     setLoading(false)
@@ -201,7 +199,7 @@ const EditDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix: string = '', customProps?: any) => {
+  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
     let uploadProps = {
       name: 'file',
@@ -226,7 +224,6 @@ const EditDataSource = (props: any) => {
       },
       onChange(info: any) {
         const { status, response } = info.file;
-        console.log('status是不是在演我啊', status);
         if (status === 'done') {
           message.success(`${info.file.name} 上传成功`);
           setFileUrl(response.data)
@@ -318,7 +315,7 @@ const EditDataSource = (props: any) => {
           >
             <TextArea
               // defaultValue={description}
-              className="setBackColor"
+              className="setBackColor clearScrollbar"
               autoSize={{ minRows: 3, maxRows: 6 }}
               placeholder="请输入" maxLength={300} />
           </Form.Item>
