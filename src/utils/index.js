@@ -9,7 +9,7 @@ export function findLayerById(layer, id) {
       return temp;
     }
     let t = null
-    if ('children' in layer) {
+    if ('components' in layer) {
       t = findLayerById(layer.components, id);
     }
     if (t) {
@@ -360,8 +360,8 @@ export const calcGroupPosition = (arr, components) => {
   let yPositionList = []
   arr.forEach((item) => {
     if(judgeIsGroup(item)) {
-      if('children' in item && item.children.length > 0) {
-        const [ xArr, yArr ] = calcGroupPosition(item.children, components)
+      if('components' in item && item.components.length > 0) {
+        const [ xArr, yArr ] = calcGroupPosition(item.components, components)
         xPositionList = xPositionList.concat(xArr)
         yPositionList = yPositionList.concat(yArr)
       }

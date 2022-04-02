@@ -68,7 +68,6 @@ const CustomDraggable
       // 注意一下
       // 选中多个组件、或者多个分组时
       bar.dragStatus = '多个'
-      console.log('selectedComponentIds', bar.selectedComponentIds)
       // bar.selectedComponentRefs
       // Object.keys(allComponentRefs).forEach(key => {
       //   if(bar.selectedComponentIds.includes(key)) {
@@ -159,17 +158,22 @@ const CustomDraggable
           delete bar.selectedComponentRefs[key]
         }
       })
-      console.log('bar.selectedComponentRefs', bar.selectedComponentRefs)
-      console.log('是否在里面', layer.id in bar.selectedComponentRefs)
+      // console.log('selectedComponentRefs', bar.selectedComponentRefs)
+      // console.log('-------------------')
+
       if(layer.id in bar.selectedComponentRefs) {
         bar.isSupportMultiple = true
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
-        Object.values(bar.selectedComponentRefs).forEach((item: any) => {
+        Object.keys(bar.selectedComponentRefs).forEach((key: any) => {
+          console.log('key', key)
+          console.log('-------')
+          // console.log('item', key)
+          // console.log('item', bar.selectedComponentRefs[key].current.dataset)
+          // console.log('--------------------')
           // todo 有问题
           // console.log('item', item.position)
-          console.log('-------------------')
           // console.log('item', item.position)
-          item.handleSetPosition(xMoveLength, yMoveLength)
+          bar.selectedComponentRefs[key].handleSetPosition(xMoveLength, yMoveLength)
         })
       } else {
         bar.isSupportMultiple = false
@@ -395,7 +399,7 @@ const CustomDraggable
           // 群组
           if(isGroup && 'components' in layer) {
             group = layer
-            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.children, components)
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.components, components)
             xPositionList = xPositionList.sort((a, b) => {
               return a - b
             })
