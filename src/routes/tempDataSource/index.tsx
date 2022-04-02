@@ -9,6 +9,7 @@ import AddDataSource from './components/addDataSource'
 import EditDataSource from './components/editDataSource'
 
 import { useFetch } from './tool/useFetch'
+import { TDataSourceParams } from './type'
 
 const { Option } = Select
 
@@ -41,13 +42,13 @@ const DataSource = (props: any) => {
    * params: 发送请求所需要的参数
    */
   //给个默认参数，初始化和刷新时方便一些
-  const defaultParams = {
+  const defaultParams: TDataSourceParams = {
     spaceId: 1,
     type: null,
     name: null,
     ...pageInfo,
   }
-  const getTableData = async (differentParams: any = defaultParams) => {
+  const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [err, data] = await useFetch('/visual/datasource/list', {
@@ -70,13 +71,13 @@ const DataSource = (props: any) => {
 
 
   // 下拉框选择
-  const selectChange = (value: any, option: any) => {
+  const selectChange = (value: any) => {
     setDataSourceType(value)
   }
   // 按类型搜索
   const searchByType = async (e: any) => {
     // 整合搜索参数
-    const finalParams: any = {
+    const finalParams: TDataSourceParams = {
       spaceId: 1,
       type: dataSourceType,
       name: inputValue === '' ? null : inputValue,
@@ -144,9 +145,16 @@ const DataSource = (props: any) => {
       }
     })
   }
-  const editClick = (text: any, record: any) => {
+  const editClick = (text: any) => {
     setIsShowEditModal(true)
     setEditDataSourceInfo(text)
+  }
+  // 排序
+  const tableOnChange = (a: any, b: any, c:any, d: any) => {
+    console.log('a', a);
+    console.log('b', b);
+    console.log('c', c);
+    console.log('d', d);
   }
   // 表格分页配置
   const paginationProps = {
@@ -154,14 +162,14 @@ const DataSource = (props: any) => {
     current: pageInfo.pageNo,
     pageSize: pageInfo.pageSize,
     pageSizeOptions: [10, 20, 30],
-    showTotal: (val: any) => `共${val}条`,
+    showTotal: (val: number | string) => `共${val}条`,
 
     defaultCurrent: 1,
     showQuickJumper: true,
     showSizeChanger: true,
     // locale: {},
     onChange(page: number, pageSize: number) {
-      const finalParams: any = {
+      const finalParams: TDataSourceParams = {
         spaceId: 1,
         type: dataSourceType,
         name: inputValue === '' ? null : inputValue,
@@ -194,6 +202,7 @@ const DataSource = (props: any) => {
     {
       title: '修改时间',
       key: 'updatedAt',
+      sorter: true,
       dataIndex: 'updatedAt',
       render: (time: any, data: any) => {
         // const a = new Date(time)
@@ -210,7 +219,7 @@ const DataSource = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
-            <span className='textInOperationColumn' onClickCapture={() => editClick(text, record)}>编辑</span>
+            <span className='textInOperationColumn' onClickCapture={() => editClick(text)}>编辑</span>
             <span className='textInOperationColumn' onClickCapture={() => delClick(record.id)}>删除</span>
           </Space>
         )
@@ -250,11 +259,12 @@ const DataSource = (props: any) => {
         </header>
         <section className='table-wrap'>
           <Table
+            rowClassName='customRowClass'
             loading={tableLoading}
             columns={columns}
             dataSource={tableData}
             pagination={paginationProps}
-            rowClassName='customRowClass'
+            onChange={tableOnChange}
           />
         </section>
         {/* 添加数据源的弹窗 */}

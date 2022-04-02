@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 
@@ -138,11 +139,11 @@ const AddDataSource = (props: any) => {
     changeShowState('add')
   }
   // 选择数据源类型
-  const selectedChange = (val: any) => {
+  const selectedChange = (val: string) => {
     setCurDataType(val)
   }
   // 选择数据库名
-  const selectDatabase = (val: any) => {
+  const selectDatabase = (val: string) => {
     addForm.setFieldsValue({ database: val })
     // 选择了数据库名，开放测试连接按钮
     setBtnDisabled(false)
@@ -155,7 +156,7 @@ const AddDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix: string = '', customProps?: any) => {
+  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
     let uploadProps = {
       name: 'file',

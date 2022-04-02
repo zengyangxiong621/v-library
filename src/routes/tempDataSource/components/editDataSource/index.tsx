@@ -201,7 +201,7 @@ const EditDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix: string = '', customProps?: any) => {
+  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
     let uploadProps = {
       name: 'file',
@@ -226,7 +226,6 @@ const EditDataSource = (props: any) => {
       },
       onChange(info: any) {
         const { status, response } = info.file;
-        console.log('status是不是在演我啊', status);
         if (status === 'done') {
           message.success(`${info.file.name} 上传成功`);
           setFileUrl(response.data)

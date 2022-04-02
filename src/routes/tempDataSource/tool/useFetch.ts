@@ -19,7 +19,7 @@ const catchErr = <T, U = Error>(
       return [err, null];
     });
 };
-export const BASE_URL = "http://10.202.226.250:9572"; // 本地
+export const BASE_URL = "http://10.202.233.230:9572"; // 本地
 // export const BASE_URL = "http://10.201.80.52:9572"; // 线上
 const DEFAULT_OPTIONS = {
   method: "POST",
@@ -37,7 +37,8 @@ const DEFAULT_OPTIONS = {
  */
 export const useFetch = async (
   path: string,
-  options: any
+  options: any,
+  customErrObj?: object
 ): Promise<[Error | null, any]> => {
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...options };
@@ -46,7 +47,7 @@ export const useFetch = async (
     response.json()
   );
 
-  let [err, data] = await catchErr(finalFetch);
+  let [err, data] = await catchErr(finalFetch, customErrObj);
   /**** 根据返回数据进行统一的处理(小拦截器) *****/
   if (err) {
     message.error({ content: "请求错误", duration: 2 });
