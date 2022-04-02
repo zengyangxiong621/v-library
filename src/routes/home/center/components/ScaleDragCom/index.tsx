@@ -20,11 +20,15 @@ type DraggableData = {
   node: any
 }
 const ScaleDragCom = ({ bar, dispatch, cRef, mouse }: any) => {
+  const nodeRef: any = useRef(null)
   const scaleDragData = bar.scaleDragData
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
-    handleSetPosition: () => {
-
+    handleSetPosition: (x: number, y: number) => {
+      const translateArr = nodeRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+      const translateX = Number(translateArr[0])
+      const translateY = Number(translateArr[1])
+      nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
     },
   }))
   const handleScaleEnd = () => {
@@ -50,6 +54,7 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse }: any) => {
       <Draggable scale={ bar.canvasScaleValue } ref={ scaleDragRef } onDrag={ handleDrag } onStop={ handleStop }
                  position={ scaleDragData.position }>
         <ScaleContainer
+          nodeRef={nodeRef}
           style={ { ...scaleDragData.style } }
           isActive={ true }
           onScaleEnd={ handleScaleEnd }
