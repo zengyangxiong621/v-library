@@ -8,6 +8,7 @@ import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData
 import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
 import Text from '../Text'
+import RemoteBaseComponent from '../../../../../components/RemoteBaseComponent';
 import {
   STYLE,
   DIMENSION,
@@ -480,6 +481,7 @@ const CustomDraggable
                     }
                   </div> : <div style={ { width: '100%', height: '100%', color: 'red', fontSize: 16 } }>
                     {/*{ layer.id }*/ }
+                    {/* <RemoteBaseComponent type="text" config={style_config}></RemoteBaseComponent> */}
                     <Text styleConfig={ style_config } staticData={ staticData }/>
                   </div>
                 }
