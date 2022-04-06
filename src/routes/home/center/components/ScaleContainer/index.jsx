@@ -2,7 +2,20 @@ import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 import './index.css'
 
-const ScaleContainer = ({ children, onScaleEnd, bar, isActive, ...props }) => {
+const ScaleContainer = ({ children, onScaleEnd, bar, isActive, mouse, ...props }) => {
+  const elementX = useRef(mouse.elementX)
+  const elementY = useRef(mouse.elementY)
+  // const [elementX, setElementX] = useState(mouse.elementX)
+  // const [elementY, setElementY] = useState(mouse.elementY)
+  useEffect(() => {
+    elementX.current = mouse.elementX
+    elementY.current = mouse.elementY
+    // console.log('mousemousemouse', mouse)
+    // setElementX(mouse.elementX)
+    // setElementY(mouse.elementY)
+  }, [mouse])
+  // console.log('mouse', mouse)
+
   const handleScaleEnd = (x, y, width, height) => {
     onScaleEnd(x, y, width, height)
   }
@@ -29,9 +42,8 @@ const ScaleContainer = ({ children, onScaleEnd, bar, isActive, ...props }) => {
         disY = oldTop + oldHeight
       }
       if (obj.className === 'tl') {
-        console.log('bar.canvasScaleValue', bar.canvasScaleValue)
-        boxRef.current.style.width = oldWidth - (oEv.clientX - oldX) / bar.canvasScaleValue + 'px'
-        boxRef.current.style.height = oldHeight - (oEv.clientY - oldY) / bar.canvasScaleValue + 'px'
+        boxRef.current.style.width = oldWidth - Math.ceil((oEv.clientX - oldX) / bar.canvasScaleValue) + 'px'
+        boxRef.current.style.height = oldHeight - Math.ceil((oEv.clientY - oldY) / bar.canvasScaleValue) + 'px'
         const translateArr = boxRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
         const translateX = translateArr[0]
         const translateY = translateArr[1]
@@ -43,11 +55,18 @@ const ScaleContainer = ({ children, onScaleEnd, bar, isActive, ...props }) => {
         // console.log('相加', Number(translateX) + num)
         console.log(oEv.clientX)
         const currentX = Number(translateX) + num
-        console.log('oEv', oEv)
         // console.log('obj', boxRef )
         // console.log('oEv', oEv.target)
         console.log('-----------')
-        // boxRef.current.style.transform = `translate(${ currentX }px, ${ Number(translateY) + (oEv.clientY - oldY) / bar.canvasScaleValue }px)`
+        console.log('oEv', oEv)
+        // console.log('offsetX', oEv.offsetX)
+        // console.log('offsetY', oEv.offsetY)
+        // console.log('elementX', elementX)
+        // console.log('elementY', elementY)
+        // console.log('mouse', mouse.elementX)
+        console.log('Xref', elementX.current)
+        console.log('Yref', elementY.current)
+        boxRef.current.style.transform = `translate(${ elementX.current / bar.canvasScaleValue }px, ${ elementY.current / bar.canvasScaleValue }px)`
         // console.log('oEv.clientX - oldX', )
         // props.onScale({x: disX, y: disY})
         // bar.scaleDragData.position.x = disX

@@ -4,7 +4,7 @@
 
 .editable-cell-value-wrap {
   background: #191B25;
-  border: 1px solid rgba(57,59,74,1);
+  border: 1px solid rgba(57, 59, 74, 1);
   border-radius: 3px;
   width: 145px;
   height: 32px;
@@ -12,13 +12,16 @@
   padding: 0 11px;
 }
 
-.custom-table .ant-table-thead > tr > th{
+.custom-table .ant-table-thead>tr>th {
   padding: 0;
   height: 32px;
-background: #2B2E3E;
-border-radius: 3px;
-font-size: 14px;
-color: #CCCCCC;
-font-weight: 400;
-text-indent: 10px;
+  background: #2B2E3E;
+  font-size: 14px;
+  color: #CCCCCC;
+  font-weight: 400;
+  text-indent: 10px;
+  border-bottom:1px solid #383B50;
+}
+.custom-table .ant-table-tbody > tr > td{
+  border-bottom:1px solid #383B50;
 }

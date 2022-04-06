@@ -31,7 +31,7 @@ const Left = ({ dispatch, bar, operate }) => {
 
   const [isExpand, setIsExpand] = useState([])
   const [customExpandKeys, setCustomExpandKeys] = useState([])
-  const [isMultipleTree, setIsMultipleTree] = useState(false)
+  const [isMultipleTree, setIsMultipleTree] = useState(bar.isMultipleTree)
   const [selected, setSelected] = useState([])
   const activeIconRef = useRef()
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
@@ -137,13 +137,14 @@ const Left = ({ dispatch, bar, operate }) => {
   const onSelect = (curKey, e, node) => {
     // 和[selected,_]重了
     // const { selected } = e
-    e.selectedNodes.forEach(item => {
-      item.selected = true
-    })
+
     const isSelected = e.selected
     const { key } = e.node
-    console.log('key', key)
-    const isFolder = !!e.node.components
+    const isFolder = !!e.node.children
+    dispatch({
+      type: 'bar/setKeys',
+      payload: e.selectedNodes,
+    })
     // 多选情况下，点击那个剩哪个
     if (!isSelected) {
       let temp = []
@@ -158,6 +159,7 @@ const Left = ({ dispatch, bar, operate }) => {
           isFolder,
         },
       })
+
       return
     }
     dispatch({
@@ -167,11 +169,7 @@ const Left = ({ dispatch, bar, operate }) => {
         isFolder,
       },
     })
-    // 中间画布需要node数组
-    dispatch({
-      type: 'bar/setNodeList',
-      payload: e.selectedNodes,
-    })
+
     setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     setIsShowRightMenu(false)
@@ -320,7 +318,7 @@ const Left = ({ dispatch, bar, operate }) => {
             onSelect={onSelect}
             onRightClick={onRightClick}
             treeData={bar.treeData}
-            selectedKeys={selected}
+            selectedKeys={bar.key}
             titleRender={(nodeData) => {
               return (<div>
                 <EveryTreeNode

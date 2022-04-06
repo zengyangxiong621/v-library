@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
 
-import { useFetch } from '../../tool/useFetch'
+import { useFetch, BASE_URL } from '../../tool/useFetch'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -43,7 +44,7 @@ const AddDataSource = (props: any) => {
     }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/connectTest', {
+    const [, data] = await useFetch('/visual/datasource/connectTest', {
       body: JSON.stringify(finalParams)
     })
     setTestConnectLoading(false)
@@ -66,7 +67,7 @@ const AddDataSource = (props: any) => {
     //！ 请求数据库列表
     setGetDBListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/queryDataBaseList', {
+    const [, data] = await useFetch('/visual/datasource/queryDataBaseList', {
       body: JSON.stringify(finalParams)
     })
     setGetDBListLoading(false)
@@ -110,7 +111,6 @@ const AddDataSource = (props: any) => {
       finalSourceConfig = {}
       finalSourceConfig.fileUrl = fileUrl
     }
-    console.log('finalffffff', finalSourceConfig);
 
     // 东拼西凑攒参数
     const finalParams = {
@@ -122,27 +122,28 @@ const AddDataSource = (props: any) => {
     }
     // 发送请求
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/add', {
+    const [, data] = await useFetch('/visual/datasource/add', {
       body: JSON.stringify(finalParams)
     })
-    console.log('添加Mysql数据源', data);
     if (data) {
       // 成功后  -关闭弹窗 -清除表单 -刷新表格
       changeShowState('add')
       addForm.resetFields()
       refreshTable()
     }
+    /** 要把isConnect重置为false,不然会有缓存,后面的数据库都不用点击测试连接即可直接创建 */
+    setIsConnect(false)
   }
 
   const handleCancel = () => {
     changeShowState('add')
   }
   // 选择数据源类型
-  const selectedChange = (val: any) => {
+  const selectedChange = (val: string) => {
     setCurDataType(val)
   }
   // 选择数据库名
-  const selectDatabase = (val: any) => {
+  const selectDatabase = (val: string) => {
     addForm.setFieldsValue({ database: val })
     // 选择了数据库名，开放测试连接按钮
     setBtnDisabled(false)
@@ -155,14 +156,14 @@ const AddDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix: string = '', customProps?: any) => {
+  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
     let uploadProps = {
       name: 'file',
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || '',
-      action: 'http://10.202.233.230:9572/visual/file/upload',
+      action: `${BASE_URL}/visual/file/upload`,
       beforeUpload(file: any) {
         const { name }: { name: string } = file
         const fileSuffixArr = fileSuffix?.split(',')
@@ -174,6 +175,7 @@ const AddDataSource = (props: any) => {
             content: '请上传符合格式的文件',
             duration: 2
           })
+          file.status = 'error'
           return false
         }
       },
@@ -254,7 +256,7 @@ const AddDataSource = (props: any) => {
           >
             <TextArea
               // value={baseParams.description}
-              className="setBackColor"
+              className="setBackColor clearScroll"
               autoSize={{ minRows: 3, maxRows: 6 }}
               placeholder="请输入" maxLength={300} />
           </Form.Item>
@@ -334,7 +336,7 @@ const AddDataSource = (props: any) => {
                     className="setBackColor" placeholder='请输入' />
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
-                  <Input
+                  <Input.Password
                     autoComplete='off'
                     className="setBackColor" placeholder='请输入' />
                 </Form.Item>
@@ -356,7 +358,9 @@ const AddDataSource = (props: any) => {
                     </Select>
                   </div>
                   <Spin wrapperClassName='testConnectWrap' spinning={testConnectLoading}>
-                    <div className={`${btnDisabled && 'btnDisabled'} testConnect`} onClick={() => testConnect()}>测试连接</div>
+                    <div style={{ cursor: btnDisabled ? 'not-allowed' : 'pointer' }}>
+                      <div className={`${btnDisabled && 'btnDisabled'} testConnect`} onClick={() => testConnect()}>测试连接</div>
+                    </div>
                   </Spin>
                 </Form.Item>
               </>
@@ -388,7 +392,9 @@ const AddDataSource = (props: any) => {
           {
             curDataType === 'EXCEL' && (
               <>
-                <Form.Item label="上传文件"
+                <Form.Item
+                  label="上传文件"
+                  style={{ marginBottom: '40px' }}
                   name='excelFileUrl'
                   rules={generateSingleRules(true, '请输入Base URL')}
                 >
