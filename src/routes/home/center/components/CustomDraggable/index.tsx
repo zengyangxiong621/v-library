@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 import Draggable from 'react-draggable'
 import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
 import './index.less'
 import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
-import { deepClone, layerComponentsFlat } from '../../../../../utils'
+import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
 import Text from '../Text'
 import RemoteBaseComponent from '../../../../../components/RemoteBaseComponent';
@@ -44,55 +44,14 @@ const CustomDraggable
        dispatch,
        treeData,
        mouse,
-     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse }) => {
+     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0 }) => {
   const components: Array<IComponent> = bar.components
   const scaleDragData = bar.scaleDragData
   const isSupportMultiple: boolean = bar.isSupportMultiple
   const allComponentRefs = bar.allComponentRefs
   let supportLinesRef = bar.supportLinesRef
   const [ startPosition, setStartPosition ] = useState({ x: 0, y: 0 })
-  const judgeIsGroup = (value: ILayerComponent | ILayerGroup) => {
-    return value.id.indexOf('group') !== -1
-  }
-  const calcGroupPosition = (arr: Array<ILayerGroup | ILayerComponent>) => {
-    let xPositionList: Array<number> = []
-    let yPositionList: Array<number> = []
-    arr.forEach((item) => {
-      if(judgeIsGroup(item)) {
-        if('children' in item && item.children.length > 0) {
-          const [ xArr, yArr ] = calcGroupPosition(item.children)
-          xPositionList = xPositionList.concat(xArr)
-          yPositionList = yPositionList.concat(yArr)
-        }
-      } else {
-        let component = components.find(it => it.id === item.id)
-        if(component) {
-          // const style_config = component.config.find((item: any) => item.name === STYLE)
-          const style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-          const config: IConfig = {
-            position: {
-              x: 0,
-              y: 0,
-            },
-            style: {
-              width: 0,
-              height: 0,
-            },
-          }
-          Object.values(style_dimension_config.value).forEach((obj: any) => {
-            if([ TOP, LEFT ].includes(obj.name)) {
-              config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-            } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
-              config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
-            }
-          })
-          xPositionList.push(config.position.x, config.position.x + config.style.width)
-          yPositionList.push(config.position.y, config.position.y + config.style.height)
-        }
-      }
-    })
-    return [ xPositionList, yPositionList ]
-  }
+  const nodeRef = useRef(null)
 
   const calcSupportLinesPosition = () => {
 
@@ -110,16 +69,17 @@ const CustomDraggable
       // 注意一下
       // 选中多个组件、或者多个分组时
       bar.dragStatus = '多个'
-      Object.keys(allComponentRefs).forEach(key => {
-        if(bar.selectedComponentIds.includes(key)) {
-          bar.selectedComponentRefs[key] = allComponentRefs[key]
-        }
-      })
+      // bar.selectedComponentRefs
+      // Object.keys(allComponentRefs).forEach(key => {
+      //   if(bar.selectedComponentIds.includes(key)) {
+      //     bar.selectedComponentRefs[key] = allComponentRefs[key]
+      //   }
+      // })
     } else {
       // 当选中了一个分组时，或者没有选中时
-      if('children' in layer) {
+      if('components' in layer) {
         bar.dragStatus = '一分组'
-        bar.selectedComponentIds = layerComponentsFlat(layer.children)
+        bar.selectedComponentIds = layerComponentsFlat((layer as any).components)
       }
     }
     bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
@@ -150,9 +110,11 @@ const CustomDraggable
       // 单个组件移动
       if('config' in component) {
         // const style_config: any = component.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
-        style_dimension_config.value.find((item: any) => item.name === LEFT).value = data.x
-        style_dimension_config.value.find((item: any) => item.name === TOP).value = data.y
+
+        // const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
+        // style_dimension_config.value.find((item: any) => item.name === LEFT).value = data.x
+        // style_dimension_config.value.find((item: any) => item.name === TOP).value = data.y
+
         // component.config.position.x = data.x
         // component.config.position.y = data.y
       }
@@ -166,7 +128,6 @@ const CustomDraggable
       const xPositionList: number[] = []
       const yPositionList: number[] = []
       bar.selectedComponents.forEach((item: IComponent) => {
-        // const style_config = item.config.find((item: any) => item.name === STYLE)
         const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
         const config: IConfig = {
           position: {
@@ -193,14 +154,30 @@ const CustomDraggable
       supportLinesRef.handleSetPosition(xPositionList[0], yPositionList[0])
       const xMoveLength = data.x - data.lastX
       const yMoveLength = data.y - data.lastY
+      Object.keys(bar.selectedComponentRefs).forEach(key => {
+        if(key.indexOf('group') !== -1) {
+          delete bar.selectedComponentRefs[key]
+        }
+      })
+      // console.log('selectedComponentRefs', bar.selectedComponentRefs)
+      // console.log('-------------------')
+
       if(layer.id in bar.selectedComponentRefs) {
+        bar.isSupportMultiple = true
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
-        Object.values(bar.selectedComponentRefs).forEach((item: any) => {
+        Object.keys(bar.selectedComponentRefs).forEach((key: any) => {
+          console.log('key', key)
+          console.log('-------')
+          // console.log('item', key)
+          // console.log('item', bar.selectedComponentRefs[key].current.dataset)
+          // console.log('--------------------')
           // todo 有问题
           // console.log('item', item.position)
-          console.log('-------------------')
-          item.handleSetPosition(item.position.x + xMoveLength, item.position.y + yMoveLength)
+          // console.log('item', item.position)
+          bar.selectedComponentRefs[key].handleSetPosition(xMoveLength, yMoveLength)
         })
+      } else {
+        bar.isSupportMultiple = false
       }
     }
   }
@@ -225,7 +202,7 @@ const CustomDraggable
           item.value = Math.ceil(data.y)
         }
       })
-      console.log('component', component)
+      // console.log('component', component)
       dispatch({
         type: 'bar/save',
         payload: {
@@ -246,18 +223,18 @@ const CustomDraggable
       dispatch({
         type: 'bar/save',
         payload: {
-          sizeChange:{
-            change:true,
-            config:{
-              left:Math.trunc(data.x),
-              top:Math.trunc(data.y),
+          sizeChange: {
+            change: true,
+            config: {
+              left: Math.trunc(data.x),
+              top: Math.trunc(data.y),
               width: config.style.width,
               height: config.style.height,
-            }
-          }
-        }
+            },
+          },
+        },
       })
-    } else if('children' in layer && bar.selectedComponentOrGroup.length === 1) {
+    } else if('components' in layer && bar.selectedComponentOrGroup.length === 1) {
       // 单个组移动
       const xMoveLength = Math.ceil(data.x - startPosition.x)
       const yMoveLength = Math.ceil(data.y - startPosition.y)
@@ -271,8 +248,6 @@ const CustomDraggable
             item.value += yMoveLength
           }
         })
-        // item.config.position.x = item.config.position.x + xMoveLength
-        // item.config.position.y = item.config.position.y + yMoveLength
       })
 
       dispatch({
@@ -418,14 +393,14 @@ const CustomDraggable
               height: 0,
             },
           }
-          let isGroup: boolean = ('children' in layer)
+          let isGroup: boolean = ('components' in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
           let style_config, staticData, style_dimension_config
           // 群组
-          if(isGroup && 'children' in layer) {
+          if(isGroup && 'components' in layer) {
             group = layer
-            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.children)
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.components, components)
             xPositionList = xPositionList.sort((a, b) => {
               return a - b
             })
@@ -463,6 +438,7 @@ const CustomDraggable
             <SingleDraggable
               dimensionConfig={ style_dimension_config }
               scale={ bar.canvasScaleValue }
+              nodeRef={ nodeRef }
               cRef={ (ref: any) => {
                 if(layer.id in allComponentRefs) {
                 } else {
@@ -477,7 +453,9 @@ const CustomDraggable
               onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
             >
               <div
+                ref={ nodeRef }
                 // onClickCapture={(ev) => handleClick(ev, layer, config)}
+                data-id={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
                 onDoubleClick={ (ev) => handleDblClick(ev, layer) }
                 onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
@@ -490,13 +468,13 @@ const CustomDraggable
                 } }>
                 {
                   isGroup ? <div className="no-cancel">
-                    { 'children' in layer && layer.children?.length > 0 ?
+                    { 'components' in layer && (layer as any).components?.length > 0 ?
                       <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
                         <CustomDraggable
-                          mouse={ mouse }
+                          mouse={ layer.selected ? mouse : 0 }
                           bar={ bar }
                           dispatch={ dispatch }
-                          treeData={ layer.children }
+                          treeData={ (layer as any).components }
                         />
                       </div>
                       : ''

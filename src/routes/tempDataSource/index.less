@@ -1,9 +1,10 @@
-@import '~antd/dist/antd.dark.css';
+@import "~antd/dist/antd.dark.css";
 .DataSource-wrap {
   padding: 16px 32px;
   background-color: #171a24;
-  width: 100%;
-  height: 100vh;
+  width: 100vw;
+  max-height: 100vh;
+  overflow: auto;
 
   .title {
     width: 64px;
@@ -34,6 +35,7 @@
 
     .search {
       display: flex;
+
     }
   }
   .table-wrap {
@@ -44,18 +46,44 @@
       font-size: 14px;
       font-weight: 400px;
     }
-    // antD组件库样式
-    // .ant-table-wrapper {
-    //   background-color: #171a24;
+
+    // 自定义表格头部的颜色
+    // th.customHeaderColor {
+    //   background-color: red;
     // }
-    // .ant-table-thead {
-    //   background-color: #171a24;
-    // }
-    .customRowClass:nth-child(even) {
-      background-color:  rgba(53,59,78,0.50);;
+    .ant-table-thead > tr > th {
+      background: #353B4E !important;
     }
-    .customRowClass:nth-child(odd)  {
+    // 去除表头每列前的小竖线
+    .ant-table-thead > tr > th.ant-table-cell::before{
+      display: none;
+    }
+    // 奇偶 行不同背景色
+    .customRowClass:nth-child(even) {
+      background-color: rgba(53, 59, 78, 0.5);
+    }
+    .customRowClass:nth-child(odd) {
       background-color: #171a24;
+    }
+    // 分页器 ”共xx条” 显示在最左侧
+    .ant-pagination-total-text {
+      margin-right: auto;
+    }
+    // 分页器页码样式调整
+    .ant-pagination-item-active {
+      background-color: #2482FF;
+    }
+    .ant-pagination-item-active a {
+      color: #fff;
+    }
+    // 表格右侧滚动条清除
+    .ant-table-body::-webkit-scrollbar {
+      display: none;
+    }
+    // 兼容ie和火狐
+    .ant-table-body {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   }
 }

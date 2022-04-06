@@ -31,7 +31,7 @@ const Left = ({ dispatch, bar, operate }) => {
 
   const [isExpand, setIsExpand] = useState([])
   const [customExpandKeys, setCustomExpandKeys] = useState([])
-  const [isMultipleTree, setIsMultipleTree] = useState(false)
+  const [isMultipleTree, setIsMultipleTree] = useState(bar.isMultipleTree)
   const [selected, setSelected] = useState([])
   const activeIconRef = useRef()
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
@@ -40,7 +40,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const topBarRef = useRef(null)
   const bottomBarRef = useRef(null)
   const headerRef = useRef(null)
-  // TODO 想使用ahooks库,但是点击树节点的时候也会出现没点到树的效果
+  // 监听 树区域 以外的点击
   useClickAway(() => {
     setSelected([])
     dispatch({
@@ -102,42 +102,6 @@ const Left = ({ dispatch, bar, operate }) => {
       }
     }
   }, [])
-  // 监听 树区域 以外的点击
-  useEffect(() => {
-    bar.treeRef = treeRef
-    document.addEventListener('click', (e) => {
-      e.stopPropagation()
-      const {
-        target: { className },
-      } = e
-      // 目前这里只有一棵antTree， 如果后续有其他antTree，需要替换方法
-      const tree = document.querySelector('.ant-tree')
-      // e.target.className 可能不存在或者是一个对象，比如svg的是[object SVGAnimatedString]
-      if (className && typeof className === 'string') {
-        const res = tree.querySelector(`.${e.target.className}`)
-        if (!res) {
-          setSelected([])
-          dispatch({
-            type: 'bar/clearAllStatus',
-          })
-          // 取消选中节点的输入框
-          dispatch({
-            type: 'bar/reName',
-            payload: {
-              value: false,
-            },
-          })
-          // 取消右键菜单
-          setIsShowRightMenu(false)
-          // 将多选树改为单选树
-          setIsMultipleTree(false)
-        }
-      }
-    })
-    return () => {
-      document.removeEventListener('click', (e) => ({}))
-    }
-  }, [])
 
   /**
    * 方法
@@ -173,13 +137,14 @@ const Left = ({ dispatch, bar, operate }) => {
   const onSelect = (curKey, e, node) => {
     // 和[selected,_]重了
     // const { selected } = e
-    e.selectedNodes.forEach(item => {
-      item.selected = true
-    })
+
     const isSelected = e.selected
     const { key } = e.node
-    console.log('key', key)
     const isFolder = !!e.node.children
+    dispatch({
+      type: 'bar/setKeys',
+      payload: e.selectedNodes,
+    })
     // 多选情况下，点击那个剩哪个
     if (!isSelected) {
       let temp = []
@@ -194,6 +159,7 @@ const Left = ({ dispatch, bar, operate }) => {
           isFolder,
         },
       })
+
       return
     }
     dispatch({
@@ -203,11 +169,7 @@ const Left = ({ dispatch, bar, operate }) => {
         isFolder,
       },
     })
-    // 中间画布需要node数组
-    dispatch({
-      type: 'bar/setNodeList',
-      payload: e.selectedNodes,
-    })
+
     setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     setIsShowRightMenu(false)
@@ -215,9 +177,8 @@ const Left = ({ dispatch, bar, operate }) => {
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
     event.stopPropagation()
-    console.log('右键点击了', event);
-    const { children, key } = node
-    const isFolder = !!children
+    const { components, key } = node
+    const isFolder = !!components
     setIsMultipleTree(false)
     // 如果有选中了的节点 并且 此次右击的目标是其中一个，则展开菜单，
     // 否则，重置已选中节点 并 单选中当前节点以及展开右键菜单
@@ -259,8 +220,8 @@ const Left = ({ dispatch, bar, operate }) => {
         if (data[i].id === key) {
           return callback(data[i], i, data)
         }
-        if (data[i].children) {
-          loop(data[i].children, key, callback)
+        if (data[i].components) {
+          loop(data[i].components, key, callback)
         }
       }
     }
@@ -272,36 +233,17 @@ const Left = ({ dispatch, bar, operate }) => {
       arr.splice(index, 1)
       dragObj = item
     })
-
-    console.log('info.dropToGap', info.dropToGap);
-    // if (!info.dropToGap) {
-    //   // Drop on the content
-    //   loop(data, dropKey, (item, index) => {
-    //     item.children = item.children || []
-    //     // where to insert 示例添加到头部，可以是随意位置
-    //     const newGroup = {
-    //       name: '分组',
-    //       id: `${index}${item}-temp`,
-    //       isFolder: true,
-    //       children: []
-    //     }
-    //     // newGroup.children.push(item)
-    //     // newGroup.children.push(dragObj)
-    //     // data.splice(index, 1, newGroup)
-    //     item.children.unshift(dragObj)
-    //   })
-    // } else
     if (
-      (info.node.props.children || []).length > 0 && // Has children
+      (info.node.props.components || []).length > 0 && // Has components
       info.node.props.expanded && // Is expanded
       dropPosition === 1 // On the bottom gap
     ) {
       loop(data, dropKey, item => {
-        item.children = item.children || []
+        item.components = item.components || []
         // where to insert 示例添加到头部，可以是随意位置
-        item.children.unshift(dragObj)
-        // in previous version, we use item.children.push(dragObj) to insert the
-        // item to the tail of the children
+        item.components.unshift(dragObj)
+        // in previous version, we use item.components.push(dragObj) to insert the
+        // item to the tail of the components
       })
     } else {
       let ar
@@ -366,7 +308,7 @@ const Left = ({ dispatch, bar, operate }) => {
             draggable
             blockNode
             fieldNames={
-              { key: 'id' }
+              { key: 'id', children: 'components' }
             }
             multiple={isMultipleTree}
             switcherIcon={<DownOutlined />}
@@ -376,7 +318,7 @@ const Left = ({ dispatch, bar, operate }) => {
             onSelect={onSelect}
             onRightClick={onRightClick}
             treeData={bar.treeData}
-            selectedKeys={selected}
+            selectedKeys={bar.key}
             titleRender={(nodeData) => {
               return (<div>
                 <EveryTreeNode

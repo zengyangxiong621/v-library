@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import { connect } from 'dva'
 import './index.css'
 import { find } from '../../../../../utils/common'
-import BackgroundColor from '../colorFullSetting'
+import BackgroundColor from '../color'
 import PageSize from '../pageSize'
 import UploadImg from '../uploadImg'
 import CusInputNumber from '../cusInputNumber'
@@ -47,7 +47,7 @@ const PageSetting = ({bar, dispatch ,...props }) => {
           <PageSize data={recommendConfig} onChange={settingsChange} />
           <BackgroundColor data={styleColorConfig} onChange={settingsChange} />
           <UploadImg data={backgroundImg} onChange={settingsChange} />
-          <CusInputNumber data={gridSpacing} onChange={settingsChange} />
+          <CusInputNumber data={gridSpacing} onChange={settingsChange} style={{width:'100%'}} />
           <RadioGroup data={zoomConfig} onChange={settingsChange} />
         </Form>
       </div>

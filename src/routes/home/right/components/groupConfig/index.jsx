@@ -6,7 +6,7 @@ import { find } from '../../../../../utils/common'
 
 import PositionSize from '../positionSize'
 import Checkbox from '../checkBox'
-import OpacitySetting from '../opacitySetting'
+import Range from '../range'
 import LoadAnimation from '../loadAnimation'
 
 import {
@@ -53,7 +53,7 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
         >
           <PositionSize data={dimensionConfig} onChange={settingsChange}></PositionSize>
           <Checkbox data={hideDefaultConfig} onChange={settingsChange} />
-          <OpacitySetting data={opacityConfig} onChange={settingsChange} />
+          <Range data={opacityConfig} onChange={settingsChange} />
           <Collapse accordion className="custom-collapse">
             <Panel header="载入动画" key="1">
               <LoadAnimation data={interactionConfig} onChange={settingsChange}/>

@@ -16,8 +16,8 @@ const placeTop: TPlaceGroup = (treeData, selectedNodes) => {
           data.unshift(delItem[0]);
         }
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -42,8 +42,8 @@ const placeBottom: TPlaceGroup = (treeData, selectedNodes) => {
           data.push(delItem[0]);
         }
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -63,9 +63,11 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (ids.includes(item.id)) {
-        data[i] = data.splice(i - 1, 1, data[i])[0];
-      } else if (item.children) {
-        recursiveFn(item.children, ids);
+        if (i !== 0) {
+          data[i] = data.splice(i - 1, 1, data[i])[0];
+        }
+      } else if (item.components) {
+        recursiveFn(item.components, ids);
       }
     }
   };
@@ -79,16 +81,15 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
 const moveDown: TMoveUpOrDown = (treeData, selectedNodes) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, ids: string) => {
-    // 这里不能break
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === ids) {
-        if (i < len - 1) {
+        if (i < len-1) {
           data[i] = data.splice(i + 1, 1, data[i])[0];
+          break;
         }
-        // break;
-      } else if (item.children) {
-        recursiveFn(item.children, ids);
+      } else if (item.components) {
+        recursiveFn(item.components, ids);
       }
     }
   };
@@ -109,8 +110,8 @@ const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
       if (item.id === id) {
         data.splice(i, 1);
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -133,8 +134,8 @@ const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
       const item = data[i];
       if (ids.includes(item.id)) {
         res.push(item[field]);
-      } else if (item.children) {
-        recursiveFn(item.children, ids, field);
+      } else if (item.components) {
+        recursiveFn(item.components, ids, field);
       }
     }
   };
@@ -155,8 +156,8 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
           ? (item.lock = !item.lock)
           : (item.lock = targetLockState);
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -177,8 +178,8 @@ const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
       if (item.id === id) {
         item.scan = targetShowState;
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -205,8 +206,8 @@ const singleShowLayer: threeParams = (
           ? (item.singleShowLayer = !item.singleShowLayer)
           : (item.singleShowLayer = SingleShowLayerState);
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -230,7 +231,7 @@ const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
     scan: true,
     lock: false,
     singleShowLayer: false,
-    children: [],
+    components: [],
   };
   let needPickItem: any = [];
   const recursiveFn = (data: any, id: string, isDone: boolean) => {
@@ -241,12 +242,12 @@ const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
         needPickItem.push(item);
         // 处理到最后一个节点了
         if (isDone) {
-          newGroup.children.push(...needPickItem);
+          newGroup.components.push(...needPickItem);
           data.push(newGroup);
         }
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id, isDone);
+      } else if (item.components) {
+        recursiveFn(item.components, id, isDone);
       }
     }
   };
@@ -269,16 +270,16 @@ const cancelGroup: TMoveUpOrDown = (treeData, selectedNodes) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        if (item.children) {
+        if (item.components) {
           data.splice(i, 1);
           // 取消成组需要倒序一下以保证成组前的顺序
-          item.children.reverse().forEach((x: any) => {
+          item.components.reverse().forEach((x: any) => {
             data.splice(i++, 0, x);
           });
         }
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -306,8 +307,8 @@ const showInput: (a: any[], b: string[], c: boolean) => any[] = (
       } else if (item.id === id) {
         item.showRenameInput = onOrOff;
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -330,8 +331,8 @@ const reName: (a: any[], b: string[], c: string) => any[] = (
       if (item.id === id) {
         item.name = newName;
         break;
-      } else if (item.children) {
-        recursiveFn(item.children, id);
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   };
@@ -347,14 +348,14 @@ const generateTreeData: () => any = () => {
     const preKey = _preKey || "1";
     const tns = _tns || tData;
 
-    const children: any = [];
+    const components: any = [];
     for (let i = 1; i < 4; i++) {
       let key = `${preKey}-${i}`;
       let prefix = "";
       const parentId = +preKey === 0 ? "parent" : preKey;
       let isFolder: boolean = false;
       if (i < 2) {
-        children.push(key);
+        components.push(key);
         isFolder = true;
         prefix = `group_`;
       } else {
@@ -378,9 +379,9 @@ const generateTreeData: () => any = () => {
       return tns;
     }
     const level = _level - 1;
-    children.forEach((key: any, index: string | number) => {
-      tns[index].children = [];
-      return generateData(level, lock, key, tns[index].children);
+    components.forEach((key: any, index: string | number) => {
+      tns[index].components = [];
+      return generateData(level, lock, key, tns[index].components);
     });
   };
   generateData(2, false, "1", tData);
@@ -399,8 +400,8 @@ const generateTreeData: () => any = () => {
 //       if (item.id === id) {
 //         data.splice(i, 0, 1);
 //         break;
-//       } else if (item.children) {
-//         recursiveFn(item.children, id);
+//       } else if (item.components) {
+//         recursiveFn(item.components, id);
 //       }
 //     }
 //   };

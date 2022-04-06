@@ -1,21 +1,87 @@
+.AddDataSource-wrap {
+  // modal组件自带类名
+  .ant-modal-header,
+  .ant-modal-footer {
+    border: none;
+  }
+  .ant-modal-content {
+    width: 534px;
+    // height: 488px;
+    background: #2a2f3d;
+    box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+  }
+  .ant-modal-header {
+    background-color: #2a2f3d;
+  }
+  .ant-modal-footer {
+    padding: 0 36px 24px;
+  }
+  .ant-modal-body {
+    padding: 24px 36px 0 36px;
+  }
+  // 自定义modal按钮类名
+  .modalBtn {
+    width: 88px;
+    height: 32px;
+    border-radius: 3px;
+  }
+  .okBtn {
+    background: #2482ff;
+  }
+  .cancelBtn {
+    margin-right: 8px;
+    background: #4a5068;
+    border: none;
+  }
+
+  /** 统一设置表单下所有输入框的背景色*/
+  .setBackColor {
+    background: #232630;
+  }
+  //
+  .clearScroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .clearScroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .dataBaseName {
   display: flex;
   justify-content: space-between;
   .dataBaseName-Select {
     flex: 1;
   }
-
-  .getDataListBtn {
-    width: 122px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #232630;
-    color: rgba(36, 130, 255, 1);
-    border: 1px solid rgba(36, 130, 255, 1);
-    border-radius: 3px;
-    margin-right: 8px;
-    cursor: pointer;
-  }
+}
+.getDataListBtn,
+.testConnect {
+  width: 122px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #232630;
+  color: rgba(36, 130, 255, 1);
+  border: 1px solid rgba(36, 130, 255, 1);
+  border-radius: 3px;
+  margin-right: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.testConnectWrap {
+  width: 122px;
+  height: 32px;
+}
+.testConnect {
+  margin-top: 8px;
+}
+.btnDisabled {
+  // background-color: green !important;
+  background-color: #343740 !important;
+  border: none !important;
+  color: #6d7070 !important;
+  pointer-events: none;
 }

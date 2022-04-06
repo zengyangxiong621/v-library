@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useImperativeHandle } from 'react'
 import { connect } from 'dva'
 import Draggable from 'react-draggable'
 import ScaleContainer from '../ScaleContainer'
@@ -19,11 +19,14 @@ type DraggableData = {
   y: number
   node: any
 }
-const ScaleDragCom = ({ bar, dispatch }: any) => {
+const ScaleDragCom = ({ bar, dispatch, cRef, mouse }: any) => {
   const scaleDragData = bar.scaleDragData
-  useEffect(() => {
+  useImperativeHandle(cRef, () => ({
+    // changeVal 就是暴露给父组件的方法
+    handleSetPosition: () => {
 
-  }, [])
+    },
+  }))
   const handleScaleEnd = () => {
 
   }
@@ -42,11 +45,6 @@ const ScaleDragCom = ({ bar, dispatch }: any) => {
     })
   }
   const scaleDragRef: any = useRef(null)
-  const handleClick = () => {
-    console.log('scaleDragRef.current', scaleDragRef.current)
-    scaleDragRef.current.props.position.x = 200
-    scaleDragRef.current.props.position.y = 200
-  }
   return (
     <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
       <Draggable scale={ bar.canvasScaleValue } ref={ scaleDragRef } onDrag={ handleDrag } onStop={ handleStop }
@@ -55,6 +53,7 @@ const ScaleDragCom = ({ bar, dispatch }: any) => {
           style={ { ...scaleDragData.style } }
           isActive={ true }
           onScaleEnd={ handleScaleEnd }
+          mouse={ mouse }
         >
           <div>
 

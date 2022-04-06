@@ -31,11 +31,9 @@ const RadioGroup = props => {
     >
       <Form.Item name={_data.name} label={_data.displayName}>
         <Radio.Group defaultValue={_data.value} className="zoom-set" onChange={selectChange}>
-          <Space direction="vertical">
+          <Space direction={_data.direction || 'horizontal'}>
             {_data.options.map(item => {
-              return <Radio value={item.value} key={item.value} style={{
-                width: '100%',
-              }}>{item.name}</Radio>
+              return <Radio value={item.value} key={item.value} style={{float: 'left'}}>{item.name}</Radio>
             })}
           </Space>
         </Radio.Group>

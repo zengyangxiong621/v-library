@@ -1,12 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 import {
-  selectSingleComponent,
+  findLayerById,
   findParentNode,
   calculateGroupPosition,
   findNode,
   moveChildrenComponents,
   mergeComponentLayers,
   layerComponentsFlat,
+  calcGroupPosition,
 } from '../utils'
 
 import {
@@ -25,6 +26,7 @@ import {
   showInput,
   hidden,
 } from '../utils/sideBar'
+import { DIMENSION } from '../routes/home/center/constant'
 
 interface IBarState {
   key: string[];
@@ -39,8 +41,12 @@ interface IBarState {
   componentLayers: any;
   selectedComponentRefs: any;
   supportLinesRef: any;
+  scaleDragCompRef: any;
   selectedComponents: any;
   scaleDragData: any;
+  componentConfig: any,
+  isMultipleTree: boolean,
+  allComponentRefs: any
 }
 
 export default {
@@ -49,6 +55,7 @@ export default {
     key: [],
     isFolder: false,
     lastRightClick: '',
+    isMultipleTree: true,
     operate: '',
     treeData: [],
     selectedComponentOrGroup: [],
@@ -63,6 +70,7 @@ export default {
       y: 200,
     },
     supportLinesRef: null,
+    scaleDragCompRef: null,
     scaleDragData: {
       position: {
         x: 0,
@@ -90,21 +98,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -179,7 +203,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -190,7 +216,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -252,21 +278,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -341,7 +383,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -352,7 +396,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -414,21 +458,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -503,7 +563,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -514,7 +576,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -576,21 +638,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -665,7 +743,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -676,7 +756,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -738,21 +818,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -827,7 +923,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -838,7 +936,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -900,21 +998,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -989,7 +1103,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -1000,7 +1116,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -1062,21 +1178,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -1151,7 +1283,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -1162,7 +1296,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -1224,21 +1358,37 @@ export default {
                 'name': 'left',
                 'displayName': 'X轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'X'
+                }
               },
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'Y'
+                }
               },
               {
                 'name': 'width',
                 'displayName': '宽度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'W'
+                }
               },
               {
                 'name': 'height',
                 'displayName': '高度',
                 'value': 100,
+                type: 'number',
+                config: {
+                  suffix: 'H'
+                }
               },
             ],
           },
@@ -1313,7 +1463,9 @@ export default {
           {
             'name': 'shadow',
             'displayName': '阴影',
-            'type': 'shadow',
+            'type': 'collapse',
+            'hasSwitch':true,
+            'defaultExpand':true,
             'value': [
               {
                 'name': 'show',
@@ -1324,7 +1476,7 @@ export default {
               {
                 'name': 'shadow',
                 'displayName': '外阴影',
-                'type': 'outsideShadow',
+                'type': 'boxShadow',
                 'value': {
                   'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   'vShadow': 0, // 垂直阴影的位置
@@ -1415,11 +1567,19 @@ export default {
         'name': 'gridSpacing',
         'displayName': '栅格间距',
         'value': 5,
+        type: 'number',
+        "config": {
+          "min": 0,
+          "step": 1,
+          suffix:'',  // 输入框后缀
+      }
       },
       {
         'name': 'zoom',
         'displayName': '缩放设置',
         'value': '0',
+        type:'radioGroup',
+        direction:'vertical', // 方向
         'options': [
           {
             'name': '按屏幕比例适配',
@@ -1440,29 +1600,46 @@ export default {
       {
         'name': 'dimension',
         'displayName': '位置尺寸',
+        'type': 'dimensionGroup',
         'config': {
-          'lock': true,
+          'lock': false,
         },
         'value': [
           {
             'name': 'left',
             'displayName': 'X轴坐标',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'X'
+            }
           },
           {
             'name': 'top',
             'displayName': 'Y轴坐标',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'Y'
+            }
           },
           {
             'name': 'width',
             'displayName': '宽度',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'W'
+            }
           },
           {
             'name': 'height',
             'displayName': '高度',
             'value': 100,
+            type: 'number',
+            config: {
+              suffix: 'H'
+            }
           },
         ],
       },
@@ -1470,11 +1647,19 @@ export default {
         'name': 'hideDefault',
         'displayName': '默认隐藏',
         'value': false,
+        'type':'checkBox'
       },
       {
         'name': 'opacity',
         'displayName': '透明度',
         'value': 0.7,
+        'type':'range',
+        "config": {
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            'suffix':'%',  // 输入框后缀
+        }
       },
       {
         'name': 'interaction',
@@ -1508,21 +1693,37 @@ export default {
               'name': 'left',
               'displayName': 'X轴坐标',
               'value': 100,
+              type: 'number',
+              config: {
+                suffix: 'X'
+              }
             },
             {
               'name': 'top',
               'displayName': 'Y轴坐标',
               'value': 100,
+              type: 'number',
+              config: {
+                suffix: 'Y'
+              }
             },
             {
               'name': 'width',
               'displayName': '宽度',
               'value': 100,
+              type: 'number',
+              config: {
+                suffix: 'W'
+              }
             },
             {
               'name': 'height',
               'displayName': '高度',
               'value': 100,
+              type: 'number',
+              config: {
+                suffix: 'H'
+              }
             },
           ],
         },
@@ -1597,7 +1798,9 @@ export default {
         {
           'name': 'shadow',
           'displayName': '阴影',
-          'type': 'shadow',
+          'type': 'collapse',
+          'hasSwitch':true,
+          'defaultExpand':true,
           'value': [
             {
               'name': 'show',
@@ -1608,7 +1811,7 @@ export default {
             {
               'name': 'shadow',
               'displayName': '外阴影',
-              'type': 'outsideShadow',
+              'type': 'boxShadow',
               'value': {
                 'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                 'vShadow': 0, // 垂直阴影的位置
@@ -1655,15 +1858,15 @@ export default {
         },
       },
     },
-    sizeChange:{
-      change:false,
-      config:{
-        left:100,
-        top:100,
-        width:100,
+    sizeChange: {
+      change: false,
+      config: {
+        left: 100,
+        top: 100,
+        width: 100,
         height: 100,
-      }
-    }
+      },
+    },
 
   } as IBarState,
   subscriptions: {
@@ -1695,6 +1898,24 @@ export default {
       // eslint-disable-line
       yield put({ type: 'selectedNode', payload })
     },
+    * chooseLayer({ payload }: any, { call, put }: any): any {
+      yield put({
+        type: 'setSelectedKeys',
+        payload,
+      })
+      yield put({
+        type: 'calcDragScaleData',
+      })
+    },
+    * setKeys({ payload }: any, { call, put }: any): any {
+      yield put({
+        type: 'setNodeList',
+        payload,
+      })
+      yield put({
+        type: 'calcDragScaleData',
+      })
+    },
   },
 
   reducers: {
@@ -1702,9 +1923,78 @@ export default {
       return { ...state, treeData: payload }
     },
     selectedNode(state: IBarState, { payload }: any) {
-      // const items = state.draggableItems;
-      // selectSingleComponent(items, payload.key[0]);
       return { ...state, ...payload }
+    },
+    setSelectedKeys(state: IBarState, { payload }: any) {
+      state.key = payload
+      state.selectedComponentOrGroup = state.key.reduce((pre: any, cur: string) => {
+        pre.push(findLayerById(state.treeData, cur))
+        return pre
+      }, [])
+      state.selectedComponentOrGroup.forEach(item => {
+        item.selected = true
+      })
+      return { ...state, ...payload }
+    },
+    calcDragScaleData(state: IBarState, { payload }: any) {
+      let xPositionList: number[] = []
+      let yPositionList: number[] = []
+      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup.length)
+      if(state.selectedComponentOrGroup.length === 1) {
+        const firstLayer = state.selectedComponentOrGroup[0]
+        if('components' in firstLayer) {
+          // 单个组
+          const positionArr = calcGroupPosition(firstLayer.components, state.components)
+          xPositionList = positionArr[0]
+          yPositionList = positionArr[1]
+        } else {
+          // 单个组件
+          const component = state.components.find(component => component.id === firstLayer.id)
+          const dimensionConfig: any = component.config.find((item: any) => item.name === DIMENSION)
+          dimensionConfig.value.forEach((config: any) => {
+            if([ 'left', 'width' ].includes(config.name)) {
+              xPositionList.push(config.value)
+            } else if([ 'top', 'height' ].includes(config.name)) {
+              yPositionList.push(config.value)
+            }
+          })
+          state.scaleDragData = {
+            position: {
+              x: xPositionList[0],
+              y: yPositionList[0],
+            },
+            style: {
+              display: 'block',
+              width: xPositionList[1],
+              height: yPositionList[1],
+            },
+          }
+          return { ...state }
+        }
+      } else if(state.selectedComponentOrGroup.length > 1) {
+        state.selectedComponentOrGroup.forEach((layer: any) => {
+          const positionArr = calcGroupPosition(state.selectedComponentOrGroup, state.components)
+          xPositionList = positionArr[0]
+          yPositionList = positionArr[1]
+        })
+      }
+      xPositionList.sort((a, b) => a - b)
+      yPositionList.sort((a, b) => a - b)
+      console.log('xPositionList积极', xPositionList)
+      state.scaleDragData = {
+        position: {
+          x: xPositionList[0],
+          y: yPositionList[0],
+        },
+        style: {
+          display: 'block',
+          width: xPositionList[xPositionList.length - 1] - xPositionList[0],
+          height: yPositionList[yPositionList.length - 1] - yPositionList[0],
+        },
+      }
+      return {
+        ...state,
+      }
     },
     // 选中节点时，保存住整个node对象
     setNodeList(state: IBarState, { payload }: any) {
@@ -1732,8 +2022,6 @@ export default {
       return { ...state }
     },
     selectSingleNode(state: IBarState, { payload: id }: any) {
-      // const items = state.draggableItems;
-      // selectSingleComponent(items, id);
       return { ...state }
     },
     testDrag(state: IBarState, { payload: { parentId } }: any) {
@@ -1863,6 +2151,7 @@ export default {
     }: any) {
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
+      console.log('state.isSupportMultiple', state.isSupportMultiple)
       if(state.isSupportMultiple) {
         // 多选
         layer.selected = true
@@ -1885,6 +2174,12 @@ export default {
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
       state.key = state.selectedComponentOrGroup.map(item => item.id)
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup)
+      state.selectedComponentRefs = {}
+      Object.keys(state.allComponentRefs).forEach(key => {
+        if(state.selectedComponentIds.includes(key)) {
+          state.selectedComponentRefs[key] = state.allComponentRefs[key]
+        }
+      })
       console.log('state.selectedComponentIds', state.selectedComponentIds)
 
       return {
@@ -1894,6 +2189,7 @@ export default {
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
       // 先将选中的 layer 的 select 状态清除
+      // todo 选区的时候会点击到这里
       state.selectedComponentOrGroup.forEach(layer => {
         layer.selected = false
       })
@@ -1903,7 +2199,9 @@ export default {
       state.selectedComponents.length = 0
       state.selectedComponentRefs = {}
       state.isSupportMultiple = false
-      state.scaleDragData.style.display = 'none'
+      // todo 选区的时候会点击到这里
+      // state.scaleDragData.style.display = 'none'
+
       state.key.length = 0
       state.isFolder = false
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
@@ -1911,6 +2209,7 @@ export default {
     },
     setComponentConfig(state: IBarState, { payload }: any) {
       const componentConfig = payload
+      state.componentConfig = payload
       console.log('payload', payload)
       // console.log('componentConfig', componentConfig)
       const index = state.components.findIndex((item: any) => {
