@@ -29,6 +29,7 @@ const CusSelect = props => {
       form={form}
       {...formItemLayout}
       colon={false}
+      style={props.formStyle}
     >
       <Form.Item
         name="select"

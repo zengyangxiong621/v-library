@@ -32,34 +32,34 @@ const CusEvent = props => {
   const [tabpanes, setTabpanes] = useState([])
 
   const eventTypes = {
-    name:"eventTypes",
-    displayName:'事件类型',
-    type:'select',
-    value:'click',
-    options:[
-        {
-            name:'当请求完成或数据变化时',
-            value:'dataChange'
-        },
-        {
-            name:'鼠标点击',
-            value:'click'
-        },
-        {
-            name:'鼠标移入',
-            value:'mouseEnter'
-        },
-        {
-            name:'鼠标移出',
-            value:'mouseLeave'
-        },
+    name: "eventTypes",
+    displayName: '事件类型',
+    type: 'select',
+    value: 'click',
+    options: [
+      {
+        name: '当请求完成或数据变化时',
+        value: 'dataChange'
+      },
+      {
+        name: '鼠标点击',
+        value: 'click'
+      },
+      {
+        name: '鼠标移入',
+        value: 'mouseEnter'
+      },
+      {
+        name: '鼠标移出',
+        value: 'mouseLeave'
+      },
     ]
-}
+  }
 
 
   const genExtra = () => (
     <React.Fragment>
-      <PlusCircleOutlined onClick={addEvent} style={{marginRight:'8px'}}/>
+      <PlusCircleOutlined onClick={addEvent} style={{ marginRight: '8px' }} />
       <DeleteOutlined onClick={deleteEvent} />
     </React.Fragment>
   );
@@ -69,9 +69,24 @@ const CusEvent = props => {
     const panes = [...tabpanes]
     const key = uuidv4()
     panes.push({
-      title: `事件${panes.length+1}`,
-      content: 'New Tab Pane',
-      key
+      trigger: 'dataChange',
+      name: `事件${panes.length + 1}`,
+      id: key,
+      conditions: [],
+      conditionType: 'all',
+      actions: [
+        {
+          id: uuidv4(),
+          name: '动作',
+          component: [],
+          animation: {
+            "type": "slideLeft",
+            "timingFunction": "ease",
+            "duration": 1000,
+            "delay": 0
+          }
+        }
+      ]
     });
     setTabpanes(panes)
     setActiveTab(key)
@@ -86,7 +101,7 @@ const CusEvent = props => {
   }
 
   const setTrigger = () => {
-    console.log('eventTypes',eventTypes)
+    console.log('eventTypes', eventTypes)
   }
 
 
@@ -105,8 +120,8 @@ const CusEvent = props => {
             activeKey={activeTab}
           >
             {tabpanes.map(pane => (
-              <TabPane tab={pane.title} key={pane.key}>
-                <CusSelect data={eventTypes} onChange={setTrigger}/>
+              <TabPane tab={pane.name} key={pane.id}>
+                <CusSelect data={eventTypes} onChange={setTrigger} formStyle={{ marginTop: '16px' }} />
               </TabPane>
             ))}
           </Tabs> : '列表为空'}
