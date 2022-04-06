@@ -39,7 +39,7 @@ class Dashboard extends Component<Props, State> {
 
     const { dispatch } = this.props
     dispatch({
-      type: 'dashboard/change',
+      type: 'components/change',
       payload: {
         data: [{
           text: value
