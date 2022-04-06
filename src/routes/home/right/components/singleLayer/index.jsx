@@ -7,12 +7,11 @@ import { EditableTable } from '../fieldMapTable'
 import ComponentCard from '../componentCard'
 import CodeEditor from '../codeEditor'
 import CusSelect from '../cusSelect'
+import CusEvent from '../cusEvent'
 
 import componentLib from '../index'
 
 import {
-  Form,
-  Collapse,
   Tabs,
   Checkbox,
   Button
@@ -442,7 +441,6 @@ const selectData = {
 }
 
 const SingleLayer = ({ bar, dispatch, ...props }) => {
-  const { Panel } = Collapse;
   const { TabPane } = Tabs;
   const formItemLayout = {
     labelAlign: 'left'
@@ -517,13 +515,8 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
-              <Form className="custom-form" {...formItemLayout} colon={false}>
-                <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
-                  <Panel header="载入动画" key="1">
-                    <LoadAnimation data={interactionConfig} onChange={settingsChange} />
-                  </Panel>
-                </Collapse>
-              </Form>
+             <LoadAnimation data={interactionConfig} onChange={settingsChange} />
+             <CusEvent />
             </ComponentCard>
           </TabPane>
         </Tabs>
