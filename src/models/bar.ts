@@ -1959,7 +1959,6 @@ export default {
     calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = []
       let yPositionList: number[] = []
-      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup.length)
       if(state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0]
         if('components' in firstLayer) {
@@ -2000,16 +1999,15 @@ export default {
       }
       xPositionList.sort((a, b) => a - b)
       yPositionList.sort((a, b) => a - b)
-      console.log('xPositionList积极', xPositionList)
       state.scaleDragData = {
         position: {
-          x: xPositionList[0],
-          y: yPositionList[0],
+          x: xPositionList[0] || 0,
+          y: yPositionList[0] || 0,
         },
         style: {
-          display: 'block',
-          width: xPositionList[xPositionList.length - 1] - xPositionList[0],
-          height: yPositionList[yPositionList.length - 1] - yPositionList[0],
+          display: xPositionList[0] ? 'block' : 'none',
+          width: (xPositionList[xPositionList.length - 1] - xPositionList[0]) || 0,
+          height: (yPositionList[yPositionList.length - 1] - yPositionList[0]) || 0,
         },
       }
       return {
@@ -2230,10 +2228,9 @@ export default {
     setComponentConfig(state: IBarState, { payload }: any) {
       const componentConfig = payload
       state.componentConfig = payload
-      console.log('payload', payload)
       // console.log('componentConfig', componentConfig)
       const index = state.components.findIndex((item: any) => {
-        return item.id === componentConfig.id
+        return item.id === payload.id
       })
       state.components.splice(index, 1, componentConfig)
       console.log('index', index)

@@ -11,6 +11,8 @@ import * as React from 'react'
 import { Button } from 'antd'
 import { useClickAway, useKeyPress, useMouse } from 'ahooks'
 import Ruler from './components/Ruler'
+import { IScaleDragData, IStyleConfig } from './type'
+import { DIMENSION } from './constant'
 
 const Center = ({ bar, dispatch }: any) => {
   const filterKey = [ 'ctrl', 'shift' ]
@@ -37,12 +39,9 @@ const Center = ({ bar, dispatch }: any) => {
     if(getCurrentDocumentWidth < 1366) {
       getCurrentDocumentWidth = 1366
     }
-    console.log('(document.querySelector(\'.left-menu\') as any).clientWidth', (document.querySelector('.left-menu') as any).clientWidth)
     const width = getCurrentDocumentWidth - 40 - (document.querySelector('.left-menu') as any).clientWidth - 333
     const height = getCurrentDocumentHeight - 64 - 35 - 40
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
-    console.log('canvasHeight: ', canvasHeight)
-    console.log('height: ', height)
     if(canvasHeight > height) {
       dispatch({
         type: 'bar/save',
@@ -52,14 +51,12 @@ const Center = ({ bar, dispatch }: any) => {
       })
       return
     }
-
     dispatch({
       type: 'bar/save',
       payload: {
         canvasScaleValue: Number((width / recommendConfig.width).toFixed(3)),
       },
     })
-    // const height = recommendConfig.height * bar.canvasScaleValue
   }
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
@@ -107,23 +104,44 @@ const Center = ({ bar, dispatch }: any) => {
         isSupportMultiple: event.type === 'keydown',
       },
     })
-    // if(event.type === 'keydown') {
-    //
-    // }
-    // if(bar.selectedComponentOrGroup.length === 0 && event.type === 'keyup') {
-    //   dispatch({
-    //     type: 'bar/save',
-    //     payload: {
-    //       isSupportMultiple: false,
-    //     },
-    //   })
-    // }
   }, {
     events: [ 'keydown', 'keyup' ],
   })
 
   const mouse = useMouse(canvasRef)
-    // const mouse = 0
+  // const mouse = 0
+
+  /**
+   * @desc 缩放组件在缩放结束后的回调
+   * @param IScaleDragData
+   * @return void
+   */
+  const handleScaleEnd = ({ position: { x, y }, style: { width, height } }: IScaleDragData) => {
+    if(bar.dragStatus === '一组件') {
+      const component = bar.selectedComponents[0]
+      const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION)
+      styleDimensionConfig.value.forEach((item: IStyleConfig) => {
+        switch(item.name) {
+          case 'left':
+            item.value = x
+            break
+          case 'top':
+            item.value = y
+            break
+          case 'width':
+            item.value = width
+            break
+          case 'height':
+            item.value = height
+        }
+      })
+    }
+    dispatch({
+      type: 'bar/save',
+    })
+  }
+
+
   return (
     <div className="c-canvas">
       <Ruler/>
@@ -156,6 +174,7 @@ const Center = ({ bar, dispatch }: any) => {
               cRef={ (ref: any) => {
                 bar.scaleDragCompRef = ref
               } }
+              onScaleEnd={ handleScaleEnd }
             />
             <SupportLines
               key="support"

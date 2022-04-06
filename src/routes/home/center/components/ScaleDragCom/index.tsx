@@ -19,7 +19,7 @@ type DraggableData = {
   y: number
   node: any
 }
-const ScaleDragCom = ({ bar, dispatch, cRef, mouse }: any) => {
+const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
   const nodeRef: any = useRef(null)
   const scaleDragData = bar.scaleDragData
   useImperativeHandle(cRef, () => ({
@@ -31,8 +31,8 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse }: any) => {
       nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
     },
   }))
-  const handleScaleEnd = () => {
-
+  const handleScaleEnd = (data: any) => {
+    onScaleEnd(data)
   }
   const handleDrag = (event: DraggableEvent, data: DraggableData) => {
     scaleDragData.position = {
@@ -54,7 +54,7 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse }: any) => {
       <Draggable scale={ bar.canvasScaleValue } ref={ scaleDragRef } onDrag={ handleDrag } onStop={ handleStop }
                  position={ bar.scaleDragData.position }>
         <ScaleContainer
-          nodeRef={nodeRef}
+          nodeRef={ nodeRef }
           style={ { ...bar.scaleDragData.style } }
           isActive={ true }
           onScaleEnd={ handleScaleEnd }

@@ -28,8 +28,6 @@ const Ruler = ({ bar }) => {
     }
     this.painter = (width, height) => {
       const draggableWrapper = document.querySelector('.canvas-container')
-      console.log('draggableWrapper', draggableWrapper)
-      console.log('draggableWrapper', draggableWrapper.getBoundingClientRect())
       // console.log('parent', draggableWrapper.offsetParent.getBoundingClientRect())
       // console.log('offsetTop', draggableWrapper.offsetTop)
       //
