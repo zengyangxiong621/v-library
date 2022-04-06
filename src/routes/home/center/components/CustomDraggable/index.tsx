@@ -65,8 +65,6 @@ const CustomDraggable
     })
     bar.selectedComponents = []
     bar.dragStatus = '一组件'
-    console.log('layer.id', layer.id)
-    console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
     if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
       console.log('存在', bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id))
       dispatch({
@@ -113,7 +111,6 @@ const CustomDraggable
       // 注意一下
       // 选中多个组件、或者多个分组时
       bar.dragStatus = '多个'
-      console.log('是多个吗')
       // bar.selectedComponentRefs
       // Object.keys(allComponentRefs).forEach(key => {
       //   if(bar.selectedComponentIds.includes(key)) {
@@ -125,15 +122,12 @@ const CustomDraggable
       if('components' in layer) {
         bar.dragStatus = '一分组'
         bar.selectedComponentIds = layerComponentsFlat((layer as any).components)
-        console.log('一分组', bar.selectedComponentIds)
 
       } else {
 
       }
     }
     bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
-
-    console.log('选中的组件', bar.selectedComponents)
     // dispatch({
     //   type: 'bar/save',
     //   payload: {
@@ -181,7 +175,6 @@ const CustomDraggable
     if(bar.dragStatus === '多个') {
       const xPositionList: number[] = []
       const yPositionList: number[] = []
-      console.log('借宿', bar.selectedComponents)
       bar.selectedComponents.forEach((item: IComponent) => {
         const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
         const config: IConfig = {
@@ -250,6 +243,8 @@ const CustomDraggable
           item.value = Math.ceil(data.y)
         }
       })
+      console.log('style', config)
+      console.log('------------------------')
       dispatch({
         type: 'bar/save',
         payload: {

@@ -52,10 +52,10 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse }: any) => {
   return (
     <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
       <Draggable scale={ bar.canvasScaleValue } ref={ scaleDragRef } onDrag={ handleDrag } onStop={ handleStop }
-                 position={ scaleDragData.position }>
+                 position={ bar.scaleDragData.position }>
         <ScaleContainer
           nodeRef={nodeRef}
-          style={ { ...scaleDragData.style } }
+          style={ { ...bar.scaleDragData.style } }
           isActive={ true }
           onScaleEnd={ handleScaleEnd }
           mouse={ mouse }
