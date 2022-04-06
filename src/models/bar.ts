@@ -40,13 +40,16 @@ interface IBarState {
   selectedComponentIds: string[];
   componentLayers: any;
   selectedComponentRefs: any;
+  selectedComponentDOMs: any;
   supportLinesRef: any;
   scaleDragCompRef: any;
   selectedComponents: any;
   scaleDragData: any;
   componentConfig: any,
   isMultipleTree: boolean,
-  allComponentRefs: any
+  allComponentRefs: any,
+  allComponentDOMs: any,
+  isAreaChoose: boolean,
 }
 
 export default {
@@ -62,8 +65,10 @@ export default {
     isSupportMultiple: false,
     selectedComponentIds: [],
     allComponentRefs: {},
+    allComponentDOMs: {},
     selectedComponents: [],
     selectedComponentRefs: {},
+    selectedComponentDOMs: {},
     dragStatus: '',
     supportLinePositionInfo: {
       x: 100,
@@ -100,8 +105,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -109,8 +114,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -118,8 +123,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -127,8 +132,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -204,8 +209,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -280,8 +285,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -289,8 +294,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -298,8 +303,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -307,8 +312,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -384,8 +389,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -460,8 +465,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -469,8 +474,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -478,8 +483,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -487,8 +492,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -564,8 +569,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -640,8 +645,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -649,8 +654,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -658,8 +663,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -667,8 +672,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -744,8 +749,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -820,8 +825,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -829,8 +834,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -838,8 +843,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -847,8 +852,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -924,8 +929,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -1000,8 +1005,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -1009,8 +1014,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -1018,8 +1023,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -1027,8 +1032,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -1104,8 +1109,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -1180,8 +1185,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -1189,8 +1194,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -1198,8 +1203,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -1207,8 +1212,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -1284,8 +1289,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -1360,8 +1365,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'X'
-                }
+                  suffix: 'X',
+                },
               },
               {
                 'name': 'top',
@@ -1369,8 +1374,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'Y'
-                }
+                  suffix: 'Y',
+                },
               },
               {
                 'name': 'width',
@@ -1378,8 +1383,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'W'
-                }
+                  suffix: 'W',
+                },
               },
               {
                 'name': 'height',
@@ -1387,8 +1392,8 @@ export default {
                 'value': 100,
                 type: 'number',
                 config: {
-                  suffix: 'H'
-                }
+                  suffix: 'H',
+                },
               },
             ],
           },
@@ -1464,8 +1469,8 @@ export default {
             'name': 'shadow',
             'displayName': '阴影',
             'type': 'collapse',
-            'hasSwitch':true,
-            'defaultExpand':true,
+            'hasSwitch': true,
+            'defaultExpand': true,
             'value': [
               {
                 'name': 'show',
@@ -1568,18 +1573,18 @@ export default {
         'displayName': '栅格间距',
         'value': 5,
         type: 'number',
-        "config": {
-          "min": 0,
-          "step": 1,
-          suffix:'',  // 输入框后缀
-      }
+        'config': {
+          'min': 0,
+          'step': 1,
+          suffix: '',  // 输入框后缀
+        },
       },
       {
         'name': 'zoom',
         'displayName': '缩放设置',
         'value': '0',
-        type:'radioGroup',
-        direction:'vertical', // 方向
+        type: 'radioGroup',
+        direction: 'vertical', // 方向
         'options': [
           {
             'name': '按屏幕比例适配',
@@ -1611,8 +1616,8 @@ export default {
             'value': 100,
             type: 'number',
             config: {
-              suffix: 'X'
-            }
+              suffix: 'X',
+            },
           },
           {
             'name': 'top',
@@ -1620,8 +1625,8 @@ export default {
             'value': 100,
             type: 'number',
             config: {
-              suffix: 'Y'
-            }
+              suffix: 'Y',
+            },
           },
           {
             'name': 'width',
@@ -1629,8 +1634,8 @@ export default {
             'value': 100,
             type: 'number',
             config: {
-              suffix: 'W'
-            }
+              suffix: 'W',
+            },
           },
           {
             'name': 'height',
@@ -1638,8 +1643,8 @@ export default {
             'value': 100,
             type: 'number',
             config: {
-              suffix: 'H'
-            }
+              suffix: 'H',
+            },
           },
         ],
       },
@@ -1647,19 +1652,19 @@ export default {
         'name': 'hideDefault',
         'displayName': '默认隐藏',
         'value': false,
-        'type':'checkBox'
+        'type': 'checkBox',
       },
       {
         'name': 'opacity',
         'displayName': '透明度',
         'value': 0.7,
-        'type':'range',
-        "config": {
-            "min": 0,
-            "max": 1,
-            "step": 0.01,
-            'suffix':'%',  // 输入框后缀
-        }
+        'type': 'range',
+        'config': {
+          'min': 0,
+          'max': 1,
+          'step': 0.01,
+          'suffix': '%',  // 输入框后缀
+        },
       },
       {
         'name': 'interaction',
@@ -1695,8 +1700,8 @@ export default {
               'value': 100,
               type: 'number',
               config: {
-                suffix: 'X'
-              }
+                suffix: 'X',
+              },
             },
             {
               'name': 'top',
@@ -1704,8 +1709,8 @@ export default {
               'value': 100,
               type: 'number',
               config: {
-                suffix: 'Y'
-              }
+                suffix: 'Y',
+              },
             },
             {
               'name': 'width',
@@ -1713,8 +1718,8 @@ export default {
               'value': 100,
               type: 'number',
               config: {
-                suffix: 'W'
-              }
+                suffix: 'W',
+              },
             },
             {
               'name': 'height',
@@ -1722,8 +1727,8 @@ export default {
               'value': 100,
               type: 'number',
               config: {
-                suffix: 'H'
-              }
+                suffix: 'H',
+              },
             },
           ],
         },
@@ -1799,8 +1804,8 @@ export default {
           'name': 'shadow',
           'displayName': '阴影',
           'type': 'collapse',
-          'hasSwitch':true,
-          'defaultExpand':true,
+          'hasSwitch': true,
+          'defaultExpand': true,
           'value': [
             {
               'name': 'show',
@@ -1867,7 +1872,7 @@ export default {
         height: 100,
       },
     },
-
+    isAreaChoose: false,
   } as IBarState,
   subscriptions: {
     init({ dispatch }: any) {
@@ -1899,6 +1904,12 @@ export default {
       yield put({ type: 'selectedNode', payload })
     },
     * chooseLayer({ payload }: any, { call, put }: any): any {
+      yield put({
+        type: 'save',
+        payload: {
+          isAreaChoose: true
+        }
+      })
       yield put({
         type: 'setSelectedKeys',
         payload,
@@ -1933,6 +1944,15 @@ export default {
       }, [])
       state.selectedComponentOrGroup.forEach(item => {
         item.selected = true
+      })
+      state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup)
+      state.selectedComponents = state.selectedComponents = state.components.filter(component => state.selectedComponentIds.includes(component.id))
+      state.selectedComponentRefs = {}
+      Object.keys(state.allComponentRefs).forEach(key => {
+        if(state.selectedComponentIds.includes(key)) {
+          state.selectedComponentRefs[key] = state.allComponentRefs[key]
+          state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
+        }
       })
       return { ...state, ...payload }
     },
@@ -2178,10 +2198,10 @@ export default {
       Object.keys(state.allComponentRefs).forEach(key => {
         if(state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key]
+          state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
       })
-      console.log('state.selectedComponentIds', state.selectedComponentIds)
-
+      state.selectedComponents = state.selectedComponents = state.components.filter(component => state.selectedComponentIds.includes(component.id))
       return {
         ...state,
       }
@@ -2200,7 +2220,7 @@ export default {
       state.selectedComponentRefs = {}
       state.isSupportMultiple = false
       // todo 选区的时候会点击到这里
-      // state.scaleDragData.style.display = 'none'
+      state.scaleDragData.style.display = 'none'
 
       state.key.length = 0
       state.isFolder = false

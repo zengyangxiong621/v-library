@@ -2,14 +2,18 @@ import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 import './index.css'
 
-const ScaleContainer = ({ children, onScaleEnd, bar, isActive, mouse, ...props }) => {
+const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, ...props }) => {
   const elementX = useRef(mouse.elementX)
   const elementY = useRef(mouse.elementY)
+  const clientX = useRef(mouse.clientX)
+  const clientY = useRef(mouse.clientY)
   // const [elementX, setElementX] = useState(mouse.elementX)
   // const [elementY, setElementY] = useState(mouse.elementY)
   useEffect(() => {
     elementX.current = mouse.elementX
     elementY.current = mouse.elementY
+    clientX.current = mouse.clientX
+    clientY.current = mouse.clientY
     // console.log('mousemousemouse', mouse)
     // setElementX(mouse.elementX)
     // setElementY(mouse.elementY)
@@ -41,54 +45,34 @@ const ScaleContainer = ({ children, onScaleEnd, bar, isActive, mouse, ...props }
       if (disY > oldTop + oldHeight) {
         disY = oldTop + oldHeight
       }
+      const translateArr = boxRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+      const translateX = translateArr[0]
+      const translateY = translateArr[1]
       if (obj.className === 'tl') {
-        boxRef.current.style.width = oldWidth - Math.ceil((oEv.clientX - oldX) / bar.canvasScaleValue) + 'px'
-        boxRef.current.style.height = oldHeight - Math.ceil((oEv.clientY - oldY) / bar.canvasScaleValue) + 'px'
-        const translateArr = boxRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
-        const translateX = translateArr[0]
-        const translateY = translateArr[1]
-        // console.log('translateX', translateX)
-        // console.log('translateY', translateY)
+        console.log('---------------------')
+        console.log('oEv.clientX', oEv.clientX)
+        console.log('elementX', clientX.current)
+        console.log('---------------------')
         let num = (oEv.clientX - oldX) / bar.canvasScaleValue
-        // console.log('num', num)
-        // console.log('translateX', translateX)
-        // console.log('相加', Number(translateX) + num)
-        console.log(oEv.clientX)
         const currentX = Number(translateX) + num
-        // console.log('obj', boxRef )
-        // console.log('oEv', oEv.target)
-        console.log('-----------')
-        console.log('oEv', oEv)
-        // console.log('offsetX', oEv.offsetX)
-        // console.log('offsetY', oEv.offsetY)
-        // console.log('elementX', elementX)
-        // console.log('elementY', elementY)
-        // console.log('mouse', mouse.elementX)
-        console.log('Xref', elementX.current)
-        console.log('Yref', elementY.current)
-        boxRef.current.style.transform = `translate(${ elementX.current / bar.canvasScaleValue }px, ${ elementY.current / bar.canvasScaleValue }px)`
-        // console.log('oEv.clientX - oldX', )
-        // props.onScale({x: disX, y: disY})
-        // bar.scaleDragData.position.x = disX
-        // bar.scaleDragData.position.y = disY
-        // boxRef.current.style.left = disX + 'px'
-        // boxRef.current.style.top = disY + 'px'
-
+        bar.scaleDragData.position = {
+          x: elementX.current / bar.canvasScaleValue,
+          y: elementY.current / bar.canvasScaleValue,
+        }
+        // boxRef.current.style.transform = `translate(${ elementX.current / bar.canvasScaleValue }px, ${ elementY.current / bar.canvasScaleValue }px)`
+        bar.scaleDragData.style.width = Math.abs(clientX.current - oldX) / bar.canvasScaleValue + oldWidth
+        bar.scaleDragData.style.height = Math.abs(clientY.current - oldY) / bar.canvasScaleValue + oldHeight
       } else if (obj.className === 'bl') {
-        boxRef.current.style.width = oldWidth - (oEv.clientX - oldX) + 'px'
-        boxRef.current.style.height = oldHeight + (oEv.clientY - oldY) + 'px'
-        boxRef.current.style.left = disX + 'px'
-        boxRef.current.style.bottom = oldTop + (oEv.clientY + oldY) + 'px'
+        bar.scaleDragData.position.x = elementX.current / bar.canvasScaleValue
+        bar.scaleDragData.style.width = oldWidth - (clientX.current - oldX) / bar.canvasScaleValue
+        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 'tr') {
-        boxRef.current.style.width = oldWidth + (oEv.clientX - oldX) + 'px'
-        boxRef.current.style.height = oldHeight - (oEv.clientY - oldY) + 'px'
-        boxRef.current.style.right = oldLeft - (oEv.clientX - oldX) + 'px'
-        boxRef.current.style.top = disY + 'px'
+        bar.scaleDragData.position.y = elementY.current / bar.canvasScaleValue
+        bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
+        bar.scaleDragData.style.height = oldHeight - (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 'br') {
-        boxRef.current.style.width = oldWidth + (oEv.clientX - oldX) / bar.canvasScaleValue + 'px'
-        boxRef.current.style.height = oldHeight + (oEv.clientY - oldY) / bar.canvasScaleValue + 'px'
-        boxRef.current.style.right = oldLeft - (oEv.clientX - oldX) + 'px'
-        boxRef.current.style.bottom = oldTop + (oEv.clientY + oldY) + 'px'
+        bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
+        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 't') {
         boxRef.current.style.height = oldHeight - (oEv.clientY - oldY) + 'px'
         boxRef.current.style.top = disY + 'px'
@@ -118,11 +102,15 @@ const ScaleContainer = ({ children, onScaleEnd, bar, isActive, mouse, ...props }
   }
   const borderRefs = useRef(null)
   const boxRef = useRef(null)
+
   const borderArr = [
     'r', 'l', 't', 'b', 'br', 'bl', 'tr', 'tl',
   ]
   return (
-    <div { ...props } ref={ boxRef }>
+    <div { ...props } ref={ (ref) => {
+      boxRef.current = ref
+      nodeRef.current = ref
+    } }>
       <div className="box">
         {
           isActive ? borderArr.map((item, index) => {

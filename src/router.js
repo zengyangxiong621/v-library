@@ -5,68 +5,77 @@ import dynamic from 'dva/dynamic'
 
 const menuGlobal = [
   {
-    id: 'home',
-    pid: '0',
-    name: 'home',
-    icon: 'user',
+    name: '可视化平台',
     path: '/',
-    models: () => [import('./models/bar'), import('./models/operate'),import('./models/pageSetting')], //models可多个
+    indexRoute: '/dashboard',
+    models: () => [import('./models/dashboardGlobal'),import('./models/bar'), import('./models/operate'),import('./models/pageSetting')], //models可多个
     component: () => import('./routes/home'),
+    children: []
   },
+
   {
-    id: 'dashboard',
-    pid: '0',
-    name: 'dashboard',
-    icon: 'dashboard',
+    name: '工作空间',
+    path: '/workspace',
+    models: () => [],
+    component: () => import('./routes/home'),
+    children: []
+  },
+
+  {
+    name: '我的数据源',
+    path: '/datasource',
+    models: () => [],
+    component: () => import('./routes/tempDataSource/index.tsx'),
+    children: []
+  },
+
+  {
+    name: '我的仪表盘',
     path: '/dashboard',
-    models: () => [import('./models/dashboard')], // models可多个
-    component: () => import('./routes/dashboard.tsx')
+    models: () => [],
+    component: () => import('./routes/home'),
+    children: [{
+      name: '新建仪表盘',
+      path: '/dashboard/id',
+      models: () => [],
+      component: () => import('./routes/home')
+    }]
   },
+
   {
-    id: 'dataSource',
-    pid: '0',
-    name: 'dataSource',
-    icon: 'dataSource',
-    path: '/dataSource',
-    models: () => [], // models可多个
-    component: () => import('./routes/tempDataSource/index.tsx')
+    name: '我的模板',
+    path: '/template',
+    models: () => [],
+    component: () => import('./routes/home')
   },
+
   {
-    id: 'test',
-    pid: '0',
-    name: 'test',
-    icon: 'test',
-    path: '/test',
-    models: () => [import('./models/test')], // models可多个
-    component: () => import('./routes/test.tsx')
+    name: '门户管理',
+    path: '/portal',
+    models: () => [],
+    component: () => import('./routes/home'),
+    children: [{
+      name: '新建门户',
+      path: '/portal/create/:id',
+      models: () => [],
+      component: () => import('./routes/home')
+    }]
   },
+
   {
-    id: 'one',
-    pid: '0',
-    name: 'aaa页',
-    icon: 'user',
-    path: '/one',
-    models: () => [import('./models/one')], //models可多个
-    component: () => import('./routes/pageOne'),
+    name: '资源中心',
+    path: '/resource',
+    models: () => [],
+    component: () => import('./routes/home'),
+    children: []
   },
+
   {
-    id: 'two',
-    pid: '0',
-    name: 'bbb页',
-    icon: 'user',
-    path: '/one/two',
-    models: () => [import('./models/two')], //models可多个
-    component: () => import('./routes/pageTwo'),
-  },
-  {
-    id: 'three',
-    pid: '0',
-    name: 'ccc页',
-    icon: 'user',
-    path: '/three',
-    models: () => [import('./models/three')], //models可多个
-    component: () => import('./routes/pageThree'),
-  },
+    name: '自定义组件',
+    path: '/components',
+    models: () => [import('./models/components')], // models可多个
+    component: () => import('./routes/components.tsx')
+  }
 ];
 
 // export interface Props {
