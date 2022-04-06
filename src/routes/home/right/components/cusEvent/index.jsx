@@ -9,7 +9,8 @@ import {
   Tabs,
   Slider,
   InputNumber,
-  Collapse
+  Collapse, 
+  Button 
 } from 'antd';
 
 
@@ -31,30 +32,24 @@ const CusEvent = props => {
   const [activeTab, setActiveTab] = useState(null)
   const [tabpanes, setTabpanes] = useState([])
 
-  const eventTypes = {
-    name: "eventTypes",
-    displayName: '事件类型',
-    type: 'select',
-    value: 'click',
-    options: [
-      {
-        name: '当请求完成或数据变化时',
-        value: 'dataChange'
-      },
-      {
-        name: '鼠标点击',
-        value: 'click'
-      },
-      {
-        name: '鼠标移入',
-        value: 'mouseEnter'
-      },
-      {
-        name: '鼠标移出',
-        value: 'mouseLeave'
-      },
-    ]
-  }
+  const eventTypes = [
+    {
+      name: '当请求完成或数据变化时',
+      value: 'dataChange'
+    },
+    {
+      name: '鼠标点击',
+      value: 'click'
+    },
+    {
+      name: '鼠标移入',
+      value: 'mouseEnter'
+    },
+    {
+      name: '鼠标移出',
+      value: 'mouseLeave'
+    },
+  ]
 
 
   const genExtra = () => (
@@ -100,8 +95,9 @@ const CusEvent = props => {
     setActiveTab(key)
   }
 
-  const setTrigger = () => {
-    console.log('eventTypes', eventTypes)
+  const eventTypeChange = (e, pane) => {
+    console.log('e', e,pane)
+    pane.trigger = e
   }
 
 
@@ -121,7 +117,30 @@ const CusEvent = props => {
           >
             {tabpanes.map(pane => (
               <TabPane tab={pane.name} key={pane.id}>
-                <CusSelect data={eventTypes} onChange={setTrigger} formStyle={{ marginTop: '16px' }} />
+                <Form.Item
+                  name="trigger"
+                  label='事件类型'
+                >
+                  <Select
+                    className="custom-select"
+                    placeholder="请选择"
+                    defaultValue={pane.trigger}
+                    style={{ marginBottom: 0 }}
+                    onChange={e => eventTypeChange(e, pane)}
+                  >
+                    {eventTypes.map((item) => {
+                      return <Option value={item.value} key={item.value}>{item.name}</Option>
+                    })}
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name="conditions"
+                  label='条件'
+                >
+                  <div className="conditon-wraper">
+                    <Button>添加条件</Button>
+                  </div>
+                </Form.Item>
               </TabPane>
             ))}
           </Tabs> : '列表为空'}
