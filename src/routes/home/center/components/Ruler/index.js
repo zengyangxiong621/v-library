@@ -23,7 +23,7 @@ const Ruler = ({ bar }) => {
     this.clearCanvas = () => {
       const contextTop = this.canvasTop.getContext('2d')
       const contextLeft = this.canvasLeft.getContext('2d')
-      contextTop.clearRect(0, 0, 1920, 20)
+      contextTop.clearRect(0, 0, 1920 , 20)
       contextLeft.clearRect(0, 0, 20, 1147)
     }
     this.painter = (width, height) => {
@@ -38,10 +38,12 @@ const Ruler = ({ bar }) => {
       const contextLeft = this.canvasLeft.getContext('2d')
       contextTop.beginPath()
       for (let i = -100; i < width; i += 10) {
+        contextTop.strokeStyle = 'white'
+        contextTop.fillStyle = 'white'
 
         //顶部标尺线绘制, 比例尺
         const y = (i % 50 === 0) ? 0 : 10
-        contextTop.moveTo(i + 50, y)
+        contextTop.moveTo(i + 50, y + 5)
         contextTop.lineTo(i + 50, 20)
 
         //顶部标尺数字绘制
@@ -54,10 +56,11 @@ const Ruler = ({ bar }) => {
         //左侧标尺线绘制
         contextLeft.save()
         contextLeft.beginPath()
-
+        contextLeft.strokeStyle = 'white'
+        contextLeft.fillStyle = 'white'
         const x = (i % 50 === 0) ? 0 : 10
-        contextLeft.moveTo(x, i + 20)
-        contextLeft.lineTo(15, i + 20)
+        contextLeft.moveTo(x + 5, i + 20)
+        contextLeft.lineTo(20, i + 20)
 
         contextLeft.stroke()
         contextLeft.closePath()
@@ -82,14 +85,14 @@ const Ruler = ({ bar }) => {
     const canvas = dom.current
     const context = canvas.getContext('2d')
     // ctx.fillStyle = '#151620'
-    context.fillStyle = 'pink'
+    context.fillStyle = 'white'
     context.fillRect(0, 0, direction === 'vertical' ? 10000 : 30, direction === 'vertical' ? 10000 : 30)
     context.beginPath()
     // context.moveTo(AXIS_ORIGIN.x, AXIS_MARGIN);
     // context.lineTo(AXIS_RIGHT,    AXIS_MARGIN)
     context.closePath()
     context.lineWidth = 0.5
-    context.strokeStyle = 'black'
+    context.strokeStyle = 'white'
   }
 
 
@@ -97,11 +100,11 @@ const Ruler = ({ bar }) => {
     <>
 
       <canvas id="canvasTop" height="20" width="1920"
-              style={ { position: 'absolute', left: 0, top: 0, background: 'white' } }>
+              style={ { position: 'absolute', left: 0, top: 0, background: '#151620' } }>
         <p>Your browserdoes not support the canvas element!</p>
       </canvas>
       <canvas id="canvasLeft" width="20" height="1080"
-              style={ { position: 'absolute', left: 0, top: 0, background: 'white' } }>
+              style={ { position: 'absolute', left: 0, top: 0, background: '#151620' } }>
         <p>Your browserdoes not support the canvas element!</p>
       </canvas>
     </>

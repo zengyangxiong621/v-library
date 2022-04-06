@@ -125,6 +125,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         selectedList.current = selectedIds
       }
       document.onmouseup = (e) => {
+        console.log('11111111111111111')
         e.preventDefault()
         dispatch({
           type: 'bar/chooseLayer',

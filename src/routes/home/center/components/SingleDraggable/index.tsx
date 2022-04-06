@@ -24,31 +24,19 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (xMoveLength: number, yMoveLength: number) => {
-      // console.log('nodeRef', nodeRef.current.dataset)
       const x = draggableRef.current.props.position.x + xMoveLength
       const y = draggableRef.current.props.position.y + yMoveLength
-      nodeRef.current.style.transform = `translate(${ x }px, ${ y }px)`
-
       draggableRef.current.props.position.x = x
       draggableRef.current.props.position.y = y
-      // console.log('draggableRef.current.props.position', draggableRef.current.props.position)
       dimensionConfig.value.find((item: any) => item.name === 'left').value = x
       dimensionConfig.value.find((item: any) => item.name === 'top').value = y
-
-      // props.position.x = x
-      // props.position.y = y
-
-
-      // dispatch({
-      //   type: 'bar/test',
-      // })
     },
     position: props.position,
     nodeRef: nodeRef
   }))
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
-    dimensionConfig.value.find((item: any) => item.name === 'left').value = data.x
-    dimensionConfig.value.find((item: any) => item.name === 'top').value = data.y
+    // dimensionConfig.value.find((item: any) => item.name === 'left').value = data.x
+    // dimensionConfig.value.find((item: any) => item.name === 'top').value = data.y
     onStop(ev, data)
   }
   return (
