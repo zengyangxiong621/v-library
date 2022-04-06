@@ -2222,7 +2222,7 @@ export default {
       // todo 选区的时候会点击到这里
       state.scaleDragData.style.display = 'none'
 
-      state.key.length = 0
+      state.key = []
       state.isFolder = false
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
       return { ...state }

@@ -33,7 +33,7 @@ const menuGlobal = [
     name: '我的仪表盘',
     path: '/dashboard',
     models: () => [],
-    component: () => import('./routes/home'),
+    component: () => import('./routes/myDashboard'),
     children: [{
       name: '新建仪表盘',
       path: '/dashboard/id',
