@@ -75,6 +75,13 @@ const menuGlobal = [
     path: '/components',
     models: () => [import('./models/components')], // models可多个
     component: () => import('./routes/components.tsx')
+  },
+  {
+    name:'header',
+    path: '/header',
+    models: () => [],
+    component: () => import('./components/header'),
+    children: []
   }
 ];
 
