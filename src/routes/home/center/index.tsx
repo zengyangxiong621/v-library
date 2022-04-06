@@ -122,13 +122,8 @@ const Center = ({ bar, dispatch }: any) => {
     events: [ 'keydown', 'keyup' ],
   })
 
-  useClickAway(() => {
-    dispatch({
-      type: 'bar/clearAllStatus',
-    })
-  }, [ draggableContainerRef, bar.treeRef ])
-  // const mouse = useMouse(canvasRef)
-  const mouse = 0
+  const mouse = useMouse(canvasRef)
+    // const mouse = 0
   return (
     <div className="c-canvas">
       <Ruler/>
@@ -170,7 +165,7 @@ const Center = ({ bar, dispatch }: any) => {
               } }
             />
             <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
-              <CustomDraggable mouse={ mouse } treeData={ treeData }/>
+              <CustomDraggable mouse={ 0 } treeData={ treeData }/>
             </div>
           </div>
         </div>

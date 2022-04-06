@@ -42,6 +42,11 @@ const Left = ({ dispatch, bar, operate }) => {
   const headerRef = useRef(null)
   // 监听 树区域 以外的点击
   useClickAway(() => {
+    console.log('2222222222222222222222222222')
+    console.log('bar', bar.isAreaChoose)
+    if(bar.isAreaChoose) {
+      return
+    }
     setSelected([])
     dispatch({
       type: 'bar/clearAllStatus',
