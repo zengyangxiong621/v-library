@@ -13,6 +13,7 @@ import { useClickAway, useKeyPress, useMouse } from 'ahooks'
 import Ruler from './components/Ruler'
 import { IScaleDragData, IStyleConfig } from './type'
 import { DIMENSION } from './constant'
+import RulerLines from './components/RulerLines'
 
 const Center = ({ bar, dispatch }: any) => {
   const filterKey = [ 'ctrl', 'shift' ]
@@ -144,7 +145,9 @@ const Center = ({ bar, dispatch }: any) => {
 
   return (
     <div className="c-canvas">
-      <Ruler/>
+      <Ruler
+        mouse={ mouse }
+      />
       <div
         ref={ canvasRef }
         className="canvas-container"
@@ -164,11 +167,6 @@ const Center = ({ bar, dispatch }: any) => {
           } }
         >
           <div className="draggable-wrapper">
-            <div style={ { position: 'absolute', left: 0, top: 0 } }>
-              {/*<Button onClick={ handleClick }>刷新</Button>*/ }
-              {/*<Button onClick={ handleDelete }>删除</Button>*/ }
-              {/*<Button onClick={ handleSelect }>选中</Button>*/ }
-            </div>
             <ScaleDragCom
               mouse={ mouse }
               cRef={ (ref: any) => {
@@ -183,6 +181,8 @@ const Center = ({ bar, dispatch }: any) => {
                 return bar.supportLinesRef
               } }
             />
+            <RulerLines/>
+
             <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
               <CustomDraggable mouse={ 0 } treeData={ treeData }/>
             </div>
@@ -194,6 +194,7 @@ const Center = ({ bar, dispatch }: any) => {
         bottom: '50px',
         right: '20px',
         color: '#999',
+        userSelect: 'none',
       } }>
         按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
         { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }

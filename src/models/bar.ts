@@ -50,6 +50,14 @@ interface IBarState {
   allComponentRefs: any,
   allComponentDOMs: any,
   isAreaChoose: boolean,
+  rulerLines: Array<{
+    position: {
+      x: number,
+      y: number
+    },
+    direction: 'horizon' | 'vertical',
+    display: 'none' | 'block'
+  }>
 }
 
 export default {
@@ -1873,6 +1881,24 @@ export default {
       },
     },
     isAreaChoose: false,
+    rulerLines: [
+      {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        direction: 'horizon',
+        display: 'block',
+      },
+      {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        direction: 'vertical',
+        display: 'block',
+      },
+    ],
   } as IBarState,
   subscriptions: {
     init({ dispatch }: any) {
@@ -1907,8 +1933,8 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          isAreaChoose: true
-        }
+          isAreaChoose: true,
+        },
       })
       yield put({
         type: 'setSelectedKeys',
