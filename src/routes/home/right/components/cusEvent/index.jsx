@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
 import { v4 as uuidv4 } from 'uuid';
-import CusSelect from '../cusSelect'
+import EventDrawer from '../eventDrawer'
 
 import {
   Form,
@@ -9,8 +9,9 @@ import {
   Tabs,
   Slider,
   InputNumber,
-  Collapse, 
-  Button 
+  Collapse,
+  Button,
+  Drawer
 } from 'antd';
 
 
@@ -31,6 +32,8 @@ const CusEvent = props => {
   const _data = props.data
   const [activeTab, setActiveTab] = useState(null)
   const [tabpanes, setTabpanes] = useState([])
+  const [drawerVisible, setDrawerVisible] = useState(false)
+  const [activePane, setActivePane] = useState(null)
 
   const eventTypes = [
     {
@@ -85,6 +88,8 @@ const CusEvent = props => {
     });
     setTabpanes(panes)
     setActiveTab(key)
+    const activePane = panes.find(item => { return item.id === key })
+    setActivePane(activePane)
   }
 
   const deleteEvent = () => {
@@ -93,11 +98,42 @@ const CusEvent = props => {
 
   const tabsChange = key => {
     setActiveTab(key)
+    const activePane = tabpanes.find(item => { return item.id === key })
+    setActivePane(activePane)
   }
 
+  // 事件类型
   const eventTypeChange = (e, pane) => {
-    console.log('e', e,pane)
+    console.log('e', e, pane)
     pane.trigger = e
+  }
+
+  // 添加条件
+  const addConditon = () => {
+    setDrawerVisible(true)
+  }
+
+  const drawerClose = () => {
+    setDrawerVisible(false)
+  }
+
+  const setCondition = (val) => {
+    console.log('setCondition', val)
+    const curPane = tabpanes.find(item => {
+      return item.id === activeTab
+    })
+    curPane.conditions = val
+    const activePane = tabpanes.find(item => { return item.id === activeTab })
+    setActivePane(activePane)
+  }
+
+  const setConditionType = (val) => {
+    const curPane = tabpanes.find(item => {
+      return item.id === activeTab
+    })
+    curPane.conditionType = val
+    const activePane = tabpanes.find(item => { return item.id === activeTab })
+    setActivePane(activePane)
   }
 
 
@@ -137,8 +173,30 @@ const CusEvent = props => {
                   name="conditions"
                   label='条件'
                 >
-                  <div className="conditon-wraper">
-                    <Button>添加条件</Button>
+                  <div className="conditon-wraper"
+                    style={{ paddingLeft: (pane.conditions.length > 1) ? "36px" : "8px" }}
+                  >
+                    {pane.conditions.length ?
+                      <div
+                        className={['conditon-list', pane.conditions.length <= 1 ? 'no-before' : null].join(' ')}
+                      >
+                        {
+                          pane.conditions.length > 1 ?
+                            <div className="conditon-type">
+                              {`${pane.conditionType === 'all' ? '且' : '或'}`}
+                            </div>
+                            : null
+                        }
+                        {pane.conditions.map(cond => {
+                          return <div className="cond">
+                            <span className="conditon-name">{cond.name}</span>
+                            <span>&gt;</span>
+                          </div>
+                        })}
+                      </div>
+                      : null
+                    }
+                    <Button type="primary" onClick={addConditon}>添加条件</Button>
                   </div>
                 </Form.Item>
               </TabPane>
@@ -146,6 +204,7 @@ const CusEvent = props => {
           </Tabs> : '列表为空'}
         </Panel>
       </Collapse>
+      <EventDrawer visible={drawerVisible} onClose={drawerClose} data={activePane} confirm={setCondition} setConditionType={setConditionType} />
     </Form>
   )
 }

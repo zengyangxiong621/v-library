@@ -1,6 +1,73 @@
-.event-form{
+.event-form {
   color: #fff;
-  .ant-tabs-nav{
+
+  .ant-tabs-nav {
     margin-bottom: 16px;
+  }
+
+  .ant-collapse-content-box{
+    color: #fff;
+  }
+
+  .conditon-wraper {
+    width: 221px;
+    padding: 8px;
+    background-color: #191B25;
+    color: #fff;
+
+    .conditon-list {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 5px;
+        bottom: 5px;
+        left: -20px;
+        width: 6px;
+        border: 1px solid #454759;
+        border-right: none;
+      }
+
+      &.no-before {
+        &::before {
+          display: none;
+        }
+      }
+
+      .conditon-type {
+        position: absolute;
+        background: #0d0e10;
+        border: 1px solid #393b4a;
+        border-radius: 1px;
+        width: 20px;
+        height: 20px;
+        line-height: 18px;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -30px;
+      }
+
+      .cond {
+        background: #2d2f38;
+        border: 1px solid #393b4a;
+        height: 24px;
+        line-height: 22px;
+        padding-left: 8px;
+        padding-right: 8px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .conditon-name {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
   }
 }
