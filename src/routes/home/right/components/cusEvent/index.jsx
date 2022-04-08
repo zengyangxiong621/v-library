@@ -7,18 +7,34 @@ import {
   Form,
   Select,
   Tabs,
-  Slider,
-  InputNumber,
   Collapse,
   Button,
-  Drawer
+  Radio,
+  TreeSelect,
+  Space,
+  InputNumber,
+  Checkbox
 } from 'antd';
-
 
 import {
   PlusCircleOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
+
+const componentsList = [
+  {
+    title: '组件1',
+    value: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '组件2',
+        value: '0-0-0',
+        key: '0-0-0',
+      },
+    ],
+  }
+]
 
 const CusEvent = props => {
   const { Panel } = Collapse;
@@ -28,12 +44,15 @@ const CusEvent = props => {
   const formItemLayout = {
     labelAlign: 'left'
   };
+  const { SHOW_PARENT } = TreeSelect;
 
   const _data = props.data
   const [activeTab, setActiveTab] = useState(null)
   const [tabpanes, setTabpanes] = useState([])
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [activePane, setActivePane] = useState(null)
+  const [activeId, setActiveId] = useState(null)
+  const [activeActionTab, setActiveActionTab] = useState(null)
 
   const eventTypes = [
     {
@@ -54,8 +73,65 @@ const CusEvent = props => {
     },
   ]
 
+  const actionTypes = [
+    {
+      name: '显示',
+      value: 'show'
+    },
+    {
+      name: '隐藏',
+      value: 'hide'
+    },
+  ]
 
-  const genExtra = () => (
+  const animationType = [
+    {
+      name: '渐隐渐现',
+      value: 'opacity'
+    },
+    {
+      name: '向左移动',
+      value: 'slideLeft'
+    },
+    {
+      name: '向右移动',
+      value: 'slideRight'
+    },
+    {
+      name: '向上移动',
+      value: 'slideTop'
+    },
+    {
+      name: '向下移动',
+      value: 'slideBottom'
+    },
+  ]
+
+  const timingFunctionType = [
+    {
+      name: '匀速',
+      value: 'linear'
+    },
+    {
+      name: '慢快慢',
+      value: 'ease'
+    },
+    {
+      name: '低速开始',
+      value: 'ease-in'
+    },
+    {
+      name: '低速结束',
+      value: 'ease-out'
+    },
+    {
+      name: '低速开始和结束',
+      value: 'ease-in-out'
+    },
+  ]
+
+
+  const eventExtra = () => (
     <React.Fragment>
       <PlusCircleOutlined onClick={addEvent} style={{ marginRight: '8px' }} />
       <DeleteOutlined onClick={deleteEvent} />
@@ -65,18 +141,23 @@ const CusEvent = props => {
   const addEvent = (e) => {
     e.stopPropagation();
     const panes = [...tabpanes]
-    const key = uuidv4()
+    const eventId = uuidv4()
+    const actionId = uuidv4()
     panes.push({
       trigger: 'dataChange',
       name: `事件${panes.length + 1}`,
-      id: key,
-      conditions: [],
+      id: eventId,
+      conditions: [
+
+      ],
       conditionType: 'all',
       actions: [
         {
-          id: uuidv4(),
-          name: '动作',
+          id: actionId,
+          name: '动作1',
+          action: 'show',
           component: [],
+          componentScope: 'current',
           animation: {
             "type": "slideLeft",
             "timingFunction": "ease",
@@ -87,13 +168,23 @@ const CusEvent = props => {
       ]
     });
     setTabpanes(panes)
-    setActiveTab(key)
-    const activePane = panes.find(item => { return item.id === key })
+    setActiveTab(eventId)
+    const activePane = panes.find(item => { return item.id === eventId })
     setActivePane(activePane)
+    setActiveActionTab(actionId)
   }
 
-  const deleteEvent = () => {
-
+  const deleteEvent = (e) => {
+    e.stopPropagation();
+    const panes = tabpanes.filter(pan => {
+      return pan.id !== activeTab
+    })
+    panes.forEach((item, index) => {
+      item.name = `事件${index + 1}`
+    })
+    setTabpanes(panes)
+    setActiveTab(panes.length ? panes[0].id : null)
+    setActivePane(panes.length ? panes[0] : null)
   }
 
   const tabsChange = key => {
@@ -115,6 +206,7 @@ const CusEvent = props => {
 
   const drawerClose = () => {
     setDrawerVisible(false)
+    setActiveId(false)
   }
 
   const setCondition = (val) => {
@@ -136,6 +228,90 @@ const CusEvent = props => {
     setActivePane(activePane)
   }
 
+  const showConditionDetail = (cond) => {
+    setDrawerVisible(true)
+    setActiveId(cond.id)
+  }
+
+  const actionExtra = () => (
+    <React.Fragment>
+      <PlusCircleOutlined onClick={addAction} style={{ marginRight: '8px' }} />
+      <DeleteOutlined onClick={deletAction} />
+    </React.Fragment>
+  );
+
+  const addAction = (e) => {
+    e.stopPropagation()
+    const panes = [...tabpanes]
+    const pane = panes.find(item => { return item.id === activeTab })
+    const id = uuidv4()
+    pane.actions.push({
+      id,
+      name: `动作${pane.actions.length + 1}`,
+      component: [],
+      action: 'show',
+      componentScope: "current",
+      animation: {
+        "type": "slideLeft",
+        "timingFunction": "ease",
+        "duration": 1000,
+        "delay": 0
+      }
+    })
+    setTabpanes(panes)
+    setActiveActionTab(id)
+  }
+
+  const deletAction = (e) => {
+    e.stopPropagation();
+    const panes = [...tabpanes]
+    const pane = panes.find(item => { return item.id === activeTab })
+    const actions = pane.actions.filter(item => {
+      return item.id !== activeActionTab
+    })
+    actions.forEach((item, index) => {
+      item.name = `动作${index + 1}`
+    })
+    pane.actions = actions
+    setTabpanes(panes)
+    setActiveActionTab(pane.actions.length ? pane.actions[0].id : null)
+  }
+
+  const actionTabsChange = (key) => {
+    setActiveActionTab(key)
+  }
+
+  const componentScopeChange = (val, action) => {
+    action.componentScope = val
+  }
+  const selectComponentChange = (val, action) => {
+    action.component = val
+  }
+
+  const actionTypeChange = (val, action) => {
+    action.action = val
+  }
+
+  const animationTypeChange = (e, action) => {
+    action.animation.type = e
+  }
+  const timingFunctionChange = (e, action) => {
+    action.animation.timingFunction = e
+  }
+  const durationChange = (e, action) => {
+    const value = parseInt(e.target.value)
+    action.animation.duration = value
+  }
+  const delayChange = (e, action) => {
+    const value = parseInt(e.target.value)
+    action.animation.delay = value
+  }
+
+  const unmountChange = (e, action) => {
+    const checked = e.target.checked
+    action.unmount = checked
+  }
+
 
   return (
     <Form
@@ -145,7 +321,7 @@ const CusEvent = props => {
       colon={false}
     >
       <Collapse accordion className="custom-collapse">
-        <Panel header="自定义事件" key="1" extra={genExtra()}>
+        <Panel header="自定义事件" key="1" extra={eventExtra()}>
           {tabpanes.length ? <Tabs
             hideAdd
             onChange={tabsChange}
@@ -188,7 +364,7 @@ const CusEvent = props => {
                             : null
                         }
                         {pane.conditions.map(cond => {
-                          return <div className="cond">
+                          return <div className="cond" key={cond.id} onClick={() => { showConditionDetail(cond) }}>
                             <span className="conditon-name">{cond.name}</span>
                             <span>&gt;</span>
                           </div>
@@ -196,15 +372,124 @@ const CusEvent = props => {
                       </div>
                       : null
                     }
-                    <Button type="primary" onClick={addConditon}>添加条件</Button>
+                    <Button style={{ width: '100%' }} type="primary" onClick={addConditon} ghost>添加条件</Button>
                   </div>
                 </Form.Item>
+                <Collapse accordion className="custom-collapse action-collapse">
+                  <Panel header="动作" key="1" extra={actionExtra()}>
+                    {pane.actions.length > 0 ?
+                      <Tabs
+                        hideAdd
+                        onChange={actionTabsChange}
+                        activeKey={activeActionTab}
+                      >
+                        {pane.actions.map(action => (
+                          <TabPane tab={action.name} key={action.id}>
+                            <Form.Item label='组件'>
+                              <div className="action-component">
+                                <Radio.Group
+                                  defaultValue={action.componentScope}
+                                  className="zoom-set"
+                                  style={{ marginBottom: '8px' }}
+                                  onChange={val => { componentScopeChange(val, action) }}>
+                                  <Space direction='horizontal'>
+                                    <Radio value='current' key='current' style={{ float: 'left' }}>当前</Radio>
+                                    <Radio value='global' key='global' style={{ float: 'left' }}>全局</Radio>
+                                  </Space>
+                                </Radio.Group>
+                                <TreeSelect
+                                  treeData={componentsList}
+                                  onChange={val => { selectComponentChange(val, action) }}
+                                  treeCheckable={true}
+                                  showCheckedStrategy={SHOW_PARENT}
+                                  placeholder=''
+                                  style={{ width: '100%' }}
+                                  dropdownClassName="action-select"
+                                />
+                              </div>
+                            </Form.Item>
+                            <Form.Item label='动作'>
+                              <Select
+                                className="custom-select"
+                                placeholder="请选择"
+                                defaultValue={action.action}
+                                style={{ marginBottom: 0 }}
+                                onChange={e => actionTypeChange(e, action)}
+                              >
+                                {actionTypes.map((item) => {
+                                  return <Option value={item.value} key={item.value}>{item.name}</Option>
+                                })}
+                              </Select>
+                            </Form.Item>
+                            <Form.Item label='动画类型'>
+                              <Select
+                                className="custom-select"
+                                placeholder="请选择"
+                                defaultValue={action.animation.type}
+                                style={{ marginBottom: 0 }}
+                                onChange={e => animationTypeChange(e, action)}
+                              >
+                                {animationType.map((item) => {
+                                  return <Option value={item.value} key={item.value}>{item.name}</Option>
+                                })}
+                              </Select>
+                            </Form.Item>
+                            <Form.Item label='速率'>
+                              <Select
+                                className="custom-select"
+                                placeholder="请选择"
+                                defaultValue={action.animation.timingFunction}
+                                style={{ marginBottom: 0 }}
+                                onChange={e => timingFunctionChange(e, action)}
+                              >
+                                {timingFunctionType.map((item) => {
+                                  return <Option value={item.value} key={item.value}>{item.name}</Option>
+                                })}
+                              </Select>
+                            </Form.Item>
+                            <Form.Item label='动画时长'>
+                              <InputNumber
+                                className="po-size-input"
+                                min={0}
+                                step={1}
+                                style={{ width: '100%' }}
+                                defaultValue={action.animation.duration}
+                                onBlur={e => durationChange(e, action)} />
+                            </Form.Item>
+                            <Form.Item label='延时'>
+                              <InputNumber
+                                className="po-size-input"
+                                min={0}
+                                step={1}
+                                style={{ width: '100%' }}
+                                defaultValue={action.animation.delay}
+                                onBlur={e => delayChange(e, action)} />
+                            </Form.Item>
+                            <Form.Item label="隐藏卸载">
+                              <Checkbox style={{ float: 'left' }}
+                                defaultChecked={action.unmount}
+                                onChange={e => { unmountChange(e, action) }} />
+                            </Form.Item>
+                          </TabPane>
+                        ))}
+
+                      </Tabs>
+                      : '列表为空'}
+                  </Panel>
+                </Collapse>
               </TabPane>
             ))}
           </Tabs> : '列表为空'}
         </Panel>
       </Collapse>
-      <EventDrawer visible={drawerVisible} onClose={drawerClose} data={activePane} confirm={setCondition} setConditionType={setConditionType} />
+      <EventDrawer
+        expandKey={activeId}
+        visible={drawerVisible}
+        onClose={drawerClose}
+        data={activePane}
+        confirm={setCondition}
+        setConditionType={setConditionType}
+      />
     </Form>
   )
 }

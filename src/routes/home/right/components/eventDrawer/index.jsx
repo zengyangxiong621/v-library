@@ -34,7 +34,7 @@ const EventDrawer = props => {
 
   const [visible, setVisible] = useState(props.visible)
   const [conditions, setConditions] = useState(props.data?.conditions || [])
-  const [conditionType,setConditionType] = useState(props.data?.conditionType || 'all')
+  const [conditionType, setConditionType] = useState(props.data?.conditionType || 'all')
 
   useEffect(() => {
     setVisible(props.visible)
@@ -79,6 +79,7 @@ const EventDrawer = props => {
     event.stopPropagation()
     const newConditions = conditions.filter(cond => cond.id !== id)
     setConditions(newConditions)
+    props.confirm(newConditions)
   }
 
   const typeChange = (e, item) => {
@@ -99,21 +100,21 @@ const EventDrawer = props => {
     item.expected = e.target.value
   }
 
-  const codeChange=(e,item)=>{
+  const codeChange = (e, item) => {
     item.code = e
   }
 
-  const resetCondition=(item) => {
-    item.type='field'
-    item.field=''
-    item.compare='=='
-    item.expected=''
-    item.code='return data'
+  const resetCondition = (item) => {
+    item.type = 'field'
+    item.field = ''
+    item.compare = '=='
+    item.expected = ''
+    item.code = 'return data'
     const conds = [...conditions]
     setConditions(conds)
   }
 
-  const confirmConditon = (item)=>{
+  const confirmConditon = (item) => {
     const conds = [...conditions]
     setConditions(conds)
     props.confirm(conds)
@@ -145,8 +146,12 @@ const EventDrawer = props => {
         <Button ghost type="primary" style={{ width: '100%', marginBottom: '16px' }} onClick={addConditon}>添加条件</Button>
         {conditions.map((item) => {
           return (
-            <Collapse accordion key={item.id} className="custom-collapse">
-              <Panel header={item.name} extra={genExtra(item.id)}>
+            <Collapse
+              accordion
+              key={item.id}
+              defaultActiveKey={props.expandKey}
+              className="custom-collapse">
+              <Panel header={item.name} key={item.id} extra={genExtra(item.id)}>
                 <Form.Item label='类型'>
                   <Select
                     className="custom-select"
@@ -196,7 +201,7 @@ const EventDrawer = props => {
                       <AceEditor
                         mode='javascript'
                         theme="twilight"
-                        onChange={e=>codeChange(e,item)}
+                        onChange={e => codeChange(e, item)}
                         name={uuidv4()}
                         editorProps={{ $blockScrolling: true }}
                         value={item.code}
@@ -213,8 +218,8 @@ const EventDrawer = props => {
                   </div>
                 }
                 <div className="btn-group">
-                <Button ghost onClick={()=>{resetCondition(item)}} style={{marginRight: '8px'}}>取消</Button>
-                <Button type="primary" onClick={()=>{confirmConditon(item)}}>确认</Button>
+                  <Button ghost onClick={() => { resetCondition(item) }} style={{ marginRight: '8px' }}>取消</Button>
+                  <Button type="primary" onClick={() => { confirmConditon(item) }}>确认</Button>
                 </div>
               </Panel>
             </Collapse>
