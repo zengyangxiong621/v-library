@@ -5,13 +5,15 @@ import { IconFont } from '../../../../utils/useIcon'
 import { Input } from 'antd'
 
 const AppCard = (props: any) => {
-  const { id, name, release } = props
+  const { id, name, release, imgUrl, changeFabuModal } = props
 
 
   const [canEdit, setCanEdit] = useState(false)
   const [appName, setAppName] = useState(name)
 
   const inputRef = useRef<any>()
+
+
 
   /** 输入框事件 */
   const bianjiClick = () => {
@@ -44,8 +46,10 @@ const AppCard = (props: any) => {
     console.log('编辑应用，仪表盘Id为', id);
   }
   const tuozhuai = (e: any) => { }
-  const fuzhi = (e: any) => { }
-  const fenxiang = (e: any) => { }
+  const fuzhi = (e: any) => {}
+  const fabu = (e: any) => {
+    changeFabuModal(true, id)
+  }
   const gengduo = (e: any) => { }
 
   return (
@@ -56,13 +60,13 @@ const AppCard = (props: any) => {
           <div className='icons-wrap'>
             <IconFont className='each-icon' onClickCapture={(e) => {
               tuozhuai(e)
-            }} type='icon-tuozhuai' />
+            }} type='icon-yidong' />
             <IconFont className='each-icon' onClickCapture={(e) => {
               fuzhi(e)
-            }} type='icon-fuzhi' />
+            }} type='icon-kaobei' />
             <IconFont className='each-icon' onClickCapture={(e) => {
-              fenxiang(e)
-            }} type='icon-fenxiang' />
+              fabu(e)
+            }} type='icon-fabu' />
             <IconFont className='each-icon' onClickCapture={(e) => {
               gengduo(e)
             }} type='icon-gengduo' />
@@ -73,16 +77,16 @@ const AppCard = (props: any) => {
           </div>
         </div>
         <div className="img-wrap">
-          <image />
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+          <img className='img-limit' src={imgUrl} />
         </div>
-
       </header>
       <div className="foot">
         <div className="front">
           {
             canEdit ?
               <Input
-                style={{ width: '230px' }}
+                className='my-input'
                 ref={inputRef}
                 maxLength={30}
                 value={appName}

@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import * as Icons from '@ant-design/icons'
-import './secondMenu.css'
+import './secondMenu.less'
 
 import { connect } from 'dva'
 

@@ -8,6 +8,9 @@ import { Input, Row, Col } from 'antd'
 import TemplateCard from './templateCard/index'
 
 const DashboardTemplate = (props: any) => {
+  const { history } = props
+
+
   const [inputValue, setInputValue] = useState('')
 
   // 搜索
@@ -16,12 +19,12 @@ const DashboardTemplate = (props: any) => {
   }
 
   const backClick = () => {
-    //TODO 返回上一级页面
-    console.log('back');
+    history.back()
   }
 
   const addTemplate = () => {
     //TODO 携带id 跳转至 新建模板 页面
+    history.push('/')
   }
   return (
     <div className='DashboardTemplate-wrap'>
@@ -43,18 +46,18 @@ const DashboardTemplate = (props: any) => {
       {/* 模板列表 */}
       <div className="list-wrap">
 
-        <Row gutter={[0, 0]} justify='start'>
-          <Col span={6} md={4} lg={6}>
+        <Row gutter={[26, 25]} justify='start'>
+          <Col span={6}>
             <div className="blank-template" onClickCapture={() => addTemplate()}>
               <span className='text'>
-                <IconFont className='tianjia-icon' type='icon-bianji' />
+                <IconFont className='tianjia-icon' type='icon-xinjianfenzu' />
                 空白模板
               </span>
             </div>
           </Col>
           {
             listData.map((item: any) => (
-              <Col span={6} md={4} lg={6} ><TemplateCard {...item} /></Col>
+              <Col span={6} ><TemplateCard {...item} /></Col>
             ))
           }
         </Row>
@@ -78,36 +81,42 @@ const listData: unknown[] = [
     name: '如果很长需要用...代替如果很长需要用...代替如果很长需要用...代替',
     ratio: '16:9',
     fenbianlv: '1920 * 1080',
+    imgUrl: 'https://img1.baidu.com/it/u=3021003518,1825276686&fm=253&fmt=auto&app=138&f=JPEG?w=450&h=233'
   },
   {
     id: '1',
     name: '中石油',
     ratio: '4:3',
     fenbianlv: '2048 * 1080',
+    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F065f4419afd06bc98180e53711745d28f34161f8.jpg&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651990097&t=483e0024896fca43342fdd315b16c375'
   },
   {
     id: '2',
     name: '网络安全综合态势',
     ratio: '2:1',
     fenbianlv: '1020 * 720',
+    imgUrl: 'https://img2.baidu.com/it/u=150520042,1822256108&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=312'
   },
   {
     id: '3',
     name: '网络安全综合态势',
     ratio: '2:1',
     fenbianlv: '1020 * 720',
+    imgUrl: 'https://img2.baidu.com/it/u=836828249,4218074621&fm=253&fmt=auto&app=138&f=JPEG?w=820&h=461'
   },
   {
     id: '4',
     name: '网络安全综合态势',
     ratio: '2:1',
     fenbianlv: '1020 * 720',
+    imgUrl: 'https://img1.baidu.com/it/u=1454865930,3426121759&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500'
   },
   {
     id: '5',
     name: '网络安全综合态势',
     ratio: '2:1',
     fenbianlv: '1020 * 720',
+    imgUrl: 'https://img0.baidu.com/it/u=2651429005,3211950086&fm=253&fmt=auto&app=138&f=JPEG?w=605&h=454'
   },
   // {
   //   id: '6',

@@ -42,7 +42,7 @@ const menuGlobal = [
     children: [
       {
         name: "新建仪表盘",
-        path: "/dashboard/id",
+        path: "/dashboard/:id",
         models: () => [],
         component: () => import("./routes/home"),
       },
@@ -54,13 +54,6 @@ const menuGlobal = [
     models: () => [],
     component: () => import("./routes/dashboardTemplate"),
   },
-  {
-    name: "我的模板",
-    path: "/template",
-    models: () => [],
-    component: () => import("./routes/home"),
-  },
-
   {
     name: "门户管理",
     path: "/portal",
