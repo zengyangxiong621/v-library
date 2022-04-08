@@ -1,0 +1,25 @@
+@backColor: #171a24;
+
+.RightContent-wrap {
+  width: 100%;
+  max-height: calc(100vh - 100px);
+  background-color: @backColor;
+  overflow-y: auto;
+  // ie 火狐 隐藏滚动条
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  // 排列内部卡片
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+
+  .setMargin {
+    margin-right: 26px;
+  }
+}
+
+.RightContent-wrap::-webkit-scrollbar {
+  display: none;
+}

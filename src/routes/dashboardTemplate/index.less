@@ -1,0 +1,102 @@
+@import "~antd/dist/antd.dark.css";
+@DashboardBackColor: #1f212c;
+
+.DashboardTemplate-wrap {
+  .back-bar {
+    width: 100%;
+    height: 64px;
+    line-height: 64px;
+    background-image: url("../../assets/images/导航.png");
+    background-size: 100% 100%;
+
+    .text {
+      width: 56px;
+      height: 20px;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 400;
+      user-select: none;
+    }
+
+    .back-icon {
+      color: #fff;
+      margin: 0 16px 0 40px;
+      cursor: pointer;
+    }
+  }
+
+  .search-wrap {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    background-color: @DashboardBackColor;
+    padding: 24px 32px 24px 0;
+
+    .search {
+      width: 240px;
+      height: 32px;
+      background: #232630;
+      border: 1px solid rgba(57, 59, 74, 1);
+      border-radius: 3px;
+    }
+  }
+
+  .list-wrap {
+    // display: grid;
+    // grid-template-columns: repeat(5, 20%);
+    // justify-content: space-between;
+    // align-content: flex-start;
+    // display: flex;
+    // flex-wrap: wrap;
+    // justify-content: space-between;
+    // align-content: flex-start;
+    background-color: @DashboardBackColor;
+    background-image: url("../../assets//images/背景图装饰.png");
+    background-repeat: no-repeat;
+    background-position: 5% 95%;
+    width: 100%;
+    height: calc(100vh - 144px); // 144 = 64（bar高度） + 80（search高度)
+    padding: 0 32px;
+    // 有可能溢出，需要滚动条
+    overflow-y: auto;
+
+    // 兼容ie 和 火狐
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    .blank-template {
+      width: 307px;
+      height: 228px;
+      background: #222838;
+      background-image: url("../../assets/images/新建的装饰.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      border: 1px dashed rgba(57, 70, 89, 1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .blank-template > .text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90px;
+      height: 22px;
+      line-height: 22px;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+
+      .tianjia-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+  // 谷歌浏览器中 去除滚动条
+  .list-wrap::-webkit-scrollbar {
+    display: none;
+  }
+}
