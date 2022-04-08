@@ -1,0 +1,99 @@
+@backColor: #171a24;
+.AppCard-wrap {
+  width: 335px;
+  height: 229px;
+  background: #222838;
+  border: 1px solid rgba(57, 70, 89, 1);
+
+  margin-right: 26px;
+  margin-bottom: 25px;
+
+  .head {
+    width: 333px;
+    height: 188px;
+    background-color: rgb(43, 44, 45);
+    .hoverOnImg {
+      display: none;
+      width: 333px;
+      height: 188px;
+      position: relative;
+
+      .div-to-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 88px;
+        height: 32px;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+      }
+      .scan-btn {
+        background: #3D404C;
+        margin-right: 16px;
+      }
+      .edit-btn {
+        background: #2482ff;
+      }
+      .icons-wrap {
+        display: flex;
+        justify-content: flex-end;
+        padding: 16px 24px 0 0;
+      }
+      .btns-wrap {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+      }
+      .each-icon {
+        cursor: pointer;
+        font-size: 16px;
+      }
+    }
+
+    .img-wrap {
+      display: block;
+      width: 333px;
+      height: 188px;
+    }
+  }
+  .head:hover .img-wrap {
+    display: none;
+  }
+  .head:hover .hoverOnImg {
+    display: block;
+    width: 333px;
+    height: 188px;
+    background: #050506;
+  }
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 0 16px 0 12px;
+
+    .bianjiIcon {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .releaseState {
+      display: flex;
+      align-items: center;
+
+      .customCircle {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .text {
+        font-size: 14px;
+        color: #999999;
+        font-weight: 400;
+      }
+    }
+  }
+}

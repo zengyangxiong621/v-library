@@ -1,0 +1,44 @@
+@backColor: #171a24;
+.TemplateCard-wrap {
+  width: 307px;
+  height: 228px;
+  background: #222838;
+  border: 1px solid rgba(57, 70, 89, 1);
+
+  // margin-right: 26px;
+  margin-bottom: 25px;
+
+  .head {
+    width: 305px;
+    height: 173px;
+    background-color: rgb(43, 44, 45);
+    cursor: pointer;
+  }
+  .foot {
+    height: 54px;
+    padding-left: 16px;
+    .name {
+      width: 90%;
+      height: 22px;
+      font-family: PingFangSC-Semibold;
+      font-size: 14px;
+      color: #ffffff;
+      line-height: 22px;
+      font-weight: 600;
+      margin-top: 6px;
+      // 名字有可能过长，需要溢出省略
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .info {
+      width: 100%;
+      height: 22px;
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #999999;
+      line-height: 22px;
+      font-weight: 400;
+    }
+  }
+}

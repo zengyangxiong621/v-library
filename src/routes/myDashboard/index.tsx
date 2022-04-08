@@ -59,10 +59,54 @@ const MyApplication = (props: any) => {
           </div>
         </div>
         {/* 右侧 */}
-        <RightContent />
+        <RightContent listData={listData} />
       </div>
     </div>
   )
 }
+const listData: object = [
+  {
+    id: '1',
+    name: 'xx',
+    imgUrl: '',
+    release: true,
+  },
+  {
+    id: '2',
+    name: 'A',
+    imgUrl: '',
+    release: true,
+  },
+  {
+    id: '3',
+    name: 'B',
+    imgUrl: '',
+    release: false,
+  },
+  {
+    id: '4',
+    name: 'C',
+    imgUrl: '',
+    release: false,
+  },
+  {
+    id: '5',
+    name: 'D',
+    imgUrl: '',
+    release: true,
+  },
+  {
+    id: '6',
+    name: 'E',
+    imgUrl: '',
+    release: false,
+  },
+  {
+    id: '7',
+    name: 'F',
+    imgUrl: '',
+    release: true,
+  },
+]
 
 export default memo(MyApplication)
