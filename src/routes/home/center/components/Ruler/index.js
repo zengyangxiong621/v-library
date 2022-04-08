@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { findDOMNode } from 'react-dom'
 import './index.less'
 import { connect } from 'dva'
 import canvas from '../../../../../models/canvas'
@@ -10,6 +11,10 @@ import {
 
 const Ruler = ({ bar, dispatch, mouse }) => {
   const recommendConfig = bar.pageConfig.find(item => item.name === 'recommend')
+  const [moveLength, setMoveLength] = useState({
+    left: 0,
+    top: 0,
+  })
   let [ruler, setRuler] = useState(null)
   const [isRulerLinesShow, setIsRulerLinesShow] = useState(true)
   // useEffect(() => {
@@ -25,25 +30,35 @@ const Ruler = ({ bar, dispatch, mouse }) => {
   // }, [recommendConfig])
   useEffect(() => {
     const temp = new rulerCanvas()
-    temp.painter(1920, 1080)
+    temp.painter(bar.canvasScaleValue)
     ruler = setRuler(temp)
+    return () => {
+      setRuler(null)
+    }
   }, [])
   useEffect(() => {
     if (ruler) {
+      const canvasContainer = document.querySelector('.canvas-container')
+      const leftWrap = document.querySelector('.home-left-wrap')
+      const headerWrap = document.querySelector('.Header-wrap')
+      setMoveLength({
+        left: Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width),
+        top: Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height),
+      })
       ruler.clearCanvas()
-      ruler.painter(1000, 1000)
+      ruler.painter(bar.canvasScaleValue, Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width), Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height))
     }
-  }, [recommendConfig])
+  }, [bar.canvasScaleValue])
   const rulerCanvas = function () {
     this.canvasTop = document.getElementById('canvasTop')
     this.canvasLeft = document.getElementById('canvasLeft')
     this.clearCanvas = () => {
       const contextTop = this.canvasTop.getContext('2d')
       const contextLeft = this.canvasLeft.getContext('2d')
-      contextTop.clearRect(0, 0, 1920, 20)
-      contextLeft.clearRect(0, 0, 20, 1147)
+      contextTop.clearRect(0, 0, 3000, 22)
+      contextLeft.clearRect(0, 0, 22, 2000)
     }
-    this.painter = (width, height) => {
+    this.painter = (canvasScaleValue, left = 0, top = 0) => {
       const draggableWrapper = document.querySelector('.canvas-container')
       // console.log('parent', draggableWrapper.offsetParent.getBoundingClientRect())
       // console.log('offsetTop', draggableWrapper.offsetTop)
@@ -52,34 +67,44 @@ const Ruler = ({ bar, dispatch, mouse }) => {
       const contextTop = this.canvasTop.getContext('2d')
       const contextLeft = this.canvasLeft.getContext('2d')
       contextTop.beginPath()
-      for (let i = -100; i < width; i += 10) {
+      let ruleScale = 100
+      if (canvasScaleValue > 1) {
+        ruleScale = 50
+      } else if (canvasScaleValue <= 0.67) {
+        ruleScale = 200
+      } else if (canvasScaleValue <= 0.33) {
+        ruleScale = 300
+      }
+      console.log('left', left)
+      for (let i = -2000; i < 3000; i += 10) {
         contextTop.strokeStyle = 'white'
         contextTop.fillStyle = 'white'
 
         //顶部标尺线绘制, 比例尺
-        // 50是尺度
-        console.log('i / 0.71', i / 0.71)
-        const y = (Math.ceil(i / 0.5) % 100 === 0) ? 0 : 15
-        // 开始的坐标
-        contextTop.moveTo(i + 50, y)
-        // 结束的坐标
-        contextTop.lineTo(i + 50, 20)
+        const y = (i % 100 === 0) ? 0 : 12
+        contextTop.moveTo(Math.ceil((i + left - 22) / canvasScaleValue), y)
+        contextTop.lineTo(Math.ceil((i + left - 22) / canvasScaleValue), 20)
+        // contextTop.moveTo(Math.ceil((i + left - 22) / canvasScaleValue), y)
+        // contextTop.lineTo(Math.ceil((i + left - 22) / canvasScaleValue), 20)
 
         //顶部标尺数字绘制
         if (y === 0) {
-          contextTop.fillText(Math.ceil(i / 0.5), i + 52, 8)
+          contextTop.font = `${ 7 / canvasScaleValue }px Arial`
+          // contextTop.fillText(i, Math.ceil((i + left - 18) / canvasScaleValue), 8)
+          contextTop.fillText(i, Math.ceil((i + left - 18) / canvasScaleValue), 10)
         }
       }
 
-      for (let i = -100; i < height; i += 10) {
+
+      for (let i = -1000; i < 2000; i += 10) {
         //左侧标尺线绘制
         contextLeft.save()
         contextLeft.beginPath()
         contextLeft.strokeStyle = 'white'
         contextLeft.fillStyle = 'white'
-        const x = (i % 50 === 0) ? 0 : 10
-        contextLeft.moveTo(x + 5, i + 20)
-        contextLeft.lineTo(20, i + 20)
+        const x = (i % 100 === 0) ? 0 : 12
+        contextLeft.moveTo(x, i)
+        contextLeft.lineTo(20, i)
 
         contextLeft.stroke()
         contextLeft.closePath()
@@ -89,7 +114,8 @@ const Ruler = ({ bar, dispatch, mouse }) => {
         if (x === 0) {
           contextLeft.translate(9, i + 18)
           contextLeft.rotate(270 * Math.PI / 180)
-          contextLeft.fillText(i.toString(), 0, 0)
+          contextLeft.font = `${ 7 / canvasScaleValue }px Arial`
+          contextLeft.fillText(i.toString(), 10, 0)
 
           contextLeft.closePath()
           contextLeft.restore()
@@ -150,14 +176,34 @@ const Ruler = ({ bar, dispatch, mouse }) => {
   }
   return (
     <div style={ { position: 'absolute', left: 0, top: 0 } }>
-      <canvas onClick={ () => handleClick('horizon') } id="canvasTop" height="20" width="1920"
-              style={ { position: 'absolute', left: 0, top: 0, background: '#151620', cursor: 'e-resize' } }>
-        <p>Your browserdoes not support the canvas element!</p>
-      </canvas>
-      <canvas onClick={ () => handleClick('vertical') } id="canvasLeft" width="20" height="1080"
-              style={ { position: 'absolute', left: 0, top: 0, background: '#151620', cursor: 'n-resize' } }>
-        <p>Your browserdoes not support the canvas element!</p>
-      </canvas>
+      <div style={ { position: 'absolute', left: 22, top: 0, transform: `scaleX(${ bar.canvasScaleValue })` } }>
+        <canvas
+          onClick={ () => handleClick('horizon') }
+          id="canvasTop"
+          height="22"
+          width={ 3000 }
+          style={ {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            background: '#151620',
+            cursor: 'e-resize',
+          } }>
+          <p>Your browserdoes not support the canvas element!</p>
+        </canvas>
+      </div>
+      <div style={ {
+        position: 'absolute',
+        left: 0,
+        top: moveLength.top,
+        transform: `scaleY(${ bar.canvasScaleValue })`,
+      } }>
+        <canvas
+          onClick={ () => handleClick('vertical') } id="canvasLeft" width="22" height="1080"
+          style={ { position: 'absolute', left: 0, top: 0, background: '#151620', cursor: 'n-resize' } }>
+          <p>Your browserdoes not support the canvas element!</p>
+        </canvas>
+      </div>
       <div
         style={ {
           width: 20,

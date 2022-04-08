@@ -102,7 +102,6 @@ const CustomDraggable
     }
     bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
   }
-
   const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
     console.log('draging')
     // 向上取整
@@ -328,7 +327,6 @@ const CustomDraggable
       })
     }
   }
-
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
     console.log('click')
     e.stopPropagation()
@@ -348,7 +346,6 @@ const CustomDraggable
     component.hover = false
   }
   // let copyTreeData = deepClone(treeData).reverse()
-
   return (
     <div className="c-custom-draggable">
       {
