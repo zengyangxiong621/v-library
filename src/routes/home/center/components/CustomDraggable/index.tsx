@@ -459,10 +459,50 @@ const CustomDraggable
                       </div>
                       : ''
                     }
-                  </div> : <div style={ { width: '100%', height: '100%', color: 'red', fontSize: 16 } }>
-                    {/*{ layer.id }*/ }
-                    <Text styleConfig={ style_config } staticData={ staticData }/>
-                  </div>
+                  </div> : <>
+                    <div style={ { width: '100%', height: '100%', color: 'red', fontSize: 16 } }>
+                      {/*{ layer.id }*/ }
+                      <Text styleConfig={ style_config } staticData={ staticData }/>
+                    </div>
+                    <div className="component-border">
+                      <span
+                        style={ {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: 1,
+                          height: '100%',
+                          transform: `translate(-50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
+                        } }/>
+                      <span
+                        style={ {
+                          position: 'absolute',
+                          top: 0,
+                          right: 0,
+                          width: 1,
+                          height: '100%',
+                          transform: `translate(50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
+                        } }/>
+                      <span
+                        style={ {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: 1,
+                          transform: `translate(0px, -50%) scaleY(${1 / bar.canvasScaleValue})`,
+                        } }/>
+                      <span
+                        style={ {
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          width: '100%',
+                          height: 1,
+                          transform: `translate(0px, 50%) scaleY(${1 / bar.canvasScaleValue})`,
+                        } }/>
+                    </div>
+                  </>
                 }
               </div>
             </SingleDraggable>

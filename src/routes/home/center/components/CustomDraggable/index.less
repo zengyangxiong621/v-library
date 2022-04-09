@@ -1,10 +1,12 @@
 .c-custom-draggable {
   // todo 为了解决放大缩小问题就先去除
-  .selected {
-    border: 1px solid #2482FF !important;
+  .selected, .hovered {
+    .component-border {
+      span {
+        display: block;
+        background-color: #2482FF
+      }
+    }
   }
 
-  .hovered {
-    border: 1px solid #2482FF !important;
-  }
 }
