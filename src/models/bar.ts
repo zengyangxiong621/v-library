@@ -1971,6 +1971,12 @@ export default {
       state.selectedComponentOrGroup.forEach(item => {
         item.selected = true
       })
+      console.log('length', state.selectedComponentOrGroup.length)
+      if(state.selectedComponentOrGroup.length > 0) {
+        state.isAreaChoose = true
+      } else {
+        state.isAreaChoose = false
+      }
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup)
       state.selectedComponents = state.selectedComponents = state.components.filter(component => state.selectedComponentIds.includes(component.id))
       state.selectedComponentRefs = {}
@@ -1980,7 +1986,7 @@ export default {
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
       })
-      
+
       return { ...state, ...payload }
     },
     calcDragScaleData(state: IBarState, { payload }: any) {

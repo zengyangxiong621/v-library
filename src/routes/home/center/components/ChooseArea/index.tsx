@@ -47,6 +47,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       const boxPreWidth = areaRef.current.offsetWidth
       const boxPreHeight = areaRef.current.offsetHeight
       let isMouseMove = false
+      selectedList.current = []
       document.onmousemove = (ev: Event) => {
         console.log('选区mouseMove')
         // 移动的时候让选区显示出来
@@ -122,11 +123,12 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
           }
           selectedIds.push(item.id)
         })
+        console.log('selectedIds', selectedIds)
         selectedList.current = selectedIds
 
       }
       document.onmouseup = (e) => {
-        console.log('选区mouseUp')
+        console.log('选区mouseUp', selectedList.current)
         e.preventDefault()
         dispatch({
           type: 'bar/chooseLayer',
