@@ -369,6 +369,7 @@ const generateTreeData: () => any = () => {
         selected: false,
         hover: false,
         scan: true,
+        cancel: true,
         lock,
         singleShowLayer: false,
         showRenameInput: false,

@@ -65,6 +65,9 @@ const CustomDraggable
    */
   const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
     console.log('dragStart', layer)
+    console.log('------------------')
+    console.log('是否多选的状态', bar.isSupportMultiple)
+    console.log('------------------')
     setStartPosition({
       x: data.x,
       y: data.y,
@@ -104,7 +107,8 @@ const CustomDraggable
     bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
   }
   const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-    console.log('draging')
+    ev.stopPropagation()
+    console.log('draging', layer)
     // 向上取整
     let aroundX = Math.ceil(data.x)
     let aroundY = Math.ceil(data.y)
@@ -334,7 +338,8 @@ const CustomDraggable
     e.stopPropagation()
   }
   const handleDblClick = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
-    e.stopPropagation()
+    // e.stopPropagation()
+    console.log('dblClick', component)
   }
   const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     if(component.hover) {
@@ -419,8 +424,10 @@ const CustomDraggable
                   allComponentRefs[layer.id] = ref
                 }
               } }
-              disabled={ layer.lock }
-              cancel=".no-cancel" key={ layer.id } position={ config.position }
+              disabled={ layer.lock || layer.cancel }
+              cancel={ layer.cancel ? '.no-cancel' : null }
+              key={ layer.id }
+              position={ config.position }
               onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config) }
               onDrag={ (ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config) }
               onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
@@ -435,9 +442,9 @@ const CustomDraggable
                 data-id={ layer.id }
                 key={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
-                onDoubleClick={ (ev) => handleDblClick(ev, layer) }
-                onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
-                onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
+                onDoubleClickCapture={ (ev) => handleDblClick(ev, layer) }
+                // onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
+                // onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
                 style={ {
                   ...config.style,
@@ -472,7 +479,7 @@ const CustomDraggable
                           left: 0,
                           width: 1,
                           height: '100%',
-                          transform: `translate(-50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
+                          transform: `translate(-50%, 0px) scaleX(${ 1 / bar.canvasScaleValue })`,
                         } }/>
                   <span
                     style={ {
@@ -481,7 +488,7 @@ const CustomDraggable
                       right: 0,
                       width: 1,
                       height: '100%',
-                      transform: `translate(50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
+                      transform: `translate(50%, 0px) scaleX(${ 1 / bar.canvasScaleValue })`,
                     } }/>
                   <span
                     style={ {
@@ -490,7 +497,7 @@ const CustomDraggable
                       left: 0,
                       width: '100%',
                       height: 1,
-                      transform: `translate(0px, -50%) scaleY(${1 / bar.canvasScaleValue})`,
+                      transform: `translate(0px, -50%) scaleY(${ 1 / bar.canvasScaleValue })`,
                     } }/>
                   <span
                     style={ {
@@ -499,7 +506,7 @@ const CustomDraggable
                       left: 0,
                       width: '100%',
                       height: 1,
-                      transform: `translate(0px, 50%) scaleY(${1 / bar.canvasScaleValue})`,
+                      transform: `translate(0px, 50%) scaleY(${ 1 / bar.canvasScaleValue })`,
                     } }/>
                 </div>
               </div>

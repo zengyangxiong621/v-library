@@ -290,7 +290,7 @@ export default {
               {
                 'name': 'left',
                 'displayName': 'X轴坐标',
-                'value': 100,
+                'value': 200,
                 type: 'number',
                 config: {
                   suffix: 'X',
@@ -299,7 +299,7 @@ export default {
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
-                'value': 100,
+                'value': 200,
                 type: 'number',
                 config: {
                   suffix: 'Y',
@@ -470,7 +470,7 @@ export default {
               {
                 'name': 'left',
                 'displayName': 'X轴坐标',
-                'value': 100,
+                'value': 300,
                 type: 'number',
                 config: {
                   suffix: 'X',
@@ -479,7 +479,7 @@ export default {
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
-                'value': 100,
+                'value': 300,
                 type: 'number',
                 config: {
                   suffix: 'Y',
@@ -650,7 +650,7 @@ export default {
               {
                 'name': 'left',
                 'displayName': 'X轴坐标',
-                'value': 100,
+                'value': 400,
                 type: 'number',
                 config: {
                   suffix: 'X',
@@ -659,7 +659,7 @@ export default {
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
-                'value': 100,
+                'value': 400,
                 type: 'number',
                 config: {
                   suffix: 'Y',
@@ -830,7 +830,7 @@ export default {
               {
                 'name': 'left',
                 'displayName': 'X轴坐标',
-                'value': 100,
+                'value': 500,
                 type: 'number',
                 config: {
                   suffix: 'X',
@@ -839,7 +839,7 @@ export default {
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
-                'value': 100,
+                'value': 500,
                 type: 'number',
                 config: {
                   suffix: 'Y',
@@ -1010,7 +1010,7 @@ export default {
               {
                 'name': 'left',
                 'displayName': 'X轴坐标',
-                'value': 100,
+                'value': 600,
                 type: 'number',
                 config: {
                   suffix: 'X',
@@ -1019,7 +1019,7 @@ export default {
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
-                'value': 100,
+                'value': 600,
                 type: 'number',
                 config: {
                   suffix: 'Y',
@@ -1190,7 +1190,7 @@ export default {
               {
                 'name': 'left',
                 'displayName': 'X轴坐标',
-                'value': 100,
+                'value': 700,
                 type: 'number',
                 config: {
                   suffix: 'X',
@@ -1199,7 +1199,7 @@ export default {
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
-                'value': 100,
+                'value': 800,
                 type: 'number',
                 config: {
                   suffix: 'Y',
@@ -1370,7 +1370,7 @@ export default {
               {
                 'name': 'left',
                 'displayName': 'X轴坐标',
-                'value': 100,
+                'value': 800,
                 type: 'number',
                 config: {
                   suffix: 'X',
@@ -1379,7 +1379,7 @@ export default {
               {
                 'name': 'top',
                 'displayName': 'Y轴坐标',
-                'value': 100,
+                'value': 800,
                 type: 'number',
                 config: {
                   suffix: 'Y',
@@ -1621,7 +1621,7 @@ export default {
           {
             'name': 'left',
             'displayName': 'X轴坐标',
-            'value': 100,
+            'value': 900,
             type: 'number',
             config: {
               suffix: 'X',
@@ -1630,7 +1630,7 @@ export default {
           {
             'name': 'top',
             'displayName': 'Y轴坐标',
-            'value': 100,
+            'value': 900,
             type: 'number',
             config: {
               suffix: 'Y',
@@ -1705,7 +1705,7 @@ export default {
             {
               'name': 'left',
               'displayName': 'X轴坐标',
-              'value': 100,
+              'value': 1000,
               type: 'number',
               config: {
                 suffix: 'X',
@@ -1714,7 +1714,7 @@ export default {
             {
               'name': 'top',
               'displayName': 'Y轴坐标',
-              'value': 100,
+              'value': 1000,
               type: 'number',
               config: {
                 suffix: 'Y',
@@ -1963,6 +1963,9 @@ export default {
 
   reducers: {
     initTreeData(state: IBarState, { payload }: any) {
+      payload.forEach((layer: any) => {
+        layer.cancel = false
+      })
       return { ...state, treeData: payload }
     },
     selectedNode(state: IBarState, { payload }: any) {

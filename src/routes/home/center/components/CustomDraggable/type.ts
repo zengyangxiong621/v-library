@@ -24,7 +24,8 @@ export interface ILayerComponent {
   lock: boolean, // 是否锁定
   scan: boolean, // 是否展示
   selected: boolean,
-  hover: boolean
+  hover: boolean,
+  cancel: boolean,
 }
 
 export interface ILayerGroup {
@@ -35,6 +36,7 @@ export interface ILayerGroup {
   collapse: boolean, // 是否展开
   selected: boolean,
   hover: boolean,
+  cancel: boolean,
   components: Array<ILayerComponent>,
   children: Array<ILayerComponent>,
 }

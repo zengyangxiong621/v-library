@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import './index.less'
 import { connect } from 'dva'
-import canvas from '../../../../../models/canvas'
 import {
   EyeOutlined,
   EyeInvisibleOutlined,
