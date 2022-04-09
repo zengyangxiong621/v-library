@@ -1937,6 +1937,9 @@ export default {
         },
       })
       yield put({
+        type: 'clearLayersSelectedStatus',
+      })
+      yield put({
         type: 'setSelectedKeys',
         payload,
       })
@@ -1945,6 +1948,9 @@ export default {
       })
     },
     * setKeys({ payload }: any, { call, put }: any): any {
+      yield put({
+        type: 'clearLayersSelectedStatus',
+      })
       yield put({
         type: 'setNodeList',
         payload,
@@ -1962,11 +1968,16 @@ export default {
     selectedNode(state: IBarState, { payload }: any) {
       return { ...state, ...payload }
     },
-    setSelectedKeys(state: IBarState, { payload }: any) {
-      state.key = payload
+    clearLayersSelectedStatus(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup.forEach(item => {
         item.selected = false
       })
+      return {
+        ...state,
+      }
+    },
+    setSelectedKeys(state: IBarState, { payload }: any) {
+      state.key = payload
       state.selectedComponentOrGroup = state.key.reduce((pre: any, cur: string) => {
         pre.push(findLayerById(state.treeData, cur))
         return pre
@@ -2047,9 +2058,6 @@ export default {
     },
     // 选中节点时，保存住整个node对象
     setNodeList(state: IBarState, { payload }: any) {
-      state.selectedComponentOrGroup.forEach(item => {
-        item.selected = false
-      })
       state.selectedComponentOrGroup = payload
       state.selectedComponentOrGroup.forEach(item => {
         item.selected = true
