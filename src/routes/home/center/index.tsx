@@ -175,10 +175,8 @@ const Center = ({ bar, dispatch }: any) => {
               onScaleEnd={ handleScaleEnd }
             />
             <SupportLines
-              key="support"
               cRef={ (ref: any) => {
                 bar.supportLinesRef = ref
-                return bar.supportLinesRef
               } }
             />
             <RulerLines/>

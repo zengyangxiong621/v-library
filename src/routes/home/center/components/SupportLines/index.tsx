@@ -2,8 +2,12 @@ import { useState, useEffect, Props, forwardRef, useImperativeHandle } from 'rea
 import { connect } from 'dva'
 import './index.css'
 
+interface SupportLineProperty {
+  bar?: any,
+  cRef?: any
+}
 
-let SupportLines: any = ({ bar, dispatch, cRef }: any) => {
+let SupportLines = ({ bar, cRef }: SupportLineProperty) => {
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (left: number, top: number, display: string = 'block') => {
