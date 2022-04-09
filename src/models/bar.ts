@@ -1964,6 +1964,9 @@ export default {
     },
     setSelectedKeys(state: IBarState, { payload }: any) {
       state.key = payload
+      state.selectedComponentOrGroup.forEach(item => {
+        item.selected = false
+      })
       state.selectedComponentOrGroup = state.key.reduce((pre: any, cur: string) => {
         pre.push(findLayerById(state.treeData, cur))
         return pre
@@ -1971,12 +1974,7 @@ export default {
       state.selectedComponentOrGroup.forEach(item => {
         item.selected = true
       })
-      console.log('length', state.selectedComponentOrGroup.length)
-      if(state.selectedComponentOrGroup.length > 0) {
-        state.isAreaChoose = true
-      } else {
-        state.isAreaChoose = false
-      }
+      state.isAreaChoose = (state.selectedComponentOrGroup.length > 0)
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup)
       state.selectedComponents = state.selectedComponents = state.components.filter(component => state.selectedComponentIds.includes(component.id))
       state.selectedComponentRefs = {}
@@ -1987,7 +1985,7 @@ export default {
         }
       })
 
-      return { ...state, ...payload }
+      return { ...state }
     },
     calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = []
@@ -2202,7 +2200,6 @@ export default {
     }: any) {
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
-      console.log('state.isSupportMultiple', state.isSupportMultiple)
       if(state.isSupportMultiple) {
         // 多选
         layer.selected = true
@@ -2241,6 +2238,7 @@ export default {
     clearAllStatus(state: IBarState, payload: any) {
       // 先将选中的 layer 的 select 状态清除
       // todo 选区的时候会点击到这里
+      console.log('选中的layer', state.selectedComponentOrGroup[0])
       state.selectedComponentOrGroup.forEach(layer => {
         layer.selected = false
       })
@@ -2266,7 +2264,6 @@ export default {
         return item.id === payload.id
       })
       state.components.splice(index, 1, componentConfig)
-      console.log('index', index)
       return { ...state }
     },
   },
