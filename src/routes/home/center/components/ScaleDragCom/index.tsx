@@ -31,14 +31,28 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
     },
   }))
-  const handleScaleEnd = (data: any) => {
-    onScaleEnd(data)
+
+
+  /**
+   *  scaleDrag 组件是可放大并且是能拖拽的组件，但是不具备主动拖拽的功能，只能通过设置 position / 真实 dom 的 transform 的数据去主动移动它
+   */
+
+  /**
+   * @desc 开始拖拽, 如果进行多个拖拽的时候，拖拽的是当前的这个 scaleDrag 组件，那么就等于是点击了空白画布，清空了
+   * @return void
+   */
+
+  const handleStart = () => {
+    dispatch({
+      type: 'bar/clearAllStatus',
+    })
   }
+
   const handleDrag = (event: DraggableEvent, data: DraggableData) => {
-    scaleDragData.position = {
-      x: data.x,
-      y: data.y,
-    }
+    // scaleDragData.position = {
+    //   x: data.x,
+    //   y: data.y,
+    // }
   }
   const handleStop = (event: DraggableEvent, data: DraggableData) => {
     dispatch({
@@ -48,11 +62,19 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       },
     })
   }
+  const handleScaleEnd = (data: any) => {
+    onScaleEnd(data)
+  }
   const scaleDragRef: any = useRef(null)
   return (
     <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
-      <Draggable scale={ bar.canvasScaleValue } ref={ scaleDragRef } onDrag={ handleDrag } onStop={ handleStop }
-                 position={ bar.scaleDragData.position }>
+      <Draggable
+        scale={ bar.canvasScaleValue }
+        ref={ scaleDragRef }
+        onStart={ handleStart }
+        onDrag={ handleDrag }
+        onStop={ handleStop }
+        position={ bar.scaleDragData.position }>
         <ScaleContainer
           nodeRef={ nodeRef }
           style={ { ...bar.scaleDragData.style } }

@@ -22,6 +22,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
 
   useEffect(() => {
     document.onmousedown = (e: any) => {
+      e.preventDefault()
       console.log('选区mouseDown')
       if(![ 'c-canvas', 'draggable-wrapper' ].includes(e.target.className)) {
         return
@@ -37,7 +38,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
           height: Math.ceil(domInfo.height),
         }
       })
-      e.preventDefault()
       /*
         初始化
        */
@@ -48,9 +48,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       const boxPreHeight = areaRef.current.offsetHeight
       let isMouseMove = false
       document.onmousemove = (ev: Event) => {
-        throttle(() => {
-
-        }, 10)
         console.log('选区mouseMove')
         // 移动的时候让选区显示出来
         e.preventDefault()

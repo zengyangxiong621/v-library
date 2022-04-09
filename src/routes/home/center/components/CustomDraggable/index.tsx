@@ -64,13 +64,14 @@ const CustomDraggable
    * @return void
    */
   const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-    console.log('dragStart')
+    console.log('dragStart', layer)
     setStartPosition({
       x: data.x,
       y: data.y,
     })
     bar.selectedComponents = []
     bar.dragStatus = '一组件'
+    // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
     if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
       dispatch({
         type: 'bar/save',
@@ -162,9 +163,11 @@ const CustomDraggable
         bar.isSupportMultiple = true
         // 当选中多个组件/小组的时候，并且当前移动的组件也在这些已经选中的 组件/小组 之中
         Object.keys(bar.selectedComponentRefs).forEach((key: any) => {
+          // 取出 transform 中 translate 的 x, y 值
           const translateArr = bar.selectedComponentDOMs[key].style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
           const translateX = Number(translateArr[0])
           const translateY = Number(translateArr[1])
+          // 重新给 transform 赋值
           bar.selectedComponentDOMs[key].style.transform = `translate(${ translateX + xMoveLength }px, ${ translateY + yMoveLength }px)`
           bar.selectedComponentRefs[key].handleSetPosition(xMoveLength, yMoveLength)
         })

@@ -1980,6 +1980,7 @@ export default {
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
       })
+      
       return { ...state, ...payload }
     },
     calcDragScaleData(state: IBarState, { payload }: any) {
