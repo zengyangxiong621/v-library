@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
 import "antd/dist/antd.css";
 import '../src/assets/iconfont/iconfont.css';
@@ -7,15 +8,26 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './assets/fonts/iconfont.css'
 
-import dva from 'dva';
+import dva, { router } from 'dva';
 import { createBrowserHistory } from 'history'
+import { createRoutes } from './utils/core';
+
+const { Router } = router;
+const routerConfig = require('./router').default
 
 const app = dva({
   history: createBrowserHistory()
 })
 
-app.model(require('./models/app').default);
-app.router(require('./router').default);
+app.model(require('./models/global').default);
+
+// app.router(require('./router').default);
+app.router(({ history, app }) => (
+  <Router history={history}>
+    {createRoutes(app, routerConfig)}
+  </Router>
+));
+
 app.start('#root');
 
 // ReactDOM.render(

@@ -26,7 +26,7 @@ import {
   showInput,
   hidden,
 } from '../utils/sideBar'
-import { DIMENSION } from '../routes/home/center/constant'
+import { DIMENSION } from '../routes/dashboard/center/constant'
 
 interface IBarState {
   key: string[];

@@ -23,7 +23,7 @@ import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 
 /** 数据 || 方法 */
 import { menuOptions } from './Data/menuOptions'
-import { getTargetMenu } from '../left/components/rightClickMenu/getMenuNode'
+import { getTargetMenu } from './components/rightClickMenu/getMenuNode'
 
 const Left = ({ dispatch, bar, operate }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置

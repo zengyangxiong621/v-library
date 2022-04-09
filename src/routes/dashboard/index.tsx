@@ -11,7 +11,7 @@ import CustomHeader from './components/header/index'
 import Left from './left'
 import Center from './center'
 import Right from './right'
-import CenterHeaderBar from '../home/center/components/topBar/index'
+import CenterHeaderBar from './center/components/topBar/index'
 import ChooseArea from './center/components/ChooseArea'
 import * as React from 'react'
 

@@ -58,8 +58,8 @@ class Dashboard extends Component<Props, State> {
 
     return (
       <div className="">
-        <RemoteBaseComponent type="text" config={componentConfig}></RemoteBaseComponent>
-        {/* <Text config={componentConfig} /> */}
+        {/* <RemoteBaseComponent type="text" config={componentConfig}></RemoteBaseComponent> */}
+        <Text config={componentConfig} />
         { fields.map((item: any, i: any) => (
           <div key={item.label}>
             <span>{item.label}</span>

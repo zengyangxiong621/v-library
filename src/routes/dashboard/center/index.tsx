@@ -157,13 +157,13 @@ const Center = ({ bar, dispatch }: any) => {
                 bar.scaleDragCompRef = ref
               } }
             />
-            <SupportLines
+            {/* <SupportLines
               key="support"
               cRef={ (ref: any) => {
                 bar.supportLinesRef = ref
                 return bar.supportLinesRef
               } }
-            />
+            /> */}
             <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
               <CustomDraggable mouse={ 0 } treeData={ treeData }/>
             </div>

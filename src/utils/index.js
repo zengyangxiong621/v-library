@@ -1,5 +1,5 @@
-import { IConfig, ILayerComponent, ILayerGroup } from '../routes/home/center/components/CustomDraggable/type'
-import { DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from '../routes/home/center/constant'
+import { IConfig, ILayerComponent, ILayerGroup } from '../routes/dashboard/center/components/CustomDraggable/type'
+import { DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from '../routes/dashboard/center/constant'
 
 export function findLayerById(layer, id) {
   let temp = null;

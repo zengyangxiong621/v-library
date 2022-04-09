@@ -8,7 +8,7 @@ import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData
 import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
 import Text from '../Text'
-import RemoteBaseComponent from '../../../../../components/RemoteBaseComponent';
+// import RemoteBaseComponent from '../../../../../components/RemoteBaseComponent';
 import {
   STYLE,
   DIMENSION,
