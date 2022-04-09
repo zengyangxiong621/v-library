@@ -72,7 +72,7 @@ const CustomDraggable
     bar.selectedComponents = []
     bar.dragStatus = '一组件'
     // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
-    if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
+    if(!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
       dispatch({
         type: 'bar/save',
         payload: {
@@ -227,7 +227,6 @@ const CustomDraggable
       // 单个组移动
       const xMoveLength = Math.ceil(data.x - startPosition.x)
       const yMoveLength = Math.ceil(data.y - startPosition.y)
-      console.log('单个组移动', bar.selectedComponents)
       bar.selectedComponents.forEach((item: IComponent) => {
         // const style_config = item.config.find((item: any) => item.name === STYLE)
         const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
@@ -343,10 +342,16 @@ const CustomDraggable
       return
     }
     component.hover = true
+    dispatch({
+      type: 'bar/save',
+    })
   }
   const handleMouseOut = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     e.stopPropagation()
     component.hover = false
+    dispatch({
+      type: 'bar/save',
+    })
   }
   // let copyTreeData = deepClone(treeData).reverse()
   return (

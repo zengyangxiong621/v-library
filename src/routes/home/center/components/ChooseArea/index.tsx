@@ -123,7 +123,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
           }
           selectedIds.push(item.id)
         })
-        console.log('selectedIds')
         selectedList.current = selectedIds
 
       }
