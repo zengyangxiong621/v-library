@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
+import { connect } from 'dva'
 import { v4 as uuidv4 } from 'uuid';
 import EventDrawer from '../eventDrawer'
 
@@ -21,22 +22,7 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 
-const componentsList = [
-  {
-    title: '组件1',
-    value: '0-0',
-    key: '0-0',
-    children: [
-      {
-        title: '组件2',
-        value: '0-0-0',
-        key: '0-0-0',
-      },
-    ],
-  }
-]
-
-const CusEvent = props => {
+const CusEvent = ({bar, dispatch ,...props }) => {
   const { Panel } = Collapse;
   const { TabPane } = Tabs;
   const { Option } = Select;
@@ -285,6 +271,7 @@ const CusEvent = props => {
     action.componentScope = val
   }
   const selectComponentChange = (val, action) => {
+    console.log('val',val)
     action.component = val
   }
 
@@ -398,7 +385,10 @@ const CusEvent = props => {
                                   </Space>
                                 </Radio.Group>
                                 <TreeSelect
-                                  treeData={componentsList}
+                                  treeData={bar.treeData}
+                                  fieldNames={
+                                    { key: 'id', children: 'components',label:'name', value:'id' }
+                                  }
                                   onChange={val => { selectComponentChange(val, action) }}
                                   treeCheckable={true}
                                   showCheckedStrategy={SHOW_PARENT}
@@ -494,4 +484,6 @@ const CusEvent = props => {
   )
 }
 
-export default memo(CusEvent)
+export default connect(({ bar }) => ({
+  bar
+}))(CusEvent)
