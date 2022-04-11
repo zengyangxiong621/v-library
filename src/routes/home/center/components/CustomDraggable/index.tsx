@@ -52,10 +52,12 @@ const CustomDraggable
   let supportLinesRef = bar.supportLinesRef
   const [ startPosition, setStartPosition ] = useState({ x: 0, y: 0 })
   const nodeRef: any = useRef(null)
-
-  const calcSupportLinesPosition = () => {
-
-  }
+  const currentTimes: any = useRef(0)
+  useEffect(() => {
+    localStorage.removeItem('dblComponentTimes')
+    return () => {
+    }
+  }, [])
   /**
    * 鼠标事件顺序： dragStart, drag, dragEnd, click
    */
@@ -65,9 +67,6 @@ const CustomDraggable
    */
   const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
     console.log('dragStart', layer)
-    console.log('------------------')
-    console.log('是否多选的状态', bar.isSupportMultiple)
-    console.log('------------------')
     setStartPosition({
       x: data.x,
       y: data.y,
@@ -108,7 +107,7 @@ const CustomDraggable
   }
   const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
     ev.stopPropagation()
-    console.log('draging', layer)
+    console.log('dragging', layer)
     // 向上取整
     let aroundX = Math.ceil(data.x)
     let aroundY = Math.ceil(data.y)
@@ -334,12 +333,52 @@ const CustomDraggable
     }
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
-    console.log('click')
+    localStorage.removeItem('dblComponentTimes')
+    console.log('click', layer)
     e.stopPropagation()
   }
-  const handleDblClick = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
-    // e.stopPropagation()
-    console.log('dblClick', component)
+  const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
+    const dblComponentTimes = localStorage.getItem('dblComponentTimes')
+    if(!currentTimes) {
+      currentTimes.current = 1
+    } else {
+      currentTimes.current++
+    }
+    if(Number(dblComponentTimes) === currentTimes.current) {
+      // layer.cancel = false
+      // layer.disabled = false
+      // e.stopPropagation()
+    }
+    // 1    2
+    if(Number(dblComponentTimes) < currentTimes.current) {
+      layer.cancel = true
+      layer.disabled = true
+      if('components' in layer) {
+        layer.components.forEach(item => {
+          item.cancel = false
+          item.disabled = false
+        })
+      }
+    }
+    console.log('-------------')
+    console.log('layer', layer)
+    console.log('-------------')
+    if(!dblComponentTimes) {
+      layer.cancel = true
+      layer.disabled = true
+      if('components' in layer) {
+        layer.components.forEach(item => {
+          item.cancel = false
+          item.disabled = false
+        })
+      }
+      localStorage.setItem('dblComponentTimes', '1')
+    } else {
+      localStorage.setItem('dblComponentTimes', (Number(dblComponentTimes) + 1).toString())
+    }
+    dispatch({
+      type: 'bar/save',
+    })
   }
   const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     if(component.hover) {
@@ -424,8 +463,9 @@ const CustomDraggable
                   allComponentRefs[layer.id] = ref
                 }
               } }
-              disabled={ layer.lock || layer.cancel }
+              disabled={ layer.lock || layer.disabled }
               cancel={ layer.cancel ? '.no-cancel' : null }
+              // cancel='.no-cancel'
               key={ layer.id }
               position={ config.position }
               onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config) }
@@ -442,7 +482,7 @@ const CustomDraggable
                 data-id={ layer.id }
                 key={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
-                onDoubleClickCapture={ (ev) => handleDblClick(ev, layer) }
+                onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
                 // onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
                 // onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
@@ -466,8 +506,9 @@ const CustomDraggable
                     }
                   </div> : <>
                     <div style={ { width: '100%', height: '100%', color: 'red', fontSize: 16 } }>
-                      {/*{ layer.id }*/ }
-                      <Text styleConfig={ style_config } staticData={ staticData }/>
+                      { layer.id }
+                      {/*<Text styleConfig={ style_config } staticData={ staticData }/>*/ }
+
                     </div>
                   </>
                 }

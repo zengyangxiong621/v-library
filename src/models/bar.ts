@@ -8,6 +8,7 @@ import {
   mergeComponentLayers,
   layerComponentsFlat,
   calcGroupPosition,
+  handleLayersStatus,
 } from '../utils'
 
 import {
@@ -27,6 +28,7 @@ import {
   hidden,
 } from '../utils/sideBar'
 import { DIMENSION } from '../routes/home/center/constant'
+import { ILayerComponent, ILayerGroup } from '../routes/home/center/components/CustomDraggable/type'
 
 interface IBarState {
   key: string[];
@@ -57,12 +59,14 @@ interface IBarState {
     },
     direction: 'horizon' | 'vertical',
     display: 'none' | 'block'
-  }>
+  }>,
+  currentDblTimes: number
 }
 
 export default {
   namespace: 'bar',
   state: {
+    currentDblTimes: 0,
     key: [],
     isFolder: false,
     lastRightClick: '',
@@ -1965,6 +1969,7 @@ export default {
     initTreeData(state: IBarState, { payload }: any) {
       payload.forEach((layer: any) => {
         layer.cancel = false
+        layer.disabled = false
       })
       return { ...state, treeData: payload }
     },
@@ -2248,8 +2253,18 @@ export default {
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
       // 先将选中的 layer 的 select 状态清除
-      // todo 选区的时候会点击到这里
-      console.log('选中的layer', state.selectedComponentOrGroup[0])
+      handleLayersStatus(state.treeData, (layer: ILayerGroup | ILayerComponent, index: number) => {
+        if((layer as any).parentId === '1') {
+          layer.cancel = false
+          layer.disabled = false
+        } else {
+          layer.cancel = true
+          layer.disabled = true
+        }
+      })
+      localStorage.removeItem('dblComponentTimes')
+      localStorage.removeItem('currentTimes')
+      state.currentDblTimes = 0
       state.selectedComponentOrGroup.forEach(layer => {
         layer.selected = false
       })

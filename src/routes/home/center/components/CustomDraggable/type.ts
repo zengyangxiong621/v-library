@@ -26,6 +26,7 @@ export interface ILayerComponent {
   selected: boolean,
   hover: boolean,
   cancel: boolean,
+  disabled: boolean,
 }
 
 export interface ILayerGroup {
@@ -37,6 +38,7 @@ export interface ILayerGroup {
   selected: boolean,
   hover: boolean,
   cancel: boolean,
+  disabled: boolean,
   components: Array<ILayerComponent>,
   children: Array<ILayerComponent>,
 }
