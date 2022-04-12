@@ -149,40 +149,49 @@ const Center = ({ bar, dispatch }: any) => {
         mouse={ mouse }
       />
       <div
-        ref={ canvasRef }
-        className="canvas-container"
         style={ {
-          width: recommendConfig.width * bar.canvasScaleValue,
-          height: recommendConfig.height * bar.canvasScaleValue,
+          width: 'calc(100% - 22px)',
+          height: '100%',
+          position: 'absolute',
+          overflow: 'hidden',
         } }
       >
         <div
-          className="canvas-screen"
+          ref={ canvasRef }
+          className="canvas-container"
           style={ {
-            width: recommendConfig.width,
-            height: recommendConfig.height,
-            transform: `scale(${ bar.canvasScaleValue })`,
-            backgroundColor: styleColor.value,
-            background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
+            width: recommendConfig.width * bar.canvasScaleValue,
+            height: recommendConfig.height * bar.canvasScaleValue,
           } }
         >
-          <div className="draggable-wrapper">
-            <ScaleDragCom
-              mouse={ mouse }
-              cRef={ (ref: any) => {
-                bar.scaleDragCompRef = ref
-              } }
-              onScaleEnd={ handleScaleEnd }
-            />
-            <SupportLines
-              cRef={ (ref: any) => {
-                bar.supportLinesRef = ref
-              } }
-            />
-            <RulerLines/>
+          <div
+            className="canvas-screen"
+            style={ {
+              width: recommendConfig.width,
+              height: recommendConfig.height,
+              transform: `scale(${ bar.canvasScaleValue })`,
+              backgroundColor: styleColor.value,
+              background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
+            } }
+          >
+            <div className="draggable-wrapper">
+              <ScaleDragCom
+                mouse={ mouse }
+                cRef={ (ref: any) => {
+                  bar.scaleDragCompRef = ref
+                } }
+                onScaleEnd={ handleScaleEnd }
+              />
+              <SupportLines
+                cRef={ (ref: any) => {
+                  bar.supportLinesRef = ref
+                } }
+              />
+              <RulerLines/>
 
-            <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
-              <CustomDraggable mouse={ 0 } treeData={ treeData }/>
+              <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
+                <CustomDraggable mouse={ 0 } treeData={ treeData }/>
+              </div>
             </div>
           </div>
         </div>

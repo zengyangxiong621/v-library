@@ -338,6 +338,7 @@ const CustomDraggable
     e.stopPropagation()
   }
   const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
+    console.log('当前的次数', currentTimes.current)
     const dblComponentTimes = localStorage.getItem('dblComponentTimes')
     if(!currentTimes) {
       currentTimes.current = 1
@@ -376,9 +377,9 @@ const CustomDraggable
     } else {
       localStorage.setItem('dblComponentTimes', (Number(dblComponentTimes) + 1).toString())
     }
-    dispatch({
-      type: 'bar/save',
-    })
+    // dispatch({
+    //   type: 'bar/save',
+    // })
   }
   const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     if(component.hover) {

@@ -67,54 +67,65 @@ const Ruler = ({ bar, dispatch, mouse }) => {
       const contextLeft = this.canvasLeft.getContext('2d')
       contextTop.beginPath()
       let ruleScale = 100
+      let ruleGrade = 10
       if (canvasScaleValue > 1) {
         ruleScale = 50
-      } else if (canvasScaleValue <= 0.67) {
+        ruleGrade = 10
+      } else if (canvasScaleValue <= 1 && canvasScaleValue > 0.67) {
+        ruleScale = 100
+        ruleGrade = 10
+      } else if (canvasScaleValue <= 0.67 && canvasScaleValue > 0.43) {
         ruleScale = 200
-      } else if (canvasScaleValue <= 0.33) {
-        ruleScale = 300
+        ruleGrade = 20
+      } else if (canvasScaleValue <= 0.43) {
+        ruleScale = 400
+        ruleGrade = 40
       }
-      console.log('left', left)
-      for (let i = -2000; i < 3000; i += 10) {
+      for (let i = -5000; i < 5000; i += ruleGrade) {
         contextTop.strokeStyle = 'white'
         contextTop.fillStyle = 'white'
 
         //顶部标尺线绘制, 比例尺
-        const y = (i % 100 === 0) ? 0 : 12
-        contextTop.moveTo(Math.ceil((i + left - 22) / canvasScaleValue), y)
-        contextTop.lineTo(Math.ceil((i + left - 22) / canvasScaleValue), 20)
-        // contextTop.moveTo(Math.ceil((i + left - 22) / canvasScaleValue), y)
-        // contextTop.lineTo(Math.ceil((i + left - 22) / canvasScaleValue), 20)
+        const y = (i % ruleScale === 0) ? 0 : 12
+        // contextTop.moveTo(i + left - 22, y)
+        // contextTop.lineTo(i + left - 22, 20)
+        contextTop.moveTo(Math.ceil(i * canvasScaleValue) + left - 22, y)
+        contextTop.lineTo(Math.ceil(i * canvasScaleValue) + left - 22, 20)
 
         //顶部标尺数字绘制
         if (y === 0) {
-          contextTop.font = `${ 7 / canvasScaleValue }px Arial`
-          // contextTop.fillText(i, Math.ceil((i + left - 18) / canvasScaleValue), 8)
-          contextTop.fillText(i, Math.ceil((i + left - 18) / canvasScaleValue), 10)
+          contextTop.font = `12px Arial`
+          console.log('刻度尺X', Math.ceil(i * canvasScaleValue) + left - 18)
+          contextTop.fillText(i, Math.ceil(i * canvasScaleValue) + left - 18, 10)
+          // contextTop.fillText(i, i + left - 18, 10)
         }
       }
 
 
-      for (let i = -1000; i < 2000; i += 10) {
+      for (let i = -5000; i < 5000; i += ruleGrade) {
         //左侧标尺线绘制
         contextLeft.save()
         contextLeft.beginPath()
         contextLeft.strokeStyle = 'white'
         contextLeft.fillStyle = 'white'
-        const x = (i % 100 === 0) ? 0 : 12
-        contextLeft.moveTo(x, i)
-        contextLeft.lineTo(20, i)
+        const x = (i % ruleScale === 0) ? 0 : 12
+        contextLeft.moveTo(x, Math.ceil(i * canvasScaleValue) + top - 22)
+        contextLeft.lineTo(20, Math.ceil(i * canvasScaleValue) + top - 22)
 
         contextLeft.stroke()
         contextLeft.closePath()
 
         //左侧标尺数字绘制
-        contextLeft.beginPath()
         if (x === 0) {
-          contextLeft.translate(9, i + 18)
-          contextLeft.rotate(270 * Math.PI / 180)
-          contextLeft.font = `${ 7 / canvasScaleValue }px Arial`
-          contextLeft.fillText(i.toString(), 10, 0)
+          contextLeft.beginPath()
+          contextLeft.font = `12px Arial`
+          contextLeft.translate(10, Math.ceil(i * canvasScaleValue) + top - 25)
+          contextLeft.rotate(-90 * Math.PI / 180)
+          contextLeft.fillText(i, 0, 0)
+          // contextLeft.fillText(i, 0, Math.ceil(i * canvasScaleValue) + top - 18)
+
+          // console.log('刻度尺Y', Math.ceil(i * canvasScaleValue) + top - 18)
+          // contextLeft.fillText(i.toString(), -(Math.ceil(i * canvasScaleValue) + top - 18), 0)
 
           contextLeft.closePath()
           contextLeft.restore()
@@ -175,12 +186,16 @@ const Ruler = ({ bar, dispatch, mouse }) => {
   }
   return (
     <div style={ { position: 'absolute', left: 0, top: 0 } }>
-      <div style={ { position: 'absolute', left: 22, top: 0, transform: `scaleX(${ bar.canvasScaleValue })` } }>
+      <div style={ {
+        position: 'absolute',
+        left: 22,
+        top: 0,
+      } }>
         <canvas
           onClick={ () => handleClick('horizon') }
           id="canvasTop"
           height="22"
-          width={ 3000 }
+          width="3000"
           style={ {
             position: 'absolute',
             left: 0,
@@ -188,21 +203,31 @@ const Ruler = ({ bar, dispatch, mouse }) => {
             background: '#151620',
             cursor: 'e-resize',
           } }>
-          <p>Your browserdoes not support the canvas element!</p>
+          <p>Your browser does not support the canvas element!</p>
         </canvas>
       </div>
       <div style={ {
         position: 'absolute',
         left: 0,
-        top: moveLength.top,
-        transform: `scaleY(${ bar.canvasScaleValue })`,
+        top: 22,
       } }>
         <canvas
-          onClick={ () => handleClick('vertical') } id="canvasLeft" width="22" height="1080"
-          style={ { position: 'absolute', left: 0, top: 0, background: '#151620', cursor: 'n-resize' } }>
-          <p>Your browserdoes not support the canvas element!</p>
+          onClick={ () => handleClick('vertical') }
+          id="canvasLeft"
+          width="22"
+          height="2000"
+          style={ {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            background: '#151620',
+            cursor: 'n-resize',
+          } }>
+          <p>Your browser does not support the canvas element!</p>
         </canvas>
       </div>
+
+
       <div
         style={ {
           width: 20,
