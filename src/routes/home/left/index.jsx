@@ -43,7 +43,7 @@ const Left = ({ dispatch, bar, operate }) => {
   // 监听 树区域 以外的点击
   useClickAway(() => {
     console.log('清空click')
-    if(bar.isAreaChoose) {
+    if (bar.isAreaChoose) {
       return
     }
     setSelected([])
@@ -110,12 +110,12 @@ const Left = ({ dispatch, bar, operate }) => {
   /**
    * 方法
    * */
-  // 收起 / 展开 菜单栏
+    // 收起 / 展开 菜单栏
   const [w, setW] = useState(250)
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
-    el.style.width = `${w}px`
+    el.style.width = `${ w }px`
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
@@ -133,7 +133,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${icon}`,
+      type: `bar/${ icon }`,
       payload: finalPayload,
     })
   }
@@ -292,57 +292,58 @@ const Left = ({ dispatch, bar, operate }) => {
     //   style={{
     //   }}
     //   inlineCollapsed={inlineCollapsed}>
-    <div className='left-menu'>
+    <div className="left-menu">
       <div className="left-wrap">
-        <div className="header" ref={headerRef}>
+        <div className="header" ref={ headerRef }>
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={() => toggle()}
-            style={{ cursor: 'pointer' }} />
+            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
+            style={ { cursor: 'pointer' } }/>
         </div>
-        <div className='left-wrap-toolbar' ref={topBarRef}>
-          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
+        <div className="left-wrap-toolbar" ref={ topBarRef }>
+          <ToolBar data={ topBarIcons } iconSize="12px" getActiveIcon={ getActiveIcon }>
           </ToolBar>
         </div>
-        {/*右键菜单Dropdown */}
+        {/*右键菜单Dropdown */ }
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
-        <div className='left-wrap-tree' ref={treeRef}>
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
+        <div className="left-wrap-tree" ref={ treeRef }>
           <Tree
             draggable
             blockNode
             fieldNames={
               { key: 'id', children: 'components' }
             }
-            multiple={isMultipleTree}
-            switcherIcon={<DownOutlined />}
-            defaultExpandedKeys={customExpandKeys}
-            onDrop={onDrop}
-            onExpand={myOnExpand}
-            onSelect={onSelect}
-            onRightClick={onRightClick}
-            treeData={bar.treeData}
-            selectedKeys={bar.key}
-            titleRender={(nodeData) => {
+            multiple={ isMultipleTree }
+            switcherIcon={ <DownOutlined/> }
+            defaultExpandedKeys={ customExpandKeys }
+            onDrop={ onDrop }
+            onExpand={ myOnExpand }
+            onSelect={ onSelect }
+            onRightClick={ onRightClick }
+            treeData={ bar.treeData }
+            selectedKeys={ bar.key }
+            titleRender={ (nodeData) => {
               return (<div>
                 <EveryTreeNode
-                  {...nodeData}
-                  isExpand={isExpand}
-                  getCurrentMenuLocation={getCurrentMenuLocation}
+                  { ...nodeData }
+                  isExpand={ isExpand }
+                  getCurrentMenuLocation={ getCurrentMenuLocation }
                 />
               </div>)
             }
             }
           />
         </div>
-        {/* </Dropdown> */}
-        {isShowRightMenu &&
-          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
+        {/* </Dropdown> */ }
+        { isShowRightMenu &&
+        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
       </div>
-      <div className="footer" ref={bottomBarRef}>
-        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
+      <div className="footer" ref={ bottomBarRef }>
+        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
         </ToolBar>
       </div>
+
     </div>
     // </Menu>
   )

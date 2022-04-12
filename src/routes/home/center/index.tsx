@@ -9,15 +9,19 @@ import SupportLines from './components/SupportLines'
 import ChooseArea from './components/ChooseArea'
 import * as React from 'react'
 import { Button } from 'antd'
-import { useClickAway, useKeyPress, useMouse } from 'ahooks'
+import { useClickAway, useKeyPress, useMouse, useThrottle } from 'ahooks'
 import Ruler from './components/Ruler'
 import { IScaleDragData, IStyleConfig } from './type'
 import { DIMENSION } from './constant'
 import RulerLines from './components/RulerLines'
+import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
+import { throttle } from '../../../utils/common'
 
 const Center = ({ bar, dispatch }: any) => {
+
   const filterKey = [ 'ctrl', 'shift' ]
   const draggableContainerRef = useRef(null)
+  const rulerRef: any = useRef(null)
   const canvasRef = useRef(null)
   // let supportLinesRef: any = useRef(null)
   const treeData = bar.treeData
@@ -142,70 +146,114 @@ const Center = ({ bar, dispatch }: any) => {
     })
   }
 
+  const handleDrag = function(event: DraggableEvent, data: DraggableData) {
+    // rulerRef.current.painter()
+    // console.log('hhhh')
+  }
+
+  const throttledFunc = throttle(handleDrag, 1000)
 
   return (
     <div className="c-canvas">
       <Ruler
+        cRef={ rulerRef }
         mouse={ mouse }
       />
       <div
         style={ {
           width: 'calc(100% - 22px)',
-          height: '100%',
+          height: 'calc(100% - 22px)',
           position: 'absolute',
           overflow: 'hidden',
         } }
       >
-        <div
-          ref={ canvasRef }
-          className="canvas-container"
-          style={ {
-            width: recommendConfig.width * bar.canvasScaleValue,
-            height: recommendConfig.height * bar.canvasScaleValue,
-          } }
+        <Draggable
+          // disabled={ true }
+          onDrag={ handleDrag }
         >
           <div
-            className="canvas-screen"
-            style={ {
-              width: recommendConfig.width,
-              height: recommendConfig.height,
-              transform: `scale(${ bar.canvasScaleValue })`,
-              backgroundColor: styleColor.value,
-              background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
-            } }
+            style={ { width: '100%', height: '100%' } }
           >
-            <div className="draggable-wrapper">
-              <ScaleDragCom
-                mouse={ mouse }
-                cRef={ (ref: any) => {
-                  bar.scaleDragCompRef = ref
-                } }
-                onScaleEnd={ handleScaleEnd }
-              />
-              <SupportLines
-                cRef={ (ref: any) => {
-                  bar.supportLinesRef = ref
-                } }
-              />
-              <RulerLines/>
+            <div
+              style={ {
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+              } }
+            >
+              <div>
+                <div
+                  ref={ canvasRef }
+                  className="canvas-container"
+                  style={ {
+                    width: recommendConfig.width * bar.canvasScaleValue,
+                    height: recommendConfig.height * bar.canvasScaleValue,
+                  } }
+                >
+                  <div
+                    className="canvas-screen"
+                    style={ {
+                      width: recommendConfig.width,
+                      height: recommendConfig.height,
+                      transform: `scale(${ bar.canvasScaleValue })`,
+                      backgroundColor: styleColor.value,
+                      background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
+                    } }
+                  >
+                    <div className="draggable-wrapper">
+                      <ScaleDragCom
+                        mouse={ mouse }
+                        cRef={ (ref: any) => {
+                          bar.scaleDragCompRef = ref
+                        } }
+                        onScaleEnd={ handleScaleEnd }
+                      />
+                      <SupportLines
+                        cRef={ (ref: any) => {
+                          bar.supportLinesRef = ref
+                        } }
+                      />
+                      <RulerLines/>
 
-              <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
-                <CustomDraggable mouse={ 0 } treeData={ treeData }/>
+                      <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
+                        <CustomDraggable mouse={ 0 } treeData={ treeData }/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="mengban"
+                  style={ {
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'gray',
+                    opacity: 0,
+                  } }
+                >
+
+                </div>
               </div>
             </div>
+            <div style={ {
+              position: 'absolute',
+              bottom: '50px',
+              right: '20px',
+              color: '#999',
+              userSelect: 'none',
+            } }>
+              按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
+              { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
+            </div>
           </div>
+        </Draggable>
+        <div className="mengban">
+
         </div>
       </div>
-      <div style={ {
-        position: 'absolute',
-        bottom: '50px',
-        right: '20px',
-        color: '#999',
-        userSelect: 'none',
-      } }>
-        按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
-        { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
-      </div>
+
     </div>
   )
 }

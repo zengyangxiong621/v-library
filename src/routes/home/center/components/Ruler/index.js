@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useImperativeHandle } from 'react'
 import { findDOMNode } from 'react-dom'
 import './index.less'
 import { connect } from 'dva'
@@ -7,13 +7,12 @@ import {
   EyeInvisibleOutlined,
 
 } from '@ant-design/icons'
+import { throttle } from '../../../../../utils/common'
 
-const Ruler = ({ bar, dispatch, mouse }) => {
+
+const Ruler = ({ bar, dispatch, mouse, cRef }) => {
+
   const recommendConfig = bar.pageConfig.find(item => item.name === 'recommend')
-  const [moveLength, setMoveLength] = useState({
-    left: 0,
-    top: 0,
-  })
   let [ruler, setRuler] = useState(null)
   const [isRulerLinesShow, setIsRulerLinesShow] = useState(true)
   // useEffect(() => {
@@ -27,6 +26,15 @@ const Ruler = ({ bar, dispatch, mouse }) => {
   //     ruler.painter(recommendConfig.width, recommendConfig.height)
   //   }
   // }, [recommendConfig])
+  const painter = () => {
+    console.log('hhhh')
+  }
+  const throttlePainter = throttle(painter, 1000)
+  useImperativeHandle(cRef, () => ({
+    painter: () => {
+      throttlePainter()
+    },
+  }))
   useEffect(() => {
     const temp = new rulerCanvas()
     temp.painter(bar.canvasScaleValue)
@@ -37,15 +45,13 @@ const Ruler = ({ bar, dispatch, mouse }) => {
   }, [])
   useEffect(() => {
     if (ruler) {
-      const canvasContainer = document.querySelector('.canvas-container')
+      const canvasContainer = document.querySelector('.canvas-screen')
       const leftWrap = document.querySelector('.home-left-wrap')
       const headerWrap = document.querySelector('.Header-wrap')
-      setMoveLength({
-        left: Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width),
-        top: Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height),
-      })
       ruler.clearCanvas()
-      ruler.painter(bar.canvasScaleValue, Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width), Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height))
+      const left = Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width)
+      const right = Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height)
+      ruler.painter(bar.canvasScaleValue, left, right)
     }
   }, [bar.canvasScaleValue])
   const rulerCanvas = function () {
@@ -95,7 +101,6 @@ const Ruler = ({ bar, dispatch, mouse }) => {
         //顶部标尺数字绘制
         if (y === 0) {
           contextTop.font = `12px Arial`
-          console.log('刻度尺X', Math.ceil(i * canvasScaleValue) + left - 18)
           contextTop.fillText(i, Math.ceil(i * canvasScaleValue) + left - 18, 10)
           // contextTop.fillText(i, i + left - 18, 10)
         }
