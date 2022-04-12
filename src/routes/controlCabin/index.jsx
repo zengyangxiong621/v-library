@@ -7,7 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 
 
 const ControlCabin = props => {
-   const SamplePrevArrow = (props) => {
+  const [currnetIndex, setCurrentIndex] = useState(0)
+  const SamplePrevArrow = (props) => {
     const { className, style, onClick } = props;
     return (
       <div
@@ -30,30 +31,38 @@ const ControlCabin = props => {
   }
   const arr = [1, 2, 3, 4, 5]
   const settings = {
+    dots: true,
     arrows: true,
     className: "center",
     centerMode: true,
     infinite: true,
-    centerPadding: "2rem",
+    centerPadding: "8rem",
     slidesToShow: 3,
     speed: 500,
-    // autoplay:true,
-    // nextArrow: <SampleNextArrow />,
-    // prevArrow: <SamplePrevArrow />
+    swipe: false,
+    initialSlide: currnetIndex,
+
+    afterChange: (index) => {
+      console.log(index)
+      setCurrentIndex(index)
+    }
   };
 
-  const onClick = () => {
-    console.log('11111')
+  const onClick = (index) => {
+    console.log('11111', index)
+    if (index === currnetIndex) {
+      console.log('todo')
+      // todo 全屏展示应用
+    }
   }
 
   return (
     <div className="control-cabin-wraper">
       <Slider {...settings}>
-        {arr.map(items => {
+        {arr.map((item, index) => {
           return (
-            <div className="box1" key={items}>
-              <div className="picture" onClick={onClick}></div>
-              <p>{items}</p>
+            <div className="box1" key={item}>
+              <div className="picture" onClick={() => onClick(index)}></div>
             </div>
           )
         })}
