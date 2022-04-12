@@ -1,18 +1,19 @@
-import { memo, useState, useRef } from 'react'
+import React, { memo, useState, useRef } from 'react'
 import './index.less'
 
+import { withRouter } from 'dva/router'
+
 import { IconFont } from '../../../../utils/useIcon'
-import { Input } from 'antd'
+import { Input, Tooltip, Dropdown, Menu } from 'antd'
 
 const AppCard = (props: any) => {
-  const { id, name, release, imgUrl, changeFabuModal } = props
+  const { id, name, release, imgUrl, changeFabuModal, history } = props
 
 
   const [canEdit, setCanEdit] = useState(false)
   const [appName, setAppName] = useState(name)
 
   const inputRef = useRef<any>()
-
 
 
   /** 输入框事件 */
@@ -40,17 +41,22 @@ const AppCard = (props: any) => {
   const scanDashboard = () => {
     // TODO 通过id跳转到预览界面
     console.log('预览应用，仪表盘Id为', id);
+    history.push(`/bigscreen/${id}`)
+
   }
   const editDashboard = () => {
     //TODO 通过id跳转到主画布
     console.log('编辑应用，仪表盘Id为', id);
   }
-  const tuozhuai = (e: any) => { }
-  const fuzhi = (e: any) => {}
+  // const tuozhuai = (e: any) => { }
+  const fuzhi = (e: any) => { }
   const fabu = (e: any) => {
     changeFabuModal(true, id)
   }
-  const gengduo = (e: any) => { }
+  const menuClick = (item: any, key: any) => {
+    console.log('iteml', item);
+    console.log('key', key);
+  }
 
   return (
     <div className='AppCard-wrap'>
@@ -58,18 +64,33 @@ const AppCard = (props: any) => {
       >
         <div className='hoverOnImg'>
           <div className='icons-wrap'>
-            <IconFont className='each-icon' onClickCapture={(e) => {
-              tuozhuai(e)
-            }} type='icon-yidong' />
-            <IconFont className='each-icon' onClickCapture={(e) => {
-              fuzhi(e)
-            }} type='icon-kaobei' />
-            <IconFont className='each-icon' onClickCapture={(e) => {
-              fabu(e)
-            }} type='icon-fabu' />
-            <IconFont className='each-icon' onClickCapture={(e) => {
-              gengduo(e)
-            }} type='icon-gengduo' />
+            <Tooltip
+              placement='bottom' title="复制">
+              <IconFont className='each-icon' onClickCapture={(e) => {
+                fuzhi(e)
+              }} type='icon-kaobei' />
+            </Tooltip>
+            <Tooltip placement='bottom' title="发布">
+              <IconFont className='each-icon' onClickCapture={(e) => {
+                fabu(e)
+              }} type='icon-fabu' />
+            </Tooltip>
+            <div className='more-icon'>
+              <IconFont className='each-icon' type='icon-gengduo' />
+              <div className="more">
+                <Menu mode="vertical" onClick={(menuClick as any)}>
+                  <Menu.Item>
+                    <span>移入分组</span>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <span>复制</span>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <span>删除</span>
+                  </Menu.Item>
+                </Menu>
+              </div>
+            </div>
           </div>
           <div className='btns-wrap'>
             <span className='div-to-btns scan-btn' onClickCapture={() => scanDashboard()}>预览</span>
@@ -115,4 +136,4 @@ const AppCard = (props: any) => {
   )
 }
 
-export default memo(AppCard)
+export default memo(withRouter(AppCard))

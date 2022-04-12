@@ -3,14 +3,17 @@ import './index.less'
 
 import { IconFont } from '../../utils/useIcon'
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, Row, Col } from 'antd'
+import { Input, Row, Col, Modal } from 'antd'
 
 import TemplateCard from './templateCard/index'
+import Preview from './preview/index'
 
 const DashboardTemplate = (props: any) => {
   const { history } = props
+  // 放入预览模板中的图片链接数组
+  const urlArr = listData.map((item: any) => item.imgUrl)
 
-
+  const [curImgIndex, setCurImgIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
 
   // 搜索
@@ -26,49 +29,74 @@ const DashboardTemplate = (props: any) => {
     //TODO 携带id 跳转至 新建模板 页面
     history.push('/')
   }
-  return (
-    <div className='DashboardTemplate-wrap'>
-      <header className='back-bar'>
-        <IconFont onClick={() => backClick()} className='back-icon' type='icon-fanhui' />
-        <span className='text'>取消创建</span>
-      </header>
-      <div className="search-wrap">
-        <Input placeholder="搜索"
-          className='search'
-          allowClear
-          maxLength={40}
-          suffix={<SearchOutlined />}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onPressEnter={search}
-        />
-      </div>
-      {/* 模板列表 */}
-      <div className="list-wrap">
 
-        <Row gutter={[26, 25]} justify='start'>
-          <Col span={6}>
-            <div className="blank-template" onClickCapture={() => addTemplate()}>
-              <span className='text'>
-                <IconFont className='tianjia-icon' type='icon-xinjianfenzu' />
-                空白模板
-              </span>
-            </div>
-          </Col>
-          {
-            listData.map((item: any) => (
-              <Col span={6} ><TemplateCard {...item} /></Col>
-            ))
-          }
-        </Row>
-        {/* {
-            listData.map((item: any) => (
-              <Row gutter={[24, 24]} justify='space-between'>
-                <Col span={8}><TemplateCard {...item} /></Col>
-              </Row>
-            ))
-          } */}
+  // 获取当前需要预览的模板 的index
+  const getCurImgIndex = (i: number) => {
+    setCurImgIndex(i)
+  }
+
+  // 关闭弹窗
+  const modalCancel = () => {
+    setCurImgIndex(-1)
+  }
+  return (
+    <div>
+      <div className='DashboardTemplate-wrap'>
+        <header className='back-bar'>
+          <IconFont onClick={() => backClick()} className='back-icon' type='icon-fanhui' />
+          <span className='text'>取消创建</span>
+        </header>
+        <div className="search-wrap">
+          <Input placeholder="搜索"
+            className='search'
+            allowClear
+            maxLength={40}
+            suffix={<SearchOutlined />}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onPressEnter={search}
+          />
+        </div>
+        {/* 模板列表 */}
+        <div className="list-wrap">
+          <Row gutter={[26, 25]} justify='start'>
+            <Col span={6}>
+              <div className="blank-template" onClickCapture={() => addTemplate()}>
+                <span className='text'>
+                  <IconFont className='tianjia-icon' type='icon-xinjianfenzu' />
+                  空白模板
+                </span>
+              </div>
+            </Col>
+            {
+              listData.map((item: any, index: number) => (
+                <Col span={6} >
+                  <TemplateCard {...item}
+                    curIndex={index}
+                    getCurImgIndex={getCurImgIndex} />
+                </Col>
+              ))
+            }
+          </Row>
+        </div>
       </div>
+      {/* 预览模板 */}
+      <Modal
+        visible={curImgIndex > -1}
+        width="90vw"
+        footer={null}
+        keyboard={true}
+        closeIcon={() => <></>} // 除去关闭按钮
+        style={{
+          top: '8vh'
+        }}
+        bodyStyle={{
+          padding: '0'
+        }}
+        onCancel={() => modalCancel()}
+      >
+        <Preview srcUrlArr={urlArr} curIndex={curImgIndex} />
+      </Modal>
     </div>
   )
 }

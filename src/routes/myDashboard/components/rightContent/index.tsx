@@ -5,6 +5,7 @@ import { Row, Col, Button, Spin, message, Form } from 'antd'
 
 import AppCard from '../appCard/index'
 import DarkModal from '../darkThemeModal/index'
+import Preview from '../../../dashboardTemplate/preview/index'
 
 const RightContent = (props: any) => {
   const { listData } = props
@@ -40,9 +41,9 @@ const RightContent = (props: any) => {
   return <div className="RightContent-wrap">
     <Row gutter={[26, 26]}>
       {
-        listData.map((item: any) => (
+        listData.map((item: any, index: number) => (
           <Col span={6}>
-            <AppCard changeFabuModal={changeFabuModal} {...item} />
+            <AppCard changeFabuModal={changeFabuModal} {...item}/>
           </Col>
         )
         )
