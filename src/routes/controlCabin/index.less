@@ -1,0 +1,37 @@
+.control-cabin-wraper {
+  background-color: #666;
+
+  .picture {
+    height: 160px;
+    width: 256px;
+    background: rgb(74, 91, 243);
+    cursor: pointer;
+  }
+
+  .slick-list {
+    margin: 0 20px;
+  }
+
+  p {
+    text-align: center;
+    opacity: 0;
+  }
+
+  .slick-slide>div {
+    height: 160px;
+    width: 256px;
+    transition: all .3s ease;
+  }
+
+  .center .slick-center>div {
+    transform: scale(1.8);
+  }
+
+  .slick-center p {
+    opacity: 1;
+  }
+
+  .slick-track {
+    padding: 48px 0 96px 0;
+  }
+}
