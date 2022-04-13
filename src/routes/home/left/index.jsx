@@ -42,10 +42,6 @@ const Left = ({ dispatch, bar, operate }) => {
   const headerRef = useRef(null)
   // 监听 树区域 以外的点击
   useClickAway(() => {
-<<<<<<< HEAD
-    console.log('清空click')
-=======
->>>>>>> bb1ef26 (feat: 合并代码)
     if (bar.isAreaChoose) {
       return
     }
@@ -112,13 +108,8 @@ const Left = ({ dispatch, bar, operate }) => {
   /**
    * 方法
    * */
-<<<<<<< HEAD
-    // 收起 / 展开 菜单栏
-  const [w, setW] = useState(250)
-=======
   // 收起 / 展开 菜单栏
   const [w, setW] = useState(188)
->>>>>>> bb1ef26 (feat: 合并代码)
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)

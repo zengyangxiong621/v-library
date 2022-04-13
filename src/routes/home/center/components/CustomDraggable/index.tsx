@@ -464,16 +464,8 @@ const CustomDraggable
                   allComponentRefs[layer.id] = ref
                 }
               } }
-<<<<<<< HEAD
-              disabled={ layer.lock || layer.disabled }
-              cancel={ layer.cancel ? '.no-cancel' : null }
-              // cancel='.no-cancel'
-              key={ layer.id }
-              position={ config.position }
-=======
               disabled={ layer.isLock }
               cancel=".no-cancel" key={ layer.id } position={ config.position }
->>>>>>> bb1ef26 (feat: 合并代码)
               onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config) }
               onDrag={ (ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config) }
               onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
