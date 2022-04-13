@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
 import {
   findLayerById,
@@ -26,9 +27,11 @@ import {
   reName,
   showInput,
   hidden,
-} from '../utils/sideBar'
-import { DIMENSION } from '../routes/home/center/constant'
-import { ILayerComponent, ILayerGroup } from '../routes/home/center/components/CustomDraggable/type'
+} from "../utils/sideBar";
+import { DIMENSION } from "../routes/home/center/constant";
+
+import { generateLayers } from "./utils/generateLayers";
+import { myFetch } from "./utils/request";
 
 interface IBarState {
   key: string[];
@@ -1929,7 +1932,80 @@ export default {
   },
 
   effects: {
-    * fetch({ payload }: any, { call, put }: any): any {
+    *group({ payload }: any, { call, put, select }: any): any {
+      const tree: any = yield select(({ bar }: any) => bar.treeData);
+      console.log("tree", tree);
+      const { treeDataCopy, newLayerId }: any = yield group(tree, payload.key);
+      console.log("newTree", treeDataCopy);
+      console.log('nuew', newLayerId)
+      yield put({
+        type: "update",
+        payload: treeDataCopy,
+      });
+      yield put({
+        type: "bar/selectedNode",
+        payload: {
+          key: [newLayerId]
+        },
+      });
+    },
+    // 更改图层组织
+    *update({ payload }: any, { call, put }: any) {
+      console.log("更改");
+      const { data } = yield myFetch("/visual/layer/update", {
+        body: JSON.stringify({
+          dashboardId: "1513702962304577537",
+          layers: payload,
+        }),
+      });
+      console.log("data", data);
+      yield put({
+        type: "updateTree",
+        payload: data,
+      });
+    },
+    // 修改图层属性图层
+    *change({ payload }: any, { call, put }: any) {
+      const { data } = yield myFetch("/visual/layer/change", {
+        body: JSON.stringify({
+          dashboardId: "1513702962304577537",
+          configs: [
+            {
+              id: "1514070775583035393",
+              key: "isShow",
+              value: true,
+            },
+          ],
+        }),
+      });
+      yield put({
+        type: "updateTree",
+        payload: data,
+      });
+    },
+    // 添加组件到画布
+    *addComponent({ payload }: any, { call, put }: any) {
+      // 请求接口数据，获得component id
+      // const componentId = yield call()
+      // const componentId = "aabbcc";
+      // const final: any = {
+      //   componentId,
+      //   name: payload.name,
+      //   moduleName: payload.module_name,
+      // };
+      const componentId = "components_1-14";
+      const final: any = {
+        id: componentId,
+        name: "新增的",
+        moduleName: "新增的组件的标识",
+      };
+      yield put({
+        type: "addLayer",
+        payload: { final, insertId: payload.insertId },
+      });
+    },
+    //
+    *fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
       yield put({ type: 'selectedNode', payload })
     },
@@ -1972,6 +2048,17 @@ export default {
         layer.disabled = false
       })
       return { ...state, treeData: payload }
+    },
+    // 更新树
+    updateTree(state: IBarState, { payload }: any) {
+      console.log("payloaddddddddddd", payload);
+      return { ...state, treeData: payload };
+    },
+    // 添加新的图层和组件
+    addLayer(state: IBarState, { payload }: any) {
+      generateLayers(state.treeData, payload.insertId, payload.final);
+      console.log("新增后的treeData", state.treeData);
+      return { ...state };
     },
     selectedNode(state: IBarState, { payload }: any) {
       return { ...state, ...payload }
@@ -2134,10 +2221,9 @@ export default {
       return { ...state, treeData: newTree }
     },
     // 成组
-    group(state: IBarState, { payload }: any) {
-      const newTree = group(state.treeData, state.key, state.lastRightClick)
-      console.log('newTree', newTree)
-      return { ...state, treeData: newTree }
+    frontgroup(state: IBarState, { payload }: any) {
+      const { treeDataCopy } = group(state.treeData, state.key);
+      return { ...state, treeData: treeDataCopy };
     },
     // 取消成组
     cancelGroup(state: IBarState, { payload }: any) {

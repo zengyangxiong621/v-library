@@ -2,7 +2,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 interface IOperateState {
   ids: any[];
-  lock?: boolean;
+  isLock?: boolean;
   show?: boolean;
   operateValue: boolean;
   operateKey: string;
@@ -16,7 +16,7 @@ export default {
     ids: [],
     operateKey: "",
     operateValue: false,
-    // lock: false,
+    // isLock: false,
     // show: false,
     // treeData: [],
   } as IOperateState,

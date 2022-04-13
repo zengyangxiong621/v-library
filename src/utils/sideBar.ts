@@ -81,12 +81,12 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
 const moveDown: TMoveUpOrDown = (treeData, selectedNodes) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData))
   const recursiveFn = (data: any, ids: string) => {
-    for(let i = 0, len = data.length; i < len; i++) {
-      const item = data[i]
-      if(item.id === ids) {
-        if(i < len - 1) {
-          data[i] = data.splice(i + 1, 1, data[i])[0]
-          break
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === ids) {
+        if (i < len - 1) {
+          data[i] = data.splice(i + 1, 1, data[i])[0];
+          break;
         }
       } else if(item.components) {
         recursiveFn(item.components, ids)
@@ -149,15 +149,15 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData))
   console.log('targetLockState', targetLockState)
   const recursiveFn = (data: any, id: string) => {
-    for(let i = 0, len = data.length; i < len; i++) {
-      const item = data[i]
-      if(item.id === id) {
-        targetLockState === 'negation'
-          ? (item.lock = !item.lock)
-          : (item.lock = targetLockState)
-        break
-      } else if(item.components) {
-        recursiveFn(item.components, id)
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === id) {
+        targetLockState === "negation"
+          ? (item.isLock = !item.isLock)
+          : (item.isLock = targetLockState);
+        break;
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   }
@@ -173,13 +173,13 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
 const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData))
   const recursiveFn = (data: any, id: string) => {
-    for(let i = 0, len = data.length; i < len; i++) {
-      const item = data[i]
-      if(item.id === id) {
-        item.scan = targetShowState
-        break
-      } else if(item.components) {
-        recursiveFn(item.components, id)
+    for (let i = 0, len = data.length; i < len; i++) {
+      const item = data[i];
+      if (item.id === id) {
+        item.isShow = targetShowState;
+        break;
+      } else if (item.components) {
+        recursiveFn(item.components, id);
       }
     }
   }
@@ -220,16 +220,17 @@ const singleShowLayer: threeParams = (
 /**
  * description:  成组
  */
-const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData))
+type groupParams2 = (a: any[], b: string[]) => any;
+const group: groupParams2 = (treeData, selectedNodes) => {
+  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const newGroup: any = {
     name: '分组',
     title: '分组',
     id: `group_${ new Date().getTime() }`,
     icon: 'SmileOutlined',
     isFolder: true,
-    scan: true,
-    lock: false,
+    isShow: true,
+    isLock: false,
     singleShowLayer: false,
     components: [],
   }
@@ -258,8 +259,8 @@ const group: threeParams2 = (treeData, selectedNodes, lastRightClickKey) => {
     }
     recursiveFn(treeDataCopy, selectedNodes[i], isDone)
   }
-  return treeDataCopy
-}
+  return { treeDataCopy, newLayerId: newGroup.id };
+};
 
 /**
  * description: 取消成组
@@ -343,10 +344,10 @@ const reName: (a: any[], b: string[], c: string) => any[] = (
  * description: mock TreeData
  */
 const generateTreeData: () => any = () => {
-  const tData: any = []
-  const generateData = (_level: any, lock: any, _preKey: any, _tns: any) => {
-    const preKey = _preKey || '1'
-    const tns = _tns || tData
+  const tData: any = [];
+  const generateData = (_level: any, isLock: any, _preKey: any, _tns: any) => {
+    const preKey = _preKey || "1";
+    const tns = _tns || tData;
 
     const components: any = []
     for(let i = 1; i < 4; i++) {
@@ -368,10 +369,8 @@ const generateTreeData: () => any = () => {
         collapse: true, // 收缩
         selected: false,
         hover: false,
-        scan: true,
-        lock: false,
-        cancel: true,
-        disabled: true,
+        isShow: true,
+        isLock,
         singleShowLayer: false,
         showRenameInput: false,
         isFolder,
@@ -382,14 +381,14 @@ const generateTreeData: () => any = () => {
     }
     const level = _level - 1
     components.forEach((key: any, index: string | number) => {
-      tns[index].components = []
-      return generateData(level, lock, key, tns[index].components)
-    })
-  }
-  generateData(2, false, '1', tData)
-  console.log('前端树的数据', tData)
-  return tData
-}
+      tns[index].components = [];
+      return generateData(level, isLock, key, tns[index].components);
+    });
+  };
+  generateData(2, false, "1", tData);
+  console.log("前端树的数据", tData);
+  return tData;
+};
 //#region
 /**
  * description: 复制

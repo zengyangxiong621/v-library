@@ -14,7 +14,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       payload
     })
   }
-  const { name, id, components, getCurrentMenuLocation, lock, singleShowLayer, showRenameInput, scan, isExpand, hover } = restPorps
+  const { name, id, components, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restPorps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(components) && components.length>0)
   // 文件夹是展开了还是关闭了
@@ -29,7 +29,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       type: 'bar/hidden',
       payload: {
         key: [name],
-        value: !scan
+        value: !isShow
       }
     })
   }
@@ -134,7 +134,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     dispatch({
       type: `bar/lock`,
       payload: {
-        value: !lock
+        value: !isLock
       }
     })
   }
@@ -168,12 +168,12 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       <div className='icons-wrap'>
         <span className='each-icon'>
           {
-            lock && <i className='iconfont icon-suoding' onClickCapture={(e) => lockIconClick(e)}></i>
+            isLock && <i className='iconfont icon-suoding' onClickCapture={(e) => lockIconClick(e)}></i>
           }
         </span>
-        <div className={`${scan && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
+        <div className={`${isShow && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
           {
-            scan ? <EyeOutlined /> : <EyeInvisibleOutlined />
+            isShow ? <EyeOutlined /> : <EyeInvisibleOutlined />
           }
         </div>
         <span className='each-icon'>
