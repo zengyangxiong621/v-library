@@ -50,7 +50,7 @@ const PageSetting = ({bar, dispatch ,...props }) => {
           <UploadImg data={backgroundImg} onChange={settingsChange} />
           <CusInputNumber data={gridSpacing} onChange={settingsChange} style={{width:'100%'}} />
           <RadioGroup data={zoomConfig} onChange={settingsChange} />
-          <EditTable></EditTable>
+          {/* <EditTable></EditTable> */}
         </Form>
       </div>
     </div>
