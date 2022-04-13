@@ -12,7 +12,8 @@ const { Switch } = router;
 interface Props {
   config?: any,
   routerData?: any,
-  component?: any
+  component?: any,
+  location?: any
 }
 
 interface State {}
@@ -26,7 +27,7 @@ class BasicLayout extends Component<Props, State> {
     super(Props)
   }
   render () {
-    const { routerData } = this.props
+    const { routerData, location } = this.props
     const { childRoutes } = routerData
 
     return (
@@ -34,20 +35,7 @@ class BasicLayout extends Component<Props, State> {
         <Header>
         </Header>
         <Content>
-            {
-              childRoutes.map((route: any, index: number) => {
-                const {path, models, component} =  route
-                console.log(route, '-----------------')
-                { 
-                  // <Route
-                  //   exact
-                  //   key={ index }
-                  //   path={ path }
-                  //   component={ newDynamic() }
-                  // /> 
-                }
-              })
-            }
+          <Switch>{childRoutes}</Switch>
         </Content>
       </Layout>
     )

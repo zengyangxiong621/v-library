@@ -17,7 +17,6 @@ class DashboardManage extends Component<Props, State> {
         0000000000000
       </div>
     )
-
   }
 }
 

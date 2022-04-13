@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 // import { connect } from 'dva';
-import { connect } from '../utils/connect';
+import { connect } from '../../utils/connect';
 import { Select, Input } from 'antd';
-import { Text } from '../components/charts/custom/text/index'; // TODO: @可用设置
-import RemoteBaseComponent from '../components/RemoteBaseComponent';
+import { Text } from '../../components/charts/custom/text/index'; // TODO: @可用设置
+import RemoteBaseComponent from '../../components/RemoteBaseComponent';
 interface Props {
   dispatch?: any,
-  dashboard?: any
+  components?: any
 }
 
 interface State {
@@ -51,8 +51,8 @@ class Dashboard extends Component<Props, State> {
 
   render() {
     const { Option } = Select;
-    const { dashboard } = this.props;
-    const { componentConfig } = dashboard;
+    const { components } = this.props;
+    const { componentConfig } = components;
     const { dataStatic } = componentConfig;
     const { fields } = dataStatic;
 

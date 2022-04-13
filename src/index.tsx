@@ -1,43 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import dva, { router } from 'dva';
+import { createBrowserHistory } from 'history'
+import reportWebVitals from './reportWebVitals';
 
 import './index.css';
 import "antd/dist/antd.css";
 import '../src/assets/iconfont/iconfont.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 import './assets/fonts/iconfont.css'
+import { ConfigProvider } from 'antd';
 
-import dva, { router } from 'dva';
-import { createBrowserHistory } from 'history'
 import { createRoutes } from './utils/core';
+import RoutesConfig from './router'
 
 const { Router } = router;
-const routerConfig = require('./router').default
 
+// -> 初始化
 const app = dva({
   history: createBrowserHistory()
 })
 
+// -> 注册全局模型
 app.model(require('./models/global').default);
 
-// app.router(require('./router').default);
-app.router(({ history, app }) => (
-  <Router history={history}>
-    {createRoutes(app, routerConfig)}
-  </Router>
+// -> 初始化路由
+app.router(({ history, app }: any) => (
+  <ConfigProvider>
+    <Router history={history}>{createRoutes(app, RoutesConfig)}</Router>
+  </ConfigProvider>
 ));
 
+// -> Start
 app.start('#root');
-
-// ReactDOM.render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>,
-//   document.getElementById('root')
-// );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-// reportWebVitals();
+reportWebVitals();
