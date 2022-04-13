@@ -9,6 +9,7 @@ import CusInputNumber from '../cusInputNumber'
 import RadioGroup from '../radioGroup'
 import { deepClone } from '../../../../../utils'
 import { Form } from 'antd';
+import EditTable from '../editTable'
 
 const PageSetting = ({bar, dispatch ,...props }) => {
   const formItemLayout = {
@@ -49,6 +50,7 @@ const PageSetting = ({bar, dispatch ,...props }) => {
           <UploadImg data={backgroundImg} onChange={settingsChange} />
           <CusInputNumber data={gridSpacing} onChange={settingsChange} style={{width:'100%'}} />
           <RadioGroup data={zoomConfig} onChange={settingsChange} />
+          {/* <EditTable></EditTable> */}
         </Form>
       </div>
     </div>

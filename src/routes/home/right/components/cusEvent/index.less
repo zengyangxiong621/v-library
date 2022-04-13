@@ -1,0 +1,149 @@
+.event-form {
+  color: #fff;
+
+  .ant-tabs-nav {
+    margin-bottom: 16px;
+  }
+
+  .ant-collapse-content-box {
+    color: #fff;
+  }
+
+  .conditon-wraper {
+    width: 221px;
+    padding: 8px;
+    background-color: #191B25;
+    color: #fff;
+
+    .conditon-list {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 5px;
+        bottom: 5px;
+        left: -20px;
+        width: 6px;
+        border: 1px solid #454759;
+        border-right: none;
+      }
+
+      &.no-before {
+        &::before {
+          display: none;
+        }
+      }
+
+      .conditon-type {
+        position: absolute;
+        background: #0d0e10;
+        border: 1px solid #393b4a;
+        border-radius: 1px;
+        width: 20px;
+        height: 20px;
+        line-height: 18px;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -30px;
+      }
+
+      .cond {
+        background: #2d2f38;
+        border: 1px solid #393b4a;
+        height: 24px;
+        line-height: 22px;
+        padding-left: 8px;
+        padding-right: 8px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &:hover {
+          color: #1890ff;
+        }
+
+        .conditon-name {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+
+  .action-component {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      bottom: 3px;
+      left: -18px;
+      width: 6px;
+      border: 1px solid #393b4a;
+      border-right: none;
+    }
+
+    .ant-select-selector {
+      background-color: #191B25 !important;
+      border: 1px solid #393b4a !important;
+      border-radius: 3px !important;
+      font-size: 14px;
+      color: #FFFFFF;
+      font-weight: 400;
+
+      .ant-select-selection-item {
+        background-color: #373A4D;
+        color: #FFFFFF;
+        border: 1px solid #393b4a !important;
+      }
+
+      .ant-select-selection-item-remove {
+        color: #FFFFFF;
+      }
+    }
+  }
+
+  .action-collapse {
+    .ant-collapse-content {
+      position: relative;
+      padding-left: 16px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 16px;
+        bottom: 28px;
+        left: 1px;
+        width: 6px;
+        border: 1px solid #393b4a;
+        border-right: none;
+      }
+    }
+  }
+
+}
+
+.action-select {
+  background-color: #222430;
+  color: #FFFFFF;
+
+  .ant-select-tree-list-holder-inner {
+    background-color: #222430;
+    color: #FFFFFF;
+  }
+
+  .ant-select-tree-node-content-wrapper:hover {
+    background-color: #191B25;
+  }
+
+  .ant-select-tree-checkbox-inner {
+    background: #191B25;
+    border: 1px solid #393b4a;
+  }
+}

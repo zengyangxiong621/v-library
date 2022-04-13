@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
-import './rightClickMenu.css'
+import './rightClickMenu.less'
 
 import {
   getFieldStates,

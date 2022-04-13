@@ -17,7 +17,7 @@ class Text extends Component<Props, State> {
     return (
       <div>
         { data.map((item:any, i:any) => (
-          <span key={item.text}> { item.text } </span>
+          <span key={item.text}> <img src={require('@/assets/images/avatar.png')}></img> { item.text } </span>
         ))}
       </div>
     )

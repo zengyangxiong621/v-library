@@ -67,7 +67,6 @@ const Left = ({ dispatch, bar, operate }) => {
   // 2、多选时不能重命名
   // 3、判断选择的节点是否是文件夹
   useEffect(() => {
-
     //1
     setSelected(bar.key)
     // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
@@ -174,7 +173,7 @@ const Left = ({ dispatch, bar, operate }) => {
       },
     })
 
-    setSelected(curKey)
+    // setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     setIsShowRightMenu(false)
   }
@@ -285,14 +284,13 @@ const Left = ({ dispatch, bar, operate }) => {
     setIsShowRightMenu(false)
   }
   return (
-    // <Menu
-    //   mode="inline"
-    //   theme="dark"
-    //   className="left-menu"
-    //   style={{
-    //   }}
-    //   inlineCollapsed={inlineCollapsed}>
-    <div className="left-menu">
+    <div className='left-menu'>
+      <button onClick={() => dispatch({
+        type: 'bar/addComponent',
+        payload: {
+          insertId: 'components_1-3'
+        }
+      })}>新增</button>
       <div className="left-wrap">
         <div className="header" ref={ headerRef }>
           <header className="header-text">图层</header>
@@ -343,7 +341,6 @@ const Left = ({ dispatch, bar, operate }) => {
         <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
         </ToolBar>
       </div>
-
     </div>
     // </Menu>
   )

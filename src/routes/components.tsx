@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { connect } from '../utils/connect';
 import { Select, Input } from 'antd';
 import { Text } from '../components/charts/custom/text/index'; // TODO: @可用设置
-
+import RemoteBaseComponent from '../components/RemoteBaseComponent';
 interface Props {
   dispatch?: any,
   dashboard?: any
@@ -39,7 +39,7 @@ class Dashboard extends Component<Props, State> {
 
     const { dispatch } = this.props
     dispatch({
-      type: 'dashboard/change',
+      type: 'components/change',
       payload: {
         data: [{
           text: value
@@ -58,7 +58,8 @@ class Dashboard extends Component<Props, State> {
 
     return (
       <div className="">
-        <Text config={componentConfig} />
+        <RemoteBaseComponent type="text" config={componentConfig}></RemoteBaseComponent>
+        {/* <Text config={componentConfig} /> */}
         { fields.map((item: any, i: any) => (
           <div key={item.label}>
             <span>{item.label}</span>
