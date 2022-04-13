@@ -168,7 +168,7 @@ const Center = ({ bar, dispatch }: any) => {
         } }
       >
         <Draggable
-          // disabled={ true }
+          disabled={ true }
           onDrag={ handleDrag }
         >
           <div
@@ -221,7 +221,8 @@ const Center = ({ bar, dispatch }: any) => {
                     </div>
                   </div>
                 </div>
-                <div
+                {/*                蒙版*/ }
+                {/*                <div
                   className="mengban"
                   style={ {
                     position: 'absolute',
@@ -234,7 +235,7 @@ const Center = ({ bar, dispatch }: any) => {
                   } }
                 >
 
-                </div>
+                </div>*/ }
               </div>
             </div>
             <div style={ {

@@ -65,6 +65,9 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
   const handleScaleEnd = (data: any) => {
     onScaleEnd(data)
   }
+  const handleScale = () => {
+
+  }
   const scaleDragRef: any = useRef(null)
   return (
     <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
@@ -80,6 +83,7 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
           style={ { ...bar.scaleDragData.style } }
           isActive={ true }
           onScaleEnd={ handleScaleEnd }
+          onScale={handleScale}
           mouse={ mouse }
         >
           <div>

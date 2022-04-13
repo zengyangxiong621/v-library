@@ -30,10 +30,22 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
     oEv.stopPropagation()
     const oldWidth = boxRef.current.offsetWidth
     const oldHeight = boxRef.current.offsetHeight
-    const oldX = oEv.clientX
-    const oldY = oEv.clientY
+    console.log('-----------------------')
+    console.log('boxRef')
+
+    console.log('elementX', elementX.current)
+    console.log('boxRef', boxRef.current.offsetTop)
+    console.log('-----------------------')
+    // const oldX = boxRef.current.getBoundingClientRect().x
+    // const oldY = boxRef.current.getBoundingClientRect().y
+    // const oldX = oEv.clientX
+    // const oldY = oEv.clientY
+    const oldX = clientX.current
+    const oldY = clientY.current
     const oldLeft = boxRef.current.offsetLeft
     const oldTop = boxRef.current.offsetTop
+    const currentX = bar.scaleDragData.position.x
+    const currentY = bar.scaleDragData.position.y
 
     document.onmousemove = function (ev) {
       console.log('缩放mouseMove')
@@ -48,73 +60,75 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         disY = oldTop + oldHeight
       }
       const translateArr = boxRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
-      const translateX = translateArr[0]
-      const translateY = translateArr[1]
-      const currentPositionX = elementX.current / bar.canvasScaleValue
-      const currentPositionY = elementY.current / bar.canvasScaleValue
-      const xMoveLength = (clientX.current - oldX) / bar.canvasScaleValue
-      const yMoveLength = (clientY.current - oldY) / bar.canvasScaleValue
+      const currentPositionX = elementX / bar.canvasScaleValue
+      const currentPositionY = elementX / bar.canvasScaleValue
+      const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+      const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+      const xBoundary = oldX + oldWidth * bar.canvasScaleValue
+      const yBoundary = oldY + oldHeight * bar.canvasScaleValue
       if (obj.className === 'tl') {
-        let num = (oEv.clientX - oldX) / bar.canvasScaleValue
-        const currentX = Number(translateX) + num
         // boxRef.current.style.transform = `translate(${ elementX.current / bar.canvasScaleValue }px, ${ elementY.current / bar.canvasScaleValue }px)`
-        if (clientX.current <= oldX + oldWidth - 20) {
-          bar.scaleDragData.position.x = currentPositionX
+        if (clientX.current <= xBoundary) {
           if (clientX.current <= oldX) {
-            bar.scaleDragData.style.width = Math.abs(xMoveLength) + oldWidth
+            bar.scaleDragData.position.x = currentX - xMoveLength
+            bar.scaleDragData.style.width = xMoveLength + oldWidth
           }
           if (clientX.current >= oldX) {
-            bar.scaleDragData.style.width = oldWidth - Math.abs(xMoveLength) / bar.canvasScaleValue
+            bar.scaleDragData.position.x = currentX + xMoveLength
+            bar.scaleDragData.style.width = oldWidth - xMoveLength
           }
         }
-        if (clientY.current <= oldY + oldHeight - 20) {
-          bar.scaleDragData.position.y = currentPositionY
+        if (clientY.current <= yBoundary) {
           if (clientY.current <= oldY) {
-            bar.scaleDragData.style.height = Math.abs(yMoveLength) + oldHeight
+            bar.scaleDragData.style.height = yMoveLength + oldHeight
+            bar.scaleDragData.position.y = currentY - yMoveLength
           }
           if (clientY.current >= oldY) {
-            bar.scaleDragData.style.height = oldHeight - Math.abs(yMoveLength)
+            bar.scaleDragData.style.height = oldHeight - yMoveLength
+            bar.scaleDragData.position.y = currentY + yMoveLength
           }
         }
       } else if (obj.className === 'bl') {
-        if (clientX.current <= oldX + oldWidth - 20) {
+        if (clientX.current <= xBoundary) {
           bar.scaleDragData.position.x = currentPositionX
           bar.scaleDragData.style.width = oldWidth - xMoveLength
         }
         bar.scaleDragData.style.height = oldHeight + yMoveLength
       } else if (obj.className === 'tr') {
-        if (clientY.current <= oldY + oldHeight - 20) {
+        if (clientY.current <= yBoundary) {
           bar.scaleDragData.position.y = currentPositionY
           bar.scaleDragData.style.height = oldHeight - yMoveLength
         }
         bar.scaleDragData.style.width = oldWidth + xMoveLength
       } else if (obj.className === 'br') {
-        bar.scaleDragData.style.width = oldWidth + xMoveLength
-        bar.scaleDragData.style.height = oldHeight + yMoveLength
+        bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
+        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 't' || obj.className === 'tc') {
-        if (clientY.current <= oldY + oldHeight - 20) {
-          bar.scaleDragData.position.y = currentPositionY
+        if (clientY.current <= yBoundary) {
           if (clientY.current <= oldY) {
-            bar.scaleDragData.style.height = Math.abs(yMoveLength) + oldHeight
+            bar.scaleDragData.style.height = yMoveLength + oldHeight
+            bar.scaleDragData.position.y = currentY - yMoveLength
           }
           if (clientY.current >= oldY) {
-            bar.scaleDragData.style.height = oldHeight - Math.abs(yMoveLength)
+            bar.scaleDragData.style.height = oldHeight - yMoveLength
+            bar.scaleDragData.position.y = currentY + yMoveLength
           }
         }
       } else if (obj.className === 'b' || obj.className === 'bc') {
-        bar.scaleDragData.style.height = oldHeight + yMoveLength
+        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 'l' || obj.className === 'lc') {
-        if (clientX.current <= oldX + oldWidth - 20) {
-          bar.scaleDragData.position.x = currentPositionX
+        if (clientX.current <= xBoundary) {
           if (clientX.current <= oldX) {
-            bar.scaleDragData.style.width = Math.abs(xMoveLength) + oldWidth
+            bar.scaleDragData.position.x = currentX - xMoveLength
+            bar.scaleDragData.style.width = xMoveLength + oldWidth
           }
           if (clientX.current >= oldX) {
-            bar.scaleDragData.style.width = oldWidth - Math.abs(xMoveLength) / bar.canvasScaleValue
+            bar.scaleDragData.position.x = currentX + xMoveLength
+            bar.scaleDragData.style.width = oldWidth - xMoveLength
           }
         }
       } else if (obj.className === 'r' || obj.className === 'rc') {
-        bar.scaleDragData.style.width = oldWidth + xMoveLength
+        bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
       }
     }
 
