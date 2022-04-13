@@ -66,6 +66,8 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
 
       const xBoundary = oldX + oldWidth * bar.canvasScaleValue
       const yBoundary = oldY + oldHeight * bar.canvasScaleValue
+      const xBoundaryNegative = oldX - oldWidth * bar.canvasScaleValue
+      const yBoundaryNegative = oldY - oldHeight * bar.canvasScaleValue
 
 
       if (obj.className === 'tl') {
@@ -90,7 +92,7 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         }
         if (clientY.current <= yBoundary) {
           if (clientY.current <= oldY) {
-            bar.scaleDragData.style.height = yMoveLength + oldHeight
+            bar.scaleDragData.style.height = oldHeight + yMoveLength
             bar.scaleDragData.position.y = currentY - yMoveLength
           }
           if (clientY.current >= oldY) {
@@ -102,8 +104,8 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         if (clientX.current >= xBoundary) {
           clientX.current = xBoundary
         }
-        if (clientY.current <= oldY) {
-          clientY.current = oldY
+        if (clientY.current <= yBoundaryNegative) {
+          clientY.current = yBoundaryNegative
         }
         const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
         const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
@@ -119,39 +121,73 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         }
         bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 'tr') {
-        if (clientY.current <= yBoundary) {
-          bar.scaleDragData.position.y = currentPositionY
-          bar.scaleDragData.style.height = oldHeight - Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+        if (clientY.current >= yBoundary) {
+          clientY.current = yBoundary
         }
-        bar.scaleDragData.style.width = oldWidth + Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+        if (clientX.current <= xBoundaryNegative) {
+          clientX.current = xBoundaryNegative
+        }
+        const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+        const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+        if (clientY.current <= yBoundary) {
+          if (clientY.current <= oldY) {
+            bar.scaleDragData.style.height = oldHeight + yMoveLength
+            bar.scaleDragData.position.y = currentY - yMoveLength
+          }
+          if (clientY.current >= oldY) {
+            bar.scaleDragData.style.height = oldHeight - yMoveLength
+            bar.scaleDragData.position.y = currentY + yMoveLength
+          }
+        }
+        bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
       } else if (obj.className === 'br') {
+        if (clientX.current <= xBoundaryNegative) {
+          clientX.current = xBoundaryNegative
+        }
+        if (clientY.current <= yBoundaryNegative) {
+          clientY.current = yBoundaryNegative
+        }
         bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
         bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 't' || obj.className === 'tc') {
+        if (clientY.current >= yBoundary) {
+          clientY.current = yBoundary
+        }
+        const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
         if (clientY.current <= yBoundary) {
           if (clientY.current <= oldY) {
-            bar.scaleDragData.style.height = Math.abs((clientY.current - oldY) / bar.canvasScaleValue) + oldHeight
-            bar.scaleDragData.position.y = currentY - Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+            bar.scaleDragData.style.height = oldHeight + yMoveLength
+            bar.scaleDragData.position.y = currentY - yMoveLength
           }
           if (clientY.current >= oldY) {
-            bar.scaleDragData.style.height = oldHeight - Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
-            bar.scaleDragData.position.y = currentY + Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+            bar.scaleDragData.style.height = oldHeight - yMoveLength
+            bar.scaleDragData.position.y = currentY + yMoveLength
           }
         }
       } else if (obj.className === 'b' || obj.className === 'bc') {
+        if (clientY.current <= yBoundaryNegative) {
+          clientY.current = yBoundaryNegative
+        }
         bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
       } else if (obj.className === 'l' || obj.className === 'lc') {
+        if (clientX.current >= xBoundary) {
+          clientX.current = xBoundary
+        }
+        const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
         if (clientX.current <= xBoundary) {
           if (clientX.current <= oldX) {
-            bar.scaleDragData.position.x = currentX - Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
-            bar.scaleDragData.style.width = Math.abs((clientX.current - oldX) / bar.canvasScaleValue) + oldWidth
+            bar.scaleDragData.position.x = currentX - xMoveLength
+            bar.scaleDragData.style.width = xMoveLength + oldWidth
           }
           if (clientX.current >= oldX) {
-            bar.scaleDragData.position.x = currentX + Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
-            bar.scaleDragData.style.width = oldWidth - Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+            bar.scaleDragData.position.x = currentX + xMoveLength
+            bar.scaleDragData.style.width = oldWidth - xMoveLength
           }
         }
       } else if (obj.className === 'r' || obj.className === 'rc') {
+        if (clientX.current <= xBoundaryNegative) {
+          clientX.current = xBoundaryNegative
+        }
         bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
       }
     }
