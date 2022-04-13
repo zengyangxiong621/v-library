@@ -94,7 +94,7 @@ const menuGlobal = [
     name: "header",
     path: "/header",
     models: () => [],
-    component: () => import("./components/header"),
+    component: () => import("./routes/controlCabin"),
     children: [],
   },
 ];
