@@ -9,12 +9,19 @@ import SupportLines from './components/SupportLines'
 import ChooseArea from './components/ChooseArea'
 import * as React from 'react'
 import { Button } from 'antd'
-import { useClickAway, useKeyPress, useMouse } from 'ahooks'
+import { useClickAway, useKeyPress, useMouse, useThrottle } from 'ahooks'
 import Ruler from './components/Ruler'
+import { IScaleDragData, IStyleConfig } from './type'
+import { DIMENSION } from './constant'
+import RulerLines from './components/RulerLines'
+import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
+import { throttle } from '../../../utils/common'
 
 const Center = ({ bar, dispatch }: any) => {
+
   const filterKey = [ 'ctrl', 'shift' ]
   const draggableContainerRef = useRef(null)
+  const rulerRef: any = useRef(null)
   const canvasRef = useRef(null)
   // let supportLinesRef: any = useRef(null)
   const treeData = bar.treeData
@@ -37,12 +44,9 @@ const Center = ({ bar, dispatch }: any) => {
     if(getCurrentDocumentWidth < 1366) {
       getCurrentDocumentWidth = 1366
     }
-    console.log('(document.querySelector(\'.left-menu\') as any).clientWidth', (document.querySelector('.left-menu') as any).clientWidth)
     const width = getCurrentDocumentWidth - 40 - (document.querySelector('.left-menu') as any).clientWidth - 333
     const height = getCurrentDocumentHeight - 64 - 35 - 40
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
-    console.log('canvasHeight: ', canvasHeight)
-    console.log('height: ', height)
     if(canvasHeight > height) {
       dispatch({
         type: 'bar/save',
@@ -52,14 +56,12 @@ const Center = ({ bar, dispatch }: any) => {
       })
       return
     }
-
     dispatch({
       type: 'bar/save',
       payload: {
         canvasScaleValue: Number((width / recommendConfig.width).toFixed(3)),
       },
     })
-    // const height = recommendConfig.height * bar.canvasScaleValue
   }
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
@@ -107,78 +109,152 @@ const Center = ({ bar, dispatch }: any) => {
         isSupportMultiple: event.type === 'keydown',
       },
     })
-    // if(event.type === 'keydown') {
-    //
-    // }
-    // if(bar.selectedComponentOrGroup.length === 0 && event.type === 'keyup') {
-    //   dispatch({
-    //     type: 'bar/save',
-    //     payload: {
-    //       isSupportMultiple: false,
-    //     },
-    //   })
-    // }
   }, {
     events: [ 'keydown', 'keyup' ],
   })
 
   const mouse = useMouse(canvasRef)
-    // const mouse = 0
+  // const mouse = 0
+
+  /**
+   * @desc 缩放组件在缩放结束后的回调
+   * @param IScaleDragData
+   * @return void
+   */
+  const handleScaleEnd = ({ position: { x, y }, style: { width, height } }: IScaleDragData) => {
+    if(bar.dragStatus === '一组件') {
+      const component = bar.selectedComponents[0]
+      const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION)
+      styleDimensionConfig.value.forEach((item: IStyleConfig) => {
+        switch(item.name) {
+          case 'left':
+            item.value = x
+            break
+          case 'top':
+            item.value = y
+            break
+          case 'width':
+            item.value = width
+            break
+          case 'height':
+            item.value = height
+        }
+      })
+    }
+    dispatch({
+      type: 'bar/save',
+    })
+  }
+
+  const handleDrag = function(event: DraggableEvent, data: DraggableData) {
+    // rulerRef.current.painter()
+    // console.log('hhhh')
+  }
+
+  const throttledFunc = throttle(handleDrag, 1000)
+
   return (
     <div className="c-canvas">
-      <Ruler/>
+      <Ruler
+        cRef={ rulerRef }
+        mouse={ mouse }
+      />
       <div
-        ref={ canvasRef }
-        className="canvas-container"
         style={ {
-          width: recommendConfig.width * bar.canvasScaleValue,
-          height: recommendConfig.height * bar.canvasScaleValue,
+          width: 'calc(100% - 22px)',
+          height: 'calc(100% - 22px)',
+          position: 'absolute',
+          overflow: 'hidden',
         } }
       >
-        <div
-          className="canvas-screen"
-          style={ {
-            width: recommendConfig.width,
-            height: recommendConfig.height,
-            transform: `scale(${ bar.canvasScaleValue })`,
-            backgroundColor: styleColor.value,
-            background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
-          } }
+        <Draggable
+          disabled={ true }
+          onDrag={ handleDrag }
         >
-          <div className="draggable-wrapper">
-            <div style={ { position: 'absolute', left: 0, top: 0 } }>
-              {/*<Button onClick={ handleClick }>刷新</Button>*/ }
-              {/*<Button onClick={ handleDelete }>删除</Button>*/ }
-              {/*<Button onClick={ handleSelect }>选中</Button>*/ }
+          <div
+            style={ { width: '100%', height: '100%' } }
+          >
+            <div
+              style={ {
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+              } }
+            >
+              <div>
+                <div
+                  ref={ canvasRef }
+                  className="canvas-container"
+                  style={ {
+                    width: recommendConfig.width * bar.canvasScaleValue,
+                    height: recommendConfig.height * bar.canvasScaleValue,
+                  } }
+                >
+                  <div
+                    className="canvas-screen"
+                    style={ {
+                      width: recommendConfig.width,
+                      height: recommendConfig.height,
+                      transform: `scale(${ bar.canvasScaleValue })`,
+                      backgroundColor: styleColor.value,
+                      background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
+                    } }
+                  >
+                    <div className="draggable-wrapper">
+                      <ScaleDragCom
+                        mouse={ mouse }
+                        cRef={ (ref: any) => {
+                          bar.scaleDragCompRef = ref
+                        } }
+                        onScaleEnd={ handleScaleEnd }
+                      />
+                      <SupportLines
+                        cRef={ (ref: any) => {
+                          bar.supportLinesRef = ref
+                        } }
+                      />
+                      <RulerLines/>
+
+                      <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
+                        <CustomDraggable mouse={ 0 } treeData={ treeData }/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/*                蒙版*/ }
+                {/*                <div
+                  className="mengban"
+                  style={ {
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'gray',
+                    opacity: 0,
+                  } }
+                >
+
+                </div>*/ }
+              </div>
             </div>
-            <ScaleDragCom
-              mouse={ mouse }
-              cRef={ (ref: any) => {
-                bar.scaleDragCompRef = ref
-              } }
-            />
-            <SupportLines
-              key="support"
-              cRef={ (ref: any) => {
-                bar.supportLinesRef = ref
-                return bar.supportLinesRef
-              } }
-            />
-            <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
-              <CustomDraggable mouse={ 0 } treeData={ treeData }/>
+            <div style={ {
+              position: 'absolute',
+              bottom: '50px',
+              right: '20px',
+              color: '#999',
+              userSelect: 'none',
+            } }>
+              按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
+              { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
             </div>
           </div>
+        </Draggable>
+        <div className="mengban">
+
         </div>
       </div>
-      <div style={ {
-        position: 'absolute',
-        bottom: '50px',
-        right: '20px',
-        color: '#999',
-      } }>
-        按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
-        { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
-      </div>
+
     </div>
   )
 }

@@ -18,7 +18,7 @@
 
 .box .l,
 .box .r {
-  width: 1px;
+  width: 3px;
   height: 100%;
   cursor: col-resize;
 }
@@ -26,7 +26,7 @@
 .box .t,
 .box .b {
   width: 100%;
-  height: 1px;
+  height: 3px;
   cursor: row-resize;
 }
 
@@ -48,20 +48,48 @@
   right: 0;
 }
 
-/*四角*/
-.box .tl,
-.box .bl,
-.box .br,
-.box .tr {
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  background: #fff;
-  border: 1px solid #2482FF;
-  border-radius: 50%;
-  z-index: 2;
-  cursor: nwse-resize
+/*八点*/
+.box {
+  .tl, .bl, .br, .tr, .tc, .bc, .lc, .rc {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #2482FF;
+    border-radius: 50%;
+    z-index: 2;
+    cursor: nwse-resize
+  }
+
+  .tc {
+    left: 50%;
+    transform: translateX(-50%);
+    top: -4px;
+    cursor: row-resize;
+  }
+
+  .bc {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -4px;
+    cursor: row-resize;
+  }
+
+  .lc {
+    top: 50%;
+    transform: translateY(-50%);
+    left: -4px;
+    cursor: col-resize;
+  }
+
+  .rc {
+    top: 50%;
+    transform: translateY(-50%);
+    right: -4px;
+    cursor: col-resize;
+  }
 }
+
 
 .box .tl,
 .box .bl {
@@ -95,24 +123,3 @@
   overflow: hidden;
 }
 
-/*竖*/
-.rule-vertical {
-  width: 20px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background: #2482FF;
-  z-index: 10000;
-}
-
-/*横*/
-.rule-horizon {
-  height: 20px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  background: green;
-  z-index: 10000;
-}
