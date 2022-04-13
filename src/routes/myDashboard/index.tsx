@@ -12,12 +12,13 @@ const { Option } = Select
 // 功能
 // 点击右侧应用列表时，可拖拽至左侧树节点里
 const MyApplication = (props: any) => {
+  const { history } = props
 
   const [inputValue, setInputValue] = useState('')
 
   // 新建应用
   const addDashboard = () => {
-
+    history.push('/template')
   }
   // 搜索应用
   const search = () => {
@@ -68,43 +69,43 @@ const listData: object = [
   {
     id: '1',
     name: 'xx',
-    imgUrl: '',
+    imgUrl: 'https://img1.baidu.com/it/u=3021003518,1825276686&fm=253&fmt=auto&app=138&f=JPEG?w=450&h=233',
     release: true,
   },
   {
     id: '2',
     name: 'A',
-    imgUrl: '',
+    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F065f4419afd06bc98180e53711745d28f34161f8.jpg&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651990097&t=483e0024896fca43342fdd315b16c375',
     release: true,
   },
   {
     id: '3',
     name: 'B',
-    imgUrl: '',
+    imgUrl: 'https://img2.baidu.com/it/u=150520042,1822256108&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=312',
     release: false,
   },
   {
     id: '4',
     name: 'C',
-    imgUrl: '',
+    imgUrl: 'https://img2.baidu.com/it/u=836828249,4218074621&fm=253&fmt=auto&app=138&f=JPEG?w=820&h=461',
     release: false,
   },
   {
     id: '5',
     name: 'D',
-    imgUrl: '',
+    imgUrl: 'https://img1.baidu.com/it/u=1454865930,3426121759&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
     release: true,
   },
   {
     id: '6',
     name: 'E',
-    imgUrl: '',
+    imgUrl: 'https://img0.baidu.com/it/u=2651429005,3211950086&fm=253&fmt=auto&app=138&f=JPEG?w=605&h=454',
     release: false,
   },
   {
     id: '7',
     name: 'F',
-    imgUrl: '',
+    imgUrl: 'https://img0.baidu.com/it/u=2651429005,3211950086&fm=253&fmt=auto&app=138&f=JPEG?w=605&h=454',
     release: true,
   },
 ]

@@ -102,7 +102,7 @@ const EveryTreeNode = (props: any) => {
       </div>
       <div className='icons-wrap'>
         {
-          title === '应用列表' ? <IconFont type='icon-bianji' onClickCapture={() => addGroups()} />
+          title === '应用列表' ? <IconFont type='icon-xinjianfenzu' onClickCapture={() => addGroups()} />
             :
             <>
               <div className='show-icon'>
@@ -110,7 +110,7 @@ const EveryTreeNode = (props: any) => {
                   <IconFont type='icon-bianji' style={{ marginRight: '16px' }} onClickCapture={() => editClick(id)} />
                 }
                 {
-                  <IconFont type='icon-bianji' onClickCapture={() => delClick(id)} />
+                  <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(id)} />
                 }
               </div>
               <span className='show-nums'>{counts}</span>

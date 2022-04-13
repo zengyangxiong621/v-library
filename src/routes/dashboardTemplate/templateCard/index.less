@@ -1,22 +1,75 @@
 @backColor: #171a24;
+// 模板Card被hover时的背景色
+@hoverBackColor: #050506;
 .TemplateCard-wrap {
-  width: 307px;
-  height: 228px;
+  // min-width: 307px;
+  // width: 380px;
+  width: 100%;
+  height: 248px;
   background: #222838;
   border: 1px solid rgba(57, 70, 89, 1);
+  user-select: none;
 
   // margin-right: 26px;
   margin-bottom: 25px;
 
   .head {
-    width: 305px;
-    height: 173px;
+    width: 100%;
+    height: 193px;
     background-color: rgb(43, 44, 45);
     cursor: pointer;
+    position: relative;
+  }
+
+  .head:hover .hover-on-template {
+    display: block;
+    background-color: rgba(8, 16, 22, 0.7);
+  }
+  .img-wrap {
+    display: block;
+    user-select: none;
+    .my-img {
+      width: 100%;
+      height: 193px;
+      background-size: 100%;
+    }
+  }
+  .hover-on-template {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    .btns-wrap {
+      display: flex;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .div-as-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 88px;
+        height: 32px;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+      }
+      .scan-btn {
+        background: #3d404c;
+        margin-right: 16px;
+      }
+      .create-btn {
+        background: #2482ff;
+      }
+    }
   }
   .foot {
     height: 54px;
     padding-left: 16px;
+    user-select: none;
     .name {
       width: 90%;
       height: 22px;

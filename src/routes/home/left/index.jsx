@@ -286,6 +286,12 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   return (
     <div className='left-menu'>
+      <button onClick={() => dispatch({
+        type: 'bar/addComponent',
+        payload: {
+          insertId: 'components_1-3'
+        }
+      })}>新增</button>
       <div className="left-wrap">
         <div className="header" ref={headerRef}>
           <header className="header-text">图层</header>
