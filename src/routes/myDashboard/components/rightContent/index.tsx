@@ -110,7 +110,6 @@ const RightContent = (props: any) => {
                   <Form.Item
                     label="分享链接"
                     colon={false}
-
                   ><div>
                       <Input />
                       <Button type="primary" >复制</Button>
@@ -118,7 +117,6 @@ const RightContent = (props: any) => {
                   <Form.Item
                     label="加密分享"
                     colon={false}
-
                   ><div className="jiamifenxiang">
                       <Switch defaultChecked onChange={jmfxChange} />
                       <span>密码: <Input /></span>

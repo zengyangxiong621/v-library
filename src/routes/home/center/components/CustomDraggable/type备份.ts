@@ -15,7 +15,19 @@ export type DraggableData = {
   node: any
 }
 
-export type IComponent = any
+export interface IComponent {
+  id: string;
+  name: string;
+  staticData?: any;
+  config: {
+    style?: any,
+    className?: string,
+    position: {
+      x: number,
+      y: number
+    }
+  },
+}
 
 export interface ILayerComponent {
   id: string,
@@ -24,9 +36,7 @@ export interface ILayerComponent {
   isLock: boolean, // 是否锁定
   isShow: boolean, // 是否展示
   selected: boolean,
-  hover: boolean,
-  cancel: boolean,
-  disabled: boolean,
+  hover: boolean
 }
 
 export interface ILayerGroup {
@@ -37,10 +47,7 @@ export interface ILayerGroup {
   collapse: boolean, // 是否展开
   selected: boolean,
   hover: boolean,
-  cancel: boolean,
-  disabled: boolean,
-  components: Array<ILayerComponent>,
-  children: Array<ILayerComponent>,
+  components: Array<ILayerComponent>
 }
 
 export interface IConfig {

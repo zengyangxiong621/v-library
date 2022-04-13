@@ -11,7 +11,7 @@ export const generateLayers = (
   // 将新的图层插入到原来的图层树中
   const extendLayer = {
     isLock: false,
-    isShow:  false,
+    isShow:  true,
     isCollapse: false,
     hover: false,
     selected: false,
@@ -19,6 +19,7 @@ export const generateLayers = (
     ...newLayer
   }
   insertLayerById(layers, insertId, extendLayer)
+  console.log('llll', layers)
 };
 
 const insertLayerById = ( target: any[], insertId: string, newLayer: any) => {

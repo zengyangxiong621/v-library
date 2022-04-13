@@ -42,7 +42,6 @@ const Left = ({ dispatch, bar, operate }) => {
   const headerRef = useRef(null)
   // 监听 树区域 以外的点击
   useClickAway(() => {
-    console.log('清空click')
     if (bar.isAreaChoose) {
       return
     }
@@ -109,8 +108,8 @@ const Left = ({ dispatch, bar, operate }) => {
   /**
    * 方法
    * */
-    // 收起 / 展开 菜单栏
-  const [w, setW] = useState(250)
+  // 收起 / 展开 菜单栏
+  const [w, setW] = useState(188)
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
@@ -124,7 +123,7 @@ const Left = ({ dispatch, bar, operate }) => {
       case 'singleShowLayer':
         finalPayload.singleShowLayer = 'negation'
         break
-      case 'lock':
+      case 'isLock':
         finalPayload.value = 'negation'
         break
       default:
@@ -262,7 +261,7 @@ const Left = ({ dispatch, bar, operate }) => {
       }
     }
     dispatch({
-      type: 'bar/initTreeData',
+      type: 'bar/update',
       payload: data,
     })
   }
@@ -288,9 +287,21 @@ const Left = ({ dispatch, bar, operate }) => {
       <button onClick={() => dispatch({
         type: 'bar/addComponent',
         payload: {
-          insertId: 'components_1-3'
+          insertId: '1514070775583035393'
         }
       })}>新增</button>
+      <button onClick={() => dispatch({
+        type: 'bar/change',
+        payload: {
+
+        }
+      })}>change</button>
+      <button onClick={() => dispatch({
+        type: 'bar/update',
+        payload: {
+
+        }
+      })}>update</button>
       <div className="left-wrap">
         <div className="header" ref={ headerRef }>
           <header className="header-text">图层</header>
