@@ -62,12 +62,22 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
       const translateArr = boxRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
       const currentPositionX = elementX / bar.canvasScaleValue
       const currentPositionY = elementX / bar.canvasScaleValue
-      const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
-      const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+
+
       const xBoundary = oldX + oldWidth * bar.canvasScaleValue
       const yBoundary = oldY + oldHeight * bar.canvasScaleValue
+
+
       if (obj.className === 'tl') {
         // boxRef.current.style.transform = `translate(${ elementX.current / bar.canvasScaleValue }px, ${ elementY.current / bar.canvasScaleValue }px)`
+        if (clientX.current >= xBoundary) {
+          clientX.current = xBoundary
+        }
+        if (clientY.current >= yBoundary) {
+          clientY.current = yBoundary
+        }
+        const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+        const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
         if (clientX.current <= xBoundary) {
           if (clientX.current <= oldX) {
             bar.scaleDragData.position.x = currentX - xMoveLength
@@ -89,34 +99,14 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
           }
         }
       } else if (obj.className === 'bl') {
-        if (clientX.current <= xBoundary) {
-          bar.scaleDragData.position.x = currentPositionX
-          bar.scaleDragData.style.width = oldWidth - xMoveLength
+        if (clientX.current >= xBoundary) {
+          clientX.current = xBoundary
         }
-        bar.scaleDragData.style.height = oldHeight + yMoveLength
-      } else if (obj.className === 'tr') {
-        if (clientY.current <= yBoundary) {
-          bar.scaleDragData.position.y = currentPositionY
-          bar.scaleDragData.style.height = oldHeight - yMoveLength
+        if (clientY.current <= oldY) {
+          clientY.current = oldY
         }
-        bar.scaleDragData.style.width = oldWidth + xMoveLength
-      } else if (obj.className === 'br') {
-        bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
-        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
-      } else if (obj.className === 't' || obj.className === 'tc') {
-        if (clientY.current <= yBoundary) {
-          if (clientY.current <= oldY) {
-            bar.scaleDragData.style.height = yMoveLength + oldHeight
-            bar.scaleDragData.position.y = currentY - yMoveLength
-          }
-          if (clientY.current >= oldY) {
-            bar.scaleDragData.style.height = oldHeight - yMoveLength
-            bar.scaleDragData.position.y = currentY + yMoveLength
-          }
-        }
-      } else if (obj.className === 'b' || obj.className === 'bc') {
-        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
-      } else if (obj.className === 'l' || obj.className === 'lc') {
+        const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+        const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
         if (clientX.current <= xBoundary) {
           if (clientX.current <= oldX) {
             bar.scaleDragData.position.x = currentX - xMoveLength
@@ -125,6 +115,40 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
           if (clientX.current >= oldX) {
             bar.scaleDragData.position.x = currentX + xMoveLength
             bar.scaleDragData.style.width = oldWidth - xMoveLength
+          }
+        }
+        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
+      } else if (obj.className === 'tr') {
+        if (clientY.current <= yBoundary) {
+          bar.scaleDragData.position.y = currentPositionY
+          bar.scaleDragData.style.height = oldHeight - Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+        }
+        bar.scaleDragData.style.width = oldWidth + Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+      } else if (obj.className === 'br') {
+        bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue
+        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
+      } else if (obj.className === 't' || obj.className === 'tc') {
+        if (clientY.current <= yBoundary) {
+          if (clientY.current <= oldY) {
+            bar.scaleDragData.style.height = Math.abs((clientY.current - oldY) / bar.canvasScaleValue) + oldHeight
+            bar.scaleDragData.position.y = currentY - Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+          }
+          if (clientY.current >= oldY) {
+            bar.scaleDragData.style.height = oldHeight - Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+            bar.scaleDragData.position.y = currentY + Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
+          }
+        }
+      } else if (obj.className === 'b' || obj.className === 'bc') {
+        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue
+      } else if (obj.className === 'l' || obj.className === 'lc') {
+        if (clientX.current <= xBoundary) {
+          if (clientX.current <= oldX) {
+            bar.scaleDragData.position.x = currentX - Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+            bar.scaleDragData.style.width = Math.abs((clientX.current - oldX) / bar.canvasScaleValue) + oldWidth
+          }
+          if (clientX.current >= oldX) {
+            bar.scaleDragData.position.x = currentX + Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
+            bar.scaleDragData.style.width = oldWidth - Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
           }
         }
       } else if (obj.className === 'r' || obj.className === 'rc') {
