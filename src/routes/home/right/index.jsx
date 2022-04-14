@@ -54,9 +54,9 @@ const Right = ({ dispatch, bar }) => {
     {
       // reflect[whichShow].type()
       whichShow === 'groupConfig' ? <GroupConfig key={key}/>
-      : whichShow === 'singleLayer' ? <SingleLayer key={key} />
-      : whichShow === 'pageSetting' ? <PageSetting key={key} />
-      : <AlignmentSetting key={key} />
+      : whichShow === 'singleLayer' ? <GroupConfig key={key} />
+      : whichShow === 'pageSetting' ? <GroupConfig key={key} />
+      : <GroupConfig key={key} />
     }
   </div>
   )

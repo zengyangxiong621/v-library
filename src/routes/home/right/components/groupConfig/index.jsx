@@ -43,14 +43,10 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     saveData()
   }, 300)
 
-  const saveData = async () => {
+  const saveData = async (param) => {
     // todo 替换假数据
-    const config = [...groupConfig]
-    config.forEach(item => {
-      item.id = 'group_1-1-1'
-    })
     const params = {
-      configs: config,
+      configs: [param],
       dashboardId: "1513702962304577537"
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -58,6 +54,50 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       body: JSON.stringify(params)
     })
   }
+
+  const hideDefaultChange = debounce(() => {
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        groupConfig
+      }
+    })
+    saveData({
+      id:'group_1-1-1',
+      key:'hideDefault',
+      value:hideDefaultConfig.value
+    })
+  },300)
+
+  const opacityChange = debounce(()=>{
+    console.log(opacityConfig)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        groupConfig
+      }
+    })
+    saveData({
+      id:'group_1-1-1',
+      key:'opacity',
+      value:opacityConfig.value
+    })
+  }, 300)
+
+  const interactionChange= debounce(() => {
+    console.log(interactionConfig)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        groupConfig
+      }
+    })
+    saveData({
+      id:'group_1-1-1',
+      key:'mountAnimation',
+      value:interactionConfig.mountAnimation
+    })
+  }, 300)
 
   return (
     <div className="GroupConfig-wrap">
@@ -72,9 +112,9 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
           colon={false}
         >
           <PositionSize data={dimensionConfig} onChange={settingsChange}></PositionSize>
-          <Checkbox data={hideDefaultConfig} onChange={settingsChange} />
-          <Range data={opacityConfig} onChange={settingsChange} />
-          <LoadAnimation data={interactionConfig} onChange={settingsChange} />
+          <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
+          <Range data={opacityConfig} onChange={opacityChange} />
+          <LoadAnimation data={interactionConfig} onChange={interactionChange} />
         </Form>
       </div>
     </div>
