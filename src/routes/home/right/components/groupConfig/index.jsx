@@ -14,9 +14,12 @@ import {
   Collapse
 } from 'antd';
 
+import debounce from 'lodash/debounce';
+import { useFetch } from '../../../../tempDataSource/tool/useFetch'
 
 
-const GroupConfig = ({bar, dispatch ,...props }) => {
+
+const GroupConfig = ({ bar, dispatch, ...props }) => {
   const [form] = Form.useForm();
   const { Panel } = Collapse;
   const groupConfig = deepClone(bar.groupConfig)
@@ -29,7 +32,7 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
     labelAlign: 'left'
   };
 
-  const settingsChange = () => {
+  const settingsChange = debounce(() => {
     console.log(groupConfig)
     dispatch({
       type: 'bar/save',
@@ -37,7 +40,64 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
         groupConfig
       }
     })
+    saveData()
+  }, 300)
+
+  const saveData = async (param) => {
+    // todo 替换假数据
+    const params = {
+      configs: [param],
+      dashboardId: "1513702962304577537"
+    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    await useFetch('/visual/layer/group/update', {
+      body: JSON.stringify(params)
+    })
   }
+
+  const hideDefaultChange = debounce(() => {
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        groupConfig
+      }
+    })
+    saveData({
+      id:'group_1-1-1',
+      key:'hideDefault',
+      value:hideDefaultConfig.value
+    })
+  },300)
+
+  const opacityChange = debounce(()=>{
+    console.log(opacityConfig)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        groupConfig
+      }
+    })
+    saveData({
+      id:'group_1-1-1',
+      key:'opacity',
+      value:opacityConfig.value
+    })
+  }, 300)
+
+  const interactionChange= debounce(() => {
+    console.log(interactionConfig)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        groupConfig
+      }
+    })
+    saveData({
+      id:'group_1-1-1',
+      key:'mountAnimation',
+      value:interactionConfig.mountAnimation
+    })
+  }, 300)
 
   return (
     <div className="GroupConfig-wrap">
@@ -52,13 +112,9 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
           colon={false}
         >
           <PositionSize data={dimensionConfig} onChange={settingsChange}></PositionSize>
-          <Checkbox data={hideDefaultConfig} onChange={settingsChange} />
-          <Range data={opacityConfig} onChange={settingsChange} />
-          <Collapse accordion className="custom-collapse">
-            <Panel header="载入动画" key="1">
-              <LoadAnimation data={interactionConfig} onChange={settingsChange}/>
-            </Panel>
-          </Collapse>
+          <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
+          <Range data={opacityConfig} onChange={opacityChange} />
+          <LoadAnimation data={interactionConfig} onChange={interactionChange} />
         </Form>
       </div>
     </div>
