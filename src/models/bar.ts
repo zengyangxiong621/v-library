@@ -2320,24 +2320,24 @@ export default {
       return { ...state, lastRightClick: payload }
     },
     // 置顶
-    frontplacedTop(state: IBarState, { payload }: any) {
-      const newTreeData = placeTop(state.treeData, state.key);
-      return { ...state, treeData: newTreeData };
+    placedTop(state: IBarState, { payload }: any) {
+      const newTreeData = placeTop(state.treeData, state.key)
+      return { ...state, treeData: newTreeData }
     },
     // 置底
-    frontplaceBottom(state: IBarState, { payload }: any) {
-      const newTreeData = placeBottom(state.treeData, state.key);
-      return { ...state, treeData: newTreeData };
+    placeBottom(state: IBarState, { payload }: any) {
+      const newTreeData = placeBottom(state.treeData, state.key)
+      return { ...state, treeData: newTreeData }
     },
     // 上移
-    frontmoveUp(state: IBarState, { payload }: any) {
-      const newTree = moveUp(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+    moveUp(state: IBarState, { payload }: any) {
+      const newTree = moveUp(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // 下移
-    forntmoveDown(state: IBarState, { payload }: any) {
-      const newTree = moveDown(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+    moveDown(state: IBarState, { payload }: any) {
+      const newTree = moveDown(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // 成组
     frontgroup(state: IBarState, { payload }: any) {
@@ -2345,9 +2345,9 @@ export default {
       return { ...state, treeData: treeDataCopy }
     },
     // 取消成组
-    frontcancelGroup(state: IBarState, { payload }: any) {
-      const newTree = cancelGroup(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+    cancelGroup(state: IBarState, { payload }: any) {
+      const newTree = cancelGroup(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // TODO 粘贴
     // paste(state: IBarState, { payload }: any) {
@@ -2359,12 +2359,12 @@ export default {
       return { ...state, treeData: newTree }
     },
     // 删除
-    frontdelete(state: IBarState, { payload }: any) {
-      const newTree = remove(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+    delete(state: IBarState, { payload }: any) {
+      const newTree = remove(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // 复制
-    frontcopy(state: IBarState, { payload }: any) {
+    copy(state: IBarState, { payload }: any) {
       // const newTree = copy(state.treeData, state.key);
       // return { ...state, treeData: newTree };
       return { ...state }
@@ -2466,18 +2466,18 @@ export default {
     clearAllStatus(state: IBarState, payload: any) {
       console.log('components', state.components)
       // 先将选中的 layer 的 select 状态清除
-      handleLayersStatus(
-        state.treeData,
-        (layer: ILayerGroup | ILayerComponent, index: number) => {
-          if((layer as any).parentId === '1') {
-            layer.cancel = false
-            layer.disabled = false
-          } else {
-            layer.cancel = true;
-            layer.disabled = false;
-          }
-        },
-      )
+      // handleLayersStatus(
+      //   state.treeData,
+      //   (layer: ILayerGroup | ILayerComponent, index: number) => {
+      //     if((layer as any).parentId === '1') {
+      //       layer.cancel = false
+      //       layer.disabled = false
+      //     } else {
+      //       layer.cancel = true
+      //       layer.disabled = true
+      //     }
+      //   },
+      // )
       localStorage.removeItem('dblComponentTimes')
       localStorage.removeItem('currentTimes')
       state.currentDblTimes = 0
