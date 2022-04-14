@@ -51,6 +51,8 @@ const CustomDraggable
   const allComponentDOMs = bar.allComponentDOMs
   let supportLinesRef = bar.supportLinesRef
   const [ startPosition, setStartPosition ] = useState({ x: 0, y: 0 })
+  const [ copyTreeData, setCopyTreeData ] = useState(deepClone(treeData))
+
   const nodeRef: any = useRef(null)
   const currentTimes: any = useRef(0)
   useEffect(() => {
@@ -58,6 +60,9 @@ const CustomDraggable
     return () => {
     }
   }, [])
+  useEffect(() => {
+    setCopyTreeData(deepClone(treeData).reverse())
+  }, [ treeData ])
   /**
    * 鼠标事件顺序： dragStart, drag, dragEnd, click
    */
@@ -333,7 +338,7 @@ const CustomDraggable
     }
     dispatch({
       type: 'bar/updateComponent',
-      payload: bar.selectedComponents
+      payload: bar.selectedComponents,
     })
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
@@ -365,9 +370,6 @@ const CustomDraggable
         })
       }
     }
-    console.log('-------------')
-    console.log('layer', layer)
-    console.log('-------------')
     if(!dblComponentTimes) {
       layer.cancel = true
       layer.disabled = true
@@ -404,7 +406,7 @@ const CustomDraggable
   return (
     <div className="c-custom-draggable">
       {
-        treeData.map((layer: ILayerGroup | ILayerComponent) => {
+        copyTreeData.map((layer: ILayerGroup | ILayerComponent) => {
           let config: IConfig = {
             position: {
               x: 0,
@@ -447,7 +449,6 @@ const CustomDraggable
               style_config = component.config
               // style_config = component.config.find((item: any) => item.name === STYLE)
               style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-              console.log('style_dimension_config', style_dimension_config)
               if(style_dimension_config) {
                 Object.values(style_dimension_config.value).forEach((obj: any) => {
                   if([ TOP, LEFT ].includes(obj.name)) {
