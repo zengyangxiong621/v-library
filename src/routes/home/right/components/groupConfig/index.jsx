@@ -54,9 +54,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       dashboardId: "1513702962304577537"
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useFetch({
-      value: '/visual/layer/group/update'
-    }, {
+    await useFetch('/visual/layer/group/update', {
       body: JSON.stringify(params)
     })
   }
