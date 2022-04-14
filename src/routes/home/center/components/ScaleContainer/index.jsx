@@ -78,6 +78,11 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         if (clientY.current >= yBoundary) {
           clientY.current = yBoundary
         }
+        // console.log('clientX', clientX)
+        // console.log('xBoundary', xBoundary)
+        // console.log('---------------------')
+        console.log('clientY', clientY)
+        console.log('yBoundary', yBoundary)
         const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
         const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
         if (clientX.current <= xBoundary) {
@@ -100,6 +105,9 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
             bar.scaleDragData.position.y = currentY + yMoveLength
           }
         }
+        console.log('height', bar.scaleDragData.style.height)
+        console.log('---------------------')
+
       } else if (obj.className === 'bl') {
         if (clientX.current >= xBoundary) {
           clientX.current = xBoundary
