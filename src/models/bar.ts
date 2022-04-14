@@ -1628,6 +1628,11 @@ export default {
           },
         ],
       },
+      {
+        name: 'thumbImg',
+        displayName: '封面',
+        value: '',
+      },
     ],
     groupConfig: [
       {
