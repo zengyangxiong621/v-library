@@ -1923,15 +1923,15 @@ export default {
   } as IBarState,
   subscriptions: {
     init({ dispatch }: any) {
-      const treeData = generateTreeData()
-      dispatch({
-        type: 'initTreeData',
-        payload: treeData,
-      })
+      // const treeData = generateTreeData()
+      // dispatch({
+      //   type: 'initTreeData',
+      //   payload: treeData,
+      // })
     },
     getDashboardDetails({ dispatch }: any) {
       dispatch({
-        type: 'getDashboardDetails'
+        type: 'getDashboardDetails',
       })
     },
     setup({ dispatch, history }: { dispatch: any; history: any }) {
@@ -1952,13 +1952,25 @@ export default {
 
   effects: {
     * getDashboardDetails({ payload }: any, { call, put, select }: any) {
-      const { data } = yield myFetch('/visual/application/dashboard/detail/1513702962304577537', {
+      const {
+        data: {
+          layers,
+          components,
+        },
+      } = yield myFetch('/visual/application/dashboard/detail/1513702962304577537', {
         method: 'get',
       })
       console.log('-------------')
       console.log('初始化')
-      console.log('data', data)
       console.log('-------------')
+      yield put({
+        type: 'save',
+        payload: {
+          treeData: layers,
+          components,
+        },
+      })
+
     },
     * group({ payload }: any, { call, put, select }: any): any {
       const tree: any = yield select(({ bar }: any) => bar.treeData)
@@ -2065,6 +2077,15 @@ export default {
       })
       yield put({
         type: 'calcDragScaleData',
+      })
+    },
+    * updateComponent({ payload }: any, { call, put }: any): any {
+      const { data } = yield myFetch('/visual/module/update', {
+        method: 'post',
+        body: JSON.stringify({
+          dashboardId: '1513702962304577537',
+          configs: payload,
+        }),
       })
     },
   },
@@ -2393,6 +2414,7 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
+      console.log('components', state.components)
       // 先将选中的 layer 的 select 状态清除
       handleLayersStatus(
         state.treeData,

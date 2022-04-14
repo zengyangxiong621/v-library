@@ -142,6 +142,10 @@ const Center = ({ bar, dispatch }: any) => {
       })
     }
     dispatch({
+      type: 'bar/updateComponent',
+      payload: bar.selectedComponents
+    })
+    dispatch({
       type: 'bar/save',
     })
   }

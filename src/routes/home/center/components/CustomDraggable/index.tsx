@@ -331,6 +331,10 @@ const CustomDraggable
         },
       })
     }
+    dispatch({
+      type: 'bar/updateComponent',
+      payload: bar.selectedComponents
+    })
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
     localStorage.removeItem('dblComponentTimes')
@@ -443,13 +447,16 @@ const CustomDraggable
               style_config = component.config
               // style_config = component.config.find((item: any) => item.name === STYLE)
               style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-              Object.values(style_dimension_config.value).forEach((obj: any) => {
-                if([ TOP, LEFT ].includes(obj.name)) {
-                  config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-                } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
-                  config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
-                }
-              })
+              console.log('style_dimension_config', style_dimension_config)
+              if(style_dimension_config) {
+                Object.values(style_dimension_config.value).forEach((obj: any) => {
+                  if([ TOP, LEFT ].includes(obj.name)) {
+                    config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+                  } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
+                    config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+                  }
+                })
+              }
             }
           }
           return (
@@ -480,7 +487,7 @@ const CustomDraggable
                 data-id={ layer.id }
                 key={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
-                onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
+                // onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
                 // onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
                 // onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
