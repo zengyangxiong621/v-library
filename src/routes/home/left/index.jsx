@@ -113,7 +113,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
-    el.style.width = `${ w }px`
+    el.style.width = `${w}px`
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
@@ -131,7 +131,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${ icon }`,
+      type: `bar/${icon}`,
       payload: finalPayload,
     })
   }
@@ -260,6 +260,7 @@ const Left = ({ dispatch, bar, operate }) => {
         ar.splice(i + 1, 0, dragObj)
       }
     }
+    console.log('aaaaa', data);
     dispatch({
       type: 'bar/update',
       payload: data,
@@ -293,63 +294,94 @@ const Left = ({ dispatch, bar, operate }) => {
       <button onClick={() => dispatch({
         type: 'bar/change',
         payload: {
-
+          dashboardId: "1513702962304577537",
+          configs: [
+            {
+              id: "1514070775583035393",
+              key: "isShow",
+              value: true,
+            },
+          ],
         }
       })}>change</button>
       <button onClick={() => dispatch({
         type: 'bar/update',
         payload: {
-
         }
       })}>update</button>
+      <button onClick={() => dispatch({
+        type: 'bar/delete',
+        payload: {
+          dashboardId: '1513702962304577537',
+          layers: [
+            {
+              id: '1514439811896410114',
+              children: [],
+            }
+          ]
+        }
+      })}>删除</button>
+      <button onClick={() => dispatch({
+        type: 'bar/copy',
+        payload: {
+          dashboardId: '1513702962304577537',
+          children: [],
+          targetDashboardId: '1513702962304577537',
+          insertId: '1514185900319133697',
+          originLayers: bar.treeData,
+          components: [...bar.key],
+          panels: [],
+          selected: [...bar.key]
+        }
+      })}>复制</button>
       <div className="left-wrap">
-        <div className="header" ref={ headerRef }>
+        <div className="header" ref={headerRef}>
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
-            style={ { cursor: 'pointer' } }/>
+            type="icon-tucengshouqi" onClickCapture={() => toggle()}
+            style={{ cursor: 'pointer' }} />
         </div>
-        <div className="left-wrap-toolbar" ref={ topBarRef }>
-          <ToolBar data={ topBarIcons } iconSize="12px" getActiveIcon={ getActiveIcon }>
+        <div className="left-wrap-toolbar" ref={topBarRef}>
+          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
           </ToolBar>
         </div>
-        {/*右键菜单Dropdown */ }
+        {/*右键菜单Dropdown */}
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
-        <div className="left-wrap-tree" ref={ treeRef }>
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
+        <div className="left-wrap-tree" ref={treeRef}>
           <Tree
             draggable
             blockNode
             fieldNames={
               { key: 'id', children: 'components' }
             }
-            multiple={ isMultipleTree }
-            switcherIcon={ <DownOutlined/> }
-            defaultExpandedKeys={ customExpandKeys }
-            onDrop={ onDrop }
-            onExpand={ myOnExpand }
-            onSelect={ onSelect }
-            onRightClick={ onRightClick }
-            treeData={ bar.treeData }
-            selectedKeys={ bar.key }
-            titleRender={ (nodeData) => {
+            multiple={isMultipleTree}
+            switcherIcon={<DownOutlined />}
+            defaultExpandedKeys={customExpandKeys}
+            onDrop={onDrop}
+            onExpand={myOnExpand}
+            onSelect={onSelect}
+            onRightClick={onRightClick}
+            treeData={bar.treeData}
+            selectedKeys={bar.key}
+            titleRender={(nodeData) => {
               return (<div>
                 <EveryTreeNode
-                  { ...nodeData }
-                  isExpand={ isExpand }
-                  getCurrentMenuLocation={ getCurrentMenuLocation }
+                  {...nodeData}
+                  isExpand={isExpand}
+                  getCurrentMenuLocation={getCurrentMenuLocation}
                 />
               </div>)
             }
             }
           />
         </div>
-        {/* </Dropdown> */ }
-        { isShowRightMenu &&
-        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
+        {/* </Dropdown> */}
+        {isShowRightMenu &&
+          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
       </div>
-      <div className="footer" ref={ bottomBarRef }>
-        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
+      <div className="footer" ref={bottomBarRef}>
+        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
     </div>
