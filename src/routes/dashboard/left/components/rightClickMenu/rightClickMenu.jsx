@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
-import './rightClickMenu.css'
+import './rightClickMenu.less'
 
 import {
   getFieldStates,
@@ -16,7 +16,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
   // 每次渲染右侧菜单，都需要确定此次是锁定还是解锁
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
-    const lockInfo = getFieldStates(bar.treeData, bar.key, 'lock')
+    const lockInfo = getFieldStates(bar.treeData, bar.key, 'isLock')
     const finalLockState = lockInfo.some(item => item===false)
     setIsLock(!finalLockState)
 
@@ -27,7 +27,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
 
     // 判断所选中的各个节点是否是显示状态
     // 只要有一个隐藏了就显示
-    const showOrHiddenInfo = getFieldStates(bar.treeData,bar.key,'scan')
+    const showOrHiddenInfo = getFieldStates(bar.treeData,bar.key,'isShow')
     const showOrHiddenState = showOrHiddenInfo.some(item => item === false)
     setIsShowOrHidden(!showOrHiddenState)
     console.log('scanOrHiddenInfo', showOrHiddenInfo);
@@ -60,7 +60,6 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
       default:
         break;
     }
-    console.log('ssss', customPayload);
     dispatch({
       type: `bar/${operateName}`,
       payload: customPayload
@@ -91,7 +90,6 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
       //   recalculateY = 20
       // }
     }
-    console.log('yyyyy;, ', recalculateY);
     menuRef.current.style.position = 'fixed'
     menuRef.current.style.top = `${recalculateY}px`
     menuRef.current.style.left = `${recalculateX}px`

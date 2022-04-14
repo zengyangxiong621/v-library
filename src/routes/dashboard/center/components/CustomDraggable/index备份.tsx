@@ -343,7 +343,7 @@ const CustomDraggable
                 }
                 return allComponentRefs[layer.id]
               } }
-              disabled={ layer.lock }
+              disabled={ layer.isLock }
               cancel=".no-cancel" key={ layer.id } position={ config.position }
               onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer) }
               onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
@@ -359,7 +359,7 @@ const CustomDraggable
                 style={ {
                   ...config.style,
                   border: '1px solid gray',
-                  visibility: !layer.scan ? 'hidden' : 'unset',
+                  visibility: !layer.isShow ? 'hidden' : 'unset',
                 } }>
                 {
                   isGroup ? <div className="no-cancel">

@@ -21,20 +21,24 @@ export interface ILayerComponent {
   id: string,
   groupId: string,
   name: string,
-  lock: boolean, // 是否锁定
-  scan: boolean, // 是否展示
+  isLock: boolean, // 是否锁定
+  isShow: boolean, // 是否展示
   selected: boolean,
-  hover: boolean
+  hover: boolean,
+  cancel: boolean,
+  disabled: boolean,
 }
 
 export interface ILayerGroup {
   id: string,
   name: string,
-  lock: boolean, // 是否锁定
-  scan: boolean, // 是否展示
+  isLock: boolean, // 是否锁定
+  isShow: boolean, // 是否展示
   collapse: boolean, // 是否展开
   selected: boolean,
   hover: boolean,
+  cancel: boolean,
+  disabled: boolean,
   components: Array<ILayerComponent>,
   children: Array<ILayerComponent>,
 }

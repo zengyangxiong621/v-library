@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { connect } from 'dva'
 import * as React from 'react'
+import { throttle } from '../../../../../utils'
 
 type Event = React.MouseEvent<HTMLElement | SVGElement>
   | React.TouchEvent<HTMLElement | SVGElement>
@@ -21,6 +22,8 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
 
   useEffect(() => {
     document.onmousedown = (e: any) => {
+      e.preventDefault()
+      console.log('选区mouseDown')
       if(![ 'c-canvas', 'draggable-wrapper' ].includes(e.target.className)) {
         return
       }
@@ -35,7 +38,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
           height: Math.ceil(domInfo.height),
         }
       })
-      e.preventDefault()
       /*
         初始化
        */
@@ -45,10 +47,11 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       const boxPreWidth = areaRef.current.offsetWidth
       const boxPreHeight = areaRef.current.offsetHeight
       let isMouseMove = false
+      selectedList.current = []
       document.onmousemove = (ev: Event) => {
+        console.log('选区mouseMove')
         // 移动的时候让选区显示出来
         e.preventDefault()
-
         isMouseMove = true
         areaRef.current.style.display = 'block'
         // 取选区 div 的左上角、右下角坐标
@@ -61,9 +64,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
           return
         }
         const pointCurY = ev.clientY
-
         const pointCurX = ev.clientX
-
         const boxCurWidth = (pointCurX - pointPreX) // 当前盒子的大小
         const boxCurHeight = (pointCurY - pointPreY)
         if(boxCurWidth >= 0 && boxCurHeight >= 0) {
@@ -123,9 +124,10 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
           selectedIds.push(item.id)
         })
         selectedList.current = selectedIds
+
       }
       document.onmouseup = (e) => {
-        console.log('11111111111111111')
+        console.log('选区mouseUp')
         e.preventDefault()
         dispatch({
           type: 'bar/chooseLayer',

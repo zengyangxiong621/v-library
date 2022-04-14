@@ -124,7 +124,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         selectedList.current = selectedIds
       }
       document.onmouseup = () => {
-        console.log('selectedList.current', selectedList.current)
         dispatch({
           type: 'bar/setSelectedKeys',
           payload: selectedList.current

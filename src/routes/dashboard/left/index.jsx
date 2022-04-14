@@ -42,9 +42,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const headerRef = useRef(null)
   // 监听 树区域 以外的点击
   useClickAway(() => {
-    console.log('2222222222222222222222222222')
-    console.log('bar', bar.isAreaChoose)
-    if(bar.isAreaChoose) {
+    if (bar.isAreaChoose) {
       return
     }
     setSelected([])
@@ -68,7 +66,6 @@ const Left = ({ dispatch, bar, operate }) => {
   // 2、多选时不能重命名
   // 3、判断选择的节点是否是文件夹
   useEffect(() => {
-
     //1
     setSelected(bar.key)
     // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
@@ -112,11 +109,11 @@ const Left = ({ dispatch, bar, operate }) => {
    * 方法
    * */
   // 收起 / 展开 菜单栏
-  const [w, setW] = useState(250)
+  const [w, setW] = useState(188)
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
-    el.style.width = `${w}px`
+    el.style.width = `${ w }px`
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
@@ -126,7 +123,7 @@ const Left = ({ dispatch, bar, operate }) => {
       case 'singleShowLayer':
         finalPayload.singleShowLayer = 'negation'
         break
-      case 'lock':
+      case 'isLock':
         finalPayload.value = 'negation'
         break
       default:
@@ -134,7 +131,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${icon}`,
+      type: `bar/${ icon }`,
       payload: finalPayload,
     })
   }
@@ -175,7 +172,7 @@ const Left = ({ dispatch, bar, operate }) => {
       },
     })
 
-    setSelected(curKey)
+    // setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     setIsShowRightMenu(false)
   }
@@ -264,7 +261,7 @@ const Left = ({ dispatch, bar, operate }) => {
       }
     }
     dispatch({
-      type: 'bar/initTreeData',
+      type: 'bar/update',
       payload: data,
     })
   }
@@ -286,62 +283,73 @@ const Left = ({ dispatch, bar, operate }) => {
     setIsShowRightMenu(false)
   }
   return (
-    // <Menu
-    //   mode="inline"
-    //   theme="dark"
-    //   className="left-menu"
-    //   style={{
-    //   }}
-    //   inlineCollapsed={inlineCollapsed}>
     <div className='left-menu'>
+      <button onClick={() => dispatch({
+        type: 'bar/addComponent',
+        payload: {
+          insertId: '1514070775583035393'
+        }
+      })}>新增</button>
+      <button onClick={() => dispatch({
+        type: 'bar/change',
+        payload: {
+
+        }
+      })}>change</button>
+      <button onClick={() => dispatch({
+        type: 'bar/update',
+        payload: {
+
+        }
+      })}>update</button>
       <div className="left-wrap">
-        <div className="header" ref={headerRef}>
+        <div className="header" ref={ headerRef }>
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={() => toggle()}
-            style={{ cursor: 'pointer' }} />
+            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
+            style={ { cursor: 'pointer' } }/>
         </div>
-        <div className='left-wrap-toolbar' ref={topBarRef}>
-          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
+        <div className="left-wrap-toolbar" ref={ topBarRef }>
+          <ToolBar data={ topBarIcons } iconSize="12px" getActiveIcon={ getActiveIcon }>
           </ToolBar>
         </div>
-        {/*右键菜单Dropdown */}
+        {/*右键菜单Dropdown */ }
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
-        <div className='left-wrap-tree' ref={treeRef}>
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
+        <div className="left-wrap-tree" ref={ treeRef }>
           <Tree
             draggable
             blockNode
             fieldNames={
               { key: 'id', children: 'components' }
             }
-            multiple={isMultipleTree}
-            switcherIcon={<DownOutlined />}
-            defaultExpandedKeys={customExpandKeys}
-            onDrop={onDrop}
-            onExpand={myOnExpand}
-            onSelect={onSelect}
-            onRightClick={onRightClick}
-            treeData={bar.treeData}
-            selectedKeys={bar.key}
-            titleRender={(nodeData) => {
+            multiple={ isMultipleTree }
+            switcherIcon={ <DownOutlined/> }
+            defaultExpandedKeys={ customExpandKeys }
+            onDrop={ onDrop }
+            onExpand={ myOnExpand }
+            onSelect={ onSelect }
+            onRightClick={ onRightClick }
+            treeData={ bar.treeData }
+            selectedKeys={ bar.key }
+            titleRender={ (nodeData) => {
               return (<div>
                 <EveryTreeNode
-                  {...nodeData}
-                  isExpand={isExpand}
-                  getCurrentMenuLocation={getCurrentMenuLocation}
+                  { ...nodeData }
+                  isExpand={ isExpand }
+                  getCurrentMenuLocation={ getCurrentMenuLocation }
                 />
               </div>)
             }
             }
           />
         </div>
-        {/* </Dropdown> */}
-        {isShowRightMenu &&
-          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
+        {/* </Dropdown> */ }
+        { isShowRightMenu &&
+        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
       </div>
-      <div className="footer" ref={bottomBarRef}>
-        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
+      <div className="footer" ref={ bottomBarRef }>
+        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
         </ToolBar>
       </div>
     </div>

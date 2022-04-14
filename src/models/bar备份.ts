@@ -365,7 +365,7 @@ export default {
     },
     // 成组
     group(state: IBarState, { payload }: any) {
-      const newTree = group(state.treeData, state.key, state.lastRightClick)
+      const newTree = group(state.treeData, state.key)
       console.log('newTree', newTree)
       return { ...state, treeData: newTree }
     },

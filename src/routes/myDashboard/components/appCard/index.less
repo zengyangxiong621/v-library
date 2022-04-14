@@ -1,0 +1,132 @@
+@backColor: #171a24;
+// 模板Card被hover时的背景色
+@hoverBackColor: #050506;
+
+.AppCard-wrap {
+  // width: 335px;
+  width: 100%;
+  height: 248px;
+  background: #222838;
+  border: 1px solid rgba(57, 70, 89, 1);
+  user-select: none;
+
+  margin-right: 26px;
+  margin-bottom: 25px;
+
+  .head {
+    width: 100%;
+    height: calc(100% - 40px);
+    background-color: rgb(43, 44, 45);
+    position: relative;
+
+    .hoverOnImg {
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      .div-to-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 88px;
+        height: 32px;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+        user-select: none;
+      }
+      .scan-btn {
+        background: #3d404c;
+        margin-right: 16px;
+      }
+      .edit-btn {
+        background: #2482ff;
+      }
+      .icons-wrap {
+        display: flex;
+        justify-content: flex-end;
+        padding: 16px 24px 0 0;
+        .more-icon {
+          max-width: 34px;
+        }
+        .more {
+          display: none;
+        }
+        .more-icon:hover .more{
+          min-width: 100px;
+          position: relative;
+          display: block;
+          z-index: 99999999999999;
+          background-color: gray;
+        }
+      }
+      .btns-wrap {
+        display: flex;
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .each-icon {
+        cursor: pointer;
+        font-size: 16px;
+        margin-left: 16px;
+        color: #fff;
+      }
+    }
+
+    .img-wrap {
+      display: block;
+      user-select: none;
+      .img-limit {
+        width: 100%;
+        height: 206px;
+        background-size: 100%;
+      }
+    }
+  }
+  .head:hover .hoverOnImg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    // background: @hoverBackColor;
+    background-color: rgba(8, 16, 22, 0.7);
+  }
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 0 16px 0 12px;
+    .my-input {
+      max-width: 100%;
+    }
+
+    .bianjiIcon {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .releaseState {
+      display: flex;
+      align-items: center;
+      min-width: 58px;
+      margin-left: 6px;
+
+      .customCircle {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .text {
+        font-size: 14px;
+        color: #999999;
+        font-weight: 400;
+        user-select: none;
+      }
+    }
+  }
+}

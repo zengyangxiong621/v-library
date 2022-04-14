@@ -33,8 +33,8 @@ export interface ILayerComponent {
   id: string,
   groupId: string,
   name: string,
-  lock: boolean, // 是否锁定
-  scan: boolean, // 是否展示
+  isLock: boolean, // 是否锁定
+  isShow: boolean, // 是否展示
   selected: boolean,
   hover: boolean
 }
@@ -42,8 +42,8 @@ export interface ILayerComponent {
 export interface ILayerGroup {
   id: string,
   name: string,
-  lock: boolean, // 是否锁定
-  scan: boolean, // 是否展示
+  isLock: boolean, // 是否锁定
+  isShow: boolean, // 是否展示
   collapse: boolean, // 是否展开
   selected: boolean,
   hover: boolean,
