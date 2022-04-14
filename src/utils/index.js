@@ -371,25 +371,27 @@ export const calcGroupPosition = (arr, components) => {
       if (component) {
         // const style_config = component.config.find((item: any) => item.name === STYLE)
         const style_dimension_config = component.config.find((item) => item.name === DIMENSION)
-        const config = {
-          position: {
-            x: 0,
-            y: 0,
-          },
-          style: {
-            width: 0,
-            height: 0,
-          },
-        }
-        Object.values(style_dimension_config.value).forEach((obj) => {
-          if ([TOP, LEFT].includes(obj.name)) {
-            config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-          } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-            config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+        if (style_dimension_config) {
+          const config = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
           }
-        })
-        xPositionList.push(config.position.x, config.position.x + config.style.width)
-        yPositionList.push(config.position.y, config.position.y + config.style.height)
+          Object.values(style_dimension_config.value).forEach((obj) => {
+            if ([TOP, LEFT].includes(obj.name)) {
+              config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+            } else if ([WIDTH, HEIGHT].includes(obj.name)) {
+              config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+            }
+          })
+          xPositionList.push(config.position.x, config.position.x + config.style.width)
+          yPositionList.push(config.position.y, config.position.y + config.style.height)
+        }
       }
     }
   })

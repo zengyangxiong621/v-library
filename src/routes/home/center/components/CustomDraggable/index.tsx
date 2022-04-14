@@ -136,25 +136,27 @@ const CustomDraggable
       const yPositionList: number[] = []
       bar.selectedComponents.forEach((item: IComponent) => {
         const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-        const config: IConfig = {
-          position: {
-            x: 0,
-            y: 0,
-          },
-          style: {
-            width: 0,
-            height: 0,
-          },
-        }
-        Object.values(style_dimension_config.value).forEach((obj: any) => {
-          if([ TOP, LEFT ].includes(obj.name)) {
-            config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-          } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
-            config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+        if(style_dimension_config) {
+          const config: IConfig = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
           }
-        })
-        xPositionList.push(config.position.x, config.position.x + config.style.width)
-        yPositionList.push(config.position.y, config.position.y + config.style.height)
+          Object.values(style_dimension_config.value).forEach((obj: any) => {
+            if([ TOP, LEFT ].includes(obj.name)) {
+              config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+            } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
+              config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+            }
+          })
+          xPositionList.push(config.position.x, config.position.x + config.style.width)
+          yPositionList.push(config.position.y, config.position.y + config.style.height)
+        }
       })
       xPositionList.sort((a, b) => a - b)
       yPositionList.sort((a, b) => a - b)
@@ -198,39 +200,41 @@ const CustomDraggable
     if(component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
       // 单个组件移动
       const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
-      style_dimension_config.value.forEach((item: any) => {
-        if(item.name === LEFT) {
-          item.value = Math.ceil(data.x)
-        } else if(item.name === TOP) {
-          item.value = Math.ceil(data.y)
-        }
-      })
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          scaleDragData: {
-            position: {
-              x: data.x,
-              y: data.y,
+      if(style_dimension_config) {
+        style_dimension_config.value.forEach((item: any) => {
+          if(item.name === LEFT) {
+            item.value = Math.ceil(data.x)
+          } else if(item.name === TOP) {
+            item.value = Math.ceil(data.y)
+          }
+        })
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            scaleDragData: {
+              position: {
+                x: data.x,
+                y: data.y,
+              },
+              style: {
+                display: 'block',
+                width: config.style.width,
+                height: config.style.height,
+              },
             },
-            style: {
-              display: 'block',
-              width: config.style.width,
-              height: config.style.height,
+            componentConfig: component,
+            sizeChange: {
+              change: true,
+              config: {
+                left: Math.trunc(data.x),
+                top: Math.trunc(data.y),
+                width: config.style.width,
+                height: config.style.height,
+              },
             },
           },
-          componentConfig: component,
-          sizeChange: {
-            change: true,
-            config: {
-              left: Math.trunc(data.x),
-              top: Math.trunc(data.y),
-              width: config.style.width,
-              height: config.style.height,
-            },
-          },
-        },
-      })
+        })
+      }
     } else if('components' in layer && bar.selectedComponentOrGroup.length === 1) {
       // 单个组移动
       const xMoveLength = Math.ceil(data.x - startPosition.x)
@@ -238,13 +242,15 @@ const CustomDraggable
       bar.selectedComponents.forEach((item: IComponent) => {
         // const style_config = item.config.find((item: any) => item.name === STYLE)
         const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-        style_dimension_config.value.forEach((item: any) => {
-          if(item.name === LEFT) {
-            item.value += xMoveLength
-          } else if(item.name === TOP) {
-            item.value += yMoveLength
-          }
-        })
+        if(style_dimension_config) {
+          style_dimension_config.value.forEach((item: any) => {
+            if(item.name === LEFT) {
+              item.value += xMoveLength
+            } else if(item.name === TOP) {
+              item.value += yMoveLength
+            }
+          })
+        }
       })
 
       dispatch({
@@ -270,25 +276,27 @@ const CustomDraggable
       bar.selectedComponents.forEach((item: IComponent) => {
         // const style_config = item.config.find((item: any) => item.name === STYLE)
         const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-        const config: IConfig = {
-          position: {
-            x: 0,
-            y: 0,
-          },
-          style: {
-            width: 0,
-            height: 0,
-          },
-        }
-        Object.values(style_dimension_config.value).forEach((obj: any) => {
-          if([ TOP, LEFT ].includes(obj.name)) {
-            config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-          } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
-            config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+        if(style_dimension_config) {
+          const config: IConfig = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
           }
-        })
-        xPositionList.push(config.position.x, config.position.x + config.style.width)
-        yPositionList.push(config.position.y, config.position.y + config.style.height)
+          Object.values(style_dimension_config.value).forEach((obj: any) => {
+            if([ TOP, LEFT ].includes(obj.name)) {
+              config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+            } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
+              config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+            }
+          })
+          xPositionList.push(config.position.x, config.position.x + config.style.width)
+          yPositionList.push(config.position.y, config.position.y + config.style.height)
+        }
       })
       xPositionList.sort((a, b) => {
         return a - b
@@ -406,7 +414,7 @@ const CustomDraggable
   return (
     <div className="c-custom-draggable">
       {
-        copyTreeData.map((layer: ILayerGroup | ILayerComponent) => {
+        treeData.map((layer: ILayerGroup | ILayerComponent) => {
           let config: IConfig = {
             position: {
               x: 0,
