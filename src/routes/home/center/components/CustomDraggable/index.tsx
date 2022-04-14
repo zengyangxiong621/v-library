@@ -451,14 +451,23 @@ const CustomDraggable
             }
           } else {
             // 组件
+
             component = components.find(item => item.id === layer.id)
             if(component) {
               staticData = component.staticData
               style_config = component.config
               // style_config = component.config.find((item: any) => item.name === STYLE)
               style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
+              if(component.id === '1514486070669705217') {
+                console.log('----------------------')
+                console.log('style_dimension_config', style_dimension_config)
+                console.log('component', component)
+                console.log('config', config)
+                console.log('---------------------')
+              }
               if(style_dimension_config) {
                 Object.values(style_dimension_config.value).forEach((obj: any) => {
+
                   if([ TOP, LEFT ].includes(obj.name)) {
                     config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
                   } else if([ WIDTH, HEIGHT ].includes(obj.name)) {

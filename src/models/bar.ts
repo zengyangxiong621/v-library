@@ -70,12 +70,14 @@ interface IBarState {
     display: 'none' | 'block';
   }>;
   currentDblTimes: number;
+  isCanClearAllStatus: boolean
 }
 
 export default {
   namespace: 'bar',
   state: {
     currentDblTimes: 0,
+    isCanClearAllStatus: true,
     key: [],
     isShowRightMenu: false,
     isFolder: false,
@@ -2003,38 +2005,41 @@ export default {
         },
       })
     },
-    *cancelGroup({ payload }: any, { call, put, select }: any): any {
-      const bar = yield select(({ bar }: any) => bar);
-      const newTree = cancelGroup(bar.treeData, bar.key);
-      console.log("取消成组的新树", newTree);
+    * cancelGroup({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = cancelGroup(bar.treeData, bar.key)
+      console.log('取消成组的新树', newTree)
       yield put({
-        type: "update",
+        type: 'update',
         payload: newTree,
-      });
+      })
     },
-    *moveUp({ payload }: any, { call, put, select }: any): any {
-      const bar = yield select(({bar}: any) => bar)
+    * moveUp({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar)
       const newTree = moveUp(bar.treeData, bar.key)
       yield put({
         type: 'update',
-        payload: newTree
+        payload: newTree,
       })
     },
-    *moveDown({ payload }: any, { call, put, select }: any): any {
-      const bar = yield select(({bar}: any) => bar)
+    * moveDown({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar)
       const newTree = moveDown(bar.treeData, bar.key)
       yield put({
         type: 'update',
-        payload: newTree
+        payload: newTree,
       })
     },
+    * placedTop({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = placeTop(bar.treeData, bar.key)
     *placedTop({ payload }: any, { call, put, select }: any): any {
       console.log('树的问题')
       const bar = yield select(({bar}: any) => bar)
       const newTree = placeTop(bar.treeData, bar.key);
       yield put({
         type: 'update',
-        payload: newTree
+        payload: newTree,
       })
     },
     *placedBottom({ payload }: any, { call, put, select }: any): any {
@@ -2043,12 +2048,12 @@ export default {
       const newTree = placeBottom(bar.treeData, bar.key);
       yield put({
         type: 'update',
-        payload: newTree
+        payload: newTree,
       })
     },
     // 更改图层组织
-    *update({ payload }: any, { call, put }: any) {
-      const { data } = yield myFetch("/visual/layer/update", {
+    * update({ payload }: any, { call, put }: any) {
+      const { data } = yield myFetch('/visual/layer/update', {
         body: JSON.stringify({
           dashboardId: '1513702962304577537',
           layers: payload,
@@ -2061,10 +2066,10 @@ export default {
       })
     },
     // 修改图层属性图层
-    *change({ payload }: any, { call, put }: any) {
-      const { data } = yield myFetch("/visual/layer/change", {
+    * change({ payload }: any, { call, put }: any) {
+      const { data } = yield myFetch('/visual/layer/change', {
         body: JSON.stringify(payload),
-      });
+      })
       yield put({
         type: 'updateTree',
         payload: data,
@@ -2092,27 +2097,28 @@ export default {
       })
     },
     // 删除图层、分组
-    *delete({payload}: any, {select, call, put}: any):any {
-      const {data} = yield myFetch('/visual/layer/delete', {
+    * delete({ payload }: any, { select, call, put }: any): any {
+      const { data } = yield myFetch('/visual/layer/delete', {
         method: 'delete',
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       })
+      console.log('删除接口返回的data', data)
       yield put({
         type: 'updateTree',
-        payload: data
+        payload: data,
       })
     },
     // 复制图层
-    *copy({payload}: any, {select, call, put}: any): any {
-      const {data:{layers}} = yield myFetch('/visual/layer/copy', {
-        body: JSON.stringify(payload)
+    * copy({ payload }: any, { select, call, put }: any): any {
+      const { data: { layers } } = yield myFetch('/visual/layer/copy', {
+        body: JSON.stringify(payload),
       })
       yield put({
         type: 'updateTree',
         payload: layers,
       })
     },
-    *fetch({ payload }: any, { call, put }: any): any {
+    * fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
       yield put({ type: 'selectedNode', payload })
     },
@@ -2120,7 +2126,7 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          isAreaChoose: true,
+          isCanClearAllStatus: false,
         },
       })
       yield put({
@@ -2485,6 +2491,13 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
+      if(!state.isCanClearAllStatus) {
+        state.isCanClearAllStatus = true
+        return {
+          ...state,
+        }
+      }
+      console.log('空白清空')
       // 先将选中的 layer 的 select 状态清除
       // handleLayersStatus(
       //   state.treeData,
