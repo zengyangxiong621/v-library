@@ -14,9 +14,12 @@ import {
   Collapse
 } from 'antd';
 
+import debounce from 'lodash/debounce';
+import { useFetch } from '../../../../tempDataSource/tool/useFetch'
 
 
-const GroupConfig = ({bar, dispatch ,...props }) => {
+
+const GroupConfig = ({ bar, dispatch, ...props }) => {
   const [form] = Form.useForm();
   const { Panel } = Collapse;
   const groupConfig = deepClone(bar.groupConfig)
@@ -29,13 +32,32 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
     labelAlign: 'left'
   };
 
-  const settingsChange = () => {
+  const settingsChange = debounce(() => {
     console.log(groupConfig)
     dispatch({
       type: 'bar/save',
       payload: {
         groupConfig
       }
+    })
+    saveData()
+  }, 300)
+
+  const saveData = async () => {
+    // todo 替换假数据
+    const config = [...groupConfig]
+    config.forEach(item => {
+      item.id = 'group_1-1-1'
+    })
+    const params = {
+      configs: config,
+      dashboardId: "1513702962304577537"
+    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    await useFetch({
+      value: '/visual/layer/group/update'
+    }, {
+      body: JSON.stringify(params)
     })
   }
 
@@ -54,11 +76,7 @@ const GroupConfig = ({bar, dispatch ,...props }) => {
           <PositionSize data={dimensionConfig} onChange={settingsChange}></PositionSize>
           <Checkbox data={hideDefaultConfig} onChange={settingsChange} />
           <Range data={opacityConfig} onChange={settingsChange} />
-          <Collapse accordion className="custom-collapse">
-            <Panel header="载入动画" key="1">
-              <LoadAnimation data={interactionConfig} onChange={settingsChange}/>
-            </Panel>
-          </Collapse>
+          <LoadAnimation data={interactionConfig} onChange={settingsChange} />
         </Form>
       </div>
     </div>

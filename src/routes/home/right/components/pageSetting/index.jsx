@@ -27,7 +27,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
 
   const [form] = Form.useForm();
 
-  const settingsChange = debounce(async () => {
+  const settingsChange = debounce(() => {
     console.log('pageConfig changed')
     dispatch({
       type: 'bar/save',
@@ -39,6 +39,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const saveData = async () => {
+    // todo 替换假数据
     const params = {
       config: pageConfig,
       thumb: thumbImg.value,

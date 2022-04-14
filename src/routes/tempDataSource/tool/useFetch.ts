@@ -21,6 +21,7 @@ const catchErr = <T, U = Error>(
 };
 export const BASE_URL = "http://10.202.233.230:9572"; // 本地
 // export const BASE_URL = "http://10.201.80.52:9572"; // 线上
+export const BASE_URL1 = "http://50423059pd.zicp.vip"; // 本地
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",
@@ -35,11 +36,11 @@ const DEFAULT_OPTIONS = {
  * return: Promise<Pending>
  */
 export const useFetch = async (
-  path: string,
+  path: any,
   options: any,
   customErrObj?: object
 ): Promise<[Error | null, any, any]> => {
-  const finalPath = `${BASE_URL}${path}`;
+  const finalPath = typeof path === "string" ?`${BASE_URL}${path}` : `${BASE_URL1}${path.value}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...options };
   // Fetch API 需要先转换一次格式
   const finalFetch = fetch(finalPath, finalParams).then((response) =>
