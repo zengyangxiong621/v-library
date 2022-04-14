@@ -34,7 +34,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
 
   const _data = props.data
   const [activeTab, setActiveTab] = useState(null)
-  const [tabpanes, setTabpanes] = useState([])
+  const [tabpanes, setTabpanes] = useState(_data.events || [])
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [activePane, setActivePane] = useState(null)
   const [activeId, setActiveId] = useState(null)
@@ -158,6 +158,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     const activePane = panes.find(item => { return item.id === eventId })
     setActivePane(activePane)
     setActiveActionTab(actionId)
+    _data.events = panes
+    props.onChange()
   }
 
   const deleteEvent = (e) => {
@@ -171,6 +173,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     setTabpanes(panes)
     setActiveTab(panes.length ? panes[0].id : null)
     setActivePane(panes.length ? panes[0] : null)
+    _data.events = panes
+    props.onChange()
   }
 
   const tabsChange = key => {
@@ -183,6 +187,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
   const eventTypeChange = (e, pane) => {
     console.log('e', e, pane)
     pane.trigger = e
+    _data.events = tabpanes
+    props.onChange()
   }
 
   // 添加条件
@@ -203,6 +209,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     curPane.conditions = val
     const activePane = tabpanes.find(item => { return item.id === activeTab })
     setActivePane(activePane)
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const setConditionType = (val) => {
@@ -212,6 +220,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     curPane.conditionType = val
     const activePane = tabpanes.find(item => { return item.id === activeTab })
     setActivePane(activePane)
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const showConditionDetail = (cond) => {
@@ -246,6 +256,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     })
     setTabpanes(panes)
     setActiveActionTab(id)
+    _data.events = panes
+    props.onChange()
   }
 
   const deletAction = (e) => {
@@ -261,6 +273,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     pane.actions = actions
     setTabpanes(panes)
     setActiveActionTab(pane.actions.length ? pane.actions[0].id : null)
+    _data.events = panes
+    props.onChange()
   }
 
   const actionTabsChange = (key) => {
@@ -269,34 +283,50 @@ const CusEvent = ({bar, dispatch ,...props }) => {
 
   const componentScopeChange = (val, action) => {
     action.componentScope = val
+    _data.events = tabpanes
+    props.onChange()
   }
   const selectComponentChange = (val, action) => {
     console.log('val',val)
     action.component = val
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const actionTypeChange = (val, action) => {
     action.action = val
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const animationTypeChange = (e, action) => {
     action.animation.type = e
+    _data.events = tabpanes
+    props.onChange()
   }
   const timingFunctionChange = (e, action) => {
     action.animation.timingFunction = e
+    _data.events = tabpanes
+    props.onChange()
   }
   const durationChange = (e, action) => {
     const value = parseInt(e.target.value)
     action.animation.duration = value
+    _data.events = tabpanes
+    props.onChange()
   }
   const delayChange = (e, action) => {
     const value = parseInt(e.target.value)
     action.animation.delay = value
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const unmountChange = (e, action) => {
     const checked = e.target.checked
     action.unmount = checked
+    _data.events = tabpanes
+    props.onChange()
   }
 
 
