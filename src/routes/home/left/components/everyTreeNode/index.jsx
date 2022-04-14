@@ -28,7 +28,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     dispatch({
       type: 'bar/hidden',
       payload: {
-        key: [name],
+        key: [id],
         value: !isShow
       }
     })

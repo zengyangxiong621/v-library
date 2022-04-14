@@ -1972,14 +1972,12 @@ export default {
       })
 
     },
-    * group({ payload }: any, { call, put, select }: any): any {
-      const tree: any = yield select(({ bar }: any) => bar.treeData)
-      console.log('tree', tree)
-      const { treeDataCopy, newLayerId }: any = yield group(tree, payload.key)
-      console.log('newTree', treeDataCopy)
-      console.log('nuew', newLayerId)
+    *group({ payload }: any, { call, put, select }: any): any {
+      console.log('成组')
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key);
       yield put({
-        type: 'update',
+        type: "bar/update",
         payload: treeDataCopy,
       })
       yield put({
@@ -1989,10 +1987,50 @@ export default {
         },
       })
     },
+    *cancelGroup({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar);
+      const newTree = cancelGroup(bar.treeData, bar.key);
+      console.log("取消成组的新树", newTree);
+      yield put({
+        type: "update",
+        payload: newTree,
+      });
+    },
+    *moveUp({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({bar}: any) => bar)
+      const newTree = moveUp(bar.treeData, bar.key)
+      yield put({
+        type: 'update',
+        payload: newTree
+      })
+    },
+    *moveDown({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({bar}: any) => bar)
+      const newTree = moveDown(bar.treeData, bar.key)
+      yield put({
+        type: 'update',
+        payload: newTree
+      })
+    },
+    *placedTop({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({bar}: any) => bar)
+      const newTree = placeTop(bar.treeData, bar.key);
+      yield put({
+        type: 'update',
+        payload: newTree
+      })
+    },
+    *placedBottom({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({bar}: any) => bar)
+      const newTree = placeBottom(bar.treeData, bar.key);
+      yield put({
+        type: 'update',
+        payload: newTree
+      })
+    },
     // 更改图层组织
-    * update({ payload }: any, { call, put }: any) {
-      console.log('更改')
-      const { data } = yield myFetch('/visual/layer/update', {
+    *update({ payload }: any, { call, put }: any) {
+      const { data } = yield myFetch("/visual/layer/update", {
         body: JSON.stringify({
           dashboardId: '1513702962304577537',
           layers: payload,
@@ -2005,19 +2043,10 @@ export default {
       })
     },
     // 修改图层属性图层
-    * change({ payload }: any, { call, put }: any) {
-      const { data } = yield myFetch('/visual/layer/change', {
-        body: JSON.stringify({
-          dashboardId: '1513702962304577537',
-          configs: [
-            {
-              id: '1514070775583035393',
-              key: 'isShow',
-              value: true,
-            },
-          ],
-        }),
-      })
+    *change({ payload }: any, { call, put }: any) {
+      const { data } = yield myFetch("/visual/layer/change", {
+        body: JSON.stringify(payload),
+      });
       yield put({
         type: 'updateTree',
         payload: data,
@@ -2044,8 +2073,29 @@ export default {
         payload: { final, insertId: payload.insertId },
       })
     },
-    //
-    * fetch({ payload }: any, { call, put }: any): any {
+    // 删除图层、分组
+    *delete({payload}: any, {select, call, put}: any):any {
+      const {data} = yield myFetch('/visual/layer/delete', {
+        method: 'delete',
+        body: JSON.stringify(payload)
+      })
+      console.log('删除接口返回的data', data)
+      yield put({
+        type: 'updateTree',
+        payload: data
+      })
+    },
+    // 复制图层
+    *copy({payload}: any, {select, call, put}: any): any {
+      const {data:{layers}} = yield myFetch('/visual/layer/copy', {
+        body: JSON.stringify(payload)
+      })
+      yield put({
+        type: 'updateTree',
+        payload: layers,
+      })
+    },
+    *fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
       yield put({ type: 'selectedNode', payload })
     },
@@ -2270,24 +2320,24 @@ export default {
       return { ...state, lastRightClick: payload }
     },
     // 置顶
-    placedTop(state: IBarState, { payload }: any) {
-      const newTreeData = placeTop(state.treeData, state.key)
-      return { ...state, treeData: newTreeData }
+    frontplacedTop(state: IBarState, { payload }: any) {
+      const newTreeData = placeTop(state.treeData, state.key);
+      return { ...state, treeData: newTreeData };
     },
     // 置底
-    placeBottom(state: IBarState, { payload }: any) {
-      const newTreeData = placeBottom(state.treeData, state.key)
-      return { ...state, treeData: newTreeData }
+    frontplaceBottom(state: IBarState, { payload }: any) {
+      const newTreeData = placeBottom(state.treeData, state.key);
+      return { ...state, treeData: newTreeData };
     },
     // 上移
-    moveUp(state: IBarState, { payload }: any) {
-      const newTree = moveUp(state.treeData, state.key)
-      return { ...state, treeData: newTree }
+    frontmoveUp(state: IBarState, { payload }: any) {
+      const newTree = moveUp(state.treeData, state.key);
+      return { ...state, treeData: newTree };
     },
     // 下移
-    moveDown(state: IBarState, { payload }: any) {
-      const newTree = moveDown(state.treeData, state.key)
-      return { ...state, treeData: newTree }
+    forntmoveDown(state: IBarState, { payload }: any) {
+      const newTree = moveDown(state.treeData, state.key);
+      return { ...state, treeData: newTree };
     },
     // 成组
     frontgroup(state: IBarState, { payload }: any) {
@@ -2295,9 +2345,9 @@ export default {
       return { ...state, treeData: treeDataCopy }
     },
     // 取消成组
-    cancelGroup(state: IBarState, { payload }: any) {
-      const newTree = cancelGroup(state.treeData, state.key)
-      return { ...state, treeData: newTree }
+    frontcancelGroup(state: IBarState, { payload }: any) {
+      const newTree = cancelGroup(state.treeData, state.key);
+      return { ...state, treeData: newTree };
     },
     // TODO 粘贴
     // paste(state: IBarState, { payload }: any) {
@@ -2309,12 +2359,12 @@ export default {
       return { ...state, treeData: newTree }
     },
     // 删除
-    delete(state: IBarState, { payload }: any) {
-      const newTree = remove(state.treeData, state.key)
-      return { ...state, treeData: newTree }
+    frontdelete(state: IBarState, { payload }: any) {
+      const newTree = remove(state.treeData, state.key);
+      return { ...state, treeData: newTree };
     },
     // 复制
-    copy(state: IBarState, { payload }: any) {
+    frontcopy(state: IBarState, { payload }: any) {
       // const newTree = copy(state.treeData, state.key);
       // return { ...state, treeData: newTree };
       return { ...state }
@@ -2423,8 +2473,8 @@ export default {
             layer.cancel = false
             layer.disabled = false
           } else {
-            layer.cancel = true
-            layer.disabled = true
+            layer.cancel = true;
+            layer.disabled = false;
           }
         },
       )

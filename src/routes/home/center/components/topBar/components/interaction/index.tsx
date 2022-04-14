@@ -5,7 +5,7 @@ import EveryItem from '../everyItem/index'
 
 const dataArr = [
   {
-    name: 'assssssssssssssssssddddddddddddddddss',
+    name: 'axaxaxax',
   },
   {
     name: 'bbbbbbbbbbbbbbbbbbbbbbbbbbb',
