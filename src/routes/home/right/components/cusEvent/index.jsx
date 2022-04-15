@@ -32,9 +32,10 @@ const CusEvent = ({bar, dispatch ,...props }) => {
   };
   const { SHOW_PARENT } = TreeSelect;
 
-  const _data = props.data
+  const _data = props.data || {}
+  const [customEventCollapseActiveKey,setCustomEventCollapseActiveKey]=useState([])
   const [activeTab, setActiveTab] = useState(null)
-  const [tabpanes, setTabpanes] = useState(_data.events || [])
+  const [tabpanes, setTabpanes] = useState(_data?.events || [])
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [activePane, setActivePane] = useState(null)
   const [activeId, setActiveId] = useState(null)
@@ -126,6 +127,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
 
   const addEvent = (e) => {
     e.stopPropagation();
+    setCustomEventCollapseActiveKey(['1'])
     const panes = [...tabpanes]
     const eventId = uuidv4()
     const actionId = uuidv4()
@@ -181,6 +183,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     setActiveTab(key)
     const activePane = tabpanes.find(item => { return item.id === key })
     setActivePane(activePane)
+    setActiveActionTab(activePane.actions.length? activePane.actions[0].id : null)
   }
 
   // 事件类型
@@ -337,7 +340,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
       {...formItemLayout}
       colon={false}
     >
-      <Collapse accordion className="custom-collapse">
+      <Collapse className="custom-collapse" activeKey={customEventCollapseActiveKey}>
         <Panel header="自定义事件" key="1" extra={eventExtra()}>
           {tabpanes.length ? <Tabs
             hideAdd
@@ -392,7 +395,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
                     <Button style={{ width: '100%' }} type="primary" onClick={addConditon} ghost>添加条件</Button>
                   </div>
                 </Form.Item>
-                <Collapse accordion className="custom-collapse action-collapse">
+                <Collapse className="custom-collapse action-collapse" defaultActiveKey={['1']}>
                   <Panel header="动作" key="1" extra={actionExtra()}>
                     {pane.actions.length > 0 ?
                       <Tabs

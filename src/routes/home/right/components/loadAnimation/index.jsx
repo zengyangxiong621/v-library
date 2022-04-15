@@ -15,7 +15,7 @@ const LoadAnimation = props => {
   const formItemLayout = {
     labelAlign: 'left'
   }
-  const _data = props.data;
+  const _data = props.data || {};
   const [animationType, setAnimationType] = useState(_data?.mountAnimation?.type || null)
   const [opacityOpen, setOpacityOpen] = useState(_data?.mountAnimation?.opacityOpen || false)
   const [timingFunction, setTimingFunction] = useState(_data?.mountAnimation?.timingFunction || 'linear')

@@ -113,8 +113,8 @@ export class EditableTable extends React.Component {
       },
     ];
     this.state = {
-      dataSource: props.data.fields,
-      count: props.data.fields.length,
+      dataSource: props.data?.fields || [],
+      count: props.data?.fields?.length || 0,
     };
   }
 
