@@ -1965,9 +1965,9 @@ export default {
       } = yield myFetch('/visual/application/dashboard/detail/1513702962304577537', {
         method: 'get',
       })
-      console.log('-------------')
-      console.log('初始化')
-      console.log('-------------')
+      // console.log('-------------')
+      // console.log('初始化')
+      // console.log('-------------')
       yield put({
         type: 'save',
         payload: {
@@ -1976,6 +1976,15 @@ export default {
         },
       })
 
+    },
+    // 重命名
+    *changeName ({payload}: any, {call, put, select}: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const newTree = reName(bar.treeData, bar.key, payload.newName)
+      yield put({
+        type: 'bar/change',
+        payload,
+      })
     },
     *group({ payload }: any, { call, put, select }: any): any {
       console.log('成组')
@@ -2026,6 +2035,7 @@ export default {
       })
     },
     *placedBottom({ payload }: any, { call, put, select }: any): any {
+      console.log('置底了')
       const bar = yield select(({bar}: any) => bar)
       const newTree = placeBottom(bar.treeData, bar.key);
       yield put({
@@ -2084,7 +2094,6 @@ export default {
         method: 'delete',
         body: JSON.stringify(payload)
       })
-      console.log('删除接口返回的data', data)
       yield put({
         type: 'updateTree',
         payload: data
@@ -2210,7 +2219,7 @@ export default {
       let yPositionList: number[] = []
       if(state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0]
-        if('components' in firstLayer) {
+        if('modules' in firstLayer) {
           // 单个组
           const positionArr = calcGroupPosition(
             firstLayer.components,
@@ -2395,7 +2404,7 @@ export default {
       return { ...state, treeData: newTree }
     },
     // 真正改变名字的地方
-    changeName(state: IBarState, { payload }: any) {
+    frontchangeName(state: IBarState, { payload }: any) {
       const newTree = reName(state.treeData, state.key, payload.newName)
       return { ...state, treeData: newTree }
     },
@@ -2469,7 +2478,6 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
-      console.log('components', state.components)
       // 先将选中的 layer 的 select 状态清除
       // handleLayersStatus(
       //   state.treeData,

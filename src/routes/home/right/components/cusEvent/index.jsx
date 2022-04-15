@@ -420,7 +420,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
                                 <TreeSelect
                                   treeData={bar.treeData}
                                   fieldNames={
-                                    { key: 'id', children: 'components',label:'name', value:'id' }
+                                    { key: 'id', children: 'modules',label:'name', value:'id' }
                                   }
                                   onChange={val => { selectComponentChange(val, action) }}
                                   treeCheckable={true}

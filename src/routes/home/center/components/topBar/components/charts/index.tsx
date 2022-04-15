@@ -38,14 +38,11 @@ const Charts = (props: any) => {
             pageSize: 100,
           })
         })
-        ChartDataMap[helplessMapping[type]].push(data.content)
+        ChartDataMap[helplessMapping[type]] = data.content
       }
-      for await( let item of chartTypes) {
-        getData(item)
+      for await (let item of chartTypes) {
+        await getData(item)
       }
-      // for (let i = 0, len = chartTypes.length; i < len; i++) {
-      //   await getData(chartTypes[i])
-      // }
     }
     init()
   }, [])

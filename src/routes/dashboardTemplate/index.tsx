@@ -1,5 +1,6 @@
 import { memo, useState } from 'react'
 import './index.less'
+import { withRouter } from 'dva/router'
 
 import { IconFont } from '../../utils/useIcon'
 import { SearchOutlined } from '@ant-design/icons'
