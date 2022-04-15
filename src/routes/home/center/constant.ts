@@ -18,6 +18,7 @@ const TEXT_ALIGN = 'textAlign'
 const TEXT_VERTICAL = 'textVertical'
 const SHADOW = 'shadow'
 const SHOW = 'show'
+const COMPONENTS = 'modules'
 
 enum hh {
   name = 'zyx',
@@ -87,5 +88,6 @@ export {
   SHOW,
   cssConstantList,
   constantList,
-  hh
+  hh,
+  COMPONENTS,
 }

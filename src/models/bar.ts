@@ -2202,6 +2202,9 @@ export default {
         },
         [],
       )
+      console.log('----------------')
+      console.log('selectedComponentOrGroup', state.selectedComponentOrGroup)
+      console.log('----------------')
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
@@ -2491,13 +2494,15 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
+      console.log('空白清空1')
+      console.log('state.isCanClearAllStatus', state.isCanClearAllStatus)
       if(!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true
         return {
           ...state,
         }
       }
-      console.log('空白清空')
+      console.log('空白清空2')
       // 先将选中的 layer 的 select 状态清除
       // handleLayersStatus(
       //   state.treeData,

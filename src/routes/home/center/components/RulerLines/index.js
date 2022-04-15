@@ -12,12 +12,12 @@ const RulerLines = ({ bar, dispatch }) => {
     console.log('-----------------------')
     if (line.direction === 'horizon') {
       // 竖
-      if (event.clientX < document.querySelector('.home-left-wrap').getBoundingClientRect().width + 20) {
+      if (event.clientX < document.querySelector('.home-left-wrap').getBoundingClientRect().width + 22) {
         bar.rulerLines.splice(index, 1)
       }
     }
     if (line.direction === 'vertical') {
-      if (event.clientY < document.querySelector('.Header-wrap').getBoundingClientRect().height + 20) {
+      if (event.clientY < document.querySelector('.Header-wrap').getBoundingClientRect().height + 22) {
         bar.rulerLines.splice(index, 1)
       }
     }

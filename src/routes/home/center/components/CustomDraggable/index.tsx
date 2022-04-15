@@ -61,6 +61,7 @@ const CustomDraggable
     }
   }, [])
   useEffect(() => {
+    console.log('treeData变化', treeData)
     setCopyTreeData(deepClone(treeData).reverse())
   }, [ treeData ])
   /**
@@ -350,6 +351,7 @@ const CustomDraggable
     })
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
+    console.log('e', e)
     localStorage.removeItem('dblComponentTimes')
     console.log('click', layer)
     e.stopPropagation()
@@ -414,7 +416,7 @@ const CustomDraggable
   return (
     <div className="c-custom-draggable">
       {
-        treeData.map((layer: ILayerGroup | ILayerComponent) => {
+        copyTreeData.map((layer: ILayerGroup | ILayerComponent) => {
           let config: IConfig = {
             position: {
               x: 0,
@@ -456,18 +458,9 @@ const CustomDraggable
             if(component) {
               staticData = component.staticData
               style_config = component.config
-              // style_config = component.config.find((item: any) => item.name === STYLE)
               style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-              if(component.id === '1514486070669705217') {
-                console.log('----------------------')
-                console.log('style_dimension_config', style_dimension_config)
-                console.log('component', component)
-                console.log('config', config)
-                console.log('---------------------')
-              }
               if(style_dimension_config) {
                 Object.values(style_dimension_config.value).forEach((obj: any) => {
-
                   if([ TOP, LEFT ].includes(obj.name)) {
                     config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
                   } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
@@ -506,8 +499,8 @@ const CustomDraggable
                 key={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
                 // onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
-                // onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
-                // onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
+                onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
+                onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
                 style={ {
                   ...config.style,
@@ -528,7 +521,7 @@ const CustomDraggable
                       : ''
                     }
                   </div> : <>
-                    <div style={ { width: '100%', height: '100%', color: 'red', fontSize: 16 } }>
+                    <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
                       { layer.id }
                       {/*<Text styleConfig={ style_config } staticData={ staticData }/>*/ }
 
