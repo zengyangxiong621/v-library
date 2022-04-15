@@ -424,7 +424,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  // const componentConfig = deepClone(bar.componentConfig)
+  const componentConfig = deepClone(bar.componentConfig)
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
   const dataConfig = componentConfig.staticData
