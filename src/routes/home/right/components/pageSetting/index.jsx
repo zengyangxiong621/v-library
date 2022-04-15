@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import { connect } from 'dva'
-import './index.css'
+import './index.less'
 import { find } from '../../../../../utils/common'
 import BackgroundColor from '../color'
 import PageSize from '../pageSize'

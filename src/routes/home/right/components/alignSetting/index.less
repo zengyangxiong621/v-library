@@ -1,0 +1,53 @@
+@import '../../../../../assets/style/variable.less';
+
+.align,
+.vertical {
+  width: 221px;
+  height: 32px;
+  box-sizing: border-box;
+  background: @componentBgColor;
+  border: 1px solid @borderColor;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #a1a1a1;
+  display: flex;
+}
+
+.align {
+  margin-bottom: 8px;
+}
+
+.align span {
+  display: inline-block;
+  vertical-align: top;
+  width: 54px;
+  height: 32px;
+  line-height: 32px;
+  border-right: 1px solid @borderColor;
+  cursor: pointer;
+  flex: 0.25;
+}
+
+.align span:last-child {
+  border-right: 0;
+}
+
+.vertical span {
+  display: inline-block;
+  vertical-align: top;
+  width: 72px;
+  height: 32px;
+  line-height: 32px;
+  border-right: 1px solid @borderColor;
+  cursor: pointer;
+  flex: 0.333;
+}
+
+.vertical span:last-child {
+  border-right: 0;
+}
+
+.align-active {
+  background: @activeComponentBgColor;
+  color: @fontColor;
+}

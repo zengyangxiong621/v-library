@@ -1,74 +1,93 @@
-.position-form{
-  .ant-form-item{
+@import "../../../../../assets/style/variable.less";
+
+.position-form {
+  .ant-form-item {
     margin-bottom: 8px !important;
   }
 }
-.po-size-input{
+
+.po-size-input {
   width: 80px;
 }
 
-.po-size-input.ant-input-affix-wrapper{
+.po-size-input.ant-input-affix-wrapper {
   width: 80px;
   margin-left: 5px;
-  padding:2px 0;
-  background-color: #232630;
+  padding: 2px 0;
+  background-color: @componentContentBgColor;
 }
-.po-size-input.ant-input-affix-wrapper .ant-input-suffix{
-  color: #fff;
+
+.po-size-input.ant-input-affix-wrapper .ant-input-suffix {
+  color: @fontColor;
   padding-right: 4px;
 }
-.po-size-input .ant-input-number-input-wrap::after{
+
+.po-size-input .ant-input-number-input-wrap::after {
   position: absolute;
-  height:32px;
+  height: 32px;
   line-height: 32px;
   color: #666;
   font-size: 14px;
-  right:6px;
+  right: 6px;
 }
-.po-size-input.input-x .ant-input-number-input-wrap::after{
+
+.po-size-input.input-x .ant-input-number-input-wrap::after {
   content: "X";
 }
-.po-size-input.input-y .ant-input-number-input-wrap::after{
+
+.po-size-input.input-y .ant-input-number-input-wrap::after {
   content: "Y";
 }
-.po-size-input.input-w .ant-input-number-input-wrap::after{
+
+.po-size-input.input-w .ant-input-number-input-wrap::after {
   content: "W";
 }
-.po-size-input.input-h .ant-input-number-input-wrap::after{
+
+.po-size-input.input-h .ant-input-number-input-wrap::after {
   content: "H";
 }
-.po-size-input:hover .ant-input-number-input-wrap::after{
-  visibility:hidden;
+
+.po-size-input:hover .ant-input-number-input-wrap::after {
+  visibility: hidden;
 }
-.po-size-input{
+
+.po-size-input {
   width: 100px;
 }
-.po-size-input .ant-input-number-input-wrap{
+
+.po-size-input .ant-input-number-input-wrap {
   position: relative;
 }
-.po-size-input.ant-input-number{
-  background-color: #191B25 !important;
-  border: 1px solid rgba(57,59,74,1) !important;
+
+.po-size-input.ant-input-number {
+  background-color: @componentBgColor !important;
+  border: 1px solid @borderColor  !important;
   border-radius: 3px !important;
   font-size: 14px;
-  color: #FFFFFF;
+  color: @fontColor;
   font-weight: 400;
 }
-.po-size-input .ant-input-number-handler-wrap{
-  background-color: #191B25 !important;
-  color: #FFFFFF;
+
+.po-size-input .ant-input-number-handler-wrap {
+  background-color: @componentBgColor !important;
+  color: @fontColor;
 }
-.po-size-input .ant-input-number-handler{
-  border-left: 1px solid rgba(57,59,74,1) !important;
-  color: #FFFFFF;
+
+.po-size-input .ant-input-number-handler {
+  border-left: 1px solid @borderColor  !important;
+  color: @fontColor;
 }
-.po-size-input .ant-input-number-handler-down{
-  border-top: 1px solid rgba(57,59,74,1) !important;
+
+.po-size-input .ant-input-number-handler-down {
+  border-top: 1px solid @borderColor  !important;
 }
-.po-size-input .ant-input-number-handler-up-inner,.size-input .ant-input-number-handler-down-inner{
-  color: #FFFFFF;
+
+.po-size-input .ant-input-number-handler-up-inner,
+.size-input .ant-input-number-handler-down-inner {
+  color: @fontColor;
 }
-.size-lock{
+
+.size-lock {
   font-size: 12px;
   color: #ccc;
   cursor: pointer;

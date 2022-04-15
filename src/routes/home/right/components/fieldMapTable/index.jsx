@@ -4,7 +4,7 @@ import {
   CheckOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import './index.css'
+import './index.less'
 const EditableContext = React.createContext(null);
 
 const EditableRow = ({ index, ...props }) => {

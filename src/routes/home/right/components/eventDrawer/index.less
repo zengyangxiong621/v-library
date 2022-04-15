@@ -1,20 +1,22 @@
+@import "../../../../../assets/style/variable.less";
+
 .event-drawer {
   .ant-drawer-content-wrapper {
     width: 400px !important;
 
     .ant-drawer-content {
-      background-color: #222430;
+      background-color: @bgColor;
 
       .ant-drawer-header {
-        background-color: #222430;
-        color: #fff;
+        background-color: @bgColor;
+        color: @fontColor;
 
         .ant-drawer-close {
-          color: #fff;
+          color: @fontColor;
         }
 
         .ant-drawer-title {
-          color: #fff;
+          color: @fontColor;
         }
       }
     }
@@ -24,7 +26,7 @@
     border: none;
 
     .cus-code {
-      color: #fff;
+      color: @fontColor;
     }
 
     .code-wraper {

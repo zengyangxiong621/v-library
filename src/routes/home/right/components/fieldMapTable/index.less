@@ -1,10 +1,12 @@
+@import "../../../../../assets/style/variable.less";
+
 .editable-cell {
   position: relative;
 }
 
 .editable-cell-value-wrap {
-  background: #191B25;
-  border: 1px solid rgba(57, 59, 74, 1);
+  background: @componentBgColor;
+  border: 1px solid @borderColor;
   border-radius: 3px;
   width: 145px;
   height: 32px;
@@ -20,8 +22,9 @@
   color: #CCCCCC;
   font-weight: 400;
   text-indent: 10px;
-  border-bottom:1px solid #383B50;
+  border-bottom: 1px solid @borderColor;
 }
-.custom-table .ant-table-tbody > tr > td{
-  border-bottom:1px solid #383B50;
+
+.custom-table .ant-table-tbody>tr>td {
+  border-bottom: 1px solid @borderColor;
 }

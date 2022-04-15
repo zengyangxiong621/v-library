@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react'
 import { connect } from 'dva'
-import './index.css'
+import './index.less'
 import { deepClone } from '../../../../../utils'
 import { find } from '../../../../../utils/common'
 
