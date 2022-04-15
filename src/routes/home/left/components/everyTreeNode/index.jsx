@@ -14,9 +14,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       payload
     })
   }
-  const { name, id, components, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restPorps
+  const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restPorps
   // 需要区分是单个图层还是文件夹
-  const [isFolder] = useState(Array.isArray(components) && components.length>0)
+  const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
   // 文件夹是展开了还是关闭了
   const isFolderExpand = Array.isArray(isExpand) && isExpand.includes(id)
   // const [eyeIconShow, setEyeIconShow] =useState(true)
@@ -76,8 +76,14 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     }
     // 先对前端的树进行一次修改
     sendDispatch('changeName', {
-      key: bar.key,
-      newName: inputValue,
+      dashboardId: '1513702962304577537',
+      configs: [
+        {
+          "id": bar.key[0],
+          "key": "name",
+          "value": inputValue
+        }
+      ]
     })
     // 应该是发送请求改名，这里先暂时这样写
   }

@@ -59,12 +59,11 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
         customPayload.key = bar.key
         break;
       case 'delete':
-        customPayload.layers = [
-          {
-            id: '1514446225437245441',
-            children: [],
-          }
-        ]
+        const l = bar.key?.map(item => ({
+          id: item,
+          children: []
+        }))
+        customPayload.layers = l
       default:
         break;
     }

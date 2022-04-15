@@ -179,8 +179,8 @@ const Left = ({ dispatch, bar, operate }) => {
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
     event.stopPropagation()
-    const { components, key } = node
-    const isFolder = !!components
+    const { modules, key } = node
+    const isFolder = !!modules
     setIsMultipleTree(false)
     // 如果有选中了的节点 并且 此次右击的目标是其中一个，则展开菜单，
     // 否则，重置已选中节点 并 单选中当前节点以及展开右键菜单
@@ -222,8 +222,8 @@ const Left = ({ dispatch, bar, operate }) => {
         if (data[i].id === key) {
           return callback(data[i], i, data)
         }
-        if (data[i].components) {
-          loop(data[i].components, key, callback)
+        if (data[i].modules) {
+          loop(data[i].modules, key, callback)
         }
       }
     }
@@ -236,14 +236,14 @@ const Left = ({ dispatch, bar, operate }) => {
       dragObj = item
     })
     if (
-      (info.node.props.components || []).length > 0 && // Has components
+      (info.node.props.modules || []).length > 0 && // Has modules
       info.node.props.expanded && // Is expanded
       dropPosition === 1 // On the bottom gap
     ) {
       loop(data, dropKey, item => {
-        item.components = item.components || []
+        item.modules = item.modules || []
         // where to insert 示例添加到头部，可以是随意位置
-        item.components.unshift(dragObj)
+        item.modules.unshift(dragObj)
         // in previous version, we use item.components.push(dragObj) to insert the
         // item to the tail of the components
       })
@@ -292,35 +292,25 @@ const Left = ({ dispatch, bar, operate }) => {
         }
       })}>新增</button>
       <button onClick={() => dispatch({
-        type: 'bar/change',
-        payload: {
-          dashboardId: "1513702962304577537",
-          configs: [
-            {
-              id: "1514070775583035393",
-              key: "isShow",
-              value: true,
-            },
-          ],
-        }
-      })}>change</button>
-      <button onClick={() => dispatch({
         type: 'bar/update',
         payload: {
         }
       })}>update</button>
-      <button onClick={() => dispatch({
-        type: 'bar/delete',
-        payload: {
-          dashboardId: '1513702962304577537',
-          layers: [
-            {
-              id: '1514439811896410114',
-              children: [],
-            }
-          ]
-        }
-      })}>删除</button>
+      <button onClick={() => {
+        const l = bar.key.map((item) => {
+          return {
+            id: item,
+            children:[]
+          }
+        })
+        dispatch({
+          type: 'bar/delete',
+          payload: {
+            dashboardId: '1513702962304577537',
+            layers: l
+          }
+        })
+      }}>删除</button>
       <button onClick={() => dispatch({
         type: 'bar/copy',
         payload: {
@@ -329,7 +319,7 @@ const Left = ({ dispatch, bar, operate }) => {
           targetDashboardId: '1513702962304577537',
           insertId: '1514185900319133697',
           originLayers: bar.treeData,
-          components: [...bar.key],
+          modules: [...bar.key],
           panels: [],
           selected: [...bar.key]
         }
@@ -353,7 +343,7 @@ const Left = ({ dispatch, bar, operate }) => {
             draggable
             blockNode
             fieldNames={
-              { key: 'id', children: 'components' }
+              { key: 'id', children: 'modules' }
             }
             multiple={isMultipleTree}
             switcherIcon={<DownOutlined />}
