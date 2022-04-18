@@ -12,7 +12,7 @@ import { Button } from 'antd'
 import { useClickAway, useKeyPress, useMouse, useThrottle } from 'ahooks'
 import Ruler from './components/Ruler'
 import { IScaleDragData, IStyleConfig } from './type'
-import { DIMENSION } from './constant'
+import { DIMENSION, WIDTH, LEFT, TOP } from './constant'
 import RulerLines from './components/RulerLines'
 import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
 import { throttle } from '../../../utils/common'
@@ -149,16 +149,31 @@ const Center = ({ bar, dispatch }: any) => {
   const mouse = useMouse(canvasRef)
   // const mouse = 0
 
+
+  const calcScaleAfterComponentsConfig = () => {
+
+  }
+
+
   /**
    * @desc 缩放组件在缩放结束后的回调
-   * @param IScaleDragData
+   * @param scaleDragData: IScaleDragData
+   * @param lastScaleDragData: IScaleDragData
    * @return void
    */
-  const handleScaleEnd = ({ position: { x, y }, style: { width, height } }: IScaleDragData) => {
-    if(bar.dragStatus === '一组件') {
+  const handleScaleEnd = (
+    { position: { x, y }, style: { width, height } }: IScaleDragData,
+    { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
+  ) => {
+    // const { position, style } = lastScaleDragData
+    console.log('x', x, ',lastX', lastX)
+    console.log('y', y, ',lastY', lastY)
+    console.log('width', width, ',lastWidth', lastWidth)
+    console.log('height', height, ',lastHeight', lastHeight)
+    if(bar.selectedComponentOrGroup.length === 1) {
       const component = bar.selectedComponents[0]
-      const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION)
-      styleDimensionConfig.value.forEach((item: IStyleConfig) => {
+      const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+      styleDimensionConfig.forEach((item: IStyleConfig) => {
         switch(item.name) {
           case 'left':
             item.value = x
@@ -173,6 +188,59 @@ const Center = ({ bar, dispatch }: any) => {
             item.value = height
         }
       })
+    } else {
+      bar.selectedComponents.forEach((item: any) => {
+        const dimensionConfig = item.config.find((item: any) => item.name === DIMENSION).value
+        console.log('dimensionConfig', dimensionConfig)
+        const data = dimensionConfig.reduce((pre: any, cur: any) => {
+          if(Array.isArray(cur.value)) {
+            const obj = cur.value.reduce((p: any, c: any) => {
+              p[c.name] = c.value
+              return p
+            }, {})
+            pre = {
+              ...pre,
+              ...obj,
+            }
+          } else {
+            pre[cur.name] = cur.value
+          }
+          return pre
+        }, {})
+        dimensionConfig.forEach((config: any) => {
+
+          if(config.name === LEFT) {
+
+            if(config.value === lastX) {
+
+            } else {
+              console.log('')
+              console.log('之前的宽度', data.width)
+              console.log('现在的宽度', data.width / (lastWidth / width))
+              console.log('之前的 x', data.left)
+              console.log('距离', data.width / (lastWidth / width) - data.width)
+              console.log('应该移动', (1 - data.width / lastWidth) * (width - lastWidth))
+              console.log('------------')
+              // config.value = data.width / (1 - (lastWidth / width)) - data.width + config.value
+              // config.value = (data.width / lastWidth) * (width - lastWidth) + config.value
+              config.value += (1 - data.width / lastWidth) * (width - lastWidth)
+            }
+          }
+          if(config.name === WIDTH) {
+            console.log('组件width', config.value)
+            console.log('宽度比例', config.value / (lastWidth / width))
+            config.value = config.value / (lastWidth / width)
+            // console.log('config', Number((data.width / lastWidth).toFixed(3)) * (lastWidth / width))
+          } else if(config.name === TOP) {
+            // config.value = Math.ceil(data.y)
+          }
+        })
+        // console.log('data', data)
+        // console.log('宽度比例', (data.width / lastWidth).toFixed(3))
+        // console.log('高度比例', (data.height / lastHeight).toFixed(3))
+        console.log('------------')
+      })
+      calcScaleAfterComponentsConfig()
     }
     dispatch({
       type: 'bar/updateComponent',
