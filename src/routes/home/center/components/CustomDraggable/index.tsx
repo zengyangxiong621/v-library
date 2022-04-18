@@ -29,7 +29,8 @@ import {
   TEXT_VERTICAL,
   SHADOW,
   SHOW,
-} from '../../constant'
+  COMPONENTS,
+} from '../../../../../constant/home'
 
 
 enum STYLE_ENUM {
@@ -101,9 +102,9 @@ const CustomDraggable
       bar.dragStatus = '多个'
     } else {
       // 当选中了一个分组时，或者没有选中时
-      if('components' in layer) {
+      if(COMPONENTS in layer) {
         bar.dragStatus = '一分组'
-        bar.selectedComponentIds = layerComponentsFlat((layer as any).components)
+        bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS])
 
       } else {
 
@@ -197,7 +198,8 @@ const CustomDraggable
         config,
       },
     })
-
+    console.log('组件', component)
+    console.log('selectedComponentOrGroup', bar.selectedComponentOrGroup)
     if(component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
       // 单个组件移动
       const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
@@ -236,7 +238,7 @@ const CustomDraggable
           },
         })
       }
-    } else if('components' in layer && bar.selectedComponentOrGroup.length === 1) {
+    } else if(COMPONENTS in layer && bar.selectedComponentOrGroup.length === 1) {
       // 单个组移动
       const xMoveLength = Math.ceil(data.x - startPosition.x)
       const yMoveLength = Math.ceil(data.y - startPosition.y)
@@ -373,8 +375,8 @@ const CustomDraggable
     if(Number(dblComponentTimes) < currentTimes.current) {
       layer.cancel = true
       layer.disabled = true
-      if('components' in layer) {
-        layer.components.forEach(item => {
+      if(COMPONENTS in layer) {
+        (layer[COMPONENTS] as any).forEach((item: any) => {
           item.cancel = false
           item.disabled = false
         })
@@ -383,8 +385,8 @@ const CustomDraggable
     if(!dblComponentTimes) {
       layer.cancel = true
       layer.disabled = true
-      if('components' in layer) {
-        layer.components.forEach(item => {
+      if(COMPONENTS in layer) {
+        (layer[COMPONENTS] as any).forEach((item: any) => {
           item.cancel = false
           item.disabled = false
         })
@@ -416,7 +418,7 @@ const CustomDraggable
   return (
     <div className="c-custom-draggable">
       {
-        copyTreeData.map((layer: ILayerGroup | ILayerComponent) => {
+        copyTreeData.map((layer: ILayerGroup | ILayerComponent | any) => {
           let config: IConfig = {
             position: {
               x: 0,
@@ -427,14 +429,17 @@ const CustomDraggable
               height: 0,
             },
           }
-          let isGroup: boolean = ('components' in layer)
+          let isGroup: boolean = (COMPONENTS in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
           let style_config, staticData, style_dimension_config
           // 群组
-          if(isGroup && 'components' in layer) {
+          console.log('layer', layer)
+          console.log('COMPONENTS in layer', COMPONENTS in layer)
+          console.log('------------------')
+          if(COMPONENTS in layer) {
             group = layer
-            let [ xPositionList, yPositionList ] = calcGroupPosition(layer.components, components)
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components)
             xPositionList = xPositionList.sort((a, b) => {
               return a - b
             })
@@ -453,8 +458,9 @@ const CustomDraggable
             }
           } else {
             // 组件
-
             component = components.find(item => item.id === layer.id)
+            console.log('组件 layer id', layer.id)
+
             if(component) {
               staticData = component.staticData
               style_config = component.config
@@ -509,13 +515,13 @@ const CustomDraggable
                 } }>
                 {
                   isGroup ? <div className="no-cancel">
-                    { 'components' in layer && (layer as any).components?.length > 0 ?
+                    { COMPONENTS in layer && (layer as any)[COMPONENTS]?.length > 0 ?
                       <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
                         <CustomDraggable
                           mouse={ layer.selected ? mouse : 0 }
                           bar={ bar }
                           dispatch={ dispatch }
-                          treeData={ (layer as any).components }
+                          treeData={ (layer as any)[COMPONENTS] }
                         />
                       </div>
                       : ''

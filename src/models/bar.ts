@@ -12,10 +12,13 @@ import {
   handleLayersStatus,
 } from '../utils'
 
+import { COMPONENTS } from '../constant/home'
+
 import {
   ILayerComponent,
   ILayerGroup,
 } from '../routes/home/center/components/CustomDraggable/type'
+
 
 import {
   generateTreeData,
@@ -1982,20 +1985,20 @@ export default {
 
     },
     // 重命名
-    *changeName ({payload}: any, {call, put, select}: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
+    * changeName({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
       const newTree = reName(bar.treeData, bar.key, payload.newName)
       yield put({
         type: 'bar/change',
         payload,
       })
     },
-    *group({ payload }: any, { call, put, select }: any): any {
+    * group({ payload }: any, { call, put, select }: any): any {
       console.log('成组')
-      const bar: any = yield select(({ bar }: any) => bar);
-      const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key);
+      const bar: any = yield select(({ bar }: any) => bar)
+      const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key)
       yield put({
-        type: "bar/update",
+        type: 'bar/update',
         payload: treeDataCopy,
       })
       yield put({
@@ -2042,10 +2045,10 @@ export default {
         payload: newTree,
       })
     },
-    *placedBottom({ payload }: any, { call, put, select }: any): any {
+    * placedBottom({ payload }: any, { call, put, select }: any): any {
       console.log('置底了')
-      const bar = yield select(({bar}: any) => bar)
-      const newTree = placeBottom(bar.treeData, bar.key);
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = placeBottom(bar.treeData, bar.key)
       yield put({
         type: 'update',
         payload: newTree,
@@ -2234,7 +2237,7 @@ export default {
         if('modules' in firstLayer) {
           // 单个组
           const positionArr = calcGroupPosition(
-            firstLayer.components,
+            firstLayer[COMPONENTS],
             state.components,
           )
           xPositionList = positionArr[0]
