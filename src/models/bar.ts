@@ -2034,9 +2034,6 @@ export default {
       })
     },
     * placedTop({ payload }: any, { call, put, select }: any): any {
-      const bar = yield select(({ bar }: any) => bar)
-      const newTree = placeTop(bar.treeData, bar.key)
-    *placedTop({ payload }: any, { call, put, select }: any): any {
       console.log('树的问题')
       const bar = yield select(({bar}: any) => bar)
       const newTree = placeTop(bar.treeData, bar.key);
