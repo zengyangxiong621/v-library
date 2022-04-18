@@ -14,6 +14,7 @@ export const newDynamic = (app, models, component) => {
  * @param {func} routesConfig
  */
 export const createRoutes = (app, routesConfig) => {
+  console.log('createRoutes------------')
     const routes = routesConfig(app)
     .map(config => createRoute(app, () => config))
     .reduce((p, n) => {
@@ -31,13 +32,14 @@ export const createRoutes = (app, routesConfig) => {
 window.dva_router_pathMap = {};
 
 export const createRoute = (app, routerConfig) => {
+  const currentRoute = routerConfig(app);
   const {
     title,
     path,
     indexRouter,
     component: Comp,
     ...otherProps
-  } = routerConfig(app);
+  } = currentRoute
 
   if (path && path !== '/') {
     window.dva_router_pathMap[path] = { path, title, ...otherProps };
@@ -53,7 +55,10 @@ export const createRoute = (app, routerConfig) => {
   
   const routePorps = Object.assign({
     key: path || '/404',
-    render: props => <Comp routerData={otherProps} {...props} />
+    render: props => {
+      console.log(otherProps, props, 'core.js-------------')
+      return <Comp routerData={otherProps} {...props} />
+    }
   },
 
   path && {

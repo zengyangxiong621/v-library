@@ -25,7 +25,7 @@ const mapStateToProps = (state: any) => {
   return state
 }
 
-class BasicLayout extends Component<Props, State> {
+class TemplateLayout extends Component<Props, State> {
   constructor(Props: any) {
     super(Props)
   }
@@ -54,7 +54,7 @@ class BasicLayout extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(BasicLayout); 
+export default connect(mapStateToProps)(TemplateLayout); 
 // export default 
 // connect(mapStateToProps)(
 //   (props: any)=>{

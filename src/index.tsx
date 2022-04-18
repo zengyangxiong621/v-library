@@ -11,7 +11,7 @@ import './assets/fonts/iconfont.css'
 import { ConfigProvider } from 'antd';
 
 import { createRoutes } from './utils/core';
-import RoutesConfig from './router'
+import RoutesConfig from './routerConfig';
 
 const { Router } = router;
 
@@ -25,9 +25,9 @@ app.model(require('./models/global').default);
 
 // -> 初始化路由
 app.router(({ history, app }: any) => (
-  <ConfigProvider>
+  <div>
     <Router history={history}>{createRoutes(app, RoutesConfig)}</Router>
-  </ConfigProvider>
+  </div>
 ));
 
 // -> Start
