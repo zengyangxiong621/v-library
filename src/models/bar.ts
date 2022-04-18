@@ -40,6 +40,7 @@ import { myFetch } from './utils/request'
 
 interface IBarState {
   key: string[];
+  isShowRightMenu: boolean,
   isFolder: boolean;
   operate: string;
   lastRightClick: string;
@@ -76,6 +77,7 @@ export default {
   state: {
     currentDblTimes: 0,
     key: [],
+    isShowRightMenu: false,
     isFolder: false,
     lastRightClick: '',
     isMultipleTree: true,
@@ -2027,6 +2029,7 @@ export default {
       })
     },
     *placedTop({ payload }: any, { call, put, select }: any): any {
+      console.log('树的问题')
       const bar = yield select(({bar}: any) => bar)
       const newTree = placeTop(bar.treeData, bar.key);
       yield put({
@@ -2301,6 +2304,10 @@ export default {
     // 点击icon或者右键菜单里的操作
     selectOperate(state: IBarState, { payload }: any) {
       return { ...state, ...payload }
+    },
+    // 控制右键菜单的显示和隐藏
+    setIsShowRightMenu(state: IBarState, {payload}: any) {
+      return { ...state, isShowRightMenu: payload }
     },
     findNode(state: IBarState, { payload: { id, callback } }: any) {
       callback(id)

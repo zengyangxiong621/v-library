@@ -39,7 +39,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     e.stopPropagation()
     // 先在前端改变锁定状态，再根据请求的结果来判断是否锁定成功
     // TODO 发送请求
-    const customPayload = {
+    let customPayload = {
       // key: bar.key,
       dashboardId: '1513702962304577537',
     }
@@ -64,6 +64,20 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
           children: []
         }))
         customPayload.layers = l
+        break;
+      case 'copy':
+        customPayload = {
+          dashboardId: '1513702962304577537',
+          children: [],
+          targetDashboardId: '1513702962304577537',
+          insertId: bar.key[0],
+          originLayers: bar.treeData,
+          //TODO 改为modules后删除掉这行
+          components: [...bar.key],
+          // components: [...bar.key],
+          panels: [],
+          selected: [...bar.key]
+        }
       default:
         break;
     }

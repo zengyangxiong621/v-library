@@ -38,6 +38,7 @@ const RightContent = (props: any) => {
   const cancelFabuModal = () => {
     setShowFabuModal(false)
   }
+
   // 发布大屏
   const fabudaping = () => {
     console.log('大屏id', curAppId);
@@ -121,15 +122,15 @@ const RightContent = (props: any) => {
                     label="分享链接"
                     colon={false}
                   ><div className="set-flex">
-                      <Input />
-                      <Button type="primary" >复制</Button>
+                      <Input style={{ width: '310px', height: '32px', lineHeight: '32px' }} />
+                      <Button type="primary" style={{ width: '60px', marginLeft: '16px' }} >复制</Button>
                     </div></Form.Item>
                   <Form.Item
                     label="加密分享"
                     colon={false}
                   ><div className="jiamifenxiang set-flex ">
                       <Switch defaultChecked onChange={jmfxChange} />
-                      <div className="set-flex"><span>密码: </span><Input /></div>
+                      <div className="set-flex"><div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div><Input style={{ width: '204px' }} /></div>
                     </div></Form.Item>
                   <Form.Item
                     label="开放应用"
@@ -143,7 +144,7 @@ const RightContent = (props: any) => {
                     colon={false}
                   >
                     <div onClickCapture={showRestInfo} className="set-flex">
-                      <IconFont type="icon-fanhui" rotate={showRestIconAngle} />
+                      <IconFont type="icon-fanhui" style={{ cursor: 'pointer' }} rotate={showRestIconAngle} />
                     </div>
                   </Form.Item>
                   {
