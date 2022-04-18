@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react'
-import './index.css'
+import './index.less'
 import Color from '../color';
 import { find } from '../../../../../utils/common'
 

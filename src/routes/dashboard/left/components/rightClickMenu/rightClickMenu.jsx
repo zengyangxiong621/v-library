@@ -9,7 +9,7 @@ import SecondMenu from './secondMenu'
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
 
-const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu}) => {
+const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMenu }) => {
   const [isLock, setIsLock] = useState(false)
   const [isSingleShow, setIsSingleShow] = useState(false)
   const [isShowOrHidden, setIsShowOrHidden] = useState(true)
@@ -17,7 +17,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
     const lockInfo = getFieldStates(bar.treeData, bar.key, 'isLock')
-    const finalLockState = lockInfo.some(item => item===false)
+    const finalLockState = lockInfo.some(item => item === false)
     setIsLock(!finalLockState)
 
     // 判断所选中的各个节点是否是单独显示状态
@@ -27,7 +27,7 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
 
     // 判断所选中的各个节点是否是显示状态
     // 只要有一个隐藏了就显示
-    const showOrHiddenInfo = getFieldStates(bar.treeData,bar.key,'isShow')
+    const showOrHiddenInfo = getFieldStates(bar.treeData, bar.key, 'isShow')
     const showOrHiddenState = showOrHiddenInfo.some(item => item === false)
     setIsShowOrHidden(!showOrHiddenState)
     console.log('scanOrHiddenInfo', showOrHiddenInfo);
@@ -35,12 +35,13 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
 
   // 后端返回的数据里应该有 show、lock 属性
   // 这里需要拿到 所选中 的treeNode中的lock或者show属性
-  const menuItemClick = (e,operateName) => {
+  const menuItemClick = (e, operateName) => {
     e.stopPropagation()
     // 先在前端改变锁定状态，再根据请求的结果来判断是否锁定成功
     // TODO 发送请求
-    const customPayload = {
-        key: bar.key,
+    let customPayload = {
+      // key: bar.key,
+      dashboardId: '1513702962304577537',
     }
     switch (operateName) {
       case 'lock':
@@ -57,6 +58,26 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
         customPayload.value = !isShowOrHidden
         customPayload.key = bar.key
         break;
+      case 'delete':
+        const l = bar.key?.map(item => ({
+          id: item,
+          children: []
+        }))
+        customPayload.layers = l
+        break;
+      case 'copy':
+        customPayload = {
+          dashboardId: '1513702962304577537',
+          children: [],
+          targetDashboardId: '1513702962304577537',
+          insertId: bar.key[0],
+          originLayers: bar.treeData,
+          //TODO 改为modules后删除掉这行
+          components: [...bar.key],
+          // components: [...bar.key],
+          panels: [],
+          selected: [...bar.key]
+        }
       default:
         break;
     }
@@ -84,8 +105,8 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
     // const isOverflowAtUnder = visualHeight - top > menuHeight
     const isOverflowAtUnder = menuHeight + top > visualHeight
     // const isOverflowAtTop =
-    if(isOverflowAtUnder) {
-      recalculateY = y - menuHeight < 0 ? 20 : y-menuHeight
+    if (isOverflowAtUnder) {
+      recalculateY = y - menuHeight < 0 ? 20 : y - menuHeight
       // if(recalculateY < 0) {
       //   recalculateY = 20
       // }
@@ -95,35 +116,35 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
     menuRef.current.style.left = `${recalculateX}px`
   }, [x, y])
   return (
-  <div className='RightClickMenu-wrap' ref={menuRef}>
+    <div className='RightClickMenu-wrap' ref={menuRef}>
       {
         menuOptions.map((item, index) => {
           const { hasLevel } = item
           return (
             <div
-            key={index}
-            className={
-            `menu-item
+              key={index}
+              className={
+                `menu-item
             ${item.disabled && 'disabled-menu-item'}
             ${hasLevel && 'li-hover'}`
-            }
-            onClick={(e) => menuItemClick(e, item.key)}
+              }
+              onClick={(e) => menuItemClick(e, item.key)}
             >
               {
                 // TODO 目前是三种双重状态，如果后续双重状态的选项太多,再封装一个组件
-                (item.key==='lock' && isLock) ||
-                (item.key==='singleShowLayer' && isSingleShow) ||
-                (item.key==='hidden' && !isShowOrHidden)
-                ? React.createElement(Icons[item.anotherIcon])
-                : React.createElement(Icons[item.icon])
+                (item.key === 'lock' && isLock) ||
+                  (item.key === 'singleShowLayer' && isSingleShow) ||
+                  (item.key === 'hidden' && !isShowOrHidden)
+                  ? React.createElement(Icons[item.anotherIcon])
+                  : React.createElement(Icons[item.icon])
               }
               <li className={`menu-item-li`}>
                 {
-                  (item.key==='lock' && isLock) ||
-                  (item.key==='singleShowLayer' && isSingleShow) ||
-                  (item.key==='hidden' && !isShowOrHidden)
-                  ? item.anotherName
-                  : item.name
+                  (item.key === 'lock' && isLock) ||
+                    (item.key === 'singleShowLayer' && isSingleShow) ||
+                    (item.key === 'hidden' && !isShowOrHidden)
+                    ? item.anotherName
+                    : item.name
                 }
                 {
                   hasLevel && <SecondMenu data={item.children} />
@@ -132,18 +153,18 @@ const RightClickMenu = ({dispatch, bar, operate, menuInfo, menuOptions, hideMenu
               {/* 右三角图标 */}
               {
                 hasLevel && <span className='right-icon'>
-                {
-                  React.createElement(Icons.CaretRightOutlined)
-                }</span>
+                  {
+                    React.createElement(Icons.CaretRightOutlined)
+                  }</span>
               }
             </div>
           )
         })
       }
-  </div>
+    </div>
   )
 }
 
 export default memo(connect(
-  ({bar, operate}) => ({bar, operate})
+  ({ bar, operate }) => ({ bar, operate })
 )(RightClickMenu))

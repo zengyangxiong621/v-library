@@ -25,10 +25,12 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (x: number, y: number) => {
-      const translateArr = nodeRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
-      const translateX = Number(translateArr[0])
-      const translateY = Number(translateArr[1])
-      nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
+      // const translateArr = nodeRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+      // const translateX = Number(translateArr[0])
+      // const translateY = Number(translateArr[1])
+      scaleDragRef.current.style.left = Number(scaleDragRef.current.style.left.replace('px', '')) + x + 'px'
+      scaleDragRef.current.style.top = Number(scaleDragRef.current.style.top.replace('px', '')) + y + 'px'
+      // nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
     },
   }))
 
@@ -71,26 +73,35 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
   const scaleDragRef: any = useRef(null)
   return (
     <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
-      <Draggable
-        scale={ bar.canvasScaleValue }
+      <div
+        className="c-scale-drag"
+        // scale={ bar.canvasScaleValue }
+        // disabled={ true }
         ref={ scaleDragRef }
-        onStart={ handleStart }
-        onDrag={ handleDrag }
-        onStop={ handleStop }
-        position={ bar.scaleDragData.position }>
+        // onStart={ handleStart }
+        // onDrag={ handleDrag }
+        // onStop={ handleStop }
+        // position={ bar.scaleDragData.position }
+        style={ {
+          ...bar.scaleDragData.style,
+          position: 'absolute',
+          left: bar.scaleDragData.position.x,
+          top: bar.scaleDragData.position.y,
+        } }
+      >
         <ScaleContainer
           nodeRef={ nodeRef }
-          style={ { ...bar.scaleDragData.style } }
+          style={ { ...bar.scaleDragData.style, position: 'absolute' } }
           isActive={ true }
           onScaleEnd={ handleScaleEnd }
-          onScale={handleScale}
+          onScale={ handleScale }
           mouse={ mouse }
         >
           <div>
 
           </div>
         </ScaleContainer>
-      </Draggable>
+      </div>
     </div>
 
   )

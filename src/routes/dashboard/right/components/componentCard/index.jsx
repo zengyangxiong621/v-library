@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react'
-import './index.css'
+import './index.less'
 
 const ComponentCard = props => {
   const _data = props.data;

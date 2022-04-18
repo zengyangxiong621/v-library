@@ -21,6 +21,9 @@ import {
   RedoOutlined
 } from '@ant-design/icons';
 
+import debounce from 'lodash/debounce';
+import { useFetch } from '../../../../tempDataSource/tool/useFetch'
+
 const componentConfig = {
   'config': [
     // 样式配置
@@ -395,30 +398,6 @@ const codeData = {
   language: 'javascript',
   value: `function onLoad(editor) {
     console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
-  }
-  function onLoad(editor) {
-    console.log("i've loaded");
   }`,
   showExpand: true
 };
@@ -457,6 +436,81 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
+  const styleChange = debounce(() => {
+    console.log('style change', componentConfig)
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+    saveStyleData({
+      id: '1513704667434328066' || componentConfig.id,
+      name: 'cdb-空白应用组件' || componentConfig.name,
+      moduleName: 'cdb-component-1' || componentConfig.moduleName,
+      moduleVersion: 'cdb-v-1.1' || componentConfig.moduleVersion,
+      config: componentConfig.config,
+    })
+  }, 300)
+
+  const saveStyleData = async (param) => {
+    // todo 替换假数据
+    const params = {
+      configs: [param],
+      dashboardId: "1513702962304577537"
+    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    await useFetch('/visual/module/update', {
+      body: JSON.stringify(params)
+    })
+  }
+
+  const interactionChange = debounce(() => {
+    console.log('interaction change', interactionConfig)
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+    saveAnimationData({
+      id: '1513704667434328066' || componentConfig.id,
+      key: 'mountAnimation',
+      value: interactionConfig.mountAnimation
+    })
+  }, 300)
+
+  const saveAnimationData = async (param) => {
+    // todo 替换假数据
+    const params = {
+      configs: [param],
+      dashboardId: "1513702962304577537"
+    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    await useFetch('/visual/layer/group/update', {
+      body: JSON.stringify(params)
+    })
+  }
+
+  const eventChange = debounce(() => {
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+    saveEventsData({
+      id: '1513704667434328066' || componentConfig.id,
+      events: interactionConfig.events
+    })
+  }, 300)
+
+  const saveEventsData = async (param) => {
+    // todo 替换假数据
+    const params = {
+      configs: [param],
+      dashboardId: "1513702962304577537"
+    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    await useFetch('/visual/module/defineEvent', {
+      body: JSON.stringify(params)
+    })
+  }
+
   return (
     <div className="SingleLayer-wrap">
       <div className="content">
@@ -469,7 +523,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
                 }
                 const TagName = componentLib[item.type];
                 return (
-                  <TagName data={item} onChange={settingsChange} key={index} />
+                  <TagName data={item} onChange={styleChange} key={index} />
                 )
               })}
             </ComponentCard>
@@ -515,8 +569,8 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
-             <LoadAnimation data={interactionConfig} onChange={settingsChange} />
-             <CusEvent />
+              <LoadAnimation data={interactionConfig} onChange={interactionChange} />
+              <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
         </Tabs>

@@ -19,7 +19,8 @@ const RightContent = (props: any) => {
   // 显示二级发布弹窗
   const [isShared, setIsShared] = useState(false)
   // 是否显示二级发布弹窗的剩余表单项
-  const [isShowRest, setIsShowRest] = useState(false)
+  const [notShowRest, setNotShowRest] = useState(false)
+  const [showRestIconAngle, setShowRestIconAngle] = useState(90)
   const [fabuLoading, setFabuLoading] = useState(false)
 
   const [curAppId, setCurAppId] = useState('')
@@ -37,6 +38,7 @@ const RightContent = (props: any) => {
   const cancelFabuModal = () => {
     setShowFabuModal(false)
   }
+
   // 发布大屏
   const fabudaping = () => {
     console.log('大屏id', curAppId);
@@ -56,6 +58,11 @@ const RightContent = (props: any) => {
   // 开放应用 开关事件
   const kfChange = (isCheck: boolean) => {
 
+  }
+  // 展示分享信息
+  const showRestInfo = () => {
+    setNotShowRest(!notShowRest)
+    setShowRestIconAngle(notShowRest ? 90 : -90)
   }
 
   return <div className="RightContent-wrap">
@@ -78,7 +85,7 @@ const RightContent = (props: any) => {
       onCancel={cancelFabuModal}
       footer={null}
       style={{
-        top: '30%'
+        top: '20%'
       }}
     >
       <div className='fabu-modal'>
@@ -101,38 +108,47 @@ const RightContent = (props: any) => {
                   labelCol={{
                     span: 4,
                   }}
+                  layout="horizontal"
                   name='releaseForm'
                 >
                   <Form.Item
                     colon={false}
                     label="发布"
-                  ><Switch defaultChecked onChange={releaseChange} /></Form.Item>
+                    style={{ marginRight: 'auto' }}
+                  ><div className="set-flex">
+                      <Switch defaultChecked onChange={releaseChange} /></div>
+                  </Form.Item>
                   <Form.Item
                     label="分享链接"
                     colon={false}
-                  ><div>
-                      <Input />
-                      <Button type="primary" >复制</Button>
+                  ><div className="set-flex">
+                      <Input style={{ width: '310px', height: '32px', lineHeight: '32px' }} />
+                      <Button type="primary" style={{ width: '60px', marginLeft: '16px' }} >复制</Button>
                     </div></Form.Item>
                   <Form.Item
                     label="加密分享"
                     colon={false}
-                  ><div className="jiamifenxiang">
+                  ><div className="jiamifenxiang set-flex ">
                       <Switch defaultChecked onChange={jmfxChange} />
-                      <span>密码: <Input /></span>
+                      <div className="set-flex"><div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div><Input style={{ width: '204px' }} /></div>
                     </div></Form.Item>
                   <Form.Item
                     label="开放应用"
                     colon={false}
-
-                  ><Switch defaultChecked onChange={kfChange} /></Form.Item>
+                  ><div className="set-flex">
+                      <Switch defaultChecked onChange={kfChange} />
+                    </div>
+                  </Form.Item>
                   <Form.Item
                     label="分享信息"
                     colon={false}
-
-                  ><IconFont type="icon-fanhui" rotate={90} /></Form.Item>
+                  >
+                    <div onClickCapture={showRestInfo} className="set-flex">
+                      <IconFont type="icon-fanhui" style={{ cursor: 'pointer' }} rotate={showRestIconAngle} />
+                    </div>
+                  </Form.Item>
                   {
-                    !isShowRest &&
+                    notShowRest &&
                     <div>
                       <Form.Item
                         label="标题"
@@ -147,7 +163,7 @@ const RightContent = (props: any) => {
                       <Form.Item label="上传图片"
                         colon={false}
                       >
-                        <Upload {...props}>
+                        <Upload {...props} className="set-flex">
                           <Button type="primary">点击上传</Button>
                         </Upload>
                       </Form.Item>

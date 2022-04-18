@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import './index.css'
+import './index.less'
 import { SketchPicker } from 'react-color'
 import { isHex, rgbToHex, hexToRgb, getRgbaNum } from '../../../../../utils/color'
 

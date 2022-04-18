@@ -4,7 +4,7 @@ import {
   CheckOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import './index.css'
+import './index.less'
 const EditableContext = React.createContext(null);
 
 const EditableRow = ({ index, ...props }) => {
@@ -113,8 +113,8 @@ export class EditableTable extends React.Component {
       },
     ];
     this.state = {
-      dataSource: props.data.fields,
-      count: props.data.fields.length,
+      dataSource: props.data?.fields || [],
+      count: props.data?.fields?.length || 0,
     };
   }
 

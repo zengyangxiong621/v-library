@@ -87,7 +87,7 @@ const zujianMenu = [
     title: '交互',
     key: 'interaction',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: true,
+    isSpecialDropMenu: false,
     component: Interaction
   },
   {

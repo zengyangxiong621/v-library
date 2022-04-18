@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import './index.css'
+import './index.less'
 
 // import Bus from '../../utils/events.js'
 import { connect } from 'dva'

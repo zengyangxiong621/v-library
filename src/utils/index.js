@@ -1,5 +1,16 @@
-import { IConfig, ILayerComponent, ILayerGroup } from '../routes/dashboard/center/components/CustomDraggable/type'
-import { DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from '../routes/dashboard/center/constant'
+import {
+  IConfig,
+  ILayerComponent,
+  ILayerGroup,
+} from '../routes/dashboard/center/components/CustomDraggable/type'
+import {
+  DIMENSION,
+  HEIGHT,
+  LEFT,
+  TOP,
+  WIDTH,
+  COMPONENTS
+} from '../constant/home'
 
 export function findLayerById (layer, id) {
   let temp = null
@@ -9,8 +20,8 @@ export function findLayerById (layer, id) {
       return temp
     }
     let t = null
-    if ('components' in layer) {
-      t = findLayerById(layer.components, id)
+    if (COMPONENTS in layer) {
+      t = findLayerById(layer[COMPONENTS], id)
     }
     if (t) {
       temp = t
@@ -34,7 +45,7 @@ export function selectMultiple (arr, ids) {
     } else {
       item.active = false
     }
-    const t = selectMultiple(item.components, copyIds)
+    const t = selectMultiple(item[COMPONENTS], copyIds)
     if (t.length > 0) {
       temp = [...temp, ...t]
     }
@@ -68,20 +79,20 @@ export function groupMultipleComponents (arr, sourceIds, targetId) {
     for (let i = 0; i < arr.length; i++) {
       let temp = ids.indexOf(arr[i].id)
       if (temp !== -1) {
-        group.components.push(arr[i])
+        group[COMPONENTS].push(arr[i])
         if (arr[i].id === targetId) {
           arr.splice(i--, 1, group)
         } else {
           arr.splice(i--, 1)
         }
         ids.splice(temp, 1)
-      } else if (arr[i].components.length > 0) {
-        groupFn(arr[i].components, ids)
+      } else if (arr[i][COMPONENTS].length > 0) {
+        groupFn(arr[i][COMPONENTS], ids)
       }
     }
   }
   groupFn(arr, sourceIds)
-  const { position, style } = calcScalePosition(group.components)
+  const { position, style } = calcScalePosition(group[COMPONENTS])
   group.position = position
   group.style.width = style.width
   group.style.height = style.height
@@ -94,8 +105,8 @@ export function findNode (state, id) {
     return node
   }
   for (let i = 0; i < state.length; i++) {
-    if (state[i].components.length > 0) {
-      temp = findNode(state[i].components, id)
+    if (state[i][COMPONENTS].length > 0) {
+      temp = findNode(state[i][COMPONENTS], id)
       if (temp) {
         return temp
       }
@@ -109,8 +120,8 @@ export function findParentNode (state, ids) {
   let id = ids.shift()
   let node = state.find((item) => item.id === id)
   arr.push(node)
-  if (node?.isGroup && node.components.length > 0) {
-    return arr.concat(findParentNode(node.components, ids))
+  if (node?.isGroup && node[COMPONENTS].length > 0) {
+    return arr.concat(findParentNode(node[COMPONENTS], ids))
   } else {
     return null
   }
@@ -125,7 +136,7 @@ export function calculateGroupPosition (state) {
         return [[], []]
       }
       let [xPositionList, yPositionList] = cur
-      next.components.forEach((component) => {
+      next[COMPONENTS].forEach((component) => {
         const { x, y } = component.position
         const { width, height } = component.style
         xPositionList = xPositionList.concat([x, x + width])
@@ -154,8 +165,8 @@ export function moveChildrenComponents (components, xMoveLength, yMoveLength) {
   components.forEach((component) => {
     component.position.x = component.position.x + xMoveLength
     component.position.y = component.position.y + yMoveLength
-    if (component.components?.length > 0) {
-      moveChildrenComponents(component.components, xMoveLength, yMoveLength)
+    if (component[COMPONENTS]?.length > 0) {
+      moveChildrenComponents(component[COMPONENTS], xMoveLength, yMoveLength)
     }
   })
 }
@@ -221,8 +232,8 @@ export function moveChildrenComponentsPosition (arr, xMoveLength, yMoveLength) {
       x: item.position.x + xMoveLength,
       y: item.position.y + yMoveLength,
     }
-    if (item.components.length > 0 || item.isGroup) {
-      moveChildrenComponentsPosition(item.components, xMoveLength, yMoveLength)
+    if (item[COMPONENTS].length > 0 || item.isGroup) {
+      moveChildrenComponentsPosition(item[COMPONENTS], xMoveLength, yMoveLength)
     }
   })
 }
@@ -277,12 +288,12 @@ export const group = (treeData, selectedNodes, lastRightClickKey) => {
         needPickItem.push(item)
         // 处理到最后一个节点了
         if (isDone) {
-          newGroup.components = needPickItem
+          newGroup[COMPONENTS] = needPickItem
           data.push(newGroup)
         }
         break
-      } else if (item.components) {
-        recursiveFn(item.components, id, isDone)
+      } else if (item[COMPONENTS]) {
+        recursiveFn(item[COMPONENTS], id, isDone)
       }
     }
   }
@@ -319,8 +330,8 @@ export function insertMultipleComponents (arr, sourceIds, targetId) {
           arr.splice(i--, 1)
         }
         ids.splice(temp, 1)
-      } else if (arr[i].components.length > 0) {
-        insertFn(arr[i].components, ids)
+      } else if (arr[i][COMPONENTS].length > 0) {
+        insertFn(arr[i][COMPONENTS], ids)
       }
     }
   }
@@ -332,8 +343,8 @@ export function insertMultipleComponents (arr, sourceIds, targetId) {
 export const layerComponentsFlat = (arr) => {
   return arr.reduce((pre, cur) => {
     return pre.concat(
-      cur.hasOwnProperty('components')
-        ? layerComponentsFlat(cur.components)
+      cur.hasOwnProperty(COMPONENTS)
+        ? layerComponentsFlat(cur[COMPONENTS])
         : cur.id,
     )
   }, [])
@@ -351,7 +362,6 @@ export const throttle = (fn, delay) => {
   }
 }
 
-
 const judgeIsGroup = (value) => {
   return value.id.indexOf('group') !== -1
 }
@@ -361,35 +371,40 @@ export const calcGroupPosition = (arr, components) => {
   let yPositionList = []
   arr.forEach((item) => {
     if (judgeIsGroup(item)) {
-      if ('components' in item && item.components.length > 0) {
-        const [xArr, yArr] = calcGroupPosition(item.components, components)
+      if (COMPONENTS in item && item[COMPONENTS].length > 0) {
+        const [xArr, yArr] = calcGroupPosition(item[COMPONENTS], components)
         xPositionList = xPositionList.concat(xArr)
         yPositionList = yPositionList.concat(yArr)
       }
     } else {
-      let component = components.find(it => it.id === item.id)
+      let component = components.find((it) => it.id === item.id)
       if (component) {
         // const style_config = component.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config = component.config.find((item) => item.name === DIMENSION)
-        const config = {
-          position: {
-            x: 0,
-            y: 0,
-          },
-          style: {
-            width: 0,
-            height: 0,
-          },
-        }
-        Object.values(style_dimension_config.value).forEach((obj) => {
-          if ([TOP, LEFT].includes(obj.name)) {
-            config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-          } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-            config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+
+        const style_dimension_config = component.config.find(
+          (item) => item.name === DIMENSION,
+        )
+        if (style_dimension_config) {
+          const config = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
           }
-        })
-        xPositionList.push(config.position.x, config.position.x + config.style.width)
-        yPositionList.push(config.position.y, config.position.y + config.style.height)
+          Object.values(style_dimension_config.value).forEach((obj) => {
+            if ([TOP, LEFT].includes(obj.name)) {
+              config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+            } else if ([WIDTH, HEIGHT].includes(obj.name)) {
+              config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+            }
+          })
+          xPositionList.push(config.position.x, config.position.x + config.style.width)
+          yPositionList.push(config.position.y, config.position.y + config.style.height)
+        }
       }
     }
   })
@@ -399,28 +414,8 @@ export const calcGroupPosition = (arr, components) => {
 export const handleLayersStatus = (layers, cb) => {
   layers.forEach((layer, index) => {
     cb(layer, index)
-    if ('components' in layer) {
-      handleLayersStatus(layer.components, cb)
+    if (COMPONENTS in layer) {
+      handleLayersStatus(layer[COMPONENTS], cb)
     }
   })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,19 +1,21 @@
+@import "../../../../../assets/style/variable.less";
+
 .event-form {
-  color: #fff;
+  color: @fontColor;
 
   .ant-tabs-nav {
     margin-bottom: 16px;
   }
 
   .ant-collapse-content-box {
-    color: #fff;
+    color: @fontColor;
   }
 
   .conditon-wraper {
     width: 221px;
     padding: 8px;
-    background-color: #191B25;
-    color: #fff;
+    background-color: @componentBgColor;
+    color: @fontColor;
 
     .conditon-list {
       position: relative;
@@ -38,7 +40,7 @@
       .conditon-type {
         position: absolute;
         background: #0d0e10;
-        border: 1px solid #393b4a;
+        border: 1px solid @borderColor;
         border-radius: 1px;
         width: 20px;
         height: 20px;
@@ -51,7 +53,7 @@
 
       .cond {
         background: #2d2f38;
-        border: 1px solid #393b4a;
+        border: 1px solid @borderColor;
         height: 24px;
         line-height: 22px;
         padding-left: 8px;
@@ -85,26 +87,26 @@
       bottom: 3px;
       left: -18px;
       width: 6px;
-      border: 1px solid #393b4a;
+      border: 1px solid @borderColor;
       border-right: none;
     }
 
     .ant-select-selector {
-      background-color: #191B25 !important;
-      border: 1px solid #393b4a !important;
+      background-color: @componentBgColor  !important;
+      border: 1px solid @borderColor  !important;
       border-radius: 3px !important;
       font-size: 14px;
-      color: #FFFFFF;
+      color: @fontColor;
       font-weight: 400;
 
       .ant-select-selection-item {
         background-color: #373A4D;
-        color: #FFFFFF;
-        border: 1px solid #393b4a !important;
+        color: @fontColor;
+        border: 1px solid @borderColor  !important;
       }
 
       .ant-select-selection-item-remove {
-        color: #FFFFFF;
+        color: @fontColor;
       }
     }
   }
@@ -121,7 +123,7 @@
         bottom: 28px;
         left: 1px;
         width: 6px;
-        border: 1px solid #393b4a;
+        border: 1px solid @borderColor;
         border-right: none;
       }
     }
@@ -130,20 +132,20 @@
 }
 
 .action-select {
-  background-color: #222430;
-  color: #FFFFFF;
+  background-color: @bgColor;
+  color: @fontColor;
 
   .ant-select-tree-list-holder-inner {
-    background-color: #222430;
-    color: #FFFFFF;
+    background-color: @bgColor;
+    color: @fontColor;
   }
 
   .ant-select-tree-node-content-wrapper:hover {
-    background-color: #191B25;
+    background-color: @componentBgColor;
   }
 
   .ant-select-tree-checkbox-inner {
-    background: #191B25;
-    border: 1px solid #393b4a;
+    background: @componentBgColor;
+    border: 1px solid @borderColor;
   }
 }

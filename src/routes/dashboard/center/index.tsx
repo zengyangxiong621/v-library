@@ -16,6 +16,8 @@ import { DIMENSION } from './constant'
 import RulerLines from './components/RulerLines'
 import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
 import { throttle } from '../../../utils/common'
+import RightClickMenu from '../left/components/rightClickMenu/rightClickMenu'
+import { menuOptions } from '../left/Data/menuOptions'
 
 const Center = ({ bar, dispatch }: any) => {
 
@@ -23,6 +25,10 @@ const Center = ({ bar, dispatch }: any) => {
   const draggableContainerRef = useRef(null)
   const rulerRef: any = useRef(null)
   const canvasRef = useRef(null)
+  const [ isShowRightMenu, setIsShowRightMenu ] = useState(false)
+  const [ menuInfo, setMenuInfo ] = useState({ x: 0, y: 0, id: '', isFolder: false })
+  const [ customMenuOptions, setCustomMenuOptions ] = useState(menuOptions)
+
   // let supportLinesRef: any = useRef(null)
   const treeData = bar.treeData
   let supportLinesRef = bar.supportLinesRef
@@ -78,6 +84,7 @@ const Center = ({ bar, dispatch }: any) => {
       })
     }
   }
+
   useEffect(() => {
     if(bar.canvasScaleValue) {
       window.addEventListener('wheel', calcCanvasScale, { passive: false })
@@ -93,11 +100,37 @@ const Center = ({ bar, dispatch }: any) => {
 
   useEffect(() => {
     calcCanvasSize()
-    window.addEventListener('resize', calcCanvasSize)
+    window.addEventListener('resize', calcCanvasSize);
+    (document.querySelector('#draggable-container') as HTMLElement).addEventListener('contextmenu', handleContextMenu)
+    // document.addEventListener('contextmenu', handleContextMenu)
     return () => {
-      window.removeEventListener('resize', calcCanvasSize)
+      window.removeEventListener('resize', calcCanvasSize);
+      (document.querySelector('#draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
+      // document.removeEventListener('contextmenu', handleContextMenu)
     }
   }, [])
+  useClickAway(() => {
+    // 取消右键菜单
+    setIsShowRightMenu(false)
+  }, [ document.querySelector('.left-wrap-tree'), document.querySelector('.left-wrap-toolbar'), document.querySelector('.left-wrap>.header'), document.querySelector('.left-menu>.footer'), document.getElementById('right-wrap'), document.getElementById('draggable-container') ])
+  const handleContextMenu = (event: MouseEvent) => {
+    console.log('event', event.target)
+    const dom = event.target as HTMLElement
+    setIsShowRightMenu(true)
+    if(dom.dataset?.id) {
+      setMenuInfo({
+        x: event.clientX,
+        y: event.clientY,
+        id: dom.dataset.id,
+        isFolder: false,
+      })
+    }
+    event.preventDefault()
+  }
+
+  const hideMenu = () => {
+    setIsShowRightMenu(false)
+  }
 
   useKeyPress(filterKey, (event) => {
     if(event.type === 'keydown' && bar.isSupportMultiple) {
@@ -142,7 +175,14 @@ const Center = ({ bar, dispatch }: any) => {
       })
     }
     dispatch({
+      type: 'bar/updateComponent',
+      payload: bar.selectedComponents,
+    })
+    dispatch({
       type: 'bar/save',
+      payload: {
+        isCanClearAllStatus: false,
+      },
     })
   }
 
@@ -159,6 +199,9 @@ const Center = ({ bar, dispatch }: any) => {
         cRef={ rulerRef }
         mouse={ mouse }
       />
+      {
+        isShowRightMenu &&
+        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
       <div
         style={ {
           width: 'calc(100% - 22px)',

@@ -57,7 +57,10 @@ const Left = ({ dispatch, bar, operate }) => {
       },
     })
     // 取消右键菜单
-    setIsShowRightMenu(false)
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
+    })
     // 将多选树改为单选树
     setIsMultipleTree(false)
   }, [treeRef, topBarRef, headerRef, bottomBarRef, document.getElementById('right-wrap'), document.getElementById('draggable-container')])
@@ -113,7 +116,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
-    el.style.width = `${ w }px`
+    el.style.width = `${w}px`
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
@@ -131,7 +134,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${ icon }`,
+      type: `bar/${icon}`,
       payload: finalPayload,
     })
   }
@@ -174,13 +177,16 @@ const Left = ({ dispatch, bar, operate }) => {
 
     // setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
-    setIsShowRightMenu(false)
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
+    })
   }
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
     event.stopPropagation()
-    const { components, key } = node
-    const isFolder = !!components
+    const { modules, key } = node
+    const isFolder = !!modules
     setIsMultipleTree(false)
     // 如果有选中了的节点 并且 此次右击的目标是其中一个，则展开菜单，
     // 否则，重置已选中节点 并 单选中当前节点以及展开右键菜单
@@ -222,8 +228,8 @@ const Left = ({ dispatch, bar, operate }) => {
         if (data[i].id === key) {
           return callback(data[i], i, data)
         }
-        if (data[i].components) {
-          loop(data[i].components, key, callback)
+        if (data[i].modules) {
+          loop(data[i].modules, key, callback)
         }
       }
     }
@@ -236,14 +242,14 @@ const Left = ({ dispatch, bar, operate }) => {
       dragObj = item
     })
     if (
-      (info.node.props.components || []).length > 0 && // Has components
+      (info.node.props.modules || []).length > 0 && // Has modules
       info.node.props.expanded && // Is expanded
       dropPosition === 1 // On the bottom gap
     ) {
       loop(data, dropKey, item => {
-        item.components = item.components || []
+        item.modules = item.modules || []
         // where to insert 示例添加到头部，可以是随意位置
-        item.components.unshift(dragObj)
+        item.modules.unshift(dragObj)
         // in previous version, we use item.components.push(dragObj) to insert the
         // item to the tail of the components
       })
@@ -260,6 +266,7 @@ const Left = ({ dispatch, bar, operate }) => {
         ar.splice(i + 1, 0, dragObj)
       }
     }
+    console.log('aaaaa', data);
     dispatch({
       type: 'bar/update',
       payload: data,
@@ -272,15 +279,21 @@ const Left = ({ dispatch, bar, operate }) => {
   const getCurrentMenuLocation = useCallback((menuInfo) => {
     setMenuInfo(menuInfo)
     // 点击右键才渲染菜单
-    setIsShowRightMenu(true)
-    const { id, isFolder } = menuInfo
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: true,
+    })
+    // const { id, isFolder } = menuInfo
     // dispatch({
     //   type: ''
     // })
   })
   // 点击右键菜单后，隐藏菜单
   const hideMenu = () => {
-    setIsShowRightMenu(false)
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
+    })
   }
   return (
     <div className='left-menu'>
@@ -291,65 +304,86 @@ const Left = ({ dispatch, bar, operate }) => {
         }
       })}>新增</button>
       <button onClick={() => dispatch({
-        type: 'bar/change',
-        payload: {
-
-        }
-      })}>change</button>
-      <button onClick={() => dispatch({
         type: 'bar/update',
         payload: {
-
         }
       })}>update</button>
+      <button onClick={() => {
+        const l = bar.key.map((item) => {
+          return {
+            id: item,
+            children: []
+          }
+        })
+        dispatch({
+          type: 'bar/delete',
+          payload: {
+            dashboardId: '1513702962304577537',
+            layers: l
+          }
+        })
+      }}>删除</button>
+      <button onClick={() => dispatch({
+        type: 'bar/copy',
+        payload: {
+          dashboardId: '1513702962304577537',
+          children: [],
+          targetDashboardId: '1513702962304577537',
+          insertId: '1514185900319133697',
+          originLayers: bar.treeData,
+          modules: [...bar.key],
+          panels: [],
+          selected: [...bar.key]
+        }
+      })}>复制</button>
       <div className="left-wrap">
-        <div className="header" ref={ headerRef }>
+        <div className="header" ref={headerRef}>
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
-            style={ { cursor: 'pointer' } }/>
+            type="icon-tucengshouqi" onClickCapture={() => toggle()}
+            style={{ cursor: 'pointer' }} />
         </div>
-        <div className="left-wrap-toolbar" ref={ topBarRef }>
-          <ToolBar data={ topBarIcons } iconSize="12px" getActiveIcon={ getActiveIcon }>
+        <div className="left-wrap-toolbar" ref={topBarRef}>
+          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
           </ToolBar>
         </div>
-        {/*右键菜单Dropdown */ }
+        {/*右键菜单Dropdown */}
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
-        <div className="left-wrap-tree" ref={ treeRef }>
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
+        <div className="left-wrap-tree" ref={treeRef}>
           <Tree
             draggable
             blockNode
             fieldNames={
-              { key: 'id', children: 'components' }
+              { key: 'id', children: 'modules' }
             }
-            multiple={ isMultipleTree }
-            switcherIcon={ <DownOutlined/> }
-            defaultExpandedKeys={ customExpandKeys }
-            onDrop={ onDrop }
-            onExpand={ myOnExpand }
-            onSelect={ onSelect }
-            onRightClick={ onRightClick }
-            treeData={ bar.treeData }
-            selectedKeys={ bar.key }
-            titleRender={ (nodeData) => {
+            multiple={isMultipleTree}
+            switcherIcon={<DownOutlined />}
+            defaultExpandedKeys={customExpandKeys}
+            onDrop={onDrop}
+            onExpand={myOnExpand}
+            onSelect={onSelect}
+            onRightClick={onRightClick}
+            treeData={bar.treeData}
+            selectedKeys={bar.key}
+            titleRender={(nodeData) => {
               return (<div>
                 <EveryTreeNode
-                  { ...nodeData }
-                  isExpand={ isExpand }
-                  getCurrentMenuLocation={ getCurrentMenuLocation }
+                  {...nodeData}
+                  isExpand={isExpand}
+                  getCurrentMenuLocation={getCurrentMenuLocation}
                 />
               </div>)
             }
             }
           />
         </div>
-        {/* </Dropdown> */ }
-        { isShowRightMenu &&
-        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
+        {/* </Dropdown> */}
+        {bar.isShowRightMenu &&
+          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
       </div>
-      <div className="footer" ref={ bottomBarRef }>
-        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
+      <div className="footer" ref={bottomBarRef}>
+        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
     </div>

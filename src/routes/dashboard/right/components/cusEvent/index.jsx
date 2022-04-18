@@ -32,9 +32,10 @@ const CusEvent = ({bar, dispatch ,...props }) => {
   };
   const { SHOW_PARENT } = TreeSelect;
 
-  const _data = props.data
+  const _data = props.data || {}
+  const [customEventCollapseActiveKey,setCustomEventCollapseActiveKey]=useState([])
   const [activeTab, setActiveTab] = useState(null)
-  const [tabpanes, setTabpanes] = useState([])
+  const [tabpanes, setTabpanes] = useState(_data?.events || [])
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [activePane, setActivePane] = useState(null)
   const [activeId, setActiveId] = useState(null)
@@ -126,6 +127,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
 
   const addEvent = (e) => {
     e.stopPropagation();
+    setCustomEventCollapseActiveKey(['1'])
     const panes = [...tabpanes]
     const eventId = uuidv4()
     const actionId = uuidv4()
@@ -158,6 +160,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     const activePane = panes.find(item => { return item.id === eventId })
     setActivePane(activePane)
     setActiveActionTab(actionId)
+    _data.events = panes
+    props.onChange()
   }
 
   const deleteEvent = (e) => {
@@ -171,18 +175,23 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     setTabpanes(panes)
     setActiveTab(panes.length ? panes[0].id : null)
     setActivePane(panes.length ? panes[0] : null)
+    _data.events = panes
+    props.onChange()
   }
 
   const tabsChange = key => {
     setActiveTab(key)
     const activePane = tabpanes.find(item => { return item.id === key })
     setActivePane(activePane)
+    setActiveActionTab(activePane.actions.length? activePane.actions[0].id : null)
   }
 
   // 事件类型
   const eventTypeChange = (e, pane) => {
     console.log('e', e, pane)
     pane.trigger = e
+    _data.events = tabpanes
+    props.onChange()
   }
 
   // 添加条件
@@ -203,6 +212,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     curPane.conditions = val
     const activePane = tabpanes.find(item => { return item.id === activeTab })
     setActivePane(activePane)
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const setConditionType = (val) => {
@@ -212,6 +223,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     curPane.conditionType = val
     const activePane = tabpanes.find(item => { return item.id === activeTab })
     setActivePane(activePane)
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const showConditionDetail = (cond) => {
@@ -246,6 +259,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     })
     setTabpanes(panes)
     setActiveActionTab(id)
+    _data.events = panes
+    props.onChange()
   }
 
   const deletAction = (e) => {
@@ -261,6 +276,8 @@ const CusEvent = ({bar, dispatch ,...props }) => {
     pane.actions = actions
     setTabpanes(panes)
     setActiveActionTab(pane.actions.length ? pane.actions[0].id : null)
+    _data.events = panes
+    props.onChange()
   }
 
   const actionTabsChange = (key) => {
@@ -269,34 +286,50 @@ const CusEvent = ({bar, dispatch ,...props }) => {
 
   const componentScopeChange = (val, action) => {
     action.componentScope = val
+    _data.events = tabpanes
+    props.onChange()
   }
   const selectComponentChange = (val, action) => {
     console.log('val',val)
     action.component = val
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const actionTypeChange = (val, action) => {
     action.action = val
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const animationTypeChange = (e, action) => {
     action.animation.type = e
+    _data.events = tabpanes
+    props.onChange()
   }
   const timingFunctionChange = (e, action) => {
     action.animation.timingFunction = e
+    _data.events = tabpanes
+    props.onChange()
   }
   const durationChange = (e, action) => {
     const value = parseInt(e.target.value)
     action.animation.duration = value
+    _data.events = tabpanes
+    props.onChange()
   }
   const delayChange = (e, action) => {
     const value = parseInt(e.target.value)
     action.animation.delay = value
+    _data.events = tabpanes
+    props.onChange()
   }
 
   const unmountChange = (e, action) => {
     const checked = e.target.checked
     action.unmount = checked
+    _data.events = tabpanes
+    props.onChange()
   }
 
 
@@ -307,7 +340,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
       {...formItemLayout}
       colon={false}
     >
-      <Collapse accordion className="custom-collapse">
+      <Collapse className="custom-collapse" activeKey={customEventCollapseActiveKey}>
         <Panel header="自定义事件" key="1" extra={eventExtra()}>
           {tabpanes.length ? <Tabs
             hideAdd
@@ -362,7 +395,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
                     <Button style={{ width: '100%' }} type="primary" onClick={addConditon} ghost>添加条件</Button>
                   </div>
                 </Form.Item>
-                <Collapse accordion className="custom-collapse action-collapse">
+                <Collapse className="custom-collapse action-collapse" defaultActiveKey={['1']}>
                   <Panel header="动作" key="1" extra={actionExtra()}>
                     {pane.actions.length > 0 ?
                       <Tabs
@@ -387,7 +420,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
                                 <TreeSelect
                                   treeData={bar.treeData}
                                   fieldNames={
-                                    { key: 'id', children: 'components',label:'name', value:'id' }
+                                    { key: 'id', children: 'modules',label:'name', value:'id' }
                                   }
                                   onChange={val => { selectComponentChange(val, action) }}
                                   treeCheckable={true}

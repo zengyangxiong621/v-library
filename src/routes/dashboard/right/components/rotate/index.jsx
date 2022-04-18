@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react'
-import './index.css'
+import './index.less'
 import CusInputNumber from '../cusInputNumber'
 
 import {

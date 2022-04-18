@@ -7,6 +7,8 @@ import {
   message,
 } from 'antd';
 
+import { BASE_URL } from '../../../../tempDataSource/tool/useFetch'
+
 
 const UploadImg = props => {
   const formItemLayout = {
@@ -35,12 +37,11 @@ const UploadImg = props => {
     return isJpgOrPng && isLt2M;
   }
   const handleBgChange = (info) => {
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, imageUrl => {
-        setBgUrl(imageUrl)
-        _data.value = imageUrl
-        props.onChange()
-      });
+    const { status, response } = info.file;
+    if (status === 'done' && response) {
+      setBgUrl(response.data)
+      _data.value = response.data
+      props.onChange()
     }
   }
   const getBase64 = (img, callback) => {
@@ -68,11 +69,11 @@ const UploadImg = props => {
         <Form.Item name="bgImage" valuePropName="fileList"
           getValueFromEvent={normFile} noStyle>
           <Upload
-            name="bgImage"
+            name="file"
             listType="picture-card"
             className="bg-uploader"
             showUploadList={{ showRemoveIcon: true, showPreviewIcon: false }}
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            action={`${BASE_URL}/visual/file/upload`}
             beforeUpload={beforeUpload}
             onChange={handleBgChange}
             onRemove={handleBgRemove}

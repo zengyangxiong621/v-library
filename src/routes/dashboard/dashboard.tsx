@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { connect } from 'dva'
 import './index.less'
 import { Layout } from 'antd'
+import {withRouter} from 'dva/router'
 
 import { useClickAway } from 'ahooks'
 
@@ -119,9 +120,9 @@ function App({ bar, dispatch }: any) {
 }
 
 
-export default connect(({ bar }: any) => (
+export default withRouter(connect(({ bar }: any) => (
   { bar }
-))(App)
+))(App))
 
 
 /**

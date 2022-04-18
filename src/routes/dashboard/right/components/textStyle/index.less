@@ -1,0 +1,45 @@
+@import "../../../../../assets/style/variable.less";
+
+.font-select {
+  width: 145px !important;
+  border-radius: 3px !important;
+  margin-right: 8px !important;
+  color: @fontColor  !important;
+  text-align: left;
+}
+
+.font-select .ant-select-selector {
+  border: 1px solid #30334b !important;
+  background-color: @componentBgColor  !important;
+}
+
+.font-select .ant-select-arrow {
+  color: #73768F;
+}
+
+.fontBi .ant-tag-checkable {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  background: @componentBgColor;
+  border: 1px solid @borderColor;
+  border-radius: 3px;
+  color: #A1A1A1;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 8px !important;
+}
+
+.fontBi .ant-tag-checkable:active,
+.fontBi .ant-tag-checkable-checked {
+  color: @activeComponentBgColor;
+  border: 1px solid @activeComponentBgColor;
+}
+
+.po-size-input.unit-input {
+  width: 66px;
+}
+
+.po-size-input.unit-input .ant-input-number-input-wrap::after {
+  content: "px";
+}

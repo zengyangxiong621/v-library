@@ -29,8 +29,8 @@ const insertLayerById = ( target: any[], insertId: string, newLayer: any) => {
       if (item.id === id) {
         data.unshift(newLayer)
         break
-      } else if (item.components && item.components.length) {
-        recursiveFn(item.components, id);
+      } else if (item.modules && item.modules.length) {
+        recursiveFn(item.modules, id);
       }
     }
   };

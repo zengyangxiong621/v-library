@@ -21,6 +21,7 @@
   // 发布弹窗 内容 的样式
   .fabu-modal {
     text-align: center;
+    user-select: none;
     .img-wrap {
       height: 160px;
       display: flex;
@@ -44,8 +45,18 @@
       width: 106px;
       margin: 0 auto;
     }
+    .set-flex {
+      display: flex;
+      align-items: center;
+      .set-flex-1 {
+        flex: 1
+      }
+    }
+    .ant-input {
+      height: 32px;
+      line-height: 32px;
+    }
   }
-
 }
 
 .RightContent-wrap::-webkit-scrollbar {

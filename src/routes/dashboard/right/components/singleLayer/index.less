@@ -1,3 +1,5 @@
+@import "../../../../../assets/style/variable.less";
+
 .SingleLayer-wrap {
   text-align: center;
   height: 100%;
@@ -54,12 +56,12 @@
 
 .custom-tabs .ant-tabs-tab-active {
   background: #585C74 !important;
-  color: #FFFFFF !important;
+  color: @fontColor  !important;
   font-weight: 400;
 }
 
 .custom-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: #FFFFFF !important;
+  color: @fontColor  !important;
   text-shadow: none;
 }
 
@@ -78,24 +80,24 @@
 }
 
 .zoom-set .ant-radio-wrapper>span:nth-child(2) {
-  color: #fff;
+  color: @fontColor;
 }
 
 .custom-collapse {
-  background-color: #232630;
+  background-color: @componentContentBgColor;
   border: none;
 
 }
 
 .custom-collapse .ant-collapse-header {
   color: #ccc !important;
-  background-color: #222430 !important;
+  background-color: @bgColor  !important;
   padding: 0 0 16px 0 !important;
 
 }
 
 .custom-collapse .ant-collapse-content {
-  background-color: #222430;
+  background-color: @bgColor;
   border: none;
 }
 
@@ -104,7 +106,7 @@
 }
 
 .custom-collapse>.ant-collapse-item {
-  border-bottom: 1px solid #3d404d;
+  border-bottom: 1px solid @headerBgColor;
 }
 
 .custom-collapse>.ant-collapse-item:last-child {
@@ -112,19 +114,19 @@
 }
 
 .SingleLayer-wrap .ant-table {
-  background-color: #232630;
-  color: #fff;
+  background-color: @componentContentBgColor;
+  color: @fontColor;
 }
 
 .SingleLayer-wrap .ant-table-thead>tr>th {
-  background-color: #3d404d;
-  color: #fff;
+  background-color: @headerBgColor;
+  color: @fontColor;
 }
 
 .SingleLayer-wrap .ant-table-tbody>tr.ant-table-row:hover>td,
 .SingleLayer-wrap .ant-table-tbody>tr>td.ant-table-cell-row-hover {
-  background-color: #3d404d;
-  color: #fff;
+  background-color: @headerBgColor;
+  color: @fontColor;
 }
 
 
@@ -149,10 +151,10 @@
   margin-top: 16px;
 
   .ant-btn {
-    background: #191B25;
-    border: 1px solid #393B4A;
+    background: @componentBgColor;
+    border: 1px solid @borderColor;
     border-radius: 3px;
-    color: #fff;
+    color: @fontColor;
   }
 
   .data-header {
@@ -185,13 +187,13 @@
 
     .ant-checkbox-wrapper {
       font-size: 14px;
-      color: #FFFFFF;
+      color: @fontColor;
       font-weight: 400;
     }
 
     .ant-checkbox-inner {
-      background: #191B25;
-      border: 1px solid #393B4A;
+      background: @componentBgColor;
+      border: 1px solid @borderColor;
     }
   }
 }

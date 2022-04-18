@@ -129,10 +129,12 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       document.onmouseup = (e) => {
         console.log('选区mouseUp')
         e.preventDefault()
-        dispatch({
-          type: 'bar/chooseLayer',
-          payload: selectedList.current,
-        })
+        if (selectedList.current.length > 0) {
+          dispatch({
+            type: 'bar/chooseLayer',
+            payload: selectedList.current,
+          })
+        }
         hide()
         document.onmousemove = null
         document.onmouseup = null
