@@ -1,6 +1,6 @@
 
 export default {
-  namespace: 'dashboard',
+  namespace: 'components',
   state: {
     componentConfig: {
       dashboardId: '1',

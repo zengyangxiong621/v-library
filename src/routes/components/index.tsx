@@ -1,9 +1,9 @@
 import { newDynamic, createRoute } from '../../utils/core';
 
 const routesConfig = (app: any) => ({
-  path: '/datasource',
-  title: 'datasource',
-  component: newDynamic(app, [], () => import('./datasource'))
+  path: '/components',
+  title: 'components',
+  component: newDynamic(app, [import('../../models/components')], () => import('./text'))
 });
 
 export default (app: any) => createRoute(app, routesConfig);

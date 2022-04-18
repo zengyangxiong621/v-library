@@ -2,7 +2,7 @@ import {
   IConfig,
   ILayerComponent,
   ILayerGroup,
-} from '../routes/home/center/components/CustomDraggable/type'
+} from '../routes/dashboard/center/components/CustomDraggable/type'
 import {
   DIMENSION,
   HEIGHT,

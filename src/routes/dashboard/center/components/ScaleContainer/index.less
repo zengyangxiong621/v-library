@@ -1,0 +1,125 @@
+.box {
+  width: 100%;
+  height: 100%;
+  /*position: absolute;*/
+  /*top: 200px;*/
+  /*left: 200px;*/
+}
+
+/*四边*/
+.box .t,
+.box .b,
+.box .l,
+.box .r {
+  position: absolute;
+  z-index: 1;
+  background: #2482FF;
+}
+
+.box .l,
+.box .r {
+  width: 3px;
+  height: 100%;
+  cursor: col-resize;
+}
+
+.box .t,
+.box .b {
+  width: 100%;
+  height: 3px;
+  cursor: row-resize;
+}
+
+.box .t {
+  top: 0;
+  left: 0
+}
+
+.box .b {
+  bottom: 0;
+  left: 0;
+}
+
+.box .l {
+  left: 0;
+}
+
+.box .r {
+  right: 0;
+}
+
+/*八点*/
+.box {
+  .tl, .bl, .br, .tr, .tc, .bc, .lc, .rc {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #2482FF;
+    border-radius: 50%;
+    z-index: 2;
+    cursor: nwse-resize
+  }
+
+  .tc {
+    left: 50%;
+    transform: translateX(-50%);
+    top: -4px;
+    cursor: row-resize;
+  }
+
+  .bc {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -4px;
+    cursor: row-resize;
+  }
+
+  .lc {
+    top: 50%;
+    transform: translateY(-50%);
+    left: -4px;
+    cursor: col-resize;
+  }
+
+  .rc {
+    top: 50%;
+    transform: translateY(-50%);
+    right: -4px;
+    cursor: col-resize;
+  }
+}
+
+
+.box .tl,
+.box .bl {
+  left: -2px;
+}
+
+.box .tr,
+.box .br {
+  right: -2px;
+}
+
+.box .br,
+.box .bl {
+  bottom: -2px;
+}
+
+.box .tl,
+.box .tr {
+  top: -2px;
+}
+
+.box .tr,
+.box .bl {
+  cursor: nesw-resize;
+}
+
+/*内核*/
+.inner {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+

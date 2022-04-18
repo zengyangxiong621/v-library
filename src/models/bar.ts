@@ -17,7 +17,7 @@ import { COMPONENTS } from '../constant/home'
 import {
   ILayerComponent,
   ILayerGroup,
-} from '../routes/home/center/components/CustomDraggable/type'
+} from '../routes/dashboard/center/components/CustomDraggable/type'
 
 
 import {
@@ -36,7 +36,7 @@ import {
   showInput,
   hidden,
 } from '../utils/sideBar'
-import { DIMENSION } from '../routes/home/center/constant'
+import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
 import { myFetch } from './utils/request'

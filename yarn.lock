@@ -3946,10 +3946,10 @@ duplexer@^0.1.2:
   resolved "https://registry.npmmirror.com/duplexer/-/duplexer-0.1.2.tgz#3abe43aef3835f8ae077d136ddce0f276b0400e6"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
-dva-core@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmmirror.com/dva-core/-/dva-core-2.0.1.tgz#7cd33f11225c099f1962b4862b8c7d10ea66283c"
-  integrity sha512-tLcf+mRxGOSlWAJNRdAHn+9hZs/ng2NOmjef4gyjR23l3Jx7uI8rzelq+5v+bybERK5xTYx2ixhzJVFuVOftXg==
+dva-core@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npmmirror.com/dva-core/-/dva-core-2.0.2.tgz#7166ef879e335db018b942c9c0f2e1a5543851a0"
+  integrity sha512-EGYjkjx6/9R3ek1L37cb6joDCLwbPrqRM56UrFqKc5yltx5UDAK3soa/Ug4j4nlGTN5W8T1Fz0qJlP3R7Jm0Hg==
   dependencies:
     "@babel/runtime" "^7.0.0"
     flatten "^1.0.2"
@@ -3959,17 +3959,17 @@ dva-core@2.0.1:
     redux-saga "^0.16.0"
     warning "^3.0.0"
 
-dva@2.6.0-beta.19:
-  version "2.6.0-beta.19"
-  resolved "https://registry.npmmirror.com/dva/-/dva-2.6.0-beta.19.tgz#b3fafe02d7fd1a1637fe803c6b76005872ae3b77"
-  integrity sha512-duxidteay9cfO8zs2sphxup+xK4zMGo9TtLQIQXthgnE9/SvcYYTvgmvPoZ31Nc3pADYbHCoOPTzH4ufo2QKJQ==
+dva@2.6.0-beta.20:
+  version "2.6.0-beta.20"
+  resolved "https://registry.npmmirror.com/dva/-/dva-2.6.0-beta.20.tgz#5633a008456479040d5efd553d4fc85e12dff88a"
+  integrity sha512-CP2xg32VzxgeBk98og2e4JbMruO8+jexTBQvTbpK9v+aZ99MBUg18mLZUhody9Uq+jPxRDx70rzkxpP+HM0/9A==
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@types/isomorphic-fetch" "^0.0.35"
     "@types/react-redux" "^7.1.0"
     "@types/react-router-dom" "^5.1.2"
     connected-react-router "6.5.2"
-    dva-core "2.0.1"
+    dva-core "2.0.2"
     global "^4.3.2"
     history "^4.7.2"
     invariant "^2.2.4"
