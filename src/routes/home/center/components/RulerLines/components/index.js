@@ -16,7 +16,6 @@ const SingleLine = (props) => {
   }, [])
   const handleDragStart = () => {
     setIsShow(true)
-
   }
   const handleDragStop = (event, data, line) => {
     setIsShow(false)
@@ -63,16 +62,20 @@ const SingleLine = (props) => {
               display: line.display,
               zIndex: 10000000,
             } }>
+            <div>
+              X:{ Math.ceil(position.x) }
+            </div>
             {
               isShow ? <div
                 style={ {
+                  transform: `scale(${ 1 / scale })`,
                   position: 'absolute',
                   top: '5000px',
-                  width: 60,
-                  height: '30px',
+                  width: 40,
+                  height: 20,
                   background: 'white',
-                  fontSize: 20,
-                  lineHeight: '30px',
+                  fontSize: 10,
+                  lineHeight: '20px',
                 } }>
                 X:{ Math.ceil(position.x) }
               </div> : ''

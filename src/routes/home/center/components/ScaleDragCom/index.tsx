@@ -74,6 +74,7 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
   return (
     <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
       <div
+        className="c-scale-drag"
         // scale={ bar.canvasScaleValue }
         // disabled={ true }
         ref={ scaleDragRef }
