@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import dva, { router } from 'dva';
+import dva from 'dva';
+import { Router } from 'dva/router';
 import { createBrowserHistory } from 'history'
 import reportWebVitals from './reportWebVitals';
 
@@ -12,8 +13,6 @@ import { ConfigProvider } from 'antd';
 
 import { createRoutes } from './utils/core';
 import RoutesConfig from './routerConfig';
-
-const { Router } = router;
 
 // -> 初始化
 const app = dva({

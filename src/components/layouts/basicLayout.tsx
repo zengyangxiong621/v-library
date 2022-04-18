@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Layout, Menu } from 'antd';
-import { router } from 'dva';
-import { Route } from 'dva/router';
+import { Route, Switch } from 'dva/router';
 import dynamic from 'dva/dynamic';
 import { connect } from '../../utils/connect';
 
@@ -10,7 +9,6 @@ import CustomHeader from '../header/index'
 import DashboardManage from '../../routes/myDashboard/myDashboard';
 
 const { Content } = Layout;
-const { Switch } = router;
 interface Props {
   config?: any,
   routerData?: any,
@@ -35,8 +33,6 @@ class BasicLayout extends Component<Props, State> {
     const { pathname } = location
     const { menuData } = global
 
-    console.log(childRoutes, 'basic0000000000000000')
-
     const isDashboardPage = pathname !== '/dashboard'
     const isPathRoot = pathname === '/'
     const defaultPath = '/dashboard-manage'
@@ -55,9 +51,4 @@ class BasicLayout extends Component<Props, State> {
 }
 
 export default connect(mapStateToProps)(BasicLayout); 
-// export default 
-// connect(mapStateToProps)(
-//   (props: any)=>{
-//     return <BasicLayout {...props} key={props.location.pathname} />
-//   }); 
 
