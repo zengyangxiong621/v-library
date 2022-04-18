@@ -57,7 +57,10 @@ const Left = ({ dispatch, bar, operate }) => {
       },
     })
     // 取消右键菜单
-    setIsShowRightMenu(false)
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
+    })
     // 将多选树改为单选树
     setIsMultipleTree(false)
   }, [treeRef, topBarRef, headerRef, bottomBarRef, document.getElementById('right-wrap'), document.getElementById('draggable-container')])
@@ -174,7 +177,10 @@ const Left = ({ dispatch, bar, operate }) => {
 
     // setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
-    setIsShowRightMenu(false)
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
+    })
   }
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
@@ -273,15 +279,21 @@ const Left = ({ dispatch, bar, operate }) => {
   const getCurrentMenuLocation = useCallback((menuInfo) => {
     setMenuInfo(menuInfo)
     // 点击右键才渲染菜单
-    setIsShowRightMenu(true)
-    const { id, isFolder } = menuInfo
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: true,
+    })
+    // const { id, isFolder } = menuInfo
     // dispatch({
     //   type: ''
     // })
   })
   // 点击右键菜单后，隐藏菜单
   const hideMenu = () => {
-    setIsShowRightMenu(false)
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
+    })
   }
   return (
     <div className='left-menu'>
@@ -300,7 +312,7 @@ const Left = ({ dispatch, bar, operate }) => {
         const l = bar.key.map((item) => {
           return {
             id: item,
-            children:[]
+            children: []
           }
         })
         dispatch({
@@ -367,7 +379,7 @@ const Left = ({ dispatch, bar, operate }) => {
           />
         </div>
         {/* </Dropdown> */}
-        {isShowRightMenu &&
+        {bar.isShowRightMenu &&
           <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
       </div>
       <div className="footer" ref={bottomBarRef}>
