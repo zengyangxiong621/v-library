@@ -2350,22 +2350,22 @@ export default {
       return { ...state, lastRightClick: payload }
     },
     // 置顶
-    placedTop(state: IBarState, { payload }: any) {
+    frontplacedTop(state: IBarState, { payload }: any) {
       const newTreeData = placeTop(state.treeData, state.key)
       return { ...state, treeData: newTreeData }
     },
     // 置底
-    placeBottom(state: IBarState, { payload }: any) {
+    frontplaceBottom(state: IBarState, { payload }: any) {
       const newTreeData = placeBottom(state.treeData, state.key)
       return { ...state, treeData: newTreeData }
     },
     // 上移
-    moveUp(state: IBarState, { payload }: any) {
+    frontmoveUp(state: IBarState, { payload }: any) {
       const newTree = moveUp(state.treeData, state.key)
       return { ...state, treeData: newTree }
     },
     // 下移
-    moveDown(state: IBarState, { payload }: any) {
+    frontmoveDown(state: IBarState, { payload }: any) {
       const newTree = moveDown(state.treeData, state.key)
       return { ...state, treeData: newTree }
     },

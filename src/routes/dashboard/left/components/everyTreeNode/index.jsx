@@ -98,13 +98,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     })
     commonChangeContent()
   }
-  const oFocus = (e) => {
-    e.stopPropagation()
-    // inputRef.current.focus({
-    //   cursor: 'all',
-    // })
-    console.log('聚焦');
-  }
   // 输入内容改变
   const oInputContent = (e) => {
     e.stopPropagation()
@@ -144,8 +137,10 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       }
     })
   }
+  const isS = bar.key.includes(id)
+  console.log('isS', isS);
   return (
-    <div className={`EveryTreeNode-wrap ${hover && 'every-tree-node-hover'}`} onContextMenu={(e) => {
+    <div className={`EveryTreeNode-wrap ${hover && 'every-tree-node-hover'} ${isS && 'aa'}`} onContextMenu={(e) => {
       mouseRightClick(e)
     }}>
       {
@@ -163,8 +158,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
           }}
           onChange={(e) => oInputContent(e)}
           onPressEnter={(e) => oPressEnter(e)}
-          onClickCapture={(e) => oFocus(e)}
-          // onFocus={(e) => oFocus(e)}
           onBlur={(e) => oBlur(e)}
         />
         <span className='title-text' style={{
