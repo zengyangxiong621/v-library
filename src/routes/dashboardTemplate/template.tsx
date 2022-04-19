@@ -39,7 +39,7 @@ const DashboardTemplate = (props: any) => {
   const modalCancel = () => {
     setCurImgIndex(-1)
   }
-  
+
   return (
     <div key={ props.location.pathname }>
       <div className='DashboardTemplate-wrap'>

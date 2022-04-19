@@ -120,7 +120,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     <div className='RightClickMenu-wrap' ref={menuRef}>
       {
         menuOptions.map((item, index) => {
-          const  hasLevel  = item.children && item.children.length && Array.isArray(item.children)
+          const hasLevel = item.children && item.children.length && Array.isArray(item.children)
           return (
             <div
               key={index}
@@ -136,8 +136,8 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
                 (item.key === 'lock' && isLock) ||
                   (item.key === 'singleShowLayer' && isSingleShow) ||
                   (item.key === 'hidden' && !isShowOrHidden)
-                  ? <IconFont  type={`icon-${item.anotherIcon}`}/>
-                  : <IconFont  type={`icon-${item.icon}`}/>
+                  ? <IconFont style={{ fontSize: '10px' }} type={`icon-${item.anotherIcon}`} />
+                  : <IconFont style={{ fontSize: '10px' }} type={`icon-${item.icon}`} />
               }
               <li className={`menu-item-li`}>
                 {
