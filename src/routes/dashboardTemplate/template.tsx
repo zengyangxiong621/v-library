@@ -1,34 +1,78 @@
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import './index.less'
 
 import { IconFont } from '../../utils/useIcon'
 import { SearchOutlined } from '@ant-design/icons'
-import { Input, Row, Col, Modal } from 'antd'
+import { Input, Row, Col, Modal, Form, Select, Button } from 'antd'
 
 import TemplateCard from './templateCard/index'
 import Preview from './preview/index'
 import DarkModal from '../myDashboard/components/darkThemeModal/index'
+import { useFetch } from '../../utils/useFetch'
+
+const { Option } = Select
 
 const DashboardTemplate = (props: any) => {
   const { history } = props
+  const [createForm] = Form.useForm()
   // 放入预览模板中的图片链接数组
   const urlArr = listData.map((item: any) => item.imgUrl)
 
   const [curImgIndex, setCurImgIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
+  const [showCreateAppModal, setShowCreateAppModal] = useState(false)
+  const spaceId = 1
 
+  const [groupOptions, setGroupOptions] = useState([])
+  // 不选择分组的时候，默认选择未分组,未分组的groupId是 0 <string>
+  const [selectedGroup, setSelectedGroup] = useState('0')
+  const [appName, setAppName] = useState('')
+
+  const GetGroups = async () => {
+    const [, data] = await useFetch(`/visual/application/queryGroupList?spaceId=${spaceId}`, {
+      method: 'get'
+    })
+    const pickNameArr = data.slice(1).map((item: any) => ({ label: item.name, value: item.groupId }))
+    setGroupOptions(pickNameArr)
+  }
   // 搜索
   const search = (e: any) => {
     console.log('模板页面的搜索');
   }
-
   const backClick = () => {
     history.back()
   }
 
+  // 新建应用弹窗
   const addTemplate = () => {
+    setShowCreateAppModal(true)
+    // 弹窗出现，发送请求
+    GetGroups()
     //TODO 携带id 跳转至 新建模板 页面
     // history.push('/')
+  }
+  // 确认新建
+  const createApp = async () => {
+    // 先校验
+    const values: any = await createForm.validateFields()
+    console.log('校验表单的值', values);
+    console.log('默认情况下选中的分组', selectedGroup);
+
+    //TODO 发送请求
+    setShowCreateAppModal(false)
+  }
+  //关闭弹窗
+  const cancelCreateApp = () => {
+    setShowCreateAppModal(false)
+  }
+
+  const appNameChange = (val: any) => {
+    setAppName(val)
+  }
+
+  const groupSelectSelect = (val: any) => {
+    console.log('va;', val);
+    setSelectedGroup(val)
   }
 
   // 获取当前需要预览的模板 的index
@@ -36,13 +80,13 @@ const DashboardTemplate = (props: any) => {
     setCurImgIndex(i)
   }
 
-  // 关闭弹窗
+  // 关闭预览弹窗
   const modalCancel = () => {
     setCurImgIndex(-1)
   }
 
   return (
-    <div key={ props.location.pathname }>
+    <div key={props.location.pathname}>
       <div className='DashboardTemplate-wrap'>
         <header className='back-bar'>
           <IconFont onClick={() => backClick()} className='back-icon' type='icon-fanhui' />
@@ -99,6 +143,58 @@ const DashboardTemplate = (props: any) => {
       >
         <Preview srcUrlArr={urlArr} curIndex={curImgIndex} />
       </Modal>
+      {/* 创建应用弹窗 */}
+      <DarkModal
+        title='创建应用'
+        destroyOnClose={true}
+        getContainer={false}
+        visible={showCreateAppModal}
+        onCancel={cancelCreateApp}
+        footer={[
+          <div className='custom-btn-wrap'>
+            <Button className='my-btn cancel-btn' onClickCapture={cancelCreateApp}>取消</Button>
+            <Button className='my-btn confirm-btn' onClickCapture={createApp}>确定</Button>
+          </div>
+        ]}
+        style={{
+          top: '25%'
+        }}
+      >
+        <Form
+          name="createForm"
+          form={createForm}
+          labelCol={{
+            span: 5
+          }}
+        >
+          <Form.Item
+            label="应用名称"
+            name="appName"
+            colon={false}
+            rules={[{ required: true, message: '请输入应用名称' }]}
+          >
+            <Input placeholder='请请输入应用名称'
+              value={appName}
+              onChange={(e) => appNameChange(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            label="所属分组"
+            colon={false}
+          >
+            <Select
+              defaultValue='未分组'
+              onChange={(val) => groupSelectSelect(val)}
+            >
+              {
+                groupOptions.map((item: any) => (
+                  <Option key={item.value} value={item.value}>{item.label}</Option>
+                ))
+              }
+            </Select>
+          </Form.Item>
+        </Form>
+      </DarkModal>
     </div>
   )
 }
