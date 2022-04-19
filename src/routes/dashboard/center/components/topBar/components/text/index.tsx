@@ -14,7 +14,7 @@ const mapStateToProps = (state: any) => {
 
 const componentCreate = ({ dispatch }: any) => {
   dispatch({
-    type: 'dashboardGlobal/create',
+    type: 'dashboard/create',
     payload: {
       test: '1111'
     }

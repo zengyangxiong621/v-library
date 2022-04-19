@@ -1,5 +1,5 @@
 export default {
-  namespace: 'dashboardGlobal',
+  namespace: 'dashboard',
   state: {
     test: '00000'
   },
@@ -7,12 +7,8 @@ export default {
     componentCreate(state: any, action: any) {
       return state
     },
-    componentUpdate() {
-
-    },
-    componentDelete() {
-
-    },
+    componentUpdate() {},
+    componentDelete() {},
   },
   effects: {
     *create(action: any, { call, put, select}: any) {

@@ -29,7 +29,7 @@ const MyApplication = (props: any) => {
 
   }
   return (
-    <div className='MyApplication-wrap' key={ props.location.pathname }>
+    <div className='MyApplication-wrap'>
       <div className="left">
         {/* 左侧树 */}
         <LeftTree />
