@@ -283,10 +283,6 @@ const Left = ({ dispatch, bar, operate }) => {
       type: 'bar/setIsShowRightMenu',
       payload: true,
     })
-    // const { id, isFolder } = menuInfo
-    // dispatch({
-    //   type: ''
-    // })
   })
   // 点击右键菜单后，隐藏菜单
   const hideMenu = () => {

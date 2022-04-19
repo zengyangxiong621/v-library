@@ -58,16 +58,18 @@ const placeBottom: TPlaceGroup = (treeData, selectedNodes) => {
  */
 type TMoveUpOrDown = getMoveGroupType<any[], string[]>;
 const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
+  console.log('moveUp执行了几次呢')
   const treeDataCopy = JSON.parse(JSON.stringify(treeData))
   const recursiveFn = (data: any, ids: string[]) => {
     for(let i = 0, len = data.length; i < len; i++) {
-      const item = data[i]
-      if(ids.includes(item.id)) {
+      if(ids.includes(data[i].id)) {
+        console.log('dataiii', data[i].id)
+        // ids.length = 0
         if(i !== 0) {
-          data[i] = data.splice(i - 1, 1, data[i])[0]
+          data[i] = data.splice(i - 1, 1, data[i])[0];
         }
-      } else if(item.modules) {
-        recursiveFn(item.modules, ids)
+      } else if(Array.isArray(data[i].modules) && data[i].modules.length) {
+        recursiveFn(data[i].modules, selectedNodes)
       }
     }
   }
