@@ -411,11 +411,11 @@ export const calcGroupPosition = (arr, components) => {
   return [xPositionList, yPositionList]
 }
 
-export const handleLayersStatus = (layers, cb) => {
+export const deepForEach = (layers, cb) => {
   layers.forEach((layer, index) => {
     cb(layer, index)
     if (COMPONENTS in layer) {
-      handleLayersStatus(layer[COMPONENTS], cb)
+      deepForEach(layer[COMPONENTS], cb)
     }
   })
 }
