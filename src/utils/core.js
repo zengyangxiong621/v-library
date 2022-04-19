@@ -14,7 +14,6 @@ export const newDynamic = (app, models, component) => {
  * @param {func} routesConfig
  */
 export const createRoutes = (app, routesConfig) => {
-  console.log('createRoutes------------')
     const routes = routesConfig(app)
     .map(config => createRoute(app, () => config))
     .reduce((p, n) => {
@@ -56,7 +55,6 @@ export const createRoute = (app, routerConfig) => {
   const routePorps = Object.assign({
     key: path || '/404',
     render: props => {
-      console.log(otherProps, props, 'core.js-------------')
       return <Comp routerData={otherProps} {...props} />
     }
   },
