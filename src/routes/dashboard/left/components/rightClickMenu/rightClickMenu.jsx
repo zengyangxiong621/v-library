@@ -4,6 +4,7 @@ import './rightClickMenu.less'
 import {
   getFieldStates,
 } from "../../../../../utils/sideBar";
+import { IconFont } from '../../../../../utils/useIcon'
 import SecondMenu from './secondMenu'
 
 import { connect } from 'dva'
@@ -119,7 +120,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     <div className='RightClickMenu-wrap' ref={menuRef}>
       {
         menuOptions.map((item, index) => {
-          const { hasLevel } = item
+          const  hasLevel  = item.children && item.children.length && Array.isArray(item.children)
           return (
             <div
               key={index}
@@ -135,8 +136,8 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
                 (item.key === 'lock' && isLock) ||
                   (item.key === 'singleShowLayer' && isSingleShow) ||
                   (item.key === 'hidden' && !isShowOrHidden)
-                  ? React.createElement(Icons[item.anotherIcon])
-                  : React.createElement(Icons[item.icon])
+                  ? <IconFont  type={`icon-${item.anotherIcon}`}/>
+                  : <IconFont  type={`icon-${item.icon}`}/>
               }
               <li className={`menu-item-li`}>
                 {

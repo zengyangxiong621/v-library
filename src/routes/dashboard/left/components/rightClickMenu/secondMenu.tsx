@@ -2,6 +2,8 @@ import React, { memo } from 'react'
 import * as Icons from '@ant-design/icons'
 import './secondMenu.less'
 
+import { IconFont } from '../../../../../utils/useIcon'
+
 import { connect } from 'dva'
 
 const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
@@ -26,9 +28,7 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
               className={`second-menu-item ${item.children && 'li-hover'}`}
               onClickCapture={() => secondMenuItemClick(item.key)}
             >
-              {
-                React.createElement((Icons as any)[item.icon])
-              }
+              <IconFont type={`icon-${item.icon}`} />
               <div className='second-menu-item-li'>
                 {
                   item.name

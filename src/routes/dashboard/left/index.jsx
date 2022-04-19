@@ -293,45 +293,6 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   return (
     <div className='left-menu'>
-      <button onClick={() => dispatch({
-        type: 'bar/addComponent',
-        payload: {
-          insertId: '1514070775583035393'
-        }
-      })}>新增</button>
-      <button onClick={() => dispatch({
-        type: 'bar/update',
-        payload: {
-        }
-      })}>update</button>
-      <button onClick={() => {
-        const l = bar.key.map((item) => {
-          return {
-            id: item,
-            children: []
-          }
-        })
-        dispatch({
-          type: 'bar/delete',
-          payload: {
-            dashboardId: '1513702962304577537',
-            layers: l
-          }
-        })
-      }}>删除</button>
-      <button onClick={() => dispatch({
-        type: 'bar/copy',
-        payload: {
-          dashboardId: '1513702962304577537',
-          children: [],
-          targetDashboardId: '1513702962304577537',
-          insertId: '1514185900319133697',
-          originLayers: bar.treeData,
-          modules: [...bar.key],
-          panels: [],
-          selected: [...bar.key]
-        }
-      })}>复制</button>
       <div className="left-wrap">
         <div className="header" ref={headerRef}>
           <header className="header-text">图层</header>
