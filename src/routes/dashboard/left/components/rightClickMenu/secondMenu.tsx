@@ -2,6 +2,8 @@ import React, { memo } from 'react'
 import * as Icons from '@ant-design/icons'
 import './secondMenu.less'
 
+import { IconFont } from '../../../../../utils/useIcon'
+
 import { connect } from 'dva'
 
 const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
@@ -26,16 +28,14 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
               className={`second-menu-item ${item.children && 'li-hover'}`}
               onClickCapture={() => secondMenuItemClick(item.key)}
             >
-              {
-                React.createElement((Icons as any)[item.icon])
-              }
+              <IconFont style={{ fontSize: '12px' }} type={`icon-${item.icon}`} />
               <div className='second-menu-item-li'>
                 {
                   item.name
                 }
                 {/* //TODO 递归组件样式需要隔离开 */}
                 {
-                  (item.children && item.children.length>0) && <SecondMenu data={item.children}></SecondMenu>
+                  (item.children && item.children.length > 0) && <SecondMenu data={item.children}></SecondMenu>
                 }
                 {/* 右三角图标 */}
                 {

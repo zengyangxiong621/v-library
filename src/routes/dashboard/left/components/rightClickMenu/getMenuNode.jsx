@@ -1,7 +1,7 @@
 import React from 'react'
 import { Menu } from 'antd'
 
-import * as Icons from '@ant-design/icons'
+import { IconFont } from '../../../../../utils/useIcon'
 
 const { SubMenu, Item } = Menu
 
@@ -12,14 +12,14 @@ const generateSubMenu = (arr) => {
         ?
         <SubMenu
           theme='dark'
-          icon={React.createElement(Icons[item.icon])}
+          icon={<IconFont type={`icon-${item.icon}`} />}
           title={item.name}>
           {
             generateSubMenu(item.children)
           }
         </SubMenu>
         :
-        <Item icon={React.createElement(Icons[item.icon])}>{item.name}</Item>
+        <Item icon={<IconFont type={`icon-${item.icon}`} />}>{item.name}</Item>
     )
   })
 }

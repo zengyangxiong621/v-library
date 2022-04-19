@@ -6,7 +6,6 @@ import { IconFont } from '../../../utils/useIcon'
 interface IProps {
   width?: string | number,
   height?: string | number,
-  srcUrl?: string,
   srcUrlArr: string[],
   curIndex: number,
 }
