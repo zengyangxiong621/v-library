@@ -5,5 +5,5 @@ const routesConfig = (app: any) => ({
   title: '我的可视化',
   component: newDynamic(app, [], () => import('./myDashboard'))
 });
-
-export default (app: any) => createRoute(app, routesConfig);
+const Page = (app: any) => createRoute(app, routesConfig);
+export default Page

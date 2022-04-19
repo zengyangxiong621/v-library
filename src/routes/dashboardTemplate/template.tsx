@@ -7,6 +7,7 @@ import { Input, Row, Col, Modal } from 'antd'
 
 import TemplateCard from './templateCard/index'
 import Preview from './preview/index'
+import DarkModal from '../myDashboard/components/darkThemeModal/index'
 
 const DashboardTemplate = (props: any) => {
   const { history } = props
@@ -27,7 +28,7 @@ const DashboardTemplate = (props: any) => {
 
   const addTemplate = () => {
     //TODO 携带id 跳转至 新建模板 页面
-    history.push('/')
+    // history.push('/')
   }
 
   // 获取当前需要预览的模板 的index
