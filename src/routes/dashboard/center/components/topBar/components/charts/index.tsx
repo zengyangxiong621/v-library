@@ -41,7 +41,7 @@ const Charts = (props: any) => {
         ChartDataMap[helplessMapping[type]] = data.content
       }
       for await (let item of chartTypes) {
-        await getData(item)
+        // await getData(item)
       }
     }
     init()

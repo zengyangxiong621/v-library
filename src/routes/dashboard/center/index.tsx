@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-19 11:44:40
- * @LastEditTime: 2022-04-19 17:24:04
+ * @LastEditTime: 2022-04-19 19:03:27
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \v-library\src\routes\dashboard\center\index.tsx
@@ -197,35 +197,7 @@ const Center = ({ bar, dispatch }: any) => {
         }
       })
     } else {
-      const xSpacingArr: number[] = [0]
-      const ySpacingArr: number[] = [0]
-      const xSortComponents: any = bar.selectedComponents.sort((a: any, b: any) => 
-        a.config.find((config: any) => config.name === DIMENSION).value.find((config: any)  => config.name === LEFT).value - 
-        b.config.find((config: any) => config.name === DIMENSION).value.find((config: any)  => config.name === LEFT).value
-      )
-      const ySortComponents: any = bar.selectedComponents.sort((a: any, b: any) => 
-        a.config.find((config: any) => config.name === DIMENSION).value.find((config: any)  => config.name === LEFT).value -
-        b.config.find((config: any) => config.name === DIMENSION).value.find((config: any)  => config.name === LEFT).value
-     )
-      xSortComponents.reduce((pre: number, cur: any) => {
-        const dimensionConfig = cur.config.find((config: any) => config.name === DIMENSION).value
-        const left = dimensionConfig.find((config: any)  => config.name === LEFT).value
-        const width = dimensionConfig.find((config: any)  => config.name === WIDTH).value
-        if (pre !== 0) {
-          xSpacingArr.push(left - pre)
-        }
-        return left + width
-      }, 0)
-      ySortComponents.reduce((pre: number, cur: any) => {
-        const dimensionConfig = cur.config.find((config: any) => config.name === DIMENSION).value
-        const top = dimensionConfig.find((config: any)  => config.name === TOP).value
-        const height = dimensionConfig.find((config: any)  => config.name === HEIGHT).value
-        if (pre !== 0) {
-          ySpacingArr.push(top - pre)
-        }
-        return top + height
-      }, 0)
-      xSortComponents.reduce((space: number, component: any, cIndex: number) => {
+      bar.selectedComponents.forEach((component: any, cIndex: number) => {
         const dimensionConfig = component.config.find((config: any) => config.name === DIMENSION).value
         const data = dimensionConfig.reduce((pre: any, cur: any) => {
           if(Array.isArray(cur.value)) {
@@ -243,38 +215,52 @@ const Center = ({ bar, dispatch }: any) => {
           return pre
         }, {})
         dimensionConfig.forEach((config: any) => {
-          if(config.name === LEFT) {
-            console.log('-------------')
-            console.log('item', component.name)
-            console.log('之前的宽度', data.width)
-            console.log('现在的宽度', data.width / (lastWidth / width))
-            console.log('距离', data.width / (lastWidth / width) - data.width)
-            console.log('应该移动', (1 - data.width / lastWidth) * (width - lastWidth))
-            console.log('边界x', lastX)
-            console.log('之前的 x', config.value)
-            console.log('index', cIndex)
-            if(config.value === lastX) {
-
-            } else {
-              console.log('xSpacingArr', xSpacingArr)
-              console.log('距离上一个组件的距离', xSpacingArr[cIndex])
-              console.log('现在距离上一个组件的距离', (xSpacingArr[cIndex] / (lastWidth / width)))
-              console.log('space', space)
-              console.log('-------------')
-              config.value = space + (xSpacingArr[cIndex] / (lastWidth / width))
-              data.left = config.value
+          if (x === lastX) {
+            if(config.name === LEFT) {
+              if(config.value !== lastX) {
+                // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
+                config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
+                data[LEFT] = config.value
+              }
+            }
+          } else {
+            if(config.name === LEFT) {
+              if(config.value === lastX) {
+                config.value = x
+              } else {
+                // 因为是缩放左侧，所以缩放组件右侧的 x + width 的值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
+                config.value = x + ((data[LEFT] - lastX) / (lastWidth / width))
+              }
             }
           }
+
+          if (y === lastY) {
+            if(config.name === TOP) {
+              if(config.value !== lastY) {
+                config.value = lastY + ((data[TOP] - lastY) / (lastHeight / height))
+                data[TOP] = config.value
+              }
+            }
+          } else {
+            if(config.name === TOP) {
+              if(config.value === lastY) {
+                config.value = y
+              } else {
+                config.value = y + ((data[TOP] - lastY) / (lastHeight / height))
+              }
+            }
+          }
+
           if(config.name === WIDTH) {
             config.value = config.value / (lastWidth / width)
-            data.width = config.value
-          } else if(config.name === TOP) {
-
+            data[WIDTH] = config.value
+          }
+          if(config.name === HEIGHT) {
+            config.value = config.value / (lastHeight / height)
+            data[HEIGHT] = config.value
           }
         })
-        console.log('pre', data.left + data.width)
-        return data.left + data.width
-      }, 0)
+      })
       calcScaleAfterComponentsConfig()
     }
     dispatch({

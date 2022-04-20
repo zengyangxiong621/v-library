@@ -443,12 +443,8 @@ const CustomDraggable
           if(COMPONENTS in layer) {
             group = layer
             let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components)
-            xPositionList = xPositionList.sort((a, b) => {
-              return a - b
-            })
-            yPositionList = yPositionList.sort((a, b) => {
-              return a - b
-            })
+            xPositionList = xPositionList.sort((a, b) => a - b)
+            yPositionList = yPositionList.sort((a, b) => a - b)
             config = {
               position: {
                 x: xPositionList[0],
