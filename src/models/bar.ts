@@ -39,7 +39,7 @@ import {
 import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
-import {  http } from './utils/request'
+import { http } from './utils/request'
 
 interface IBarState {
   key: string[];
@@ -2053,8 +2053,8 @@ export default {
       })
     },
     // 更改图层组织
-    * update({ payload }: any, { call, put }: any) {
-      const { data } = yield http({
+    * update({ payload }: any, { select, call, put }: any): any {
+      const layers = yield http({
         url: '/visual/layer/update',
         method: 'post',
         body: {
@@ -2062,22 +2062,21 @@ export default {
           layers: payload,
         },
       })
-      console.log('data', data)
       yield put({
         type: 'updateTree',
-        payload: data,
+        payload: layers,
       })
     },
     // 修改图层属性图层
-    * change({ payload }: any, { call, put }: any) {
-      const { data } = yield http({
+    * change({ payload }: any, { call, put }: any): any {
+      const layers = yield http({
         url: '/visual/layer/change',
         method: 'post',
         body: payload,
       })
       yield put({
         type: 'updateTree',
-        payload: data,
+        payload: layers,
       })
     },
     // 添加组件到画布
@@ -2095,20 +2094,19 @@ export default {
     },
     // 删除图层、分组
     * delete({ payload }: any, { select, call, put }: any): any {
-      const { data } = yield http({
+      const layers = yield http({
         url: '/visual/layer/delete',
         method: 'delete',
         body: payload,
       })
-      console.log('删除接口返回的data', data)
       yield put({
         type: 'updateTree',
-        payload: data,
+        payload: layers,
       })
     },
     // 复制图层
     * copy({ payload }: any, { select, call, put }: any): any {
-      const { data: { layers } } = yield http({
+      const { layers, components } = yield http({
         url: '/visual/layer/copy',
         method: 'post',
         body: payload,
@@ -2116,6 +2114,10 @@ export default {
       yield put({
         type: 'updateTree',
         payload: layers,
+      })
+      yield put({
+        type: 'addComponent',
+        payload: components,
       })
     },
     * fetch({ payload }: any, { call, put }: any): any {
@@ -2175,7 +2177,6 @@ export default {
     },
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
-      console.log('payloaddddddddddd', payload)
       return { ...state, treeData: payload }
     },
     // 添加新的图层和组件
@@ -2183,6 +2184,11 @@ export default {
       debugger
       generateLayers(state.treeData, payload.insertId, payload.final)
       console.log('新增后的treeData', state.treeData)
+      return { ...state }
+    },
+    // 添加新的图层和组件
+    addComponent(state: IBarState, { payload }: any) {
+      state.components = state.components.concat(payload)
       return { ...state }
     },
     selectedNode(state: IBarState, { payload }: any) {
