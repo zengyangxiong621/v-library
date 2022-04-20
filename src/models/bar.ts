@@ -1966,17 +1966,369 @@ export default {
   effects: {
     * getDashboardDetails({ payload }: any, { call, put, select }: any) {
       try {
-        const {
-          layers,
-          components,
-        } = yield http({
-          url: '/visual/application/dashboard/detail/1513702962304577537',
-          method: 'get',
-        })
+        // const {
+        //   layers,
+        //   components,
+        // } = yield http({
+        //   url: '/visual/application/dashboard/detail/1513702962304577537',
+        //   method: 'get',
+        // })
+        const components = [
+          {
+            'id': '1516684854008651778',
+            'name': '单一config的组件1',
+            'moduleName': 'hasConfig-component-4',
+            'moduleVersion': 'hasConfig-v-1.1',
+            'config': [
+              {
+                'displayName': '位置尺寸',
+                'name': 'dimension',
+                'type': 'dimensionGroup',
+                'config': {
+                  'lock': false,
+                },
+                'value': [
+                  {
+                    'displayName': 'X轴坐标',
+                    'name': 'left',
+                    'type': 'number',
+                    'value': 1106,
+                    'config': {
+                      'suffix': 'X',
+                    },
+                  },
+                  {
+                    'displayName': 'Y轴坐标',
+                    'name': 'top',
+                    'type': 'number',
+                    'value': 461,
+                    'config': {
+                      'suffix': 'Y',
+                    },
+                  },
+                  {
+                    'displayName': '宽度',
+                    'name': 'width',
+                    'type': 'number',
+                    'value': 100,
+                    'config': {
+                      'suffix': 'W',
+                    },
+                  },
+                  {
+                    'displayName': '高度',
+                    'name': 'height',
+                    'type': 'number',
+                    'value': 100,
+                    'config': {
+                      'suffix': 'H',
+                    },
+                  },
+                ],
+              },
+              {
+                'displayName': '默认隐藏',
+                'name': 'hideDefault',
+                'type': 'checkBox',
+                'value': false,
+              },
+              {
+                'displayName': '文本样式',
+                'name': 'textStyle',
+                'type': 'textFullStyleGroup',
+                'value': [
+                  {
+                    'displayName': '',
+                    'name': 'fontFamily',
+                    'value': 'Microsoft Yahei',
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'fontSize',
+                    'value': 32,
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'color',
+                    'type': 'color',
+                    'value': '#000',
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'bold',
+                    'value': false,
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'italic',
+                    'value': false,
+                  },
+                  {
+                    'displayName': '字距',
+                    'name': 'letterSpacing',
+                    'value': 0,
+                  },
+                  {
+                    'displayName': '行距',
+                    'name': 'lineHeight',
+                    'value': 'unset',
+                  },
+                ],
+              },
+              {
+                'displayName': '对齐方式',
+                'name': 'align',
+                'type': 'alignFull',
+                'value': [
+                  {
+                    'displayName': '水平对齐',
+                    'name': 'textAlign',
+                    'type': 'align',
+                    'value': 'left',
+                  },
+                  {
+                    'displayName': '垂直对齐',
+                    'name': 'textVertical',
+                    'type': 'vertical',
+                    'value': 'top',
+                  },
+                ],
+              },
+              {
+                'hasSwitch': true,
+                'defaultExpand': true,
+                'displayName': '阴影',
+                'name': 'shadow',
+                'type': 'collapse',
+                'value': [
+                  {
+                    'displayName': '',
+                    'name': 'show',
+                    'type': 'switch',
+                    'value': true,
+                  },
+                  {
+                    'displayName': '外阴影',
+                    'name': 'shadow',
+                    'type': 'boxShadow',
+                    'value': {
+                      'color': '#0075FF',
+                      'hShadow': 0,
+                      'blur': 8,
+                      'vShadow': 0,
+                    },
+                  },
+                ],
+              },
+            ],
+            'dataConfig': {},
+            'autoUpdate': {},
+            'dataType': '',
+            'staticData': {},
+            'events': [],
+            'triggers': [],
+            'useFilter': false,
+            'filters': [],
+            'actions': [],
+            'parent': null,
+            'dashboardId': '1513702962304577537',
+            'dataContainers': [],
+          }, {
+            'id': '1516684864750264321',
+            'name': '单一config的组件2',
+            'moduleName': 'hasConfig-component-4',
+            'moduleVersion': 'hasConfig-v-1.1',
+            'config': [
+              {
+                'displayName': '位置尺寸',
+                'name': 'dimension',
+                'type': 'dimensionGroup',
+                'config': {
+                  'lock': false,
+                },
+                'value': [
+                  {
+                    'displayName': 'X轴坐标',
+                    'name': 'left',
+                    'type': 'number',
+                    'value': 1106,
+                    'config': {
+                      'suffix': 'X',
+                    },
+                  },
+                  {
+                    'displayName': 'Y轴坐标',
+                    'name': 'top',
+                    'type': 'number',
+                    'value': 461,
+                    'config': {
+                      'suffix': 'Y',
+                    },
+                  },
+                  {
+                    'displayName': '宽度',
+                    'name': 'width',
+                    'type': 'number',
+                    'value': 100,
+                    'config': {
+                      'suffix': 'W',
+                    },
+                  },
+                  {
+                    'displayName': '高度',
+                    'name': 'height',
+                    'type': 'number',
+                    'value': 100,
+                    'config': {
+                      'suffix': 'H',
+                    },
+                  },
+                ],
+              },
+              {
+                'displayName': '默认隐藏',
+                'name': 'hideDefault',
+                'type': 'checkBox',
+                'value': false,
+              },
+              {
+                'displayName': '文本样式',
+                'name': 'textStyle',
+                'type': 'textFullStyleGroup',
+                'value': [
+                  {
+                    'displayName': '',
+                    'name': 'fontFamily',
+                    'value': 'Microsoft Yahei',
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'fontSize',
+                    'value': 32,
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'color',
+                    'type': 'color',
+                    'value': '#000',
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'bold',
+                    'value': false,
+                  },
+                  {
+                    'displayName': '',
+                    'name': 'italic',
+                    'value': false,
+                  },
+                  {
+                    'displayName': '字距',
+                    'name': 'letterSpacing',
+                    'value': 0,
+                  },
+                  {
+                    'displayName': '行距',
+                    'name': 'lineHeight',
+                    'value': 'unset',
+                  },
+                ],
+              },
+              {
+                'displayName': '对齐方式',
+                'name': 'align',
+                'type': 'alignFull',
+                'value': [
+                  {
+                    'displayName': '水平对齐',
+                    'name': 'textAlign',
+                    'type': 'align',
+                    'value': 'left',
+                  },
+                  {
+                    'displayName': '垂直对齐',
+                    'name': 'textVertical',
+                    'type': 'vertical',
+                    'value': 'top',
+                  },
+                ],
+              },
+              {
+                'hasSwitch': true,
+                'defaultExpand': true,
+                'displayName': '阴影',
+                'name': 'shadow',
+                'type': 'collapse',
+                'value': [
+                  {
+                    'displayName': '',
+                    'name': 'show',
+                    'type': 'switch',
+                    'value': true,
+                  },
+                  {
+                    'displayName': '外阴影',
+                    'name': 'shadow',
+                    'type': 'boxShadow',
+                    'value': {
+                      'color': '#0075FF',
+                      'hShadow': 0,
+                      'blur': 8,
+                      'vShadow': 0,
+                    },
+                  },
+                ],
+              },
+            ],
+            'dataConfig': {},
+            'autoUpdate': {},
+            'dataType': '',
+            'staticData': {},
+            'events': [],
+            'triggers': [],
+            'useFilter': false,
+            'filters': [],
+            'actions': [],
+            'parent': null,
+            'dashboardId': '1513702962304577537',
+            'dataContainers': [],
+          },
+        ]
+        const layers = [
+          {
+            'isLock': false,
+            'isFolder': true,
+            'singleShowLayer': false,
+            'name': '分组',
+            'icon': 'SmileOutlined',
+            'id': 'group_1650442017394',
+            'title': '分组',
+            'modules': [
+              {
+                'isLock': false,
+                'hover': false,
+                'name': '单一config的组件1',
+                'moduleName': 'hasConfig-component-4',
+                'id': '1516684854008651778',
+                'selected': true,
+                'isShow': true,
+              },
+              {
+                'isLock': false,
+                'name': '单一config的组件2',
+                'moduleName': 'hasConfig-component-4',
+                'id': '1516684864750264321',
+                'selected': true,
+                'isShow': true,
+              },
+            ],
+            'isShow': true,
+          },
+        ]
         yield put({
           type: 'save',
           payload: {
-            treeData: layers,
+            // treeData: layers,
             components,
           },
         })
@@ -2211,9 +2563,6 @@ export default {
         },
         [],
       )
-      console.log('----------------')
-      console.log('selectedComponentOrGroup', state.selectedComponentOrGroup)
-      console.log('----------------')
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
