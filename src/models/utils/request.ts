@@ -1,6 +1,25 @@
 import { message } from 'antd'
 import qs from 'qs'
 
+const defaultOptions: any = {
+  method: 'post',
+  mode: 'cors',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}
+export const myFetch = (
+  url: string,
+  options: object,
+  baseUrl: string = 'http://10.200.252.109:9572',
+  // baseUrl: string = "http://50423059pd.zicp.vip"
+) => {
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+  }
+  return fetch(`${ baseUrl }${ url }`, finalOptions).then((res) => res.json())
+}
 const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === '[object Object]'
 }
@@ -31,7 +50,6 @@ export const http = (config: any): any => {
 
   if(isPlainObject(body)) {
     body = JSON.stringify(body)
-    console.log('body', body)
     // 'Content-Type': 'application/json',
     // headers['Content-Type'] = 'application/x-www-form-urlencoded'
     headers['Content-Type'] = 'application/json'
@@ -50,7 +68,8 @@ export const http = (config: any): any => {
     cache: 'no-cache',
     mode: 'cors',
   }
-  if(/^(POST|PUT|PATCH)$/i.test(method) && body) config.body = body
+  // if(/^(POST|PUT|PATCH)$/i.test(method) && body) config.body = body
+  config.body = body
   if(signal) config.signal = signal
   return fetch(url, config).then(response => {
     // 成功则返回响应主体信息
@@ -79,6 +98,7 @@ export const http = (config: any): any => {
     return result.then((response) => {
       const { code, data } = response
       if(code === 10000) {
+        console.log('data', data)
         return Promise.resolve(data)
       } else {
         return Promise.reject(response)

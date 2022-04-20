@@ -17,7 +17,7 @@ import {
 
 const codeData = {
   readOnly: false,
-  language: 'javascript', 
+  language: 'javascript',
   value: `function onLoad(editor) {
     console.log("i've loaded");
   }`,
@@ -60,18 +60,29 @@ const staticData = {
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
-  const [drawerVisible,setDrawerVisible] = useState(false)
+  const [drawerVisible, setDrawerVisible] = useState(false)
+  const [filterFlag, setFilterFlag] = useState(false)
+  const [filters, setFilters] = useState([])
 
   const settingsChange = () => {
 
   }
 
-  const addDataFilters = () => {
+  const filterBoxChange = e => {
+    console.log('e', e)
+    setFilterFlag(e.target.checked)
+  }
+
+  const showFilterDrawer = () => {
     setDrawerVisible(true)
   }
 
   const drawerClose = () => {
     setDrawerVisible(false)
+  }
+
+  const drawerSave = filters => {
+    setFilters(filters)
   }
 
   return (
@@ -96,8 +107,13 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
           </div>
         </div>
         <div className="data-footer">
-          <Checkbox onClick={addDataFilters}>数据过滤器</Checkbox>
-          <Button onClick={addDataFilters} icon={<PlusOutlined />}>添加过滤器</Button>
+          <Checkbox defaultChecked={filterFlag} onChange={filterBoxChange}>数据过滤器</Checkbox>
+          {filters.length
+            ?
+            <span disabled={!filterFlag} className="filter-num" onClick={showFilterDrawer}>已添加{filters.length}个过滤器</span>
+            :
+            <Button disabled={!filterFlag} onClick={showFilterDrawer} icon={<PlusOutlined />}>添加过滤器</Button>
+          }
         </div>
       </div>
       <div className="data-config">
@@ -114,6 +130,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       <DataConfigDrawer
         visible={drawerVisible}
         onClose={drawerClose}
+        onSave={drawerSave}
       />
     </React.Fragment>
   )
