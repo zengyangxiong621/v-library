@@ -1,26 +1,6 @@
 import { message } from 'antd'
 import qs from 'qs'
 
-const defaultOptions: any = {
-  method: 'post',
-  mode: 'cors',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-}
-export const myFetch = (
-  url: string,
-  options: object,
-  baseUrl: string = 'http://10.200.252.109:9572',
-  // baseUrl: string = "http://50423059pd.zicp.vip"
-) => {
-  const finalOptions = {
-    ...defaultOptions,
-    ...options,
-  }
-  return fetch(`${ baseUrl }${ url }`, finalOptions).then((res) => res.json())
-}
-
 const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === '[object Object]'
 }
@@ -46,9 +26,15 @@ export const http = (config: any): any => {
   if(params) url += `${ url.includes('?') ? '&' : '?' }${ qs.stringify(params) }`
   url = baseUrl + url
   // 处理请求主体:只针对于POST系列请求；body是个纯粹对象，根据当前后台要求，把其变为urlencoded格式！
+  console.log('---------------------')
+  console.log('body', body)
+
   if(isPlainObject(body)) {
-    body = qs.stringify(body)
-    headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    body = JSON.stringify(body)
+    console.log('body', body)
+    // 'Content-Type': 'application/json',
+    // headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    headers['Content-Type'] = 'application/json'
   }
 
   // 类似于Axios的请求拦截器，例如：把存储在客户端本地的token信息携带给服务器「根据当前后台要求处理」
