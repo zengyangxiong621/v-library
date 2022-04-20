@@ -4,6 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import debounce from 'lodash/debounce';
 
 import {
+  sortableContainer,
+  sortableElement,
+  sortableHandle,
+} from 'react-sortable-hoc';
+
+import {
   Drawer,
   Form,
   Button,
@@ -66,17 +72,17 @@ const DataConfigDrawer = props => {
 
   const [visible, setVisible] = useState(props.visible)
   const [filters, setFilters] = useState(cfilters)
-  const [currentFilter,setCurrentFilter] = useState(null)
+  const [currentFilter, setCurrentFilter] = useState(null)
   const [isModalVisible, setModalVisible] = useState(false)
-  const [isEdit,setEdit] = useState(false)
+  const [isEdit, setEdit] = useState(false)
 
   useEffect(() => {
     setVisible(props.visible)
   }, [props.visible])
 
   useEffect(() => {
-    const flag = filters.find(item=>item.status === 1)
-    if(flag){
+    const flag = filters.find(item => item.status === 1)
+    if (flag) {
       setEdit(true)
     }
   }, [filters])
@@ -113,13 +119,15 @@ const DataConfigDrawer = props => {
     <React.Fragment>
       {
         filter.isEditName ?
-          <Input style={{ width: '84px', float: 'left' }}
-            className="cus-input"
-            placeholder={filter.name}
-            defaultValue={filter.name}
-            onChange={e => editName(e, filter)}
-            onClick={e => e.stopPropagation()}
-          />
+          <React.Fragment>
+            <Input style={{ width: '84px', float: 'left' }}
+              className="cus-input"
+              placeholder={filter.name}
+              defaultValue={filter.name}
+              onChange={e => editName(e, filter)}
+              onClick={e => e.stopPropagation()}
+            />
+          </React.Fragment>
           :
           <React.Fragment>
             <span>{filter.name}</span>
@@ -214,7 +222,7 @@ const DataConfigDrawer = props => {
 
   const confirmFilter = (item) => {
     // TODO 保存接口
-    item.status =0
+    item.status = 0
     const all = [...filters]
     setFilters(all)
     props.onSave(filters)
@@ -242,6 +250,89 @@ const DataConfigDrawer = props => {
     form.setFieldsValue({ field: '' })
   }
 
+  const arrayMove = (array, from, to) => {
+    array = array.slice();
+    array.splice(to < 0 ? array.length + to : to, 0, array.splice(from, 1)[0]);
+    return array;
+  }
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    console.log('oldIndex, newIndex', oldIndex, newIndex)
+    const all = [...filters]
+    const newFifters = arrayMove(all, oldIndex, newIndex)
+    setFilters(newFifters)
+
+    // TODO: saves
+  };
+
+  const DragHandle = sortableHandle(() => <span className="sort-dot">::</span>);
+
+  const SortableContainer = sortableContainer(({ children }) => {
+    return <ul className="sort-wraper">{children}</ul>;
+  });
+
+  const SortableItem = sortableElement(({ item }) => (
+    <li className="fifter-sort-item">
+      <DragHandle />
+      <Collapse
+        accordion
+        key={item.id}
+        className="custom-collapse">
+        <Panel header={genHeader(item)} key={item.id} extra={genExtra(item.id)}>
+          <div className="filter-wraper">
+            <div className="header">
+              <span className="fif-title">回调字段</span>
+              <Button ghost type="primary" onClick={() => { addCallBack(item) }}>添加回调</Button>
+            </div>
+            <div className="body">
+              <Tabs
+                hideAdd
+                defaultActiveKey={item.callbacks.length ? item.callbacks[0].id : null}
+                type="editable-card"
+                onEdit={(key, action) => tabEdit(key, action, item)}
+              >
+                {item.callbacks.map(pane => (
+                  <TabPane tab={pane.name} key={pane.id}>
+                    <div className="code-editor">
+                      <div className="cus-code">{`function filter(data){`}</div>
+                      <div className="code-wraper">
+                        <AceEditor
+                          mode='javascript'
+                          theme="twilight"
+                          onChange={e => codeChange(e, pane, item)}
+                          name={uuidv4()}
+                          editorProps={{ $blockScrolling: true }}
+                          value={pane.code}
+                          setOptions={{
+                            enableBasicAutocompletion: true,
+                            enableLiveAutocompletion: true,
+                            enableSnippets: true,
+                            showGutter: true,
+                          }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </div>
+                      <div className="cus-code">{`}`}</div>
+                    </div>
+                  </TabPane>
+                ))}
+              </Tabs>
+            </div>
+            <div className="bottom">
+              <p className={['status', item.status === 0 ? 'saved' : 'unsave'].join(' ')}>
+                {item.status === 0 ? '已保存' : '未保存'}
+              </p>
+              <div className="btn-group">
+                <Button ghost onClick={() => { resetFilter(item) }} style={{ marginRight: '8px' }}>取消</Button>
+                <Button type="primary" onClick={() => { confirmFilter(item) }}>确认</Button>
+              </div>
+            </div>
+          </div>
+        </Panel>
+      </Collapse>
+    </li>
+  ));
+
   return (
     <Drawer
       title="数据过滤器"
@@ -263,66 +354,11 @@ const DataConfigDrawer = props => {
         </Select>
         <Button disabled={isEdit} type="primary" onClick={addFilter}>添加条件</Button>
       </div>
-      {filters.map((item) => {
-        return (
-          <Collapse
-            accordion
-            key={item.id}
-            className="custom-collapse">
-            <Panel header={genHeader(item)} key={item.id} extra={genExtra(item.id)}>
-              <div className="filter-wraper">
-                <div className="header">
-                  <span className="fif-title">回调字段</span>
-                  <Button ghost type="primary" onClick={() => { addCallBack(item) }}>添加回调</Button>
-                </div>
-                <div className="body">
-                  <Tabs
-                    hideAdd
-                    defaultActiveKey={item.callbacks.length ? item.callbacks[0].id : null}
-                    type="editable-card"
-                    onEdit={(key, action) => tabEdit(key, action, item)}
-                  >
-                    {item.callbacks.map(pane => (
-                      <TabPane tab={pane.name} key={pane.id}>
-                        <div className="code-editor">
-                          <div className="cus-code">{`function filter(data){`}</div>
-                          <div className="code-wraper">
-                            <AceEditor
-                              mode='javascript'
-                              theme="twilight"
-                              onChange={e => codeChange(e, pane, item)}
-                              name={uuidv4()}
-                              editorProps={{ $blockScrolling: true }}
-                              value={pane.code}
-                              setOptions={{
-                                enableBasicAutocompletion: true,
-                                enableLiveAutocompletion: true,
-                                enableSnippets: true,
-                                showGutter: true,
-                              }}
-                              style={{ width: '100%', height: '100%' }}
-                            />
-                          </div>
-                          <div className="cus-code">{`}`}</div>
-                        </div>
-                      </TabPane>
-                    ))}
-                  </Tabs>
-                </div>
-                <div className="bottom">
-                  <p className={['status', item.status === 0 ? 'saved' : 'unsave'].join(' ')}>
-                    {item.status === 0 ? '已保存' : '未保存'}
-                  </p>
-                  <div className="btn-group">
-                    <Button ghost onClick={() => { resetFilter(item) }} style={{ marginRight: '8px' }}>取消</Button>
-                    <Button type="primary" onClick={() => { confirmFilter(item) }}>确认</Button>
-                  </div>
-                </div>
-              </div>
-            </Panel>
-          </Collapse>
-        )
-      })}
+      <SortableContainer onSortEnd={onSortEnd} useDragHandle>
+        {filters.map((item, index) => (
+          <SortableItem key={item.id} index={index} item={item} />
+        ))}
+      </SortableContainer>
       <Modal
         title="添加回调"
         visible={isModalVisible}
