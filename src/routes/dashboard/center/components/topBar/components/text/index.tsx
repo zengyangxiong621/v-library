@@ -13,6 +13,7 @@ const mapStateToProps = (state: any) => {
 }
 
 const componentCreate = ({ dispatch }: any) => {
+  console.log(dispatch, '===============================================')
   dispatch({
     type: 'dashboard/create',
     payload: {
@@ -26,16 +27,15 @@ const Text = (props: any) => {
   useEffect(() => {
     const init = async () => {
       const getData = async () => {
-        const { data }: any = await myFetch('/visual/modules/queryModuleList', {
+        const { data }: any = await myFetch('/visual/module-manage/queryModuleList', {
           body: JSON.stringify({
-            type: 1,
+            type: [0],
             status: 0,
-            pageNo: 1,
+            pageNo: 0,
             pageSize: 100,
           })
         })
         data.content.push({ name: 'cccccccc' })
-        console.log('sssssdata', data.content);
         setDataArr(data.content)
         setTimeout(() => {
           console.log('变量变量');
@@ -54,7 +54,7 @@ const Text = (props: any) => {
       {
         dataArr.map((item: any, index: number) => {
           return (
-            <EveryItem data={item} onClickFunc={() => componentCreate(props)} />
+            <EveryItem data={item} />
           )
         })
       }

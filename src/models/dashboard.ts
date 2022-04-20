@@ -1,7 +1,9 @@
+import { myFetch } from './utils/request'
+
 export default {
   namespace: 'dashboard',
   state: {
-    test: '00000'
+    modules: {}
   },
   reducers: {
     componentCreate(state: any, action: any) {
@@ -12,6 +14,7 @@ export default {
   },
   effects: {
     *create(action: any, { call, put, select}: any) {
+      console.log(action, 'action=============================')
       yield put({
         type: 'componentCreate',
         payload: action.payload

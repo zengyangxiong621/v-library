@@ -29,9 +29,9 @@ const Charts = (props: any) => {
   useEffect(() => {
     const init = async () => {
       const getData = async (type: string) => {
-        const { data }: any = await myFetch('/visual/modules/queryModuleList', {
+        const { data }: any = await myFetch('/visual/module-manage/queryModuleList', {
           body: JSON.stringify({
-            type: 0,
+            type: [0],
             subType: type,
             status: 0,
             pageNo: 1,
@@ -67,7 +67,7 @@ const Charts = (props: any) => {
         {
           ChartDataMap[active].map((item: any, index: number) => {
             return (
-              <EveryItem data={item} />
+              <EveryItem data={item} {...props}/>
             )
           })
         }
