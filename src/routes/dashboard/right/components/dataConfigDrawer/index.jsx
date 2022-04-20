@@ -62,17 +62,24 @@ const DataConfigDrawer = props => {
   const { Option } = Select;
   const { confirm } = Modal;
   const { TabPane } = Tabs;
-  const formItemLayout = {
-    labelAlign: 'left'
-  };
   const [form] = Form.useForm();
 
   const [visible, setVisible] = useState(props.visible)
   const [filters, setFilters] = useState(cfilters)
+  const [currentFilter,setCurrentFilter] = useState(null)
+  const [isModalVisible, setModalVisible] = useState(false)
+  const [isEdit,setEdit] = useState(false)
 
   useEffect(() => {
     setVisible(props.visible)
   }, [props.visible])
+
+  useEffect(() => {
+    const flag = filters.find(item=>item.status === 1)
+    if(flag){
+      setEdit(true)
+    }
+  }, [filters])
 
   const onClose = () => {
     console.log('11111')
@@ -181,26 +188,20 @@ const DataConfigDrawer = props => {
   }
 
   const addCallBack = (item) => {
-    item.callbacks.push({
-      id: uuidv4(),
-      name: '111',
-      code: `return data`,
-    })
-    item.status = 1
-    const all = [...filters]
-    setFilters(all)
+    setModalVisible(true)
+    setCurrentFilter(item)
   }
 
-  const tabEdit = (key, action,item) => {
-    console.log('key', key,action)
-    if(action === 'remove') {
-      item.callbacks = item.callbacks.filter(cb=>cb.id !== key)
+  const tabEdit = (key, action, item) => {
+    console.log('key', key, action)
+    if (action === 'remove') {
+      item.callbacks = item.callbacks.filter(cb => cb.id !== key)
     }
     const all = [...filters]
     setFilters(all)
   }
 
-  const codeChange = debounce((e, code,item) => {
+  const codeChange = debounce((e, code, item) => {
     code.code = e
     item.status = 1
     const all = [...filters]
@@ -213,6 +214,32 @@ const DataConfigDrawer = props => {
 
   const confirmFilter = (item) => {
     // TODO 保存接口
+    item.status =0
+    const all = [...filters]
+    setFilters(all)
+    props.onSave(filters)
+  }
+
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+      currentFilter.callbacks.push({
+        id: uuidv4(),
+        name: values.field,
+        code: `return data`,
+      })
+      currentFilter.status = 1
+      const all = [...filters]
+      setFilters(all)
+      setModalVisible(false)
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+  }
+
+  const handleCancel = () => {
+    setModalVisible(false)
+    form.setFieldsValue({ field: '' })
   }
 
   return (
@@ -234,7 +261,7 @@ const DataConfigDrawer = props => {
           <Option value='1' key='1'>过滤器1</Option>
           <Option value='2' key='2'>过滤器2</Option>
         </Select>
-        <Button type="primary" onClick={addFilter}>添加条件</Button>
+        <Button disabled={isEdit} type="primary" onClick={addFilter}>添加条件</Button>
       </div>
       {filters.map((item) => {
         return (
@@ -253,7 +280,7 @@ const DataConfigDrawer = props => {
                     hideAdd
                     defaultActiveKey={item.callbacks.length ? item.callbacks[0].id : null}
                     type="editable-card"
-                    onEdit={(key, action)=>tabEdit(key, action,item)}
+                    onEdit={(key, action) => tabEdit(key, action, item)}
                   >
                     {item.callbacks.map(pane => (
                       <TabPane tab={pane.name} key={pane.id}>
@@ -263,7 +290,7 @@ const DataConfigDrawer = props => {
                             <AceEditor
                               mode='javascript'
                               theme="twilight"
-                              onChange={e => codeChange(e, pane,item)}
+                              onChange={e => codeChange(e, pane, item)}
                               name={uuidv4()}
                               editorProps={{ $blockScrolling: true }}
                               value={pane.code}
@@ -296,6 +323,40 @@ const DataConfigDrawer = props => {
           </Collapse>
         )
       })}
+      <Modal
+        title="添加回调"
+        visible={isModalVisible}
+        cancelText='取消'
+        okText='确认'
+        onOk={handleOk}
+        onCancel={handleCancel}>
+        <Form
+          name="basic"
+          labelCol={{
+            span: 6,
+          }}
+          wrapperCol={{
+            span: 18,
+          }}
+          initialValues={{ field: 'aaa' }}
+          autoComplete="off"
+          labelAlign="left"
+          form={form}
+        >
+          <Form.Item
+            label="回调字段名"
+            name="field"
+            rules={[
+              {
+                required: true,
+                message: '回调字段名不能为空!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Drawer>
   )
 }
