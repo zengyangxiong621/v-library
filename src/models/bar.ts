@@ -39,7 +39,7 @@ import {
 import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
-import { myFetch, http } from './utils/request'
+import {  http } from './utils/request'
 
 interface IBarState {
   key: string[];
@@ -2057,10 +2057,10 @@ export default {
       const { data } = yield http({
         url: '/visual/layer/update',
         method: 'post',
-        body: JSON.stringify({
+        body: {
           dashboardId: '1513702962304577537',
           layers: payload,
-        }),
+        },
       })
       console.log('data', data)
       yield put({
@@ -2070,8 +2070,10 @@ export default {
     },
     // 修改图层属性图层
     * change({ payload }: any, { call, put }: any) {
-      const { data } = yield myFetch('/visual/layer/change', {
-        body: JSON.stringify(payload),
+      const { data } = yield http({
+        url: '/visual/layer/change',
+        method: 'post',
+        body: payload,
       })
       yield put({
         type: 'updateTree',
@@ -2093,9 +2095,10 @@ export default {
     },
     // 删除图层、分组
     * delete({ payload }: any, { select, call, put }: any): any {
-      const { data } = yield myFetch('/visual/layer/delete', {
+      const { data } = yield http({
+        url: '/visual/layer/delete',
         method: 'delete',
-        body: JSON.stringify(payload),
+        body: payload,
       })
       console.log('删除接口返回的data', data)
       yield put({
@@ -2105,8 +2108,10 @@ export default {
     },
     // 复制图层
     * copy({ payload }: any, { select, call, put }: any): any {
-      const { data: { layers } } = yield myFetch('/visual/layer/copy', {
-        body: JSON.stringify(payload),
+      const { data: { layers } } = yield http({
+        url: '/visual/layer/copy',
+        method: 'post',
+        body: payload,
       })
       yield put({
         type: 'updateTree',
@@ -2149,12 +2154,13 @@ export default {
       })
     },
     * updateComponent({ payload }: any, { call, put }: any): any {
-      const { data } = yield myFetch('/visual/module/update', {
+      const { data } = yield http({
+        url: '/visual/module/update',
         method: 'post',
-        body: JSON.stringify({
+        body: {
           dashboardId: '1513702962304577537',
           configs: payload,
-        }),
+        },
       })
     },
   },

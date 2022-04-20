@@ -60,7 +60,13 @@ const Left = ({ dispatch, bar, operate }) => {
     })
     // 将多选树改为单选树
     setIsMultipleTree(false)
-  }, [treeRef, topBarRef, headerRef, bottomBarRef, document.getElementById('right-wrap'), document.getElementById('draggable-container')])
+  }, [treeRef, topBarRef, headerRef, bottomBarRef,
+    document.getElementById('right-wrap'),
+    document.getElementById('draggable-container'),
+    document.querySelector('.TopBar-wrap'),
+    document.querySelector('.hasList-self-tooltip'),
+    document.querySelector('.Header-wrap>.center'),
+  ])
 
   // 1、其它组件更改了选中的节点时触发
   // 2、多选时不能重命名
