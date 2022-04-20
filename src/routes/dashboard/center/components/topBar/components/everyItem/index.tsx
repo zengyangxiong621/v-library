@@ -1,10 +1,18 @@
 import { memo } from 'react'
+import { connect } from 'dva'
 import './index.less'
 
 const EveryItem = (props: any) => {
-  const { data, onClickFunc } = props
+  const { data, dispatch } = props
+  const componentCreate = () => {
+    dispatch({
+      type: 'bar/addComponent',
+      payload: data
+    })
+  }
+
   return (
-    <div className='EveryItem-wrap' onClickCapture={onClickFunc}>
+    <div className='EveryItem-wrap' onClickCapture={componentCreate}>
       <div className='db-img'>
         <img style={{
           paddingTop: '10px',
@@ -15,4 +23,6 @@ const EveryItem = (props: any) => {
   )
 }
 
-export default memo(EveryItem)
+export default connect(({ bar }: any) => (
+  { bar }
+))(EveryItem)

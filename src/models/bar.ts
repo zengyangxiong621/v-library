@@ -2004,7 +2004,7 @@ export default {
       yield put({
         type: 'bar/selectedNode',
         payload: {
-          key: [ newLayerId ],
+          key: [newLayerId],
         },
       })
     },
@@ -2035,7 +2035,7 @@ export default {
     },
     * placedTop({ payload }: any, { call, put, select }: any): any {
       console.log('树的问题')
-      const bar = yield select(({bar}: any) => bar)
+      const bar = yield select(({ bar }: any) => bar)
       const newTree = placeTop(bar.treeData, bar.key);
       yield put({
         type: 'update',
@@ -2077,15 +2077,7 @@ export default {
     },
     // 添加组件到画布
     * addComponent({ payload }: any, { call, put }: any) {
-      // 请求接口数据，获得component id
-      // const componentId = yield call()
-      // const componentId = "aabbcc";
-      // const final: any = {
-      //   componentId,
-      //   name: payload.name,
-      //   moduleName: payload.module_name,
-      // };
-      const componentId = 'components_1-14'
+      const componentId = payload.id
       const final: any = {
         id: componentId,
         name: '新增的',
@@ -2178,6 +2170,7 @@ export default {
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
+      debugger
       generateLayers(state.treeData, payload.insertId, payload.final)
       console.log('新增后的treeData', state.treeData)
       return { ...state }
@@ -2218,7 +2211,7 @@ export default {
         )
       state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if(state.selectedComponentIds.includes(key)) {
+        if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key]
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
@@ -2229,9 +2222,9 @@ export default {
     calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = []
       let yPositionList: number[] = []
-      if(state.selectedComponentOrGroup.length === 1) {
+      if (state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0]
-        if('modules' in firstLayer) {
+        if ('modules' in firstLayer) {
           // 单个组
           const positionArr = calcGroupPosition(
             firstLayer[COMPONENTS],
@@ -2248,9 +2241,9 @@ export default {
             (item: any) => item.name === DIMENSION,
           )
           dimensionConfig.value.forEach((config: any) => {
-            if([ 'left', 'width' ].includes(config.name)) {
+            if (['left', 'width'].includes(config.name)) {
               xPositionList.push(config.value)
-            } else if([ 'top', 'height' ].includes(config.name)) {
+            } else if (['top', 'height'].includes(config.name)) {
               yPositionList.push(config.value)
             }
           })
@@ -2267,7 +2260,7 @@ export default {
           }
           return { ...state }
         }
-      } else if(state.selectedComponentOrGroup.length > 1) {
+      } else if (state.selectedComponentOrGroup.length > 1) {
         state.selectedComponentOrGroup.forEach((layer: any) => {
           const positionArr = calcGroupPosition(
             state.selectedComponentOrGroup,
@@ -2307,7 +2300,7 @@ export default {
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
     pushToSelectedNode(state: IBarState, { payload }: any) {
       const { key, isFolder } = payload
-      const newArr = [ ...(new Set(state.key.concat(key)) as any) ]
+      const newArr = [...(new Set(state.key.concat(key)) as any)]
       return { key: newArr, isFolder }
     },
     // 点击icon或者右键菜单里的操作
@@ -2315,7 +2308,7 @@ export default {
       return { ...state, ...payload }
     },
     // 控制右键菜单的显示和隐藏
-    setIsShowRightMenu(state: IBarState, {payload}: any) {
+    setIsShowRightMenu(state: IBarState, { payload }: any) {
       return { ...state, isShowRightMenu: payload }
     },
     findNode(state: IBarState, { payload: { id, callback } }: any) {
@@ -2327,7 +2320,7 @@ export default {
     },
     testDrag(state: IBarState, { payload: { parentId } }: any) {
       // console.log('parentId', parentId)
-      const ids = [ '1-1', '1-1-1', '1-1-1-1' ]
+      const ids = ['1-1', '1-1-1', '1-1-1-1']
       const copyState: IBarState = JSON.parse(JSON.stringify(state))
       // let childrenComponents = findParentNode(
       //   copyState.draggableItems,
@@ -2451,11 +2444,11 @@ export default {
     ) {
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
-      if(state.isSupportMultiple) {
+      if (state.isSupportMultiple) {
         // 多选
         layer.selected = true
         // 如果 selectedComponentOrGroup 里不存在当前点击的组件/分组的话，就添加
-        if(
+        if (
           !state.selectedComponentOrGroup.find((item) => item.id === layer.id)
         ) {
           (state.selectedComponentOrGroup as any).push(layer)
@@ -2470,7 +2463,7 @@ export default {
         // 再将自己的 select 状态设置为 true
         layer.selected = true
         // 再重新赋值 selectedComponentOrGroup 长度为 1
-        state.selectedComponentOrGroup = [ layer ]
+        state.selectedComponentOrGroup = [layer]
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
       state.key = state.selectedComponentOrGroup.map((item) => item.id)
@@ -2479,7 +2472,7 @@ export default {
       )
       state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if(state.selectedComponentIds.includes(key)) {
+        if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key]
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
@@ -2496,7 +2489,7 @@ export default {
     clearAllStatus(state: IBarState, payload: any) {
       console.log('空白清空1')
       console.log('state.isCanClearAllStatus', state.isCanClearAllStatus)
-      if(!state.isCanClearAllStatus) {
+      if (!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true
         return {
           ...state,

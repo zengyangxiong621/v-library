@@ -15,12 +15,9 @@ import Right from './right'
 import CenterHeaderBar from './center/components/topBar/index'
 import ChooseArea from './center/components/ChooseArea'
 import * as React from 'react'
+import { init } from 'echarts'
 
 const { Header } = Layout
-
-
-
-
 
 function App({ bar, dispatch }: any) {
   // const trRef: any = useRef()
@@ -82,10 +79,9 @@ function App({ bar, dispatch }: any) {
       }
     }
 
-    return () => {
-    }
+    return () => {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dispatch])
   /**
    * description:  是否显示中心画布上方的导航栏
    */
@@ -118,7 +114,6 @@ function App({ bar, dispatch }: any) {
     </Layout>
   )
 }
-
 
 export default withRouter(connect(({ bar }: any) => (
   { bar }
