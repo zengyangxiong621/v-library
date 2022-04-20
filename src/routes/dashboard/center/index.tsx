@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2022-04-19 11:44:40
+ * @LastEditTime: 2022-04-19 19:03:27
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \v-library\src\routes\dashboard\center\index.tsx
+ */
 import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 
@@ -12,7 +20,7 @@ import { Button } from 'antd'
 import { useClickAway, useKeyPress, useMouse, useThrottle } from 'ahooks'
 import Ruler from './components/Ruler'
 import { IScaleDragData, IStyleConfig } from './type'
-import { DIMENSION } from './constant'
+import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT } from './constant'
 import RulerLines from './components/RulerLines'
 import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
 import { throttle } from '../../../utils/common'
@@ -149,16 +157,31 @@ const Center = ({ bar, dispatch }: any) => {
   const mouse = useMouse(canvasRef)
   // const mouse = 0
 
+
+  const calcScaleAfterComponentsConfig = () => {
+
+  }
+
+
   /**
    * @desc 缩放组件在缩放结束后的回调
-   * @param IScaleDragData
+   * @param scaleDragData: IScaleDragData
+   * @param lastScaleDragData: IScaleDragData
    * @return void
    */
-  const handleScaleEnd = ({ position: { x, y }, style: { width, height } }: IScaleDragData) => {
-    if(bar.dragStatus === '一组件') {
+  const handleScaleEnd = (
+    { position: { x, y }, style: { width, height } }: IScaleDragData,
+    { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
+  ) => {
+    // const { position, style } = lastScaleDragData
+    console.log('x', x, ',lastX', lastX)
+    console.log('y', y, ',lastY', lastY)
+    console.log('width', width, ',lastWidth', lastWidth)
+    console.log('height', height, ',lastHeight', lastHeight)
+    if(bar.selectedComponentOrGroup.length === 1) {
       const component = bar.selectedComponents[0]
-      const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION)
-      styleDimensionConfig.value.forEach((item: IStyleConfig) => {
+      const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+      styleDimensionConfig.forEach((item: IStyleConfig) => {
         switch(item.name) {
           case 'left':
             item.value = x
@@ -173,6 +196,72 @@ const Center = ({ bar, dispatch }: any) => {
             item.value = height
         }
       })
+    } else {
+      bar.selectedComponents.forEach((component: any, cIndex: number) => {
+        const dimensionConfig = component.config.find((config: any) => config.name === DIMENSION).value
+        const data = dimensionConfig.reduce((pre: any, cur: any) => {
+          if(Array.isArray(cur.value)) {
+            const obj = cur.value.reduce((p: any, c: any) => {
+              p[c.name] = c.value
+              return p
+            }, {})
+            pre = {
+              ...pre,
+              ...obj,
+            }
+          } else {
+            pre[cur.name] = cur.value
+          }
+          return pre
+        }, {})
+        dimensionConfig.forEach((config: any) => {
+          if (x === lastX) {
+            if(config.name === LEFT) {
+              if(config.value !== lastX) {
+                // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
+                config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
+                data[LEFT] = config.value
+              }
+            }
+          } else {
+            if(config.name === LEFT) {
+              if(config.value === lastX) {
+                config.value = x
+              } else {
+                // 因为是缩放左侧，所以缩放组件右侧的 x + width 的值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
+                config.value = x + ((data[LEFT] - lastX) / (lastWidth / width))
+              }
+            }
+          }
+
+          if (y === lastY) {
+            if(config.name === TOP) {
+              if(config.value !== lastY) {
+                config.value = lastY + ((data[TOP] - lastY) / (lastHeight / height))
+                data[TOP] = config.value
+              }
+            }
+          } else {
+            if(config.name === TOP) {
+              if(config.value === lastY) {
+                config.value = y
+              } else {
+                config.value = y + ((data[TOP] - lastY) / (lastHeight / height))
+              }
+            }
+          }
+
+          if(config.name === WIDTH) {
+            config.value = config.value / (lastWidth / width)
+            data[WIDTH] = config.value
+          }
+          if(config.name === HEIGHT) {
+            config.value = config.value / (lastHeight / height)
+            data[HEIGHT] = config.value
+          }
+        })
+      })
+      calcScaleAfterComponentsConfig()
     }
     dispatch({
       type: 'bar/updateComponent',

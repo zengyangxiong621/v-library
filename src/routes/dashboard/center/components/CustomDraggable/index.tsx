@@ -56,6 +56,9 @@ const CustomDraggable
 
   const nodeRef: any = useRef(null)
   const currentTimes: any = useRef(0)
+
+  const clickTimer: any = useRef(null)
+
   useEffect(() => {
     localStorage.removeItem('dblComponentTimes')
     return () => {
@@ -114,7 +117,7 @@ const CustomDraggable
   }
   const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
     ev.stopPropagation()
-    console.log('dragging', layer)
+    // console.log('dragging', layer)
     // 向上取整
     let aroundX = Math.ceil(data.x)
     let aroundY = Math.ceil(data.y)
@@ -198,8 +201,6 @@ const CustomDraggable
         config,
       },
     })
-    console.log('组件', component)
-    console.log('selectedComponentOrGroup', bar.selectedComponentOrGroup)
     if(component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
       // 单个组件移动
       const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
@@ -353,13 +354,18 @@ const CustomDraggable
     })
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
-    console.log('e', e)
+    clearTimeout(clickTimer.current)
+    clickTimer.current = setTimeout(() => {
+      console.log('单击')
+    }, 400)
     localStorage.removeItem('dblComponentTimes')
     console.log('click', layer)
     e.stopPropagation()
   }
   const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
     console.log('当前的次数', currentTimes.current)
+    clearTimeout(clickTimer.current)
+    console.log('双击')
     const dblComponentTimes = localStorage.getItem('dblComponentTimes')
     if(!currentTimes) {
       currentTimes.current = 1
@@ -404,21 +410,21 @@ const CustomDraggable
       return
     }
     component.hover = true
-    dispatch({
-      type: 'bar/save',
-    })
+    // dispatch({
+    //   type: 'bar/save',
+    // })
   }
   const handleMouseOut = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
     component.hover = false
-    dispatch({
-      type: 'bar/save',
-    })
+    // dispatch({
+    //   type: 'bar/save',
+    // })
   }
   // let copyTreeData = deepClone(treeData).reverse()
   return (
     <div className="c-custom-draggable">
       {
-        copyTreeData.map((layer: ILayerGroup | ILayerComponent | any) => {
+        bar.treeData.map((layer: ILayerGroup | ILayerComponent | any) => {
           let config: IConfig = {
             position: {
               x: 0,
@@ -434,18 +440,11 @@ const CustomDraggable
           let component: IComponent | undefined
           let style_config, staticData, style_dimension_config
           // 群组
-          console.log('layer', layer)
-          console.log('COMPONENTS in layer', COMPONENTS in layer)
-          console.log('------------------')
           if(COMPONENTS in layer) {
             group = layer
             let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components)
-            xPositionList = xPositionList.sort((a, b) => {
-              return a - b
-            })
-            yPositionList = yPositionList.sort((a, b) => {
-              return a - b
-            })
+            xPositionList = xPositionList.sort((a, b) => a - b)
+            yPositionList = yPositionList.sort((a, b) => a - b)
             config = {
               position: {
                 x: xPositionList[0],
@@ -459,7 +458,8 @@ const CustomDraggable
           } else {
             // 组件
             component = components.find(item => item.id === layer.id)
-            console.log('组件 layer id', layer.id)
+            // console.log('组件 layer id', layer.id)
+            // console.log('组件', component)
 
             if(component) {
               staticData = component.staticData
@@ -504,7 +504,7 @@ const CustomDraggable
                 data-id={ layer.id }
                 key={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
-                // onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
+                onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
                 onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
                 onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 className={ `box ${ layer.selected ? 'selected' : '' } ${ layer.hover ? 'hovered' : '' }` }
@@ -528,7 +528,7 @@ const CustomDraggable
                     }
                   </div> : <>
                     <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
-                      { layer.id }
+                      { layer.name }
                       {/*<Text styleConfig={ style_config } staticData={ staticData }/>*/ }
 
                     </div>

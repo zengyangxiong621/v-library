@@ -4,6 +4,7 @@ import Draggable from 'react-draggable'
 import ScaleContainer from '../ScaleContainer'
 import * as React from 'react'
 import { Button } from 'antd'
+import { IScaleDragData } from '../../type'
 
 type DraggableEvent = React.MouseEvent<HTMLElement | SVGElement>
   | React.TouchEvent<HTMLElement | SVGElement>
@@ -64,8 +65,8 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       },
     })
   }
-  const handleScaleEnd = (data: any) => {
-    onScaleEnd(data)
+  const handleScaleEnd = (scaleDragData: IScaleDragData, lastScaleDragData: IScaleDragData) => {
+    onScaleEnd(scaleDragData, lastScaleDragData)
   }
   const handleScale = () => {
 

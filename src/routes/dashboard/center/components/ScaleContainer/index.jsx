@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 import './index.less'
+import { position } from 'tailwindcss/lib/util/dataTypes'
+import { deepClone } from '../../../../../utils'
 
 const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, ...props }) => {
   const elementX = useRef(mouse.elementX)
@@ -25,6 +27,7 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
   }
   const handleMouseDown = (ev) => {
     console.log('缩放mouseDown')
+    const lastScaleDragData = deepClone(bar.scaleDragData)
     const obj = ev.target
     const oEv = ev
     oEv.stopPropagation()
@@ -204,11 +207,12 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
       e.stopPropagation()
       console.log('缩放mouseUp')
       if (['tl', 'r', 'l', 'b', 't', 'br', 'tr', 'bl', 'tl', 'tc', 'bc', 'lc', 'rc'].includes(obj.className)) {
-        bar.scaleDragData.position.x = Math.ceil(bar.scaleDragData.position.x)
-        bar.scaleDragData.position.y = Math.ceil(bar.scaleDragData.position.y)
-        bar.scaleDragData.style.width = Math.ceil(bar.scaleDragData.style.width)
-        bar.scaleDragData.style.height = Math.ceil(bar.scaleDragData.style.height)
-        onScaleEnd(bar.scaleDragData)
+        // bar.scaleDragData.position.x = Math.ceil(bar.scaleDragData.position.x)
+        // bar.scaleDragData.position.y = Math.ceil(bar.scaleDragData.position.y)
+        // bar.scaleDragData.style.width = Math.ceil(bar.scaleDragData.style.width)
+        // bar.scaleDragData.style.height = Math.ceil(bar.scaleDragData.style.height)
+        console.log('lastScaleDragData', lastScaleDragData)
+        onScaleEnd(bar.scaleDragData, lastScaleDragData)
         // handleScaleEnd(boxRef.current.offsetLeft, boxRef.current.offsetTop, boxRef.current.offsetWidth, boxRef.current.offsetHeight)
       }
       document.onmousemove = null

@@ -44,7 +44,7 @@ const Text = (props: any) => {
           }])
         }, 2000);
       }
-      getData()
+      // getData()
     }
     init()
   }, [])

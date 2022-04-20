@@ -48,6 +48,9 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       const boxPreHeight = areaRef.current.offsetHeight
       let isMouseMove = false
       selectedList.current = []
+      let areaPosition: {
+        [key: string]: number
+      } = {}
       document.onmousemove = (ev: Event) => {
         console.log('选区mouseMove')
         // 移动的时候让选区显示出来
@@ -55,9 +58,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         isMouseMove = true
         areaRef.current.style.display = 'block'
         // 取选区 div 的左上角、右下角坐标
-        let areaPosition: {
-          [key: string]: number
-        } = {}
+
         // const pointCurX = ev.clientX
         // const pointCurY = ev.clientY
         if(!('clientX' in ev && 'clientY' in ev)) {
@@ -112,30 +113,31 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
             height: ~boxCurHeight,
           }
         }
-        const selectedIds: Array<string> = []
-        let b1 = areaPosition.y + areaPosition.height
-        let r1 = areaPosition.x + areaPosition.width
-        reactDraggableDomPosition.forEach((item) => {
-          let b2 = item.y + item.height
-          let r2 = item.x + item.width
-          if(b1 < item.y || areaPosition.y > b2 || r1 < item.x || areaPosition.x > r2) {
-            return false
-          }
-          selectedIds.push(item.id)
-        })
-        selectedList.current = selectedIds
+
 
       }
       document.onmouseup = (e) => {
         console.log('选区mouseUp')
         e.preventDefault()
-        if (selectedList.current.length > 0) {
-          dispatch({
-            type: 'bar/chooseLayer',
-            payload: selectedList.current,
-          })
-        }
         hide()
+        const selectedIds: Array<string> = []
+        let b1 = areaPosition.y + areaPosition.height
+        let r1 = areaPosition.x + areaPosition.width
+        if (Object.keys(areaPosition).length > 0) {
+          reactDraggableDomPosition.forEach((item) => {
+            let b2 = item.y + item.height
+            let r2 = item.x + item.width
+            if(!(b1 < item.y || areaPosition.y > b2 || r1 < item.x || areaPosition.x > r2)) {
+              selectedIds.push(item.id)
+            }
+          })
+          if (selectedIds.length > 0) {
+            dispatch({
+              type: 'bar/chooseLayer',
+              payload: selectedIds,
+            })
+          }
+        }
         document.onmousemove = null
         document.onmouseup = null
       }

@@ -3,24 +3,16 @@ import { connect } from 'dva'
 import './index.less'
 import { deepClone } from '../../../../../utils'
 import LoadAnimation from '../loadAnimation'
-import { EditableTable } from '../fieldMapTable'
-import ComponentCard from '../componentCard'
-import CodeEditor from '../codeEditor'
-import CusSelect from '../cusSelect'
-import CusEvent from '../cusEvent'
 
+import ComponentCard from '../componentCard'
+import DataConfig from '../dataConfig'
+import CusEvent from '../cusEvent'
 import componentLib from '../index'
 
 import {
   Tabs,
-  Checkbox,
-  Button
+  
 } from 'antd';
-import {
-  PlusOutlined,
-  RedoOutlined
-} from '@ant-design/icons';
-
 import debounce from 'lodash/debounce';
 import { useFetch } from '../../../../tempDataSource/tool/useFetch'
 
@@ -393,31 +385,7 @@ const componentConfig = {
   },
 }
 
-const codeData = {
-  readOnly: false,
-  language: 'javascript',
-  value: `function onLoad(editor) {
-    console.log("i've loaded");
-  }`,
-  showExpand: true
-};
 
-const selectData = {
-  name: "xxx",
-  displayName: '',
-  type: 'select',
-  value: 'static',
-  options: [
-    {
-      name: '静态数据',
-      value: 'static'
-    },
-    {
-      name: '动态数据',
-      value: 'dynamic'
-    },
-  ]
-}
 
 const SingleLayer = ({ bar, dispatch, ...props }) => {
   const { TabPane } = Tabs;
@@ -530,41 +498,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="数据" key="2">
             <ComponentCard data={componentConfig}>
-              <div className="data-config" style={{ marginTop: 0 }}>
-                <div className="data-header">
-                  <label className="data-name">数据接口</label>
-                  <span className="data-interface"><i></i>配置完成</span>
-                </div>
-                <div className="data-content">
-                  <EditableTable data={dataConfig} onChange={settingsChange} />
-                </div>
-              </div>
-              <div className="data-config">
-                <div className="data-header">
-                  <label className="data-name">数据源类型</label>
-                  <CusSelect data={selectData} onChange={settingsChange} style={{ width: '207px' }} />
-                </div>
-                <div className="data-content">
-                  <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
-                    <CodeEditor data={codeData} onChange={settingsChange} />
-                  </div>
-                </div>
-                <div className="data-footer">
-                  <Checkbox>数据过滤器</Checkbox>
-                  <Button icon={<PlusOutlined />}>添加过滤器</Button>
-                </div>
-              </div>
-              <div className="data-config">
-                <div className="data-header">
-                  <label className="data-name">数据响应结果（只读）</label>
-                  <Button icon={<RedoOutlined />} style={{ border: 0, background: 'transparent' }} />
-                </div>
-                <div className="data-content">
-                  <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
-                    <CodeEditor data={codeData} onChange={settingsChange} />
-                  </div>
-                </div>
-              </div>
+              <DataConfig />
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">
