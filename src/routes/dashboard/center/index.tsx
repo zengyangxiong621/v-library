@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-19 11:44:40
- * @LastEditTime: 2022-04-19 18:52:22
+ * @LastEditTime: 2022-04-19 19:03:27
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \v-library\src\routes\dashboard\center\index.tsx
@@ -218,39 +218,47 @@ const Center = ({ bar, dispatch }: any) => {
           if (x === lastX) {
             if(config.name === LEFT) {
               if(config.value !== lastX) {
+                // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
                 config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
                 data[LEFT] = config.value
-              } 
+              }
             }
           } else {
             if(config.name === LEFT) {
               if(config.value === lastX) {
-  
+                config.value = x
               } else {
-                config.value = config.value - (width - lastWidth)
-                data[LEFT] = config.value
+                // 因为是缩放左侧，所以缩放组件右侧的 x + width 的值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
+                config.value = x + ((data[LEFT] - lastX) / (lastWidth / width))
               }
             }
           }
-
 
           if (y === lastY) {
             if(config.name === TOP) {
               if(config.value !== lastY) {
                 config.value = lastY + ((data[TOP] - lastY) / (lastHeight / height))
                 data[TOP] = config.value
-              } 
+              }
+            }
+          } else {
+            if(config.name === TOP) {
+              if(config.value === lastY) {
+                config.value = y
+              } else {
+                config.value = y + ((data[TOP] - lastY) / (lastHeight / height))
+              }
             }
           }
 
           if(config.name === WIDTH) {
-            config.value = config.value / (lastWidth / width) 
+            config.value = config.value / (lastWidth / width)
             data[WIDTH] = config.value
-          } 
+          }
           if(config.name === HEIGHT) {
-            config.value = config.value / (lastHeight / height) 
+            config.value = config.value / (lastHeight / height)
             data[HEIGHT] = config.value
-          } 
+          }
         })
       })
       calcScaleAfterComponentsConfig()
