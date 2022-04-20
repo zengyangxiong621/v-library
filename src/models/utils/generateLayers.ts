@@ -19,7 +19,6 @@ export const generateLayers = (
     ...newLayer
   }
   insertLayerById(layers, insertId, extendLayer)
-  console.log('llll', layers)
 };
 
 const insertLayerById = ( target: any[], insertId: string, newLayer: any) => {

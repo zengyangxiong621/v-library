@@ -39,7 +39,7 @@ import {
 import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
-import { myFetch } from './utils/request'
+import { myFetch, http } from './utils/request'
 
 interface IBarState {
   key: string[];
@@ -1965,25 +1965,25 @@ export default {
 
   effects: {
     * getDashboardDetails({ payload }: any, { call, put, select }: any) {
-      const {
-        data: {
+      try {
+        const {
           layers,
           components,
-        },
-      } = yield myFetch('/visual/application/dashboard/detail/1513702962304577537', {
-        method: 'get',
-      })
-      // console.log('-------------')
-      // console.log('初始化')
-      // console.log('-------------')
-      yield put({
-        type: 'save',
-        payload: {
-          treeData: layers,
-          components,
-        },
-      })
-
+        } = yield http({
+          url: '/visual/application/dashboard/detail/1513702962304577537',
+          method: 'get',
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            treeData: layers,
+            components,
+          },
+        })
+      } catch(e) {
+        console.log('e', e)
+        return e
+      }
     },
     // 重命名
     * changeName({ payload }: any, { call, put, select }: any): any {
@@ -2054,7 +2054,9 @@ export default {
     },
     // 更改图层组织
     * update({ payload }: any, { call, put }: any) {
-      const { data } = yield myFetch('/visual/layer/update', {
+      const { data } = yield http({
+        url: '/visual/layer/update',
+        method: 'post',
         body: JSON.stringify({
           dashboardId: '1513702962304577537',
           layers: payload,
@@ -2442,6 +2444,7 @@ export default {
       return { ...state }
     },
     save(state: IBarState, { payload }: any) {
+      console.log('payload', payload)
       return { ...state, ...payload }
     },
     selectComponentOrGroup(
@@ -2495,6 +2498,7 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
+      console.log('GGGGGGGGGGGGGGGG', state.treeData)
       if(!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true
         return {
