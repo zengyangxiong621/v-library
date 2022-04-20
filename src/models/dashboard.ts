@@ -1,5 +1,3 @@
-import { myFetch } from './utils/request'
-
 export default {
   namespace: 'dashboard',
   state: {
