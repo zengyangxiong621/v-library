@@ -2082,15 +2082,9 @@ export default {
     },
     // 添加组件到画布
     * addComponent({ payload }: any, { call, put }: any) {
-      const componentId = payload.id
-      const final: any = {
-        id: componentId,
-        name: '新增的',
-        moduleName: '新增的组件的标识',
-      }
       yield put({
         type: 'addLayer',
-        payload: { final, insertId: payload.insertId },
+        payload: { final: payload, insertId: payload.insertId },
       })
     },
     // 删除图层、分组
@@ -2175,13 +2169,19 @@ export default {
     },
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
-      console.log('payloaddddddddddd', payload)
       return { ...state, treeData: payload }
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
       debugger
-      generateLayers(state.treeData, payload.insertId, payload.final)
+      let insertId: String
+      const { treeData } = state
+      if (payload.insertId && treeData.length) {
+        insertId = payload.insertId
+      } else {
+        insertId = treeData[0].id
+      }
+      generateLayers(state.treeData, insertId, payload.final)
       console.log('新增后的treeData', state.treeData)
       return { ...state }
     },
