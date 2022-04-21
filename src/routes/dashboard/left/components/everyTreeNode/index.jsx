@@ -138,7 +138,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     })
   }
   const isS = bar.key.includes(id)
-  console.log('isS', isS);
   return (
     <div className={`EveryTreeNode-wrap ${hover && 'every-tree-node-hover'} ${isS && 'aa'}`} onContextMenu={(e) => {
       mouseRightClick(e)

@@ -20,16 +20,6 @@ import { init } from 'echarts'
 const { Header } = Layout
 
 function App({ bar, dispatch }: any) {
-  // const trRef: any = useRef()
-  // useClickAway(() => {
-  //   console.log('没点到左边的');
-  //   dispatch({
-  //     type: 'bar/selectedNode',
-  //     payload: {
-  //       key: [],
-  //     },
-  //   })
-  // }, [trRef])
   const detectZoom = () => {
     let ratio = 0,
       screen: any = window.screen,

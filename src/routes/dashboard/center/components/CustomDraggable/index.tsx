@@ -65,7 +65,6 @@ const CustomDraggable
     }
   }, [])
   useEffect(() => {
-    console.log('treeData变化', treeData)
     setCopyTreeData(deepClone(treeData).reverse())
   }, [ treeData ])
   /**
@@ -359,7 +358,6 @@ const CustomDraggable
       console.log('单击')
     }, 400)
     localStorage.removeItem('dblComponentTimes')
-    console.log('click', layer)
     e.stopPropagation()
   }
   const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
