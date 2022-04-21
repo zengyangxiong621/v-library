@@ -394,15 +394,11 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   };
   const componentConfig = deepClone(bar.componentConfig)
   const styleConfig = componentConfig.config
-  const interactionConfig = componentConfig.interaction
-  const dataConfig = componentConfig.staticData
-
-  const settingsChange = () => {
-    dispatch({
-      type: 'bar/setComponentConfig',
-      payload: componentConfig
-    })
+  const interactionConfig = componentConfig.interaction || {
+    mountAnimation:{},
+    events:[]
   }
+  const dataConfig = componentConfig.staticData
 
   const styleChange = debounce(() => {
     console.log('style change', componentConfig)
@@ -411,10 +407,10 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       payload: componentConfig
     })
     saveStyleData({
-      id: '1513704667434328066' || componentConfig.id,
-      name: 'cdb-空白应用组件' || componentConfig.name,
-      moduleName: 'cdb-component-1' || componentConfig.moduleName,
-      moduleVersion: 'cdb-v-1.1' || componentConfig.moduleVersion,
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
       config: componentConfig.config,
     })
   }, 300)
@@ -431,6 +427,32 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
+  const dataChange = debounce(() => {
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+    saveDataHandle({
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion:componentConfig.moduleVersion,
+      staticData: componentConfig.staticData,
+    })
+  },300)
+
+  const saveDataHandle = async (param) => {
+    // todo 替换假数据
+    const params = {
+      param,
+      dashboardId: "1513702962304577537"
+    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // await useFetch('/visual/module/update', {
+    //   body: JSON.stringify(params)
+    // })
+  }
+
   const interactionChange = debounce(() => {
     console.log('interaction change', interactionConfig)
     dispatch({
@@ -438,7 +460,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       payload: componentConfig
     })
     saveAnimationData({
-      id: '1513704667434328066' || componentConfig.id,
+      id: componentConfig.id,
       key: 'mountAnimation',
       value: interactionConfig.mountAnimation
     })
@@ -462,7 +484,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       payload: componentConfig
     })
     saveEventsData({
-      id: '1513704667434328066' || componentConfig.id,
+      id: componentConfig.id,
       events: interactionConfig.events
     })
   }, 300)
@@ -498,7 +520,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="数据" key="2">
             <ComponentCard data={componentConfig}>
-              <DataConfig />
+              <DataConfig data={dataConfig} onChange={dataChange}/>
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">

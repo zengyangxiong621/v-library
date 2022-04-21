@@ -32,15 +32,15 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
 
-  const settingsChange = debounce(() => {
+  const positionChange = debounce(() => {
     console.log(groupConfig)
+    // 位置信息变化由中间画布保存
     dispatch({
       type: 'bar/save',
       payload: {
         groupConfig
       }
     })
-    saveData()
   }, 300)
 
   const saveData = async (param) => {
@@ -74,9 +74,9 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       key:'hideDefault',
       value:hideDefaultConfig.value
     })
-  },300)
+  }, 300)
 
-  const opacityChange = debounce(()=>{
+  const opacityChange = debounce(() => {
     console.log(opacityConfig)
     dispatch({
       type: 'bar/save',
@@ -91,7 +91,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     })
   }, 300)
 
-  const interactionChange= debounce(() => {
+  const interactionChange = debounce(() => {
     console.log(interactionConfig)
     dispatch({
       type: 'bar/save',
@@ -118,7 +118,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
           {...formItemLayout}
           colon={false}
         >
-          <PositionSize data={dimensionConfig} onChange={settingsChange}/>
+          <PositionSize data={dimensionConfig} onChange={positionChange}/>
           <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
           <Range data={opacityConfig} onChange={opacityChange} />
           <LoadAnimation data={interactionConfig} onChange={interactionChange} />
