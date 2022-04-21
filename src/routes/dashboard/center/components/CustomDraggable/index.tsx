@@ -16,6 +16,7 @@ import {
   WIDTH,
   HEIGHT,
   HIDE_DEFAULT,
+  OPACITY,
   TEXT_STYLE,
   FONT_FAMILY,
   FONT_SIZE,
@@ -243,10 +244,9 @@ const CustomDraggable
       const xMoveLength = Math.ceil(data.x - startPosition.x)
       const yMoveLength = Math.ceil(data.y - startPosition.y)
       bar.selectedComponents.forEach((item: IComponent) => {
-        // const style_config = item.config.find((item: any) => item.name === STYLE)
-        const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-        if(style_dimension_config) {
-          style_dimension_config.value.forEach((item: any) => {
+        const dimensionConfig = item.config.find((item: any) => item.name === DIMENSION).value
+        if(dimensionConfig) {
+          dimensionConfig.forEach((item: any) => {
             if(item.name === LEFT) {
               item.value += xMoveLength
             } else if(item.name === TOP) {
@@ -255,10 +255,24 @@ const CustomDraggable
           })
         }
       })
-
+      console.log('------------')
+      console.log('layer', layer)
+      console.log('------------')
       dispatch({
-        type: 'bar/save',
+        type: 'bar/setGroupConfig',
         payload: {
+          config: {
+            position: {
+              x: data.x,
+              y: data.y,
+            },
+            style: {
+              width: config.style.width,
+              height: config.style.height,
+            },
+            [OPACITY]: layer[OPACITY] || 100,
+            [HIDE_DEFAULT]: layer[HIDE_DEFAULT] || false,
+          },
           scaleDragData: {
             position: {
               x: data.x,
@@ -510,27 +524,32 @@ const CustomDraggable
                   ...config.style,
                   // border: '1px solid gray',
                   visibility: !layer.isShow ? 'hidden' : 'unset',
+                  opacity: (layer[OPACITY] || 100) / 100,
                 } }>
                 {
-                  isGroup ? <div className="no-cancel">
-                    { COMPONENTS in layer && (layer as any)[COMPONENTS]?.length > 0 ?
-                      <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
-                        <CustomDraggable
-                          mouse={ layer.selected ? mouse : 0 }
-                          bar={ bar }
-                          dispatch={ dispatch }
-                          treeData={ (layer as any)[COMPONENTS] }
-                        />
+                  layer[HIDE_DEFAULT] ?
+                    <div style={ {
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: 'rgba(76, 255, 231, 0.15)',
+                    } }/> : isGroup ? <div className="no-cancel">
+                      { (layer as any)[COMPONENTS]?.length > 0 ?
+                        <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
+                          <CustomDraggable
+                            mouse={ layer.selected ? mouse : 0 }
+                            bar={ bar }
+                            dispatch={ dispatch }
+                            treeData={ (layer as any)[COMPONENTS] }
+                          />
+                        </div>
+                        : ''
+                      }
+                    </div> : <>
+                      <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
+                        { layer.name }
+                        {/*<Text styleConfig={ style_config } staticData={ staticData }/>*/ }
                       </div>
-                      : ''
-                    }
-                  </div> : <>
-                    <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
-                      { layer.name }
-                      {/*<Text styleConfig={ style_config } staticData={ staticData }/>*/ }
-
-                    </div>
-                  </>
+                    </>
                 }
                 <div className="component-border">
                       <span

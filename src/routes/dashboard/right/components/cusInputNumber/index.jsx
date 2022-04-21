@@ -14,6 +14,9 @@ const CusInputNumber = props => {
   const _data = props.data
   const _min = typeof (_data?.config?.min) !== 'undefined' ? _data.config.min : Number.MIN_SAFE_INTEGER
   const _max = typeof (_data?.config?.max) !== 'undefined' ? _data?.config?.max : Number.MAX_SAFE_INTEGER
+
+
+
   const _step = typeof (_data?.config?.step) !== 'undefined' ? _data?.config?.step : 1
   const [value, setValue] = useState(_data.value)
 

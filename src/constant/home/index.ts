@@ -5,6 +5,7 @@ const TOP = 'top'
 const WIDTH = 'width'
 const HEIGHT = 'height'
 const HIDE_DEFAULT = 'hideDefault'
+const OPACITY = 'opacity'
 const TEXT_STYLE = 'textStyle'
 const FONT_FAMILY = 'fontFamily'
 const FONT_SIZE = 'fontSize'
@@ -19,6 +20,7 @@ const TEXT_VERTICAL = 'textVertical'
 const SHADOW = 'shadow'
 const SHOW = 'show'
 const COMPONENTS = 'modules'
+const CONFIG = 'config'
 
 enum hh {
   name = 'zyx',
@@ -90,4 +92,5 @@ export {
   constantList,
   hh,
   COMPONENTS,
+  OPACITY
 }
