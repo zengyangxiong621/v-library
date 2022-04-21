@@ -25,7 +25,6 @@ const LeftTree = (props: any) => {
       const [, data] = await useFetch(`/visual/application/queryGroupList?spaceId=${spaceId}`, {
         method: 'get',
       })
-      console.log('应用分组数据', data);
       // 拿到数据之后
       setOriginTree(data)
       const treeData: any =
@@ -43,7 +42,6 @@ const LeftTree = (props: any) => {
 
   // 新建分组或者重命名成功分组，触发刷新
   const refreshList = () => {
-    alert('成功更改')
     setIsRefreshGroupList(isRefreshGroupList += 1)
   }
   // 添加分组
@@ -65,6 +63,9 @@ const LeftTree = (props: any) => {
     setFinalTree(treeData)
   }
 
+  const selectTreeNode = (keys: any) => {
+    console.log('value', keys);
+  }
 
   return (
     <div className='LeftTree-wrap'>
@@ -77,6 +78,7 @@ const LeftTree = (props: any) => {
           title: 'name',
           key: 'groupId'
         }}
+        onSelect={selectTreeNode}
         titleRender={(nodeData: any) => (
           <Node
             refreshList={refreshList}

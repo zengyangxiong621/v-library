@@ -11,7 +11,6 @@ import { Input } from 'antd'
 const EveryTreeNode = (props: any) => {
   const { groupId, name, number,
     systemDefined, addGroup, refreshList } = props || {}
-  console.log('groupId', groupId);
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -63,7 +62,6 @@ const EveryTreeNode = (props: any) => {
     const [, data] = await useFetch('/visual/application/updateGroup', {
       body: JSON.stringify(finalBody)
     })
-    console.log('重命名返回的数据', data);
     if (data) {
       inputRef.current.blur()
       refreshList()
@@ -77,7 +75,6 @@ const EveryTreeNode = (props: any) => {
   }
   // 点击编辑图标
   const editClick = (id: string | number) => {
-    console.log('点到了编辑图标');
     setShowRenameInput(true)
     setInputValue(name)
   }

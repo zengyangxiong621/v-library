@@ -19,10 +19,10 @@ const catchErr = <T, U = Error>(
       return [err, null];
     });
 };
-
 // export const BASE_URL = "http://10.202.233.230:9572"; // HFF 本地
+export const BASE_URL = "http://10.202.226.250:9572"; // HFF 本地
 // export const BASE_URL = "http://50423059pd.zicp.vip"; // FJJ 本地
-export const BASE_URL = "http://10.202.226.250:9572"; // 线上
+// export const BASE_URL = "http://10.202.226.250:9572"; // 线上
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",
@@ -41,6 +41,7 @@ export const useFetch = async (
   options: any,
   customErrObj?: object
 ): Promise<[Error | null, any, any]> => {
+  // 最终路径 & 最终配置、参数
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...options };
   // Fetch API 需要先转换一次格式
@@ -51,15 +52,16 @@ export const useFetch = async (
   let [err, data] = await catchErr(finalFetch, customErrObj);
   /**** 根据返回数据进行统一的处理(小拦截器) *****/
   // 捕获发送请求时的错误
-  console.log('err', err)
+  // console.log("err", err);
   if (err) {
     message.error({ content: "请求发送失败", duration: 2 });
     // 出错了需要终止程序的执行吗
     // throw Error('终止程序')
   }
   // 后端的返回码
-  let code = data.code ?? 'codeNull';
+  let code = data ? data.code : 'errorCode';
   // 请求成功发送出去，但是接口错误
+  // TODO 外部传入 对应状态码的处理逻辑
   if (code === 500) {
     message.error({
       content: "请求数据失败",

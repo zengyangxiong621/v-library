@@ -50,16 +50,18 @@
         justify-content: flex-end;
         padding: 16px 24px 0 0;
         .more-icon {
+          position: relative;
           max-width: 34px;
         }
         .more {
           display: none;
         }
-        .more-icon:hover .more{
+        .more-icon:hover .more {
           min-width: 100px;
-          position: relative;
+          position: absolute;
+          top: 20px;
           display: block;
-          z-index: 99999999999999;
+          z-index: 99999;
           background-color: gray;
         }
       }
@@ -101,10 +103,23 @@
     align-items: center;
     height: 40px;
     padding: 0 16px 0 12px;
-    .my-input {
-      max-width: 100%;
-    }
 
+    .front {
+      min-width: 152px;
+      .my-input {
+        max-width: 100%;
+      }
+    }
+    .icon-and-text {
+      display: flex;
+      align-items: center;
+      max-width: 280px;
+    }
+    .card-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .bianjiIcon {
       margin-right: 10px;
       cursor: pointer;

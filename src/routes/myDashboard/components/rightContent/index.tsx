@@ -1,5 +1,6 @@
 import { memo, useState } from "react";
 import "./index.less";
+import { connect } from 'dva'
 
 import {
   Row, Col, Button, Spin, message, Form,
@@ -13,8 +14,10 @@ import DarkModal from '../darkThemeModal/index'
 import Preview from '../../../dashboardTemplate/preview/index'
 
 const RightContent = (props: any) => {
-  const { listData } = props
-
+  const { listData, dashboardManage, dispatch } = props
+  console.log('dashboardManage', dashboardManage);
+  /** **工作空间id  */
+  const spaceId = 1
   const [showFabuModal, setShowFabuModal] = useState(false)
   // 显示二级发布弹窗
   const [isShared, setIsShared] = useState(false)
@@ -24,10 +27,21 @@ const RightContent = (props: any) => {
   const [fabuLoading, setFabuLoading] = useState(false)
 
   const [curAppId, setCurAppId] = useState('')
+  /** ***** 每个appCard 进行复制、删除等操作后都需要刷新内容列表 ******* */
+  const refreshList = () => {
+    const finalBody = {
+      pageNo: 1,
+      pageSize: 1000,
+      spaceId,
+    }
+    dispatch({
+      type: 'dashboardManage/getTemplateList',
+      payload: finalBody,
+    })
+  }
 
   // TODO 点击发布的时候，怎么判断是否已经发布(easyv上有两个接口)
   // TODO　如果已经发布了，直接就显示　发布详情里的内容
-
 
   // 打开发布Modal, 顺便获取当前应用的id
   const changeFabuModal = (bool: boolean, id: string) => {
@@ -66,11 +80,15 @@ const RightContent = (props: any) => {
   }
 
   return <div className="RightContent-wrap">
-    <Row gutter={[26, 26]}>
+    <Row style={{ width: '100%' }} gutter={[26, 26]}>
       {
         listData.map((item: any, index: number) => (
           <Col span={6}>
-            <AppCard changeFabuModal={changeFabuModal} {...item} />
+            <AppCard
+              {...item}
+              changeFabuModal={changeFabuModal}
+              refreshList={refreshList}
+            />
           </Col>
         )
         )
@@ -178,4 +196,6 @@ const RightContent = (props: any) => {
   </div >;
 };
 
-export default memo(RightContent);
+export default memo(connect(
+  ({ dashboardManage }: any) => ({ dashboardManage })
+)(RightContent));
