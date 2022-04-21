@@ -15,8 +15,10 @@ const Range = props => {
   };
   const _data = props.data
   const [range, setRange] = useState(_data.value);
-  const _min = typeof (_data?.config?.min) !== 'undefined' ? _data.config.min : Number.MIN_SAFE_INTEGER
-  const _max = typeof (_data?.config?.max) !== 'undefined' ? _data?.config?.max : Number.MAX_SAFE_INTEGER
+  // const _min = typeof (_data?.config?.min) !== 'undefined' ? _data.config.min : Number.MIN_SAFE_INTEGER
+  // const _max = typeof (_data?.config?.max) !== 'undefined' ? _data?.config?.max : Number.MAX_SAFE_INTEGER
+  const _min = typeof (_data?.config?.min) !== 'undefined' ? _data.config.min : 0
+  const _max = typeof (_data?.config?.max) !== 'undefined' ? _data?.config?.max : 100
   const _step = typeof (_data?.config?.step) !== 'undefined' ? _data?.config?.step : 1
 
   const _inputData = Object.assign(
@@ -29,8 +31,8 @@ const Range = props => {
 
   const rangeChange = (e) => {
     setRange(e)
-    _data.value = e
-    _inputData.value = e
+    _data.value = e[0] || 100
+    _inputData.value = e[0] || 100
     props.onChange()
   }
   const rangeInputChange = () => {

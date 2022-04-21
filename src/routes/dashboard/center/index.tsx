@@ -12,7 +12,7 @@ import { Button } from 'antd'
 import { useClickAway, useKeyPress, useMouse, useThrottle } from 'ahooks'
 import Ruler from './components/Ruler'
 import { IScaleDragData, IStyleConfig } from './type'
-import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT } from './constant'
+import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from './constant'
 import RulerLines from './components/RulerLines'
 import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
 import { throttle } from '../../../utils/common'
@@ -32,6 +32,7 @@ const Center = ({ bar, dispatch }: any) => {
   // let supportLinesRef: any = useRef(null)
   const treeData = bar.treeData
   let supportLinesRef = bar.supportLinesRef
+
 
   const findItem = (name: string) => {
     return bar.pageConfig.find((item: any) => {
@@ -165,12 +166,7 @@ const Center = ({ bar, dispatch }: any) => {
     { position: { x, y }, style: { width, height } }: IScaleDragData,
     { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
   ) => {
-    // const { position, style } = lastScaleDragData
-    console.log('x', x, ',lastX', lastX)
-    console.log('y', y, ',lastY', lastY)
-    console.log('width', width, ',lastWidth', lastWidth)
-    console.log('height', height, ',lastHeight', lastHeight)
-    if(bar.selectedComponentOrGroup.length === 1) {
+    if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
       const component = bar.selectedComponents[0]
       const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
       styleDimensionConfig.forEach((item: IStyleConfig) => {
@@ -253,17 +249,17 @@ const Center = ({ bar, dispatch }: any) => {
           }
         })
       })
-      calcScaleAfterComponentsConfig()
     }
     dispatch({
       type: 'bar/updateComponent',
       payload: bar.selectedComponents,
     })
     dispatch({
-      type: 'bar/save',
+      type: 'bar/setGroupConfig',
       payload: {
+        config: { position: { x, y }, style: { width, height } },
         isCanClearAllStatus: false,
-      },
+      }
     })
   }
 
