@@ -530,7 +530,7 @@ export default {
             components,
           },
         })
-      } catch(e) {
+      } catch (e) {
         console.log('e', e)
         return e
       }
@@ -631,6 +631,7 @@ export default {
     },
     // 添加组件到画布
     * addComponent({ payload }: any, { call, put }: any) {
+      debugger
       yield put({
         type: 'addLayer',
         payload: { final: payload, insertId: payload.insertId },
@@ -660,7 +661,7 @@ export default {
         payload: layers,
       })
       yield put({
-        type: 'addComponent',
+        type: 'updateComponents',
         payload: components,
       })
     },
@@ -699,15 +700,32 @@ export default {
         type: 'calcDragScaleData',
       })
     },
-    * createComponent({ payload }: any, { call, put }: any) {
-      const { data } = yield http({
+    * createComponent({ payload, itemData }: any, { call, put, select }: any): any {
+      debugger
+      const state: any = yield select((state: any) => state)
+      // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
+      const insertId = state.bar.key.length !== 0 ? state.bar.key[state.bar.key.length - 1] : state.bar.treeData[0].id
+      yield http({
         url: '/visual/module/add',
         method: 'post',
         body: {
           dashboardId: '1513702962304577537',
-          configs: payload,
+          component: payload,
+          insertId: insertId,
+          children: [],// TODO: 需要确定children从哪里来
         },
       })
+
+      yield put({
+        type: 'updateComponents',
+        payload: payload
+      })
+
+      yield put({
+        type: 'addComponent',
+        payload: itemData
+      })
+
     },
     * updateComponent({ payload }: any, { call, put }: any): any {
       const { data } = yield http({
@@ -719,7 +737,7 @@ export default {
         },
       })
     },
-    
+
   },
 
   reducers: {
@@ -750,7 +768,8 @@ export default {
       return { ...state }
     },
     // 添加新的图层和组件
-    addComponent(state: IBarState, { payload }: any) {
+    updateComponents(state: IBarState, { payload }: any) {
+      debugger
       state.components = state.components.concat(payload)
       return { ...state }
     },
@@ -1064,7 +1083,7 @@ export default {
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
       console.log('GGGGGGGGGGGGGGGG', state.treeData)
-      if(!state.isCanClearAllStatus) {
+      if (!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true
         return {
           ...state,

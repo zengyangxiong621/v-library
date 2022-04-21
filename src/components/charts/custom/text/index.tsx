@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import componentDefaultConfig from './config'
 
 interface Props {
   config?: any
