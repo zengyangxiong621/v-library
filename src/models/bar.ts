@@ -694,12 +694,12 @@ export default {
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId = state.bar.key.length !== 0 ? state.bar.key[state.bar.key.length - 1] : state.bar.treeData[0].id
-      yield http({
+      const {id, children}: any = yield http({
         url: '/visual/module/add',
         method: 'post',
         body: {
           dashboardId: '1513702962304577537',
-          component: payload,
+          component: {...payload},
           insertId: insertId,
           children: [],// TODO: 需要确定children从哪里来
         },
@@ -707,7 +707,7 @@ export default {
 
       yield put({
         type: 'updateComponents',
-        payload: payload
+        payload: {...payload, id: id, children: children}
       })
 
       yield put({
@@ -751,10 +751,12 @@ export default {
       } else {
         insertId = treeData[0].id
       }
-      generateLayers(state.treeData, insertId, payload.final)
+      const newLayers = generateLayers(state.treeData, insertId, payload.final)
+
+      console.log(newLayers, '==================')
 
       console.log('新增后的treeData', state.treeData)
-      return { ...state }
+      return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
