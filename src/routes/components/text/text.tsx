@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 // import { connect } from 'dva';
-import { connect } from '../../utils/connect';
+import { connect } from '../../../utils/connect';
 import { Select, Input } from 'antd';
-import { Text } from '../../components/charts/custom/text/index'; // TODO: @可用设置
-import RemoteBaseComponent from '../../components/RemoteBaseComponent';
+import { Text } from '../../../components/charts/custom/text/index'; // TODO: @可用设置
+import RemoteBaseComponent from '../../../components/RemoteBaseComponent';
 interface Props {
   dispatch?: any,
   components?: any

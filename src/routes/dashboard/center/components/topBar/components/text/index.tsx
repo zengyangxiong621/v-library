@@ -12,16 +12,6 @@ const mapStateToProps = (state: any) => {
   return state
 }
 
-const componentCreate = ({ dispatch }: any) => {
-  console.log(dispatch, '===============================================')
-  dispatch({
-    type: 'dashboard/create',
-    payload: {
-      test: '1111'
-    }
-  })
-}
-
 const Text = (props: any) => {
   const [dataArr, setDataArr] = useState<any>([])
   useEffect(() => {
@@ -29,7 +19,7 @@ const Text = (props: any) => {
       const getData = async () => {
         const { data }: any = await myFetch('/visual/module-manage/queryModuleList', {
           body: JSON.stringify({
-            type: [0],
+            type: [2],// 0:图表 2:文本
             status: 0,
             pageNo: 0,
             pageSize: 100,
@@ -37,14 +27,8 @@ const Text = (props: any) => {
         })
         data.content.push({ name: 'cccccccc' })
         setDataArr(data.content)
-        setTimeout(() => {
-          console.log('变量变量');
-          setDataArr([{
-            name: 'dddddddddddddddd'
-          }])
-        }, 2000);
       }
-      // getData()
+      getData()
     }
     init()
   }, [])
@@ -62,5 +46,4 @@ const Text = (props: any) => {
   )
 }
 
-export default connect(mapStateToProps)(Text);
-// export default memo(Text)
+export default memo(Text)

@@ -23,10 +23,12 @@ export const generateLayers = (
 
 const insertLayerById = ( target: any[], insertId: string, newLayer: any) => {
   const recursiveFn = (data: any, id: string) => {
+    debugger
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        data.unshift(newLayer)
+        // data.unshift(newLayer)
+        data= [...data, newLayer]
         break
       } else if (item.modules && item.modules.length) {
         recursiveFn(item.modules, id);
