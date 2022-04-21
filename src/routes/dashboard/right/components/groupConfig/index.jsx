@@ -32,15 +32,15 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
 
-  const settingsChange = debounce(() => {
+  const positionChange = debounce(() => {
     console.log(groupConfig)
+    // 位置信息变化由中间画布保存
     dispatch({
       type: 'bar/save',
       payload: {
         groupConfig
       }
     })
-    saveData()
   }, 300)
 
   const saveData = async (param) => {
@@ -63,13 +63,13 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       }
     })
     saveData({
-      id:'group_1-1-1',
-      key:'hideDefault',
-      value:hideDefaultConfig.value
+      id: bar.key,
+      key: 'hideDefault',
+      value: hideDefaultConfig.value
     })
-  },300)
+  }, 300)
 
-  const opacityChange = debounce(()=>{
+  const opacityChange = debounce(() => {
     console.log(opacityConfig)
     dispatch({
       type: 'bar/save',
@@ -78,13 +78,13 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       }
     })
     saveData({
-      id:'group_1-1-1',
-      key:'opacity',
-      value:opacityConfig.value
+      id: bar.key,
+      key: 'opacity',
+      value: opacityConfig.value
     })
   }, 300)
 
-  const interactionChange= debounce(() => {
+  const interactionChange = debounce(() => {
     console.log(interactionConfig)
     dispatch({
       type: 'bar/save',
@@ -93,9 +93,9 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       }
     })
     saveData({
-      id:'group_1-1-1',
-      key:'mountAnimation',
-      value:interactionConfig.mountAnimation
+      id: bar.key,
+      key: 'mountAnimation',
+      value: interactionConfig.mountAnimation
     })
   }, 300)
 
@@ -111,7 +111,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
           {...formItemLayout}
           colon={false}
         >
-          <PositionSize data={dimensionConfig} onChange={settingsChange}></PositionSize>
+          <PositionSize data={dimensionConfig} onChange={positionChange}></PositionSize>
           <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
           <Range data={opacityConfig} onChange={opacityChange} />
           <LoadAnimation data={interactionConfig} onChange={interactionChange} />
