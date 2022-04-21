@@ -1,16 +1,21 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react'
 import './index.less'
+import { connect } from 'dva'
+import { Button } from 'antd'
 
-const AlignmentSetting = props => {
-  const alignmentChange = (str) => {
-    console.log('str', str)
+const AlignmentSetting = ({ bar, dispatch, ...props }) => {
+  const alignmentChange = (type) => {
+    dispatch({
+      type: 'bar/setAlignment',
+      payload: type,
+    })
   }
   const arrangementChange = (str) => {
     console.log('str', str)
   }
 
   return (
-    <div className='AlignmentSetting-wrap'>
+    <div className="AlignmentSetting-wrap">
       <h3 className="header">
         对齐设置
       </h3>
@@ -20,22 +25,22 @@ const AlignmentSetting = props => {
         </h4>
         <div className="pan-content">
           <span title="顶部对齐">
-            <i className="iconfont icon-jushangduiqi" onClick={() => alignmentChange('top')}></i>
+            <i className="iconfont icon-jushangduiqi" onClick={ () => alignmentChange('top') }/>
           </span>
           <span title="垂直居中对齐">
-            <i className="iconfont icon-chuizhijuzhongduiqi" onClick={() => alignmentChange('vertical')}></i>
+            <i className="iconfont icon-chuizhijuzhongduiqi" onClick={ () => alignmentChange('vertical') }></i>
           </span>
           <span title="底部对齐">
-            <i className="iconfont icon-juxiaduiqi" onClick={() => alignmentChange('bottom')}></i>
+            <i className="iconfont icon-juxiaduiqi" onClick={ () => alignmentChange('bottom') }></i>
           </span>
           <span title="左对齐">
-            <i className="iconfont icon-zuoduiqi-" onClick={() => alignmentChange('left')}></i>
+            <i className="iconfont icon-zuoduiqi-" onClick={ () => alignmentChange('left') }></i>
           </span>
           <span title="水平居中对齐">
-            <i className="iconfont icon-shuipingjuzhongduiqi" onClick={() => alignmentChange('horizontal')}></i>
+            <i className="iconfont icon-shuipingjuzhongduiqi" onClick={ () => alignmentChange('horizontal') }></i>
           </span>
           <span title="右对齐">
-            <i className="iconfont icon-juyouduiqi" onClick={() => alignmentChange('right')}></i>
+            <i className="iconfont icon-juyouduiqi" onClick={ () => alignmentChange('right') }></i>
           </span>
         </div>
         <h4 className="pan-title">
@@ -43,10 +48,10 @@ const AlignmentSetting = props => {
         </h4>
         <div className="pan-content">
           <span title="水平分布">
-            <i className="iconfont icon-horizontal" onClick={() => arrangementChange('horizontal')}></i>
+            <i className="iconfont icon-horizontal" onClick={ () => arrangementChange('horizontal') }></i>
           </span>
           <span title="垂直分布">
-            <i className="iconfont icon-vertical" onClick={() => arrangementChange('vertical')}></i>
+            <i className="iconfont icon-vertical" onClick={ () => arrangementChange('vertical') }></i>
           </span>
         </div>
       </div>
@@ -54,4 +59,6 @@ const AlignmentSetting = props => {
   )
 }
 
-export default memo(AlignmentSetting)
+export default connect(({ bar }) => ({
+  bar,
+}))(AlignmentSetting)
