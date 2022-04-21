@@ -27,11 +27,18 @@
       background: @bgColor;
       display:flex;
       justify-content:flex-start;
-      padding:8px;
-      margin-bottom: 16px;
+      margin: 8px 8px 16px 8px;
+      height: 24px;
+      line-height: 24px;
       .fif-title{
         color:#ccc;
         margin-right: 8px;
+      }
+      .site-tag-plus{
+        border: 1px solid @activeComponentBgColor;
+        color: @activeFontColor;
+        height:24px;
+        line-height: 24px;
       }
     }
     .code-editor {
@@ -87,8 +94,19 @@
   .sort-dot{
     cursor:move;
     position:absolute;
+    z-index: 1;
+    left:8px;
   }
-  .custom-collapse{
-    padding-left: 20px;
+  .ant-collapse-header{
+    padding-left: 50px !important;
+  }
+  .sort-box{
+    position: absolute;
+    left:22px;
+    top:7px;
+    z-index: 1;
+  }
+  .ant-checkbox-inner{
+    background: @bgColor;
   }
 }
