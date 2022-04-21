@@ -2211,9 +2211,6 @@ export default {
         },
         [],
       )
-      console.log('----------------')
-      console.log('selectedComponentOrGroup', state.selectedComponentOrGroup)
-      console.log('----------------')
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
