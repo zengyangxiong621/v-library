@@ -1,5 +1,5 @@
 import BasicLayout from './components/layouts/basicLayout';
-import Components from './routes/components';
+import Components from './routes/components/text';
 import DashboardManage from './routes/myDashboard';
 import DashboardTemplate from './routes/dashboardTemplate';
 import Dashboard from './routes/dashboard';
