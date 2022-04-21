@@ -12,7 +12,7 @@ import {
   deepForEach,
 } from '../utils'
 
-import { COMPONENTS } from '../constant/home'
+import { COMPONENTS, LEFT, TOP, WIDTH, HEIGHT, OPACITY, HIDE_DEFAULT } from '../constant/home'
 
 import {
   ILayerComponent,
@@ -44,7 +44,6 @@ import { http } from './utils/request'
 interface IBarState {
   key: string[];
   isShowRightMenu: boolean,
-  isFolder: boolean;
   operate: string;
   lastRightClick: string;
   treeData: any[];
@@ -60,6 +59,7 @@ interface IBarState {
   selectedComponents: any;
   scaleDragData: any;
   componentConfig: any;
+  groupConfig: any;
   isMultipleTree: boolean;
   allComponentRefs: any;
   allComponentDOMs: any;
@@ -83,7 +83,6 @@ export default {
     isCanClearAllStatus: true,
     key: [],
     isShowRightMenu: false,
-    isFolder: false,
     lastRightClick: '',
     isMultipleTree: true,
     operate: '',
@@ -196,7 +195,6 @@ export default {
       {
         name: 'dimension',
         displayName: '位置尺寸',
-        type: 'dimensionGroup',
         config: {
           lock: false,
         },
@@ -243,19 +241,11 @@ export default {
         name: 'hideDefault',
         displayName: '默认隐藏',
         value: false,
-        type: 'checkBox',
       },
       {
         name: 'opacity',
         displayName: '透明度',
-        value: 0.7,
-        type: 'range',
-        config: {
-          min: 0,
-          max: 1,
-          step: 0.01,
-          suffix: '%', // 输入框后缀
-        },
+        value: 100,
       },
       {
         name: 'interaction',
@@ -553,9 +543,9 @@ export default {
         payload: treeDataCopy,
       })
       yield put({
-        type: 'bar/selectedNode',
+        type: 'bar/save',
         payload: {
-          key: [newLayerId],
+          key: [ newLayerId ],
         },
       })
     },
@@ -670,7 +660,6 @@ export default {
       yield put({ type: 'selectedNode', payload })
     },
     * chooseLayer({ payload }: any, { call, put }: any): any {
-      console.log('是这里吗')
       yield put({
         type: 'save',
         payload: {
@@ -688,12 +677,12 @@ export default {
         type: 'calcDragScaleData',
       })
     },
-    * setKeys({ payload }: any, { call, put }: any): any {
+    * selectLayers({ payload }: any, { call, put }: any): any {
       yield put({
         type: 'clearLayersSelectedStatus',
       })
       yield put({
-        type: 'setNodeList',
+        type: 'setLayers',
         payload,
       })
       yield put({
@@ -728,7 +717,7 @@ export default {
 
     },
     * updateComponent({ payload }: any, { call, put }: any): any {
-      const { data } = yield http({
+      yield http({
         url: '/visual/module/update',
         method: 'post',
         body: {
@@ -773,9 +762,6 @@ export default {
       state.components = state.components.concat(payload)
       return { ...state }
     },
-    selectedNode(state: IBarState, { payload }: any) {
-      return { ...state, ...payload }
-    },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = false
@@ -803,7 +789,7 @@ export default {
       state.selectedComponents = state.components.filter((component) => state.selectedComponentIds.includes(component.id))
       state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if (state.selectedComponentIds.includes(key)) {
+        if(state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key]
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
@@ -814,10 +800,12 @@ export default {
     calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = []
       let yPositionList: number[] = []
-      if (state.selectedComponentOrGroup.length === 1) {
+      let status: '分组' | '多组件' = '分组'
+      if(state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0]
-        if ('modules' in firstLayer) {
+        if(COMPONENTS in firstLayer) {
           // 单个组
+          status = '分组'
           const positionArr = calcGroupPosition(
             firstLayer[COMPONENTS],
             state.components,
@@ -827,15 +815,15 @@ export default {
         } else {
           // 单个组件
           const component = state.components.find(
-            (component) => component.id === firstLayer.id,
+            component => component.id === firstLayer.id,
           )
           const dimensionConfig: any = component.config.find(
             (item: any) => item.name === DIMENSION,
           )
           dimensionConfig.value.forEach((config: any) => {
-            if (['left', 'width'].includes(config.name)) {
+            if([ 'left', 'width' ].includes(config.name)) {
               xPositionList.push(config.value)
-            } else if (['top', 'height'].includes(config.name)) {
+            } else if([ 'top', 'height' ].includes(config.name)) {
               yPositionList.push(config.value)
             }
           })
@@ -850,9 +838,11 @@ export default {
               height: yPositionList[1],
             },
           }
+          state.componentConfig = component
           return { ...state }
         }
-      } else if (state.selectedComponentOrGroup.length > 1) {
+      } else if(state.selectedComponentOrGroup.length > 1) {
+        status = '多组件'
         state.selectedComponentOrGroup.forEach((layer: any) => {
           const positionArr = calcGroupPosition(
             state.selectedComponentOrGroup,
@@ -864,6 +854,8 @@ export default {
       }
       xPositionList.sort((a, b) => a - b)
       yPositionList.sort((a, b) => a - b)
+      const width = xPositionList[xPositionList.length - 1] - xPositionList[0] || 0
+      const height = yPositionList[yPositionList.length - 1] - yPositionList[0] || 0
       state.scaleDragData = {
         position: {
           x: xPositionList[0] || 0,
@@ -871,18 +863,35 @@ export default {
         },
         style: {
           display: xPositionList[0] ? 'block' : 'none',
-          width:
-            xPositionList[xPositionList.length - 1] - xPositionList[0] || 0,
-          height:
-            yPositionList[yPositionList.length - 1] - yPositionList[0] || 0,
+          width,
+          height,
         },
+      }
+      if(status === '分组') {
+        const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
+        dimensionConfig.forEach((config: any) => {
+          switch(config.name) {
+            case LEFT:
+              config.value = xPositionList[0]
+              break
+            case TOP:
+              config.value = yPositionList[0]
+              break
+            case WIDTH:
+              config.value = width
+              break
+            case HEIGHT:
+              config.value = height
+              break
+          }
+        })
       }
       return {
         ...state,
       }
     },
     // 选中节点时，保存住整个node对象
-    setNodeList(state: IBarState, { payload }: any) {
+    setLayers(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup = payload
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
@@ -891,9 +900,9 @@ export default {
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
     pushToSelectedNode(state: IBarState, { payload }: any) {
-      const { key, isFolder } = payload
-      const newArr = [...(new Set(state.key.concat(key)) as any)]
-      return { key: newArr, isFolder }
+      const { key } = payload
+      const newArr = [ ...(new Set(state.key.concat(key)) as any) ]
+      return { key: newArr }
     },
     // 点击icon或者右键菜单里的操作
     selectOperate(state: IBarState, { payload }: any) {
@@ -912,7 +921,7 @@ export default {
     },
     testDrag(state: IBarState, { payload: { parentId } }: any) {
       // console.log('parentId', parentId)
-      const ids = ['1-1', '1-1-1', '1-1-1-1']
+      const ids = [ '1-1', '1-1-1', '1-1-1-1' ]
       const copyState: IBarState = JSON.parse(JSON.stringify(state))
       // let childrenComponents = findParentNode(
       //   copyState.draggableItems,
@@ -1028,22 +1037,19 @@ export default {
       return { ...state }
     },
     save(state: IBarState, { payload }: any) {
-      console.log('payload', payload)
       return { ...state, ...payload }
     },
     selectComponentOrGroup(
       state: IBarState,
       { payload: { layer, config } }: any,
     ) {
-      console.log('這裏？')
-
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
-      if (state.isSupportMultiple) {
+      if(state.isSupportMultiple) {
         // 多选
         layer.selected = true
         // 如果 selectedComponentOrGroup 里不存在当前点击的组件/分组的话，就添加
-        if (
+        if(
           !state.selectedComponentOrGroup.find((item) => item.id === layer.id)
         ) {
           (state.selectedComponentOrGroup as any).push(layer)
@@ -1058,7 +1064,7 @@ export default {
         // 再将自己的 select 状态设置为 true
         layer.selected = true
         // 再重新赋值 selectedComponentOrGroup 长度为 1
-        state.selectedComponentOrGroup = [layer]
+        state.selectedComponentOrGroup = [ layer ]
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
       state.key = state.selectedComponentOrGroup.map((item) => item.id)
@@ -1067,7 +1073,7 @@ export default {
       )
       state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if (state.selectedComponentIds.includes(key)) {
+        if(state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key]
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
@@ -1082,13 +1088,14 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
-      console.log('GGGGGGGGGGGGGGGG', state.treeData)
-      if (!state.isCanClearAllStatus) {
+      if(!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true
+        console.log('不清除')
         return {
           ...state,
         }
       }
+      console.log('清除')
       localStorage.removeItem('dblComponentTimes')
       localStorage.removeItem('currentTimes')
       state.currentDblTimes = 0
@@ -1103,8 +1110,8 @@ export default {
       state.isSupportMultiple = false
       // todo 选区的时候会点击到这里
       state.scaleDragData.style.display = 'none'
-      state.key.length = 0
-      state.isFolder = false
+      state.key = []
+      console.log('state.key', state.key)
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
       return { ...state }
     },
@@ -1117,6 +1124,34 @@ export default {
       state.components.splice(index, 1, state.componentConfig)
       return { ...state }
     },
-
+    setGroupConfig(state: IBarState, { payload }: any) {
+      const {
+        config: { position: { x, y }, style: { width, height }, opacity, hideDefault },
+        ...otherPayload
+      } = payload
+      const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
+      const hideDefaultConfig = state.groupConfig.find((config: any) => config.name === HIDE_DEFAULT)
+      const opacityConfig = state.groupConfig.find((config: any) => config.name === OPACITY)
+      hideDefaultConfig.value = hideDefault
+      opacityConfig.value = opacity
+      dimensionConfig.forEach((config: any) => {
+        switch(config.name) {
+          case LEFT:
+            config.value = x
+            break
+          case TOP:
+            config.value = y
+            break
+          case WIDTH:
+            config.value = width
+            break
+          case HEIGHT:
+            config.value = height
+            break
+        }
+      })
+      console.log('state.groupConfig', state.groupConfig)
+      return { ...state, ...otherPayload }
+    },
   },
 }

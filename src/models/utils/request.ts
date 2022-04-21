@@ -41,6 +41,7 @@ export const http = (config: any): any => {
   if(config.params !== null && !isPlainObject(config.params)) config.params = null
   let { url, method, credentials, headers, body, params, responseType, signal } = config
   let baseUrl = 'http://10.202.226.250:9572'
+  // let baseUrl = 'http://50423059pd.zicp.vip'
   // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
   if(params) url += `${ url.includes('?') ? '&' : '?' }${ qs.stringify(params) }`
   url = baseUrl + url
@@ -57,7 +58,7 @@ export const http = (config: any): any => {
 
   // 类似于Axios的请求拦截器，例如：把存储在客户端本地的token信息携带给服务器「根据当前后台要求处理」
   let token = localStorage.getItem('token')
-  if(token) headers['authorization'] = token
+  if(token) headers['Authorization'] = token
 
   // 发送请求
   method = method.toUpperCase()

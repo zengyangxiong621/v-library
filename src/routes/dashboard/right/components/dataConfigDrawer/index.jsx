@@ -11,19 +11,20 @@ import {
 
 import {
   Drawer,
-  Form,
   Button,
   Collapse,
   Select,
   Input,
   Modal,
-  Tabs
+  Checkbox,
+  Tag
 } from 'antd';
 
 import {
   DeleteOutlined,
   EditOutlined,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  PlusOutlined
 } from '@ant-design/icons';
 
 import AceEditor from "react-ace";
@@ -37,29 +38,25 @@ import "ace-builds/src-noconflict/theme-twilight"
 const cfilters = [
   {
     id: uuidv4(),
+    enable: true,
     name: '过滤器1',
     isEditName: false,
-    callbacks: [
-      {
-        id: uuidv4(),
-        name: '111',
-        code: `return data`,
-      }
-    ],
+    content: 'return data',
+    callbackKeys: [],
+    isAddKey: false, // 是否正在添加key
+    editkeycontent: '', // 正在编辑的key内容
     status: 0 // 0: 未编辑 1：编辑
   },
   {
     id: uuidv4(),
+    enable: true,
     name: '过滤器2',
     isEditName: false,
-    callbacks: [
-      {
-        id: uuidv4(),
-        name: '111',
-        code: `return data`,
-      }
-    ],
-    status: 0,
+    content: 'return data',
+    callbackKeys: [],
+    isAddKey: false,
+    editkeycontent: '',
+    status: 0 // 0: 未编辑 1：编辑
   },
 ]
 
@@ -67,13 +64,9 @@ const DataConfigDrawer = props => {
   const { Panel } = Collapse;
   const { Option } = Select;
   const { confirm } = Modal;
-  const { TabPane } = Tabs;
-  const [form] = Form.useForm();
 
   const [visible, setVisible] = useState(props.visible)
   const [filters, setFilters] = useState(cfilters)
-  const [currentFilter, setCurrentFilter] = useState(null)
-  const [isModalVisible, setModalVisible] = useState(false)
   const [isEdit, setEdit] = useState(false)
 
   useEffect(() => {
@@ -101,15 +94,13 @@ const DataConfigDrawer = props => {
     const all = [...filters]
     all.push({
       id: uuidv4(),
+      enable: true,
       name: '新增过滤器',
       isEditName: false,
-      callbacks: [
-        {
-          id: uuidv4(),
-          name: '111',
-          code: `return data`,
-        }
-      ],
+      content: 'return data',
+      callbackKeys: [],
+      isAddKey: false,
+      editkeycontent: '',
       status: 1 // 0: 未编辑 1：编辑
     })
     setFilters(all)
@@ -195,22 +186,44 @@ const DataConfigDrawer = props => {
     // TODO 接口保存
   }
 
-  const addCallBack = (item) => {
-    setModalVisible(true)
-    setCurrentFilter(item)
-  }
-
-  const tabEdit = (key, action, item) => {
-    console.log('key', key, action)
-    if (action === 'remove') {
-      item.callbacks = item.callbacks.filter(cb => cb.id !== key)
-    }
+  const enableFifter = (e, item) => {
+    console.log('e', e)
+    item.enable = e.target.checked
     const all = [...filters]
     setFilters(all)
   }
 
-  const codeChange = debounce((e, code, item) => {
-    code.code = e
+  const handleCallbackKeyClose = (key, item) => {
+    item.status = 1
+    item.callbackKeys = item.callbackKeys.filter(tag => tag !== key)
+    const all = [...filters]
+    setFilters(all)
+  }
+
+  const addKeyHandle = item => {
+    item.isAddKey = true
+    const all = [...filters]
+    setFilters(all)
+  }
+
+  const handleKeyInputChange = debounce((e, item) => {
+    item.editkeycontent = e.target.value
+    const all = [...filters]
+    setFilters(all)
+  }, 300)
+
+  const handleKeyInputConfirm = (item) => {
+    if (item.editkeycontent) {
+      item.callbackKeys.push(item.editkeycontent)
+    }
+    item.editkeycontent = ''
+    item.isAddKey = false
+    const all = [...filters]
+    setFilters(all)
+  }
+
+  const codeChange = debounce((e, item) => {
+    item.content = e
     item.status = 1
     const all = [...filters]
     setFilters(all)
@@ -226,28 +239,6 @@ const DataConfigDrawer = props => {
     const all = [...filters]
     setFilters(all)
     props.onSave(filters)
-  }
-
-  const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
-      currentFilter.callbacks.push({
-        id: uuidv4(),
-        name: values.field,
-        code: `return data`,
-      })
-      currentFilter.status = 1
-      const all = [...filters]
-      setFilters(all)
-      setModalVisible(false)
-    } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
-    }
-  }
-
-  const handleCancel = () => {
-    setModalVisible(false)
-    form.setFieldsValue({ field: '' })
   }
 
   const arrayMove = (array, from, to) => {
@@ -274,6 +265,7 @@ const DataConfigDrawer = props => {
   const SortableItem = sortableElement(({ item }) => (
     <li className="fifter-sort-item">
       <DragHandle />
+      <Checkbox defaultChecked={item.enable} onChange={v => enableFifter(v, item)} className="sort-box" />
       <Collapse
         accordion
         key={item.id}
@@ -282,41 +274,57 @@ const DataConfigDrawer = props => {
           <div className="filter-wraper">
             <div className="header">
               <span className="fif-title">回调字段</span>
-              <Button ghost type="primary" onClick={() => { addCallBack(item) }}>添加回调</Button>
+              {
+                item.callbackKeys.map(key => (
+                  <Tag
+                    closable
+                    onClose={e => {
+                      e.preventDefault();
+                      handleCallbackKeyClose(key, item);
+                    }}
+                  >
+                    {key}
+                  </Tag>
+                ))
+              }
+              {/* {JSON.stringify(item)} */}
+              {item.isAddKey ? (
+                <Input
+                  type="text"
+                  style={{ width: 78 }}
+                  defaultValue={item.editkeycontent}
+                  onChange={e => handleKeyInputChange(e, item)}
+                  onBlur={()=>handleKeyInputConfirm(item)}
+                  onPressEnter={()=>handleKeyInputConfirm(item)}
+                />
+              ) : (
+                <Tag onClick={()=>addKeyHandle(item)} className="site-tag-plus">
+                  <PlusOutlined /> 添加回调
+                </Tag>
+              )}
             </div>
             <div className="body">
-              <Tabs
-                hideAdd
-                defaultActiveKey={item.callbacks.length ? item.callbacks[0].id : null}
-                type="editable-card"
-                onEdit={(key, action) => tabEdit(key, action, item)}
-              >
-                {item.callbacks.map(pane => (
-                  <TabPane tab={pane.name} key={pane.id}>
-                    <div className="code-editor">
-                      <div className="cus-code">{`function filter(data){`}</div>
-                      <div className="code-wraper">
-                        <AceEditor
-                          mode='javascript'
-                          theme="twilight"
-                          onChange={e => codeChange(e, pane, item)}
-                          name={uuidv4()}
-                          editorProps={{ $blockScrolling: true }}
-                          value={pane.code}
-                          setOptions={{
-                            enableBasicAutocompletion: true,
-                            enableLiveAutocompletion: true,
-                            enableSnippets: true,
-                            showGutter: true,
-                          }}
-                          style={{ width: '100%', height: '100%' }}
-                        />
-                      </div>
-                      <div className="cus-code">{`}`}</div>
-                    </div>
-                  </TabPane>
-                ))}
-              </Tabs>
+              <div className="code-editor">
+                <div className="cus-code">{`function filter(data){`}</div>
+                <div className="code-wraper">
+                  <AceEditor
+                    mode='javascript'
+                    theme="twilight"
+                    onChange={e => codeChange(e, item)}
+                    name={uuidv4()}
+                    editorProps={{ $blockScrolling: true }}
+                    value={item.content}
+                    setOptions={{
+                      enableBasicAutocompletion: true,
+                      enableLiveAutocompletion: true,
+                      enableSnippets: true,
+                      showGutter: true,
+                    }}
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                </div>
+                <div className="cus-code">{`}`}</div>
+              </div>
             </div>
             <div className="bottom">
               <p className={['status', item.status === 0 ? 'saved' : 'unsave'].join(' ')}>
@@ -359,40 +367,6 @@ const DataConfigDrawer = props => {
           <SortableItem key={item.id} index={index} item={item} />
         ))}
       </SortableContainer>
-      <Modal
-        title="添加回调"
-        visible={isModalVisible}
-        cancelText='取消'
-        okText='确认'
-        onOk={handleOk}
-        onCancel={handleCancel}>
-        <Form
-          name="basic"
-          labelCol={{
-            span: 6,
-          }}
-          wrapperCol={{
-            span: 18,
-          }}
-          initialValues={{ field: 'aaa' }}
-          autoComplete="off"
-          labelAlign="left"
-          form={form}
-        >
-          <Form.Item
-            label="回调字段名"
-            name="field"
-            rules={[
-              {
-                required: true,
-                message: '回调字段名不能为空!',
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
     </Drawer>
   )
 }

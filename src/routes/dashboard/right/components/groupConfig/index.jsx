@@ -32,15 +32,15 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
 
-  const settingsChange = debounce(() => {
+  const positionChange = debounce(() => {
     console.log(groupConfig)
+    // 位置信息变化由中间画布保存
     dispatch({
       type: 'bar/save',
       payload: {
         groupConfig
       }
     })
-    saveData()
   }, 300)
 
   const saveData = async (param) => {
@@ -50,8 +50,15 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       dashboardId: "1513702962304577537"
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useFetch('/visual/layer/group/update', {
+    const data = await useFetch('/visual/layer/group/update', {
       body: JSON.stringify(params)
+    })
+    console.log('layers', data[1])
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        treeData: data[1]
+      }
     })
   }
 
@@ -63,13 +70,13 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       }
     })
     saveData({
-      id:'group_1-1-1',
+      id: bar.key[0],
       key:'hideDefault',
       value:hideDefaultConfig.value
     })
-  },300)
+  }, 300)
 
-  const opacityChange = debounce(()=>{
+  const opacityChange = debounce(() => {
     console.log(opacityConfig)
     dispatch({
       type: 'bar/save',
@@ -78,13 +85,13 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       }
     })
     saveData({
-      id:'group_1-1-1',
+      id: bar.key[0],
       key:'opacity',
       value:opacityConfig.value
     })
   }, 300)
 
-  const interactionChange= debounce(() => {
+  const interactionChange = debounce(() => {
     console.log(interactionConfig)
     dispatch({
       type: 'bar/save',
@@ -93,7 +100,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       }
     })
     saveData({
-      id:'group_1-1-1',
+      id: bar.key[0],
       key:'mountAnimation',
       value:interactionConfig.mountAnimation
     })
@@ -111,7 +118,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
           {...formItemLayout}
           colon={false}
         >
-          <PositionSize data={dimensionConfig} onChange={settingsChange}></PositionSize>
+          <PositionSize data={dimensionConfig} onChange={positionChange}/>
           <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
           <Range data={opacityConfig} onChange={opacityChange} />
           <LoadAnimation data={interactionConfig} onChange={interactionChange} />

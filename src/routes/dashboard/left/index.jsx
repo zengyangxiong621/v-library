@@ -143,38 +143,34 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   //选择的树节点
   const onSelect = (curKey, e, node) => {
+    let temp = curKey
     // 和[selected,_]重了
     // const { selected } = e
-
+    console.log('e.selectedNodes', e.selectedNodes)
     const isSelected = e.selected
     const { key } = e.node
-    const isFolder = !!e.node.children
     dispatch({
-      type: 'bar/setKeys',
+      type: 'bar/selectLayers',
       payload: e.selectedNodes,
     })
     // 多选情况下，点击那个剩哪个
     if (!isSelected) {
-      let temp = []
       // 多选情况下，按住ctrl键时，应该是取消选中所点击的那项
       //           没有按住ctrl键时，应该只保留所点击的那项
       isCtrlKeyPressing ? (temp = curKey) : (temp = [key])
       setSelected(temp)
       dispatch({
-        type: 'bar/selectedNode',
+        type: 'bar/save',
         payload: {
           key: temp,
-          isFolder,
         },
       })
-
       return
     }
     dispatch({
-      type: 'bar/selectedNode',
+      type: 'bar/save',
       payload: {
-        key: curKey,
-        isFolder,
+        key: temp,
       },
     })
 
@@ -189,7 +185,6 @@ const Left = ({ dispatch, bar, operate }) => {
   const onRightClick = ({ event, node }) => {
     event.stopPropagation()
     const { modules, key } = node
-    const isFolder = !!modules
     setIsMultipleTree(false)
     // 如果有选中了的节点 并且 此次右击的目标是其中一个，则展开菜单，
     // 否则，重置已选中节点 并 单选中当前节点以及展开右键菜单
@@ -203,10 +198,9 @@ const Left = ({ dispatch, bar, operate }) => {
     setSelected(t)
     // !用seletced在本次渲染中不能获取到
     dispatch({
-      type: 'bar/selectedNode',
+      type: 'bar/save',
       payload: {
         key: t,
-        isFolder,
       },
     })
     // 确认分组时点击的是哪个节点

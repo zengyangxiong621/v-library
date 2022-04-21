@@ -230,7 +230,6 @@ const group: groupParams2 = (treeData, selectedNodes) => {
     title: '分组',
     id: `group_${ new Date().getTime() }`,
     icon: 'SmileOutlined',
-    isFolder: true,
     isShow: true,
     isLock: false,
     singleShowLayer: false,
@@ -356,10 +355,8 @@ const generateTreeData: () => any = () => {
       let key = `${ preKey }-${ i }`
       let prefix = ''
       const parentId = +preKey === 0 ? 'parent' : preKey
-      let isFolder: boolean = false
       if(i < 2) {
         modules.push(key)
-        isFolder = true
         prefix = `group_`
       } else {
         prefix = `components_`
@@ -375,7 +372,6 @@ const generateTreeData: () => any = () => {
         isLock,
         singleShowLayer: false,
         showRenameInput: false,
-        isFolder,
       })
     }
     if(_level < 0) {
