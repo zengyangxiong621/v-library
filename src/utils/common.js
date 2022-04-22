@@ -12,6 +12,11 @@ const find = (arr, val, field = 'name') => {
   })
 }
 
+const truncValue = object => {
+  object.value = Math.trunc(object.value)
+  return object
+}
+
 /**
  * 防抖
  * @param {*} fn
@@ -51,4 +56,5 @@ export {
   find,
   debounce,
   throttle,
+  truncValue,
 }
