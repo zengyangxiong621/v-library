@@ -42,6 +42,7 @@ import { generateLayers } from './utils/generateLayers'
 import { http } from './utils/request'
 
 interface IBarState {
+  dashboardId: string,
   key: string[];
   isShowRightMenu: boolean,
   operate: string;
@@ -79,6 +80,7 @@ interface IBarState {
 export default {
   namespace: 'bar',
   state: {
+    dashboardId: '',
     currentDblTimes: 0,
     isCanClearAllStatus: true,
     key: [],
@@ -504,6 +506,12 @@ export default {
   },
 
   effects: {
+    * getDashboardId ({ payload }: any, { call, put, select }: any) {
+      yield put({
+        type:'changeDashboardId',
+        payload: payload
+      })
+    },
     * getDashboardDetails({ payload }: any, { call, put, select }: any) {
       try {
         const {
@@ -594,11 +602,12 @@ export default {
     },
     // 更改图层组织
     * update({ payload }: any, { select, call, put }: any): any {
+      const state: any = yield select((state: any) => state)
       const layers = yield http({
         url: '/visual/layer/update',
         method: 'post',
         body: {
-          dashboardId: '1513702962304577537',
+          dashboardId: state.bar.dashboardId,
           layers: payload,
         },
       })
@@ -621,7 +630,6 @@ export default {
     },
     // 添加组件到画布
     * addComponent({ payload }: any, { call, put }: any) {
-      debugger
       yield put({
         type: 'addLayer',
         payload: { final: payload, insertId: payload.insertId },
@@ -690,7 +698,6 @@ export default {
       })
     },
     * createComponent({ payload, itemData }: any, { call, put, select }: any): any {
-      debugger
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId = state.bar.key.length !== 0 ? state.bar.key[state.bar.key.length - 1] : state.bar.treeData[0].id
@@ -698,7 +705,7 @@ export default {
         url: '/visual/module/add',
         method: 'post',
         body: {
-          dashboardId: '1513702962304577537',
+          dashboardId: state.bar.dashboardId,
           component: {...payload},
           insertId: insertId,
           children: [],// TODO: 需要确定children从哪里来
@@ -716,12 +723,13 @@ export default {
       })
 
     },
-    * updateComponent({ payload }: any, { call, put }: any): any {
+    * updateComponent({ payload }: any, { call, put, select }: any): any {
+      const state: any = yield select((state: any) => state)
       yield http({
         url: '/visual/module/update',
         method: 'post',
         body: {
-          dashboardId: '1513702962304577537',
+          dashboardId: state.bar.dashboardId,
           configs: payload,
         },
       })
@@ -730,6 +738,9 @@ export default {
   },
 
   reducers: {
+    changeDashboardId(state: IBarState, { payload }: any) {
+      return {...state, dashboardId: payload}
+    },
     initTreeData(state: IBarState, { payload }: any) {
       payload.forEach((layer: any) => {
         layer.cancel = false
@@ -743,7 +754,6 @@ export default {
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
-      debugger
       let insertId: String
       const { treeData } = state
       if (payload.insertId && treeData.length) {
@@ -753,14 +763,11 @@ export default {
       }
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
 
-      console.log(newLayers, '==================')
-
       console.log('新增后的treeData', state.treeData)
       return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
-      debugger
       state.components = state.components.concat(payload)
       return { ...state }
     },
