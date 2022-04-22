@@ -10,19 +10,17 @@ import { IconFont } from '../../../../utils/useIcon'
 import { Input, Tooltip, Dropdown, Menu, message } from 'antd'
 
 const AppCard = (props: any) => {
-  const { id, name, status, photoUrl, changeFabuModal, refreshList, history } = props
+  const { id, name, status, photoUrl,
+    openMoveGroupModal, changeFabuModal, refreshList, history } = props
 
   // 后端返回的photoUrl为空，则使用默认图片
   const picUrl = photoUrl ?? require('../../../../assets/images/模板默认背景图.png')
 
-
   const [canEdit, setCanEdit] = useState(false)
   const [appName, setAppName] = useState(name)
-  // TODO 更多菜单点完不消失
-  const [showMenu, setShowMenu] = useState(false)
+  const [isShowUL, setIsShowUL] = useState(false)
 
   const inputRef = useRef<any>()
-
 
   /** 输入框事件 */
   const bianjiClick = () => {
@@ -38,22 +36,27 @@ const AppCard = (props: any) => {
   }
   const changAppName = async (e: any) => {
     // 校验： 如果两次修改的名称一样，那就不发请求了
-    if(name === appName) {
-      message.warning({content: '新旧名称不能相同', duration: 2})
+    console.log('name', name);
+    console.log('appName', appName);
+    if (name === appName) {
+      message.warning({ content: '新旧名称不能相同', duration: 2 })
+      setCanEdit(false)
       return
     }
-    const [err, data] = await useFetch('/application/updateAppName', {
+    const [err, data] = await useFetch('/visual/application/updateAppName', {
       body: JSON.stringify({
         id,
         name: appName
       })
+    }, {
+      onlyNeedWrapData: true
     })
-    console.log('应用名称修改成功', data);
-    if(data) {
-      message.success({content: '应用名修改成功', duration: 2})
+    console.log('da', data);
+    if (data.data) {
+      message.success({ content: '应用名修改成功', duration: 2 })
       refreshList()
     } else {
-      message.error({content: '应用名称修改失败', duration: 2})
+      message.error({ content: data.message || '应用名称修改失败', duration: 2 })
     }
     setCanEdit(false)
   }
@@ -82,7 +85,7 @@ const AppCard = (props: any) => {
         appId
       })
     })
-    // 有id, 视为复制成功
+    // 返回的数据有id, 视为复制成功
     if (data && data.id) {
       refreshList()
       message.success({ content: '复制成功', duration: 2 })
@@ -105,25 +108,30 @@ const AppCard = (props: any) => {
       message.error({ content: '删除失败', duration: 2 })
     }
   }
-  const refreshAppList = () => {
-
+  // 移动分组
+  const moveGroup = (appId: string) => {
+    openMoveGroupModal(appId)
   }
-  const menuClick = ({ item, key }: any) => {
-    console.log('iteml', item);
-    console.log('key', key);
-    switch (key) {
-      case 'move':
+  // 鼠标移入更多按钮时，显示下拉菜单
+  const moreIconMouseOver = () => {
+    setIsShowUL(true)
+  }
+  // 点击更多列表下的选项
+  const ulClick = (e: any) => {
+    const operation = e.target.innerHTML
+    switch (operation) {
+      case '移入分组':
+        moveGroup(id)
         break;
-      case 'copy':
+      case '复制':
         copyApp(id)
-        setShowMenu(false)
         break;
-      case 'delete':
+      case '删除':
         deleteApp([id])
         break;
     }
-    // 刷新应用列表
-    refreshAppList()
+    // 点击任意菜单子项后，需要隐藏ul
+    setIsShowUL(false)
   }
 
   return (
@@ -144,10 +152,17 @@ const AppCard = (props: any) => {
               }} type='icon-fabu' />
             </Tooltip>
             <div className='more-icon'>
-              <IconFont className='each-icon' type='icon-gengduo' />
+              <IconFont onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
               <div className="more"
               >
-                <Menu mode="vertical" onSelect={(menuClick as any)}>
+                <ul className='more-ul' style={{
+                  display: isShowUL ? 'block' : 'none'
+                }} onClick={(e) => ulClick(e)}>
+                  <li key="move">移入分组</li>
+                  <li>复制</li>
+                  <li>删除</li>
+                </ul>
+                {/* <Menu mode="vertical" onSelect={(menuClick as any)}>
                   <Menu.Item key='move'>
                     <span>移入分组</span>
                   </Menu.Item>
@@ -157,7 +172,7 @@ const AppCard = (props: any) => {
                   <Menu.Item key='delete'>
                     <span>删除</span>
                   </Menu.Item>
-                </Menu>
+                </Menu> */}
               </div>
             </div>
           </div>

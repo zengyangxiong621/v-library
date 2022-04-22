@@ -34,12 +34,16 @@ const DEFAULT_OPTIONS = {
  * description: 处理数据，对请求成功或者失败做统一处理
  * params:  @path -- 请求路径
  *          @options -- 优先级更高的自定义fetchAPI请求配置
+ *          @customErrObj -- 添加自定义的错误信息
  * return: Promise<Pending>
  */
 export const useFetch = async (
   path: string,
   options: any,
-  customErrObj?: object
+  customOptions: any = {
+    customErrObj: '',
+    onlyNeedWrapData: false
+  },
 ): Promise<[Error | null, any, any]> => {
   // 最终路径 & 最终配置、参数
   const finalPath = `${BASE_URL}${path}`;
@@ -49,7 +53,7 @@ export const useFetch = async (
     response.json()
   );
 
-  let [err, data] = await catchErr(finalFetch, customErrObj);
+  let [err, data] = await catchErr(finalFetch, customOptions.customErrObj);
   /**** 根据返回数据进行统一的处理(小拦截器) *****/
   // 捕获发送请求时的错误
   // console.log("err", err);
@@ -70,7 +74,7 @@ export const useFetch = async (
   }
   if (data) {
     // data = data.data.content
-    data = data.data;
+    data =  customOptions.onlyNeedWrapData ? data : data.data;
   }
   return [err, data, code];
 };

@@ -51,5 +51,5 @@ class BasicLayout extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(BasicLayout); 
+export default connect(mapStateToProps)(BasicLayout);
 

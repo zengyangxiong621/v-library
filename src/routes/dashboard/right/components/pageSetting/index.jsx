@@ -11,7 +11,7 @@ import { deepClone } from '../../../../../utils'
 import { Form } from 'antd';
 import EditTable from '../editTable'
 import debounce from 'lodash/debounce';
-import { useFetch } from '../../../../tempDataSource/tool/useFetch'
+import { useFetch } from '../../../../../utils/useFetch'
 
 const PageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {

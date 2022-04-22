@@ -56,10 +56,27 @@
         .more {
           display: none;
         }
+        .more-ul {
+          list-style: none;
+          margin-bottom: 0;
+          border: 1px solid #394659;
+
+          li {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #171a24;
+          }
+          li:hover {
+            background-color: #2482ff;
+          }
+        }
         .more-icon:hover .more {
           min-width: 100px;
           position: absolute;
           top: 20px;
+          left: 10px;
           display: block;
           z-index: 99999;
           background-color: gray;
