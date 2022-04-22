@@ -513,7 +513,7 @@ const CustomDraggable
                     allComponentDOMs[layer.id] = ref
                   }
                 } }                // onClickCapture={(ev) => handleClick(ev, layer, config)}
-                data-id={ layer.id }
+                data-id={ isGroup ? layer.id : 'component-' + layer.id }
                 key={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
                 onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
@@ -524,7 +524,6 @@ const CustomDraggable
                   ...config.style,
                   // border: '1px solid gray',
                   visibility: !layer.isShow ? 'hidden' : 'unset',
-                  opacity: (layer[OPACITY] || 100) / 100,
                 } }>
                 {
                   layer[HIDE_DEFAULT] ?
@@ -532,7 +531,9 @@ const CustomDraggable
                       width: '100%',
                       height: '100%',
                       backgroundColor: 'rgba(76, 255, 231, 0.15)',
-                    } }/> : isGroup ? <div className="no-cancel">
+                    } }/> : isGroup ? <div className="no-cancel" style={ {
+                      opacity: (layer[OPACITY] || 100) / 100,
+                    } }>
                       { (layer as any)[COMPONENTS]?.length > 0 ?
                         <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
                           <CustomDraggable
