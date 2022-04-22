@@ -58,6 +58,10 @@ const CodeEditor = props => {
   const [modalContent,setModalContent] = useState(null)
   const aceName = uuidv4()
 
+  useEffect(() => {
+    setContent(_data.value)
+  }, [_data.value])
+
   const onChange = (val) => {
     console.log('val', val)
     setContent(val)
