@@ -42,6 +42,10 @@ const createMenu = ((menuData, props) => {  //创建菜单
 const Header = props => {
   const { menuData, defaultPath, location} = props
   const { pathname } = location
+  let currentPathname = pathname
+  if (pathname === '/') { 
+    currentPathname = '/dashboard-manage' 
+  }
 
   return (
     <div className="header-wraper">
@@ -53,7 +57,7 @@ const Header = props => {
         className="menu-nav"
         theme="dark"
         mode="horizontal"
-        selectedKeys={[pathname]}
+        selectedKeys={[currentPathname]}
       >
         {
           createMenu(menuData, props)
