@@ -30,9 +30,10 @@ const Range = props => {
   )
 
   const rangeChange = (e) => {
+    console.log('eeeeee',e)
     setRange(e)
-    _data.value = e[0] || 100
-    _inputData.value = e[0] || 100
+    _data.value = e || 100
+    _inputData.value = e || 100
     props.onChange()
   }
   const rangeInputChange = () => {
