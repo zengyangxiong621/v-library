@@ -4,7 +4,7 @@ import './index.less'
 
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
 
-import { useFetch, BASE_URL } from '../../tool/useFetch'
+import { useFetch, BASE_URL } from '../../../../utils/useFetch'
 import { info } from 'console'
 
 const { Option } = Select

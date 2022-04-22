@@ -19,8 +19,6 @@ import { init } from 'echarts'
 
 const { Header } = Layout
 
-
-
 function App({ bar, dispatch }: any) {
   const detectZoom = () => {
     let ratio = 0,
