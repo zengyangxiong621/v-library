@@ -28,7 +28,6 @@ const insertLayerById = ( target: any[], insertId: string, newLayer: any) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
       if (item.id === id) {
-        debugger
         // data.unshift(newLayer)
         data= [newLayer, ...data]
         newTarget = data

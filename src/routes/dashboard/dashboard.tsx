@@ -19,7 +19,8 @@ import { init } from 'echarts'
 
 const { Header } = Layout
 
-function App({ bar, dispatch }: any) {
+function App({ bar, dispatch, location }: any) {
+
   const detectZoom = () => {
     let ratio = 0,
       screen: any = window.screen,
@@ -69,9 +70,17 @@ function App({ bar, dispatch }: any) {
       }
     }
 
+    const getDashboardId = (() => {
+      const dashboardId = location.pathname.split('/')[2]
+      dispatch({
+        type: 'bar/getDashboardId',
+        payload: dashboardId
+      })
+    })()
+
     return () => {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])
+  }, [])
   /**
    * description:  是否显示中心画布上方的导航栏
    */
@@ -81,7 +90,6 @@ function App({ bar, dispatch }: any) {
     setZujianORsucai(whichBar)
     setShowTopBar(true)
   }
-
 
   return (
     <Layout>
