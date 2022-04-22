@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Layout, Menu } from 'antd';
-import { Route, Switch } from 'dva/router';
+import { Route, Switch, Redirect } from 'dva/router';
 import dynamic from 'dva/dynamic';
 import { connect } from '../../utils/connect';
 
@@ -14,7 +14,8 @@ interface Props {
   routerData?: any,
   component?: any,
   location?: any,
-  global?: any
+  global?: any,
+  history?: any
 }
 
 interface State {}
@@ -28,21 +29,21 @@ class BasicLayout extends Component<Props, State> {
     super(Props)
   }
   render () {
-    const { routerData, location, global } = this.props
+    const { routerData, location, global, history } = this.props
     const { childRoutes } = routerData
     const { pathname } = location
     const { menuData } = global
 
-    const isDashboardPage = pathname !== '/dashboard'
+    const needHeader = pathname.indexOf('/dashboard/') !== -1  || pathname === '/template'
     const isPathRoot = pathname === '/'
     const defaultPath = '/dashboard-manage'
 
     return (
-      <Layout key={this.props.location.pathname}>
-        { isDashboardPage && <CustomHeader {...this.props} menuData={ menuData } defaultPath={ defaultPath }></CustomHeader> }
+      <Layout>
+        { !needHeader && <CustomHeader {...this.props} menuData={ menuData } defaultPath={ defaultPath }></CustomHeader> }
         <Content>
           {
-            isPathRoot ? <DashboardManage></DashboardManage> : <Switch location={location}>{childRoutes}</Switch>
+            isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch>
           }
         </Content>
       </Layout>
