@@ -31,7 +31,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       const reactDraggableDomPosition = [ ...reactDraggableDomList ].map(item => {
         const domInfo = item.getBoundingClientRect()
         return {
-          id: item.dataset.id,
+          id: item.dataset.id.indexOf('group-') !== -1 ? item.dataset.id : item.dataset.id.replace('component-', ''),
           x: Math.floor(domInfo.x),
           y: Math.floor(domInfo.y),
           width: Math.ceil(domInfo.width),
@@ -123,7 +123,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         const selectedIds: Array<string> = []
         let b1 = areaPosition.y + areaPosition.height
         let r1 = areaPosition.x + areaPosition.width
-        if (Object.keys(areaPosition).length > 0) {
+        if(Object.keys(areaPosition).length > 0) {
           reactDraggableDomPosition.forEach((item) => {
             let b2 = item.y + item.height
             let r2 = item.x + item.width
@@ -131,7 +131,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
               selectedIds.push(item.id)
             }
           })
-          if (selectedIds.length > 0) {
+          if(selectedIds.length > 0) {
             dispatch({
               type: 'bar/chooseLayer',
               payload: selectedIds,

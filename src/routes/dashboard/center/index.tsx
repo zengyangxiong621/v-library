@@ -122,7 +122,7 @@ const Center = ({ bar, dispatch }: any) => {
       setMenuInfo({
         x: event.clientX,
         y: event.clientY,
-        id: dom.dataset.id,
+        id: dom.dataset.id.indexOf('group-') !== -1 ? dom.dataset.id : dom.dataset.id.replace('component-', ''),
         isFolder: false,
       })
     }

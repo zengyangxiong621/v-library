@@ -9,9 +9,20 @@ const AlignmentSetting = ({ bar, dispatch, ...props }) => {
       type: 'bar/setAlignment',
       payload: type,
     })
+    dispatch({
+      type: 'bar/updateComponent',
+      payload: bar.selectedComponents,
+    })
+    dispatch({
+      type: 'bar/calcDragScaleData',
+    })
   }
-  const arrangementChange = (str) => {
-    console.log('str', str)
+
+  const arrangementChange = (type) => {
+    dispatch({
+      type: 'bar/setArrangement',
+      payload: type,
+    })
   }
 
   return (
