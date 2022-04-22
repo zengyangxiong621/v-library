@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 
@@ -57,9 +58,24 @@ const DashboardTemplate = (props: any) => {
     const values: any = await createForm.validateFields()
     console.log('校验表单的值', values);
     console.log('默认情况下选中的分组', selectedGroup);
-
     //TODO 发送请求
-    setShowCreateAppModal(false)
+    const finalBody = {
+      spaceId,
+      ...values
+    }
+    const [, data] = await useFetch('/visual/application/createBlankApp', {
+      body: JSON.stringify(finalBody)
+    })
+    // 请求成功
+    // 关闭弹窗 - 清除弹窗缓存 - 跳转至应用所属的画布
+    if (data) {
+      console.log('name', data.name)
+      console.log('id', data.screenId)
+      setShowCreateAppModal(false)
+      createForm.resetFields()
+      history.push('/dashboard')
+      // history.push(`/dashboard/${data.screenId}`)
+    }
   }
   //关闭弹窗
   const cancelCreateApp = () => {
@@ -69,7 +85,7 @@ const DashboardTemplate = (props: any) => {
   const appNameChange = (val: any) => {
     setAppName(val)
   }
-
+  // 手动选择分组
   const groupSelectSelect = (val: any) => {
     console.log('va;', val);
     setSelectedGroup(val)
@@ -169,12 +185,15 @@ const DashboardTemplate = (props: any) => {
         >
           <Form.Item
             label="应用名称"
-            name="appName"
+            name="name"
             colon={false}
             rules={[{ required: true, message: '请输入应用名称' }]}
           >
             <Input placeholder='请请输入应用名称'
+              autoComplete='off'
               value={appName}
+              maxLength={20}
+              showCount={true}
               onChange={(e) => appNameChange(e.target.value)}
             />
           </Form.Item>

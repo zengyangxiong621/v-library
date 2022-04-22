@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react'
 import './index.less'
+import { withRouter } from 'dva/router'
 
 import { Input } from 'antd'
 import { IconFont } from '../../../../utils/useIcon'
@@ -14,6 +15,7 @@ const Header = props => {
   const [activeIcon, setActiveIcon] = useState(false)
   const toBack = () => {
     // 返回首页
+    props.history.back()
   }
   // 获取当前活跃的按钮
   const getActiveIcon = (icon) => {
@@ -119,4 +121,4 @@ const rightIconArr = [
     text: '发布'
   },
 ]
-export default memo(Header)
+export default memo(withRouter(Header))
