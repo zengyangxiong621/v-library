@@ -6,8 +6,6 @@ import Dashboard from './routes/dashboard';
 import DataSource from './routes/tempDataSource';
 import ControlCabin from './routes/controlCabin';
 
-import Test from './routes/test';
-
 const routesConfig = (app: any) => [
   // {
   //   path: '/sign',
@@ -50,19 +48,9 @@ const routesConfig = (app: any) => [
       DashboardTemplate(app),
       Dashboard(app),
       DataSource(app),
-      ControlCabin(app),
-      // Test(app)
+      ControlCabin(app)
     ]
-  },
-
-        {
-        name: 'test',
-        title: 'test',
-        path: '/test',
-        models: [],
-        component: Test,
-        childRoutes: []
-      },
+  }
 
 ];
 
