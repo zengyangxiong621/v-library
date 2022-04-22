@@ -7,21 +7,22 @@ export default {
           title: '我的可视化',
         },
         {
-          path: '/template',
-          title: '新建仪表盘',
-        },
-        {
-          path: '/dashboard',
-          title: '仪表盘',
+          path: '/datasource',
+          title: '我的数据',
         },
         {
           path: '/components',
-          title: '组件库',
+          title: '组件开发',
         },
         {
-          path: '/test',
-          title: 'ceshi',
-        }
+          path: '/cockpit',
+          title: '驾驶仓',
+        },
+        // {
+        //   path: '/resource',
+        //   title: '资源中心',
+        // }
+
       ]
   }
 };
