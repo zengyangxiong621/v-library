@@ -1,5 +1,5 @@
 # --- base images -------------
-FROM repository.gridsum.com:8443/techpub/node:latest  AS base
+FROM repository.gridsum.com:8443/techpub/node:14.15.4  AS base
 # --- run images -----------
 FROM repository.gridsum.com:8443/techpub/nginx:latest AS run
 
