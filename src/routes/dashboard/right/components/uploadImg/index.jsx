@@ -7,7 +7,7 @@ import {
   message,
 } from 'antd';
 
-import { BASE_URL } from '../../../../tempDataSource/tool/useFetch'
+import { BASE_URL } from '../../../../../utils/useFetch'
 
 
 const UploadImg = props => {

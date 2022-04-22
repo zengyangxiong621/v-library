@@ -8,7 +8,7 @@ import { PlusOutlined, SearchOutlined, ExclamationCircleFilled } from '@ant-desi
 import AddDataSource from './components/addDataSource'
 import EditDataSource from './components/editDataSource'
 
-import { useFetch } from './tool/useFetch'
+import { useFetch } from '../../utils/useFetch'
 import { TDataSourceParams } from './type'
 
 const { Option } = Select

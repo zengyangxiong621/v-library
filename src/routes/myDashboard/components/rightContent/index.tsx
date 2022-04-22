@@ -1,24 +1,30 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { memo, useState } from "react";
 import "./index.less";
 import { connect } from 'dva'
-
-import {
-  Row, Col, Button, Spin, message, Form,
-  Switch, Input, Upload
-} from 'antd'
-
-import { IconFont } from '../../../../utils/useIcon'
+import { useFetch } from "../../../../utils/useFetch";
 
 import AppCard from '../appCard/index'
 import DarkModal from '../darkThemeModal/index'
 import Preview from '../../../dashboardTemplate/preview/index'
 
+import {
+  Row, Col, Button, Spin, message, Form,
+  Switch, Input, Upload, Select
+} from 'antd'
+import { IconFont } from '../../../../utils/useIcon'
+
+const { Option } = Select
+
+
 const RightContent = (props: any) => {
   const { listData, dashboardManage, dispatch } = props
-  console.log('dashboardManage', dashboardManage);
   /** **工作空间id  */
   const spaceId = 1
+  // 发布弹窗、移动分组 modal状态
   const [showFabuModal, setShowFabuModal] = useState(false)
+  const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)
+  const [newGroupId, setNewGroupId] = useState('')
   // 显示二级发布弹窗
   const [isShared, setIsShared] = useState(false)
   // 是否显示二级发布弹窗的剩余表单项
@@ -40,9 +46,44 @@ const RightContent = (props: any) => {
     })
   }
 
+  /**** 移动分组Modal相关代码*** */
+  const openMoveGroupModal = (appId: string) => {
+    setShowMoveGroupModal(true)
+    setCurAppId(appId)
+  }
+  // 关闭移动分组弹窗
+  const cancelmoveGroupModal = () => {
+    setShowMoveGroupModal(false)
+  }
+  // 选择 新的分组
+  const selectGroup = (val: any) => {
+    setNewGroupId(val)
+  }
+  // 确认移动分组
+  const confirmMoveGroup = async () => {
+    const [err, data] = await useFetch('/visual/application/updateAppGroup', {
+      body: JSON.stringify({
+        spaceId,
+        appId: curAppId,
+        newGroupId: newGroupId,
+      })
+    })
+    if (data) {
+      message.success({ content: '移动分组成功', duration: 2 })
+      refreshList()
+      cancelMoveGroup()
+    } else {
+      message.error({ content: '移动分组失败', duration: 2 })
+    }
+  }
+  // 取消移动分组
+  const cancelMoveGroup = () => {
+    setShowMoveGroupModal(false)
+  }
+
+
   // TODO 点击发布的时候，怎么判断是否已经发布(easyv上有两个接口)
   // TODO　如果已经发布了，直接就显示　发布详情里的内容
-
   // 打开发布Modal, 顺便获取当前应用的id
   const changeFabuModal = (bool: boolean, id: string) => {
     setShowFabuModal(bool)
@@ -55,14 +96,12 @@ const RightContent = (props: any) => {
 
   // 发布大屏
   const fabudaping = () => {
-    console.log('大屏id', curAppId);
     // TODO 发布成功，将弹窗内容替换成发布详情信息
     setIsShared(true)
     // message.success({ content: '发布成功', duration: 2 })
   }
   // 发布开关 事件
   const releaseChange = (isCheck: boolean) => {
-    console.log('is', isCheck);
   }
   // 加密分享 开关事件
   const jmfxChange = (isCheck: boolean) => {
@@ -87,6 +126,7 @@ const RightContent = (props: any) => {
             <AppCard
               {...item}
               changeFabuModal={changeFabuModal}
+              openMoveGroupModal={openMoveGroupModal}
               refreshList={refreshList}
             />
           </Col>
@@ -148,7 +188,9 @@ const RightContent = (props: any) => {
                     colon={false}
                   ><div className="jiamifenxiang set-flex ">
                       <Switch defaultChecked onChange={jmfxChange} />
-                      <div className="set-flex"><div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div><Input style={{ width: '204px' }} /></div>
+                      <div className="set-flex">
+                        <div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div><Input style={{ width: '204px' }} />
+                      </div>
                     </div></Form.Item>
                   <Form.Item
                     label="开放应用"
@@ -193,6 +235,46 @@ const RightContent = (props: any) => {
         }
       </div>
     </DarkModal >
+    {/* 移入分组弹窗 */}
+    <DarkModal
+      title='移入分组'
+      destroyOnClose={true}
+      getContainer={false}
+      visible={showMoveGroupModal}
+      onCancel={cancelmoveGroupModal}
+      footer={[
+        <div className='custom-btn-wrap'>
+          <Button className='my-btn cancel-btn' onClickCapture={cancelMoveGroup}>取消</Button>
+          <Button className='my-btn confirm-btn' onClickCapture={confirmMoveGroup}>确定</Button>
+        </div>
+      ]}
+      style={{
+        top: '25%'
+      }}
+    >
+      <Form
+        labelCol={{
+          span: 4,
+        }}
+        layout="horizontal"
+        name='releaseForm'
+      >
+        <Form.Item label='可选分组'
+          name="group"
+          rules={[{ required: true }]}
+        >
+          <Select onSelect={selectGroup}>
+            {
+              // 将全部应用这一分组剔除
+              dashboardManage.groupList.slice(1).map((item: any) =>
+              (<Option key={item.groupId} value={item.groupId}>      {item.name}
+              </Option>)
+              )
+            }
+          </Select>
+        </Form.Item>
+      </Form>
+    </DarkModal>
   </div >;
 };
 
