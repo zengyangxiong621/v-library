@@ -71,7 +71,7 @@ const EditableCell = ({
         ]}
       >
         <Select ref={inputRef} onChange={save} style={{width:'145px'}}>
-          <Option value="lucy">Lucy</Option>
+          <Option value="text">text</Option>
         </Select>
       </Form.Item>
     ) : (
@@ -113,8 +113,8 @@ export class EditableTable extends React.Component {
       },
     ];
     this.state = {
-      dataSource: props.data?.fields || [],
-      count: props.data?.fields?.length || 0,
+      dataSource: props.data || [],
+      count: props.data?.length || 0,
     };
   }
 
@@ -127,7 +127,7 @@ export class EditableTable extends React.Component {
     this.setState({
       dataSource: newData,
     });
-    this.props.data.fields = newData
+    this.props.data = newData
     this.props.onChange()
   };
 

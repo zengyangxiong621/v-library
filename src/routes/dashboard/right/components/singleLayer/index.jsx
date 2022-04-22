@@ -385,8 +385,6 @@ const componentConfig = {
   },
 }
 
-
-
 const SingleLayer = ({ bar, dispatch, ...props }) => {
   const { TabPane } = Tabs;
   const formItemLayout = {
@@ -398,7 +396,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     mountAnimation:{},
     events:[]
   }
-  const dataConfig = componentConfig.staticData
 
   const styleChange = debounce(() => {
     console.log('style change', componentConfig)
@@ -427,30 +424,23 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
-  const dataChange = debounce(() => {
+  const dataChange = (data) => {
+    componentConfig.staticData.data = data
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig
     })
     saveDataHandle({
       id: componentConfig.id,
-      name: componentConfig.name,
-      moduleName: componentConfig.moduleName,
-      moduleVersion:componentConfig.moduleVersion,
-      staticData: componentConfig.staticData,
+      data
     })
-  },300)
+  }
 
   const saveDataHandle = async (param) => {
-    // todo 替换假数据
-    const params = {
-      param,
-      dashboardId: "1513702962304577537"
-    }
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    // await useFetch('/visual/module/update', {
-    //   body: JSON.stringify(params)
-    // })
+    await useFetch('/visual/module/data/update', {
+      body: JSON.stringify(param)
+    })
   }
 
   const interactionChange = debounce(() => {
@@ -520,7 +510,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="数据" key="2">
             <ComponentCard data={componentConfig}>
-              <DataConfig data={dataConfig} onChange={dataChange}/>
+              <DataConfig data={componentConfig} onDataChange={dataChange}/>
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">
