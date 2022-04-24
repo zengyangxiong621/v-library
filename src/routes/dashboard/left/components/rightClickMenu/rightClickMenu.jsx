@@ -9,7 +9,6 @@ import SecondMenu from './secondMenu'
 
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
-
 const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMenu }) => {
   const [isLock, setIsLock] = useState(false)
   const [isSingleShow, setIsSingleShow] = useState(false)
