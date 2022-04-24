@@ -73,8 +73,7 @@ const DashboardTemplate = (props: any) => {
       console.log('id', data.screenId)
       setShowCreateAppModal(false)
       createForm.resetFields()
-      history.push('/dashboard')
-      // history.push(`/dashboard/${data.screenId}`)
+      history.push(`/dashboard/${data.screenId}`)
     }
   }
   //关闭弹窗
