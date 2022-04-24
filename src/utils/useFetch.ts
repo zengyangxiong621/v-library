@@ -56,8 +56,8 @@ export const useFetch = async (
   let [err, data] = await catchErr(finalFetch, customOptions.customErrObj);
   /**** 根据返回数据进行统一的处理(小拦截器) *****/
   // 捕获发送请求时的错误
-  // console.log("err", err);
   if (err) {
+    console.log("err", err);
     message.error({ content: "请求发送失败", duration: 2 });
     // 出错了需要终止程序的执行吗
     // throw Error('终止程序')

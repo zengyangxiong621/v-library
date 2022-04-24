@@ -162,17 +162,6 @@ const AppCard = (props: any) => {
                   <li>复制</li>
                   <li>删除</li>
                 </ul>
-                {/* <Menu mode="vertical" onSelect={(menuClick as any)}>
-                  <Menu.Item key='move'>
-                    <span>移入分组</span>
-                  </Menu.Item>
-                  <Menu.Item key='copy'>
-                    <span>复制</span>
-                  </Menu.Item>
-                  <Menu.Item key='delete'>
-                    <span>删除</span>
-                  </Menu.Item>
-                </Menu> */}
               </div>
             </div>
           </div>

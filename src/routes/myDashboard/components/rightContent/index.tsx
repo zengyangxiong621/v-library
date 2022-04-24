@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from 'dva'
 import { useFetch } from "../../../../utils/useFetch";
@@ -33,7 +33,12 @@ const RightContent = (props: any) => {
   const [fabuLoading, setFabuLoading] = useState(false)
 
   const [curAppId, setCurAppId] = useState('')
-  /** ***** 每个appCard 进行复制、删除等操作后都需要刷新内容列表 ******* */
+  useEffect(() => {
+    if (showMoveGroupModal) {
+      console.log('每次执行', dashboardManage.groupList);
+    }
+  }, [showMoveGroupModal])
+  /** ***** 每个appCard 进行复制、删除等操作后都需要刷新内容列表 && 更新左侧分组树 ******* */
   const refreshList = () => {
     const finalBody = {
       pageNo: 1,
@@ -43,6 +48,12 @@ const RightContent = (props: any) => {
     dispatch({
       type: 'dashboardManage/getTemplateList',
       payload: finalBody,
+    })
+    dispatch({
+      type: 'dashboardManage/getGroupTree',
+      payload: {
+        spaceId
+      }
     })
   }
 
@@ -61,7 +72,7 @@ const RightContent = (props: any) => {
   }
   // 确认移动分组
   const confirmMoveGroup = async () => {
-    const [err, data] = await useFetch('/visual/application/updateAppGroup', {
+    const [, data] = await useFetch('/visual/application/updateAppGroup', {
       body: JSON.stringify({
         spaceId,
         appId: curAppId,
@@ -136,6 +147,7 @@ const RightContent = (props: any) => {
     </Row>
     {/* 发布弹窗 */}
     <DarkModal
+      className="fabu-dark-modal"
       title='发布'
       destroyOnClose={true}
       getContainer={false}
@@ -238,6 +250,7 @@ const RightContent = (props: any) => {
     {/* 移入分组弹窗 */}
     <DarkModal
       title='移入分组'
+      className="move-dark-modal"
       destroyOnClose={true}
       getContainer={false}
       visible={showMoveGroupModal}
@@ -266,7 +279,7 @@ const RightContent = (props: any) => {
           <Select onSelect={selectGroup}>
             {
               // 将全部应用这一分组剔除
-              dashboardManage.groupList.slice(1).map((item: any) =>
+              dashboardManage.groupList[0]?.children?.slice(1).map((item: any) =>
               (<Option key={item.groupId} value={item.groupId}>      {item.name}
               </Option>)
               )
