@@ -69,19 +69,18 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     // 比如名字一样,不发请求
     console.log('name', name);
     if (inputValue === name) {
-      console.log('相等的啊');
       return
     } else {
-      console.log('不相等，可以更改');
     }
     // 先对前端的树进行一次修改
+    const saveId = JSON.parse(JSON.stringify(bar.key[0]))
     sendDispatch('changeName', {
       dashboardId: '1513702962304577537',
       configs: [
         {
-          "id": bar.key[0],
-          "key": "name",
-          "value": inputValue
+          id: saveId,
+          key: "name",
+          value: inputValue
         }
       ]
     })
