@@ -29,7 +29,7 @@ export const menuOptions = [
   },
   {
     name: '置底',
-    key: 'placeBottom',
+    key: 'placedBottom',
     icon: 'zhidi',
     disabled: false,
   },
