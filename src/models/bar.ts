@@ -518,7 +518,7 @@ export default {
     },
     *getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
-        const { layers, components } = yield http({
+        const { layers, components ,dashboardConfig} = yield http({
           url: `/visual/application/dashboard/detail/${payload}`,
           method: "get",
         });
