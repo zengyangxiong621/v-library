@@ -516,21 +516,22 @@ export default {
         payload: payload
       })
     },
-    * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar)
+    *getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
-        const {
-          layers,
-          components,
-          dashboardConfig,
-        } = yield http({
-          url: `/visual/application/dashboard/detail/${ payload }`,
-          method: 'get',
+        const { layers, components ,dashboardConfig} = yield http({
+          url: `/visual/application/dashboard/detail/${payload}`,
+          method: "get",
+        });
+        const addSomeAttrToLayers = layers.map((item: any) => {
+          return {
+            ...item,
+            singleShowLayer: false
+          }
         })
         yield put({
           type: 'save',
           payload: {
-            treeData: layers,
+            treeData: addSomeAttrToLayers,
             components,
             dashboardId: payload,
             pageConfig: dashboardConfig,
@@ -549,12 +550,15 @@ export default {
       yield put({
         type: 'bar/change',
         payload,
-      })
+      });
     },
-    * group({ payload }: any, { call, put, select }: any): any {
-      console.log('成组')
-      const bar: any = yield select(({ bar }: any) => bar)
-      const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key)
+    // 成组
+    *group({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { treeDataCopy, newLayerId }: any = yield group(
+        bar.treeData,
+        bar.key
+      );
       yield put({
         type: 'bar/update',
         payload: treeDataCopy,
@@ -591,19 +595,17 @@ export default {
         payload: newTree,
       })
     },
-    * placedTop({ payload }: any, { call, put, select }: any): any {
-      console.log('树的问题')
-      const bar = yield select(({ bar }: any) => bar)
-      const newTree = placeTop(bar.treeData, bar.key)
+    *placedTop({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar);
+      const newTree = placeTop(bar.treeData, bar.key);
       yield put({
         type: 'update',
         payload: newTree,
       })
     },
-    * placedBottom({ payload }: any, { call, put, select }: any): any {
-      console.log('置底了')
-      const bar = yield select(({ bar }: any) => bar)
-      const newTree = placeBottom(bar.treeData, bar.key)
+    *placedBottom({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar);
+      const newTree = placeBottom(bar.treeData, bar.key);
       yield put({
         type: 'update',
         payload: newTree,
@@ -672,7 +674,37 @@ export default {
         payload: components,
       })
     },
-    * fetch({ payload }: any, { call, put }: any): any {
+    // 锁定
+    * lock({payload}: any, {call, put}: any): any {
+      console.log('锁定的payload.value', payload)
+      // 前端锁定
+      yield put({
+        type: 'frontLock',
+        payload: {
+          value: payload.configs[0].value
+        }
+      })
+      yield put({
+        type: 'change',
+        payload
+      })
+    },
+    // 隐藏 / 显示
+    * hidden({payload}: any, {call, put}: any): any {
+    console.log('锁定的payload.value', payload)
+    // 前端隐藏
+    yield put({
+      type: 'frontHidden',
+      payload: {
+        value: payload.configs[0].value
+      }
+    })
+    yield put({
+      type: 'change',
+      payload
+    })
+  },
+    *fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
       yield put({ type: 'selectedNode', payload })
     },
@@ -770,10 +802,9 @@ export default {
       } else {
         insertId = treeData[0].id
       }
-      const newLayers = generateLayers(state.treeData, insertId, payload.final)
-
-      console.log('新增后的treeData', state.treeData)
-      return { ...state, treeData: newLayers }
+      const newLayers = generateLayers(state.treeData, insertId, payload.final);
+      console.log("新增后的treeData", state.treeData);
+      return { ...state, treeData: newLayers };
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
@@ -962,29 +993,29 @@ export default {
       return { ...state, lastRightClick: payload }
     },
     // 置顶
-    frontplacedTop(state: IBarState, { payload }: any) {
-      const newTreeData = placeTop(state.treeData, state.key)
-      return { ...state, treeData: newTreeData }
+    frontPlacedTop(state: IBarState, { payload }: any) {
+      const newTreeData = placeTop(state.treeData, state.key);
+      return { ...state, treeData: newTreeData };
     },
     // 置底
-    frontplaceBottom(state: IBarState, { payload }: any) {
-      const newTreeData = placeBottom(state.treeData, state.key)
-      return { ...state, treeData: newTreeData }
+    frontPlaceBottom(state: IBarState, { payload }: any) {
+      const newTreeData = placeBottom(state.treeData, state.key);
+      return { ...state, treeData: newTreeData };
     },
     // 上移
-    frontmoveUp(state: IBarState, { payload }: any) {
-      const newTree = moveUp(state.treeData, state.key)
-      return { ...state, treeData: newTree }
+    frontMoveUp(state: IBarState, { payload }: any) {
+      const newTree = moveUp(state.treeData, state.key);
+      return { ...state, treeData: newTree };
     },
     // 下移
-    frontmoveDown(state: IBarState, { payload }: any) {
-      const newTree = moveDown(state.treeData, state.key)
-      return { ...state, treeData: newTree }
+    frontMoveDown(state: IBarState, { payload }: any) {
+      const newTree = moveDown(state.treeData, state.key);
+      return { ...state, treeData: newTree };
     },
     // 成组
-    frontgroup(state: IBarState, { payload }: any) {
-      const { treeDataCopy } = group(state.treeData, state.key)
-      return { ...state, treeData: treeDataCopy }
+    frontGroup(state: IBarState, { payload }: any) {
+      const { treeDataCopy } = group(state.treeData, state.key);
+      return { ...state, treeData: treeDataCopy };
     },
     // 取消成组
     cancelGroup(state: IBarState, { payload }: any) {
@@ -996,9 +1027,9 @@ export default {
     //   return { ...state };
     // },
     // 锁定
-    lock(state: IBarState, { payload }: any) {
-      const newTree = lock(state.treeData, state.key, payload.value)
-      return { ...state, treeData: newTree }
+    frontLock(state: IBarState, { payload }: any) {
+      const newTree = lock(state.treeData, state.key, payload.value);
+      return { ...state, treeData: newTree };
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
@@ -1021,7 +1052,7 @@ export default {
       return { ...state, treeData: newTree }
     },
     // 隐藏
-    hidden(state: IBarState, { payload }: any) {
+    frontHidden(state: IBarState, { payload }: any) {
       // 此处只能用payload.key,因为eyes图标在没有任何节点被选中时也要能响应点击
       const newTree = hidden(state.treeData, payload.key, payload.value)
       return { ...state, treeData: newTree }
@@ -1032,9 +1063,9 @@ export default {
       return { ...state, treeData: newTree }
     },
     // 真正改变名字的地方
-    frontchangeName(state: IBarState, { payload }: any) {
-      const newTree = reName(state.treeData, state.key, payload.newName)
-      return { ...state, treeData: newTree }
+    frontChangeName(state: IBarState, { payload }: any) {
+      const newTree = reName(state.treeData, state.key, payload.newName);
+      return { ...state, treeData: newTree };
     },
     mergeComponentLayers(state: IBarState, { payload }: any) {
       state.componentLayers = mergeComponentLayers(

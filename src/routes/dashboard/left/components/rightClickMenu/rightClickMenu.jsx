@@ -9,7 +9,6 @@ import SecondMenu from './secondMenu'
 
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
-
 const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMenu }) => {
   const [isLock, setIsLock] = useState(false)
   const [isSingleShow, setIsSingleShow] = useState(false)
@@ -31,7 +30,6 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     const showOrHiddenInfo = getFieldStates(bar.treeData, bar.key, 'isShow')
     const showOrHiddenState = showOrHiddenInfo.some(item => item === false)
     setIsShowOrHidden(!showOrHiddenState)
-    console.log('scanOrHiddenInfo', showOrHiddenInfo);
   }, [bar.treeData, bar.key])
 
   // 后端返回的数据里应该有 show、lock 属性
@@ -46,7 +44,12 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     }
     switch (operateName) {
       case 'lock':
-        customPayload.value = !isLock
+        const finalBody = bar.key.map(item => ({
+          id: item,
+          key: "isLock",
+          value: !isLock
+        }))
+        customPayload.configs = finalBody
         break;
       case 'singleShowLayer':
         customPayload.singleShowLayer = !isSingleShow
@@ -56,8 +59,12 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
         customPayload.value = true
         break;
       case 'hidden':
-        customPayload.value = !isShowOrHidden
-        customPayload.key = bar.key
+        const finalHiddenConfigs = bar.key.map(item => ({
+          id: item,
+          key: "isShow",
+          value: !isShowOrHidden
+        }))
+        customPayload.configs = finalHiddenConfigs
         break;
       case 'delete':
         const l = bar.key?.map(item => ({
