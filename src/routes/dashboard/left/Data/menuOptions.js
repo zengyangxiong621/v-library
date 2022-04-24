@@ -68,7 +68,7 @@ export const menuOptions = [
     name:'单独显示图层',
     icon: 'danduxianshi',
     anotherName: '取消单独显示',
-    anotherIcon: 'danduxianshi',
+    anotherIcon: 'guanbidanchuang',
     disabled: false,
   },
   {
