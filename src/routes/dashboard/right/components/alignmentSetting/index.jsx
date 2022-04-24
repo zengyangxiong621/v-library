@@ -59,10 +59,10 @@ const AlignmentSetting = ({ bar, dispatch, ...props }) => {
         </h4>
         <div className="pan-content">
           <span title="水平分布">
-            <i className="iconfont icon-horizontal" onClick={ () => arrangementChange('horizontal') }></i>
+            <i className="iconfont icon-horizontal" onClick={ () => arrangementChange('arrange-horizontal') }></i>
           </span>
           <span title="垂直分布">
-            <i className="iconfont icon-vertical" onClick={ () => arrangementChange('vertical') }></i>
+            <i className="iconfont icon-vertical" onClick={ () => arrangementChange('arrange-vertical') }></i>
           </span>
         </div>
       </div>

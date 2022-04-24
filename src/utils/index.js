@@ -421,21 +421,7 @@ export const deepForEach = (layers, cb) => {
 }
 
 export const setComponentDimension = (dimensionConfig, { x = null, y = null, width = null, height = null }, type) => {
-  const data = dimensionConfig.reduce((pre, cur) => {
-    if (Array.isArray(cur.value)) {
-      const obj = cur.value.reduce((pre, cur) => {
-        pre[cur.name] = cur.value
-        return pre
-      }, {})
-      pre = {
-        ...pre,
-        ...obj,
-      }
-    } else {
-      pre[cur.name] = cur.value
-    }
-    return pre
-  }, {})
+  const data = getDimensionData(dimensionConfig)
   dimensionConfig.forEach((config) => {
     switch (config.name) {
       case LEFT:
@@ -502,4 +488,22 @@ export const setComponentDimension = (dimensionConfig, { x = null, y = null, wid
         break
     }
   })
+  return data
+}
+export const getDimensionData = (dimensionConfig) => {
+  return dimensionConfig.reduce((pre, cur) => {
+    if (Array.isArray(cur.value)) {
+      const obj = cur.value.reduce((pre, cur) => {
+        pre[cur.name] = cur.value
+        return pre
+      }, {})
+      pre = {
+        ...pre,
+        ...obj,
+      }
+    } else {
+      pre[cur.name] = cur.value
+    }
+    return pre
+  }, {})
 }
