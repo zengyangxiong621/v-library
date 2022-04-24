@@ -9,7 +9,7 @@ import {
   LEFT,
   TOP,
   WIDTH,
-  COMPONENTS
+  COMPONENTS,
 } from '../constant/home'
 
 export function findLayerById (layer, id) {
@@ -416,6 +416,90 @@ export const deepForEach = (layers, cb) => {
     cb(layer, index)
     if (COMPONENTS in layer) {
       deepForEach(layer[COMPONENTS], cb)
+    }
+  })
+}
+
+export const setComponentDimension = (dimensionConfig, { x = null, y = null, width = null, height = null }, type) => {
+  const data = dimensionConfig.reduce((pre, cur) => {
+    if (Array.isArray(cur.value)) {
+      const obj = cur.value.reduce((pre, cur) => {
+        pre[cur.name] = cur.value
+        return pre
+      }, {})
+      pre = {
+        ...pre,
+        ...obj,
+      }
+    } else {
+      pre[cur.name] = cur.value
+    }
+    return pre
+  }, {})
+  dimensionConfig.forEach((config) => {
+    switch (config.name) {
+      case LEFT:
+        if (x) {
+          switch (type) {
+            case 'set':
+              config.value = x
+              break
+            case 'add':
+              config.value = config.value + x
+              break
+            case 'update':
+              config.value = config.value + (x - (data[LEFT] + data[WIDTH]))
+              break
+            case 'center':
+              config.value = config.value + (x - (data[LEFT] + data[WIDTH] / 2))
+              break
+          }
+        }
+        break
+      case TOP:
+        if (y) {
+          switch (type) {
+            case 'set':
+              config.value = y
+              break
+            case 'add':
+              config.value = config.value + y
+              break
+            case 'update':
+              config.value = config.value + (y - (data[HEIGHT] + data[TOP]))
+              break
+            case 'center':
+              config.value = config.value + (y - (data[TOP] + data[HEIGHT] / 2))
+              break
+          }
+        }
+        break
+      case WIDTH:
+        if (width) {
+          switch (type) {
+            case 'set':
+              config.value = width
+              break
+            case 'add':
+              config.value = config.value + width
+              break
+            case 'update':
+          }
+        }
+        break
+      case HEIGHT:
+        if (height) {
+          switch (type) {
+            case 'set':
+              config.value = height
+              break
+            case 'add':
+              config.value = config.value + height
+              break
+            case 'update':
+          }
+        }
+        break
     }
   })
 }

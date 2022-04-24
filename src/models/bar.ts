@@ -1,47 +1,41 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
 import {
-  findLayerById,
-  findParentNode,
-  calculateGroupPosition,
-  findNode,
-  moveChildrenComponents,
-  mergeComponentLayers,
-  layerComponentsFlat,
   calcGroupPosition,
   deepForEach,
+  findLayerById,
+  layerComponentsFlat,
+  mergeComponentLayers,
+  setComponentDimension,
 } from '../utils'
 
-import { COMPONENTS, LEFT, TOP, WIDTH, HEIGHT, OPACITY, HIDE_DEFAULT } from '../constant/home'
+import { COMPONENTS, HEIGHT, HIDE_DEFAULT, LEFT, OPACITY, TOP, WIDTH } from '../constant/home'
 
-import {
-  ILayerComponent,
-  ILayerGroup,
-} from '../routes/dashboard/center/components/CustomDraggable/type'
+import { ILayerComponent, ILayerGroup } from '../routes/dashboard/center/components/CustomDraggable/type'
 
 
 import {
-  generateTreeData,
-  placeTop,
-  placeBottom,
-  moveUp,
-  moveDown,
-  remove,
-  // copy,
-  lock,
-  singleShowLayer,
-  group,
   cancelGroup,
+  group,
+  hidden,
+  lock,
+  moveDown,
+  moveUp,
+  placeBottom,
+  placeTop,
+  remove,
   reName,
   showInput,
-  hidden,
+  singleShowLayer,
 } from '../utils/sideBar'
 import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
 import { http } from './utils/request'
+import { DOMElement } from 'react'
 
 interface IBarState {
+  dashboardId: string,
   key: string[];
   isShowRightMenu: boolean,
   operate: string;
@@ -79,6 +73,7 @@ interface IBarState {
 export default {
   namespace: 'bar',
   state: {
+    dashboardId: '',
     currentDblTimes: 0,
     isCanClearAllStatus: true,
     key: [],
@@ -482,11 +477,11 @@ export default {
       //   payload: treeData,
       // })
     },
-    getDashboardDetails({ dispatch }: any) {
-      dispatch({
-        type: 'getDashboardDetails',
-      })
-    },
+    // getDashboardDetails({ dispatch }: any) {
+    //   dispatch({
+    //     type: 'getDashboardDetails',
+    //   })
+    // },
     setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
       history.listen((location: any) => {
@@ -504,13 +499,20 @@ export default {
   },
 
   effects: {
-    * getDashboardDetails({ payload }: any, { call, put, select }: any) {
+    * getDashboardId ({ payload }: any, { call, put, select }: any) {
+      yield put({
+        type:'changeDashboardId',
+        payload: payload
+      })
+    },
+    * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
       try {
         const {
           layers,
           components,
         } = yield http({
-          url: '/visual/application/dashboard/detail/1513702962304577537',
+          url: `/visual/application/dashboard/detail/${ payload }`,
           method: 'get',
         })
         yield put({
@@ -518,9 +520,10 @@ export default {
           payload: {
             treeData: layers,
             components,
+            dashboardId: payload,
           },
         })
-      } catch (e) {
+      } catch(e) {
         console.log('e', e)
         return e
       }
@@ -594,11 +597,12 @@ export default {
     },
     // 更改图层组织
     * update({ payload }: any, { select, call, put }: any): any {
+      const state: any = yield select((state: any) => state)
       const layers = yield http({
         url: '/visual/layer/update',
         method: 'post',
         body: {
-          dashboardId: '1513702962304577537',
+          dashboardId: state.bar.dashboardId,
           layers: payload,
         },
       })
@@ -621,7 +625,6 @@ export default {
     },
     // 添加组件到画布
     * addComponent({ payload }: any, { call, put }: any) {
-      debugger
       yield put({
         type: 'addLayer',
         payload: { final: payload, insertId: payload.insertId },
@@ -690,15 +693,14 @@ export default {
       })
     },
     * createComponent({ payload, itemData }: any, { call, put, select }: any): any {
-      debugger
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId = state.bar.key.length !== 0 ? state.bar.key[state.bar.key.length - 1] : state.bar.treeData[0].id
-      const {id, children}: any = yield http({
+      const { id, children }: any = yield http({
         url: '/visual/module/add',
         method: 'post',
         body: {
-          dashboardId: '1513702962304577537',
+          dashboardId: state.bar.dashboardId,
           component: {...payload},
           insertId: insertId,
           children: [],// TODO: 需要确定children从哪里来
@@ -716,12 +718,13 @@ export default {
       })
 
     },
-    * updateComponent({ payload }: any, { call, put }: any): any {
+    * updateComponent({ payload }: any, { call, put, select }: any): any {
+      const state: any = yield select((state: any) => state)
       yield http({
         url: '/visual/module/update',
         method: 'post',
         body: {
-          dashboardId: '1513702962304577537',
+          dashboardId: state.bar.dashboardId,
           configs: payload,
         },
       })
@@ -730,6 +733,9 @@ export default {
   },
 
   reducers: {
+    changeDashboardId(state: IBarState, { payload }: any) {
+      return {...state, dashboardId: payload}
+    },
     initTreeData(state: IBarState, { payload }: any) {
       payload.forEach((layer: any) => {
         layer.cancel = false
@@ -743,7 +749,6 @@ export default {
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
-      debugger
       let insertId: String
       const { treeData } = state
       if (payload.insertId && treeData.length) {
@@ -753,14 +758,11 @@ export default {
       }
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
 
-      console.log(newLayers, '==================')
-
       console.log('新增后的treeData', state.treeData)
       return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
-      debugger
       state.components = state.components.concat(payload)
       return { ...state }
     },
@@ -823,9 +825,9 @@ export default {
             (item: any) => item.name === DIMENSION,
           )
           dimensionConfig.value.forEach((config: any) => {
-            if([ 'left', 'width' ].includes(config.name)) {
+            if([ LEFT, WIDTH ].includes(config.name)) {
               xPositionList.push(config.value)
-            } else if([ 'top', 'height' ].includes(config.name)) {
+            } else if([ TOP, HEIGHT ].includes(config.name)) {
               yPositionList.push(config.value)
             }
           })
@@ -1080,7 +1082,7 @@ export default {
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
       })
-      state.selectedComponents = state.selectedComponents =
+      state.selectedComponents =
         state.components.filter((component) =>
           state.selectedComponentIds.includes(component.id),
         )
@@ -1154,6 +1156,114 @@ export default {
       })
       console.log('state.groupConfig', state.groupConfig)
       return { ...state, ...otherPayload }
+    },
+    setAlignment(state: IBarState, { payload }: any) {
+      const { position: { x, y }, style: { width, height } } = state.scaleDragData
+      state.selectedComponentOrGroup.forEach((layer) => {
+        if(COMPONENTS in layer) {
+          // 组
+          // 当前 layer 所包含的所有组件的 id 数组
+          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ layer.id }]`)
+          let layerX: number = 0, layerY: number = 0, layerWidth: number = 0, layerHeight: number = 0
+          if(layerDom) {
+            const translateArr = layerDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+            layerX = Number(translateArr[0])
+            layerY = Number(translateArr[1])
+            layerWidth = Number(layerDom.style.width.replace('px', ''))
+            layerHeight = Number(layerDom.style.height.replace('px', ''))
+          }
+          const componentIds = layerComponentsFlat(layer[COMPONENTS])
+          // 通过 id 筛选出当前组的组件
+          const components = state.selectedComponents.filter((component: any) =>
+            componentIds.includes(component.id),
+          )
+          components.forEach((component: any) => {
+            const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+            if(dimensionConfig) {
+              switch(payload) {
+                case 'top':
+                  setComponentDimension(dimensionConfig, { y: (y - layerY as any) }, 'add')
+                  break
+                case 'bottom':
+                  setComponentDimension(dimensionConfig, { y: ((y + height) - (layerY + layerHeight) as any) }, 'add')
+                  break
+                case 'left':
+                  setComponentDimension(dimensionConfig, { x: (x - layerX as any) }, 'add')
+                  break
+                case 'right':
+                  setComponentDimension(dimensionConfig, { x: ((x + width) - (layerX + layerWidth) as any) }, 'add')
+                  break
+                case 'vertical':
+                  setComponentDimension(dimensionConfig, { y: ((y + height / 2) - (layerY + layerHeight / 2) as any) }, 'add')
+                  break
+                case 'horizontal':
+                  setComponentDimension(dimensionConfig, { x: ((x + width / 2) - (layerX + layerWidth / 2) as any) }, 'add')
+                  break
+              }
+            }
+          })
+        } else {
+          // 组件
+          const component = state.selectedComponents.find((component: any) => component.id === layer.id)
+          if(component) {
+            const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+            if(dimensionConfig) {
+              switch(payload) {
+                case 'top':
+                  setComponentDimension(dimensionConfig, { y }, 'set')
+                  break
+                case 'bottom':
+                  setComponentDimension(dimensionConfig, { y: y + height }, 'update')
+                  break
+                case 'left':
+                  setComponentDimension(dimensionConfig, { x }, 'set')
+                  break
+                case 'right':
+                  setComponentDimension(dimensionConfig, { x: x + width }, 'update')
+                  break
+                case 'vertical':
+                  setComponentDimension(dimensionConfig, { y: (y + height / 2 as any) }, 'center')
+                  break
+                case 'horizontal':
+                  setComponentDimension(dimensionConfig, { x: (x + width / 2 as any) }, 'center')
+                  break
+              }
+            }
+          }
+        }
+      })
+      return {
+        ...state,
+      }
+    },
+    setArrangement(state: IBarState, { payload }: any) {
+      console.log('payload', payload)
+      const xSortComponents: any = state.selectedComponentOrGroup.sort((a: any, b: any) => {
+        const aIsGroup = (COMPONENTS in a)
+        const bIsGroup = (COMPONENTS in b)
+        const aDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ aIsGroup ? a.id : 'component-' + a.id }]`)
+        const bDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ bIsGroup ? b.id : 'component-' + b.id }]`)
+        const aTranslateArr = aDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+        const aLayerX = Number(aTranslateArr[0])
+        const bTranslateArr = bDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+        const bLayerX = Number(bTranslateArr[0])
+        return aLayerX - bLayerX
+      })
+      const positionArr = calcGroupPosition([ xSortComponents[0] ], state.components)
+      const xPositionList = positionArr[0].sort((a: number, b: number) => a - b)
+      const yPositionList = positionArr[1].sort((a: number, b: number) => a - b)
+      const aWidth = xPositionList[1] - xPositionList[0]
+      console.log('xSortComponents[0]', xSortComponents[0].id)
+      console.log('aWidth', aWidth)
+      xSortComponents.forEach((item: any, index: any) => {
+        if(index === 0 || index === xSortComponents.length - 1) {
+          return
+        }
+
+      })
+      return {
+        ...state,
+      }
     },
   },
 }
