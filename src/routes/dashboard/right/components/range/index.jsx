@@ -29,11 +29,16 @@ const Range = props => {
     }
   )
 
+  useEffect(()=>{
+    form.setFieldsValue({
+      range: _data.value
+    })
+  },[_data.value])
+
   const rangeChange = (e) => {
-    console.log('eeeeee',e)
     setRange(e)
-    _data.value = e || 100
-    _inputData.value = e || 100
+    _data.value = e
+    _inputData.value = e
     props.onChange()
   }
   const rangeInputChange = () => {

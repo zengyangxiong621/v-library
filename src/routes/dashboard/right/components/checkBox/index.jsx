@@ -12,6 +12,10 @@ const CheckBox = props => {
   };
   const _data = props.data;
   const [hideGlup, setHideGlup] = useState(_data.value)
+
+  useEffect(()=>{
+    setHideGlup(_data.value)
+  },[_data.value])
   
   const checkChange = () => {
     setHideGlup(!hideGlup)
