@@ -4,6 +4,7 @@ import { Link } from 'dva/router';
 import './index.less'
 import { Layout, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import logo from '@/assets/images/logo.svg';
 
 const menu = (
   <Menu className="cus-dropdown-menu">
@@ -50,7 +51,7 @@ const Header = props => {
   return (
     <div className="header-wraper">
       <div className="logo">
-        <img src={require('@/assets/images/logo.png')} alt="" />
+        <img src={logo} alt="" />
         <span>可视化搭建平台</span>
       </div>
       <Menu
@@ -73,8 +74,9 @@ const Header = props => {
           </Dropdown>
         </div>
         <div className="user">
-          <img src={require('@/assets/images/avatar.png')} alt="" />
-          <span title="gridsumgridsumgridsum">gridsumgridsumgridsum</span>
+          {/* <img src={require('@/assets/images/avatar.png')} alt="" /> */}
+          <i className="iconfont icon-yonghu" style={{color:'#2482FF',fontSize:'18px'}}></i>
+          <span title="admin">admin</span>
         </div>
       </div>
     </div>
