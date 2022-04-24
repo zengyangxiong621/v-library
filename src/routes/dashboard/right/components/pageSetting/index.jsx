@@ -13,6 +13,8 @@ import EditTable from '../editTable'
 import debounce from 'lodash/debounce';
 import { useFetch } from '../../../../../utils/useFetch'
 
+const dashboardId = window.location.pathname.split('/')[2]
+
 const PageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
@@ -43,7 +45,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
     const params = {
       config: pageConfig,
       thumb: thumbImg.value,
-      dashboardId: '1513702962304577537'
+      dashboardId: dashboardId
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [, {config}] = await useFetch('/visual/application/update', {
