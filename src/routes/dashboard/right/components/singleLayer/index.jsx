@@ -385,6 +385,8 @@ const componentConfig = {
   },
 }
 
+const dashboardId = window.location.pathname.split('/')[2]
+
 const SingleLayer = ({ bar, dispatch, ...props }) => {
   const { TabPane } = Tabs;
   const formItemLayout = {
@@ -416,7 +418,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     // todo 替换假数据
     const params = {
       configs: [param],
-      dashboardId: "1513702962304577537"
+      dashboardId: dashboardId
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     await useFetch('/visual/module/update', {
@@ -460,7 +462,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     // todo 替换假数据
     const params = {
       configs: [param],
-      dashboardId: "1513702962304577537"
+      dashboardId: dashboardId
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     await useFetch('/visual/layer/group/update', {
@@ -483,7 +485,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     // todo 替换假数据
     const params = {
       configs: [param],
-      dashboardId: "1513702962304577537"
+      dashboardId: dashboardId
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     await useFetch('/visual/module/defineEvent', {

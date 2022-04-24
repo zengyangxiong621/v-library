@@ -17,7 +17,7 @@ import {
 import debounce from 'lodash/debounce';
 import { useFetch } from '../../../../../utils/useFetch'
 
-
+const dashboardId = window.location.pathname.split('/')[2]
 
 const GroupConfig = ({ bar, dispatch, ...props }) => {
   const [form] = Form.useForm();
@@ -47,7 +47,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     // todo 替换假数据
     const params = {
       configs: [param],
-      dashboardId: "1513702962304577537"
+      dashboardId: dashboardId
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const data = await useFetch('/visual/layer/group/update', {
