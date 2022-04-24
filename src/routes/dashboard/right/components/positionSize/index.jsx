@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
-import { find } from '../../../../../utils/common'
+import { find,truncValue } from '../../../../../utils/common'
 import CusInputNumber from "../cusInputNumber"
 
 import {
@@ -17,10 +17,10 @@ const PositionSize = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
   const _data = props.data;
-  const _left = find(_data, 'left')
-  const _top = find(_data, 'top')
-  const _width = find(_data, 'width')
-  const _height = find(_data, 'height')
+  const _left = truncValue(find(_data, 'left'))
+  const _top = truncValue(find(_data, 'top'))
+  const _width = truncValue(find(_data, 'width'))
+  const _height = truncValue(find(_data, 'height'))
 
   const _leftCopy = Object.assign({}, _left, { displayName: '' })
   const _topCopy = Object.assign({}, _top, { displayName: '' })
