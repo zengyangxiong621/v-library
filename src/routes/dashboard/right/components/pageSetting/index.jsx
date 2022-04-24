@@ -12,6 +12,7 @@ import { Form } from 'antd';
 import EditTable from '../editTable'
 import debounce from 'lodash/debounce';
 import { useFetch } from '../../../../../utils/useFetch'
+import { v4 as uuidv4 } from 'uuid';
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -26,8 +27,14 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   const gridSpacing = find(pageConfig, 'gridSpacing')
   const zoomConfig = find(pageConfig, 'zoom')
   const thumbImg = find(pageConfig, 'thumbImg')
+  const [key,setKey] = useState(uuidv4())
 
   const [form] = Form.useForm();
+
+  useEffect(()=>{
+    console.log('bar.pageConfig',bar.pageConfig)
+    setKey(uuidv4())
+  },[bar.pageConfig])
 
   const settingsChange = debounce(() => {
     console.log('pageConfig changed')
@@ -64,7 +71,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
       <h3 className="header">
         页面设置
       </h3>
-      <div className="content">
+      <div className="content" key={key}>
         <Form
           className="custom-form"
           form={form}
