@@ -522,6 +522,7 @@ export default {
         const {
           layers,
           components,
+          dashboardConfig,
         } = yield http({
           url: `/visual/application/dashboard/detail/${ payload }`,
           method: 'get',
@@ -532,6 +533,8 @@ export default {
             treeData: layers,
             components,
             dashboardId: payload,
+            pageConfig: dashboardConfig,
+
           },
         })
       } catch(e) {

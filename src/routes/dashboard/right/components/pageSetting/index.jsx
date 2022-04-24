@@ -46,8 +46,14 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
       dashboardId: '1513702962304577537'
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useFetch('/visual/application/update', {
+    const [, {config}] = await useFetch('/visual/application/update', {
       body: JSON.stringify(params)
+    })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        pageConfig: config
+      }
     })
   }
 
