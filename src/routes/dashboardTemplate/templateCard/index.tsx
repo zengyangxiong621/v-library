@@ -4,19 +4,15 @@ import './index.less'
 import { withRouter } from 'dva/router'
 
 const TemplateCard = (props: any) => {
-
-  const { id, name, ratio, fenbianlv,
-    imgUrl, getCurImgIndex, curIndex,
-    history
-  } = props
-  // 没有图片链接，使用自定义的图片
-  const finalPicUrl = imgUrl || ''
-
+  const { id, name, ratio, fenbianlv, photoUrl,
+    getCurImgIndex, curIndex,history } = props
+    // 后端返回的photoUrl为空，则使用默认图片
+  const finalPicUrl = photoUrl ?? require('../../../assets/images/模板默认背景图.png')
   const scanDashboard = () => {
     getCurImgIndex(curIndex)
   }
   const createProject = () => {
-    history.push('/')
+    history.push(`/dashboard/${id}`)
   }
   return (
     <div className='TemplateCard-wrap'>

@@ -6,11 +6,12 @@ import { connect } from 'dva'
 import { useFetch } from '../../../../utils/useFetch'
 
 import { IconFont } from '../../../../utils/useIcon'
-import { Input } from 'antd'
+import { Input, message } from 'antd'
 
 const EveryTreeNode = (props: any) => {
-  const { groupId, name, number,
-    systemDefined, addGroup, refreshList } = props || {}
+  const { groupId, name, number, systemDefined,
+    addGroup,
+    refreshGroupLists } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -24,10 +25,15 @@ const EveryTreeNode = (props: any) => {
     })
   }, [showRenameInput])
 
-
-
   /** ** 新建分组****** */
   const createGroup = async () => {
+    // 前端校验一遍
+    //比如名字一样,不发请求
+    if (newGroupName === '') {
+      message.warning({ content: '分组名不能为空', duration: 2 })
+      addGroup()
+      return
+    }
     const finalBody = {
       spaceId: '1',
       name: newGroupName
@@ -36,22 +42,28 @@ const EveryTreeNode = (props: any) => {
       body: JSON.stringify(finalBody)
     })
     // 创建成功，改变父组件传入的变量通知父组件重新获取最新分组列表
-    if (data) refreshList()
+    if (data) refreshGroupLists()
   }
   const createInputChange = (e: any) => {
     setNewGroupName(e.target.value)
   }
+  const createInputFocus = (e: any) => {
+    console.log('eeee', e);
+  }
 
   /** ** 编辑分组****** */
   // 修改分组名字
-  const updateGroupName = async () => {
+  const updateGroupName = async (e: any) => {
+    e.stopPropagation()
     // TODO 校验
     // 比如名字一样,不发请求
     if (inputValue === '') {
-      alert('哎，怎么能为空呢')
+      // message.warning({ content: '分组名不能为空', duration: 2 })
+      setShowRenameInput(false)
       return
     } else if (inputValue === name) {
-      alert('来点不一样的啊')
+      // message.warning({ content: '新旧分组名不能相同', duration: 2 })
+      setShowRenameInput(false)
       return
     }
     const finalBody = {
@@ -64,7 +76,7 @@ const EveryTreeNode = (props: any) => {
     })
     if (data) {
       inputRef.current.blur()
-      refreshList()
+      refreshGroupLists()
       setShowRenameInput(false)
     }
   }
@@ -74,7 +86,8 @@ const EveryTreeNode = (props: any) => {
     setInputValue(e.target.value)
   }
   // 点击编辑图标
-  const editClick = (id: string | number) => {
+  const editClick = (e: any, id: string | number) => {
+    e.stopPropagation()
     setShowRenameInput(true)
     setInputValue(name)
   }
@@ -83,19 +96,23 @@ const EveryTreeNode = (props: any) => {
     const [, data] = await useFetch(`/visual/application/deleteGroup?groupId=${id}`, {
       method: 'delete'
     })
-    data && refreshList()
+    data && refreshGroupLists()
+  }
+  const inputWrapClick = (e: any) => {
+    // e.stopPropagation()
   }
   return (
     <div className={`node-wrap`}>
       {
         groupId === 'aInput'
           ?
-          <><Input
+          <div onClick={(e) => inputWrapClick(e)}><Input
             value={newGroupName}
+            onFocus={(e) => createInputFocus(e)}
             onChange={(e) => createInputChange(e)}
             onPressEnter={() => createGroup()}
             onBlur={() => createGroup()}
-          /></>
+          /></div>
           :
           <>
             <div className='title'>
@@ -106,9 +123,10 @@ const EveryTreeNode = (props: any) => {
                     style={{ width: '120px' }}
                     value={inputValue}
                     ref={inputRef}
+                    onClick={(e) => e.stopPropagation()}
                     onChange={(e) => oInputContent(e)}
-                    onPressEnter={(e) => updateGroupName()}
-                    onBlur={(e) => updateGroupName()}
+                    onPressEnter={(e) => updateGroupName(e)}
+                    onBlur={(e) => updateGroupName(e)}
                   />
                   : <>{name}</>
               }
@@ -124,7 +142,7 @@ const EveryTreeNode = (props: any) => {
                     <>
                       <div className='show-icon'>
                         {
-                          <IconFont type='icon-bianji' style={{ marginRight: '16px' }} onClickCapture={() => editClick(groupId)} />
+                          <IconFont type='icon-bianji' style={{ marginRight: '16px' }} onClickCapture={(e) => editClick(e, groupId)} />
                         }
                         {
                           <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(groupId)} />

@@ -9,6 +9,9 @@ export default {
     groupList: [],
   },
   reducers: {
+    resetTheModels(state: any) {
+      return { ...state }
+    },
     updateTemplateList(state: any, { payload }: any) {
       return { ...state, templateList: payload };
     },
@@ -36,16 +39,15 @@ export default {
           method: "get",
         }
       );
-      const finalGroupTree: any = [
-        {
-          groupId: "wrap",
-          name: "应用列表",
-          children: data,
-        },
-      ];
       yield put({
-        type: "dashboardManage/setGroupList",
-        payload: finalGroupTree,
+        type: "setGroupList",
+        payload: [
+          {
+            groupId: "wrap",
+            name: "应用列表",
+            children: data,
+          },
+        ],
       });
     },
   },

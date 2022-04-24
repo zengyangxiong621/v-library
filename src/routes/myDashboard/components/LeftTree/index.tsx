@@ -16,26 +16,17 @@ import { DownOutlined } from '@ant-design/icons'
 const LeftTree = ({ dashboardManage, dispatch }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   const spaceId = '1'
-
-  const [finalTree, setFinalTree] = useState([])
-  const [originTree, setOriginTree] = useState<any[]>([])
   // 获取应用分组列表
   useEffect(() => {
-    dispatch({
-      type: 'dashboardManage/getGroupTree',
-      payload: {
-        spaceId: 1
-      }
-    })
-    setOriginTree(dashboardManage.groupList)
+    refreshGroupLists()
   }, [])
 
   // 新建分组或者重命名成功分组，触发刷新
-  const refreshList = () => {
+  const refreshGroupLists = () => {
     dispatch({
       type: 'dashboardManage/getGroupTree',
       payload: {
-        spaceId: 1
+        spaceId
       }
     })
   }
@@ -46,10 +37,32 @@ const LeftTree = ({ dashboardManage, dispatch }: any) => {
       groupId: 'aInput',
       name: "占位的input",
     }
-    dashboardManage.groupList.splice(-1, 0, mockItem)
+    // 插入的输入框是在数组的倒数第二个位置
+    const origin = dashboardManage.groupList[0].children
+    if (origin[origin.length - 2].groupId === 'aInput') {
+      // debugger
+      dashboardManage.groupList[0].children.splice(-2, 1)
+      const temp = JSON.parse(JSON.stringify(dashboardManage.groupList))
+      dispatch({
+        type: 'dashboardManage/setGroupList',
+        payload: temp
+      })
+      return
+    }
+    // 增加一个占位数据
+    dashboardManage.groupList[0].children.splice(-1, 0, mockItem)
+    const temp = JSON.parse(JSON.stringify(dashboardManage.groupList))
+    dispatch({
+      type: 'dashboardManage/setGroupList',
+      payload: temp
+    })
   }
 
-  const selectTreeNode = (keys: any) => {
+  const selectTreeNode = (keys: any, e: any) => {
+    const { node } = e
+    if (node.key === 'aInput' || node.name === '占位的input' || node.key === 'wrap') {
+      return
+    }
     // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)
     const key = keys[0]
     if (key === 'wrap') return
@@ -66,27 +79,30 @@ const LeftTree = ({ dashboardManage, dispatch }: any) => {
       payload: finalBody
     })
   }
-
   return (
     <div className='LeftTree-wrap'>
-      <Tree
-        blockNode
-        defaultExpandAll={true}
-        treeData={dashboardManage.groupList}
-        switcherIcon={<DownOutlined />}
-        fieldNames={{
-          title: 'name',
-          key: 'groupId'
-        }}
-        onSelect={selectTreeNode}
-        titleRender={(nodeData: any) => (
-          <Node
-            refreshList={refreshList}
-            addGroup={addGroup}
-            {...nodeData}>
-          </Node>)}
-      >
-      </Tree>
+      {
+        dashboardManage.groupList.length > 0 &&
+        <Tree
+          blockNode
+          defaultExpandedKeys={['wrap']}
+          // defaultExpandAll={customExpandAll}
+          treeData={dashboardManage.groupList}
+          switcherIcon={<DownOutlined />}
+          fieldNames={{
+            title: 'name',
+            key: 'groupId'
+          }}
+          onSelect={selectTreeNode}
+          titleRender={(nodeData: any) => (
+            <Node
+              refreshGroupLists={refreshGroupLists}
+              addGroup={addGroup}
+              {...nodeData}>
+            </Node>)}
+        >
+        </Tree>
+      }
     </div>
   )
 }
