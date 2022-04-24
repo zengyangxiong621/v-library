@@ -4,6 +4,7 @@ import {
   calcGroupPosition,
   deepForEach,
   findLayerById,
+  getDimensionData,
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
@@ -88,9 +89,9 @@ export default {
     isCanClearAllStatus: true,
     key: [],
     isShowRightMenu: false,
-    lastRightClick: "",
+    lastRightClick: '',
     isMultipleTree: true,
-    operate: "",
+    operate: '',
     treeData: [],
     selectedComponentOrGroup: [],
     isSupportMultiple: false,
@@ -100,7 +101,7 @@ export default {
     selectedComponents: [],
     selectedComponentRefs: {},
     selectedComponentDOMs: {},
-    dragStatus: "",
+    dragStatus: '',
     supportLinePositionInfo: {
       x: 100,
       y: 200,
@@ -113,7 +114,7 @@ export default {
         y: 0,
       },
       style: {
-        display: "none",
+        display: 'none',
         width: 100,
         height: 100,
       },
@@ -124,147 +125,147 @@ export default {
     canvasScaleValue: 0,
     pageConfig: [
       {
-        name: "recommend",
-        displayName: "屏幕大小",
-        value: "0",
+        name: 'recommend',
+        displayName: '屏幕大小',
+        value: '0',
         options: [
           {
-            name: "大屏推荐尺寸1920*1080",
-            value: "0",
+            name: '大屏推荐尺寸1920*1080',
+            value: '0',
           },
           {
-            name: "web最常见尺寸1366*768",
-            value: "1",
+            name: 'web最常见尺寸1366*768',
+            value: '1',
           },
           {
-            name: "web最小尺寸1024*768",
-            value: "2",
+            name: 'web最小尺寸1024*768',
+            value: '2',
           },
           {
-            name: "自定义",
-            value: "4",
+            name: '自定义',
+            value: '4',
           },
         ],
         width: 1920,
         height: 1080,
       },
       {
-        name: "styleColor",
-        displayName: "背景",
-        value: "#222430", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+        name: 'styleColor',
+        displayName: '背景',
+        value: '#222430', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
       },
       {
-        name: "backgroundImg",
-        displayName: "背景图",
-        value: "", // 有背景图则返回背景图的url，没有背景图返回空或者null
+        name: 'backgroundImg',
+        displayName: '背景图',
+        value: '', // 有背景图则返回背景图的url，没有背景图返回空或者null
       },
       {
-        name: "gridSpacing",
-        displayName: "栅格间距",
+        name: 'gridSpacing',
+        displayName: '栅格间距',
         value: 5,
-        type: "number",
+        type: 'number',
         config: {
           min: 0,
           step: 1,
-          suffix: "", // 输入框后缀
+          suffix: '', // 输入框后缀
         },
       },
       {
-        name: "zoom",
-        displayName: "缩放设置",
-        value: "0",
-        type: "radioGroup",
-        direction: "vertical", // 方向
+        name: 'zoom',
+        displayName: '缩放设置',
+        value: '0',
+        type: 'radioGroup',
+        direction: 'vertical', // 方向
         options: [
           {
-            name: "按屏幕比例适配",
-            value: "0",
+            name: '按屏幕比例适配',
+            value: '0',
           },
           {
-            name: "强制铺满",
-            value: "1",
+            name: '强制铺满',
+            value: '1',
           },
           {
-            name: "原比例展示溢出滚动",
-            value: "2",
+            name: '原比例展示溢出滚动',
+            value: '2',
           },
         ],
       },
       {
-        name: "thumbImg",
-        displayName: "封面",
-        value: "",
+        name: 'thumbImg',
+        displayName: '封面',
+        value: '',
       },
     ],
     groupConfig: [
       {
-        name: "dimension",
-        displayName: "位置尺寸",
+        name: 'dimension',
+        displayName: '位置尺寸',
         config: {
           lock: false,
         },
         value: [
           {
-            name: "left",
-            displayName: "X轴坐标",
+            name: 'left',
+            displayName: 'X轴坐标',
             value: 900,
-            type: "number",
+            type: 'number',
             config: {
-              suffix: "X",
+              suffix: 'X',
             },
           },
           {
-            name: "top",
-            displayName: "Y轴坐标",
+            name: 'top',
+            displayName: 'Y轴坐标',
             value: 900,
-            type: "number",
+            type: 'number',
             config: {
-              suffix: "Y",
+              suffix: 'Y',
             },
           },
           {
-            name: "width",
-            displayName: "宽度",
+            name: 'width',
+            displayName: '宽度',
             value: 100,
-            type: "number",
+            type: 'number',
             config: {
-              suffix: "W",
+              suffix: 'W',
             },
           },
           {
-            name: "height",
-            displayName: "高度",
+            name: 'height',
+            displayName: '高度',
             value: 100,
-            type: "number",
+            type: 'number',
             config: {
-              suffix: "H",
+              suffix: 'H',
             },
           },
         ],
       },
       {
-        name: "hideDefault",
-        displayName: "默认隐藏",
+        name: 'hideDefault',
+        displayName: '默认隐藏',
         value: false,
       },
       {
-        name: "opacity",
-        displayName: "透明度",
+        name: 'opacity',
+        displayName: '透明度',
         value: 100,
       },
       {
-        name: "interaction",
-        displayName: "交互",
+        name: 'interaction',
+        displayName: '交互',
         value: {
           // 该部分实际上来自于layers设置
           mountAnimation: {
             // 如果不存在载入动画，该项为null
             delay: 2, // 延迟
-            direction: "right", // 方向
+            direction: 'right', // 方向
             duration: 304, // 持续时间(ms)
             opacityOpen: true, // 渐隐渐现
-            timingFunction: "ease", // 速率
-            type: "slide", // 动画类型
+            timingFunction: 'ease', // 速率
+            type: 'slide', // 动画类型
           },
         },
       },
@@ -273,138 +274,138 @@ export default {
       config: [
         // 样式配置
         {
-          name: "dimension",
-          displayName: "位置尺寸",
-          type: "dimensionGroup",
+          name: 'dimension',
+          displayName: '位置尺寸',
+          type: 'dimensionGroup',
           config: {
             lock: false,
           },
           value: [
             {
-              name: "left",
-              displayName: "X轴坐标",
+              name: 'left',
+              displayName: 'X轴坐标',
               value: 1000,
-              type: "number",
+              type: 'number',
               config: {
-                suffix: "X",
+                suffix: 'X',
               },
             },
             {
-              name: "top",
-              displayName: "Y轴坐标",
+              name: 'top',
+              displayName: 'Y轴坐标',
               value: 1000,
-              type: "number",
+              type: 'number',
               config: {
-                suffix: "Y",
+                suffix: 'Y',
               },
             },
             {
-              name: "width",
-              displayName: "宽度",
+              name: 'width',
+              displayName: '宽度',
               value: 100,
-              type: "number",
+              type: 'number',
               config: {
-                suffix: "W",
+                suffix: 'W',
               },
             },
             {
-              name: "height",
-              displayName: "高度",
+              name: 'height',
+              displayName: '高度',
               value: 100,
-              type: "number",
+              type: 'number',
               config: {
-                suffix: "H",
+                suffix: 'H',
               },
             },
           ],
         },
         {
-          name: "hideDefault",
-          displayName: "默认隐藏",
-          type: "checkBox",
+          name: 'hideDefault',
+          displayName: '默认隐藏',
+          type: 'checkBox',
           value: false,
         },
         {
-          name: "textStyle",
-          displayName: "文本样式",
-          type: "textFullStyleGroup",
+          name: 'textStyle',
+          displayName: '文本样式',
+          type: 'textFullStyleGroup',
           value: [
             {
-              name: "fontFamily",
-              displayName: "",
-              value: "Microsoft Yahei",
+              name: 'fontFamily',
+              displayName: '',
+              value: 'Microsoft Yahei',
             },
             {
-              name: "fontSize",
-              displayName: "",
+              name: 'fontSize',
+              displayName: '',
               value: 32,
             },
             {
-              name: "color",
-              displayName: "",
-              type: "color",
-              value: "#000", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              name: 'color',
+              displayName: '',
+              type: 'color',
+              value: '#000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
             },
             {
-              name: "bold",
-              displayName: "",
+              name: 'bold',
+              displayName: '',
               value: false,
             },
             {
-              name: "italic",
-              displayName: "",
+              name: 'italic',
+              displayName: '',
               value: false,
             },
             {
-              name: "letterSpacing",
-              displayName: "字距",
+              name: 'letterSpacing',
+              displayName: '字距',
               value: 0,
             },
             {
-              name: "lineHeight",
-              displayName: "行距",
+              name: 'lineHeight',
+              displayName: '行距',
               value: 48,
             },
           ],
         },
         {
-          name: "align",
-          displayName: "对齐方式",
-          type: "alignFull",
+          name: 'align',
+          displayName: '对齐方式',
+          type: 'alignFull',
           value: [
             {
-              name: "textAlign",
-              displayName: "水平对齐",
-              type: "align",
-              value: "left", // left , center, right,bothEnds
+              name: 'textAlign',
+              displayName: '水平对齐',
+              type: 'align',
+              value: 'left', // left , center, right,bothEnds
             },
             {
-              name: "textVertical",
-              displayName: "垂直对齐",
-              type: "vertical",
-              value: "top", // top bottom vertical
+              name: 'textVertical',
+              displayName: '垂直对齐',
+              type: 'vertical',
+              value: 'top', // top bottom vertical
             },
           ],
         },
         {
-          name: "shadow",
-          displayName: "阴影",
-          type: "collapse",
+          name: 'shadow',
+          displayName: '阴影',
+          type: 'collapse',
           hasSwitch: true,
           defaultExpand: true,
           value: [
             {
-              name: "show",
-              displayName: "",
+              name: 'show',
+              displayName: '',
               value: true,
-              type: "switch",
+              type: 'switch',
             },
             {
-              name: "shadow",
-              displayName: "外阴影",
-              type: "boxShadow",
+              name: 'shadow',
+              displayName: '外阴影',
+              type: 'boxShadow',
               value: {
-                color: "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                color: '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                 vShadow: 0, // 垂直阴影的位置
                 hShadow: 0, // 水平阴影的位置
                 blur: 8, // 模糊的距离
@@ -414,25 +415,25 @@ export default {
         },
       ],
       dataConfig: {}, //数据源配置
-      dataType: "static", //数据类型：static;mysql;api;clickhouse
+      dataType: 'static', //数据类型：static;mysql;api;clickhouse
       id: 111, //组件ID
-      moduleName: "textV2", //组件标识
-      moduleVersion: "1.1.0", //组件版本号
-      name: "标题", //图层名称
-      parent: "", //组件父级配置
-      dashboardId: "11", //画布id
+      moduleName: 'textV2', //组件标识
+      moduleVersion: '1.1.0', //组件版本号
+      name: '标题', //图层名称
+      parent: '', //组件父级配置
+      dashboardId: '11', //画布id
       staticData: {
         //静态数据
         data: [
           {
-            text: "我是文字组件111",
+            text: '我是文字组件111',
           },
         ],
         fields: [
           {
-            name: "text",
-            value: "text",
-            desc: "文本",
+            name: 'text',
+            value: 'text',
+            desc: '文本',
             status: true, // 状态
           },
         ],
@@ -442,11 +443,11 @@ export default {
         mountAnimation: {
           // 如果不存在载入动画，该项为null
           delay: 2, // 延迟
-          direction: "right", // 方向
+          direction: 'right', // 方向
           duration: 304, // 持续时间(ms)
           opacityOpen: true, // 渐隐渐现
-          timingFunction: "ease", // 速率
-          type: "slide", // 动画类型
+          timingFunction: 'ease', // 速率
+          type: 'slide', // 动画类型
         },
       },
     },
@@ -466,16 +467,16 @@ export default {
           x: 0,
           y: 0,
         },
-        direction: "horizon",
-        display: "block",
+        direction: 'horizon',
+        display: 'block',
       },
       {
         position: {
           x: 0,
           y: 0,
         },
-        direction: "vertical",
-        display: "block",
+        direction: 'vertical',
+        display: 'block',
       },
     ],
   } as IBarState,
@@ -496,504 +497,496 @@ export default {
       // eslint-disable-line
       history.listen((location: any) => {
         // console.log("location", location);
-      });
+      })
     },
     onResize({ dispatch, history }: any) {
-      window.onresize = (e) => {};
+      window.onresize = (e) => {
+      }
     },
     keyEvent({ dispatch, history }: any) {
-      document.onkeydown = (e) => {};
+      document.onkeydown = (e) => {
+      }
     },
   },
 
   effects: {
-    *getDashboardId({ payload }: any, { call, put, select }: any) {
+    * getDashboardId ({ payload }: any, { call, put, select }: any) {
       yield put({
-        type: "changeDashboardId",
-        payload: payload,
-      });
+        type:'changeDashboardId',
+        payload: payload
+      })
     },
-    *getDashboardDetails({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
+    * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
       try {
-        const { layers, components } = yield http({
-          url: `/visual/application/dashboard/detail/${payload}`,
-          method: "get",
-        });
+        const {
+          layers,
+          components,
+        } = yield http({
+          url: `/visual/application/dashboard/detail/${ payload }`,
+          method: 'get',
+        })
         yield put({
-          type: "save",
+          type: 'save',
           payload: {
             treeData: layers,
             components,
             dashboardId: payload,
           },
-        });
-      } catch (e) {
-        console.log("e", e);
-        return e;
+        })
+      } catch(e) {
+        console.log('e', e)
+        return e
       }
     },
     // 重命名
-    *changeName({ payload }: any, { call, put, select }: any): any {
-      // const bar: any = yield select(({ bar }: any) => bar)
-      // const newTree = reName(bar.treeData, bar.key, payload.newName)
+    * changeName({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
+      const newTree = reName(bar.treeData, bar.key, payload.newName)
       yield put({
-        type: "bar/change",
+        type: 'bar/change',
         payload,
-      });
+      })
     },
-    *group({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
-      const { treeDataCopy, newLayerId }: any = yield group(
-        bar.treeData,
-        bar.key
-      );
+    * group({ payload }: any, { call, put, select }: any): any {
+      console.log('成组')
+      const bar: any = yield select(({ bar }: any) => bar)
+      const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key)
       yield put({
-        type: "bar/update",
+        type: 'bar/update',
         payload: treeDataCopy,
-      });
+      })
       yield put({
-        type: "bar/save",
+        type: 'bar/save',
         payload: {
-          key: [newLayerId],
+          key: [ newLayerId ],
         },
-      });
+      })
     },
-    *cancelGroup({ payload }: any, { call, put, select }: any): any {
-      const bar = yield select(({ bar }: any) => bar);
-      const newTree = cancelGroup(bar.treeData, bar.key);
-      console.log("取消成组的新树", newTree);
+    * cancelGroup({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = cancelGroup(bar.treeData, bar.key)
+      console.log('取消成组的新树', newTree)
       yield put({
-        type: "update",
+        type: 'update',
         payload: newTree,
-      });
+      })
     },
-    *moveUp({ payload }: any, { call, put, select }: any): any {
-      const bar = yield select(({ bar }: any) => bar);
-      const newTree = moveUp(bar.treeData, bar.key);
+    * moveUp({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = moveUp(bar.treeData, bar.key)
       yield put({
-        type: "update",
+        type: 'update',
         payload: newTree,
-      });
+      })
     },
-    *moveDown({ payload }: any, { call, put, select }: any): any {
-      const bar = yield select(({ bar }: any) => bar);
-      const newTree = moveDown(bar.treeData, bar.key);
+    * moveDown({ payload }: any, { call, put, select }: any): any {
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = moveDown(bar.treeData, bar.key)
       yield put({
-        type: "update",
+        type: 'update',
         payload: newTree,
-      });
+      })
     },
-    *placedTop({ payload }: any, { call, put, select }: any): any {
-      console.log("准备置顶");
-      const bar = yield select(({ bar }: any) => bar);
-      const newTree = placeTop(bar.treeData, bar.key);
+    * placedTop({ payload }: any, { call, put, select }: any): any {
+      console.log('树的问题')
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = placeTop(bar.treeData, bar.key)
       yield put({
-        type: "update",
+        type: 'update',
         payload: newTree,
-      });
+      })
     },
-    *placedBottom({ payload }: any, { call, put, select }: any): any {
-      console.log("置底了");
-      const bar = yield select(({ bar }: any) => bar);
-      const newTree = placeBottom(bar.treeData, bar.key);
+    * placedBottom({ payload }: any, { call, put, select }: any): any {
+      console.log('置底了')
+      const bar = yield select(({ bar }: any) => bar)
+      const newTree = placeBottom(bar.treeData, bar.key)
       yield put({
-        type: "update",
+        type: 'update',
         payload: newTree,
-      });
+      })
     },
     // 更改图层组织
-    *update({ payload }: any, { select, call, put }: any): any {
-      const state: any = yield select((state: any) => state);
+    * update({ payload }: any, { select, call, put }: any): any {
+      const state: any = yield select((state: any) => state)
       const layers = yield http({
-        url: "/visual/layer/update",
-        method: "post",
+        url: '/visual/layer/update',
+        method: 'post',
         body: {
           dashboardId: state.bar.dashboardId,
           layers: payload,
         },
-      });
+      })
       yield put({
-        type: "updateTree",
+        type: 'updateTree',
         payload: layers,
-      });
+      })
     },
     // 修改图层属性图层
-    *change({ payload }: any, { call, put }: any): any {
-      console.log("有id吗", payload.configs);
+    * change({ payload }: any, { call, put }: any): any {
       const layers = yield http({
-        url: "/visual/layer/change",
-        method: "post",
+        url: '/visual/layer/change',
+        method: 'post',
         body: payload,
-      });
+      })
       yield put({
-        type: "updateTree",
+        type: 'updateTree',
         payload: layers,
-      });
+      })
     },
     // 添加组件到画布
-    *addComponent({ payload }: any, { call, put }: any) {
+    * addComponent({ payload }: any, { call, put }: any) {
       yield put({
-        type: "addLayer",
+        type: 'addLayer',
         payload: { final: payload, insertId: payload.insertId },
-      });
+      })
     },
     // 删除图层、分组
-    *delete({ payload }: any, { select, call, put }: any): any {
+    * delete({ payload }: any, { select, call, put }: any): any {
       const layers = yield http({
-        url: "/visual/layer/delete",
-        method: "delete",
+        url: '/visual/layer/delete',
+        method: 'delete',
         body: payload,
-      });
+      })
       yield put({
-        type: "updateTree",
+        type: 'updateTree',
         payload: layers,
-      });
+      })
     },
     // 复制图层
-    *copy({ payload }: any, { select, call, put }: any): any {
+    * copy({ payload }: any, { select, call, put }: any): any {
       const { layers, components } = yield http({
-        url: "/visual/layer/copy",
-        method: "post",
+        url: '/visual/layer/copy',
+        method: 'post',
         body: payload,
-      });
+      })
       yield put({
-        type: "updateTree",
+        type: 'updateTree',
         payload: layers,
-      });
+      })
       yield put({
-        type: "updateComponents",
+        type: 'updateComponents',
         payload: components,
-      });
+      })
     },
-    *fetch({ payload }: any, { call, put }: any): any {
+    * fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
-      yield put({ type: "selectedNode", payload });
+      yield put({ type: 'selectedNode', payload })
     },
-    *chooseLayer({ payload }: any, { call, put }: any): any {
+    * chooseLayer({ payload }: any, { call, put }: any): any {
       yield put({
-        type: "save",
+        type: 'save',
         payload: {
           isCanClearAllStatus: false,
         },
-      });
+      })
       yield put({
-        type: "clearLayersSelectedStatus",
-      });
+        type: 'clearLayersSelectedStatus',
+      })
       yield put({
-        type: "setSelectedKeys",
+        type: 'setSelectedKeys',
         payload,
-      });
+      })
       yield put({
-        type: "calcDragScaleData",
-      });
+        type: 'calcDragScaleData',
+      })
     },
-    *selectLayers({ payload }: any, { call, put }: any): any {
+    * selectLayers({ payload }: any, { call, put }: any): any {
       yield put({
-        type: "clearLayersSelectedStatus",
-      });
+        type: 'clearLayersSelectedStatus',
+      })
       yield put({
-        type: "setLayers",
+        type: 'setLayers',
         payload,
-      });
+      })
       yield put({
-        type: "calcDragScaleData",
-      });
+        type: 'calcDragScaleData',
+      })
     },
-    *createComponent(
-      { payload, itemData }: any,
-      { call, put, select }: any
-    ): any {
-      const state: any = yield select((state: any) => state);
+    * createComponent({ payload, itemData }: any, { call, put, select }: any): any {
+      const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
-      const insertId =
-        state.bar.key.length !== 0
-          ? state.bar.key[state.bar.key.length - 1]
-          : state.bar.treeData[0].id;
+      const insertId = state.bar.key.length !== 0 ? state.bar.key[state.bar.key.length - 1] : state.bar.treeData[0].id
       const { id, children }: any = yield http({
-        url: "/visual/module/add",
-        method: "post",
+        url: '/visual/module/add',
+        method: 'post',
         body: {
           dashboardId: state.bar.dashboardId,
-          component: { ...payload },
+          component: {...payload},
           insertId: insertId,
-          children: [], // TODO: 需要确定children从哪里来
+          children: [],// TODO: 需要确定children从哪里来
         },
-      });
+      })
 
       yield put({
-        type: "updateComponents",
-        payload: { ...payload, id: id, children: children },
-      });
+        type: 'updateComponents',
+        payload: {...payload, id: id, children: children}
+      })
 
       yield put({
-        type: "addComponent",
-        payload: itemData,
-      });
+        type: 'addComponent',
+        payload: itemData
+      })
+
     },
-    *updateComponent({ payload }: any, { call, put, select }: any): any {
-      const state: any = yield select((state: any) => state);
+    * updateComponent({ payload }: any, { call, put, select }: any): any {
+      const state: any = yield select((state: any) => state)
       yield http({
-        url: "/visual/module/update",
-        method: "post",
+        url: '/visual/module/update',
+        method: 'post',
         body: {
           dashboardId: state.bar.dashboardId,
           configs: payload,
         },
-      });
+      })
     },
+
   },
 
   reducers: {
     changeDashboardId(state: IBarState, { payload }: any) {
-      return { ...state, dashboardId: payload };
+      return {...state, dashboardId: payload}
     },
     initTreeData(state: IBarState, { payload }: any) {
       payload.forEach((layer: any) => {
-        layer.cancel = false;
-        layer.disabled = false;
-      });
-      return { ...state, treeData: payload };
+        layer.cancel = false
+        layer.disabled = false
+      })
+      return { ...state, treeData: payload }
     },
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
-      return { ...state, treeData: payload };
+      return { ...state, treeData: payload }
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
-      let insertId: String;
-      const { treeData } = state;
+      let insertId: String
+      const { treeData } = state
       if (payload.insertId && treeData.length) {
-        insertId = payload.insertId;
+        insertId = payload.insertId
       } else {
-        insertId = treeData[0].id;
+        insertId = treeData[0].id
       }
-      const newLayers = generateLayers(state.treeData, insertId, payload.final);
+      const newLayers = generateLayers(state.treeData, insertId, payload.final)
 
-      console.log("新增后的treeData", state.treeData);
-      return { ...state, treeData: newLayers };
+      console.log('新增后的treeData', state.treeData)
+      return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
-      state.components = state.components.concat(payload);
-      return { ...state };
+      state.components = state.components.concat(payload)
+      return { ...state }
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup.forEach((item) => {
-        item.selected = false;
-      });
+        item.selected = false
+      })
       return {
         ...state,
-      };
+      }
     },
     setSelectedKeys(state: IBarState, { payload }: any) {
-      state.key = payload;
+      state.key = payload
       state.selectedComponentOrGroup = state.key.reduce(
         (pre: any, cur: string) => {
-          pre.push(findLayerById(state.treeData, cur));
-          return pre;
+          pre.push(findLayerById(state.treeData, cur))
+          return pre
         },
-        []
-      );
+        [],
+      )
       state.selectedComponentOrGroup.forEach((item) => {
-        item.selected = true;
-      });
-      state.isAreaChoose = state.selectedComponentOrGroup.length > 0;
+        item.selected = true
+      })
+      state.isAreaChoose = state.selectedComponentOrGroup.length > 0
       state.selectedComponentIds = layerComponentsFlat(
-        state.selectedComponentOrGroup
-      );
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
-      state.selectedComponentRefs = {};
+        state.selectedComponentOrGroup,
+      )
+      state.selectedComponents = state.components.filter((component) => state.selectedComponentIds.includes(component.id))
+      state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if (state.selectedComponentIds.includes(key)) {
-          state.selectedComponentRefs[key] = state.allComponentRefs[key];
-          state.selectedComponentDOMs[key] = state.allComponentDOMs[key];
+        if(state.selectedComponentIds.includes(key)) {
+          state.selectedComponentRefs[key] = state.allComponentRefs[key]
+          state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
-      });
+      })
 
-      return { ...state };
+      return { ...state }
     },
     calcDragScaleData(state: IBarState, { payload }: any) {
-      let xPositionList: number[] = [];
-      let yPositionList: number[] = [];
-      let status: "分组" | "多组件" = "分组";
-      if (state.selectedComponentOrGroup.length === 1) {
-        const firstLayer = state.selectedComponentOrGroup[0];
-        if (COMPONENTS in firstLayer) {
+      let xPositionList: number[] = []
+      let yPositionList: number[] = []
+      let status: '分组' | '多组件' = '分组'
+      if(state.selectedComponentOrGroup.length === 1) {
+        const firstLayer = state.selectedComponentOrGroup[0]
+        if(COMPONENTS in firstLayer) {
           // 单个组
-          status = "分组";
+          status = '分组'
           const positionArr = calcGroupPosition(
             firstLayer[COMPONENTS],
-            state.components
-          );
-          xPositionList = positionArr[0];
-          yPositionList = positionArr[1];
+            state.components,
+          )
+          xPositionList = positionArr[0]
+          yPositionList = positionArr[1]
         } else {
           // 单个组件
           const component = state.components.find(
-            (component) => component.id === firstLayer.id
-          );
+            component => component.id === firstLayer.id,
+          )
           const dimensionConfig: any = component.config.find(
-            (item: any) => item.name === DIMENSION
-          );
+            (item: any) => item.name === DIMENSION,
+          )
           dimensionConfig.value.forEach((config: any) => {
-            if ([LEFT, WIDTH].includes(config.name)) {
-              xPositionList.push(config.value);
-            } else if ([TOP, HEIGHT].includes(config.name)) {
-              yPositionList.push(config.value);
+            if([ LEFT, WIDTH ].includes(config.name)) {
+              xPositionList.push(config.value)
+            } else if([ TOP, HEIGHT ].includes(config.name)) {
+              yPositionList.push(config.value)
             }
-          });
+          })
           state.scaleDragData = {
             position: {
               x: xPositionList[0],
               y: yPositionList[0],
             },
             style: {
-              display: "block",
+              display: 'block',
               width: xPositionList[1],
               height: yPositionList[1],
             },
-          };
-          state.componentConfig = component;
-          return { ...state };
+          }
+          state.componentConfig = component
+          return { ...state }
         }
-      } else if (state.selectedComponentOrGroup.length > 1) {
-        status = "多组件";
+      } else if(state.selectedComponentOrGroup.length > 1) {
+        status = '多组件'
         state.selectedComponentOrGroup.forEach((layer: any) => {
           const positionArr = calcGroupPosition(
             state.selectedComponentOrGroup,
-            state.components
-          );
-          xPositionList = positionArr[0];
-          yPositionList = positionArr[1];
-        });
+            state.components,
+          )
+          xPositionList = positionArr[0]
+          yPositionList = positionArr[1]
+        })
       }
-      xPositionList.sort((a, b) => a - b);
-      yPositionList.sort((a, b) => a - b);
-      const width =
-        xPositionList[xPositionList.length - 1] - xPositionList[0] || 0;
-      const height =
-        yPositionList[yPositionList.length - 1] - yPositionList[0] || 0;
+      xPositionList.sort((a, b) => a - b)
+      yPositionList.sort((a, b) => a - b)
+      const width = xPositionList[xPositionList.length - 1] - xPositionList[0] || 0
+      const height = yPositionList[yPositionList.length - 1] - yPositionList[0] || 0
       state.scaleDragData = {
         position: {
           x: xPositionList[0] || 0,
           y: yPositionList[0] || 0,
         },
         style: {
-          display: xPositionList[0] ? "block" : "none",
+          display: xPositionList[0] ? 'block' : 'none',
           width,
           height,
         },
-      };
-      if (status === "分组") {
-        const dimensionConfig = state.groupConfig.find(
-          (config: any) => config.name === DIMENSION
-        ).value;
+      }
+      if(status === '分组') {
+        const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
         dimensionConfig.forEach((config: any) => {
-          switch (config.name) {
+          switch(config.name) {
             case LEFT:
-              config.value = xPositionList[0];
-              break;
+              config.value = xPositionList[0]
+              break
             case TOP:
-              config.value = yPositionList[0];
-              break;
+              config.value = yPositionList[0]
+              break
             case WIDTH:
-              config.value = width;
-              break;
+              config.value = width
+              break
             case HEIGHT:
-              config.value = height;
-              break;
+              config.value = height
+              break
           }
-        });
+        })
       }
       return {
         ...state,
-      };
+      }
     },
     // 选中节点时，保存住整个node对象
     setLayers(state: IBarState, { payload }: any) {
-      state.selectedComponentOrGroup = payload;
+      state.selectedComponentOrGroup = payload
       state.selectedComponentOrGroup.forEach((item) => {
-        item.selected = true;
-      });
-      return { ...state };
+        item.selected = true
+      })
+      return { ...state }
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
     pushToSelectedNode(state: IBarState, { payload }: any) {
-      const { key } = payload;
-      const newArr = [...(new Set(state.key.concat(key)) as any)];
-      return { key: newArr };
+      const { key } = payload
+      const newArr = [ ...(new Set(state.key.concat(key)) as any) ]
+      return { key: newArr }
     },
     // 点击icon或者右键菜单里的操作
     selectOperate(state: IBarState, { payload }: any) {
-      return { ...state, ...payload };
+      return { ...state, ...payload }
     },
     // 控制右键菜单的显示和隐藏
     setIsShowRightMenu(state: IBarState, { payload }: any) {
-      return { ...state, isShowRightMenu: payload };
+      return { ...state, isShowRightMenu: payload }
     },
     findNode(state: IBarState, { payload: { id, callback } }: any) {
-      callback(id);
-      return { ...state };
+      callback(id)
+      return { ...state }
     },
     selectSingleNode(state: IBarState, { payload: id }: any) {
-      return { ...state };
+      return { ...state }
     },
     testDrag(state: IBarState, { payload: { parentId } }: any) {
       // console.log('parentId', parentId)
-      const ids = ["1-1", "1-1-1", "1-1-1-1"];
-      const copyState: IBarState = JSON.parse(JSON.stringify(state));
+      const ids = [ '1-1', '1-1-1', '1-1-1-1' ]
+      const copyState: IBarState = JSON.parse(JSON.stringify(state))
       // let childrenComponents = findParentNode(
       //   copyState.draggableItems,
       //   ids
       // ).filter((item: any) => item);
       // calculateGroupPosition(childrenComponents.reverse());
-      return copyState;
+      return copyState
     },
     moveGroupPosition(
       state: IBarState,
-      { payload: { id, xMoveLength, yMoveLength } }: any
+      { payload: { id, xMoveLength, yMoveLength } }: any,
     ) {
       // const node = findNode(state.draggableItems, id);
       // moveChildrenComponents(node.components, xMoveLength, yMoveLength);
       // console.log("node", node);
-      return { ...state };
+      return { ...state }
     },
     // 多选时候，记录最后一次被右键点击的节点
     saveLastRightClickKey(state: IBarState, { payload }: any) {
-      return { ...state, lastRightClick: payload };
+      return { ...state, lastRightClick: payload }
     },
     // 置顶
     frontplacedTop(state: IBarState, { payload }: any) {
-      const newTreeData = placeTop(state.treeData, state.key);
-      return { ...state, treeData: newTreeData };
+      const newTreeData = placeTop(state.treeData, state.key)
+      return { ...state, treeData: newTreeData }
     },
     // 置底
     frontplaceBottom(state: IBarState, { payload }: any) {
-      const newTreeData = placeBottom(state.treeData, state.key);
-      return { ...state, treeData: newTreeData };
+      const newTreeData = placeBottom(state.treeData, state.key)
+      return { ...state, treeData: newTreeData }
     },
     // 上移
     frontmoveUp(state: IBarState, { payload }: any) {
-      const newTree = moveUp(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+      const newTree = moveUp(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // 下移
     frontmoveDown(state: IBarState, { payload }: any) {
-      const newTree = moveDown(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+      const newTree = moveDown(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // 成组
     frontgroup(state: IBarState, { payload }: any) {
-      const { treeDataCopy } = group(state.treeData, state.key);
-      return { ...state, treeData: treeDataCopy };
+      const { treeDataCopy } = group(state.treeData, state.key)
+      return { ...state, treeData: treeDataCopy }
     },
     // 取消成组
     cancelGroup(state: IBarState, { payload }: any) {
-      const newTree = cancelGroup(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+      const newTree = cancelGroup(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // TODO 粘贴
     // paste(state: IBarState, { payload }: any) {
@@ -1001,375 +994,321 @@ export default {
     // },
     // 锁定
     lock(state: IBarState, { payload }: any) {
-      const newTree = lock(state.treeData, state.key, payload.value);
-      return { ...state, treeData: newTree };
+      const newTree = lock(state.treeData, state.key, payload.value)
+      return { ...state, treeData: newTree }
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      const newTree = remove(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+      const newTree = remove(state.treeData, state.key)
+      return { ...state, treeData: newTree }
     },
     // 复制
     copy(state: IBarState, { payload }: any) {
       // const newTree = copy(state.treeData, state.key);
       // return { ...state, treeData: newTree };
-      return { ...state };
+      return { ...state }
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
       const newTree = singleShowLayer(
         state.treeData,
         state.key,
-        payload.singleShowLayer
-      );
-      return { ...state, treeData: newTree };
+        payload.singleShowLayer,
+      )
+      return { ...state, treeData: newTree }
     },
     // 隐藏
     hidden(state: IBarState, { payload }: any) {
       // 此处只能用payload.key,因为eyes图标在没有任何节点被选中时也要能响应点击
-      const newTree = hidden(state.treeData, payload.key, payload.value);
-      return { ...state, treeData: newTree };
+      const newTree = hidden(state.treeData, payload.key, payload.value)
+      return { ...state, treeData: newTree }
     },
     // 改变重命名输入框的显示状态
     reName(state: IBarState, { payload }: any) {
-      const newTree = showInput(state.treeData, state.key, payload.value);
-      return { ...state, treeData: newTree };
+      const newTree = showInput(state.treeData, state.key, payload.value)
+      return { ...state, treeData: newTree }
     },
     // 真正改变名字的地方
     frontchangeName(state: IBarState, { payload }: any) {
-      const newTree = reName(state.treeData, state.key, payload.newName);
-      return { ...state, treeData: newTree };
+      const newTree = reName(state.treeData, state.key, payload.newName)
+      return { ...state, treeData: newTree }
     },
     mergeComponentLayers(state: IBarState, { payload }: any) {
       state.componentLayers = mergeComponentLayers(
         state.components,
-        state.treeData
-      );
-      return { ...state };
+        state.treeData,
+      )
+      return { ...state }
     },
     test(state: IBarState, { payload }: any) {
-      return { ...state };
+      return { ...state }
     },
     test2(state: IBarState) {
-      return { ...state };
+      return { ...state }
     },
     testDelete(state: IBarState) {
-      state.components.pop();
-      state.treeData.pop();
-      return { ...state };
+      state.components.pop()
+      state.treeData.pop()
+      return { ...state }
     },
     save(state: IBarState, { payload }: any) {
-      return { ...state, ...payload };
+      return { ...state, ...payload }
     },
     selectComponentOrGroup(
       state: IBarState,
-      { payload: { layer, config } }: any
+      { payload: { layer, config } }: any,
     ) {
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
-      if (state.isSupportMultiple) {
+      if(state.isSupportMultiple) {
         // 多选
-        layer.selected = true;
+        layer.selected = true
         // 如果 selectedComponentOrGroup 里不存在当前点击的组件/分组的话，就添加
-        if (
+        if(
           !state.selectedComponentOrGroup.find((item) => item.id === layer.id)
         ) {
-          (state.selectedComponentOrGroup as any).push(layer);
+          (state.selectedComponentOrGroup as any).push(layer)
         }
       } else {
         // 单选
         // 单选分为单选组件、单选分组
         // 单选的话，将其他组件的 select 状态取消掉
         state.selectedComponentOrGroup.forEach((item) => {
-          item.selected = false;
-        });
+          item.selected = false
+        })
         // 再将自己的 select 状态设置为 true
-        layer.selected = true;
+        layer.selected = true
         // 再重新赋值 selectedComponentOrGroup 长度为 1
-        state.selectedComponentOrGroup = [layer];
+        state.selectedComponentOrGroup = [ layer ]
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
-      state.key = state.selectedComponentOrGroup.map((item) => item.id);
+      state.key = state.selectedComponentOrGroup.map((item) => item.id)
       state.selectedComponentIds = layerComponentsFlat(
-        state.selectedComponentOrGroup
-      );
-      state.selectedComponentRefs = {};
+        state.selectedComponentOrGroup,
+      )
+      state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if (state.selectedComponentIds.includes(key)) {
-          state.selectedComponentRefs[key] = state.allComponentRefs[key];
-          state.selectedComponentDOMs[key] = state.allComponentDOMs[key];
+        if(state.selectedComponentIds.includes(key)) {
+          state.selectedComponentRefs[key] = state.allComponentRefs[key]
+          state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
-      });
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
+      })
+      state.selectedComponents =
+        state.components.filter((component) =>
+          state.selectedComponentIds.includes(component.id),
+        )
       return {
         ...state,
-      };
+      }
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
-      if (!state.isCanClearAllStatus) {
-        state.isCanClearAllStatus = true;
-        console.log("不清除");
+      if(!state.isCanClearAllStatus) {
+        state.isCanClearAllStatus = true
+        console.log('不清除')
         return {
           ...state,
-        };
+        }
       }
-      console.log("清除");
-      localStorage.removeItem("dblComponentTimes");
-      localStorage.removeItem("currentTimes");
-      state.currentDblTimes = 0;
+      console.log('清除')
+      localStorage.removeItem('dblComponentTimes')
+      localStorage.removeItem('currentTimes')
+      state.currentDblTimes = 0
       deepForEach(state.treeData, (layer: ILayerGroup | ILayerComponent) => {
-        layer.selected = false;
-      });
+        layer.selected = false
+      })
       // 清空 selectedComponentOrGroup、selectedComponentIds、selectedComponents
-      state.selectedComponentOrGroup.length = 0;
-      state.selectedComponentIds.length = 0;
-      state.selectedComponents.length = 0;
-      state.selectedComponentRefs = {};
-      state.isSupportMultiple = false;
+      state.selectedComponentOrGroup.length = 0
+      state.selectedComponentIds.length = 0
+      state.selectedComponents.length = 0
+      state.selectedComponentRefs = {}
+      state.isSupportMultiple = false
       // todo 选区的时候会点击到这里
-      state.scaleDragData.style.display = "none";
-      state.key = [];
-      console.log("state.key", state.key);
-      state.supportLinesRef.handleSetPosition(0, 0, "none");
-      return { ...state };
+      state.scaleDragData.style.display = 'none'
+      state.key = []
+      console.log('state.key', state.key)
+      state.supportLinesRef.handleSetPosition(0, 0, 'none')
+      return { ...state }
     },
     setComponentConfig(state: IBarState, { payload }: any) {
-      state.componentConfig = payload;
+      state.componentConfig = payload
       // console.log('componentConfig', componentConfig)
       const index = state.components.findIndex((item: any) => {
-        return item.id === payload.id;
-      });
-      state.components.splice(index, 1, state.componentConfig);
-      return { ...state };
+        return item.id === payload.id
+      })
+      state.components.splice(index, 1, state.componentConfig)
+      return { ...state }
     },
     setGroupConfig(state: IBarState, { payload }: any) {
       const {
-        config: {
-          position: { x, y },
-          style: { width, height },
-          opacity,
-          hideDefault,
-        },
+        config: { position: { x, y }, style: { width, height }, opacity, hideDefault },
         ...otherPayload
-      } = payload;
-      const dimensionConfig = state.groupConfig.find(
-        (config: any) => config.name === DIMENSION
-      ).value;
-      const hideDefaultConfig = state.groupConfig.find(
-        (config: any) => config.name === HIDE_DEFAULT
-      );
-      const opacityConfig = state.groupConfig.find(
-        (config: any) => config.name === OPACITY
-      );
-      hideDefaultConfig.value = hideDefault;
-      opacityConfig.value = opacity;
+      } = payload
+      const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
+      const hideDefaultConfig = state.groupConfig.find((config: any) => config.name === HIDE_DEFAULT)
+      const opacityConfig = state.groupConfig.find((config: any) => config.name === OPACITY)
+      hideDefaultConfig.value = hideDefault
+      opacityConfig.value = opacity
       dimensionConfig.forEach((config: any) => {
-        switch (config.name) {
+        switch(config.name) {
           case LEFT:
-            config.value = x;
-            break;
+            config.value = x
+            break
           case TOP:
-            config.value = y;
-            break;
+            config.value = y
+            break
           case WIDTH:
-            config.value = width;
-            break;
+            config.value = width
+            break
           case HEIGHT:
-            config.value = height;
-            break;
+            config.value = height
+            break
         }
-      });
-      console.log("state.groupConfig", state.groupConfig);
-      return { ...state, ...otherPayload };
+      })
+      console.log('state.groupConfig', state.groupConfig)
+      return { ...state, ...otherPayload }
     },
     setAlignment(state: IBarState, { payload }: any) {
-      const {
-        position: { x, y },
-        style: { width, height },
-      } = state.scaleDragData;
+      const { position: { x, y }, style: { width, height } } = state.scaleDragData
       state.selectedComponentOrGroup.forEach((layer) => {
-        if (COMPONENTS in layer) {
+        if(COMPONENTS in layer) {
           // 组
           // 当前 layer 所包含的所有组件的 id 数组
-          const layerDom: HTMLDivElement | any = document.querySelector(
-            `.react-draggable[data-id=${layer.id}]`
-          );
-          let layerX: number = 0,
-            layerY: number = 0,
-            layerWidth: number = 0,
-            layerHeight: number = 0;
-          if (layerDom) {
-            const translateArr = layerDom.style.transform
-              .replace("translate(", "")
-              .replace(")", "")
-              .replaceAll("px", "")
-              .split(", ");
-            layerX = Number(translateArr[0]);
-            layerY = Number(translateArr[1]);
-            layerWidth = Number(layerDom.style.width.replace("px", ""));
-            layerHeight = Number(layerDom.style.height.replace("px", ""));
+          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ layer.id }]`)
+          let layerX: number = 0, layerY: number = 0, layerWidth: number = 0, layerHeight: number = 0
+          if(layerDom) {
+            const translateArr = layerDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+            layerX = Number(translateArr[0])
+            layerY = Number(translateArr[1])
+            layerWidth = Number(layerDom.style.width.replace('px', ''))
+            layerHeight = Number(layerDom.style.height.replace('px', ''))
           }
-          const componentIds = layerComponentsFlat(layer[COMPONENTS]);
+          const componentIds = layerComponentsFlat(layer[COMPONENTS])
           // 通过 id 筛选出当前组的组件
           const components = state.selectedComponents.filter((component: any) =>
-            componentIds.includes(component.id)
-          );
+            componentIds.includes(component.id),
+          )
           components.forEach((component: any) => {
-            const dimensionConfig = component.config.find(
-              (item: any) => item.name === DIMENSION
-            ).value;
-            if (dimensionConfig) {
-              switch (payload) {
-                case "top":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y - layerY) as any },
-                    "add"
-                  );
-                  break;
-                case "bottom":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y + height - (layerY + layerHeight)) as any },
-                    "add"
-                  );
-                  break;
-                case "left":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x - layerX) as any },
-                    "add"
-                  );
-                  break;
-                case "right":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x + width - (layerX + layerWidth)) as any },
-                    "add"
-                  );
-                  break;
-                case "vertical":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y + height / 2 - (layerY + layerHeight / 2)) as any },
-                    "add"
-                  );
-                  break;
-                case "horizontal":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x + width / 2 - (layerX + layerWidth / 2)) as any },
-                    "add"
-                  );
-                  break;
+            const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+            if(dimensionConfig) {
+              switch(payload) {
+                case 'top':
+                  setComponentDimension(dimensionConfig, { y: (y - layerY as any) }, 'add')
+                  break
+                case 'bottom':
+                  setComponentDimension(dimensionConfig, { y: ((y + height) - (layerY + layerHeight) as any) }, 'add')
+                  break
+                case 'left':
+                  setComponentDimension(dimensionConfig, { x: (x - layerX as any) }, 'add')
+                  break
+                case 'right':
+                  setComponentDimension(dimensionConfig, { x: ((x + width) - (layerX + layerWidth) as any) }, 'add')
+                  break
+                case 'vertical':
+                  setComponentDimension(dimensionConfig, { y: ((y + height / 2) - (layerY + layerHeight / 2) as any) }, 'add')
+                  break
+                case 'horizontal':
+                  setComponentDimension(dimensionConfig, { x: ((x + width / 2) - (layerX + layerWidth / 2) as any) }, 'add')
+                  break
               }
             }
-          });
+          })
         } else {
           // 组件
-          const component = state.selectedComponents.find(
-            (component: any) => component.id === layer.id
-          );
-          if (component) {
-            const dimensionConfig = component.config.find(
-              (item: any) => item.name === DIMENSION
-            ).value;
-            if (dimensionConfig) {
-              switch (payload) {
-                case "top":
-                  setComponentDimension(dimensionConfig, { y }, "set");
-                  break;
-                case "bottom":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: y + height },
-                    "update"
-                  );
-                  break;
-                case "left":
-                  setComponentDimension(dimensionConfig, { x }, "set");
-                  break;
-                case "right":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: x + width },
-                    "update"
-                  );
-                  break;
-                case "vertical":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y + height / 2) as any },
-                    "center"
-                  );
-                  break;
-                case "horizontal":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x + width / 2) as any },
-                    "center"
-                  );
-                  break;
+          const component = state.selectedComponents.find((component: any) => component.id === layer.id)
+          if(component) {
+            const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+            if(dimensionConfig) {
+              switch(payload) {
+                case 'top':
+                  setComponentDimension(dimensionConfig, { y }, 'set')
+                  break
+                case 'bottom':
+                  setComponentDimension(dimensionConfig, { y: y + height }, 'update')
+                  break
+                case 'left':
+                  setComponentDimension(dimensionConfig, { x }, 'set')
+                  break
+                case 'right':
+                  setComponentDimension(dimensionConfig, { x: x + width }, 'update')
+                  break
+                case 'vertical':
+                  setComponentDimension(dimensionConfig, { y: (y + height / 2 as any) }, 'center')
+                  break
+                case 'horizontal':
+                  setComponentDimension(dimensionConfig, { x: (x + width / 2 as any) }, 'center')
+                  break
               }
             }
           }
         }
-      });
+      })
       return {
         ...state,
-      };
+      }
     },
     setArrangement(state: IBarState, { payload }: any) {
-      console.log("payload", payload);
-      const xSortComponents: any = state.selectedComponentOrGroup.sort(
-        (a: any, b: any) => {
-          const aIsGroup = COMPONENTS in a;
-          const bIsGroup = COMPONENTS in b;
-          const aDom: HTMLDivElement | any = document.querySelector(
-            `.react-draggable[data-id=${aIsGroup ? a.id : "component-" + a.id}]`
-          );
-          const bDom: HTMLDivElement | any = document.querySelector(
-            `.react-draggable[data-id=${bIsGroup ? b.id : "component-" + b.id}]`
-          );
-          const aTranslateArr = aDom.style.transform
-            .replace("translate(", "")
-            .replace(")", "")
-            .replaceAll("px", "")
-            .split(", ");
-          const aLayerX = Number(aTranslateArr[0]);
-          const bTranslateArr = bDom.style.transform
-            .replace("translate(", "")
-            .replace(")", "")
-            .replaceAll("px", "")
-            .split(", ");
-          const bLayerX = Number(bTranslateArr[0]);
-          return aLayerX - bLayerX;
+      const { position: { x, y } } = state.scaleDragData
+      const xSortLayers: any = state.selectedComponentOrGroup.sort((a: any, b: any) => {
+        const aIsGroup = (COMPONENTS in a)
+        const bIsGroup = (COMPONENTS in b)
+        const aDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ aIsGroup ? a.id : 'component-' + a.id }]`)
+        const bDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ bIsGroup ? b.id : 'component-' + b.id }]`)
+        const aTranslateArr = aDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+        const aLayerX = Number(aTranslateArr[0])
+        const bTranslateArr = bDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+        const bLayerX = Number(bTranslateArr[0])
+        return aLayerX - bLayerX
+      })
+      // RemainingWidth 是除了前后两个 layer 宽度后的大小
+      const remainingSpaceWidth = calcGroupPosition([ xSortLayers[xSortLayers.length - 1] ], state.components)[0][0] - calcGroupPosition([ xSortLayers[0] ], state.components)[0][1]
+
+      const remainingTotalWidth = xSortLayers.reduce((width: number, layer: any, index: number) => {
+        if(index === 0 || index === xSortLayers.length - 1) {
+          return width
         }
-      );
-      const positionArr = calcGroupPosition(
-        [xSortComponents[0]],
-        state.components
-      );
-      const xPositionList = positionArr[0].sort(
-        (a: number, b: number) => a - b
-      );
-      const yPositionList = positionArr[1].sort(
-        (a: number, b: number) => a - b
-      );
-      const aWidth = xPositionList[1] - xPositionList[0];
-      console.log("xSortComponents[0]", xSortComponents[0].id);
-      console.log("aWidth", aWidth);
-      xSortComponents.forEach((item: any, index: any) => {
-        if (index === 0 || index === xSortComponents.length - 1) {
-          return;
+        const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ COMPONENTS in layer ? layer.id : 'component-' + layer.id }]`)
+        return width + Number(layerDom.style.width.replace('px', ''))
+      }, 0)
+      const xSpace = (remainingSpaceWidth - remainingTotalWidth) / (xSortLayers.length - 1)
+      // distance 是当前 scaleDragData 的 x 值，即整个选择的区域内距离画布左侧的值
+      xSortLayers.reduce((distance: number, layer: any, index: any) => {
+        if(index === 0) {
+          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ COMPONENTS in layer ? layer.id : 'component-' + layer.id }]`)
+          return distance + Number(layerDom.style.width.replace('px', ''))
         }
-      });
+        if(index === xSortLayers.length - 1) {
+          return distance
+        }
+        if(COMPONENTS in layer) {
+          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ COMPONENTS in layer ? layer.id : 'component-' + layer.id }]`)
+          const translateArr = layerDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+          const layerX = Number(translateArr[0])
+          const componentIds = layerComponentsFlat(layer[COMPONENTS])
+          // 通过 id 筛选出当前组的组件
+          // 现在知道 distance + xSpace 是一个组/组件的位置, 所有 distance + xSpace - layerX， 让组里的每个组件的位置都增加这个值
+          const components = state.selectedComponents.filter((component: any) => componentIds.includes(component.id))
+          components.forEach((component: any) => {
+            const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+            if(dimensionConfig) {
+              setComponentDimension(dimensionConfig, { x: (distance + xSpace - layerX as any) }, 'add')
+            }
+          })
+          return distance + Number(layerDom.style.width.replace('px', '')) + xSpace
+        } else {
+          const component = state.selectedComponents.find((component: any) => component.id === layer.id)
+          const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+          if(dimensionConfig) {
+            const data: any = setComponentDimension(dimensionConfig, { x: distance + xSpace as any }, 'set')
+            return distance + data[WIDTH] + xSpace
+          }
+        }
+
+        return distance
+      }, x)
       return {
         ...state,
-      };
+      }
     },
   },
-};
+}
