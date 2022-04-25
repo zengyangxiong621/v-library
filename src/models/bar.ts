@@ -9,7 +9,7 @@ import {
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
-} from "../utils";
+} from '../utils'
 
 import {
   COMPONENTS,
@@ -19,12 +19,13 @@ import {
   OPACITY,
   TOP,
   WIDTH,
-} from "../constant/home";
+  INTERACTION,
+} from '../constant/home'
 
 import {
   ILayerComponent,
   ILayerGroup,
-} from "../routes/dashboard/center/components/CustomDraggable/type";
+} from '../routes/dashboard/center/components/CustomDraggable/type'
 
 import {
   cancelGroup,
@@ -39,11 +40,12 @@ import {
   reName,
   showInput,
   singleShowLayer,
-} from "../utils/sideBar";
-import { DIMENSION } from "../routes/dashboard/center/constant";
+} from '../utils/sideBar'
+import { DIMENSION } from '../routes/dashboard/center/constant'
 
-import { generateLayers } from "./utils/generateLayers";
-import { http } from "./utils/request";
+import { generateLayers } from './utils/generateLayers'
+import { http } from './utils/request'
+import { log } from 'util'
 
 interface IBarState {
   dashboardId: string;
@@ -74,17 +76,17 @@ interface IBarState {
       x: number;
       y: number;
     };
-    direction: "horizon" | "vertical";
-    display: "none" | "block";
+    direction: 'horizon' | 'vertical';
+    display: 'none' | 'block';
   }>;
   currentDblTimes: number;
   isCanClearAllStatus: boolean;
 }
 
 export default {
-  namespace: "bar",
+  namespace: 'bar',
   state: {
-    dashboardId: "",
+    dashboardId: '',
     currentDblTimes: 0,
     isCanClearAllStatus: true,
     key: [],
@@ -510,36 +512,36 @@ export default {
   },
 
   effects: {
-    * getDashboardId ({ payload }: any, { call, put, select }: any) {
+    * getDashboardId({ payload }: any, { call, put, select }: any) {
       yield put({
-        type:'changeDashboardId',
-        payload: payload
+        type: 'changeDashboardId',
+        payload: payload,
       })
     },
-    *getDashboardDetails({ payload }: any, { call, put, select }: any): any {
+    * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
         const { layers, components, dashboardConfig } = yield http({
-          url: `/visual/application/dashboard/detail/${payload}`,
-          method: "get",
-        });
+          url: `/visual/application/dashboard/detail/${ payload }`,
+          method: 'get',
+        })
         const addSomeAttrToLayers = layers.map((item: any) => {
           return {
             ...item,
             singleShowLayer: false,
-          };
-        });
+          }
+        })
         yield put({
-          type: "save",
+          type: 'save',
           payload: {
             treeData: addSomeAttrToLayers,
             components,
             dashboardId: payload,
             pageConfig: dashboardConfig,
           },
-        });
-      } catch (e) {
-        console.log("e", e);
-        return e;
+        })
+      } catch(e) {
+        console.log('e', e)
+        return e
       }
     },
     // 重命名
@@ -670,37 +672,37 @@ export default {
       yield put({
         type: 'updateComponents',
         payload: components,
-      });
+      })
     },
     // 锁定
-    *lock({ payload }: any, { call, put }: any): any {
-      console.log("锁定的payload.value", payload);
+    * lock({ payload }: any, { call, put }: any): any {
+      console.log('锁定的payload.value', payload)
       // 前端锁定
       yield put({
-        type: "frontLock",
+        type: 'frontLock',
         payload: {
           value: payload.configs[0].value,
         },
-      });
+      })
       yield put({
-        type: "change",
+        type: 'change',
         payload,
-      });
+      })
     },
     // 隐藏 / 显示
-    *hidden({ payload }: any, { call, put }: any): any {
-      console.log("锁定的payload.value", payload);
+    * hidden({ payload }: any, { call, put }: any): any {
+      console.log('锁定的payload.value', payload)
       // 前端隐藏
       yield put({
-        type: "frontHidden",
+        type: 'frontHidden',
         payload: {
           value: payload.configs[0].value,
         },
-      });
+      })
       yield put({
-        type: "change",
+        type: 'change',
         payload,
-      });
+      })
     },
     * fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
@@ -740,36 +742,36 @@ export default {
         type: 'calcDragScaleData',
       })
     },
-    *createComponent(
+    * createComponent(
       { payload, itemData }: any,
-      { call, put, select }: any
+      { call, put, select }: any,
     ): any {
-      const state: any = yield select((state: any) => state);
+      const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         state.bar.key.length !== 0
           ? state.bar.key[state.bar.key.length - 1]
-          : state.bar.treeData[0].id;
+          : state.bar.treeData[0].id
       const { id, children }: any = yield http({
-        url: "/visual/module/add",
-        method: "post",
+        url: '/visual/module/add',
+        method: 'post',
         body: {
           dashboardId: state.bar.dashboardId,
           component: { ...payload },
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
-      });
+      })
 
       yield put({
-        type: "updateComponents",
+        type: 'updateComponents',
         payload: { ...payload, id: id, children: children },
-      });
+      })
 
       yield put({
-        type: "addComponent",
+        type: 'addComponent',
         payload: itemData,
-      });
+      })
     },
     * updateComponent({ payload }: any, { call, put, select }: any): any {
       const state: any = yield select((state: any) => state)
@@ -787,7 +789,7 @@ export default {
 
   reducers: {
     changeDashboardId(state: IBarState, { payload }: any) {
-      return {...state, dashboardId: payload}
+      return { ...state, dashboardId: payload }
     },
     initTreeData(state: IBarState, { payload }: any) {
       payload.forEach((layer: any) => {
@@ -802,15 +804,15 @@ export default {
         return {
           ...item,
           singleShowLayer: false,
-        };
-      });
-      return { ...state, treeData: addSomeAttrToLayers };
+        }
+      })
+      return { ...state, treeData: addSomeAttrToLayers }
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
       let insertId: String
       const { treeData } = state
-      if (payload.insertId && treeData.length) {
+      if(payload.insertId && treeData.length) {
         insertId = payload.insertId
       } else {
         insertId = treeData[0].id
@@ -869,8 +871,21 @@ export default {
           const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
           const hideDefaultConfig = state.groupConfig.find((config: any) => config.name === HIDE_DEFAULT)
           const opacityConfig = state.groupConfig.find((config: any) => config.name === OPACITY)
-          hideDefaultConfig.value = layer[HIDE_DEFAULT]
-          opacityConfig.value = layer[OPACITY]
+          const interactionConfig = state.groupConfig.find((config: any) => config.name === INTERACTION)
+          hideDefaultConfig.value = layer[HIDE_DEFAULT] || false
+          opacityConfig.value = layer[OPACITY] || 100
+          interactionConfig.value = layer[INTERACTION] || {
+            // 该部分实际上来自于layers设置
+            mountAnimation: {
+              // 如果不存在载入动画，该项为null
+              delay: 3, // 延迟
+              direction: 'right', // 方向
+              duration: 305, // 持续时间(ms)
+              opacityOpen: true, // 渐隐渐现
+              timingFunction: 'ease', // 速率
+              type: 'slide', // 动画类型
+            },
+          }
           dimensionConfig.forEach((config: any) => {
             switch(config.name) {
               case LEFT:
@@ -1230,14 +1245,31 @@ export default {
     },
     setGroupConfig(state: IBarState, { payload }: any) {
       const {
-        config: { position: { x, y }, style: { width, height }, opacity, hideDefault },
+        config: { position: { x, y }, style: { width, height }, opacity, hideDefault, interaction },
         ...otherPayload
       } = payload
       const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
       const hideDefaultConfig = state.groupConfig.find((config: any) => config.name === HIDE_DEFAULT)
       const opacityConfig = state.groupConfig.find((config: any) => config.name === OPACITY)
-      hideDefault && (hideDefaultConfig.value = hideDefault)
-      opacity && (opacityConfig.value = opacity)
+      const interactionConfig = state.groupConfig.find((config: any) => config.name === INTERACTION)
+      hideDefaultConfig.value = (hideDefault || false)
+      opacityConfig.value = (opacity || 100)
+      console.log('interaction', interaction)
+      interactionConfig.value = {
+        ...interactionConfig.value,
+        ...(interaction || {
+          // 该部分实际上来自于layers设置
+          mountAnimation: {
+            // 如果不存在载入动画，该项为null
+            delay: 3, // 延迟
+            direction: 'right', // 方向
+            duration: 305, // 持续时间(ms)
+            opacityOpen: true, // 渐隐渐现
+            timingFunction: 'ease', // 速率
+            type: 'slide', // 动画类型
+          },
+        }),
+      }
       dimensionConfig.forEach((config: any) => {
         switch(config.name) {
           case LEFT:
@@ -1254,6 +1286,7 @@ export default {
             break
         }
       })
+      console.log('state.groupConfig', state.groupConfig)
       return { ...state, ...otherPayload }
     },
     setAlignment(state: IBarState, { payload }: any) {

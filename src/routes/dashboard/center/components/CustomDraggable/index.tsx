@@ -30,7 +30,7 @@ import {
   TEXT_VERTICAL,
   SHADOW,
   SHOW,
-  COMPONENTS,
+  COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
 
 
@@ -270,8 +270,11 @@ const CustomDraggable
               width: config.style.width,
               height: config.style.height,
             },
-            [OPACITY]: layer[OPACITY] || 100,
-            [HIDE_DEFAULT]: layer[HIDE_DEFAULT] || false,
+            [OPACITY]: layer[OPACITY],
+            [HIDE_DEFAULT]: layer[HIDE_DEFAULT],
+            [INTERACTION]: {
+              [MOUNT_ANIMATION]: layer[MOUNT_ANIMATION],
+            },
           },
           scaleDragData: {
             position: {
