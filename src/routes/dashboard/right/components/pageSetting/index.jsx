@@ -48,7 +48,6 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const saveData = async () => {
-    // todo 替换假数据
     const params = {
       config: pageConfig,
       thumb: thumbImg.value,

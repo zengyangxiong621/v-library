@@ -1,8 +1,9 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState,useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
 import { deepClone } from '../../../../../utils'
 import { find } from '../../../../../utils/common'
+import { v4 as uuidv4 } from 'uuid';
 
 import PositionSize from '../positionSize'
 import Checkbox from '../checkBox'
@@ -22,6 +23,7 @@ const dashboardId = window.location.pathname.split('/')[2]
 const GroupConfig = ({ bar, dispatch, ...props }) => {
   const [form] = Form.useForm();
   const { Panel } = Collapse;
+  const [key,setKey] = useState(uuidv4())
   const groupConfig = deepClone(bar.groupConfig)
   const dimensionConfig = find(groupConfig, 'dimension')
   const hideDefaultConfig = find(groupConfig, 'hideDefault')
@@ -31,6 +33,12 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
+
+  useEffect(()=>{
+    console.log('bar.groupConfig',bar.groupConfig)
+    setKey(uuidv4())
+  },[bar.groupConfig])
+
 
   const positionChange = debounce(() => {
     console.log(groupConfig)
@@ -111,7 +119,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       <h3 className="header">
         组设置
       </h3>
-      <div className="content">
+      <div className="content" key={key}>
         <Form
           className="custom-form"
           form={form}
