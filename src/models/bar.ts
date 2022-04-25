@@ -19,7 +19,7 @@ import {
   OPACITY,
   TOP,
   WIDTH,
-  INTERACTION,
+  INTERACTION, MOUNT_ANIMATION,
 } from '../constant/home'
 
 import {
@@ -521,6 +521,7 @@ export default {
       yield put({
         type: 'clearLayersSelectedStatus',
       })
+      console.log('什么东西1')
       yield put({
         type: 'setSelectedKeys',
         payload,
@@ -530,6 +531,7 @@ export default {
       })
     },
     * selectLayers({ payload }: any, { call, put }: any): any {
+      console.log('什么东西2')
       yield put({
         type: 'clearLayersSelectedStatus',
       })
@@ -672,17 +674,9 @@ export default {
           const interactionConfig = state.groupConfig.find((config: any) => config.name === INTERACTION)
           hideDefaultConfig.value = layer[HIDE_DEFAULT] || false
           opacityConfig.value = layer[OPACITY] || 100
-          interactionConfig.value = layer[INTERACTION] || {
-            // 该部分实际上来自于layers设置
-            mountAnimation: {
-              // 如果不存在载入动画，该项为null
-              delay: 3, // 延迟
-              direction: 'right', // 方向
-              duration: 305, // 持续时间(ms)
-              opacityOpen: true, // 渐隐渐现
-              timingFunction: 'ease', // 速率
-              type: 'slide', // 动画类型
-            },
+          interactionConfig.value = {
+            ...interactionConfig.value,
+            [MOUNT_ANIMATION]: layer[MOUNT_ANIMATION],
           }
           dimensionConfig.forEach((config: any) => {
             switch(config.name) {
@@ -810,6 +804,7 @@ export default {
     // 选中节点时，保存住整个node对象
     setLayers(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup = payload
+      console.log('什么东西的payload', payload)
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
@@ -1055,18 +1050,7 @@ export default {
       console.log('interaction', interaction)
       interactionConfig.value = {
         ...interactionConfig.value,
-        ...(interaction || {
-          // 该部分实际上来自于layers设置
-          mountAnimation: {
-            // 如果不存在载入动画，该项为null
-            delay: 3, // 延迟
-            direction: 'right', // 方向
-            duration: 305, // 持续时间(ms)
-            opacityOpen: true, // 渐隐渐现
-            timingFunction: 'ease', // 速率
-            type: 'slide', // 动画类型
-          },
-        }),
+        ...interaction,
       }
       dimensionConfig.forEach((config: any) => {
         switch(config.name) {
