@@ -1,7 +1,7 @@
 const componentDefaultConfig = {
   "id": '121', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "标题", //图层名称
+  "name": "多行文本V2", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
@@ -139,13 +139,13 @@ const componentDefaultConfig = {
         {
           "name": "fontSize",
           "displayName": "",
-          "value": 32
+          "value": 64
         },
         {
           "name": "color",
           "displayName": "",
           "type": "color",
-          "value": "#000" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
         },
         {
           "name": "bold",
@@ -165,7 +165,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": 48
+          "value": '48px'
         }
       ]
     },

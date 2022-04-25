@@ -272,187 +272,7 @@ export default {
         },
       },
     ],
-    componentConfig: {
-      config: [
-        // 样式配置
-        {
-          name: 'dimension',
-          displayName: '位置尺寸',
-          type: 'dimensionGroup',
-          config: {
-            lock: false,
-          },
-          value: [
-            {
-              name: 'left',
-              displayName: 'X轴坐标',
-              value: 1000,
-              type: 'number',
-              config: {
-                suffix: 'X',
-              },
-            },
-            {
-              name: 'top',
-              displayName: 'Y轴坐标',
-              value: 1000,
-              type: 'number',
-              config: {
-                suffix: 'Y',
-              },
-            },
-            {
-              name: 'width',
-              displayName: '宽度',
-              value: 100,
-              type: 'number',
-              config: {
-                suffix: 'W',
-              },
-            },
-            {
-              name: 'height',
-              displayName: '高度',
-              value: 100,
-              type: 'number',
-              config: {
-                suffix: 'H',
-              },
-            },
-          ],
-        },
-        {
-          name: 'hideDefault',
-          displayName: '默认隐藏',
-          type: 'checkBox',
-          value: false,
-        },
-        {
-          name: 'textStyle',
-          displayName: '文本样式',
-          type: 'textFullStyleGroup',
-          value: [
-            {
-              name: 'fontFamily',
-              displayName: '',
-              value: 'Microsoft Yahei',
-            },
-            {
-              name: 'fontSize',
-              displayName: '',
-              value: 32,
-            },
-            {
-              name: 'color',
-              displayName: '',
-              type: 'color',
-              value: '#000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-            },
-            {
-              name: 'bold',
-              displayName: '',
-              value: false,
-            },
-            {
-              name: 'italic',
-              displayName: '',
-              value: false,
-            },
-            {
-              name: 'letterSpacing',
-              displayName: '字距',
-              value: 0,
-            },
-            {
-              name: 'lineHeight',
-              displayName: '行距',
-              value: 48,
-            },
-          ],
-        },
-        {
-          name: 'align',
-          displayName: '对齐方式',
-          type: 'alignFull',
-          value: [
-            {
-              name: 'textAlign',
-              displayName: '水平对齐',
-              type: 'align',
-              value: 'left', // left , center, right,bothEnds
-            },
-            {
-              name: 'textVertical',
-              displayName: '垂直对齐',
-              type: 'vertical',
-              value: 'top', // top bottom vertical
-            },
-          ],
-        },
-        {
-          name: 'shadow',
-          displayName: '阴影',
-          type: 'collapse',
-          hasSwitch: true,
-          defaultExpand: true,
-          value: [
-            {
-              name: 'show',
-              displayName: '',
-              value: true,
-              type: 'switch',
-            },
-            {
-              name: 'shadow',
-              displayName: '外阴影',
-              type: 'boxShadow',
-              value: {
-                color: '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                vShadow: 0, // 垂直阴影的位置
-                hShadow: 0, // 水平阴影的位置
-                blur: 8, // 模糊的距离
-              },
-            },
-          ],
-        },
-      ],
-      dataConfig: {}, //数据源配置
-      dataType: 'static', //数据类型：static;mysql;api;clickhouse
-      id: 111, //组件ID
-      moduleName: 'textV2', //组件标识
-      moduleVersion: '1.1.0', //组件版本号
-      name: '标题', //图层名称
-      parent: '', //组件父级配置
-      dashboardId: '11', //画布id
-      staticData: {
-        //静态数据
-        data: [
-          {
-            text: '我是文字组件111',
-          },
-        ],
-        fields: [
-          {
-            name: 'text',
-            value: 'text',
-            desc: '文本',
-            status: true, // 状态
-          },
-        ],
-      },
-      interaction: {
-        // 交互
-        mountAnimation: {
-          // 如果不存在载入动画，该项为null
-          delay: 2, // 延迟
-          direction: 'right', // 方向
-          duration: 304, // 持续时间(ms)
-          opacityOpen: true, // 渐隐渐现
-          timingFunction: 'ease', // 速率
-          type: 'slide', // 动画类型
-        },
-      },
-    },
+    componentConfig: {},
     sizeChange: {
       change: false,
       config: {
@@ -642,9 +462,9 @@ export default {
     // 添加组件到画布
     * addComponent({ payload }: any, { call, put }: any) {
       yield put({
-        type: 'addLayer',
-        payload: { final: payload, insertId: payload.insertId },
-      })
+        type: "addLayer",
+        payload: { final: payload.final, insertId: payload.insertId },
+      });
     },
     // 删除图层、分组
     * delete({ payload }: any, { select, call, put }: any): any {
@@ -751,7 +571,7 @@ export default {
       const insertId =
         state.bar.key.length !== 0
           ? state.bar.key[state.bar.key.length - 1]
-          : state.bar.treeData[0].id
+          : state.bar.treeData.length !== 0 ? state.bar.treeData[0].id : '';
       const { id, children }: any = yield http({
         url: '/visual/module/add',
         method: 'post',
@@ -769,9 +589,9 @@ export default {
       })
 
       yield put({
-        type: 'addComponent',
-        payload: itemData,
-      })
+        type: "addComponent",
+        payload: { final: itemData, insertId: insertId },
+      });
     },
     * updateComponent({ payload }: any, { call, put, select }: any): any {
       const state: any = yield select((state: any) => state)
