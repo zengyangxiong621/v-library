@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { memo, useEffect, useState } from 'react'
 import { connect } from '../../../../../../../utils/connect';
 import './index.less'
 
-import { myFetch } from '../../fetch'
+import { useFetch } from '../../../../../../../utils/useFetch'
 
 import EveryItem from '../everyItem/index'
 
@@ -17,7 +18,7 @@ const Text = (props: any) => {
   useEffect(() => {
     const init = async () => {
       const getData = async () => {
-        const { data }: any = await myFetch('/visual/module-manage/queryModuleList', {
+        const { data }: any = await useFetch('/visual/module-manage/queryModuleList', {
           body: JSON.stringify({
             type: [2],// 0:图表 2:文本
             status: 0,
@@ -26,7 +27,7 @@ const Text = (props: any) => {
           })
         })
         data.content.push({ name: 'cccccccc' })
-        setDataArr(data.content)
+        setDataArr(data.content ?? [])
       }
       getData()
     }
@@ -36,7 +37,7 @@ const Text = (props: any) => {
   return (
     <div className='Text-wrap'>
       {
-        dataArr.map((item: any, index: number) => {
+        dataArr?.map((item: any, index: number) => {
           return (
             <EveryItem data={item} />
           )

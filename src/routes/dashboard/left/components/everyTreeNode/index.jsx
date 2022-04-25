@@ -2,19 +2,19 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import './index.less'
 import { connect } from 'dva'
 
-import { Input } from 'antd'
+import { AutoComplete, Input } from 'antd'
 import {
   EyeOutlined, EyeInvisibleOutlined
 } from '@ant-design/icons'
 
-const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
+const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   const sendDispatch = (modelName, payload, type = 'bar',) => {
     dispatch({
       type: `${type}/${modelName}`,
       payload
     })
   }
-  const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restPorps
+  const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
   // 文件夹是展开了还是关闭了
@@ -28,7 +28,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     dispatch({
       type: 'bar/hidden',
       payload: {
-        dashboardId: bar.dashboardId || '1513702962304577537',
+        dashboardId: bar.dashboardId,
         configs: [
           {
             id,
@@ -81,7 +81,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
     // 先对前端的树进行一次修改
     const saveId = JSON.parse(JSON.stringify(bar.key[0]))
     sendDispatch('changeName', {
-      dashboardId: '1513702962304577537',
+      dashboardId: bar.dashboardId,
       configs: [
         {
           id: saveId,
@@ -142,16 +142,28 @@ const EveryTreeNode = ({ dispatch, bar, ...restPorps }) => {
       }
     })
   }
-  const isS = bar.key.includes(id)
+  useEffect(() => {
+  }, [])
+  const isSelected = bar.key.includes(id)
   return (
-    <div className={`EveryTreeNode-wrap ${hover && 'every-tree-node-hover'} ${isS && 'aa'}`} onContextMenu={(e) => {
-      mouseRightClick(e)
-    }}>
-      {
-        isFolder ?
-          isFolderExpand ? <i className='iconfont icon-wenjianjia-zhankai set-margin' /> : <i className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
-          : <div className='frame set-margin'></div>
-      }
+    <div className={`EveryTreeNode-wrap
+        ${hover && 'every-tree-node-hover'}
+        ${isSelected && 'set-back-color'}
+      `}
+      onContextMenu={(e) => {
+        mouseRightClick(e)
+      }}>
+      <div>
+        {
+          isFolder ?
+            isFolderExpand ? <i style={{
+              paddingLeft: '13px'
+            }} className='iconfont icon-wenjianjia-zhankai set-margin set-icon-size' /> : <i style={{
+              paddingLeft: '13px'
+            }} className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
+            : <div className='frame set-margin'></div>
+        }
+      </div>
       <div className='title' onDoubleClick={(e) => dClick(e)}>
         <Input
           value={inputValue}

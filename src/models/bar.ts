@@ -43,9 +43,9 @@ import {
 } from '../utils/sideBar'
 import { DIMENSION } from '../routes/dashboard/center/constant'
 
-import { generateLayers } from './utils/generateLayers'
-import { http } from './utils/request'
-import { log } from 'util'
+import { generateLayers } from "./utils/generateLayers";
+import { addSomeAttrInLayers } from "./utils/addSomeAttrInLayers";
+import { http } from "./utils/request";
 
 interface IBarState {
   dashboardId: string;
@@ -483,18 +483,6 @@ export default {
     ],
   } as IBarState,
   subscriptions: {
-    init({ dispatch }: any) {
-      // const treeData = generateTreeData()
-      // dispatch({
-      //   type: 'initTreeData',
-      //   payload: treeData,
-      // })
-    },
-    // getDashboardDetails({ dispatch }: any) {
-    //   dispatch({
-    //     type: 'getDashboardDetails',
-    //   })
-    // },
     setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
       history.listen((location: any) => {
@@ -521,19 +509,14 @@ export default {
     * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
         const { layers, components, dashboardConfig } = yield http({
-          url: `/visual/application/dashboard/detail/${ payload }`,
-          method: 'get',
-        })
-        const addSomeAttrToLayers = layers.map((item: any) => {
-          return {
-            ...item,
-            singleShowLayer: false,
-          }
-        })
+          url: `/visual/application/dashboard/detail/${payload}`,
+          method: "get",
+        });
+        const extendedSomeAttrLayers = addSomeAttrInLayers(layers);
         yield put({
           type: 'save',
           payload: {
-            treeData: addSomeAttrToLayers,
+            treeData: extendedSomeAttrLayers,
             components,
             dashboardId: payload,
             pageConfig: dashboardConfig,
@@ -800,13 +783,8 @@ export default {
     },
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
-      const addSomeAttrToLayers = payload.map((item: any) => {
-        return {
-          ...item,
-          singleShowLayer: false,
-        }
-      })
-      return { ...state, treeData: addSomeAttrToLayers }
+      const extendedSomeAttrLayers = addSomeAttrInLayers(payload)
+      return { ...state, treeData: extendedSomeAttrLayers };
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {

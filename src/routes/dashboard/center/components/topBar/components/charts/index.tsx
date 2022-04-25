@@ -6,7 +6,8 @@ import './index.less'
 import EveryItem from '../everyItem/index'
 
 import { useRequest } from 'ahooks'
-import { myFetch } from '../../fetch'
+
+import { useFetch } from '../../../../../../../utils/useFetch'
 
 
 const Charts = (props: any) => {
@@ -29,7 +30,7 @@ const Charts = (props: any) => {
   useEffect(() => {
     const init = async () => {
       const getData = async (type: string) => {
-        const { data }: any = await myFetch('/visual/module-manage/queryModuleList', {
+        const { data }: any = await useFetch('/visual/module-manage/queryModuleList', {
           body: JSON.stringify({
             type: [0],
             subType: type,
@@ -38,7 +39,7 @@ const Charts = (props: any) => {
             pageSize: 100,
           })
         })
-        ChartDataMap[helplessMapping[type]] = data.content
+        ChartDataMap[helplessMapping[type]] = data?.content
       }
       for await (let item of chartTypes) {
         await getData(item)
@@ -52,7 +53,7 @@ const Charts = (props: any) => {
     <div className='Charts-wrap'>
       <ul className='text-list'>
         {
-          chartType.map((item: any) => {
+          chartType?.map((item: any) => {
             return (
               <li
                 className={`${active === item.key && 'active-li'}`}
@@ -65,7 +66,7 @@ const Charts = (props: any) => {
       </ul>
       <div className='charts-list'>
         {
-          ChartDataMap[active].map((item: any, index: number) => {
+          ChartDataMap[active]?.map((item: any, index: number) => {
             return (
               <EveryItem data={item}/>
             )

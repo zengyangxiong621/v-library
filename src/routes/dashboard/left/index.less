@@ -91,13 +91,15 @@
   .ant-tree .ant-tree-treenode {
     color: #fff;
     align-items: center !important;
+    // antd 组件树节点默认有 4px 的 paddingBottom值, 清除
+    padding: 0;
   }
   .ant-tree .ant-tree-treenode:hover {
-    background-color: #2482ff;
+    background-color: #373A4D;
     background-image: none;
   }
   .ant-tree .ant-tree-node-content-wrapper:hover {
-    background-color: #2482ff;
+    background-color: #373A4D;
   }
 
   .ant-tree-switcher.ant-tree-switcher_close {
@@ -111,11 +113,16 @@
     text-align: right;
   }
   .ant-tree-indent {
-    // background-color: #2482ff;
+    // width: 0;
   }
-
+  .EveryTreeNode-wrap {
+    position: relative;
+  }
   .ant-tree-switcher {
-    width: 0;
+    // width: 0;
+    // position: absolute;
+    width: 14px;
+    z-index: 999;
   }
   // .ant-tree-switcher ant-tree-switcher-noop {
   //   width: 0;

@@ -40,7 +40,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     // TODO 发送请求
     let customPayload = {
       // key: bar.key,
-      dashboardId: '1513702962304577537',
+      dashboardId: bar.dashboardId,
     }
     switch (operateName) {
       case 'lock':
@@ -75,9 +75,9 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
         break;
       case 'copy':
         customPayload = {
-          dashboardId: '1513702962304577537',
+          dashboardId: bar.dashboardId,
           children: [],
-          targetDashboardId: '1513702962304577537',
+          targetDashboardId: bar.dashboardId,
           insertId: bar.key[0],
           originLayers: bar.treeData,
           //TODO 改为modules后删除掉这行
