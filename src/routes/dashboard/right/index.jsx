@@ -47,7 +47,7 @@ const Right = ({ dispatch, bar }) => {
     setKey(key.join(''))
   }, [bar.key])
   return (
-    <div className="right-wrap" id="right-wrap">
+    <div className="right-wrap">
       {
         // reflect[whichShow].type()
         whichShow === 'groupConfig' ? <GroupConfig key={ key }/>

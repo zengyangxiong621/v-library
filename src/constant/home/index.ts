@@ -21,6 +21,8 @@ const SHADOW = 'shadow'
 const SHOW = 'show'
 const COMPONENTS = 'modules'
 const CONFIG = 'config'
+const INTERACTION = 'interaction'
+const MOUNT_ANIMATION = 'mountAnimation'
 
 enum hh {
   name = 'zyx',
@@ -92,5 +94,7 @@ export {
   constantList,
   hh,
   COMPONENTS,
-  OPACITY
+  OPACITY,
+  INTERACTION,
+  MOUNT_ANIMATION
 }

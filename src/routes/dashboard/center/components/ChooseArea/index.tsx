@@ -22,7 +22,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
 
   useEffect(() => {
     document.onmousedown = (e: any) => {
-      e.preventDefault()
       console.log('选区mouseDown')
       if(![ 'c-canvas', 'draggable-wrapper' ].includes(e.target.className)) {
         return
@@ -118,7 +117,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       }
       document.onmouseup = (e) => {
         console.log('选区mouseUp')
-        e.preventDefault()
         hide()
         const selectedIds: Array<string> = []
         let b1 = areaPosition.y + areaPosition.height

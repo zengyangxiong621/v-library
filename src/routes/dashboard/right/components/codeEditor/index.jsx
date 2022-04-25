@@ -55,7 +55,8 @@ const CodeEditor = props => {
   const _data = props.data
   const [content, setContent] = useState(_data.value)
   const [fullScreen, setFullScreen] = useState(false)
-  const [modalContent,setModalContent] = useState(null)
+  const [modalContent, setModalContent] = useState(null)
+  const [hasEdit, setHasEdit] = useState(false)
   const aceName = uuidv4()
 
   useEffect(() => {
@@ -63,11 +64,16 @@ const CodeEditor = props => {
   }, [_data.value])
 
   const onChange = (val) => {
-    console.log('val', val)
-    setContent(val)
-    setModalContent(val)
-    _data.value = val
-    props.onChange()
+    setHasEdit(true)
+  }
+  const handleBlur = (a, b) => {
+    if (hasEdit) {
+      const val = b.renderer.content.innerText
+      setContent(val)
+      setModalContent(val)
+      _data.value = val
+      props.onChange()
+    }
   }
 
   const expandHandle = () => {
@@ -88,6 +94,7 @@ const CodeEditor = props => {
         mode={_data.language}
         theme="twilight"
         onChange={onChange}
+        onBlur={handleBlur}
         name={aceName}
         editorProps={{ $blockScrolling: true }}
         value={content}
@@ -119,7 +126,7 @@ const CodeEditor = props => {
         <AceEditor
           mode={_data.language}
           theme="twilight"
-          onChange={(e)=>setModalContent(e)}
+          onChange={(e) => setModalContent(e)}
           name={aceName}
           editorProps={{ $blockScrolling: true }}
           value={modalContent}

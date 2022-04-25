@@ -81,7 +81,13 @@ const TextStyle = props => {
       >
         <Input.Group compact style={{ marginBottom: '8px' }}>
           <Form.Item name="fontFamily" noStyle>
-            <Select className="font-select" defaultValue={fontSetting.fontFamily} style={{ width: 120 }} onChange={handleFontFamilyChange}>
+            <Select
+              className="font-select"
+              defaultValue={fontSetting.fontFamily}
+              style={{ width: 120 }}
+              onChange={handleFontFamilyChange}
+              getPopupContainer={() => document.querySelector('.right-wrap')}
+            >
               <Option value="Microsoft Yahei">微软雅黑</Option>
               <Option value="宋体">宋体</Option>
               <Option value="SimHei">黑体</Option>

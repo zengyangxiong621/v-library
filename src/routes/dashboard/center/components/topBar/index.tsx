@@ -28,7 +28,7 @@ const TopBar = (props: any) => {
   }
 
   return (
-    <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
+    <div className='TopBar-wrap use-away' style={{ display: showTopBar ? 'block' : 'none' }}>
       <Menu className='TopBar-wrap' mode="horizontal">
         {
           menuReflect[zujianORsucai].map((item: any) => {
