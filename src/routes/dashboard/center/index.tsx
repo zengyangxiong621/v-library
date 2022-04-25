@@ -102,11 +102,11 @@ const Center = ({ bar, dispatch }: any) => {
   useEffect(() => {
     calcCanvasSize()
     window.addEventListener('resize', calcCanvasSize);
-    (document.querySelector('#draggable-container') as HTMLElement).addEventListener('contextmenu', handleContextMenu)
+    (document.querySelector('.draggable-container') as HTMLElement).addEventListener('contextmenu', handleContextMenu)
     // document.addEventListener('contextmenu', handleContextMenu)
     return () => {
       window.removeEventListener('resize', calcCanvasSize);
-      (document.querySelector('#draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
+      (document.querySelector('.draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
       // document.removeEventListener('contextmenu', handleContextMenu)
     }
   }, [])
@@ -336,7 +336,7 @@ const Center = ({ bar, dispatch }: any) => {
                       />
                       <RulerLines/>
 
-                      <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
+                      <div className="draggable-container"  ref={ draggableContainerRef }>
                         <CustomDraggable mouse={ 0 } treeData={ treeData }/>
                       </div>
                     </div>

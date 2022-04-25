@@ -732,6 +732,7 @@ export default {
         type: 'setLayers',
         payload,
       })
+      // setComponentConfig / setGroupConfig
       yield put({
         type: 'setLayerConfig',
       })
@@ -860,7 +861,6 @@ export default {
       return { ...state }
     },
     setLayerConfig(state: IBarState, { payload }: any) {
-      console.log('state', state.selectedComponentOrGroup)
       if(state.selectedComponentOrGroup.length === 1) {
         const layer = state.selectedComponentOrGroup[0]
         if(COMPONENTS in layer) {
@@ -889,8 +889,7 @@ export default {
           })
         } else {
           // 组件
-          const { x, y, width, height } = getLayerDimensionByDomId(layer.id)
-
+          state.componentConfig = layer
         }
       }
       return {

@@ -58,6 +58,43 @@ function App({ bar, dispatch, location }: any) {
     187: true, // +
     189: true, // -
   }
+
+  useClickAway((event) => {
+    console.log('event', event.target)
+    // setSelected([])
+    dispatch({
+      type: 'bar/clearAllStatus',
+    })
+    // 取消选中节点的输入框
+    dispatch({
+      type: 'bar/reName',
+      payload: {
+        value: false,
+      },
+    })
+    // 取消右键菜单
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        isShowRightMenu: false,
+      },
+    })
+    // 将多选树改为单选树
+    // setIsMultipleTree(false)
+  }, [
+    document.getElementById('right-wrap'),
+    document.querySelector('.draggable-container'),
+    // document.querySelector('.TopBar-wrap'),
+    ...document.querySelectorAll('.use-away') as any,
+    document.querySelector('.hasList-self-tooltip'),
+    document.querySelector('.Header-wrap>.center'),
+    document.querySelector('.left-wrap-tree'),
+    document.querySelector('.left-wrap-toolbar'),
+    document.querySelector('.left-menu>.left-wrap>.header'),
+    document.querySelector('.left-menu>.footer'),
+  ])
+
+
   useEffect(() => {
     const dashboardId = window.location.pathname.split('/')[2]
 
