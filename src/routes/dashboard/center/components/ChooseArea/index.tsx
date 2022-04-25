@@ -117,7 +117,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       }
       document.onmouseup = (e) => {
         console.log('选区mouseUp')
-        e.preventDefault()
         hide()
         const selectedIds: Array<string> = []
         let b1 = areaPosition.y + areaPosition.height

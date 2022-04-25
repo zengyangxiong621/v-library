@@ -113,7 +113,7 @@ const Center = ({ bar, dispatch }: any) => {
   useClickAway(() => {
     // 取消右键菜单
     setIsShowRightMenu(false)
-  }, [ document.querySelector('.left-wrap-tree'), document.querySelector('.left-wrap-toolbar'), document.querySelector('.left-wrap>.header'), document.querySelector('.left-menu>.footer'), document.getElementById('right-wrap'), document.getElementById('draggable-container') ])
+  }, [ document.querySelector('.left-wrap-tree'), document.querySelector('.left-wrap-toolbar'), document.querySelector('.left-wrap>.header'), document.querySelector('.left-menu>.footer'), document.querySelector('.right-wrap'), document.getElementById('draggable-container') ])
   const handleContextMenu = (event: MouseEvent) => {
     console.log('event', event.target)
     const dom = event.target as HTMLElement

@@ -58,41 +58,50 @@ function App({ bar, dispatch, location }: any) {
     187: true, // +
     189: true, // -
   }
-
-  useClickAway((event) => {
-    console.log('event', event.target)
-    // setSelected([])
-    dispatch({
-      type: 'bar/clearAllStatus',
-    })
-    // 取消选中节点的输入框
-    dispatch({
-      type: 'bar/reName',
-      payload: {
-        value: false,
-      },
-    })
-    // 取消右键菜单
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        isShowRightMenu: false,
-      },
-    })
-    // 将多选树改为单选树
-    // setIsMultipleTree(false)
-  }, [
-    document.getElementById('right-wrap'),
-    document.querySelector('.draggable-container'),
-    // document.querySelector('.TopBar-wrap'),
-    ...document.querySelectorAll('.use-away') as any,
-    document.querySelector('.hasList-self-tooltip'),
-    document.querySelector('.Header-wrap>.center'),
-    document.querySelector('.left-wrap-tree'),
-    document.querySelector('.left-wrap-toolbar'),
-    document.querySelector('.left-menu>.left-wrap>.header'),
-    document.querySelector('.left-menu>.footer'),
-  ])
+  const clearAllStatus = (event: MouseEvent) => {
+    console.log('target', event.target)
+    const dom: any = (event.target as any) || null
+    if(!dom || !dom.className || dom.className === 'ant-layout' || dom.className === 'draggable-wrapper') {
+      dispatch({
+        type: 'bar/clearAllStatus',
+      })
+      // 取消选中节点的输入框
+      dispatch({
+        type: 'bar/reName',
+        payload: {
+          value: false,
+        },
+      })
+      // 取消右键菜单
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          isShowRightMenu: false,
+        },
+      })
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('click', clearAllStatus)
+    return () => {
+      document.removeEventListener('click', clearAllStatus)
+    }
+  }, [])
+  // useClickAway((event) => {
+  //   console.log('target', event.target)
+  //   clearAllStatus()
+  // }, [
+  //   document.querySelector('.right-wrap'),
+  //   document.querySelector('.draggable-container'),
+  //   // document.querySelector('.TopBar-wrap'),
+  //   ...document.querySelectorAll('.use-away') as any,
+  //   document.querySelector('.hasList-self-tooltip'),
+  //   document.querySelector('.Header-wrap>.center'),
+  //   document.querySelector('.left-wrap-tree'),
+  //   document.querySelector('.left-wrap-toolbar'),
+  //   document.querySelector('.left-menu>.left-wrap>.header'),
+  //   document.querySelector('.left-menu>.footer'),
+  // ])
 
 
   useEffect(() => {
