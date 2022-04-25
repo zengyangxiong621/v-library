@@ -228,7 +228,6 @@ const group: groupParams2 = (treeData, selectedNodes) => {
     name: "分组",
     title: "分组",
     id: `group_${new Date().getTime()}`,
-    icon: "SmileOutlined",
     isShow: true,
     isLock: false,
     singleShowLayer: false,
