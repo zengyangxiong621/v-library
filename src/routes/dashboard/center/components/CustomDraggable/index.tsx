@@ -546,7 +546,7 @@ const CustomDraggable
                         : ''
                       }
                     </div> : <>
-                      <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
+                      <div data-id={ layer.id } style={ { width: '100%', height: '100%', color: 'white' } }>
                         { layer.name }
                         {/*<Text styleConfig={ style_config } staticData={ staticData }/>*/ }
                       </div>

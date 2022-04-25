@@ -43,21 +43,7 @@ const Left = ({ dispatch, bar, operate }) => {
   // 监听 树区域 以外的点击
   useClickAway(() => {
     setSelected([])
-    dispatch({
-      type: 'bar/clearAllStatus',
-    })
-    // 取消选中节点的输入框
-    dispatch({
-      type: 'bar/reName',
-      payload: {
-        value: false,
-      },
-    })
-    // 取消右键菜单
-    dispatch({
-      type: 'bar/setIsShowRightMenu',
-      payload: false,
-    })
+
     // 将多选树改为单选树
     setIsMultipleTree(false)
   }, [treeRef, topBarRef, headerRef, bottomBarRef,

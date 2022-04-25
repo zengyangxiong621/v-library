@@ -507,3 +507,15 @@ export const getDimensionData = (dimensionConfig) => {
     return pre
   }, {})
 }
+
+export const getLayerDimensionByDomId = (id) => {
+  const layerDom = document.querySelector(`.react-draggable[data-id=${ id }]`)
+  const translateArr = layerDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
+  const x = Number(translateArr[0])
+  const y = Number(translateArr[1])
+  const width = Number(layerDom.style.width.replace('px', ''))
+  const height = Number(layerDom.style.height.replace('px', ''))
+  return {
+    x, y, width, height,
+  }
+}

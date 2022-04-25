@@ -102,11 +102,11 @@ const Center = ({ bar, dispatch }: any) => {
   useEffect(() => {
     calcCanvasSize()
     window.addEventListener('resize', calcCanvasSize);
-    (document.querySelector('#draggable-container') as HTMLElement).addEventListener('contextmenu', handleContextMenu)
+    (document.querySelector('.draggable-container') as HTMLElement).addEventListener('contextmenu', handleContextMenu)
     // document.addEventListener('contextmenu', handleContextMenu)
     return () => {
       window.removeEventListener('resize', calcCanvasSize);
-      (document.querySelector('#draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
+      (document.querySelector('.draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
       // document.removeEventListener('contextmenu', handleContextMenu)
     }
   }, [])
@@ -203,7 +203,7 @@ const Center = ({ bar, dispatch }: any) => {
           return pre
         }, {})
         dimensionConfig.forEach((config: any) => {
-          if (x === lastX) {
+          if(x === lastX) {
             if(config.name === LEFT) {
               if(config.value !== lastX) {
                 // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
@@ -222,7 +222,7 @@ const Center = ({ bar, dispatch }: any) => {
             }
           }
 
-          if (y === lastY) {
+          if(y === lastY) {
             if(config.name === TOP) {
               if(config.value !== lastY) {
                 config.value = lastY + ((data[TOP] - lastY) / (lastHeight / height))
@@ -259,7 +259,7 @@ const Center = ({ bar, dispatch }: any) => {
       payload: {
         config: { position: { x, y }, style: { width, height } },
         isCanClearAllStatus: false,
-      }
+      },
     })
   }
 
@@ -317,7 +317,8 @@ const Center = ({ bar, dispatch }: any) => {
                       height: recommendConfig.height,
                       transform: `scale(${ bar.canvasScaleValue })`,
                       backgroundColor: styleColor.value,
-                      background: backgroundImg.value ? `url(${ backgroundImg.value })` : styleColor.value,
+                      background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
+                      backgroundSize: 'cover',
                     } }
                   >
                     <div className="draggable-wrapper">
@@ -335,7 +336,7 @@ const Center = ({ bar, dispatch }: any) => {
                       />
                       <RulerLines/>
 
-                      <div className="draggable-container" id="draggable-container" ref={ draggableContainerRef }>
+                      <div className="draggable-container"  ref={ draggableContainerRef }>
                         <CustomDraggable mouse={ 0 } treeData={ treeData }/>
                       </div>
                     </div>
