@@ -91,7 +91,7 @@ const PageSize = props => {
             <InputNumber defaultValue={width} className="size-input" style={{ marginRight: '16px' }} onChange={(value) => sizeChange('width', value)} />
           </Form.Item>
           <Form.Item noStyle name="height">
-            <InputNumber defaultValue={height} className="size-input" />
+            <InputNumber defaultValue={height} className="size-input" onChange={(value) => sizeChange('height', value)}/>
           </Form.Item>
         </Input.Group>
         <Row>
