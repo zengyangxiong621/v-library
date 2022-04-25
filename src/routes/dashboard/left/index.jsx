@@ -41,32 +41,32 @@ const Left = ({ dispatch, bar, operate }) => {
   const bottomBarRef = useRef(null)
   const headerRef = useRef(null)
   // 监听 树区域 以外的点击
-  useClickAway(() => {
-    setSelected([])
-    dispatch({
-      type: 'bar/clearAllStatus',
-    })
-    // 取消选中节点的输入框
-    dispatch({
-      type: 'bar/reName',
-      payload: {
-        value: false,
-      },
-    })
-    // 取消右键菜单
-    dispatch({
-      type: 'bar/setIsShowRightMenu',
-      payload: false,
-    })
-    // 将多选树改为单选树
-    setIsMultipleTree(false)
-  }, [treeRef, topBarRef, headerRef, bottomBarRef,
-    document.getElementById('right-wrap'),
-    document.getElementById('draggable-container'),
-    document.querySelector('.TopBar-wrap'),
-    document.querySelector('.hasList-self-tooltip'),
-    document.querySelector('.Header-wrap>.center'),
-  ])
+  // useClickAway(() => {
+  //   setSelected([])
+  //   dispatch({
+  //     type: 'bar/clearAllStatus',
+  //   })
+  //   // 取消选中节点的输入框
+  //   dispatch({
+  //     type: 'bar/reName',
+  //     payload: {
+  //       value: false,
+  //     },
+  //   })
+  //   // 取消右键菜单
+  //   dispatch({
+  //     type: 'bar/setIsShowRightMenu',
+  //     payload: false,
+  //   })
+  //   // 将多选树改为单选树
+  //   setIsMultipleTree(false)
+  // }, [treeRef, topBarRef, headerRef, bottomBarRef,
+  //   document.getElementById('right-wrap'),
+  //   document.getElementById('draggable-container'),
+  //   document.querySelector('.TopBar-wrap'),
+  //   document.querySelector('.hasList-self-tooltip'),
+  //   document.querySelector('.Header-wrap>.center'),
+  // ])
 
   // 1、其它组件更改了选中的节点时触发
   // 2、多选时不能重命名

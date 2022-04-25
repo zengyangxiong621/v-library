@@ -7,7 +7,8 @@ import './index.less'
 import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
 import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
-import Text from '../Text'
+// import Text from '../Text'
+import Text from '../../../../../components/charts/custom/text'
 import {
   STYLE,
   DIMENSION,
@@ -547,8 +548,7 @@ const CustomDraggable
                       }
                     </div> : <>
                       <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
-                        { layer.name }
-                        {/*<Text styleConfig={ style_config } staticData={ staticData }/>*/ }
+                        <Text componentConfig={ component }/>
                       </div>
                     </>
                 }

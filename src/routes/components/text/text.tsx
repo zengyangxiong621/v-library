@@ -7,7 +7,8 @@ import { Text } from '../../../components/charts/custom/text/index'; // TODO: @å
 import RemoteBaseComponent from '../../../components/RemoteBaseComponent';
 interface Props {
   dispatch?: any,
-  components?: any
+  components?: any,
+  config?: any
 }
 
 interface State {
@@ -59,7 +60,7 @@ class Dashboard extends Component<Props, State> {
     return (
       <div className="">
         {/* <RemoteBaseComponent type="text" config={componentConfig}></RemoteBaseComponent> */}
-        <Text config={componentConfig} />
+        <Text componentConfig={componentConfig} />
         { fields.map((item: any, i: any) => (
           <div key={item.label}>
             <span>{item.label}</span>

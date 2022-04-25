@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, CSSProperties } from 'react';
 import componentDefaultConfig from './config'
 
 interface Props {
-  config?: any
+  componentConfig?: any
 }
 
 interface State {}
@@ -12,13 +12,33 @@ class Text extends Component<Props, State> {
     super(Props)
   }
   render () {
-    const { dataStatic } = this.props.config
-    const { data } = dataStatic
+    // const { dataStatic } = this.props.config
+    // const { data } = dataStatic
+
+    const componentConfig = this.props.componentConfig || componentDefaultConfig
+    const {config, staticData} = componentConfig
+  
+    const style: CSSProperties = config.filter((item: any) => item.name !== 'dimension').reduce((pre: any, cur: any) => {
+      if(Array.isArray(cur.value)) {
+        const obj = cur.value.reduce((p: any, c: any) => {
+          p[c.name] = c.value
+          return p
+        }, {})
+        pre = {
+          ...pre,
+          ...obj,
+        }
+      } else {
+        pre[cur.name] = cur.value
+      }
+      return pre
+    }, {})
 
     return (
-      <div>
-        { data.map((item:any, i:any) => (
-          <span key={item.text}> <img src={require('@/assets/images/avatar.png')}></img> { item.text } </span>
+      <div style={ style } className="text">
+        { staticData.data.map((item:any, i:any) => (
+          // <span key={item.text}> <img src={require('@/assets/images/avatar.png')}></img> { item.text } </span>
+          <span key={item.text}> { item.text } </span>
         ))}
       </div>
     )
