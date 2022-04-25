@@ -61,7 +61,7 @@ function App({ bar, dispatch, location }: any) {
   const clearAllStatus = (event: MouseEvent) => {
     console.log('target', event.target)
     const dom: any = (event.target as any) || null
-    if(!dom || !dom.className || dom.className === 'ant-layout' || dom.className === 'draggable-wrapper') {
+    if(dom?.className && [ 'ant-layout', 'draggable-wrapper', 'left-wrap' ].includes(dom.className)) {
       dispatch({
         type: 'bar/clearAllStatus',
       })

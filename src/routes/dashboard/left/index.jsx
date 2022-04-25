@@ -41,10 +41,13 @@ const Left = ({ dispatch, bar, operate }) => {
   const bottomBarRef = useRef(null)
   const headerRef = useRef(null)
 
-  const clearStatus = () => {
-    setSelected([])
-    // 将多选树改为单选树
-    setIsMultipleTree(false)
+  const clearStatus = (event) => {
+    const dom = event.target || null
+    if (!dom || !dom.className || ['ant-layout', 'draggable-wrapper', 'left-wrap'].includes(dom.className)) {
+      setSelected([])
+      // 将多选树改为单选树
+      setIsMultipleTree(false)
+    }
   }
   // 1、其它组件更改了选中的节点时触发
   // 2、多选时不能重命名
