@@ -49,15 +49,15 @@ enum constantList {
 }
 
 const cssConstantList = {
-  LEFT: 'left',
-  TOP: 'top',
+  [LEFT]: 'left',
+  [TOP]: 'top',
   WIDTH: 'width',
   HEIGHT: 'height',
   FONT_FAMILY: 'fontFamily',
   FONT_SIZE: 'fontSize',
   COLOR: 'color',
   BOLD: 'fontBold',
-  LETTER_SPACING: 'letterSpacing',
+  [LETTER_SPACING]: 'letterSpacing',
   LINE_HEIGHT: 'lineHeight',
   TEXT_ALIGN: 'textAlign',
   TEXT_VERTICAL: 'verticalAlign',
