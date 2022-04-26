@@ -555,7 +555,7 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
-      debugger
+      
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
@@ -972,7 +972,6 @@ export default {
       state: IBarState,
       { payload: { layer, config } }: any,
     ) {
-      debugger
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
       console.log('啦啦啦啦')

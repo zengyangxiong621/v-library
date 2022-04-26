@@ -15,7 +15,6 @@ const EveryItem = (props: any) => {
   const { data, dispatch } = props
   const componentConfig = data.moduleName === 'wordCloud' ? textDefaultConfig : imageDefaultConfig
   const componentCreate = () => {
-    console.log('componentDefaultConfig', componentDefaultConfig)
     dispatch({
       type: 'bar/createComponent',
       payload: componentConfig,
