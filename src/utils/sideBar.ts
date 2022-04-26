@@ -121,12 +121,14 @@ const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
   return treeDataCopy;
 };
 
-/**
- * description: 获取每一个被选中节点的 锁定/单独显示图层 状态
- */
-
 type threeParams = (a: any[], b: string[], c: boolean | string) => any[];
 type threeParams2 = (a: any[], b: string[], c: string) => any[];
+/**
+ * description: 获取每一个被选中节点的 锁定/单独显示图层 状态
+ * params: {treeData} 目标树  {selectedNodes} 当前选中的节点 {field} 要匹配的字段
+ *
+ * return: boolean[]
+ */
 const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
   let res: string[] = [];
   const recursiveFn = (data: any, ids: string[], field: string) => {
@@ -171,7 +173,7 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
  * description: 隐藏 / 显示
  */
 const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
-  console.log('---------zzzzzzzzzzz-----------', selectedNodes)
+  console.log("---------zzzzzzzzzzz-----------", selectedNodes);
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {

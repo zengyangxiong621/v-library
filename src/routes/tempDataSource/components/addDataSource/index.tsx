@@ -55,8 +55,10 @@ const AddDataSource = (props: any) => {
     })
     setTestConnectLoading(false)
     if (data) {
-      message.success({ content: '连接成功', duration: 2 })
+      message.success({ content: '数据源连接成功', duration: 2 })
       setIsConnect(true)
+    } else {
+      message.error({ content: '数据源连接失败', duration: 2 })
     }
   }
   /**
@@ -109,7 +111,6 @@ const AddDataSource = (props: any) => {
       finalType = 'RDBMS'
     }
     if (['csv', 'json', 'excel'].includes(dataBaseOrNormal)) {
-      console.log('fileUrl', fileUrl);
       if (!fileUrl) {
         message.error('上传文件格式错误或未上传文件')
         return
@@ -193,7 +194,21 @@ const AddDataSource = (props: any) => {
         } else if (status === 'error') {
           message.error(`${info.file.name} 上传失败`);
         }
-      }
+      },
+      onDrop(e: any) {
+        const {name} = e.dataTransfer.files[0]
+        const fileSuffixArr = fileSuffix?.split(',')
+        // 考虑 cdb.la...yer.json 这个文件名
+        const lastPointIndex = name.lastIndexOf('.')
+        const nameSuffix = name.slice(lastPointIndex)
+        if (!fileSuffixArr?.includes(nameSuffix)) {
+          message.error({
+            content: '文件格式不符',
+            duration: 2
+          })
+          return
+        }
+      },
     };
     if (JSON.stringify(customProps) !== '{}') {
       uploadProps = { ...uploadProps, ...customProps }
@@ -205,7 +220,7 @@ const AddDataSource = (props: any) => {
   // .csv 文件
   const csvUploadProps = generateUploadProps('.csv')
   // .excel 文件
-  const excelUploadProps = generateUploadProps('.excel')
+  const excelUploadProps = generateUploadProps('.xlsx')
   return (
     <div className='AddDataSource-wrap'>
       <Modal
@@ -280,7 +295,7 @@ const AddDataSource = (props: any) => {
                 <Form.Item
                   label="上传文件"
                   style={{ marginBottom: '40px' }}
-                  name="csvFileUrl"
+                  // name="csvFileUrl"
                   rules={generateSingleRules(true, '请选择要上传的文件')}
                 >
                   <div className="setBackColor"
@@ -379,7 +394,7 @@ const AddDataSource = (props: any) => {
                 <Form.Item
                   label="上传文件"
                   style={{ marginBottom: '40px' }}
-                  name="jsonFileUrl"
+                  // name="jsonFileUrl"
                   rules={generateSingleRules(true, '请选择要上传的文件')}
                 >
                   <div className="setBackColor"
@@ -401,14 +416,14 @@ const AddDataSource = (props: any) => {
                 <Form.Item
                   label="上传文件"
                   style={{ marginBottom: '40px' }}
-                  name='excelFileUrl'
+                  // name='excelFileUrl'
                   rules={generateSingleRules(true, '请输入Base URL')}
                 >
                   <div className="setBackColor"
                     style={{ height: '120px' }}>
                     <Dragger {...excelUploadProps}>
                       <p className="ant-upload-hint">
-                        点击或拖拽excel格式的文件至此处进行上传，10M以内
+                        点击或拖拽.xlsx格式的文件至此处进行上传，10M以内
                       </p>
                     </Dragger>
                   </div>
