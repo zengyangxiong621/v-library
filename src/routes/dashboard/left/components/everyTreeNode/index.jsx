@@ -127,7 +127,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     dispatch({
       type: 'bar/singleShowLayer',
       payload: {
-        key: [name],
+        keys: [id],
         singleShowLayer: !singleShowLayer
       }
     })
@@ -138,7 +138,12 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     dispatch({
       type: `bar/lock`,
       payload: {
-        value: !isLock
+        dashboardId: bar.dashboardId,
+        configs: [{
+          id,
+          key: "isLock",
+          value: !isLock
+        }]
       }
     })
   }

@@ -83,11 +83,20 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       } else if (canvasScaleValue <= 0.67 && canvasScaleValue > 0.43) {
         ruleScale = 200
         ruleGrade = 20
-      } else if (canvasScaleValue <= 0.43) {
+      } else if (canvasScaleValue <= 0.43 && canvasScaleValue > 0.19) {
         ruleScale = 400
         ruleGrade = 40
+      } else if (canvasScaleValue <= 0.19 && canvasScaleValue > 0.13) {
+        ruleScale = 500
+        ruleGrade = 50
+      } else if (canvasScaleValue <= 0.13 && canvasScaleValue > 0.03) {
+        ruleScale = 1000
+        ruleGrade = 100
+      } else {
+        ruleScale = 2000
+        ruleGrade = 200
       }
-      for (let i = -5000; i < 5000; i += ruleGrade) {
+      for (let i = -20000; i < 20000; i += ruleGrade) {
         contextTop.strokeStyle = 'white'
         contextTop.fillStyle = 'white'
 
@@ -105,9 +114,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
           // contextTop.fillText(i, i + left - 18, 10)
         }
       }
-
-
-      for (let i = -5000; i < 5000; i += ruleGrade) {
+      for (let i = -10000; i < 10000; i += ruleGrade) {
         //左侧标尺线绘制
         contextLeft.save()
         contextLeft.beginPath()

@@ -350,17 +350,18 @@ export const layerComponentsFlat = (arr) => {
   }, [])
 }
 
-export const throttle = (fn, delay) => {
-  let timer = null
-  return function () {
-    if (!timer) {
-      timer = setTimeout(() => {
-        fn.apply(this, arguments)
-        timer = null
+export function throttle(fn, delay) {
+  let timer
+  return function (...args) {
+    if(!timer){
+      timer=setTimeout(()=>{
+        timer=null
+        fn.apply(this, args)
       }, delay)
     }
   }
 }
+
 
 const judgeIsGroup = (value) => {
   return value.id.indexOf('group') !== -1
