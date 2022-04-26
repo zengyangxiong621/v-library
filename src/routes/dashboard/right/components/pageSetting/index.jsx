@@ -11,7 +11,7 @@ import { deepClone } from '../../../../../utils'
 import { Form } from 'antd';
 import EditTable from '../editTable'
 import debounce from 'lodash/debounce';
-import { useFetch } from '../../../../../utils/useFetch'
+import { http } from '../../../../../models/utils/request'
 import { v4 as uuidv4 } from 'uuid';
 
 const dashboardId = window.location.pathname.split('/')[2]
@@ -27,23 +27,16 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   const gridSpacing = find(pageConfig, 'gridSpacing')
   const zoomConfig = find(pageConfig, 'zoom')
   const thumbImg = find(pageConfig, 'thumbImg')
-  const [key,setKey] = useState(uuidv4())
+  const [key, setKey] = useState(uuidv4())
 
   const [form] = Form.useForm();
 
-  useEffect(()=>{
-    console.log('bar.pageConfig',bar.pageConfig)
+  useEffect(() => {
+    console.log('bar.pageConfig', bar.pageConfig)
     setKey(uuidv4())
-  },[bar.pageConfig])
+  }, [bar.pageConfig])
 
   const settingsChange = debounce(() => {
-    console.log('pageConfig changed')
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        pageConfig
-      }
-    })
     saveData()
   }, 300)
 
@@ -53,9 +46,10 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
       thumb: thumbImg.value,
       dashboardId: dashboardId
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, {config}] = await useFetch('/visual/application/update', {
-      body: JSON.stringify(params)
+    const { config } = await http({
+      url: '/visual/application/update',
+      method: 'post',
+      body: params,
     })
     dispatch({
       type: 'bar/save',

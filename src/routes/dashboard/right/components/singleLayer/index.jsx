@@ -11,10 +11,10 @@ import componentLib from '../index'
 
 import {
   Tabs,
-  
+
 } from 'antd';
 import debounce from 'lodash/debounce';
-import { useFetch } from '../../../../../utils/useFetch'
+import { http } from '../../../../../models/utils/request'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -24,7 +24,11 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
+  console.log('--------------------')
+  console.log('componentConfig', bar.componentConfig)
   const styleConfig = componentConfig.config
+  console.log('styleConfig', styleConfig)
+  console.log('--------------------')
   const interactionConfig = componentConfig.interaction || {
     mountAnimation:{},
     events:[]
@@ -46,14 +50,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const saveStyleData = async (param) => {
-    // todo 替换假数据
     const params = {
       configs: [param],
       dashboardId: dashboardId
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useFetch('/visual/module/update', {
-      body: JSON.stringify(params)
+    await http({
+      url:'/visual/module/update',
+      method: 'post',
+      body: params
     })
   }
 
@@ -70,9 +74,10 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const saveDataHandle = async (param) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useFetch('/visual/module/data/update', {
-      body: JSON.stringify(param)
+    await http({
+      url:'/visual/module/data/update',
+      method: 'post',
+      body: param
     })
   }
 
@@ -90,14 +95,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const saveAnimationData = async (param) => {
-    // todo 替换假数据
     const params = {
       configs: [param],
       dashboardId: dashboardId
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useFetch('/visual/layer/group/update', {
-      body: JSON.stringify(params)
+    await http({
+      url:'/visual/layer/group/update',
+      method: 'post',
+      body: params
     })
   }
 
@@ -113,14 +118,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const saveEventsData = async (param) => {
-    // todo 替换假数据
     const params = {
       configs: [param],
       dashboardId: dashboardId
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useFetch('/visual/module/defineEvent', {
-      body: JSON.stringify(params)
+    await http({
+      url:'/visual/module/defineEvent',
+      method: 'post',
+      body: params
     })
   }
 
