@@ -7,8 +7,25 @@
   color: #ccc;
 }
 .ant-tree-treenode-selected {
-  background-color: #2482FF !important;
+  background-color: #2482ff !important;
   transition: unset;
+}
+// antd拖拽时自带的下边框样式, 改成透明即可，若直接不显示，拖拽位置会不准确
+.ant-tree-drop-indicator {
+  // display: none;
+  opacity: 0;
+}
+.drag-over-gap-bottom {
+  background-color: #2482ff;
+  // border: none !important;
+}
+.drop-target {
+  border: none;
+}
+.ant-tree-treenode-draggable {
+}
+.dragging {
+  // background-color: red;
 }
 .title {
   flex: 1;
@@ -29,7 +46,7 @@
   border: 1px rgb(204, 199, 199) solid;
 }
 .set-back-color {
-  background-color: #2482FF;
+  background-color: #2482ff;
 }
 .set-margin {
   margin-right: 12px;

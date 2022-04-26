@@ -6,13 +6,13 @@
  */
 // 右键菜单配置项
 export const menuOptions = [
-  {
-    name: '图层排序',
-    key: '',
-    icon: 'sucai',
-    disabled: false,
-    hasLevel: true,
-  },
+  // {
+  //   name: '图层排序',
+  //   key: '',
+  //   icon: 'sucai',
+  //   disabled: false,
+  //   hasLevel: true,
+  // },
   {
     name: '锁定',
     key: 'lock',
@@ -81,7 +81,6 @@ export const menuOptions = [
     name:'重命名',
     key: 'reName',
     icon: 'bianji',
-    disabled: false,
     mayDisabled: true,
   },
   {
