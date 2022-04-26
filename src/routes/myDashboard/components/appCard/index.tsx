@@ -36,10 +36,8 @@ const AppCard = (props: any) => {
   }
   const changAppName = async (e: any) => {
     // 校验： 如果两次修改的名称一样，那就不发请求了
-    console.log('name', name);
-    console.log('appName', appName);
     if (name === appName) {
-      message.warning({ content: '新旧名称不能相同', duration: 2 })
+      // message.warning({ content: '新旧名称不能相同', duration: 2 })
       setCanEdit(false)
       return
     }

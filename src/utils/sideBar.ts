@@ -171,6 +171,7 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
  * description: 隐藏 / 显示
  */
 const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
+  console.log('---------zzzzzzzzzzz-----------', selectedNodes)
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {

@@ -92,7 +92,7 @@ export default {
     key: [],
     isShowRightMenu: false,
     lastRightClick: '',
-    isMultipleTree: true,
+    isMultipleTree: false,
     operate: '',
     treeData: [],
     selectedComponentOrGroup: [],
@@ -488,13 +488,14 @@ export default {
     },
     // 隐藏 / 显示
     * hidden({ payload }: any, { call, put }: any): any {
-      // 前端隐藏
-      yield put({
-        type: 'frontHidden',
-        payload: {
-          value: payload.configs[0].value,
-        },
-      })
+      // console.log('隐藏的payload.value', payload)
+      // 暂时先不启用前端隐藏
+      // yield put({
+      //   type: 'frontHidden',
+      //   payload: {
+      //     value: payload.configs[0].value,
+      //   },
+      // })
       yield put({
         type: 'change',
         payload,
@@ -895,15 +896,16 @@ export default {
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
+      console.log('aaaaa', payload)
       const newTree = singleShowLayer(
         state.treeData,
-        state.key,
+        payload.keys,
         payload.singleShowLayer,
       )
       return { ...state, treeData: newTree }
     },
     // 隐藏
-    hidden(state: IBarState, { payload }: any) {
+    frontHidden(state: IBarState, { payload }: any) {
       // 此处只能用payload.key,因为eyes图标在没有任何节点被选中时也要能响应点击
       const newTree = hidden(state.treeData, payload.key, payload.value)
       return { ...state, treeData: newTree }
