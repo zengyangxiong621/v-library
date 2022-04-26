@@ -542,6 +542,7 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
+      debugger
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =

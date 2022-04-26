@@ -1,11 +1,11 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
+  "id": '122', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "图像组件", //图层名称
+  "name": "图片", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
-  "moduleName": "textV2", //组件标识
+  "moduleName": "imageV2", //组件标识
   "moduleVersion": "1.1.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
@@ -25,7 +25,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "text": "title"
+        "imageUrl": ""
       }
     ],
     "fields": [
