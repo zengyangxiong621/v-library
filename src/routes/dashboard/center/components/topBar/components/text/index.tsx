@@ -30,6 +30,9 @@ const Text = (props: any) => {
           pageSize: 100,
         }
       }).then((data: any) => {
+        data.content.forEach((item: any) => {
+          item.photoPath = require('../../../../../../../assets/images/thumb-text.png')
+        })
         setDataArr(() => data.content)
       })
     }

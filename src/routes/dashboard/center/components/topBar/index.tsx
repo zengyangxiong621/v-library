@@ -53,13 +53,13 @@ const TopBar = (props: any) => {
  * description: 组件 、 素材 导航栏选项卡配置
  */
 const zujianMenu = [
-  {
-    title: '图表',
-    key: 'chart',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: true,
-    component: Charts,
-  },
+  // {
+  //   title: '图表',
+  //   key: 'chart',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: true,
+  //   component: Charts,
+  // },
   // {
   //   title: '地图',
   //   key: 'map',
@@ -74,13 +74,13 @@ const zujianMenu = [
     isSpecialDropMenu: false,
     component: Text
   },
-  // {
-  //   title: '辅助',
-  //   key: 'assist',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Assist
-  // },
+  {
+    title: '辅助',
+    key: 'assist',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Assist
+  },
   // {
   //   title: '交互',
   //   key: 'interaction',
