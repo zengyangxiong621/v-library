@@ -420,8 +420,22 @@ export const deepForEach = (layers, cb) => {
   })
 }
 
-export const setComponentDimension = (dimensionConfig, { x = null, y = null, width = null, height = null }, type) => {
+export const setComponentDimension = (dimensionConfig, {
+  x = null,
+  y = null,
+  width = null,
+  height = null,
+}, type, cb) => {
   const data = getDimensionData(dimensionConfig)
+  if (type === 'callback') {
+    const { x: configX, y: configY, width: configWidth, height: configHeight, type: configType } = cb(data)
+    configX && (x = configX)
+    configY && (y = configY)
+    configWidth && (width = configWidth)
+    configHeight && (height = configHeight)
+    configType && (type = configType)
+  }
+
   dimensionConfig.forEach((config) => {
     switch (config.name) {
       case LEFT:

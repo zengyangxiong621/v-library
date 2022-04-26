@@ -43,9 +43,9 @@ import {
 } from '../utils/sideBar'
 import { DIMENSION } from '../routes/dashboard/center/constant'
 
-import { generateLayers } from "./utils/generateLayers";
-import { addSomeAttrInLayers } from "./utils/addSomeAttrInLayers";
-import { http } from "./utils/request";
+import { generateLayers } from './utils/generateLayers'
+import { addSomeAttrInLayers } from './utils/addSomeAttrInLayers'
+import { http } from './utils/request'
 
 interface IBarState {
   dashboardId: string;
@@ -329,10 +329,10 @@ export default {
     * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
         const { layers, components, dashboardConfig } = yield http({
-          url: `/visual/application/dashboard/detail/${payload}`,
-          method: "get",
-        });
-        const extendedSomeAttrLayers = addSomeAttrInLayers(layers);
+          url: `/visual/application/dashboard/detail/${ payload }`,
+          method: 'get',
+        })
+        const extendedSomeAttrLayers = addSomeAttrInLayers(layers)
         yield put({
           type: 'save',
           payload: {
@@ -445,9 +445,9 @@ export default {
     // 添加组件到画布
     * addComponent({ payload }: any, { call, put }: any) {
       yield put({
-        type: "addLayer",
+        type: 'addLayer',
         payload: { final: payload.final, insertId: payload.insertId },
-      });
+      })
     },
     // 删除图层、分组
     * delete({ payload }: any, { select, call, put }: any): any {
@@ -556,7 +556,7 @@ export default {
       const insertId =
         state.bar.key.length !== 0
           ? state.bar.key[state.bar.key.length - 1]
-          : state.bar.treeData.length !== 0 ? state.bar.treeData[0].id : '';
+          : state.bar.treeData.length !== 0 ? state.bar.treeData[0].id : ''
       const { id, children }: any = yield http({
         url: '/visual/module/add',
         method: 'post',
@@ -574,9 +574,9 @@ export default {
       })
 
       yield put({
-        type: "addComponent",
+        type: 'addComponent',
         payload: { final: itemData, insertId: insertId },
-      });
+      })
     },
     * updateComponent({ payload }: any, { call, put, select }: any): any {
       const state: any = yield select((state: any) => state)
@@ -606,7 +606,7 @@ export default {
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
       const extendedSomeAttrLayers = addSomeAttrInLayers(payload)
-      return { ...state, treeData: extendedSomeAttrLayers };
+      return { ...state, treeData: extendedSomeAttrLayers }
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
@@ -1151,7 +1151,12 @@ export default {
       }
     },
     setArrangement(state: IBarState, { payload }: any) {
-      const { position: { x, y } } = state.scaleDragData
+      if(state.selectedComponentOrGroup.length <= 2) {
+        return {
+          ...state,
+        }
+      }
+      const { position: { x, y }, style: { width, height } } = state.scaleDragData
       const xSortLayers: any = state.selectedComponentOrGroup.sort((a: any, b: any) => {
         const aIsGroup = (COMPONENTS in a)
         const bIsGroup = (COMPONENTS in b)
@@ -1163,30 +1168,68 @@ export default {
         const bLayerX = Number(bTranslateArr[0])
         return aLayerX - bLayerX
       })
+      const xLength = xSortLayers.length
+      //
+      const xFirstLayer = xSortLayers[0] // 第一个
+      const xLastLayer = xSortLayers[xLength - 1] // 倒数第一个
+      const xLastPreLayer = xSortLayers[xLength - 2] // 倒数第二个
+
+      const xLastLayerData = getLayerDimensionByDomId(COMPONENTS in xLastLayer ? xLastLayer.id : `component-${ xLastLayer.id }`)
+      const xFirstLayerData = getLayerDimensionByDomId(COMPONENTS in xFirstLayer ? xFirstLayer.id : `component-${ xFirstLayer.id }`)
+      const xLastPreLayerData = getLayerDimensionByDomId(COMPONENTS in xLastPreLayer ? xLastPreLayer.id : `component-${ xLastPreLayer.id }`)
+
+      let remainingSpaceWidth
+      if(xLastPreLayer.x + xLastPreLayer.width < xLastLayerData.x + xLastLayerData.width) {
+        remainingSpaceWidth = width - xLastPreLayer.width - xFirstLayerData.width
+      } else {
+        remainingSpaceWidth = width - xLastLayer.width - xFirstLayerData.width
+        // remainingSpaceWidth = calcGroupPosition([ xLastLayer ], state.components)[0][0] - calcGroupPosition([ xFirstLayer ], state.components)[0][1]
+      }
       // RemainingWidth 是除了前后两个 layer 宽度后的大小
-      const remainingSpaceWidth = calcGroupPosition([ xSortLayers[xSortLayers.length - 1] ], state.components)[0][0] - calcGroupPosition([ xSortLayers[0] ], state.components)[0][1]
 
       const remainingTotalWidth = xSortLayers.reduce((width: number, layer: any, index: number) => {
         if(index === 0 || index === xSortLayers.length - 1) {
           return width
         }
-        const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ COMPONENTS in layer ? layer.id : 'component-' + layer.id }]`)
-        return width + Number(layerDom.style.width.replace('px', ''))
+        const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+        return width + layerData.width
       }, 0)
       const xSpace = (remainingSpaceWidth - remainingTotalWidth) / (xSortLayers.length - 1)
       // distance 是当前 scaleDragData 的 x 值，即整个选择的区域内距离画布左侧的值
       xSortLayers.reduce((distance: number, layer: any, index: any) => {
         if(index === 0) {
-          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ COMPONENTS in layer ? layer.id : 'component-' + layer.id }]`)
-          return distance + Number(layerDom.style.width.replace('px', ''))
+          const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+          return distance + layerData.width
         }
         if(index === xSortLayers.length - 1) {
+          if(xLastPreLayer.x + xLastPreLayer.width < xLastLayerData.x + xLastLayerData.width) {
+            if(COMPONENTS in layer) {
+              const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+              const componentIds = layerComponentsFlat(layer[COMPONENTS])
+              // 通过 id 筛选出当前组的组件
+              // 现在知道 distance + xSpace 是一个组/组件的位置, 所有 distance + xSpace - layerX， 让组里的每个组件的位置都增加这个值
+              const components = state.selectedComponents.filter((component: any) => componentIds.includes(component.id))
+              components.forEach((component: any) => {
+                const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+                if(dimensionConfig) {
+                  setComponentDimension(dimensionConfig, { x: (x + width) - (layerData.x + layerData.width) as any }, 'add')
+                }
+              })
+            } else {
+              const component = state.selectedComponents.find((component: any) => component.id === layer.id)
+              const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+              if(dimensionConfig) {
+                setComponentDimension(dimensionConfig, { x: null }, 'callback', (data: any) => {
+                  return { x: (x + width) - (data.width + data.x), type: 'add' }
+                })
+              }
+            }
+          }
           return distance
         }
         if(COMPONENTS in layer) {
-          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ COMPONENTS in layer ? layer.id : 'component-' + layer.id }]`)
-          const translateArr = layerDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
-          const layerX = Number(translateArr[0])
+          const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+          const layerX = layerData.x
           const componentIds = layerComponentsFlat(layer[COMPONENTS])
           // 通过 id 筛选出当前组的组件
           // 现在知道 distance + xSpace 是一个组/组件的位置, 所有 distance + xSpace - layerX， 让组里的每个组件的位置都增加这个值
@@ -1197,7 +1240,7 @@ export default {
               setComponentDimension(dimensionConfig, { x: (distance + xSpace - layerX as any) }, 'add')
             }
           })
-          return distance + Number(layerDom.style.width.replace('px', '')) + xSpace
+          return distance + layerData.width + xSpace
         } else {
           const component = state.selectedComponents.find((component: any) => component.id === layer.id)
           const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
