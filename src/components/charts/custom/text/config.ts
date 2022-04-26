@@ -25,7 +25,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "text": "我是文字组件111"
+        "text": "文字组件"
       }
     ],
     "fields": [
