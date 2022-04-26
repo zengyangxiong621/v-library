@@ -17,6 +17,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
     const lockInfo = getFieldStates(bar.treeData, bar.key, 'isLock')
+    debugger
     const finalLockState = lockInfo.some(item => item === false)
     setIsLock(!finalLockState)
 
@@ -88,6 +89,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
           panels: [],
           selected: [...bar.key]
         }
+        break;
       default:
         break;
     }

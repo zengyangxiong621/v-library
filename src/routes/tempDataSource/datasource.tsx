@@ -163,11 +163,11 @@ const DataSource = (props: any) => {
     // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
     // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
     const { field, order } = sorter
-    console.log('sort', sorter);
+    console.log('sort', order);
     if (action === 'sort') {
-      setTableMap({
-        [field]: order
-      })
+      // setTableMap({
+      //   [field]: order
+      // })
       // 发送请求
       // const finalParams: TDataSourceParams = {
       //   spaceId: 1,
