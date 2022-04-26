@@ -277,9 +277,9 @@ const Center = ({ bar, dispatch }: any) => {
         cRef={ rulerRef }
         mouse={ mouse }
       />
-      {
+{/*      {
         isShowRightMenu &&
-        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
+        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }*/}
       <div
         style={ {
           width: 'calc(100% - 22px)',

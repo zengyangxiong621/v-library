@@ -8,6 +8,7 @@ import componentDefaultConfig from '../../../../../../../components/charts/custo
 const EveryItem = (props: any) => {
   const { data, dispatch } = props
   const componentCreate = () => {
+    console.log('componentDefaultConfig', componentDefaultConfig)
     dispatch({
       type: 'bar/createComponent',
       payload: componentDefaultConfig,

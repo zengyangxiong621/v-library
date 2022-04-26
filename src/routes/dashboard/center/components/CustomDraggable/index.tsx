@@ -367,6 +367,7 @@ const CustomDraggable
         },
       })
     }
+    console.log('点击点击')
     dispatch({
       type: 'bar/updateComponent',
       payload: bar.selectedComponents,
@@ -378,6 +379,10 @@ const CustomDraggable
         key: bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id),
       },
     })
+    console.log('---------------')
+    console.log('bar.key', bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id))
+    console.log('selectedComponentOrGroup', bar.selectedComponentOrGroup)
+    console.log('---------------')
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
     clearTimeout(clickTimer.current)
@@ -445,6 +450,7 @@ const CustomDraggable
     //   type: 'bar/save',
     // })
   }
+  console.log('newTreeDATA', treeData)
   // let copyTreeData = deepClone(treeData).reverse()
   return (
     <div className="c-custom-draggable">
@@ -560,8 +566,8 @@ const CustomDraggable
                       }
                     </div> : <>
                       <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
-                        <Text componentConfig={ component }/>
-                        <CompImage componentConfig={ component }/>
+                        <Text componentConfig={ component } key={Math.random()}/>
+                        {/*<CompImage componentConfig={ component }/>*/}
                       </div>
                     </>
                 }
