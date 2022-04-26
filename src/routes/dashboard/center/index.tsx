@@ -70,11 +70,12 @@ const Center = ({ bar, dispatch }: any) => {
       },
     })
   }
+
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
     if(e.ctrlKey) {
       e.preventDefault()
-      if(e.deltaY > 0 && bar.canvasScaleValue < 0.19) {
+      if(e.deltaY > 0 && bar.canvasScaleValue < 0.1) {
         return false
       }
       dispatch({

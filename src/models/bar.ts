@@ -607,7 +607,7 @@ export default {
       if(payload.insertId && treeData.length) {
         insertId = payload.insertId
       } else {
-        insertId = treeData.length !== 0 ?  treeData[0].id : ''
+        insertId = treeData.length !== 0 ? treeData[0].id : ''
       }
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
       return { ...state, treeData: newLayers }
@@ -626,17 +626,18 @@ export default {
       }
     },
     setSelectedKeys(state: IBarState, { payload }: any) {
-      state.key = payload
-      state.selectedComponentOrGroup = state.key.reduce(
+      state.selectedComponentOrGroup = payload.reduce(
         (pre: any, cur: string) => {
           pre.push(findLayerById(state.treeData, cur))
           return pre
         },
         [],
-      )
+      ).filter((layer: ILayerGroup | ILayerComponent) => !layer.isLock)
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
+      state.key = state.selectedComponentOrGroup.map((layer: ILayerGroup | ILayerComponent) => layer.id)
+
       state.isAreaChoose = state.selectedComponentOrGroup.length > 0
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup,
@@ -1163,13 +1164,9 @@ export default {
       const xFirstLayerData = getLayerDimensionByDomId(COMPONENTS in xFirstLayer ? xFirstLayer.id : `component-${ xFirstLayer.id }`)
       const xLastPreLayerData = getLayerDimensionByDomId(COMPONENTS in xLastPreLayer ? xLastPreLayer.id : `component-${ xLastPreLayer.id }`)
 
-      let remainingSpaceWidth
-      if(xLastPreLayer.x + xLastPreLayer.width < xLastLayerData.x + xLastLayerData.width) {
-        remainingSpaceWidth = width - xLastPreLayer.width - xFirstLayerData.width
-      } else {
-        remainingSpaceWidth = width - xLastLayer.width - xFirstLayerData.width
-        // remainingSpaceWidth = calcGroupPosition([ xLastLayer ], state.components)[0][0] - calcGroupPosition([ xFirstLayer ], state.components)[0][1]
-      }
+
+      let remainingSpaceWidth = width - xLastPreLayerData.width - xFirstLayerData.width
+
       // RemainingWidth 是除了前后两个 layer 宽度后的大小
 
       const remainingTotalWidth = xSortLayers.reduce((width: number, layer: any, index: number) => {
@@ -1187,7 +1184,7 @@ export default {
           return distance + layerData.width
         }
         if(index === xSortLayers.length - 1) {
-          if(xLastPreLayer.x + xLastPreLayer.width < xLastLayerData.x + xLastLayerData.width) {
+          if(xLastPreLayerData.x + xLastPreLayerData.width > xLastLayerData.x + xLastLayerData.width) {
             if(COMPONENTS in layer) {
               const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
               const componentIds = layerComponentsFlat(layer[COMPONENTS])
@@ -1205,7 +1202,7 @@ export default {
               const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
               if(dimensionConfig) {
                 setComponentDimension(dimensionConfig, { x: null }, 'callback', (data: any) => {
-                  return { x: (x + width) - (data.width + data.x), type: 'add' }
+                  return { x: (x + width) - (data.width + data.left), type: 'add' }
                 })
               }
             }
