@@ -1,4 +1,4 @@
-import React, { memo, useState,useEffect } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
 import { deepClone } from '../../../../../utils'
@@ -16,14 +16,14 @@ import {
 } from 'antd';
 
 import debounce from 'lodash/debounce';
-import { useFetch } from '../../../../../utils/useFetch'
+import { http } from '../../../../../models/utils/request'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
 const GroupConfig = ({ bar, dispatch, ...props }) => {
   const [form] = Form.useForm();
   const { Panel } = Collapse;
-  const [key,setKey] = useState(uuidv4())
+  const [key, setKey] = useState(uuidv4())
   const groupConfig = deepClone(bar.groupConfig)
   const dimensionConfig = find(groupConfig, 'dimension')
   const hideDefaultConfig = find(groupConfig, 'hideDefault')
@@ -34,10 +34,10 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
 
-  useEffect(()=>{
-    console.log('bar.groupConfig',bar.groupConfig)
+  useEffect(() => {
+    console.log('bar.groupConfig', bar.groupConfig)
     setKey(uuidv4())
-  },[bar.groupConfig])
+  }, [bar.groupConfig])
 
 
   const positionChange = debounce(() => {
@@ -52,14 +52,14 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const saveData = async (param) => {
-    // todo 替换假数据
     const params = {
       configs: [param],
       dashboardId: dashboardId
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await useFetch('/visual/layer/group/update', {
-      body: JSON.stringify(params)
+    const data = await http({
+      url: '/visual/layer/group/update',
+      method: 'post',
+      body: params,
     })
     console.log('layers', data[1])
     dispatch({
@@ -79,8 +79,8 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     })
     saveData({
       id: bar.key[0],
-      key:'hideDefault',
-      value:hideDefaultConfig.value
+      key: 'hideDefault',
+      value: hideDefaultConfig.value
     })
   }, 300)
 
@@ -94,8 +94,8 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     })
     saveData({
       id: bar.key[0],
-      key:'opacity',
-      value:opacityConfig.value
+      key: 'opacity',
+      value: opacityConfig.value
     })
   }, 300)
 
@@ -109,8 +109,8 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     })
     saveData({
       id: bar.key[0],
-      key:'mountAnimation',
-      value:interactionConfig.mountAnimation
+      key: 'mountAnimation',
+      value: interactionConfig.mountAnimation
     })
   }, 300)
 
@@ -126,7 +126,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
           {...formItemLayout}
           colon={false}
         >
-          <PositionSize data={dimensionConfig} onChange={positionChange}/>
+          <PositionSize data={dimensionConfig} onChange={positionChange} />
           <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
           <Range data={opacityConfig} onChange={opacityChange} />
           <LoadAnimation data={interactionConfig} onChange={interactionChange} />
