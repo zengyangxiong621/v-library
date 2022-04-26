@@ -555,6 +555,7 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
+      
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
@@ -571,15 +572,14 @@ export default {
           children: [], // TODO: 需要确定children从哪里来
         },
       })
-      // console.log('id', id)
       yield put({
         type: 'updateComponents',
         payload: { ...deepClone(payload), id: id, children: children },
       })
-      itemData.id = id
+      // itemData.id = id
       yield put({
         type: 'addComponent',
-        payload: { final: itemData, insertId: insertId },
+        payload: { final: {...itemData, id: id}, insertId: insertId },
       })
 
 

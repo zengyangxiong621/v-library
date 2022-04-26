@@ -566,8 +566,9 @@ const CustomDraggable
                       }
                     </div> : <>
                       <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
-                        <Text componentConfig={ component } key={Math.random()}/>
-                        {/*<CompImage componentConfig={ component }/>*/}
+                        {
+                          layer.moduleName === 'wordCloud' ? <Text componentConfig={ component }/> : <CompImage componentConfig={ component }/>
+                        }
                       </div>
                     </>
                 }

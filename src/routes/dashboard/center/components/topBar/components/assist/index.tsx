@@ -32,6 +32,7 @@ const Text = (props: any) => {
       }).then((data: any) => {
         data.content.forEach((item: any) => {
           item.photoPath = require('../../../../../../../assets/images/thumb-image.png')
+          item.type = 'assist'
         })
         setDataArr(() => data.content)
       })
