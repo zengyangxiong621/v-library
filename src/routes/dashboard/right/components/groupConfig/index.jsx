@@ -61,11 +61,11 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       method: 'post',
       body: params,
     })
-    console.log('layers', data[1])
+    console.log('layers', data)
     dispatch({
       type: 'bar/save',
       payload: {
-        treeData: data[1]
+        treeData: data
       }
     })
   }
