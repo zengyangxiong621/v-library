@@ -56,12 +56,11 @@ const DashboardTemplate = (props: any) => {
   const createApp = async () => {
     // 先校验
     const values: any = await createForm.validateFields()
-    console.log('校验表单的值', values);
-    console.log('默认情况下选中的分组', selectedGroup);
     //TODO 发送请求
     const finalBody = {
       spaceId,
-      ...values
+      ...values,
+      groupId: selectedGroup
     }
     const [, data] = await useFetch('/visual/application/createBlankApp', {
       body: JSON.stringify(finalBody)
@@ -69,8 +68,6 @@ const DashboardTemplate = (props: any) => {
     // 请求成功
     // 关闭弹窗 - 清除弹窗缓存 - 跳转至应用所属的画布
     if (data) {
-      console.log('name', data.name)
-      console.log('id', data.screenId)
       setShowCreateAppModal(false)
       createForm.resetFields()
       history.push(`/dashboard/${data.screenId}`)

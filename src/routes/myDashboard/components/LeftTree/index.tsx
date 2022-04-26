@@ -59,6 +59,8 @@ const LeftTree = ({ dashboardManage, dispatch }: any) => {
   }
 
   const selectTreeNode = (keys: any, e: any) => {
+    // 如果是取消选择直接中止
+    if(!e.selected) return
     const { node } = e
     if (node.key === 'aInput' || node.name === '占位的input' || node.key === 'wrap') {
       return
