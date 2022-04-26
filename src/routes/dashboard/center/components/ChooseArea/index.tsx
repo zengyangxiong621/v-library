@@ -134,6 +134,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
               type: 'bar/chooseLayer',
               payload: selectedIds,
             })
+
           }
         }
         document.onmousemove = null

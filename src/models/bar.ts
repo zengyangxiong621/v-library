@@ -9,6 +9,7 @@ import {
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
+  deepClone
 } from '../utils'
 
 import {
@@ -505,7 +506,7 @@ export default {
       // eslint-disable-line
       yield put({ type: 'selectedNode', payload })
     },
-    * chooseLayer({ payload }: any, { call, put }: any): any {
+    * chooseLayer({ payload }: any, { call, put, select }: any): any {
       yield put({
         type: 'save',
         payload: {
@@ -521,6 +522,17 @@ export default {
       })
       yield put({
         type: 'calcDragScaleData',
+      })
+      const bar = yield select(({ bar }: any) => bar)
+      console.log('---------------')
+      console.log('bar', bar.selectedComponentOrGroup)
+      console.log('---------------')
+
+      yield put({
+        type: 'save',
+        payload: {
+          key: bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id),
+        },
       })
     },
     * selectLayers({ payload }: any, { call, put }: any): any {
@@ -562,7 +574,7 @@ export default {
       })
       yield put({
         type: 'updateComponents',
-        payload: { ...payload, id: id, children: children },
+        payload: { ...deepClone(payload), id: id, children: children },
       })
       // itemData.id = id
       yield put({
@@ -611,12 +623,20 @@ export default {
       } else {
         insertId = treeData.length !== 0 ? treeData[0].id : ''
       }
+      console.log('----------')
+      console.log('payload', payload.final)
+      console.log('----------')
+
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
-      console.log('newLayers', newLayers)
+      console.log('newLayersdasdsaasadsdsdassd', newLayers)
       return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
+      console.log('呵呵哈哈哈')
+      console.log('payload', payload)
+      console.log('呵呵哈哈哈')
+
       state.components = state.components.concat(payload)
       console.log('state.components', state.components)
       return { ...state }
@@ -636,7 +656,8 @@ export default {
           return pre
         },
         [],
-      ).filter((layer: ILayerGroup | ILayerComponent) => !layer.isLock)
+      ).filter((layer: ILayerGroup | ILayerComponent) => (!layer.isLock && layer.isShow)) // 显示且未被锁
+      console.log('selectedComponentOrGroup', state.selectedComponentOrGroup)
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
@@ -739,6 +760,8 @@ export default {
             },
           }
           state.componentConfig = component
+          state.key = state.selectedComponentOrGroup.map((item: ILayerComponent) => item.id)
+
           return { ...state }
         }
       } else if(state.selectedComponentOrGroup.length > 1) {
@@ -791,8 +814,6 @@ export default {
           }
         })
       }
-      state.key = state.selectedComponentOrGroup.map((layer: ILayerGroup | ILayerComponent) => layer.id)
-
       return {
         ...state,
       }
@@ -954,6 +975,7 @@ export default {
       debugger
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
+      console.log('啦啦啦啦')
       if(state.isSupportMultiple) {
         // 多选
         layer.selected = true

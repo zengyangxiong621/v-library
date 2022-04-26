@@ -5,8 +5,6 @@
 import React, { useState, useEffect, useMemo, useReducer, useRef, useCallback } from 'react'
 import './index.less'
 import { connect } from 'dva'
-import { useClickAway } from 'ahooks'
-
 
 /** 组件库相关 **/
 import { Tree, Menu, Dropdown, Button } from 'antd'
@@ -24,6 +22,7 @@ import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 /** 数据 || 方法 */
 import { menuOptions } from './Data/menuOptions'
 import { getTargetMenu } from './components/rightClickMenu/getMenuNode'
+import { getFieldStates } from '../../../utils/sideBar'
 
 const Left = ({ dispatch, bar, operate }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
@@ -40,6 +39,8 @@ const Left = ({ dispatch, bar, operate }) => {
   const topBarRef = useRef(null)
   const bottomBarRef = useRef(null)
   const headerRef = useRef(null)
+  // TODO  待删除
+  const [single, setSingle] = useState(true)
   // 监听 树区域 以外的点击
   // useClickAway(() => {
   //   setSelected([])
@@ -133,14 +134,48 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
-    const finalPayload = {}
+    console.log('icon', icon);
+    let finalPayload = {
+      dashboardId: bar.dashboardId
+    }
     switch (icon) {
+      case 'lock':
+        const everyNodeLockState = getFieldStates(bar.treeData, bar.key, 'isLock')
+        const finalBody = bar.key.map((item, index) => ({
+          id: item,
+          key: "isLock",
+          value: !everyNodeLockState[index]
+        }))
+        finalPayload.configs = finalBody
+        break;
+      case 'copy':
+        finalPayload = {
+          dashboardId: bar.dashboardId,
+          children: [],
+          targetDashboardId: bar.dashboardId,
+          insertId: bar.key[0],
+          originLayers: bar.treeData,
+          //TODO 改为modules后删除掉这行
+          components: [...bar.key],
+          // components: [...bar.key],
+          panels: [],
+          selected: [...bar.key]
+        }
       case 'singleShowLayer':
-        finalPayload.singleShowLayer = 'negation'
-        break
-      case 'isLock':
-        finalPayload.value = 'negation'
-        break
+        finalPayload.keys = bar.key
+        finalPayload.singleShowLayer = single
+        setSingle(!single)
+        break;
+      // case 'singleShowLayer':
+      //   finalPayload.singleShowLayer = 'negation'
+      //   break
+      case 'delete':
+        const l = bar.key?.map(item => ({
+          id: item,
+          children: []
+        }))
+        finalPayload.layers = l
+        break;
       default:
         break
     }
@@ -266,6 +301,7 @@ const Left = ({ dispatch, bar, operate }) => {
       if (dropPosition === -1) {
         ar.splice(i, 0, dragObj)
       } else {
+        // debugger
         ar.splice(i + 1, 0, dragObj)
       }
     }
