@@ -11,7 +11,7 @@ const defaultOptions: any = {
 export const myFetch = (
   url: string,
   options: object,
-  baseUrl: string = 'http://10.202.226.250:9572',
+  baseUrl: string = 'http://10.201.82.245:31088',
   // baseUrl: string = "http://50423059pd.zicp.vip"
 ) => {
   const finalOptions = {
@@ -42,7 +42,8 @@ export const http = (config: any): any => {
   let { url, method, credentials, headers, body, params, responseType, signal } = config
   // let baseUrl = 'http://10.202.233.230:9572'
   // let baseUrl = 'http://10.202.226.250:9572'
-  let baseUrl = 'http://50423059pd.zicp.vip'
+  let baseUrl = 'http://10.201.82.245:31088'
+  // let baseUrl = 'http://50423059pd.zicp.vip'
   // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
   if(params) url += `${ url.includes('?') ? '&' : '?' }${ qs.stringify(params) }`
   url = baseUrl + url
