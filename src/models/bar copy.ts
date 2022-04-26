@@ -2175,7 +2175,6 @@ export default {
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
-      debugger
       let insertId: String
       const { treeData } = state
       if (payload.insertId && treeData.length) {

@@ -6,7 +6,8 @@ import { connect } from 'dva'
 import { useFetch } from '../../../../utils/useFetch'
 
 import { IconFont } from '../../../../utils/useIcon'
-import { Input, message } from 'antd'
+import { Input, message, Modal } from 'antd'
+import { ExclamationCircleFilled } from '@ant-design/icons'
 
 const EveryTreeNode = (props: any) => {
   const { groupId, name, number, systemDefined,
@@ -93,10 +94,43 @@ const EveryTreeNode = (props: any) => {
   }
   // 点击删除图标
   const delClick = async (id: string | number) => {
-    const [, data] = await useFetch(`/visual/application/deleteGroup?groupId=${id}`, {
-      method: 'delete'
+    Modal.confirm({
+      title: '删除分组',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#e9535d',
+          border: 'none',
+          // marginLeft: '8px',
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          backgroundColor: '#3d404d'
+        }
+      },
+      icon: <ExclamationCircleFilled />,
+      content: '删除后不可恢复，确认删除此分组吗?',
+      okText: '确定',
+      cancelText: '取消',
+      bodyStyle: {
+        background: '#232630',
+      },
+      async onOk(close) {
+        const [, data] = await useFetch(`/visual/application/deleteGroup?groupId=${id}`, {
+          method: 'delete'
+        })
+        if (data) {
+          close()
+          refreshGroupLists()
+        } else {
+          close()
+          message.error({ content: '删除失败', duration: 2 })
+        }
+      },
+      onCancel(close) {
+        close()
+      }
     })
-    data && refreshGroupLists()
   }
   const inputWrapClick = (e: any) => {
     // e.stopPropagation()

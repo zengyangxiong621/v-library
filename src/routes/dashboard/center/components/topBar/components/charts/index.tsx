@@ -5,8 +5,6 @@ import './index.less'
 
 import EveryItem from '../everyItem/index'
 
-import { useRequest } from 'ahooks'
-
 import { useFetch } from '../../../../../../../utils/useFetch'
 
 
