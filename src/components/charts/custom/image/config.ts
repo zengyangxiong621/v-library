@@ -101,22 +101,22 @@ const componentDefaultConfig = {
         {
           "name": "left",
           "displayName": "X轴坐标",
-          "value": 100
+          "value": 200
         },
         {
           "name": "top",
           "displayName": "Y轴坐标",
-          "value": 100
+          "value": 200
         },
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 100
+          "value": 754
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 100
+          "value": 398
         }
       ]
     },

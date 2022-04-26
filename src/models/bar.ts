@@ -560,20 +560,14 @@ export default {
           children: [], // TODO: 需要确定children从哪里来
         },
       })
-      console.log('-------------------')
-      console.log('payload', payload)
-      console.log('id', id)
-      console.log('children', children)
-      console.log('component', { ...payload, id: id, children: children })
-      console.log('-------------------')
       yield put({
         type: 'updateComponents',
         payload: { ...payload, id: id, children: children },
       })
-      itemData.id = id
+      // itemData.id = id
       yield put({
         type: 'addComponent',
-        payload: { final: itemData, insertId: insertId },
+        payload: { final: {...itemData, id: id}, insertId: insertId },
       })
 
 
@@ -957,6 +951,7 @@ export default {
       state: IBarState,
       { payload: { layer, config } }: any,
     ) {
+      debugger
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
       if(state.isSupportMultiple) {

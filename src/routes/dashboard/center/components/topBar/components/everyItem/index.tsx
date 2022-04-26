@@ -13,11 +13,11 @@ import imageDefaultConfig from '../../../../../../../components/charts/custom/im
 
 const EveryItem = (props: any) => {
   const { data, dispatch } = props
+  const componentConfig = data.moduleName === 'wordCloud' ? textDefaultConfig : imageDefaultConfig
   const componentCreate = () => {
-    debugger
     dispatch({
       type: 'bar/createComponent',
-      payload: data.type === 'text' ? textDefaultConfig : imageDefaultConfig,
+      payload: componentConfig,
       itemData: data
     })
   }
