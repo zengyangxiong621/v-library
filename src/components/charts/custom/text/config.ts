@@ -191,7 +191,9 @@ const componentDefaultConfig = {
     {
       "name": "shadow",
       "displayName": "阴影",
-      "type": "shadow",
+      "type": 'collapse',
+      "hasSwitch": true,
+      "defaultExpand": true,
       "value": [
         {
           "name": "show",
