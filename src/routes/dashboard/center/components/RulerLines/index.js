@@ -14,18 +14,21 @@ const RulerLines = ({ bar, dispatch }) => {
       // 竖
       if (event.clientX < document.querySelector('.home-left-wrap').getBoundingClientRect().width + 22) {
         bar.rulerLines.splice(index, 1)
+        dispatch({
+          type: 'bar/save',
+        })
       }
     }
     if (line.direction === 'vertical') {
+      // 横
       if (event.clientY < document.querySelector('.Header-wrap').getBoundingClientRect().height + 22) {
         bar.rulerLines.splice(index, 1)
+        dispatch({
+          type: 'bar/save',
+        })
       }
     }
-    console.log('-----------------------')
 
-    dispatch({
-      type: 'bar/save',
-    })
   }
   return (
     <div className="RulerLines" style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>

@@ -11,7 +11,7 @@ import componentLib from '../index'
 
 import {
   Tabs,
-  
+
 } from 'antd';
 import debounce from 'lodash/debounce';
 import { useFetch } from '../../../../../utils/useFetch'
@@ -24,7 +24,11 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
+  console.log('--------------------')
+  console.log('componentConfig', bar.componentConfig)
   const styleConfig = componentConfig.config
+  console.log('styleConfig', styleConfig)
+  console.log('--------------------')
   const interactionConfig = componentConfig.interaction || {
     mountAnimation:{},
     events:[]
