@@ -9,6 +9,8 @@ import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../.
 import { generateTreeData } from '../../../../../utils/sideBar'
 // import Text from '../Text'
 import Text from '../../../../../components/charts/custom/text'
+import CompImage from '../../../../../components/charts/custom/image'
+
 import {
   STYLE,
   DIMENSION,
@@ -552,6 +554,7 @@ const CustomDraggable
                     </div> : <>
                       <div data-id={ layer.id } style={ { width: '100%', height: '100%' } }>
                         <Text componentConfig={ component }/>
+                        <CompImage componentConfig={ component }/>
                       </div>
                     </>
                 }
