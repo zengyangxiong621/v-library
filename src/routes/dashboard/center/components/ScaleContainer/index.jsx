@@ -235,13 +235,43 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
       <div className="box">
         {
           isActive ? borderArr.map((item, index) => {
+            if (['r', 'l'].includes(item)) {
+              return (
+                <span
+                  onMouseDown={ handleMouseDown }
+                  className={ item }
+                  style={ { width: `${ 3 / bar.canvasScaleValue }px` } }
+                >
+                </span>
+              )
+            }
+            if (['t', 'b'].includes(item)) {
+              return (
+                <span
+                  onMouseDown={ handleMouseDown }
+                  className={ item }
+                  style={ { height: `${ 3 / bar.canvasScaleValue }px` } }
+                >
+                </span>
+              )
+            }
+            if (['br', 'bl', 'tr', 'tl', 'tc', 'bc', 'lc', 'rc'].includes(item)) {
+              return (
+                <span
+                  onMouseDown={ handleMouseDown }
+                  className={ item }
+                  style={ {
+                    width: `${ 7 / bar.canvasScaleValue }px`,
+                    height: `${ 7 / bar.canvasScaleValue }px`,
+                  } }
+                >
+                </span>
+              )
+            }
             return (
               <span
                 onMouseDown={ handleMouseDown }
                 className={ item }
-                style={ {
-                  // border: ['br', 'bl', 'tr', 'tl'].includes(item) ? `${ 1 / bar.canvasScaleValue }px solid #2482FF` : 'unset',
-                } }
               >
             </span>
             )

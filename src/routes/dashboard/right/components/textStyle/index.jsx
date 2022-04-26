@@ -86,7 +86,6 @@ const TextStyle = props => {
               defaultValue={fontSetting.fontFamily}
               style={{ width: 120 }}
               onChange={handleFontFamilyChange}
-              getPopupContainer={() => document.querySelector('.right-wrap')}
             >
               <Option value="Microsoft Yahei">微软雅黑</Option>
               <Option value="宋体">宋体</Option>

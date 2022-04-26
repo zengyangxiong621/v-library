@@ -102,7 +102,7 @@ const Color = props => {
 
   return (
     <Form
-      className="custom-form use-away"
+      className="custom-form"
       form={form}
       {...formItemLayout}
       colon={false}
@@ -113,7 +113,7 @@ const Color = props => {
           <div className="color-dis" style={{ background: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})` }} />
         </div>
         {displayColorPicker ? <div className="color-popover">
-          <div className="color-cover use-away" onClick={() => { setDisplayColorPicker(false) }} />
+          <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
           <SketchPicker color={color.rgb} onChange={(e) => { handleBgcChange(e) }} />
         </div> : null}
         <Form.Item noStyle name="hex">
