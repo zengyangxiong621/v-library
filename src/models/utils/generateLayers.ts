@@ -24,20 +24,23 @@ export const generateLayers = (
 
 const insertLayerById = ( target: any[], insertId: string, newLayer: any) => {
   let newTarget: any = []
-  const recursiveFn = (data: any, id: string) => {
-    for (let i = 0, len = data.length; i < len; i++) {
-      const item = data[i];
-      if (item.id === id) {
-        // data.unshift(newLayer)
-        data= [newLayer, ...data]
-        newTarget = data
-        break
-      } else if (item.modules && item.modules.length) {
-        recursiveFn(item.modules, id);
+  if (insertId.length) {
+    const recursiveFn = (data: any, id: string) => {
+      for (let i = 0, len = data.length; i < len; i++) {
+        const item = data[i];
+        if (item.id === id) {
+          // data.unshift(newLayer)
+          data= [newLayer, ...data]
+          newTarget = data
+          break
+        } else if (item.modules && item.modules.length) {
+          recursiveFn(item.modules, id);
+        }
       }
-    }
-  };
-  recursiveFn(target, insertId);
-
+    };
+    recursiveFn(target, insertId);
+  } else {
+    newTarget.push(newLayer)
+  }
   return newTarget
 };

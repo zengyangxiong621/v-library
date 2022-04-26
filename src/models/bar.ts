@@ -613,7 +613,7 @@ export default {
       if(payload.insertId && treeData.length) {
         insertId = payload.insertId
       } else {
-        insertId = treeData[0].id
+        insertId = treeData.length !== 0 ?  treeData[0].id : ''
       }
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
 
