@@ -340,7 +340,7 @@ const CusEvent = ({bar, dispatch ,...props }) => {
       {...formItemLayout}
       colon={false}
     >
-      <Collapse className="custom-collapse" activeKey={customEventCollapseActiveKey}>
+      <Collapse className="custom-collapse">
         <Panel header="自定义事件" key="1" extra={eventExtra()}>
           {tabpanes.length ? <Tabs
             hideAdd
