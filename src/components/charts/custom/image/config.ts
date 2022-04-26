@@ -1,7 +1,7 @@
 const componentDefaultConfig = {
   "id": '121', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "文字组件", //图层名称
+  "name": "图像组件", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
@@ -25,7 +25,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "text": "文字组件"
+        "text": "title"
       }
     ],
     "fields": [
@@ -139,7 +139,7 @@ const componentDefaultConfig = {
         {
           "name": "fontSize",
           "displayName": "",
-          "value": 32
+          "value": 64
         },
         {
           "name": "color",
@@ -191,9 +191,7 @@ const componentDefaultConfig = {
     {
       "name": "shadow",
       "displayName": "阴影",
-      "type": 'collapse',
-      "hasSwitch": true,
-      "defaultExpand": true,
+      "type": "shadow",
       "value": [
         {
           "name": "show",
