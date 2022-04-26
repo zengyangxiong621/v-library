@@ -605,7 +605,7 @@ export default {
     initTreeData(state: IBarState, { payload }: any) {
       payload.forEach((layer: any) => {
         layer.cancel = false
-        layer.disabled = false
+        // layer.disabled = false
       })
       return { ...state, treeData: payload }
     },

@@ -89,7 +89,7 @@ const Left = ({ dispatch, bar, operate }) => {
         if (item.key === 'reName') {
           return {
             ...item,
-            disabled: true,
+            // disabled: true,
           }
         }
         return item

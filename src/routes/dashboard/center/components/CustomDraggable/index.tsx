@@ -410,21 +410,21 @@ const CustomDraggable
     // 1    2
     if(Number(dblComponentTimes) < currentTimes.current) {
       layer.cancel = true
-      layer.disabled = true
+      // layer.disabled = true
       if(COMPONENTS in layer) {
         (layer[COMPONENTS] as any).forEach((item: any) => {
           item.cancel = false
-          item.disabled = false
+          // item.disabled = false
         })
       }
     }
     if(!dblComponentTimes) {
       layer.cancel = true
-      layer.disabled = true
+      // layer.disabled = true
       if(COMPONENTS in layer) {
         (layer[COMPONENTS] as any).forEach((item: any) => {
           item.cancel = false
-          item.disabled = false
+          // item.disabled = false
         })
       }
       localStorage.setItem('dblComponentTimes', '1')
