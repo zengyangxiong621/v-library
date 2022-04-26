@@ -464,12 +464,12 @@ export default {
         body: payload,
       })
       yield put({
-        type: 'updateTree',
-        payload: layers,
-      })
-      yield put({
         type: 'updateComponents',
         payload: components,
+      })
+      yield put({
+        type: 'updateTree',
+        payload: layers,
       })
     },
     // 锁定
@@ -559,16 +559,23 @@ export default {
           children: [], // TODO: 需要确定children从哪里来
         },
       })
-
+      console.log('-------------------')
+      console.log('payload', payload)
+      console.log('id', id)
+      console.log('children', children)
+      console.log('component', { ...payload, id: id, children: children })
+      console.log('-------------------')
       yield put({
         type: 'updateComponents',
         payload: { ...payload, id: id, children: children },
       })
-
+      itemData.id = id
       yield put({
         type: 'addComponent',
         payload: { final: itemData, insertId: insertId },
       })
+
+
     },
     * updateComponent({ payload }: any, { call, put, select }: any): any {
       const state: any = yield select((state: any) => state)
@@ -610,11 +617,13 @@ export default {
         insertId = treeData.length !== 0 ? treeData[0].id : ''
       }
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
+      console.log('newLayers', newLayers)
       return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
       state.components = state.components.concat(payload)
+      console.log('state.components', state.components)
       return { ...state }
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {
@@ -636,7 +645,6 @@ export default {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
-      state.key = state.selectedComponentOrGroup.map((layer: ILayerGroup | ILayerComponent) => layer.id)
 
       state.isAreaChoose = state.selectedComponentOrGroup.length > 0
       state.selectedComponentIds = layerComponentsFlat(
@@ -788,6 +796,8 @@ export default {
           }
         })
       }
+      state.key = state.selectedComponentOrGroup.map((layer: ILayerGroup | ILayerComponent) => layer.id)
+
       return {
         ...state,
       }

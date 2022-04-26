@@ -296,6 +296,7 @@ const Center = ({ bar, dispatch }: any) => {
             style={ { width: '100%', height: '100%' } }
           >
             <div
+              className="use-away"
               style={ {
                 width: '100%',
                 height: '100%',
