@@ -369,6 +369,12 @@ const CustomDraggable
       type: 'bar/updateComponent',
       payload: bar.selectedComponents,
     })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        key: bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id),
+      },
+    })
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
     clearTimeout(clickTimer.current)

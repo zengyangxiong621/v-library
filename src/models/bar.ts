@@ -343,7 +343,6 @@ export default {
           },
         })
       } catch(e) {
-        console.log('e', e)
         return e
       }
     },
@@ -357,7 +356,6 @@ export default {
       })
     },
     * group({ payload }: any, { call, put, select }: any): any {
-      console.log('成组')
       const bar: any = yield select(({ bar }: any) => bar)
       const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key)
       yield put({
@@ -374,7 +372,6 @@ export default {
     * cancelGroup({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar)
       const newTree = cancelGroup(bar.treeData, bar.key)
-      console.log('取消成组的新树', newTree)
       yield put({
         type: 'update',
         payload: newTree,
@@ -397,7 +394,6 @@ export default {
       })
     },
     * placedTop({ payload }: any, { call, put, select }: any): any {
-      console.log('树的问题')
       const bar = yield select(({ bar }: any) => bar)
       const newTree = placeTop(bar.treeData, bar.key)
       yield put({
@@ -406,7 +402,6 @@ export default {
       })
     },
     * placedBottom({ payload }: any, { call, put, select }: any): any {
-      console.log('置底了')
       const bar = yield select(({ bar }: any) => bar)
       const newTree = placeBottom(bar.treeData, bar.key)
       yield put({
@@ -479,7 +474,6 @@ export default {
     },
     // 锁定
     * lock({ payload }: any, { call, put }: any): any {
-      console.log('锁定的payload.value', payload)
       // 前端锁定
       yield put({
         type: 'frontLock',
@@ -494,7 +488,6 @@ export default {
     },
     // 隐藏 / 显示
     * hidden({ payload }: any, { call, put }: any): any {
-      console.log('锁定的payload.value', payload)
       // 前端隐藏
       yield put({
         type: 'frontHidden',
@@ -521,7 +514,6 @@ export default {
       yield put({
         type: 'clearLayersSelectedStatus',
       })
-      console.log('什么东西1')
       yield put({
         type: 'setSelectedKeys',
         payload,
@@ -531,7 +523,6 @@ export default {
       })
     },
     * selectLayers({ payload }: any, { call, put }: any): any {
-      console.log('什么东西2')
       yield put({
         type: 'clearLayersSelectedStatus',
       })
@@ -618,8 +609,6 @@ export default {
         insertId = treeData.length !== 0 ?  treeData[0].id : ''
       }
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
-
-      console.log('新增后的treeData', state.treeData)
       return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
@@ -804,7 +793,6 @@ export default {
     // 选中节点时，保存住整个node对象
     setLayers(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup = payload
-      console.log('什么东西的payload', payload)
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
@@ -979,7 +967,6 @@ export default {
         state.selectedComponentOrGroup = [ layer ]
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
-      state.key = state.selectedComponentOrGroup.map((item) => item.id)
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup,
       )
@@ -1002,7 +989,6 @@ export default {
     clearAllStatus(state: IBarState, payload: any) {
       if(!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true
-        console.log('不清除')
         return {
           ...state,
         }
@@ -1023,7 +1009,6 @@ export default {
       // todo 选区的时候会点击到这里
       state.scaleDragData.style.display = 'none'
       state.key = []
-      console.log('state.key', state.key)
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
       return { ...state }
     },
@@ -1047,7 +1032,6 @@ export default {
       const interactionConfig = state.groupConfig.find((config: any) => config.name === INTERACTION)
       hideDefaultConfig.value = (hideDefault || false)
       opacityConfig.value = (opacity || 100)
-      console.log('interaction', interaction)
       interactionConfig.value = {
         ...interactionConfig.value,
         ...interaction,
@@ -1068,7 +1052,6 @@ export default {
             break
         }
       })
-      console.log('state.groupConfig', state.groupConfig)
       return { ...state, ...otherPayload }
     },
     setAlignment(state: IBarState, { payload }: any) {

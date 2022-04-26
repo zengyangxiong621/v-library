@@ -11,8 +11,8 @@ const defaultOptions: any = {
 export const myFetch = (
   url: string,
   options: object,
-  // baseUrl: string = 'http://10.202.233.230:9572',
-  baseUrl: string = "http://50423059pd.zicp.vip"
+  baseUrl: string = 'http://10.202.226.250:9572',
+  // baseUrl: string = "http://50423059pd.zicp.vip"
 ) => {
   const finalOptions = {
     ...defaultOptions,
