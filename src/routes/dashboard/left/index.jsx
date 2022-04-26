@@ -184,7 +184,6 @@ const Left = ({ dispatch, bar, operate }) => {
         key: temp,
       },
     })
-
     // setSelected(curKey)
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     dispatch({

@@ -38,9 +38,15 @@ const AddDataSource = (props: any) => {
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await addForm.validateFields(['port', 'username', 'password', 'host', 'database'])
+    // 此处为了先完成演示
     const finalParams = {
-      ...values,
-      dataBaseType: curDataType
+      type: curDataType === 'MYSQL' ? 'RDBMS' : 'ELASTIC_SEARCH',
+      rdbmsSourceConfig: {
+        ...values,
+        dataBaseType: curDataType,
+      },
+      // 此处为了先完成演示
+      elasticsearchConfig: {}
     }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks

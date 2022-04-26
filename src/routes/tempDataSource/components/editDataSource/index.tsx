@@ -78,10 +78,20 @@ const EditDataSource = (props: any) => {
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await editForm.validateFields(['port', 'username', 'password', 'host', 'database'])
+    // 此处为了先完成演示
     const finalParams = {
-      ...values,
-      dataBaseType: dataSourceType
+      type: dataSourceType === 'MYSQL' ? 'RDBMS' : 'ELASTIC_SEARCH',
+      rdbmsSourceConfig: {
+        ...values,
+        dataBaseType: dataSourceType,
+      },
+      // 此处为了先完成演示
+      elasticsearchConfig: {}
     }
+    // const finalParams = {
+    //   ...values,
+    //   dataBaseType: dataSourceType
+    // }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [, data] = await useFetch('/visual/datasource/connectTest', {

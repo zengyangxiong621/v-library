@@ -14,7 +14,7 @@ const AppCard = (props: any) => {
     openMoveGroupModal, changeFabuModal, refreshList, history } = props
 
   // 后端返回的photoUrl为空，则使用默认图片
-  const picUrl = photoUrl ?? require('../../../../assets/images/模板默认背景图.png')
+  const picUrl = photoUrl || require('../../../../assets/images/模板默认背景图.png')
 
   const [canEdit, setCanEdit] = useState(false)
   const [appName, setAppName] = useState(name)
