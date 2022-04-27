@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 // react-beautiful-dnd
 // ant
 import { connect } from 'dva'
@@ -6,16 +6,12 @@ import './index.less'
 import { Layout } from 'antd'
 import { withRouter } from 'dva/router'
 
-import { useClickAway } from 'ahooks'
-
 import CustomHeader from './components/header/index'
 import Left from './left'
 import Center from './center'
 import Right from './right'
 import CenterHeaderBar from './center/components/topBar/index'
 import ChooseArea from './center/components/ChooseArea'
-import * as React from 'react'
-import { init } from 'echarts'
 
 const { Header } = Layout
 

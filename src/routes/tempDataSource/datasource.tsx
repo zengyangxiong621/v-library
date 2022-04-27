@@ -53,7 +53,7 @@ const DataSource = (props: any) => {
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [err, data] = await useFetch('/visual/datasource/list', {
+    const [, data] = await useFetch('/visual/datasource/list', {
       body: JSON.stringify(differentParams)
     })
     if (data) {

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import './index.less'
 import { withRouter } from 'dva/router'
 
@@ -9,16 +9,39 @@ import NavigationItem from '../navigationItem/index'
 
 
 
-const Header = props => {
+const Header = (props: any) => {
+
+  // console.log(history);
+  // console.log(location);
+
   // const { showWhichBar } = props
   const [isRename, setIsRename] = useState(false)
   const [activeIcon, setActiveIcon] = useState(false)
+
+  const appNameInputRef = useRef<any>()
+
+
   const toBack = () => {
     // 返回首页
     props.history.back()
   }
+  // 修改应用名称
+  const changeAppName = (e: any) => {
+    e.stopPropagation()
+    setIsRename(false)
+  }
+  // 显示修改应用名称的input
+  const showChangeNameInput = () => {
+    setIsRename(true)
+    setTimeout(() => {
+      appNameInputRef.current!.focus({
+        cursor: 'all'
+      })
+    }, 4);
+
+  }
   // 获取当前活跃的按钮
-  const getActiveIcon = (icon) => {
+  const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
     if (icon === 'zujian') {
       props.showWhichBar(icon)
@@ -34,8 +57,13 @@ const Header = props => {
           onClick={() => toBack()} />
         {
           isRename ?
-            <Input className='left-input' />
-            : isRename || '未命名'
+            <Input className='left-input'
+              // value={}
+              ref={appNameInputRef}
+              onBlur={(e) => changeAppName(e)}
+            />
+            :
+            <span className='appName' onDoubleClickCapture={showChangeNameInput}>未命名</span>
         }
       </div>
       <div className='center'>
