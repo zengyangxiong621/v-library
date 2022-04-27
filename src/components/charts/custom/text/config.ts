@@ -204,7 +204,7 @@ const componentDefaultConfig = {
         {
           "name": "shadow",
           "displayName": "外阴影",
-          "type": "outsideShadow",
+          "type": "boxShadow",
           "value": {
             "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
             "vShadow": 0, // 垂直阴影的位置
