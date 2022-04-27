@@ -23,10 +23,11 @@ export interface ILayerComponent {
   name: string,
   isLock: boolean, // 是否锁定
   isShow: boolean, // 是否展示
-  selected: boolean,
-  hover: boolean,
+  selected?: boolean,
+  hover?: boolean,
   cancel: boolean,
   disabled: boolean,
+  singleShowLayer?: boolean
 }
 
 export interface ILayerGroup {
@@ -35,12 +36,13 @@ export interface ILayerGroup {
   isLock: boolean, // 是否锁定
   isShow: boolean, // 是否展示
   collapse: boolean, // 是否展开
-  selected: boolean,
-  hover: boolean,
+  selected?: boolean,
+  hover?: boolean,
   cancel: boolean,
   disabled: boolean,
   components: Array<ILayerComponent>,
   children: Array<ILayerComponent>,
+  singleShowLayer?: boolean
 }
 
 export interface IConfig {

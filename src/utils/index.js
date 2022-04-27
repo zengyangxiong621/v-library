@@ -350,12 +350,12 @@ export const layerComponentsFlat = (arr) => {
   }, [])
 }
 
-export function throttle(fn, delay) {
+export function throttle (fn, delay) {
   let timer
   return function (...args) {
-    if(!timer){
-      timer=setTimeout(()=>{
-        timer=null
+    if (!timer) {
+      timer = setTimeout(() => {
+        timer = null
         fn.apply(this, args)
       }, delay)
     }
@@ -419,8 +419,16 @@ export const deepForEach = (layers, cb) => {
       deepForEach(layer[COMPONENTS], cb)
     }
   })
+  return layers
 }
-
+export const deepFilterAttrs = (layers, attrs) => {
+  deepForEach(layers, (layer) => {
+    attrs.forEach(attr => {
+      delete layer[attr]
+    })
+  })
+  return layers
+}
 export const setComponentDimension = (dimensionConfig, {
   x = null,
   y = null,

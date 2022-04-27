@@ -9,7 +9,7 @@ import {
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
-  deepClone
+  deepClone, deepFilterAttrs,
 } from '../utils'
 
 import {
@@ -329,15 +329,22 @@ export default {
     },
     * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
-        const { layers, components, dashboardConfig } = yield http({
+        let { layers, components, dashboardConfig } = yield http({
           url: `/visual/application/dashboard/detail/${ payload }`,
           method: 'get',
         })
-        const extendedSomeAttrLayers = addSomeAttrInLayers(layers)
+        // let extendedSomeAttrLayers = addSomeAttrInLayers(layers)
+        // extendedSomeAttrLayers = deepFilterAttrs(extendedSomeAttrLayers, [ 'selected' ])
+        layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+          layer.singleShowLayer = false
+          delete layer.selected
+          delete layer.hover
+        })
+        console.log('layerslayerslayerslayerslayers', layers)
         yield put({
           type: 'save',
           payload: {
-            treeData: extendedSomeAttrLayers,
+            treeData: layers,
             components,
             dashboardId: payload,
             pageConfig: dashboardConfig,
@@ -555,7 +562,7 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
-      
+
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
@@ -579,7 +586,7 @@ export default {
       // itemData.id = id
       yield put({
         type: 'addComponent',
-        payload: { final: {...itemData, id: id}, insertId: insertId },
+        payload: { final: { ...itemData, id: id }, insertId: insertId },
       })
 
 

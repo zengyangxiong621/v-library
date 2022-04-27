@@ -32,7 +32,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
       dimensionConfig.value.find((item: any) => item.name === 'top').value = y
     },
     position: props.position,
-    nodeRef: nodeRef
+    nodeRef: nodeRef,
   }))
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
     // dimensionConfig.value.find((item: any) => item.name === 'left').value = data.x
@@ -40,10 +40,8 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
     onStop(ev, data)
   }
   return (
-    <div>
-      <Draggable ref={ draggableRef } onStop={ handleStop } { ...props }>
-      </Draggable>
-    </div>
+    <Draggable ref={ draggableRef } onStop={ handleStop } { ...props }>
+    </Draggable>
   )
 }
 export default connect(({ bar }: any) => ({

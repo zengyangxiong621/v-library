@@ -14,7 +14,7 @@ class Text extends Component<Props, State> {
   render () {
     // const { dataStatic } = this.props.config
     // const { data } = dataStatic
-    
+
     const componentConfig = this.props.componentConfig || componentDefaultConfig
     const {config, staticData} = componentConfig
 
@@ -37,7 +37,7 @@ class Text extends Component<Props, State> {
     return (
       <div style={ {width: '100%', height: '100%', ...style }} className="component-image">
         { staticData.data.map((item:any, i:any) => (
-          <img key={'../temp.png'} src={'../temp.png'} style={{width: '100%', height: '100%' }}></img>
+          <img key={ '../temp.png' } src={ '../temp.png' } style={ { width: '100%', height: '100%' } }/>
         ))}
       </div>
     )
