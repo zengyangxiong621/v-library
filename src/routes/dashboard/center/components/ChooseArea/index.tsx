@@ -25,7 +25,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       if(![ 'c-canvas', 'draggable-wrapper' ].includes(e.target.className)) {
         return
       }
-      const reactDraggableDomList: any = document.querySelectorAll('.draggable-container>.c-custom-draggable>div>.react-draggable')
+      const reactDraggableDomList: any = document.querySelectorAll('.draggable-container>.c-custom-draggable>.react-draggable')
       const reactDraggableDomPosition = [ ...reactDraggableDomList ].map(item => {
         const domInfo = item.getBoundingClientRect()
         return {
