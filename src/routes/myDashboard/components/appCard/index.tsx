@@ -41,7 +41,7 @@ const AppCard = (props: any) => {
       setCanEdit(false)
       return
     }
-    const [err, data] = await useFetch('/visual/application/updateAppName', {
+    const [, data] = await useFetch('/visual/application/updateAppName', {
       body: JSON.stringify({
         id,
         name: appName

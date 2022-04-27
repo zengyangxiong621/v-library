@@ -28,7 +28,7 @@ const Charts = (props: any) => {
   useEffect(() => {
     const init = async () => {
       const getData = async (type: string) => {
-        const { data }: any = await useFetch('/visual/module-manage/queryModuleList', {
+        const [, data]: any = await useFetch('/visual/module-manage/queryModuleList', {
           body: JSON.stringify({
             type: [0],
             subType: type,

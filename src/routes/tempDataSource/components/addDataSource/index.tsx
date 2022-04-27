@@ -79,12 +79,16 @@ const AddDataSource = (props: any) => {
       body: JSON.stringify(finalParams)
     })
     setGetDBListLoading(false)
-    // data 只是个数组，处理成select需要的形式
-    const formatData = data.map((item: any) => ({
-      label: item,
-      value: item
-    }))
-    setDataBaseList(formatData)
+    if (Array.isArray(data) && data.length) {
+      // data 只是个数组，处理成select需要的形式
+      const formatData: any = data.map((item: any) => ({
+        label: item,
+        value: item
+      }))
+      setDataBaseList(formatData)
+    } else {
+      message.error({ content: '获取数据库列表失败', duration: 2 })
+    }
   }
   /**
    * description: 新增数据源
@@ -196,7 +200,7 @@ const AddDataSource = (props: any) => {
         }
       },
       onDrop(e: any) {
-        const {name} = e.dataTransfer.files[0]
+        const { name } = e.dataTransfer.files[0]
         const fileSuffixArr = fileSuffix?.split(',')
         // 考虑 cdb.la...yer.json 这个文件名
         const lastPointIndex = name.lastIndexOf('.')

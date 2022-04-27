@@ -21,6 +21,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   const [sortMap, setSortMap] = useState<any>({
     updated_time: false
   })
+  const [inputValue, setInputValue] = useState('')
 
   // 获取模板列表数据的方法
   const getDataDispatch = (finalBody: any) => {
@@ -45,14 +46,24 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   const addDashboard = () => {
     history.push('/template')
   }
+  // 搜索框的值改变
+  const changeSearchValue = (e: any) => {
+    setInputValue(e.target.value)
+  }
+  // 当切换任意分组时，都需要清除输入框里的值
+  const clearSearchInputState = () => {
+    setInputValue('')
+  }
   // 搜索应用
-  const search = (value: any) => {
+  const search = () => {
+    const groupId = dashboardManage.curSelectedGroup[0] === '-1' ? null : dashboardManage.curSelectedGroup[0]
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      name: value,
-      map: sortMap
+      name: inputValue,
+      map: sortMap,
+      groupId,
     }
     getDataDispatch(finalBody)
   }
@@ -78,7 +89,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     <div className='MyApplication-wrap'>
       <div className="left">
         {/* 左侧树 */}
-        <LeftTree />
+        <LeftTree clearSearchInputState={clearSearchInputState} />
       </div>
       <div className="right">
         <div className="right-header">
@@ -90,6 +101,8 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
             </div>
             <div className="search-wrap">
               <Input.Search
+                value={inputValue}
+                onChange={changeSearchValue}
                 placeholder="搜索"
                 className='search'
                 allowClear
