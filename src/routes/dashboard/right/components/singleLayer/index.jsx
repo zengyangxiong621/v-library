@@ -24,11 +24,11 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
-  console.log('--------------------')
-  console.log('componentConfig', bar.componentConfig)
+  // console.log('--------------------')
+  // console.log('componentConfig', bar.componentConfig)
   const styleConfig = componentConfig.config
-  console.log('styleConfig', styleConfig)
-  console.log('--------------------')
+  // console.log('styleConfig', styleConfig)
+  // console.log('--------------------')
   const interactionConfig = componentConfig.interaction || {
     mountAnimation:{},
     events:[]

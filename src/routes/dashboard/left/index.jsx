@@ -256,6 +256,7 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   //
   const onDrop = info => {
+    console.log('info', info);
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
     const dropPos = info.node.pos.split('-')
@@ -279,17 +280,24 @@ const Left = ({ dispatch, bar, operate }) => {
       arr.splice(index, 1)
       dragObj = item
     })
+
+    // if (!info.dropToGap) {
+    //   // Drop on the content
+    //   loop(data, dropKey, item => {
+    //     item.children = item.children || [];
+    //     // where to insert 示例添加到头部，可以是随意位置
+    //     item.children.unshift(dragObj);
+    //   });
+    // } else
+
     if (
-      (info.node.props.modules || []).length > 0 && // Has modules
-      info.node.props.expanded && // Is expanded
-      dropPosition === 1 // On the bottom gap
+      (info.node.modules || []).length > 0 &&
+      info.node.props.expanded
+      // && dropPosition === 1 // On the bottom gap
     ) {
       loop(data, dropKey, item => {
         item.modules = item.modules || []
-        // where to insert 示例添加到头部，可以是随意位置
         item.modules.unshift(dragObj)
-        // in previous version, we use item.components.push(dragObj) to insert the
-        // item to the tail of the components
       })
     } else {
       let ar
@@ -310,6 +318,7 @@ const Left = ({ dispatch, bar, operate }) => {
       payload: data,
     })
   }
+
 
   // 获取子组件传过来的X，Y值
   const [isShowRightMenu, setIsShowRightMenu] = useState(false)
@@ -362,7 +371,8 @@ const Left = ({ dispatch, bar, operate }) => {
             treeData={bar.treeData}
             selectedKeys={bar.key}
             titleRender={(nodeData) => {
-              return (<div>
+              // title 置为空，覆盖antTree 默认的title
+              return (<div title=''>
                 <EveryTreeNode
                   {...nodeData}
                   isExpand={isExpand}

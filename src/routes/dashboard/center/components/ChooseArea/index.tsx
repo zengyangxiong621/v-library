@@ -22,7 +22,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
 
   useEffect(() => {
     document.onmousedown = (e: any) => {
-      console.log('选区mouseDown')
       if(![ 'c-canvas', 'draggable-wrapper' ].includes(e.target.className)) {
         return
       }
