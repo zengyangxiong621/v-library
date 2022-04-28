@@ -67,7 +67,7 @@ export function groupMultipleComponents (arr, sourceIds, targetId) {
     displayName: '例子',
     className: 'draggable-item',
     active: false,
-    disabled: false,
+    // disabled: false,
     isGroup: true,
     position: {
       x: 0,
@@ -270,7 +270,7 @@ export const group = (treeData, selectedNodes, lastRightClickKey) => {
     displayName: '例子',
     className: 'draggable-item',
     active: false,
-    disabled: false,
+    // disabled: false,
     isGroup: true,
     position: {
       x: 0,

@@ -450,7 +450,6 @@ const CustomDraggable
     //   type: 'bar/save',
     // })
   }
-  console.log('newTreeDATA', treeData)
   // let copyTreeData = deepClone(treeData).reverse()
   return (
     <div className="c-custom-draggable">

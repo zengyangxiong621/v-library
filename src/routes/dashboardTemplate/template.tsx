@@ -28,6 +28,8 @@ const DashboardTemplate = (props: any) => {
   // 不选择分组的时候，默认选择未分组,未分组的groupId是 0 <string>
   const [selectedGroup, setSelectedGroup] = useState('0')
   const [appName, setAppName] = useState('')
+  // 点击 推荐/我的 模板时传过来的模板id
+  const [templateId, setTemplateId] = useState<string>('')
 
   const GetGroups = async () => {
     const [, data] = await useFetch(`/visual/application/queryGroupList?spaceId=${spaceId}`, {
@@ -44,13 +46,14 @@ const DashboardTemplate = (props: any) => {
     history.back()
   }
 
-  // 新建应用弹窗
-  const addTemplate = () => {
+  // 新建应用弹窗 1.点击空白模板
+  // 2.通过已有模板创建(带模板id的)
+  const addTemplate = (mobanId?: string) => {
     setShowCreateAppModal(true)
     // 弹窗出现，发送请求
+    // 有的话再设置
+    mobanId && setTemplateId(mobanId)
     GetGroups()
-    //TODO 携带id 跳转至 新建模板 页面
-    // history.push('/')
   }
   // 确认新建
   const createApp = async () => {
@@ -62,6 +65,7 @@ const DashboardTemplate = (props: any) => {
       ...values,
       groupId: selectedGroup
     }
+    // templateId && (finalBody.templateId = templateId)
     const [, data] = await useFetch('/visual/application/createBlankApp', {
       body: JSON.stringify(finalBody)
     })
@@ -83,7 +87,6 @@ const DashboardTemplate = (props: any) => {
   }
   // 手动选择分组
   const groupSelectSelect = (val: any) => {
-    console.log('va;', val);
     setSelectedGroup(val)
   }
 
@@ -105,11 +108,10 @@ const DashboardTemplate = (props: any) => {
           <span className='text'>取消创建</span>
         </header>
         <div className="search-wrap">
-          <Input placeholder="搜索"
+          <Input.Search placeholder="搜索"
             className='search'
             allowClear
             maxLength={40}
-            suffix={<SearchOutlined />}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onPressEnter={search}
@@ -131,7 +133,9 @@ const DashboardTemplate = (props: any) => {
                 <Col span={6} >
                   <TemplateCard {...item}
                     curIndex={index}
-                    getCurImgIndex={getCurImgIndex} />
+                    getCurImgIndex={getCurImgIndex}
+                    addTemplate={addTemplate}
+                  />
                 </Col>
               ))
             }
@@ -158,6 +162,7 @@ const DashboardTemplate = (props: any) => {
       {/* 创建应用弹窗 */}
       <DarkModal
         title='创建应用'
+        className="createApp-modal"
         destroyOnClose={true}
         getContainer={false}
         visible={showCreateAppModal}
@@ -169,7 +174,7 @@ const DashboardTemplate = (props: any) => {
           </div>
         ]}
         style={{
-          top: '25%'
+          top: '25%',
         }}
       >
         <Form
