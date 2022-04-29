@@ -3,7 +3,7 @@ import './index.less'
 import zhCN from 'antd/es/locale/zh_CN'
 
 import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from 'antd'
-import { PlusOutlined, SearchOutlined, ExclamationCircleFilled } from '@ant-design/icons'
+import { PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 
 import AddDataSource from './components/addDataSource'
 import EditDataSource from './components/editDataSource'
@@ -45,7 +45,7 @@ const DataSource = (props: any) => {
   //给个默认参数，初始化和刷新时方便一些
   const defaultParams: TDataSourceParams = {
     spaceId: 1,
-    type: null,
+    type: dataSourceType,
     name: null,
     ...pageInfo,
     map: tableMap,
@@ -160,26 +160,30 @@ const DataSource = (props: any) => {
   }
   // 表格排序
   const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
-    // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
     // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
-    const { field, order } = sorter
-    console.log('sort', order);
     if (action === 'sort') {
-      // setTableMap({
-      //   [field]: order
-      // })
+      const { field, order } = sorter
+      console.log('sort', order);
+      // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
+      // 但是后端只接受 true 或 false
+      if (order === undefined) return
+      //@mark 因为后端的某些原因，后端传过来的是updateTime,但是排序接受的是update_time    本表中只有一个排序字段，不需要做映射了
+      let sortKye: any = field === 'updatedTime' ? 'updated_time' : null
+      // 更新 tableMap, 在别处发请求时会带上当前排序条件
+      setTableMap({
+        [sortKye]: order
+      })
       // 发送请求
-      // const finalParams: TDataSourceParams = {
-      //   spaceId: 1,
-      //   type: dataSourceType,
-      //   name: inputValue === '' ? null : inputValue,
-      //   ...pageInfo,
-      //   map: {
-      //     [field]: order
-      //   },
-      // }
-      // TODO 等后端做好排序，解封即可
-      // getTableData(finalParams)
+      const finalParams: TDataSourceParams = {
+        spaceId: 1,
+        type: dataSourceType,
+        name: inputValue === '' ? null : inputValue,
+        ...pageInfo,
+        map: {
+          [sortKye]: order === "ascend"
+        },
+      }
+      getTableData(finalParams)
     }
   }
   // 表格分页配置
@@ -232,11 +236,12 @@ const DataSource = (props: any) => {
     },
     {
       title: '修改时间',
-      key: 'updatedAt',
+      key: 'updatedTime',
       sorter: true,
       width: 300,
       ellipsis: true,
-      dataIndex: 'updatedAt',
+      showSorterTooltip: false,
+      dataIndex: 'updatedTime',
       render: (time: any, data: any) => {
         // const a = new Date(time)
         return (
@@ -267,13 +272,15 @@ const DataSource = (props: any) => {
     <ConfigProvider locale={zhCN}>
       <div className='DataSource-wrap'>
         <div className='title'>我的数据</div>
-        <header className='header'>
+        <header className='header' style={{
+          background: '#171a24'
+        }}>
           <div className='custom-btn' onClick={addDataSource}>
             <PlusOutlined style={{ fontSize: '12px', marginRight: '2px' }} />
             <span>添加数据源</span>
           </div>
           <div className='search'>
-            <Select style={{ minWidth: '120px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部类型" onChange={selectChange}>
+            <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部类型" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
                   return (
@@ -282,19 +289,19 @@ const DataSource = (props: any) => {
                 })
               }
             </Select>
-            <Input placeholder="搜索"
+            <Input.Search placeholder="搜索"
               allowClear
               maxLength={40}
-              suffix={<SearchOutlined />}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onPressEnter={searchByType}
+              onSearch={searchByType}
             />
           </div>
         </header>
         <section className='table-wrap'>
           <Table
             scroll={{ y: 560 }}
+            sortDirections={['ascend', 'descend']}
             rowClassName='customRowClass'
             loading={tableLoading}
             columns={columns}
@@ -329,10 +336,6 @@ const selectOptions = [
     key: null,
   },
   {
-    name: 'RDBMS',
-    key: 'RDBMS',
-  },
-  {
     name: 'API',
     key: 'RESTFUL_API',
   },
@@ -347,6 +350,14 @@ const selectOptions = [
   {
     name: 'EXCEL',
     key: 'EXCEL',
+  },
+  {
+    name: 'RDBMS',
+    key: 'RDBMS',
+  },
+  {
+    name: 'ELASTIC_SEARCH',
+    key: 'ELASTIC_SEARCH'
   }
 ]
 export default memo(DataSource)

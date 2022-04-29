@@ -6,11 +6,11 @@ enum dataSourceType {
   EXCEL,
 }
 
-enum MapParams {
-  ascend,
-  descend,
-  default
-}
+// enum MapParams {
+//   ascend,
+//   descend,
+//   default
+// }
 
 
 export type TDataSourceParams = {
@@ -20,7 +20,7 @@ export type TDataSourceParams = {
   pageNo: string | number;
   pageSize: string | number;
   map?: {
-    [key: string]: keyof typeof MapParams
+    [x: string]: boolean
   }
 };
 
