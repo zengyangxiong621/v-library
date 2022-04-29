@@ -12,21 +12,28 @@ const { Dragger } = Upload
 
 
 const AddDataSource = (props: any) => {
+  // TODO 暂无确定的取得spaceId的方案
+  const spaceId = 1
+
   const [addForm] = Form.useForm()
   const { visible, changeShowState, refreshTable } = props
 
   const [curDataType, setCurDataType] = useState('')
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
+  const [getDBListLoading, setGetDBListLoading] = useState(false)
+  // 通过后台获取到的索引列表
+  const [indexList, setIndexList] = useState([])
+  const [getIndexListLoading, setGetIndexListLoading] = useState(false)
   // 上传的文件在后端存储的地址
   const [fileUrl, setFileUrl] = useState('')
   // 数据库连接是否测试成功
   const [isConnect, setIsConnect] = useState(false)
-
   const [loading, setLoading] = useState()
-  const [getDBListLoading, setGetDBListLoading] = useState(false)
   const [btnDisabled, setBtnDisabled] = useState(true)
   const [testConnectLoading, setTestConnectLoading] = useState(false)
+
+  const [indexName, setIndexName] = useState('')
 
   // 获取到最新的curDataType
   useEffect(() => {
@@ -77,7 +84,7 @@ const AddDataSource = (props: any) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [, data] = await useFetch('/visual/datasource/queryDataBaseList', {
       body: JSON.stringify(finalParams)
-    })
+    }, { errorInfo: '获取数据库列表失败' })
     setGetDBListLoading(false)
     if (Array.isArray(data) && data.length) {
       // data 只是个数组，处理成select需要的形式
@@ -86,21 +93,45 @@ const AddDataSource = (props: any) => {
         value: item
       }))
       setDataBaseList(formatData)
-    } else {
-      message.error({ content: '获取数据库列表失败', duration: 2 })
+    }
+  }
+  /**
+   * description: 获取可选择的索引列表
+   */
+  const getIndexList = async () => {
+    // 通过表单校验获取es连接地址
+    const values: any = await addForm.validateFields(['url'])
+    setGetIndexListLoading(true)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [, data] = await useFetch('/visual/datasource/queryIndices', {
+      body: JSON.stringify(values)
+    }, {
+      errorInfo: '索引列表获取失败'
+    })
+    setGetIndexListLoading(false)
+    if (Array.isArray(data) && data.length) {
+      const formatData: any = data.map(item => ({ label: item, value: item }))
+      setIndexList(formatData)
     }
   }
   /**
    * description: 新增数据源
    */
   const handleOk = async () => {
+    // es 数据源类型时，如果没有index名，直接return
+    if(!indexName) {
+      message.warning({content:'请先选择索引名称', duration: 2})
+      return
+    }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await addForm.validateFields()
+    console.log('最终的表单参数', values);
     const { name, type, description, ...rest } = values
     // 判断当前是否是数据库
     const dataBaseOrNormal = dataTypeClassify.get(curDataType)
     let finalType = type
     let finalSourceConfig = rest
+    console.log('剩余参数', rest);
     //如果是数据库类型的数据源的话，
     //-- 先判断数据库测试连接是否成功
     //-- 要加上 dataBaseType 字段
@@ -122,10 +153,15 @@ const AddDataSource = (props: any) => {
       finalSourceConfig = {}
       finalSourceConfig.fileUrl = fileUrl
     }
+    if (dataBaseOrNormal === 'es') {
+      finalSourceConfig.index = indexName
+      // finalSourceConfig.username = username,
+      // finalSourceConfig.password = password,
+    }
 
     // 东拼西凑攒参数
     const finalParams = {
-      spaceId: 1,
+      spaceId,
       name,
       type: finalType,
       description,
@@ -142,8 +178,9 @@ const AddDataSource = (props: any) => {
       addForm.resetFields()
       refreshTable()
     }
-    /** 要把isConnect重置为false,不然会有缓存,后面的数据库都不用点击测试连接即可直接创建 */
+    /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接创建 */
     setIsConnect(false)
+    setIndexName('')
   }
 
   const handleCancel = () => {
@@ -160,6 +197,12 @@ const AddDataSource = (props: any) => {
     setBtnDisabled(false)
   }
 
+  /**
+  * description: 选择索引(es)
+  */
+  const selectIndex = (val: any) => {
+    setIndexName(val)
+  }
 
   /**
    * description: 针对不同格式文件的上传 生成 相应的uploadProps
@@ -333,7 +376,7 @@ const AddDataSource = (props: any) => {
           {
             (curDataType === 'MYSQL' || curDataType === 'POSTGRESQL') && (
               <>
-                <Form.Item label="链接地址" name="host" rules={generateSingleRules(true, '请输入链接地址')}>
+                <Form.Item label="连接地址" name="host" rules={generateSingleRules(true, '请输入链接地址')}>
                   <Input className="setBackColor"
                     autoComplete='off'
                     placeholder='请输入' />
@@ -435,6 +478,46 @@ const AddDataSource = (props: any) => {
               </>
             )
           }
+          {/* Elastic Search 类型 */}
+          {
+            curDataType === 'ELASTIC_SEARCH' && (
+              <>
+                <Form.Item label="连接地址" name="url" rules={generateSingleRules(true, '请输入链接地址')}>
+                  <Input className="setBackColor"
+                    autoComplete='off'
+                    placeholder='请输入' />
+                </Form.Item>
+                <Form.Item label="用户名" name="username">
+                  <Input
+                    autoComplete='off'
+                    className="setBackColor" placeholder='请输入' />
+                </Form.Item>
+                <Form.Item label="密码" name="password">
+                  <Input.Password
+                    autoComplete='off'
+                    className="setBackColor" placeholder='请输入' />
+                </Form.Item>
+                <Form.Item label="索引名称">
+                  <div className='dataBaseName'>
+                    <Spin spinning={getIndexListLoading}>
+                      <div className='getDataListBtn' onClick={() => getIndexList()}>获取索引列表</div>
+                    </Spin>
+                    <Select
+                      placeholder="请选择索引"
+                      disabled={Array.isArray(indexList) && indexList.length === 0}
+                      onChange={selectIndex}
+                      className='dataBaseName-Select setBackColor'>
+                      {
+                        indexList.map((item: any) => {
+                          return <Option value={item.value} key={item.value}>{item.label}</Option>
+                        })
+                      }
+                    </Select>
+                  </div>
+                </Form.Item>
+              </>
+            )
+          }
         </Form >
       </Modal >
     </div >
@@ -464,18 +547,6 @@ const dataSourceType: TSelectOptionItems[] = [
     value: 'CSV'
   },
   {
-    label: 'POSTGRESQL',
-    value: 'POSTGRESQL',
-  },
-  {
-    label: 'MYSQL',
-    value: 'MYSQL',
-  },
-  {
-    label: 'ES',
-    value: 'ES'
-  },
-  {
     label: 'API',
     value: 'RESTFUL_API',
   },
@@ -487,8 +558,22 @@ const dataSourceType: TSelectOptionItems[] = [
     label: 'EXCEL',
     value: 'EXCEL',
   },
+  {
+    label: 'POSTGRESQL',
+    value: 'POSTGRESQL',
+  },
+  {
+    label: 'MYSQL',
+    value: 'MYSQL',
+  },
+  {
+    label: 'ELASTIC_SEARCH',
+    value: 'ELASTIC_SEARCH'
+  },
 ]
-// 根据选择的数据源类型，来动态生成 []SourceConfig
+// @mark 关系型数据库 统一对应的是 'rdbms'
+// 因为后端的类型不一定与界面上展示的数据源类型名一致（例如：api <=> RESTFUL_API) 所以，直接做个映射
+// 方便，根据选择的数据源类型，来动态生成 []SourceConfig
 const dataTypeClassify: any = new Map([
   ['CSV', 'csv'],
   ['RESTFUL_API', 'api'],
@@ -496,7 +581,7 @@ const dataTypeClassify: any = new Map([
   ['EXCEL', 'excel'],
   ['POSTGRESQL', 'rdbms'],
   ['MYSQL', 'rdbms'],
-  ['ES', 'rdbms'],
+  ['ELASTIC_SEARCH', 'es'],
 ])
 
 // 单选框 CSV类型- 编码格式

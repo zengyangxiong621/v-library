@@ -114,7 +114,7 @@ const DashboardTemplate = (props: any) => {
             maxLength={40}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onPressEnter={search}
+            onSearch={search}
           />
         </div>
         {/* 模板列表 */}

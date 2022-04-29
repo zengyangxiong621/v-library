@@ -5,7 +5,6 @@ import './index.less'
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
 
 import { useFetch, BASE_URL } from '../../../../utils/useFetch'
-import { info } from 'console'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -23,7 +22,10 @@ const EditDataSource = (props: any) => {
     jsonSourceConfig,
     excelSourceConfig,
     rdbmsSourceConfig,
+    esSourceConfig,
   } = props.editDataSourceInfo
+  console.log('props', props);
+
   const { visible, changeShowState, refreshTable } = props
 
   // 获取表单实例准备做校验
@@ -39,6 +41,8 @@ const EditDataSource = (props: any) => {
   // 因为后端中关系型数据库统一表示为RDBMS, 此处将数据库数据源类型拆解出来
   const [dataSourceType, setDataSourceType] = useState()
   useEffect(() => {
+    console.log('type', type);
+
     if (type === 'RDBMS') {
       // 获取当前是那种类型的数据库
       setDataSourceType(rdbmsSourceConfig.dataBaseType)
@@ -63,28 +67,38 @@ const EditDataSource = (props: any) => {
 
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
+  const [getDBListLoading, setGetDBListLoading] = useState(false)
+
+  // 通过后台获取到的索引列表
+  const [indexList, setIndexList] = useState([])
+  const [getIndexListLoading, setGetIndexListLoading] = useState(false)
   // 上传的文件在后端存储的地址,
   // 数据库连接是否测试成功
   const [isConnect, setIsConnect] = useState(false)
 
   const [loading, setLoading] = useState(false)
-  const [getDBListLoading, setGetDBListLoading] = useState(false)
   const [btnDisabled, setBtnDisabled] = useState(true)
   const [testConnectLoading, setTestConnectLoading] = useState(false)
+  const [indexName, setIndexName] = useState('')
+  /**
+   * description: 选择索引(es)
+   */
+  const selectIndex = (val: any) => {
+    setIndexName(val)
+  }
+
   /**
    * description: 测试数据库连接
    */
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await editForm.validateFields(['port', 'username', 'password', 'host', 'database'])
-    // 此处为了先完成演示
     const finalParams = {
       type: dataSourceType === 'MYSQL' ? 'RDBMS' : 'ELASTIC_SEARCH',
       rdbmsSourceConfig: {
         ...values,
         dataBaseType: dataSourceType,
       },
-      // 此处为了先完成演示
       elasticsearchConfig: {}
     }
     // const finalParams = {
@@ -129,10 +143,35 @@ const EditDataSource = (props: any) => {
     }))
     setDataBaseList(formatData)
   }
+
+  /**
+  * description: 获取可选择的索引列表
+  */
+  const getIndexList = async () => {
+    // 通过表单校验获取es连接地址
+    const values: any = await editForm.validateFields(['url'])
+    setGetIndexListLoading(true)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [, data] = await useFetch('/visual/datasource/queryIndices', {
+      body: JSON.stringify(values)
+    }, {
+      errorInfo: '索引列表获取失败'
+    })
+    setGetIndexListLoading(false)
+    if (Array.isArray(data) && data.length) {
+      const formatData: any = data.map(item => ({ label: item, value: item }))
+      setIndexList(formatData)
+    }
+  }
   /**
    * description: 新增数据源
    */
   const handleOk = async () => {
+    // es 数据源类型时，如果没有index名，直接return
+    if (!indexName) {
+      message.warning({ content: '请先选择索引', duration: 2 })
+      return
+    }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields()
     //------ 由于表单initValues里的 <<type>> 为 RESTFUL_API 的时候已经被转成了 API
@@ -169,6 +208,11 @@ const EditDataSource = (props: any) => {
     if (dataBaseOrNormal === 'api') {
       finalType = 'RESTFUL_API'
     }
+    console.log('dataBaseOrNormal', dataBaseOrNormal);
+
+    if (dataBaseOrNormal === 'es') {
+      finalSourceConfig.index = indexName
+    }
 
     // 东拼西凑攒参数
     const finalParams = {
@@ -188,7 +232,7 @@ const EditDataSource = (props: any) => {
     setLoading(false)
     if (data) {
       // 成功后  -关闭弹窗 -清除表单 -刷新表格
-      changeShowState('edit')
+      handleCancel()
       editForm.resetFields()
       refreshTable()
     }
@@ -196,13 +240,19 @@ const EditDataSource = (props: any) => {
 
   const handleCancel = () => {
     changeShowState('edit')
+    /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接更新 */
+    setIsConnect(false)
+    setIndexName('')
+    // setBtnDisabled(true)
   }
   // 选择数据库名
   const selectDatabase = (val: any) => {
     editForm.setFieldsValue({ database: val })
     // 选择了数据库名，开放测试连接按钮
-    setBtnDisabled(false)
+    // setBtnDisabled(false)
   }
+
+
 
   /**
    * description: 针对不同格式文件的上传 生成 相应的uploadProps
@@ -279,19 +329,21 @@ const EditDataSource = (props: any) => {
     baseUrl: apiSourceConfig?.baseUrl,
     code: csvSourceConfig?.code,
     database: rdbmsSourceConfig?.database,
-    password: rdbmsSourceConfig?.password,
     port: rdbmsSourceConfig?.port,
     host: rdbmsSourceConfig?.host,
-    username: rdbmsSourceConfig?.username,
+    // rdbms里和es里都有 username和password
+    password: rdbmsSourceConfig?.password || esSourceConfig?.username,
+    username: rdbmsSourceConfig?.username || esSourceConfig?.username,
     jsonFileUrl: jsonSourceConfig?.fileUrl,
     csvFileUrl: csvSourceConfig?.fileUrl,
     excelFileUrl: excelSourceConfig?.fileUrl,
+    url: esSourceConfig?.url
   }
   return (
     <div className='EditDataSource-wrap'>
       <Modal
         title="编辑数据源"
-        destroyOnClose
+        destroyOnClose={true}
         maskClosable={false}
         visible={visible}
         okText="确定"
@@ -445,7 +497,7 @@ const EditDataSource = (props: any) => {
                       <div className='getDataListBtn' onClick={() => getDataBaseList()}>获取数据库列表</div>
                     </Spin>
                     <Select
-                      // defaultValue={database}
+                      defaultValue={rdbmsSourceConfig?.database}
                       placeholder="请选择数据库"
                       disabled={Array.isArray(dataBaseList) && dataBaseList.length === 0}
                       onChange={selectDatabase}
@@ -458,8 +510,13 @@ const EditDataSource = (props: any) => {
                     </Select>
                   </div>
                   <Spin wrapperClassName='testConnectWrap' spinning={testConnectLoading}>
-                    <div style={{ cursor: btnDisabled ? 'not-allowed' : 'pointer' }}>
-                      <div className={`${btnDisabled && 'btnDisabled'} testConnect`} onClick={() => testConnect()}>测试连接</div>
+                    <div
+                    // style={{ cursor: btnDisabled ? 'not-allowed' : 'pointer' }}
+                    >
+                      <div
+                        className='testConnect'
+                        // className={`${btnDisabled && 'btnDisabled'} testConnect`}
+                        onClick={() => testConnect()}>测试连接</div>
                     </div>
                   </Spin>
                 </Form.Item>
@@ -508,6 +565,46 @@ const EditDataSource = (props: any) => {
               </>
             )
           }
+          {/* Elastic Search 类型 */}
+          {
+            dataSourceType === 'ELASTIC_SEARCH' && (
+              <>
+                <Form.Item label="连接地址" name="url" rules={generateSingleRules(true, '请输入链接地址')}>
+                  <Input className="setBackColor"
+                    autoComplete='off'
+                    placeholder='请输入' />
+                </Form.Item>
+                <Form.Item label="用户名" name="username">
+                  <Input
+                    autoComplete='off'
+                    className="setBackColor" placeholder='请输入' />
+                </Form.Item>
+                <Form.Item label="密码" name="password">
+                  <Input.Password
+                    autoComplete='off'
+                    className="setBackColor" placeholder='请输入' />
+                </Form.Item>
+                <Form.Item label="索引名称" >
+                  <div className='dataBaseName'>
+                    <Spin spinning={getIndexListLoading}>
+                      <div className='getDataListBtn' onClick={() => getIndexList()}>获取索引列表</div>
+                    </Spin>
+                    <Select
+                      placeholder="请选择索引"
+                      disabled={Array.isArray(indexList) && indexList.length === 0}
+                      onChange={selectIndex}
+                      className='dataBaseName-Select setBackColor'>
+                      {
+                        indexList.map((item: any) => {
+                          return <Option value={item.value} key={item.value}>{item.label}</Option>
+                        })
+                      }
+                    </Select>
+                  </div>
+                </Form.Item>
+              </>
+            )
+          }
         </Form >
       </Modal >
     </div >
@@ -540,6 +637,7 @@ const dataTypeClassify: any = new Map([
   ['POSTGRESQL', 'rdbms'],
   ['MYSQL', 'rdbms'],
   ['ES', 'rdbms'],
+  ['ELASTIC_SEARCH', 'es'],
 ])
 // ['CSV', 'CSV'],
 //   ['RESTFUL_API', 'RESTFUL_API'],

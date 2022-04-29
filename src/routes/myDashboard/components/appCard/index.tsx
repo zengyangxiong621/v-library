@@ -139,7 +139,12 @@ const AppCard = (props: any) => {
         <div className='hoverOnImg'>
           <div className='icons-wrap'>
             <Tooltip
-              placement='bottom' title="拷贝给他人">
+              placement='bottom' title="拷贝给他人"
+            // tooltip挂载到body下容易被影响样式
+            // getPopupContainer={(triggerNode) => {
+            //   return triggerNode
+            // }}
+            >
               <IconFont className='each-icon' onClickCapture={(e) => {
                 copyToOthers(e)
               }} type='icon-kaobei' />

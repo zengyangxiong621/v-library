@@ -10,11 +10,12 @@ import Preview from '../../../dashboardTemplate/preview/index'
 
 import {
   Row, Col, Button, Spin, message, Form,
-  Switch, Input, Upload, Select
+  Switch, Input, Upload, Select, Typography, Tooltip
 } from 'antd'
 import { IconFont } from '../../../../utils/useIcon'
 
 const { Option } = Select
+const { Paragraph } = Typography
 
 
 const RightContent = (props: any) => {
@@ -27,10 +28,15 @@ const RightContent = (props: any) => {
   const [newGroupId, setNewGroupId] = useState('')
   // 显示二级发布弹窗
   const [isShared, setIsShared] = useState(false)
+  // 是否加密分享
+  const [isJMFX, setIsJMFX] = useState(false)
   // 是否显示二级发布弹窗的剩余表单项
   const [notShowRest, setNotShowRest] = useState(false)
   const [showRestIconAngle, setShowRestIconAngle] = useState(90)
-  const [fabuLoading, setFabuLoading] = useState(false)
+  const [fabuBtnLoading, setFabuBtnLoading] = useState(false)
+
+  // 表单项数据 (此处表单数据不适合用Form校验来获取各个form.item的值)
+  const [fxljInputValue, setFxljInputValue] = useState<string>('')
 
   const [curAppId, setCurAppId] = useState('')
   useEffect(() => {
@@ -134,7 +140,8 @@ const RightContent = (props: any) => {
   }
   // 加密分享 开关事件
   const jmfxChange = (isCheck: boolean) => {
-
+    console.log('zzzz', isCheck);
+    setIsJMFX(isCheck)
   }
 
   // 开放应用 开关事件
@@ -184,7 +191,7 @@ const RightContent = (props: any) => {
                 <img src={require("../../../../assets/images/发布.png")} alt="图片正在赶来的路上…" />
               </div>
               <p className="text">发布后，获得大屏分享链接</p>
-              <Spin wrapperClassName='fabu-spin' spinning={fabuLoading}>
+              <Spin wrapperClassName='fabu-spin' spinning={fabuBtnLoading}>
                 <Button style={{ width: '106px' }} type="primary" onClickCapture={() => fabudaping()
                 }>发布大屏</Button>
               </Spin>
@@ -194,7 +201,7 @@ const RightContent = (props: any) => {
               <div>
                 <Form
                   labelCol={{
-                    span: 4,
+                    span: 5,
                   }}
                   layout="horizontal"
                   name='releaseForm'
@@ -204,29 +211,53 @@ const RightContent = (props: any) => {
                     label="发布"
                     style={{ marginRight: 'auto' }}
                   ><div className="set-flex">
-                      <Switch defaultChecked onChange={releaseChange} /></div>
+                      <Switch onChange={releaseChange} />
+                    </div>
                   </Form.Item>
                   <Form.Item
                     label="分享链接"
                     colon={false}
-                  ><div className="set-flex">
-                      <Input style={{ width: '310px', height: '32px', lineHeight: '32px' }} />
-                      <Button type="primary" style={{ width: '60px', marginLeft: '16px' }} >复制</Button>
-                    </div></Form.Item>
+                    className="set-flex"
+                  >
+                    <div className="set-flex">
+                      <Input
+                        value={fxljInputValue}
+                        onChange={(e) => setFxljInputValue(e.target.value)}
+                        style={{ width: '310px', height: '32px', lineHeight: '32px' }}
+                      />
+                      <Paragraph
+                        copyable={{
+                          text: `${fxljInputValue}`,
+                          onCopy: () => {
+                            message.success({ content: '复制链接成功', duration: 1 })
+                          },
+                          icon: [<Tooltip title="点此复制分享链接" placement="bottom">
+                            <Button type="primary" style={{ width: '60px', marginLeft: '16px', height: '30px' }} >复制</Button>
+                          </Tooltip>],
+                          tooltips: false
+                        }}
+                        style={{ marginBottom: 0 }}
+                      ></Paragraph>
+                    </div>
+                  </Form.Item>
                   <Form.Item
                     label="加密分享"
                     colon={false}
                   ><div className="jiamifenxiang set-flex ">
-                      <Switch defaultChecked onChange={jmfxChange} />
-                      <div className="set-flex">
-                        <div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div><Input style={{ width: '204px' }} />
-                      </div>
-                    </div></Form.Item>
+                      <Switch onChange={jmfxChange} />
+                      {
+                        isJMFX &&
+                        <div className="set-flex">
+                          <div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div><Input style={{ width: '204px' }} />
+                        </div>
+                      }
+                    </div>
+                  </Form.Item>
                   <Form.Item
-                    label="开放应用"
+                    label="应用到驾驶舱"
                     colon={false}
                   ><div className="set-flex">
-                      <Switch defaultChecked onChange={kfChange} />
+                      <Switch onChange={kfChange} />
                     </div>
                   </Form.Item>
                   <Form.Item
