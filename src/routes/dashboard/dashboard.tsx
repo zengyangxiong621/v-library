@@ -99,28 +99,29 @@ function App({ bar, dispatch, location }: any) {
   //   document.querySelector('.left-menu>.footer'),
   // ])
 
+  // 阻止 window 缩放
+  const handleStopWindowWheel = (event: any) => {
+    const e = event || window.event
+    const ctrlKey = e.ctrlKey || e.metaKey
+    if(ctrlKey && keyCodeMap[e.keyCode]) {
+      e.preventDefault()
+    } else if(e.detail) { // Firefox
+      event.returnValue = false
+    }
+  }
 
   useEffect(() => {
     const dashboardId = window.location.pathname.split('/')[2]
-
     dispatch({
       type: 'bar/getDashboardDetails',
       payload: dashboardId,
     })
-    // 覆盖ctrl||command + ‘+’/‘-’
-    document.onkeydown = function(event) {
-      const e = event || window.event
-      const ctrlKey = e.ctrlKey || e.metaKey
-      if(ctrlKey && keyCodeMap[e.keyCode]) {
-        e.preventDefault()
-      } else if(e.detail) { // Firefox
-        event.returnValue = false
-      }
-    }
+    document.addEventListener('keydown', handleStopWindowWheel)
     return () => {
+      document.removeEventListener('keydown', handleStopWindowWheel)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   /**
    * description:  是否显示中心画布上方的导航栏
    */

@@ -12,9 +12,16 @@ import { throttle } from '../../../../../utils/common'
 
 const Ruler = ({ bar, dispatch, mouse, cRef }) => {
 
+  const MARGIN_LENGTH = 22
+
   const recommendConfig = bar.pageConfig.find(item => item.name === 'recommend')
   let [ruler, setRuler] = useState(null)
   const [isRulerLinesShow, setIsRulerLinesShow] = useState(true)
+  // 横
+  const [horizonRulerWidth, setHorizonRulerWidth] = useState(2550)
+  // 竖
+  const [verticalRulerHeight, setVerticalRulerHeight] = useState(1440)
+
   // useEffect(() => {
   //   const temp = new rulerCanvas()
   //   temp.painter(recommendConfig.width, recommendConfig.height)
@@ -47,7 +54,11 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
     if (ruler) {
       const canvasContainer = document.querySelector('.canvas-screen')
       const leftWrap = document.querySelector('.home-left-wrap')
+      const centerWrap = document.querySelector('.center-wrap')
       const headerWrap = document.querySelector('.Header-wrap')
+      console.log('ruler-width', centerWrap.getBoundingClientRect().width)
+      // setHorizonRulerWidth(Math.ceil(centerWrap.getBoundingClientRect().width) - MARGIN_LENGTH)
+      // setVerticalRulerHeight(Math.ceil(centerWrap.getBoundingClientRect().height) - MARGIN_LENGTH)
       ruler.clearCanvas()
       const left = Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width)
       const right = Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height)
@@ -55,13 +66,13 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
     }
   }, [bar.canvasScaleValue])
   const rulerCanvas = function () {
-    this.canvasTop = document.getElementById('canvasTop')
-    this.canvasLeft = document.getElementById('canvasLeft')
+    this.canvasTop = document.querySelector('#h-ruler-canvas')
+    this.canvasLeft = document.querySelector('#v-ruler-canvas')
     this.clearCanvas = () => {
       const contextTop = this.canvasTop.getContext('2d')
       const contextLeft = this.canvasLeft.getContext('2d')
-      contextTop.clearRect(0, 0, 3000, 22)
-      contextLeft.clearRect(0, 0, 22, 2000)
+      contextTop.clearRect(0, 0, this.canvasTop.getBoundingClientRect().width, MARGIN_LENGTH)
+      contextLeft.clearRect(0, 0, MARGIN_LENGTH, this.canvasLeft.getBoundingClientRect().height)
     }
     this.painter = (canvasScaleValue, left = 0, top = 0) => {
       const draggableWrapper = document.querySelector('.canvas-container')
@@ -71,79 +82,77 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       // console.log('offsetLeft', draggableWrapper.offsetLeft)
       const contextTop = this.canvasTop.getContext('2d')
       const contextLeft = this.canvasLeft.getContext('2d')
+
       contextTop.beginPath()
-      let ruleScale = 100
-      let ruleGrade = 10
+      contextLeft.beginPath()
+
+      let rulerScale = 100
+      let rulerGrade = 10
+
+      let hRulerScaleMaximum = 5000
+      let vRulerScaleMaximum = 5000
+
       if (canvasScaleValue > 1) {
-        ruleScale = 50
-        ruleGrade = 10
+        rulerScale = 50
+        rulerGrade = 10
       } else if (canvasScaleValue <= 1 && canvasScaleValue > 0.67) {
-        ruleScale = 100
-        ruleGrade = 10
+        rulerScale = 100
+        rulerGrade = 10
       } else if (canvasScaleValue <= 0.67 && canvasScaleValue > 0.43) {
-        ruleScale = 200
-        ruleGrade = 20
+        rulerScale = 200
+        rulerGrade = 20
       } else if (canvasScaleValue <= 0.43 && canvasScaleValue > 0.19) {
-        ruleScale = 400
-        ruleGrade = 40
+        rulerScale = 400
+        rulerGrade = 40
       } else if (canvasScaleValue <= 0.19 && canvasScaleValue > 0.13) {
-        ruleScale = 500
-        ruleGrade = 50
+        rulerScale = 500
+        rulerGrade = 50
       } else if (canvasScaleValue <= 0.13 && canvasScaleValue > 0.03) {
-        ruleScale = 1000
-        ruleGrade = 100
+        rulerScale = 1000
+        rulerGrade = 100
       } else {
-        ruleScale = 2000
-        ruleGrade = 200
+        rulerScale = 2000
+        rulerGrade = 200
       }
-      for (let i = -20000; i < 20000; i += ruleGrade) {
+      for (let i = -hRulerScaleMaximum; i < hRulerScaleMaximum; i += rulerGrade) {
         contextTop.strokeStyle = 'white'
         contextTop.fillStyle = 'white'
 
         //顶部标尺线绘制, 比例尺
-        const y = (i % ruleScale === 0) ? 0 : 12
-        // contextTop.moveTo(i + left - 22, y)
-        // contextTop.lineTo(i + left - 22, 20)
-        contextTop.moveTo(Math.ceil(i * canvasScaleValue) + left - 22, y)
-        contextTop.lineTo(Math.ceil(i * canvasScaleValue) + left - 22, 20)
+        const y = (i % rulerScale === 0) ? 0 : 12
+        contextTop.moveTo(Math.ceil(i * canvasScaleValue) + left - MARGIN_LENGTH, y)
+        contextTop.lineTo(Math.ceil(i * canvasScaleValue) + left - MARGIN_LENGTH, 20)
 
         //顶部标尺数字绘制
         if (y === 0) {
           contextTop.font = `12px Arial`
           contextTop.fillText(i, Math.ceil(i * canvasScaleValue) + left - 18, 10)
-          // contextTop.fillText(i, i + left - 18, 10)
         }
       }
-      for (let i = -10000; i < 10000; i += ruleGrade) {
+
+      for (let i = -vRulerScaleMaximum; i < vRulerScaleMaximum; i += rulerGrade) {
         //左侧标尺线绘制
-        contextLeft.save()
-        contextLeft.beginPath()
         contextLeft.strokeStyle = 'white'
         contextLeft.fillStyle = 'white'
-        const x = (i % ruleScale === 0) ? 0 : 12
-        contextLeft.moveTo(x, Math.ceil(i * canvasScaleValue) + top - 22)
-        contextLeft.lineTo(20, Math.ceil(i * canvasScaleValue) + top - 22)
-
-        contextLeft.stroke()
-        contextLeft.closePath()
+        const x = (i % rulerScale === 0) ? 0 : 12
+        contextLeft.moveTo(x, Math.ceil(i * canvasScaleValue) + top - MARGIN_LENGTH)
+        contextLeft.lineTo(20, Math.ceil(i * canvasScaleValue) + top - MARGIN_LENGTH)
 
         //左侧标尺数字绘制
         if (x === 0) {
-          contextLeft.beginPath()
-          contextLeft.font = `12px Arial`
+          contextLeft.save()
           contextLeft.translate(10, Math.ceil(i * canvasScaleValue) + top - 25)
+          contextLeft.font = `12px Arial`
           contextLeft.rotate(-90 * Math.PI / 180)
           contextLeft.fillText(i, 0, 0)
-          // contextLeft.fillText(i, 0, Math.ceil(i * canvasScaleValue) + top - 18)
-
-          // console.log('刻度尺Y', Math.ceil(i * canvasScaleValue) + top - 18)
-          // contextLeft.fillText(i.toString(), -(Math.ceil(i * canvasScaleValue) + top - 18), 0)
-
-          contextLeft.closePath()
           contextLeft.restore()
         }
+
       }
+      contextLeft.stroke()
+      contextLeft.closePath()
       contextTop.stroke()
+      contextTop.closePath()
     }
   }
 
@@ -164,7 +173,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
 
   const handleClick = (direction) => {
     if (direction === 'vertical') {
-      // 横
+      // 竖
       bar.rulerLines.push({
         position: {
           x: 0,
@@ -174,7 +183,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       })
     }
     if (direction === 'horizon') {
-      // 竖
+      // 横
       bar.rulerLines.push({
         position: {
           x: mouse.elementX / bar.canvasScaleValue,
@@ -197,17 +206,19 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
     })
   }
   return (
-    <div style={ { position: 'absolute', left: 0, top: 0 } }>
-      <div style={ {
+    <div className="c-ruler-container" style={ { position: 'absolute', inset: 0 } }>
+      <div className="h-container" style={ {
         position: 'absolute',
-        left: 22,
+        width: '100%',
+        height: MARGIN_LENGTH,
+        left: MARGIN_LENGTH,
         top: 0,
       } }>
         <canvas
           onClick={ () => handleClick('horizon') }
-          id="canvasTop"
-          height="22"
-          width="3000"
+          id="h-ruler-canvas"
+          height={ MARGIN_LENGTH }
+          width={ horizonRulerWidth }
           style={ {
             position: 'absolute',
             left: 0,
@@ -218,16 +229,18 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
           <p>Your browser does not support the canvas element!</p>
         </canvas>
       </div>
-      <div style={ {
+      <div className="v-container" style={ {
         position: 'absolute',
+        height: '100%',
+        width: MARGIN_LENGTH,
         left: 0,
-        top: 22,
+        top: MARGIN_LENGTH,
       } }>
         <canvas
           onClick={ () => handleClick('vertical') }
-          id="canvasLeft"
-          width="22"
-          height="2000"
+          id="v-ruler-canvas"
+          width={ MARGIN_LENGTH }
+          height={ verticalRulerHeight }
           style={ {
             position: 'absolute',
             left: 0,
