@@ -78,6 +78,7 @@ const Center = ({ bar, dispatch }: any) => {
       if(e.deltaY > 0 && bar.canvasScaleValue < 0.1) {
         return false
       }
+      console.log('e.deltaY', e.deltaY)
       dispatch({
         type: 'bar/save',
         payload: {
