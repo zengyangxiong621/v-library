@@ -1,0 +1,71 @@
+@import "~antd/dist/antd.dark.css";
+
+@backColor: #151820;
+@textColor: #fff;
+
+.workSpace-wrap {
+  display: flex;
+  background-color: @backColor;
+  color: @textColor;
+  user-select: none;
+  .left {
+    border-right: 1px solid #fff;
+  }
+
+  .right {
+    flex: 1;
+    padding: 16px;
+    .right-two {
+      margin: 16px 0;
+    }
+  }
+
+  .custom-btn-wrap {
+    display: flex;
+    justify-content: flex-end;
+    .my-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      width: 88px;
+      height: 32px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .cancel-btn {
+      background: #4a5068;
+    }
+    .confirm-btn {
+      background: #2482ff;
+      margin-left: 16px;
+    }
+  }
+
+  // 自定义通用样式
+  .set-flex {
+    display: flex;
+    align-items: center;
+  }
+  .set-flex-sb {
+    justify-content: space-between;
+  }
+  .custom-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    width: 96px;
+    height: 32px;
+    background: #2482ff;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  // 奇偶 行不同背景色
+  .customRowClass:nth-child(even) {
+    background-color: rgba(53, 59, 78, 0.5);
+  }
+  .customRowClass:nth-child(odd) {
+    background-color: #171a24;
+  }
+}

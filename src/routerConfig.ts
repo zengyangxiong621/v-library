@@ -5,6 +5,7 @@ import DashboardTemplate from './routes/dashboardTemplate';
 import Dashboard from './routes/dashboard';
 import DataSource from './routes/tempDataSource';
 import ControlCabin from './routes/controlCabin';
+import WorkSpace from './routes/workSpace'
 
 const routesConfig = (app: any) => [
   // {
@@ -48,7 +49,8 @@ const routesConfig = (app: any) => [
       DashboardTemplate(app),
       Dashboard(app),
       DataSource(app),
-      ControlCabin(app)
+      ControlCabin(app),
+      WorkSpace(app)
     ]
   }
 
