@@ -45,7 +45,7 @@ import {
 import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
-import { addSomeAttrInLayers } from './utils/addSomeAttrInLayers'
+import { addSomeAttrInLayers, clearNullGroup } from './utils/addSomeAttrInLayers'
 import { http } from './utils/request'
 
 interface IBarState {
@@ -367,11 +367,11 @@ export default {
       const bar: any = yield select(({ bar }: any) => bar)
       const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key)
       yield put({
-        type: 'bar/update',
+        type: 'update',
         payload: treeDataCopy,
       })
       yield put({
-        type: 'bar/save',
+        type: 'save',
         payload: {
           key: [ newLayerId ],
         },
@@ -459,9 +459,11 @@ export default {
         method: 'delete',
         body: payload,
       })
+      const filterNullLayers = clearNullGroup(layers)
+
       yield put({
         type: 'updateTree',
-        payload: layers,
+        payload: filterNullLayers,
       })
     },
     // 复制图层
