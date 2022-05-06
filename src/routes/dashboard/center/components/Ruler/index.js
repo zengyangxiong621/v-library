@@ -22,15 +22,14 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
   // 竖
   const [verticalRulerHeight, setVerticalRulerHeight] = useState(1440)
 
-
+  const canvasContainer = document.querySelector('.canvas-screen')
+  const centerWrap = document.querySelector('.center-wrap')
+  const headerWrap = document.querySelector('.Header-wrap')
 
 
   const painter = () => {
     if (ruler) {
       ruler.clear()
-      const canvasContainer = document.querySelector('.canvas-screen')
-      const centerWrap = document.querySelector('.center-wrap')
-      const headerWrap = document.querySelector('.Header-wrap')
       const leftWrap = document.querySelector('.home-left-wrap')
       const left = Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width)
       const right = Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height)
