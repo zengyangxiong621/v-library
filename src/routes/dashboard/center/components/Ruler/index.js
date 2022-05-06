@@ -22,24 +22,24 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
   // 竖
   const [verticalRulerHeight, setVerticalRulerHeight] = useState(1440)
 
-  // useEffect(() => {
-  //   const temp = new rulerCanvas()
-  //   temp.painter(recommendConfig.width, recommendConfig.height)
-  //   ruler = setRuler(temp)
-  // }, [])
-  // useEffect(() => {
-  //   if (ruler) {
-  //     ruler.clearCanvas()
-  //     ruler.painter(recommendConfig.width, recommendConfig.height)
-  //   }
-  // }, [recommendConfig])
+
+
+
   const painter = () => {
-    console.log('hhhh')
+    if (ruler) {
+      ruler.clear()
+      const canvasContainer = document.querySelector('.canvas-screen')
+      const centerWrap = document.querySelector('.center-wrap')
+      const headerWrap = document.querySelector('.Header-wrap')
+      const leftWrap = document.querySelector('.home-left-wrap')
+      const left = Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width)
+      const right = Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height)
+      ruler.painter(bar.canvasScaleValue, left, right)
+    }
   }
-  const throttlePainter = throttle(painter, 1000)
   useImperativeHandle(cRef, () => ({
     painter: () => {
-      throttlePainter()
+      painter()
     },
   }))
   useEffect(() => {
@@ -52,23 +52,13 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
   }, [])
   useEffect(() => {
     if (ruler) {
-      const canvasContainer = document.querySelector('.canvas-screen')
-      const leftWrap = document.querySelector('.home-left-wrap')
-      const centerWrap = document.querySelector('.center-wrap')
-      const headerWrap = document.querySelector('.Header-wrap')
-      console.log('ruler-width', centerWrap.getBoundingClientRect().width)
-      // setHorizonRulerWidth(Math.ceil(centerWrap.getBoundingClientRect().width) - MARGIN_LENGTH)
-      // setVerticalRulerHeight(Math.ceil(centerWrap.getBoundingClientRect().height) - MARGIN_LENGTH)
-      ruler.clearCanvas()
-      const left = Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width)
-      const right = Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height)
-      ruler.painter(bar.canvasScaleValue, left, right)
+      painter()
     }
-  }, [bar.canvasScaleValue])
+  }, [bar.canvasScaleValue, bar.leftMenuWidth])
   const rulerCanvas = function () {
     this.canvasTop = document.querySelector('#h-ruler-canvas')
     this.canvasLeft = document.querySelector('#v-ruler-canvas')
-    this.clearCanvas = () => {
+    this.clear = () => {
       const contextTop = this.canvasTop.getContext('2d')
       const contextLeft = this.canvasLeft.getContext('2d')
       contextTop.clearRect(0, 0, this.canvasTop.getBoundingClientRect().width, MARGIN_LENGTH)
@@ -89,8 +79,8 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       let rulerScale = 100
       let rulerGrade = 10
 
-      let hRulerScaleMaximum = 5000
-      let vRulerScaleMaximum = 5000
+      let hRulerScaleMaximum = 20000
+      let vRulerScaleMaximum = 10000
 
       if (canvasScaleValue > 1) {
         rulerScale = 50

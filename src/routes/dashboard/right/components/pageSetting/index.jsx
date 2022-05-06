@@ -32,7 +32,6 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    console.log('bar.pageConfig', bar.pageConfig)
     setKey(uuidv4())
   }, [bar.pageConfig])
 

@@ -172,8 +172,7 @@ export function moveChildrenComponents (components, xMoveLength, yMoveLength) {
 }
 
 export function mergeComponentLayers (components, layers) {
-  console.log('components', components)
-  console.log('layers', layers)
+
 
   return []
 }
@@ -198,7 +197,6 @@ export function deepClone (obj) {
 
 // 计算
 export function calcScalePosition (arr) {
-  console.log('arr', arr)
   let xPositionList = []
   let yPositionList = []
   arr.forEach((component) => {
@@ -280,7 +278,6 @@ export const group = (treeData, selectedNodes, lastRightClickKey) => {
   }
   let needPickItem = []
   const recursiveFn = (data, id, isDone) => {
-    console.log('data', data)
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i]
       if (item.id === id) {
@@ -304,7 +301,6 @@ export const group = (treeData, selectedNodes, lastRightClickKey) => {
     }
     recursiveFn(treeDataCopy, selectedNodes[i], isDone)
   }
-  console.log('needPickItem', needPickItem)
   return treeDataCopy
 }
 

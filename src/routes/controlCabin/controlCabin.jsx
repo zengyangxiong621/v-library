@@ -49,7 +49,6 @@ const ControlCabin = props => {
   };
 
   const onClick = (index) => {
-    console.log('11111', index)
     if (index === currnetIndex) {
       console.log('todo')
       // todo 全屏展示应用

@@ -35,8 +35,6 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
     nodeRef: nodeRef,
   }))
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
-    // dimensionConfig.value.find((item: any) => item.name === 'left').value = data.x
-    // dimensionConfig.value.find((item: any) => item.name === 'top').value = data.y
     onStop(ev, data)
   }
   return (
