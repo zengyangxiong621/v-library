@@ -7,6 +7,7 @@ import { PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 
 import AddDataSource from './components/addDataSource'
 import EditDataSource from './components/editDataSource'
+import PreviewTable from '../../routes/dashboard/right/components/editTable/previewTable'
 
 import { useFetch } from '../../utils/useFetch'
 import { TDataSourceParams } from './type'
@@ -27,7 +28,10 @@ const DataSource = (props: any) => {
   const [tableMap, setTableMap] = useState({})
   const [totalElements, setTotalElements] = useState(0)
   const [tableData, setTableData] = useState([])
+  const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
+  const [previewFileUrl, setPreviewFileUrl] = useState(null)
   const [tableLoading, setTableLoading] = useState(true)
+
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
   const resetTableInfo = (data: any) => {
@@ -158,6 +162,15 @@ const DataSource = (props: any) => {
     setIsShowEditModal(true)
     setEditDataSourceInfo(text)
   }
+  const previewClick = (record: any) => {
+    console.log(record)
+    const fileUrl = record.type === 'EXCEL' ? record.excelSourceConfig.fileUrl : record.csvSourceConfig.fileUrl
+    setIsShowPreviewModal(true)
+    setPreviewFileUrl(fileUrl)
+  }
+  const changePreviewShowState = (val:boolean) => {
+    setIsShowPreviewModal(val)
+  }
   // 表格排序
   const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
     // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
@@ -259,6 +272,11 @@ const DataSource = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
+            {
+              ['EXCEL'].includes(record.type) ?
+                <span className='textInOperationColumn' onClickCapture={() => previewClick(record)}>预览</span>
+                : null
+            }
             <span className='textInOperationColumn' onClickCapture={() => editClick(text)}>编辑</span>
             <span className='textInOperationColumn' onClickCapture={() => delClick(record.id)}>删除</span>
           </Space>
@@ -322,6 +340,12 @@ const DataSource = (props: any) => {
           visible={isShowEditModal}
           changeShowState={changeShowState}
           refreshTable={refreshTable}
+        />
+        {/* 表格在线预览 */}
+        <PreviewTable
+          visible={isShowPreviewModal}
+          fileUrl={previewFileUrl}
+          changeShowState={changePreviewShowState}
         />
       </div>
     </ConfigProvider>
