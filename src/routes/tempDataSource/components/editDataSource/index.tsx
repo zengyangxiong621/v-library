@@ -208,7 +208,6 @@ const EditDataSource = (props: any) => {
     if (dataBaseOrNormal === 'api') {
       finalType = 'RESTFUL_API'
     }
-    console.log('dataBaseOrNormal', dataBaseOrNormal);
 
     if (dataBaseOrNormal === 'es') {
       finalSourceConfig.index = indexName

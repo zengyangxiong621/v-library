@@ -82,6 +82,7 @@ interface IBarState {
   }>;
   currentDblTimes: number;
   isCanClearAllStatus: boolean;
+  leftMenuWidth: number;
 }
 
 export default {
@@ -302,6 +303,7 @@ export default {
         display: 'block',
       },
     ],
+    leftMenuWidth: 250,
   } as IBarState,
   subscriptions: {
     setup({ dispatch, history }: { dispatch: any; history: any }) {
@@ -340,7 +342,6 @@ export default {
           delete layer.selected
           delete layer.hover
         })
-        console.log('layerslayerslayerslayerslayers', layers)
         yield put({
           type: 'save',
           payload: {
@@ -533,10 +534,6 @@ export default {
         type: 'calcDragScaleData',
       })
       const bar = yield select(({ bar }: any) => bar)
-      console.log('---------------')
-      console.log('bar', bar.selectedComponentOrGroup)
-      console.log('---------------')
-
       yield put({
         type: 'save',
         payload: {
@@ -632,22 +629,12 @@ export default {
       } else {
         insertId = treeData.length !== 0 ? treeData[0].id : ''
       }
-      console.log('----------')
-      console.log('payload', payload.final)
-      console.log('----------')
-
       const newLayers = generateLayers(state.treeData, insertId, payload.final)
-      console.log('newLayersdasdsaasadsdsdassd', newLayers)
       return { ...state, treeData: newLayers }
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: any) {
-      console.log('呵呵哈哈哈')
-      console.log('payload', payload)
-      console.log('呵呵哈哈哈')
-
       state.components = state.components.concat(payload)
-      console.log('state.components', state.components)
       return { ...state }
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {
@@ -666,7 +653,6 @@ export default {
         },
         [],
       ).filter((layer: ILayerGroup | ILayerComponent) => (!layer.isLock && layer.isShow)) // 显示且未被锁
-      console.log('selectedComponentOrGroup', state.selectedComponentOrGroup)
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
@@ -932,7 +918,6 @@ export default {
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
-      console.log('aaaaa', payload)
       const newTree = singleShowLayer(
         state.treeData,
         payload.keys,
@@ -983,7 +968,6 @@ export default {
     ) {
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
-      console.log('啦啦啦啦')
       if(state.isSupportMultiple) {
         // 多选
         layer.selected = true
@@ -1032,7 +1016,6 @@ export default {
           ...state,
         }
       }
-      console.log('清除')
       localStorage.removeItem('dblComponentTimes')
       localStorage.removeItem('currentTimes')
       state.currentDblTimes = 0

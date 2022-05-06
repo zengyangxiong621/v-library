@@ -131,6 +131,12 @@ const Left = ({ dispatch, bar, operate }) => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
     el.style.width = `${w}px`
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        leftMenuWidth: w
+      }
+    })
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {

@@ -258,9 +258,6 @@ const CustomDraggable
           })
         }
       })
-      console.log('------------')
-      console.log('layer', layer)
-      console.log('------------')
       dispatch({
         type: 'bar/setGroupConfig',
         payload: {
@@ -379,10 +376,6 @@ const CustomDraggable
         key: bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id),
       },
     })
-    console.log('---------------')
-    console.log('bar.key', bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id))
-    console.log('selectedComponentOrGroup', bar.selectedComponentOrGroup)
-    console.log('---------------')
   }
   const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
     clearTimeout(clickTimer.current)

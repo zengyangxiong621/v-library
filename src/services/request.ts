@@ -11,8 +11,8 @@ const defaultOptions: any = {
 export const myFetch = (
   url: string,
   options: object,
-  baseUrl: string = 'http://10.201.82.245:31088',
-  // baseUrl: string = "http://50423059pd.zicp.vip"
+  // baseUrl: string = 'http://10.201.82.245:31088',
+  baseUrl: string = "http://50423059pd.zicp.vip"
 ) => {
   const finalOptions = {
     ...defaultOptions,
@@ -48,8 +48,6 @@ export const http = (config: any): any => {
   if(params) url += `${ url.includes('?') ? '&' : '?' }${ qs.stringify(params) }`
   url = baseUrl + url
   // 处理请求主体:只针对于POST系列请求；body是个纯粹对象，根据当前后台要求，把其变为urlencoded格式！
-  console.log('---------------------')
-  console.log('body', body)
 
   if(isPlainObject(body)) {
     body = JSON.stringify(body)
@@ -101,7 +99,6 @@ export const http = (config: any): any => {
     return result.then((response) => {
       const { code, data } = response
       if(code === 10000) {
-        console.log('data', data)
         return Promise.resolve(data)
       } else {
         return Promise.reject(response)

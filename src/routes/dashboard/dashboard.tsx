@@ -8,9 +8,10 @@ import { withRouter } from 'dva/router'
 
 import CustomHeader from './components/header/index'
 import Left from './left'
-import Center from './center'
+import CenterCanvas from './center'
 import Right from './right'
 import CenterHeaderBar from './center/components/topBar/index'
+import CenterBottomBar from './center/components/BottomBar/index'
 import ChooseArea from './center/components/ChooseArea'
 
 const { Header } = Layout
@@ -57,7 +58,7 @@ function App({ bar, dispatch, location }: any) {
   const clearAllStatus = (event: MouseEvent) => {
     console.log('target', event.target)
     const dom: any = (event.target as any) || null
-    if(dom?.className && [ 'ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away' ].includes(dom.className)) {
+    if(dom?.className && [ 'ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable' ].includes(dom.className)) {
       dispatch({
         type: 'bar/clearAllStatus',
       })
@@ -135,7 +136,6 @@ function App({ bar, dispatch, location }: any) {
   return (
     <Layout>
       <ChooseArea/>
-
       <Header className="home-header">
         <CustomHeader showWhichBar={ showWhichBar }/>
       </Header>
@@ -146,7 +146,8 @@ function App({ bar, dispatch, location }: any) {
         </div>
         <div className="center-wrap">
           <CenterHeaderBar showTopBar={ showTopBar } zujianORsucai={ zujianORsucai }/>
-          <Center/>
+          <CenterCanvas/>
+          <CenterBottomBar/>
         </div>
         <Right/>
       </div>

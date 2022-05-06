@@ -149,7 +149,6 @@ const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
  */
 const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
-  console.log("targetLockState", targetLockState);
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -173,7 +172,6 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
  * description: 隐藏 / 显示
  */
 const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
-  console.log("---------zzzzzzzzzzz-----------", selectedNodes);
   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
@@ -391,7 +389,6 @@ const generateTreeData: () => any = () => {
     });
   };
   generateData(2, false, "1", tData);
-  console.log("前端树的数据", tData);
   return tData;
 };
 //#region
