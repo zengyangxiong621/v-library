@@ -135,8 +135,40 @@ const RightContent = (props: any) => {
     setIsShared(true)
     // message.success({ content: '发布成功', duration: 2 })
   }
+
+  /**
+   * description: 通过不同的参数发布应用
+   * params: 接口参数
+   */
+  const publishByDiffParams = async (body: object) => {
+    const [, data] = await useFetch('/visual/application/share', {
+      body: JSON.stringify(body)
+    }, {
+      errHandleFn: (err: any) => {
+        message.error('发布失败');
+      },
+      onlyNeedWrapData: true
+    })
+    return data
+  }
   // 发布开关 事件
-  const releaseChange = (isCheck: boolean) => {
+  const releaseChange = async (isCheck: boolean) => {
+    // 为true时发布，并获取发布连接
+    if(isCheck) {
+      const finalBody = {
+
+      }
+      const result = await publishByDiffParams(finalBody)
+      console.log('result', result);
+      if(result.data === null) {
+        message.error(result.message)
+      }
+    } else {
+      // 为false时取消发布， 取消发布成功后，切回上一级弹窗
+      const finalBody = {}
+      publishByDiffParams(finalBody)
+      setIsShared(isCheck)
+    }
   }
   // 加密分享 开关事件
   const jmfxChange = (isCheck: boolean) => {
