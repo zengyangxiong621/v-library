@@ -58,7 +58,16 @@ function App({ bar, dispatch, location }: any) {
   const clearAllStatus = (event: MouseEvent) => {
     console.log('target', event.target)
     const dom: any = (event.target as any) || null
-    if(dom?.className && [ 'ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable' ].includes(dom.className)) {
+
+    let temp = true
+    // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
+    let awayList = [ 'ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable' ]
+    awayList.forEach(className => {
+      if(dom?.className.indexOf(className) !== -1) {
+        temp = false
+      }
+    })
+    if(!temp) {
       dispatch({
         type: 'bar/clearAllStatus',
       })
@@ -78,6 +87,7 @@ function App({ bar, dispatch, location }: any) {
       })
     }
   }
+
   useEffect(() => {
     document.addEventListener('click', clearAllStatus)
     return () => {

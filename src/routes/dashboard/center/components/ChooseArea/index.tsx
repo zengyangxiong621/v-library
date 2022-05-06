@@ -23,12 +23,13 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
   useEffect(() => {
     document.onmousedown = (e: any) => {
       let temp = false
-      e.target.className.split(' ').forEach((classname: any) => {
-        if(![ 'c-canvas', 'draggable-wrapper', 'canvas-draggable' ].includes(classname)) {
+      let awayList = [ 'c-canvas', 'draggable-wrapper', 'canvas-draggable' ]
+      awayList.forEach(className => {
+        if (e.target.className.indexOf(className) !== -1) {
           temp = true
         }
       })
-      if(temp) {
+      if(!temp) {
         return
       }
       const reactDraggableDomList: any = document.querySelectorAll('.draggable-container>.c-custom-draggable>.react-draggable')

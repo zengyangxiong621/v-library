@@ -83,6 +83,10 @@ interface IBarState {
   currentDblTimes: number;
   isCanClearAllStatus: boolean;
   leftMenuWidth: number;
+  canvasDraggablePosition: {
+    x: number,
+    y: number
+  }
 }
 
 export default {
@@ -127,6 +131,10 @@ export default {
     componentLayers: [],
     treeRef: null,
     canvasScaleValue: 0,
+    canvasDraggablePosition: {
+      x: 0,
+      y: 0,
+    },
     pageConfig: [
       {
         name: 'recommend',

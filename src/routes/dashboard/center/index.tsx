@@ -28,9 +28,7 @@ const Center = ({ bar, dispatch }: any) => {
   const [ isShowRightMenu, setIsShowRightMenu ] = useState(false)
   const [ menuInfo, setMenuInfo ] = useState({ x: 0, y: 0, id: '', isFolder: false })
   const [ customMenuOptions, setCustomMenuOptions ] = useState(menuOptions)
-  const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)
-  const [ canvasDraggablePosition, setCanvasDraggablePosition ]: any = useState({ x: 0, y: 0 })
-  // let supportLinesRef: any = useRef(null)
+  const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)// let supportLinesRef: any = useRef(null)
   const treeData = bar.treeData
   let supportLinesRef = bar.supportLinesRef
 
@@ -101,6 +99,15 @@ const Center = ({ bar, dispatch }: any) => {
 
   useEffect(() => {
     calcCanvasSize()
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        canvasDraggablePosition: {
+          x: 0,
+          y: 0,
+        },
+      },
+    })
   }, [ recommendConfig.width, recommendConfig.height ])
 
   useEffect(() => {
@@ -284,7 +291,21 @@ const Center = ({ bar, dispatch }: any) => {
   }
 
   const handleCanvasDrag = function(event: DraggableEvent, data: DraggableData) {
-    let { x, y } = data
+    handleCalcPosition({ x: data.x, y: data.y })
+  }
+
+  const handleCanvasDragStop = (event: DraggableEvent, data: DraggableData) => {
+    const { x, y } = data
+    handleCalcPosition({ x, y })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        canvasDraggablePosition: { x, y },
+      },
+    })
+  }
+
+  const handleCalcPosition = ({ x, y }: { x: number, y: number }) => {
     const canvasDraggableDOM: any = document.querySelector('.canvas-draggable')
     if(x >= 4334) {
       x = 4334
@@ -295,20 +316,8 @@ const Center = ({ bar, dispatch }: any) => {
     canvasDraggableDOM.style.transform = `translate(${ x }px, ${ y }px)`
     draggableRef.current.props.position.x = x
     draggableRef.current.props.position.y = y
-    setCanvasDraggablePosition({ x, y })
-    // console.log('rulerRef', rulerRef)
     rulerRef.current.painter()
-    // console.log('hhhh')
   }
-  const handleCanvasDragStop = (event: DraggableEvent, data: DraggableData) => {
-    const { x, y } = data
-    const canvasDraggableDOM: any = document.querySelector('.canvas-draggable')
-    // canvasDraggableDOM.style.transform = `translate(${ 4344 }px, ${ y }px)`
-
-
-    // setCanvasDraggablePosition({ x, y })
-  }
-  const throttledFunc = throttle(handleCanvasDrag, 1000)
 
   return (
     <div className="c-canvas">
@@ -332,7 +341,7 @@ const Center = ({ bar, dispatch }: any) => {
           disabled={ !isCanvasDraggable }
           onDrag={ handleCanvasDrag }
           onStop={ handleCanvasDragStop }
-          position={ canvasDraggablePosition }
+          position={ bar.canvasDraggablePosition }
         >
           <div
             className="canvas-draggable"
