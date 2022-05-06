@@ -119,8 +119,8 @@ const AddDataSource = (props: any) => {
    */
   const handleOk = async () => {
     // es 数据源类型时，如果没有index名，直接return
-    if(!indexName) {
-      message.warning({content:'请先选择索引名称', duration: 2})
+    if ( curDataType === 'ELASTIC_SEARCH' && !indexName) {
+      message.warning({ content: '请先选择索引名称', duration: 2 })
       return
     }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
@@ -131,7 +131,6 @@ const AddDataSource = (props: any) => {
     const dataBaseOrNormal = dataTypeClassify.get(curDataType)
     let finalType = type
     let finalSourceConfig = rest
-    console.log('剩余参数', rest);
     //如果是数据库类型的数据源的话，
     //-- 先判断数据库测试连接是否成功
     //-- 要加上 dataBaseType 字段

@@ -20,9 +20,9 @@ const catchErr = <T, U = Error>(
     });
 };
 
-export const BASE_URL = "http://10.202.233.230:9572"; // HFF 本地
+// export const BASE_URL = "http://10.202.233.230:9572"; // HFF 本地
 // export const BASE_URL = "http://10.202.226.250:9572"; // HFF 本地
-// export const BASE_URL = "http://50423059pd.zicp.vip"; // FJJ 本地
+export const BASE_URL = "http://50423059pd.zicp.vip"; // FJJ 本地
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",
@@ -35,15 +35,20 @@ const DEFAULT_OPTIONS = {
  * params:  @path -- 请求路径
  *          @fetchOptions -- 优先级更高的自定义fetchAPI请求配置
  *          @customOptions -- 添加自定义的错误信息
+ *            {
+ *              errorInfo: '请求发送失败时自定义的提示信息',
+ *              onlyNeedWrapData: '是否只需要最外层的data',
+ *              errHandleFn: '发送请求失败时自定义的处理回调'
+ *            }
  * return: Promise<Pending>
  */
 export const useFetch = async (
   path: string,
   fetchOptions: any,
   customOptions: any = {
-    customErrObj: {},
     errorInfo: "请求发送失败",
     onlyNeedWrapData: false,
+    errHandleFn: () => {}
   }
 ): Promise<[Error | null, any, any]> => {
   // 最终路径 & 最终配置、参数
@@ -57,12 +62,18 @@ export const useFetch = async (
     return !!responseType ? response[responseType]() : response.json();
   });
 
-  let [err, data]: any = await catchErr(finalFetch, customOptions.customErrObj);
+  let [err, data]: any = await catchErr(finalFetch, customOptions);
   /**** 根据返回数据进行统一的处理 *****/
   // 捕获发送请求时的错误
   if (err) {
-    console.log("useFetch_Error", err);
-    message.error({ content: customOptions.errorInfo, duration: 2 });
+    if (
+      !customOptions.errHandleFn &&
+      typeof customOptions.errHandleFn !== "function"
+    ) {
+      message.error({ content: customOptions.errorInfo, duration: 2 });
+    } else {
+      customOptions.errHandleFn(err);
+    }
     // 出错了需要终止程序的执行吗
     // throw Error('终止程序')
   }
