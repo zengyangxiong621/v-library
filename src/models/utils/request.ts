@@ -40,8 +40,8 @@ export const http = (config: any): any => {
   if(!isPlainObject(config.headers)) config.headers = {}
   if(config.params !== null && !isPlainObject(config.params)) config.params = null
   let { url, method, credentials, headers, body, params, responseType, signal } = config
-  // let baseUrl = 'http://10.202.233.230:9572'
   let baseUrl = 'http://10.202.233.230:9572'
+  // let baseUrl = 'http://10.202.226.250:9572'
   // let baseUrl = 'http://10.201.82.245:31088'
   // let baseUrl = 'http://50423059pd.zicp.vip'
   // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
@@ -107,6 +107,88 @@ export const http = (config: any): any => {
         return Promise.reject(response)
       }
     })
+  }).catch(err => {
+    const { code, message: errMessage } = err
+    message.error(errMessage)
+    return Promise.reject(err)
+  })
+}
+
+export const http1 = (config: any): any => {
+  // init config & validate
+  if(!isPlainObject(config)) config = {}
+  config = Object.assign({
+    url: '',
+    method: 'GET',
+    credentials: 'include',
+    headers: null,
+    body: null,
+    params: null,
+    responseType: 'json',
+    signal: null,
+  }, config)
+  if(!isPlainObject(config.headers)) config.headers = {}
+  if(config.params !== null && !isPlainObject(config.params)) config.params = null
+  let { url, method, credentials, headers, body, params, responseType, signal } = config
+  let baseUrl = 'http://10.202.233.230:9572'
+  // let baseUrl = 'http://10.202.226.250:9572'
+  // let baseUrl = 'http://10.201.82.245:31088'
+  // let baseUrl = 'http://50423059pd.zicp.vip'
+  // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
+  if(params) url += `${ url.includes('?') ? '&' : '?' }${ qs.stringify(params) }`
+  url = baseUrl + url
+  // 处理请求主体:只针对于POST系列请求；body是个纯粹对象，根据当前后台要求，把其变为urlencoded格式！
+  console.log('---------------------')
+  console.log('body', body)
+
+  if(isPlainObject(body)) {
+    body = JSON.stringify(body)
+    // 'Content-Type': 'application/json',
+    // headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    headers['Content-Type'] = 'application/json'
+  }
+
+  // 类似于Axios的请求拦截器，例如：把存储在客户端本地的token信息携带给服务器「根据当前后台要求处理」
+  let token = localStorage.getItem('token')
+  if(token) headers['Authorization'] = token
+
+  // 发送请求
+  method = method.toUpperCase()
+  config = {
+    method,
+    credentials,
+    headers,
+    cache: 'no-cache',
+    mode: 'cors',
+  }
+  // if(/^(POST|PUT|PATCH)$/i.test(method) && body) config.body = body
+  config.body = body
+  if(signal) config.signal = signal
+  return fetch(url, config).then(response => {
+    // 成功则返回响应主体信息
+    let { status, statusText } = response,
+      result
+    if(status !== 200) {
+      return Promise.reject({ code: -1, status, statusText })
+    }
+    if(!responseType) {
+      result = response.json()
+    } else {
+      switch(responseType.toLowerCase()) {
+        case 'text':
+          result = response.text()
+          break
+        case 'arraybuffer':
+          result = response.arrayBuffer()
+          break
+        case 'blob':
+          result = response.blob()
+          break
+        default:
+          result = response.json()
+      }
+    }
+    return  result
   }).catch(err => {
     const { code, message: errMessage } = err
     message.error(errMessage)
