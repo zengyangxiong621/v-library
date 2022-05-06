@@ -3,10 +3,11 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from 'dva'
 import { useFetch } from "../../../../utils/useFetch";
+import { BASE_URL } from '../../../../utils/useFetch'
 
 import AppCard from '../appCard/index'
 import DarkModal from '../darkThemeModal/index'
-import Preview from '../../../dashboardTemplate/preview/index'
+
 
 import {
   Row, Col, Button, Spin, message, Form,
@@ -28,17 +29,38 @@ const RightContent = (props: any) => {
   const [newGroupId, setNewGroupId] = useState('')
   // 显示二级发布弹窗
   const [isShared, setIsShared] = useState(false)
-  // 是否加密分享
-  const [isJMFX, setIsJMFX] = useState(false)
+  // 发布开关的值
+  const [fabuChecked, setFabuChecked] = useState(false)
+
   // 是否显示二级发布弹窗的剩余表单项
   const [notShowRest, setNotShowRest] = useState(false)
   const [showRestIconAngle, setShowRestIconAngle] = useState(90)
   const [fabuBtnLoading, setFabuBtnLoading] = useState(false)
 
   // 表单项数据 (此处表单数据不适合用Form校验来获取各个form.item的值)
+  // 分享连接
   const [fxljInputValue, setFxljInputValue] = useState<string>('')
+  // 加密分享
+  const [jmfxValue, setJmfxValue] = useState<string>('')
+  // 是否加密分享
+  const [isJMFX, setIsJMFX] = useState(false)
+  const [jmfxSwitchValue, setJmfxSwitchValue] = useState(false)
+  // 驾驶舱 相关
+  const [toCockpitSwitchValue, setToCockpitSwitchValue] = useState(false)
 
+  // 发布应用时的参数
   const [curAppId, setCurAppId] = useState('')
+  const [fabuBody, setFabuBody] = useState<any>({
+    share: false,
+    needPassword: false,
+    open: false,
+    title: '',
+    description: '',
+    thumb: ''
+  })
+  const [titleInputValue, setTitleInputValue] = useState<string>('')
+  const [desInputValue, setDesInputValue] = useState<string>('')
+
   useEffect(() => {
     if (showMoveGroupModal) {
       console.log('每次执行', dashboardManage.groupList);
@@ -51,6 +73,7 @@ const RightContent = (props: any) => {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
+      groupId: dashboardManage.curSelectedGroup[0]
     }
     dispatch({
       type: 'dashboardManage/getTemplateList',
@@ -90,22 +113,7 @@ const RightContent = (props: any) => {
       message.success({ content: '移动分组成功', duration: 2 })
       // refreshList()
       // 移入分组成功后，需要刷新当前分组下的模板以及刷新左侧分组树
-      const finalBody = {
-        pageNo: 1,
-        pageSize: 1000,
-        spaceId,
-        groupId: dashboardManage.curSelectedGroup[0]
-      }
-      dispatch({
-        type: 'dashboardManage/getTemplateList',
-        payload: finalBody
-      })
-      dispatch({
-        type: 'dashboardManage/getGroupTree',
-        payload: {
-          spaceId
-        }
-      })
+      refreshList()
       cancelMoveGroup()
     } else {
       message.error({ content: '移动分组失败', duration: 2 })
@@ -118,11 +126,36 @@ const RightContent = (props: any) => {
 
 
   // TODO 点击发布的时候，怎么判断是否已经发布(easyv上有两个接口)
-  // TODO　如果已经发布了，直接就显示　发布详情里的内容
-  // 打开发布Modal, 顺便获取当前应用的id
-  const changeFabuModal = (bool: boolean, id: string) => {
+  // TODO　如果已经发布了，调用应用详情接口获取相关的发布详情
+  // 打开发布Modal, 顺便获取当前应用的id 和 发布状态 0-未发布 1-已发布
+  const changeFabuModal = async (bool: boolean, id: string, isPublish: number) => {
+    if (isPublish) {
+      setFabuChecked(true)
+      // 此处拿不到最新的id值，就直接传了
+      const finalBody = {
+        ...fabuBody,
+        id,
+        share: true
+      }
+      setFabuBody(finalBody)
+      const result = await publishByDiffParams(finalBody)
+      if (result) {
+        setFxljInputValue(result.shareUrl)
+        if (result.needPassword) {
+          // setJmfxValue()
+          setIsJMFX(true)
+          setJmfxValue(result.sharePassword)
+          setJmfxSwitchValue(true)
+        }
+        // ue改动，后端暂时将 open 对应 ”应用到驾驶舱“
+        if (result.open) {
+          setToCockpitSwitchValue(true)
+        }
+      }
+    }
     setShowFabuModal(bool)
     setCurAppId(id)
+    setIsShared(!!isPublish)
   }
   // 关闭发布Modal
   const cancelFabuModal = () => {
@@ -130,12 +163,31 @@ const RightContent = (props: any) => {
   }
 
   // 发布大屏
-  const fabudaping = () => {
-    // TODO 发布成功，将弹窗内容替换成发布详情信息
-    setIsShared(true)
-    // message.success({ content: '发布成功', duration: 2 })
+  const fabudaping = async () => {
+    //发布成功，将弹窗内容替换成发布详情信息
+    const finalBody = {
+      ...fabuBody,
+      share: true,
+      id: curAppId
+    }
+    setFabuBody(finalBody)
+    console.log('aaaa', fabuBody);
+    const result = await publishByDiffParams(finalBody)
+    if (result === null) {
+      message.error({ content: '发布失败, 请检查网络后重试', duration: 2 })
+      setFabuChecked(false)
+      // setIsShared(false)
+    } else {
+      message.success({ content: '发布成功', duration: 2 })
+      // 发布成功，1. 刷新列表获得应用最新的发布状态
+      // 2. 设置分享连接地址
+      refreshList()
+      setFxljInputValue(result.shareUrl)
+      // 打开发布开关
+      setFabuChecked(true)
+      setIsShared(true)
+    }
   }
-
   /**
    * description: 通过不同的参数发布应用
    * params: 接口参数
@@ -147,38 +199,91 @@ const RightContent = (props: any) => {
       errHandleFn: (err: any) => {
         message.error('发布失败');
       },
-      onlyNeedWrapData: true
+      // onlyNeedWrapData: true
     })
     return data
   }
   // 发布开关 事件
   const releaseChange = async (isCheck: boolean) => {
-    // 为true时发布，并获取发布连接
-    if(isCheck) {
-      const finalBody = {
-
-      }
-      const result = await publishByDiffParams(finalBody)
-      console.log('result', result);
-      if(result.data === null) {
-        message.error(result.message)
-      }
-    } else {
+    setFabuChecked(isCheck)
+    if (!isCheck) {
       // 为false时取消发布， 取消发布成功后，切回上一级弹窗
-      const finalBody = {}
-      publishByDiffParams(finalBody)
-      setIsShared(isCheck)
+      const finalBody = {
+        ...fabuBody,
+        share: false
+      }
+      setFabuBody(finalBody)
+      const result = publishByDiffParams(finalBody)
+      if (!result) {
+        message.error({ content: '取消发布失败', duration: 2 })
+        setFabuChecked(true)
+      } else {
+        message.success({ content: '取消发布成功', duration: 2 })
+        // 取消发布成功后，
+        // 刷新列表, 清空分享连接等信息
+        refreshList()
+        setIsShared(isCheck)
+        setFxljInputValue('')
+        setIsJMFX(isCheck)
+        setJmfxValue('')
+      }
     }
   }
   // 加密分享 开关事件
-  const jmfxChange = (isCheck: boolean) => {
-    console.log('zzzz', isCheck);
-    setIsJMFX(isCheck)
+  const jmfxChange = async (isCheck: boolean) => {
+    const finalBody = {
+      ...fabuBody,
+      needPassword: isCheck
+    }
+    setFabuBody(finalBody)
+    const result: any = await publishByDiffParams(finalBody)
+    if (!result) {
+      message.error({ content: isCheck ? '发布失败' : '取消发布失败', duration: 2 })
+      setIsJMFX(!isCheck)
+      setJmfxSwitchValue(!isCheck)
+    } else {
+      message.success({ content: isCheck ? '发布成功' : '取消发布成功', duration: 2 })
+      // 显示密码框
+      setIsJMFX(isCheck)
+      setJmfxValue(result.sharePassword)
+      setJmfxSwitchValue(isCheck)
+    }
+  }
+  // 加密分享 Input 失焦，以新的密码重新发布应用
+  const jmfxInputOnBlur = async (e: any) => {
+    // const newInputValue = e.target.value
+    // if (newInputValue === jmfxValue) {
+    //   return
+    // }
+    // const finalBody = {
+    //   ...fabuBody,
+    //   needPassword: newInputValue
+    // }
+    // setFabuBody(finalBody)
+    // const result: any = await publishByDiffParams(finalBody)
+    // if (!result) {
+    //   message.error({ content: '发布失败', duration: 2 })
+    // } else {
+    //   message.success({ content: '发布成功', duration: 2 })
+    //   setJmfxValue(result.sharePassword)
+    // }
   }
 
-  // 开放应用 开关事件
-  const kfChange = (isCheck: boolean) => {
-
+  // 应用到驾驶舱 开关事件
+  const toCockpit = async (isCheck: boolean) => {
+    let finalBody = {
+      ...fabuBody,
+      open: isCheck
+    }
+    setFabuBody(finalBody)
+    const result: any = await publishByDiffParams(finalBody)
+    if (!result) {
+      message.error({ content: isCheck ? '发布失败' : '取消发布失败', duration: 2 })
+      setToCockpitSwitchValue(!isCheck)
+    } else {
+      message.success({ content: isCheck ? '发布成功' : '取消发布成功', duration: 2 })
+      setToCockpitSwitchValue(isCheck)
+    }
   }
   // 展示分享信息
   const showRestInfo = () => {
@@ -186,6 +291,62 @@ const RightContent = (props: any) => {
     setShowRestIconAngle(notShowRest ? 90 : -90)
   }
 
+  // 标题输入框失焦重新发布
+  const rePublishByOnBlur = async (newValue: string, field: string) => {
+    const finalBody = {
+      ...fabuBody,
+      [field]: newValue
+    }
+    setFabuBody(finalBody)
+    const result = await publishByDiffParams(finalBody)
+    if (result) {
+      message.success({ content: '发布成功', duration: 2 })
+      setTitleInputValue(result.title)
+    } else {
+      message.error({ content: '发布失败', duration: 2 })
+    }
+  }
+
+  const titleInputOnBlur = (e: any) => {
+    rePublishByOnBlur(e.target.value, 'title')
+  }
+  // 描述输入框失焦重新发布
+  const desInputOnBlur = (e: any) => {
+    rePublishByOnBlur(e.target.value, 'description')
+  }
+
+  // 上传图片
+  const uploadImgProps = {
+    name: 'file',
+    multiple: false,
+    maxCount: 1,
+    accept: 'image/png, image/jpeg',
+    action: `${BASE_URL}/visual/file/upload`,
+    beforeUpload(file: any) {
+      const { name }: { name: string } = file
+      // const fileSuffixArr = fileSuffix?.split(',')
+      // // 考虑 cdb.la...yer.json 这个文件名
+      // const lastPointIndex = name.lastIndexOf('.')
+      // const nameSuffix = name.slice(lastPointIndex)
+      // if (!fileSuffixArr?.includes(nameSuffix)) {
+      //   message.error({
+      //     content: '请上传符合格式的文件',
+      //     duration: 2
+      //   })
+      //   file.status = 'error'
+      //   return false
+      // }
+    },
+    onChange(info: any) {
+      const { status, response } = info.file;
+      if (status === 'done') {
+        message.success(`${info.file.name} 上传成功`);
+        // setFileUrl(response.data)
+      } else if (status === 'error') {
+        message.error(`${info.file.name} 上传失败`);
+      }
+    },
+  };
   return <div className="RightContent-wrap">
     <Row style={{ width: '100%' }} gutter={[26, 26]}>
       {
@@ -243,7 +404,7 @@ const RightContent = (props: any) => {
                     label="发布"
                     style={{ marginRight: 'auto' }}
                   ><div className="set-flex">
-                      <Switch onChange={releaseChange} />
+                      <Switch checked={fabuChecked} onChange={releaseChange} />
                     </div>
                   </Form.Item>
                   <Form.Item
@@ -255,7 +416,7 @@ const RightContent = (props: any) => {
                       <Input
                         value={fxljInputValue}
                         onChange={(e) => setFxljInputValue(e.target.value)}
-                        style={{ width: '310px', height: '32px', lineHeight: '32px' }}
+                        style={{ width: '310px', height: '32px', lineHeight: '32px', paddingRight: '8px' }}
                       />
                       <Paragraph
                         copyable={{
@@ -276,11 +437,17 @@ const RightContent = (props: any) => {
                     label="加密分享"
                     colon={false}
                   ><div className="jiamifenxiang set-flex ">
-                      <Switch onChange={jmfxChange} />
+                      <Switch onChange={jmfxChange} checked={jmfxSwitchValue} />
                       {
                         isJMFX &&
                         <div className="set-flex">
-                          <div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div><Input style={{ width: '204px' }} />
+                          <div style={{ width: '28px', margin: '0 20px 0 23px' }}>密码 </div>
+                          <Input style={{ width: '204px' }}
+                            value={jmfxValue}
+                            onChange={(e) => setJmfxValue(e.target.value)}
+                            onBlur={jmfxInputOnBlur}
+                            maxLength={20}
+                          />
                         </div>
                       }
                     </div>
@@ -289,7 +456,7 @@ const RightContent = (props: any) => {
                     label="应用到驾驶舱"
                     colon={false}
                   ><div className="set-flex">
-                      <Switch onChange={kfChange} />
+                      <Switch checked={toCockpitSwitchValue} onChange={toCockpit} />
                     </div>
                   </Form.Item>
                   <Form.Item
@@ -306,17 +473,27 @@ const RightContent = (props: any) => {
                       <Form.Item
                         label="标题"
                         colon={false}
-                      ><Input placeholder="请输入标题" /></Form.Item>
+                      ><Input placeholder="请输入标题"
+                        value={titleInputValue}
+                        onChange={(e) => setTitleInputValue(e.target.value)}
+                        onBlur={titleInputOnBlur}
+                        />
+                      </Form.Item>
                       <Form.Item label="描述"
                         colon={false}
-                      ><Input placeholder="请输入描述" /></Form.Item>
+                      ><Input placeholder="请输入描述"
+                        value={desInputValue}
+                        onChange={(e) => setDesInputValue(e.target.value)}
+                        onBlur={desInputOnBlur}
+                        />
+                      </Form.Item>
                       <Form.Item label="图片地址"
                         colon={false}
                       ><Input placeholder="请输入图片地址" /></Form.Item>
                       <Form.Item label="上传图片"
                         colon={false}
                       >
-                        <Upload {...props} className="set-flex">
+                        <Upload {...uploadImgProps} className="set-flex">
                           <Button type="primary">点击上传</Button>
                         </Upload>
                       </Form.Item>

@@ -48,7 +48,7 @@ export const useFetch = async (
   customOptions: any = {
     errorInfo: "请求发送失败",
     onlyNeedWrapData: false,
-    errHandleFn: () => {}
+    errHandleFn: () => {},
   }
 ): Promise<[Error | null, any, any]> => {
   // 最终路径 & 最终配置、参数

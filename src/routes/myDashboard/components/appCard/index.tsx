@@ -73,7 +73,7 @@ const AppCard = (props: any) => {
 
   }
   const fabu = (e: any) => {
-    changeFabuModal(true, id)
+    changeFabuModal(true, id, status)
   }
 
   // 复制应用
