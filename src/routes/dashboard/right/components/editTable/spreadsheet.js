@@ -53,9 +53,9 @@ export default function Spreadsheet(props) {
       .loadData(state) // load data
       .change((data) => {
         setState(data);
-        props.onChange && props.onChange(data)
+        props.onChange && props.onChange(sheet.getData())
       });
-
+    // const getData = sheet.getData
     sheetRef.current = sheet;
     return () => {
       element.innerHTML = "";

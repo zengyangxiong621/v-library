@@ -30,6 +30,7 @@ const DataSource = (props: any) => {
   const [tableData, setTableData] = useState([])
   const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
   const [previewFileUrl, setPreviewFileUrl] = useState(null)
+  const [previewRecord, setPreviewRecord] = useState(null)
   const [tableLoading, setTableLoading] = useState(true)
 
 
@@ -164,12 +165,29 @@ const DataSource = (props: any) => {
   }
   const previewClick = (record: any) => {
     console.log(record)
+    setPreviewRecord(record)
     const fileUrl = record.type === 'EXCEL' ? record.excelSourceConfig.fileUrl : record.csvSourceConfig.fileUrl
     setIsShowPreviewModal(true)
     setPreviewFileUrl(fileUrl)
   }
-  const changePreviewShowState = (val:boolean) => {
+  const changePreviewShowState = (val: boolean) => {
     setIsShowPreviewModal(val)
+    setPreviewFileUrl(null)
+  }
+  const changeRecordFileUrl = async (fileUrl: string) => {
+    const finalParams = Object.assign({}, previewRecord, {
+      excelSourceConfig: {
+        fileUrl
+      }
+    })
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [, data] = await useFetch('/visual/datasource/update', {
+      body: JSON.stringify(finalParams)
+    })
+    if (data) {
+      refreshTable()
+      setPreviewFileUrl(null)
+    }
   }
   // 表格排序
   const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
@@ -345,6 +363,7 @@ const DataSource = (props: any) => {
           visible={isShowPreviewModal}
           fileUrl={previewFileUrl}
           changeShowState={changePreviewShowState}
+          changeRecordFileUrl={changeRecordFileUrl}
         />
       </div>
     </ConfigProvider>
