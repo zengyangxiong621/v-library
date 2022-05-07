@@ -3,44 +3,14 @@ import React, { memo, useState, useEffect } from 'react'
 import './index.less'
 import Spreadsheet from "./spreadsheet.js";
 import * as XLSX from 'xlsx'
-import { http1 } from '../../../../../models/utils/request'
+import { http } from '../../../../../models/utils/request'
 import { BASE_URL } from '../../../../../utils/useFetch'
 import debounce from 'lodash/debounce';
 
 import { Button, Modal, Spin } from 'antd';
 
-const data = {
-  rows: {
-    "0": {
-      cells: {
-        "0": { text: "0" },
-        "1": { text: "0" },
-        "2": { text: "0" }
-      }
-    },
-    "1": {
-      cells: {
-        "0": { text: "0" },
-        "1": { text: "0" },
-        "2": { text: "0" }
-      }
-    },
-    "2": {
-      cells: {
-        "0": { text: "0" },
-        "1": { text: "0" },
-        "2": { text: "0" }
-      }
-    },
-    len: 50
-  },
-  cols: { len: 26 },
-  validations: [],
-  autofilter: {}
-}
-
 const PreviewTable = props => {
-  const { visible, fileUrl, changeShowState,changeRecordFileUrl } = props
+  const { visible, fileUrl, changeShowState, changeRecordFileUrl } = props
   const [modalContent, setModalContent] = useState(null)
   const [isEdit, setIsEdit] = useState(false)
   const [isTableChange, setIsTableChange] = useState(false)
@@ -49,11 +19,12 @@ const PreviewTable = props => {
   useEffect(() => {
     if (fileUrl) {
       downloadExcel()
+      setModalContent(null)
     }
   }, [fileUrl])
 
   const downloadExcel = async () => {
-    const data = await http1({
+    const data = await http({
       url: "/visual/file/download",
       method: 'post',
       credentials: 'omit',
@@ -61,7 +32,7 @@ const PreviewTable = props => {
       body: {
         fileUrl
       }
-    })
+    },true)
     console.log('data', data)
     const dataNew = new Uint8Array(data)
     const workbook = XLSX.read(dataNew, { type: 'array' });
@@ -84,7 +55,7 @@ const PreviewTable = props => {
         o.rows[i] = { cells: cells };
       })
       // 设置合并单元格
-      if(ws['!merges']){
+      if (ws['!merges']) {
         ws['!merges'].forEach(merge => {
           /** merge = {
            *  s: {c: 0, r: 15}
@@ -93,14 +64,14 @@ const PreviewTable = props => {
            */
           // 修改 cell 中 merge [合并行数,合并列数]
           let cell = o.rows[merge.s.r].cells[merge.s.c]
-  
+
           //无内容单元格处理
           if (!cell) {
             cell = { text: "" }
           }
           cell.merge = [merge.e.r - merge.s.r, merge.e.c - merge.s.c]
           o.rows[merge.s.r].cells[merge.s.c] = cell
-  
+
           // 修改 merges
           o.merges.push(XLSX.utils.encode_range(merge))
         })
@@ -116,15 +87,15 @@ const PreviewTable = props => {
     const wbout = XLSX.write(new_wb, { type: 'binary' })
     console.log('new_wb', new_wb)
     const file = new Blob([s2ab(wbout)]);
-    console.log('file',file)
+    console.log('file', file)
     const forms = new FormData()
     forms.append('file', file)
-    fetch(`${BASE_URL}/visual/file/upload`,{
-      method:'POST',
-      body:forms
-    }).then(res=>{
+    fetch(`${BASE_URL}/visual/file/upload`, {
+      method: 'POST',
+      body: forms
+    }).then(res => {
       return res.json()
-    }).then(res=>{
+    }).then(res => {
       console.log(res)
       changeShowState(false)
       changeRecordFileUrl(res.data)
@@ -178,7 +149,7 @@ const PreviewTable = props => {
     console.log(data)
     setIsTableChange(true)
     setCurrentSheetData(data)
-  },300)
+  }, 300)
 
   const handleEdit = () => {
     setIsEdit(true)
@@ -211,6 +182,7 @@ const PreviewTable = props => {
       {
         modalContent ?
           <Spreadsheet
+            key={fileUrl}
             height="100%"
             data={modalContent}
             onChange={modalDataChange}

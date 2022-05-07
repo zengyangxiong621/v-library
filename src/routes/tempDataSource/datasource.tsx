@@ -30,7 +30,7 @@ const DataSource = (props: any) => {
   const [tableData, setTableData] = useState([])
   const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
   const [previewFileUrl, setPreviewFileUrl] = useState(null)
-  const [previewRecord, setPreviewRecord] = useState(null)
+  const [previewRecord, setPreviewRecord] = useState({})
   const [tableLoading, setTableLoading] = useState(true)
 
 
@@ -175,8 +175,10 @@ const DataSource = (props: any) => {
     setPreviewFileUrl(null)
   }
   const changeRecordFileUrl = async (fileUrl: string) => {
+    const previewRecordCopy:any = previewRecord
+    const type = previewRecordCopy.type.toLowerCase()
     const finalParams = Object.assign({}, previewRecord, {
-      excelSourceConfig: {
+      [`${type}SourceConfig`]: {
         fileUrl
       }
     })
@@ -290,7 +292,7 @@ const DataSource = (props: any) => {
         return (
           <Space size="middle" >
             {
-              ['EXCEL'].includes(record.type) ?
+              ['EXCEL','CSV'].includes(record.type) ?
                 <span className='textInOperationColumn' onClickCapture={() => previewClick(record)}>预览</span>
                 : null
             }
