@@ -6,8 +6,15 @@ import {
   MinusCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons'
+import * as React from 'react'
 
 const BottomBar = ({ bar, dispatch, props }: any) => {
+  const findItem = (name: string) => {
+    return bar.pageConfig.find((item: any) => {
+      return item.name === name
+    })
+  }
+  const recommendConfig = findItem('recommend')
   useEffect(() => {
 
   }, [])
@@ -32,6 +39,16 @@ const BottomBar = ({ bar, dispatch, props }: any) => {
 
   return (
     <div className="c-center-bottom-bar">
+      <section style={ {
+        position: 'absolute',
+        bottom: '50px',
+        right: '20px',
+        color: '#999',
+        userSelect: 'none',
+      } }>
+        按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
+        { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
+      </section>
       <section className="left">
       </section>
       <section className="right">

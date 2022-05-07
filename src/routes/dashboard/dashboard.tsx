@@ -56,9 +56,7 @@ function App({ bar, dispatch, location }: any) {
     189: true, // -
   }
   const clearAllStatus = (event: MouseEvent) => {
-    console.log('target', event.target)
     const dom: any = (event.target as any) || null
-
     let temp = true
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
     let awayList = [ 'ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable' ]
@@ -94,21 +92,6 @@ function App({ bar, dispatch, location }: any) {
       document.removeEventListener('click', clearAllStatus)
     }
   }, [])
-  // useClickAway((event) => {
-  //   console.log('target', event.target)
-  //   clearAllStatus()
-  // }, [
-  //   document.querySelector('.right-wrap'),
-  //   document.querySelector('.draggable-container'),
-  //   // document.querySelector('.TopBar-wrap'),
-  //   ...document.querySelectorAll('.use-away') as any,
-  //   document.querySelector('.hasList-self-tooltip'),
-  //   document.querySelector('.Header-wrap>.center'),
-  //   document.querySelector('.left-wrap-tree'),
-  //   document.querySelector('.left-wrap-toolbar'),
-  //   document.querySelector('.left-menu>.left-wrap>.header'),
-  //   document.querySelector('.left-menu>.footer'),
-  // ])
 
   // 阻止 window 缩放
   const handleStopWindowWheel = (event: any) => {
@@ -168,27 +151,3 @@ function App({ bar, dispatch, location }: any) {
 export default withRouter(connect(({ bar }: any) => (
   { bar }
 ))(App))
-
-
-/**
- * description: 左侧菜单栏拖动功能
- */
-// const dragEl: any = document.querySelector('.left-menu')
-// // 拖动右边框改变右侧菜单栏的宽度
-// const changeWidth = throttle((e: any) => {
-//   console.log('eeeeeeeee', e);
-//   console.log('dragEl', dragEl);
-//   e.stopPropagation()
-//   if (e.clientX > 180 && e.clientX < 300) {
-//     dragEl.style.width = `${e.clientX}px`
-//   }
-// }, 0)
-// const onMouseDown = (e: any) => {
-//   const isLeftClick = e.button == 0
-//   if (isLeftClick) {
-//     document.addEventListener('mousemove', changeWidth)
-//   }
-//   document.addEventListener('mouseup', () => {
-//     document.removeEventListener('mousemove', changeWidth)
-//   })
-// }
