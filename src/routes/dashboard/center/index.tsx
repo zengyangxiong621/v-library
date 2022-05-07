@@ -68,16 +68,10 @@ const Center = ({ bar, dispatch }: any) => {
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
     let canvasScaleValue = 0
     if(canvasHeight > height) {
-      console.log('1')
       canvasScaleValue = Number((height / recommendConfig.height).toFixed(3))
       const left = (getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 22 - recommendConfig.width * canvasScaleValue) / 2
-      console.log('-----------------')
-      console.log('getCurrentDocumentHeight', getCurrentDocumentHeight)
-      console.log('height', height)
-      console.log('-----------------')
       setRulerCanvasSpacing({ top: 22, left })
     } else {
-      console.log('2')
       // 如果中间区域刚好能装下画布
       // 那么尺子组件距离画布的横向距离就是 22
       canvasScaleValue = Number((width / recommendConfig.width).toFixed(3))
