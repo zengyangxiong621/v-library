@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import './index.less'
 import { v4 as uuidv4 } from 'uuid';
 import { http } from '../../../../../models/utils/request'
+import { BASE_URL } from '../../../../../utils/useFetch'
 import debounce from 'lodash/debounce';
 
 import { Button, Modal, Spin, message } from 'antd';
@@ -71,15 +72,23 @@ const PreViewJson = props => {
 
   const upLoadJson = async() => {
     const fileName = fileUrl.split('/').pop()
-    const res = await http({
-      url: "/visual/file/uploadByJsonStr",
-      method: 'post',
-      body: {
-        fileName,
-        content:modalContent
-      }
+    let blob = new Blob([modalContent], {
+      type: "application/json"
+    });
+    let file = new File([blob], `${fileName}`, {
+      type: 'application/json',
+      lastModified: Date.now()
     })
-    changeRecordFileUrl(res)
+    const forms = new FormData()
+    forms.append('file', file)
+    fetch(`${BASE_URL}/visual/file/upload`, {
+      method: 'POST',
+      body: forms
+    }).then(res => {
+      return res.json()
+    }).then(res => {
+      changeRecordFileUrl(res.data)
+    })
   }
 
   return (
