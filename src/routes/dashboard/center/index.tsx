@@ -375,6 +375,7 @@ const Center = ({ bar, dispatch }: any) => {
               position: 'absolute',
               left: -5000,
               top: -5000,
+              background: '#181a24'
             } }
           >
 
