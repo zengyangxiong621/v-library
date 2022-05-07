@@ -76,7 +76,7 @@ const PreViewJson = props => {
       method: 'post',
       body: {
         fileName,
-        content:JSON.stringify(modalContent)
+        content:modalContent
       }
     })
     changeRecordFileUrl(res)
