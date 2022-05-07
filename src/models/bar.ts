@@ -664,7 +664,8 @@ export default {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
-
+      // 左侧树多选
+      state.isMultipleTree = true
       state.isAreaChoose = state.selectedComponentOrGroup.length > 0
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup,

@@ -23,7 +23,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
   const [verticalRulerHeight, setVerticalRulerHeight] = useState(1440)
 
   const canvasContainer = document.querySelector('.canvas-screen')
-  const centerWrap = document.querySelector('.center-wrap')
+
   const headerWrap = document.querySelector('.Header-wrap')
 
 
@@ -33,7 +33,12 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       const leftWrap = document.querySelector('.home-left-wrap')
       const left = Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width)
       const right = Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height)
+      const centerWrap = document.querySelector('.center-wrap')
       ruler.painter(bar.canvasScaleValue, left, right)
+      // 下面两个需要先执行，因为是异步的，需要在重新渲染画布之前
+
+      // setHorizonRulerWidth(centerWrap.getBoundingClientRect().width)
+      // setVerticalRulerHeight(centerWrap.getBoundingClientRect().height)
     }
   }
   useImperativeHandle(cRef, () => ({
@@ -41,19 +46,25 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       painter()
     },
   }))
+
   useEffect(() => {
     const temp = new rulerCanvas()
     temp.painter(bar.canvasScaleValue)
     ruler = setRuler(temp)
+    const centerWrap = document.querySelector('.center-wrap')
+    setHorizonRulerWidth(centerWrap.getBoundingClientRect().width)
+    setVerticalRulerHeight(centerWrap.getBoundingClientRect().height)
     return () => {
       setRuler(null)
     }
   }, [])
+
   useEffect(() => {
     if (ruler) {
       painter()
     }
-  }, [bar.canvasScaleValue, bar.leftMenuWidth])
+  }, [bar.canvasScaleValue])
+
   const rulerCanvas = function () {
     this.canvasTop = document.querySelector('#h-ruler-canvas')
     this.canvasLeft = document.querySelector('#v-ruler-canvas')
@@ -228,12 +239,13 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
         <canvas
           onClick={ () => handleClick('vertical') }
           id="v-ruler-canvas"
-          width={ MARGIN_LENGTH }
+          // width={ MARGIN_LENGTH }
           height={ verticalRulerHeight }
           style={ {
             position: 'absolute',
             left: 0,
             top: 0,
+            right: 0,
             background: '#151620',
             cursor: 'n-resize',
           } }>

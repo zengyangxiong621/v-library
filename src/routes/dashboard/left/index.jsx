@@ -30,7 +30,6 @@ const Left = ({ dispatch, bar, operate }) => {
 
   const [isExpand, setIsExpand] = useState([])
   const [customExpandKeys, setCustomExpandKeys] = useState([])
-  const [isMultipleTree, setIsMultipleTree] = useState(bar.isMultipleTree)
   const [selected, setSelected] = useState([])
   const activeIconRef = useRef()
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false)
@@ -74,7 +73,10 @@ const Left = ({ dispatch, bar, operate }) => {
     if (!dom || !dom.className || ['ant-layout', 'draggable-wrapper', 'left-wrap'].includes(dom.className)) {
       setSelected([])
       // 将多选树改为单选树
-      setIsMultipleTree(false)
+      dispatch({
+        type: 'bar/save',
+        payload: { isMultipleTree: false },
+      })
     }
   }
   // 1、其它组件更改了选中的节点时触发
@@ -102,13 +104,19 @@ const Left = ({ dispatch, bar, operate }) => {
   useEffect(() => {
     onkeydown = (e) => {
       if (e.key === 'Control') {
-        setIsMultipleTree(true)
+        dispatch({
+          type: 'bar/save',
+          payload: { isMultipleTree: true },
+        })
         setIsCtrlKeyPressing(true)
       }
     }
     onkeyup = (e) => {
       if (e.key === 'Control') {
-        setIsMultipleTree(false)
+        dispatch({
+          type: 'bar/save',
+          payload: { isMultipleTree: true },
+        })
         setIsCtrlKeyPressing(false)
       }
     }
@@ -125,35 +133,35 @@ const Left = ({ dispatch, bar, operate }) => {
   /**
    * 方法
    * */
-  // 收起 / 展开 菜单栏
+    // 收起 / 展开 菜单栏
   const [w, setW] = useState(188)
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
-    el.style.width = `${w}px`
+    el.style.width = `${ w }px`
     dispatch({
       type: 'bar/save',
       payload: {
-        leftMenuWidth: w
-      }
+        leftMenuWidth: w,
+      },
     })
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
-    console.log('icon', icon);
+    console.log('icon', icon)
     let finalPayload = {
-      dashboardId: bar.dashboardId
+      dashboardId: bar.dashboardId,
     }
     switch (icon) {
       case 'lock':
         const everyNodeLockState = getFieldStates(bar.treeData, bar.key, 'isLock')
         const finalBody = bar.key.map((item, index) => ({
           id: item,
-          key: "isLock",
-          value: !everyNodeLockState[index]
+          key: 'isLock',
+          value: !everyNodeLockState[index],
         }))
         finalPayload.configs = finalBody
-        break;
+        break
       case 'copy':
         finalPayload = {
           dashboardId: bar.dashboardId,
@@ -165,29 +173,29 @@ const Left = ({ dispatch, bar, operate }) => {
           components: [...bar.key],
           // components: [...bar.key],
           panels: [],
-          selected: [...bar.key]
+          selected: [...bar.key],
         }
       case 'singleShowLayer':
         finalPayload.keys = bar.key
         finalPayload.singleShowLayer = single
         setSingle(!single)
-        break;
+        break
       // case 'singleShowLayer':
       //   finalPayload.singleShowLayer = 'negation'
       //   break
       case 'delete':
         const l = bar.key?.map(item => ({
           id: item,
-          children: []
+          children: [],
         }))
         finalPayload.layers = l
-        break;
+        break
       default:
         break
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${icon}`,
+      type: `bar/${ icon }`,
       payload: finalPayload,
     })
   }
@@ -232,12 +240,18 @@ const Left = ({ dispatch, bar, operate }) => {
   const onRightClick = ({ event, node }) => {
     event.stopPropagation()
     const { modules, key } = node
-    setIsMultipleTree(false)
+    dispatch({
+      type: 'bar/save',
+      payload: { isMultipleTree: true },
+    })
     // 如果有选中了的节点 并且 此次右击的目标是其中一个，则展开菜单，
     // 否则，重置已选中节点 并 单选中当前节点以及展开右键菜单
     let t = []
     if (selected.length && selected.includes(key)) {
-      setIsMultipleTree(true)
+      dispatch({
+        type: 'bar/save',
+        payload: { isMultipleTree: true },
+      })
       t = selected
     } else {
       t = [key]
@@ -262,7 +276,7 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   //
   const onDrop = info => {
-    console.log('info', info);
+    console.log('info', info)
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
     const dropPos = info.node.pos.split('-')
@@ -347,54 +361,54 @@ const Left = ({ dispatch, bar, operate }) => {
   return (
     <div className="left-menu">
       <div className="left-wrap">
-        <div className="header" ref={headerRef}>
+        <div className="header" ref={ headerRef }>
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={() => toggle()}
-            style={{ cursor: 'pointer' }} />
+            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
+            style={ { cursor: 'pointer' } }/>
         </div>
-        <div className="left-wrap-toolbar" ref={topBarRef}>
-          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
+        <div className="left-wrap-toolbar" ref={ topBarRef }>
+          <ToolBar data={ topBarIcons } iconSize="12px" getActiveIcon={ getActiveIcon }>
           </ToolBar>
         </div>
-        {/*右键菜单Dropdown */}
+        {/*右键菜单Dropdown */ }
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
-        <div className="left-wrap-tree" ref={treeRef}>
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
+        <div className="left-wrap-tree" ref={ treeRef }>
           <Tree
             draggable
             blockNode
             fieldNames={
               { key: 'id', children: 'modules' }
             }
-            multiple={isMultipleTree}
-            switcherIcon={<DownOutlined />}
-            defaultExpandedKeys={customExpandKeys}
-            onDrop={onDrop}
-            onExpand={myOnExpand}
-            onSelect={onSelect}
-            onRightClick={onRightClick}
-            treeData={bar.treeData}
-            selectedKeys={bar.key}
-            titleRender={(nodeData) => {
+            multiple={ bar.isMultipleTree }
+            switcherIcon={ <DownOutlined/> }
+            defaultExpandedKeys={ customExpandKeys }
+            onDrop={ onDrop }
+            onExpand={ myOnExpand }
+            onSelect={ onSelect }
+            onRightClick={ onRightClick }
+            treeData={ bar.treeData }
+            selectedKeys={ bar.key }
+            titleRender={ (nodeData) => {
               // title 置为空，覆盖antTree 默认的title
-              return (<div title=''>
+              return (<div title="">
                 <EveryTreeNode
-                  {...nodeData}
-                  isExpand={isExpand}
-                  getCurrentMenuLocation={getCurrentMenuLocation}
+                  { ...nodeData }
+                  isExpand={ isExpand }
+                  getCurrentMenuLocation={ getCurrentMenuLocation }
                 />
               </div>)
             }
             }
           />
         </div>
-        {/* </Dropdown> */}
-        {bar.isShowRightMenu &&
-          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />}
+        {/* </Dropdown> */ }
+        { bar.isShowRightMenu &&
+        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
       </div>
-      <div className="footer" ref={bottomBarRef}>
-        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
+      <div className="footer" ref={ bottomBarRef }>
+        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
         </ToolBar>
       </div>
     </div>
