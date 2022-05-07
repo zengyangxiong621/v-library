@@ -55,34 +55,26 @@ const Center = ({ bar, dispatch }: any) => {
     }
     // bar.leftMenuWidth 是左侧菜单的宽度, 333 是右侧菜单的高度， 66 是 3 个尺子的宽度
     const width = getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 66
-    console.log('窗口的宽度', getCurrentDocumentWidth)
-    console.log('canvas应该的宽度', width)
     // 64 是顶部菜单的高度,  32 是底部菜单的高度, 66 是 3 个尺子的高度
+    // width、 height 就是当前 canvas 实际宽高
     const height = getCurrentDocumentHeight - 64 - 35 - 66
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
-    console.log('canvasHeight', canvasHeight)
-    console.log('height', height)
+    let canvasScaleValue = 0
     if(canvasHeight > height) {
-      // 如果画布
-      console.log('width', width)
-      const left = (getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 22 ) / 2
-      setRulerCanvasSpacing({ left, top: 22 })
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          canvasScaleValue: Number((height / recommendConfig.height).toFixed(3)),
-          canvasDraggablePosition: { x: 0, y: 0 },
-        },
-      })
-      return
+      canvasScaleValue = Number((height / recommendConfig.height).toFixed(3))
+      const left = (getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 22 - recommendConfig.width * canvasScaleValue) / 2
+      setRulerCanvasSpacing({ ...rulerCanvasSpacing, left })
+    } else {
+      // 如果中间区域刚好能装下画布
+      // 那么尺子组件距离画布的横向距离就是 22
+      canvasScaleValue = Number((width / recommendConfig.width).toFixed(3))
+      const top = (getCurrentDocumentHeight - 64 - 22 - 32 - recommendConfig.height * canvasScaleValue) / 2
+      setRulerCanvasSpacing({ ...rulerCanvasSpacing, top })
     }
-    // 如果中间区域刚好能装下画布
-    // 那么尺子组件距离画布的横向距离就是 22
-    setRulerCanvasSpacing({ ...rulerCanvasSpacing, left: 22 })
     dispatch({
       type: 'bar/save',
       payload: {
-        canvasScaleValue: Number((width / recommendConfig.width).toFixed(3)),
+        canvasScaleValue,
         canvasDraggablePosition: { x: 0, y: 0 },
       },
     })
@@ -103,6 +95,14 @@ const Center = ({ bar, dispatch }: any) => {
       })
     }
   }
+
+  const calcCanvasPosition = () => {
+
+  }
+
+  useEffect(() => {
+
+  }, [ bar.canvasScaleValue ])
 
   useEffect(() => {
     if(bar.canvasScaleValue) {
@@ -414,16 +414,6 @@ const Center = ({ bar, dispatch }: any) => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div style={ {
-              position: 'absolute',
-              bottom: '50px',
-              right: '20px',
-              color: '#999',
-              userSelect: 'none',
-            } }>
-              按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
-              { ' ' + Math.ceil(bar.canvasScaleValue * 100) + '%' }
             </div>
             {
               isCanvasDraggable ? <div className="canvas-mask" style={ { position: 'absolute', inset: 0 } }/> : <></>
