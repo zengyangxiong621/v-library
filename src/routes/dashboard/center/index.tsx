@@ -33,43 +33,56 @@ const Center = ({ bar, dispatch }: any) => {
   const treeData = bar.treeData
   let supportLinesRef = bar.supportLinesRef
 
-
   const findItem = (name: string) => {
     return bar.pageConfig.find((item: any) => {
       return item.name === name
     })
   }
+
+
+  // const recommendConfig = findItem('recommend')
+  // const styleColor = findItem('styleColor')
+  // const backgroundImg = findItem('backgroundImg')
+  // const gridSpacing = findItem('gridSpacing')
+  // const zoomConfig = findItem('zoom')
   const recommendConfig = findItem('recommend')
   const styleColor = findItem('styleColor')
   const backgroundImg = findItem('backgroundImg')
   const gridSpacing = findItem('gridSpacing')
   const zoomConfig = findItem('zoom')
+
   // 计算画布的大小
   const calcCanvasSize = () => {
-    console.log('calcCanvasSize')
     let getCurrentDocumentWidth = document.documentElement.clientWidth
+    // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
     const getCurrentDocumentHeight = document.documentElement.clientHeight
     // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
     if(getCurrentDocumentWidth < 1366) {
       getCurrentDocumentWidth = 1366
     }
+    // width、 height 是我们希望的当前 canvas 实际宽高
     // bar.leftMenuWidth 是左侧菜单的宽度, 333 是右侧菜单的高度， 66 是 3 个尺子的宽度
     const width = getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 66
     // 64 是顶部菜单的高度,  32 是底部菜单的高度, 66 是 3 个尺子的高度
-    // width、 height 就是当前 canvas 实际宽高
     const height = getCurrentDocumentHeight - 64 - 35 - 66
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
     let canvasScaleValue = 0
     if(canvasHeight > height) {
+      console.log('1')
       canvasScaleValue = Number((height / recommendConfig.height).toFixed(3))
       const left = (getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 22 - recommendConfig.width * canvasScaleValue) / 2
-      setRulerCanvasSpacing({ ...rulerCanvasSpacing, left })
+      console.log('-----------------')
+      console.log('getCurrentDocumentHeight', getCurrentDocumentHeight)
+      console.log('height', height)
+      console.log('-----------------')
+      setRulerCanvasSpacing({ top: 22, left })
     } else {
+      console.log('2')
       // 如果中间区域刚好能装下画布
       // 那么尺子组件距离画布的横向距离就是 22
       canvasScaleValue = Number((width / recommendConfig.width).toFixed(3))
       const top = (getCurrentDocumentHeight - 64 - 22 - 32 - recommendConfig.height * canvasScaleValue) / 2
-      setRulerCanvasSpacing({ ...rulerCanvasSpacing, top })
+      setRulerCanvasSpacing({ left: 22, top })
     }
     dispatch({
       type: 'bar/save',
@@ -105,6 +118,8 @@ const Center = ({ bar, dispatch }: any) => {
   }, [ bar.canvasScaleValue ])
 
   useEffect(() => {
+    console.log('recommendConfig.width1', bar.pageConfig)
+
     if(bar.canvasScaleValue) {
       window.addEventListener('wheel', calcCanvasScale, { passive: false })
     }
@@ -143,7 +158,7 @@ const Center = ({ bar, dispatch }: any) => {
       (document.querySelector('.draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
       // document.removeEventListener('contextmenu', handleContextMenu)
     }
-  }, [])
+  }, [bar.pageConfig])
   useClickAway(() => {
     // 取消右键菜单
     setIsShowRightMenu(false)
