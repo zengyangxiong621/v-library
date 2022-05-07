@@ -33,7 +33,6 @@ const PreviewTable = props => {
         fileUrl
       }
     },true)
-    console.log('data', data)
     const dataNew = new Uint8Array(data)
     const workbook = XLSX.read(dataNew, { type: 'array' });
     const workbookNew = stox(workbook)
@@ -83,28 +82,24 @@ const PreviewTable = props => {
 
   /** 上传excel */
   const uploadExcel = () => {
+    const fileName = fileUrl.split('/').pop()
     const new_wb = xtos(currentSheetData);
     const wbout = XLSX.write(new_wb, { type: 'binary' })
-    console.log('new_wb', new_wb)
     const file = new Blob([s2ab(wbout)]);
-    console.log('file', file)
     const forms = new FormData()
-    forms.append('file', file)
+    forms.append('file', file,`${fileName}`)
     fetch(`${BASE_URL}/visual/file/upload`, {
       method: 'POST',
       body: forms
     }).then(res => {
       return res.json()
     }).then(res => {
-      console.log(res)
-      changeShowState(false)
       changeRecordFileUrl(res.data)
     })
   }
 
   /** 将x-data-spreadsheet中的数据格式转为xlsx中的workbook */
   const xtos = sdata => {
-    console.log(sdata)
     var out = XLSX.utils.book_new();
     sdata.forEach(function (xws) {
       var aoa = [[]];
@@ -146,7 +141,6 @@ const PreviewTable = props => {
   }
 
   const modalDataChange = debounce(data => {
-    console.log(data)
     setIsTableChange(true)
     setCurrentSheetData(data)
   }, 300)
@@ -160,6 +154,7 @@ const PreviewTable = props => {
   }
 
   const handleOk = () => {
+    changeShowState(false)
     if (isTableChange) {
       uploadExcel()
     }

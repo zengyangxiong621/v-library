@@ -8,6 +8,7 @@ import { PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 import AddDataSource from './components/addDataSource'
 import EditDataSource from './components/editDataSource'
 import PreviewTable from '../../routes/dashboard/right/components/editTable/previewTable'
+import PreViewJson from '../../routes/dashboard/right/components/codeEditor/previewJson'
 
 import { useFetch } from '../../utils/useFetch'
 import { TDataSourceParams } from './type'
@@ -30,7 +31,7 @@ const DataSource = (props: any) => {
   const [tableData, setTableData] = useState([])
   const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
   const [previewFileUrl, setPreviewFileUrl] = useState(null)
-  const [previewRecord, setPreviewRecord] = useState({})
+  const [previewRecord, setPreviewRecord] = useState({ type: '',id:'' })
   const [tableLoading, setTableLoading] = useState(true)
 
 
@@ -166,7 +167,9 @@ const DataSource = (props: any) => {
   const previewClick = (record: any) => {
     console.log(record)
     setPreviewRecord(record)
-    const fileUrl = record.type === 'EXCEL' ? record.excelSourceConfig.fileUrl : record.csvSourceConfig.fileUrl
+    const fileUrl = record.type === 'EXCEL' ?
+      record.excelSourceConfig.fileUrl : record.type === 'CSV' ?
+        record.csvSourceConfig.fileUrl : record.jsonSourceConfig.fileUrl
     setIsShowPreviewModal(true)
     setPreviewFileUrl(fileUrl)
   }
@@ -175,8 +178,7 @@ const DataSource = (props: any) => {
     setPreviewFileUrl(null)
   }
   const changeRecordFileUrl = async (fileUrl: string) => {
-    const previewRecordCopy:any = previewRecord
-    const type = previewRecordCopy.type.toLowerCase()
+    const type = previewRecord.type.toLowerCase()
     const finalParams = Object.assign({}, previewRecord, {
       [`${type}SourceConfig`]: {
         fileUrl
@@ -292,7 +294,7 @@ const DataSource = (props: any) => {
         return (
           <Space size="middle" >
             {
-              ['EXCEL','CSV'].includes(record.type) ?
+              ['EXCEL', 'CSV', 'JSON'].includes(record.type) ?
                 <span className='textInOperationColumn' onClickCapture={() => previewClick(record)}>预览</span>
                 : null
             }
@@ -360,13 +362,25 @@ const DataSource = (props: any) => {
           changeShowState={changeShowState}
           refreshTable={refreshTable}
         />
-        {/* 表格在线预览 */}
-        <PreviewTable
-          visible={isShowPreviewModal}
-          fileUrl={previewFileUrl}
-          changeShowState={changePreviewShowState}
-          changeRecordFileUrl={changeRecordFileUrl}
-        />
+        {
+          ['EXCEL', 'CSV'].includes(previewRecord.type) ?
+            // {/* 表格在线预览 */}
+            <PreviewTable
+              visible={isShowPreviewModal}
+              fileUrl={previewFileUrl}
+              changeShowState={changePreviewShowState}
+              changeRecordFileUrl={changeRecordFileUrl}
+            />
+            :
+            // {/* json在线预览 */}
+            <PreViewJson
+              visible={isShowPreviewModal}
+              fileUrl={previewFileUrl}
+              dataSourceId={previewRecord.id}
+              changeShowState={changePreviewShowState}
+              changeRecordFileUrl={changeRecordFileUrl}
+            />
+        }
       </div>
     </ConfigProvider>
   )
