@@ -207,7 +207,6 @@ const Center = ({ bar, dispatch }: any) => {
 
   }
 
-
   /**
    * @desc 缩放组件在缩放结束后的回调
    * @param scaleDragData: IScaleDragData

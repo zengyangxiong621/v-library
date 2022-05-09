@@ -100,7 +100,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     // 点击后隐藏菜单
     hideMenu()
   }
-  const { x, y, id, isFolder } = menuInfo
+  const { x, y } = menuInfo
   // console.log('x y id isFolders', x, y, id, isFolder);
   const menuRef = useRef(null)
   useEffect(() => {

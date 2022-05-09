@@ -133,12 +133,12 @@ const Left = ({ dispatch, bar, operate }) => {
   /**
    * 方法
    * */
-    // 收起 / 展开 菜单栏
+  // 收起 / 展开 菜单栏
   const [w, setW] = useState(188)
   const toggle = () => {
     const el = document.querySelector('.left-menu')
     w === 188 ? setW(250) : setW(188)
-    el.style.width = `${ w }px`
+    el.style.width = `${w}px`
     dispatch({
       type: 'bar/save',
       payload: {
@@ -195,7 +195,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     activeIconRef.current = icon
     dispatch({
-      type: `bar/${ icon }`,
+      type: `bar/${icon}`,
       payload: finalPayload,
     })
   }
@@ -341,10 +341,13 @@ const Left = ({ dispatch, bar, operate }) => {
 
 
   // 获取子组件传过来的X，Y值
-  const [isShowRightMenu, setIsShowRightMenu] = useState(false)
   const [menuInfo, setMenuInfo] = useState({ x: 0, y: 0, id: null, isFolder: false })
   const getCurrentMenuLocation = useCallback((menuInfo) => {
-    setMenuInfo(menuInfo)
+    // setMenuInfo(menuInfo)
+    dispatch({
+      type: 'bar/setRightMenuInfo',
+      payload: menuInfo
+    })
     // 点击右键才渲染菜单
     dispatch({
       type: 'bar/setIsShowRightMenu',
@@ -361,54 +364,54 @@ const Left = ({ dispatch, bar, operate }) => {
   return (
     <div className="left-menu">
       <div className="left-wrap">
-        <div className="header" ref={ headerRef }>
+        <div className="header" ref={headerRef}>
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={ () => toggle() }
-            style={ { cursor: 'pointer' } }/>
+            type="icon-tucengshouqi" onClickCapture={() => toggle()}
+            style={{ cursor: 'pointer' }} />
         </div>
-        <div className="left-wrap-toolbar" ref={ topBarRef }>
-          <ToolBar data={ topBarIcons } iconSize="12px" getActiveIcon={ getActiveIcon }>
+        <div className="left-wrap-toolbar" ref={topBarRef}>
+          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
           </ToolBar>
         </div>
-        {/*右键菜单Dropdown */ }
+        {/*右键菜单Dropdown */}
 
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */ }
-        <div className="left-wrap-tree" ref={ treeRef }>
+        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
+        <div className="left-wrap-tree" ref={treeRef}>
           <Tree
             draggable
             blockNode
             fieldNames={
               { key: 'id', children: 'modules' }
             }
-            multiple={ bar.isMultipleTree }
-            switcherIcon={ <DownOutlined/> }
-            defaultExpandedKeys={ customExpandKeys }
-            onDrop={ onDrop }
-            onExpand={ myOnExpand }
-            onSelect={ onSelect }
-            onRightClick={ onRightClick }
-            treeData={ bar.treeData }
-            selectedKeys={ bar.key }
-            titleRender={ (nodeData) => {
+            multiple={bar.isMultipleTree}
+            switcherIcon={<DownOutlined />}
+            defaultExpandedKeys={customExpandKeys}
+            onDrop={onDrop}
+            onExpand={myOnExpand}
+            onSelect={onSelect}
+            onRightClick={onRightClick}
+            treeData={bar.treeData}
+            selectedKeys={bar.key}
+            titleRender={(nodeData) => {
               // title 置为空，覆盖antTree 默认的title
               return (<div title="">
                 <EveryTreeNode
-                  { ...nodeData }
-                  isExpand={ isExpand }
-                  getCurrentMenuLocation={ getCurrentMenuLocation }
+                  {...nodeData}
+                  isExpand={isExpand}
+                  getCurrentMenuLocation={getCurrentMenuLocation}
                 />
               </div>)
             }
             }
           />
         </div>
-        {/* </Dropdown> */ }
-        { bar.isShowRightMenu &&
-        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }
+        {/* </Dropdown> */}
+        {/* {bar.isShowRightMenu &&
+          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />} */}
       </div>
-      <div className="footer" ref={ bottomBarRef }>
-        <ToolBar needBottomBorder={ false } iconSize="14px" data={ bottomBarIcons } getActiveIcon={ getActiveIcon }>
+      <div className="footer" ref={bottomBarRef}>
+        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>
       </div>
     </div>
