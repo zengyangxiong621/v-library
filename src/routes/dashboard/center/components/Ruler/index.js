@@ -52,8 +52,8 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
     temp.painter(bar.canvasScaleValue)
     ruler = setRuler(temp)
     const centerWrap = document.querySelector('.center-wrap')
-    setHorizonRulerWidth(centerWrap.getBoundingClientRect().width)
-    setVerticalRulerHeight(centerWrap.getBoundingClientRect().height)
+    // setHorizonRulerWidth(centerWrap.getBoundingClientRect().width)
+    // setVerticalRulerHeight(centerWrap.getBoundingClientRect().height)
     return () => {
       setRuler(null)
     }
