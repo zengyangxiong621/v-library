@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
+import debounce from 'lodash/debounce';
 
 import { Button, Modal } from 'antd';
 import {
@@ -63,18 +64,13 @@ const CodeEditor = props => {
     setContent(_data.value)
   }, [_data.value])
 
-  const onChange = (val) => {
+  const onChange = debounce((val) => {
     setHasEdit(true)
-  }
-  const handleBlur = (a, b) => {
-    if (hasEdit) {
-      const val = b.renderer.content.innerText
-      setContent(val)
-      setModalContent(val)
-      _data.value = val
-      props.onChange()
-    }
-  }
+    setContent(val)
+    setModalContent(val)
+    _data.value = val
+    props.onChange()
+  },300)
 
   const expandHandle = () => {
     setFullScreen(true)
@@ -94,7 +90,6 @@ const CodeEditor = props => {
         mode={_data.language}
         theme="twilight"
         onChange={onChange}
-        onBlur={handleBlur}
         name={aceName}
         editorProps={{ $blockScrolling: true }}
         value={content}
