@@ -11,22 +11,22 @@ const defaultOptions: any = {
 export const myFetch = (
   url: string,
   options: object,
-  baseUrl: string = 'http://10.201.82.245:31088',
+  baseUrl: string = 'http://10.202.233.230:9572',
   // baseUrl: string = "http://50423059pd.zicp.vip"
 ) => {
   const finalOptions = {
     ...defaultOptions,
     ...options,
   }
-  return fetch(`${baseUrl}${url}`, finalOptions).then((res) => res.json())
+  return fetch(`${ baseUrl }${ url }`, finalOptions).then((res) => res.json())
 }
 const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === '[object Object]'
 }
 /* 核心方法 */
-export const http = (config: any, isDownload: boolean = false): any => {
+export const http = (config: any): any => {
   // init config & validate
-  if (!isPlainObject(config)) config = {}
+  if(!isPlainObject(config)) config = {}
   config = Object.assign({
     url: '',
     method: 'GET',
@@ -37,19 +37,19 @@ export const http = (config: any, isDownload: boolean = false): any => {
     responseType: 'json',
     signal: null,
   }, config)
-  if (!isPlainObject(config.headers)) config.headers = {}
-  if (config.params !== null && !isPlainObject(config.params)) config.params = null
+  if(!isPlainObject(config.headers)) config.headers = {}
+  if(config.params !== null && !isPlainObject(config.params)) config.params = null
   let { url, method, credentials, headers, body, params, responseType, signal } = config
+  // let baseUrl = 'http://10.202.233.230:9572'
   let baseUrl = 'http://10.202.233.230:9572'
-  // let baseUrl = 'http://10.202.226.250:9572'
   // let baseUrl = 'http://10.201.82.245:31088'
   // let baseUrl = 'http://50423059pd.zicp.vip'
   // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
-  if (params) url += `${url.includes('?') ? '&' : '?'}${qs.stringify(params)}`
+  if(params) url += `${ url.includes('?') ? '&' : '?' }${ qs.stringify(params) }`
   url = baseUrl + url
   // 处理请求主体:只针对于POST系列请求；body是个纯粹对象，根据当前后台要求，把其变为urlencoded格式！
 
-  if (isPlainObject(body)) {
+  if(isPlainObject(body)) {
     body = JSON.stringify(body)
     // 'Content-Type': 'application/json',
     // headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -58,7 +58,7 @@ export const http = (config: any, isDownload: boolean = false): any => {
 
   // 类似于Axios的请求拦截器，例如：把存储在客户端本地的token信息携带给服务器「根据当前后台要求处理」
   let token = localStorage.getItem('token')
-  if (token) headers['Authorization'] = token
+  if(token) headers['Authorization'] = token
 
   // 发送请求
   method = method.toUpperCase()
@@ -71,18 +71,18 @@ export const http = (config: any, isDownload: boolean = false): any => {
   }
   // if(/^(POST|PUT|PATCH)$/i.test(method) && body) config.body = body
   config.body = body
-  if (signal) config.signal = signal
+  if(signal) config.signal = signal
   return fetch(url, config).then(response => {
     // 成功则返回响应主体信息
     let { status, statusText } = response,
       result
-    if (status !== 200) {
+    if(status !== 200) {
       return Promise.reject({ code: -1, status, statusText })
     }
-    if (!responseType) {
+    if(!responseType) {
       result = response.json()
     } else {
-      switch (responseType.toLowerCase()) {
+      switch(responseType.toLowerCase()) {
         case 'text':
           result = response.text()
           break
@@ -96,18 +96,14 @@ export const http = (config: any, isDownload: boolean = false): any => {
           result = response.json()
       }
     }
-    if (isDownload) {
-      return result
-    } else {
-      return result.then((response) => {
-        const { code, data } = response
-        if (code === 10000) {
-          return Promise.resolve(data)
-        } else {
-          return Promise.reject(response)
-        }
-      })
-    }
+    return result.then((response) => {
+      const { code, data } = response
+      if(code === 10000) {
+        return Promise.resolve(data)
+      } else {
+        return Promise.reject(response)
+      }
+    })
   }).catch(err => {
     const { code, message: errMessage } = err
     message.error(errMessage)
@@ -116,17 +112,17 @@ export const http = (config: any, isDownload: boolean = false): any => {
 }
 
 /* 快捷方法 */
-['GET', 'HEAD', 'DELETE', 'OPTIONS'].forEach(item => {
-  (http as any)[item.toLowerCase()] = function (url: string, config: any) {
-    if (!isPlainObject(config)) config = {}
+[ 'GET', 'HEAD', 'DELETE', 'OPTIONS' ].forEach(item => {
+  (http as any)[item.toLowerCase()] = function(url: string, config: any) {
+    if(!isPlainObject(config)) config = {}
     config['url'] = url
     config['method'] = item
     return http(config)
   }
 });
-['POST', 'PUT', 'PATCH'].forEach((item: string) => {
-  (http as any)[item.toLowerCase()] = function (url: string, body: any, config: any) {
-    if (!isPlainObject(config)) config = {}
+[ 'POST', 'PUT', 'PATCH' ].forEach((item: string) => {
+  (http as any)[item.toLowerCase()] = function(url: string, body: any, config: any) {
+    if(!isPlainObject(config)) config = {}
     config['url'] = url
     config['method'] = item
     config['body'] = body

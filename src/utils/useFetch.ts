@@ -20,8 +20,8 @@ const catchErr = <T, U = Error>(
     });
 };
 
+// export const BASE_URL = "http://10.202.233.230:9572"; // HFF 本地
 export const BASE_URL = "http://10.202.233.230:9572"; // HFF 本地
-// export const BASE_URL = "http://10.202.226.250:9572"; // HFF 本地
 // export const BASE_URL = "http://50423059pd.zicp.vip"; // FJJ 本地
 const DEFAULT_OPTIONS = {
   method: "POST",
@@ -48,7 +48,7 @@ export const useFetch = async (
   customOptions: any = {
     errorInfo: "请求发送失败",
     onlyNeedWrapData: false,
-    errHandleFn: () => {},
+    errHandleFn: () => {}
   }
 ): Promise<[Error | null, any, any]> => {
   // 最终路径 & 最终配置、参数
