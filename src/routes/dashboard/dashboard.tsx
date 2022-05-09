@@ -13,6 +13,8 @@ import Right from './right'
 import CenterHeaderBar from './center/components/topBar/index'
 import CenterBottomBar from './center/components/BottomBar/index'
 import ChooseArea from './center/components/ChooseArea'
+import CenterRightMenu from './left/components/rightClickMenu/rightClickMenu'
+import {menuOptions} from './left/Data/menuOptions'
 
 const { Header } = Layout
 
@@ -23,17 +25,17 @@ function App({ bar, dispatch, location }: any) {
       screen: any = window.screen,
       ua = navigator.userAgent.toLowerCase()
 
-    if(window.devicePixelRatio !== undefined) {
+    if (window.devicePixelRatio !== undefined) {
       ratio = window.devicePixelRatio
-    } else if(~ua.indexOf('msie')) {
-      if(screen.deviceXDPI && screen.logicalXDPI) {
+    } else if (~ua.indexOf('msie')) {
+      if (screen.deviceXDPI && screen.logicalXDPI) {
         ratio = screen.deviceXDPI / screen.logicalXDPI
       }
-    } else if(window.outerWidth !== undefined && window.innerWidth !== undefined) {
+    } else if (window.outerWidth !== undefined && window.innerWidth !== undefined) {
       ratio = window.outerWidth / window.innerWidth
     }
 
-    if(ratio) {
+    if (ratio) {
       ratio = Math.round(ratio * 100)
     }
     return ratio
@@ -41,7 +43,7 @@ function App({ bar, dispatch, location }: any) {
   const isScale = () => {
     let rate = detectZoom()
     console.log('rate', rate)
-    if(rate != 100) {
+    if (rate != 100) {
       //如何让页面的缩放比例自动为100,'transform':'scale(1,1)'没有用，又无法自动条用键盘事件，目前只能提示让用户如果想使用100%的比例手动去触发按ctrl+0
       // alert('当前页面不是100%显示，请按键盘ctrl+0恢复100%显示标准，以防页面显示错乱！')
     }
@@ -59,13 +61,13 @@ function App({ bar, dispatch, location }: any) {
     const dom: any = (event.target as any) || null
     let temp = true
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
-    let awayList = [ 'ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable' ]
+    let awayList = ['ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable']
     awayList.forEach(className => {
-      if(dom && dom?.className.indexOf(className) !== -1) {
+      if (dom && dom?.className.indexOf(className) !== -1) {
         temp = false
       }
     })
-    if(!temp) {
+    if (!temp) {
       dispatch({
         type: 'bar/clearAllStatus',
       })
@@ -97,9 +99,9 @@ function App({ bar, dispatch, location }: any) {
   const handleStopWindowWheel = (event: any) => {
     const e = event || window.event
     const ctrlKey = e.ctrlKey || e.metaKey
-    if(ctrlKey && keyCodeMap[e.keyCode]) {
+    if (ctrlKey && keyCodeMap[e.keyCode]) {
       e.preventDefault()
-    } else if(e.detail) { // Firefox
+    } else if (e.detail) { // Firefox
       event.returnValue = false
     }
   }
@@ -119,30 +121,45 @@ function App({ bar, dispatch, location }: any) {
   /**
    * description:  是否显示中心画布上方的导航栏
    */
-  const [ showTopBar, setShowTopBar ] = useState(false)
-  const [ zujianORsucai, setZujianORsucai ] = useState('zujian')
+  const [showTopBar, setShowTopBar] = useState(false)
+  const [zujianORsucai, setZujianORsucai] = useState('zujian')
   const showWhichBar = (whichBar: string) => {
     setZujianORsucai(whichBar)
     setShowTopBar(true)
   }
 
+  /**
+   * description: 画布右键菜单
+   */
+  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
+  // 点击右键菜单后，隐藏菜单
+  const hideMenu = () => {
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
+    })
+  }
+
   return (
     <Layout>
-      <ChooseArea/>
+      <ChooseArea />
       <Header className="home-header">
-        <CustomHeader showWhichBar={ showWhichBar }/>
+        <CustomHeader showWhichBar={showWhichBar} />
       </Header>
       <div className="p-home">
-        <div className="home-left-wrap"
-        >
-          <Left/>
+        <div className="home-left-wrap">
+          <Left />
         </div>
         <div className="center-wrap">
-          <CenterHeaderBar showTopBar={ showTopBar } zujianORsucai={ zujianORsucai }/>
-          <CenterCanvas/>
-          <CenterBottomBar/>
+          <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
+          <CenterCanvas />
+          <CenterBottomBar />
         </div>
-        <Right/>
+        <Right />
+        {
+          bar.isShowRightMenu &&
+          <CenterRightMenu menuInfo={ bar.rightMenuInfo } menuOptions={customMenuOptions} hideMenu={hideMenu} />
+        }
       </div>
     </Layout>
   )

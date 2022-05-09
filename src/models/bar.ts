@@ -52,6 +52,7 @@ interface IBarState {
   dashboardId: string;
   key: string[];
   isShowRightMenu: boolean;
+  rightMenuInfo: any;
   operate: string;
   lastRightClick: string;
   treeData: any[];
@@ -97,6 +98,7 @@ export default {
     isCanClearAllStatus: true,
     key: [],
     isShowRightMenu: false,
+    rightMenuInfo: { x: 0, y: 0, id: null, isFolder: false },
     lastRightClick: '',
     isMultipleTree: false,
     operate: '',
@@ -613,6 +615,10 @@ export default {
   },
 
   reducers: {
+    // 设置右键菜单位置的信息
+    setRightMenuInfo(state: IBarState, { payload }: any) {
+      return { ...state, rightMenuInfo: payload }
+    },
     changeDashboardId(state: IBarState, { payload }: any) {
       return { ...state, dashboardId: payload }
     },

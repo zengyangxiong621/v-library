@@ -31,7 +31,7 @@ const DataSource = (props: any) => {
   const [tableData, setTableData] = useState([])
   const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
   const [previewFileUrl, setPreviewFileUrl] = useState(null)
-  const [previewRecord, setPreviewRecord] = useState({ type: '',id:'' })
+  const [previewRecord, setPreviewRecord] = useState({ type: '', id: '' })
   const [tableLoading, setTableLoading] = useState(true)
 
 
