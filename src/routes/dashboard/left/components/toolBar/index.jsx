@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react'
-import './index.css'
+import './index.less'
 
 import { Tooltip } from 'antd'
 import { IconFont } from '../../../../../utils/useIcon'
@@ -15,7 +15,8 @@ const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, iconSize, needBo
       {
         data.map(o => {
           return (
-            <Tooltip key={o.key} title={o.text} color='white' placement='bottomRight'>
+            <Tooltip key={o.key} title={o.text}
+              placement='bottomRight'>
               {
                 <div style={{ cursor: notBannedClick ? 'pointer' : 'not-allowed' }}>
                   <IconFont

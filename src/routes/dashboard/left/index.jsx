@@ -214,19 +214,20 @@ const Left = ({ dispatch, bar, operate }) => {
   const onRightClick = ({ event, node }) => {
     event.stopPropagation()
     const { modules, key } = node
-    dispatch({
-      type: 'bar/save',
-      payload: { isMultipleTree: true },
-    })
+    // dispatch({
+    //   type: 'bar/save',
+    //   payload: { isMultipleTree: true },
+    // })
     // 如果有选中了的节点 并且 此次右击的目标是其中一个，则展开菜单，
     // 否则，重置已选中节点 并 单选中当前节点以及展开右键菜单
     let t = []
     if (selected.length && selected.includes(key)) {
-      dispatch({
-        type: 'bar/save',
-        payload: { isMultipleTree: true },
-      })
+      console.log('sssss', selected);
       t = selected
+      // dispatch({
+      //   type: 'bar/save',
+      //   payload: { isMultipleTree: false },
+      // })
     } else {
       t = [key]
     }
@@ -242,6 +243,10 @@ const Left = ({ dispatch, bar, operate }) => {
     dispatch({
       type: `bar/saveLastRightClickKey`,
       payload: key,
+    })
+    dispatch({
+      type: 'bar/save',
+      payload: { isMultipleTree: false },
     })
   }
   // 展开 / 收起 全部节点

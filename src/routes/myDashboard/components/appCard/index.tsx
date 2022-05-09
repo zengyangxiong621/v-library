@@ -62,7 +62,9 @@ const AppCard = (props: any) => {
   /** Card 中图标 和 编辑、预览按钮 事件 */
   const scanDashboard = () => {
     // TODO 通过id跳转到预览界面
-    history.push(`/bigscreen/${id}`)
+    const w = window.open('_blank');
+    w!.location.href = `/bigscreen/${id}`
+    w?.history.replaceState(null, '')
   }
   const editDashboard = () => {
     //TODO 通过id跳转到主画布
@@ -141,15 +143,14 @@ const AppCard = (props: any) => {
             <Tooltip
               placement='bottom' title="拷贝给他人"
             // tooltip挂载到body下容易被影响样式
-            // getPopupContainer={(triggerNode) => {
-            //   return triggerNode
-            // }}
+            // getPopupContainer={(triggerNode) => triggerNode}
             >
               <IconFont className='each-icon' onClickCapture={(e) => {
                 copyToOthers(e)
               }} type='icon-kaobei' />
             </Tooltip>
-            <Tooltip placement='bottom' title="发布">
+            <Tooltip placement='bottom'
+              title="发布">
               <IconFont className='each-icon' onClickCapture={(e) => {
                 fabu(e)
               }} type='icon-fabu' />

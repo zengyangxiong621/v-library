@@ -8,18 +8,6 @@ const defaultOptions: any = {
     'Content-Type': 'application/json',
   },
 }
-export const myFetch = (
-  url: string,
-  options: object,
-  baseUrl: string = 'http://10.202.226.250:9572',
-  // baseUrl: string = "http://50423059pd.zicp.vip"
-) => {
-  const finalOptions = {
-    ...defaultOptions,
-    ...options,
-  }
-  return fetch(`${ baseUrl }${ url }`, finalOptions).then((res) => res.json())
-}
 const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === '[object Object]'
 }
