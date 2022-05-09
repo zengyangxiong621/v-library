@@ -5,24 +5,17 @@ import { EditableTable } from '../fieldMapTable'
 import CodeEditor from '../codeEditor'
 import CusSelect from '../cusSelect'
 import DataConfigDrawer from '../dataConfigDrawer'
-import debounce from 'lodash/debounce';
+
+import StaticData from './staticData'
 
 import {
   Checkbox,
   Button,
-  message
 } from 'antd';
 import {
   PlusOutlined,
   RedoOutlined
 } from '@ant-design/icons';
-
-const sourceCodeData = {
-  readOnly: false,
-  language: 'json',
-  value: ``,
-  showExpand: true
-};
 
 const resultCodeData = {
   readOnly: true,
@@ -42,8 +35,32 @@ const selectData = {
       value: 'static'
     },
     {
-      name: '动态数据',
-      value: 'dynamic'
+      name: 'JSON数据',
+      value: 'json'
+    },
+    {
+      name: 'CSV数据',
+      value: 'csv'
+    },
+    {
+      name: 'EXCEL数据',
+      value: 'excel'
+    },
+    {
+      name: 'API数据',
+      value: 'api'
+    },
+    {
+      name: 'MYSQL数据',
+      value: 'mysql'
+    },
+    {
+      name: 'PostgreSQL数据',
+      value: 'PostgreSQL'
+    },
+    {
+      name: 'ES数据',
+      value: 'es'
     },
   ]
 }
@@ -55,49 +72,41 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [filterFlag, setFilterFlag] = useState(false)
   const [filters, setFilters] = useState([])
-  const [staticData, setStaticData] = useState(sourceCodeData)
   const [resultData, setResultData] = useState(resultCodeData)
 
   useEffect(() => {
-    selectData.value = _data.dataType
+    selectData.value = _data.dataType || 'static'
     setDataSourceTypes(selectData)
   }, [_data.dataType])
 
   useEffect(() => {
-    sourceCodeData.value = JSON.stringify(_data.staticData?.data) || ''
-    setStaticData(sourceCodeData)
-  }, [_data.staticData])
-
-  useEffect(() => {
     const newData = Object.assign({}, resultData, {
-      value: staticData.value
+      value: JSON.stringify(_data.staticData.data,null,2) || ''
     })
+    // todo 数据过滤之后再展示结果
     setResultData(newData)
-  }, [staticData])
+  }, [_data.staticData.data])
 
   const fieldsChange = () => {
     console.log('_fields', _fields)
   }
 
   const dataSourceTypeChange = () => {
-    if (selectData.value !== 'static') {
-      message.warning('其他数据源类型开发中')
-      selectData.value = 'static'
-      setDataSourceTypes(selectData)
-    }
+    console.log('dataSourceTypes.value', dataSourceTypes.value)
+    const newDataSourceTypes = Object.assign({}, dataSourceTypes)
+    setDataSourceTypes(newDataSourceTypes)
     // TODO: 调用接口保存
   }
 
-  const staticDataChange = debounce(() => {
-    const staDa = { ...staticData }
-    setStaticData(staDa)
-    try{
-      const data = JSON.parse(staticData.value)
-      props.onDataChange(data)
-    }catch(e){
-      message.error('格式错误')
-    }
-  }, 300)
+  const onStaticDataChange = data => {
+    const newData = Object.assign({}, resultData, {
+      value: data
+    })
+    // todo 数据过滤之后再展示结果
+    console.log('data',data)
+    setResultData(newData)
+    props.onDataChange(JSON.parse(data))
+  }
 
   const resultDataChange = () => {
     // not do anything
@@ -136,9 +145,24 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
           <CusSelect data={dataSourceTypes} onChange={dataSourceTypeChange} style={{ width: '207px' }} />
         </div>
         <div className="data-content">
-          <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
-            <CodeEditor data={staticData} onChange={staticDataChange} />
-          </div>
+          {dataSourceTypes.value === 'static' ?
+            <StaticData data={_data.staticData.data} onChange={onStaticDataChange} />
+            : dataSourceTypes.value === 'json' ?
+              <div>json</div>
+              : dataSourceTypes.value === 'csv' ?
+                <div>csv</div>
+                : dataSourceTypes.value === 'excel' ?
+                  <div>excel</div>
+                  : dataSourceTypes.value === 'api' ?
+                    <div>api</div>
+                    : dataSourceTypes.value === 'mysql' ?
+                      <div>mysql</div>
+                      : dataSourceTypes.value === 'PostgreSQL' ?
+                        <div>PostgreSQL</div>
+                        : dataSourceTypes.value === 'es' ?
+                          <div>es</div>
+                          : null
+          }
         </div>
         <div className="data-footer">
           <Checkbox defaultChecked={filterFlag} onChange={filterBoxChange}>数据过滤器</Checkbox>
