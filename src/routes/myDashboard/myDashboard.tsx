@@ -86,7 +86,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     })
   }
   return (
-    <div className='MyApplication-wrap'>
+    <div className='MyApplication-wrap' id='myApplicationPage'>
       <div className="left">
         {/* 左侧树 */}
         <LeftTree clearSearchInputState={clearSearchInputState} />

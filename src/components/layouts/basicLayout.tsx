@@ -34,10 +34,11 @@ class BasicLayout extends Component<Props, State> {
     const { pathname } = location
     const { menuData } = global
 
-    const needHeader = pathname.indexOf('/dashboard/') !== -1  || pathname === '/template'
+    const needHeader = pathname.indexOf('/dashboard/') !== -1  || pathname === '/template' || pathname.startsWith('/bigscreen')
     const isPathRoot = pathname === '/'
     const defaultPath = '/dashboard-manage'
-
+    console.log('pathName', pathname);
+    console.log(pathname.indexOf('/dashboard/') !== -1);
     return (
       <Layout>
         { !needHeader && <CustomHeader {...this.props} menuData={ menuData } defaultPath={ defaultPath }></CustomHeader> }
