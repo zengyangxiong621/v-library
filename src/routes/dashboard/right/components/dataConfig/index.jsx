@@ -38,36 +38,36 @@ const selectData = {
     },
     {
       name: 'JSON数据',
-      value: 'JSON'
+      value: 'json'
     },
     {
       name: 'CSV数据',
-      value: 'CSV'
+      value: 'csv'
     },
     {
       name: 'EXCEL数据',
-      value: 'EXCEL'
+      value: 'excel'
     },
     {
       name: 'API数据',
-      value: 'RESTFUL_API'
+      value: 'restful_api'
     },
     {
       name: 'MYSQL数据',
-      value: 'MYSQL'
+      value: 'mysql'
     },
     {
       name: 'PostgreSQL数据',
-      value: 'POSTGRESQL'
+      value: 'postgresql'
     },
     {
       name: 'ES数据',
-      value: 'ELASTIC_SEARCH'
+      value: 'elastic_search'
     },
   ]
 }
 
-const sqlData = {
+const _sqlDataConfig = {
   readOnly: false,
   language: 'mysql',
   value: `SELECT * FROM`,
@@ -82,10 +82,21 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const [filterFlag, setFilterFlag] = useState(false)
   const [filters, setFilters] = useState([])
   const [resultData, setResultData] = useState(resultCodeData)
+  const [sqlData, setSqlData] = useState(_sqlDataConfig)
 
   useEffect(() => {
     selectData.value = _data.dataType || 'static'
     setDataSourceTypes(selectData)
+    if (['mysql', 'postgresql'].includes(_data.dataType)) {
+      const newSqlData = { ...sqlData }
+      if (_data.dataConfig[_data.dataType]) {
+        const sql = _data.dataConfig[_data.dataType].data.sql
+        if (sql) {
+          newSqlData.value = sql
+          setSqlData(newSqlData)
+        }
+      }
+    }
   }, [_data.dataType])
 
   useEffect(() => {
@@ -117,8 +128,19 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onDataChange(JSON.parse(data))
   }
 
+  // csv,json,excel 数据源选择回调
+  const dataSourceChange = data => {
+    // todo 设置数据源 保存
+  }
+
+  // postgresql,mysql 数据源选择回调
+  const sqlSourceChange = data => {
+    // todo 设置数据源 保存
+  }
+
   const sqlDataChange = () => {
     console.log('sqlData', sqlData)
+    // todo 保存
   }
 
   const resultDataChange = () => {
@@ -155,23 +177,32 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       <div className="data-config">
         <div className="data-header">
           <label className="data-name">数据源类型</label>
-          <CusSelect data={dataSourceTypes} onChange={dataSourceTypeChange} style={{ width: '207px' }} />
+          <CusSelect data={dataSourceTypes} onChange={dataSourceTypeChange} style={{ width: '221px' }} />
         </div>
         <div className="data-content">
           {dataSourceTypes.value === 'static' ?
             <StaticData data={_data.staticData.data} onChange={onStaticDataChange} />
-            : ['CSV', 'EXCEL', 'JSON'].includes(dataSourceTypes.value) ?
-              <SelectDataSource key={dataSourceTypes.value} type={dataSourceTypes.value} />
-              : dataSourceTypes.value === 'RESTFUL_API' ?
-                <APIDataSource data={_data}/>
-                : ['POSTGRESQL', 'MYSQL'].includes(dataSourceTypes.value) ?
-                  <React.Fragment>
-                    <SelectDataSource key={dataSourceTypes.value} type={dataSourceTypes.value} />
+            : ['csv', 'excel', 'json'].includes(dataSourceTypes.value) ?
+              <SelectDataSource
+                data={_data}
+                key={dataSourceTypes.value}
+                type={dataSourceTypes.value}
+                onChange={dataSourceChange}
+              />
+              : dataSourceTypes.value === 'restful_api' ?
+                <APIDataSource data={_data} />
+                : ['postgresql', 'mysql'].includes(dataSourceTypes.value) ?
+                  <React.Fragment key={dataSourceTypes.value}>
+                    <SelectDataSource 
+                    data={_data} 
+                    type={dataSourceTypes.value}
+                    onChange={sqlSourceChange}
+                    />
                     <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
                       <CodeEditor data={sqlData} onChange={sqlDataChange} />
                     </div>
                   </React.Fragment>
-                  : dataSourceTypes.value === 'ELASTIC_SEARCH' ?
+                  : dataSourceTypes.value === 'elastic_search' ?
                     <div>es</div>
                     : null
           }

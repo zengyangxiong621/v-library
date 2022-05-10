@@ -3,7 +3,8 @@
 // 数据配置
 .data-config {
   margin-top: 16px;
-  &:last-child{
+
+  &:last-child {
     padding-bottom: 16px;
   }
 
@@ -64,16 +65,17 @@
       box-shadow: none;
     }
 
-    .filter-num{
+    .filter-num {
       height: 32px;
       line-height: 32px;
-      padding:0 6px;
-      background-color:@bgColor;
+      padding: 0 6px;
+      background-color: @bgColor;
       border: 1px solid @borderColor;
       border-radius: 4px;
       cursor: pointer;
     }
-    .filter-num[disabled]{
+
+    .filter-num[disabled] {
       color: rgba(255, 255, 255, 0.3);
       border-color: #434343;
       background: rgba(255, 255, 255, 0.08);
@@ -84,9 +86,54 @@
   }
 }
 
-.data-select-source{
+.data-select-source {
   margin-top: 16px;
-  .okBtn{
-    background-color:@activeComponentBgColor;
+
+  .okBtn {
+    background-color: @activeComponentBgColor;
+  }
+}
+
+.api-data-source-config {
+  .reuqest-baseurl {
+    margin-top: 16px;
+
+    .ant-input-disabled {
+      float: right;
+      margin-right: 0;
+    }
+  }
+
+  .request-header,
+  .request-body {
+    text-align: left;
+    margin-bottom: 16px;
+
+    .data-name {
+      height: 32px;
+      line-height: 32px;
+      font-size: 14px;
+      color: #CCCCCC;
+    }
+  }
+
+  .ant-checkbox-wrapper {
+    font-size: 14px;
+    color: @fontColor;
+    font-weight: 400;
+  }
+
+  .ant-checkbox-inner {
+    background: @componentBgColor;
+    border: 1px solid @borderColor;
+  }
+
+  .request-back {
+    text-align: left;
+    margin-bottom: 16px;
+  }
+
+  .request-cookie {
+    text-align: left;
   }
 }
