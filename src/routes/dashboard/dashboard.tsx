@@ -158,7 +158,7 @@ function App({ bar, dispatch, location }: any) {
         <Right />
         {
           bar.isShowRightMenu &&
-          <CenterRightMenu menuInfo={ bar.rightMenuInfo } menuOptions={customMenuOptions} hideMenu={hideMenu} />
+          <CenterRightMenu  menuOptions={customMenuOptions} hideMenu={hideMenu} />
         }
       </div>
     </Layout>

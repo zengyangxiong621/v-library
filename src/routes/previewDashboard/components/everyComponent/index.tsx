@@ -1,43 +1,62 @@
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import './index.less'
+import { MORENYINCANG, WEIZHICHICUN, WENBENYANGSHI, DUIQIFANGSHI, YINYING } from './type'
+
+import { getTargetStyle } from './type'
 
 
 const EveryComponent = ({ allData }: any) => {
-  const { name, config, staticData: { data } } = allData
+  const { id, name, config, staticData: { data } } = allData
+  console.log('aall', allData);
 
   // 文本信息 | 图片路径
   const { text, imageUrl } = data[0]
 
-  /** 组件 ****** */
-  const { value } = config[0]
-  const cmpLocationAndSize = value
-  // 每个组件的样式(位置，大小)
-  const componentStyle: any = {
+  // websocket 获取数据
+  useEffect(() => {
+    const ws = new WebSocket(`ws://50423059pd.zicp.vip/visual/webSocket/${id}`)
+    console.log('wss', ws);
+    ws.onopen = e => {
+      console.log('ws 连接成功');
+      ws.close()
+    }
+    ws.onmessage = msg => {
+      console.log('ws msg', msg);
+    }
+    ws.onclose = e => {
+      console.log('关闭');
+    }
+    ws.onerror = err => {
+      console.log('ws错误', err);
+    }
+  }, [])
+
+  // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
+  const allConfigMap = new Map()
+  config.forEach(({ displayName, value }: any) => {
+    allConfigMap.set(displayName, value)
+  });
+  //位置尺寸
+  const weizhichicunArr = allConfigMap.get(WEIZHICHICUN)
+
+  const componentStyle = getTargetStyle(weizhichicunArr, {
     position: 'absolute',
     border: '1px solid #fff'
-  }
-  // 每个item结构 -> {
-  //   "displayName": "X轴坐标", "name": "left", "value": 100
-  // }
-  cmpLocationAndSize.forEach(({ name, value }: any) => {
-    componentStyle[name] = value
-  });
-
-  /** 组内的文字 ****** */
+  })
   // 文本样式
-  const wenbenyangshiArr = config[2]?.value
-  // console.log('hhhhhhhh', wenbenyangshiArr);
-  // 每个组件中文字的样式
-  const textStyle: any = {}
-  wenbenyangshiArr.forEach(({ name, value }: any) => {
-    textStyle[name] = value
-  });
+  const wenbenyangshiArr = allConfigMap.get(WENBENYANGSHI)
+  const textStyle = getTargetStyle(wenbenyangshiArr)
+
+
+
   return (
     <div className='EveryComponent-wrap'
       style={componentStyle}
     >
       {
-        text ? <p style={textStyle}>{text}</p> : <img src={require('../../../../assets/images/发布.png')} alt="图片正在加载…" />
+        text
+          ? <p style={textStyle}>{text}</p>
+          : <img className='fill-img' src={require('../../../../assets/images/发布.png')} alt="图片正在加载…" />
       }
     </div>
   )

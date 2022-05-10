@@ -37,7 +37,6 @@ class BasicLayout extends Component<Props, State> {
     const needHeader = pathname.indexOf('/dashboard/') !== -1  || pathname === '/template' || pathname.startsWith('/bigscreen')
     const isPathRoot = pathname === '/'
     const defaultPath = '/dashboard-manage'
-    console.log('pathName', pathname);
     console.log(pathname.indexOf('/dashboard/') !== -1);
     return (
       <Layout>
