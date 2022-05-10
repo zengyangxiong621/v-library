@@ -1,9 +1,6 @@
-@import "../../../../assets/style/variable.less";
+@import "../../../../../../assets/style/variable.less";
 
-.data-container-wrap {
-}
-.data-container-drawer {
-  position: absolute;
+.single-data-container-drawer {
   .ant-drawer-content-wrapper {
     width: 400px !important;
 
@@ -24,7 +21,19 @@
       }
     }
   }
-
+  .data-source {
+    position: relative;
+    left: -24px;
+    margin-top: 24px;
+    width: calc(100% + 48px);
+    padding-left: 24px;
+    height: 32px;
+    font-size: 14px;
+    color: #ccc;
+    line-height: 32px;
+    background: #292B38;
+    border: 1px solid #353746;
+  }
   .data-container-handle {
     display: flex;
   }
