@@ -5,8 +5,10 @@ import { EditableTable } from '../fieldMapTable'
 import CodeEditor from '../codeEditor'
 import CusSelect from '../cusSelect'
 import DataConfigDrawer from '../dataConfigDrawer'
-
 import StaticData from './staticData'
+import SelectDataSource from './selectDataSource'
+import APIDataSource from './apiDataSource'
+
 
 import {
   Checkbox,
@@ -36,33 +38,40 @@ const selectData = {
     },
     {
       name: 'JSON数据',
-      value: 'json'
+      value: 'JSON'
     },
     {
       name: 'CSV数据',
-      value: 'csv'
+      value: 'CSV'
     },
     {
       name: 'EXCEL数据',
-      value: 'excel'
+      value: 'EXCEL'
     },
     {
       name: 'API数据',
-      value: 'api'
+      value: 'RESTFUL_API'
     },
     {
       name: 'MYSQL数据',
-      value: 'mysql'
+      value: 'MYSQL'
     },
     {
       name: 'PostgreSQL数据',
-      value: 'PostgreSQL'
+      value: 'POSTGRESQL'
     },
     {
       name: 'ES数据',
-      value: 'es'
+      value: 'ELASTIC_SEARCH'
     },
   ]
+}
+
+const sqlData = {
+  readOnly: false,
+  language: 'mysql',
+  value: `SELECT * FROM`,
+  showExpand: false
 }
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
@@ -81,7 +90,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     const newData = Object.assign({}, resultData, {
-      value: JSON.stringify(_data.staticData.data,null,2) || ''
+      value: JSON.stringify(_data.staticData.data, null, 2) || ''
     })
     // todo 数据过滤之后再展示结果
     setResultData(newData)
@@ -103,9 +112,13 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       value: data
     })
     // todo 数据过滤之后再展示结果
-    console.log('data',data)
+    console.log('data', data)
     setResultData(newData)
     props.onDataChange(JSON.parse(data))
+  }
+
+  const sqlDataChange = () => {
+    console.log('sqlData', sqlData)
   }
 
   const resultDataChange = () => {
@@ -147,21 +160,20 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         <div className="data-content">
           {dataSourceTypes.value === 'static' ?
             <StaticData data={_data.staticData.data} onChange={onStaticDataChange} />
-            : dataSourceTypes.value === 'json' ?
-              <div>json</div>
-              : dataSourceTypes.value === 'csv' ?
-                <div>csv</div>
-                : dataSourceTypes.value === 'excel' ?
-                  <div>excel</div>
-                  : dataSourceTypes.value === 'api' ?
-                    <div>api</div>
-                    : dataSourceTypes.value === 'mysql' ?
-                      <div>mysql</div>
-                      : dataSourceTypes.value === 'PostgreSQL' ?
-                        <div>PostgreSQL</div>
-                        : dataSourceTypes.value === 'es' ?
-                          <div>es</div>
-                          : null
+            : ['CSV', 'EXCEL', 'JSON'].includes(dataSourceTypes.value) ?
+              <SelectDataSource key={dataSourceTypes.value} type={dataSourceTypes.value} />
+              : dataSourceTypes.value === 'RESTFUL_API' ?
+                <APIDataSource data={_data}/>
+                : ['POSTGRESQL', 'MYSQL'].includes(dataSourceTypes.value) ?
+                  <React.Fragment>
+                    <SelectDataSource key={dataSourceTypes.value} type={dataSourceTypes.value} />
+                    <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
+                      <CodeEditor data={sqlData} onChange={sqlDataChange} />
+                    </div>
+                  </React.Fragment>
+                  : dataSourceTypes.value === 'ELASTIC_SEARCH' ?
+                    <div>es</div>
+                    : null
           }
         </div>
         <div className="data-footer">
