@@ -43,12 +43,8 @@ const Header = (props: any) => {
   // 获取当前活跃的按钮
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
-    if (icon === 'zujian') {
-      props.showWhichBar(icon)
-    }
-    if (icon === 'sucai') {
-      props.showWhichBar(icon)
-    }
+    props.showWhichBar(icon)
+
   }
   return (
     <div className='Header-wrap'>
@@ -132,6 +128,10 @@ const centerIconArr = [
   {
     icon: 'huitiaoguanli',
     text: '回调管理'
+  },
+  {
+    icon: 'shujurongqi',
+    text: '数据容器'
   },
 ]
 

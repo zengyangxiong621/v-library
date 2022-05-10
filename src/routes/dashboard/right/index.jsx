@@ -47,13 +47,13 @@ const Right = ({ dispatch, bar }) => {
     setKey(key.join(''))
   }, [bar.key])
   return (
-    <div className="right-wrap">
+    <div className="right-setting-wrap">
       {
         // reflect[whichShow].type()
         whichShow === 'groupConfig' ? <GroupConfig key={ key }/>
           : whichShow === 'singleLayer' ? <SingleLayer key={ key }/>
           : whichShow === 'pageSetting' ? <PageSetting key={ key }/>
-            : <AlignmentSetting key={ key }/>
+          : whichShow === 'alignmentSetting' ? <AlignmentSetting key={ key }/> : <></>
       }
     </div>
   )

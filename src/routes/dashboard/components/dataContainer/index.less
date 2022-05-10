@@ -1,0 +1,31 @@
+@import "../../../../assets/style/variable.less";
+
+.data-container-wrap {
+
+}
+.data-container-drawer {
+  .ant-drawer-content-wrapper {
+    width: 400px !important;
+
+    .ant-drawer-content {
+      background-color: @bgColor;
+
+      .ant-drawer-header {
+        background-color: @bgColor;
+        color: @fontColor;
+
+        .ant-drawer-close {
+          color: @fontColor;
+        }
+
+        .ant-drawer-title {
+          color: @fontColor;
+        }
+      }
+    }
+  }
+
+  .data-container-handle {
+    display: flex;
+  }
+}

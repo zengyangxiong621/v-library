@@ -15,6 +15,7 @@ import CenterBottomBar from './center/components/BottomBar/index'
 import ChooseArea from './center/components/ChooseArea'
 import CenterRightMenu from './left/components/rightClickMenu/rightClickMenu'
 import {menuOptions} from './left/Data/menuOptions'
+import DataContainer from './components/dataContainer'
 
 const { Header } = Layout
 
@@ -123,9 +124,17 @@ function App({ bar, dispatch, location }: any) {
    */
   const [showTopBar, setShowTopBar] = useState(false)
   const [zujianORsucai, setZujianORsucai] = useState('zujian')
+  const [dataContainerVisible, setDataContainerVisible] = useState(false)
   const showWhichBar = (whichBar: string) => {
-    setZujianORsucai(whichBar)
-    setShowTopBar(true)
+    console.log('whitchBar', whichBar)
+    if (['zujian', 'sucai'].includes(whichBar)) {
+      setZujianORsucai(whichBar)
+      setShowTopBar(true)
+      return
+    }
+    if (whichBar === 'shujurongqi') {
+      setDataContainerVisible(true)
+    }
   }
 
   /**
@@ -139,7 +148,9 @@ function App({ bar, dispatch, location }: any) {
       payload: false,
     })
   }
-
+  const handleDCVisibleChange = (value: boolean) => {
+    setDataContainerVisible(value)
+  }
   return (
     <Layout>
       <ChooseArea />
@@ -155,7 +166,10 @@ function App({ bar, dispatch, location }: any) {
           <CenterCanvas />
           <CenterBottomBar />
         </div>
-        <Right />
+        <div className="right-wrap">
+          <Right />
+          <DataContainer visible={dataContainerVisible} onChange={handleDCVisibleChange}/>
+        </div>
         {
           bar.isShowRightMenu &&
           <CenterRightMenu  menuOptions={customMenuOptions} hideMenu={hideMenu} />
