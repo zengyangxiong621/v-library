@@ -9,7 +9,7 @@ import SecondMenu from './secondMenu'
 
 import { connect } from 'dva'
 import * as Icons from '@ant-design/icons'
-const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMenu }) => {
+const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   const [isLock, setIsLock] = useState(false)
   const [isSingleShow, setIsSingleShow] = useState(false)
   const [isShowOrHidden, setIsShowOrHidden] = useState(true)
@@ -100,7 +100,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     // 点击后隐藏菜单
     hideMenu()
   }
-  const { x, y } = menuInfo
+  const { x, y } = bar.rightMenuInfo
   // console.log('x y id isFolders', x, y, id, isFolder);
   const menuRef = useRef(null)
   useEffect(() => {
@@ -110,20 +110,16 @@ const RightClickMenu = ({ dispatch, bar, operate, menuInfo, menuOptions, hideMen
     // 因为右侧菜单第一次渲染，因为首次渲染的元素在Tree的最底部，所以有一个默认的offsetTop（这里打印出来是521）
     // so,这里需要将鼠标的y轴坐标作为offsetTop
     const visualHeight = document.body.clientHeight
-    const top = recalculateY
     const menuHeight = menuRef.current.clientHeight
     // 如果offsetTop + 元素本身高度 > 浏览器可视区域高度，将菜单上移
-    // const isOverflowAtUnder = visualHeight - top > menuHeight
-    const isOverflowAtUnder = menuHeight + top > visualHeight
-    // const isOverflowAtTop =
+    const isOverflowAtUnder = menuHeight + recalculateY > visualHeight
     if (isOverflowAtUnder) {
-      recalculateY = y - menuHeight < 0 ? 20 : y - menuHeight
-      // if(recalculateY < 0) {
-      //   recalculateY = 20
-      // }
+      const a = menuHeight + recalculateY - visualHeight
+      recalculateY = y - (menuHeight + recalculateY - visualHeight) - 20
     }
     menuRef.current.style.position = 'fixed'
     menuRef.current.style.top = `${recalculateY}px`
+    console.log('recalculateY', recalculateY);
     menuRef.current.style.left = `${recalculateX}px`
   }, [x, y])
   return (
