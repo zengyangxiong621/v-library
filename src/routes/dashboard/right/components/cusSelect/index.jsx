@@ -1,6 +1,8 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
 
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   Form,
   Select,
@@ -14,6 +16,11 @@ const CusSelect = props => {
   const [form] = Form.useForm();
   const _data = props.data
   const [select, setSelect] = useState(_data.value)
+  const [key,setKey] = useState(uuidv4())
+
+  useEffect(() => {
+    setKey(uuidv4())
+  },[_data.options])
 
   // 下拉框选择
   const selectChange = (e) => {
@@ -36,6 +43,7 @@ const CusSelect = props => {
         label={_data.displayName}
       >
         <Select
+          key={key}
           className="custom-select"
           placeholder="请选择"
           defaultValue={select}
@@ -46,6 +54,7 @@ const CusSelect = props => {
             return <Option value={item.value} key={item.value}>{item.name}</Option>
           })}
         </Select>
+        {props.children}
       </Form.Item>
     </Form>
   )
