@@ -13,11 +13,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     console.log('_fields', _fields)
   }
 
-  const onStaticDataChange = data => {
-    props.onStaticDataChange(JSON.parse(data))
-  }
-
-
   return (
     <React.Fragment>
       <div className="data-config" style={{ marginTop: 0 }}>
@@ -32,7 +27,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       <DataSourceConfig
         data={_data}
         onDataTypeChange={props.onDataTypeChange}
-        onStaticDataChange={onStaticDataChange}
+        onStaticDataChange={props.onStaticDataChange}
         onDataSourceChange={props.onDataSourceChange}
       />
       <DataResult data={_data}/>

@@ -107,7 +107,7 @@ const DataSourceConfig = props => {
   }
 
   const onStaticDataChange = data => {
-    props.onStaticDataChange(data)
+    props.onStaticDataChange(JSON.parse(data))
   }
 
   // csv,json,excel 数据源选择回调
