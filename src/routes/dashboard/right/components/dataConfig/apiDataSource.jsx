@@ -4,6 +4,10 @@ import CusSelect from '../cusSelect'
 import CusInput from '../cusInput'
 import CodeEditor from '../codeEditor'
 import SelectDataSource from './selectDataSource'
+
+import { http } from '../../../../../models/utils/request'
+import cloneDeep from 'lodash/cloneDeep'
+
 import {
   Checkbox
 } from 'antd';
@@ -83,52 +87,81 @@ const APIDataSource = props => {
   const [paramData, setParamData] = useState(_paramDataConfig)
   const [reqFromBack, setReqFromBack] = useState(false)
   const [needCookie, setNeedCookie] = useState(false)
-  const [isShowBody,setIsShowBody] = useState(false)
+  const [isShowBody, setIsShowBody] = useState(false)
 
   useEffect(() => {
     // 参数回填
-    if (_data.dataConfig?.restful_api) {
-      if(['post','put','patch'].includes(_data.dataConfig?.restful_api?.data?.method )){
+    if (_data.dataConfig?.api) {
+      if (['post', 'put', 'patch'].includes(_data.dataConfig?.api?.data?.method)) {
         setIsShowBody(true)
       }
-      _requestMethodConfig.value = _data.dataConfig?.restful_api?.data?.method || 'get'
+      _requestMethodConfig.value = _data.dataConfig?.api?.data?.method || 'get'
       setRequestMethods(_requestMethodConfig)
-      _baseUrlDataConfig.value = _data.dataConfig?.restful_api?.data?.baseUrl || ''
+      _baseUrlDataConfig.value = _data.dataConfig?.api?.data?.baseUrl || ''
       setBaseUrlData(_baseUrlDataConfig)
-      _requestHeaderDataConfig.value = _data.dataConfig?.restful_api?.data?.headers || ''
+      _requestHeaderDataConfig.value = _data.dataConfig?.api?.data?.headers || ''
       setRequestHeaderData(_requestHeaderDataConfig)
-      _requestBodyDataConfig.value = _data.dataConfig?.restful_api?.data?.body || ''
+      _requestBodyDataConfig.value = _data.dataConfig?.api?.data?.body || ''
       setRequestBodyData(_requestBodyDataConfig)
-      _pathDataConfig.value = _data.dataConfig?.restful_api?.data?.path || ''
+      _pathDataConfig.value = _data.dataConfig?.api?.data?.path || ''
       setPathData(_pathDataConfig)
-      _paramDataConfig.value = _data.dataConfig?.restful_api?.data?.params || ''
+      _paramDataConfig.value = _data.dataConfig?.api?.data?.params || ''
       setParamData(_paramDataConfig)
-      setReqFromBack(_data.dataConfig?.restful_api?.data?.reqFromBack || false)
-      setNeedCookie(_data.dataConfig?.restful_api?.data?.needCookie || false)
-
+      setReqFromBack(_data.dataConfig?.api?.data?.reqFromBack || false)
+      setNeedCookie(_data.dataConfig?.api?.data?.needCookie || false)
     }
-  })
+  }, [_data.config])
 
-  const dataSourceChange = data => {
-    console.log('data', data)
-    const baseUrlDataNew = { ...baseUrlData }
-    baseUrlDataNew.value = data.baseUrl
-    setBaseUrlData(baseUrlDataNew)
-    // todo 保存baseurl
+  const saveDataConfig = async (key, param) => {
+    const dataConfig = cloneDeep(_data.dataConfig)
+    if (dataConfig.api) {
+      dataConfig.api.data[key] = param.value
+      if(key==='data_id'){
+        dataConfig.api.data.baseUrl = param.baseUrl
+      }
+    } else {
+      let data
+      data = {
+        [key]: param.value,
+        baseUrl: param.baseUrl
+      }
+      if(key==='data_id'){
+        data = Object.assign({},data,{
+          baseUrl: param.baseUrl
+        })
+      }
+      dataConfig.api = {
+        data
+      }
+    }
+    props.onDataSourceChange(dataConfig)
+    await http({
+      url: '/visual/module/updateDatasource',
+      method: 'post',
+      body: {
+        id: _data.id,
+        data: dataConfig.api.data,
+        dataType: 'api'
+      }
+    })
   }
 
-  const baseUrlDataChange = () => {
-    // do nothing
+  const dataSourceChange = async (param) => {
+    console.log('param', param)
+    const baseUrlDataNew = { ...baseUrlData }
+    baseUrlDataNew.value = param.baseUrl
+    setBaseUrlData(baseUrlDataNew)
+    saveDataConfig('data_id', param)
   }
 
   const requestMethodsChange = () => {
     console.log('requestMethods', requestMethods)
-    if(['post','put','patch'].includes(requestMethods.value)){
+    if (['post', 'put', 'patch'].includes(requestMethods.value)) {
       setIsShowBody(true)
-    }else{
+    } else {
       setIsShowBody(false)
     }
-    // todo 保存requestMethods
+    saveDataConfig('method',requestMethods)
   }
 
   const requestHeaderDataChange = () => {
@@ -166,9 +199,9 @@ const APIDataSource = props => {
 
   return (
     <div className="api-data-source-config">
-      <SelectDataSource data={_data} type="restful_api" onChange={dataSourceChange} />
-      <div className="reuqest-baseurl">
-        <CusInput data={baseUrlData} onChange={baseUrlDataChange} />
+      <SelectDataSource data={_data} type="api" onChange={dataSourceChange} />
+      <div className="reuqest-baseurl" key={baseUrlData.value}>
+        <CusInput data={baseUrlData} onChange={() => { }} />
       </div>
       <CusSelect data={requestMethods} onChange={requestMethodsChange} style={{ float: 'right' }} />
       <div className="request-header">

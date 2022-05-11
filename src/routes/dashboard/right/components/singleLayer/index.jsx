@@ -61,7 +61,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
-  const dataChange = (data) => {
+  const staticDataChange = (data) => {
     componentConfig.staticData.data = data
     dispatch({
       type: 'bar/setComponentConfig',
@@ -70,6 +70,22 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     saveDataHandle({
       id: componentConfig.id,
       data
+    })
+  }
+
+  const dataTypeChange = type => {
+    componentConfig.dataType = type
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+  }
+
+  const dataSourceChange = dataSource => {
+    componentConfig.dataConfig = dataSource
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
     })
   }
 
@@ -148,7 +164,11 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="数据" key="2">
             <ComponentCard data={componentConfig}>
-              <DataConfig data={componentConfig} onDataChange={dataChange}/>
+              <DataConfig 
+                data={componentConfig} 
+                onStaticDataChange={staticDataChange}
+                onDataTypeChange={dataTypeChange}
+                onDataSourceChange={dataSourceChange}/>
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">
