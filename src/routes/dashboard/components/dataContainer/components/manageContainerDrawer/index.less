@@ -1,25 +1,35 @@
 @import "../../../../../../assets/style/variable.less";
 
-.update-data-container-drawer {
+.manage-data-container-drawer {
   .ant-drawer-content-wrapper {
     .ant-drawer-content {
       background-color: @bgColor;
-
-      .ant-drawer-header {
-        background-color: @bgColor;
-        color: @fontColor;
-
-        .ant-drawer-close {
+      .ant-drawer-wrapper-body {
+        .ant-drawer-header {
+        @apply g-p-2 g-text-center;
+          background: #373A4D;
           color: @fontColor;
+          border-bottom: unset;
+          .ant-drawer-close {
+            color: @fontColor;
+          }
+
+          .ant-drawer-title {
+            color: #ccc;
+          }
         }
-
-        .ant-drawer-title {
-          color: @fontColor;
+        .ant-drawer-body {
+        @apply g-p-4;
         }
       }
     }
   }
-
+  .starting {
+    color: @activeFontColor
+  }
+  .stop {
+    color: #525456
+  }
   .data-source {
     position: relative;
     left: -24px;

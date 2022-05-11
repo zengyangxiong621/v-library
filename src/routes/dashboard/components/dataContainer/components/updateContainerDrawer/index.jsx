@@ -17,6 +17,7 @@ const UpdateContainerDrawer = props => {
     }
   }, [data])
   const onClose = () => {
+
     props.onVisibleChange(false)
   };
   return (
@@ -30,7 +31,7 @@ const UpdateContainerDrawer = props => {
       closable={true}
       onClose={onClose}
       visible={props.visible}
-      className='single-data-container-drawer'
+      className='update-data-container-drawer'
       getContainer={false}
       maskStyle={null}
       style={{position: 'absolute'}}

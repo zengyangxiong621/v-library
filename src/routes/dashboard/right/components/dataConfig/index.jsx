@@ -7,6 +7,7 @@ import DataResult from './dataResult'
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
+  console.log('_data', _data)
   const _fields = _data.staticData.fields
 
   const fieldsChange = () => {
