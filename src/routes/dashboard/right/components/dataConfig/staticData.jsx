@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect } from 'react'
 import './index.less'
 import CodeEditor from '../codeEditor'
+import { v4 as uuidv4 } from 'uuid'
 import {
   message
 } from 'antd';
@@ -15,11 +16,13 @@ const sourceCodeData = {
 
 const StaticData = props => {
   const [staticData, setStaticData] = useState(sourceCodeData)
+  const [key, setKey] = useState(uuidv4())
 
   useEffect(() => {
-    console.log('props.data',props.data)
-    sourceCodeData.value = JSON.stringify(props.data,null,2) || ''
+    console.log('props.data', props.data)
+    sourceCodeData.value = JSON.stringify(props.data, null, 2) || ''
     setStaticData(sourceCodeData)
+    setKey(uuidv4())
   }, [props.data])
 
   const staticDataChange = debounce(() => {
