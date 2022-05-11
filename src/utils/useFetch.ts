@@ -10,7 +10,9 @@ const catchErr = <T, U = Error>(
   customErrInfo?: object
 ): Promise<[null, T] | [U, null]> => {
   return promise
-    .then<[null, T]>((res: T) => [null, res])
+    .then<[null, T]>((res: T) => {
+      return [null, res];
+    })
     .catch<[U, null]>((err: U) => {
       if (customErrInfo) {
         const mergeErrObj = { ...err, customErrInfo };
@@ -48,19 +50,22 @@ export const useFetch = async (
   customOptions: any = {
     errorInfo: "请求发送失败",
     onlyNeedWrapData: false,
-    errHandleFn: () => {}
+    errHandleFn: () => {},
   }
 ): Promise<[Error | null, any, any]> => {
   // 最终路径 & 最终配置、参数
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
 
-  // Fetch API 需要先转换一次格式
   // 格式由fetchOptions中的responseType来决定，默认是json
-  const finalFetch = fetch(finalPath, finalParams).then((response: any) => {
-    const { responseType }: { responseType: string } = fetchOptions;
-    return !!responseType ? response[responseType]() : response.json();
-  });
+  const finalFetch = fetch(finalPath, finalParams)
+    .then((response: any) => {
+      const { responseType }: { responseType: string } = fetchOptions;
+      return responseType !== undefined ? response[responseType]() : response.json();
+    })
+    .catch((err) => {
+      console.log("err", err);
+    });
 
   let [err, data]: any = await catchErr(finalFetch, customOptions);
   /**** 根据返回数据进行统一的处理 *****/
@@ -84,7 +89,7 @@ export const useFetch = async (
   if (code === 500) {
     message.error({
       content: "请求数据失败",
-      duration: 5,
+      duration: 4,
     });
   }
   if (data) {

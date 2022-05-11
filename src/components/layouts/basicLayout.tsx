@@ -18,7 +18,7 @@ interface Props {
   history?: any
 }
 
-interface State {}
+interface State { }
 
 const mapStateToProps = (state: any) => {
   return state
@@ -28,19 +28,19 @@ class BasicLayout extends Component<Props, State> {
   constructor(Props: any) {
     super(Props)
   }
-  render () {
+  render() {
     const { routerData, location, global, history } = this.props
     const { childRoutes } = routerData
     const { pathname } = location
     const { menuData } = global
 
-    const needHeader = pathname.indexOf('/dashboard/') !== -1  || pathname === '/template' || pathname.startsWith('/bigscreen')
+    const needHeader = pathname.indexOf('/dashboard/') !== -1 || pathname === '/template' || pathname.startsWith('/bigscreen')
     const isPathRoot = pathname === '/'
     const defaultPath = '/dashboard-manage'
     console.log(pathname.indexOf('/dashboard/') !== -1);
     return (
       <Layout>
-        { !needHeader && <CustomHeader {...this.props} menuData={ menuData } defaultPath={ defaultPath }></CustomHeader> }
+        {!needHeader && <CustomHeader {...this.props} menuData={menuData} defaultPath={defaultPath}></CustomHeader>}
         <Content>
           {
             isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch>

@@ -108,6 +108,40 @@ const AppCard = (props: any) => {
       message.error({ content: '删除失败', duration: 2 })
     }
   }
+
+  /**
+   * description: 下载文件
+   * @params:  blob: 后端返回的文件数据,
+   *          @fileName: 自定义文件名
+   */
+  const downloadFile = (blob: any, fileName: string): void => {
+    const toolA = document.createElement('a')
+    toolA.href = URL.createObjectURL(blob)
+    toolA.download = fileName
+    toolA.click()
+    URL.revokeObjectURL(toolA.href)
+  }
+  // 导出应用
+  const exportApp = async (appId: string) => {
+    const [, data] = await useFetch(`/visual/application/export/${appId}`, {
+      method: 'get',
+      // 'Response-Type': 'blob',
+      responseType: 'blob',
+    }, {
+      onlyNeedWrapData: true,
+    })
+    console.log('data', data);
+    // saveFile(data, '我的zip')
+    if (data) {
+      if (data instanceof Blob) {
+        alert('是一个blob')
+        downloadFile(data, '')
+      } else {
+        message.error({ content: '导出失败', duration: 2 })
+      }
+    }
+  }
+
   // 移动分组
   const moveGroup = (appId: string) => {
     openMoveGroupModal(appId)
@@ -128,6 +162,9 @@ const AppCard = (props: any) => {
         break;
       case '删除':
         deleteApp([id])
+        break;
+      case '导出应用':
+        exportApp(id)
         break;
     }
     // 点击任意菜单子项后，需要隐藏ul
@@ -165,6 +202,7 @@ const AppCard = (props: any) => {
                   <li key="move">移入分组</li>
                   <li>复制</li>
                   <li>删除</li>
+                  <li>导出应用</li>
                 </ul>
               </div>
             </div>
