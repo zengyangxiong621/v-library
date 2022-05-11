@@ -15,6 +15,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import {
   Checkbox,
   Button,
+  message
 } from 'antd';
 import {
   PlusOutlined,
@@ -68,6 +69,13 @@ const _sqlDataConfig = {
   showExpand: false
 }
 
+const _esDataConfig = {
+  readOnly: false,
+  language: 'json',
+  value: ``,
+  showExpand: false
+}
+
 const DataSourceConfig = props => {
   const _data = props.data;
   const [dataSourceTypes, setDataSourceTypes] = useState(selectData)
@@ -75,9 +83,10 @@ const DataSourceConfig = props => {
   const [filterFlag, setFilterFlag] = useState(false)
   const [filters, setFilters] = useState([])
   const [sqlData, setSqlData] = useState(_sqlDataConfig)
+  const [esData, setEsData] = useState(_esDataConfig)
 
   useEffect(() => {
-    const newDataSourceTypes = {...dataSourceTypes}
+    const newDataSourceTypes = { ...dataSourceTypes }
     newDataSourceTypes.value = _data.dataType || 'static'
     setDataSourceTypes(newDataSourceTypes)
     if (['mysql', 'postgresql'].includes(_data.dataType)) {
@@ -90,10 +99,19 @@ const DataSourceConfig = props => {
         }
       }
     }
+    if (['elastic_search'].includes(_data.dataType)) {
+      const esDataNew = { ...esData }
+      if (_data.dataConfig[_data.dataType]) {
+        const query = _data.dataConfig[_data.dataType].data.query
+        if (query) {
+          esDataNew.value = query
+          setEsData(esDataNew)
+        }
+      }
+    }
   }, [_data.dataType])
 
   const dataSourceTypeChange = async () => {
-    console.log('dataSourceTypes.value', dataSourceTypes.value)
     const newDataSourceTypes = Object.assign({}, dataSourceTypes)
     setDataSourceTypes(newDataSourceTypes)
     await http({
@@ -105,21 +123,37 @@ const DataSourceConfig = props => {
       }
     })
     props.onDataTypeChange(dataSourceTypes.value)
+
+    const type = dataSourceTypes.value
+    if (['mysql', 'postgresql'].includes(type)) {
+      const newSqlData = { ...sqlData }
+      if (_data.dataConfig[type]) {
+        const sql = _data.dataConfig[type].data.sql
+        if (sql) {
+          newSqlData.value = sql
+          setSqlData(newSqlData)
+        } else {
+          setSqlData(_sqlDataConfig)
+        }
+      } else {
+        setSqlData(_sqlDataConfig)
+      }
+    }
+
   }
 
   const onStaticDataChange = data => {
     props.onStaticDataChange(JSON.parse(data))
   }
 
-  // csv,json,excel 数据源选择回调
-  const dataSourceChange = async (data) => {
+  const saveDataSource = async (key, data) => {
     const dataConfig = cloneDeep(_data.dataConfig)
     if (dataConfig[_data.dataType]) {
-      dataConfig[_data.dataType].data.data_id = data.value
+      dataConfig[_data.dataType].data[key] = data.value
     } else {
       dataConfig[_data.dataType] = {
         data: {
-          data_id: data.value
+          [key]: data.value
         }
       }
     }
@@ -135,19 +169,27 @@ const DataSourceConfig = props => {
     props.onDataSourceChange(dataConfig)
   }
 
-  // api 数据源设置变化
-  const onAPIDataSourceChange = (dataConfig) => {
-    props.onDataSourceChange(dataConfig)
-  }
-
-  // postgresql,mysql 数据源选择回调
-  const sqlSourceChange = data => {
-    // todo 设置数据源 保存
+  // csv,json,excel,postgresql,mysql 数据源选择回调
+  const dataSourceChange = (data) => {
+    console.log('data', data)
+    saveDataSource('data_id', data)
   }
 
   const sqlDataChange = () => {
     console.log('sqlData', sqlData)
-    // todo 保存
+    saveDataSource('sql', sqlData)
+  }
+
+  const esDataChange = () => {
+    console.log('esData', esData)
+    try {
+      JSON.parse(esData.value)
+    } catch (err) {
+      console.log('err',err)
+      message.error('格式错误')
+      return
+    }
+    saveDataSource('query', esData)
   }
 
   const filterBoxChange = e => {
@@ -184,21 +226,29 @@ const DataSourceConfig = props => {
                 onChange={dataSourceChange}
               />
               : dataSourceTypes.value === 'api' ?
-                <APIDataSource data={_data} onDataSourceChange={onAPIDataSourceChange}/>
-                : ['postgresql', 'mysql'].includes(dataSourceTypes.value) ?
+                <APIDataSource data={_data} onDataSourceChange={props.onDataSourceChange} />
+                : ['postgresql', 'mysql', 'elastic_search'].includes(dataSourceTypes.value) ?
                   <React.Fragment key={dataSourceTypes.value}>
                     <SelectDataSource
                       data={_data}
                       type={dataSourceTypes.value}
-                      onChange={sqlSourceChange}
+                      onChange={dataSourceChange}
                     />
-                    <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
-                      <CodeEditor data={sqlData} onChange={sqlDataChange} />
-                    </div>
+                    {
+                      ['postgresql', 'mysql'].includes(dataSourceTypes.value) ?
+                        <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
+                          <CodeEditor data={sqlData} onChange={sqlDataChange} />
+                        </div>
+                        : <div className="es-query">
+                          <label className="data-name">查询语句（JSON格式）</label>
+                          <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
+                            <CodeEditor data={esData} onChange={esDataChange} />
+                          </div>
+                        </div>
+                    }
+
                   </React.Fragment>
-                  : dataSourceTypes.value === 'elastic_search' ?
-                    <div>es</div>
-                    : null
+                  : null
           }
         </div>
         <div className="data-footer">

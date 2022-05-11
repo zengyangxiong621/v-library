@@ -9,7 +9,8 @@ import { http } from '../../../../../models/utils/request'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {
-  Checkbox
+  Checkbox,
+  message
 } from 'antd';
 
 const _baseUrlDataConfig = {
@@ -95,38 +96,43 @@ const APIDataSource = props => {
       if (['post', 'put', 'patch'].includes(_data.dataConfig?.api?.data?.method)) {
         setIsShowBody(true)
       }
-      _requestMethodConfig.value = _data.dataConfig?.api?.data?.method || 'get'
-      setRequestMethods(_requestMethodConfig)
-      _baseUrlDataConfig.value = _data.dataConfig?.api?.data?.baseUrl || ''
-      setBaseUrlData(_baseUrlDataConfig)
-      _requestHeaderDataConfig.value = _data.dataConfig?.api?.data?.headers || ''
-      setRequestHeaderData(_requestHeaderDataConfig)
-      _requestBodyDataConfig.value = _data.dataConfig?.api?.data?.body || ''
-      setRequestBodyData(_requestBodyDataConfig)
-      _pathDataConfig.value = _data.dataConfig?.api?.data?.path || ''
-      setPathData(_pathDataConfig)
-      _paramDataConfig.value = _data.dataConfig?.api?.data?.params || ''
-      setParamData(_paramDataConfig)
+      const requestMethodsNew = { ...requestMethods }
+      requestMethodsNew.value = _data.dataConfig?.api?.data?.method || 'get'
+      setRequestMethods(requestMethodsNew)
+      const baseUrlDataNew = { ...baseUrlData }
+      baseUrlDataNew.value = _data.dataConfig?.api?.data?.baseUrl || ''
+      setBaseUrlData(baseUrlDataNew)
+      const requestHeaderDataNew = { ...requestHeaderData }
+      requestHeaderDataNew.value = _data.dataConfig?.api?.data?.headers || ''
+      setRequestHeaderData(requestHeaderDataNew)
+      const requestBodyDataNew = { ...requestBodyData }
+      requestBodyDataNew.value = _data.dataConfig?.api?.data?.body || ''
+      setRequestBodyData(requestBodyDataNew)
+      const pathDataNew = { ...pathData }
+      pathDataNew.value = _data.dataConfig?.api?.data?.path || ''
+      setPathData(pathDataNew)
+      const paramDataNew = { ...paramData }
+      paramDataNew.value = _data.dataConfig?.api?.data?.params || ''
+      setParamData(paramDataNew)
       setReqFromBack(_data.dataConfig?.api?.data?.reqFromBack || false)
       setNeedCookie(_data.dataConfig?.api?.data?.needCookie || false)
     }
-  }, [_data.config])
+  }, [_data.dataConfig])
 
   const saveDataConfig = async (key, param) => {
     const dataConfig = cloneDeep(_data.dataConfig)
     if (dataConfig.api) {
       dataConfig.api.data[key] = param.value
-      if(key==='data_id'){
+      if (key === 'data_id') {
         dataConfig.api.data.baseUrl = param.baseUrl
       }
     } else {
       let data
       data = {
-        [key]: param.value,
-        baseUrl: param.baseUrl
+        [key]: param.value
       }
-      if(key==='data_id'){
-        data = Object.assign({},data,{
+      if (key === 'data_id') {
+        data = Object.assign({}, data, {
           baseUrl: param.baseUrl
         })
       }
@@ -161,46 +167,62 @@ const APIDataSource = props => {
     } else {
       setIsShowBody(false)
     }
-    saveDataConfig('method',requestMethods)
+    saveDataConfig('method', requestMethods)
   }
 
   const requestHeaderDataChange = () => {
     console.log('requestHeaderData', requestHeaderData)
-    // todo 保存
+    try {
+      JSON.parse(requestHeaderData.value)
+    } catch (err) {
+      message.error('格式错误')
+      return
+    }
+    saveDataConfig('headers', requestHeaderData)
   }
 
   const requestBodyDataChange = () => {
     console.log('requestBodyData', requestBodyData)
-    // todo 保存
+    try {
+      JSON.parse(requestBodyData.value)
+    } catch (err) {
+      message.error('格式错误')
+      return
+    }
+    saveDataConfig('body', requestBodyData)
   }
 
   const pathDataChange = () => {
     console.log('pathData', pathData)
-    // todo 保存
+    saveDataConfig('path', pathData)
   }
 
   const paramDataChange = () => {
     console.log('paramData', paramData)
-    // todo 保存
+    saveDataConfig('params', paramData)
   }
 
   const reqFromBackChange = () => {
     console.log('reqFromBack', reqFromBack)
     setReqFromBack(!reqFromBack)
-    // todo 保存
+    saveDataConfig('reqFromBack', {
+      value: !reqFromBack
+    })
   }
 
   const needCookieChange = () => {
     console.log('needCookie', needCookie)
     setNeedCookie(!needCookie)
-    // todo 保存
+    saveDataConfig('needCookie', {
+      value: !needCookie
+    })
   }
 
 
   return (
     <div className="api-data-source-config">
       <SelectDataSource data={_data} type="api" onChange={dataSourceChange} />
-      <div className="reuqest-baseurl" key={baseUrlData.value}>
+      <div className="reuqest-baseurl">
         <CusInput data={baseUrlData} onChange={() => { }} />
       </div>
       <CusSelect data={requestMethods} onChange={requestMethodsChange} style={{ float: 'right' }} />
