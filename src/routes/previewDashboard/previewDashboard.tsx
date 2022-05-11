@@ -44,7 +44,7 @@ const PreViewDashboard = ({ history, location }: any) => {
           <div className='previewDashboard-wrap'>
             {
               allComponentsList.map((item, index) => <>
-                <EveryComponent allData={item} />
+                <EveryComponent key={index} allData={item} />
               </>)
             }
           </div>

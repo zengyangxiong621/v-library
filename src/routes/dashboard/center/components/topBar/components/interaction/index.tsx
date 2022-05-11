@@ -43,7 +43,7 @@ const Interaction = (props: any) => {
       {
         dataArr.map((item: any, index: number) => {
           return (
-            <EveryItem data={item} />
+            <EveryItem key={index} data={item} />
           )
         })
       }

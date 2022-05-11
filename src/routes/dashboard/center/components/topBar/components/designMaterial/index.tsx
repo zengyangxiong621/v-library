@@ -18,6 +18,7 @@ const DesignMaterial = (props: any) => {
           chartType.map((item: any) => {
             return (
               <li
+                key={item.key}
                 className={`${active === item.key && 'active-li'}`}
                 onMouseEnter={() => liHover(item.key)}>
                 {item.text}
@@ -30,7 +31,7 @@ const DesignMaterial = (props: any) => {
         {
           ChartDataMap[active].map((item: any, index: number) => {
             return (
-              <EveryItem data={item} />
+              <EveryItem data={item} key={index}/>
             )
           })
         }

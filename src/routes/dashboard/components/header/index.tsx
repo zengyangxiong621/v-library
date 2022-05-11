@@ -64,9 +64,9 @@ const Header = (props: any) => {
       </div>
       <div className='center'>
         {
-          centerIconArr.map(item => {
+          centerIconArr.map((item, index) => {
             return (
-              <div>
+              <div key={index}>
                 {
                   item.icon === 'line' ? <div className='line'></div>
                     :

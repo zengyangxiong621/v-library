@@ -35,7 +35,6 @@ const RightContent = (props: any) => {
   // 是否显示二级发布弹窗的剩余表单项
   const [notShowRest, setNotShowRest] = useState(false)
   const [showRestIconAngle, setShowRestIconAngle] = useState(90)
-  const [fabuBtnLoading, setFabuBtnLoading] = useState(false)
   const [fabuSpinning, setFabuSpinning] = useState(false)
 
   // 表单项数据 (此处表单数据不适合用Form校验来获取各个form.item的值)
@@ -235,7 +234,6 @@ const RightContent = (props: any) => {
       errHandleFn: (err: any) => {
         message.error('发布失败');
       },
-      // onlyNeedWrapData: true
     })
     setFabuSpinning(false)
     return data
@@ -415,7 +413,7 @@ const RightContent = (props: any) => {
     <Row style={{ width: '100%' }} gutter={[26, 26]}>
       {
         listData.map((item: any, index: number) => (
-          <Col span={6}>
+          <Col span={6} key={index}>
             <AppCard
               {...item}
               changeFabuModal={changeFabuModal}
