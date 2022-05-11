@@ -9,11 +9,14 @@ import './index.css';
 import "antd/dist/antd.css";
 import '../src/assets/iconfont/iconfont.css';
 import './assets/fonts/iconfont.css'
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, message } from 'antd';
 
 import { createRoutes } from './utils/core';
 import RoutesConfig from './routerConfig';
-
+message.config({
+  duration: 2,
+  maxCount: 1,
+});
 // -> 初始化
 const app = dva({
   history: createBrowserHistory()
