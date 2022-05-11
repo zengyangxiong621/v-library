@@ -24,7 +24,7 @@ const selectData = {
   name: "xxx",
   displayName: '',
   type: 'select',
-  value: 'static',
+  value: '',
   options: [
     {
       name: '静态数据',
@@ -77,8 +77,9 @@ const DataSourceConfig = props => {
   const [sqlData, setSqlData] = useState(_sqlDataConfig)
 
   useEffect(() => {
-    selectData.value = _data.dataType || 'static'
-    setDataSourceTypes(selectData)
+    const newDataSourceTypes = {...dataSourceTypes}
+    newDataSourceTypes.value = _data.dataType || 'static'
+    setDataSourceTypes(newDataSourceTypes)
     if (['mysql', 'postgresql'].includes(_data.dataType)) {
       const newSqlData = { ...sqlData }
       if (_data.dataConfig[_data.dataType]) {
