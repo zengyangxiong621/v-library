@@ -5,18 +5,36 @@
 
 .workSpace-wrap {
   display: flex;
+  width: 100%;
   background-color: @backColor;
   color: @textColor;
   user-select: none;
   .left {
-    border-right: 1px solid #fff;
   }
 
   .right {
     flex: 1;
+    display: inline-block;
     padding: 16px;
     .right-two {
       margin: 16px 0;
+    }
+    .right-table-wrap {
+      width: 100%;
+      // 表格右侧滚动条清除
+      .ant-table-body::-webkit-scrollbar {
+        display: none;
+      }
+
+      // 兼容ie和火狐
+      .ant-table-body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      // 分页器 ”共xx条” 显示在最左侧
+      .ant-pagination-total-text {
+        margin-right: auto;
+      }
     }
   }
 
