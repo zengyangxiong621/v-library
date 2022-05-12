@@ -73,7 +73,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   const commonChangeContent = () => {
     // TODO 校验
     // 比如名字一样,不发请求
-    console.log('name', name);
     if (inputValue === name) {
       return
     } else {

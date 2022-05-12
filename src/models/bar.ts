@@ -50,6 +50,7 @@ import { http } from './utils/request'
 
 interface IBarState {
   dashboardId: string;
+  dashboardName: string;
   key: string[];
   isShowRightMenu: boolean;
   rightMenuInfo: any;
@@ -94,6 +95,7 @@ export default {
   namespace: 'bar',
   state: {
     dashboardId: '',
+    dashboardName: '',
     currentDblTimes: 0,
     isCanClearAllStatus: true,
     key: [],
@@ -341,7 +343,7 @@ export default {
     },
     * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
-        let { layers, components, dashboardConfig } = yield http({
+        let { layers, components, dashboardConfig, dashboardName } = yield http({
           url: `/visual/application/dashboard/detail/${ payload }`,
           method: 'get',
         })
@@ -359,6 +361,7 @@ export default {
             components,
             dashboardId: payload,
             pageConfig: dashboardConfig,
+            dashboardName: dashboardName
           },
         })
       } catch(e) {

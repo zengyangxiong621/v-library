@@ -2,8 +2,7 @@
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from 'dva'
-import { useFetch } from "../../../../utils/useFetch";
-import { BASE_URL } from '../../../../utils/useFetch'
+import { useFetch, BASE_URL } from "../../../../utils/useFetch";
 
 import AppCard from '../appCard/index'
 import DarkModal from '../darkThemeModal/index'
@@ -160,11 +159,10 @@ const RightContent = (props: any) => {
       setFabuChecked(true)
       // 此处拿不到最新的id值，就直接传了
       const [, data] = await useFetch(`/visual/application/share/detail/${id}`, { method: 'get' })
-      console.log('dataaaaaaaaa', data);
       const { shareUrl, ...filterShareUrl } = data
       setFabuBody(filterShareUrl)
       if (data) {
-        setFxljInputValue(data.shareUrl)
+        setFxljInputValue(`${BASE_URL}${data.shareUrl}`)
         if (data.needPassword) {
           // setJmfxValue()
           setIsShowJmfxInput(true)
@@ -216,7 +214,7 @@ const RightContent = (props: any) => {
       // 发布成功，1. 刷新列表获得应用最新的发布状态
       // 2. 设置分享连接地址
       refreshList()
-      setFxljInputValue(result.shareUrl)
+      setFxljInputValue(`${BASE_URL}${result.shareUrl}`)
       // 打开发布开关
       setFabuChecked(true)
       setIsShared(true)
@@ -524,8 +522,8 @@ const RightContent = (props: any) => {
                     label="分享信息"
                     colon={false}
                   >
-                    <div onClickCapture={showRestInfo} className="set-flex">
-                      <IconFont type="icon-fanhui" style={{ cursor: 'pointer' }} rotate={showRestIconAngle} />
+                    <div onClickCapture={showRestInfo} className="icon-wrap set-flex">
+                      <IconFont type="icon-fanhui" rotate={showRestIconAngle} />
                     </div>
                   </Form.Item>
                   {

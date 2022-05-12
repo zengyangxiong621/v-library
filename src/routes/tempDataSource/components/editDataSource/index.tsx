@@ -24,7 +24,6 @@ const EditDataSource = (props: any) => {
     rdbmsSourceConfig,
     esSourceConfig,
   } = props.editDataSourceInfo
-  console.log('props', props);
 
   const { visible, changeShowState, refreshTable } = props
 

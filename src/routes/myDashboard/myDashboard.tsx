@@ -54,7 +54,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
 
   // 导入应用
   const importDashboard = () => {
-    console.log('导入应用');
   }
 
   // 搜索框的值改变
@@ -66,13 +65,13 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     setInputValue('')
   }
   // 搜索应用
-  const search = () => {
+  const search = (value: string) => {
     const groupId = dashboardManage.curSelectedGroup[0] === '-1' ? null : dashboardManage.curSelectedGroup[0]
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      name: inputValue,
+      name: value,
       map: sortMap,
       groupId,
     }
@@ -101,16 +100,16 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     name: 'file',
     multiple: false,
     maxCount: 1,
-    accept: 'image/png, image/jpeg',
+    accept: 'application/zip',
     action: `${BASE_URL}/visual/file/upload`,
     beforeUpload(file: any) {
       const { name }: { name: string } = file
       // 考虑 cdb.la...yer.json 这个文件名
       const lastPointIndex = name.lastIndexOf('.')
       const nameSuffix = name.slice(lastPointIndex)
-      if (['png', 'jpg', 'gif', 'jpeg', 'webp', 'svg'].includes(nameSuffix)) {
+      if (!['.zip'].includes(nameSuffix)) {
         message.error({
-          content: '请上传符合格式的图片',
+          content: '请上传符合格式的文件',
           duration: 2
         })
         file.status = 'error'
@@ -119,12 +118,15 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     },
     async onChange(info: any) {
       const { status, response } = info.file;
-      console.log('info', info);
+      // - 应用文件上传成功
+      // - 开始导入应用
+      // - 刷新列表(必须保证后端数据更新)
       if (status === 'done') {
         console.log('上传应用的结果', response.data);
         setUploadFileUrl(response.data)
-        // TODO 应用上传成功了，需要重新刷新下应用列表(立马刷新后端数据可能不能及时更新，设置延迟？)
-        let file = new Blob(['我是一个blob'], {type: 'text/plain'})
+        // let file = new Blob(['我是一个blob'], { type: 'text/plain' })
+        let file = new Blob([info.fileList[0]], { type: 'image/png' })
+        console.log('file', file);
         const formData = new FormData()
         formData.append('avatar', 'cdb')
         formData.append('file', file)
@@ -135,7 +137,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
           body: formData
         })
         console.log('上传一个文件试试先', data);
-
       } else if (status === 'error') {
         message.error(`应用上传失败`);
       }
@@ -154,7 +155,9 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
         <div className="right-header">
           <div className='set-flex'>
             <p className='title'>全部应用</p>
-            <Upload {...importAppUploadprops}>
+            <Upload {...importAppUploadprops}
+              showUploadList={false}
+            >
               <div className='custom-btn set-mr' onClick={importDashboard}>
                 <span>导入应用</span>
               </div>
