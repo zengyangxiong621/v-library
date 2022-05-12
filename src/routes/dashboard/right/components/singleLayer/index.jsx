@@ -61,8 +61,12 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
-  const filedsChange = fields => {
-    componentConfig.staticData.fields = fields
+  const filedsChange = (fields,type) => {
+    if(type==='static'){
+      componentConfig.staticData.fields = fields
+    }else{
+      componentConfig.dataConfig[type].fields = fields
+    }
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig

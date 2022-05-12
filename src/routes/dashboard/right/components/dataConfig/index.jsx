@@ -75,7 +75,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         fields
       }
     })
-    props.onFiledsChange(fields)
+    props.onFiledsChange(fields,_data.dataType)
   }
 
   const resultDataChange = data => {
