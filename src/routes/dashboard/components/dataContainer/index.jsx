@@ -3,7 +3,7 @@ import {connect} from 'dva'
 import './index.less'
 import {Form, Drawer, Select, Button, Input, Modal, message} from 'antd';
 import {
-  CloseOutlined
+  CloseOutlined, LeftOutlined, AudioOutlined, SearchOutlined
 } from '@ant-design/icons';
 import DataContainerItem from './components/dataContainerItem'
 import {http} from '../../../../models/utils/request'
@@ -78,38 +78,38 @@ const DataContainer = ({bar, dispatch, ...props}) => {
     setItemData(containerData)
   }
 
-
-
-
   return (
     <div className="data-container-wrap">
       <Drawer
         title={
-          <div className="g-relative">
+          <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
+            <span></span>
             数据容器
-            <CloseOutlined onClick={onClose} className="g-absolute g-cursor-pointer" style={{top: 4, right: 8}}/>
+            <CloseOutlined onClick={onClose} className="g-cursor-pointer"/>
           </div>
         }
-        closeIcon={null}
         placement='right'
-        closable={true}
+        closable={false}
         onClose={onClose}
         visible={props.visible}
         className='data-container-drawer'
         getContainer={false}
         style={{position: 'absolute'}}
-        width={400}
+        width={333}
       >
         <div className='data-container-handle'>
-          <Search
+          <Input
+            placeholder="请输入"
+            suffix={<SearchOutlined
+              className="input-search-icon"
+              onClick={handleSearch}
+            />}
             value={inputValue}
-            onChange={handleSearchValueChange}
-            placeholder="搜索"
-            className='search'
-            maxLength={40}
+            onChange={(e) => setInputValue(e.target.value)}
+            allowClear
             onSearch={handleSearch}
-          ></Search>
-          <Button onClick={() => handleContainerClick({})}>+新增</Button>
+          />
+          <Button className="g-mx-2" onClick={() => handleContainerClick({})}>+新增</Button>
           <Button onClick={() => setManageVisible(true)}>管理</Button>
         </div>
         {

@@ -1,6 +1,64 @@
 @import "../../../../assets/style/variable.less";
 
 .data-container-wrap {
+  .ant-btn-default {
+    color: @btn-default-color;
+    border-color: @btn-default-border;
+    background-color: @btn-default-bg;
+  }
+  .ant-btn:hover, .ant-btn:focus {
+    color: @primary-color-hover;
+    border-color: @primary-color-hover;
+  }
+
+
+  .ant-input {
+    background-color: @input-bg;
+  }
+
+  .ant-input-affix-wrapper {
+    background-color: @input-bg;
+    border-color: @input-border-color;
+    .ant-input-clear-icon {
+      color: @input-icon-color
+    }
+  }
+  .input-search-icon {
+    color: @input-search-icon;
+    cursor: pointer;
+  }
+
+  .ant-drawer .ant-table thead > tr > th {
+    background-color: @table-header-bg;
+    border-color: @table-border-color;
+    color: @fontColor2
+  }
+  .ant-table-tbody > tr > td {
+    border-bottom: 1px solid @table-border-color;
+    color: @fontColor2
+  }
+  .ant-table-tbody > tr:nth-child(even) {
+    background: @table-tr-even-bg
+  }
+  .ant-table-tbody > tr:nth-child(odd) {
+    background: @table-tr-odd-bg
+  }
+  .ant-table-tbody>tr>td.ant-table-cell-row-hover {
+    background: @table-row-hover-bg
+  }
+
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table {
+    border-color: @table-border-color
+  }
+  .ant-table.ant-table-bordered > .ant-table-container {
+    border-color: @table-border-color
+  }
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th {
+    border-right:1px solid @table-border-color
+  }
+  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tbody > tr > td {
+    border-right:1px solid @table-border-color
+  }
 }
 .data-container-drawer {
   position: absolute;
@@ -32,3 +90,4 @@
     display: flex;
   }
 }
+

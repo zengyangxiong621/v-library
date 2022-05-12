@@ -48,7 +48,7 @@ const DataContainerItem = props => {
     ModalConfirm({
       title: '删除确认',
       content: '仍有组件绑定该数据容器，删除后不可逆，确认删除？',
-      desc: '',
+      desc: '', // 选填
       onCancel: () => {
         console.log('取消')
       },
@@ -75,15 +75,16 @@ const DataContainerItem = props => {
             onPressEnter={handleInputValueEdit}
             style={{width: 200}}
           /> : <>
-            <span onClick={() => props.onClick(data)} className="container-name">{data.name}</span>
+            <span onClick={() => props.onClick(data)} className="container-name" title={data.name}>{data.name}</span>
             <EditOutlined
               onClick={handleEdit}
             />
           </>
         }
       </div>
-      <div className="handle-area">
+      <div className="handle-area g-flex g-items-center">
         <CopyOutlined
+          className="g-mx-4"
         />
         <DeleteOutlined
           onClick={handleDelete}

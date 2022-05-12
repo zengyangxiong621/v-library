@@ -2,7 +2,7 @@ import React, {memo, useState, useEffect, useRef} from 'react';
 import './index.less'
 import {Drawer, Input, Table, Modal} from 'antd'
 import {http} from '../../../../../../models/utils/request'
-import {CloseOutlined} from "@ant-design/icons";
+import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 
 const ManageContainerDrawer = props => {
   const [dataList, setDataList] = useState([])
@@ -42,7 +42,7 @@ const ManageContainerDrawer = props => {
       key: 'dataType',
       width: 120,
       ellipsis: true,
-      render: text => <span style={{color: '#ccc'}}>{dataSourceEnum[text]}</span>
+      render: text => <span>{dataSourceEnum[text]}</span>
     },
     {
       title: '接入组件',
@@ -60,9 +60,10 @@ const ManageContainerDrawer = props => {
   return (
     <Drawer
       title={
-        <div className="g-relative">
+        <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
+          <span></span>
           数据容器
-          <CloseOutlined onClick={onClose} className="g-absolute g-cursor-pointer" style={{top: 4, right: 8}}/>
+          <CloseOutlined onClick={onClose} className="g-cursor-pointer"/>
         </div>
       }
       closeIcon={null}
@@ -77,8 +78,19 @@ const ManageContainerDrawer = props => {
       style={{position: 'absolute'}}
     >
       <div>
-        <Input.Search value={searchValue} onChange={(e) => setSearchValue(e.target.value)} onSearch={handleSearch} onBlur={(e) => handleSearch(e.target.value)}></Input.Search>
+        <Input
+          placeholder="请输入"
+          suffix={<SearchOutlined
+            className="input-search-icon"
+            onClick={handleSearch}
+          />}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          allowClear
+          onSearch={handleSearch}
+        />
         <Table
+          bordered={true}
           className="g-mt-2"
           columns={columns}
           dataSource={dataList}
