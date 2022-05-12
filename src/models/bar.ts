@@ -87,7 +87,8 @@ interface IBarState {
   canvasDraggablePosition: {
     x: number,
     y: number
-  }
+  };
+  componentData:any;
 }
 
 export default {
@@ -314,6 +315,7 @@ export default {
       },
     ],
     leftMenuWidth: 250,
+    componentData:{}
   } as IBarState,
   subscriptions: {
     setup({ dispatch, history }: { dispatch: any; history: any }) {

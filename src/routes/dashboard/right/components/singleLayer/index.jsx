@@ -30,8 +30,8 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   // console.log('styleConfig', styleConfig)
   // console.log('--------------------')
   const interactionConfig = componentConfig.interaction || {
-    mountAnimation:{},
-    events:[]
+    mountAnimation: {},
+    events: []
   }
 
   const styleChange = debounce(() => {
@@ -55,9 +55,17 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       dashboardId: dashboardId
     }
     await http({
-      url:'/visual/module/update',
+      url: '/visual/module/update',
       method: 'post',
       body: params
+    })
+  }
+
+  const filedsChange = fields => {
+    componentConfig.staticData.fields = fields
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
     })
   }
 
@@ -91,7 +99,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const saveDataHandle = async (param) => {
     await http({
-      url:'/visual/module/data/update',
+      url: '/visual/module/data/update',
       method: 'post',
       body: param
     })
@@ -116,7 +124,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       dashboardId: dashboardId
     }
     await http({
-      url:'/visual/layer/group/update',
+      url: '/visual/layer/group/update',
       method: 'post',
       body: params
     })
@@ -139,7 +147,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       dashboardId: dashboardId
     }
     await http({
-      url:'/visual/module/defineEvent',
+      url: '/visual/module/defineEvent',
       method: 'post',
       body: params
     })
@@ -164,11 +172,12 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="数据" key="2">
             <ComponentCard data={componentConfig}>
-              <DataConfig 
-                data={componentConfig} 
+              <DataConfig
+                data={componentConfig}
+                onFiledsChange={filedsChange}
                 onStaticDataChange={staticDataChange}
                 onDataTypeChange={dataTypeChange}
-                onDataSourceChange={dataSourceChange}/>
+                onDataSourceChange={dataSourceChange} />
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">

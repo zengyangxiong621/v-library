@@ -1,5 +1,7 @@
 import React, { memo, useState, useEffect } from 'react'
+import { connect } from 'dva'
 import './index.less'
+
 import CusSelect from '../cusSelect'
 import CusInput from '../cusInput'
 import CodeEditor from '../codeEditor'
@@ -78,7 +80,7 @@ const _paramDataConfig = {
   value: '',
 }
 
-const APIDataSource = props => {
+const APIDataSource = ({ bar, dispatch, ...props }) => {
   const _data = props.data
   const [requestMethods, setRequestMethods] = useState(_requestMethodConfig)
   const [baseUrlData, setBaseUrlData] = useState(_baseUrlDataConfig)
@@ -140,7 +142,6 @@ const APIDataSource = props => {
         data
       }
     }
-    props.onDataSourceChange(dataConfig)
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -150,6 +151,32 @@ const APIDataSource = props => {
         dataType: 'api'
       }
     })
+    props.onDataSourceChange(dataConfig)
+    queryComponentData()
+  }
+
+  const queryComponentData = async()=>{
+    const data =  await http({
+      url:'/visual/module/getData',
+      method: 'post',
+      body:{
+        moduleId:_data.id,
+        dataType:'api'
+      }
+    })
+    console.log('data',data)
+    if(data){
+      props.onResultDataChange(_data.dataType!=='static' ? data : data.data)
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentData: {
+            ...bar.componentData,
+            [_data.id]: _data.dataType!=='static' ? data : data.data
+          }
+        },
+      })
+    }
   }
 
   const dataSourceChange = async (param) => {
@@ -253,4 +280,6 @@ const APIDataSource = props => {
   )
 }
 
-export default memo(APIDataSource)
+export default connect(({ bar }) => ({
+  bar
+}))(APIDataSource)

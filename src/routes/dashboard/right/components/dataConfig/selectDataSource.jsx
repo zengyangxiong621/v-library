@@ -45,7 +45,8 @@ const SelectDataSource = props => {
         spaceId: 1,
         type: ['mysql', 'postgresql'].includes(props.type)
           ? 'RDBMS' : ['api'].includes(props.type)
-            ? 'RESTFUL_API' : props.type.toUpperCase(),
+            ? 'RESTFUL_API' :['elasticSearch'].includes(props.type)
+            ? 'ELASTIC_SEARCH' : props.type.toUpperCase(),
       }
     })
     console.log('content', content)

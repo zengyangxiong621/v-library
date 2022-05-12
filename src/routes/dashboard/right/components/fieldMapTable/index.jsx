@@ -25,6 +25,7 @@ const EditableCell = ({
   dataIndex,
   record,
   handleSave,
+  fieldsKeys,
   ...restProps
 }) => {
   const [editing, setEditing] = useState(false);
@@ -70,8 +71,11 @@ const EditableCell = ({
           },
         ]}
       >
-        <Select ref={inputRef} onChange={save} style={{width:'145px'}}>
-          <Option value="text">text</Option>
+        <Select ref={inputRef} onChange={save} style={{ width: '145px' }}>
+          {/* <Option value="text">text</Option> */}
+          {fieldsKeys.map((option) => {
+            return (<Option key={option} value={option}>{option}</Option>)
+          })}
         </Select>
       </Form.Item>
     ) : (
@@ -108,13 +112,17 @@ export class EditableTable extends React.Component {
         title: '状态',
         dataIndex: 'status',
         render: (text, record, index) => {
-          return (text ? <CheckOutlined /> : <CloseOutlined />)
+          console.log('text', text, record)
+          return (props.fieldsKeys.includes(record.value) ?
+            <CheckOutlined style={{ color: 'green' }} /> :
+            <CloseOutlined style={{ color: 'red' }} />)
         }
       },
     ];
     this.state = {
       dataSource: props.data || [],
       count: props.data?.length || 0,
+      fieldsKeys: props.fieldsKeys || []
     };
   }
 
@@ -127,12 +135,11 @@ export class EditableTable extends React.Component {
     this.setState({
       dataSource: newData,
     });
-    this.props.data = newData
-    this.props.onChange()
+    this.props.onChange(newData)
   };
 
   render() {
-    const { dataSource } = this.state;
+    const { dataSource, fieldsKeys } = this.state;
     const components = {
       body: {
         row: EditableRow,
@@ -151,6 +158,7 @@ export class EditableTable extends React.Component {
           editable: col.editable,
           dataIndex: col.dataIndex,
           title: col.title,
+          fieldsKeys: fieldsKeys,
           handleSave: this.handleSave,
         }),
       };
