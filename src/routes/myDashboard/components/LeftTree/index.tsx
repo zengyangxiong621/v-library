@@ -59,10 +59,11 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
   }
 
   const selectTreeNode = (keys: any, e: any) => {
+    console.log('key', keys);
     // 如果是取消选择直接中止
     if (!e.selected) return
     const { node } = e
-    if (node.key === 'aInput' || node.name === '占位的input' || node.key === 'wrap') {
+    if (node.key === 'aInput' || node.name === '占位的input') {
       return
     }
     // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)

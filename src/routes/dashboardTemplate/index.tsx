@@ -1,7 +1,5 @@
 import { newDynamic, createRoute } from '../../utils/core';
 
-console.log('templateIndex')
-
 const routesConfig = (app: any) => ({
   path: '/template',
   title: '新建',

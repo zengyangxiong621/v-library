@@ -1,34 +1,54 @@
-import React, { memo, useRef, useState } from 'react'
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { memo, useEffect, useRef, useState } from 'react'
 import './index.less'
 import { withRouter } from 'dva/router'
+import { connect } from 'dva'
 
-import { Input } from 'antd'
+import { useFetch } from '../../../../utils/useFetch'
+import { Input, message } from 'antd'
 import { IconFont } from '../../../../utils/useIcon'
 
 import NavigationItem from '../navigationItem/index'
 
 
 
-const Header = (props: any) => {
-
-  // console.log(history);
-  // console.log(location);
-
-  // const { showWhichBar } = props
+const Header = ({ bar, dispatch, history, showWhichBar }: any) => {
+  const [appName, setAppName] = useState(bar.dashboardName)
   const [isRename, setIsRename] = useState(false)
   const [activeIcon, setActiveIcon] = useState(false)
 
   const appNameInputRef = useRef<any>()
-
+  useEffect(() => {
+    setAppName(bar.dashboardName)
+  }, [bar.dashboardName])
 
   const toBack = () => {
     // 返回首页
-    props.history.back()
+    history.back()
   }
   // 修改应用名称
-  const changeAppName = (e: any) => {
+  const reNameApp = async (e: any) => {
+    console.log('e', appName);
     e.stopPropagation()
     setIsRename(false)
+    // 没改新名称
+    if(appName === bar.dashboardName) {
+      return
+    }
+    if(!appName) {
+      setAppName(bar.dashboardName)
+      return
+    }
+    const finalBody = {
+      id: bar.dashboardId,
+      name: appName
+    }
+    const [, data] = await useFetch('/visual/application/updateAppName', {
+      body: JSON.stringify(finalBody)
+    }, { onlyNeedWrapData: true })
+    if (!data.data) {
+      message.error({ content: data.message, duration: 2 })
+    }
   }
   // 显示修改应用名称的input
   const showChangeNameInput = () => {
@@ -43,8 +63,7 @@ const Header = (props: any) => {
   // 获取当前活跃的按钮
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
-    props.showWhichBar(icon)
-
+    showWhichBar(icon)
   }
   return (
     <div className='Header-wrap'>
@@ -54,15 +73,18 @@ const Header = (props: any) => {
         {
           isRename ?
             <Input className='left-input'
-              // value={}
+              value={appName}
               ref={appNameInputRef}
-              onBlur={(e) => changeAppName(e)}
+              maxLength={20}
+              onBlur={(e) => reNameApp(e)}
+              onPressEnter={(e) => reNameApp(e)}
+              onChange={(e) => setAppName(e.target.value)}
             />
             :
-            <span className='appName' onDoubleClickCapture={showChangeNameInput}>未命名</span>
+            <span className='appName' onDoubleClickCapture={showChangeNameInput}>{appName}</span>
         }
       </div>
-      <div className='center'>
+      <div className='cdb-center'>
         {
           centerIconArr.map((item, index) => {
             return (
@@ -149,4 +171,6 @@ const rightIconArr = [
     text: '发布'
   },
 ]
-export default memo(withRouter(Header))
+export default memo(connect(
+  ({ bar }: any) => ({ bar })
+)(withRouter(Header)))

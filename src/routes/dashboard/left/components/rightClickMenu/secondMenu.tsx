@@ -10,7 +10,6 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
   const { data } = otherProps
 
   const secondMenuItemClick = (key: string) => {
-    console.log('item', key);
     // TODO 目前的操作只用发送dispatch即可，不用动态添加payload
     // const willBeDispatch = {}
     dispatch({

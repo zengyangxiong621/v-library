@@ -36,7 +36,6 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   // 这里需要拿到 所选中 的treeNode中的lock或者show属性
   const menuItemClick = (e, operateName) => {
     e.stopPropagation()
-    console.log('operateName', operateName);
     // 先在前端改变锁定状态，再根据请求的结果来判断是否锁定成功
     // TODO 发送请求
     let customPayload = {
@@ -119,7 +118,6 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     }
     menuRef.current.style.position = 'fixed'
     menuRef.current.style.top = `${recalculateY}px`
-    console.log('recalculateY', recalculateY);
     menuRef.current.style.left = `${recalculateX}px`
   }, [x, y])
   return (

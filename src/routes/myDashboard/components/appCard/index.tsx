@@ -49,7 +49,6 @@ const AppCard = (props: any) => {
     }, {
       onlyNeedWrapData: true
     })
-    console.log('da', data);
     if (data.data) {
       message.success({ content: '应用名修改成功', duration: 2 })
       refreshList()
@@ -70,10 +69,10 @@ const AppCard = (props: any) => {
     //TODO 通过id跳转到主画布
     history.push(`/dashboard/${id}`)
   }
+  // TODO  已确定先不做
   // 拷贝给他人
-  const copyToOthers = (e: any) => {
-
-  }
+  // const copyToOthers = (e: any) => {
+  // }
   const fabu = (e: any) => {
     changeFabuModal(true, id, status)
   }
@@ -134,7 +133,6 @@ const AppCard = (props: any) => {
     // saveFile(data, '我的zip')
     if (data) {
       if (data instanceof Blob) {
-        alert('是一个blob')
         downloadFile(data, '')
       } else {
         message.error({ content: '导出失败', duration: 2 })
@@ -177,15 +175,15 @@ const AppCard = (props: any) => {
       >
         <div className='hoverOnImg'>
           <div className='icons-wrap'>
-            <Tooltip
+            {/* <Tooltip
               placement='bottom' title="拷贝给他人"
             // tooltip挂载到body下容易被影响样式
-            // getPopupContainer={(triggerNode) => triggerNode}
+            getPopupContainer={(triggerNode) => triggerNode}
             >
               <IconFont className='each-icon' onClickCapture={(e) => {
                 copyToOthers(e)
               }} type='icon-kaobei' />
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip placement='bottom'
               title="发布">
               <IconFont className='each-icon' onClickCapture={(e) => {
@@ -224,7 +222,8 @@ const AppCard = (props: any) => {
               <Input
                 className='my-input'
                 ref={inputRef}
-                maxLength={30}
+                maxLength={20}
+                showCount={true}
                 value={appName}
                 onChange={nameInputChange}
                 onPressEnter={changAppName}

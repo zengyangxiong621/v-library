@@ -13,7 +13,7 @@ const NavigationIcon = (props: any) => {
       onClick={() => getActiveIcon(data.icon)}
     >
       <IconFont className='icon' type={`icon-${data.icon}`} />
-      <span className='text'>{data.text}</span>
+      <div className='cdb-text'>{data.text}</div>
     </div>
   )
 }

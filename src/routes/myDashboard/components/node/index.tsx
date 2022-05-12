@@ -31,7 +31,7 @@ const EveryTreeNode = (props: any) => {
     // 前端校验一遍
     //比如名字一样,不发请求
     if (newGroupName === '') {
-      message.warning({ content: '分组名不能为空', duration: 2 })
+      // message.warning({ content: '分组名不能为空', duration: 2 })
       addGroup()
       return
     }
