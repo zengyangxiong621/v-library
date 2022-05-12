@@ -23,11 +23,12 @@ const DataResult = props => {
 
   useEffect(() => {
     const newData = Object.assign({}, resultData, {
-      value: JSON.stringify(_data.staticData.data, null, 2) || ''
+      value: _data.dataType==='static'?JSON.stringify(_data.staticData.data, null, 2):
+      JSON.stringify(props.resultData,null,2)
     })
     // todo 数据过滤之后再展示结果
     setResultData(newData)
-  }, [_data.staticData.data])
+  },[props.resultData])
 
   return (
     <React.Fragment>

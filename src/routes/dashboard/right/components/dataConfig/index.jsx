@@ -1,17 +1,85 @@
 import React, { memo, useState, useEffect } from 'react'
+import { connect } from 'dva'
 import './index.less'
 
 import { EditableTable } from '../fieldMapTable'
 import DataSourceConfig from './dataSourceConfig'
 import DataResult from './dataResult'
 
+import { http } from '../../../../../models/utils/request'
+
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
-  console.log('_data', _data)
-  const _fields = _data.staticData.fields
+  const [resultData, setResultData] = useState([])
+  const [fieldkeys, setFieldkeys] = useState([])
+  const [fieldsData, setFieldsData] = useState([])
 
-  const fieldsChange = () => {
-    console.log('_fields', _fields)
+  useEffect(() => {
+    console.log('componentData', bar.componentData)
+    if (bar.componentData[_data.id]) {
+      setResultData(bar.componentData[_data.id])
+      const keys = getKeys(bar.componentData[_data.id])
+      console.log('keys', keys)
+      setFieldkeys(keys)
+    } else {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentData: {
+            ...bar.componentData,
+            [_data.id]: _data.staticData.data
+          }
+        },
+      })
+      const keys = getKeys(_data.staticData.data)
+      console.log('keys', keys)
+      setFieldkeys(keys)
+    }
+  }, [bar.componentData])
+
+  useEffect(() => {
+    const data = _data.dataConfig[_data.dataType]
+    if(data && data.fields){
+      setFieldsData(data.fields)
+    }else{
+      setFieldsData(_data.staticData.fields)
+    }
+  },[_data.dataConfig])
+
+  const getKeys = (data) => {
+    if (Object.prototype.toString.call(data) === '[object Object]') {
+      return Object.keys(data)
+    } else if (Object.prototype.toString.call(data) === '[object Array]') {
+      if (data.length) {
+        if (Object.prototype.toString.call(data[0]) === '[object Object]') {
+          return Object.keys(data[0])
+        } else if (Object.prototype.toString.call(data[0]) === '[object Array]') {
+          return getKeys(data[0])
+        }
+      } else {
+        return []
+      }
+    } else {
+      return []
+    }
+  }
+
+  const fieldsChange = async(fields) => {
+    console.log('fields', fields)
+    await http({
+      url: '/visual/module/updateDatasource',
+      method: 'post',
+      body: {
+        id: _data.id,
+        dataType: _data.dataType,
+        fields
+      }
+    })
+    props.onFiledsChange(fields)
+  }
+
+  const resultDataChange = data => {
+    setResultData(data)
   }
 
   return (
@@ -22,7 +90,11 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
           <span className="data-interface"><i></i>配置完成</span>
         </div>
         <div className="data-content">
-          <EditableTable data={_fields} onChange={fieldsChange} />
+          <EditableTable
+            key={fieldkeys.toString()}
+            fieldsKeys={fieldkeys}
+            data={fieldsData}
+            onChange={fieldsChange} />
         </div>
       </div>
       <DataSourceConfig
@@ -30,10 +102,13 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         onDataTypeChange={props.onDataTypeChange}
         onStaticDataChange={props.onStaticDataChange}
         onDataSourceChange={props.onDataSourceChange}
+        onResultDataChange={resultDataChange}
       />
-      <DataResult data={_data}/>
+      <DataResult data={_data} resultData={resultData} />
     </React.Fragment>
   )
 }
 
-export default memo(DataConfig)
+export default connect(({ bar }) => ({
+  bar
+}))(DataConfig)

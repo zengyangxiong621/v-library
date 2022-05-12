@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect } from 'react'
+import { connect } from 'dva'
 import './index.less'
 
 import CodeEditor from '../codeEditor'
@@ -10,7 +11,6 @@ import APIDataSource from './apiDataSource'
 import { http } from '../../../../../models/utils/request'
 
 import cloneDeep from 'lodash/cloneDeep'
-
 
 import {
   Checkbox,
@@ -57,7 +57,7 @@ const selectData = {
     },
     {
       name: 'ES数据',
-      value: 'elastic_search'
+      value: 'elasticSearch'
     },
   ]
 }
@@ -76,7 +76,7 @@ const _esDataConfig = {
   showExpand: false
 }
 
-const DataSourceConfig = props => {
+const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
   const [dataSourceTypes, setDataSourceTypes] = useState(selectData)
   const [drawerVisible, setDrawerVisible] = useState(false)
@@ -99,10 +99,10 @@ const DataSourceConfig = props => {
         }
       }
     }
-    if (['elastic_search'].includes(_data.dataType)) {
+    if (['elasticSearch'].includes(_data.dataType)) {
       const esDataNew = { ...esData }
       if (_data.dataConfig[_data.dataType]) {
-        const query = _data.dataConfig[_data.dataType].data.query
+        const query = _data.dataConfig[_data.dataType].data.query_script
         if (query) {
           esDataNew.value = query
           setEsData(esDataNew)
@@ -139,7 +139,7 @@ const DataSourceConfig = props => {
         setSqlData(_sqlDataConfig)
       }
     }
-
+    queryComponentData()
   }
 
   const onStaticDataChange = data => {
@@ -167,9 +167,34 @@ const DataSourceConfig = props => {
       }
     })
     props.onDataSourceChange(dataConfig)
+    queryComponentData()
   }
 
-  // csv,json,excel,postgresql,mysql 数据源选择回调
+  const queryComponentData = async () => {
+    const data = await http({
+      url: '/visual/module/getData',
+      method: 'post',
+      body: {
+        moduleId: _data.id,
+        dataType: _data.dataType
+      }
+    })
+    console.log('data', data)
+    if (data) {
+      props.onResultDataChange(_data.dataType!=='static' ? data : data.data)
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentData: {
+            ...bar.componentData,
+            [_data.id]: _data.dataType!=='static' ? data : data.data
+          }
+        },
+      })
+    }
+  }
+
+  // csv,json,excel,postgresql,mysql，es 数据源选择回调
   const dataSourceChange = (data) => {
     console.log('data', data)
     saveDataSource('data_id', data)
@@ -185,11 +210,11 @@ const DataSourceConfig = props => {
     try {
       JSON.parse(esData.value)
     } catch (err) {
-      console.log('err',err)
+      console.log('err', err)
       message.error('格式错误')
       return
     }
-    saveDataSource('query', esData)
+    saveDataSource('query_script', esData)
   }
 
   const filterBoxChange = e => {
@@ -217,7 +242,7 @@ const DataSourceConfig = props => {
         </div>
         <div className="data-content">
           {dataSourceTypes.value === 'static' ?
-            <StaticData data={_data.staticData.data} onChange={onStaticDataChange} />
+            <StaticData data={_data} onChange={onStaticDataChange} />
             : ['csv', 'excel', 'json'].includes(dataSourceTypes.value) ?
               <SelectDataSource
                 data={_data}
@@ -226,8 +251,12 @@ const DataSourceConfig = props => {
                 onChange={dataSourceChange}
               />
               : dataSourceTypes.value === 'api' ?
-                <APIDataSource data={_data} onDataSourceChange={props.onDataSourceChange} />
-                : ['postgresql', 'mysql', 'elastic_search'].includes(dataSourceTypes.value) ?
+                <APIDataSource
+                  data={_data}
+                  onDataSourceChange={props.onDataSourceChange}
+                  onResultDataChange={props.onResultDataChange}
+                />
+                : ['postgresql', 'mysql', 'elasticSearch'].includes(dataSourceTypes.value) ?
                   <React.Fragment key={dataSourceTypes.value}>
                     <SelectDataSource
                       data={_data}
@@ -270,4 +299,6 @@ const DataSourceConfig = props => {
   )
 }
 
-export default memo(DataSourceConfig)
+export default connect(({ bar }) => ({
+  bar
+}))(DataSourceConfig)
