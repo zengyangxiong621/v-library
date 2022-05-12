@@ -72,22 +72,6 @@ const DataContainer = ({bar, dispatch, ...props}) => {
   }
   const handleContainerClick = (containerData) => {
     console.log('ModalConfirm', )
-    ModalConfirm({
-      title: '删除确认',
-      content: '仍有组件绑定该数据容器，删除后不可逆，确认删除？',
-      onCancel: () => {
-        console.log('取消')
-      },
-      onOk: async () => {
-        const data = await new Promise((resolve, reject) => {
-          setTimeout(() => {
-            console.log('once')
-            resolve('success')
-          }, 1000)
-        })
-        message.success('成功')
-      }
-    })
     // Modal.success()
     setItemVisible(true)
     console.log('containerData', containerData)

@@ -1,7 +1,6 @@
 import {CustomModal} from './modal'
 import ReactDOM from 'react-dom';
-import {useState} from 'react'
-export default function ({title, content, cancelText = '取消', okText = '确定', onCancel, onOk}) {
+export default function ({title, content, cancelText = '取消', okText = '确定', desc='' , onCancel, onOk}) {
   const div = document.createElement('div');
   document.body.appendChild(div);
 
@@ -9,27 +8,26 @@ export default function ({title, content, cancelText = '取消', okText = '确�
     ReactDOM.unmountComponentAtNode(div);
     if (div && div.parentNode) {
       div.parentNode.removeChild(div);
-      onCancel()
     }
   }
-  const confirm = async () => {
+  const cancel = async () => {
+    await onCancel()
+  }
+  const ok = async () => {
     await onOk()
   }
   ReactDOM.render(
     <CustomModal
-      visible
-      transparent
       title={title}
       content={content}
+      desc={desc}
       cancelText={cancelText}
       okText={okText}
-      transitionName="am-zoom"
       closable={false}
-      maskClosable={false}
-      onCancel={close}
-      onOk={confirm}
+      onCancel={cancel}
+      onOk={ok}
+      onClose={close}
       confirmLoading={false}
-      maskTransitionName="am-fade"
       footer={null}
     >
     </CustomModal>,

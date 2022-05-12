@@ -1,12 +1,13 @@
 import React, {memo, useState, useEffect, useRef} from 'react';
 import './index.less'
-import {Input} from 'antd'
+import {Input, message} from 'antd'
 import {
   CopyOutlined,
   DeleteOutlined,
   EditOutlined
 } from '@ant-design/icons';
 import {http} from '../../../../../../models/utils/request'
+import ModalConfirm from "../../../../../../components/modalConfirm";
 
 const DataContainerItem = props => {
   const data = props.data
@@ -43,6 +44,21 @@ const DataContainerItem = props => {
   const handleChange = (e) => {
     setInputValue(e.target.name)
   }
+  const handleDelete = () => {
+    ModalConfirm({
+      title: '删除确认',
+      content: '仍有组件绑定该数据容器，删除后不可逆，确认删除？',
+      desc: '',
+      onCancel: () => {
+        console.log('取消')
+      },
+      onOk: async () => {
+        const data = await http({
+          url: 'url'
+        })
+      }
+    })
+  }
   return (
     <div className="data-container-item">
       <span className={['status-light', data.enable ? 'starting' : 'stop'].join(' ')}>
@@ -70,6 +86,7 @@ const DataContainerItem = props => {
         <CopyOutlined
         />
         <DeleteOutlined
+          onClick={handleDelete}
         />
       </div>
     </div>
