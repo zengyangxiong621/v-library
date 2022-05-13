@@ -28,6 +28,10 @@ export const http = (config: any): any => {
   if(!isPlainObject(config.headers)) config.headers = {}
   if(config.params !== null && !isPlainObject(config.params)) config.params = null
   let { url, method, credentials, headers, body, params, responseType, signal } = config
+<<<<<<< HEAD
+=======
+  let baseUrl = "http://10.201.83.166:31088"
+>>>>>>> ea33621 (feat: 应用导入按钮改造)
   // let baseUrl = 'http://10.202.233.230:9572'
   // let baseUrl = 'http://10.202.233.230:9572'
   let baseUrl = 'http://10.201.83.166:31088'

@@ -36,26 +36,14 @@ export default {
       //     errorInfo: "成员列表请求失败",
       //   }
       // );
-      const mockData = [
-        {
-          name: 'kamier',
-          id: 'ajielaqi',
+      const mockData = Array.from({length: 50}, (item, index) => {
+        return {
+          name: 'kamier'+index,
+          id: index,
           userType: 'top',
-          updatedTime: '2022/5/3'
-        },
-        {
-          name: 'kamier',
-          id: 'ajielaqi',
-          userType: 'top',
-          updatedTime: '2022/5/3'
-        },
-        {
-          name: 'kamier',
-          id: 'ajielaqi',
-          userType: 'top',
-          updatedTime: '2022/5/3'
+          updatedTime: '2022/5/13'
         }
-      ]
+      })
       const data = {
         content: mockData,
         totalElements: 100,

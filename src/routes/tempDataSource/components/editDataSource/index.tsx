@@ -40,8 +40,6 @@ const EditDataSource = (props: any) => {
   // 因为后端中关系型数据库统一表示为RDBMS, 此处将数据库数据源类型拆解出来
   const [dataSourceType, setDataSourceType] = useState()
   useEffect(() => {
-    console.log('type', type);
-
     if (type === 'RDBMS') {
       // 获取当前是那种类型的数据库
       setDataSourceType(rdbmsSourceConfig.dataBaseType)
@@ -121,6 +119,8 @@ const EditDataSource = (props: any) => {
    * description: 获取可选择的数据库名称列表
    */
   const getDataBaseList = async () => {
+    // 每次请求数据库列表前，都该清除上次请求成功的列表缓存
+    setDataBaseList([])
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await editForm.validateFields(['port', 'username', 'password', 'host'])
     // 攒成目标参数
@@ -135,18 +135,29 @@ const EditDataSource = (props: any) => {
       body: JSON.stringify(finalParams)
     })
     setGetDBListLoading(false)
-    // data 只是个数组，处理成select需要的形式
-    const formatData = data.map((item: any) => ({
-      label: item,
-      value: item
-    }))
-    setDataBaseList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的数据库')
+        setDataBaseList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setDataBaseList(formatData)
+      }
+    } else {
+      message.error('获取数据库列表失败')
+    }
   }
 
   /**
   * description: 获取可选择的索引列表
   */
   const getIndexList = async () => {
+    // 每次重新发起请求前都应该先清除indexList
+    setIndexList([])
     // 通过表单校验获取es连接地址
     const values: any = await editForm.validateFields(['url'])
     setGetIndexListLoading(true)
@@ -157,9 +168,20 @@ const EditDataSource = (props: any) => {
       errorInfo: '索引列表获取失败'
     })
     setGetIndexListLoading(false)
-    if (Array.isArray(data) && data.length) {
-      const formatData: any = data.map(item => ({ label: item, value: item }))
-      setIndexList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的索引')
+        setIndexList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setIndexList(formatData)
+      }
+    } else {
+      message.error('获取索引列表失败')
     }
   }
   /**
@@ -236,11 +258,20 @@ const EditDataSource = (props: any) => {
     }
   }
 
+  /**
+   * description: 清除编辑框中的状态
+   */
+  const clearModalState = () => {
+    setDataBaseList([])
+    setIndexList([])
+    setIsConnect(false)
+    setIndexName('')
+
+  }
   const handleCancel = () => {
     changeShowState('edit')
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接更新 */
-    setIsConnect(false)
-    setIndexName('')
+    clearModalState()
     // setBtnDisabled(true)
   }
   // 选择数据库名
@@ -249,7 +280,6 @@ const EditDataSource = (props: any) => {
     // 选择了数据库名，开放测试连接按钮
     // setBtnDisabled(false)
   }
-
 
 
   /**

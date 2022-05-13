@@ -7,7 +7,7 @@ import { getTargetStyle } from './type'
 
 const EveryComponent = ({ allData }: any) => {
   const { id, name, config, staticData: { data } } = allData
-  console.log('aall', allData);
+  // console.log('aall', allData);
 
   // 文本信息 | 图片路径
   const { text, imageUrl } = data[0]
@@ -15,19 +15,21 @@ const EveryComponent = ({ allData }: any) => {
   // websocket 获取数据
   useEffect(() => {
     const ws = new WebSocket(`ws://50423059pd.zicp.vip/visual/webSocket/${id}`)
-    console.log('wss', ws);
     ws.onopen = e => {
       console.log('ws 连接成功');
-      ws.close()
     }
-    ws.onmessage = msg => {
-      console.log('ws msg', msg);
+    ws.onmessage  = msg => {
+      // console.log('ws msg', JSON.parse(msg.data));
     }
     ws.onclose = e => {
       console.log('关闭');
     }
     ws.onerror = err => {
       console.log('ws错误', err);
+    }
+    return () => {
+      console.log('预览页面的每个组件内关闭ws');
+      ws.close()
     }
   }, [])
 
