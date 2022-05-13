@@ -1,14 +1,14 @@
 import React, {memo, useState, useEffect, useRef} from 'react';
 import './index.less'
 import {Drawer, Input} from 'antd'
-
+import {connect} from 'dva'
 import {http} from '../../../../../../models/utils/request'
 import DataSourceConfig from "../../../../right/components/dataConfig/dataSourceConfig";
 import DataResult from "../../../../right/components/dataConfig/dataResult";
 import {CloseOutlined, LeftOutlined} from "@ant-design/icons";
+
 const testData = {
-  "id": "1524414033550970881", // 容器 id
-  "name": "二二", // 容器名字
+  "name": "容器名称", // 容器名字
   "dataConfig": {}, // 数据源配置
   "dataType": "static", // 数据类型
   "autoUpdate": {}, // 更新配置
@@ -27,43 +27,67 @@ const testData = {
       }
     ]
   }, // 静态数据
-  "data":{}, // 非静态数据
+  "data": {}, // 非静态数据
   "events": [],
   "triggers": [],
   "useFilter": false, // 是否启用过滤器
   "filters": [],
 }
-const UpdateContainerDrawer = props => {
-  const data = props.data
+const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
+  const inputRef = useRef(null)
+  const [copyData, setCopyData] = useState(testData)
+  const visible = props.visible
   useEffect(() => {
-    if (Object.keys(data).length === 0) {
+    if (props.data === null) {
+      setCopyData(testData)
+
+      return
+    }
+    if (Object.keys(props.data).length === 0) {
       // 新增
+      addDataContainer()
+      setCopyData(testData)
       console.log('新增')
     } else {
       // 编辑
-      console.log('编辑')
+      setCopyData(props.data)
     }
-  }, [data])
+    return () => {
+
+    }
+  }, [props.data])
+
+  const addDataContainer = async () => {
+    const data = await http({
+      method: 'post',
+      url: '/visual/container/add',
+
+      body: {
+        dashboardId: bar.dashboardId
+      }
+    })
+  }
+
   const onClose = () => {
 
     props.onVisibleChange(false)
   };
   const handleDataTypeChange = (value) => {
+    setCopyData({...copyData, dataType: value})
     testData.dataType = value
     console.log('handleDataTypeChange', value)
-    console.log('testData', testData)
 
   }
   const handleStaticDataChange = (value) => {
+    setCopyData({...copyData, staticData: value})
+
     testData.staticData.data = value
     console.log('handleStaticDataChange', value)
-    console.log('testData', testData)
 
   }
   const handleDataSourceChange = (value) => {
-    testData.dataConfig = value
+    setCopyData({...copyData, dataConfig: value})
     console.log('handleDataSourceChange', value)
-    console.log('testData', testData)
 
   }
   return (
@@ -86,15 +110,16 @@ const UpdateContainerDrawer = props => {
       style={{position: 'absolute'}}
     >
       <div>
-        <Input defaultValue={data.name} onChange={(e) => data.name = e.target.name}></Input>
+        <Input ref={inputRef} value={copyData.name}
+               onChange={(e) => setCopyData({...copyData, name: e.target.value})}></Input>
         <p className="data-source">数据源</p>
         <DataSourceConfig
-          data={testData}
+          data={copyData}
           onDataTypeChange={handleDataTypeChange}
           onStaticDataChange={handleStaticDataChange}
           onDataSourceChange={handleDataSourceChange}
         />
-        <DataResult data={testData}/>
+        <DataResult data={copyData}/>
 
       </div>
 
@@ -102,4 +127,4 @@ const UpdateContainerDrawer = props => {
   )
 }
 
-export default memo(UpdateContainerDrawer)
+export default connect((bar) => ({bar}))(UpdateContainerDrawer)

@@ -15,44 +15,41 @@ const {Search} = Input;
 const DataContainer = ({bar, dispatch, ...props}) => {
   const [itemVisible, setItemVisible] = useState(false);
   const [manageVisible, setManageVisible] = useState(false);
-  const [itemData, setItemData] = useState({});
+  const [itemData, setItemData] = useState(null);
   const [inputValue, setInputValue] = useState('')
-  const [dataContainerList, setDataContainerList] = useState([])
   useEffect(async () => {
-    // const data = await http({
-    //   method: 'get',
-    //   url: '/visual/container/list/1513418102787268609'
-    // })
-    // console.log('data', data)
-    setDataContainerList([
-      {
-        id: '1',
-        name: '数据容器1数据容器1数据容器1数据容器1数据容器1',
-        enable: true,
-        dataType: 'static',
-        useFilter: true,
-        triggers: null,
-        events: null,
-      },
-      {
-        id: '2',
-        name: '数据容器2',
-        enable: true,
-        dataType: 'static',
-        useFilter: true,
-        triggers: null,
-        events: null,
-      },
-      {
-        id: '3',
-        name: '数据容器3',
-        enable: true,
-        dataType: 'static',
-        useFilter: true,
-        triggers: null,
-        events: null,
-      },
-    ])
+    dispatch({
+      type: 'bar/getDataContainerList'
+    })
+    // setDataContainerList([
+    //   {
+    //     id: '1',
+    //     name: '数据容器1数据容器1数据容器1数据容器1数据容器1',
+    //     enable: true,
+    //     dataType: 'static',
+    //     useFilter: true,
+    //     triggers: null,
+    //     events: null,
+    //   },
+    //   {
+    //     id: '2',
+    //     name: '数据容器2',
+    //     enable: true,
+    //     dataType: 'static',
+    //     useFilter: true,
+    //     triggers: null,
+    //     events: null,
+    //   },
+    //   {
+    //     id: '3',
+    //     name: '数据容器3',
+    //     enable: true,
+    //     dataType: 'static',
+    //     useFilter: true,
+    //     triggers: null,
+    //     events: null,
+    //   },
+    // ])
 
     // setDataContainerList(data)
   }, [])
@@ -113,13 +110,13 @@ const DataContainer = ({bar, dispatch, ...props}) => {
           <Button onClick={() => setManageVisible(true)}>管理</Button>
         </div>
         {
-          dataContainerList.map(container =>
+          bar.dataContainerList.map(container =>
             <DataContainerItem onClick={handleContainerClick} key={container.id} data={container}/>
           )
         }
       </Drawer>
-      <UpdateContainerDrawer data={itemData} visible={itemVisible} onVisibleChange={(value) => setItemVisible(value)}/>
-      <ManageContainerDrawer data={dataContainerList} visible={manageVisible} onVisibleChange={(value) => setManageVisible(value)} onChoose={(data) => handleContainerClick(data)} />
+      <ManageContainerDrawer data={bar.dataContainerList} visible={manageVisible} onVisibleChange={(value) => setManageVisible(value)} onChoose={(data) => handleContainerClick(data)} />
+      <UpdateContainerDrawer dashboardId={bar.dashboardId} data={itemData} visible={itemVisible} onVisibleChange={(value) => setItemVisible(value)}/>
     </div>
   )
 }

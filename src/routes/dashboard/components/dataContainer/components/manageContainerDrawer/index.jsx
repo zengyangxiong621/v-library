@@ -1,28 +1,23 @@
 import React, {memo, useState, useEffect, useRef} from 'react';
 import './index.less'
-import {Drawer, Input, Table, Modal} from 'antd'
+import {Drawer, Input, Table, Modal, Button} from 'antd'
 import {http} from '../../../../../../models/utils/request'
 import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 
 const ManageContainerDrawer = props => {
-  const [dataList, setDataList] = useState([])
   const [searchValue, setSearchValue] = useState('')
+  const [filterData, setFilterData] = useState(props.data)
   const dataSourceEnum = {
     static: '静态数据'
   }
-
-  useEffect(async () => {
-    const data = await http({
-        method: 'get',
-        url: '/visual/container/list/1513418102787268609'
-      })
-    setDataList(data)
-  }, [])
-
-
   const onClose = () => {
     props.onVisibleChange(false)
+    setSearchValue('')
+    handleSearch()
   };
+  useEffect(() => {
+    setFilterData(props.data)
+  }, [props.data])
   const columns = [
     {
       title: '数据容器',
@@ -30,11 +25,11 @@ const ManageContainerDrawer = props => {
       key: 'name',
       width: 120,
       ellipsis: true,
-      render: (text, record) => <span onClick={() => {
-        onClose()
+      render: (text, record) => <a onClick={() => {
+        // onClose()
         props.onChoose(record)
       }
-      } className={`g-cursor-pointer ${record.enable ? 'starting' : 'stop'}`}>{text}</span>
+      } className='g-cursor-pointer'>{text}</a>
     },
     {
       title: '数据源',
@@ -46,16 +41,34 @@ const ManageContainerDrawer = props => {
     },
     {
       title: '接入组件',
-      dataIndex: 'address',
-      key: 'address',
-      // render: text => text.map(item => {
-      //   return <span className="g-mr-2" title={item.name}>item.name</span>
-      // })
+      dataIndex: 'modules',
+      key: 'modules',
+      render: list => {
+        console.log('list', list)
+        return list && list.length > 0 ?
+          <div className="g-flex g-flex-wrap">{
+            list.map(item => {
+              return <a
+                className="g-pr-4 g-py-1 g-whitespace-nowrap g-overflow-hidden g-overflow-ellipsis g-whitespace-nowrap g-cursor-pointer"
+                style={{maxWidth: 131}}
+                title={item.name}
+                onClick={() => {
+                  console.log('选择组件byId', item.id)
+                }
+                }
+              >{item.name}
+              </a>
+            })
+          }</div>
+          :
+          <div>无关联组件</div>
+      }
     },
   ];
-  const handleSearch = (value) => {
-    console.log('value', value);
-
+  const handleSearch = (value = '') => {
+    setFilterData(props.data.filter((item) => {
+      return item.name.indexOf(value) !== -1
+    }))
   }
   return (
     <Drawer
@@ -82,18 +95,19 @@ const ManageContainerDrawer = props => {
           placeholder="请输入"
           suffix={<SearchOutlined
             className="input-search-icon"
-            onClick={handleSearch}
+            onClick={(e) => handleSearch(e.target.value)}
           />}
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           allowClear
-          onSearch={handleSearch}
+          onSearch={(e) => handleSearch(e.target.value)}
+          onPressEnter={(e) => handleSearch(e.target.value)}
         />
         <Table
           bordered={true}
           className="g-mt-2"
           columns={columns}
-          dataSource={dataList}
+          dataSource={filterData}
           pagination={
             {
               hideOnSinglePage: true

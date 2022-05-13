@@ -90,6 +90,7 @@ interface IBarState {
     y: number
   };
   componentData:any;
+  dataContainerList: any;
 }
 
 export default {
@@ -115,6 +116,7 @@ export default {
     selectedComponentRefs: {},
     selectedComponentDOMs: {},
     dragStatus: '',
+    dataContainerList: [],
     supportLinePositionInfo: {
       x: 100,
       y: 200,
@@ -615,6 +617,34 @@ export default {
           configs: payload,
         },
       })
+    },
+    * getDataContainerList({ payload }: any, { call, put, select }: any): any {
+      const state: any = yield select((state: any) => state)
+      const data = yield http({
+        method: 'get',
+        url: '/visual/container/list/1513418102787268609'
+      })
+      yield put({
+        type: 'save',
+        payload: {
+          dataContainerList: data
+        }
+      })
+      console.log('data', data)
+    },
+    * addDataContainer({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
+      const data = yield http({
+        method: 'post',
+        url: '/visual/container/add/',
+        params: {
+          id: '123'
+        },
+        body: {
+          dashboardId: bar.dashboardId
+        }
+      })
+      payload.cb(data)
     },
 
   },
