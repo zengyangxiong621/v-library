@@ -27,22 +27,22 @@ const StaticData = ({ bar, dispatch, ...props }) => {
   const staticDataChange = debounce(() => {
     const staDa = { ...staticData }
     setStaticData(staDa)
-    // try {
-    //   JSON.parse(staticData.value)
-    // } catch (e) {
-    //   message.error('格式错误')
-    //   return
-    // }
-    // props.onChange(staticData.value)
-    // dispatch({
-    //   type: 'bar/save',
-    //   payload: {
-    //     componentData: {
-    //       ...bar.componentData,
-    //       [_data.id]: JSON.parse(staticData.value)
-    //     }
-    //   },
-    // })
+    try {
+      JSON.parse(staticData.value)
+    } catch (e) {
+      message.error('格式错误')
+      return
+    }
+    props.onChange(staticData.value)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        componentData: {
+          ...bar.componentData,
+          [_data.id]: JSON.parse(staticData.value)
+        }
+      },
+    })
   }, 300)
 
   return (
