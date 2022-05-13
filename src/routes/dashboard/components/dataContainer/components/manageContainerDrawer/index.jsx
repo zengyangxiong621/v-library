@@ -44,7 +44,6 @@ const ManageContainerDrawer = props => {
       dataIndex: 'modules',
       key: 'modules',
       render: list => {
-        console.log('list', list)
         return list && list.length > 0 ?
           <div className="g-flex g-flex-wrap">{
             list.map(item => {

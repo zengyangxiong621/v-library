@@ -18,9 +18,11 @@ const DataContainer = ({bar, dispatch, ...props}) => {
   const [itemData, setItemData] = useState(null);
   const [inputValue, setInputValue] = useState('')
   useEffect(async () => {
-    dispatch({
-      type: 'bar/getDataContainerList'
-    })
+    if (props.visible && bar.dataContainerList.length === 0) {
+      dispatch({
+        type: 'bar/getDataContainerList'
+      })
+    }
     // setDataContainerList([
     //   {
     //     id: '1',
@@ -52,7 +54,7 @@ const DataContainer = ({bar, dispatch, ...props}) => {
     // ])
 
     // setDataContainerList(data)
-  }, [])
+  }, [props.visible])
 
   const showDrawer = () => {
     props.onChange(true)
@@ -68,13 +70,42 @@ const DataContainer = ({bar, dispatch, ...props}) => {
 
   }
   const handleContainerClick = (containerData) => {
-    console.log('ModalConfirm', )
     // Modal.success()
     setItemVisible(true)
-    console.log('containerData', containerData)
     setItemData(containerData)
   }
-
+  const handleContainerDelete = (id) => {
+    dispatch({
+      type: 'bar/deleteDataContainer',
+      payload: id
+    })
+  }
+  const handleContainerCopy = (id) => {
+    dispatch({
+      type: 'bar/copyDataContainer',
+      payload: id
+    })
+  }
+  const handleContainerChange = (data, cb) => {
+    const {name} = data
+    let temp = bar.dataContainerList.find(item => item.name === name)
+    if (temp) {
+      // 命名重复
+      message.error('容器名称重复')
+      cb(true)
+    } else {
+      dispatch({
+        type: 'bar/updateDataContainer',
+        payload: data
+      })
+    }
+  }
+  const handleUpdateDrawerClose = (value) => {
+    setItemVisible(value)
+    dispatch({
+      type: 'bar/getDataContainerList'
+    })
+  }
   return (
     <div className="data-container-wrap">
       <Drawer
@@ -111,12 +142,12 @@ const DataContainer = ({bar, dispatch, ...props}) => {
         </div>
         {
           bar.dataContainerList.map(container =>
-            <DataContainerItem onClick={handleContainerClick} key={container.id} data={container}/>
+            <DataContainerItem onChoose={handleContainerClick} onDelete={handleContainerDelete} onCopy={handleContainerCopy} onChange={handleContainerChange} key={container.id} data={container}/>
           )
         }
       </Drawer>
       <ManageContainerDrawer data={bar.dataContainerList} visible={manageVisible} onVisibleChange={(value) => setManageVisible(value)} onChoose={(data) => handleContainerClick(data)} />
-      <UpdateContainerDrawer dashboardId={bar.dashboardId} data={itemData} visible={itemVisible} onVisibleChange={(value) => setItemVisible(value)}/>
+      <UpdateContainerDrawer dashboardId={bar.dashboardId} data={itemData} visible={itemVisible} onVisibleChange={handleUpdateDrawerClose}/>
     </div>
   )
 }

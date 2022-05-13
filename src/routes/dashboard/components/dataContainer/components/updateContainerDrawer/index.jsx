@@ -37,35 +37,30 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   const inputRef = useRef(null)
   const [copyData, setCopyData] = useState(testData)
   const visible = props.visible
-  useEffect(() => {
+  useEffect(async () => {
     if (props.data === null) {
       setCopyData(testData)
-
-      return
-    }
-    if (Object.keys(props.data).length === 0) {
-      // 新增
-      addDataContainer()
-      setCopyData(testData)
-      console.log('新增')
     } else {
-      // 编辑
-      setCopyData(props.data)
-    }
-    return () => {
-
+      if (Object.keys(props.data).length === 0) {
+        // 新增
+        const data = await http({
+          method: 'post',
+          url: '/visual/container/add',
+          body: {
+            dashboardId: bar.dashboardId
+          }
+        })
+        setCopyData(data)
+      } else {
+        // 编辑
+        setCopyData(props.data)
+      }
     }
   }, [props.data])
 
   const addDataContainer = async () => {
-    const data = await http({
-      method: 'post',
-      url: '/visual/container/add',
 
-      body: {
-        dashboardId: bar.dashboardId
-      }
-    })
+
   }
 
   const onClose = () => {
@@ -127,4 +122,4 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   )
 }
 
-export default connect((bar) => ({bar}))(UpdateContainerDrawer)
+export default connect(({bar}) => ({bar}))(UpdateContainerDrawer)
