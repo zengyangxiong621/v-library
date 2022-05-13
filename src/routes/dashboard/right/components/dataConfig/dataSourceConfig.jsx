@@ -114,14 +114,6 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   const dataSourceTypeChange = async () => {
     const newDataSourceTypes = Object.assign({}, dataSourceTypes)
     setDataSourceTypes(newDataSourceTypes)
-    await http({
-      url: '/visual/module/updateDatasource',
-      method: 'post',
-      body: {
-        id: _data.id,
-        dataType: dataSourceTypes.value
-      }
-    })
     props.onDataTypeChange(dataSourceTypes.value)
 
     const type = dataSourceTypes.value

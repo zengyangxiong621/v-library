@@ -82,6 +82,18 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     setResultData(data)
   }
 
+  const onDataTypeChange = async(data) => {
+    await http({
+      url: '/visual/module/updateDatasource',
+      method: 'post',
+      body: {
+        id: _data.id,
+        dataType: data
+      }
+    })
+    props.onDataTypeChange(data)
+  }
+
   return (
     <React.Fragment>
       <div className="data-config" style={{ marginTop: 0 }}>
@@ -99,7 +111,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       </div>
       <DataSourceConfig
         data={_data}
-        onDataTypeChange={props.onDataTypeChange}
+        onDataTypeChange={onDataTypeChange}
         onStaticDataChange={props.onStaticDataChange}
         onDataSourceChange={props.onDataSourceChange}
         onResultDataChange={resultDataChange}
