@@ -61,9 +61,9 @@ const AppCard = (props: any) => {
   /** Card 中图标 和 编辑、预览按钮 事件 */
   const scanDashboard = () => {
     // TODO 通过id跳转到预览界面
-    const w = window.open('_blank');
-    w!.location.href = `/bigscreen/${id}`
-    w?.history.replaceState(null, '')
+    let newTab = window.open('_blank');
+    newTab!.location.href = `/bigscreen/${id}`
+    newTab?.history.replaceState(null, '')
   }
   const editDashboard = () => {
     //TODO 通过id跳转到主画布

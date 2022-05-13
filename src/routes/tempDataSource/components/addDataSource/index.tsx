@@ -34,6 +34,19 @@ const AddDataSource = (props: any) => {
   const [testConnectLoading, setTestConnectLoading] = useState(false)
 
   const [indexName, setIndexName] = useState('')
+  /**
+   * description: 清除弹窗内部维护的所有状态
+   */
+  const clearModalState = () => {
+    setCurDataType('')
+    setDataBaseList([])
+    setIndexList([])
+    setFileUrl('')
+    setIsConnect(false)
+    setBtnDisabled(true)
+    setTestConnectLoading(false)
+    setIndexName('')
+  }
 
   // 获取到最新的curDataType
   useEffect(() => {
@@ -86,19 +99,27 @@ const AddDataSource = (props: any) => {
       body: JSON.stringify(finalParams)
     }, { errorInfo: '获取数据库列表失败' })
     setGetDBListLoading(false)
-    if (Array.isArray(data) && data.length) {
-      // data 只是个数组，处理成select需要的形式
-      const formatData: any = data.map((item: any) => ({
-        label: item,
-        value: item
-      }))
-      setDataBaseList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的数据库')
+        setDataBaseList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setDataBaseList(formatData)
+      }
+    } else {
+      message.error('获取数据库列表失败')
     }
   }
   /**
    * description: 获取可选择的索引列表
    */
   const getIndexList = async () => {
+    setIndexList([])
     // 通过表单校验获取es连接地址
     const values: any = await addForm.validateFields(['url'])
     setGetIndexListLoading(true)
@@ -109,9 +130,20 @@ const AddDataSource = (props: any) => {
       errorInfo: '索引列表获取失败'
     })
     setGetIndexListLoading(false)
-    if (Array.isArray(data) && data.length) {
-      const formatData: any = data.map(item => ({ label: item, value: item }))
-      setIndexList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的索引')
+        setIndexList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setIndexList(formatData)
+      }
+    } else {
+      message.error('获取索引列表失败')
     }
   }
   /**
@@ -184,6 +216,8 @@ const AddDataSource = (props: any) => {
 
   const handleCancel = () => {
     changeShowState('add')
+    addForm.resetFields()
+    clearModalState()
   }
   // 选择数据源类型
   const selectedChange = (val: string) => {

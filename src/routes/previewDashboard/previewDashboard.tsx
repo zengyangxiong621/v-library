@@ -19,12 +19,13 @@ const PreViewDashboard = ({ history, location }: any) => {
     // 进入页面，先获取画布详情
     const getDashboardDetail = async () => {
       setIsLoaded(false)
-      let { components }: any = await http({
+      let { components, dashboardName }: any = await http({
         url: `/visual/application/dashboard/detail/${dashboardId}`,
         method: 'get',
       })
-      if (Array.isArray(components) && components.length > 0) {
+      if (Array.isArray(components)) {
         setIsLoaded(true)
+        document.title = dashboardName
       } else {
         message.error('出错了，请稍后重试');
         // setTimeout(() => {

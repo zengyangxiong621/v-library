@@ -15,7 +15,6 @@ import DarkModal from "../myDashboard/components/darkThemeModal";
 
 // 功能
 const workSpace = ({ workSpace, dispatch, history }: any) => {
-  console.log("工作空间models", workSpace);
   // 空间id
   let spaceId = 1;
   // TODO 后端目前默认是倒排，后续可能需要更改
@@ -142,6 +141,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
       title: "用户名",
       dataIndex: "name",
       key: "name",
+      // showSorterTooltip: false,
       width: 250,
       className: "customHeaderColor",
       ellipsis: true,
@@ -218,6 +218,10 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
           {/* 右侧表格 */}
           <div className="right-three right-table-wrap">
             <Table
+              title={(a) => {
+                console.log('a', a);
+                return ''
+              }}
               scroll={{ y: 560 }}
               rowClassName="customRowClass"
               loading={tableLoading}
