@@ -2,75 +2,28 @@ import React, { memo, useState, useEffect } from 'react';
 import './index.less'
 import debounce from 'lodash/debounce';
 
+import MonacoEditor from 'react-monaco-editor';
 import { Button, Modal } from 'antd';
 import {
   ArrowsAltOutlined
 } from '@ant-design/icons';
-
-import { v4 as uuidv4 } from 'uuid';
-
-import AceEditor from "react-ace";
-import "ace-builds/src-min-noconflict/ext-searchbox";
-import "ace-builds/src-min-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/mode-jsx";
-const languages = [
-  "javascript",
-  "java",
-  "python",
-  "xml",
-  "ruby",
-  "sass",
-  "markdown",
-  "mysql",
-  "json",
-  "html",
-  "handlebars",
-  "golang",
-  "csharp",
-  "elixir",
-  "typescript",
-  "css"
-];
-
-const themes = [
-  "monokai",
-  "github",
-  "tomorrow",
-  "kuroir",
-  "twilight",
-  "xcode",
-  "textmate",
-  "solarized_dark",
-  "solarized_light",
-  "terminal"
-];
-
-languages.forEach(lang => {
-  require(`ace-builds/src-noconflict/mode-${lang}`);
-  require(`ace-builds/src-noconflict/snippets/${lang}`);
-});
-
-themes.forEach(theme => require(`ace-builds/src-noconflict/theme-${theme}`));
 
 const CodeEditor = props => {
   const _data = props.data
   const [content, setContent] = useState(_data.value)
   const [fullScreen, setFullScreen] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const [hasEdit, setHasEdit] = useState(false)
-  const aceName = uuidv4()
 
   useEffect(() => {
     setContent(_data.value)
   }, [_data.value])
 
   const onChange = debounce((val) => {
-    setHasEdit(true)
     setContent(val)
     setModalContent(val)
     _data.value = val
     props.onChange()
-  },300)
+  }, 300)
 
   const expandHandle = () => {
     setFullScreen(true)
@@ -84,23 +37,22 @@ const CodeEditor = props => {
     props.onChange()
   }
 
+  const editorDidMountHandle = (editor, monaco) => {
+    editor.getAction('editor.action.formatDocument').run()  //格式化
+  }
+
   return (
     <div className="code-wraper">
-      <AceEditor
-        mode={_data.language}
-        theme="twilight"
-        onChange={onChange}
-        name={aceName}
-        editorProps={{ $blockScrolling: true }}
+      <MonacoEditor
+        language={_data.language}
+        theme="vs-dark"
         value={content}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-          showGutter: true,
+        options={{
+          contextmenu: false,
           readOnly: _data.readOnly
         }}
-        style={{ width: '100%', height: '100%' }}
+        onChange={(e) => onChange(e)}
+        editorDidMount={editorDidMountHandle}
       />
       {_data.showExpand
         ? <Button
@@ -118,21 +70,17 @@ const CodeEditor = props => {
         visible={fullScreen}
         onOk={handleOk}
         onCancel={() => setFullScreen(false)}>
-        <AceEditor
-          mode={_data.language}
-          theme="twilight"
-          onChange={(e) => setModalContent(e)}
-          name={aceName}
-          editorProps={{ $blockScrolling: true }}
+        <MonacoEditor
+          height="500"
+          language={_data.language}
+          theme="vs-dark"
           value={modalContent}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: true,
-            showGutter: true,
+          options={{
+            contextmenu: false,
             readOnly: _data.readOnly
           }}
-          style={{ width: '100%', height: '500px' }}
+          onChange={(e) => setModalContent(e)}
+          editorDidMount={editorDidMountHandle}
         />
       </Modal>
     </div>
