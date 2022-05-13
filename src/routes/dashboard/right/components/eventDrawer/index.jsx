@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
-import CodeEditor from '../codeEditor'
+import MonacoEditor from 'react-monaco-editor';
 
 import {
   Drawer,
@@ -15,14 +15,6 @@ import {
 
 import { DeleteOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
-
-import AceEditor from "react-ace";
-import "ace-builds/src-min-noconflict/ext-searchbox";
-import "ace-builds/src-min-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/mode-jsx";
-import "ace-builds/src-noconflict/mode-javascript"
-import "ace-builds/src-noconflict/snippets/javascript"
-import "ace-builds/src-noconflict/theme-twilight"
 
 const EventDrawer = props => {
   const { Panel } = Collapse;
@@ -120,6 +112,10 @@ const EventDrawer = props => {
     props.confirm(conds)
   }
 
+  const editorDidMountHandle = (editor, monaco) => {
+    editor.getAction('editor.action.formatDocument').run()  //格式化
+  }
+
   return (
     <Drawer
       title="自定义条件编辑"
@@ -198,20 +194,15 @@ const EventDrawer = props => {
                   <div className="code-editor">
                     <div className="cus-code">{`function filter(data){`}</div>
                     <div className="code-wraper">
-                      <AceEditor
-                        mode='javascript'
-                        theme="twilight"
-                        onChange={e => codeChange(e, item)}
-                        name={uuidv4()}
-                        editorProps={{ $blockScrolling: true }}
+                      <MonacoEditor
+                        language="javascript"
+                        theme="vs-dark"
                         value={item.code}
-                        setOptions={{
-                          enableBasicAutocompletion: true,
-                          enableLiveAutocompletion: true,
-                          enableSnippets: true,
-                          showGutter: true,
+                        onChange={(e) => codeChange(e,item)}
+                        editorDidMount={editorDidMountHandle}
+                        options={{
+                          contextmenu: false,
                         }}
-                        style={{ width: '100%', height: '100%' }}
                       />
                     </div>
                     <div className="cus-code">{`}`}</div>

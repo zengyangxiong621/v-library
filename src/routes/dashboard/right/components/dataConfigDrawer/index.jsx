@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import './index.less';
 import { v4 as uuidv4 } from 'uuid';
 import debounce from 'lodash/debounce';
+import MonacoEditor from 'react-monaco-editor';
 
 import {
   sortableContainer,
@@ -26,14 +27,6 @@ import {
   ExclamationCircleOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-
-import AceEditor from "react-ace";
-import "ace-builds/src-min-noconflict/ext-searchbox";
-import "ace-builds/src-min-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/mode-jsx";
-import "ace-builds/src-noconflict/mode-javascript"
-import "ace-builds/src-noconflict/snippets/javascript"
-import "ace-builds/src-noconflict/theme-twilight"
 
 const cfilters = [
   {
@@ -262,6 +255,10 @@ const DataConfigDrawer = props => {
     return <ul className="sort-wraper">{children}</ul>;
   });
 
+  const editorDidMountHandle = (editor, monaco) => {
+    editor.getAction('editor.action.formatDocument').run()  //格式化
+  }
+
   const SortableItem = sortableElement(({ item }) => (
     <li className="fifter-sort-item">
       <DragHandle />
@@ -307,20 +304,15 @@ const DataConfigDrawer = props => {
               <div className="code-editor">
                 <div className="cus-code">{`function filter(data){`}</div>
                 <div className="code-wraper">
-                  <AceEditor
-                    mode='javascript'
-                    theme="twilight"
-                    onChange={e => codeChange(e, item)}
-                    name={uuidv4()}
-                    editorProps={{ $blockScrolling: true }}
+                  <MonacoEditor
+                    language="javascript"
+                    theme="vs-dark"
                     value={item.content}
-                    setOptions={{
-                      enableBasicAutocompletion: true,
-                      enableLiveAutocompletion: true,
-                      enableSnippets: true,
-                      showGutter: true,
+                    onChange={(e) => codeChange(e,item)}
+                    editorDidMount={editorDidMountHandle}
+                    options={{
+                      contextmenu: false,
                     }}
-                    style={{ width: '100%', height: '100%' }}
                   />
                 </div>
                 <div className="cus-code">{`}`}</div>
