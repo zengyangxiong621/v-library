@@ -92,25 +92,25 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     })
   }
 
-  async function uploadFile() {
-    const uploadFileEle: any = document.getElementById("uploadFile");
-    console.log('uploadFile', uploadFileEle.files);
-    if (!uploadFileEle.files.length) return;
-    const file = uploadFileEle.files[0]; // 获取单个文件
-    // 省略文件的校验过程，比如文件类型、大小校验
-    upload({
-      file,
-    });
-  }
+  // async function uploadFile() {
+  //   const uploadFileEle: any = document.getElementById("uploadFile");
+  //   console.log('uploadFile', uploadFileEle.files);
+  //   if (!uploadFileEle.files.length) return;
+  //   const file = uploadFileEle.files[0]; // 获取单个文件
+  //   // 省略文件的校验过程，比如文件类型、大小校验
+  //   upload({
+  //     file,
+  //   });
+  // }
 
-  async function upload({ file, fieldName = "file" }: any) {
-    let formData = new FormData();
-    formData.set(fieldName, file);
-    const [, data] = await useFetch(`/visual/application/import/${spaceId}`, {
-      body: formData,
-      headers: {}
-    })
-  }
+  // async function upload({ file, fieldName = "file" }: any) {
+  //   let formData = new FormData();
+  //   formData.set(fieldName, file);
+  //   const [, data] = await useFetch(`/visual/application/import/${spaceId}`, {
+  //     body: formData,
+  //     headers: {}
+  //   })
+  // }
 
   // 导入应用
   const importAppUploadprops = {
@@ -118,7 +118,10 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     multiple: false,
     maxCount: 1,
     accept: 'application/zip',
-    // action: `${BASE_URL}/visual/application/import/${spaceId}`,
+    action: `${BASE_URL}/visual/application/import/${spaceId}`,
+    // headers: {},
+    // data: {
+    // },
     beforeUpload(file: any) {
       const { name }: { name: string } = file
       // 考虑 cdb.la...yer.json 这个文件名
@@ -172,16 +175,16 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
         <div className="right-header">
           <div className='set-flex'>
             <p className='title'>全部应用</p>
-            {/* <Upload {...importAppUploadprops}
+            <Upload {...importAppUploadprops}
               showUploadList={false}
             >
-            </Upload> */}
             <div className='custom-btn set-mr'>
-              <input id="uploadFile" type="file" name="kjj" accept="application/zip" onChange={uploadFile}
+              {/* <input id="uploadFile" type="file" name="kjj" accept="application/zip" onChange={uploadFile}
                 style={{ position: 'absolute', width: '100%', height: '100%', left: 0, top: 0, opacity: 0, cursor: 'pointer' }}
-              />
+              /> */}
               <span>导入应用</span>
             </div>
+            </Upload>
           </div>
           <div className="add-search">
             <div className='custom-btn' onClick={addDashboard}>
