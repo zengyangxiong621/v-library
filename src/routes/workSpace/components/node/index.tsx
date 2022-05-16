@@ -136,9 +136,8 @@ const EveryTreeNode = (props: any) => {
     // e.stopPropagation()
   }
   return (
-    <div className={`node-wrap`}>
-      <>树节点</>
-      {/* {
+    <div className={`workspace-node-wrap`}>
+      {
         groupId === 'aInput'
           ?
           <div onClick={(e) => inputWrapClick(e)}><Input
@@ -188,7 +187,7 @@ const EveryTreeNode = (props: any) => {
               }
             </div>
           </>
-      } */}
+      }
     </div>
   )
 }

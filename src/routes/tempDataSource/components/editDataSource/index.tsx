@@ -24,6 +24,8 @@ const EditDataSource = (props: any) => {
     rdbmsSourceConfig,
     esSourceConfig,
   } = props.editDataSourceInfo
+  let spaceId = 1
+  // let spaceId = '1513466256657637378'
 
   const { visible, changeShowState, refreshTable } = props
 
@@ -74,7 +76,6 @@ const EditDataSource = (props: any) => {
   const [isConnect, setIsConnect] = useState(false)
 
   const [loading, setLoading] = useState(false)
-  const [btnDisabled, setBtnDisabled] = useState(true)
   const [testConnectLoading, setTestConnectLoading] = useState(false)
   const [indexName, setIndexName] = useState('')
   /**
@@ -90,9 +91,8 @@ const EditDataSource = (props: any) => {
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await editForm.validateFields(['port', 'username', 'password', 'host', 'database'])
-    let finalType = (dataSourceType === 'MYSQL' || dataSourceType === 'POSTGRESQL') ? 'RDBMS' : 'type不是mySql或者pgSql'
     const finalParams = {
-      type: finalType,
+      type: dataSourceType,
       rdbmsSourceConfig: {
         ...values,
         dataBaseType: dataSourceType,
@@ -193,7 +193,6 @@ const EditDataSource = (props: any) => {
     }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields()
-    //------ 由于表单initValues里的 <<type>> 为 RESTFUL_API 的时候已经被转成了 API
     //-----所以这里解构出来的type已经是API了
     const { name, type, description, ...rest } = values
     // 判断当前是否是数据库(这儿是为了凑 (rdbms/api/csv)SourceConfig这种格式的参数的  和上方的dataSourceType不同的)
@@ -212,7 +211,7 @@ const EditDataSource = (props: any) => {
         return
       }
       finalSourceConfig.dataBaseType = type
-      finalType = 'RDBMS'
+      // finalType = 'RDBMS'
     }
     // 如果是需要上传文件的这几种类型，先检查有没有fileUrl
     if (['csv', 'json', 'excel'].includes(dataBaseOrNormal)) {
@@ -224,17 +223,15 @@ const EditDataSource = (props: any) => {
       finalSourceConfig.fileUrl = fileUrl
     }
     // 如果是API类型,参数中的type类型需要变成RESTFUL_API
-    if (dataBaseOrNormal === 'api') {
-      finalType = 'RESTFUL_API'
-    }
-
+    // if (dataBaseOrNormal === 'api') {
+    //   finalType = 'RESTFUL_API'
+    // }
     if (dataBaseOrNormal === 'es') {
       finalSourceConfig.index = indexName
     }
 
-    // 东拼西凑攒参数
     const finalParams = {
-      spaceId: 1,
+      spaceId,
       id,
       name,
       type: finalType,
@@ -355,8 +352,7 @@ const EditDataSource = (props: any) => {
   const editFormInitValues = {
     description,
     name,
-    // 后端的 API 对应的枚举值为 RESTFUL_API,转一手
-    type: dataSourceType === 'RESTFUL_API' ? 'API' : dataSourceType,
+    type: dataSourceType,
     baseUrl: apiSourceConfig?.baseUrl,
     code: csvSourceConfig?.code,
     database: rdbmsSourceConfig?.database,
@@ -461,7 +457,7 @@ const EditDataSource = (props: any) => {
           }
           {/* API接口 */}
           {
-            dataSourceType === 'RESTFUL_API' && (
+            dataSourceType === 'API' && (
               <>
                 <Form.Item label="Base URL"
                   name='baseUrl'
@@ -661,7 +657,6 @@ type TSelectOptionItems = {
 // 根据选择的数据源类型，来动态生成 []SourceConfig
 const dataTypeClassify: any = new Map([
   ['CSV', 'csv'],
-  // ['RESTFUL_API', 'api'],
   ['API', 'api'],
   ['JSON', 'json'],
   ['EXCEL', 'excel'],
@@ -670,13 +665,6 @@ const dataTypeClassify: any = new Map([
   ['ES', 'rdbms'],
   ['ELASTIC_SEARCH', 'es'],
 ])
-// ['CSV', 'CSV'],
-//   ['RESTFUL_API', 'RESTFUL_API'],
-//   ['JSON', 'JSON'],
-//   ['EXCEL', 'EXCEL'],
-//   ['POSTGRESQL', 'RDBMS'],
-//   ['MYSQL', 'RDBMS'],
-//   ['ES', 'RDBMS'],
 
 // 单选框 CSV类型- 编码格式
 const codeFormatOptions: TSelectOptionItems[] = [

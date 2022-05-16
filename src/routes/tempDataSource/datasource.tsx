@@ -17,6 +17,8 @@ const { Option } = Select
 
 
 const DataSource = (props: any) => {
+  // let spaceId = '1513466256657637378'
+  let spaceId = 1
   const [inputValue, setInputValue] = useState('')
   const [dataSourceType, setDataSourceType] = useState<any>(null)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
@@ -50,7 +52,7 @@ const DataSource = (props: any) => {
    */
   //给个默认参数，初始化和刷新时方便一些
   const defaultParams: TDataSourceParams = {
-    spaceId: 1,
+    spaceId,
     type: dataSourceType,
     name: null,
     ...pageInfo,
@@ -86,17 +88,13 @@ const DataSource = (props: any) => {
 
   // 下拉框选择
   const selectChange = (value: any) => {
-    if(value === 'POSTGRESQL' || value === 'MYSQL') {
-      setDataSourceType('RDBMS')
-    } else {
-      setDataSourceType(value)
-    }
+    setDataSourceType(value)
   }
   // 按类型搜索
   const searchByType = async (e: any) => {
     // 整合搜索参数
     const finalParams: TDataSourceParams = {
-      spaceId: 1,
+      spaceId,
       type: dataSourceType,
       name: inputValue === '' ? null : inputValue,
       pageNo: 1,
@@ -213,7 +211,7 @@ const DataSource = (props: any) => {
       })
       // 发送请求
       const finalParams: TDataSourceParams = {
-        spaceId: 1,
+        spaceId,
         type: dataSourceType,
         name: inputValue === '' ? null : inputValue,
         ...pageInfo,
@@ -238,7 +236,7 @@ const DataSource = (props: any) => {
     // locale: {},
     onChange(page: number, pageSize: number) {
       const finalParams: TDataSourceParams = {
-        spaceId: 1,
+        spaceId,
         type: dataSourceType,
         name: inputValue === '' ? null : inputValue,
         pageNo: page,
@@ -399,7 +397,7 @@ const selectOptions = [
   },
   {
     name: 'API',
-    key: 'RESTFUL_API',
+    key: 'API',
   },
   {
     name: 'JSON',

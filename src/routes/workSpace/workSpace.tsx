@@ -45,13 +45,14 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
 
   // 页面初始化- 获取空间列表数据 & 获取表格数据
   useEffect(() => {
+    // getDataDispatch({accountId: '123'}, 'getWorkSpaceList')
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId: spaceId,
       map: sortMap,
     };
-    getDataDispatch(finalBody, "getMemberList");
+    // getDataDispatch(finalBody, "getMemberList");
   }, []);
 
   // 选择排序的标准
@@ -134,7 +135,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
         pageSize,
         map: tableMap,
       };
-      getDataDispatch(finalParams, "getMemberList");
+      // getDataDispatch(finalParams, "getMemberList");
     },
   };
   // 列配置
@@ -221,7 +222,6 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
           <div className="right-three right-table-wrap">
             <Table
               title={(a) => {
-                console.log('a', a);
                 return ''
               }}
               scroll={{ y: 560 }}

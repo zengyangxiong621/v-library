@@ -140,13 +140,15 @@ const EveryTreeNode = (props: any) => {
       {
         groupId === 'aInput'
           ?
-          <div onClick={(e) => inputWrapClick(e)}><Input
-            value={newGroupName}
-            onFocus={(e) => createInputFocus(e)}
-            onChange={(e) => createInputChange(e)}
-            onPressEnter={() => createGroup()}
-            onBlur={() => createGroup()}
-          /></div>
+          <div onClick={(e) => inputWrapClick(e)}>
+            <Input
+              value={newGroupName}
+              maxLength={25}
+              onFocus={(e) => createInputFocus(e)}
+              onChange={(e) => createInputChange(e)}
+              onPressEnter={() => createGroup()}
+              onBlur={() => createGroup()}
+            /></div>
           :
           <>
             <div className='title'>
@@ -157,6 +159,7 @@ const EveryTreeNode = (props: any) => {
                     style={{ width: '120px' }}
                     value={inputValue}
                     ref={inputRef}
+                    maxLength={25}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => oInputContent(e)}
                     onPressEnter={(e) => updateGroupName(e)}
