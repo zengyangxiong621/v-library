@@ -1,5 +1,5 @@
 # --- base images -------------
-FROM  docker.gridsumdissector.com/library/v-libray/node:14.16.0  AS base
+FROM  docker.gridsumdissector.com/vlibrary/node:14.16.0  AS base
 # --- run images -----------
 # FROM  docker.gridsumdissector.com/library/v-libray/nginx:latest AS run
 
