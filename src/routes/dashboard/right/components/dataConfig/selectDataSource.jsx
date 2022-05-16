@@ -42,20 +42,12 @@ const SelectDataSource = props => {
         name: null,
         pageNo: 1,
         pageSize: 1000,
-        spaceId: 1,
-        type: ['mysql', 'postgresql'].includes(props.type)
-          ? 'RDBMS' : ['api'].includes(props.type)
-            ? 'RESTFUL_API' :['elasticSearch'].includes(props.type)
+        spaceId: "1513466256657637378",
+        type: ['elasticSearch'].includes(props.type)
             ? 'ELASTIC_SEARCH' : props.type.toUpperCase(),
       }
     })
     console.log('content', content)
-    if (['mysql', 'postgresql'].includes(props.type)) {
-      content = content.filter(item => {
-        return item.rdbmsSourceConfig.dataBaseType === props.type.toUpperCase()
-      })
-    }
-
     const options = content.map(item => {
       if (props.type === 'api') {
         return {
