@@ -101,12 +101,17 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       visible={props.visible}
       className='update-data-container-drawer'
       getContainer={false}
-      maskStyle={null}
       style={{position: 'absolute'}}
+      maskStyle={{opacity: 0, animation: 'unset'}}
     >
       <div>
         <Input ref={inputRef} value={copyData.name}
-               onChange={(e) => setCopyData({...copyData, name: e.target.value})}></Input>
+               onChange={(e) => setCopyData({...copyData, name: e.target.value})} onPressEnter={() => {
+          dispatch({
+            type: 'bar/updateDataContainer',
+            payload: copyData
+          })
+        }}></Input>
         <p className="data-source">数据源</p>
         <DataSourceConfig
           data={copyData}

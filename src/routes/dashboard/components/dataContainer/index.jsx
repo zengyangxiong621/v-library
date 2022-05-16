@@ -10,6 +10,7 @@ import {http} from '../../../../models/utils/request'
 import UpdateContainerDrawer from "./components/updateContainerDrawer";
 import ManageContainerDrawer from "./components/manageContainerDrawer";
 import ModalConfirm from '../../../../components/modalConfirm'
+
 const {Search} = Input;
 
 const DataContainer = ({bar, dispatch, ...props}) => {
@@ -17,6 +18,8 @@ const DataContainer = ({bar, dispatch, ...props}) => {
   const [manageVisible, setManageVisible] = useState(false);
   const [itemData, setItemData] = useState(null);
   const [inputValue, setInputValue] = useState('')
+  const [filterDataList, setFilterDataList] = useState(bar.dataContainerList)
+
   useEffect(async () => {
     if (props.visible && bar.dataContainerList.length === 0) {
       dispatch({
@@ -55,19 +58,25 @@ const DataContainer = ({bar, dispatch, ...props}) => {
 
     // setDataContainerList(data)
   }, [props.visible])
-
+  useEffect(() => {
+    setFilterDataList(bar.dataContainerList)
+  }, [bar.dataContainerList])
   const showDrawer = () => {
     props.onChange(true)
   };
 
   const onClose = () => {
+    setInputValue('')
+    handleSearch('')
     props.onChange(false)
   };
   const handleSearchValueChange = (e) => {
-    setInputValue(e.target.value)
-  }
-  const handleSearch = () => {
 
+  }
+  const handleSearch = (value) => {
+    setFilterDataList(bar.dataContainerList.filter(item => {
+      return item.name.indexOf(value) !== -1
+    }))
   }
   const handleContainerClick = (containerData) => {
     // Modal.success()
@@ -124,6 +133,7 @@ const DataContainer = ({bar, dispatch, ...props}) => {
         getContainer={false}
         style={{position: 'absolute'}}
         width={333}
+        maskStyle={{opacity: 0, animation: null}}
       >
         <div className='data-container-handle'>
           <Input
@@ -135,19 +145,25 @@ const DataContainer = ({bar, dispatch, ...props}) => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             allowClear
-            onSearch={handleSearch}
+            onSearch={(e) => handleSearch(e.target.value)}
+            onPressEnter={(e) => handleSearch(e.target.value)}
           />
           <Button className="g-mx-2" onClick={() => handleContainerClick({})}>+新增</Button>
           <Button onClick={() => setManageVisible(true)}>管理</Button>
         </div>
         {
-          bar.dataContainerList.map(container =>
-            <DataContainerItem onChoose={handleContainerClick} onDelete={handleContainerDelete} onCopy={handleContainerCopy} onChange={handleContainerChange} key={container.id} data={container}/>
+          filterDataList.map(container =>
+            <DataContainerItem onChoose={handleContainerClick} onDelete={handleContainerDelete}
+                               onCopy={handleContainerCopy} onChange={handleContainerChange} key={container.id}
+                               data={container}/>
           )
         }
       </Drawer>
-      <ManageContainerDrawer data={bar.dataContainerList} visible={manageVisible} onVisibleChange={(value) => setManageVisible(value)} onChoose={(data) => handleContainerClick(data)} />
-      <UpdateContainerDrawer dashboardId={bar.dashboardId} data={itemData} visible={itemVisible} onVisibleChange={handleUpdateDrawerClose}/>
+      <ManageContainerDrawer data={bar.dataContainerList} visible={manageVisible}
+                             onVisibleChange={(value) => setManageVisible(value)}
+                             onChoose={(data) => handleContainerClick(data)}/>
+      <UpdateContainerDrawer dashboardId={bar.dashboardId} data={itemData} visible={itemVisible}
+                             onVisibleChange={handleUpdateDrawerClose}/>
     </div>
   )
 }

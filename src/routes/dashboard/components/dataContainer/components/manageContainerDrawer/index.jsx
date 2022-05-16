@@ -86,8 +86,8 @@ const ManageContainerDrawer = props => {
       visible={props.visible}
       className='manage-data-container-drawer'
       getContainer={false}
-      maskStyle={null}
       style={{position: 'absolute'}}
+      maskStyle={{opacity: 0}}
     >
       <div>
         <Input
