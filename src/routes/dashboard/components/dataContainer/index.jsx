@@ -120,7 +120,7 @@ const DataContainer = ({bar, dispatch, ...props}) => {
       <Drawer
         title={
           <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
-            <span></span>
+            <span/>
             数据容器
             <CloseOutlined onClick={onClose} className="g-cursor-pointer"/>
           </div>

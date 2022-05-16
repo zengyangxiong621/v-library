@@ -77,7 +77,9 @@ const _esDataConfig = {
 }
 
 const DataSourceConfig = ({ bar, dispatch, ...props }) => {
-  const _data = props.data;
+  // 判断是内置组件还是公共组件，如果 type 为 component 则是 公共组件
+  const componentType = props.type
+  const _data = props.data
   const [dataSourceTypes, setDataSourceTypes] = useState(selectData)
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [filterFlag, setFilterFlag] = useState(false)
@@ -114,6 +116,16 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   const dataSourceTypeChange = async () => {
     const newDataSourceTypes = Object.assign({}, dataSourceTypes)
     setDataSourceTypes(newDataSourceTypes)
+    if (componentType !== 'component') {
+      await http({
+        url: '/visual/module/updateDatasource',
+        method: 'post',
+        body: {
+          id: _data.id,
+          dataType: dataSourceTypes.value,
+        },
+      })
+    }
     props.onDataTypeChange(dataSourceTypes.value)
 
     const type = dataSourceTypes.value
@@ -149,40 +161,43 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
         }
       }
     }
-    await http({
-      url: '/visual/module/updateDatasource',
-      method: 'post',
-      body: {
-        id: _data.id,
-        data: dataConfig[_data.dataType].data,
-        dataType: _data.dataType
-      }
-    })
+    if (componentType !== 'component') {
+      await http({
+        url: '/visual/module/updateDatasource',
+        method: 'post',
+        body: {
+          id: _data.id,
+          data: dataConfig[_data.dataType].data,
+          dataType: _data.dataType,
+        },
+      })
+    }
     props.onDataSourceChange(dataConfig)
     queryComponentData()
   }
 
   const queryComponentData = async () => {
-    const data = await http({
-      url: '/visual/module/getData',
-      method: 'post',
-      body: {
-        moduleId: _data.id,
-        dataType: _data.dataType
-      }
-    })
-    console.log('data', data)
-    if (data) {
-      props.onResultDataChange(_data.dataType!=='static' ? data : data.data)
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          componentData: {
-            ...bar.componentData,
-            [_data.id]: _data.dataType!=='static' ? data : data.data
-          }
+    if (componentType !== 'component') {
+      const data = await http({
+        url: '/visual/module/getData',
+        method: 'post',
+        body: {
+          moduleId: _data.id,
+          dataType: _data.dataType,
         },
       })
+      if (data) {
+        props.onResultDataChange(_data.dataType !== 'static' ? data : data.data)
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            componentData: {
+              ...bar.componentData,
+              [_data.id]: _data.dataType !== 'static' ? data : data.data,
+            },
+          },
+        })
+      }
     }
   }
 
