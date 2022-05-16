@@ -16,7 +16,7 @@ const testData = {
   'staticData': {
     'data': [
       {
-        'text': '测试文本',
+        'text': '数据容器',
       },
     ],
     'fields': [
@@ -51,6 +51,21 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
             dashboardId: bar.dashboardId,
           },
         })
+        data.staticData = {
+          'data': [
+            {
+              'text': '测试文本',
+            },
+          ],
+          'fields': [
+            {
+              'name': 'text',
+              'value': 'text',
+              'desc': '文本',
+              'status': true,
+            },
+          ],
+        }
         setCopyData(data)
       } else {
         // 编辑
@@ -73,7 +88,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
     const data = await http({
       url: '/visual/container/source',
       method: 'post',
-      body
+      body,
     })
   }
 
@@ -84,11 +99,21 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
     await updateDataContainer({ ...copyData, dataType: value })
 
   }
-  const handleStaticDataChange = (value) => {
-    // setCopyData({ ...copyData, staticData: value })
-
-    // testData.staticData.data = value
-    console.log('handleStaticDataChange', value)
+  const handleStaticDataChange = async(data) => {
+    console.log('staticData', copyData.staticData)
+    setCopyData({
+      ...copyData, staticData: {
+        ...copyData.staticData,
+        data,
+      },
+    })
+    await updateDataContainer({
+      ...copyData, staticData: {
+        ...copyData.staticData,
+        data,
+      },
+    })
+    console.log('handleStaticDataChange', data)
 
   }
   const handleDataSourceChange = async (dataConfig) => {
@@ -126,7 +151,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
           onPressEnter={ () => {
             updateDataContainer(copyData)
           } }
-          onBlur={() => {
+          onBlur={ () => {
             updateDataContainer(copyData)
           } }
         />
