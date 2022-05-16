@@ -410,7 +410,11 @@ const selectOptions = [
     key: 'EXCEL',
   },
   {
-    name: 'RDBMS',
+    name: 'MYSQL',
+    key: 'RDBMS',
+  },
+  {
+    name: 'POSTGRESQL',
     key: 'RDBMS',
   },
   {
