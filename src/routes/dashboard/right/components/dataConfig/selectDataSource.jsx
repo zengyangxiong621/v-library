@@ -42,7 +42,7 @@ const SelectDataSource = props => {
         name: null,
         pageNo: 1,
         pageSize: 1000,
-        spaceId: "1513466256657637378",
+        spaceId: 1,
         type: ['elasticSearch'].includes(props.type)
             ? 'ELASTIC_SEARCH' : props.type.toUpperCase(),
       }
