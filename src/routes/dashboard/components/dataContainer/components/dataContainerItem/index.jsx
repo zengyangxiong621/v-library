@@ -23,26 +23,22 @@ const DataContainerItem = props => {
     })
   }
 
+  useEffect(() => {
+    setInputValue(data.name)
+  }, [data])
+
   const handleInputValueEdit = async () => {
     // 编辑
-    console.log(inputValue)
-    try {
-      await http({
-        method: 'post',
-        url: '/visual/visual/container/source',
-        body: {
-          id: data.id,
-          name: inputValue
-        }
+    if (data.name !== inputValue) {
+      props.onChange({
+        ...data,
+        name: inputValue
       })
-      props.data.name = inputValue
-      setIsEdit(false)
-    } catch (e) {
-
     }
+    setIsEdit(false)
   }
   const handleChange = (e) => {
-    setInputValue(e.target.name)
+    setInputValue(e.target.value)
   }
   const handleDelete = () => {
     ModalConfirm({
@@ -52,10 +48,8 @@ const DataContainerItem = props => {
       onCancel: () => {
         console.log('取消')
       },
-      onOk: async () => {
-        const data = await http({
-          url: 'url'
-        })
+      onOk: () => {
+        props.onDelete(data.id)
       }
     })
   }
@@ -75,7 +69,7 @@ const DataContainerItem = props => {
             onPressEnter={handleInputValueEdit}
             style={{width: 200}}
           /> : <>
-            <span onClick={() => props.onClick(data)} className="container-name" title={data.name}>{data.name}</span>
+            <span onClick={() => props.onChoose(data)} className="container-name" title={data.name}>{data.name}</span>
             <EditOutlined
               onClick={handleEdit}
             />
@@ -85,6 +79,7 @@ const DataContainerItem = props => {
       <div className="handle-area g-flex g-items-center">
         <CopyOutlined
           className="g-mx-4"
+          onClick={() => props.onCopy(data.id)}
         />
         <DeleteOutlined
           onClick={handleDelete}

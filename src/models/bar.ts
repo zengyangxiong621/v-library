@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
+import {message} from 'antd'
 import {
   calcGroupPosition,
   deepForEach,
@@ -619,10 +620,11 @@ export default {
       })
     },
     * getDataContainerList({ payload }: any, { call, put, select }: any): any {
-      const state: any = yield select((state: any) => state)
+      const bar: any = yield select(({ bar }: any) => bar)
+      console.log('bar', bar)
       const data = yield http({
         method: 'get',
-        url: '/visual/container/list/1513418102787268609'
+        url: `/visual/container/list/${bar.dashboardId}`
       })
       yield put({
         type: 'save',
@@ -630,7 +632,7 @@ export default {
           dataContainerList: data
         }
       })
-      console.log('data', data)
+      // console.log('data', data)
     },
     * addDataContainer({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
@@ -645,6 +647,49 @@ export default {
         }
       })
       payload.cb(data)
+    },
+    * deleteDataContainer({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
+      const data = yield http({
+        method: 'delete',
+        url: `/visual/container/delete/${payload}`,
+        body: {
+          dashboardId: bar.dashboardId
+        }
+      })
+      if (data) {
+        message.success('操作成功')
+      }
+      yield put({
+        type: 'getDataContainerList'
+      })
+    },
+    * copyDataContainer({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
+      const data = yield http({
+        method: 'put',
+        url: `/visual/container/copy/${payload}`,
+      })
+      if (data) {
+        message.success('操作成功')
+      }
+      yield put({
+        type: 'getDataContainerList'
+      })
+    },
+    * updateDataContainer({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
+      const data = yield http({
+        method: 'post',
+        url: `/visual/container/source`,
+        body: payload
+      })
+      if (data) {
+        message.success('操作成功')
+      }
+      yield put({
+        type: 'getDataContainerList'
+      })
     },
 
   },
