@@ -18,7 +18,7 @@ const { Option } = Select
 
 const DataSource = (props: any) => {
   const [inputValue, setInputValue] = useState('')
-  const [dataSourceType, setDataSourceType] = useState(null)
+  const [dataSourceType, setDataSourceType] = useState<any>(null)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
   const [isShowEditModal, setIsShowEditModal] = useState(false)
   const [editDataSourceInfo, setEditDataSourceInfo] = useState({})
@@ -86,7 +86,11 @@ const DataSource = (props: any) => {
 
   // 下拉框选择
   const selectChange = (value: any) => {
-    setDataSourceType(value)
+    if(value === 'POSTGRESQL' || value === 'MYSQL') {
+      setDataSourceType('RDBMS')
+    } else {
+      setDataSourceType(value)
+    }
   }
   // 按类型搜索
   const searchByType = async (e: any) => {
@@ -411,11 +415,11 @@ const selectOptions = [
   },
   {
     name: 'MYSQL',
-    key: 'RDBMS',
+    key: 'MYSQL',
   },
   {
     name: 'POSTGRESQL',
-    key: 'RDBMS',
+    key: 'POSTGRESQL',
   },
   {
     name: 'ELASTIC_SEARCH',

@@ -90,18 +90,16 @@ const EditDataSource = (props: any) => {
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await editForm.validateFields(['port', 'username', 'password', 'host', 'database'])
+    let finalType = (dataSourceType === 'MYSQL' || dataSourceType === 'POSTGRESQL') ? 'RDBMS' : 'type不是mySql或者pgSql'
     const finalParams = {
-      type: dataSourceType === 'MYSQL' ? 'RDBMS' : 'ELASTIC_SEARCH',
+      type: finalType,
       rdbmsSourceConfig: {
         ...values,
         dataBaseType: dataSourceType,
       },
+      // ELASTIC_SEARCH已经不需要测试连接但是后端没改，这个不传会报错
       elasticsearchConfig: {}
     }
-    // const finalParams = {
-    //   ...values,
-    //   dataBaseType: dataSourceType
-    // }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [, data] = await useFetch('/visual/datasource/connectTest', {
@@ -189,8 +187,8 @@ const EditDataSource = (props: any) => {
    */
   const handleOk = async () => {
     // es 数据源类型时，如果没有index名，直接return
-    if (!indexName) {
-      message.warning({ content: '请先选择索引', duration: 2 })
+    if ( dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
+      message.warning({ content: '请先选择索引名称', duration: 2 })
       return
     }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
@@ -297,7 +295,12 @@ const EditDataSource = (props: any) => {
       accept: fileSuffix || '',
       action: `${BASE_URL}/visual/file/upload`,
       beforeUpload(file: any) {
-        const { name }: { name: string } = file
+        const { name, size }: { name: string, size: number } = file
+        if (size > 1024 * 1024 * 10) {
+          message.warning('文件大小超过限制')
+          file.status = 'error'
+          return false
+        }
         const fileSuffixArr = fileSuffix?.split(',')
         // 考虑 cdb.la...yer.json / ......csv 这种文件名
         const lastPointIndex = name.lastIndexOf('.')

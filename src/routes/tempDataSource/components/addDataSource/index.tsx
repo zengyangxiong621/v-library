@@ -5,6 +5,7 @@ import './index.less'
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
 
 import { useFetch, BASE_URL } from '../../../../utils/useFetch'
+import { type } from 'os'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -58,14 +59,15 @@ const AddDataSource = (props: any) => {
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await addForm.validateFields(['port', 'username', 'password', 'host', 'database'])
+    let finalType = (curDataType==='MYSQL' || curDataType === 'POSTGRESQL') ? 'RDBMS' : 'type不是mySql或者pgSql'
     // 此处为了先完成演示
     const finalParams = {
-      type: curDataType === 'MYSQL' ? 'RDBMS' : 'ELASTIC_SEARCH',
+      type: finalType,
       rdbmsSourceConfig: {
         ...values,
         dataBaseType: curDataType,
       },
-      // 此处为了先完成演示
+      // ELASTIC_SEARCH已经不需要测试连接但是后端没改，这个不传会报错
       elasticsearchConfig: {}
     }
     setTestConnectLoading(true)
@@ -157,7 +159,6 @@ const AddDataSource = (props: any) => {
     }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await addForm.validateFields()
-    console.log('最终的表单参数', values);
     const { name, type, description, ...rest } = values
     // 判断当前是否是数据库
     const dataBaseOrNormal = dataTypeClassify.get(curDataType)
@@ -189,8 +190,6 @@ const AddDataSource = (props: any) => {
       // finalSourceConfig.username = username,
       // finalSourceConfig.password = password,
     }
-
-    // 东拼西凑攒参数
     const finalParams = {
       spaceId,
       name,
@@ -204,9 +203,10 @@ const AddDataSource = (props: any) => {
       body: JSON.stringify(finalParams)
     })
     if (data) {
-      // 成功后  -关闭弹窗 -清除表单 -刷新表格
+      // 成功后  -关闭弹窗 -清除表单- 重置添加数据源表单为初始样式 -刷新表格
       changeShowState('add')
       addForm.resetFields()
+      setCurDataType('')
       refreshTable()
     }
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接创建 */
@@ -222,6 +222,8 @@ const AddDataSource = (props: any) => {
   // 选择数据源类型
   const selectedChange = (val: string) => {
     setCurDataType(val)
+    // 清除剩余表单中已录入的信息
+    addForm.resetFields(['host', 'port', 'username', 'password', 'database', ])
   }
   // 选择数据库名
   const selectDatabase = (val: string) => {
@@ -252,7 +254,12 @@ const AddDataSource = (props: any) => {
       accept: fileSuffix || '',
       action: `${BASE_URL}/visual/file/upload`,
       beforeUpload(file: any) {
-        const { name }: { name: string } = file
+        const { name, size }: { name: string, size: number } = file
+        if(size > 1024 * 1024 * 10) {
+          message.warning('文件大小超过限制')
+          file.status = 'error'
+          return false
+        }
         const fileSuffixArr = fileSuffix?.split(',')
         // 考虑 cdb.la...yer.json 这个文件名
         const lastPointIndex = name.lastIndexOf('.')
@@ -606,7 +613,7 @@ const dataSourceType: TSelectOptionItems[] = [
 ]
 // @mark 关系型数据库 统一对应的是 'rdbms'
 // 因为后端的类型不一定与界面上展示的数据源类型名一致（例如：api <=> RESTFUL_API) 所以，直接做个映射
-// 方便，根据选择的数据源类型，来动态生成 []SourceConfig
+// 方便根据选择的数据源类型，来动态生成 []SourceConfig
 const dataTypeClassify: any = new Map([
   ['CSV', 'csv'],
   ['RESTFUL_API', 'api'],
