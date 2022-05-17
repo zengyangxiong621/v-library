@@ -113,6 +113,10 @@ function App({ bar, dispatch, location }: any) {
       type: 'bar/getDashboardDetails',
       payload: dashboardId,
     })
+    dispatch({
+      type: 'bar/getDataContainerList',
+      payload: dashboardId,
+    })
     document.addEventListener('keydown', handleStopWindowWheel)
     return () => {
       document.removeEventListener('keydown', handleStopWindowWheel)
@@ -161,7 +165,7 @@ function App({ bar, dispatch, location }: any) {
         <div className="home-left-wrap">
           <Left />
         </div>
-        <div className="center-wrap">
+        <div className="center-wrap g-flex">
           <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
           <CenterCanvas />
           <CenterBottomBar />

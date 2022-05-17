@@ -20,44 +20,6 @@ const DataContainer = ({bar, dispatch, ...props}) => {
   const [inputValue, setInputValue] = useState('')
   const [filterDataList, setFilterDataList] = useState(bar.dataContainerList)
 
-  useEffect(async () => {
-    if (props.visible && bar.dataContainerList.length === 0) {
-      dispatch({
-        type: 'bar/getDataContainerList'
-      })
-    }
-    // setDataContainerList([
-    //   {
-    //     id: '1',
-    //     name: '数据容器1数据容器1数据容器1数据容器1数据容器1',
-    //     enable: true,
-    //     dataType: 'static',
-    //     useFilter: true,
-    //     triggers: null,
-    //     events: null,
-    //   },
-    //   {
-    //     id: '2',
-    //     name: '数据容器2',
-    //     enable: true,
-    //     dataType: 'static',
-    //     useFilter: true,
-    //     triggers: null,
-    //     events: null,
-    //   },
-    //   {
-    //     id: '3',
-    //     name: '数据容器3',
-    //     enable: true,
-    //     dataType: 'static',
-    //     useFilter: true,
-    //     triggers: null,
-    //     events: null,
-    //   },
-    // ])
-
-    // setDataContainerList(data)
-  }, [props.visible])
   useEffect(() => {
     setFilterDataList(bar.dataContainerList)
   }, [bar.dataContainerList])

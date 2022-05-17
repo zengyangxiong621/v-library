@@ -1,5 +1,5 @@
 import dynamic from 'dva/dynamic';
-import { Route, Switch, Redirect } from 'dva/router';
+import { Route, Switch } from 'dva/router';
 
 export const newDynamic = (app, models, component) => {
   return dynamic({
@@ -51,7 +51,7 @@ export const createRoute = (app, routerConfig) => {
       });
     }
   }
-  
+
   const routePorps = Object.assign({
     key: path || '/404',
     render: props => {

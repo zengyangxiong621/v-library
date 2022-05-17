@@ -1,8 +1,4 @@
-import {
-  IConfig,
-  ILayerComponent,
-  ILayerGroup,
-} from '../routes/dashboard/center/components/CustomDraggable/type'
+
 import {
   DIMENSION,
   HEIGHT,
@@ -125,7 +121,6 @@ export function findParentNode (state, ids) {
   } else {
     return null
   }
-  return arr
 }
 
 // ['1-1', '1-1-1']
@@ -458,6 +453,7 @@ export const setComponentDimension = (dimensionConfig, {
             case 'center':
               config.value = config.value + (x - (data[LEFT] + data[WIDTH] / 2))
               break
+            default:
           }
         }
         break
@@ -476,6 +472,8 @@ export const setComponentDimension = (dimensionConfig, {
             case 'center':
               config.value = config.value + (y - (data[TOP] + data[HEIGHT] / 2))
               break
+            default:
+
           }
         }
         break
@@ -489,6 +487,9 @@ export const setComponentDimension = (dimensionConfig, {
               config.value = config.value + width
               break
             case 'update':
+              break
+            default:
+              break
           }
         }
         break
@@ -502,9 +503,13 @@ export const setComponentDimension = (dimensionConfig, {
               config.value = config.value + height
               break
             case 'update':
+              break
+            default:
+              break
           }
         }
         break
+      default:
     }
   })
   return data
