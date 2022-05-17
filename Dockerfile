@@ -10,7 +10,7 @@ RUN npm config set registry https://registry.npm.taobao.org
 WORKDIR /workdir
 ADD ./ /workdir
 
-RUN npm install  --registry=http://registry.npm.gridsum.com
+RUN npm install
 RUN npm run build
 
 
