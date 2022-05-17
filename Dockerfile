@@ -6,12 +6,12 @@ FROM  docker.gridsumdissector.com/vlibrary/node:14.16.0  AS base
 # --- dependencies images -------------
 FROM base AS dependencies
 
-RUN npm config set registry http://registry.npm.gridsum.com/
+# RUN npm config set registry http://registry.npm.gridsum.com/
 WORKDIR /workdir
 ADD ./ /workdir
 
-RUN npm install  --registry=http://registry.npm.gridsum.com
-RUN npm run build
+RUN yarn
+RUN yarn build
 
 
 FROM run AS release
