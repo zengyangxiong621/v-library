@@ -167,7 +167,7 @@ const EveryTreeNode = (props: any) => {
             </div>
             <div className='icons-wrap'>
               {
-                name === '应用列表'
+                name === '我的空间'
                   ? <IconFont type='icon-xinjianfenzu' onClickCapture={addWorkSpace} />
                   :
                   (name === '全部应用' || name === '未分组')
