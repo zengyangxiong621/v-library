@@ -17,7 +17,7 @@ export default {
       return { ...state, memberList: payload };
     },
     setWorkSpaceList(state: any, { payload }: any) {
-      return { ...state, groupList: payload };
+      return { ...state, workSpaceList: payload };
     },
     // 设置当前选中的 工作空间 payload => 当前选中树节点的数组 string[]
     setCurSelectedGroup(state: any, { payload }: any) {
@@ -57,7 +57,7 @@ export default {
     },
     *getWorkSpaceList({ payload }: any, { call, put }: any): any {
       const [, data] = yield useFetch(
-        `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
+        `/visual/workspace/list/${payload.accountId}`,
         {
           method: "get",
         },
@@ -69,7 +69,7 @@ export default {
         type: "setWorkSpaceList",
         payload: [
           {
-            groupId: "wrap",
+            id: "wrap",
             name: "我的空间",
             children: data,
           },

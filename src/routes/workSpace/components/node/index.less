@@ -1,6 +1,6 @@
 @backColor: #313239;
 
-.node-wrap {
+.workspace-node-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -10,15 +10,10 @@
   padding-left: 2px;
   .title {
     flex: 1;
+    max-width: 140px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    .title-text {
-      width: 90%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
   }
   .icons-wrap {
     .show-icon {
@@ -43,7 +38,6 @@
 
 /* 自定义Input的背景色 */
 .ant-input {
-  padding: 2px 0 2px 8px;
   color: #fff;
   background-color: #24262e;
 }
@@ -73,6 +67,7 @@
 .ant-tree .ant-tree-treenode {
   width: 240px;
   padding-right: 16px;
+  padding-bottom: 0;
 }
 .ant-tree .ant-tree-treenode:hover {
   background-image: linear-gradient(

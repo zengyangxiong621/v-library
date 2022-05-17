@@ -9,8 +9,6 @@
   background-color: @backColor;
   color: @textColor;
   user-select: none;
-  .left {
-  }
 
   .right {
     flex: auto;
@@ -85,5 +83,15 @@
   }
   .customRowClass:nth-child(odd) {
     background-color: #171a24;
+  }
+
+  // 自定义滚动条样式
+  .ant-table-body::-webkit-scrollbar {
+    display: none;
+  }
+  // 兼容ie & 火狐
+  .ant-table-body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 }

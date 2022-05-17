@@ -7,16 +7,18 @@ import { connect } from "dva";
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Input, Table, Space, Button } from "antd";
+import { ConfigProvider, Input, Table, Space, Button, Form } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
 import DarkModal from "../myDashboard/components/darkThemeModal";
 
+
 // 功能
 const workSpace = ({ workSpace, dispatch, history }: any) => {
   // 空间id
   let spaceId = 1;
+  const addMemberForm: any = Form.useForm()
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
@@ -43,13 +45,14 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
 
   // 页面初始化- 获取空间列表数据 & 获取表格数据
   useEffect(() => {
+    // getDataDispatch({accountId: '123'}, 'getWorkSpaceList')
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId: spaceId,
       map: sortMap,
     };
-    getDataDispatch(finalBody, "getMemberList");
+    // getDataDispatch(finalBody, "getMemberList");
   }, []);
 
   // 选择排序的标准
@@ -75,7 +78,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     setShowAddMemberModal(!showAddMemberModal);
   };
   // 表格中的删除事件
-  const delClick = (rowId: string) => {};
+  const delClick = (rowId: string) => { };
 
   // 表格排序 (分页事件在paginationProps中已经定义)
   const tableOnChange = (
@@ -108,7 +111,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
   };
 
   // ****** Modal相关  *****
-  const confirmAddMember = () => {};
+  const confirmAddMember = () => { };
   const cancelAddMemberModal = () => {
     setShowAddMemberModal(false);
   };
@@ -132,7 +135,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
         pageSize,
         map: tableMap,
       };
-      getDataDispatch(finalParams, "getMemberList");
+      // getDataDispatch(finalParams, "getMemberList");
     },
   };
   // 列配置
@@ -219,7 +222,6 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
           <div className="right-three right-table-wrap">
             <Table
               title={(a) => {
-                console.log('a', a);
                 return ''
               }}
               scroll={{ y: 560 }}
@@ -259,7 +261,26 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
           style={{
             top: "25%",
           }}
-        ></DarkModal>
+        >
+          <Form
+            ref={addMemberForm}
+            labelCol={{
+              span: 4,
+            }}
+            layout="horizontal"
+            name='releaseForm'
+          >
+            <Form.Item
+              colon={false}
+              label="用户名"
+              name="name"
+              rules={[{required: true, message: '请输入用户名'}]}
+            ><div className="set-flex">
+              <Input />
+              </div>
+            </Form.Item>
+          </Form>
+        </DarkModal>
       </div>
     </ConfigProvider>
   );

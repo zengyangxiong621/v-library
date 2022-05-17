@@ -15,6 +15,7 @@ const { Dragger } = Upload
 const AddDataSource = (props: any) => {
   // TODO 暂无确定的取得spaceId的方案
   const spaceId = 1
+  // const spaceId = '1513466256657637378'
 
   const [addForm] = Form.useForm()
   const { visible, changeShowState, refreshTable } = props
@@ -59,10 +60,8 @@ const AddDataSource = (props: any) => {
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await addForm.validateFields(['port', 'username', 'password', 'host', 'database'])
-    let finalType = (curDataType==='MYSQL' || curDataType === 'POSTGRESQL') ? 'RDBMS' : 'type不是mySql或者pgSql'
-    // 此处为了先完成演示
     const finalParams = {
-      type: finalType,
+      type: curDataType,
       rdbmsSourceConfig: {
         ...values,
         dataBaseType: curDataType,
@@ -175,7 +174,7 @@ const AddDataSource = (props: any) => {
         return
       }
       finalSourceConfig.dataBaseType = curDataType
-      finalType = 'RDBMS'
+      // finalType = 'RDBMS'
     }
     if (['csv', 'json', 'excel'].includes(dataBaseOrNormal)) {
       if (!fileUrl) {
@@ -399,7 +398,7 @@ const AddDataSource = (props: any) => {
           }
           {/* API接口 */}
           {
-            curDataType === 'RESTFUL_API' && (
+            curDataType === 'API' && (
               <>
                 <Form.Item label="Base URL"
                   name='baseUrl'
@@ -588,7 +587,7 @@ const dataSourceType: TSelectOptionItems[] = [
   },
   {
     label: 'API',
-    value: 'RESTFUL_API',
+    value: 'API',
   },
   {
     label: 'JSON',
@@ -616,7 +615,7 @@ const dataSourceType: TSelectOptionItems[] = [
 // 方便根据选择的数据源类型，来动态生成 []SourceConfig
 const dataTypeClassify: any = new Map([
   ['CSV', 'csv'],
-  ['RESTFUL_API', 'api'],
+  ['API', 'api'],
   ['JSON', 'json'],
   ['EXCEL', 'excel'],
   ['POSTGRESQL', 'rdbms'],

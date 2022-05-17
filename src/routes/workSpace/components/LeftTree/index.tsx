@@ -17,6 +17,7 @@ import workspace from '../../../../models/workspace'
 const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   const spaceId = '1'
+  let accountId = '123'
   // 获取应用分组列表
   useEffect(() => {
     refreshWorkSpaceLists()
@@ -27,7 +28,7 @@ const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
     dispatch({
       type: 'workSpace/getWorkSpaceList',
       payload: {
-        spaceId
+        accountId
       }
     })
   }
@@ -35,12 +36,12 @@ const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
   // 创建一个占位数据
   const addWorkSpace = () => {
     const mockItem: any = {
-      groupId: 'aInput',
+      id: 'aInput',
       name: "占位的input",
     }
     // 插入的输入框是在数组的倒数第二个位置
     const origin = workSpace.workSpaceList[0].children
-    if (origin[origin.length - 2].groupId === 'aInput') {
+    if (origin[origin.length - 2].id === 'aInput') {
       // debugger
       workSpace.workSpaceList[0].children.splice(-2, 1)
       const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList))
@@ -72,12 +73,12 @@ const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
     // 每次切换分组，都要将搜索框内的值清除掉
     clearSearchInputState()
     // 全部分组后端的数据里是-1, 但是要求传值时为Null
-    const groupId = key === '-1' ? null : key
+    const id = key === '-1' ? null : key
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      groupId
+      id
     }
     dispatch({
       type: 'workSpace/getTemplateList',
@@ -90,7 +91,7 @@ const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
     })
   }
   return (
-    <div className='LeftTree-wrap'>
+    <div className='worksapce-leftTree-wrap'>
       {
         workSpace.workSpaceList.length > 0 &&
         <Tree

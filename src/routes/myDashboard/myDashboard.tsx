@@ -92,26 +92,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     })
   }
 
-  // async function uploadFile() {
-  //   const uploadFileEle: any = document.getElementById("uploadFile");
-  //   console.log('uploadFile', uploadFileEle.files);
-  //   if (!uploadFileEle.files.length) return;
-  //   const file = uploadFileEle.files[0]; // 获取单个文件
-  //   // 省略文件的校验过程，比如文件类型、大小校验
-  //   upload({
-  //     file,
-  //   });
-  // }
-
-  // async function upload({ file, fieldName = "file" }: any) {
-  //   let formData = new FormData();
-  //   formData.set(fieldName, file);
-  //   const [, data] = await useFetch(`/visual/application/import/${spaceId}`, {
-  //     body: formData,
-  //     headers: {}
-  //   })
-  // }
-
   // 导入应用
   const importAppUploadprops = {
     name: 'file',
@@ -174,7 +154,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       <div className="right">
         <div className="right-header">
           <div className='set-flex'>
-            <p className='title'>全部应用</p>
+            <p className='title'>{dashboardManage.curSelectedGroupName || '全部应用'}</p>
             <Upload {...importAppUploadprops}
               showUploadList={false}
             >
