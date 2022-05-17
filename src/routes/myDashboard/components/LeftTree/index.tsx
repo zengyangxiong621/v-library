@@ -100,7 +100,7 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
           blockNode
           defaultExpandedKeys={['wrap']}
           defaultSelectedKeys={['-1']}
-          // defaultExpandAll={customExpandAll}
+          selectedKeys={dashboardManage.curSelectedGroup}
           treeData={dashboardManage.groupList}
           switcherIcon={<DownOutlined />}
           fieldNames={{

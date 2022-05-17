@@ -14,14 +14,14 @@ import workspace from '../../../../models/workspace'
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
 
-const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
+const LeftTree = ({ workSpace, dispatch, refreshMemberList }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   const spaceId = '1'
-  let accountId = '123'
+  let accountId = workSpace.accountId
   // 获取应用分组列表
-  useEffect(() => {
-    refreshWorkSpaceLists()
-  }, [])
+  // useEffect(() => {
+  //   refreshWorkSpaceLists()
+  // }, [])
 
   // 新建分组或者重命名成功分组，触发刷新
   const refreshWorkSpaceLists = () => {
@@ -62,44 +62,40 @@ const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
 
   const selectTreeNode = (keys: any, e: any) => {
     // 如果是取消选择直接中止
-    if (!e.selected) return
-    const { node } = e
-    if (node.key === 'aInput' || node.name === '占位的input' || node.key === 'wrap') {
+    if (!e.selected) {
       return
     }
-    // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)
-    const key = keys[0]
-    if (key === 'wrap') return
-    // 每次切换分组，都要将搜索框内的值清除掉
-    clearSearchInputState()
-    // 全部分组后端的数据里是-1, 但是要求传值时为Null
-    const id = key === '-1' ? null : key
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId,
-      id
+    const { key, name, projectQuota, remainQuota }: any = e.node
+    if (key === 'aInput' || key === 'wrap' || name === '占位的input' || key === 'wrap') {
+      return
     }
+    console.log('选中树节点的key', key);
+    // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)
+    // 重新设置  配额、成员列表
     dispatch({
-      type: 'workSpace/getTemplateList',
-      payload: finalBody
+      type: 'workSpace/setBaseTypeKey',
+      payload: {
+        projectQuota,
+        remainQuota,
+      }
     })
     // 每次变更选中的分组时，将当前分组保存至models中
     dispatch({
-      type: 'workSpace/setCurSelectedGroup',
+      type: 'workSpace/setCurWorkSpace',
       payload: keys
     })
+    // 发送请求刷新右侧成员列表
+    refreshMemberList(key)
   }
   return (
-    <div className='worksapce-leftTree-wrap'>
+    <div className='workspace-leftTree-wrap'>
       {
         workSpace.workSpaceList.length > 0 &&
         <Tree
           blockNode
           defaultExpandedKeys={['wrap']}
-          defaultSelectedKeys={['-1']}
-          // defaultExpandAll={customExpandAll}
           treeData={workSpace.workSpaceList}
+          selectedKeys={workSpace.curWorkSpace}
           switcherIcon={<DownOutlined />}
           fieldNames={{
             title: 'name',
@@ -109,6 +105,7 @@ const LeftTree = ({ workSpace, dispatch, clearSearchInputState }: any) => {
           titleRender={(nodeData: any) => (
             <Node
               refreshWorkSpaceLists={refreshWorkSpaceLists}
+              accountId={accountId}
               addWorkSpace={addWorkSpace}
               {...nodeData}>
             </Node>)}
