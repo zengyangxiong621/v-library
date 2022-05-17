@@ -4,12 +4,14 @@ import './index.less'
 
 import { EditableTable } from '../fieldMapTable'
 import DataSourceConfig from './dataSourceConfig'
+import DataContainerConfig from './dataContainerConfig'
 import DataResult from './dataResult'
 
 import { http } from '../../../../../models/utils/request'
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
+  _data.bindDataContainer = false
   const [resultData, setResultData] = useState([])
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
@@ -109,13 +111,29 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
             onChange={fieldsChange} />
         </div>
       </div>
-      <DataSourceConfig
-        data={_data}
-        onDataTypeChange={onDataTypeChange}
-        onStaticDataChange={props.onStaticDataChange}
-        onDataSourceChange={props.onDataSourceChange}
-        onResultDataChange={resultDataChange}
-      />
+      <div className="data-type g-mt-4">
+        <div>
+          关联{_data.bindDataContainer ? '容器' : '数据源'}
+        </div>
+        <a
+          className="g-pr-4"
+          onClick={() => {
+        }}>
+          {_data.bindDataContainer ? '数据源' : '容器'}
+        </a>
+      </div>
+      {
+        _data.bindDataContainer ? <DataContainerConfig>
+
+        </DataContainerConfig> : <DataSourceConfig
+          data={_data}
+          onDataTypeChange={onDataTypeChange}
+          onStaticDataChange={props.onStaticDataChange}
+          onDataSourceChange={props.onDataSourceChange}
+          onResultDataChange={resultDataChange}
+        />
+      }
+
       <DataResult data={_data} resultData={resultData} />
     </React.Fragment>
   )

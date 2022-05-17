@@ -86,6 +86,23 @@
   }
 }
 
+
+.data-type {
+  width: calc(100% + 32px);
+  position: relative;
+  left: -16px;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-color: @border-color-base;
+  padding-left: 16px;
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: @fontColor2;
+  background-color: @bgColor2;
+}
+
 .data-select-source {
   margin-top: 16px;
 
@@ -137,4 +154,20 @@
     font-size: 14px;
     color: #CCCCCC;
   }
+}
+
+.data-container-config {
+  .ant-btn-default {
+    color: @btn-default-color;
+    border-color: @btn-default-border;
+    background-color: @btn-default-bg;
+  }
+  .ant-btn:hover, .ant-btn:focus, .ant-btn-link:active {
+    color: @primary-color-hover;
+    border-color: @primary-color-hover;
+  }
+  .ant-btn-link:hover, .ant-btn-link:focus, .ant-btn-link:active {
+    border-color: transparent;
+  }
+
 }
