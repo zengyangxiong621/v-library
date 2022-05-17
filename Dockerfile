@@ -16,7 +16,7 @@ RUN npm run build
 
 FROM run AS release
 
-COPY --from=dependencies --chown=nginx  /workdir/build  /usr/html/
+COPY --from=dependencies --chown=nginx  /workdir/build  /usr/share/nginx/html
 
 EXPOSE 8080
 
