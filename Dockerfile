@@ -6,12 +6,12 @@ FROM  docker.gridsumdissector.com/library/node:14.16.0  AS base
 # --- dependencies images -------------
 FROM base AS dependencies
 
-# RUN npm config set registry http://registry.npm.gridsum.com/
+RUN npm config set registry https://registry.npm.taobao.org
 WORKDIR /workdir
 ADD ./ /workdir
 
-RUN yarn
-RUN yarn build
+RUN cnpm install
+RUN cnpm run build
 
 
 FROM run AS release
