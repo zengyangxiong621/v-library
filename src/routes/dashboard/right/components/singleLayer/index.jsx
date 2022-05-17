@@ -14,7 +14,7 @@ import {
 
 } from 'antd';
 import debounce from 'lodash/debounce';
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 
 const dashboardId = window.location.pathname.split('/')[2]
 

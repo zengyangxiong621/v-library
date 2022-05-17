@@ -1,7 +1,6 @@
 import React, {memo, useState, useEffect, useRef} from 'react';
 import './index.less'
 import {Drawer, Input, Table, Modal, Button} from 'antd'
-import {http} from '../../../../../../models/utils/request'
 import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 
 const ManageContainerDrawer = props => {

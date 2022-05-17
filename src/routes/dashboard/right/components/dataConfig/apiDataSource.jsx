@@ -7,7 +7,7 @@ import CusInput from '../cusInput'
 import CodeEditor from '../codeEditor'
 import SelectDataSource from './selectDataSource'
 
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {

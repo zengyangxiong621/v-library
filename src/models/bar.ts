@@ -47,7 +47,7 @@ import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
 import { addSomeAttrInLayers, clearNullGroup } from './utils/addSomeAttrInLayers'
-import { http } from './utils/request'
+import { http } from '../services/request'
 
 interface IBarState {
   dashboardId: string;

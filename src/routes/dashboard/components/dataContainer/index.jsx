@@ -6,7 +6,6 @@ import {
   CloseOutlined, LeftOutlined, AudioOutlined, SearchOutlined
 } from '@ant-design/icons';
 import DataContainerItem from './components/dataContainerItem'
-import {http} from '../../../../models/utils/request'
 import UpdateContainerDrawer from "./components/updateContainerDrawer";
 import ManageContainerDrawer from "./components/manageContainerDrawer";
 import ModalConfirm from '../../../../components/modalConfirm'

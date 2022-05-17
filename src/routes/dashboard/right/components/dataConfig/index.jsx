@@ -8,7 +8,7 @@ import DataContainerConfig from './dataContainerConfig'
 import DataResult from './dataResult'
 import { SwapOutlined } from '@ant-design/icons';
 
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;

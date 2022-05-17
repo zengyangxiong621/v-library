@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
 import { Select, Button, Tabs } from 'antd'
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 import UpdateContainerDrawer from '../../../components/dataContainer/components/updateContainerDrawer'
 import CodeEditor from '../codeEditor'
 

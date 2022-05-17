@@ -6,7 +6,6 @@ import {
   DeleteOutlined,
   EditOutlined
 } from '@ant-design/icons';
-import {http} from '../../../../../../models/utils/request'
 import ModalConfirm from "../../../../../../components/modalConfirm";
 
 const DataContainerItem = props => {
