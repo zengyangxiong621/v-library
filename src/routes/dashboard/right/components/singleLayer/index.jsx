@@ -14,7 +14,7 @@ import {
 
 } from 'antd';
 import debounce from 'lodash/debounce';
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -73,6 +73,17 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
+  const dataContainerChange = (dataContainerIds) => {
+    componentConfig.dataContainers = dataContainerIds.map(id => ({
+      id,
+      enable: true,
+      rank: 0
+    }))
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+  }
   const staticDataChange = (data) => {
     componentConfig.staticData.data = data
     dispatch({
@@ -95,6 +106,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const dataSourceChange = dataSource => {
     componentConfig.dataConfig = dataSource
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+  }
+
+  const dataFromChange = dataFrom => {
+    componentConfig.dataFrom = dataFrom
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig
@@ -178,10 +197,13 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
             <ComponentCard data={componentConfig}>
               <DataConfig
                 data={componentConfig}
+                onDataContainerChange={dataContainerChange}
                 onFiledsChange={filedsChange}
                 onStaticDataChange={staticDataChange}
                 onDataTypeChange={dataTypeChange}
-                onDataSourceChange={dataSourceChange} />
+                onDataSourceChange={dataSourceChange}
+                onDataFromChange={dataFromChange}
+              />
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">

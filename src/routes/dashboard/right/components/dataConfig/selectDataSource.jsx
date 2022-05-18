@@ -6,7 +6,7 @@ import {
 } from 'antd';
 
 import AddDataSource from '../../../../tempDataSource/components/addDataSource'
-import { http } from '../../../../../models/utils/request';
+import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid';
 
 const selectData = {

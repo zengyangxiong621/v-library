@@ -157,6 +157,34 @@
 }
 
 .data-container-config {
+  color: @fontColor2;
+
+  .data-container-tabs {
+
+    &-item {
+      color: @fontColor2;
+      max-width: 60px;
+      height: 28px;
+      line-height: 28px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      border: 1px solid @border-color-base;
+      padding: 0 8px;
+      &:hover {
+        color: @fontColor;
+        background-color: @component-background;
+        border-bottom: 0;
+      }
+
+      &-active {
+        color: @fontColor;
+        background-color: @component-background;
+        border-bottom: 0;
+
+      }
+    }
+  }
+
   .ant-btn-default {
     color: @btn-default-color;
     border-color: @btn-default-border;
@@ -169,5 +197,25 @@
   .ant-btn-link:hover, .ant-btn-link:focus, .ant-btn-link:active {
     border-color: transparent;
   }
+
+  .ant-select-selector {
+    background-color: @componentBgColor  !important;
+    border: 1px solid @borderColor  !important;
+    border-radius: 3px !important;
+    font-size: 14px;
+    color: @fontColor;
+    font-weight: 400;
+
+    .ant-select-selection-item {
+      background-color: #373A4D;
+      color: @fontColor;
+      border: 1px solid @borderColor  !important;
+    }
+
+    .ant-select-selection-item-remove {
+      color: @fontColor;
+    }
+  }
+
 
 }

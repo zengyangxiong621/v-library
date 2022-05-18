@@ -47,7 +47,7 @@ import { DIMENSION } from '../routes/dashboard/center/constant'
 
 import { generateLayers } from './utils/generateLayers'
 import { addSomeAttrInLayers, clearNullGroup } from './utils/addSomeAttrInLayers'
-import { http } from './utils/request'
+import { http } from '../services/request'
 
 interface IBarState {
   dashboardId: string;
@@ -621,10 +621,11 @@ export default {
     },
     * getDataContainerList({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
+      const dashboardId = bar.dashboardId || payload
       console.log('bar', bar)
       const data = yield http({
         method: 'get',
-        url: `/visual/container/list/${bar.dashboardId}`
+        url: `/visual/container/list/${dashboardId}`
       })
       yield put({
         type: 'save',

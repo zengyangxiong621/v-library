@@ -8,7 +8,7 @@ import DataConfigDrawer from '../dataConfigDrawer'
 import StaticData from './staticData'
 import SelectDataSource from './selectDataSource'
 import APIDataSource from './apiDataSource'
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 
 import cloneDeep from 'lodash/cloneDeep'
 

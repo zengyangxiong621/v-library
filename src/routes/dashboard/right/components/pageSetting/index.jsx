@@ -11,7 +11,7 @@ import { deepClone } from '../../../../../utils'
 import { Form } from 'antd';
 import EditTable from '../editTable'
 import debounce from 'lodash/debounce';
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid';
 
 const dashboardId = window.location.pathname.split('/')[2]

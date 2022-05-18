@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 import { BASE_URL } from '../../../../../utils/useFetch'
 import debounce from 'lodash/debounce';
 

@@ -6,12 +6,12 @@ import { EditableTable } from '../fieldMapTable'
 import DataSourceConfig from './dataSourceConfig'
 import DataContainerConfig from './dataContainerConfig'
 import DataResult from './dataResult'
+import { SwapOutlined } from '@ant-design/icons';
 
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
-  _data.bindDataContainer = false
   const [resultData, setResultData] = useState([])
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
@@ -67,7 +67,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   }
 
   const fieldsChange = async(fields) => {
-    console.log('fields', fields)
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -96,6 +95,21 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onDataTypeChange(data)
   }
 
+  const dataFromChange = async() => {
+    const data = await http({
+      url: '/visual/module/updateDataFrom',
+      method: 'post',
+      body: {
+        id: _data.id,
+        dataFrom: _data.dataFrom === 1 ? 0 : 1
+      }
+    })
+    if (data) {
+      props.onDataFromChange(_data.dataFrom === 1 ? 0 : 1)
+    }
+  }
+
+
   return (
     <React.Fragment>
       <div className="data-config" style={{ marginTop: 0 }}>
@@ -113,19 +127,21 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       </div>
       <div className="data-type g-mt-4">
         <div>
-          关联{_data.bindDataContainer ? '容器' : '数据源'}
+          关联{_data.dataFrom ? '容器' : '数据源'}
         </div>
         <a
-          className="g-pr-4"
-          onClick={() => {
-        }}>
-          {_data.bindDataContainer ? '数据源' : '容器'}
+          className="g-pr-4 g-flex g-items-center"
+          onClick={dataFromChange}>
+          <SwapOutlined className="g-mr-2" />
+          {_data.dataFrom ? '数据源' : '容器'}
         </a>
       </div>
       {
-        _data.bindDataContainer ? <DataContainerConfig>
-
-        </DataContainerConfig> : <DataSourceConfig
+        _data.dataFrom ? <DataContainerConfig
+            data={_data}
+            onDataContainerChange={props.onDataContainerChange}
+          />
+          : <DataSourceConfig
           data={_data}
           onDataTypeChange={onDataTypeChange}
           onStaticDataChange={props.onStaticDataChange}
