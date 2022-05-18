@@ -1,0 +1,108 @@
+@import "../../../../../assets/style/variable.less";
+
+.origin-select-container {
+  position: relative;
+  width: 64px;
+  height: 46px;
+
+  .origin-select-grid {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top right, rgba(57, 59, 54, 0) 0%, rgba(57, 59, 54, 0) calc(50% - 1.5px), rgba(57, 59, 54, 0.3) 50%, rgba(57, 59, 54, 0) calc(50% + 1.5px), rgba(57, 59, 54, 0) 100%), linear-gradient(to bottom right, rgba(57, 59, 54, 0) 0%, rgba(57, 59, 54, 0) calc(50% - 1.5px), rgba(57, 59, 54, 0.3) 50%, rgba(57, 59, 54, 0) calc(50% + 1.5px), rgba(57, 59, 54, 0) 100%);
+
+    &::before {
+      position: absolute;
+      content: '';
+      top: 4px;
+      left: 4px;
+      bottom: 4px;
+      right: 4px;
+      border: 1px solid rgba(83, 84, 92, 0.5);
+    }
+
+    .origin-select-item {
+      display: block;
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      left: 0;
+      top: 0;
+      border: 1px solid #53545c;
+      background: #181b24;
+      cursor: pointer;
+
+      &.origin-select-active{
+        border-width: 2px;
+        border-color:@primary-color; 
+      }
+
+      &::before {
+        position: absolute;
+        content: '';
+        width: 16px;
+        height: 16px;
+        left: -6px;
+        top: -6px;
+      }
+
+      &:nth-child(1) {
+        top: 0;
+        left: 0;
+      }
+
+      &:nth-child(2) {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+      }
+
+      &:nth-child(3) {
+        top: 0;
+        right: 0;
+        left: auto;
+      }
+
+      &:nth-child(4) {
+        top: 50%;
+        left: 0;
+        transform: translate(0, -50%);
+      }
+
+      &:nth-child(5) {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      &:nth-child(6) {
+        top: 50%;
+        right: 0;
+        left: auto;
+        transform: translate(0, -50%);
+      }
+
+      &:nth-child(7) {
+        bottom: 0;
+        left: 0;
+        top: auto;
+      }
+
+      &:nth-child(8) {
+        bottom: 0;
+        left: 50%;
+        top: auto;
+        transform: translate(-50%, 0);
+      }
+
+      &:nth-child(9) {
+        bottom: 0;
+        right: 0;
+        top: auto;
+        left: auto;
+      }
+    }
+  }
+
+
+}

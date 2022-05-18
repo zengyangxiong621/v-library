@@ -127,6 +127,60 @@
         border-right: none;
       }
     }
+
+    .translate-x,
+    .translate-y {
+      float: left;
+      width: calc(50% - 4px);
+      position: relative;
+    }
+
+    .scale-x,
+    .scale-y {
+      float: left;
+      width: 92px;
+      position: relative;
+    }
+
+    .scale-lock {
+      font-size: 12px;
+      color: #ccc;
+      cursor: pointer;
+      line-height: 32px;
+      float: left;
+      margin: 0 2px;
+    }
+
+    .input-num-suffix {
+      display: inline-table;
+      line-height: 32px;
+      height: 32px;
+      position: absolute;
+      right: 6px;
+      padding: 0;
+      background: inherit;
+      border: none;
+      color: #666;
+      top: 0;
+    }
+
+    .rotate-item {
+      .rotate-slider {
+        float: left;
+        width: 132px;
+        margin-right: 8px;
+
+        .ant-slider-track {
+          background-color: @activeComponentBgColor;
+        }
+      }
+
+      .rotate-number {
+        width: 64px;
+        float: left;
+        position: relative;
+      }
+    }
   }
 
 }

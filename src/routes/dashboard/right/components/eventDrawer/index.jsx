@@ -1,4 +1,5 @@
-import React, { memo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { connect } from 'dva'
 import './index.less'
 import MonacoEditor from 'react-monaco-editor';
 
@@ -10,13 +11,33 @@ import {
   Button,
   Collapse,
   Select,
-  Input
+  Input,
+  Popover,
+  Table
 } from 'antd';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 
-const EventDrawer = props => {
+const columns = [
+  {
+    title: '字段',
+    dataIndex: 'field',
+    key: 'field',
+  },
+  {
+    title: '类型',
+    dataIndex: 'type',
+    key: 'type',
+  },
+  {
+    title: '说明',
+    dataIndex: 'desc',
+    key: 'desc',
+  },
+];
+
+const EventDrawer = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
   const { Option } = Select;
   const formItemLayout = {
@@ -27,13 +48,97 @@ const EventDrawer = props => {
   const [visible, setVisible] = useState(props.visible)
   const [conditions, setConditions] = useState(props.data?.conditions || [])
   const [conditionType, setConditionType] = useState(props.data?.conditionType || 'all')
+  const [tableData, setTableData] = useState([])
+  const [comData, setComData] = useState('')
+  const [comDataType, setComDataType] = useState('--')
+
+  // 监听组件的数据变化，设置popover的弹框table及数据
+  useEffect(() => {
+    const componentId = bar.key[0]
+    const componentData = bar.componentData[componentId] || ''
+    setComData(componentData ? JSON.stringify(componentData, null, 2) : '')
+    if (componentData) {
+      setComDataType(getType(componentData))
+    } else {
+      setComDataType('--')
+    }
+    let table = []
+    const dataType = bar.componentConfig.dataType
+    if (dataType === 'static') {
+      table = bar.componentConfig.staticData.fields.map(item => {
+        return {
+          field: item.value,
+          type: getFieldType(componentData, item.value),
+          desc: item.desc
+        }
+      })
+      setTableData(table)
+    } else {
+      if (bar.componentConfig.dataConfig[dataType].fields) {
+        table = bar.componentConfig.dataConfig[dataType].fields.map(item => {
+          return {
+            field: item.value,
+            type: getFieldType(componentData, item.value),
+            desc: item.desc
+          }
+        })
+        setTableData(table)
+      } else {
+        table = bar.componentConfig.staticData.fields.map(item => {
+          return {
+            field: item.value,
+            type: getFieldType(componentData, item.value),
+            desc: item.desc
+          }
+        })
+        setTableData(table)
+      }
+    }
+  }, [bar.componentData, bar.componentConfig.dataType, bar.componentConfig.dataConfig])
+
+  const getFieldType = (data, field) => {
+    if (data) {
+      if (getType(data) === 'object') {
+        return getType(data[field])
+      } else if (getType(data) === 'array') {
+        if (data.length) {
+          if (getType(data[0]) === 'object') {
+            return getType(data[0][field])
+          } else if (getType(data[0]) === 'array') {
+            return getFieldType(data[0], field)
+          }
+        } else {
+          return '--'
+        }
+      }
+    } else {
+      return '--'
+    }
+  }
+
+  // 判断类型
+  const getType = data => {
+    let type = typeof data
+    if (type === 'object') {
+      if (data instanceof Array) {
+        type = 'array'
+      } else if (data instanceof Object) {
+        type = 'object'
+      } else {
+        type = '--'
+      }
+    }
+    return type
+  }
+
+
+
 
   useEffect(() => {
     setVisible(props.visible)
   }, [props.visible])
 
   const onClose = () => {
-    console.log('11111')
     setVisible(false)
     props.onClose()
   }
@@ -44,7 +149,6 @@ const EventDrawer = props => {
   }
 
   const addConditon = () => {
-    console.log('addConditon')
     const conds = [...conditions]
     const id = uuidv4()
     conds.push({
@@ -115,6 +219,33 @@ const EventDrawer = props => {
   const editorDidMountHandle = (editor, monaco) => {
     editor.getAction('editor.action.formatDocument').run()  //格式化
   }
+
+  const tipsContent = (
+    <div>
+      <div className="fields-wraper">
+        <p>事件传出的数据为{comDataType}类型，包含以下字段</p>
+        <Table
+          dataSource={tableData}
+          columns={columns}
+          pagination={false} />
+      </div>
+      <div className="data-wraper">
+        <p>数据示例</p>
+        <MonacoEditor
+          height="300"
+          language="json"
+          theme="vs-dark"
+          value={comData}
+          editorDidMount={editorDidMountHandle}
+          options={{
+            contextmenu: false,
+            readOnly: true
+          }}
+        />
+      </div>
+
+    </div>
+  )
 
   return (
     <Drawer
@@ -198,7 +329,7 @@ const EventDrawer = props => {
                         language="javascript"
                         theme="vs-dark"
                         value={item.code}
-                        onChange={(e) => codeChange(e,item)}
+                        onChange={(e) => codeChange(e, item)}
                         editorDidMount={editorDidMountHandle}
                         options={{
                           contextmenu: false,
@@ -217,8 +348,20 @@ const EventDrawer = props => {
           )
         })}
       </Form>
+      <div className="event-footer">
+        <Popover
+          overlayClassName="custom-event-popover"
+          content={tipsContent}
+          title="数据字段参考"
+          trigger="click"
+          placement="leftBottom">
+          <div className="event-popover-tip">查看条件数据参数提示</div>
+        </Popover>
+      </div>
     </Drawer>
   )
 }
 
-export default memo(EventDrawer)
+export default connect(({ bar }) => ({
+  bar
+}))(EventDrawer)

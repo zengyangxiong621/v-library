@@ -24,15 +24,16 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
+  componentConfig.interaction = componentConfig.interaction || {
+    mountAnimation: bar.treeData.find(item => item.id === componentConfig.id)?.mountAnimation,
+    events: componentConfig.events
+  }
   // console.log('--------------------')
   // console.log('componentConfig', bar.componentConfig)
   const styleConfig = componentConfig.config
   // console.log('styleConfig', styleConfig)
   // console.log('--------------------')
-  const interactionConfig = componentConfig.interaction || {
-    mountAnimation: {},
-    events: []
-  }
+  const interactionConfig = componentConfig.interaction
 
   const styleChange = debounce(() => {
     console.log('style change', componentConfig)
@@ -61,10 +62,10 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
-  const filedsChange = (fields,type) => {
-    if(type==='static'){
+  const filedsChange = (fields, type) => {
+    if (type === 'static') {
       componentConfig.staticData.fields = fields
-    }else{
+    } else {
       componentConfig.dataConfig[type].fields = fields
     }
     dispatch({
@@ -111,6 +112,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const interactionChange = debounce(() => {
     console.log('interaction change', interactionConfig)
+    componentConfig.interaction.mountAnimation = interactionConfig.mountAnimation
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig
@@ -135,6 +137,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const eventChange = debounce(() => {
+    componentConfig.interaction.events = interactionConfig.events
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig
