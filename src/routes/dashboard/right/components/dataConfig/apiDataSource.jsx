@@ -37,18 +37,18 @@ const _requestMethodConfig = {
       name: 'POST',
       value: 'post'
     },
-    {
-      name: 'PUT',
-      value: 'put'
-    },
-    {
-      name: 'DELETE',
-      value: 'delete'
-    },
-    {
-      name: 'PATCH',
-      value: 'patch'
-    },
+    // {
+    //   name: 'PUT',
+    //   value: 'put'
+    // },
+    // {
+    //   name: 'DELETE',
+    //   value: 'delete'
+    // },
+    // {
+    //   name: 'PATCH',
+    //   value: 'patch'
+    // },
   ]
 }
 
