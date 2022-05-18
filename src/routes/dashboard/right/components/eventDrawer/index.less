@@ -52,4 +52,82 @@
       display: none;
     }
   }
+
+  .event-footer {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+
+    .event-popover-tip {
+      color: #b4b7c1;
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.custom-event-popover {
+  .ant-popover-arrow {
+    display: none;
+  }
+
+  .ant-popover-inner {
+    color: #fff;
+    background-color: @componentContentBgColor;
+    width: 322px;
+    max-height: 520px;
+    overflow: auto;
+    padding: 16px 20px;
+
+    .ant-popover-title {
+      color: #fff;
+      border-bottom: 0;
+      font-size: 14px;
+      padding: 0;
+    }
+
+    .ant-popover-inner-content {
+      padding: 0;
+      color: #fff;
+
+      .fields-wraper {
+        p {
+          font-size: 12px;
+          color: @fontColor2;
+        }
+
+        .ant-table-content {
+
+          th,
+          td {
+            padding: 4px;
+            color: @fontColor2;
+            border-bottom: 0;
+            font-size: 12px;
+          }
+
+          th {
+            background: #2B2E3E;
+          }
+
+          td {
+            background-color: @headerBgColor;
+          }
+        }
+      }
+
+      .data-wraper {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 16px;
+      }
+    }
+  }
 }
