@@ -21,12 +21,36 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
     refreshGroupLists()
   }, [])
 
-  // 新建分组或者重命名成功分组，触发刷新
+  /**
+   * description:  刷新左侧列表
+   */
   const refreshGroupLists = () => {
     dispatch({
       type: 'dashboardManage/getGroupTree',
       payload: {
         spaceId
+      }
+    })
+  }
+  /**
+   * description:  刷新右侧
+   */
+  const refreshRight = () => {
+    const finalBody = {
+      pageNo: 1,
+      pageSize: 1000,
+      spaceId,
+      groupId: null
+    }
+    dispatch({
+      type: 'dashboardManage/getTemplateList',
+      payload: finalBody
+    })
+    dispatch({
+      type: 'dashboardManage/resetModel',
+      payload: {
+        curSelectedGroup: ['-1'],
+        curSelectedGroupName: '全部应用'
       }
     })
   }
@@ -62,7 +86,7 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
     // 如果是取消选择直接中止
     if (!e.selected) return
     const { node } = e
-    console.log('node', node.name);
+    console.log('node', node);
     if (node.key === 'aInput' || node.key === 'wrap' || node.name === '占位的input' || node.name === '应用列表') {
       return
     }
@@ -93,10 +117,11 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
     })
   }
   return (
-    <div className='LeftTree-wrap'>
+    <div className='dashboard-leftTree-wrap'>
       {
         dashboardManage.groupList.length > 0 &&
         <Tree
+          className='my-dashboard-tree'
           blockNode
           defaultExpandedKeys={['wrap']}
           defaultSelectedKeys={['-1']}
@@ -111,6 +136,7 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
           titleRender={(nodeData: any) => (
             <Node
               refreshGroupLists={refreshGroupLists}
+              refreshRight={refreshRight}
               addGroup={addGroup}
               {...nodeData}>
             </Node>)}
