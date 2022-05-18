@@ -110,6 +110,22 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   }
 
 
+  // 处理过滤器
+
+  // useEffect(async () => {
+  //   console.log('_data.dataFrom', _data.dataFrom)
+  //   const data = await http({
+  //     url: '/visual/module/getData',
+  //     method: 'post',
+  //     body: {
+  //       moduleId: _data.id,
+  //       dataType: _data.dataType,
+  //     },
+  //   })
+  //   console.log('data', data)
+  // }, [_data.dataFrom])
+
+
   return (
     <React.Fragment>
       <div className="data-config" style={{ marginTop: 0 }}>

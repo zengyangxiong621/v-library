@@ -619,7 +619,7 @@ export default {
         },
       })
     },
-    * getDataContainerList({ payload }: any, { call, put, select }: any): any {
+    * getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
       const dashboardId = bar.dashboardId || payload
       console.log('bar', bar)
@@ -633,6 +633,7 @@ export default {
           dataContainerList: data
         }
       })
+      cb(data)
       // console.log('data', data)
     },
     * addDataContainer({ payload }: any, { call, put, select }: any): any {

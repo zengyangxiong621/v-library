@@ -116,6 +116,10 @@ function App({ bar, dispatch, location }: any) {
     dispatch({
       type: 'bar/getDataContainerList',
       payload: dashboardId,
+      cb:async (dataContainerList: any) => {
+
+        console.log('dataContainerList', dataContainerList)
+      }
     })
     document.addEventListener('keydown', handleStopWindowWheel)
     return () => {
