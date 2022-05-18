@@ -1,23 +1,11 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
-import { v4 as uuidv4 } from 'uuid';
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 import { BASE_URL } from '../../../../../utils/useFetch'
 import debounce from 'lodash/debounce';
 
 import { Button, Modal, Spin, message } from 'antd';
-import AceEditor from "react-ace";
-import "ace-builds/src-min-noconflict/ext-searchbox";
-import "ace-builds/src-min-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/mode-jsx";
-
-const languages = ["json"]
-const themes = ["twilight"]
-languages.forEach(lang => {
-  require(`ace-builds/src-noconflict/mode-${lang}`)
-  require(`ace-builds/src-noconflict/snippets/${lang}`)
-})
-themes.forEach(theme => require(`ace-builds/src-noconflict/theme-${theme}`))
+import MonacoEditor from 'react-monaco-editor';
 
 const PreViewJson = props => {
   const { visible, dataSourceId, fileUrl, changeShowState, changeRecordFileUrl } = props
@@ -25,7 +13,6 @@ const PreViewJson = props => {
   const [isEdit, setIsEdit] = useState(false)
   const [hasEdit, setHasEdit] = useState(false)
   const [isError, setIsError] = useState(false)
-  const aceName = uuidv4()
 
   useEffect(() => {
     setModalContent(null)
@@ -39,7 +26,7 @@ const PreViewJson = props => {
       url: `/visual/datasource/json/getData/${dataSourceId}`,
       method: 'get'
     })
-    data ? setModalContent(JSON.stringify(data, null, 4)) : setModalContent(null)
+    data ? setModalContent(JSON.stringify(data, null, 2)) : setModalContent(null)
   }
 
   const handleEdit = () => {
@@ -47,6 +34,7 @@ const PreViewJson = props => {
   }
 
   const onChange = debounce((val) => {
+    setModalContent(val)
     try {
       JSON.parse(val)
     } catch (err) {
@@ -56,8 +44,11 @@ const PreViewJson = props => {
     }
     setIsError(false)
     setHasEdit(true)
-    setModalContent(val)
   }, 300)
+
+  const editorDidMountHandle = (editor, monaco) => {
+    editor.getAction('editor.action.formatDocument').run()  //格式化
+  }
 
   const handleCancel = () => {
     changeShowState(false)
@@ -70,7 +61,7 @@ const PreViewJson = props => {
     }
   }
 
-  const upLoadJson = async() => {
+  const upLoadJson = async () => {
     const fileName = fileUrl.split('/').pop()
     let blob = new Blob([modalContent], {
       type: "application/json"
@@ -107,23 +98,20 @@ const PreViewJson = props => {
     >
       {
         modalContent ?
-          <AceEditor
+          <MonacoEditor
             key={dataSourceId}
-            mode="json"
-            theme="twilight"
-            onChange={(e) => onChange(e)}
-            name={aceName}
-            editorProps={{ $blockScrolling: true }}
+            height="450"
+            language="json"
+            theme="vs-dark"
             value={modalContent}
-            setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: true,
-              showGutter: true,
+            options={{
+              contextmenu: false,
               readOnly: !isEdit
             }}
-            style={{ width: '100%', height: '450px' }}
-          /> :
+            onChange={(e) => onChange(e)}
+            editorDidMount={editorDidMountHandle}
+          />
+          :
           <Spin tip="加载中..." />
       }
     </Modal>

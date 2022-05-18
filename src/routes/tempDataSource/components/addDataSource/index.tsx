@@ -5,6 +5,7 @@ import './index.less'
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
 
 import { useFetch, BASE_URL } from '../../../../utils/useFetch'
+import { type } from 'os'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -14,6 +15,7 @@ const { Dragger } = Upload
 const AddDataSource = (props: any) => {
   // TODO 暂无确定的取得spaceId的方案
   const spaceId = 1
+  // const spaceId = '1513466256657637378'
 
   const [addForm] = Form.useForm()
   const { visible, changeShowState, refreshTable } = props
@@ -34,6 +36,19 @@ const AddDataSource = (props: any) => {
   const [testConnectLoading, setTestConnectLoading] = useState(false)
 
   const [indexName, setIndexName] = useState('')
+  /**
+   * description: 清除弹窗内部维护的所有状态
+   */
+  const clearModalState = () => {
+    setCurDataType('')
+    setDataBaseList([])
+    setIndexList([])
+    setFileUrl('')
+    setIsConnect(false)
+    setBtnDisabled(true)
+    setTestConnectLoading(false)
+    setIndexName('')
+  }
 
   // 获取到最新的curDataType
   useEffect(() => {
@@ -45,14 +60,13 @@ const AddDataSource = (props: any) => {
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await addForm.validateFields(['port', 'username', 'password', 'host', 'database'])
-    // 此处为了先完成演示
     const finalParams = {
-      type: curDataType === 'MYSQL' ? 'RDBMS' : 'ELASTIC_SEARCH',
+      type: curDataType,
       rdbmsSourceConfig: {
         ...values,
         dataBaseType: curDataType,
       },
-      // 此处为了先完成演示
+      // ELASTIC_SEARCH已经不需要测试连接但是后端没改，这个不传会报错
       elasticsearchConfig: {}
     }
     setTestConnectLoading(true)
@@ -86,19 +100,27 @@ const AddDataSource = (props: any) => {
       body: JSON.stringify(finalParams)
     }, { errorInfo: '获取数据库列表失败' })
     setGetDBListLoading(false)
-    if (Array.isArray(data) && data.length) {
-      // data 只是个数组，处理成select需要的形式
-      const formatData: any = data.map((item: any) => ({
-        label: item,
-        value: item
-      }))
-      setDataBaseList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的数据库')
+        setDataBaseList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setDataBaseList(formatData)
+      }
+    } else {
+      message.error('获取数据库列表失败')
     }
   }
   /**
    * description: 获取可选择的索引列表
    */
   const getIndexList = async () => {
+    setIndexList([])
     // 通过表单校验获取es连接地址
     const values: any = await addForm.validateFields(['url'])
     setGetIndexListLoading(true)
@@ -109,9 +131,20 @@ const AddDataSource = (props: any) => {
       errorInfo: '索引列表获取失败'
     })
     setGetIndexListLoading(false)
-    if (Array.isArray(data) && data.length) {
-      const formatData: any = data.map(item => ({ label: item, value: item }))
-      setIndexList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的索引')
+        setIndexList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setIndexList(formatData)
+      }
+    } else {
+      message.error('获取索引列表失败')
     }
   }
   /**
@@ -125,7 +158,6 @@ const AddDataSource = (props: any) => {
     }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await addForm.validateFields()
-    console.log('最终的表单参数', values);
     const { name, type, description, ...rest } = values
     // 判断当前是否是数据库
     const dataBaseOrNormal = dataTypeClassify.get(curDataType)
@@ -142,7 +174,7 @@ const AddDataSource = (props: any) => {
         return
       }
       finalSourceConfig.dataBaseType = curDataType
-      finalType = 'RDBMS'
+      // finalType = 'RDBMS'
     }
     if (['csv', 'json', 'excel'].includes(dataBaseOrNormal)) {
       if (!fileUrl) {
@@ -157,8 +189,6 @@ const AddDataSource = (props: any) => {
       // finalSourceConfig.username = username,
       // finalSourceConfig.password = password,
     }
-
-    // 东拼西凑攒参数
     const finalParams = {
       spaceId,
       name,
@@ -172,9 +202,10 @@ const AddDataSource = (props: any) => {
       body: JSON.stringify(finalParams)
     })
     if (data) {
-      // 成功后  -关闭弹窗 -清除表单 -刷新表格
+      // 成功后  -关闭弹窗 -清除表单- 重置添加数据源表单为初始样式 -刷新表格
       changeShowState('add')
       addForm.resetFields()
+      setCurDataType('')
       refreshTable()
     }
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接创建 */
@@ -184,10 +215,14 @@ const AddDataSource = (props: any) => {
 
   const handleCancel = () => {
     changeShowState('add')
+    addForm.resetFields()
+    clearModalState()
   }
   // 选择数据源类型
   const selectedChange = (val: string) => {
     setCurDataType(val)
+    // 清除剩余表单中已录入的信息
+    addForm.resetFields(['host', 'port', 'username', 'password', 'database', ])
   }
   // 选择数据库名
   const selectDatabase = (val: string) => {
@@ -218,7 +253,12 @@ const AddDataSource = (props: any) => {
       accept: fileSuffix || '',
       action: `${BASE_URL}/visual/file/upload`,
       beforeUpload(file: any) {
-        const { name }: { name: string } = file
+        const { name, size }: { name: string, size: number } = file
+        if(size > 1024 * 1024 * 10) {
+          message.warning('文件大小超过限制')
+          file.status = 'error'
+          return false
+        }
         const fileSuffixArr = fileSuffix?.split(',')
         // 考虑 cdb.la...yer.json 这个文件名
         const lastPointIndex = name.lastIndexOf('.')
@@ -358,7 +398,7 @@ const AddDataSource = (props: any) => {
           }
           {/* API接口 */}
           {
-            curDataType === 'RESTFUL_API' && (
+            curDataType === 'API' && (
               <>
                 <Form.Item label="Base URL"
                   name='baseUrl'
@@ -547,7 +587,7 @@ const dataSourceType: TSelectOptionItems[] = [
   },
   {
     label: 'API',
-    value: 'RESTFUL_API',
+    value: 'API',
   },
   {
     label: 'JSON',
@@ -572,10 +612,10 @@ const dataSourceType: TSelectOptionItems[] = [
 ]
 // @mark 关系型数据库 统一对应的是 'rdbms'
 // 因为后端的类型不一定与界面上展示的数据源类型名一致（例如：api <=> RESTFUL_API) 所以，直接做个映射
-// 方便，根据选择的数据源类型，来动态生成 []SourceConfig
+// 方便根据选择的数据源类型，来动态生成 []SourceConfig
 const dataTypeClassify: any = new Map([
   ['CSV', 'csv'],
-  ['RESTFUL_API', 'api'],
+  ['API', 'api'],
   ['JSON', 'json'],
   ['EXCEL', 'excel'],
   ['POSTGRESQL', 'rdbms'],

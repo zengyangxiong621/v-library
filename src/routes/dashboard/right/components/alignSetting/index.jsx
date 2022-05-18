@@ -32,7 +32,7 @@ const AlignSetting = props => {
 
   return (
     <Form
-      className="custom-form"
+      className="custom-form align-form"
       form={form}
       {...formItemLayout}
       colon={false}

@@ -1,7 +1,6 @@
 import React, {memo, useState, useEffect, useRef} from 'react';
 import './index.less'
 import {Drawer, Input, Table, Modal, Button} from 'antd'
-import {http} from '../../../../../../models/utils/request'
 import {CloseOutlined, SearchOutlined} from "@ant-design/icons";
 
 const ManageContainerDrawer = props => {
@@ -44,7 +43,6 @@ const ManageContainerDrawer = props => {
       dataIndex: 'modules',
       key: 'modules',
       render: list => {
-        console.log('list', list)
         return list && list.length > 0 ?
           <div className="g-flex g-flex-wrap">{
             list.map(item => {
@@ -87,8 +85,8 @@ const ManageContainerDrawer = props => {
       visible={props.visible}
       className='manage-data-container-drawer'
       getContainer={false}
-      maskStyle={null}
       style={{position: 'absolute'}}
+      maskStyle={{opacity: 0}}
     >
       <div>
         <Input

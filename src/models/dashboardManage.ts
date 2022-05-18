@@ -8,6 +8,7 @@ export default {
     templateList: [],
     groupList: [],
     curSelectedGroup: [],
+    curSelectedGroupName: "",
   },
   reducers: {
     // resetTheModels(state: any) {
@@ -25,6 +26,9 @@ export default {
     // 设置当前选中的 应用分组 payload => 当前选中树节点的数组 string[]
     setCurSelectedGroup(state: any, { payload }: any) {
       return { ...state, curSelectedGroup: payload };
+    },
+    setCurSelectedGroupName(state: any, { payload }: any) {
+      return { ...state, curSelectedGroupName: payload };
     },
   },
   effects: {
@@ -48,8 +52,9 @@ export default {
         `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
         {
           method: "get",
-        }, {
-          errorInfo: '应用分组列表请求失败'
+        },
+        {
+          errorInfo: "应用分组列表请求失败",
         }
       );
       yield put({

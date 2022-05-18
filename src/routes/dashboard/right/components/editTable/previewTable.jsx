@@ -3,7 +3,7 @@ import React, { memo, useState, useEffect } from 'react'
 import './index.less'
 import Spreadsheet from "./spreadsheet.js";
 import * as XLSX from 'xlsx'
-import { http } from '../../../../../models/utils/request'
+import { http } from '../../../../../services/request'
 import { BASE_URL } from '../../../../../utils/useFetch'
 import debounce from 'lodash/debounce';
 
@@ -58,7 +58,7 @@ const PreviewTable = props => {
         ws['!merges'].forEach(merge => {
           /** merge = {
            *  s: {c: 0, r: 15}
-           *  e: {c: 15, r: 15} 
+           *  e: {c: 15, r: 15}
            * }
            */
           // 修改 cell 中 merge [合并行数,合并列数]

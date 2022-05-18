@@ -24,6 +24,8 @@ const EditDataSource = (props: any) => {
     rdbmsSourceConfig,
     esSourceConfig,
   } = props.editDataSourceInfo
+  let spaceId = 1
+  // let spaceId = '1513466256657637378'
 
   const { visible, changeShowState, refreshTable } = props
 
@@ -40,8 +42,6 @@ const EditDataSource = (props: any) => {
   // 因为后端中关系型数据库统一表示为RDBMS, 此处将数据库数据源类型拆解出来
   const [dataSourceType, setDataSourceType] = useState()
   useEffect(() => {
-    console.log('type', type);
-
     if (type === 'RDBMS') {
       // 获取当前是那种类型的数据库
       setDataSourceType(rdbmsSourceConfig.dataBaseType)
@@ -76,7 +76,6 @@ const EditDataSource = (props: any) => {
   const [isConnect, setIsConnect] = useState(false)
 
   const [loading, setLoading] = useState(false)
-  const [btnDisabled, setBtnDisabled] = useState(true)
   const [testConnectLoading, setTestConnectLoading] = useState(false)
   const [indexName, setIndexName] = useState('')
   /**
@@ -93,17 +92,14 @@ const EditDataSource = (props: any) => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await editForm.validateFields(['port', 'username', 'password', 'host', 'database'])
     const finalParams = {
-      type: dataSourceType === 'MYSQL' ? 'RDBMS' : 'ELASTIC_SEARCH',
+      type: dataSourceType,
       rdbmsSourceConfig: {
         ...values,
         dataBaseType: dataSourceType,
       },
+      // ELASTIC_SEARCH已经不需要测试连接但是后端没改，这个不传会报错
       elasticsearchConfig: {}
     }
-    // const finalParams = {
-    //   ...values,
-    //   dataBaseType: dataSourceType
-    // }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [, data] = await useFetch('/visual/datasource/connectTest', {
@@ -121,6 +117,8 @@ const EditDataSource = (props: any) => {
    * description: 获取可选择的数据库名称列表
    */
   const getDataBaseList = async () => {
+    // 每次请求数据库列表前，都该清除上次请求成功的列表缓存
+    setDataBaseList([])
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await editForm.validateFields(['port', 'username', 'password', 'host'])
     // 攒成目标参数
@@ -135,18 +133,29 @@ const EditDataSource = (props: any) => {
       body: JSON.stringify(finalParams)
     })
     setGetDBListLoading(false)
-    // data 只是个数组，处理成select需要的形式
-    const formatData = data.map((item: any) => ({
-      label: item,
-      value: item
-    }))
-    setDataBaseList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的数据库')
+        setDataBaseList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setDataBaseList(formatData)
+      }
+    } else {
+      message.error('获取数据库列表失败')
+    }
   }
 
   /**
   * description: 获取可选择的索引列表
   */
   const getIndexList = async () => {
+    // 每次重新发起请求前都应该先清除indexList
+    setIndexList([])
     // 通过表单校验获取es连接地址
     const values: any = await editForm.validateFields(['url'])
     setGetIndexListLoading(true)
@@ -157,9 +166,20 @@ const EditDataSource = (props: any) => {
       errorInfo: '索引列表获取失败'
     })
     setGetIndexListLoading(false)
-    if (Array.isArray(data) && data.length) {
-      const formatData: any = data.map(item => ({ label: item, value: item }))
-      setIndexList(formatData)
+    if (Array.isArray(data)) {
+      if (!data.length) {
+        message.error('没有可用的索引')
+        setIndexList([])
+      } else {
+        // data 只是个数组，处理成select需要的形式
+        const formatData: any = data.map((item: any) => ({
+          label: item,
+          value: item
+        }))
+        setIndexList(formatData)
+      }
+    } else {
+      message.error('获取索引列表失败')
     }
   }
   /**
@@ -167,13 +187,12 @@ const EditDataSource = (props: any) => {
    */
   const handleOk = async () => {
     // es 数据源类型时，如果没有index名，直接return
-    if (!indexName) {
-      message.warning({ content: '请先选择索引', duration: 2 })
+    if ( dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
+      message.warning({ content: '请先选择索引名称', duration: 2 })
       return
     }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields()
-    //------ 由于表单initValues里的 <<type>> 为 RESTFUL_API 的时候已经被转成了 API
     //-----所以这里解构出来的type已经是API了
     const { name, type, description, ...rest } = values
     // 判断当前是否是数据库(这儿是为了凑 (rdbms/api/csv)SourceConfig这种格式的参数的  和上方的dataSourceType不同的)
@@ -192,7 +211,7 @@ const EditDataSource = (props: any) => {
         return
       }
       finalSourceConfig.dataBaseType = type
-      finalType = 'RDBMS'
+      // finalType = 'RDBMS'
     }
     // 如果是需要上传文件的这几种类型，先检查有没有fileUrl
     if (['csv', 'json', 'excel'].includes(dataBaseOrNormal)) {
@@ -204,17 +223,15 @@ const EditDataSource = (props: any) => {
       finalSourceConfig.fileUrl = fileUrl
     }
     // 如果是API类型,参数中的type类型需要变成RESTFUL_API
-    if (dataBaseOrNormal === 'api') {
-      finalType = 'RESTFUL_API'
-    }
-
+    // if (dataBaseOrNormal === 'api') {
+    //   finalType = 'RESTFUL_API'
+    // }
     if (dataBaseOrNormal === 'es') {
       finalSourceConfig.index = indexName
     }
 
-    // 东拼西凑攒参数
     const finalParams = {
-      spaceId: 1,
+      spaceId,
       id,
       name,
       type: finalType,
@@ -236,11 +253,20 @@ const EditDataSource = (props: any) => {
     }
   }
 
+  /**
+   * description: 清除编辑框中的状态
+   */
+  const clearModalState = () => {
+    setDataBaseList([])
+    setIndexList([])
+    setIsConnect(false)
+    setIndexName('')
+
+  }
   const handleCancel = () => {
     changeShowState('edit')
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接更新 */
-    setIsConnect(false)
-    setIndexName('')
+    clearModalState()
     // setBtnDisabled(true)
   }
   // 选择数据库名
@@ -249,7 +275,6 @@ const EditDataSource = (props: any) => {
     // 选择了数据库名，开放测试连接按钮
     // setBtnDisabled(false)
   }
-
 
 
   /**
@@ -267,7 +292,12 @@ const EditDataSource = (props: any) => {
       accept: fileSuffix || '',
       action: `${BASE_URL}/visual/file/upload`,
       beforeUpload(file: any) {
-        const { name }: { name: string } = file
+        const { name, size }: { name: string, size: number } = file
+        if (size > 1024 * 1024 * 10) {
+          message.warning('文件大小超过限制')
+          file.status = 'error'
+          return false
+        }
         const fileSuffixArr = fileSuffix?.split(',')
         // 考虑 cdb.la...yer.json / ......csv 这种文件名
         const lastPointIndex = name.lastIndexOf('.')
@@ -322,8 +352,7 @@ const EditDataSource = (props: any) => {
   const editFormInitValues = {
     description,
     name,
-    // 后端的 API 对应的枚举值为 RESTFUL_API,转一手
-    type: dataSourceType === 'RESTFUL_API' ? 'API' : dataSourceType,
+    type: dataSourceType,
     baseUrl: apiSourceConfig?.baseUrl,
     code: csvSourceConfig?.code,
     database: rdbmsSourceConfig?.database,
@@ -428,7 +457,7 @@ const EditDataSource = (props: any) => {
           }
           {/* API接口 */}
           {
-            dataSourceType === 'RESTFUL_API' && (
+            dataSourceType === 'API' && (
               <>
                 <Form.Item label="Base URL"
                   name='baseUrl'
@@ -628,7 +657,6 @@ type TSelectOptionItems = {
 // 根据选择的数据源类型，来动态生成 []SourceConfig
 const dataTypeClassify: any = new Map([
   ['CSV', 'csv'],
-  // ['RESTFUL_API', 'api'],
   ['API', 'api'],
   ['JSON', 'json'],
   ['EXCEL', 'excel'],
@@ -637,13 +665,6 @@ const dataTypeClassify: any = new Map([
   ['ES', 'rdbms'],
   ['ELASTIC_SEARCH', 'es'],
 ])
-// ['CSV', 'CSV'],
-//   ['RESTFUL_API', 'RESTFUL_API'],
-//   ['JSON', 'JSON'],
-//   ['EXCEL', 'EXCEL'],
-//   ['POSTGRESQL', 'RDBMS'],
-//   ['MYSQL', 'RDBMS'],
-//   ['ES', 'RDBMS'],
 
 // 单选框 CSV类型- 编码格式
 const codeFormatOptions: TSelectOptionItems[] = [

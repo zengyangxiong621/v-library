@@ -408,21 +408,21 @@ const RightContent = (props: any) => {
     }
   };
   return <div className="RightContent-wrap">
-    <Row style={{ width: '100%' }} gutter={[26, 26]}>
+    {/* <Row style={{ width: '100%' }} gutter={[26, 26]}> */}
       {
         listData.map((item: any, index: number) => (
-          <Col span={6} key={index}>
+          // <Col span={6} key={index}>
             <AppCard
               {...item}
               changeFabuModal={changeFabuModal}
               openMoveGroupModal={openMoveGroupModal}
               refreshList={refreshList}
             />
-          </Col>
+          // </Col>
         )
         )
       }
-    </Row>
+    {/* </Row> */}
     {/* 发布弹窗 */}
     <DarkModal
       className="fabu-dark-modal"

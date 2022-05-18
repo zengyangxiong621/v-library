@@ -9,18 +9,25 @@
   background-color: @backColor;
   color: @textColor;
   user-select: none;
-  .left {
-  }
 
   .right {
-    flex: 1;
+    flex: auto;
+    min-width: 0;
     display: inline-block;
     padding: 16px;
+    .right-one {
+      display: flex;
+      align-items: center;
+      .title {
+        display: flex;
+        align-items: center;
+        margin-right: 8px;
+      }
+    }
     .right-two {
       margin: 16px 0;
     }
     .right-table-wrap {
-      width: 100%;
       // 表格右侧滚动条清除
       .ant-table-body::-webkit-scrollbar {
         display: none;
@@ -85,5 +92,15 @@
   }
   .customRowClass:nth-child(odd) {
     background-color: #171a24;
+  }
+
+  // 自定义滚动条样式
+  .ant-table-body::-webkit-scrollbar {
+    display: none;
+  }
+  // 兼容ie & 火狐
+  .ant-table-body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 }

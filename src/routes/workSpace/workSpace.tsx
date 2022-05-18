@@ -7,30 +7,34 @@ import { connect } from "dva";
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Input, Table, Space, Button } from "antd";
+import { ConfigProvider, Input, Table, Space, Button, Form } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
 import DarkModal from "../myDashboard/components/darkThemeModal";
+import { useFetch } from "../../utils/useFetch";
+
 
 // 功能
 const workSpace = ({ workSpace, dispatch, history }: any) => {
-  console.log("工作空间models", workSpace);
   // 空间id
-  let spaceId = 1;
+  const addMemberForm: any = Form.useForm()
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
-    updated_time: false,
+    // updated_time: false,
   });
   // 剩余配额
-  const [remainingQuota] = useState<number | string>(0);
+  const [projectQuota, setProjectQuota] = useState<any>(0);
+
+  // 表格 相关状态
+  const [memberList, setMemberList] = useState([])
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
     pageSize: 10,
   });
   const [tableMap, setTableMap] = useState({});
-  const [totalElements, setTotalElements] = useState(100);
+  const [totalElements, setTotalElements] = useState(0);
   const [tableLoading, setTableLoading] = useState(false);
   // Modal相关状态
   const [showAddMemberModal, setShowAddMemberModal] = useState(false);
@@ -42,16 +46,68 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     });
   };
 
+  /**
+ * description: 更新表格数据
+ */
+  const getTableData = async (finalBody: any) => {
+    setTableLoading(true)
+    const [, data] = await useFetch("/visual/workspace/userList",
+      { body: JSON.stringify(finalBody) },
+      { errorInfo: "空间成员列表请求失败" })
+    setTableLoading(false)
+    if (Array.isArray(data?.content)) {
+      setMemberList(data.content)
+      setPageInfo({
+        pageNo: data.pageNo,
+        pageSize: data.pageSize
+      })
+      setTotalElements(data.totalElements)
+    }
+  }
+
   // 页面初始化- 获取空间列表数据 & 获取表格数据
+  useEffect(() => {
+    getDataDispatch({ accountId: workSpace.accountId }, 'getWorkSpaceList')
+  }, []);
   useEffect(() => {
     const finalBody = {
       pageNo: 1,
-      pageSize: 1000,
-      spaceId: spaceId,
+      pageSize: 10,
+      spaceId: workSpace.curWorkSpace[0],
       map: sortMap,
     };
-    getDataDispatch(finalBody, "getMemberList");
-  }, []);
+    getTableData(finalBody)
+  }, [workSpace.curWorkSpace])
+  // 设置项目配额
+  useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota])
+
+  // 重新设置项目配额
+  const resetQuota = async () => {
+    const finalBody = {
+      accountId: workSpace.accountId,
+      spaceId: workSpace.curWorkSpace[0],
+      projectQuota: projectQuota
+    }
+    const [, data] = await useFetch(`/visual/workspace/update`, {
+      body: JSON.stringify(finalBody)
+    }, { errorInfo: '更改项目配额失败' })
+    if (data) {
+      // 更改配额成功了, 刷新页面
+      getDataDispatch({ accountId: workSpace.accountId }, 'getWorkSpaceList')
+    }
+  }
+
+  // 刷新右侧成员列表
+  const refreshMemberList = async (workSpaceId: string) => {
+    // 在点击了左侧空间后，右侧在重新刷新表格之前需要清除上一个表格的缓存信息，比如pageNo,pageSize……
+    const finalBody = {
+      pageNo: 1,
+      pageSize: 10,
+      spaceId: workSpaceId,
+      map: sortMap,
+    };
+    getTableData(finalBody)
+  }
 
   // 选择排序的标准
   const selectSortType = (value: any, b: any) => {
@@ -62,8 +118,8 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     // 选择新标准后，需要发送一次请求
     const finalBody = {
       pageNo: 1,
-      pageSize: 1000,
-      spaceId,
+      pageSize: 10,
+      spaceId: workSpace.curWorkSpace[0],
       map: newSortMap,
     };
     dispatch({
@@ -76,7 +132,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     setShowAddMemberModal(!showAddMemberModal);
   };
   // 表格中的删除事件
-  const delClick = (rowId: string) => {};
+  const delClick = (rowId: string) => { };
 
   // 表格排序 (分页事件在paginationProps中已经定义)
   const tableOnChange = (
@@ -95,7 +151,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
       // })
       // 发送请求
       // const finalParams: TDataSourceParams = {
-      //   spaceId: 1,
+      //   spaceId: workSpace.curWorkSpace[0],
       //   type: dataSourceType,
       //   name: inputValue === '' ? null : inputValue,
       //   ...pageInfo,
@@ -109,7 +165,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
   };
 
   // ****** Modal相关  *****
-  const confirmAddMember = () => {};
+  const confirmAddMember = () => { };
   const cancelAddMemberModal = () => {
     setShowAddMemberModal(false);
   };
@@ -128,12 +184,12 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     // locale: {},
     onChange(page: number, pageSize: number) {
       const finalParams: TWorkSpaceParams = {
-        spaceId: 1,
+        spaceId: workSpace.curWorkSpace[0],
         pageNo: page,
         pageSize,
         map: tableMap,
       };
-      getDataDispatch(finalParams, "getMemberList");
+      getTableData(finalParams)
     },
   };
   // 列配置
@@ -142,6 +198,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
       title: "用户名",
       dataIndex: "name",
       key: "name",
+      // showSorterTooltip: false,
       width: 250,
       className: "customHeaderColor",
       ellipsis: true,
@@ -163,12 +220,12 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     },
     {
       title: "添加时间",
-      key: "updatedTime",
+      key: "createdTime",
       sorter: true,
       width: 300,
       ellipsis: true,
       showSorterTooltip: false,
-      dataIndex: "updatedTime",
+      dataIndex: "createdTime",
       render: (time: any, data: any) => {
         // const a = new Date(time)
         return <>{time}</>;
@@ -198,15 +255,21 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
       <div className="workSpace-wrap">
         <div className="left">
           {/* 左侧树 */}
-          <LeftTree />
+          <LeftTree refreshMemberList={refreshMemberList} />
         </div>
         <div className="right">
           <div className="right-one">
-            <p className="title">项目配额</p>
             <div className="set-flex">
-              <Input style={{ width: "160px", marginRight: "10px" }}></Input>
-              <span>剩余项目配额{remainingQuota}个</span>
+              <div className="title">项目配额</div>
+              <Input
+                value={projectQuota}
+                onChange={(e) => setProjectQuota(e.target.value)}
+                onPressEnter={resetQuota}
+                onBlur={resetQuota}
+                style={{ width: "80px", marginRight: "20px" }}>
+              </Input>
             </div>
+            <span>剩余项目配额  {workSpace.remainQuota}  个</span>
           </div>
           <div className="right-two set-flex set-flex-sb">
             <p>成员管理</p>
@@ -222,7 +285,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
               rowClassName="customRowClass"
               loading={tableLoading}
               columns={columns}
-              dataSource={workSpace.memberList}
+              dataSource={memberList}
               pagination={paginationProps}
               onChange={tableOnChange}
             ></Table>
@@ -255,7 +318,26 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
           style={{
             top: "25%",
           }}
-        ></DarkModal>
+        >
+          <Form
+            ref={addMemberForm}
+            labelCol={{
+              span: 4,
+            }}
+            layout="horizontal"
+            name='releaseForm'
+          >
+            <Form.Item
+              colon={false}
+              label="用户名"
+              name="name"
+              rules={[{ required: true, message: '请输入用户名' }]}
+            ><div className="set-flex">
+                <Input />
+              </div>
+            </Form.Item>
+          </Form>
+        </DarkModal>
       </div>
     </ConfigProvider>
   );

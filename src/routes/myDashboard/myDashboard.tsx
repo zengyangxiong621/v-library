@@ -52,10 +52,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     history.push('/template')
   }
 
-  // 导入应用
-  const importDashboard = () => {
-  }
-
   // 搜索框的值改变
   const changeSearchValue = (e: any) => {
     setInputValue(e.target.value)
@@ -96,12 +92,16 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     })
   }
 
+  // 导入应用
   const importAppUploadprops = {
     name: 'file',
     multiple: false,
     maxCount: 1,
     accept: 'application/zip',
-    action: `${BASE_URL}/visual/file/upload`,
+    action: `${BASE_URL}/visual/application/import/${spaceId}`,
+    // headers: {},
+    // data: {
+    // },
     beforeUpload(file: any) {
       const { name }: { name: string } = file
       // 考虑 cdb.la...yer.json 这个文件名
@@ -122,21 +122,21 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       // - 开始导入应用
       // - 刷新列表(必须保证后端数据更新)
       if (status === 'done') {
+        console.log('resp', info);
         console.log('上传应用的结果', response.data);
         setUploadFileUrl(response.data)
-        // let file = new Blob(['我是一个blob'], { type: 'text/plain' })
-        let file = new Blob([info.fileList[0]], { type: 'image/png' })
-        console.log('file', file);
-        const formData = new FormData()
-        formData.append('avatar', 'cdb')
-        formData.append('file', file)
-        const [, data] = await useFetch(`/visual/application/import/${spaceId}`, {
-          headers: {
-            // 'Content-Type': 'multipart/form-data'
-          },
-          body: formData
-        })
-        console.log('上传一个文件试试先', data);
+        // let file = new Blob([info.fileList[0]], { type: 'image/png' })
+        // console.log('file', file);
+        // const formData = new FormData()
+        // formData.append('avatar', 'cdb')
+        // formData.append('file', file)
+        // const [, data] = await useFetch(`/visual/application/import/${spaceId}`, {
+        //   headers: {
+        //     // 'Content-Type': 'multipart/form-data'
+        //   },
+        //   body: formData
+        // })
+        // console.log('上传一个文件试试先', data);
       } else if (status === 'error') {
         message.error(`应用上传失败`);
       }
@@ -154,13 +154,16 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       <div className="right">
         <div className="right-header">
           <div className='set-flex'>
-            <p className='title'>全部应用</p>
+            <p className='title'>{dashboardManage.curSelectedGroupName || '全部应用'}</p>
             <Upload {...importAppUploadprops}
               showUploadList={false}
             >
-              <div className='custom-btn set-mr' onClick={importDashboard}>
-                <span>导入应用</span>
-              </div>
+            <div className='custom-btn set-mr'>
+              {/* <input id="uploadFile" type="file" name="kjj" accept="application/zip" onChange={uploadFile}
+                style={{ position: 'absolute', width: '100%', height: '100%', left: 0, top: 0, opacity: 0, cursor: 'pointer' }}
+              /> */}
+              <span>导入应用</span>
+            </div>
             </Upload>
           </div>
           <div className="add-search">

@@ -1,22 +1,36 @@
 .control-cabin-wraper {
-  background-color: #666;
   width: 100%;
   height: 100vh;
   padding: 0 2.5rem;
+  position: relative;
+
+  .ant-spin-spinning {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .ant-empty {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 
   .picture {
     height: 10rem;
     width: 16rem;
-    background:url(../../assets//images/app-source.png) no-repeat center;
+    // background: url(../../assets//images/app-source.png) no-repeat center;
     background-size: cover;
   }
 
-  .slick-slider{
-    top:50%;
+  .slick-slider {
+    top: 50%;
     transform: translateY(-50%);
   }
 
-  .slick-current{
+  .slick-current {
     cursor: pointer;
   }
 
@@ -29,7 +43,13 @@
   .center .slick-center>div {
     transform: scale(1.5);
   }
+
   .slick-track {
     padding: 3rem 0 6rem 0;
+  }
+
+  .slick-prev:before,
+  .slick-next:before {
+    color: #666;
   }
 }

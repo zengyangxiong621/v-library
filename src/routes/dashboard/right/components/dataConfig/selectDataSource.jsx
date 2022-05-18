@@ -6,7 +6,7 @@ import {
 } from 'antd';
 
 import AddDataSource from '../../../../tempDataSource/components/addDataSource'
-import { http } from '../../../../../models/utils/request';
+import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid';
 
 const selectData = {
@@ -43,19 +43,11 @@ const SelectDataSource = props => {
         pageNo: 1,
         pageSize: 1000,
         spaceId: 1,
-        type: ['mysql', 'postgresql'].includes(props.type)
-          ? 'RDBMS' : ['api'].includes(props.type)
-            ? 'RESTFUL_API' :['elasticSearch'].includes(props.type)
+        type: ['elasticSearch'].includes(props.type)
             ? 'ELASTIC_SEARCH' : props.type.toUpperCase(),
       }
     })
     console.log('content', content)
-    if (['mysql', 'postgresql'].includes(props.type)) {
-      content = content.filter(item => {
-        return item.rdbmsSourceConfig.dataBaseType === props.type.toUpperCase()
-      })
-    }
-
     const options = content.map(item => {
       if (props.type === 'api') {
         return {
