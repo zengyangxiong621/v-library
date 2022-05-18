@@ -277,7 +277,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
 
   const drawerClose = () => {
     setDrawerVisible(false)
-    setActiveId(false)
+    setActiveId(null)
   }
 
   const setCondition = (val) => {
