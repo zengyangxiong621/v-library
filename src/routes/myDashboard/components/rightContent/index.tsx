@@ -596,7 +596,7 @@ const RightContent = (props: any) => {
     >
       <Form
         labelCol={{
-          span: 4,
+          span: 5,
         }}
         layout="horizontal"
         name='releaseForm'

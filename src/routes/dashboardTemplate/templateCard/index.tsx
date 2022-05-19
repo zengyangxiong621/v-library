@@ -20,7 +20,7 @@ const TemplateCard = (props: any) => {
         <div className="hover-on-template">
           <div className='btns-wrap'>
             <span className='div-as-btns scan-btn' onClickCapture={() => scanDashboard()}>预览模板</span>
-            <span className='div-as-btns create-btn' onClickCapture={() => createProject()}>创建项目</span>
+            <span className='div-as-btns create-btn' onClickCapture={() => createProject()}>创建应用</span>
           </div>
         </div>
         <div className="img-wrap">

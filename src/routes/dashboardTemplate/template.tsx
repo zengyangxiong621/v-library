@@ -190,7 +190,7 @@ const DashboardTemplate = (props: any) => {
             colon={false}
             rules={[{ required: true, message: '请输入应用名称' }]}
           >
-            <Input placeholder='请请输入应用名称'
+            <Input placeholder='请输入应用名称'
               autoComplete='off'
               value={appName}
               maxLength={20}

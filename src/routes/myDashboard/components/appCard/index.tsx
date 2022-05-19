@@ -139,46 +139,14 @@ const AppCard = (props: any) => {
     })
   }
 
-  /**
-   * description: 下载文件
-   * @params:  blob: 后端返回的文件数据,
-   *          @fileName: 自定义文件名
-   */
-  const downloadFile = (blob: any, fileName: string): void => {
-    const toolA = document.createElement('a')
-    toolA.href = URL.createObjectURL(blob)
-    toolA.download = fileName
-    toolA.click()
-    URL.revokeObjectURL(toolA.href)
-  }
   // 导出应用
   const exportApp = async (appId: string) => {
-    const [, data] = await useFetch(`/visual/application/export/${appId}`, {
-      method: 'get',
-      responseType: 'blob',
-      headers: {
-        'Response-Type': 'blob'
-        // 'Content-Type': 'multipart/form-data'
-      }
-    }, {
-      onlyNeedWrapData: true,
+    const [,data] = await useFetch(`/visual/application/export/${appId}`, {
+      method: 'get'
     })
-    console.log('data', data);
-    if (data) {
-      if (data instanceof Blob) {
-        const reader = new FileReader();
-        reader.readAsText(data, 'UTF-8');
-        reader.onload = function (e: any) {
-          console.log('e', e);
-          const fileContent = e.target.result;
-          // fileEditText = fileContent;
-        };
-        console.log('文件名', reader);
-        downloadFile(data, '')
-      } else {
-        message.error({ content: '导出失败', duration: 2 })
-      }
-    }
+    const toolA = document.createElement('a')
+    toolA.href = `http://10.201.83.166:31088/visual/application/export/${appId}`
+    toolA.click()
   }
 
   // 移动分组
