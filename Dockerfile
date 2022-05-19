@@ -6,7 +6,7 @@ FROM docker.gridsumdissector.com/library/nginx:1.20.1 AS run
 # --- dependencies images -------------
 FROM base AS dependencies
 
-RUN npm config set registry https://registry.npm.taobao.org
+RUN npm config set registry http://registry.npm.gridsum.com/
 WORKDIR /workdir
 ADD ./ /workdir
 
