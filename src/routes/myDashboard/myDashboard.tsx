@@ -133,8 +133,8 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
         // let file = new Blob([info.fileList[0]], { type: 'image/png' })
         // console.log('file', file);
         // const formData = new FormData()
-        // formData.append('avatar', 'cdb')
-        // formData.append('file', file)
+        // // formData.append('avatar', 'cdb')
+        // formData.append('file', info.file)
         // const [, data] = await useFetch(`/visual/application/import/${spaceId}`, {
         //   headers: {
         //     // 'Content-Type': 'multipart/form-data'
