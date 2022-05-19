@@ -155,24 +155,23 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
     queryComponentData()
   }
 
-  const queryComponentData = async()=>{
-    const data =  await http({
-      url:'/visual/module/getData',
+  const queryComponentData = async () => {
+    const data = await http({
+      url: '/visual/module/getData',
       method: 'post',
-      body:{
-        moduleId:_data.id,
-        dataType:'api'
+      body: {
+        moduleId: _data.id,
+        dataType: 'api'
       }
-    })
-    console.log('data',data)
-    if(data){
-      props.onResultDataChange(_data.dataType!=='static' ? data : data.data)
+    }, true)
+    if (data.code === 10000 && data.data) {
+      props.onResultDataChange(data.data)
       dispatch({
         type: 'bar/save',
         payload: {
           componentData: {
             ...bar.componentData,
-            [_data.id]: _data.dataType!=='static' ? data : data.data
+            [_data.id]: data.data
           }
         },
       })
