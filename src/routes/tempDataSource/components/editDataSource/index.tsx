@@ -78,12 +78,6 @@ const EditDataSource = (props: any) => {
   const [loading, setLoading] = useState(false)
   const [testConnectLoading, setTestConnectLoading] = useState(false)
   const [indexName, setIndexName] = useState('')
-  /**
-   * description: 选择索引(es)
-   */
-  const selectIndex = (val: any) => {
-    setIndexName(val)
-  }
 
   /**
    * description: 测试数据库连接
@@ -186,13 +180,15 @@ const EditDataSource = (props: any) => {
    * description: 新增数据源
    */
   const handleOk = async () => {
-    // es 数据源类型时，如果没有index名，直接return
-    if ( dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
-      message.warning({ content: '请先选择索引名称', duration: 2 })
-      return
-    }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields()
+    console.log('valu', values);
+
+    // es 数据源类型时，如果没有index名，直接return
+    // if (dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
+    //   message.warning({ content: '请先选择索引名称', duration: 2 })
+    //   return
+    // }
     //-----所以这里解构出来的type已经是API了
     const { name, type, description, ...rest } = values
     // 判断当前是否是数据库(这儿是为了凑 (rdbms/api/csv)SourceConfig这种格式的参数的  和上方的dataSourceType不同的)
@@ -227,7 +223,7 @@ const EditDataSource = (props: any) => {
     //   finalType = 'RESTFUL_API'
     // }
     if (dataBaseOrNormal === 'es') {
-      finalSourceConfig.index = indexName
+      // finalSourceConfig.index = indexName
     }
 
     const finalParams = {
@@ -260,8 +256,8 @@ const EditDataSource = (props: any) => {
     setDataBaseList([])
     setIndexList([])
     setIsConnect(false)
-    setIndexName('')
-
+    // setIndexName('')
+    editForm.resetFields()
   }
   const handleCancel = () => {
     changeShowState('edit')
@@ -274,6 +270,14 @@ const EditDataSource = (props: any) => {
     editForm.setFieldsValue({ database: val })
     // 选择了数据库名，开放测试连接按钮
     // setBtnDisabled(false)
+  }
+
+  /**
+ * description: 选择索引(es)
+ */
+  const selectIndex = (val: any) => {
+    // setIndexName(val)
+    editForm.setFieldsValue({ index: val })
   }
 
 
@@ -359,12 +363,13 @@ const EditDataSource = (props: any) => {
     port: rdbmsSourceConfig?.port,
     host: rdbmsSourceConfig?.host,
     // rdbms里和es里都有 username和password
-    password: rdbmsSourceConfig?.password || esSourceConfig?.username,
+    password: rdbmsSourceConfig?.password || esSourceConfig?.password,
     username: rdbmsSourceConfig?.username || esSourceConfig?.username,
     jsonFileUrl: jsonSourceConfig?.fileUrl,
     csvFileUrl: csvSourceConfig?.fileUrl,
     excelFileUrl: excelSourceConfig?.fileUrl,
-    url: esSourceConfig?.url
+    url: esSourceConfig?.url,
+    index: esSourceConfig?.index
   }
   return (
     <div className='EditDataSource-wrap'>
@@ -611,7 +616,7 @@ const EditDataSource = (props: any) => {
                     autoComplete='off'
                     className="setBackColor" placeholder='请输入' />
                 </Form.Item>
-                <Form.Item label="索引名称" >
+                <Form.Item label="索引名称" name='index'>
                   <div className='dataBaseName'>
                     <Spin spinning={getIndexListLoading}>
                       <div className='getDataListBtn' onClick={() => getIndexList()}>获取索引列表</div>
@@ -619,6 +624,7 @@ const EditDataSource = (props: any) => {
                     <Select
                       placeholder="请选择索引"
                       disabled={Array.isArray(indexList) && indexList.length === 0}
+                      defaultValue={esSourceConfig?.index}
                       onChange={selectIndex}
                       className='dataBaseName-Select setBackColor'>
                       {

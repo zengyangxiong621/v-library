@@ -117,10 +117,9 @@ const DataSource = (props: any) => {
       setIsShowEditModal(false)
   }, [])
   // 刷新表格数据
-  const refreshTable = useCallback(() => {
+  const refreshTable = () => {
     getTableData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
 
   /**********  删除、编辑 操作 *************/
   const delClick = (dataSourceId: string) => {
