@@ -52,4 +52,127 @@
       display: none;
     }
   }
+
+  .event-footer {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+
+    .event-popover-tip {
+      color: #b4b7c1;
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  .cus-event-pan-header {
+    display: flex;
+    flex: 1 1 0%;
+    align-items: center;
+
+    &:hover {
+      .anticon-edit {
+        opacity: 1;
+      }
+    }
+
+    .cus-event-pan-title {
+      font-size: 14px;
+      color: @fontColor;
+      width: 158px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .anticon-edit {
+      width: 32px;
+      text-align: center;
+      color: #fff;
+      opacity: 0;
+    }
+
+    .cus-event-pan-add-status {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      margin-left: 6px;
+      color: @fontColor2;
+
+      i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #ff3c38;
+        margin-right: 4px;
+      }
+    }
+
+  }
+}
+
+.custom-event-popover {
+  .ant-popover-arrow {
+    display: none;
+  }
+
+  .ant-popover-inner {
+    color: #fff;
+    background-color: @componentContentBgColor;
+    width: 322px;
+    max-height: 520px;
+    overflow: auto;
+    padding: 16px 20px;
+
+    .ant-popover-title {
+      color: #fff;
+      border-bottom: 0;
+      font-size: 14px;
+      padding: 0;
+    }
+
+    .ant-popover-inner-content {
+      padding: 0;
+      color: #fff;
+
+      .fields-wraper {
+        p {
+          font-size: 12px;
+          color: @fontColor2;
+        }
+
+        .ant-table-content {
+
+          th,
+          td {
+            padding: 4px;
+            color: @fontColor2;
+            border-bottom: 0;
+            font-size: 12px;
+          }
+
+          th {
+            background: #2B2E3E;
+          }
+
+          td {
+            background-color: @headerBgColor;
+          }
+        }
+      }
+
+      .data-wraper {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 16px;
+      }
+    }
+  }
 }

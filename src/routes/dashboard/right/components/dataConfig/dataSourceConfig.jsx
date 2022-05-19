@@ -152,10 +152,10 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
 
   const saveDataSource = async (key, data) => {
     const dataConfig = cloneDeep(_data.dataConfig)
-    if (dataConfig[_data.dataType]) {
-      dataConfig[_data.dataType].data[key] = data.value
+    if (dataConfig[dataSourceTypes.value]) {
+      dataConfig[dataSourceTypes.value].data[key] = data.value
     } else {
-      dataConfig[_data.dataType] = {
+      dataConfig[dataSourceTypes.value] = {
         data: {
           [key]: data.value
         }
@@ -167,8 +167,8 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
         method: 'post',
         body: {
           id: _data.id,
-          data: dataConfig[_data.dataType].data,
-          dataType: _data.dataType,
+          data: dataConfig[dataSourceTypes.value].data,
+          dataType: dataSourceTypes.value,
         },
       })
     }
@@ -183,17 +183,17 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
         method: 'post',
         body: {
           moduleId: _data.id,
-          dataType: _data.dataType,
+          dataType: dataSourceTypes.value,
         },
-      })
-      if (data) {
-        props.onResultDataChange(_data.dataType !== 'static' ? data : data.data)
+      },true)
+      if (data.code === 10000 && data.data) {
+        props.onResultDataChange(dataSourceTypes.value !== 'static' ? data.data : data.data.data)
         dispatch({
           type: 'bar/save',
           payload: {
             componentData: {
               ...bar.componentData,
-              [_data.id]: _data.dataType !== 'static' ? data : data.data,
+              [_data.id]: dataSourceTypes.value !== 'static' ? data.data : data.data.data,
             },
           },
         })

@@ -7,3 +7,4 @@ const routesConfig = (app: any) => ({
 });
 const Page = (app: any) => createRoute(app, routesConfig);
 export default Page
+

@@ -73,11 +73,12 @@ const RightContent = (props: any) => {
   // ************** 可复用方法 ************
   /**  每个appCard 进行复制、删除等操作后都需要刷新内容列表 && 更新左侧分组树  */
   const refreshList = () => {
+    const transformId = dashboardManage.curSelectedGroup[0] === '-1' ? null : dashboardManage.curSelectedGroup[0]
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      groupId: dashboardManage.curSelectedGroup[0]
+      groupId: transformId
     }
     dispatch({
       type: 'dashboardManage/getTemplateList',
@@ -141,6 +142,7 @@ const RightContent = (props: any) => {
       // 移入分组成功后，需要刷新当前分组下的模板以及刷新左侧分组树
       refreshList()
       cancelMoveGroup()
+      setNewGroupId('')
     } else {
       message.error({ content: '移动分组失败', duration: 2 })
     }
@@ -409,19 +411,19 @@ const RightContent = (props: any) => {
   };
   return <div className="RightContent-wrap">
     {/* <Row style={{ width: '100%' }} gutter={[26, 26]}> */}
-      {
-        listData.map((item: any, index: number) => (
-          // <Col span={6} key={index}>
-            <AppCard
-              {...item}
-              changeFabuModal={changeFabuModal}
-              openMoveGroupModal={openMoveGroupModal}
-              refreshList={refreshList}
-            />
-          // </Col>
-        )
-        )
-      }
+    {
+      listData.map((item: any, index: number) => (
+        // <Col span={6} key={index}>
+        <AppCard
+          {...item}
+          changeFabuModal={changeFabuModal}
+          openMoveGroupModal={openMoveGroupModal}
+          refreshList={refreshList}
+        />
+        // </Col>
+      )
+      )
+    }
     {/* </Row> */}
     {/* 发布弹窗 */}
     <DarkModal

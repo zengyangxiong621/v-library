@@ -11,8 +11,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 
 const EveryTreeNode = (props: any) => {
   const { groupId, name, number, systemDefined,
-    addGroup,
-    refreshGroupLists } = props || {}
+    addGroup,refreshGroupLists, refreshRight } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -96,6 +95,9 @@ const EveryTreeNode = (props: any) => {
   const delClick = async (id: string | number) => {
     Modal.confirm({
       title: '删除分组',
+      style: {
+        top: '30%'
+      },
       okButtonProps: {
         style: {
           backgroundColor: '#e9535d',
@@ -120,8 +122,10 @@ const EveryTreeNode = (props: any) => {
           method: 'delete'
         })
         if (data) {
+          // 删除成功，需要刷新左侧树列表、和整个列表
           close()
           refreshGroupLists()
+          refreshRight()
         } else {
           close()
           message.error({ content: '删除失败', duration: 2 })
@@ -136,7 +140,7 @@ const EveryTreeNode = (props: any) => {
     // e.stopPropagation()
   }
   return (
-    <div className={`node-wrap`}>
+    <div className={`dashboard-node-wrap`}>
       {
         groupId === 'aInput'
           ?

@@ -14,6 +14,9 @@ export default {
     // resetTheModels(state: any) {
     //   return { ...state }
     // },
+    resetModel(state: any, { payload }: any) {
+      return { ...state, ...payload };
+    },
     updateTemplateList(state: any, { payload }: any) {
       return { ...state, templateList: payload };
     },

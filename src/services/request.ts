@@ -94,6 +94,9 @@ export const http = (config: any, isDownload: boolean = false): any => {
             result = response.json();
         }
       }
+      if (isDownload) {
+        return result;
+      }
       return result.then((response) => {
         const { code, data } = response;
         if (code === 10000) {

@@ -358,6 +358,7 @@ const Left = ({ dispatch, bar, operate }) => {
         {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
         <div className="left-wrap-tree" ref={treeRef}>
           <Tree
+            className='layers-tree'
             draggable
             blockNode
             fieldNames={
