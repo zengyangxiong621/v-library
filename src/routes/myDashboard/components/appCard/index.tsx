@@ -3,8 +3,8 @@ import React, { memo, useState, useRef } from 'react'
 import './index.less'
 
 import { withRouter } from 'dva/router'
-import { connect } from 'dva'
 import { useFetch } from '../../../../utils/useFetch'
+import { BASEURL } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { ExclamationCircleFilled } from '@ant-design/icons'
@@ -141,11 +141,9 @@ const AppCard = (props: any) => {
 
   // 导出应用
   const exportApp = async (appId: string) => {
-    const [,data] = await useFetch(`/visual/application/export/${appId}`, {
-      method: 'get'
-    })
+    // console.log(`${BASEURL}/visual/application/export/${appId}`);
     const toolA = document.createElement('a')
-    toolA.href = `http://10.201.83.166:31088/visual/application/export/${appId}`
+    toolA.href = `${BASEURL}/visual/application/export/${appId}`
     toolA.click()
   }
 

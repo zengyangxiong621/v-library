@@ -96,7 +96,28 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       payload: finalBody
     })
   }
-
+  /**
+   * description:  刷新左侧分组列表和右侧应用列表
+   */
+  const refreshList = () => {
+    const transformId = dashboardManage.curSelectedGroup[0] === '-1' ? null : dashboardManage.curSelectedGroup[0]
+    const finalBody = {
+      pageNo: 1,
+      pageSize: 1000,
+      spaceId,
+      groupId: transformId
+    }
+    dispatch({
+      type: 'dashboardManage/getTemplateList',
+      payload: finalBody,
+    })
+    dispatch({
+      type: 'dashboardManage/getGroupTree',
+      payload: {
+        spaceId
+      }
+    })
+  }
   // 导入应用
   const importAppUploadprops = {
     name: 'file',
@@ -104,7 +125,9 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     maxCount: 1,
     accept: 'application/zip',
     action: `${BASE_URL}/visual/application/import/${spaceId}`,
-    // headers: {},
+    headers: {
+      'Response-Type': 'application/json'
+    },
     // data: {
     // },
     beforeUpload(file: any) {
@@ -123,31 +146,18 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     },
     async onChange(info: any) {
       const { status, response } = info.file;
-      // - 应用文件上传成功
       // - 开始导入应用
       // - 刷新列表(必须保证后端数据更新)
       if (status === 'done') {
-        console.log('resp', info);
-        console.log('上传应用的结果', response.data);
-        setUploadFileUrl(response.data)
-        // let file = new Blob([info.fileList[0]], { type: 'image/png' })
-        // console.log('file', file);
-        // const formData = new FormData()
-        // // formData.append('avatar', 'cdb')
-        // formData.append('file', info.file)
-        // const [, data] = await useFetch(`/visual/application/import/${spaceId}`, {
-        //   headers: {
-        //     // 'Content-Type': 'multipart/form-data'
-        //   },
-        //   body: formData
-        // })
-        // console.log('上传一个文件试试先', data);
+        message[response.data === null ? 'error' : 'success'](response.message)
+        refreshList()
+        // setUploadFileUrl(response.data)
       } else if (status === 'error') {
         message.error(`应用上传失败`);
       }
     },
     onRemove(file: any) {
-      setUploadFileUrl('')
+      // setUploadFileUrl('')
     }
   }
   return (
