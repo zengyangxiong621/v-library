@@ -48,6 +48,34 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     }
   },[_data.dataConfig])
 
+
+  useEffect(async () => {
+    console.log('_data', _data)
+    const { dataFrom } = _data
+    if (dataFrom === 0) {
+      // 数据源
+      const data =  await http({
+        url:'/visual/module/getData',
+        method: 'post',
+        body:{
+          moduleId: _data.id,
+          dataType: _data.dataType
+        }
+      })
+      setResultData(data)
+    } else {
+      // 数据容器
+      const dataContainerIds = _data.dataContainers.map(item => item.id)
+      const dataList = bar.dataContainerDataList.reduce((pre, cur) => {
+        if (dataContainerIds.includes(cur.id)) {
+          pre.push(cur.data)
+        }
+        return pre
+      }, [])
+      setResultData(JSON.stringify(dataList))
+    }
+  }, [])
+
   const getKeys = (data) => {
     if (Object.prototype.toString.call(data) === '[object Object]') {
       return Object.keys(data)

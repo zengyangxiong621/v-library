@@ -83,9 +83,6 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
 
   const handleUpdateDrawerClose = (value) => {
     setItemVisible(value)
-    dispatch({
-      type: 'bar/getDataContainerList',
-    })
   }
   // item: {id?: string}
   const handleTabClick = async (item) => {
@@ -95,13 +92,14 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
       if (dataContainer.dataType === 'static') {
         data = dataContainer.dataType === 'static' ? dataContainer.staticData.data : {}
       } else {
-        data = await http({
-          method: 'get',
-          url: '/visual/container/data/get',
-          params: {
-            id: dataContainer.id,
-          },
-        })
+        data = bar.dataContainerDataList.find(it => it.id === item.id).data
+        // data = await http({
+        //   method: 'get',
+        //   url: '/visual/container/data/get',
+        //   params: {
+        //     id: dataContainer.id,
+        //   },
+        // })
       }
       setResultData({ ...resultData, value: JSON.stringify(data, null, 2) })
       setTabValue(item.id)

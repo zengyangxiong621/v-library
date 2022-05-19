@@ -42,56 +42,57 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   const visible = props.visible
   useEffect(async () => {
     if (Object.keys(props.data).length === 0) {
+      setCopyData(testData)
       // 新增
-      const data = await http({
+      const containerData = await http({
         method: 'post',
         url: '/visual/container/add',
         body: {
           dashboardId: bar.dashboardId,
         },
       })
-      setCopyData(data)
+      dispatch({
+        type: 'bar/updateDataContainer',
+        payload: {
+          containerData,
+          data: containerData.staticData.data
+        }
+      })
+      setResultData(containerData.staticData.data)
+      setCopyData(containerData)
     } else {
       // 编辑
       setCopyData(props.data)
-      const data = await http({
-        method: 'get',
-        url: '/visual/container/data/get',
-        params: {
-          id: props.data.id
-        }
-      })
+      const data = bar.dataContainerDataList.find(item => item.id === props.data.id)
+      console.log('-------------')
+      console.log('data', data)
+      console.log('props.data', props.data)
+      console.log('---------------')
       setResultData(data)
     }
   }, [props.data])
-
-  const addDataContainer = async () => {
-
-
-  }
 
   const onClose = () => {
 
     props.onVisibleChange(false)
   }
-
+  // 更新输入容器
   const updateDataContainer = async (body) => {
-    const data = await http({
+    await http({
       url: '/visual/container/source',
       method: 'post',
       body,
     })
   }
-
+  // 数据类型切换
   const handleDataTypeChange = async (value) => {
     console.log('handleDataTypeChange', value)
 
     setCopyData({ ...copyData, dataType: value })
     await updateDataContainer({ ...copyData, dataType: value })
-
   }
+  // 静态数据变化
   const handleStaticDataChange = async (data) => {
-    console.log('staticData', copyData.staticData)
     setCopyData({
       ...copyData, staticData: {
         ...copyData.staticData,
@@ -104,15 +105,23 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
         data,
       },
     })
-    console.log('handleStaticDataChange', data)
-
+    dispatch({
+      type: 'bar/updateDataContainer',
+      payload: {
+        containerData: {
+          ...copyData, staticData: {
+            ...copyData.staticData,
+            data,
+          },
+        },
+        data
+      }
+    })
   }
+  // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
     setCopyData({ ...copyData, dataConfig })
-    await updateDataContainer({
-      ...copyData,
-      data: dataConfig[copyData.dataType].data, // 必须要的
-    })
+    await updateDataContainer({ ...copyData, data: dataConfig[copyData.dataType].data })
     const data = await http({
       method: 'get',
       url: '/visual/container/data/get',
@@ -120,9 +129,14 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
         id: copyData.id
       }
     })
+    dispatch({
+      type: 'bar/updateDataContainer',
+      payload: {
+        containerData: { ...copyData, dataConfig },
+        data
+      }
+    })
     setResultData(data)
-    console.log('handleDataSourceChange', dataConfig)
-
   }
   return (
     <Drawer

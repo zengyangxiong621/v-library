@@ -110,17 +110,21 @@ function App({ bar, dispatch, location }: any) {
   useEffect(() => {
     const dashboardId = window.location.pathname.split('/')[2]
     dispatch({
-      type: 'bar/getDashboardDetails',
+      type: 'bar/initDashboard',
       payload: dashboardId,
     })
-    dispatch({
-      type: 'bar/getDataContainerList',
-      payload: dashboardId,
-      cb:async (dataContainerList: any) => {
-
-        console.log('dataContainerList', dataContainerList)
-      }
-    })
+    // dispatch({
+    //   type: 'bar/getDashboardDetails',
+    //   payload: dashboardId,
+    // })
+    // dispatch({
+    //   type: 'bar/getDataContainerList',
+    //   payload: dashboardId,
+    //   cb:async (dataContainerList: any) => {
+    //
+    //     console.log('dataContainerList', dataContainerList)
+    //   }
+    // })
     document.addEventListener('keydown', handleStopWindowWheel)
     return () => {
       document.removeEventListener('keydown', handleStopWindowWheel)
