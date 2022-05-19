@@ -35,16 +35,21 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
 
   // 页面初始化- 请求模板列表数据
   useEffect(() => {
+    dispatch({
+      type: 'dashboardManage/resetModel',
+      payload: {
+        curSelectedGroup: ['-1'],
+        curSelectedGroupName: '全部应用'
+      }
+    })
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId: spaceId,
-      map: sortMap
+      map: sortMap,
+      groupId: null
     }
     getDataDispatch(finalBody)
-    // setTimeout(() => {
-    //   alert('hhhh')
-    // }, 3000);
   }, [])
 
   // 新建应用
@@ -158,12 +163,12 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
             <Upload {...importAppUploadprops}
               showUploadList={false}
             >
-            <div className='custom-btn set-mr'>
-              {/* <input id="uploadFile" type="file" name="kjj" accept="application/zip" onChange={uploadFile}
+              <div className='custom-btn set-mr'>
+                {/* <input id="uploadFile" type="file" name="kjj" accept="application/zip" onChange={uploadFile}
                 style={{ position: 'absolute', width: '100%', height: '100%', left: 0, top: 0, opacity: 0, cursor: 'pointer' }}
               /> */}
-              <span>导入应用</span>
-            </div>
+                <span>导入应用</span>
+              </div>
             </Upload>
           </div>
           <div className="add-search">

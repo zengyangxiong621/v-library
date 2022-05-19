@@ -416,6 +416,7 @@ const EditDataSource = (props: any) => {
               // defaultValue={name}
               className='setBackColor'
               placeholder='请输入数据源名称'
+              maxLength={30}
               autoComplete='off' />
           </Form.Item>
           <Form.Item
@@ -469,7 +470,9 @@ const EditDataSource = (props: any) => {
                   rules={generateSingleRules(true, '请输入Base URL')}
                 >
                   <Input
-                    className="setBackColor" autoComplete='off'
+                    className="setBackColor"
+                    autoComplete='off'
+                    maxLength={1000}
                   // defaultValue={baseUrl}
                   ></Input>
                 </Form.Item>
@@ -485,6 +488,7 @@ const EditDataSource = (props: any) => {
                   <Input className="setBackColor"
                     autoComplete='off'
                     placeholder='请输入'
+                    maxLength={1000}
                   // defaultValue={host}
                   />
                 </Form.Item>
@@ -506,20 +510,23 @@ const EditDataSource = (props: any) => {
                     // defaultValue={port}
                     className="setBackColor"
                     placeholder='请输入数字'
-                    maxLength={10} />
+                    maxLength={6} />
                 </Form.Item>
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
                   <Input
                     autoComplete='off'
+                    maxLength={20}
                     // defaultValue={username}
                     className="setBackColor"
-                    placeholder='请输入' />
+                    placeholder='请输入'
+                  />
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
                   <Input.Password
                     autoComplete='off'
                     className="setBackColor"
                     placeholder='请输入'
+                    maxLength={20}
                   // defaultValue={password}
                   />
                 </Form.Item>
@@ -604,17 +611,25 @@ const EditDataSource = (props: any) => {
                 <Form.Item label="连接地址" name="url" rules={generateSingleRules(true, '请输入链接地址')}>
                   <Input className="setBackColor"
                     autoComplete='off'
-                    placeholder='请输入' />
+                    placeholder='请输入'
+                    maxLength={1000}
+                  />
                 </Form.Item>
                 <Form.Item label="用户名" name="username">
                   <Input
                     autoComplete='off'
-                    className="setBackColor" placeholder='请输入' />
+                    className="setBackColor"
+                    placeholder='请输入'
+                    maxLength={20}
+                  />
                 </Form.Item>
                 <Form.Item label="密码" name="password">
                   <Input.Password
                     autoComplete='off'
-                    className="setBackColor" placeholder='请输入' />
+                    className="setBackColor"
+                    placeholder='请输入'
+                    maxLength={20}
+                  />
                 </Form.Item>
                 <Form.Item label="索引名称" name='index'>
                   <div className='dataBaseName'>

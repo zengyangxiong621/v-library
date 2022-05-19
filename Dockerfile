@@ -1,22 +1,22 @@
 # --- base images -------------
-FROM repository.gridsum.com:8443/techpub/node:14.15.4  AS base
+FROM  docker.gridsumdissector.com/vlibrary/node:14.16.0  AS base
 # --- run images -----------
-FROM repository.gridsum.com:8443/techpub/nginx:latest AS run
+FROM docker.gridsumdissector.com/library/nginx:1.20.1 AS run
 
 # --- dependencies images -------------
 FROM base AS dependencies
 
-RUN npm config set registry http://registry.npm.gridsum.com/
-RUN npm config set sass-binary-site "https://npm.taobao.org/mirrors/node-sass/"
+RUN npm config set registry https://registry.npm.taobao.org
 WORKDIR /workdir
 ADD ./ /workdir
 
-RUN npm install  --registry=http://registry.npm.gridsum.com
+RUN npm install
 RUN npm run build
 
 
 FROM run AS release
 
-COPY --from=dependencies --chown=nginx  /workdir/dist  /usr/html/
+COPY --from=dependencies --chown=nginx  /workdir/build  /usr/share/nginx/html
 
 EXPOSE 8080
+

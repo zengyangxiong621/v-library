@@ -152,7 +152,7 @@ const AddDataSource = (props: any) => {
    */
   const handleOk = async () => {
     // es 数据源类型时，如果没有index名，直接return
-    if ( curDataType === 'ELASTIC_SEARCH' && !indexName) {
+    if (curDataType === 'ELASTIC_SEARCH' && !indexName) {
       message.warning({ content: '请先选择索引名称', duration: 2 })
       return
     }
@@ -222,7 +222,7 @@ const AddDataSource = (props: any) => {
   const selectedChange = (val: string) => {
     setCurDataType(val)
     // 清除剩余表单中已录入的信息
-    addForm.resetFields(['host', 'port', 'username', 'password', 'database', ])
+    addForm.resetFields(['host', 'port', 'username', 'password', 'database',])
   }
   // 选择数据库名
   const selectDatabase = (val: string) => {
@@ -254,7 +254,7 @@ const AddDataSource = (props: any) => {
       action: `${BASE_URL}/visual/file/upload`,
       beforeUpload(file: any) {
         const { name, size }: { name: string, size: number } = file
-        if(size > 1024 * 1024 * 10) {
+        if (size > 1024 * 1024 * 10) {
           message.warning('文件大小超过限制')
           file.status = 'error'
           return false
@@ -355,7 +355,10 @@ const AddDataSource = (props: any) => {
             rules={generateSingleRules(true, '请输入数据源名称')}
           >
             <Input
-              className='setBackColor' placeholder='请输入数据源名称' autoComplete='off' />
+              className='setBackColor'
+              placeholder='请输入数据源名称' autoComplete='off'
+              maxLength={30}
+            />
           </Form.Item>
           <Form.Item
             label="描述"
@@ -405,7 +408,10 @@ const AddDataSource = (props: any) => {
                   rules={generateSingleRules(true, '请输入Base URL')}
                 >
                   <Input
-                    className="setBackColor" autoComplete='off' ></Input>
+                    className="setBackColor"
+                    autoComplete='off'
+                    maxLength={1024}
+                  ></Input>
                 </Form.Item>
               </>
             )
@@ -418,6 +424,7 @@ const AddDataSource = (props: any) => {
                 <Form.Item label="连接地址" name="host" rules={generateSingleRules(true, '请输入链接地址')}>
                   <Input className="setBackColor"
                     autoComplete='off'
+                    maxLength={1000}
                     placeholder='请输入' />
                 </Form.Item>
                 <Form.Item label="端口" name="port" rules={[
@@ -435,17 +442,23 @@ const AddDataSource = (props: any) => {
                 ]}>
                   <Input
                     autoComplete='off'
-                    className="setBackColor" placeholder='请输入数字' maxLength={10} />
+                    className="setBackColor" placeholder='请输入数字' maxLength={6} />
                 </Form.Item>
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
                   <Input
                     autoComplete='off'
-                    className="setBackColor" placeholder='请输入' />
+                    className="setBackColor"
+                    placeholder='请输入'
+                    maxLength={20}
+                  />
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
                   <Input.Password
                     autoComplete='off'
-                    className="setBackColor" placeholder='请输入' />
+                    className="setBackColor"
+                    placeholder='请输入'
+                    maxLength={20}
+                  />
                 </Form.Item>
                 <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请选择数据库')}>
                   <div className='dataBaseName'>
@@ -524,17 +537,25 @@ const AddDataSource = (props: any) => {
                 <Form.Item label="连接地址" name="url" rules={generateSingleRules(true, '请输入链接地址')}>
                   <Input className="setBackColor"
                     autoComplete='off'
-                    placeholder='请输入' />
+                    placeholder='请输入'
+                    maxLength={1000}
+                  />
                 </Form.Item>
                 <Form.Item label="用户名" name="username">
                   <Input
                     autoComplete='off'
-                    className="setBackColor" placeholder='请输入' />
+                    className="setBackColor"
+                    maxLength={20}
+                    placeholder='请输入'
+                  />
                 </Form.Item>
                 <Form.Item label="密码" name="password">
                   <Input.Password
                     autoComplete='off'
-                    className="setBackColor" placeholder='请输入' />
+                    className="setBackColor"
+                    placeholder='请输入'
+                    maxLength={20}
+                  />
                 </Form.Item>
                 <Form.Item label="索引名称">
                   <div className='dataBaseName'>

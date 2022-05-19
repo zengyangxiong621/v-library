@@ -1,6 +1,6 @@
 @backColor: #313239;
 
-.node-wrap {
+.dashboard-node-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,12 +15,12 @@
     white-space: nowrap;
     max-width: 140px;
 
-    // .title-text {
-    //   width: 90%;
-    //   overflow: hidden;
-    //   text-overflow: ellipsis;
-    //   white-space: nowrap;
-    // }
+    .text {
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   .icons-wrap {
     .show-icon {
@@ -84,7 +84,9 @@
   );
 }
 .ant-tree .ant-tree-treenode:hover .show-icon {
-  display: block;
+  display: flex;
+  align-items: center;
+
 }
 .ant-tree .ant-tree-treenode:hover .show-nums {
   display: none;
