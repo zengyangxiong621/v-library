@@ -431,6 +431,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     action.scale.x = e / 100
     if (action.scale.lock) {
       action.scale.y = (e / 100 / scaleProportion).toFixed(2)
+      form.setFieldsValue({
+        [action.id + 'scaley']: (e / 100 / scaleProportion).toFixed(2) * 100,
+      })
     }
     const tabpanesNew = [...tabpanes]
     setTabpanes(tabpanesNew)
@@ -442,6 +445,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     action.scale.y = e / 100
     if (action.scale.lock) {
       action.scale.x = (e / 100 * scaleProportion).toFixed(2)
+      form.setFieldsValue({
+        [action.id + 'scalex']: (e / 100 * scaleProportion).toFixed(2) * 100,
+      })
     }
     const tabpanesNew = [...tabpanes]
     setTabpanes(tabpanesNew)
@@ -459,11 +465,20 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     props.onChange()
   }
 
-  const rotateChange = (e, action, str) => {
-    action.rotate[`rotate${str}`] = e
+  const rotateChange = debounce((e, action, direction, el) => {
+    action.rotate[`rotate${direction}`] = e
+    if (el === 'slider') {
+      form.setFieldsValue({
+        [action.id + `rotate${direction}-input`]: e
+      })
+    } else {
+      form.setFieldsValue({
+        [action.id + `rotate${direction}-slider`]: e
+      })
+    }
     _data.events = tabpanes
     props.onChange()
-  }
+  }, 300)
 
   const perspectiveChange = (e, action) => {
     const checked = e.target.checked
@@ -640,13 +655,15 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                     </Form.Item>
                                     <Form.Item label='缩放比例'>
                                       <div className="scale-x">
-                                        <InputNumber
-                                          step="1"
-                                          className="size-input"
-                                          style={{ width: '100%' }}
-                                          value={action.scale.x * 100}
-                                          onChange={e => scaleXchange(e, action)}
-                                        />
+                                        <Form.Item name={action.id + 'scalex'} style={{ marginBottom: 0 }}>
+                                          <InputNumber
+                                            step="1"
+                                            className="size-input"
+                                            style={{ width: '100%' }}
+                                            defaultValue={action.scale.x * 100}
+                                            onChange={e => scaleXchange(e, action)}
+                                          />
+                                        </Form.Item>
                                         <div className="ant-input-group-addon input-num-suffix">%</div>
                                       </div>
                                       <span className="scale-lock" onClick={(e) => scaleLockChange(e, action)}>
@@ -654,13 +671,15 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                           <i className="iconfont icon-unlock"></i>}
                                       </span>
                                       <div className="scale-y">
-                                        <InputNumber
-                                          step="1"
-                                          className="size-input"
-                                          style={{ width: '100%' }}
-                                          value={action.scale.y * 100}
-                                          onChange={e => scaleYchange(e, action)}
-                                        />
+                                        <Form.Item name={action.id + 'scaley'} style={{ marginBottom: 0 }}>
+                                          <InputNumber
+                                            step="1"
+                                            className="size-input"
+                                            style={{ width: '100%' }}
+                                            defaultValue={action.scale.y * 100}
+                                            onChange={e => scaleYchange(e, action)}
+                                          />
+                                        </Form.Item>
                                         <div className="ant-input-group-addon input-num-suffix">%</div>
                                       </div>
                                       <Row style={{ clear: 'both' }}>
@@ -674,25 +693,29 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                       <Form.Item label='旋转'>
                                         <div className="rotate-item">
                                           <div className="rotate-slider">
-                                            <Slider
-                                              min={-180}
-                                              max={180}
-                                              step={1}
-                                              tooltipVisible={false}
-                                              onAfterChange={e => rotateChange(e, action, 'X')}
-                                              value={action.rotate.rotateX}
-                                            />
+                                            <Form.Item name={action.id + 'rotateX-slider'} style={{ marginBottom: 0 }}>
+                                              <Slider
+                                                min={-180}
+                                                max={180}
+                                                step={1}
+                                                tooltipVisible={false}
+                                                onAfterChange={e => rotateChange(e, action, 'X', 'slider')}
+                                                defaultValue={action.rotate.rotateX}
+                                              />
+                                            </Form.Item>
                                           </div>
                                           <div className="rotate-number">
-                                            <InputNumber
-                                              min={-180}
-                                              max={180}
-                                              step={1}
-                                              className="size-input"
-                                              style={{ width: '100%' }}
-                                              value={action.rotate.rotateX}
-                                              onChange={e => rotateChange(e, action, 'X')}
-                                            />
+                                            <Form.Item name={action.id + 'rotateX-input'} style={{ marginBottom: 0 }}>
+                                              <InputNumber
+                                                min={-180}
+                                                max={180}
+                                                step={1}
+                                                className="size-input"
+                                                style={{ width: '100%' }}
+                                                defaultValue={action.rotate.rotateX}
+                                                onChange={e => rotateChange(e, action, 'X', 'input')}
+                                              />
+                                            </Form.Item>
                                             <div className="ant-input-group-addon input-num-suffix">°</div>
                                           </div>
                                           <Row style={{ clear: 'both' }}>
@@ -701,25 +724,29 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                         </div>
                                         <div className="rotate-item">
                                           <div className="rotate-slider">
-                                            <Slider
-                                              min={-180}
-                                              max={180}
-                                              step={1}
-                                              tooltipVisible={false}
-                                              onAfterChange={e => rotateChange(e, action, 'Y')}
-                                              value={action.rotate.rotateY}
-                                            />
+                                            <Form.Item name={action.id + 'rotateY-slider'} style={{ marginBottom: 0 }}>
+                                              <Slider
+                                                min={-180}
+                                                max={180}
+                                                step={1}
+                                                tooltipVisible={false}
+                                                onAfterChange={e => rotateChange(e, action, 'Y', 'slider')}
+                                                defaultValue={action.rotate.rotateY}
+                                              />
+                                            </Form.Item>
                                           </div>
                                           <div className="rotate-number">
-                                            <InputNumber
-                                              min={-180}
-                                              max={180}
-                                              step={1}
-                                              className="size-input"
-                                              style={{ width: '100%' }}
-                                              value={action.rotate.rotateY}
-                                              onChange={e => rotateChange(e, action, 'Y')}
-                                            />
+                                            <Form.Item name={action.id + 'rotateY-input'} style={{ marginBottom: 0 }}>
+                                              <InputNumber
+                                                min={-180}
+                                                max={180}
+                                                step={1}
+                                                className="size-input"
+                                                style={{ width: '100%' }}
+                                                defaultValue={action.rotate.rotateY}
+                                                onChange={e => rotateChange(e, action, 'Y', 'input')}
+                                              />
+                                            </Form.Item>
                                             <div className="ant-input-group-addon input-num-suffix">°</div>
                                           </div>
                                           <Row style={{ clear: 'both' }}>
@@ -728,25 +755,29 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                         </div>
                                         <div className="rotate-item">
                                           <div className="rotate-slider">
-                                            <Slider
-                                              min={-180}
-                                              max={180}
-                                              step={1}
-                                              tooltipVisible={false}
-                                              onAfterChange={e => rotateChange(e, action, 'Z')}
-                                              value={action.rotate.rotateZ}
-                                            />
+                                            <Form.Item name={action.id + 'rotateZ-slider'} style={{ marginBottom: 0 }}>
+                                              <Slider
+                                                min={-180}
+                                                max={180}
+                                                step={1}
+                                                tooltipVisible={false}
+                                                onAfterChange={e => rotateChange(e, action, 'Z', 'slider')}
+                                                defaultValue={action.rotate.rotateZ}
+                                              />
+                                            </Form.Item>
                                           </div>
                                           <div className="rotate-number">
-                                            <InputNumber
-                                              min={-180}
-                                              max={180}
-                                              step={1}
-                                              className="size-input"
-                                              style={{ width: '100%' }}
-                                              value={action.rotate.rotateZ}
-                                              onChange={e => rotateChange(e, action, 'Z')}
-                                            />
+                                            <Form.Item name={action.id + 'rotateZ-input'} style={{ marginBottom: 0 }}>
+                                              <InputNumber
+                                                min={-180}
+                                                max={180}
+                                                step={1}
+                                                className="size-input"
+                                                style={{ width: '100%' }}
+                                                defaultValue={action.rotate.rotateZ}
+                                                onChange={e => rotateChange(e, action, 'Z', 'input')}
+                                              />
+                                            </Form.Item>
                                             <div className="ant-input-group-addon input-num-suffix">°</div>
                                           </div>
                                           <Row style={{ clear: 'both' }}>
