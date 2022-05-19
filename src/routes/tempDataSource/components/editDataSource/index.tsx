@@ -180,11 +180,6 @@ const EditDataSource = (props: any) => {
    * description: 新增数据源
    */
   const handleOk = async () => {
-    // es 数据源类型时，如果没有index名，直接return
-    if (dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
-      message.warning({ content: '请先选择索引名称', duration: 2 })
-      return
-    }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields()
     console.log('valu', values);
