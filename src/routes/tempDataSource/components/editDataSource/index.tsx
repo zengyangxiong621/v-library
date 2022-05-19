@@ -24,6 +24,8 @@ const EditDataSource = (props: any) => {
     rdbmsSourceConfig,
     esSourceConfig,
   } = props.editDataSourceInfo
+  console.log('props.editDataSourceInfo', props.editDataSourceInfo);
+
   let spaceId = 1
   // let spaceId = '1513466256657637378'
 
@@ -31,7 +33,6 @@ const EditDataSource = (props: any) => {
 
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
-
 
   // 与添加数据源不同，这里需要判断数据源的类型(csv,json,excel)来确定初始的fileUrl
   const [fileUrl, setFileUrl] = useState('')
@@ -260,6 +261,7 @@ const EditDataSource = (props: any) => {
     editForm.resetFields()
   }
   const handleCancel = () => {
+    console.log('关闭编辑弹窗');
     changeShowState('edit')
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接更新 */
     clearModalState()
@@ -271,7 +273,6 @@ const EditDataSource = (props: any) => {
     // 选择了数据库名，开放测试连接按钮
     // setBtnDisabled(false)
   }
-
   /**
  * description: 选择索引(es)
  */
