@@ -24,8 +24,8 @@ const catchErr = <T, U = Error>(
 
 // export const BASE_URL = "http://10.202.233.230:9572"; // HFF 本地
 // export const BASE_URL = "http://10.202.233.230:9572"; // HFF 本地
-// export const BASE_URL = "http://50423059pd.zicp.vip"; // FJJ 本地
-export const BASE_URL = "http://10.201.83.166:31088"
+export const BASE_URL = "http://50423059pd.zicp.vip"; // FJJ 本地
+// export const BASE_URL = "http://10.201.83.166:31088"
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",

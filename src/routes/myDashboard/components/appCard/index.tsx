@@ -10,8 +10,10 @@ import { IconFont } from '../../../../utils/useIcon'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Tooltip, Dropdown, Menu, message, Modal } from 'antd'
 
+// import M from '@/components/modalConfirm/index'
+
 const AppCard = (props: any) => {
-  const { id, name, status, photoUrl,
+  const { id, name, status, photoUrl, spaceId,
     openMoveGroupModal, changeFabuModal, refreshList, history } = props
 
   // 后端返回的photoUrl为空，则使用默认图片
@@ -123,7 +125,8 @@ const AppCard = (props: any) => {
         const [, data] = await useFetch('/visual/application/deleteApp', {
           method: 'delete',
           body: JSON.stringify({
-            appIdList: appIds
+            appIdList: appIds,
+            spaceId
           })
         })
         if (data) {

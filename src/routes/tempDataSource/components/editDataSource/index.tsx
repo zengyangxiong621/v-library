@@ -178,7 +178,7 @@ const EditDataSource = (props: any) => {
     }
   }
   /**
-   * description: 新增数据源
+   * description: 修改数据源
    */
   const handleOk = async () => {
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
@@ -245,7 +245,6 @@ const EditDataSource = (props: any) => {
     if (data) {
       // 成功后  -关闭弹窗 -清除表单 -刷新表格
       handleCancel()
-      editForm.resetFields()
       refreshTable()
     }
   }
@@ -258,13 +257,11 @@ const EditDataSource = (props: any) => {
     setIndexList([])
     setIsConnect(false)
     // setIndexName('')
-    editForm.resetFields()
   }
-  const handleCancel = () => {
-    console.log('关闭编辑弹窗');
+  const handleCancel = async () => {
+    clearModalState()
     changeShowState('edit')
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接更新 */
-    clearModalState()
     // setBtnDisabled(true)
   }
   // 选择数据库名
