@@ -6,8 +6,7 @@ import { http } from '../../../../../../services/request'
 import DataSourceConfig from '../../../../right/components/dataConfig/dataSourceConfig'
 import DataResult from '../../../../right/components/dataConfig/dataResult'
 import { CloseOutlined, LeftOutlined } from '@ant-design/icons'
-import async from 'async'
-
+import useLoading from '@/components/useLoading'
 const testData = {
   'name': '容器名称', // 容器名字
   'dataConfig': {}, // 数据源配置
@@ -38,7 +37,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   const inputRef = useRef(null)
   const [copyData, setCopyData] = useState(testData)
   const [resultData, setResultData] = useState([])
-
+  const [loading, setLoading] = useLoading(false, document.querySelector('.loading-wrapper'))
   const visible = props.visible
   useEffect(async () => {
     if (Object.keys(props.data).length === 0) {
@@ -67,6 +66,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
       console.log('-------------')
       console.log('data', data)
       console.log('props.data', props.data)
+      console.log('bar.dataContainerDataList', bar.dataContainerDataList)
       console.log('---------------')
       setResultData(data)
     }
@@ -157,7 +157,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
       style={ { position: 'absolute' } }
       maskStyle={ { opacity: 0, animation: 'unset' } }
     >
-      <div>
+      <div className="loading-wrapper">
         <Input
           ref={ inputRef } value={ copyData.name }
           onChange={ (e) => setCopyData({ ...copyData, name: e.target.value }) }

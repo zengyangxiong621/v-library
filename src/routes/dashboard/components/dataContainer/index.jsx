@@ -1,7 +1,7 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 import './index.less'
-import { Form, Drawer, Select, Button, Input, Modal, message } from 'antd'
+import { Form, Drawer, Select, Button, Input, Modal, message, Spin } from 'antd'
 import {
   CloseOutlined, LeftOutlined, AudioOutlined, SearchOutlined,
 } from '@ant-design/icons'
@@ -13,19 +13,23 @@ import { http } from '../../../../services/request'
 
 const { Search } = Input
 
+
+import useLoading from '@/components/useLoading'
+
 const DataContainer = ({ bar, dispatch, ...props }) => {
+  const drawerRef = useRef(null)
   const [itemVisible, setItemVisible] = useState(false)
   const [manageVisible, setManageVisible] = useState(false)
   const [itemData, setItemData] = useState(null)
   const [inputValue, setInputValue] = useState('')
   const [filterDataList, setFilterDataList] = useState(bar.dataContainerList)
   useEffect(() => {
-    console.log('更新')
     setFilterDataList(bar.dataContainerList)
   }, [bar.dataContainerList])
   const showDrawer = () => {
     props.onChange(true)
   }
+
 
   const onClose = () => {
     setInputValue('')
@@ -76,7 +80,7 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
           method: 'get',
           url: '/visual/container/data/get',
           params: {
-            id: containerData.id
+            id: containerData.id,
           },
         })
       }
@@ -135,39 +139,42 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
         closable={ false }
         onClose={ onClose }
         visible={ props.visible }
+        ref={ drawerRef }
         className="data-container-drawer"
         getContainer={ false }
         style={ { position: 'absolute' } }
         width={ 333 }
         maskStyle={ { opacity: 0, animation: null } }
       >
-        <div className="data-container-handle">
-          <Input
-            placeholder="请输入"
-            suffix={ <SearchOutlined
-              className="input-search-icon"
-              onClick={ handleSearch }
-            /> }
-            value={ inputValue }
-            onChange={ (e) => setInputValue(e.target.value) }
-            allowClear
-            onSearch={ (e) => handleSearch(e.target.value) }
-            onPressEnter={ (e) => handleSearch(e.target.value) }
-          />
-          <Button className="g-mx-2" onClick={ () => handleContainerClick({}) }>+新增</Button>
-          <Button onClick={ () => setManageVisible(true) }>管理</Button>
+        <div className="data-container-body-wrapper">
+          <div className="data-container-handle">
+            <Input
+              placeholder="请输入"
+              suffix={ <SearchOutlined
+                className="input-search-icon"
+                onClick={ handleSearch }
+              /> }
+              value={ inputValue }
+              onChange={ (e) => setInputValue(e.target.value) }
+              allowClear
+              onSearch={ (e) => handleSearch(e.target.value) }
+              onPressEnter={ (e) => handleSearch(e.target.value) }
+            />
+            <Button className="g-mx-2" onClick={ () => handleContainerClick({}) }>+新增</Button>
+            <Button onClick={ () => setManageVisible(true) }>管理</Button>
+          </div>
+          {
+            filterDataList.map(container =>
+              <DataContainerItem
+                onChoose={ handleContainerClick }
+                onDelete={ handleContainerDelete }
+                onCopy={ handleContainerCopy }
+                onChange={ handleContainerChange }
+                key={ container.id }
+                data={ container }/>,
+            )
+          }
         </div>
-        {
-          filterDataList.map(container =>
-            <DataContainerItem
-              onChoose={ handleContainerClick }
-              onDelete={ handleContainerDelete }
-              onCopy={ handleContainerCopy }
-              onChange={ handleContainerChange }
-              key={ container.id }
-              data={ container }/>,
-          )
-        }
       </Drawer>
       <ManageContainerDrawer
         data={ bar.dataContainerList }

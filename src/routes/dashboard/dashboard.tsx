@@ -16,11 +16,16 @@ import ChooseArea from './center/components/ChooseArea'
 import CenterRightMenu from './left/components/rightClickMenu/rightClickMenu'
 import {menuOptions} from './left/Data/menuOptions'
 import DataContainer from './components/dataContainer'
+import useLoading from '@/components/useLoading'
 
 const { Header } = Layout
 
 function App({ bar, dispatch, location }: any) {
-
+  const [showTopBar, setShowTopBar] = useState(false)
+  const [zujianORsucai, setZujianORsucai] = useState('zujian')
+  const [dataContainerVisible, setDataContainerVisible] = useState(false)
+  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
+  const [loading, setLoading]: any = useLoading(false, document.querySelector('.p-home'))
   const detectZoom = () => {
     let ratio = 0,
       screen: any = window.screen,
@@ -109,10 +114,13 @@ function App({ bar, dispatch, location }: any) {
 
   useEffect(() => {
     const dashboardId = window.location.pathname.split('/')[2]
+
     dispatch({
       type: 'bar/initDashboard',
       payload: dashboardId,
+      cb: () => {}
     })
+
     // dispatch({
     //   type: 'bar/getDashboardDetails',
     //   payload: dashboardId,
@@ -134,9 +142,7 @@ function App({ bar, dispatch, location }: any) {
   /**
    * description:  是否显示中心画布上方的导航栏
    */
-  const [showTopBar, setShowTopBar] = useState(false)
-  const [zujianORsucai, setZujianORsucai] = useState('zujian')
-  const [dataContainerVisible, setDataContainerVisible] = useState(false)
+
   const showWhichBar = (whichBar: string) => {
     console.log('whitchBar', whichBar)
     if (['zujian', 'sucai'].includes(whichBar)) {
@@ -152,7 +158,6 @@ function App({ bar, dispatch, location }: any) {
   /**
    * description: 画布右键菜单
    */
-  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
   // 点击右键菜单后，隐藏菜单
   const hideMenu = () => {
     dispatch({

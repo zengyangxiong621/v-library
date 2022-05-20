@@ -349,7 +349,7 @@ export default {
         payload,
       })
     },
-    * initDashboard ({ payload }: any, { call, put, select }: any): any {
+    * initDashboard ({ payload, cb }: any, { call, put, select }: any): any {
 
       yield put({
         type: 'getDashboardDetails',
@@ -381,6 +381,7 @@ export default {
           dataContainerDataList: bar.dataContainerDataList
         }
       })
+      yield cb()
     },
     * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
@@ -725,7 +726,7 @@ export default {
           container.data = data
         } else {
           // 不存在则新增
-          state.dataContainerDataList.unshift({id: payload, data})
+          state.dataContainerDataList.unshift({id: containerData.id, data})
         }
       }
       if (index !== -1) {
