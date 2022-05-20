@@ -258,7 +258,7 @@ const EditDataSource = (props: any) => {
     setIsConnect(false)
     // setIndexName('')
   }
-  const handleCancel = async () => {
+  const handleCancel = () => {
     clearModalState()
     changeShowState('edit')
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接更新 */
