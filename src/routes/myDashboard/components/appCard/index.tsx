@@ -3,11 +3,12 @@ import React, { memo, useState, useRef } from 'react'
 import './index.less'
 
 import { withRouter } from 'dva/router'
-import { connect } from 'dva'
 import { useFetch } from '../../../../utils/useFetch'
+import { BASEURL } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
-import { Input, Tooltip, Dropdown, Menu, message } from 'antd'
+import { ExclamationCircleFilled } from '@ant-design/icons'
+import { Input, Tooltip, Dropdown, Menu, message, Modal } from 'antd'
 
 const AppCard = (props: any) => {
   const { id, name, status, photoUrl,
@@ -94,50 +95,56 @@ const AppCard = (props: any) => {
   }
   // 删除应用
   const deleteApp = async (appIds: string[]) => {
-    const [, data] = await useFetch('/visual/application/deleteApp', {
-      method: 'delete',
-      body: JSON.stringify({
-        appIdList: appIds
-      })
+    Modal.confirm({
+      title: '删除应用',
+      style: {
+        top: '30%'
+      },
+      okButtonProps: {
+        style: {
+          backgroundColor: '#e9535d',
+          border: 'none',
+          // marginLeft: '8px',
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          backgroundColor: '#3d404d'
+        }
+      },
+      icon: <ExclamationCircleFilled />,
+      content: '确认删除此应用吗?',
+      okText: '确定',
+      cancelText: '取消',
+      bodyStyle: {
+        background: '#232630',
+      },
+      async onOk(close) {
+        const [, data] = await useFetch('/visual/application/deleteApp', {
+          method: 'delete',
+          body: JSON.stringify({
+            appIdList: appIds
+          })
+        })
+        if (data) {
+          refreshList()
+          message.success({ content: '删除成功', duration: 2 })
+        } else {
+          message.error({ content: '删除失败', duration: 2 })
+        }
+      },
+      onCancel(close) {
+        close()
+      }
     })
-    if (data) {
-      refreshList()
-      message.success({ content: '删除成功', duration: 2 })
-    } else {
-      message.error({ content: '删除失败', duration: 2 })
-    }
   }
 
-  /**
-   * description: 下载文件
-   * @params:  blob: 后端返回的文件数据,
-   *          @fileName: 自定义文件名
-   */
-  const downloadFile = (blob: any, fileName: string): void => {
-    const toolA = document.createElement('a')
-    toolA.href = URL.createObjectURL(blob)
-    toolA.download = fileName
-    toolA.click()
-    URL.revokeObjectURL(toolA.href)
-  }
   // 导出应用
   const exportApp = async (appId: string) => {
-    const [, data] = await useFetch(`/visual/application/export/${appId}`, {
-      method: 'get',
-      // 'Response-Type': 'blob',
-      responseType: 'blob',
-    }, {
-      onlyNeedWrapData: true,
-    })
-    console.log('data', data);
-    // saveFile(data, '我的zip')
-    if (data) {
-      if (data instanceof Blob) {
-        downloadFile(data, '')
-      } else {
-        message.error({ content: '导出失败', duration: 2 })
-      }
-    }
+    // console.log(`${BASEURL}/visual/application/export/${appId}`);
+    const toolA = document.createElement('a')
+    toolA.href = `${BASEURL}/visual/application/export/${appId}`
+    toolA.click()
   }
 
   // 移动分组

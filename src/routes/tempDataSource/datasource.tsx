@@ -109,13 +109,13 @@ const DataSource = (props: any) => {
     setIsShowAddModal(true)
   }
   // 关闭数据源弹窗
-  const changeShowState = useCallback((modalType: string) => {
+  const changeShowState = (modalType: string) => {
     modalType === 'add'
       ?
       setIsShowAddModal(false)
       :
       setIsShowEditModal(false)
-  }, [])
+  }
   // 刷新表格数据
   const refreshTable = () => {
     getTableData()

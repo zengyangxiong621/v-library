@@ -5,10 +5,10 @@ const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === "[object Object]";
 };
 
-// let baseUrl = 'http://10.202.233.230:9572'
-// let baseUrl = 'http://10.202.233.230:9572'
-export const baseUrl = "http://10.201.83.166:31088";
-// let baseUrl = 'http://50423059pd.zicp.vip'
+// export const BASEURL = 'http://10.202.233.230:9572'
+// export const BASEURL = 'http://10.202.233.230:9572'
+// export const BASEURL = "http://10.201.83.166:31088";
+export const BASEURL = "http://50423059pd.zicp.vip";
 
 /* 核心方法 */
 export const http = (config: any, isDownload: boolean = false): any => {
@@ -43,7 +43,7 @@ export const http = (config: any, isDownload: boolean = false): any => {
 
   // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
   if (params) url += `${url.includes("?") ? "&" : "?"}${qs.stringify(params)}`;
-  url = baseUrl + url;
+  url = BASEURL + url;
   // 处理请求主体:只针对于POST系列请求；body是个纯粹对象，根据当前后台要求，把其变为urlencoded格式！
 
   if (isPlainObject(body)) {
