@@ -48,6 +48,7 @@ import { DIMENSION } from '../routes/dashboard/center/constant'
 import { generateLayers } from './utils/generateLayers'
 import { addSomeAttrInLayers, clearNullGroup } from './utils/addSomeAttrInLayers'
 import { http } from '../services/request'
+import staticData from '../routes/dashboard/right/components/dataConfig/staticData'
 
 interface IBarState {
   dashboardId: string;
@@ -92,6 +93,7 @@ interface IBarState {
   };
   componentData:any;
   dataContainerList: any;
+  dataContainerDataList: any;
 }
 
 export default {
@@ -118,6 +120,7 @@ export default {
     selectedComponentDOMs: {},
     dragStatus: '',
     dataContainerList: [],
+    dataContainerDataList: [],
     supportLinePositionInfo: {
       x: 100,
       y: 200,
@@ -343,7 +346,52 @@ export default {
     * getDashboardId({ payload }: any, { call, put, select }: any) {
       yield put({
         type: 'changeDashboardId',
-        payload: payload,
+        payload,
+      })
+    },
+    * initDashboard ({ payload, cb }: any, { call, put, select }: any): any {
+
+      yield put({
+        type: 'getDashboardDetails',
+        payload,
+      })
+      // TODO 怎么造成的
+      const data = yield(yield put({
+        type: 'getDataContainerList',
+        payload,
+      }))
+      const bar: any = yield select(({ bar }: any) => bar)
+      bar.dataContainerList.forEach(async (item: any) => {
+        let data: any = null
+        if (item.dataType === 'static') {
+          data = item.staticData.data
+        } else {
+          data = await http({
+            url: '/visual/container/data/get',
+            params:{
+              id: item.id
+            }
+          })
+        }
+        bar.dataContainerDataList.push({ id: item.id, data })
+      })
+      yield put({
+        type: 'save',
+        payload: {
+          dataContainerDataList: bar.dataContainerDataList
+        }
+      })
+      yield cb()
+    },
+    * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
+      const index = bar.dataContainerDataList.findIndex((item: any) => item.id === payload)
+      bar.dataContainerDataList.splice(index, 1)
+      put({
+        type: 'save',
+        payload: {
+          dataContainerDataList: bar.dataContainerDataList
+        }
       })
     },
     * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
@@ -619,7 +667,7 @@ export default {
         },
       })
     },
-    * getDataContainerList({ payload }: any, { call, put, select }: any): any {
+    * getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
       const dashboardId = bar.dashboardId || payload
       console.log('bar', bar)
@@ -633,6 +681,7 @@ export default {
           dataContainerList: data
         }
       })
+      return data
       // console.log('data', data)
     },
     * addDataContainer({ payload }: any, { call, put, select }: any): any {
@@ -649,53 +698,44 @@ export default {
       })
       payload.cb(data)
     },
-    * deleteDataContainer({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar)
-      const data = yield http({
-        method: 'delete',
-        url: `/visual/container/delete/${payload}`,
-        body: {
-          dashboardId: bar.dashboardId
-        }
-      })
-      if (data) {
-        message.success('操作成功')
-      }
-      yield put({
-        type: 'getDataContainerList'
-      })
-    },
-    * copyDataContainer({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar)
-      const data = yield http({
-        method: 'put',
-        url: `/visual/container/copy/${payload}`,
-      })
-      if (data) {
-        message.success('操作成功')
-      }
-      yield put({
-        type: 'getDataContainerList'
-      })
-    },
-    * updateDataContainer({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar)
-      const data = yield http({
-        method: 'post',
-        url: `/visual/container/source`,
-        body: payload
-      })
-      if (data) {
-        message.success('操作成功')
-      }
-      yield put({
-        type: 'getDataContainerList'
-      })
-    },
-
   },
 
   reducers: {
+    deleteDataContainer(state: IBarState, { payload }: any) {
+      let index = state.dataContainerDataList.findIndex((item: any) => item.id === payload)
+      state.dataContainerDataList.splice(index, 1)
+      index = state.dataContainerList.findIndex((item: any) => item.id === payload)
+      state.dataContainerList.splice(index, 1)
+      return { ...state, dataContainerList: state.dataContainerList }
+    },
+    copyDataContainer(state: IBarState, { payload }: any) {
+
+      return {...state}
+    },
+    updateDataContainer(state: IBarState, { payload }: any) {
+      // containerData 是容器全部的数据信息, data 是 容器的数据 静态/动态数据
+      const { containerData, data } = payload
+      const container = state.dataContainerDataList.find((item: any) => item.id === containerData.id);
+      const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
+      console.log('-----------containerData', containerData)
+      console.log('data', data)
+      console.log('-------------')
+      if (data) {
+        if (container) {
+          // container 存在，说明是修改
+          container.data = data
+        } else {
+          // 不存在则新增
+          state.dataContainerDataList.unshift({id: containerData.id, data})
+        }
+      }
+      if (index !== -1) {
+        state.dataContainerList[index] = containerData
+      } else {
+        state.dataContainerList.unshift(containerData)
+      }
+      return { ...state, dataContainerList: state.dataContainerList, dataContainerDataList: state.dataContainerDataList}
+    },
     // 设置右键菜单位置的信息
     setRightMenuInfo(state: IBarState, { payload }: any) {
       return { ...state, rightMenuInfo: payload }

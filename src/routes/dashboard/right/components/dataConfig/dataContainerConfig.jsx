@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
-import { Select, Button, Tabs } from 'antd'
+import { Select, Button, Tabs, Tooltip } from 'antd'
 import { http } from '../../../../../services/request'
 import UpdateContainerDrawer from '../../../components/dataContainer/components/updateContainerDrawer'
 import CodeEditor from '../codeEditor'
@@ -12,8 +12,8 @@ const { TabPane } = Tabs
 const resultCodeData = {
   readOnly: true,
   language: 'json',
-  value: ``,
-  showExpand: false
+  value: '{}',
+  showExpand: false,
 }
 
 const DataContainerConfig = ({ bar, dispatch, ...props }) => {
@@ -21,17 +21,22 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
   const dataContainerIds = _data.dataContainers.map(item => item.id)
   const [itemData, setItemData] = useState(null)
   const [itemVisible, setItemVisible] = useState(false)
-  const [tabValue, setTabValue] = useState(_data.dataContainers[0].id)
+  const [tabValue, setTabValue] = useState(null)
   const [resultData, setResultData] = useState(resultCodeData)
 
   useEffect(() => {
-
+    handleChoose(dataContainerIds.length > 0 ? dataContainerIds[0] : null)
   }, [])
+
+  const handleChoose = (id) => {
+    // 默认设置选中第一个
+    handleTabClick({ id })
+  }
+
   const handleChange = async (value) => {
-    props.onDataContainerChange(value)
+    // props.onDataContainerChange(value)
   }
   const handleDeSelect = async (value) => {
-    console.log('取消')
     const data = await http({
       method: 'post',
       url: '/visual/module/bindContainer',
@@ -41,6 +46,18 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
         containerId: value,
       },
     })
+    if (data) {
+      const index = dataContainerIds.indexOf(value)
+      dataContainerIds.splice(index, 1)
+      props.onDataContainerChange(dataContainerIds)
+      if (dataContainerIds.length > 0) {
+        if (value === tabValue) {
+          handleChoose(dataContainerIds.length > 0 ? dataContainerIds[0] : null)
+        }
+      } else {
+        handleChoose(null)
+      }
+    }
   }
   const handleSelect = async (value) => {
     const data = await http({
@@ -52,6 +69,11 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
         containerId: value,
       },
     })
+    if (data) {
+      dataContainerIds.push(value)
+      props.onDataContainerChange(dataContainerIds)
+      handleChoose(value)
+    }
   }
 
   const handleAddDataContainer = () => {
@@ -61,19 +83,34 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
 
   const handleUpdateDrawerClose = (value) => {
     setItemVisible(value)
-    dispatch({
-      type: 'bar/getDataContainerList',
-    })
   }
-
-  const handleTabClick = (item) => {
-    console.log('tabValue', tabValue)
-    setTabValue(item.id)
+  // item: {id?: string}
+  const handleTabClick = async (item) => {
+    if (item.id) {
+      const dataContainer = bar.dataContainerList.find(it => it.id === item.id)
+      let data = {}
+      if (dataContainer.dataType === 'static') {
+        data = dataContainer.dataType === 'static' ? dataContainer.staticData.data : {}
+      } else {
+        data = bar.dataContainerDataList.find(it => it.id === item.id).data
+        // data = await http({
+        //   method: 'get',
+        //   url: '/visual/container/data/get',
+        //   params: {
+        //     id: dataContainer.id,
+        //   },
+        // })
+      }
+      setResultData({ ...resultData, value: JSON.stringify(data, null, 2) })
+      setTabValue(item.id)
+    } else {
+      setResultData(resultCodeData)
+    }
   }
 
   return (
     <div className="data-container-config">
-      <div className="data-container-select g-flex g-justify-between g-mt-4"
+      <div className="data-container-select g-flex g-justify-between g-mt-4 g-mb-9"
            style={ { display: 'flex' } }>
         <span style={ { minWidth: '73px', lineHeight: '32px' } } className="g-text-left">数据容器</span>
         <Select
@@ -87,7 +124,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
         >
           {
             bar.dataContainerList.map(item => (
-                <Option value={ item.id }>
+                <Option key={ item.id } value={ item.id }>
                   { item.name }
                 </Option>
               ),
@@ -104,8 +141,9 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
               return (
                 <div
                   key={ item.id }
-                  className={`data-container-tabs-item ${item.id === tabValue ? 'data-container-tabs-item-active ' :''}g-cursor-pointer g-overflow-hidden g-overflow-ellipsis g-whitespace-nowrap`}
-                  onClick={() => handleTabClick(item)}
+                  title={ dataContainer.name }
+                  className={ `data-container-tabs-item ${ item.id === tabValue ? 'data-container-tabs-item-active ' : '' }g-cursor-pointer g-overflow-hidden g-overflow-ellipsis g-whitespace-nowrap` }
+                  onClick={ () => handleTabClick(item) }
                 >
                   { dataContainer.name }
                 </div>
@@ -116,8 +154,12 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
           })
         }
       </div>
-      <div className="data-container-show-card">
-        <CodeEditor data={resultData} onChange={()=>{}} />
+      <div
+        className="data-container-show-card"
+        style={ { width: '100%', height: '198px' } }
+      >
+        <CodeEditor data={ resultData } onChange={ () => {
+        } }/>
       </div>
       <UpdateContainerDrawer dashboardId={ bar.dashboardId } data={ itemData } visible={ itemVisible }
                              onVisibleChange={ handleUpdateDrawerClose }/>

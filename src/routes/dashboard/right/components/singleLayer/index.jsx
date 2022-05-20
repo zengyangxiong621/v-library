@@ -75,10 +75,10 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const dataContainerChange = (dataContainerIds) => {
-    componentConfig.dataContainers = dataContainerIds.map(id => ({
+    componentConfig.dataContainers = dataContainerIds.map((id, index) => ({
       id,
       enable: true,
-      rank: 0
+      rank: index
     }))
     dispatch({
       type: 'bar/setComponentConfig',

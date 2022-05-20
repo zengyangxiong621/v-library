@@ -32,11 +32,14 @@ const DataContainerItem = props => {
       props.onChange({
         ...data,
         name: inputValue
+      }, () => {
+        setInputValue(data.name)
       })
     }
     setIsEdit(false)
   }
   const handleChange = (e) => {
+    console.log('清空')
     setInputValue(e.target.value)
   }
   const handleDelete = () => {
