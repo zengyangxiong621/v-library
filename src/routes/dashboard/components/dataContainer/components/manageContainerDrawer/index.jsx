@@ -3,6 +3,7 @@ import './index.less'
 import { Drawer, Input, Table, Modal, Button } from 'antd'
 import { CloseOutlined, SearchOutlined } from '@ant-design/icons'
 import { connect } from 'dva'
+import { findLayerById } from '@/utils/index'
 
 const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
   const [searchValue, setSearchValue] = useState('')
@@ -14,11 +15,27 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
   }, [props.data, props.visible])
   const dataSourceEnum = {
     static: '静态数据',
+    json: 'JSON',
+    api: 'API',
+    csv: 'CSV'
   }
   const onClose = () => {
     props.onVisibleChange(false)
     setSearchValue('')
     handleSearch()
+  }
+  const handleChoose = (id) => {
+    const layer = findLayerById(bar.treeData, id)
+    dispatch({
+      type: 'bar/selectLayers',
+      payload: [layer]
+    })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        key: [id]
+      }
+    })
   }
   const columns = [
     {
@@ -48,15 +65,12 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
       render: list => {
         return list && list.length > 0 ?
           <div className="g-flex g-flex-wrap">{
-            list.map(item => {
+            bar.components.map(item => {
               return <a
                 className="g-pr-4 g-py-1 g-whitespace-nowrap g-overflow-hidden g-overflow-ellipsis g-whitespace-nowrap g-cursor-pointer"
                 style={ { maxWidth: 131 } }
                 title={ item.name }
-                onClick={ () => {
-                  console.log('选择组件byId', item.id)
-                }
-                }
+                onClick={ () => handleChoose(item.id) }
               >{ item.name }
               </a>
             })
@@ -75,7 +89,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
     <Drawer
       title={
         <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
-          <span></span>
+          <span/>
           数据容器
           <CloseOutlined onClick={ onClose } className="g-cursor-pointer"/>
         </div>
@@ -120,4 +134,6 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
   )
 }
 
-export default connect(({ bar }) => ({ bar }))(ManageContainerDrawer)
+export default connect(
+  ({ bar }) => ({ bar }),
+)(ManageContainerDrawer)
