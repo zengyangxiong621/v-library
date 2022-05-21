@@ -14,7 +14,8 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
-
+  const [componentResultData, setComponentResultData] = useState({  })
+  const [componentType, setComponentType] = useState('')
   useEffect(() => {
     const currentData = bar.componentData[_data.id]
     if (currentData) {
@@ -89,7 +90,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const changeDataFromCallback = async () => {
     const { dataFrom } = _data
     if (dataFrom === 0) {
-      console.log('dataFrom', dataFrom)
       await setDataSourceResult()
     } else {
       await setDataContainerResult()
@@ -106,7 +106,15 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         dataType: _data.dataType
       }
     })
-    setResultData(data)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        componentData: {
+          ...bar.componentData,
+          [_data.id]: _data.dataType.value !== 'static' ? data : data.data,
+        },
+      },
+    })
   }
 
   const setDataContainerResult = () => {
@@ -118,15 +126,11 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       }
       return pre
     }, [])
-    setResultData(dataList)
+    setComponentResultData(dataList)
   }
 
   useEffect(async () => {
-    await changeDataFromCallback()
-  }, [])
-
-
-  useEffect(async () => {
+    setComponentType(_data.dataFrom === 0 ? '' : 'component')
     await changeDataFromCallback()
   }, [_data.dataFrom])
 
@@ -161,10 +165,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onFiledsChange(fields, _data.dataType)
   }
 
-  const resultDataChange = data => {
-    setResultData(data)
-  }
-
   const onDataTypeChange = async(data) => {
     await http({
       url: '/visual/module/updateDatasource',
@@ -193,19 +193,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
 
 
   // 处理过滤器
-
-  // useEffect(async () => {
-  //   console.log('_data.dataFrom', _data.dataFrom)
-  //   const data = await http({
-  //     url: '/visual/module/getData',
-  //     method: 'post',
-  //     body: {
-  //       moduleId: _data.id,
-  //       dataType: _data.dataType,
-  //     },
-  //   })
-  //   console.log('data', data)
-  // }, [_data.dataFrom])
 
 
   return (
@@ -247,7 +234,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
           />
       }
 
-      <DataResult data={_data} />
+      <DataResult data={_data} resultData={componentResultData} type={componentType} />
     </React.Fragment>
   )
 }

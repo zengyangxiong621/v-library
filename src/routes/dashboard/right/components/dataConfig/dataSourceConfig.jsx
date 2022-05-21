@@ -196,7 +196,15 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
           },
         })
       } else {
-        props.onResultDataChange({})
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            componentData: {
+              ...bar.componentData,
+              [_data.id]: {}
+            },
+          },
+        })
         message.error('数据源请求失败')
       }
     }
