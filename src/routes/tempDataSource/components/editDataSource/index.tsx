@@ -34,6 +34,15 @@ const EditDataSource = (props: any) => {
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
 
+  useEffect(() => {
+    console.log('visible', visible);
+    if(!visible) {
+      editForm.resetFields()
+      alert('重置了')
+      console.log('editForm的值',editForm.getFieldsValue());
+    }
+  }, [visible])
+
   // 与添加数据源不同，这里需要判断数据源的类型(csv,json,excel)来确定初始的fileUrl
   const [fileUrl, setFileUrl] = useState('')
   useEffect(() => {
@@ -374,6 +383,7 @@ const EditDataSource = (props: any) => {
     <div className='EditDataSource-wrap'>
       <Modal
         title="编辑数据源"
+        key={id}
         destroyOnClose={true}
         maskClosable={false}
         visible={visible}
@@ -388,7 +398,6 @@ const EditDataSource = (props: any) => {
         ]}
       >
         <Form
-          key={id}
           name="editDataSource"
           labelCol={{
             span: 5,
