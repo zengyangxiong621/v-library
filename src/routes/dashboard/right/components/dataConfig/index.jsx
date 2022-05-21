@@ -52,7 +52,9 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   }, [_data.dataConfig])
 
   useEffect(() => {
-    setDataContainerResult()
+    if (_data.dataFrom === 1) {
+      setDataContainerResult()
+    }
   }, [_data.dataContainers])
 
   const dataFilterHandler = data => {
@@ -104,6 +106,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         dataType: _data.dataType
       }
     })
+    setResultData(data)
   }
 
   const setDataContainerResult = () => {
@@ -115,6 +118,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       }
       return pre
     }, [])
+    setResultData(dataList)
   }
 
   useEffect(async () => {
@@ -157,7 +161,11 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onFiledsChange(fields, _data.dataType)
   }
 
-  const onDataTypeChange = async (data) => {
+  const resultDataChange = data => {
+    setResultData(data)
+  }
+
+  const onDataTypeChange = async(data) => {
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
