@@ -254,9 +254,9 @@ const EditDataSource = (props: any) => {
     setDataBaseList([])
     setIndexList([])
     setIsConnect(false)
-    setTimeout(() => {
-      editForm.resetFields()
-    }, 4);
+    // setTimeout(() => {
+    //   editForm.resetFields()
+    // }, 4);
     // setIndexName('')
   }
   const handleCancel = () => {
@@ -388,6 +388,7 @@ const EditDataSource = (props: any) => {
         ]}
       >
         <Form
+          key={id}
           name="editDataSource"
           labelCol={{
             span: 5,
