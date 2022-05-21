@@ -46,6 +46,7 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     if (type === 'component') {
+
       const newData = Object.assign({}, resultData, {
         value: JSON.stringify(componentResultData, null, 2)
       })
