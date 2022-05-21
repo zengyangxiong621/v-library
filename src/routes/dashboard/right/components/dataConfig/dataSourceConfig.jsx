@@ -9,7 +9,7 @@ import StaticData from './staticData'
 import SelectDataSource from './selectDataSource'
 import APIDataSource from './apiDataSource'
 import { http } from '../../../../../services/request'
-
+import DataFilter from './dataFilter'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {
@@ -306,6 +306,9 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
           }
         </div>
         <div className="data-footer">
+{/*
+          <DataFilter data={_data} onFilterBoxChange={filterBoxChange}/>
+*/}
           <Checkbox defaultChecked={filterFlag} onChange={filterBoxChange}>数据过滤器</Checkbox>
           {_data.filters.length
             ?

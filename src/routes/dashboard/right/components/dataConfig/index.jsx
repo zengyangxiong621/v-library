@@ -127,7 +127,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       }
       return pre
     }, [])
-    setComponentResultData(dataList)
   }
 
   useEffect(async () => {

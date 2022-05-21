@@ -25,34 +25,41 @@ const DataResult = ({ bar, dispatch, ...props }) => {
   const [resultData, setResultData] = useState(resultCodeData)
 
   useEffect(() => {
-    if (type !== 'component') {
-      let resData = null
-      const currentData = bar.componentData[_data.id]
-      if (currentData) {
-        // 如果使用数据过滤器，则需要过滤数据
-        if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
-          resData = dataFilterHandler(currentData)
-        } else {
-          resData = currentData
-        }
-        console.log('resData', resData)
-        const newData = Object.assign({}, resultData, {
-          value: JSON.stringify(resData, null, 2)
-        })
-        setResultData(newData)
-      }
+    const dataFrom = _data.dataFrom
+    let resData = null
+    let currentData = null
+    if (dataFrom === 0) {
+      currentData = bar.componentData[_data.id]
+    } else {
+      currentData = setDataContainerResult()
     }
-  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter])
-
-  useEffect(() => {
-    if (type === 'component') {
-
+    if (currentData) {
+      // 如果使用数据过滤器，则需要过滤数据
+      if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
+        resData = dataFilterHandler(currentData)
+      } else {
+        resData = currentData
+      }
+      console.log('resData', resData)
       const newData = Object.assign({}, resultData, {
-        value: JSON.stringify(componentResultData, null, 2)
+        value: JSON.stringify(resData, null, 2)
       })
       setResultData(newData)
     }
-  }, [componentResultData])
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
+
+  const setDataContainerResult = () => {
+    // 数据容器
+    if (_data?.dataContainers) {
+      const dataContainerIds = _data.dataContainers.map(item => item.id)
+      return bar.dataContainerDataList.reduce((pre, cur) => {
+        if (dataContainerIds.includes(cur.id)) {
+          pre.push(cur.data)
+        }
+        return pre
+      }, [])
+    }
+  }
 
 
   const dataFilterHandler = data => {
