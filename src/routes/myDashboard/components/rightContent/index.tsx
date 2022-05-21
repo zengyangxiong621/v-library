@@ -2,8 +2,7 @@
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from 'dva'
-import { useFetch, BASE_URL } from "../../../../utils/useFetch";
-
+import { http, BASEURL } from '@/services/request'
 import AppCard from '../appCard/index'
 import DarkModal from '../darkThemeModal/index'
 
@@ -129,12 +128,14 @@ const RightContent = (props: any) => {
   }
   // 确认移动分组
   const confirmMoveGroup = async () => {
-    const [, data] = await useFetch('/visual/application/updateAppGroup', {
-      body: JSON.stringify({
+    const data = await http({
+      url: '/visual/application/updateAppGroup',
+      method: 'post',
+      body: {
         spaceId,
         appId: curAppId,
         newGroupId: newGroupId,
-      })
+      }
     })
     if (data) {
       message.success({ content: '移动分组成功', duration: 2 })
@@ -160,11 +161,14 @@ const RightContent = (props: any) => {
     if (isPublish) {
       setFabuChecked(true)
       // 此处拿不到最新的id值，就直接传了
-      const [, data] = await useFetch(`/visual/application/share/detail/${id}`, { method: 'get' })
+      const data = await http({
+        url: `/visual/application/share/detail/${id}`,
+        method: 'get'
+      })
       const { shareUrl, ...filterShareUrl } = data
       setFabuBody(filterShareUrl)
       if (data) {
-        setFxljInputValue(`${BASE_URL}${data.shareUrl}`)
+        setFxljInputValue(`${BASEURL}${data.shareUrl}`)
         if (data.needPassword) {
           // setJmfxValue()
           setIsShowJmfxInput(true)
@@ -216,7 +220,7 @@ const RightContent = (props: any) => {
       // 发布成功，1. 刷新列表获得应用最新的发布状态
       // 2. 设置分享连接地址
       refreshList()
-      setFxljInputValue(`${BASE_URL}${result.shareUrl}`)
+      setFxljInputValue(`${BASEURL}${result.shareUrl}`)
       // 打开发布开关
       setFabuChecked(true)
       setIsShared(true)
@@ -228,13 +232,16 @@ const RightContent = (props: any) => {
    */
   const publishByDiffParams = async (body: object) => {
     setFabuSpinning(true)
-    const [, data] = await useFetch('/visual/application/share', {
-      body: JSON.stringify(body)
-    }, {
-      errHandleFn: (err: any) => {
-        message.error('发布失败');
-      },
+    const data = await http({
+      url: '/visual/application/share',
+      method: 'post',
+      body: body
     })
+    // {
+    //   errHandleFn: (err: any) => {
+    //     message.error('发布失败');
+    //   },
+    // }
     setFabuSpinning(false)
     return data
   }
@@ -365,7 +372,7 @@ const RightContent = (props: any) => {
     multiple: false,
     maxCount: 1,
     accept: 'image/png, image/jpeg',
-    action: `${BASE_URL}/visual/file/upload`,
+    action: `${BASEURL}/visual/file/upload`,
     beforeUpload(file: any) {
       const { name }: { name: string } = file
       // 考虑 cdb.la...yer.json 这个文件名

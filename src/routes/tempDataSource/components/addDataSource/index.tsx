@@ -4,8 +4,7 @@ import './index.less'
 
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
 
-import { useFetch, BASE_URL } from '../../../../utils/useFetch'
-import { type } from 'os'
+import { http, BASEURL } from '@/services/request'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -71,8 +70,10 @@ const AddDataSource = (props: any) => {
     }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/connectTest', {
-      body: JSON.stringify(finalParams)
+    const data = await http({
+      url: '/visual/datasource/connectTest',
+      method: 'post',
+      body: finalParams
     })
     setTestConnectLoading(false)
     if (data) {
@@ -96,9 +97,11 @@ const AddDataSource = (props: any) => {
     //！ 请求数据库列表
     setGetDBListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/queryDataBaseList', {
-      body: JSON.stringify(finalParams)
-    }, { errorInfo: '获取数据库列表失败' })
+    const data = await http({
+      url: '/visual/datasource/queryDataBaseList',
+      method: 'post',
+      body: finalParams
+    })
     setGetDBListLoading(false)
     if (Array.isArray(data)) {
       if (!data.length) {
@@ -125,10 +128,10 @@ const AddDataSource = (props: any) => {
     const values: any = await addForm.validateFields(['url'])
     setGetIndexListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/queryIndices', {
-      body: JSON.stringify(values)
-    }, {
-      errorInfo: '索引列表获取失败'
+    const data = await http({
+      url: '/visual/datasource/queryIndices',
+      method: 'post',
+      body: values
     })
     setGetIndexListLoading(false)
     if (Array.isArray(data)) {
@@ -198,8 +201,10 @@ const AddDataSource = (props: any) => {
     }
     // 发送请求
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/add', {
-      body: JSON.stringify(finalParams)
+    const data = await http({
+      method: 'post',
+      url: '/visual/datasource/add',
+      body: finalParams
     })
     if (data) {
       // 成功后  -关闭弹窗 -清除表单- 重置添加数据源表单为初始样式 -刷新表格
@@ -251,7 +256,7 @@ const AddDataSource = (props: any) => {
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || '',
-      action: `${BASE_URL}/visual/file/upload`,
+      action: `${BASEURL}/visual/file/upload`,
       beforeUpload(file: any) {
         const { name, size }: { name: string, size: number } = file
         if (size > 1024 * 1024 * 10) {

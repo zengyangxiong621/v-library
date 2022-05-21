@@ -10,7 +10,7 @@ import EditDataSource from './components/editDataSource'
 import PreviewTable from '../../routes/dashboard/right/components/editTable/previewTable'
 import PreViewJson from '../../routes/dashboard/right/components/codeEditor/previewJson'
 
-import { useFetch } from '../../utils/useFetch'
+import { http } from '@/services/request'
 import { TDataSourceParams } from './type'
 
 const { Option } = Select
@@ -61,8 +61,10 @@ const DataSource = (props: any) => {
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/list', {
-      body: JSON.stringify(differentParams)
+    const data = await http({
+      url: '/visual/datasource/list',
+      method: 'post',
+      body: differentParams
     })
     if (data) {
       setTableLoading(false)
@@ -147,7 +149,9 @@ const DataSource = (props: any) => {
       async onOk(close) {
         //TODO 发送删除数据源的请求
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const [, data] = await useFetch(`/visual/datasource/delete?dataSourceId=${dataSourceId}`, {
+        const data = await http({
+          url: `/visual/datasource/delete?dataSourceId=${dataSourceId}`,
+          method: 'post'
         })
         if (data) {
           close()
@@ -186,8 +190,10 @@ const DataSource = (props: any) => {
       }
     })
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/update', {
-      body: JSON.stringify(finalParams)
+    const data = await http({
+      url: '/visual/datasource/update',
+      method: 'post',
+      body: finalParams
     })
     if (data) {
       refreshTable()

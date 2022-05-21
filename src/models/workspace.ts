@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import { useFetch } from "../utils/useFetch";
+import { http } from "@/services/request";
 
 export default {
   namespace: "workSpace",
@@ -32,22 +32,25 @@ export default {
   effects: {
     *getMemberList({ payload }: any, { put }: any): any {
       console.log("payload", payload);
-      const [, data] = yield useFetch(
-        "/visual/workspace/userList",
-        { body: JSON.stringify(payload) },
-        { errorInfo: "空间成员列表请求失败" }
+      const data = yield http(
+        {
+          url: "/visual/workspace/userList",
+          body: payload,
+        }
+        // { errorInfo: "空间成员列表请求失败" }
       );
-      console.log("ddd", data);
       yield put({
         type: "setMemberList",
         payload: data?.content || [],
       });
     },
     *getWorkSpaceList({ payload }: any, { call, put, select }: any): any {
-      const [, data] = yield useFetch(
-        `/visual/workspace/list/${payload.accountId}`,
-        { method: "get" },
-        { errorInfo: "获取空间列表请求失败" }
+      const data = yield http(
+        {
+          method: "get",
+          url: `/visual/workspace/list/${payload.accountId}`,
+        }
+        // { errorInfo: "获取空间列表请求失败" }
       );
       yield put({
         type: "setWorkSpaceList",

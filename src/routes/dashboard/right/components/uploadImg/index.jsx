@@ -7,7 +7,7 @@ import {
   message,
 } from 'antd';
 
-import { BASE_URL } from '../../../../../utils/useFetch'
+import { BASEURL } from '@/services/request'
 
 
 const UploadImg = props => {
@@ -80,7 +80,7 @@ const UploadImg = props => {
             listType="picture-card"
             className="bg-uploader"
             showUploadList={{ showRemoveIcon: true, showPreviewIcon: false }}
-            action={`${BASE_URL}/visual/file/upload`}
+            action={`${BASEURL}/visual/file/upload`}
             beforeUpload={beforeUpload}
             onChange={handleBgChange}
             onRemove={handleBgRemove}

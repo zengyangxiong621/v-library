@@ -4,7 +4,7 @@ import './index.less'
 import Spreadsheet from "./spreadsheet.js";
 import * as XLSX from 'xlsx'
 import { http } from '../../../../../services/request'
-import { BASE_URL } from '../../../../../utils/useFetch'
+import { BASEURL } from '@/services/request'
 import debounce from 'lodash/debounce';
 
 import { Button, Modal, Spin } from 'antd';
@@ -88,7 +88,7 @@ const PreviewTable = props => {
     const file = new Blob([s2ab(wbout)]);
     const forms = new FormData()
     forms.append('file', file,`${fileName}`)
-    fetch(`${BASE_URL}/visual/file/upload`, {
+    fetch(`${BASEURL}/visual/file/upload`, {
       method: 'POST',
       body: forms
     }).then(res => {

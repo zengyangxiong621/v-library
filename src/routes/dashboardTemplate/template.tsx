@@ -9,7 +9,7 @@ import { Input, Row, Col, Modal, Form, Select, Button } from 'antd'
 import TemplateCard from './templateCard/index'
 import Preview from './preview/index'
 import DarkModal from '../myDashboard/components/darkThemeModal/index'
-import { useFetch } from '../../utils/useFetch'
+import { http } from '@/services/request'
 
 const { Option } = Select
 
@@ -32,7 +32,8 @@ const DashboardTemplate = (props: any) => {
   const [templateId, setTemplateId] = useState<string>('')
 
   const GetGroups = async () => {
-    const [, data] = await useFetch(`/visual/application/queryGroupList?spaceId=${spaceId}`, {
+    const data = await http({
+      url: `/visual/application/queryGroupList?spaceId=${spaceId}`,
       method: 'get'
     })
     const pickNameArr = data.slice(1).map((item: any) => ({ label: item.name, value: item.groupId }))
@@ -66,8 +67,10 @@ const DashboardTemplate = (props: any) => {
       groupId: selectedGroup
     }
     // templateId && (finalBody.templateId = templateId)
-    const [, data] = await useFetch('/visual/application/createBlankApp', {
-      body: JSON.stringify(finalBody)
+    const data = await http({
+      url: '/visual/application/createBlankApp',
+      method: 'post',
+      body: finalBody
     })
     // 请求成功
     // 关闭弹窗 - 清除弹窗缓存 - 跳转至应用所属的画布
