@@ -5,7 +5,7 @@ import './index.less'
 
 import EveryItem from '../everyItem/index'
 
-import { useFetch } from '../../../../../../../utils/useFetch'
+import { http } from '@/services/request'
 
 
 const Charts = (props: any) => {
@@ -25,27 +25,50 @@ const Charts = (props: any) => {
 
   const chartTypes = ['全部', '柱型图', '折线图', '饼图', '散点图', '其他']
 
+  // useEffect(() => {
+    // const init = async () => {
+  //     const getData = async (type?: string) => {
+  //       const data: any = await http({
+  //         url: '/visual/module-manage/queryModuleList',
+  //         method: 'post',
+  //         body: {
+  //           type: [0],
+  //           // subType: type,
+  //           status: 0,
+  //           pageNo: 1,
+  //           pageSize: 100,
+  //         }
+  //       })
+        // ChartDataMap[helplessMapping[type]] = data?.content
+        // }
+  //       console.log('data', data);
+        // for await (let item of chartTypes) {
+          //   await getData(item)
+          // }
+  //       }
+  //       getData()
+    // init()
+  // }, [])
   useEffect(() => {
-    const init = async () => {
-      const getData = async (type: string) => {
-        const [, data]: any = await useFetch('/visual/module-manage/queryModuleList', {
-          body: JSON.stringify({
+      const getData = async () => {
+        const data: any = await http({
+          url: '/visual/module-manage/queryModuleList',
+          method: 'post',
+          body: {
             type: [0],
-            subType: type,
             status: 0,
             pageNo: 1,
             pageSize: 100,
-          })
+          }
         })
-        ChartDataMap[helplessMapping[type]] = data?.content
-      }
-      for await (let item of chartTypes) {
-        await getData(item)
-      }
-    }
-    init()
+        // ChartDataMap[helplessMapping[type]] = data?.content
+        // }
+        console.log('data', data);
+        // TODO  把data里的数据按照组件种类放入chartDataMap中
+        }
+        getData()
+    // init()
   }, [])
-
 
   return (
     <div className='Charts-wrap'>

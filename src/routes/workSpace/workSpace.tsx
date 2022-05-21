@@ -12,7 +12,7 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
 import DarkModal from "../myDashboard/components/darkThemeModal";
-import { useFetch } from "../../utils/useFetch";
+import { http } from '@/services/request'
 
 
 // 功能
@@ -51,9 +51,13 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
  */
   const getTableData = async (finalBody: any) => {
     setTableLoading(true)
-    const [, data] = await useFetch("/visual/workspace/userList",
-      { body: JSON.stringify(finalBody) },
-      { errorInfo: "空间成员列表请求失败" })
+    const data = await http(
+      {
+        url: "/visual/workspace/userList",
+        method: 'post',
+        body: finalBody
+      },
+    )
     setTableLoading(false)
     if (Array.isArray(data?.content)) {
       setMemberList(data.content)
@@ -88,9 +92,11 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
       spaceId: workSpace.curWorkSpace[0],
       projectQuota: projectQuota
     }
-    const [, data] = await useFetch(`/visual/workspace/update`, {
-      body: JSON.stringify(finalBody)
-    }, { errorInfo: '更改项目配额失败' })
+    const data = await http({
+      url: `/visual/workspace/update`,
+      method: 'post',
+      body: finalBody
+    })
     if (data) {
       // 更改配额成功了, 刷新页面
       getDataDispatch({ accountId: workSpace.accountId }, 'getWorkSpaceList')

@@ -16,8 +16,16 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const [fieldsData, setFieldsData] = useState([])
 
   useEffect(() => {
-    if (bar.componentData[_data.id]) {
-      const keys = getKeys(bar.componentData[_data.id])
+    const currentData = bar.componentData[_data.id]
+    if (currentData) {
+      let resData = null
+      // 如果使用数据过滤器，则需要过滤数据
+      if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
+        resData = dataFilterHandler(currentData)
+      } else{
+        resData = currentData
+      }
+      const keys = getKeys(resData)
       setFieldkeys(keys)
     } else {
       dispatch({
@@ -32,7 +40,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       const keys = getKeys(_data.staticData.data)
       setFieldkeys(keys)
     }
-  }, [bar.componentData])
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter])
 
   useEffect(() => {
     const data = _data.dataConfig[_data.dataType]
@@ -46,6 +54,33 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   useEffect(() => {
     setDataContainerResult()
   }, [_data.dataContainers])
+
+  const dataFilterHandler = data => {
+    const filters = bar.componentConfig.filters.map(item => {
+      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      return {
+        ...filterDetail,
+        enable: item.enable,
+      }
+    }).filter(item => item.enable)
+    try {
+      const functions = filters.map(item => {
+        return (new Function('data', item.content))
+      })
+      const resultArr = []
+      functions.forEach((fn, index) => {
+        if (index === 0) {
+          resultArr.push(fn(data))
+        } else {
+          resultArr.push(fn(resultArr[index - 1]))
+        }
+      })
+      return resultArr[resultArr.length - 1]
+    } catch (e) {
+      console.error(e)
+      return {}
+    }
+  }
 
 
   // 一切到数据 tab 栏时，渲染出的数据响应结果

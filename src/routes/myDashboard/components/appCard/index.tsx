@@ -3,7 +3,7 @@ import React, { memo, useState, useRef } from 'react'
 import './index.less'
 
 import { withRouter } from 'dva/router'
-import { useFetch } from '../../../../utils/useFetch'
+import { http } from '@/services/request'
 import { BASEURL } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
@@ -42,19 +42,17 @@ const AppCard = (props: any) => {
       setCanEdit(false)
       return
     }
-    const [, data] = await useFetch('/visual/application/updateAppName', {
-      body: JSON.stringify({
+    const data = await http({
+      url: '/visual/application/updateAppName',
+      method: 'post',
+      body: {
         id,
         name: appName
-      })
-    }, {
-      onlyNeedWrapData: true
+      }
     })
-    if (data.data) {
+    if (data) {
       message.success({ content: '应用名修改成功', duration: 2 })
       refreshList()
-    } else {
-      message.error({ content: data.message || '应用名称修改失败', duration: 2 })
     }
     setCanEdit(false)
   }
@@ -80,10 +78,12 @@ const AppCard = (props: any) => {
 
   // 复制应用
   const copyApp = async (appId: string) => {
-    const [, data] = await useFetch('/visual/application/copy', {
-      body: JSON.stringify({
+    const data = await http({
+      url: '/visual/application/copy',
+      method: 'post',
+      body: {
         appId
-      })
+      }
     })
     // 返回的数据有id, 视为复制成功
     if (data && data.id) {
@@ -120,11 +120,12 @@ const AppCard = (props: any) => {
         background: '#232630',
       },
       async onOk(close) {
-        const [, data] = await useFetch('/visual/application/deleteApp', {
+        const data = await http({
+          url: '/visual/application/deleteApp',
           method: 'delete',
-          body: JSON.stringify({
+          body: {
             appIdList: appIds
-          })
+          }
         })
         if (data) {
           refreshList()

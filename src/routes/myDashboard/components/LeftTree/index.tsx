@@ -1,8 +1,6 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect } from 'react'
 import './index.less'
 import { connect } from 'dva'
-
-import { useFetch } from '../../../../utils/useFetch'
 
 import Node from '../node/index'
 

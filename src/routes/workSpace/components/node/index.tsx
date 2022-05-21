@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useEffect, useRef, useState } from 'react'
 import './index.less'
-import { connect } from 'dva'
 
-import { useFetch } from '../../../../utils/useFetch'
+import { http } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { Input, message, Modal } from 'antd'
@@ -40,8 +39,10 @@ const EveryTreeNode = (props: any) => {
       // 配额默认是50个
       projectQuota: 50
     }
-    const [, data] = await useFetch('/visual/workspace/add', {
-      body: JSON.stringify(finalBody)
+    const data = await http({
+      url: '/visual/workspace/add',
+      method: 'post',
+      body: finalBody
     })
     // 创建成功，改变父组件传入的变量通知父组件重新获取最新分组列表
     if (data) refreshWorkSpaceLists()
@@ -72,8 +73,10 @@ const EveryTreeNode = (props: any) => {
       name: inputValue,
       spaceId: id,
     }
-    const [, data] = await useFetch('/visual/workspace/update', {
-      body: JSON.stringify(finalBody)
+    const data = await http({
+      url: '/visual/workspace/update',
+      method: 'post',
+      body: finalBody
     })
     if (data) {
       inputRef.current.blur()
@@ -121,7 +124,8 @@ const EveryTreeNode = (props: any) => {
         background: '#232630',
       },
       async onOk(close) {
-        const [, data] = await useFetch(`/visual/workspace/delete/${id}`, {
+        const data = await http({
+          url: `/visual/workspace/delete/${id}`,
           method: 'delete'
         })
         if (data) {
