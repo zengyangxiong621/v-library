@@ -90,7 +90,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
       const dataContainer = bar.dataContainerList.find(it => it.id === item.id)
       let data = {}
       if (dataContainer.dataType === 'static') {
-        data = dataContainer.dataType === 'static' ? dataContainer.staticData.data : {}
+        data = dataContainer.staticData.data || {}
       } else {
         data = bar.dataContainerDataList.find(it => it.id === item.id).data
         // data = await http({

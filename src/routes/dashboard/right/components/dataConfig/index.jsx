@@ -17,11 +17,9 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const [fieldsData, setFieldsData] = useState([])
 
   useEffect(() => {
-    console.log('componentData', bar.componentData)
     if (bar.componentData[_data.id]) {
       setResultData(bar.componentData[_data.id])
       const keys = getKeys(bar.componentData[_data.id])
-      console.log('keys', keys)
       setFieldkeys(keys)
     } else {
       dispatch({
@@ -34,7 +32,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         },
       })
       const keys = getKeys(_data.staticData.data)
-      console.log('keys', keys)
       setFieldkeys(keys)
     }
   }, [bar.componentData])
@@ -48,33 +45,56 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     }
   },[_data.dataConfig])
 
+  useEffect(() => {
+    setDataContainerResult()
+  }, [_data.dataContainers])
 
-  useEffect(async () => {
-    console.log('_data', _data)
+
+  // 一切到数据 tab 栏时，渲染出的数据响应结果
+  const changeDataFromCallback = async () => {
     const { dataFrom } = _data
     if (dataFrom === 0) {
-      // 数据源
-      const data =  await http({
-        url:'/visual/module/getData',
-        method: 'post',
-        body:{
-          moduleId: _data.id,
-          dataType: _data.dataType
-        }
-      })
-      setResultData(data)
+      console.log('dataFrom', dataFrom)
+      await setDataSourceResult()
     } else {
-      // 数据容器
-      const dataContainerIds = _data.dataContainers.map(item => item.id)
-      const dataList = bar.dataContainerDataList.reduce((pre, cur) => {
-        if (dataContainerIds.includes(cur.id)) {
-          pre.push(cur.data)
-        }
-        return pre
-      }, [])
-      setResultData(JSON.stringify(dataList))
+      await setDataContainerResult()
     }
+  }
+
+  const setDataSourceResult = async () => {
+    // 数据源
+    const data = await http({
+      url:'/visual/module/getData',
+      method: 'post',
+      body:{
+        moduleId: _data.id,
+        dataType: _data.dataType
+      }
+    })
+    console.log('setDataSourceResult', setDataSourceResult)
+    setResultData(data)
+  }
+
+  const setDataContainerResult = () => {
+    // 数据容器
+    const dataContainerIds = _data.dataContainers.map(item => item.id)
+    const dataList = bar.dataContainerDataList.reduce((pre, cur) => {
+      if (dataContainerIds.includes(cur.id)) {
+        pre.push(cur.data)
+      }
+      return pre
+    }, [])
+    setResultData(dataList)
+  }
+
+  useEffect(async () => {
+    await changeDataFromCallback()
   }, [])
+
+
+  useEffect(async () => {
+    await changeDataFromCallback()
+  }, [_data.dataFrom])
 
   const getKeys = (data) => {
     if (Object.prototype.toString.call(data) === '[object Object]') {

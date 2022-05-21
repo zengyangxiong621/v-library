@@ -40,35 +40,37 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   const [loading, setLoading] = useLoading(false, document.querySelector('.loading-wrapper'))
   const visible = props.visible
   useEffect(async () => {
-    if (Object.keys(props.data).length === 0) {
-      setCopyData(testData)
-      // 新增
-      const containerData = await http({
-        method: 'post',
-        url: '/visual/container/add',
-        body: {
-          dashboardId: bar.dashboardId,
-        },
-      })
-      dispatch({
-        type: 'bar/updateDataContainer',
-        payload: {
-          containerData,
-          data: containerData.staticData.data
-        }
-      })
-      setResultData(containerData.staticData.data)
-      setCopyData(containerData)
-    } else {
-      // 编辑
-      setCopyData(props.data)
-      const data = bar.dataContainerDataList.find(item => item.id === props.data.id)
-      console.log('-------------')
-      console.log('data', data)
-      console.log('props.data', props.data)
-      console.log('bar.dataContainerDataList', bar.dataContainerDataList)
-      console.log('---------------')
-      setResultData(data)
+    if (Object.prototype.toString.call(props.data) === '[object Object]') {
+      if (Object.keys(props.data).length === 0) {
+        setCopyData(testData)
+        // 新增
+        const containerData = await http({
+          method: 'post',
+          url: '/visual/container/add',
+          body: {
+            dashboardId: bar.dashboardId,
+          },
+        })
+        dispatch({
+          type: 'bar/updateDataContainer',
+          payload: {
+            containerData,
+            data: containerData.staticData.data
+          }
+        })
+        setResultData(containerData.staticData.data)
+        setCopyData(containerData)
+      } else {
+        // 编辑
+        setCopyData(props.data)
+        const data = bar.dataContainerDataList.find(item => item.id === props.data.id)
+        console.log('-------------')
+        console.log('data', data)
+        console.log('props.data', props.data)
+        console.log('bar.dataContainerDataList', bar.dataContainerDataList)
+        console.log('---------------')
+        setResultData(data)
+      }
     }
   }, [props.data])
 
