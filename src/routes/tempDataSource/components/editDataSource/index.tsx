@@ -4,7 +4,7 @@ import './index.less'
 
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
 
-import { useFetch, BASE_URL } from '../../../../utils/useFetch'
+import { http, BASEURL } from '@/services/request'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -97,8 +97,10 @@ const EditDataSource = (props: any) => {
     }
     setTestConnectLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/connectTest', {
-      body: JSON.stringify(finalParams)
+    const data = await http({
+      url: '/visual/datasource/connectTest',
+      method: 'post',
+      body: finalParams
     })
     setTestConnectLoading(false)
     if (data) {
@@ -124,8 +126,10 @@ const EditDataSource = (props: any) => {
     //！ 请求数据库列表
     setGetDBListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/queryDataBaseList', {
-      body: JSON.stringify(finalParams)
+    const data = await http({
+      url: '/visual/datasource/queryDataBaseList',
+      method: 'post',
+      body: finalParams
     })
     setGetDBListLoading(false)
     if (Array.isArray(data)) {
@@ -155,10 +159,10 @@ const EditDataSource = (props: any) => {
     const values: any = await editForm.validateFields(['url'])
     setGetIndexListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/queryIndices', {
-      body: JSON.stringify(values)
-    }, {
-      errorInfo: '索引列表获取失败'
+    const data = await http({
+      url: '/visual/datasource/queryIndices',
+      method: 'post',
+      body: values
     })
     setGetIndexListLoading(false)
     if (Array.isArray(data)) {
@@ -238,8 +242,10 @@ const EditDataSource = (props: any) => {
     // 发送请求
     setLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, data] = await useFetch('/visual/datasource/update', {
-      body: JSON.stringify(finalParams)
+    const data = await http({
+      url: '/visual/datasource/update',
+      method: 'post',
+      body: finalParams
     })
     setLoading(false)
     if (data) {
@@ -295,7 +301,7 @@ const EditDataSource = (props: any) => {
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || '',
-      action: `${BASE_URL}/visual/file/upload`,
+      action: `${BASEURL}/visual/file/upload`,
       beforeUpload(file: any) {
         const { name, size }: { name: string, size: number } = file
         if (size > 1024 * 1024 * 10) {

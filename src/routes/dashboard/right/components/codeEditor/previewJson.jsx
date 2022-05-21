@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
 import { http } from '../../../../../services/request'
-import { BASE_URL } from '../../../../../utils/useFetch'
+import { BASEURL } from '@/services/request'
 import debounce from 'lodash/debounce';
 
 import { Button, Modal, Spin, message } from 'antd';
@@ -72,7 +72,7 @@ const PreViewJson = props => {
     })
     const forms = new FormData()
     forms.append('file', file)
-    fetch(`${BASE_URL}/visual/file/upload`, {
+    fetch(`${BASEURL}/visual/file/upload`, {
       method: 'POST',
       body: forms
     }).then(res => {

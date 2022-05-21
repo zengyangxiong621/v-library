@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useEffect, useState } from 'react'
 import './index.less'
-import { BASE_URL, useFetch } from '../../utils/useFetch'
+import { BASEURL } from '@/services/request'
 import { connect } from 'dva'
 
 import { Input, Select, Upload, message } from 'antd'
@@ -124,7 +124,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     multiple: false,
     maxCount: 1,
     accept: 'application/zip',
-    action: `${BASE_URL}/visual/application/import/${spaceId}`,
+    action: `${BASEURL}/visual/application/import/${spaceId}`,
     headers: {
       'Response-Type': 'application/json'
     },
