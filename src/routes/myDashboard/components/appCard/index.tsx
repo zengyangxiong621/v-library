@@ -28,6 +28,8 @@ const AppCard = (props: any) => {
   /** 输入框事件 */
   const bianjiClick = () => {
     setCanEdit(true)
+    // 每次input框出现时，都应该是重新设置输入框里的值，不然切换到别的分组后再编辑任意应用，输入框里都将是上一次的值
+    setAppName(name)
     Promise.resolve().then(() => {
       inputRef.current.focus({
         cursor: 'all'
