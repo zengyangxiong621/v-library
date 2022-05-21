@@ -28,13 +28,13 @@ const DataResult = ({ bar, dispatch, ...props }) => {
     if (currentData) {
       // 如果使用数据过滤器，则需要过滤数据
       if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
-        resData = dataFilterHandler(_data.dataType === 'static' ? _data.staticData.data : currentData)
-      } else{
+        resData = dataFilterHandler(currentData)
+      } else {
         resData = currentData
       }
+      console.log('resData', resData)
       const newData = Object.assign({}, resultData, {
-        value: _data.dataType === 'static' ? JSON.stringify(_data.staticData.data, null, 2) :
-          JSON.stringify(resData, null, 2)
+        value: JSON.stringify(resData, null, 2)
       })
       setResultData(newData)
     }
