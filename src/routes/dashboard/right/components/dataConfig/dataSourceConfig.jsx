@@ -82,8 +82,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data
   const [dataSourceTypes, setDataSourceTypes] = useState(selectData)
   const [drawerVisible, setDrawerVisible] = useState(false)
-  const [filterFlag, setFilterFlag] = useState(false)
-  const [filters, setFilters] = useState([])
+  const [filterFlag, setFilterFlag] = useState(_data.useFilter)
   const [sqlData, setSqlData] = useState(_sqlDataConfig)
   const [esData, setEsData] = useState(_esDataConfig)
 
@@ -187,7 +186,6 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
         },
       },true)
       if (data.code === 10000 && data.data) {
-        props.onResultDataChange(dataSourceTypes.value !== 'static' ? data.data : data.data.data)
         dispatch({
           type: 'bar/save',
           payload: {
@@ -224,8 +222,17 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
     saveDataSource('query_script', esData)
   }
 
-  const filterBoxChange = e => {
+  const filterBoxChange =async(e)=> {
     setFilterFlag(e.target.checked)
+    await http({
+      url:'/visual/module/updateDatasource',
+      method:'post',
+      body:{
+        id:_data.id,
+        useFilter:e.target.checked,
+        dataType: dataSourceTypes.value,
+      }
+    })
   }
 
   const showFilterDrawer = () => {
@@ -237,7 +244,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   }
 
   const drawerSave = filters => {
-    setFilters(filters)
+    // todo
   }
 
   return (
@@ -261,7 +268,6 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
                 <APIDataSource
                   data={_data}
                   onDataSourceChange={props.onDataSourceChange}
-                  onResultDataChange={props.onResultDataChange}
                 />
                 : ['postgresql', 'mysql', 'elasticSearch'].includes(dataSourceTypes.value) ?
                   <React.Fragment key={dataSourceTypes.value}>
@@ -289,9 +295,9 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
         </div>
         <div className="data-footer">
           <Checkbox defaultChecked={filterFlag} onChange={filterBoxChange}>数据过滤器</Checkbox>
-          {filters.length
+          {_data.filters.length
             ?
-            <span disabled={!filterFlag} className="filter-num" onClick={showFilterDrawer}>已添加{filters.length}个过滤器</span>
+            <span disabled={!filterFlag} className="filter-num" onClick={showFilterDrawer}>已添加{_data.filters.length}个过滤器</span>
             :
             <Button disabled={!filterFlag} onClick={showFilterDrawer} icon={<PlusOutlined />}>添加过滤器</Button>
           }

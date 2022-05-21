@@ -1,8 +1,11 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useRef } from 'react';
 import './index.less';
+import { connect } from 'dva'
 import { v4 as uuidv4 } from 'uuid';
-import debounce from 'lodash/debounce';
 import MonacoEditor from 'react-monaco-editor';
+import DataResult from '../dataConfig/dataResult'
+
+import { http } from '../../../../../services/request'
 
 import {
   sortableContainer,
@@ -18,14 +21,16 @@ import {
   Input,
   Modal,
   Checkbox,
-  Tag
+  Tag,
+  Popover
 } from 'antd';
 
 import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  PlusOutlined
+  PlusOutlined,
+  MenuOutlined
 } from '@ant-design/icons';
 
 const cfilters = [
@@ -37,126 +42,273 @@ const cfilters = [
     content: 'return data',
     callbackKeys: [],
     isAddKey: false, // 是否正在添加key
-    editkeycontent: '', // 正在编辑的key内容
-    status: 0 // 0: 未编辑 1：编辑
-  },
-  {
-    id: uuidv4(),
-    enable: true,
-    name: '过滤器2',
-    isEditName: false,
-    content: 'return data',
-    callbackKeys: [],
-    isAddKey: false,
-    editkeycontent: '',
-    status: 0 // 0: 未编辑 1：编辑
+    status: 0,// 0: 未编辑 1：编辑
+    moduleIds: [] // 使用该过滤器的组件ID的数组
   },
 ]
 
-const DataConfigDrawer = props => {
+const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
   const { Option } = Select;
   const { confirm } = Modal;
 
   const [visible, setVisible] = useState(props.visible)
-  const [filters, setFilters] = useState(cfilters)
-  const [isEdit, setEdit] = useState(false)
+  const [filters, setFilters] = useState([])
+  const [activeCollapseKeys, setActiveCollapseKeys] = useState([])
+  const [filterOfAdd, setFilterOfAdd] = useState(null)
+  const [selectFilterOprions, setSelectFilterOprions] = useState([])
+
+  const inputNameRef = useRef(null)
+  const inputFiledRef = useRef(null)
 
   useEffect(() => {
     setVisible(props.visible)
   }, [props.visible])
 
   useEffect(() => {
-    const flag = filters.find(item => item.status === 1)
-    if (flag) {
-      setEdit(true)
-    }
-  }, [filters])
+    effectHandler()
+  }, [bar.componentConfig.filters, bar.componentFilters])
+
+  const effectHandler = () => {
+    const conFifters = bar.componentConfig?.filters?.map(item => {
+      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      return {
+        ...filterDetail,
+        enable: item.enable,
+        isEditName: false,
+        isAddKey: false,
+        status: 0,
+      }
+    }) || []
+    setFilters(conFifters)
+    const options = bar.componentFilters.filter(v => {
+      if (!bar.componentConfig) {
+        return v
+      } else {
+        return !bar.componentConfig.filters.some((item) => item.id === v.id)
+      }
+    })
+    setSelectFilterOprions(options)
+  }
 
   const onClose = () => {
-    console.log('11111')
     setVisible(false)
     props.onClose()
   }
 
-  const selectedFiltersChange = (val) => {
-    console.log('val', val)
+  const selectedFiltersChange = async (val) => {
+    await http({
+      url: '/visual/module/filter/add',
+      method: 'POST',
+      body: {
+        filterId: val,
+        id: bar.key[0]
+      }
+    })
+    // 更新过滤器信息
+    const componentFilters = [...bar.componentFilters]
+    componentFilters.forEach(filter => {
+      if (filter.id === val) {
+        filter.moduleIds.push(bar.key[0])
+      }
+    })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        componentFilters
+      }
+    })
+    // 跟新组件配置信息
+    const componentConfig = { ...bar.componentConfig }
+    const comFilters = [...componentConfig.filters]
+    comFilters.push(
+      {
+        enable: true,
+        id: val
+      }
+    )
+    componentConfig.filters = comFilters
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
   }
 
   const addFilter = () => {
-    const all = [...filters]
-    all.push({
-      id: uuidv4(),
+    const id= uuidv4()
+    setFilterOfAdd({
+      id,
       enable: true,
       name: '新增过滤器',
       isEditName: false,
       content: 'return data',
       callbackKeys: [],
       isAddKey: false,
-      editkeycontent: '',
-      status: 1 // 0: 未编辑 1：编辑
+      status: 1, // 0: 未编辑 1：编辑
+      isNewAdd: true,
     })
-    setFilters(all)
+    const activeCollapseKeysNew = [...activeCollapseKeys]
+    activeCollapseKeysNew.push(id)
+    setActiveCollapseKeys(activeCollapseKeysNew)
   }
 
   const genHeader = filter => (
-    <React.Fragment>
-      {
-        filter.isEditName ?
-          <React.Fragment>
-            <Input style={{ width: '84px', float: 'left' }}
-              className="cus-input"
-              placeholder={filter.name}
-              defaultValue={filter.name}
-              onChange={e => editName(e, filter)}
-              onClick={e => e.stopPropagation()}
-            />
-          </React.Fragment>
-          :
-          <React.Fragment>
-            <span>{filter.name}</span>
-            <EditOutlined style={{ color: '#2482FF', lineHeight: '32px', marginLeft: '8px' }} onClick={e => editFilterName(e, filter)} />
-          </React.Fragment>
-      }
-    </React.Fragment>
+    <div className="cus-fifter-pan-header">
+      <div className="cus-fifter-pan-title">
+        <span className="cus-fifter-name">
+          {
+            filter.isEditName ?
+              <Input
+                ref={inputNameRef}
+                defaultValue={filter.name}
+                onClick={e => { e.stopPropagation() }}
+                onBlur={(e) => editName(e, filter)}
+                onPressEnter={(e) => editName(e, filter)} />
+              : <span title={filter.name}>{filter.name}</span>
+          }
+        </span>
+        <EditOutlined onClick={event => editFilterName(event, filter)} />
+        {
+          filter.status === 1 ? <span className="cus-fifter-pan-add-status">
+            <i></i>未保存
+          </span> : null
+        }
+      </div>
+      <div className="cus-fifter-pan-opt">
+        {
+          !filter.isNewAdd ?
+            <span className="collapse-header-opt">
+              <Popover overlayClassName="cus-component-popover" content={useingComponent(filter)} title="">
+                <span className="collapse-header-num">{filter?.moduleIds?.length || 0}</span>
+                个组件正在调用
+              </Popover>
+            </span>
+            : null
+        }
+        <DeleteOutlined
+          onClick={event => {
+            deleteFilter(event, filter)
+          }}
+        />
+      </div>
+    </div>
   )
 
   const editFilterName = (e, filter) => {
-    console.log('11111')
     e.stopPropagation()
-    filter.status = 1
     filter.isEditName = true
     const all = [...filters]
     setFilters(all)
+    setTimeout(() => {
+      inputNameRef.current.focus()
+    })
   }
 
-  const editName = (e, filter) => {
+  const editName = async (e, filter) => {
     e.stopPropagation();
     filter.name = e.target.value
-    // TODO: 调用接口保存
+    filter.isEditName = false
+    if (filter.isNewAdd) {
+      const filterOfAddNew = { ...filterOfAdd }
+      setFilterOfAdd(filterOfAddNew)
+    } else {
+      const { id, name, callbackKeys, content } = filter
+      await http({
+        url: '/visual/module/filter/update',
+        method: 'POST',
+        body: {
+          id,
+          name,
+          callbackKeys,
+          content,
+          dashboardId: bar.dashboardId
+        }
+      })
+      // 更新bar里面的componentFilters
+      const componentFilters = [...bar.componentFilters]
+      componentFilters.forEach(item => {
+        if (item.id === id) {
+          item.name = e.target.value
+        }
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentFilters,
+        },
+      })
+    }
   }
 
-  const genExtra = (id) => (
+  const collapseChange = e => {
+    setActiveCollapseKeys(e)
+  }
+
+  const showComponentDetail = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const useingComponent = (filter) => (
     <React.Fragment>
-      <span className="collapse-header-opt">
-        <span className="collapse-header-num">2</span>
-        个组件正在调用
-      </span>
-      <DeleteOutlined
-        style={{ color: '#2482FF' }}
-        onClick={event => {
-          deleteFilter(event, id)
-        }}
-      />
+      {
+        filter?.moduleIds?.length ?
+          <ul className="component-pop-wraper">
+            {filter.moduleIds.map(item => {
+              return (
+                <li className="component-list">
+                  <i className="dot"></i>
+                  <span className="title" onClick={e => showComponentDetail(e)}>
+                    {bar.components.find(jtem => jtem.id === item).name + "_" + item}
+                  </span>
+                </li>)
+            })}
+          </ul>
+          : '无正在使用的组件'
+      }
     </React.Fragment>
-  )
+  );
 
-  const deleteFilter = (event, id) => {
+  const deleteFilter = async (event, filter) => {
     event.stopPropagation()
-    showConfirm(id)
+    if (filter.isNewAdd) {
+      setFilterOfAdd(null)
+    } else {
+      // 如果是项目过滤器里面的删除，则需要提示
+      // showConfirm(filter)
+      // 组件里面的删除，只是解除关联关系
+      const data = await http({
+        url: '/visual/module/filter/remove',
+        method: 'POST',
+        body: {
+          moduleId: bar.key[0],
+          filterIds: [filter.id]
+        }
+      })
+      // 更新过滤器的moduleIds信息
+      const componentFilters = [...bar.componentFilters]
+      componentFilters.forEach(item => {
+        if (item.id === filter.id) {
+          item.moduleIds = item.moduleIds.filter(jtem => jtem !== bar.key[0])
+        }
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentFilters
+        }
+      })
+      // 跟新组件配置信息
+      const componentConfig = { ...bar.componentConfig }
+      componentConfig.filters = componentConfig.filters.filter(item => item.id !== filter.id)
+      dispatch({
+        type: 'bar/setComponentConfig',
+        payload: componentConfig
+      })
+    }
   }
 
-  const showConfirm = (id) => {
+  const showConfirm = (filter) => {
     confirm({
       title: '删除后可能导致相关组件不可用，是否删除数据过滤器？',
       icon: <ExclamationCircleOutlined />,
@@ -164,26 +316,48 @@ const DataConfigDrawer = props => {
       okText: '确认',
       cancelText: '取消',
       onOk() {
-        deleteFilterHandle(id)
+        deleteFilterHandle(filter)
       },
       onCancel() {
-        console.log('Cancel');
+        // do nothing
       },
     });
   }
 
-  const deleteFilterHandle = (id) => {
-    const allFilters = [...filters]
-    const rest = allFilters.filter(item => item.id !== id)
-    setFilters(rest)
-    // TODO 接口保存
+  const deleteFilterHandle = async (filter) => {
+    const data = await http({
+      url: '/visual/module/filter/delete',
+      method: 'POST',
+      body: {
+        filterIds: [filter.id],
+        modules: [...filter.moduleIds]
+      }
+    })
   }
 
-  const enableFifter = (e, item) => {
-    console.log('e', e)
+  const enableFifter = async (e, item) => {
     item.enable = e.target.checked
-    const all = [...filters]
-    setFilters(all)
+    const data = await http({
+      url: '/visual/module/filter/trigger',
+      method: 'POST',
+      body: {
+        id: bar.key[0],
+        filterId: item.id,
+        enable: e.target.checked
+      }
+    })
+    const componentConfig = { ...bar.componentConfig }
+    const comFilters = [...componentConfig.filters]
+    comFilters.forEach(filter => {
+      if (filter.id === item.id) {
+        filter.enable = e.target.checked
+      }
+    })
+    componentConfig.filters = comFilters
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
   }
 
   const handleCallbackKeyClose = (key, item) => {
@@ -193,45 +367,124 @@ const DataConfigDrawer = props => {
     setFilters(all)
   }
 
-  const addKeyHandle = item => {
+  const addKeyHandle = (e, item) => {
+    e.preventDefault();
     item.isAddKey = true
-    const all = [...filters]
-    setFilters(all)
+    const filtersNew = [...filters]
+    setFilters(filtersNew)
+    setTimeout(() => {
+      inputFiledRef.current.focus()
+    })
   }
 
-  const handleKeyInputChange = debounce((e, item) => {
-    item.editkeycontent = e.target.value
-    const all = [...filters]
-    setFilters(all)
-  }, 300)
-
-  const handleKeyInputConfirm = (item) => {
-    if (item.editkeycontent) {
-      item.callbackKeys.push(item.editkeycontent)
+  const handleKeyInputConfirm = (e, item) => {
+    const value = e.target.value
+    if (value && !item.callbackKeys.includes(value)) {
+      item.callbackKeys.push(e.target.value)
+      item.status = 1
     }
-    item.editkeycontent = ''
     item.isAddKey = false
     const all = [...filters]
     setFilters(all)
   }
 
-  const codeChange = debounce((e, item) => {
+  const codeChange = (e, item) => {
     item.content = e
     item.status = 1
-    const all = [...filters]
-    setFilters(all)
-  }, 300)
-
-  const resetFilter = (pane) => {
-    console.log('pane', pane)
   }
 
-  const confirmFilter = (item) => {
-    // TODO 保存接口
-    item.status = 0
-    const all = [...filters]
-    setFilters(all)
-    props.onSave(filters)
+  const resetFilter = (filter) => {
+    if (filter.isNewAdd) {
+      setFilterOfAdd(null)
+    } else {
+      effectHandler()
+    }
+  }
+
+  const confirmFilter = item => {
+    if (item.isNewAdd) {
+      saveNewFifterHandle()
+    } else {
+      updateFifterHandle(item)
+    }
+  }
+
+  const saveNewFifterHandle = async () => {
+    // 新增保存,创建过滤器，把过滤器添加到当前组件
+    const { id, enable, isEditName, isAddKey, status, isNewAdd, ...rest } = filterOfAdd
+    const data = await http({
+      url: '/visual/module/filter/create',
+      method: 'POST',
+      body: {
+        ...rest,
+        dashboardId: bar.dashboardId
+      }
+    })
+    if (data) {
+      // 把过滤器添加到当前组件
+      const res = await http({
+        url: '/visual/module/filter/add',
+        method: 'POST',
+        body: {
+          filterId: data.id,
+          id: bar.key[0]
+        }
+      })
+      // 更新过滤器信息
+      const componentFilters = [...bar.componentFilters]
+      componentFilters.push({
+        id: data.id,
+        name: data.name,
+        content: data.content,
+        callbackKeys: data.callbackKeys,
+        moduleIds: [bar.key[0]]
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentFilters
+        }
+      })
+      // 跟新组件配置信息
+      const componentConfig = { ...bar.componentConfig }
+      componentConfig.filters = res.filters
+      dispatch({
+        type: 'bar/setComponentConfig',
+        payload: componentConfig
+      })
+      setFilterOfAdd(null)
+    }
+  }
+
+  const updateFifterHandle = async (filter) => {
+    const { id, name, callbackKeys, content } = filter
+    const data = await http({
+      url: '/visual/module/filter/update',
+      method: 'POST',
+      body: {
+        id,
+        name,
+        callbackKeys,
+        content,
+        dashboardId: bar.dashboardId
+      }
+    })
+    // 更新过滤器信息
+    const componentFilters = [...bar.componentFilters]
+    componentFilters.forEach(item => {
+      if (item.id === filter.id) {
+        item.id = id
+        item.name = name
+        item.callbackKeys = callbackKeys
+        item.content = content
+      }
+    })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        componentFilters
+      }
+    })
   }
 
   const arrayMove = (array, from, to) => {
@@ -240,19 +493,36 @@ const DataConfigDrawer = props => {
     return array;
   }
 
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    console.log('oldIndex, newIndex', oldIndex, newIndex)
+  const onSortEnd = async ({ oldIndex, newIndex }) => {
     const all = [...filters]
     const newFifters = arrayMove(all, oldIndex, newIndex)
-    setFilters(newFifters)
-
-    // TODO: saves
+    const comFilters = newFifters.map(item => {
+      return {
+        id: item.id,
+        enable: item.enable
+      }
+    })
+    await http({
+      url: '/visual/module/filter/order',
+      method: 'POST',
+      body: {
+        moduleId: bar.key[0],
+        filters: comFilters
+      }
+    })
+    // 跟新组件配置信息
+    const componentConfig = { ...bar.componentConfig }
+    componentConfig.filters = comFilters
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
   };
 
-  const DragHandle = sortableHandle(() => <span className="sort-dot">::</span>);
+  const DragHandle = sortableHandle(() => <span className="cus-fifter-sort-dot"><MenuOutlined /></span>);
 
   const SortableContainer = sortableContainer(({ children }) => {
-    return <ul className="sort-wraper">{children}</ul>;
+    return <ul className="cus-sort-wraper">{children}</ul>;
   });
 
   const editorDidMountHandle = (editor, monaco) => {
@@ -260,19 +530,28 @@ const DataConfigDrawer = props => {
   }
 
   const SortableItem = sortableElement(({ item }) => (
-    <li className="fifter-sort-item">
-      <DragHandle />
-      <Checkbox defaultChecked={item.enable} onChange={v => enableFifter(v, item)} className="sort-box" />
+    FilterItem(item)
+  ));
+
+  const FilterItem = item => (
+    <li className="cus-fifter-sort-item" key={item.id}>
+      {!item.isNewAdd ?
+        <React.Fragment>
+          <DragHandle />
+          <Checkbox defaultChecked={item.enable} onChange={v => enableFifter(v, item)} className="sort-box" />
+        </React.Fragment> : null
+      }
       <Collapse
-        accordion
-        key={item.id}
-        className="custom-collapse">
-        <Panel header={genHeader(item)} key={item.id} extra={genExtra(item.id)}>
-          <div className="filter-wraper">
-            <div className="header">
+        defaultActiveKey={activeCollapseKeys}
+        onChange={collapseChange}
+        className={['custom-collapse', item.isNewAdd ? 'collapse-add-filter' : null].join(' ')}
+      >
+        <Panel header={genHeader(item)} key={item.id}>
+          <div className="cus-filter-content-wraper">
+            <div className="cus-header">
               <span className="fif-title">回调字段</span>
               {
-                item.callbackKeys.map(key => (
+                item?.callbackKeys?.map(key => (
                   <Tag
                     closable
                     onClose={e => {
@@ -284,18 +563,16 @@ const DataConfigDrawer = props => {
                   </Tag>
                 ))
               }
-              {/* {JSON.stringify(item)} */}
               {item.isAddKey ? (
                 <Input
+                  ref={inputFiledRef}
                   type="text"
                   style={{ width: 78 }}
-                  defaultValue={item.editkeycontent}
-                  onChange={e => handleKeyInputChange(e, item)}
-                  onBlur={()=>handleKeyInputConfirm(item)}
-                  onPressEnter={()=>handleKeyInputConfirm(item)}
+                  onBlur={(e) => handleKeyInputConfirm(e, item)}
+                  onPressEnter={(e) => handleKeyInputConfirm(e, item)}
                 />
               ) : (
-                <Tag onClick={()=>addKeyHandle(item)} className="site-tag-plus">
+                <Tag onClick={(e) => addKeyHandle(e, item)} className="site-tag-plus">
                   <PlusOutlined /> 添加回调
                 </Tag>
               )}
@@ -308,7 +585,7 @@ const DataConfigDrawer = props => {
                     language="javascript"
                     theme="vs-dark"
                     value={item.content}
-                    onChange={(e) => codeChange(e,item)}
+                    onChange={(e) => codeChange(e, item)}
                     editorDidMount={editorDidMountHandle}
                     options={{
                       contextmenu: false,
@@ -319,9 +596,6 @@ const DataConfigDrawer = props => {
               </div>
             </div>
             <div className="bottom">
-              <p className={['status', item.status === 0 ? 'saved' : 'unsave'].join(' ')}>
-                {item.status === 0 ? '已保存' : '未保存'}
-              </p>
               <div className="btn-group">
                 <Button ghost onClick={() => { resetFilter(item) }} style={{ marginRight: '8px' }}>取消</Button>
                 <Button type="primary" onClick={() => { confirmFilter(item) }}>确认</Button>
@@ -331,7 +605,7 @@ const DataConfigDrawer = props => {
         </Panel>
       </Collapse>
     </li>
-  ));
+  )
 
   return (
     <Drawer
@@ -340,27 +614,40 @@ const DataConfigDrawer = props => {
       closable={true}
       onClose={onClose}
       visible={visible}
-      className='event-drawer data-config-drawer'
+      className='data-config-drawer'
+      width="520"
     >
       <div className="drawer-tool">
         <Select
+          key={selectFilterOprions.length + 'key'}
           className="custom-select"
           placeholder="请选择过滤器"
           onChange={selectedFiltersChange}
-          style={{ marginBottom: 0, width: '220px' }}
+          style={{ marginBottom: 0, width: '374px' }}
         >
-          <Option value='1' key='1'>过滤器1</Option>
-          <Option value='2' key='2'>过滤器2</Option>
+          {selectFilterOprions.map(item => {
+            return (<Option value={item.id} key={item.id}>{item.name}</Option>)
+          })}
         </Select>
-        <Button disabled={isEdit} type="primary" onClick={addFilter}>添加条件</Button>
+        <Button disabled={!!filterOfAdd} type="primary" onClick={addFilter}>新建过滤器</Button>
       </div>
-      <SortableContainer onSortEnd={onSortEnd} useDragHandle>
-        {filters.map((item, index) => (
-          <SortableItem key={item.id} index={index} item={item} />
-        ))}
-      </SortableContainer>
+      {
+        (filters.length || filterOfAdd) ?
+          <SortableContainer onSortEnd={onSortEnd} useDragHandle>
+            {filters.map((item, index) => (
+              <SortableItem key={item.id} index={index} item={item} />
+            ))}
+            {
+              filterOfAdd ?
+                FilterItem(filterOfAdd) : null
+            }
+          </SortableContainer> : null
+      }
+      <DataResult data={bar.componentConfig} style={{ width: '488px', height: '326px' }}></DataResult>
     </Drawer>
   )
 }
 
-export default memo(DataConfigDrawer)
+export default connect(({ bar }) => ({
+  bar
+}))(DataConfigDrawer)

@@ -12,13 +12,11 @@ import { http } from '../../../../../services/request'
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
-  const [resultData, setResultData] = useState([])
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
 
   useEffect(() => {
     if (bar.componentData[_data.id]) {
-      setResultData(bar.componentData[_data.id])
       const keys = getKeys(bar.componentData[_data.id])
       setFieldkeys(keys)
     } else {
@@ -38,12 +36,12 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     const data = _data.dataConfig[_data.dataType]
-    if(data && data.fields){
+    if (data && data.fields) {
       setFieldsData(data.fields)
-    }else{
+    } else {
       setFieldsData(_data.staticData.fields)
     }
-  },[_data.dataConfig])
+  }, [_data.dataConfig])
 
   useEffect(() => {
     setDataContainerResult()
@@ -71,8 +69,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         dataType: _data.dataType
       }
     })
-    console.log('setDataSourceResult', setDataSourceResult)
-    setResultData(data)
   }
 
   const setDataContainerResult = () => {
@@ -84,7 +80,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       }
       return pre
     }, [])
-    setResultData(dataList)
   }
 
   useEffect(async () => {
@@ -114,7 +109,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     }
   }
 
-  const fieldsChange = async(fields) => {
+  const fieldsChange = async (fields) => {
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -124,14 +119,10 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         fields
       }
     })
-    props.onFiledsChange(fields,_data.dataType)
+    props.onFiledsChange(fields, _data.dataType)
   }
 
-  const resultDataChange = data => {
-    setResultData(data)
-  }
-
-  const onDataTypeChange = async(data) => {
+  const onDataTypeChange = async (data) => {
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -143,7 +134,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onDataTypeChange(data)
   }
 
-  const dataFromChange = async() => {
+  const dataFromChange = async () => {
     const data = await http({
       url: '/visual/module/updateDataFrom',
       method: 'post',
@@ -202,19 +193,18 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       </div>
       {
         _data.dataFrom ? <DataContainerConfig
-            data={_data}
-            onDataContainerChange={props.onDataContainerChange}
-          />
-          : <DataSourceConfig
           data={_data}
-          onDataTypeChange={onDataTypeChange}
-          onStaticDataChange={props.onStaticDataChange}
-          onDataSourceChange={props.onDataSourceChange}
-          onResultDataChange={resultDataChange}
+          onDataContainerChange={props.onDataContainerChange}
         />
+          : <DataSourceConfig
+            data={_data}
+            onDataTypeChange={onDataTypeChange}
+            onStaticDataChange={props.onStaticDataChange}
+            onDataSourceChange={props.onDataSourceChange}
+          />
       }
 
-      <DataResult data={_data} resultData={resultData} />
+      <DataResult data={_data} />
     </React.Fragment>
   )
 }
