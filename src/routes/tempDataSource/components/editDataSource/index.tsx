@@ -183,8 +183,6 @@ const EditDataSource = (props: any) => {
   const handleOk = async () => {
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields()
-    console.log('valu', values);
-
     // es 数据源类型时，如果没有index名，直接return
     // if (dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
     //   message.warning({ content: '请先选择索引名称', duration: 2 })
@@ -256,6 +254,9 @@ const EditDataSource = (props: any) => {
     setDataBaseList([])
     setIndexList([])
     setIsConnect(false)
+    setTimeout(() => {
+      editForm.resetFields()
+    }, 4);
     // setIndexName('')
   }
   const handleCancel = () => {
@@ -373,7 +374,7 @@ const EditDataSource = (props: any) => {
     <div className='EditDataSource-wrap'>
       <Modal
         title="编辑数据源"
-        // destroyOnClose={true}
+        destroyOnClose={true}
         maskClosable={false}
         visible={visible}
         okText="确定"
