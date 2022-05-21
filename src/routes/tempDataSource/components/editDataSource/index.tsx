@@ -373,7 +373,7 @@ const EditDataSource = (props: any) => {
     <div className='EditDataSource-wrap'>
       <Modal
         title="编辑数据源"
-        destroyOnClose={true}
+        // destroyOnClose={true}
         maskClosable={false}
         visible={visible}
         okText="确定"
