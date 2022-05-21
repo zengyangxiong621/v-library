@@ -12,7 +12,7 @@ const { TabPane } = Tabs
 const resultCodeData = {
   readOnly: true,
   language: 'json',
-  value: '{}',
+  value: '[]',
   showExpand: false,
 }
 

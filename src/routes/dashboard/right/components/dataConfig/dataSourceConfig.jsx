@@ -195,6 +195,17 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
             },
           },
         })
+      } else {
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            componentData: {
+              ...bar.componentData,
+              [_data.id]: {}
+            },
+          },
+        })
+        message.error('数据源请求失败')
       }
     }
   }
@@ -260,7 +271,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
             : ['csv', 'excel', 'json'].includes(dataSourceTypes.value) ?
               <SelectDataSource
                 data={_data}
-                key={dataSourceTypes.value}
+                key={_data.id}
                 type={dataSourceTypes.value}
                 onChange={dataSourceChange}
               />
