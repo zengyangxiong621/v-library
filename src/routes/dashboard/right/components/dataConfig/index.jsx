@@ -106,12 +106,13 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         dataType: _data.dataType
       }
     })
+    console.log('这里吗', data)
     dispatch({
       type: 'bar/save',
       payload: {
         componentData: {
           ...bar.componentData,
-          [_data.id]: _data.dataType.value !== 'static' ? data : data.data,
+          [_data.id]: _data.dataType !== 'static' ? data : data.data,
         },
       },
     })
