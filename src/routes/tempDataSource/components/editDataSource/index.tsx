@@ -24,6 +24,9 @@ const EditDataSource = (props: any) => {
     rdbmsSourceConfig,
     esSourceConfig,
   } = props.editDataSourceInfo
+
+  const [data, setData] = useState(props.editDataSourceInfo)
+  console.log('id', id)
   console.log('props.editDataSourceInfo', props.editDataSourceInfo);
 
   let spaceId = 1
@@ -34,14 +37,14 @@ const EditDataSource = (props: any) => {
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
 
-  useEffect(() => {
-    console.log('visible', visible);
-    if(!visible) {
-      editForm.resetFields()
-      alert('重置了')
-      console.log('editForm的值',editForm.getFieldsValue());
-    }
-  }, [visible])
+  // useEffect(() => {
+  //   console.log('visible', visible);
+  //   if (!visible) {
+  //     editForm.resetFields()
+  //     alert('重置了')
+  //     console.log('editForm的值', editForm.getFieldsValue());
+  //   }
+  // }, [visible])
 
   // 与添加数据源不同，这里需要判断数据源的类型(csv,json,excel)来确定初始的fileUrl
   const [fileUrl, setFileUrl] = useState('')
@@ -73,7 +76,9 @@ const EditDataSource = (props: any) => {
     }
   }, [id])
 
-
+  useEffect(() => {
+    setData(props.editDataSourceInfo)
+  }, [props.editDataSourceInfo])
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
   const [getDBListLoading, setGetDBListLoading] = useState(false)
@@ -383,7 +388,7 @@ const EditDataSource = (props: any) => {
     <div className='EditDataSource-wrap'>
       <Modal
         title="编辑数据源"
-        key={id}
+        key={data.id}
         destroyOnClose={true}
         maskClosable={false}
         visible={visible}
@@ -403,7 +408,7 @@ const EditDataSource = (props: any) => {
             span: 5,
           }}
           form={editForm}
-          initialValues={editFormInitValues}
+          initialValues={data}
         >
           <Form.Item
             label="数据源类型"
