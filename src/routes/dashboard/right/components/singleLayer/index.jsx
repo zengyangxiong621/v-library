@@ -35,6 +35,27 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   // console.log('--------------------')
   const interactionConfig = componentConfig.interaction
 
+  useEffect(async () => {
+    const fifters = await http({
+      url: '/visual/module/filter/list',
+      method: 'GET',
+      params: {
+        id: bar.dashboardId,
+        type: 'screen'
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    console.log('fifters', fifters)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        componentFilters: fifters || [],
+      },
+    })
+  }, [])
+
   const styleChange = debounce(() => {
     console.log('style change', componentConfig)
     dispatch({
