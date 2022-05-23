@@ -16,7 +16,7 @@ export default {
         },
         {
           path: '/cockpit',
-          title: '驾驶仓',
+          title: '驾驶舱',
         },
         // {
         //   path: '/resource',
