@@ -168,7 +168,9 @@ const RightContent = (props: any) => {
       const { shareUrl, ...filterShareUrl } = data
       setFabuBody(filterShareUrl)
       if (data) {
-        setFxljInputValue(`${BASEURL}${data.shareUrl}`)
+        let host = window.location.host
+        const idInUrl = data.shareUrl.split('/').pop()
+        setFxljInputValue(`${host}/publishScreen/${idInUrl}`)
         if (data.needPassword) {
           // setJmfxValue()
           setIsShowJmfxInput(true)
@@ -220,7 +222,9 @@ const RightContent = (props: any) => {
       // 发布成功，1. 刷新列表获得应用最新的发布状态
       // 2. 设置分享连接地址
       refreshList()
-      setFxljInputValue(`${BASEURL}${result.shareUrl}`)
+      let host = window.location.host
+      const idInUrl = result.shareUrl.split('/').pop()
+      setFxljInputValue(`${host}/publishScreen/${idInUrl}`)
       // 打开发布开关
       setFabuChecked(true)
       setIsShared(true)
