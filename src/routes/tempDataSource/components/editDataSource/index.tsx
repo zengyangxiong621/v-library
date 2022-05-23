@@ -24,6 +24,9 @@ const EditDataSource = (props: any) => {
     rdbmsSourceConfig,
     esSourceConfig,
   } = props.editDataSourceInfo
+
+  const [data, setData] = useState(props.editDataSourceInfo)
+  console.log('id', id)
   console.log('props.editDataSourceInfo', props.editDataSourceInfo);
 
   let spaceId = 1
@@ -33,6 +36,15 @@ const EditDataSource = (props: any) => {
 
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
+
+  // useEffect(() => {
+  //   console.log('visible', visible);
+  //   if (!visible) {
+  //     editForm.resetFields()
+  //     alert('重置了')
+  //     console.log('editForm的值', editForm.getFieldsValue());
+  //   }
+  // }, [visible])
 
   // 与添加数据源不同，这里需要判断数据源的类型(csv,json,excel)来确定初始的fileUrl
   const [fileUrl, setFileUrl] = useState('')
@@ -64,7 +76,9 @@ const EditDataSource = (props: any) => {
     }
   }, [id])
 
-
+  useEffect(() => {
+    setData(props.editDataSourceInfo)
+  }, [props.editDataSourceInfo])
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
   const [getDBListLoading, setGetDBListLoading] = useState(false)
@@ -182,13 +196,11 @@ const EditDataSource = (props: any) => {
     }
   }
   /**
-   * description: 新增数据源
+   * description: 修改数据源
    */
   const handleOk = async () => {
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields()
-    console.log('valu', values);
-
     // es 数据源类型时，如果没有index名，直接return
     // if (dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
     //   message.warning({ content: '请先选择索引名称', duration: 2 })
@@ -251,7 +263,6 @@ const EditDataSource = (props: any) => {
     if (data) {
       // 成功后  -关闭弹窗 -清除表单 -刷新表格
       handleCancel()
-      editForm.resetFields()
       refreshTable()
     }
   }
@@ -263,14 +274,15 @@ const EditDataSource = (props: any) => {
     setDataBaseList([])
     setIndexList([])
     setIsConnect(false)
+    // setTimeout(() => {
+    //   editForm.resetFields()
+    // }, 4);
     // setIndexName('')
-    editForm.resetFields()
   }
   const handleCancel = () => {
-    console.log('关闭编辑弹窗');
+    clearModalState()
     changeShowState('edit')
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接更新 */
-    clearModalState()
     // setBtnDisabled(true)
   }
   // 选择数据库名
@@ -382,6 +394,7 @@ const EditDataSource = (props: any) => {
     <div className='EditDataSource-wrap'>
       <Modal
         title="编辑数据源"
+        key={data.id}
         destroyOnClose={true}
         maskClosable={false}
         visible={visible}
@@ -401,7 +414,7 @@ const EditDataSource = (props: any) => {
             span: 5,
           }}
           form={editForm}
-          initialValues={editFormInitValues}
+          initialValues={data}
         >
           <Form.Item
             label="数据源类型"

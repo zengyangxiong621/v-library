@@ -427,6 +427,7 @@ const RightContent = (props: any) => {
         // <Col span={6} key={index}>
         <AppCard
           {...item}
+          spaceId={spaceId}
           changeFabuModal={changeFabuModal}
           openMoveGroupModal={openMoveGroupModal}
           refreshList={refreshList}

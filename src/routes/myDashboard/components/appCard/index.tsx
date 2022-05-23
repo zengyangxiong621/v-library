@@ -3,15 +3,17 @@ import React, { memo, useState, useRef } from 'react'
 import './index.less'
 
 import { withRouter } from 'dva/router'
-import { http } from '@/services/request'
+import { useFetch } from '../../../../utils/useFetch'
 import { BASEURL } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { Input, Tooltip, Dropdown, Menu, message, Modal } from 'antd'
 
+// import M from '@/components/modalConfirm/index'
+
 const AppCard = (props: any) => {
-  const { id, name, status, photoUrl,
+  const { id, name, status, photoUrl, spaceId,
     openMoveGroupModal, changeFabuModal, refreshList, history } = props
 
   // 后端返回的photoUrl为空，则使用默认图片
@@ -26,6 +28,8 @@ const AppCard = (props: any) => {
   /** 输入框事件 */
   const bianjiClick = () => {
     setCanEdit(true)
+    // 每次input框出现时，都应该是重新设置输入框里的值，不然切换到别的分组后再编辑任意应用，输入框里都将是上一次的值
+    setAppName(name)
     Promise.resolve().then(() => {
       inputRef.current.focus({
         cursor: 'all'
@@ -42,17 +46,19 @@ const AppCard = (props: any) => {
       setCanEdit(false)
       return
     }
-    const data = await http({
-      url: '/visual/application/updateAppName',
-      method: 'post',
-      body: {
+    const [, data] = await useFetch('/visual/application/updateAppName', {
+      body: JSON.stringify({
         id,
         name: appName
-      }
+      })
+    }, {
+      onlyNeedWrapData: true
     })
-    if (data) {
+    if (data.data) {
       message.success({ content: '应用名修改成功', duration: 2 })
       refreshList()
+    } else {
+      message.error({ content: data.message || '应用名称修改失败', duration: 2 })
     }
     setCanEdit(false)
   }
@@ -78,12 +84,10 @@ const AppCard = (props: any) => {
 
   // 复制应用
   const copyApp = async (appId: string) => {
-    const data = await http({
-      url: '/visual/application/copy',
-      method: 'post',
-      body: {
+    const [, data] = await useFetch('/visual/application/copy', {
+      body: JSON.stringify({
         appId
-      }
+      })
     })
     // 返回的数据有id, 视为复制成功
     if (data && data.id) {
@@ -120,12 +124,12 @@ const AppCard = (props: any) => {
         background: '#232630',
       },
       async onOk(close) {
-        const data = await http({
-          url: '/visual/application/deleteApp',
+        const [, data] = await useFetch('/visual/application/deleteApp', {
           method: 'delete',
-          body: {
-            appIdList: appIds
-          }
+          body: JSON.stringify({
+            appIdList: appIds,
+            spaceId
+          })
         })
         if (data) {
           refreshList()
