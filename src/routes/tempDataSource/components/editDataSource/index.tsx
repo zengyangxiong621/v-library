@@ -35,6 +35,15 @@ const EditDataSource = (props: any) => {
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
 
+  // useEffect(() => {
+  //   console.log('visible', visible);
+  //   if (!visible) {
+  //     editForm.resetFields()
+  //     alert('重置了')
+  //     console.log('editForm的值', editForm.getFieldsValue());
+  //   }
+  // }, [visible])
+
   // 与添加数据源不同，这里需要判断数据源的类型(csv,json,excel)来确定初始的fileUrl
   const [fileUrl, setFileUrl] = useState('')
   useEffect(() => {
@@ -78,7 +87,7 @@ const EditDataSource = (props: any) => {
 
   const [loading, setLoading] = useState(false)
   const [testConnectLoading, setTestConnectLoading] = useState(false)
-  // const [indexName, setIndexName] = useState('')
+  const [indexName, setIndexName] = useState('')
 
   /**
    * description: 测试数据库连接
@@ -260,8 +269,8 @@ const EditDataSource = (props: any) => {
     setDataBaseList([])
     setIndexList([])
     setIsConnect(false)
-    editForm.resetFields()
     // setTimeout(() => {
+    //   editForm.resetFields()
     // }, 4);
     // setIndexName('')
   }
@@ -356,25 +365,71 @@ const EditDataSource = (props: any) => {
   const csvUploadProps = generateUploadProps('.csv')
   // .excel 文件
   const excelUploadProps = generateUploadProps('.xlsx')
+
+
   /*** 编辑表单各项初始值 */
-  const editFormInitValues = {
+  let editFormInitValues = {
     description,
     name,
     type: dataSourceType,
-    baseUrl: props.editDataSourceInfo?.apiSourceConfig?.baseUrl,
-    code: props.editDataSourceInfo.csvSourceConfig?.code,
-    database: props.editDataSourceInfo.rdbmsSourceConfig?.database,
-    port: props.editDataSourceInfo?.rdbmsSourceConfig?.port,
-    host: props.editDataSourceInfo?.rdbmsSourceConfig?.host,
+    baseUrl: apiSourceConfig?.baseUrl,
+    code: csvSourceConfig?.code,
+    database: rdbmsSourceConfig?.database,
+    port: rdbmsSourceConfig?.port,
+    host: rdbmsSourceConfig?.host,
     // rdbms里和es里都有 username和password
-    password: props.editDataSourceInfo?.rdbmsSourceConfig?.password || props.editDataSourceInfo?.esSourceConfig?.password,
-    username: props.editDataSourceInfo?.rdbmsSourceConfig?.username || props.editDataSourceInfo?.esSourceConfig?.username,
-    jsonFileUrl: props.editDataSourceInfo?.jsonSourceConfig?.fileUrl,
-    csvFileUrl: props.editDataSourceInfo?.csvSourceConfig?.fileUrl,
-    excelFileUrl: props.editDataSourceInfo?.excelSourceConfig?.fileUrl,
-    url: props.editDataSourceInfo?.esSourceConfig?.url,
-    index: props.editDataSourceInfo?.esSourceConfig?.index
+    password: rdbmsSourceConfig?.password || esSourceConfig?.password,
+    username: rdbmsSourceConfig?.username || esSourceConfig?.username,
+    jsonFileUrl: jsonSourceConfig?.fileUrl,
+    csvFileUrl: csvSourceConfig?.fileUrl,
+    excelFileUrl: excelSourceConfig?.fileUrl,
+    url: esSourceConfig?.url,
+    index: esSourceConfig?.index
   }
+  // const [data, setData] = useState(editFormInitValues)
+  // useEffect(() => {
+  //   console.log('props.config改变了');
+  //   setData({
+  //     description,
+  //     name,
+  //     type: dataSourceType,
+  //     baseUrl: apiSourceConfig?.baseUrl,
+  //     code: csvSourceConfig?.code,
+  //     database: rdbmsSourceConfig?.database,
+  //     port: rdbmsSourceConfig?.port,
+  //     host: rdbmsSourceConfig?.host,
+  //     // rdbms里和es里都有 username和password
+  //     password: rdbmsSourceConfig?.password || esSourceConfig?.password,
+  //     username: rdbmsSourceConfig?.username || esSourceConfig?.username,
+  //     jsonFileUrl: jsonSourceConfig?.fileUrl,
+  //     csvFileUrl: csvSourceConfig?.fileUrl,
+  //     excelFileUrl: excelSourceConfig?.fileUrl,
+  //     url: esSourceConfig?.url,
+  //     index: esSourceConfig?.index
+  //   })
+  // }, [props.editDataSourceInfo.csvSourceConfig, props.editDataSourceInfo.rdbmsSourceConfig, props.editDataSourceInfo.apiSourceConfig, props.editDataSourceInfo.esSourceConfig])
+  useEffect(() => {
+    console.log('更新前的editFormInitValues', editFormInitValues);
+    editFormInitValues = {
+      description,
+      name,
+      type: dataSourceType,
+      baseUrl: apiSourceConfig?.baseUrl,
+      code: csvSourceConfig?.code,
+      database: rdbmsSourceConfig?.database,
+      port: rdbmsSourceConfig?.port,
+      host: rdbmsSourceConfig?.host,
+      // rdbms里和es里都有 username和password
+      password: rdbmsSourceConfig?.password || esSourceConfig?.password,
+      username: rdbmsSourceConfig?.username || esSourceConfig?.username,
+      jsonFileUrl: jsonSourceConfig?.fileUrl,
+      csvFileUrl: csvSourceConfig?.fileUrl,
+      excelFileUrl: excelSourceConfig?.fileUrl,
+      url: esSourceConfig?.url,
+      index: esSourceConfig?.index
+    }
+    console.log('更新后', editFormInitValues);
+  }, [editFormInitValues])
   return (
     <div className='EditDataSource-wrap'>
       <Modal
@@ -394,7 +449,6 @@ const EditDataSource = (props: any) => {
       >
         <Form
           name="editDataSource"
-          preserve={false}
           labelCol={{
             span: 5,
           }}

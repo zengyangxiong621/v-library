@@ -22,7 +22,7 @@ const EveryComponent = ({ allData }: any) => {
 
   const componentStyle = getTargetStyle(weizhichicunArr, {
     position: 'absolute',
-    border: '1px solid #fff'
+    // border: '1px solid #fff'
   })
   // 文本样式
   const wenbenyangshiArr = allConfigMap.get(WENBENYANGSHI)
