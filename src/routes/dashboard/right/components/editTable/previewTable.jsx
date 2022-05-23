@@ -9,12 +9,13 @@ import debounce from 'lodash/debounce';
 
 import { Button, Modal, Spin } from 'antd';
 
+let currentSheetData = null
+let isTableChange = false
+
 const PreviewTable = props => {
   const { visible, fileUrl, changeShowState, changeRecordFileUrl } = props
   const [modalContent, setModalContent] = useState(null)
   const [isEdit, setIsEdit] = useState(false)
-  const [isTableChange, setIsTableChange] = useState(false)
-  const [currentSheetData, setCurrentSheetData] = useState(null)
 
   useEffect(() => {
     if (fileUrl) {
@@ -141,8 +142,8 @@ const PreviewTable = props => {
   }
 
   const modalDataChange = debounce(data => {
-    setIsTableChange(true)
-    setCurrentSheetData(data)
+    isTableChange = true
+    currentSheetData = data
   }, 300)
 
   const handleEdit = () => {
@@ -151,10 +152,12 @@ const PreviewTable = props => {
 
   const handleCancel = () => {
     changeShowState(false)
+    setIsEdit(false)
   }
 
   const handleOk = () => {
     changeShowState(false)
+    setIsEdit(false)
     if (isTableChange) {
       uploadExcel()
     }
