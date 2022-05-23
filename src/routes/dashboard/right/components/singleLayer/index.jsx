@@ -134,6 +134,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }
 
+  const useFilterChange = flag => {
+    componentConfig.useFilter = flag
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+  }
+
   const dataFromChange = dataFrom => {
     componentConfig.dataFrom = dataFrom
     dispatch({
@@ -227,6 +235,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
                 onDataTypeChange={dataTypeChange}
                 onDataSourceChange={dataSourceChange}
                 onDataFromChange={dataFromChange}
+                onUseFilterChange={useFilterChange}
               />
             </ComponentCard>
           </TabPane>
