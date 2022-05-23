@@ -184,7 +184,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
           moduleId: _data.id,
           dataType: dataSourceTypes.value,
         },
-      },true)
+      }, true)
       if (data.code === 10000 && data.data) {
         dispatch({
           type: 'bar/save',
@@ -233,17 +233,18 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
     saveDataSource('query_script', esData)
   }
 
-  const filterBoxChange =async(e)=> {
+  const filterBoxChange = async (e) => {
     setFilterFlag(e.target.checked)
     await http({
-      url:'/visual/module/updateDatasource',
-      method:'post',
-      body:{
-        id:_data.id,
-        useFilter:e.target.checked,
+      url: '/visual/module/updateDatasource',
+      method: 'post',
+      body: {
+        id: _data.id,
+        useFilter: e.target.checked,
         dataType: dataSourceTypes.value,
       }
     })
+    props.onUseFilterChange(e.target.checked)
   }
 
   const showFilterDrawer = () => {

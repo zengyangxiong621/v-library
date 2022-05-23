@@ -23,7 +23,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       // 如果使用数据过滤器，则需要过滤数据
       if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
         resData = dataFilterHandler(currentData)
-      } else{
+      } else {
         resData = currentData
       }
       const keys = getKeys(resData)
@@ -99,9 +99,9 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const setDataSourceResult = async () => {
     // 数据源
     const data = await http({
-      url:'/visual/module/getData',
+      url: '/visual/module/getData',
       method: 'post',
-      body:{
+      body: {
         moduleId: _data.id,
         dataType: _data.dataType
       }
@@ -232,6 +232,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
             onDataTypeChange={onDataTypeChange}
             onStaticDataChange={props.onStaticDataChange}
             onDataSourceChange={props.onDataSourceChange}
+            onUseFilterChange={props.onUseFilterChange}
           />
       }
 
