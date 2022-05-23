@@ -4,17 +4,18 @@ import './index.less'
 import Spreadsheet from "./spreadsheet.js";
 import * as XLSX from 'xlsx'
 import { http } from '../../../../../services/request'
-import { BASE_URL } from '../../../../../utils/useFetch'
+import { BASEURL } from '@/services/request'
 import debounce from 'lodash/debounce';
 
 import { Button, Modal, Spin } from 'antd';
+
+let currentSheetData = null
+let isTableChange = false
 
 const PreviewTable = props => {
   const { visible, fileUrl, changeShowState, changeRecordFileUrl } = props
   const [modalContent, setModalContent] = useState(null)
   const [isEdit, setIsEdit] = useState(false)
-  const [isTableChange, setIsTableChange] = useState(false)
-  const [currentSheetData, setCurrentSheetData] = useState(null)
 
   useEffect(() => {
     if (fileUrl) {
@@ -88,7 +89,7 @@ const PreviewTable = props => {
     const file = new Blob([s2ab(wbout)]);
     const forms = new FormData()
     forms.append('file', file,`${fileName}`)
-    fetch(`${BASE_URL}/visual/file/upload`, {
+    fetch(`${BASEURL}/visual/file/upload`, {
       method: 'POST',
       body: forms
     }).then(res => {
@@ -141,8 +142,8 @@ const PreviewTable = props => {
   }
 
   const modalDataChange = debounce(data => {
-    setIsTableChange(true)
-    setCurrentSheetData(data)
+    isTableChange = true
+    currentSheetData = data
   }, 300)
 
   const handleEdit = () => {
@@ -151,10 +152,12 @@ const PreviewTable = props => {
 
   const handleCancel = () => {
     changeShowState(false)
+    setIsEdit(false)
   }
 
   const handleOk = () => {
     changeShowState(false)
+    setIsEdit(false)
     if (isTableChange) {
       uploadExcel()
     }

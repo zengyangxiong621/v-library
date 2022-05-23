@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useEffect, useRef, useState } from 'react'
 import './index.less'
-import { connect } from 'dva'
 
-import { useFetch } from '../../../../utils/useFetch'
+import { http } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { Input, message, Modal } from 'antd'
@@ -11,7 +10,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 
 const EveryTreeNode = (props: any) => {
   const { groupId, name, number, systemDefined,
-    addGroup,refreshGroupLists, refreshRight } = props || {}
+    addGroup, refreshGroupLists, refreshRight } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -38,17 +37,16 @@ const EveryTreeNode = (props: any) => {
       spaceId: '1',
       name: newGroupName
     }
-    const [, data] = await useFetch('/visual/application/addGroup', {
-      body: JSON.stringify(finalBody)
+    const data = await http({
+      method: 'post',
+      url: '/visual/application/addGroup',
+      body: finalBody
     })
     // 创建成功，改变父组件传入的变量通知父组件重新获取最新分组列表
     if (data) refreshGroupLists()
   }
   const createInputChange = (e: any) => {
     setNewGroupName(e.target.value)
-  }
-  const createInputFocus = (e: any) => {
-    console.log('eeee', e);
   }
 
   /** ** 编辑分组****** */
@@ -71,8 +69,10 @@ const EveryTreeNode = (props: any) => {
       name: inputValue,
       spaceId: 1
     }
-    const [, data] = await useFetch('/visual/application/updateGroup', {
-      body: JSON.stringify(finalBody)
+    const data = await http({
+      method: 'post',
+      url: '/visual/application/updateGroup',
+      body: finalBody
     })
     if (data) {
       inputRef.current.blur()
@@ -118,7 +118,8 @@ const EveryTreeNode = (props: any) => {
         background: '#232630',
       },
       async onOk(close) {
-        const [, data] = await useFetch(`/visual/application/deleteGroup?groupId=${id}`, {
+        const data = await http({
+          url: `/visual/application/deleteGroup?groupId=${id}`,
           method: 'delete'
         })
         if (data) {
@@ -148,7 +149,6 @@ const EveryTreeNode = (props: any) => {
             <Input
               value={newGroupName}
               maxLength={20}
-              onFocus={(e) => createInputFocus(e)}
               onChange={(e) => createInputChange(e)}
               onPressEnter={() => createGroup()}
               onBlur={() => createGroup()}

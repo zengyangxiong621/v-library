@@ -165,7 +165,6 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
       }
     }, true)
     if (data.code === 10000 && data.data) {
-      props.onResultDataChange(data.data)
       dispatch({
         type: 'bar/save',
         payload: {

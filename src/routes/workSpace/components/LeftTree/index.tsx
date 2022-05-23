@@ -2,13 +2,10 @@ import { memo, useEffect, useState } from 'react'
 import './index.less'
 import { connect } from 'dva'
 
-import { useFetch } from '../../../../utils/useFetch'
-
 import Node from '../node/index'
 
 import { Tree } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import workspace from '../../../../models/workspace'
 
 
 // 全部应用 和 未分组两项应该固定

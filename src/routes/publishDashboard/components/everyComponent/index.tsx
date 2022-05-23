@@ -12,6 +12,27 @@ const EveryComponent = ({ allData }: any) => {
   // 文本信息 | 图片路径
   const { text, imageUrl } = data[0]
 
+  // websocket 获取数据
+  // useEffect(() => {
+    // const ws = new WebSocket(`ws://50423059pd.zicp.vip/visual/webSocket/${id}`)
+    // ws.onopen = e => {
+    //   console.log('ws 连接成功');
+    // }
+    // ws.onmessage  = msg => {
+    //   // console.log('ws msg', JSON.parse(msg.data));
+    // }
+    // ws.onclose = e => {
+    //   console.log('关闭');
+    // }
+    // ws.onerror = err => {
+    //   console.log('ws错误', err);
+    // }
+    // return () => {
+    //   console.log('预览页面的每个组件内关闭ws');
+    //   ws.close()
+    // }
+  // }, [])
+
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -19,7 +40,6 @@ const EveryComponent = ({ allData }: any) => {
   });
   //位置尺寸
   const weizhichicunArr = allConfigMap.get(WEIZHICHICUN)
-
   const componentStyle = getTargetStyle(weizhichicunArr, {
     position: 'absolute',
     border: '1px solid #fff'
@@ -29,8 +49,9 @@ const EveryComponent = ({ allData }: any) => {
   const textStyle = getTargetStyle(wenbenyangshiArr)
 
 
+
   return (
-    <div className='preview-component-wrap'
+    <div className='publish-component-wrap'
       style={componentStyle}
     >
       {

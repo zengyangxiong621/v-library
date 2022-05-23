@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import { useFetch } from "../utils/useFetch";
+import { http } from "@/services/request";
 
 export default {
   namespace: "dashboardManage",
@@ -36,29 +36,31 @@ export default {
   },
   effects: {
     *getTemplateList({ payload }: any, { call, put, select }: any): any {
-      const [, data] = yield useFetch(
-        "/visual/application/queryAppList",
+      const data = yield http(
         {
-          body: JSON.stringify(payload),
-        },
-        {
-          errorInfo: "应用列表请求失败",
+          url: "/visual/application/queryAppList",
+          method: "post",
+          body: payload,
         }
+        // {
+        //   errorInfo: "应用列表请求失败",
+        // }
       );
+      console.log("dddd", data);
       yield put({
         type: "updateTemplateList",
         payload: data?.content || [],
       });
     },
     *getGroupTree({ payload }: any, { call, put }: any): any {
-      const [, data] = yield useFetch(
-        `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
+      const data  = yield http(
         {
+          url: `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
           method: "get",
-        },
-        {
-          errorInfo: "应用分组列表请求失败",
         }
+        // {
+        //   errorInfo: "应用分组列表请求失败",
+        // }
       );
       yield put({
         type: "setGroupList",

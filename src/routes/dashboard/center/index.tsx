@@ -20,7 +20,6 @@ import { menuOptions } from '../left/Data/menuOptions'
 
 const Center = ({ bar, dispatch }: any) => {
 
-  const filterKey = [ 'ctrl', 'shift' ]
   const draggableContainerRef = useRef(null)
   const draggableRef: any = useRef(null)
   const rulerRef: any = useRef(null)
@@ -176,28 +175,29 @@ const Center = ({ bar, dispatch }: any) => {
     setIsShowRightMenu(false)
   }
 
-  useKeyPress(filterKey, (event) => {
-    if(event.type === 'keydown' && bar.isSupportMultiple) {
-      return
-    }
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        isSupportMultiple: event.type === 'keydown',
-      },
-    })
-  }, {
-    events: [ 'keydown', 'keyup' ],
-  })
+  // useKeyPress([ 'ctrl', 'shift' ], (event) => {
+  //   if(event.type === 'keydown' && bar.isSupportMultiple) {
+  //
+  //   } else {
+  //     dispatch({
+  //       type: 'bar/save',
+  //       payload: {
+  //         isSupportMultiple: event.type === 'keydown',
+  //       },
+  //     })
+  //   }
+  // }, {
+  //   events: [ 'keydown', 'keyup' ],
+  // })
+  // useKeyPress([ 'space' ], (event) => {
+  //   if(event.type === 'keydown' && isCanvasDraggable) {
+  //     return
+  //   }
+  //   setIsCanvasDraggable(event.type === 'keydown')
+  // }, {
+  //   events: [ 'keydown', 'keyup' ],
+  // })
 
-  useKeyPress([ 'space' ], (event) => {
-    if(event.type === 'keydown' && isCanvasDraggable) {
-      return
-    }
-    setIsCanvasDraggable(event.type === 'keydown')
-  }, {
-    events: [ 'keydown', 'keyup' ],
-  })
 
   const mouse = useMouse(canvasRef)
   // const mouse = 0

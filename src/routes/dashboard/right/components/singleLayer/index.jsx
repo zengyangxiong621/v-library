@@ -35,6 +35,27 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   // console.log('--------------------')
   const interactionConfig = componentConfig.interaction
 
+  useEffect(async () => {
+    const fifters = await http({
+      url: '/visual/module/filter/list',
+      method: 'GET',
+      params: {
+        id: bar.dashboardId,
+        type: 'screen'
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    console.log('fifters', fifters)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        componentFilters: fifters || [],
+      },
+    })
+  }, [])
+
   const styleChange = debounce(() => {
     console.log('style change', componentConfig)
     dispatch({
@@ -75,10 +96,10 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const dataContainerChange = (dataContainerIds) => {
-    componentConfig.dataContainers = dataContainerIds.map(id => ({
+    componentConfig.dataContainers = dataContainerIds.map((id, index) => ({
       id,
       enable: true,
-      rank: 0
+      rank: index
     }))
     dispatch({
       type: 'bar/setComponentConfig',
@@ -107,6 +128,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const dataSourceChange = dataSource => {
     componentConfig.dataConfig = dataSource
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+  }
+
+  const useFilterChange = flag => {
+    componentConfig.useFilter = flag
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig
@@ -206,6 +235,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
                 onDataTypeChange={dataTypeChange}
                 onDataSourceChange={dataSourceChange}
                 onDataFromChange={dataFromChange}
+                onUseFilterChange={useFilterChange}
               />
             </ComponentCard>
           </TabPane>

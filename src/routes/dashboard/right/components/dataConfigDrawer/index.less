@@ -1,112 +1,273 @@
 @import "../../../../../assets/style/variable.less";
 
-.data-config-drawer{
-  .drawer-tool{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom: 16px;
-  }
-  .ant-collapse-item{
-    margin-bottom: 16px;
-  }
-  .ant-collapse-header{
-    background-color:@headerBgColor !important;
-    padding:2px 6px !important;
-    line-height: 32px !important;
-    .collapse-header-opt{
-      cursor: default;
-      margin-right: 6px;
-      .collapse-header-num{
-        cursor: pointer;
-        color:@activeComponentBgColor;
+.data-config-drawer {
+  .ant-drawer-content-wrapper {
+    .ant-drawer-content {
+      background-color: @bgColor;
+
+      .ant-drawer-header {
+        background-color: @bgColor;
+        color: @fontColor;
+
+        .ant-drawer-close {
+          color: @fontColor;
+        }
+
+        .ant-drawer-title {
+          color: @fontColor;
+        }
+      }
+
+      .ant-drawer-body {
+        padding: 20px 16px 16px 16px;
+        scrollbar-width: none;
+        /* firefox */
+        -ms-overflow-style: none;
+        /* IE 10+ */
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 100%;
+    
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
     }
   }
-  .filter-wraper{
-    .header{
+
+  .drawer-tool {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .cus-sort-wraper {
+    background: rgb(24, 27, 36);
+    padding: 18px 16px;
+    overflow: auto;
+  }
+
+}
+
+.cus-fifter-sort-item {
+  position: relative;
+  list-style: none;
+  z-index: 10000;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .cus-filter-content-wraper {
+    padding:16px;
+    .cus-header {
       background: @bgColor;
-      display:flex;
-      justify-content:flex-start;
+      display: flex;
+      justify-content: flex-start;
       margin: 8px 8px 16px 8px;
       height: 24px;
       line-height: 24px;
-      .fif-title{
-        color:#ccc;
+
+      .fif-title {
+        color: #ccc;
         margin-right: 8px;
       }
-      .site-tag-plus{
+
+      .site-tag-plus {
         border: 1px solid @activeComponentBgColor;
         color: @activeFontColor;
-        height:24px;
+        height: 24px;
         line-height: 24px;
+        background-color: @bgColor;
+        cursor: pointer;
       }
     }
+
     .code-editor {
       border: none;
-  
+
       .cus-code {
         color: @fontColor;
       }
-  
+
       .code-wraper {
         height: 200px;
       }
     }
-    .bottom{
-      display:flex;
-      justify-content:space-between;
-      .status{
-        position: relative;
-        padding-left: 16px;
-        &::before{
-          content: "";
-          position: absolute;
-          width:8px;
-          height: 8px;
-          border-radius: 50%;
-          left:0;
-          top: 7px;
-        }
-        &.saved{
-          &::before{
-            background:@successColor;
-          }
-        }
-        &.unsave{
-          &::before{
-            background:@failedColor;
-          }
-        }
+
+    .bottom {
+      overflow: hidden;
+
+      .btn-group {
+        float: right;
       }
     }
   }
-  .fifter-sort-item{
-    .sort-dot{
-      top: 5px;
+
+  .cus-fifter-sort-dot {
+    color: #fff;
+    cursor: move;
+    position: absolute;
+    z-index: 1;
+    left: 8px;
+    top:6px;
+  }
+
+  .ant-collapse-header {
+    background-color: @headerBgColor  !important;
+    padding: 2px 6px 2px 60px !important;
+    line-height: 32px !important;
+
+    &:hover {
+      .anticon-edit {
+        opacity: 1 !important;
+      }
     }
+
+    .cus-fifter-pan-header {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .cus-fifter-pan-title {
+      display: flex;
+      align-items: center;
+
+      .cus-fifter-name {
+        font-size: 14px;
+        color: #fafafa;
+        max-width: 140px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .anticon-edit {
+        width: 32px;
+        text-align: center;
+        color: #bfbfbf;
+        opacity: 0;
+      }
+
+      .cus-fifter-pan-add-status {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        margin-left: 6px;
+        color: @fontColor2;
+
+        i {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #ff3c38;
+          margin-right: 4px;
+        }
+      }
+    }
+
+    .cus-fifter-pan-opt {
+      display: flex;
+      align-items: center;
+
+      .collapse-header-opt {
+        cursor: pointer;
+        margin-right: 6px;
+
+        &:hover {
+          color: #fff;
+
+          .collapse-header-num {
+            color: @activeComponentBgColor;
+          }
+        }
+
+        .collapse-header-num {
+          color: @activeComponentBgColor;
+        }
+      }
+
+      .anticon-delete {
+        &:hover {
+          color: #fff;
+        }
+      }
+
+    }
+  }
+
+  .collapse-add-filter{
+    .ant-collapse-header{
+      padding: 2px 6px 2px 6px !important;
+    }
+  }
+
+  .sort-box {
+    position: absolute;
+    left: 30px;
+    top: 10px;
+    z-index: 1;
+  }
+
+  .ant-checkbox-inner {
+    background: @bgColor;
   }
 }
 
-.fifter-sort-item{
-  position: relative;
-  list-style: none;
-  z-index: 10000;
-  .sort-dot{
-    cursor:move;
-    position:absolute;
-    z-index: 1;
-    left:8px;
+.cus-component-popover {
+  width: 176px;
+
+  .ant-popover-inner {
+    background: #13141D;
   }
-  .ant-collapse-header{
-    padding-left: 50px !important;
+
+  .ant-popover-arrow-content {
+    background: #13141D;
+
+    &::before {
+      background: none;
+    }
   }
-  .sort-box{
-    position: absolute;
-    left:22px;
-    top:7px;
-    z-index: 1;
-  }
-  .ant-checkbox-inner{
-    background: @bgColor;
+
+  .component-pop-wraper {
+    padding: 0;
+    margin: 0;
+
+    .component-list {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+      cursor: pointer;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        background: @activeFontColor;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .title {
+        height: 18px;
+        font-size: 12px;
+        color: #999999;
+        font-weight: 400;
+        line-height: 18px;
+
+        &:hover {
+          color: @fontColor;
+        }
+      }
+    }
   }
 }

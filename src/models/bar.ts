@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import {message} from 'antd'
+import { message } from 'antd'
 import {
   calcGroupPosition,
   deepForEach,
@@ -48,6 +48,7 @@ import { DIMENSION } from '../routes/dashboard/center/constant'
 import { generateLayers } from './utils/generateLayers'
 import { addSomeAttrInLayers, clearNullGroup } from './utils/addSomeAttrInLayers'
 import { http } from '../services/request'
+import staticData from '../routes/dashboard/right/components/dataConfig/staticData'
 
 interface IBarState {
   dashboardId: string;
@@ -90,8 +91,10 @@ interface IBarState {
     x: number,
     y: number
   };
-  componentData:any;
+  componentData: any;
   dataContainerList: any;
+  dataContainerDataList: any;
+  componentFilters: any;
 }
 
 export default {
@@ -118,6 +121,7 @@ export default {
     selectedComponentDOMs: {},
     dragStatus: '',
     dataContainerList: [],
+    dataContainerDataList: [],
     supportLinePositionInfo: {
       x: 100,
       y: 200,
@@ -320,7 +324,8 @@ export default {
       },
     ],
     leftMenuWidth: 250,
-    componentData:{}
+    componentData: {},
+    componentFilters: [],
   } as IBarState,
   subscriptions: {
     setup({ dispatch, history }: { dispatch: any; history: any }) {
@@ -343,13 +348,58 @@ export default {
     * getDashboardId({ payload }: any, { call, put, select }: any) {
       yield put({
         type: 'changeDashboardId',
-        payload: payload,
+        payload,
+      })
+    },
+    * initDashboard ({ payload, cb }: any, { call, put, select }: any): any {
+
+      yield put({
+        type: 'getDashboardDetails',
+        payload,
+      })
+      // TODO 怎么造成的
+      const data = yield(yield put({
+        type: 'getDataContainerList',
+        payload,
+      }))
+      const bar: any = yield select(({ bar }: any) => bar)
+      bar.dataContainerList.forEach(async (item: any) => {
+        let data: any = null
+        if (item.dataType === 'static') {
+          data = item.staticData.data
+        } else {
+          data = await http({
+            url: '/visual/container/data/get',
+            params:{
+              id: item.id
+            }
+          })
+        }
+        bar.dataContainerDataList.push({ id: item.id, data })
+      })
+      yield put({
+        type: 'save',
+        payload: {
+          dataContainerDataList: bar.dataContainerDataList
+        }
+      })
+      yield cb()
+    },
+    * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar)
+      const index = bar.dataContainerDataList.findIndex((item: any) => item.id === payload)
+      bar.dataContainerDataList.splice(index, 1)
+      put({
+        type: 'save',
+        payload: {
+          dataContainerDataList: bar.dataContainerDataList
+        }
       })
     },
     * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http({
-          url: `/visual/application/dashboard/detail/${ payload }`,
+          url: `/visual/application/dashboard/detail/${payload}`,
           method: 'get',
         })
         // let extendedSomeAttrLayers = addSomeAttrInLayers(layers)
@@ -369,7 +419,7 @@ export default {
             dashboardName: dashboardName
           },
         })
-      } catch(e) {
+      } catch (e) {
         return e
       }
     },
@@ -392,7 +442,7 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          key: [ newLayerId ],
+          key: [newLayerId],
         },
       })
     },
@@ -619,7 +669,7 @@ export default {
         },
       })
     },
-    * getDataContainerList({ payload }: any, { call, put, select }: any): any {
+    * getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
       const dashboardId = bar.dashboardId || payload
       console.log('bar', bar)
@@ -633,6 +683,7 @@ export default {
           dataContainerList: data
         }
       })
+      return data
       // console.log('data', data)
     },
     * addDataContainer({ payload }: any, { call, put, select }: any): any {
@@ -649,53 +700,44 @@ export default {
       })
       payload.cb(data)
     },
-    * deleteDataContainer({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar)
-      const data = yield http({
-        method: 'delete',
-        url: `/visual/container/delete/${payload}`,
-        body: {
-          dashboardId: bar.dashboardId
-        }
-      })
-      if (data) {
-        message.success('操作成功')
-      }
-      yield put({
-        type: 'getDataContainerList'
-      })
-    },
-    * copyDataContainer({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar)
-      const data = yield http({
-        method: 'put',
-        url: `/visual/container/copy/${payload}`,
-      })
-      if (data) {
-        message.success('操作成功')
-      }
-      yield put({
-        type: 'getDataContainerList'
-      })
-    },
-    * updateDataContainer({ payload }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar)
-      const data = yield http({
-        method: 'post',
-        url: `/visual/container/source`,
-        body: payload
-      })
-      if (data) {
-        message.success('操作成功')
-      }
-      yield put({
-        type: 'getDataContainerList'
-      })
-    },
-
   },
 
   reducers: {
+    deleteDataContainer(state: IBarState, { payload }: any) {
+      let index = state.dataContainerDataList.findIndex((item: any) => item.id === payload)
+      state.dataContainerDataList.splice(index, 1)
+      index = state.dataContainerList.findIndex((item: any) => item.id === payload)
+      state.dataContainerList.splice(index, 1)
+      return { ...state, dataContainerList: state.dataContainerList }
+    },
+    copyDataContainer(state: IBarState, { payload }: any) {
+
+      return {...state}
+    },
+    updateDataContainer(state: IBarState, { payload }: any) {
+      // containerData 是容器全部的数据信息, data 是 容器的数据 静态/动态数据
+      const { containerData, data } = payload
+      const container = state.dataContainerDataList.find((item: any) => item.id === containerData.id);
+      const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
+      console.log('-----------containerData', containerData)
+      console.log('data', data)
+      console.log('-------------')
+      if (data) {
+        if (container) {
+          // container 存在，说明是修改
+          container.data = data
+        } else {
+          // 不存在则新增
+          state.dataContainerDataList.unshift({id: containerData.id, data})
+        }
+      }
+      if (index !== -1) {
+        state.dataContainerList[index] = containerData
+      } else {
+        state.dataContainerList.unshift(containerData)
+      }
+      return { ...state, dataContainerList: state.dataContainerList, dataContainerDataList: state.dataContainerDataList}
+    },
     // 设置右键菜单位置的信息
     setRightMenuInfo(state: IBarState, { payload }: any) {
       return { ...state, rightMenuInfo: payload }
@@ -719,7 +761,7 @@ export default {
     addLayer(state: IBarState, { payload }: any) {
       let insertId: String
       const { treeData } = state
-      if(payload.insertId && treeData.length) {
+      if (payload.insertId && treeData.length) {
         insertId = payload.insertId
       } else {
         insertId = treeData.length !== 0 ? treeData[0].id : ''
@@ -760,7 +802,7 @@ export default {
       state.selectedComponents = state.components.filter((component) => state.selectedComponentIds.includes(component.id))
       state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if(state.selectedComponentIds.includes(key)) {
+        if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key]
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
@@ -769,9 +811,9 @@ export default {
       return { ...state }
     },
     setLayerConfig(state: IBarState, { payload }: any) {
-      if(state.selectedComponentOrGroup.length === 1) {
+      if (state.selectedComponentOrGroup.length === 1) {
         const layer = state.selectedComponentOrGroup[0]
-        if(COMPONENTS in layer) {
+        if (COMPONENTS in layer) {
           // 组
           const { x, y, width, height } = getLayerDimensionByDomId(layer.id)
           const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
@@ -785,7 +827,7 @@ export default {
             [MOUNT_ANIMATION]: layer[MOUNT_ANIMATION],
           }
           dimensionConfig.forEach((config: any) => {
-            switch(config.name) {
+            switch (config.name) {
               case LEFT:
                 config.value = x
                 break
@@ -813,9 +855,9 @@ export default {
       let xPositionList: number[] = []
       let yPositionList: number[] = []
       let status: '分组' | '多组件' = '分组'
-      if(state.selectedComponentOrGroup.length === 1) {
+      if (state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0]
-        if(COMPONENTS in firstLayer) {
+        if (COMPONENTS in firstLayer) {
           // 单个组
           status = '分组'
           const positionArr = calcGroupPosition(
@@ -833,9 +875,9 @@ export default {
             (item: any) => item.name === DIMENSION,
           )
           dimensionConfig.value.forEach((config: any) => {
-            if([ LEFT, WIDTH ].includes(config.name)) {
+            if ([LEFT, WIDTH].includes(config.name)) {
               xPositionList.push(config.value)
-            } else if([ TOP, HEIGHT ].includes(config.name)) {
+            } else if ([TOP, HEIGHT].includes(config.name)) {
               yPositionList.push(config.value)
             }
           })
@@ -855,7 +897,7 @@ export default {
 
           return { ...state }
         }
-      } else if(state.selectedComponentOrGroup.length > 1) {
+      } else if (state.selectedComponentOrGroup.length > 1) {
         status = '多组件'
         state.selectedComponentOrGroup.forEach((layer: any) => {
           const positionArr = calcGroupPosition(
@@ -881,7 +923,7 @@ export default {
           height,
         },
       }
-      if(status === '分组') {
+      if (status === '分组') {
         const layer = state.selectedComponentOrGroup[0]
         const { opacity, hideDefault } = layer
         state.groupConfig.forEach((bigConfig: any, i: any) => {
@@ -889,7 +931,7 @@ export default {
         })
         const dimensionConfig = state.groupConfig.find((config: any) => config.name === DIMENSION).value
         dimensionConfig.forEach((config: any) => {
-          switch(config.name) {
+          switch (config.name) {
             case LEFT:
               config.value = xPositionList[0]
               break
@@ -920,7 +962,7 @@ export default {
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
     pushToSelectedNode(state: IBarState, { payload }: any) {
       const { key } = payload
-      const newArr = [ ...(new Set(state.key.concat(key)) as any) ]
+      const newArr = [...(new Set(state.key.concat(key)) as any)]
       return { key: newArr }
     },
     // 点击icon或者右键菜单里的操作
@@ -940,7 +982,7 @@ export default {
     },
     testDrag(state: IBarState, { payload: { parentId } }: any) {
       // console.log('parentId', parentId)
-      const ids = [ '1-1', '1-1-1', '1-1-1-1' ]
+      const ids = ['1-1', '1-1-1', '1-1-1-1']
       const copyState: IBarState = JSON.parse(JSON.stringify(state))
       // let childrenComponents = findParentNode(
       //   copyState.draggableItems,
@@ -1065,11 +1107,11 @@ export default {
       console.log('keykey')
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
-      if(state.isSupportMultiple) {
+      if (state.isSupportMultiple) {
         // 多选
         layer.selected = true
         // 如果 selectedComponentOrGroup 里不存在当前点击的组件/分组的话，就添加
-        if(
+        if (
           !state.selectedComponentOrGroup.find((item) => item.id === layer.id)
         ) {
           (state.selectedComponentOrGroup as any).push(layer)
@@ -1084,7 +1126,7 @@ export default {
         // 再将自己的 select 状态设置为 true
         layer.selected = true
         // 再重新赋值 selectedComponentOrGroup 长度为 1
-        state.selectedComponentOrGroup = [ layer ]
+        state.selectedComponentOrGroup = [layer]
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
       state.selectedComponentIds = layerComponentsFlat(
@@ -1092,7 +1134,7 @@ export default {
       )
       state.selectedComponentRefs = {}
       Object.keys(state.allComponentRefs).forEach((key) => {
-        if(state.selectedComponentIds.includes(key)) {
+        if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key]
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key]
         }
@@ -1107,7 +1149,7 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
-      if(!state.isCanClearAllStatus) {
+      if (!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true
         return {
           ...state,
@@ -1156,7 +1198,7 @@ export default {
         ...interaction,
       }
       dimensionConfig.forEach((config: any) => {
-        switch(config.name) {
+        switch (config.name) {
           case LEFT:
             config.value = x
             break
@@ -1176,12 +1218,12 @@ export default {
     setAlignment(state: IBarState, { payload }: any) {
       const { position: { x, y }, style: { width, height } } = state.scaleDragData
       state.selectedComponentOrGroup.forEach((layer) => {
-        if(COMPONENTS in layer) {
+        if (COMPONENTS in layer) {
           // 组
           // 当前 layer 所包含的所有组件的 id 数组
-          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ layer.id }]`)
+          const layerDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${layer.id}]`)
           let layerX: number = 0, layerY: number = 0, layerWidth: number = 0, layerHeight: number = 0
-          if(layerDom) {
+          if (layerDom) {
             const translateArr = layerDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
             layerX = Number(translateArr[0])
             layerY = Number(translateArr[1])
@@ -1195,8 +1237,8 @@ export default {
           )
           components.forEach((component: any) => {
             const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
-            if(dimensionConfig) {
-              switch(payload) {
+            if (dimensionConfig) {
+              switch (payload) {
                 case 'top':
                   setComponentDimension(dimensionConfig, { y: (y - layerY as any) }, 'add')
                   break
@@ -1221,10 +1263,10 @@ export default {
         } else {
           // 组件
           const component = state.selectedComponents.find((component: any) => component.id === layer.id)
-          if(component) {
+          if (component) {
             const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
-            if(dimensionConfig) {
-              switch(payload) {
+            if (dimensionConfig) {
+              switch (payload) {
                 case 'top':
                   setComponentDimension(dimensionConfig, { y }, 'set')
                   break
@@ -1253,7 +1295,7 @@ export default {
       }
     },
     setArrangement(state: IBarState, { payload }: any) {
-      if(state.selectedComponentOrGroup.length <= 2) {
+      if (state.selectedComponentOrGroup.length <= 2) {
         return {
           ...state,
         }
@@ -1262,8 +1304,8 @@ export default {
       const xSortLayers: any = state.selectedComponentOrGroup.sort((a: any, b: any) => {
         const aIsGroup = (COMPONENTS in a)
         const bIsGroup = (COMPONENTS in b)
-        const aDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ aIsGroup ? a.id : 'component-' + a.id }]`)
-        const bDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${ bIsGroup ? b.id : 'component-' + b.id }]`)
+        const aDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${aIsGroup ? a.id : 'component-' + a.id}]`)
+        const bDom: HTMLDivElement | any = document.querySelector(`.react-draggable[data-id=${bIsGroup ? b.id : 'component-' + b.id}]`)
         const aTranslateArr = aDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
         const aLayerX = Number(aTranslateArr[0])
         const bTranslateArr = bDom.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
@@ -1276,9 +1318,9 @@ export default {
       const xLastLayer = xSortLayers[xLength - 1] // 倒数第一个
       const xLastPreLayer = xSortLayers[xLength - 2] // 倒数第二个
 
-      const xLastLayerData = getLayerDimensionByDomId(COMPONENTS in xLastLayer ? xLastLayer.id : `component-${ xLastLayer.id }`)
-      const xFirstLayerData = getLayerDimensionByDomId(COMPONENTS in xFirstLayer ? xFirstLayer.id : `component-${ xFirstLayer.id }`)
-      const xLastPreLayerData = getLayerDimensionByDomId(COMPONENTS in xLastPreLayer ? xLastPreLayer.id : `component-${ xLastPreLayer.id }`)
+      const xLastLayerData = getLayerDimensionByDomId(COMPONENTS in xLastLayer ? xLastLayer.id : `component-${xLastLayer.id}`)
+      const xFirstLayerData = getLayerDimensionByDomId(COMPONENTS in xFirstLayer ? xFirstLayer.id : `component-${xFirstLayer.id}`)
+      const xLastPreLayerData = getLayerDimensionByDomId(COMPONENTS in xLastPreLayer ? xLastPreLayer.id : `component-${xLastPreLayer.id}`)
 
 
       let remainingSpaceWidth = width - xLastPreLayerData.width - xFirstLayerData.width
@@ -1286,37 +1328,37 @@ export default {
       // RemainingWidth 是除了前后两个 layer 宽度后的大小
 
       const remainingTotalWidth = xSortLayers.reduce((width: number, layer: any, index: number) => {
-        if(index === 0 || index === xSortLayers.length - 1) {
+        if (index === 0 || index === xSortLayers.length - 1) {
           return width
         }
-        const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+        const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${layer.id}`)
         return width + layerData.width
       }, 0)
       const xSpace = (remainingSpaceWidth - remainingTotalWidth) / (xSortLayers.length - 1)
       // distance 是当前 scaleDragData 的 x 值，即整个选择的区域内距离画布左侧的值
       xSortLayers.reduce((distance: number, layer: any, index: any) => {
-        if(index === 0) {
-          const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+        if (index === 0) {
+          const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${layer.id}`)
           return distance + layerData.width
         }
-        if(index === xSortLayers.length - 1) {
-          if(xLastPreLayerData.x + xLastPreLayerData.width > xLastLayerData.x + xLastLayerData.width) {
-            if(COMPONENTS in layer) {
-              const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+        if (index === xSortLayers.length - 1) {
+          if (xLastPreLayerData.x + xLastPreLayerData.width > xLastLayerData.x + xLastLayerData.width) {
+            if (COMPONENTS in layer) {
+              const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${layer.id}`)
               const componentIds = layerComponentsFlat(layer[COMPONENTS])
               // 通过 id 筛选出当前组的组件
               // 现在知道 distance + xSpace 是一个组/组件的位置, 所有 distance + xSpace - layerX， 让组里的每个组件的位置都增加这个值
               const components = state.selectedComponents.filter((component: any) => componentIds.includes(component.id))
               components.forEach((component: any) => {
                 const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
-                if(dimensionConfig) {
+                if (dimensionConfig) {
                   setComponentDimension(dimensionConfig, { x: (x + width) - (layerData.x + layerData.width) as any }, 'add')
                 }
               })
             } else {
               const component = state.selectedComponents.find((component: any) => component.id === layer.id)
               const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
-              if(dimensionConfig) {
+              if (dimensionConfig) {
                 setComponentDimension(dimensionConfig, { x: null }, 'callback', (data: any) => {
                   return { x: (x + width) - (data.width + data.left), type: 'add' }
                 })
@@ -1325,8 +1367,8 @@ export default {
           }
           return distance
         }
-        if(COMPONENTS in layer) {
-          const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${ layer.id }`)
+        if (COMPONENTS in layer) {
+          const layerData = getLayerDimensionByDomId(COMPONENTS in layer ? layer.id : `component-${layer.id}`)
           const layerX = layerData.x
           const componentIds = layerComponentsFlat(layer[COMPONENTS])
           // 通过 id 筛选出当前组的组件
@@ -1334,7 +1376,7 @@ export default {
           const components = state.selectedComponents.filter((component: any) => componentIds.includes(component.id))
           components.forEach((component: any) => {
             const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
-            if(dimensionConfig) {
+            if (dimensionConfig) {
               setComponentDimension(dimensionConfig, { x: (distance + xSpace - layerX as any) }, 'add')
             }
           })
@@ -1342,7 +1384,7 @@ export default {
         } else {
           const component = state.selectedComponents.find((component: any) => component.id === layer.id)
           const dimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
-          if(dimensionConfig) {
+          if (dimensionConfig) {
             const data: any = setComponentDimension(dimensionConfig, { x: distance + xSpace as any }, 'set')
             return distance + data[WIDTH] + xSpace
           }

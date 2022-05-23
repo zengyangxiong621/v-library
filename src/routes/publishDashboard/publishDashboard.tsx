@@ -8,49 +8,37 @@ import { http } from '../../services/request'
 import EveryComponent from './components/everyComponent'
 
 
-const PreViewDashboard = ({ history, location }: any) => {
+const PublishDashboard = ({ history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
   const [allComponentsList, setAllComponentsList] = useState([])
   const { pathname } = location
   const dashboardId = pathname.split('/').pop()
-  /**
-   * description: 进入页面，先获取画布详情
-   */
+  // 进入页面，先获取画布详情
   const getDashboardDetail = async () => {
+    setIsLoaded(false)
     let { components, dashboardName }: any = await http({
       url: `/visual/application/dashboard/detail/${dashboardId}`,
       method: 'get',
     })
     if (Array.isArray(components)) {
+      setIsLoaded(true)
       document.title = dashboardName
+    } else {
+      message.error('出错了，请稍后重试');
     }
+    // console.log('预览模板画布详情数据', components);
     setAllComponentsList(components)
   }
   useEffect(() => {
-    const init = async () => {
-      setIsLoaded(false)
-      await getDashboardDetail()
-      setIsLoaded(true)
-    }
-    init()
+    getDashboardDetail()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      getDashboardDetail()
-    }, 3600 * 1000)
-    return () => {
-      clearInterval(intervalId)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
     <>
       {
         isLoaded ?
-          <div className='previewDashboard-wrap'>
+          <div className='PublishDashboard-wrap'>
             {
               allComponentsList.map((item, index) => <>
                 <EveryComponent key={index} allData={item} />
@@ -59,7 +47,7 @@ const PreViewDashboard = ({ history, location }: any) => {
           </div>
           :
           <Spin
-            tip='正在生成中…'
+            tip='正在加载中…'
             style={{ maxHeight: '100%' }}>
             <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
           </Spin>
@@ -68,4 +56,4 @@ const PreViewDashboard = ({ history, location }: any) => {
   )
 }
 
-export default memo(withRouter(PreViewDashboard))
+export default memo(withRouter(PublishDashboard))

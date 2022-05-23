@@ -5,10 +5,7 @@ const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === "[object Object]";
 };
 
-// export const BASEURL = 'http://10.202.233.230:9572'
-// export const BASEURL = 'http://10.202.233.230:9572'
-// export const BASEURL = "http://10.201.83.166:31088";
-export const BASEURL = "http://50423059pd.zicp.vip";
+export const BASEURL = (window as any).CONFIG.BASE_URL;
 
 /* 核心方法 */
 export const http = (config: any, isDownload: boolean = false): any => {

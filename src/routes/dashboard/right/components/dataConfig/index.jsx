@@ -12,16 +12,21 @@ import { http } from '../../../../../services/request'
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
-  const [resultData, setResultData] = useState([])
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
-
+  const [componentResultData, setComponentResultData] = useState({  })
+  const [componentType, setComponentType] = useState('')
   useEffect(() => {
-    console.log('componentData', bar.componentData)
-    if (bar.componentData[_data.id]) {
-      setResultData(bar.componentData[_data.id])
-      const keys = getKeys(bar.componentData[_data.id])
-      console.log('keys', keys)
+    const currentData = bar.componentData[_data.id]
+    if (currentData) {
+      let resData = null
+      // 如果使用数据过滤器，则需要过滤数据
+      if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
+        resData = dataFilterHandler(currentData)
+      } else {
+        resData = currentData
+      }
+      const keys = getKeys(resData)
       setFieldkeys(keys)
     } else {
       dispatch({
@@ -34,19 +39,101 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         },
       })
       const keys = getKeys(_data.staticData.data)
-      console.log('keys', keys)
       setFieldkeys(keys)
     }
-  }, [bar.componentData])
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter])
 
   useEffect(() => {
     const data = _data.dataConfig[_data.dataType]
-    if(data && data.fields){
+    if (data && data.fields) {
       setFieldsData(data.fields)
-    }else{
+    } else {
       setFieldsData(_data.staticData.fields)
     }
-  },[_data.dataConfig])
+  }, [_data.dataConfig])
+
+  useEffect(() => {
+    if (_data.dataFrom === 1) {
+      setDataContainerResult()
+    }
+  }, [_data.dataContainers])
+
+  const dataFilterHandler = data => {
+    const filters = bar.componentConfig.filters.map(item => {
+      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      return {
+        ...filterDetail,
+        enable: item.enable,
+      }
+    }).filter(item => item.enable)
+    try {
+      const functions = filters.map(item => {
+        return (new Function('data', item.content))
+      })
+      const resultArr = []
+      functions.forEach((fn, index) => {
+        if (index === 0) {
+          resultArr.push(fn(data))
+        } else {
+          resultArr.push(fn(resultArr[index - 1]))
+        }
+      })
+      return resultArr[resultArr.length - 1]
+    } catch (e) {
+      console.error(e)
+      return {}
+    }
+  }
+
+
+  // 一切到数据 tab 栏时，渲染出的数据响应结果
+  const changeDataFromCallback = async () => {
+    const { dataFrom } = _data
+    if (dataFrom === 0) {
+      await setDataSourceResult()
+    } else {
+      await setDataContainerResult()
+    }
+  }
+
+  const setDataSourceResult = async () => {
+    // 数据源
+    const data = await http({
+      url: '/visual/module/getData',
+      method: 'post',
+      body: {
+        moduleId: _data.id,
+        dataType: _data.dataType
+      }
+    })
+    console.log('这里吗', data)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        componentData: {
+          ...bar.componentData,
+          [_data.id]: _data.dataType !== 'static' ? data : data.data,
+        },
+      },
+    })
+  }
+
+  const setDataContainerResult = () => {
+    // 数据容器
+    const dataContainerIds = _data.dataContainers.map(item => item.id)
+    const dataList = bar.dataContainerDataList.reduce((pre, cur) => {
+      if (dataContainerIds.includes(cur.id)) {
+        pre.push(cur.data)
+      }
+      return pre
+    }, [])
+    setComponentResultData(dataList)
+  }
+
+  useEffect(async () => {
+    setComponentType(_data.dataFrom === 0 ? '' : 'component')
+    await changeDataFromCallback()
+  }, [_data.dataFrom])
 
   const getKeys = (data) => {
     if (Object.prototype.toString.call(data) === '[object Object]') {
@@ -66,7 +153,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     }
   }
 
-  const fieldsChange = async(fields) => {
+  const fieldsChange = async (fields) => {
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -76,11 +163,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         fields
       }
     })
-    props.onFiledsChange(fields,_data.dataType)
-  }
-
-  const resultDataChange = data => {
-    setResultData(data)
+    props.onFiledsChange(fields, _data.dataType)
   }
 
   const onDataTypeChange = async(data) => {
@@ -95,7 +178,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onDataTypeChange(data)
   }
 
-  const dataFromChange = async() => {
+  const dataFromChange = async () => {
     const data = await http({
       url: '/visual/module/updateDataFrom',
       method: 'post',
@@ -108,6 +191,9 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       props.onDataFromChange(_data.dataFrom === 1 ? 0 : 1)
     }
   }
+
+
+  // 处理过滤器
 
 
   return (
@@ -138,19 +224,19 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       </div>
       {
         _data.dataFrom ? <DataContainerConfig
-            data={_data}
-            onDataContainerChange={props.onDataContainerChange}
-          />
-          : <DataSourceConfig
           data={_data}
-          onDataTypeChange={onDataTypeChange}
-          onStaticDataChange={props.onStaticDataChange}
-          onDataSourceChange={props.onDataSourceChange}
-          onResultDataChange={resultDataChange}
+          onDataContainerChange={props.onDataContainerChange}
         />
+          : <DataSourceConfig
+            data={_data}
+            onDataTypeChange={onDataTypeChange}
+            onStaticDataChange={props.onStaticDataChange}
+            onDataSourceChange={props.onDataSourceChange}
+            onUseFilterChange={props.onUseFilterChange}
+          />
       }
 
-      <DataResult data={_data} resultData={resultData} />
+      <DataResult data={_data} resultData={componentResultData} type={componentType} />
     </React.Fragment>
   )
 }
