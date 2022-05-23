@@ -21,13 +21,20 @@ const resultCodeData = {
 const DataResult = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
   const type = props.type
-  const componentResultData = props.resultData
+  const componentResultData = props.resultData || []
   const [resultData, setResultData] = useState(resultCodeData)
 
   useEffect(() => {
-    if (type !== 'component') {
+    console.log('type', type)
+    if (!type && type !== 'component') {
+      const dataFrom = _data.dataFrom
       let resData = null
-      const currentData = bar.componentData[_data.id]
+      let currentData = null
+      if (dataFrom === 0) {
+        currentData = bar.componentData[_data.id]
+      } else {
+        currentData = setDataContainerResult()
+      }
       if (currentData) {
         // 如果使用数据过滤器，则需要过滤数据
         if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
@@ -42,17 +49,31 @@ const DataResult = ({ bar, dispatch, ...props }) => {
         setResultData(newData)
       }
     }
-  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter])
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
 
   useEffect(() => {
     if (type === 'component') {
-
       const newData = Object.assign({}, resultData, {
         value: JSON.stringify(componentResultData, null, 2)
       })
       setResultData(newData)
     }
   }, [componentResultData])
+
+
+
+  const setDataContainerResult = () => {
+    // 数据容器
+    if (_data?.dataContainers) {
+      const dataContainerIds = _data.dataContainers.map(item => item.id)
+      return bar.dataContainerDataList.reduce((pre, cur) => {
+        if (dataContainerIds.includes(cur.id)) {
+          pre.push(cur.data)
+        }
+        return pre
+      }, [])
+    }
+  }
 
 
   const dataFilterHandler = data => {

@@ -45,55 +45,60 @@
   }
 
   .data-footer {
-    height: 32px;
-    line-height: 32px;
-    margin-top: 16px;
-    display: flex;
-    justify-content: space-between;
 
-    .ant-checkbox-wrapper {
-      font-size: 14px;
-      color: @fontColor;
-      font-weight: 400;
-    }
-
-    .ant-checkbox-inner {
-      background: @componentBgColor;
-      border: 1px solid @borderColor;
-    }
-
-    .ant-btn[disabled],
-    .ant-btn[disabled]:hover,
-    .ant-btn[disabled]:focus,
-    .ant-btn[disabled]:active {
-      color: rgba(255, 255, 255, 0.3);
-      border-color: #434343;
-      background: rgba(255, 255, 255, 0.08);
-      text-shadow: none;
-      box-shadow: none;
-    }
-
-    .filter-num {
-      height: 32px;
-      line-height: 32px;
-      padding: 0 6px;
-      background-color: @bgColor;
-      border: 1px solid @borderColor;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .filter-num[disabled] {
-      color: rgba(255, 255, 255, 0.3);
-      border-color: #434343;
-      background: rgba(255, 255, 255, 0.08);
-      text-shadow: none;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
   }
 }
+.data-filter {
+  height: 32px;
+  line-height: 32px;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
 
+  .ant-checkbox-wrapper {
+    font-size: 14px;
+    color: @fontColor;
+    font-weight: 400;
+  }
+
+  .ant-checkbox-inner {
+    background: @componentBgColor;
+    border: 1px solid @borderColor;
+  }
+
+  .ant-btn[disabled],
+  .ant-btn[disabled]:hover,
+  .ant-btn[disabled]:focus,
+  .ant-btn[disabled]:active {
+    color: rgba(255, 255, 255, 0.3);
+    border-color: #434343;
+    background: rgba(255, 255, 255, 0.08);
+    text-shadow: none;
+    box-shadow: none;
+  }
+
+  .ant-btn-default {
+    color: @btn-default-color;
+    border-color: @btn-default-border;
+    background-color: @btn-default-bg;
+  }
+
+  .ant-btn:hover,
+  .ant-btn:focus,
+  .ant-btn-link:active {
+    color: @primary-color-hover;
+    border-color: @primary-color-hover;
+  }
+
+  .filter-num[disabled] {
+    color: rgba(255, 255, 255, 0.3);
+    border-color: #434343;
+    background: rgba(255, 255, 255, 0.08);
+    text-shadow: none;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
 
 .data-type {
   width: calc(100% + 32px);

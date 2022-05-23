@@ -144,7 +144,8 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
         getContainer={ false }
         style={ { position: 'absolute' } }
         width={ 333 }
-        maskStyle={ { opacity: 0, animation: null } }
+        // maskStyle={ { opacity: 0, animation: null } }
+        maskStyle={{ animation: 'unset'}}
       >
         <div className="data-container-body-wrapper">
           <div className="data-container-handle">

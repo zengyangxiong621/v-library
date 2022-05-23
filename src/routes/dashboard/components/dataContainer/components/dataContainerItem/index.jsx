@@ -69,7 +69,7 @@ const DataContainerItem = props => {
             onChange={handleChange}
             onBlur={handleInputValueEdit}
             onPressEnter={handleInputValueEdit}
-            style={{width: 200}}
+            style={{width: 190}}
           /> : <>
             <span onClick={() => props.onChoose(data)} className="container-name" title={data.name}>{data.name}</span>
             <EditOutlined
