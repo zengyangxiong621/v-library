@@ -363,12 +363,14 @@ const DataSource = (props: any) => {
           refreshTable={refreshTable}
         />
         {/* 编辑数据源的弹窗 */}
-        <EditDataSource
+        {
+          isShowEditModal && <EditDataSource
           editDataSourceInfo={editDataSourceInfo}
           visible={isShowEditModal}
           changeShowState={changeShowState}
           refreshTable={refreshTable}
         />
+        }
         {
           ['EXCEL', 'CSV'].includes(previewRecord.type) ?
             // {/* 表格在线预览 */}
