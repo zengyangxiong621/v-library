@@ -25,8 +25,6 @@ const EditDataSource = (props: any) => {
     esSourceConfig,
   } = props.editDataSourceInfo
 
-  const [data, setData] = useState(props.editDataSourceInfo)
-  console.log('id', id)
   console.log('props.editDataSourceInfo', props.editDataSourceInfo);
 
   let spaceId = 1
@@ -76,9 +74,6 @@ const EditDataSource = (props: any) => {
     }
   }, [id])
 
-  useEffect(() => {
-    setData(props.editDataSourceInfo)
-  }, [props.editDataSourceInfo])
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
   const [getDBListLoading, setGetDBListLoading] = useState(false)
@@ -392,289 +387,290 @@ const EditDataSource = (props: any) => {
   }
   return (
     <div className='EditDataSource-wrap'>
-      <Modal
-        title="编辑数据源"
-        key={data.id}
-        destroyOnClose={true}
-        maskClosable={false}
-        visible={visible}
-        okText="确定"
-        cancelText="取消"
-        onCancel={handleCancel}
-        getContainer={false}
-        confirmLoading={loading}
-        footer={[
-          <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel}>取消</Button>,
-          <Button type='primary' className='modalBtn okBtn' onClick={handleOk}>确定</Button>
-        ]}
-      >
-        <Form
-          name="editDataSource"
-          labelCol={{
-            span: 5,
-          }}
-          form={editForm}
-          initialValues={data}
+      {
+        visible && <Modal
+          title="编辑数据源"
+          destroyOnClose={true}
+          maskClosable={false}
+          visible={visible}
+          okText="确定"
+          cancelText="取消"
+          onCancel={handleCancel}
+          getContainer={false}
+          confirmLoading={loading}
+          footer={[
+            <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel}>取消</Button>,
+            <Button type='primary' className='modalBtn okBtn' onClick={handleOk}>确定</Button>
+          ]}
         >
-          <Form.Item
-            label="数据源类型"
-            name="type"
-            rules={[{ required: true }]}
+          <Form
+            name="editDataSource"
+            labelCol={{
+              span: 5,
+            }}
+            form={editForm}
+            initialValues={editFormInitValues}
           >
-            <Input className='setBackColor'
-              autoComplete='off'
-              // defaultValue={type}
-              disabled>
-            </Input>
-          </Form.Item>
-          <Form.Item
-            label="数据源名称"
-            name='name'
-            rules={generateSingleRules(true, '请输入数据源名称')}
-          >
-            <Input
-              // defaultValue={name}
-              className='setBackColor'
-              placeholder='请输入数据源名称'
-              maxLength={30}
-              autoComplete='off' />
-          </Form.Item>
-          <Form.Item
-            label="描述"
-            name='description'
-          >
-            <TextArea
-              // defaultValue={description}
-              className="setBackColor clearScrollbar"
-              autoSize={{ minRows: 3, maxRows: 6 }}
-              placeholder="请输入" maxLength={300} />
-          </Form.Item>
-          {/* CSV格式 */}
-          {
-            dataSourceType === 'CSV' && (
-              <>
-                <Form.Item
-                  label="编码格式"
-                  name="code"
-                  rules={generateSingleRules(true, '请选择编码格式')}
-                >
-                  <Radio.Group
-                    // defaultValue={code}
-                    options={codeFormatOptions}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="上传文件"
-                  style={{ marginBottom: '40px' }}
-                  // name="csvFileUrl"
-                  rules={generateSingleRules(true, '请重新上传文件')}
-                >
-                  <div className="setBackColor"
-                    style={{ height: '120px' }}>
-                    <Dragger {...csvUploadProps}>
-                      <p className="ant-upload-hint">
-                        点击或拖拽上传新的 <span style={{ color: '#ccc', fontSize: '18px' }}>csv</span> 格式文件，10M以内
-                      </p>
-                    </Dragger>
-                  </div>
-                </Form.Item>
-              </>
-            )
-          }
-          {/* API接口 */}
-          {
-            dataSourceType === 'API' && (
-              <>
-                <Form.Item label="Base URL"
-                  name='baseUrl'
-                  rules={generateSingleRules(true, '请输入Base URL')}
-                >
-                  <Input
-                    className="setBackColor"
-                    autoComplete='off'
-                    maxLength={1000}
-                  // defaultValue={baseUrl}
-                  ></Input>
-                </Form.Item>
-              </>
-            )
-          }
-          {/*//TODO MYSQL数据库 和 PGSQL暂时先共用一个，已经明确两者有差异，视后续的改动决定是否单独抽出去 */
-          }
-          {
-            (dataSourceType === 'MYSQL' || dataSourceType === 'POSTGRESQL') && (
-              <>
-                <Form.Item label="链接地址" name="host" rules={generateSingleRules(true, '请输入链接地址')}>
-                  <Input className="setBackColor"
-                    autoComplete='off'
-                    placeholder='请输入'
-                    maxLength={1000}
-                  // defaultValue={host}
-                  />
-                </Form.Item>
-                <Form.Item label="端口" name="port" rules={[
-                  {
-                    required: true,
-                    validator(rule, value) {
-                      const reg = /^\d{1,}$/
-                      if (!reg.test(value)) {
-                        return Promise.reject(new Error('端口号只能由数字组成'))
-                      } else {
-                        return Promise.resolve()
+            <Form.Item
+              label="数据源类型"
+              name="type"
+              rules={[{ required: true }]}
+            >
+              <Input className='setBackColor'
+                autoComplete='off'
+                // defaultValue={type}
+                disabled>
+              </Input>
+            </Form.Item>
+            <Form.Item
+              label="数据源名称"
+              name='name'
+              rules={generateSingleRules(true, '请输入数据源名称')}
+            >
+              <Input
+                // defaultValue={name}
+                className='setBackColor'
+                placeholder='请输入数据源名称'
+                maxLength={30}
+                autoComplete='off' />
+            </Form.Item>
+            <Form.Item
+              label="描述"
+              name='description'
+            >
+              <TextArea
+                // defaultValue={description}
+                className="setBackColor clearScrollbar"
+                autoSize={{ minRows: 3, maxRows: 6 }}
+                placeholder="请输入" maxLength={300} />
+            </Form.Item>
+            {/* CSV格式 */}
+            {
+              dataSourceType === 'CSV' && (
+                <>
+                  <Form.Item
+                    label="编码格式"
+                    name="code"
+                    rules={generateSingleRules(true, '请选择编码格式')}
+                  >
+                    <Radio.Group
+                      // defaultValue={code}
+                      options={codeFormatOptions}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label="上传文件"
+                    style={{ marginBottom: '40px' }}
+                    // name="csvFileUrl"
+                    rules={generateSingleRules(true, '请重新上传文件')}
+                  >
+                    <div className="setBackColor"
+                      style={{ height: '120px' }}>
+                      <Dragger {...csvUploadProps}>
+                        <p className="ant-upload-hint">
+                          点击或拖拽上传新的 <span style={{ color: '#ccc', fontSize: '18px' }}>csv</span> 格式文件，10M以内
+                        </p>
+                      </Dragger>
+                    </div>
+                  </Form.Item>
+                </>
+              )
+            }
+            {/* API接口 */}
+            {
+              dataSourceType === 'API' && (
+                <>
+                  <Form.Item label="Base URL"
+                    name='baseUrl'
+                    rules={generateSingleRules(true, '请输入Base URL')}
+                  >
+                    <Input
+                      className="setBackColor"
+                      autoComplete='off'
+                      maxLength={1000}
+                    // defaultValue={baseUrl}
+                    ></Input>
+                  </Form.Item>
+                </>
+              )
+            }
+            {/*//TODO MYSQL数据库 和 PGSQL暂时先共用一个，已经明确两者有差异，视后续的改动决定是否单独抽出去 */
+            }
+            {
+              (dataSourceType === 'MYSQL' || dataSourceType === 'POSTGRESQL') && (
+                <>
+                  <Form.Item label="链接地址" name="host" rules={generateSingleRules(true, '请输入链接地址')}>
+                    <Input className="setBackColor"
+                      autoComplete='off'
+                      placeholder='请输入'
+                      maxLength={1000}
+                    // defaultValue={host}
+                    />
+                  </Form.Item>
+                  <Form.Item label="端口" name="port" rules={[
+                    {
+                      required: true,
+                      validator(rule, value) {
+                        const reg = /^\d{1,}$/
+                        if (!reg.test(value)) {
+                          return Promise.reject(new Error('端口号只能由数字组成'))
+                        } else {
+                          return Promise.resolve()
+                        }
                       }
                     }
-                  }
-                ]}>
-                  <Input
-                    autoComplete='off'
-                    // defaultValue={port}
-                    className="setBackColor"
-                    placeholder='请输入数字'
-                    maxLength={6} />
-                </Form.Item>
-                <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
-                  <Input
-                    autoComplete='off'
-                    maxLength={20}
-                    // defaultValue={username}
-                    className="setBackColor"
-                    placeholder='请输入'
-                  />
-                </Form.Item>
-                <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
-                  <Input.Password
-                    autoComplete='off'
-                    className="setBackColor"
-                    placeholder='请输入'
-                    maxLength={20}
-                  // defaultValue={password}
-                  />
-                </Form.Item>
-                <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请选择数据库')}>
-                  <div className='dataBaseName'>
-                    <Spin spinning={getDBListLoading}>
-                      <div className='getDataListBtn' onClick={() => getDataBaseList()}>获取数据库列表</div>
-                    </Spin>
-                    <Select
-                      defaultValue={rdbmsSourceConfig?.database}
-                      placeholder="请选择数据库"
-                      disabled={Array.isArray(dataBaseList) && dataBaseList.length === 0}
-                      onChange={selectDatabase}
-                      className='dataBaseName-Select setBackColor'>
-                      {
-                        dataBaseList.map((item: any) => {
-                          return <Option value={item.value} key={item.value}>{item.label}</Option>
-                        })
-                      }
-                    </Select>
-                  </div>
-                  <Spin wrapperClassName='testConnectWrap' spinning={testConnectLoading}>
-                    <div
-                    // style={{ cursor: btnDisabled ? 'not-allowed' : 'pointer' }}
-                    >
-                      <div
-                        className='testConnect'
-                        // className={`${btnDisabled && 'btnDisabled'} testConnect`}
-                        onClick={() => testConnect()}>测试连接</div>
+                  ]}>
+                    <Input
+                      autoComplete='off'
+                      // defaultValue={port}
+                      className="setBackColor"
+                      placeholder='请输入数字'
+                      maxLength={6} />
+                  </Form.Item>
+                  <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
+                    <Input
+                      autoComplete='off'
+                      maxLength={20}
+                      // defaultValue={username}
+                      className="setBackColor"
+                      placeholder='请输入'
+                    />
+                  </Form.Item>
+                  <Form.Item label="密码" name="password" rules={generateSingleRules(true, '请输入密码')}>
+                    <Input.Password
+                      autoComplete='off'
+                      className="setBackColor"
+                      placeholder='请输入'
+                      maxLength={20}
+                    // defaultValue={password}
+                    />
+                  </Form.Item>
+                  <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请选择数据库')}>
+                    <div className='dataBaseName'>
+                      <Spin spinning={getDBListLoading}>
+                        <div className='getDataListBtn' onClick={() => getDataBaseList()}>获取数据库列表</div>
+                      </Spin>
+                      <Select
+                        defaultValue={rdbmsSourceConfig?.database}
+                        placeholder="请选择数据库"
+                        disabled={Array.isArray(dataBaseList) && dataBaseList.length === 0}
+                        onChange={selectDatabase}
+                        className='dataBaseName-Select setBackColor'>
+                        {
+                          dataBaseList.map((item: any) => {
+                            return <Option value={item.value} key={item.value}>{item.label}</Option>
+                          })
+                        }
+                      </Select>
                     </div>
-                  </Spin>
-                </Form.Item>
-              </>
-            )
-          }
-          {/* JSON */}
-          {
-            dataSourceType === 'JSON' && (
-              <>
-                <Form.Item
-                  label="上传文件"
-                  style={{ marginBottom: '40px' }}
-                  // name="jsonFileUrl"
-                  rules={generateSingleRules(true, '请选择要上传的文件')}
-                >
-                  <div className="setBackColor"
-                    style={{ height: '120px' }}>
-                    <Dragger {...jsonUploadProps}>
-                      <p className="ant-upload-hint">
-                        点击或拖拽上传新的 <span style={{ color: '#ccc', fontSize: '18px' }}>json</span> 格式文件，10M以内
-                      </p>
-                    </Dragger>
-                  </div>
-                </Form.Item>
-              </>
-            )
-          }
-          {/* EXCEL */}
-          {
-            dataSourceType === 'EXCEL' && (
-              <>
-                <Form.Item label="上传文件"
-                  // name='excelFileUrl'
-                  rules={generateSingleRules(true, '请输入Base URL')}
-                >
-                  <div className="setBackColor"
-                    style={{ height: '120px' }}>
-                    <Dragger {...excelUploadProps}>
-                      <p className="ant-upload-hint">
-                        点击或拖拽上传新的 <span style={{ color: '#ccc', fontSize: '18px' }}>.xlsx</span> 格式文件，10M以内
-                      </p>
-                    </Dragger>
-                  </div>
-                </Form.Item>
-              </>
-            )
-          }
-          {/* Elastic Search 类型 */}
-          {
-            dataSourceType === 'ELASTIC_SEARCH' && (
-              <>
-                <Form.Item label="连接地址" name="url" rules={generateSingleRules(true, '请输入链接地址')}>
-                  <Input className="setBackColor"
-                    autoComplete='off'
-                    placeholder='请输入'
-                    maxLength={1000}
-                  />
-                </Form.Item>
-                <Form.Item label="用户名" name="username">
-                  <Input
-                    autoComplete='off'
-                    className="setBackColor"
-                    placeholder='请输入'
-                    maxLength={20}
-                  />
-                </Form.Item>
-                <Form.Item label="密码" name="password">
-                  <Input.Password
-                    autoComplete='off'
-                    className="setBackColor"
-                    placeholder='请输入'
-                    maxLength={20}
-                  />
-                </Form.Item>
-                <Form.Item label="索引名称" name='index'>
-                  <div className='dataBaseName'>
-                    <Spin spinning={getIndexListLoading}>
-                      <div className='getDataListBtn' onClick={() => getIndexList()}>获取索引列表</div>
+                    <Spin wrapperClassName='testConnectWrap' spinning={testConnectLoading}>
+                      <div
+                      // style={{ cursor: btnDisabled ? 'not-allowed' : 'pointer' }}
+                      >
+                        <div
+                          className='testConnect'
+                          // className={`${btnDisabled && 'btnDisabled'} testConnect`}
+                          onClick={() => testConnect()}>测试连接</div>
+                      </div>
                     </Spin>
-                    <Select
-                      placeholder="请选择索引"
-                      disabled={Array.isArray(indexList) && indexList.length === 0}
-                      defaultValue={esSourceConfig?.index}
-                      onChange={selectIndex}
-                      className='dataBaseName-Select setBackColor'>
-                      {
-                        indexList.map((item: any) => {
-                          return <Option value={item.value} key={item.value}>{item.label}</Option>
-                        })
-                      }
-                    </Select>
-                  </div>
-                </Form.Item>
-              </>
-            )
-          }
-        </Form >
-      </Modal >
+                  </Form.Item>
+                </>
+              )
+            }
+            {/* JSON */}
+            {
+              dataSourceType === 'JSON' && (
+                <>
+                  <Form.Item
+                    label="上传文件"
+                    style={{ marginBottom: '40px' }}
+                    // name="jsonFileUrl"
+                    rules={generateSingleRules(true, '请选择要上传的文件')}
+                  >
+                    <div className="setBackColor"
+                      style={{ height: '120px' }}>
+                      <Dragger {...jsonUploadProps}>
+                        <p className="ant-upload-hint">
+                          点击或拖拽上传新的 <span style={{ color: '#ccc', fontSize: '18px' }}>json</span> 格式文件，10M以内
+                        </p>
+                      </Dragger>
+                    </div>
+                  </Form.Item>
+                </>
+              )
+            }
+            {/* EXCEL */}
+            {
+              dataSourceType === 'EXCEL' && (
+                <>
+                  <Form.Item label="上传文件"
+                    // name='excelFileUrl'
+                    rules={generateSingleRules(true, '请输入Base URL')}
+                  >
+                    <div className="setBackColor"
+                      style={{ height: '120px' }}>
+                      <Dragger {...excelUploadProps}>
+                        <p className="ant-upload-hint">
+                          点击或拖拽上传新的 <span style={{ color: '#ccc', fontSize: '18px' }}>.xlsx</span> 格式文件，10M以内
+                        </p>
+                      </Dragger>
+                    </div>
+                  </Form.Item>
+                </>
+              )
+            }
+            {/* Elastic Search 类型 */}
+            {
+              dataSourceType === 'ELASTIC_SEARCH' && (
+                <>
+                  <Form.Item label="连接地址" name="url" rules={generateSingleRules(true, '请输入链接地址')}>
+                    <Input className="setBackColor"
+                      autoComplete='off'
+                      placeholder='请输入'
+                      maxLength={1000}
+                    />
+                  </Form.Item>
+                  <Form.Item label="用户名" name="username">
+                    <Input
+                      autoComplete='off'
+                      className="setBackColor"
+                      placeholder='请输入'
+                      maxLength={20}
+                    />
+                  </Form.Item>
+                  <Form.Item label="密码" name="password">
+                    <Input.Password
+                      autoComplete='off'
+                      className="setBackColor"
+                      placeholder='请输入'
+                      maxLength={20}
+                    />
+                  </Form.Item>
+                  <Form.Item label="索引名称" name='index'>
+                    <div className='dataBaseName'>
+                      <Spin spinning={getIndexListLoading}>
+                        <div className='getDataListBtn' onClick={() => getIndexList()}>获取索引列表</div>
+                      </Spin>
+                      <Select
+                        placeholder="请选择索引"
+                        disabled={Array.isArray(indexList) && indexList.length === 0}
+                        defaultValue={esSourceConfig?.index}
+                        onChange={selectIndex}
+                        className='dataBaseName-Select setBackColor'>
+                        {
+                          indexList.map((item: any) => {
+                            return <Option value={item.value} key={item.value}>{item.label}</Option>
+                          })
+                        }
+                      </Select>
+                    </div>
+                  </Form.Item>
+                </>
+              )
+            }
+          </Form >
+        </Modal >
+      }
     </div >
   )
 }
