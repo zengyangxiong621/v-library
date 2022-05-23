@@ -5,7 +5,7 @@ const componentDefaultConfig = {
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
-  "moduleName": "wordCloud", //组件标识
+  "moduleName": "text", //组件标识
   "moduleVersion": "1.1.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========

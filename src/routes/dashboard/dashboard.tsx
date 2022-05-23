@@ -178,7 +178,7 @@ function App({ bar, dispatch, location }: any) {
         <div className="home-left-wrap">
           <Left />
         </div>
-        <div className="center-wrap g-flex">
+        <div className="center-wrap">
           <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
           <CenterCanvas />
           <CenterBottomBar />
