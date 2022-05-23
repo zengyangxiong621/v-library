@@ -21,32 +21,46 @@ const resultCodeData = {
 const DataResult = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
   const type = props.type
-  const componentResultData = props.resultData
+  const componentResultData = props.resultData || []
   const [resultData, setResultData] = useState(resultCodeData)
 
   useEffect(() => {
-    const dataFrom = _data.dataFrom
-    let resData = null
-    let currentData = null
-    if (dataFrom === 0) {
-      currentData = bar.componentData[_data.id]
-    } else {
-      currentData = setDataContainerResult()
-    }
-    if (currentData) {
-      // 如果使用数据过滤器，则需要过滤数据
-      if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
-        resData = dataFilterHandler(currentData)
+    console.log('type', type)
+    if (!type && type !== 'component') {
+      const dataFrom = _data.dataFrom
+      let resData = null
+      let currentData = null
+      if (dataFrom === 0) {
+        currentData = bar.componentData[_data.id]
       } else {
-        resData = currentData
+        currentData = setDataContainerResult()
       }
-      console.log('resData', resData)
+      if (currentData) {
+        // 如果使用数据过滤器，则需要过滤数据
+        if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
+          resData = dataFilterHandler(currentData)
+        } else {
+          resData = currentData
+        }
+        console.log('resData', resData)
+        const newData = Object.assign({}, resultData, {
+          value: JSON.stringify(resData, null, 2)
+        })
+        setResultData(newData)
+      }
+    }
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
+
+  useEffect(() => {
+    if (type === 'component') {
       const newData = Object.assign({}, resultData, {
-        value: JSON.stringify(resData, null, 2)
+        value: JSON.stringify(componentResultData, null, 2)
       })
       setResultData(newData)
     }
-  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
+  }, [componentResultData])
+
+
 
   const setDataContainerResult = () => {
     // 数据容器

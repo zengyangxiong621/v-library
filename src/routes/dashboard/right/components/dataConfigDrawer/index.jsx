@@ -4,7 +4,7 @@ import { connect } from 'dva'
 import { v4 as uuidv4 } from 'uuid';
 import MonacoEditor from 'react-monaco-editor';
 import DataResult from '../dataConfig/dataResult'
-
+import ModalConfirm from '@/components/modalConfirm'
 import { http } from '../../../../../services/request'
 
 import {
@@ -48,6 +48,8 @@ const cfilters = [
 ]
 
 const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
+  const _data = props.data || {filters: []}
+  const resultData = props.resultData || []
   const { Panel } = Collapse;
   const { Option } = Select;
   const { confirm } = Modal;
@@ -66,8 +68,38 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }, [props.visible])
 
   useEffect(() => {
-    effectHandler()
+    if (props.type === 'component') {
+
+    } else {
+      effectHandler()
+    }
   }, [bar.componentConfig.filters, bar.componentFilters])
+
+  useEffect(() => {
+    if (props.type === 'component') {
+      // bar.componentFilters 所有的 filter
+      const conFifters = _data?.filters?.map(item => {
+        const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+        return {
+          ...filterDetail,
+          enable: item.enable,
+          isEditName: false,
+          isAddKey: false,
+          status: 0,
+        }
+      }) || [];
+      setFilters(conFifters)
+      const options = bar.componentFilters.filter(v => {
+        if (!_data) {
+          return v
+        } else {
+          return !_data.filters.some((item) => item.id === v.id)
+        }
+      })
+      setSelectFilterOprions(options)
+    }
+  }, [_data.id, _data.filters])
+
 
   const effectHandler = () => {
     const conFifters = bar.componentConfig?.filters?.map(item => {
@@ -82,7 +114,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     }) || []
     setFilters(conFifters)
     const options = bar.componentFilters.filter(v => {
-      if (!bar.componentConfig) {
+      if (Object.keys(bar.componentConfig).length === 0) {
         return v
       } else {
         return !bar.componentConfig.filters.some((item) => item.id === v.id)
@@ -97,6 +129,10 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }
 
   const selectedFiltersChange = async (val) => {
+    if (props.type === 'component') {
+      props.onSelectedFiltersChange(val)
+      return
+    }
     await http({
       url: '/visual/module/filter/add',
       method: 'POST',
@@ -277,6 +313,10 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       // 如果是项目过滤器里面的删除，则需要提示
       // showConfirm(filter)
       // 组件里面的删除，只是解除关联关系
+      if (props.type === 'component') {
+        props.onDeleteFilters(filter)
+        return
+      }
       const data = await http({
         url: '/visual/module/filter/remove',
         method: 'POST',
@@ -309,12 +349,9 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }
 
   const showConfirm = (filter) => {
-    confirm({
-      title: '删除后可能导致相关组件不可用，是否删除数据过滤器？',
-      icon: <ExclamationCircleOutlined />,
-      content: '',
-      okText: '确认',
-      cancelText: '取消',
+    ModalConfirm({
+      title: '删除确认',
+      content: '删除后可能导致相关组件不可用，是否删除数据过滤器？',
       onOk() {
         deleteFilterHandle(filter)
       },
@@ -337,6 +374,10 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
 
   const enableFifter = async (e, item) => {
     item.enable = e.target.checked
+    if (props.type === 'component') {
+      props.onBindFilters(item, e.target.checked)
+      return
+    }
     const data = await http({
       url: '/visual/module/filter/trigger',
       method: 'POST',
@@ -420,6 +461,10 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         dashboardId: bar.dashboardId
       }
     })
+    if (data && props.type === 'component') {
+      props.onSelectedFiltersChange(data.id)
+      return
+    }
     if (data) {
       // 把过滤器添加到当前组件
       const res = await http({
@@ -470,21 +515,26 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       }
     })
     // 更新过滤器信息
-    const componentFilters = [...bar.componentFilters]
-    componentFilters.forEach(item => {
-      if (item.id === filter.id) {
-        item.id = id
-        item.name = name
-        item.callbackKeys = callbackKeys
-        item.content = content
+    if (data) {
+      const componentFilters = [...bar.componentFilters]
+      componentFilters.forEach(item => {
+        if (item.id === filter.id) {
+          item.id = id
+          item.name = name
+          item.callbackKeys = callbackKeys
+          item.content = content
+        }
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentFilters
+        }
+      })
+      if (props.type === 'component') {
+        props.onUpdateFilters(data)
       }
-    })
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        componentFilters
-      }
-    })
+    }
   }
 
   const arrayMove = (array, from, to) => {
@@ -643,7 +693,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             }
           </SortableContainer> : null
       }
-      <DataResult data={bar.componentConfig} style={{ width: '488px', height: '326px' }}></DataResult>
+      <DataResult data={bar.componentConfig} resultData={resultData} type="component" style={{ width: '488px', height: '326px' }}></DataResult>
     </Drawer>
   )
 }

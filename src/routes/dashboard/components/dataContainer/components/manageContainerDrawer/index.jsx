@@ -26,6 +26,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
   }
   const handleChoose = (id) => {
     const layer = findLayerById(bar.treeData, id)
+    console.log('layer', layer)
     dispatch({
       type: 'bar/selectLayers',
       payload: [layer]
@@ -65,7 +66,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
       render: list => {
         return list && list.length > 0 ?
           <div className="g-flex g-flex-wrap">{
-            bar.components.map(item => {
+            list.map(item => {
               return <a
                 className="g-pr-4 g-py-1 g-whitespace-nowrap g-overflow-hidden g-overflow-ellipsis g-whitespace-nowrap g-cursor-pointer"
                 style={ { maxWidth: 131 } }
@@ -103,7 +104,8 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
       className="manage-data-container-drawer"
       getContainer={ false }
       style={ { position: 'absolute' } }
-      maskStyle={ { opacity: 0 } }
+      // maskStyle={ { opacity: 0 } }
+      maskStyle={{ animation: 'unset'}}
     >
       <div>
         <Input
