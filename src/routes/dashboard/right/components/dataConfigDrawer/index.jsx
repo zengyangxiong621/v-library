@@ -48,7 +48,7 @@ const cfilters = [
 ]
 
 const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
-  const _data = props.data || {filters: []}
+  const _data = props.data || { filters: [] }
   const resultData = props.resultData || []
   const { Panel } = Collapse;
   const { Option } = Select;
@@ -171,7 +171,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }
 
   const addFilter = () => {
-    const id= uuidv4()
+    const id = uuidv4()
     setFilterOfAdd({
       id,
       enable: true,
@@ -693,7 +693,12 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             }
           </SortableContainer> : null
       }
-      <DataResult data={bar.componentConfig} resultData={resultData} type="component" style={{ width: '488px', height: '326px' }}></DataResult>
+      {
+        props.type === 'component'
+          ? <DataResult data={bar.componentConfig} resultData={resultData} type="component" style={{ width: '488px', height: '326px' }}></DataResult>
+          : <DataResult data={bar.componentConfig} style={{ width: '488px', height: '326px' }}></DataResult>
+      }
+
     </Drawer>
   )
 }
