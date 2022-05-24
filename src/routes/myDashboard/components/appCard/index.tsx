@@ -84,6 +84,10 @@ const AppCard = (props: any) => {
 
   // 复制应用
   const copyApp = async (appId: string) => {
+    if(name.length>15) {
+      message.warning('复制后应用名称超过长度限制')
+      return
+    }
     const [, data] = await useFetch('/visual/application/copy', {
       body: JSON.stringify({
         appId

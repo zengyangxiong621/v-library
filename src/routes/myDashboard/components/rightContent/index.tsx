@@ -323,7 +323,7 @@ const RightContent = (props: any) => {
   const rePublishByOnBlur = async (newValue: string, field: string) => {
     // 获取聚焦时 输入框内的值
     // - 如果为 '' , 不发请求； 如果相同，不发请求
-    if (newValue === curFocusInputValue || !newValue) {
+    if (newValue === curFocusInputValue || (!curFocusInputValue && !newValue)) {
       // debugger
       return
     }
@@ -489,6 +489,7 @@ const RightContent = (props: any) => {
                     <div className="set-flex">
                       <Input
                         value={fxljInputValue}
+                        disabled={true}
                         onChange={(e) => setFxljInputValue(e.target.value)}
                         style={{ width: '310px', height: '32px', lineHeight: '32px', paddingRight: '8px' }}
                       />
@@ -546,8 +547,9 @@ const RightContent = (props: any) => {
                       <Form.Item
                         label="标题"
                         colon={false}
-                      ><Input placeholder="请输入标题"
+                      ><Input placeholder="请输入标题(不超过30字)"
                         value={titleInputValue}
+                        maxLength={30}
                         onChange={(e) => setTitleInputValue(e.target.value)}
                         onBlur={titleInputOnBlur}
                         onFocus={getCurFocusInputValue}
@@ -555,8 +557,9 @@ const RightContent = (props: any) => {
                       </Form.Item>
                       <Form.Item label="描述"
                         colon={false}
-                      ><Input placeholder="请输入描述"
+                      ><Input placeholder="请输入描述(不超过40字)"
                         value={descriptionInputValue}
+                        maxLength={40}
                         onChange={(e) => setDescriptionInputValue(e.target.value)}
                         onBlur={desInputOnBlur}
                         onFocus={getCurFocusInputValue}
@@ -567,6 +570,7 @@ const RightContent = (props: any) => {
                       >
                         <Input placeholder="请输入图片地址"
                           value={imgUrl}
+                          maxLength={1000}
                           onChange={(e) => setImgUrl(e.target.value)}
                           onBlur={imgUrlOnBlur}
                           onFocus={getCurFocusInputValue}
@@ -576,7 +580,9 @@ const RightContent = (props: any) => {
                       <Form.Item label="上传图片"
                         colon={false}
                       >
-                        <Upload {...uploadImgProps} className="set-flex">
+                        <Upload {...uploadImgProps} className="set-flex"
+                          style={{ background: 'red', maxWidth: '100%' }}
+                        >
                           <Button type="primary">点击上传</Button>
                         </Upload>
                       </Form.Item>
