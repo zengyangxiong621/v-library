@@ -30,11 +30,14 @@ const DataResult = ({ bar, dispatch, ...props }) => {
       const dataFrom = _data.dataFrom
       let resData = null
       let currentData = null
+      console.log('dataFrom', _data)
+
       if (dataFrom === 0) {
         currentData = bar.componentData[_data.id]
       } else {
         currentData = setDataContainerResult()
       }
+      console.log('currentDatacurrentDatacurrentDatacurrentData', currentData)
       if (currentData) {
         // 如果使用数据过滤器，则需要过滤数据
         if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
