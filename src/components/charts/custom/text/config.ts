@@ -11,11 +11,12 @@ const componentDefaultConfig = {
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
 
-  "autoUpdate": {"isAuto": false, "interval": 10}, // =========
+  "autoUpdate": { "isAuto": false, "interval": 10 }, // =========
   "thumb": "", // 缩略图 // =========
 
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
+  "dataFrom": 0,
   "dataContainers": [{// =========
     "enable": true,
     "id": 2744,
@@ -44,67 +45,39 @@ const componentDefaultConfig = {
     "id": 362505
   }],
 
-  "interaction":{ // 交互
-    "mountAnimation": {
-      // 如果不存在载入动画，该项为null
-      "delay": 2, // 延迟
-      "direction": "right", // 方向
-      "duration": 304, // 持续时间(ms)
-      "opacityOpen": true, // 渐隐渐现
-      "timingFunction": "ease", // 速率
-      "type": "slide" // 动画类型
-    },
-    "events":[
+  "events": [{
+    "trigger": "dataChange", // 事件类型 dataChange、click、mouseEnter、mouseLeave
+    "name": "事件1",
+    "id": "key",
+    "conditions": [
       {
-          "name":"事件1",
-          "conditionType":"all",	// 满足全部条件 all  满足任意条件 random
-          "trigger":"dataChange", // 事件类型 dataChange click  mouseEnter mouseLeave
-          "id":"96c8d7d8-6620-48b4-be05-ab865ac0e26b",
-          "conditions":[
-              {
-                  "compare":"==", // 判断条件 == != < > <= >= include exclude
-                  "code":"return data",
-                  "field":"", // 字段
-                  "expected":"", // 期望的字段值
-                  "name":"条件",
-                  "id":"5d8a602a-a286-45f2-8e97-50a6f037cb1c",
-                  "type":"field"  // field custom
-              }
-          ],
-          "actions":[
-              {
-                  "rotate":{ // 旋转配置
-                      "perspective":false, // 透视 true  false
-                      "rotateX":0,
-                      "rotateY":0,
-                      "rotateZ":0
-                  },
-                  "component":['componentid','groupid'], // 组id 组件id
-                  "name":"动作1",
-                  "action":"show", // show hide show/hide translate scale rotate
-                  "scale":{	// 缩放配置
-                      "origin":"50% 50%", // 缩放原点
-                      "x":1,	// x方向缩放比例
-                      "lock":true, // 锁定x/y
-                      "y":1	// y方向缩放比例
-                  },
-                  "id":"73c57ff6-3215-4eb4-b100-2ab0a3ef6472",
-                  "componentScope":"current",	// 当前current 全局global
-                  "translate":{ // 移动配置
-                      "toX":0,
-                      "toY":0
-                  },
-                  "animation":{	// 动画配置
-                      "duration":1004,	// 动画时长
-                      "delay":0,	// 延时
-                      "type":"slideLeft",	// 动画类型opacity slideLeft slideRight slideTop slideBottom
-                      "timingFunction":"ease" // 速率 linear ease ease-in ease-out ease-in-out
-                  }
-              }
-          ]
+        "name": "条件",
+        "type": "field",
+        "field": "a",
+        "compare": "==",
+        "expected": "a",
+        "code": "return data",
+        "id": "key"
+      }
+    ],
+    "conditionType": "all", // 判断类型
+    "actions": [
+      {
+        "id": "uuidv4()",
+        "name": "动作",
+        "action": "show", //动作 show hide
+        "componentScope": "current",  //组件scope global\current
+        "unmount": true, // 隐藏卸载
+        "component": [], // 组件id数组
+        "animation": {
+          "type": "slideLeft", // opacity\slideLeft\slideRight\slideTop\slideBottom
+          "timingFunction": "ease", // linear\ease\ease-in\ease-out\ease-in-out
+          "duration": 1000,
+          "delay": 0
+        }
       }
     ]
-  },
+  }],
   "config": [
     // 样式配置
     {

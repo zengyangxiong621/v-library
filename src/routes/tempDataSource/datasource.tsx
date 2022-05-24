@@ -26,7 +26,7 @@ const DataSource = (props: any) => {
   const [editDataSourceInfo, setEditDataSourceInfo] = useState({})
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
-    pageSize: 10,
+    pageSize: 30,
   })
   const [tableMap, setTableMap] = useState({})
   const [totalElements, setTotalElements] = useState(0)
@@ -344,9 +344,9 @@ const DataSource = (props: any) => {
             />
           </div>
         </header>
-        <section className='table-wrap'>
+        <div className='table-wrap'>
           <Table
-            scroll={{ y: 560 }}
+            scroll={{ y: '53vh' }}
             sortDirections={['ascend', 'descend']}
             rowClassName='customRowClass'
             loading={tableLoading}
@@ -355,7 +355,7 @@ const DataSource = (props: any) => {
             pagination={paginationProps}
             onChange={tableOnChange}
           />
-        </section>
+        </div>
         {/* 添加数据源的弹窗 */}
         <AddDataSource
           visible={isShowAddModal}
@@ -363,12 +363,14 @@ const DataSource = (props: any) => {
           refreshTable={refreshTable}
         />
         {/* 编辑数据源的弹窗 */}
-        <EditDataSource
+        {
+          isShowEditModal && <EditDataSource
           editDataSourceInfo={editDataSourceInfo}
           visible={isShowEditModal}
           changeShowState={changeShowState}
           refreshTable={refreshTable}
         />
+        }
         {
           ['EXCEL', 'CSV'].includes(previewRecord.type) ?
             // {/* 表格在线预览 */}

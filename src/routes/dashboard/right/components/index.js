@@ -19,6 +19,7 @@ import RadioGroup from './radioGroup'
 import CusInput from './cusInput'
 import CheckBoxGroup from './checkBoxGroup'
 import CusTabs from './cusTabs'
+import UploadImg from './uploadImg'
 
 
 const componentLib = {
@@ -40,7 +41,8 @@ const componentLib = {
   inputNumber2:InputNumber2,
   input:CusInput,
   checkBoxGroup:CheckBoxGroup,
-  tabs:CusTabs
+  tabs:CusTabs,
+  image:UploadImg
 }
 
 export default componentLib

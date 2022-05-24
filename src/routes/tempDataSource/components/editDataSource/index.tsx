@@ -25,8 +25,7 @@ const EditDataSource = (props: any) => {
     esSourceConfig,
   } = props.editDataSourceInfo
 
-  const [data, setData] = useState(props.editDataSourceInfo)
-  console.log('id', id)
+
   console.log('props.editDataSourceInfo', props.editDataSourceInfo);
 
   let spaceId = 1
@@ -37,14 +36,6 @@ const EditDataSource = (props: any) => {
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
 
-  // useEffect(() => {
-  //   console.log('visible', visible);
-  //   if (!visible) {
-  //     editForm.resetFields()
-  //     alert('重置了')
-  //     console.log('editForm的值', editForm.getFieldsValue());
-  //   }
-  // }, [visible])
 
   // 与添加数据源不同，这里需要判断数据源的类型(csv,json,excel)来确定初始的fileUrl
   const [fileUrl, setFileUrl] = useState('')
@@ -55,10 +46,10 @@ const EditDataSource = (props: any) => {
   // 因为后端中关系型数据库统一表示为RDBMS, 此处将数据库数据源类型拆解出来
   const [dataSourceType, setDataSourceType] = useState()
   useEffect(() => {
-    if (type === 'RDBMS') {
+    // if (type === 'RDBMS') {
       // 获取当前是那种类型的数据库
-      setDataSourceType(rdbmsSourceConfig.dataBaseType)
-    } else {
+      // setDataSourceType(rdbmsSourceConfig.dataBaseType)
+    // } else {
       // 根据数据源类型来获取fileUrl
       setDataSourceType(type)
       switch (type) {
@@ -73,12 +64,9 @@ const EditDataSource = (props: any) => {
           break;
         default: break;
       }
-    }
-  }, [id])
+    // }
+  }, [])
 
-  useEffect(() => {
-    setData(props.editDataSourceInfo)
-  }, [props.editDataSourceInfo])
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
   const [getDBListLoading, setGetDBListLoading] = useState(false)
@@ -275,7 +263,7 @@ const EditDataSource = (props: any) => {
     setIndexList([])
     setIsConnect(false)
     // setTimeout(() => {
-    //   editForm.resetFields()
+    editForm.resetFields()
     // }, 4);
     // setIndexName('')
   }
@@ -371,8 +359,29 @@ const EditDataSource = (props: any) => {
   // .excel 文件
   const excelUploadProps = generateUploadProps('.xlsx')
 
+  const [initVal, setInitVal] = useState({
+    description,
+    name,
+    type,
+    baseUrl: apiSourceConfig?.baseUrl,
+    code: csvSourceConfig?.code,
+    database: rdbmsSourceConfig?.database,
+    port: rdbmsSourceConfig?.port,
+    host: rdbmsSourceConfig?.host,
+    // rdbms里和es里都有 username和password
+    password: rdbmsSourceConfig?.password || esSourceConfig?.password,
+    username: rdbmsSourceConfig?.username || esSourceConfig?.username,
+    jsonFileUrl: jsonSourceConfig?.fileUrl,
+    csvFileUrl: csvSourceConfig?.fileUrl,
+    excelFileUrl: excelSourceConfig?.fileUrl,
+    url: esSourceConfig?.url,
+    index: esSourceConfig?.index
+  })
+  useEffect(() => {
+    setInitVal({ ...initVal, type })
+  }, [visible, type])
   /*** 编辑表单各项初始值 */
-  const editFormInitValues = {
+  let editFormInitValues = {
     description,
     name,
     type: dataSourceType,
@@ -390,12 +399,33 @@ const EditDataSource = (props: any) => {
     url: esSourceConfig?.url,
     index: esSourceConfig?.index
   }
+  // const [data, setData] = useState(editFormInitValues)
+  // useEffect(() => {
+  //   console.log('props.config改变了');
+  //   setData({
+  //     description,
+  //     name,
+  //     type: dataSourceType,
+  //     baseUrl: apiSourceConfig?.baseUrl,
+  //     code: csvSourceConfig?.code,
+  //     database: rdbmsSourceConfig?.database,
+  //     port: rdbmsSourceConfig?.port,
+  //     host: rdbmsSourceConfig?.host,
+  //     // rdbms里和es里都有 username和password
+  //     password: rdbmsSourceConfig?.password || esSourceConfig?.password,
+  //     username: rdbmsSourceConfig?.username || esSourceConfig?.username,
+  //     jsonFileUrl: jsonSourceConfig?.fileUrl,
+  //     csvFileUrl: csvSourceConfig?.fileUrl,
+  //     excelFileUrl: excelSourceConfig?.fileUrl,
+  //     url: esSourceConfig?.url,
+  //     index: esSourceConfig?.index
+  //   })
+  // }, [props.editDataSourceInfo.csvSourceConfig, props.editDataSourceInfo.rdbmsSourceConfig, props.editDataSourceInfo.apiSourceConfig, props.editDataSourceInfo.esSourceConfig])
   return (
     <div className='EditDataSource-wrap'>
       <Modal
         title="编辑数据源"
-        key={data.id}
-        destroyOnClose={true}
+        // destroyOnClose={true}
         maskClosable={false}
         visible={visible}
         okText="确定"
@@ -414,7 +444,8 @@ const EditDataSource = (props: any) => {
             span: 5,
           }}
           form={editForm}
-          initialValues={data}
+          preserve={false}
+          initialValues={initVal}
         >
           <Form.Item
             label="数据源类型"
