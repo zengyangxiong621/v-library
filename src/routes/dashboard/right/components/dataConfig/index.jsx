@@ -9,6 +9,7 @@ import DataResult from './dataResult'
 import { SwapOutlined } from '@ant-design/icons';
 
 import { http } from '../../../../../services/request'
+import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilter";
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
@@ -127,7 +128,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       }
       return pre
     }, [])
-    setComponentResultData(dataList)
   }
 
   useEffect(async () => {
@@ -192,7 +192,19 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     }
   }
 
-
+  const filterBoxChange = async (e) => {
+    console.log('dataType', _data.dataType)
+    await http({
+      url: '/visual/module/updateDatasource',
+      method: 'post',
+      body: {
+        id: _data.id,
+        useFilter: e.target.checked,
+        dataType: _data.dataType,
+      }
+    })
+    props.onUseFilterChange(e.target.checked)
+  }
   // 处理过滤器
 
 
@@ -232,11 +244,10 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
             onDataTypeChange={onDataTypeChange}
             onStaticDataChange={props.onStaticDataChange}
             onDataSourceChange={props.onDataSourceChange}
-            onUseFilterChange={props.onUseFilterChange}
           />
       }
-
-      <DataResult data={_data} resultData={componentResultData} type={componentType} />
+      <DataFilter data={_data} onFilterBoxChange={filterBoxChange}/>
+      <DataResult data={_data} />
     </React.Fragment>
   )
 }

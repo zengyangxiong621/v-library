@@ -9,7 +9,7 @@ import StaticData from './staticData'
 import SelectDataSource from './selectDataSource'
 import APIDataSource from './apiDataSource'
 import { http } from '../../../../../services/request'
-
+import DataFilter from './dataFilter'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {
@@ -82,7 +82,6 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data
   const [dataSourceTypes, setDataSourceTypes] = useState(selectData)
   const [drawerVisible, setDrawerVisible] = useState(false)
-  const [filterFlag, setFilterFlag] = useState(_data.useFilter)
   const [sqlData, setSqlData] = useState(_sqlDataConfig)
   const [esData, setEsData] = useState(_esDataConfig)
 
@@ -234,7 +233,6 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   }
 
   const filterBoxChange = async (e) => {
-    setFilterFlag(e.target.checked)
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -306,13 +304,16 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
           }
         </div>
         <div className="data-footer">
-          <Checkbox defaultChecked={filterFlag} onChange={filterBoxChange}>数据过滤器</Checkbox>
+
+          {/*<DataFilter data={_data} onFilterBoxChange={filterBoxChange}/>*/}
+
+{/*          <Checkbox defaultChecked={filterFlag} onChange={filterBoxChange}>数据过滤器</Checkbox>
           {_data.filters.length
             ?
             <span disabled={!filterFlag} className="filter-num" onClick={showFilterDrawer}>已添加{_data.filters.length}个过滤器</span>
             :
             <Button disabled={!filterFlag} onClick={showFilterDrawer} icon={<PlusOutlined />}>添加过滤器</Button>
-          }
+          }*/}
         </div>
       </div>
       <DataConfigDrawer

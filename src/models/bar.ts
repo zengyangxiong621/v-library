@@ -377,12 +377,29 @@ export default {
         }
         bar.dataContainerDataList.push({ id: item.id, data })
       })
+      // 数据过滤器
+
+      const fifters = yield http({
+        url: '/visual/module/filter/list',
+        method: 'GET',
+        params: {
+          id: bar.dashboardId,
+          type: 'screen'
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
       yield put({
         type: 'save',
         payload: {
-          dataContainerDataList: bar.dataContainerDataList
+          dataContainerDataList: bar.dataContainerDataList,
+          componentFilters: fifters || []
+
         }
       })
+
+
       yield cb()
     },
     * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {

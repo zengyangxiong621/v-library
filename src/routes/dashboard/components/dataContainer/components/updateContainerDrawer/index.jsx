@@ -1,12 +1,14 @@
-import React, { memo, useState, useEffect, useRef } from 'react'
+import React, {memo, useState, useEffect, useRef} from 'react'
 import './index.less'
-import { Drawer, Input } from 'antd'
-import { connect } from 'dva'
-import { http } from '../../../../../../services/request'
+import {Drawer, Input, message} from 'antd'
+import {connect} from 'dva'
+import {http} from '../../../../../../services/request'
 import DataSourceConfig from '../../../../right/components/dataConfig/dataSourceConfig'
 import DataResult from '../../../../right/components/dataConfig/dataResult'
-import { CloseOutlined, LeftOutlined } from '@ant-design/icons'
+import {CloseOutlined, LeftOutlined} from '@ant-design/icons'
 import useLoading from '@/components/useLoading'
+import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilter";
+
 const testData = {
   'name': '容器名称', // 容器名字
   'dataConfig': {}, // 数据源配置
@@ -33,7 +35,7 @@ const testData = {
   'useFilter': false, // 是否启用过滤器
   'filters': [],
 }
-const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
+const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   const inputRef = useRef(null)
   const [copyData, setCopyData] = useState(testData)
   const [resultData, setResultData] = useState([])
@@ -63,13 +65,18 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
       } else {
         // 编辑
         setCopyData(props.data)
-        const data = bar.dataContainerDataList.find(item => item.id === props.data.id)
-        console.log('-------------')
-        console.log('data', data)
-        console.log('props.data', props.data)
-        console.log('bar.dataContainerDataList', bar.dataContainerDataList)
-        console.log('---------------')
-        setResultData(data)
+        let data = bar.dataContainerDataList.find(item => item.id === props.data.id)
+        let resultData = []
+        if (data) {
+          if (props.data.useFilter) {
+            resultData = handleDataFilter(data.data, props.data.filters)
+            setResultData(resultData)
+          }
+          setResultData(data.data)
+        } else {
+          setResultData(resultData)
+        }
+
       }
     }
   }, [props.data])
@@ -78,6 +85,11 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
 
     props.onVisibleChange(false)
   }
+
+  const updateDataContainerName = async (body) => {
+    await updateDataContainer(body)
+  }
+
   // 更新输入容器
   const updateDataContainer = async (body) => {
     await http({
@@ -90,8 +102,8 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   const handleDataTypeChange = async (value) => {
     console.log('handleDataTypeChange', value)
 
-    setCopyData({ ...copyData, dataType: value })
-    await updateDataContainer({ ...copyData, dataType: value })
+    setCopyData({...copyData, dataType: value})
+    await updateDataContainer({...copyData, dataType: value})
   }
   // 静态数据变化
   const handleStaticDataChange = async (data) => {
@@ -122,67 +134,219 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   }
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
-    setCopyData({ ...copyData, dataConfig })
-    await updateDataContainer({ ...copyData, data: dataConfig[copyData.dataType].data })
-    const data = await http({
-      method: 'get',
-      url: '/visual/container/data/get',
-      params: {
-        id: copyData.id
+    setCopyData({...copyData, dataConfig})
+    await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
+    try {
+      const data = await http({
+        method: 'get',
+        url: '/visual/container/data/get',
+        params: {
+          id: copyData.id
+        }
+      })
+      console.log('gggggggggggggggg')
+      console.log('data', data)
+      if (data) {
+        message.success('操作成功')
+        dispatch({
+          type: 'bar/updateDataContainer',
+          payload: {
+            containerData: {...copyData, dataConfig},
+            data
+          }
+        })
+        if (copyData.useFilter) {
+          let filterData = handleDataFilter(data, copyData.filters)
+          setResultData(filterData)
+        } else {
+          setResultData(data)
+        }
       }
+    } catch (err) {
+      setResultData([])
+    }
+
+  }
+  // 数据过滤器开关
+  const filterBoxChange = async (e) => {
+
+    setCopyData({...copyData, useFilter: e.target.checked})
+    await updateDataContainer({...copyData, useFilter: e.target.checked})
+    dispatch({
+      type: 'bar/updateDataContainer',
+      payload: {
+        containerData: {...copyData, useFilter: e.target.checked},
+      }
+    })
+    let data = bar.dataContainerDataList.find(item => item.id === copyData.id).data
+    if (e.target.checked) {
+      data = handleDataFilter(data, copyData.filters)
+    }
+    setResultData(data)
+  }
+  // 数据过滤器变化
+  const selectedFiltersChange = async (value) => {
+    // 绑定/解绑过滤器
+    const data = await http({
+      method: 'post',
+      url: '/visual/container/filter',
+      body: {
+        id: copyData.id,
+        filterId: value,
+        add: true
+      }
+    })
+    setCopyData({
+      ...copyData, filters: data.filters
     })
     dispatch({
       type: 'bar/updateDataContainer',
       payload: {
-        containerData: { ...copyData, dataConfig },
-        data
+        containerData: data
       }
     })
-    setResultData(data)
+    let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
+    containerData = handleDataFilter(containerData, data.filters)
+    setResultData(containerData)
+  }
+  // 数据过滤
+  const handleDataFilter = (data, allFilters) => {
+    const filters = allFilters.map(item => {
+      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      return {
+        ...filterDetail,
+        enable: item.enable,
+      }
+    }).filter(item => item.enable)
+    if (filters.length === 0) {
+      return data
+    }
+    try {
+      const functions = filters.map(item => {
+        return (new Function('data', item.content))
+      })
+      const resultArr = []
+      functions.forEach((fn, index) => {
+        if (index === 0) {
+          resultArr.push(fn(data))
+        } else {
+          resultArr.push(fn(resultArr[index - 1]))
+        }
+      })
+      return resultArr[resultArr.length - 1]
+    } catch (e) {
+      return []
+    }
+  }
+  // 更新过滤器
+  const updateFilters = (data) => {
+    let containerData = bar.dataContainerDataList.find(item => item.id === props.data.id).data
+    containerData = handleDataFilter(containerData, copyData.filters)
+    setResultData(containerData)
+  }
+  const deleteFilters = async ({id}) => {
+    // 删除过滤器
+    const data = await http({
+      method: 'post',
+      url: '/visual/container/filter',
+      body: {
+        id: copyData.id,
+        filterId: id,
+        add: false
+      }
+    })
+    setCopyData({
+      ...copyData, filters: data.filters
+    })
+    dispatch({
+      type: 'bar/updateDataContainer',
+      payload: {
+        containerData: data
+      }
+    })
+    let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
+    containerData = handleDataFilter(containerData, data.filters)
+    setResultData(containerData)
+  }
+  // bindFilters
+  const bindFilters = async ({id}, status) => {
+    // 绑定过滤器
+    const data = await http({
+      method: 'post',
+      url: '/visual/container/filter/trigger',
+      body: {
+        id: copyData.id,
+        filterId: id,
+        enable: status
+      }
+    })
+    setCopyData({
+      ...copyData, filters: data.filters
+    })
+    dispatch({
+      type: 'bar/updateDataContainer',
+      payload: {
+        containerData: data
+      }
+    })
+    let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
+    containerData = handleDataFilter(containerData, data.filters)
+    setResultData(containerData)
   }
   return (
     <Drawer
       title={
         <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
-          <LeftOutlined onClick={ onClose } className="g-cursor-pointer" style={ { fontSize: 12 } }/>
+          <LeftOutlined onClick={onClose} className="g-cursor-pointer" style={{fontSize: 12}}/>
           数据容器
-          <CloseOutlined onClick={ onClose } className="g-cursor-pointer" style={ {} }/>
+          <CloseOutlined onClick={onClose} className="g-cursor-pointer" style={{}}/>
         </div>
       }
-      closable={ false }
-      width={ 333 }
+      closable={false}
+      width={333}
       placement="right"
-      onClose={ onClose }
-      visible={ props.visible }
+      onClose={onClose}
+      visible={props.visible}
       className="update-data-container-drawer"
-      getContainer={ false }
-      style={ { position: 'absolute' } }
-      maskStyle={ { opacity: 0, animation: 'unset' } }
+      getContainer={false}
+      style={{position: 'absolute'}}
+      // maskStyle={{opacity: 0, animation: 'unset'}}
+      maskStyle={{ animation: 'unset'}}
     >
       <div className="loading-wrapper">
         <Input
-          ref={ inputRef } value={ copyData.name }
-          onChange={ (e) => setCopyData({ ...copyData, name: e.target.value }) }
-          onPressEnter={ () => {
-            updateDataContainer(copyData)
-          } }
-          onBlur={ () => {
-            updateDataContainer(copyData)
-          } }
+          ref={inputRef} value={copyData.name}
+          onChange={(e) => setCopyData({...copyData, name: e.target.value})}
+          onPressEnter={() => {
+            updateDataContainerName(copyData)
+          }}
+          onBlur={() => {
+            updateDataContainerName(copyData)
+          }}
         />
         <p className="data-source">数据源</p>
         <DataSourceConfig
           type="component"
-          data={ copyData }
-          onDataTypeChange={ handleDataTypeChange }
-          onStaticDataChange={ handleStaticDataChange }
-          onDataSourceChange={ handleDataSourceChange }
+          data={copyData}
+          onDataTypeChange={handleDataTypeChange}
+          onStaticDataChange={handleStaticDataChange}
+          onDataSourceChange={handleDataSourceChange}
         />
-        <DataResult data={ copyData } resultData={resultData} />
+        <DataFilter
+          data={copyData}
+          type="component"
+          onFilterBoxChange={filterBoxChange}
+          onSelectedFiltersChange={selectedFiltersChange}
+          onUpdateFilters={updateFilters}
+          onDeleteFilters={deleteFilters}
+          onBindFilters={bindFilters}
+          resultData={resultData}
+        />
+        <DataResult data={copyData} resultData={resultData} type="component"/>
 
       </div>
     </Drawer>
   )
 }
 
-export default connect(({ bar }) => ({ bar }))(UpdateContainerDrawer)
+export default connect(({bar}) => ({bar}))(UpdateContainerDrawer)
