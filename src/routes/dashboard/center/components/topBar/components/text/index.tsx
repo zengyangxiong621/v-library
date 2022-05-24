@@ -16,6 +16,7 @@ const mapStateToProps = (state: any) => {
 const Text = (props: any) => {
   const [dataArr, setDataArr] = useState<any>([])
   useEffect(() => {
+    const moduleType = 'text'
     const init = () => {
       http({
         url:'/visual/module-manage/queryModuleList', 
@@ -31,8 +32,8 @@ const Text = (props: any) => {
         }
       }).then((data: any) => {
         data.content.forEach((item: any) => {
-          item.photoPath = require('../../../../../../../assets/images/thumb-text.png')
-          item.type = 'text'
+          item.photoPath = `http://10.201.83.166:35034/modules/${moduleType}/${item.moduleVersion}/thumb-${item.moduleName}.png`
+        
         })
         setDataArr(() => data.content)
       })

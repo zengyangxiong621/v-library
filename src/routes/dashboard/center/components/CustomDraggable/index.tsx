@@ -10,7 +10,6 @@ import {generateTreeData} from '../../../../../utils/sideBar'
 
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 
-
 // import Text from '../Text'
 import Text from '../../../../../components/charts/custom/text'
 import CompImage from '../../../../../components/charts/custom/image'

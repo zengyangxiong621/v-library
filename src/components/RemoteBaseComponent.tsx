@@ -2,25 +2,30 @@ import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 
 const RemoteBaseComponent = (props: any) => {
-
+  debugger
   const { type } = props;
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
-
   const importComponent = useCallback(() => {
-    return axios.get(`http://127.0.0.1:5500/${type}.js`).then(res => res.data);
+    // return `${ (window as any).CONFIG.COMP_URL }/modules/text/1.0.0/text.js`
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/text/1.0.0/text.js`).then(res => res.data);
   }, [type])
 
   const loadComp = useCallback(async () => {
     // new Function(`${await importComponent()}`)();
     window.eval(`${await importComponent()}`)
+    
     const { default: component } = (window as any).VComponents;
+    debugger
     setComponent(() => component);
   }, [importComponent, setComponent])
 
   useEffect(() => {
     loadComp();
   }, [loadComp]);
+
+  debugger
+  console.log(Comp, 'Comp=============================')
 
   if (Comp) {
     return <Comp {...props}/>
