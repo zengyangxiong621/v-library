@@ -40,7 +40,8 @@ const componentLib = {
   inputNumber2:InputNumber2,
   input:CusInput,
   checkBoxGroup:CheckBoxGroup,
-  tabs:CusTabs
+  tabs:CusTabs,
+  image:UploadImg
 }
 
 export default componentLib

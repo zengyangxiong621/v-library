@@ -11,7 +11,7 @@ const componentDefaultConfig = {
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
 
-  "autoUpdate": {"isAuto": false, "interval": 10}, // =========
+  "autoUpdate": { "isAuto": false, "interval": 10 }, // =========
   "thumb": "", // 缩略图 // =========
 
   "dataConfig": {}, //数据源配置
@@ -44,50 +44,39 @@ const componentDefaultConfig = {
     "id": 362505
   }],
 
-  "interaction":{ // 交互
-    "mountAnimation": {
-      // 如果不存在载入动画，该项为null
-      "delay": 2, // 延迟
-      "direction": "right", // 方向
-      "duration": 304, // 持续时间(ms)
-      "opacityOpen": true, // 渐隐渐现
-      "timingFunction": "ease", // 速率
-      "type": "slide" // 动画类型
-    },
-    "events":[{
-        "trigger": "dataChange", // 事件类型 dataChange、click、mouseEnter、mouseLeave
-        "name": "事件1",
-        "id": "key",
-        "conditions": [
-            {
-                "name": "条件",
-                "type": "field", 
-                "field": "a", 
-                "compare": "==", 
-                "expected": "a",
-                "code": "return data",
-                "id": "key"
-            }
-        ],
-        "conditionType": "all", // 判断类型
-        "actions": [
-            {
-                "id": "uuidv4()",
-                "name": "动作",
-                "action":"show", //动作 show hide
-                "componentScope":"current",  //组件scope global\current
-                "unmount":true, // 隐藏卸载
-                "component": [], // 组件id数组
-                "animation": {
-                    "type": "slideLeft", // opacity\slideLeft\slideRight\slideTop\slideBottom
-                    "timingFunction": "ease", // linear\ease\ease-in\ease-out\ease-in-out
-                    "duration": 1000,
-                    "delay": 0
-                }
-            }
-        ]
-    }]
-  },
+  "events": [{
+    "trigger": "dataChange", // 事件类型 dataChange、click、mouseEnter、mouseLeave
+    "name": "事件1",
+    "id": "key",
+    "conditions": [
+      {
+        "name": "条件",
+        "type": "field",
+        "field": "a",
+        "compare": "==",
+        "expected": "a",
+        "code": "return data",
+        "id": "key"
+      }
+    ],
+    "conditionType": "all", // 判断类型
+    "actions": [
+      {
+        "id": "uuidv4()",
+        "name": "动作",
+        "action": "show", //动作 show hide
+        "componentScope": "current",  //组件scope global\current
+        "unmount": true, // 隐藏卸载
+        "component": [], // 组件id数组
+        "animation": {
+          "type": "slideLeft", // opacity\slideLeft\slideRight\slideTop\slideBottom
+          "timingFunction": "ease", // linear\ease\ease-in\ease-out\ease-in-out
+          "duration": 1000,
+          "delay": 0
+        }
+      }
+    ]
+  }],
   "config": [
     // 样式配置
     {
