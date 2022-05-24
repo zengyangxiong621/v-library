@@ -19,6 +19,7 @@ import RadioGroup from './radioGroup'
 import CusInput from './cusInput'
 import CheckBoxGroup from './checkBoxGroup'
 import CusTabs from './cusTabs'
+import UploadImg from './uploadImg'
 
 
 const componentLib = {
