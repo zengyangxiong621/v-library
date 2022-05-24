@@ -64,15 +64,15 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         setCopyData(containerData)
       } else {
         // 编辑
-        console.log('1111111111111111111111111111111111111')
         setCopyData(props.data)
         let data = bar.dataContainerDataList.find(item => item.id === props.data.id)
         let resultData = []
         if (data) {
           if (props.data.useFilter) {
             resultData = handleDataFilter(data.data, props.data.filters)
+            setResultData(resultData)
           }
-          setResultData(resultData)
+          setResultData(data.data)
         } else {
           setResultData(resultData)
         }
@@ -85,6 +85,11 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
 
     props.onVisibleChange(false)
   }
+
+  const updateDataContainerName = async (body) => {
+    await updateDataContainer(body)
+  }
+
   // 更新输入容器
   const updateDataContainer = async (body) => {
     await http({
@@ -313,10 +318,10 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           ref={inputRef} value={copyData.name}
           onChange={(e) => setCopyData({...copyData, name: e.target.value})}
           onPressEnter={() => {
-            updateDataContainer(copyData)
+            updateDataContainerName(copyData)
           }}
           onBlur={() => {
-            updateDataContainer(copyData)
+            updateDataContainerName(copyData)
           }}
         />
         <p className="data-source">数据源</p>
