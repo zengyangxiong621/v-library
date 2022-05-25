@@ -27,7 +27,7 @@ const AlignmentSetting = ({ bar, dispatch, ...props }) => {
 
   return (
     <div className="AlignmentSetting-wrap">
-      <h3 className="header">
+      <h3 className="alignment-header">
         对齐设置
       </h3>
       <div className="content">

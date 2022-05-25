@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
 
+import { v4 as uuidv4 } from 'uuid';
 import { EditableTable } from '../fieldMapTable'
 import DataSourceConfig from './dataSourceConfig'
 import DataContainerConfig from './dataContainerConfig'
@@ -13,9 +14,10 @@ import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilte
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
+  const [tableKey,setTableKey] = useState(uuidv4())
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
-  const [componentResultData, setComponentResultData] = useState({  })
+  const [componentResultData, setComponentResultData] = useState({})
   const [componentType, setComponentType] = useState('')
   useEffect(() => {
     const currentData = bar.componentData[_data.id]
@@ -42,6 +44,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       const keys = getKeys(_data.staticData.data)
       setFieldkeys(keys)
     }
+    setTableKey(uuidv4())
   }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter])
 
   useEffect(() => {
@@ -51,6 +54,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     } else {
       setFieldsData(_data.staticData.fields)
     }
+    setTableKey(uuidv4())
   }, [_data.dataConfig])
 
   useEffect(() => {
@@ -106,17 +110,19 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         moduleId: _data.id,
         dataType: _data.dataType
       }
-    })
-    console.log('这里吗', data)
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        componentData: {
-          ...bar.componentData,
-          [_data.id]: _data.dataType !== 'static' ? data : data.data,
+    }, true)
+    if (data.code === 10000 && data.data) {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentData: {
+            ...bar.componentData,
+            [_data.id]: _data.dataType !== 'static' ? data.data : data.data.data,
+          },
         },
-      },
-    })
+      })
+    }
+
   }
 
   const setDataContainerResult = () => {
@@ -166,7 +172,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onFiledsChange(fields, _data.dataType)
   }
 
-  const onDataTypeChange = async(data) => {
+  const onDataTypeChange = async (data) => {
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -217,7 +223,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         </div>
         <div className="data-content">
           <EditableTable
-            key={fieldkeys.toString()}
+            key={tableKey}
             fieldsKeys={fieldkeys}
             data={fieldsData}
             onChange={fieldsChange} />
@@ -246,7 +252,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
             onDataSourceChange={props.onDataSourceChange}
           />
       }
-      <DataFilter data={_data} onFilterBoxChange={filterBoxChange}/>
+      <DataFilter data={_data} onFilterBoxChange={filterBoxChange} />
       <DataResult data={_data} />
     </React.Fragment>
   )

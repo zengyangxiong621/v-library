@@ -204,7 +204,6 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
             },
           },
         })
-        message.error('数据源请求失败')
       }
     }
   }
