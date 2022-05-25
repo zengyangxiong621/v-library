@@ -10,8 +10,8 @@ RUN npm config set registry https://registry.npm.taobao.org
 WORKDIR /workdir
 ADD ./ /workdir
 
-RUN cnpm install  
-RUN cnpm run build
+RUN npm install  
+RUN npm run build
 
 
 FROM run AS release
