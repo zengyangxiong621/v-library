@@ -25,7 +25,14 @@ const DataResult = ({ bar, dispatch, ...props }) => {
   const [resultData, setResultData] = useState(resultCodeData)
 
   useEffect(() => {
-    console.log('type', type)
+    init()
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
+
+  useEffect(() => {
+    initOfComponent()
+  }, [componentResultData])
+
+  const init = () => {
     if (!type && type !== 'component') {
       const dataFrom = _data.dataFrom
       let resData = null
@@ -52,18 +59,16 @@ const DataResult = ({ bar, dispatch, ...props }) => {
         setResultData(newData)
       }
     }
-  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
+  }
 
-  useEffect(() => {
+  const initOfComponent = () => {
     if (type === 'component') {
       const newData = Object.assign({}, resultData, {
         value: JSON.stringify(componentResultData, null, 2)
       })
       setResultData(newData)
     }
-  }, [componentResultData])
-
-
+  }
 
   const setDataContainerResult = () => {
     // 数据容器
@@ -106,12 +111,20 @@ const DataResult = ({ bar, dispatch, ...props }) => {
     }
   }
 
+  const refresh = () => {
+    if(type === 'component'){
+      initOfComponent()
+    }else{
+      init()
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="data-config">
         <div className="data-header">
           <label className="data-name">数据响应结果（只读）</label>
-          <Button icon={<RedoOutlined />} style={{ border: 0, background: 'transparent' }} />
+          <Button onClick={refresh} icon={<RedoOutlined />} style={{ border: 0, background: 'transparent' }} />
         </div>
         <div className="data-content">
           <div className="data-code-wraper" style={props.style}>
