@@ -15,7 +15,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
-  const [componentResultData, setComponentResultData] = useState({  })
+  const [componentResultData, setComponentResultData] = useState({})
   const [componentType, setComponentType] = useState('')
   useEffect(() => {
     const currentData = bar.componentData[_data.id]
@@ -106,17 +106,19 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         moduleId: _data.id,
         dataType: _data.dataType
       }
-    })
-    console.log('这里吗', data)
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        componentData: {
-          ...bar.componentData,
-          [_data.id]: _data.dataType !== 'static' ? data : data.data,
+    }, true)
+    if (data.code === 10000 && data.data) {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          componentData: {
+            ...bar.componentData,
+            [_data.id]: _data.dataType !== 'static' ? data.data : data.data.data,
+          },
         },
-      },
-    })
+      })
+    }
+
   }
 
   const setDataContainerResult = () => {
@@ -166,7 +168,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onFiledsChange(fields, _data.dataType)
   }
 
-  const onDataTypeChange = async(data) => {
+  const onDataTypeChange = async (data) => {
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',
@@ -246,7 +248,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
             onDataSourceChange={props.onDataSourceChange}
           />
       }
-      <DataFilter data={_data} onFilterBoxChange={filterBoxChange}/>
+      <DataFilter data={_data} onFilterBoxChange={filterBoxChange} />
       <DataResult data={_data} />
     </React.Fragment>
   )

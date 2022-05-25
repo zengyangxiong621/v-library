@@ -24,7 +24,9 @@ const DataFilter = (props) => {
   }
 
   const showFilterDrawer = () => {
-    setDrawerVisible(true)
+    if(filterFlag){
+      setDrawerVisible(true)
+    }
   }
 
   const drawerClose = () => {
