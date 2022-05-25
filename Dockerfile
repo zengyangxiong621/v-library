@@ -6,12 +6,12 @@ FROM docker.gridsumdissector.com/library/nginx:1.20.1 AS run
 # --- dependencies images -------------
 FROM base AS dependencies
 
-RUN npm config set registry https://registry.npm.taobao.org
+# RUN npm config set registry https://registry.npm.taobao.org
 WORKDIR /workdir
 ADD ./ /workdir
 
-RUN npm install
-RUN npm run build
+RUN yarn  
+RUN yarn build
 
 
 FROM run AS release
