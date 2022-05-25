@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
 
+import { v4 as uuidv4 } from 'uuid';
 import { EditableTable } from '../fieldMapTable'
 import DataSourceConfig from './dataSourceConfig'
 import DataContainerConfig from './dataContainerConfig'
@@ -13,6 +14,7 @@ import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilte
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
+  const [tableKey,setTableKey] = useState(uuidv4())
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
   const [componentResultData, setComponentResultData] = useState({})
@@ -42,6 +44,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       const keys = getKeys(_data.staticData.data)
       setFieldkeys(keys)
     }
+    setTableKey(uuidv4())
   }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter])
 
   useEffect(() => {
@@ -51,6 +54,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     } else {
       setFieldsData(_data.staticData.fields)
     }
+    setTableKey(uuidv4())
   }, [_data.dataConfig])
 
   useEffect(() => {
@@ -219,7 +223,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         </div>
         <div className="data-content">
           <EditableTable
-            key={fieldkeys.toString()}
+            key={tableKey}
             fieldsKeys={fieldkeys}
             data={fieldsData}
             onChange={fieldsChange} />
