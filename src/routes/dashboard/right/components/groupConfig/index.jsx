@@ -116,7 +116,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
 
   return (
     <div className="GroupConfig-wrap">
-      <h3 className="header">
+      <h3 className="groupset-header">
         组设置
       </h3>
       <div className="content" key={key}>

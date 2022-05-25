@@ -16,10 +16,12 @@ const PreViewJson = props => {
 
   useEffect(() => {
     setModalContent(null)
-    if (dataSourceId) {
-      getData()
+    if(visible){
+      if (dataSourceId) {
+        getData()
+      }
     }
-  }, [dataSourceId])
+  }, [dataSourceId,visible])
 
   const getData = async () => {
     const data = await http({
@@ -52,10 +54,12 @@ const PreViewJson = props => {
 
   const handleCancel = () => {
     changeShowState(false)
+    setIsEdit(false)
   }
 
   const handleOk = () => {
     changeShowState(false)
+    setIsEdit(false)
     if (hasEdit && !isError) {
       upLoadJson()
     }

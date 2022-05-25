@@ -439,6 +439,8 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       setFilterOfAdd(null)
     } else {
       effectHandler()
+      const activeCollapseKeysNew = [...activeCollapseKeys]
+      setActiveCollapseKeys(activeCollapseKeysNew.filter(item=>item !== filter.id))
     }
   }
 
@@ -531,6 +533,8 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           componentFilters
         }
       })
+      const activeCollapseKeysNew = [...activeCollapseKeys]
+      setActiveCollapseKeys(activeCollapseKeysNew.filter(item=>item !== filter.id))
       if (props.type === 'component') {
         props.onUpdateFilters(data)
       }
