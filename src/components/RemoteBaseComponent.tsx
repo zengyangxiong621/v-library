@@ -1,31 +1,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
+import { connect } from 'dva'
 
 const RemoteBaseComponent = (props: any) => {
-  debugger
-  const { type } = props;
+  const { type, version, name, dispatch} = props;
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
+  
   const importComponent = useCallback(() => {
-    // return `${ (window as any).CONFIG.COMP_URL }/modules/text/1.0.0/text.js`
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/text/1.0.0/text.js`).then(res => res.data);
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${type}/${version}/${name}.js`).then(res => res.data);
   }, [type])
-
+  
   const loadComp = useCallback(async () => {
-    // new Function(`${await importComponent()}`)();
     window.eval(`${await importComponent()}`)
-    
-    const { default: component } = (window as any).VComponents;
-    debugger
+    const { default: component} = (window as any).VComponents;
     setComponent(() => component);
   }, [importComponent, setComponent])
 
   useEffect(() => {
     loadComp();
   }, [loadComp]);
-
-  debugger
-  console.log(Comp, 'Comp=============================')
 
   if (Comp) {
     return <Comp {...props}/>
@@ -64,5 +58,8 @@ const RemoteBaseComponent = (props: any) => {
 //   }
 // }
 
-export default RemoteBaseComponent;
+// export default RemoteBaseComponent;
+export default connect(({ bar }: any) => (
+  { bar }
+))(RemoteBaseComponent)
 

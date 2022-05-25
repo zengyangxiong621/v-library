@@ -15,8 +15,9 @@ const mapStateToProps = (state: any) => {
 
 const Text = (props: any) => {
   const [dataArr, setDataArr] = useState<any>([])
+  const moduleType = 'text'
+  
   useEffect(() => {
-    const moduleType = 'text'
     const init = () => {
       http({
         url:'/visual/module-manage/queryModuleList', 
@@ -32,7 +33,7 @@ const Text = (props: any) => {
         }
       }).then((data: any) => {
         data.content.forEach((item: any) => {
-          item.photoPath = `http://10.201.83.166:35034/modules/${moduleType}/${item.moduleVersion}/thumb-${item.moduleName}.png`
+          item.photoPath = `${(window as any).CONFIG.COMP_URL}/modules/${moduleType}/${item.moduleVersion}/thumb-${item.moduleName}.png`// TODO: 最终全部的地址需要从后端取
         
         })
         setDataArr(() => data.content)
@@ -46,7 +47,7 @@ const Text = (props: any) => {
       {
         dataArr?.map((item: any, index: number) => {
           return (
-            <EveryItem key={index} data={item} />
+            <EveryItem key={index} data={item} type={moduleType} />
           )
         })
       }

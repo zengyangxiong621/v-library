@@ -621,7 +621,7 @@ const CustomDraggable
                         {
                           // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                           //   <CompImage componentConfig={component}/>
-                          <RemoteBaseComponent type="text" componentConfig={component}></RemoteBaseComponent>
+                          <RemoteBaseComponent type="text" version={layer.moduleVersion} name={layer.moduleName} componentConfig={component}></RemoteBaseComponent>
                         }
                       </div>
                     </>
