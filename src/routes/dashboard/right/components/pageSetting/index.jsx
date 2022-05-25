@@ -60,7 +60,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
 
   return (
     <div className="PageSetting-wrap">
-      <h3 className="header">
+      <h3 className="pageset-header">
         页面设置
       </h3>
       <div className="content" key={key}>
