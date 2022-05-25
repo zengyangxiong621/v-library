@@ -13,7 +13,7 @@ const EveryItem = (props: any) => {
   // })
 
   const importComponent = useCallback(() => {
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${type}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   }, [type])
 
   const loadComp = useCallback(async () => {
@@ -29,7 +29,6 @@ const EveryItem = (props: any) => {
   }, [loadComp]);
 
   const componentCreate = () => {
-    debugger
     dispatch({
       type: 'bar/createComponent',
       payload: currentDefaultConfig,

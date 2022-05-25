@@ -15,6 +15,8 @@ const mapStateToProps = (state: any) => {
 
 const Text = (props: any) => {
   const [dataArr, setDataArr] = useState<any>([])
+  const moduleType = 'assist'
+
   useEffect(() => {
     const init = () => {
       http({
@@ -31,8 +33,8 @@ const Text = (props: any) => {
         }
       }).then((data: any) => {
         data.content.forEach((item: any) => {
-          item.photoPath = require('../../../../../../../assets/images/thumb-image.png')
-          item.type = 'assist'
+          // item.photoPath = `${(window as any).CONFIG.COMP_URL}/modules/${moduleType}/${item.moduleVersion}/thumb-${item.moduleName}.png`// TODO: 最终全部的地址需要从后端取
+          item.photoPath = `${(window as any).CONFIG.COMP_URL}/modules/${item.moduleName}/${item.moduleVersion}/thumb-${item.moduleName}.png`// TODO: 最终全部的地址需要从后端取
         })
         setDataArr(() => data.content)
       })
@@ -45,7 +47,7 @@ const Text = (props: any) => {
       {
         dataArr?.map((item: any, index: number) => {
           return (
-            <EveryItem data={item} />
+            <EveryItem key={item.moduleName} data={item} type={moduleType} />
           )
         })
       }
