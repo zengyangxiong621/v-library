@@ -6,9 +6,10 @@ import {
   MinusCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons'
+
 import * as React from 'react'
 
-const BottomBar = ({ bar, dispatch, props }: any) => {
+const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
   const findItem = (name: string) => {
     return bar.pageConfig.find((item: any) => {
       return item.name === name
@@ -19,7 +20,7 @@ const BottomBar = ({ bar, dispatch, props }: any) => {
 
   }, [])
   const handleFullScreen = () => {
-
+    focus$.emit();
   }
   const handleScreen = (type: boolean) => {
     // type: true 为放大 false 缩小

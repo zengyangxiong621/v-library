@@ -18,7 +18,7 @@ import { throttle } from '../../../utils/common'
 import RightClickMenu from '../left/components/rightClickMenu/rightClickMenu'
 import { menuOptions } from '../left/Data/menuOptions'
 
-const Center = ({ bar, dispatch }: any) => {
+const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   const draggableContainerRef = useRef(null)
   const draggableRef: any = useRef(null)
@@ -85,7 +85,9 @@ const Center = ({ bar, dispatch }: any) => {
       },
     })
   }
-
+  focus$.useSubscription(() => {
+    calcCanvasSize()
+  });
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
     if(e.ctrlKey) {
