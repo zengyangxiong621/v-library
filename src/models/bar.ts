@@ -1206,6 +1206,34 @@ export default {
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
       return { ...state }
     },
+    updateContainersEnableAndModules(state: IBarState, { payload }: any) {
+      // 更新数据容器的状态、绑定的组件数组
+      const enableContainerList: any = []
+      state.components.forEach((component) => {
+        component.dataContainers.forEach((container: any) => {
+          enableContainerList.push({
+            componentName: component.name,
+            componentId: component.id,
+            containerId: container.id,
+          })
+        })
+      })
+      state.dataContainerList.forEach((container: any) => {
+        container.enable = !!enableContainerList.find((item: any) => item.containerId === container.id)
+        container.modules = []
+        enableContainerList.forEach((item: any) => {
+          if (item.containerId === container.id) {
+            container.modules.push({
+              id: item.componentId,
+              name: item.componentName
+            })
+          }
+        })
+      })
+      return {
+        ...state
+      }
+    },
     setComponentConfig(state: IBarState, { payload }: any) {
       state.componentConfig = payload
       // console.log('componentConfig', componentConfig)
