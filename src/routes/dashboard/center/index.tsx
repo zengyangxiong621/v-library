@@ -14,7 +14,7 @@ import { IScaleDragData, IStyleConfig } from './type'
 import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from './constant'
 import RulerLines from './components/RulerLines'
 import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
-import { throttle } from '../../../utils/common'
+import { deepClone, deepForEach} from '../../../utils'
 import RightClickMenu from '../left/components/rightClickMenu/rightClickMenu'
 import { menuOptions } from '../left/Data/menuOptions'
 
@@ -29,7 +29,23 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [ customMenuOptions, setCustomMenuOptions ] = useState(menuOptions)
   const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)// let supportLinesRef: any = useRef(// null)
   const [ rulerCanvasSpacing, setRulerCanvasSpacing ] = useState({ left: 22, top: 22 })
-  const treeData = bar.treeData
+  const [layers, setLayers] = useState(deepClone(bar.treeData))
+
+  useEffect(() => {
+    const data = deepClone(bar.treeData)
+    treeDataReverse(data)
+    setLayers(data)
+  }, [bar.treeData])
+
+  const treeDataReverse = (treeData: any) => {
+    treeData = treeData.reverse()
+    treeData.forEach((layer: any) => {
+      if (COMPONENTS in layer) {
+        treeDataReverse(layer[COMPONENTS])
+      }
+    })
+  }
+
   let supportLinesRef = bar.supportLinesRef
 
   const findItem = (name: string) => {
@@ -420,7 +436,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     <RulerLines/>
 
                     <div className="draggable-container" ref={ draggableContainerRef }>
-                      <CustomDraggable mouse={ 0 } treeData={ treeData }/>
+                      <CustomDraggable mouse={ 0 } treeData={ layers }/>
                     </div>
                   </div>
                 </div>
