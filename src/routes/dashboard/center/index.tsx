@@ -191,14 +191,14 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   // }, {
   //   events: [ 'keydown', 'keyup' ],
   // })
-  // useKeyPress([ 'space' ], (event) => {
-  //   if(event.type === 'keydown' && isCanvasDraggable) {
-  //     return
-  //   }
-  //   setIsCanvasDraggable(event.type === 'keydown')
-  // }, {
-  //   events: [ 'keydown', 'keyup' ],
-  // })
+  useKeyPress([ 'space' ], (event) => {
+    if(event.type === 'keydown' && isCanvasDraggable) {
+      return
+    }
+    setIsCanvasDraggable(event.type === 'keydown')
+  }, {
+    events: [ 'keydown', 'keyup' ],
+  })
 
 
   const mouse = useMouse(canvasRef)
