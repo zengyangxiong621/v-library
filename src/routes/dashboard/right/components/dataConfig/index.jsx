@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
+import { getComDataWithFilters } from '../.../../../../../../utils/data'
 
 import { v4 as uuidv4 } from 'uuid';
 import { EditableTable } from '../fieldMapTable'
@@ -14,22 +15,16 @@ import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilte
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
-  const [tableKey,setTableKey] = useState(uuidv4())
+  const [tableKey, setTableKey] = useState(uuidv4())
   const [fieldkeys, setFieldkeys] = useState([])
   const [fieldsData, setFieldsData] = useState([])
   const [componentResultData, setComponentResultData] = useState({})
   const [componentType, setComponentType] = useState('')
+
   useEffect(() => {
-    const currentData = bar.componentData[_data.id]
+    const currentData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList)
     if (currentData) {
-      let resData = null
-      // 如果使用数据过滤器，则需要过滤数据
-      if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
-        resData = dataFilterHandler(currentData)
-      } else {
-        resData = currentData
-      }
-      const keys = getKeys(resData)
+      const keys = getKeys(currentData)
       setFieldkeys(keys)
     } else {
       dispatch({
@@ -45,7 +40,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       setFieldkeys(keys)
     }
     setTableKey(uuidv4())
-  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter])
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, bar.componentConfig.dataFrom, bar.componentConfig.dataContainers])
 
   useEffect(() => {
     const data = _data.dataConfig[_data.dataType]
@@ -62,34 +57,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       setDataContainerResult()
     }
   }, [_data.dataContainers])
-
-  const dataFilterHandler = data => {
-    const filters = bar.componentConfig.filters.map(item => {
-      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
-      return {
-        ...filterDetail,
-        enable: item.enable,
-      }
-    }).filter(item => item.enable)
-    try {
-      const functions = filters.map(item => {
-        return (new Function('data', item.content))
-      })
-      const resultArr = []
-      functions.forEach((fn, index) => {
-        if (index === 0) {
-          resultArr.push(fn(data))
-        } else {
-          resultArr.push(fn(resultArr[index - 1]))
-        }
-      })
-      return resultArr[resultArr.length - 1]
-    } catch (e) {
-      console.error(e)
-      return {}
-    }
-  }
-
 
   // 一切到数据 tab 栏时，渲染出的数据响应结果
   const changeDataFromCallback = async () => {

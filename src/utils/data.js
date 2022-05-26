@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 /**
  * 获取组件数据
  * @param {*} componentData 当前画布组件的数据集合
@@ -7,11 +9,12 @@
  * @returns 
  */
 const getComDataWithFilters = (componentData, componentConfig, componentFilters,dataContainerDataList) => {
+  console.log('componentData, componentConfig, componentFilters,dataContainerDataList',componentData, componentConfig, componentFilters,dataContainerDataList)
   const dataFrom = componentConfig.dataFrom || 0
   let resData = null
   let currentData = null
   if (dataFrom === 0) {
-    currentData = componentData[componentConfig.id]
+    currentData = cloneDeep(componentData[componentConfig.id])
   } else {
     currentData = setDataContainerResult(componentConfig,dataContainerDataList)
   }
