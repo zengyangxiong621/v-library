@@ -22,16 +22,25 @@ const BottomBar = ({ bar, dispatch, props }: any) => {
 
   }
   const handleScreen = (type: boolean) => {
+    // type: true 为放大 false 缩小
     if(bar.canvasScaleValue < 0.1) {
-      return false
-    }
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        canvasScaleValue: Number((bar.canvasScaleValue + (type ? 0.1 : -0.1)).toFixed(3)),
-      },
-    })
+      if (type) { // 可以放大
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            canvasScaleValue: Number((bar.canvasScaleValue + 0.1).toFixed(3)),
+          },
+        })
+      }
+    } else {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          canvasScaleValue: Number((bar.canvasScaleValue + (type ? 0.1 : -0.1)).toFixed(3)),
+        },
+      })
 
+    }
   }
   const handleMinusScreen = () => {
 
