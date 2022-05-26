@@ -421,9 +421,9 @@ export default {
           delete layer.selected
           delete layer.hover
         })
-
         const componentData: any = {}
-        components.forEach(async (component: any) => {
+
+        const func = async (component: any) => {
           try {
             const data = await http({
               url: '/visual/module/getData',
@@ -433,6 +433,8 @@ export default {
                 dataType: component.dataType
               }
             })
+            console.log('1')
+
             if (data) {
               componentData[component.id] = component.dataType !== 'static' ? data : data.data
             } else {
@@ -441,7 +443,9 @@ export default {
           } catch (err) {
             componentData[component.id] = {}
           }
-        })
+          return componentData[component.id]
+        }
+        yield Promise.all(components.map((item: any) => func(item)))
         // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
         yield put({
           type: 'save',
@@ -449,7 +453,7 @@ export default {
             componentData
           }
         })
-        console.log('componentData', componentData)
+        const bar: any = yield select(({ bar }: any) => bar)
         yield put({
           type: 'save',
           payload: {
