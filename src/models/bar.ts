@@ -441,7 +441,7 @@ export default {
               throw new Error('请求不到数据')
             }
           } catch (err) {
-            componentData[component.id] = {}
+            componentData[component.id] = null
           }
           return componentData[component.id]
         }

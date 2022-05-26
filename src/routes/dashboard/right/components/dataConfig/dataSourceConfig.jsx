@@ -200,7 +200,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
           payload: {
             componentData: {
               ...bar.componentData,
-              [_data.id]: {}
+              [_data.id]: null
             },
           },
         })
