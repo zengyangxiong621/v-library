@@ -765,6 +765,7 @@ export default {
       }
       if (index !== -1) {
         state.dataContainerList[index] = containerData
+        console.log('state.dataContainerList[index]', state.dataContainerList[index])
       } else {
         state.dataContainerList.unshift(containerData)
       }
