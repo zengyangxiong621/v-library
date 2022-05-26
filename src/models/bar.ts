@@ -383,7 +383,7 @@ export default {
         url: '/visual/module/filter/list',
         method: 'GET',
         params: {
-          id: bar.dashboardId,
+          id: payload,
           type: 'screen'
         },
         headers: {
@@ -546,7 +546,22 @@ export default {
         body: payload,
       })
       const filterNullLayers = clearNullGroup(layers)
-
+      yield put({
+        type: 'save',
+        payload: {
+          scaleDragData: {
+            position: {
+              x: 0,
+              y: 0
+            },
+            style: {
+              width: 0,
+              height: 0,
+              display: 'none'
+            }
+          }
+        }
+      })
       yield put({
         type: 'updateTree',
         payload: filterNullLayers,
