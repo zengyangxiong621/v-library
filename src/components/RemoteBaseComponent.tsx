@@ -3,14 +3,14 @@ import axios from 'axios';
 import { connect } from 'dva'
 
 const RemoteBaseComponent = (props: any) => {
-  const { version, name} = props;
+  const { type, version, name, dispatch} = props;
   const isExit = typeof version === 'undefined'
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
   
   const importComponent = useCallback(() => {
     return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${name}/${version}/${name}.js`).then(res => res.data);
-  }, [])
+  }, [type])
   
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`)
