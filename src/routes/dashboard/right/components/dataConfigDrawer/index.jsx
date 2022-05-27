@@ -375,6 +375,11 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   const enableFifter = async (e, item) => {
     item.enable = e.target.checked
     if (props.type === 'component') {
+      console.log('-----------')
+      console.log('item', item)
+      console.log('checked', e.target.checked)
+      console.log('-----------')
+
       props.onBindFilters(item, e.target.checked)
       return
     }

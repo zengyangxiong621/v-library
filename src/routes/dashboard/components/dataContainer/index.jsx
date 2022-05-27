@@ -151,6 +151,7 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
           <div className="data-container-handle">
             <Input
               placeholder="请输入"
+              maxLength={30}
               suffix={ <SearchOutlined
                 className="input-search-icon"
                 onClick={ handleSearch }

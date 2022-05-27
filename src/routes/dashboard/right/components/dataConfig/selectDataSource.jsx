@@ -24,13 +24,14 @@ const SelectDataSource = props => {
   const [key, setKey] = useState(uuidv4())
 
   useEffect(() => {
-    const newData = { ...selectDatas }
-    if (_data.dataConfig[props.type]) {
-      newData.value = _data.dataConfig[props.type]?.data?.data_id || ''
-    }
-    setSelectDatas(newData)
-    setKey(uuidv4())
-    queryDataSource()
+    queryDataSource().then(res=>{
+      const newData = { ...res }
+      if (_data.dataConfig[props.type]) {
+        newData.value = _data.dataConfig[props.type]?.data?.data_id || ''
+      }
+      setSelectDatas(newData)
+      setKey(uuidv4())
+    })
   }, [props.type])
 
   const queryDataSource = async () => {
@@ -64,6 +65,7 @@ const SelectDataSource = props => {
     const newData = { ...selectDatas }
     newData.options = options
     setSelectDatas(newData)
+    return Promise.resolve(newData)
   }
 
   const dataSourceChange = () => {

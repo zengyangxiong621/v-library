@@ -9,7 +9,6 @@ import cloneDeep from 'lodash/cloneDeep';
  * @returns 
  */
 const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList) => {
-  debugger
   console.log('componentData, componentConfig, componentFilters,dataContainerDataList', componentData, componentConfig, componentFilters, dataContainerDataList)
   const dataFrom = componentConfig.dataFrom || 0
   let resData = null
@@ -93,7 +92,6 @@ const setDataContainerResult = (componentConfig, dataContainerDataList) => {
  * @returns 
  */
 const getFields = (componentConfig) => {
-  debugger
   const dataType = componentConfig.dataType
   let fields = null
   if (dataType === 'static' || !dataType) {

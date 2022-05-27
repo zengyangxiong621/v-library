@@ -39,7 +39,6 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList }: any) => {
     // 插入的输入框是在数组的倒数第二个位置
     const origin = workSpace.workSpaceList[0].children
     if (origin[origin.length - 2].id === 'aInput') {
-      // debugger
       workSpace.workSpaceList[0].children.splice(-2, 1)
       const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList))
       dispatch({

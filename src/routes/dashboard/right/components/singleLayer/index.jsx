@@ -85,6 +85,9 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       type: 'bar/setComponentConfig',
       payload: componentConfig
     })
+    dispatch({
+      type: 'bar/updateContainersEnableAndModules'
+    })
   }
   const staticDataChange = (data) => {
     componentConfig.staticData.data = data

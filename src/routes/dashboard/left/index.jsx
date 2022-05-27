@@ -308,7 +308,6 @@ const Left = ({ dispatch, bar, operate }) => {
       if (dropPosition === -1) {
         ar.splice(i, 0, dragObj)
       } else {
-        // debugger
         ar.splice(i + 1, 0, dragObj)
       }
     }
@@ -343,7 +342,7 @@ const Left = ({ dispatch, bar, operate }) => {
   return (
     <div className="left-menu">
       <div className="left-wrap">
-        <div className="header" ref={headerRef}>
+        <div className="left-tree-header" ref={headerRef}>
           <header className="header-text">图层</header>
           <IconFont
             type="icon-tucengshouqi" onClickCapture={() => toggle()}

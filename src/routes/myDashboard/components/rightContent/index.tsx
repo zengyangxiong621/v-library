@@ -324,7 +324,6 @@ const RightContent = (props: any) => {
     // 获取聚焦时 输入框内的值
     // - 如果为 '' , 不发请求； 如果相同，不发请求
     if (newValue === curFocusInputValue || (!curFocusInputValue && !newValue)) {
-      // debugger
       return
     }
     const finalBody = {

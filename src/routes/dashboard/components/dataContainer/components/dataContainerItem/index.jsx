@@ -68,6 +68,7 @@ const DataContainerItem = props => {
             allowClear
             onChange={handleChange}
             onBlur={handleInputValueEdit}
+            maxLength={30}
             onPressEnter={handleInputValueEdit}
             style={{width: 190}}
           /> : <>
