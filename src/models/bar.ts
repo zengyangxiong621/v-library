@@ -1,33 +1,29 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import { message } from 'antd'
 import {
   calcGroupPosition,
+  deepClone,
   deepForEach,
   findLayerById,
-  getDimensionData,
   getLayerDimensionByDomId,
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
-  deepClone, deepFilterAttrs,
 } from '../utils'
 
 import {
   COMPONENTS,
   HEIGHT,
   HIDE_DEFAULT,
+  INTERACTION,
   LEFT,
+  MOUNT_ANIMATION,
   OPACITY,
   TOP,
   WIDTH,
-  INTERACTION, MOUNT_ANIMATION,
 } from '../constant/home'
 
-import {
-  ILayerComponent,
-  ILayerGroup,
-} from '../routes/dashboard/center/components/CustomDraggable/type'
+import {ILayerComponent, ILayerGroup,} from '../routes/dashboard/center/components/CustomDraggable/type'
 
 import {
   cancelGroup,
@@ -43,12 +39,11 @@ import {
   showInput,
   singleShowLayer,
 } from '../utils/sideBar'
-import { DIMENSION } from '../routes/dashboard/center/constant'
+import {DIMENSION} from '../routes/dashboard/center/constant'
 
-import { generateLayers } from './utils/generateLayers'
-import { addSomeAttrInLayers, clearNullGroup } from './utils/addSomeAttrInLayers'
-import { http } from '../services/request'
-import staticData from '../routes/dashboard/right/components/dataConfig/staticData'
+import {generateLayers} from './utils/generateLayers'
+import {addSomeAttrInLayers, clearNullGroup} from './utils/addSomeAttrInLayers'
+import {http} from '../services/request'
 
 interface IBarState {
   dashboardId: string;
@@ -352,12 +347,8 @@ export default {
       })
     },
     * initDashboard ({ payload, cb }: any, { call, put, select }: any): any {
-
-      yield put({
-        type: 'getDashboardDetails',
-        payload,
-      })
       // TODO 怎么造成的
+      // 获取所有的数据容器数据
       const data = yield(yield put({
         type: 'getDataContainerList',
         payload,
@@ -377,9 +368,9 @@ export default {
         }
         bar.dataContainerDataList.push({ id: item.id, data })
       })
-      // 数据过滤器
+      // 获取当前画布所有的数据过滤器
 
-      const fifters = yield http({
+      const filters = yield http({
         url: '/visual/module/filter/list',
         method: 'GET',
         params: {
@@ -390,15 +381,19 @@ export default {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
+
       yield put({
         type: 'save',
         payload: {
           dataContainerDataList: bar.dataContainerDataList,
-          componentFilters: fifters || []
-
+          componentFilters: filters || []
         }
       })
 
+      yield put({
+        type: 'getDashboardDetails',
+        payload,
+      })
 
       yield cb()
     },
@@ -426,6 +421,39 @@ export default {
           delete layer.selected
           delete layer.hover
         })
+        const componentData: any = {}
+
+        const func = async (component: any) => {
+          try {
+            const data = await http({
+              url: '/visual/module/getData',
+              method: 'post',
+              body: {
+                moduleId: component.id,
+                dataType: component.dataType
+              }
+            })
+            console.log('1')
+
+            if (data) {
+              componentData[component.id] = component.dataType !== 'static' ? data : data.data
+            } else {
+              throw new Error('请求不到数据')
+            }
+          } catch (err) {
+            componentData[component.id] = null
+          }
+          return componentData[component.id]
+        }
+        yield Promise.all(components.map((item: any) => func(item)))
+        // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
+        yield put({
+          type: 'save',
+          payload: {
+            componentData
+          }
+        })
+        const bar: any = yield select(({ bar }: any) => bar)
         yield put({
           type: 'save',
           payload: {
