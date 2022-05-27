@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import './index.less'
 
 import {
@@ -22,13 +22,20 @@ const Color = props => {
   const [color, setColor] = useState({
     hex: isHex(_data.value) ? _data.value : rgbToHex(getRgbaNum(_data.value)),
     rgb: isHex(_data.value) ? {
+      // TODO  这里的_data.value会变
       ...hexToRgb(_data.value),
       a: 1
     } : {
       ...getRgbaNum(_data.value)
     },
+    // rgb: {r: 22, g: 22, b: 33, a: 1},
     opacity: isHex(_data.value) ? 100 : getRgbaNum(_data.value).a * 100
   });
+  console.log('_data', _data);
+  useEffect(() => {
+    console.log('cccccccccccccccccc', color);
+  }, [color])
+
   const handleBgcChange = (e) => {
     setColor({
       hex: e.hex,

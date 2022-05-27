@@ -5,7 +5,7 @@ import { withRouter } from 'dva/router'
 import { connect } from 'dva'
 
 import { useFetch } from '../../../../utils/useFetch'
-import { Input, message } from 'antd'
+import { Input, message, Tooltip } from 'antd'
 import { IconFont } from '../../../../utils/useIcon'
 
 import NavigationItem from '../navigationItem/index'
@@ -22,9 +22,19 @@ const Header = ({ bar, dispatch, history, showWhichBar }: any) => {
     setAppName(bar.dashboardName)
   }, [bar.dashboardName])
 
+  // 返回首页
   const toBack = () => {
-    // 返回首页
     history.back()
+  }
+  // 跳转至发布预览页面
+  const toPreviewOrPublish = (targetPage: string) => {
+    const pageReflect: any = {
+      'yulan': `/bigscreen/${bar.dashboardId}`,
+      'fabu': `/publishScreen/${bar.dashboardId}`
+    }
+    let newTab = window.open('_blank');
+    newTab!.location.href = pageReflect[targetPage]
+    newTab?.history.replaceState(null, '')
   }
   // 修改应用名称
   const reNameApp = async (e: any) => {
@@ -32,10 +42,10 @@ const Header = ({ bar, dispatch, history, showWhichBar }: any) => {
     e.stopPropagation()
     setIsRename(false)
     // 没改新名称
-    if(appName === bar.dashboardName) {
+    if (appName === bar.dashboardName) {
       return
     }
-    if(!appName) {
+    if (!appName) {
       setAppName(bar.dashboardName)
       return
     }
@@ -60,10 +70,19 @@ const Header = ({ bar, dispatch, history, showWhichBar }: any) => {
     }, 4);
 
   }
-  // 获取当前活跃的按钮
+  // 获取当前活跃的按钮, 并执行对应逻辑
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
     showWhichBar(icon)
+    console.log('icon', icon);
+    switch (icon) {
+      case 'fabu':
+        toPreviewOrPublish(icon)
+        break;
+      case 'yulan':
+        toPreviewOrPublish(icon)
+        break;
+    }
   }
   return (
     <div className='Header-wrap'>
@@ -81,7 +100,9 @@ const Header = ({ bar, dispatch, history, showWhichBar }: any) => {
               onChange={(e) => setAppName(e.target.value)}
             />
             :
-            <span className='appName' onDoubleClickCapture={showChangeNameInput}>{appName}</span>
+            <Tooltip title={appName} zIndex={9999999} color='#434343'>
+              <span className='appName' onDoubleClickCapture={showChangeNameInput}>{appName}</span>
+            </Tooltip>
         }
       </div>
       <div className='cdb-center'>
@@ -102,9 +123,12 @@ const Header = ({ bar, dispatch, history, showWhichBar }: any) => {
       </div>
       <div className='right'>
         {
-          rightIconArr.map(item => (
-            <NavigationItem activeIcon={activeIcon}
-              getActiveIcon={getActiveIcon} data={item} />
+          rightIconArr.map((item, index) => (
+            <NavigationItem
+              key={index}
+              activeIcon={activeIcon}
+              getActiveIcon={getActiveIcon}
+              data={item} />
           ))
         }
       </div>
