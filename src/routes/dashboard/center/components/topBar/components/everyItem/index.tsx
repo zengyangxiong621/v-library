@@ -12,7 +12,10 @@ const EveryItem = (props: any) => {
   //   return item.moduleName === data.moduleName
   // })
 
+ 
+
   const importComponent = useCallback(() => {
+   
     return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   }, [type])
 
@@ -20,8 +23,6 @@ const EveryItem = (props: any) => {
     window.eval(`${await importComponent()}`)
     const { ComponentDefaultConfig } = (window as any).VComponents;
     currentDefaultConfig = ComponentDefaultConfig
-    console.log(currentDefaultConfig, 'currentDefaultConfig=======================')
-
   }, [importComponent])
 
   useEffect(() => {
