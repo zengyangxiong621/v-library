@@ -7,6 +7,9 @@ import './index.less'
 import {ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse} from './type'
 import {deepClone, layerComponentsFlat, calcGroupPosition} from '../../../../../utils'
 import {generateTreeData} from '../../../../../utils/sideBar'
+
+import RemoteBaseComponent from '@/components/RemoteBaseComponent';
+
 // import Text from '../Text'
 import Text from '../../../../../components/charts/custom/text'
 import CompImage from '../../../../../components/charts/custom/image'
@@ -514,6 +517,7 @@ const CustomDraggable
               height: 0,
             },
           }
+          debugger
           let isGroup: boolean = (COMPONENTS in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
@@ -616,8 +620,10 @@ const CustomDraggable
                     </div> : <>
                       <div data-id={layer.id} style={{width: '100%', height: '100%'}}>
                         {
-                          layer.moduleName === 'text' ? <Text componentConfig={component}/> :
-                            <CompImage componentConfig={component}/>
+                          // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
+                          //   <CompImage componentConfig={component}/>
+                          
+                          <RemoteBaseComponent type="text" version={'1.0.0'} name={layer.moduleName} componentConfig={component}></RemoteBaseComponent>
                         }
                       </div>
                     </>

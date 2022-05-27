@@ -1,23 +1,38 @@
-import { memo } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { connect } from 'dva'
+import axios from 'axios'
 import './index.less'
-import textDefaultConfig from '../../../../../../../components/charts/custom/text/config' // 后端部署后，需要更新
-import imageDefaultConfig from '../../../../../../../components/charts/custom/image/config' // 后端部署后，需要更新
-
-// const getCurrentModule = 'https://easyv.assets.dtstack.com/components/basicColumnV2/1.3.0/basicColumnV2.js'
-
-   // TODO:temp
-  // imageDefaultConfig.staticData.data.forEach((item: any) => {
-  //   item.imageUrl = require().default
-  // })
 
 const EveryItem = (props: any) => {
-  const { data, dispatch } = props
-  const componentConfig = data.moduleName === 'text' ? textDefaultConfig : imageDefaultConfig
+  const { data, dispatch, bar, type} = props
+  let currentDefaultConfig: any = null
+
+  // const { moduleDefaultConfig } = bar
+  // const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
+  //   return item.moduleName === data.moduleName
+  // })
+
+ 
+
+  const importComponent = useCallback(() => {
+   
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
+  }, [type])
+
+  const loadComp = useCallback(async () => {
+    window.eval(`${await importComponent()}`)
+    const { ComponentDefaultConfig } = (window as any).VComponents;
+    currentDefaultConfig = ComponentDefaultConfig
+  }, [importComponent])
+
+  useEffect(() => {
+    loadComp();
+  }, [loadComp]);
+
   const componentCreate = () => {
     dispatch({
       type: 'bar/createComponent',
-      payload: componentConfig,
+      payload: currentDefaultConfig,
       itemData: data
     })
   }

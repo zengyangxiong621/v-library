@@ -1,31 +1,33 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
+import { connect } from 'dva'
 
 const RemoteBaseComponent = (props: any) => {
-
-  const { type } = props;
+  debugger
+  const { type, version, name, dispatch} = props;
+  const isExit = typeof version === 'undefined'
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
-
+  
   const importComponent = useCallback(() => {
-    return axios.get(`http://127.0.0.1:5500/${type}.js`).then(res => res.data);
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${name}/${version}/${name}.js`).then(res => res.data);
   }, [type])
-
+  
   const loadComp = useCallback(async () => {
-    // new Function(`${await importComponent()}`)();
     window.eval(`${await importComponent()}`)
-    const { default: component } = (window as any).VComponents;
+    const { default: component} = (window as any).VComponents;
     setComponent(() => component);
   }, [importComponent, setComponent])
 
   useEffect(() => {
-    loadComp();
+    if (!isExit){
+      loadComp();
+    }
   }, [loadComp]);
 
   if (Comp) {
     return <Comp {...props}/>
   }
-
   return null;
 }
 
@@ -59,5 +61,8 @@ const RemoteBaseComponent = (props: any) => {
 //   }
 // }
 
-export default RemoteBaseComponent;
+// export default RemoteBaseComponent;
+export default connect(({ bar }: any) => (
+  { bar }
+))(RemoteBaseComponent)
 

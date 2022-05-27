@@ -15,6 +15,8 @@ const mapStateToProps = (state: any) => {
 
 const Text = (props: any) => {
   const [dataArr, setDataArr] = useState<any>([])
+  const moduleType = 'text'
+
   useEffect(() => {
     const init = () => {
       http({
@@ -31,8 +33,7 @@ const Text = (props: any) => {
         }
       }).then((data: any) => {
         data.content.forEach((item: any) => {
-          item.photoPath = require('../../../../../../../assets/images/thumb-text.png')
-          item.type = 'text'
+          item.photoPath = `${(window as any).CONFIG.COMP_URL}/modules/${item.moduleName}/${item.moduleVersion}/thumb-${item.moduleName}.png`// TODO: 最终全部的地址需要从后端取
         })
         setDataArr(() => data.content)
       })
@@ -45,7 +46,7 @@ const Text = (props: any) => {
       {
         dataArr?.map((item: any, index: number) => {
           return (
-            <EveryItem key={index} data={item} />
+            <EveryItem key={item.moduleName} data={item} type={moduleType} />
           )
         })
       }
