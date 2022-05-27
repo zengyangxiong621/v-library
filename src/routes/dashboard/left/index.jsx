@@ -342,7 +342,7 @@ const Left = ({ dispatch, bar, operate }) => {
   return (
     <div className="left-menu">
       <div className="left-wrap">
-        <div className="header" ref={headerRef}>
+        <div className="left-tree-header" ref={headerRef}>
           <header className="header-text">图层</header>
           <IconFont
             type="icon-tucengshouqi" onClickCapture={() => toggle()}
