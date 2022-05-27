@@ -517,7 +517,6 @@ const CustomDraggable
               height: 0,
             },
           }
-          debugger
           let isGroup: boolean = (COMPONENTS in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined

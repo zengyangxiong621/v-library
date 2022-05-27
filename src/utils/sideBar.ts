@@ -248,7 +248,6 @@ const group: groupParams2 = (treeData, selectedNodes) => {
         // 处理到最后一个节点了
         if (isDone) {
           newGroup.modules.push(...needPickItem);
-          // debugger
           data.splice(insertIndex, 0, newGroup);
           // data.push(newGroup)
         }

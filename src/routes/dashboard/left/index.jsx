@@ -308,7 +308,6 @@ const Left = ({ dispatch, bar, operate }) => {
       if (dropPosition === -1) {
         ar.splice(i, 0, dragObj)
       } else {
-        // debugger
         ar.splice(i + 1, 0, dragObj)
       }
     }

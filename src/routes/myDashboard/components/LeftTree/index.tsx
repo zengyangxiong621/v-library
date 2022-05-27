@@ -62,7 +62,6 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
     // 插入的输入框是在数组的倒数第二个位置
     const origin = dashboardManage.groupList[0].children
     if (origin[origin.length - 2].groupId === 'aInput') {
-      // debugger
       dashboardManage.groupList[0].children.splice(-2, 1)
       const temp = JSON.parse(JSON.stringify(dashboardManage.groupList))
       dispatch({

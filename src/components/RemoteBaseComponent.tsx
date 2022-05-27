@@ -3,7 +3,6 @@ import axios from 'axios';
 import { connect } from 'dva'
 
 const RemoteBaseComponent = (props: any) => {
-  debugger
   const { type, version, name, dispatch} = props;
   const isExit = typeof version === 'undefined'
 
