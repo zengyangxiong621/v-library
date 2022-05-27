@@ -8,15 +8,15 @@ import cloneDeep from 'lodash/cloneDeep';
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
  * @returns 
  */
-const getComDataWithFilters = (componentData, componentConfig, componentFilters,dataContainerDataList) => {
-  console.log('componentData, componentConfig, componentFilters,dataContainerDataList',componentData, componentConfig, componentFilters,dataContainerDataList)
+const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList) => {
+  console.log('componentData, componentConfig, componentFilters,dataContainerDataList', componentData, componentConfig, componentFilters, dataContainerDataList)
   const dataFrom = componentConfig.dataFrom || 0
   let resData = null
   let currentData = null
   if (dataFrom === 0) {
     currentData = cloneDeep(componentData[componentConfig.id])
   } else {
-    currentData = setDataContainerResult(componentConfig,dataContainerDataList)
+    currentData = setDataContainerResult(componentConfig, dataContainerDataList)
   }
   if (currentData) {
     // 如果使用数据过滤器，则需要过滤数据
@@ -44,7 +44,7 @@ const dataFilterHandler = (data, componentConfig, componentFilters) => {
       enable: item.enable,
     }
   }).filter(item => item.enable)
-  if(filters.length){
+  if (filters.length) {
     try {
       const functions = filters.map(item => {
         return (new Function('data', item.content))
@@ -62,10 +62,10 @@ const dataFilterHandler = (data, componentConfig, componentFilters) => {
       console.error(e)
       return {}
     }
-  }else{
+  } else {
     return data
   }
-  
+
 }
 
 /**
@@ -74,7 +74,7 @@ const dataFilterHandler = (data, componentConfig, componentFilters) => {
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
  * @returns 
  */
-const setDataContainerResult = (componentConfig,dataContainerDataList) => {
+const setDataContainerResult = (componentConfig, dataContainerDataList) => {
   if (componentConfig.dataContainers) {
     const dataContainerIds = componentConfig.dataContainers.map(item => item.id)
     return dataContainerDataList.reduce((pre, cur) => {
@@ -86,6 +86,28 @@ const setDataContainerResult = (componentConfig,dataContainerDataList) => {
   }
 }
 
+/**
+ * 获取组件数据映射字段
+ * @param {*} componentConfig 当前组件的配置信息
+ * @returns 
+ */
+const getFields = (componentConfig) => {
+  const dataType = componentConfig.dataType
+  let fields = null
+  if (dataType === 'static' || !dataType) {
+    fields = componentConfig.staticData.fields
+  } else {
+    if (componentConfig.dataConfig[dataType] && componentConfig.dataConfig[dataType].fields) {
+      fields = componentConfig.dataConfig[dataType].fields
+    } else {
+      fields = componentConfig.staticData.fields
+    }
+  }
+  return fields.map(item => item.value)
+
+}
+
 export {
-  getComDataWithFilters
+  getComDataWithFilters,
+  getFields
 }
