@@ -12,10 +12,8 @@ const CusInputNumber = props => {
   };
   const [form] = Form.useForm();
   const _data = props.data
-  const _min = typeof (_data?.config?.min) !== 'undefined' ? _data.config.min : Number.MIN_SAFE_INTEGER
-  const _max = typeof (_data?.config?.max) !== 'undefined' ? _data?.config?.max : Number.MAX_SAFE_INTEGER
-
-
+  const _min = typeof (_data?.config?.min) !== 'undefined' ? _data.config.min : 1
+  const _max = typeof (_data?.config?.max) !== 'undefined' ? _data?.config?.max : 1000
 
   const _step = typeof (_data?.config?.step) !== 'undefined' ? _data?.config?.step : 1
   const [value, setValue] = useState(_data.value)
@@ -47,11 +45,10 @@ const CusInputNumber = props => {
             min={_min}
             max={_max}
             step={_step}
-            style={{ width: '100%' }}
+            style={{ width: '100%', ...props.style }}
             className="size-input"
             value={value}
             onChange={valueChange}
-            style={props.style}
           />
           {_data?.config?.suffix ? <div className="ant-input-group-addon input-num-suffix" >{_data.config.suffix}</div> : null}
         </Form.Item>

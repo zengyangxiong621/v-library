@@ -18,7 +18,7 @@ const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, iconSize, needBo
             <Tooltip key={o.key} title={o.text}
               placement='bottomRight'>
               {
-                <div style={{ cursor: notBannedClick ? 'pointer' : 'not-allowed' }}>
+                <div style={{ cursor: notBannedClick ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center' }}>
                   <IconFont
                     type={o.icon}
                     onClick={() => {
