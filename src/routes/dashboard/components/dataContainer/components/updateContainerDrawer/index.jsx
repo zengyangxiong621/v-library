@@ -86,8 +86,17 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     props.onVisibleChange(false)
   }
 
-  const updateDataContainerName = async (body) => {
-    await updateDataContainer(body)
+  const updateDataContainerName = async (copyData) => {
+    console.log('copyData', copyData)
+    await updateDataContainer(copyData)
+    dispatch({
+      type: 'bar/updateDataContainer',
+      payload: {
+        containerData: {
+          ...copyData
+        },
+      }
+    })
   }
 
   // 更新输入容器
@@ -271,6 +280,10 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   // bindFilters
   const bindFilters = async ({id}, status) => {
     // 绑定过滤器
+    console.log('hhhhhhhhhhhhh')
+    console.log('id', id)
+    console.log('status', status)
+    console.log('hhhhhhhhhhhhh')
     const data = await http({
       method: 'post',
       url: '/visual/container/filter/trigger',
@@ -280,18 +293,26 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         enable: status
       }
     })
-    setCopyData({
-      ...copyData, filters: data.filters
-    })
-    dispatch({
-      type: 'bar/updateDataContainer',
-      payload: {
-        containerData: data
-      }
-    })
-    let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
-    containerData = handleDataFilter(containerData, data.filters)
-    setResultData(containerData)
+
+    if (data) {
+      message.success('操作成功')
+      const filter = copyData.filters.find(item => item.id === id)
+      filter.enable = status
+      setCopyData({
+        ...copyData, filters: copyData.filters
+      })
+      dispatch({
+        type: 'bar/updateDataContainer',
+        payload: {
+          containerData: {
+            ...copyData, filters: copyData.filters
+          }
+        }
+      })
+      let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
+      containerData = handleDataFilter(containerData, copyData.filters)
+      setResultData(containerData)
+    }
   }
   return (
     <Drawer
@@ -315,7 +336,8 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     >
       <div className="loading-wrapper">
         <Input
-          ref={inputRef} value={copyData.name}
+          ref={inputRef}
+          value={copyData.name}
           onChange={(e) => setCopyData({...copyData, name: e.target.value})}
           onPressEnter={() => {
             updateDataContainerName(copyData)
@@ -323,6 +345,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           onBlur={() => {
             updateDataContainerName(copyData)
           }}
+
         />
         <p className="data-source">数据源</p>
         <DataSourceConfig
