@@ -113,7 +113,7 @@ export class EditableTable extends React.Component {
         dataIndex: 'status',
         render: (text, record, index) => {
           console.log('text', text, record)
-          return (props.fieldsKeys.includes(record.value) ?
+          return (props.fieldsKeys && props.fieldsKeys.includes(record.value) ?
             <CheckOutlined style={{ color: 'green' }} /> :
             <CloseOutlined style={{ color: 'red' }} />)
         }
