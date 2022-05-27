@@ -102,6 +102,10 @@ function App({ bar, dispatch, location }: any) {
     document.addEventListener('click', clearAllStatus)
     return () => {
       document.removeEventListener('click', clearAllStatus)
+      dispatch({
+        type: 'bar/clearCurrentDashboardData'
+      })
+      console.log('清除了嘛', bar)
     }
   }, [])
 
