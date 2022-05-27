@@ -88,10 +88,10 @@ const PageSize = props => {
         </Select>
         <Input.Group compact>
           <Form.Item noStyle name="width">
-            <InputNumber defaultValue={width} className="size-input" style={{ marginRight: '16px' }} onChange={(value) => sizeChange('width', value)} />
+            <InputNumber max={15000} defaultValue={width} className="size-input" style={{ marginRight: '16px' }} onChange={(value) => sizeChange('width', value)} />
           </Form.Item>
           <Form.Item noStyle name="height">
-            <InputNumber defaultValue={height} className="size-input" onChange={(value) => sizeChange('height', value)}/>
+            <InputNumber max={10000} defaultValue={height} className="size-input" onChange={(value) => sizeChange('height', value)}/>
           </Form.Item>
         </Input.Group>
         <Row>

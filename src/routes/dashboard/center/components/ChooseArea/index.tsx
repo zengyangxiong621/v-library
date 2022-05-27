@@ -25,7 +25,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       let temp = false
       let awayList = [ 'c-canvas', 'draggable-wrapper', 'canvas-draggable' ]
       awayList.forEach(className => {
-        if (e.target.className.indexOf(className) !== -1) {
+        if (e.target.className?.indexOf(className) !== -1) {
           temp = true
         }
       })

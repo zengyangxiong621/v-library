@@ -356,6 +356,7 @@ export default {
       const bar: any = yield select(({ bar }: any) => bar)
       bar.dataContainerList.forEach(async (item: any) => {
         let data: any = null
+        item.enable = (item.modules.length > 0)
         if (item.dataType === 'static') {
           data = item.staticData.data
         } else {
