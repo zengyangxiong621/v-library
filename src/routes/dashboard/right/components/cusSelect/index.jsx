@@ -22,6 +22,11 @@ const CusSelect = props => {
     setKey(uuidv4())
   },[_data.options])
 
+  useEffect(() => {
+    setKey(uuidv4())
+    setSelect(_data.value)
+  },[_data.value])
+
   // 下拉框选择
   const selectChange = (e) => {
     setSelect(e)
