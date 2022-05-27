@@ -17,6 +17,7 @@ import CenterRightMenu from './left/components/rightClickMenu/rightClickMenu'
 import {menuOptions} from './left/Data/menuOptions'
 import DataContainer from './components/dataContainer'
 import useLoading from '@/components/useLoading'
+import { useEventEmitter } from 'ahooks';
 
 const { Header } = Layout
 
@@ -26,6 +27,9 @@ function App({ bar, dispatch, location }: any) {
   const [dataContainerVisible, setDataContainerVisible] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
   const [loading, setLoading]: any = useLoading(false, document.querySelector('.p-home'))
+  // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
+  const focus$ = useEventEmitter();
+
   const detectZoom = () => {
     let ratio = 0,
       screen: any = window.screen,
@@ -180,8 +184,8 @@ function App({ bar, dispatch, location }: any) {
         </div>
         <div className="center-wrap">
           <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
-          <CenterCanvas />
-          <CenterBottomBar />
+          <CenterCanvas focus$={focus$} />
+          <CenterBottomBar focus$={focus$} />
         </div>
         <div className="right-wrap">
           <Right />

@@ -160,6 +160,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         dataFrom: _data.dataFrom === 1 ? 0 : 1
       }
     })
+
     if (data) {
       props.onDataFromChange(_data.dataFrom === 1 ? 0 : 1)
     }

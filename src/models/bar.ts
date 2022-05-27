@@ -574,7 +574,22 @@ export default {
         body: payload,
       })
       const filterNullLayers = clearNullGroup(layers)
-
+      yield put({
+        type: 'save',
+        payload: {
+          scaleDragData: {
+            position: {
+              x: 0,
+              y: 0
+            },
+            style: {
+              width: 0,
+              height: 0,
+              display: 'none'
+            }
+          }
+        }
+      })
       yield put({
         type: 'updateTree',
         payload: filterNullLayers,
@@ -778,6 +793,7 @@ export default {
       }
       if (index !== -1) {
         state.dataContainerList[index] = containerData
+        console.log('state.dataContainerList[index]', state.dataContainerList[index])
       } else {
         state.dataContainerList.unshift(containerData)
       }
@@ -1217,6 +1233,34 @@ export default {
       state.key = []
       state.supportLinesRef.handleSetPosition(0, 0, 'none')
       return { ...state }
+    },
+    updateContainersEnableAndModules(state: IBarState, { payload }: any) {
+      // 更新数据容器的状态、绑定的组件数组
+      const enableContainerList: any = []
+      state.components.forEach((component) => {
+        component.dataContainers.forEach((container: any) => {
+          enableContainerList.push({
+            componentName: component.name,
+            componentId: component.id,
+            containerId: container.id,
+          })
+        })
+      })
+      state.dataContainerList.forEach((container: any) => {
+        container.enable = !!enableContainerList.find((item: any) => item.containerId === container.id)
+        container.modules = []
+        enableContainerList.forEach((item: any) => {
+          if (item.containerId === container.id) {
+            container.modules.push({
+              id: item.componentId,
+              name: item.componentName
+            })
+          }
+        })
+      })
+      return {
+        ...state
+      }
     },
     setComponentConfig(state: IBarState, { payload }: any) {
       state.componentConfig = payload
