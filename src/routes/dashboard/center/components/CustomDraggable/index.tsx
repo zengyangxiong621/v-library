@@ -9,10 +9,7 @@ import {deepClone, layerComponentsFlat, calcGroupPosition} from '../../../../../
 import {generateTreeData} from '../../../../../utils/sideBar'
 
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
-
-// import Text from '../Text'
-import Text from '../../../../../components/charts/custom/text'
-import CompImage from '../../../../../components/charts/custom/image'
+import { getComDataWithFilters, getFields } from '@/utils/data'
 
 import {
   STYLE,
@@ -517,7 +514,6 @@ const CustomDraggable
               height: 0,
             },
           }
-          debugger
           let isGroup: boolean = (COMPONENTS in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
@@ -623,7 +619,13 @@ const CustomDraggable
                           // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                           //   <CompImage componentConfig={component}/>
                           
-                          <RemoteBaseComponent type="text" version={'1.0.0'} name={layer.moduleName} componentConfig={component}></RemoteBaseComponent>
+                          <RemoteBaseComponent 
+                            version={'1.0.0'} 
+                            name={layer.moduleName} 
+                            componentConfig={component}
+                            fields={getFields(component)}
+                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)}
+                          ></RemoteBaseComponent>
                         }
                       </div>
                     </>

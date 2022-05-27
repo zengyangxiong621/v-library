@@ -3,7 +3,6 @@ import axios from 'axios';
 import { connect } from 'dva'
 
 const RemoteBaseComponent = (props: any) => {
-  debugger
   const { type, version, name, dispatch} = props;
   const isExit = typeof version === 'undefined'
 
@@ -14,6 +13,7 @@ const RemoteBaseComponent = (props: any) => {
   }, [type])
   
   const loadComp = useCallback(async () => {
+    debugger
     window.eval(`${await importComponent()}`)
     const { default: component} = (window as any).VComponents;
     setComponent(() => component);
