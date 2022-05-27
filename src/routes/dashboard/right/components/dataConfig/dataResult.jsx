@@ -3,6 +3,7 @@ import './index.less'
 import { connect } from 'dva'
 
 import CodeEditor from '../codeEditor'
+import { getComDataWithFilters } from '../../../../../utils/data'
 
 import {
   Button,
@@ -34,30 +35,11 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 
   const init = () => {
     if (!type && type !== 'component') {
-      const dataFrom = _data.dataFrom
-      let resData = null
-      let currentData = null
-      console.log('dataFrom', _data)
-
-      if (dataFrom === 0) {
-        currentData = bar.componentData[_data.id]
-      } else {
-        currentData = setDataContainerResult()
-      }
-      console.log('currentDatacurrentDatacurrentDatacurrentData', currentData)
-      if (currentData) {
-        // 如果使用数据过滤器，则需要过滤数据
-        if (bar.componentConfig.useFilter && bar.componentConfig.filters) {
-          resData = dataFilterHandler(currentData)
-        } else {
-          resData = currentData
-        }
-        console.log('resData', resData)
-        const newData = Object.assign({}, resultData, {
-          value: JSON.stringify(resData, null, 2)
-        })
-        setResultData(newData)
-      }
+      const resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList)
+      const newData = Object.assign({}, resultData, {
+        value: resData ? JSON.stringify(resData, null, 2) : ''
+      })
+      setResultData(newData)
     }
   }
 
@@ -70,51 +52,10 @@ const DataResult = ({ bar, dispatch, ...props }) => {
     }
   }
 
-  const setDataContainerResult = () => {
-    // 数据容器
-    if (_data?.dataContainers) {
-      const dataContainerIds = _data.dataContainers.map(item => item.id)
-      return bar.dataContainerDataList.reduce((pre, cur) => {
-        if (dataContainerIds.includes(cur.id)) {
-          pre.push(cur.data)
-        }
-        return pre
-      }, [])
-    }
-  }
-
-
-  const dataFilterHandler = data => {
-    const filters = bar.componentConfig.filters.map(item => {
-      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
-      return {
-        ...filterDetail,
-        enable: item.enable,
-      }
-    }).filter(item => item.enable)
-    try {
-      const functions = filters.map(item => {
-        return (new Function('data', item.content))
-      })
-      const resultArr = []
-      functions.forEach((fn, index) => {
-        if (index === 0) {
-          resultArr.push(fn(data))
-        } else {
-          resultArr.push(fn(resultArr[index - 1]))
-        }
-      })
-      return resultArr[resultArr.length - 1]
-    } catch (e) {
-      console.error(e)
-      return {}
-    }
-  }
-
   const refresh = () => {
-    if(type === 'component'){
+    if (type === 'component') {
       initOfComponent()
-    }else{
+    } else {
       init()
     }
   }

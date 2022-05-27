@@ -197,11 +197,13 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
 
   const requestHeaderDataChange = () => {
     console.log('requestHeaderData', requestHeaderData)
-    try {
-      JSON.parse(requestHeaderData.value)
-    } catch (err) {
-      message.error('格式错误')
-      return
+    if(requestHeaderData.value){
+      try {
+        JSON.parse(requestHeaderData.value)
+      } catch (err) {
+        message.error('格式错误')
+        return
+      }
     }
     saveDataConfig('headers', requestHeaderData)
   }
