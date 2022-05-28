@@ -14,7 +14,6 @@ const EveryItem = (props: any) => {
     window.eval(`${await importComponent()}`)
     const { ComponentDefaultConfig } = (window as any).VComponents;
     const currentDefaultConfig = ComponentDefaultConfig
-    console.log(currentDefaultConfig, 'currentDefaultConfig=====================')
     dispatch({
       type: 'bar/setModuleDefaultConfig',
       payload: currentDefaultConfig,
@@ -28,8 +27,6 @@ const EveryItem = (props: any) => {
 
   const componentCreate = () => {
     const { moduleDefaultConfig } = bar
-    console.log(moduleDefaultConfig, 'componentCreate----------------')
-    debugger
     const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
       return item.moduleName === data.moduleName
     })

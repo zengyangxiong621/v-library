@@ -25,7 +25,6 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
       resData = currentData
     }
   }
-  console.log(resData, 'getComDataWithFilters==================')
   return resData
 }
 
