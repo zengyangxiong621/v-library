@@ -154,7 +154,7 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
               maxLength={30}
               suffix={ <SearchOutlined
                 className="input-search-icon"
-                onClick={ handleSearch }
+                onClick={ () => handleSearch(inputValue) }
               /> }
               value={ inputValue }
               onChange={ (e) => setInputValue(e.target.value) }
