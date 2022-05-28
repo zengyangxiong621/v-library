@@ -46,8 +46,10 @@ import {addSomeAttrInLayers, clearNullGroup} from './utils/addSomeAttrInLayers'
 import {http} from '../services/request'
 
 import defaultData from './defaultData/bar'
+import { debug } from 'console'
 
 interface IBarState {
+  moduleDefaultConfig: any[],
   dashboardId: string;
   dashboardName: string;
   key: string[];
@@ -117,6 +119,12 @@ export default {
   },
 
   effects: {
+    * setModuleDefaultConfig({ payload }: any, { call, put, select }: any) {
+        yield put({
+          type: 'changeModuleDefaultConfig',
+          payload,
+        })
+    },
     * getDashboardId({ payload }: any, { call, put, select }: any) {
       yield put({
         type: 'changeDashboardId',
@@ -351,6 +359,10 @@ export default {
         method: 'delete',
         body: payload,
       })
+      yield put({
+        type: 'deleteComponentData',
+        payload: { id: payload.id }
+      })
       const filterNullLayers = clearNullGroup(layers)
       yield put({
         type: 'save',
@@ -467,7 +479,7 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
-
+      console.log(payload, 'payload======================')
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
@@ -485,6 +497,13 @@ export default {
         },
       })
       yield put({
+        type: 'addComponentData',
+        payload: {
+          id,
+          dataType: 'static'
+        }
+      })
+      yield put({
         type: 'updateComponents',
         payload: { ...deepClone(payload), id: id, children: children },
       })
@@ -493,8 +512,6 @@ export default {
         type: 'addComponent',
         payload: { final: { ...itemData, id: id }, insertId: insertId },
       })
-
-
     },
     * updateComponent({ payload }: any, { call, put, select }: any): any {
       const state: any = yield select((state: any) => state)
@@ -538,9 +555,51 @@ export default {
       })
       payload.cb(data)
     },
+    * addComponentData({ payload }: any, { call, put, select }: any): any {
+      const component = payload
+      const bar: any = yield select(({ bar }: any) => bar)
+      try {
+        const data = yield http({
+          url: '/visual/module/getData',
+          method: 'post',
+          body: {
+            moduleId: component.id,
+            dataType: component.dataType
+          }
+        })
+        if (data) {
+          bar.componentData[component.id] = component.dataType !== 'static' ? data : data.data
+        } else {
+          throw new Error('请求不到数据')
+        }
+      } catch (err) {
+        bar.componentData[component.id] = null
+      }
+      yield put({
+        type: 'save',
+        componentData: bar.componentData
+      })
+    },
   },
 
   reducers: {
+    changeModuleDefaultConfig(state: IBarState, { payload }: any) {
+      const isExit = state.moduleDefaultConfig.filter((item) => {
+        return item.moduleName === payload.moduleName
+      })
+
+      if (isExit.length === 0) {
+        state.moduleDefaultConfig.push(payload)
+      }
+      return { ...state }
+    },
+    deleteComponentData (state: IBarState, { payload }: any) {
+      // const { id } = payload
+      // if (state.componentData[id]) {
+      //   // delete state.componentData[id]
+      // }
+      return { ...state, componentData: state.componentData }
+    },
     deleteDataContainer(state: IBarState, { payload }: any) {
       let index = state.dataContainerDataList.findIndex((item: any) => item.id === payload)
       state.dataContainerDataList.splice(index, 1)
@@ -576,8 +635,7 @@ export default {
         state.dataContainerList.unshift(containerData)
       }
       return { ...state, dataContainerList: state.dataContainerList, dataContainerDataList: state.dataContainerDataList}
-    },
-    // 设置右键菜单位置的信息
+    }, // 设置右键菜单位置的信息
     setRightMenuInfo(state: IBarState, { payload }: any) {
       return { ...state, rightMenuInfo: payload }
     },

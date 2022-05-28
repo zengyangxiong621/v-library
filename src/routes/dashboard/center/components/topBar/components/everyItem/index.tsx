@@ -4,24 +4,21 @@ import axios from 'axios'
 import './index.less'
 
 const EveryItem = (props: any) => {
-  const { data, dispatch, bar, type} = props
-  let currentDefaultConfig: any = null
-
-  // const { moduleDefaultConfig } = bar
-  // const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
-  //   return item.moduleName === data.moduleName
-  // })
+  const { data, type, dispatch, bar } = props
 
   const importComponent = useCallback(() => {
-   
     return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   }, [type])
 
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`)
     const { ComponentDefaultConfig } = (window as any).VComponents;
-    currentDefaultConfig = ComponentDefaultConfig
-    console.log(currentDefaultConfig, 'currentDefaultConfig=====================')
+    const currentDefaultConfig = ComponentDefaultConfig
+    dispatch({
+      type: 'bar/setModuleDefaultConfig',
+      payload: currentDefaultConfig,
+      itemData: data
+    })
   }, [importComponent])
 
   useEffect(() => {
@@ -29,6 +26,10 @@ const EveryItem = (props: any) => {
   }, [loadComp]);
 
   const componentCreate = () => {
+    const { moduleDefaultConfig } = bar
+    const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
+      return item.moduleName === data.moduleName
+    })
     dispatch({
       type: 'bar/createComponent',
       payload: currentDefaultConfig,

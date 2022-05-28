@@ -9,7 +9,6 @@ import cloneDeep from 'lodash/cloneDeep';
  * @returns 
  */
 const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList) => {
-  console.log('componentData, componentConfig, componentFilters,dataContainerDataList', componentData, componentConfig, componentFilters, dataContainerDataList)
   const dataFrom = componentConfig.dataFrom || 0
   let resData = null
   let currentData = null

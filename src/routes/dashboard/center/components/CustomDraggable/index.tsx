@@ -9,10 +9,7 @@ import {deepClone, layerComponentsFlat, calcGroupPosition} from '../../../../../
 import {generateTreeData} from '../../../../../utils/sideBar'
 
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
-
-// import Text from '../Text'
-import Text from '../../../../../components/charts/custom/text'
-import CompImage from '../../../../../components/charts/custom/image'
+import { getComDataWithFilters, getFields } from '@/utils/data'
 
 import {
   STYLE,
@@ -558,6 +555,10 @@ const CustomDraggable
               }
             }
           }
+          console.log('-------------------------------------')
+          console.log('bar.componentData', bar.componentData[layer.id])
+          const compData = getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)
+          console.log('----------------------------------getComDataWithFilters', compData)
           return (
             <SingleDraggable
               dimensionConfig={style_dimension_config}
@@ -622,7 +623,13 @@ const CustomDraggable
                           // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                           //   <CompImage componentConfig={component}/>
                           
-                          <RemoteBaseComponent version={'1.0.0'} name={layer.moduleName} componentConfig={component}></RemoteBaseComponent>
+                          <RemoteBaseComponent 
+                            version={'1.0.0'} 
+                            name={layer.moduleName} 
+                            componentConfig={component}
+                            fields={getFields(component)}
+                            comData={compData}
+                          ></RemoteBaseComponent>
                         }
                       </div>
                     </>

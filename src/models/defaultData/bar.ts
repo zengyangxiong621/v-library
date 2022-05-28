@@ -1,4 +1,5 @@
 const data = {
+  moduleDefaultConfig: [],
   dashboardId: '',
   dashboardName: '',
   currentDblTimes: 0,
