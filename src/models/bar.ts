@@ -46,6 +46,7 @@ import {addSomeAttrInLayers, clearNullGroup} from './utils/addSomeAttrInLayers'
 import {http} from '../services/request'
 
 import defaultData from './defaultData/bar'
+import { debug } from 'console'
 
 interface IBarState {
   moduleDefaultConfig: any[],
@@ -549,18 +550,14 @@ export default {
 
   reducers: {
     changeModuleDefaultConfig(state: IBarState, { payload }: any) {
-      debugger
-      const currentDefaultConfig: any = []
-      if (state.moduleDefaultConfig.length) {
-        const isExit = state.moduleDefaultConfig.find(payload)
-        if (isExit.length === 0) {
-          currentDefaultConfig.push(payload)
-        }
-      } else {
-        currentDefaultConfig.push(payload)
-      }
+      const isExit = state.moduleDefaultConfig.filter((item) => {
+        return item.moduleName === payload.moduleName
+      })
 
-      return { ...state, moduleDefaultConfig: state.moduleDefaultConfig.concat(currentDefaultConfig) } 
+      if (isExit.length === 0) {
+        state.moduleDefaultConfig.push(payload)
+      }
+      return { ...state } 
     },
     deleteDataContainer(state: IBarState, { payload }: any) {
       let index = state.dataContainerDataList.findIndex((item: any) => item.id === payload)
