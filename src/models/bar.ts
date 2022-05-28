@@ -48,6 +48,7 @@ import {http} from '../services/request'
 import defaultData from './defaultData/bar'
 
 interface IBarState {
+  moduleDefaultConfig: any[],
   dashboardId: string;
   dashboardName: string;
   key: string[];
@@ -117,6 +118,12 @@ export default {
   },
 
   effects: {
+    * setModuleDefaultConfig({ payload }: any, { call, put, select }: any) {
+        yield put({
+          type: 'changeModuleDefaultConfig',
+          payload,
+        })
+    },
     * getDashboardId({ payload }: any, { call, put, select }: any) {
       yield put({
         type: 'changeDashboardId',
@@ -467,7 +474,7 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
-
+      console.log(payload, 'payload======================')
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
@@ -541,6 +548,20 @@ export default {
   },
 
   reducers: {
+    changeModuleDefaultConfig(state: IBarState, { payload }: any) {
+      debugger
+      const currentDefaultConfig: any = []
+      if (state.moduleDefaultConfig.length) {
+        const isExit = state.moduleDefaultConfig.find(payload)
+        if (isExit.length === 0) {
+          currentDefaultConfig.push(payload)
+        }
+      } else {
+        currentDefaultConfig.push(payload)
+      }
+
+      return { ...state, moduleDefaultConfig: state.moduleDefaultConfig.concat(currentDefaultConfig) } 
+    },
     deleteDataContainer(state: IBarState, { payload }: any) {
       let index = state.dataContainerDataList.findIndex((item: any) => item.id === payload)
       state.dataContainerDataList.splice(index, 1)
