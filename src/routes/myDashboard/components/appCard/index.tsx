@@ -207,7 +207,7 @@ const AppCard = (props: any) => {
               }} type='icon-fabu' />
             </Tooltip>
             <div className='more-icon'>
-              <IconFont onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
+              <IconFont style={{fontSize: '20px'}} onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
               <div className="more"
               >
                 <ul className='more-ul' style={{

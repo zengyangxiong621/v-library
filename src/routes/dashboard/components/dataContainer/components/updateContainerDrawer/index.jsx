@@ -320,7 +320,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
           <LeftOutlined onClick={onClose} className="g-cursor-pointer" style={{fontSize: 12}}/>
           数据容器
-          <CloseOutlined onClick={onClose} className="g-cursor-pointer" style={{}}/>
+          <CloseOutlined onClick={onClose} className="g-cursor-pointer"/>
         </div>
       }
       closable={false}
@@ -338,6 +338,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         <Input
           ref={inputRef}
           value={copyData.name}
+          maxLength={30}
           onChange={(e) => setCopyData({...copyData, name: e.target.value})}
           onPressEnter={() => {
             updateDataContainerName(copyData)
