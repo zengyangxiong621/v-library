@@ -112,7 +112,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
           placeholder="请输入"
           suffix={ <SearchOutlined
             className="input-search-icon"
-            onClick={ (e) => handleSearch(e.target.value) }
+            onClick={ (e) => handleSearch(searchValue) }
           /> }
           value={ searchValue }
           onChange={ (e) => setSearchValue(e.target.value) }
