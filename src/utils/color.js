@@ -10,8 +10,6 @@ const hexToRgb = (hexValue) => {
   const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   const hex = hexValue.replace(rgx, (m, r, g, b) => r + r + g + g + b + b);
   const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  console.log('hexVa---------', hexValue)
-  console.log('rgb', rgb)
   // if(!rgb) {
   //   return {}
   // }

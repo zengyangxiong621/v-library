@@ -31,9 +31,7 @@ const Color = props => {
     // rgb: {r: 22, g: 22, b: 33, a: 1},
     opacity: isHex(_data.value) ? 100 : getRgbaNum(_data.value).a * 100
   });
-  console.log('_data', _data);
   useEffect(() => {
-    console.log('cccccccccccccccccc', color);
   }, [color])
 
   const handleBgcChange = (e) => {
