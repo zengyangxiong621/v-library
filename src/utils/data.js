@@ -75,14 +75,21 @@ const dataFilterHandler = (data, componentConfig, componentFilters) => {
  */
 const setDataContainerResult = (componentConfig, dataContainerDataList) => {
   if (componentConfig.dataContainers) {
-    const dataContainerIds = componentConfig.dataContainers.map(item => item.id)
-    return dataContainerDataList.reduce((pre, cur) => {
-      if (dataContainerIds.includes(cur.id)) {
-        pre.push(cur.data)
-      }
-      return pre
-    }, [])
+    if (componentConfig.dataContainers.length === 1) {
+      const id = componentConfig.dataContainers[0].id
+      return dataContainerDataList.find(item => item.id === id).data
+    }
+    if (componentConfig.dataContainers.length > 1) {
+      const dataContainerIds = componentConfig.dataContainers.map(item => item.id)
+      return dataContainerDataList.reduce((pre, cur) => {
+        if (dataContainerIds.includes(cur.id)) {
+          pre.push(cur.data)
+        }
+        return pre
+      }, [])
+    }
   }
+  return []
 }
 
 /**

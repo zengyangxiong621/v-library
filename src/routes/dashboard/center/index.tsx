@@ -106,15 +106,39 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
-    if(e.ctrlKey) {
-      e.preventDefault()
-      if(e.deltaY > 0 && bar.canvasScaleValue < 0.1) {
-        return false
+    e.preventDefault()
+    const type = e.deltaY < 0
+    // type: true 为放大 false 缩小
+    if(bar.canvasScaleValue <= 0.1) {
+      if (type) { // 可以放大
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            canvasScaleValue: Number((bar.canvasScaleValue + 0.03).toFixed(3)),
+          },
+        })
+      }
+    } else if (bar.canvasScaleValue >= 4) {
+      if (!type) { // 可以缩小
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            canvasScaleValue: Number((bar.canvasScaleValue - 0.03).toFixed(3)),
+          },
+        })
+      }
+    } else {
+      let canvasScaleValue =  Number((bar.canvasScaleValue + (type ? 0.03 : -0.03)).toFixed(3))
+      if (canvasScaleValue <= 0.1) {
+        canvasScaleValue = 0.1
+      }
+      if (canvasScaleValue >= 4) {
+        canvasScaleValue = 4
       }
       dispatch({
         type: 'bar/save',
         payload: {
-          canvasScaleValue: Number((bar.canvasScaleValue + (e.deltaY > 0 ? -0.03 : 0.03)).toFixed(3)),
+          canvasScaleValue
         },
       })
     }

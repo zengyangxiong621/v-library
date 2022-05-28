@@ -22,7 +22,6 @@ const Color = props => {
   const [color, setColor] = useState({
     hex: isHex(_data.value) ? _data.value : rgbToHex(getRgbaNum(_data.value)),
     rgb: isHex(_data.value) ? {
-      // TODO  这里的_data.value会变
       ...hexToRgb(_data.value),
       a: 1
     } : {
@@ -31,8 +30,6 @@ const Color = props => {
     // rgb: {r: 22, g: 22, b: 33, a: 1},
     opacity: isHex(_data.value) ? 100 : getRgbaNum(_data.value).a * 100
   });
-  useEffect(() => {
-  }, [color])
 
   const handleBgcChange = (e) => {
     setColor({
@@ -49,7 +46,7 @@ const Color = props => {
     } else {
       _data.value = `rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`
     }
-    props.onChange()
+    // props.onChange()
   }
   const handleHexChange = (e) => {
     const hexTmp = e.target.value
@@ -104,7 +101,11 @@ const Color = props => {
   const selectBgc = () => {
     setDisplayColorPicker(!displayColorPicker)
   }
-
+  // @Mark-- 因为之前在 handleBgcChange 中发送请求,返回数据后会强刷页面，导致操作一次或几次后选色板消失， 所以将发送请求的时机延后至主动隐藏选色板后
+  const clickOutSketchPicker = () => {
+    setDisplayColorPicker(false)
+    props.onChange()
+  }
   return (
     <Form
       className="custom-form"
@@ -118,7 +119,7 @@ const Color = props => {
           <div className="color-dis" style={{ background: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})` }} />
         </div>
         {displayColorPicker ? <div className="color-popover">
-          <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
+          <div className="color-cover" onClick={() => clickOutSketchPicker()} />
           <SketchPicker color={color.rgb} onChange={(e) => { handleBgcChange(e) }} />
         </div> : null}
         <Form.Item noStyle name="hex">

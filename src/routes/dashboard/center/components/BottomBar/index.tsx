@@ -24,7 +24,7 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
   }
   const handleScreen = (type: boolean) => {
     // type: true 为放大 false 缩小
-    if(bar.canvasScaleValue < 0.1) {
+    if(bar.canvasScaleValue <= 0.1) {
       if (type) { // 可以放大
         dispatch({
           type: 'bar/save',
@@ -33,14 +33,29 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
           },
         })
       }
+    } else if (bar.canvasScaleValue >= 4) {
+      if (!type) { // 可以缩小
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            canvasScaleValue: Number((bar.canvasScaleValue - 0.1).toFixed(3)),
+          },
+        })
+      }
     } else {
+      let canvasScaleValue =  Number((bar.canvasScaleValue + (type ? 0.1 : -0.1)).toFixed(3))
+      if (canvasScaleValue <= 0.1) {
+        canvasScaleValue = 0.1
+      }
+      if (canvasScaleValue >= 4) {
+        canvasScaleValue = 4
+      }
       dispatch({
         type: 'bar/save',
         payload: {
-          canvasScaleValue: Number((bar.canvasScaleValue + (type ? 0.1 : -0.1)).toFixed(3)),
+          canvasScaleValue
         },
       })
-
     }
   }
   const handleMinusScreen = () => {
