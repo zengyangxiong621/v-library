@@ -555,6 +555,10 @@ const CustomDraggable
               }
             }
           }
+          console.log('-------------------------------------')
+          console.log('bar.componentData', bar.componentData[layer.id])
+          const compData = getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)
+          console.log('----------------------------------getComDataWithFilters', compData)
           return (
             <SingleDraggable
               dimensionConfig={style_dimension_config}
@@ -624,7 +628,7 @@ const CustomDraggable
                             name={layer.moduleName} 
                             componentConfig={component}
                             fields={getFields(component)}
-                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)}
+                            comData={compData}
                           ></RemoteBaseComponent>
                         }
                       </div>
