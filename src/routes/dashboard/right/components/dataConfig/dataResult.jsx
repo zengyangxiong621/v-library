@@ -40,7 +40,7 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 
   const init = () => {
     if (!type && type !== 'component') {
-      const resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList)
+      const resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)
       const newData = Object.assign({}, resultData, {
         value: resData ? JSON.stringify(resData, null, 2) : ''
       })

@@ -22,7 +22,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const [componentType, setComponentType] = useState('')
 
   useEffect(() => {
-    const currentData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList)
+    const currentData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)
     if (currentData) {
       const keys = getKeys(currentData)
       setFieldkeys(keys)

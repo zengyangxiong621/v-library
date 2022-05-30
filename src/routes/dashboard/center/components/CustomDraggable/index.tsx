@@ -557,7 +557,7 @@ const CustomDraggable
           }
           console.log('-------------------------------------')
           console.log('bar.componentData', bar.componentData[layer.id])
-          const compData = getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)
+          const compData = getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)
           console.log('----------------------------------getComDataWithFilters', compData)
           return (
             <SingleDraggable

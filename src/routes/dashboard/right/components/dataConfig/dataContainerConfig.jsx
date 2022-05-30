@@ -84,6 +84,37 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
   const handleUpdateDrawerClose = (value) => {
     setItemVisible(value)
   }
+
+  // 数据过滤
+  const handleDataFilter = (data, allFilters) => {
+    const filters = allFilters.map(item => {
+      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      return {
+        ...filterDetail,
+        enable: item.enable,
+      }
+    }).filter(item => item.enable)
+    if (filters.length === 0) {
+      return data
+    }
+    try {
+      const functions = filters.map(item => {
+        return (new Function('data', item.content))
+      })
+      const resultArr = []
+      functions.forEach((fn, index) => {
+        if (index === 0) {
+          resultArr.push(fn(data))
+        } else {
+          resultArr.push(fn(resultArr[index - 1]))
+        }
+      })
+      return resultArr[resultArr.length - 1]
+    } catch (e) {
+      return []
+    }
+  }
+
   // item: {id?: string}
   const handleTabClick = async (item) => {
     if (item.id) {
@@ -93,13 +124,9 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
         data = dataContainer.staticData.data || {}
       } else {
         data = bar.dataContainerDataList.find(it => it.id === item.id).data
-        // data = await http({
-        //   method: 'get',
-        //   url: '/visual/container/data/get',
-        //   params: {
-        //     id: dataContainer.id,
-        //   },
-        // })
+      }
+      if (dataContainer.useFilter) {
+        data = handleDataFilter(data, dataContainer.filters)
       }
       setResultData({ ...resultData, value: JSON.stringify(data, null, 2) })
       setTabValue(item.id)

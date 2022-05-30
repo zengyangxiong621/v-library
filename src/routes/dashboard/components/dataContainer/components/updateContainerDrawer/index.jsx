@@ -71,8 +71,9 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           if (props.data.useFilter) {
             resultData = handleDataFilter(data.data, props.data.filters)
             setResultData(resultData)
+          } else {
+            setResultData(data.data)
           }
-          setResultData(data.data)
         } else {
           setResultData(resultData)
         }
