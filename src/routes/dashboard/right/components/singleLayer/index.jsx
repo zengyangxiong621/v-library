@@ -76,18 +76,25 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const dataContainerChange = (dataContainerIds) => {
-    componentConfig.dataContainers = dataContainerIds.map((id, index) => ({
-      id,
-      enable: true,
-      rank: index
-    }))
     dispatch({
-      type: 'bar/setComponentConfig',
-      payload: componentConfig
+      type: 'bar/componentsBindContainer',
+      payload:{
+        componentConfig,
+        dataContainerIds
+      }
     })
-    dispatch({
-      type: 'bar/updateContainersEnableAndModules'
-    })
+    // componentConfig.dataContainers = dataContainerIds.map((id, index) => ({
+    //   id,
+    //   enable: true,
+    //   rank: index
+    // }))
+    // dispatch({
+    //   type: 'bar/setComponentConfig',
+    //   payload: componentConfig
+    // })
+    // dispatch({
+    //   type: 'bar/updateContainersEnableAndModules'
+    // })
   }
   const staticDataChange = (data) => {
     componentConfig.staticData.data = data

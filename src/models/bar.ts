@@ -580,6 +580,21 @@ export default {
         componentData: bar.componentData
       })
     },
+    * componentsBindContainer({ payload }: any, { call, put, select }: any): any {
+      const { componentConfig, dataContainerIds } = payload
+      componentConfig.dataContainers = dataContainerIds.map((id: string, index: number) => ({
+        id,
+        enable: true,
+        rank: index
+      }))
+      yield put({
+        type: 'setComponentConfig',
+        payload: componentConfig
+      })
+      yield put({
+        type: 'updateContainersEnableAndModules'
+      })
+    }
   },
 
   reducers: {
@@ -601,11 +616,21 @@ export default {
       return { ...state, componentData: state.componentData }
     },
     deleteDataContainer(state: IBarState, { payload }: any) {
-      let index = state.dataContainerDataList.findIndex((item: any) => item.id === payload)
+      const { containerId, componentIds }  = payload
+      let index = state.dataContainerDataList.findIndex((item: any) => item.id === containerId)
       state.dataContainerDataList.splice(index, 1)
-      index = state.dataContainerList.findIndex((item: any) => item.id === payload)
+      index = state.dataContainerList.findIndex((item: any) => item.id === containerId)
       state.dataContainerList.splice(index, 1)
-      return { ...state, dataContainerList: state.dataContainerList }
+
+      // 组件解绑数据容器
+      componentIds.forEach((id: string) => {
+        const component = state.components.find(item => item.id === id)
+        const index = component.dataContainers.find((item: any) => item.id === containerId)
+        component.dataContainers.splice(index, 1)
+      })
+      console.log('state.dataContainerList', state.dataContainerList)
+      console.log('state.components', state.components)
+      return { ...state, dataContainerList: state.dataContainerList, components: state.components }
     },
     copyDataContainer(state: IBarState, { payload }: any) {
 
@@ -1320,6 +1345,26 @@ export default {
         ...state,
       }
     },
+    // componentsBindContainer(state: IBarState, { payload }: any) {
+    //   const {components, containerId} = payload
+    //   // component: {id, name}
+    //   components.forEach(async (component: any) => {
+    //     await http({
+    //       method: 'post',
+    //       url: '/visual/module/bindContainer',
+    //       body: {
+    //         moduleId: component.id,
+    //         binding: false,
+    //         containerId
+    //       },
+    //     })
+    //   })
+    //   console.log('components', components)
+    //
+    //   return {
+    //     ...state
+    //   }
+    // },
     clearCurrentDashboardData(state: IBarState, { payload }: any) {
       return {
         ...defaultData

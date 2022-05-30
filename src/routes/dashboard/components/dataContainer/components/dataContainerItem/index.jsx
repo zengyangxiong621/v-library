@@ -7,6 +7,7 @@ import {
   EditOutlined
 } from '@ant-design/icons';
 import ModalConfirm from "../../../../../../components/modalConfirm";
+import {http} from "@/services/request";
 
 const DataContainerItem = props => {
   const data = props.data
@@ -43,17 +44,21 @@ const DataContainerItem = props => {
     setInputValue(e.target.value)
   }
   const handleDelete = () => {
-    ModalConfirm({
-      title: '删除确认',
-      content: '仍有组件绑定该数据容器，删除后不可逆，确认删除？',
-      desc: '', // 选填
-      onCancel: () => {
-        console.log('取消')
-      },
-      onOk: () => {
-        props.onDelete(data.id)
-      }
-    })
+    if (data.enable) {
+      ModalConfirm({
+        title: '删除确认',
+        content: '仍有组件绑定该数据容器，删除后不可逆，确认删除？',
+        desc: '', // 选填
+        onCancel: () => {
+          console.log('取消')
+        },
+        onOk: () => {
+          props.onDelete(data.id, data.modules)
+        }
+      })
+    } else {
+      props.onDelete(data.id, data.modules)
+    }
   }
   return (
     <div className="data-container-item">
