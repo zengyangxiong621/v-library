@@ -58,7 +58,7 @@ const CodeEditor = props => {
       />
       <Modal
         width="70%"
-        title="修改数据"
+        title="编辑"
         okText="确认"
         cancelText="取消"
         visible={fullScreen}
