@@ -56,14 +56,14 @@ const _requestHeaderDataConfig = {
   readOnly: false,
   language: 'json',
   value: ``,
-  showExpand: false
+  showExpand: true
 }
 
 const _requestBodyDataConfig = {
   readOnly: false,
   language: 'json',
   value: ``,
-  showExpand: false
+  showExpand: true
 }
 
 const _pathDataConfig = {

@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect, useRef } from 'react';
 import './index.less';
 import { connect } from 'dva'
 import { v4 as uuidv4 } from 'uuid';
-import MonacoEditor from 'react-monaco-editor';
+import CodeEditor from '../codeEditor/editor'
 import DataResult from '../dataConfig/dataResult'
 import ModalConfirm from '@/components/modalConfirm'
 import { http } from '../../../../../services/request'
@@ -584,10 +584,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     return <ul className="cus-sort-wraper">{children}</ul>;
   });
 
-  const editorDidMountHandle = (editor, monaco) => {
-    editor.getAction('editor.action.formatDocument').run()  //格式化
-  }
-
   const SortableItem = sortableElement(({ item }) => (
     FilterItem(item)
   ));
@@ -640,16 +636,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
               <div className="code-editor">
                 <div className="cus-code">{`function filter(data){`}</div>
                 <div className="code-wraper">
-                  <MonacoEditor
-                    language="javascript"
-                    theme="vs-dark"
-                    value={item.content}
-                    onChange={(e) => codeChange(e, item)}
-                    editorDidMount={editorDidMountHandle}
-                    options={{
-                      contextmenu: false,
-                    }}
-                  />
+                  <CodeEditor value={item.content} language="javascript" onChange={(e) => codeChange(e, item)}></CodeEditor>
                 </div>
                 <div className="cus-code">{`}`}</div>
               </div>

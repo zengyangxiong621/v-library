@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'dva'
 import './index.less'
 import MonacoEditor from 'react-monaco-editor';
+import CodeEditor from '../codeEditor/editor'
 
 import {
   Drawer,
@@ -407,16 +408,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
                     <div className="code-editor">
                       <div className="cus-code">{`function filter(data){`}</div>
                       <div className="code-wraper">
-                        <MonacoEditor
-                          language="javascript"
-                          theme="vs-dark"
-                          value={item.code}
-                          onChange={(e) => codeChange(e, item)}
-                          editorDidMount={editorDidMountHandle}
-                          options={{
-                            contextmenu: false,
-                          }}
-                        />
+                        <CodeEditor value={item.code} language="javascript" onChange={(e) => codeChange(e, item)}></CodeEditor>
                       </div>
                       <div className="cus-code">{`}`}</div>
                     </div>

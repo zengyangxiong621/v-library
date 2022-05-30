@@ -11,7 +11,7 @@ const sourceCodeData = {
   readOnly: false,
   language: 'json',
   value: ``,
-  showExpand: false
+  showExpand: true
 };
 
 const StaticData = ({ bar, dispatch, ...props }) => {

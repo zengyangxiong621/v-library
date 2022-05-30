@@ -66,14 +66,14 @@ const _sqlDataConfig = {
   readOnly: false,
   language: 'mysql',
   value: `SELECT * FROM`,
-  showExpand: false
+  showExpand: true
 }
 
 const _esDataConfig = {
   readOnly: false,
   language: 'json',
   value: ``,
-  showExpand: false
+  showExpand: true
 }
 
 const DataSourceConfig = ({ bar, dispatch, ...props }) => {
