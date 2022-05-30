@@ -22,10 +22,10 @@ const PositionSize = ({ bar, dispatch, ...props }) => {
   const _width = truncValue(find(_data, 'width'))
   const _height = truncValue(find(_data, 'height'))
 
-  const _leftCopy = Object.assign({}, _left, { displayName: '' })
-  const _topCopy = Object.assign({}, _top, { displayName: '' })
-  const _widthCopy = Object.assign({}, _width, { displayName: '' })
-  const _heightCopy = Object.assign({}, _height, { displayName: '' })
+  const _leftCopy = Object.assign({}, _left, { displayName: '',config: {suffix:'X'}})
+  const _topCopy = Object.assign({}, _top, { displayName: '',config: {suffix:'Y'} })
+  const _widthCopy = Object.assign({}, _width, { displayName: '',config: {suffix:'W'} })
+  const _heightCopy = Object.assign({}, _height, { displayName: '',config: {suffix:'H'} })
 
   const [sizeLock, setSizeLock] = useState(_data.config.lock)
 
