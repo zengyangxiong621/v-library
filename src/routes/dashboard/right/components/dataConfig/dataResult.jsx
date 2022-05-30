@@ -30,7 +30,12 @@ const DataResult = ({ bar, dispatch, ...props }) => {
   }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
 
   useEffect(() => {
-    initOfComponent()
+    if (type === 'component') {
+      console.log('哈哈哈哈哈哈哈哈哈或')
+      console.log('componentResultData', componentResultData)
+      console.log('哈哈哈哈哈哈哈哈哈或')
+      initOfComponent()
+    }
   }, [componentResultData])
 
   const init = () => {

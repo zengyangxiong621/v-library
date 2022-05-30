@@ -128,6 +128,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         data,
       },
     })
+
     dispatch({
       type: 'bar/updateDataContainer',
       payload: {
@@ -140,6 +141,12 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         data
       }
     })
+    if (copyData.useFilter) {
+      let filterData = handleDataFilter(data, copyData.filters)
+      setResultData(filterData)
+    } else {
+      setResultData(data)
+    }
   }
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
@@ -178,7 +185,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
   // 数据过滤器开关
   const filterBoxChange = async (e) => {
-
     setCopyData({...copyData, useFilter: e.target.checked})
     await updateDataContainer({...copyData, useFilter: e.target.checked})
     dispatch({
