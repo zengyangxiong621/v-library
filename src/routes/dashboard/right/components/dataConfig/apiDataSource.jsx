@@ -82,12 +82,12 @@ const _paramDataConfig = {
 
 const APIDataSource = ({ bar, dispatch, ...props }) => {
   const _data = props.data
-  const [requestMethods, setRequestMethods] = useState(_requestMethodConfig)
-  const [baseUrlData, setBaseUrlData] = useState(_baseUrlDataConfig)
-  const [requestHeaderData, setRequestHeaderData] = useState(_requestHeaderDataConfig)
-  const [requestBodyData, setRequestBodyData] = useState(_requestBodyDataConfig)
-  const [pathData, setPathData] = useState(_pathDataConfig)
-  const [paramData, setParamData] = useState(_paramDataConfig)
+  const [requestMethods, setRequestMethods] = useState({..._requestMethodConfig})
+  const [baseUrlData, setBaseUrlData] = useState({..._baseUrlDataConfig})
+  const [requestHeaderData, setRequestHeaderData] = useState({..._requestHeaderDataConfig})
+  const [requestBodyData, setRequestBodyData] = useState({..._requestBodyDataConfig})
+  const [pathData, setPathData] = useState({..._pathDataConfig})
+  const [paramData, setParamData] = useState({..._paramDataConfig})
   const [reqFromBack, setReqFromBack] = useState(false)
   const [needCookie, setNeedCookie] = useState(false)
   const [isShowBody, setIsShowBody] = useState(false)
