@@ -16,8 +16,10 @@ type TArr = {
  */
 export const getTargetStyle = (Arr: TArr[], originalStyle?: {}): TArr => {
   const targetStyle: TArr = {};
-  Arr.forEach(({ name, value }) => {
-    targetStyle[name] = value;
-  });
+  if (Array.isArray(Arr) && Arr.length) {
+    Arr.forEach(({ name, value }) => {
+      targetStyle[name] = value;
+    });
+  }
   return { ...originalStyle, ...targetStyle };
 };
