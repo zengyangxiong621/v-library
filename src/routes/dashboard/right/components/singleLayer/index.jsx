@@ -28,11 +28,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     mountAnimation: bar.treeData.find(item => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events
   }
-  // console.log('--------------------')
-  // console.log('componentConfig', bar.componentConfig)
   const styleConfig = componentConfig.config
-  // console.log('styleConfig', styleConfig)
-  // console.log('--------------------')
   const interactionConfig = componentConfig.interaction
 
 

@@ -61,8 +61,6 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
 
     if (data) {
       message.success('操作成功')
-      console.log('components.map(item => item.id)', components.map(item => item.id))
-      console.log('id', id)
       dispatch({
         type: 'bar/deleteDataContainer',
         payload: {

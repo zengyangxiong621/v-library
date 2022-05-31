@@ -33,6 +33,14 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
     handleTabClick({ id })
   }
 
+  useEffect(() => {
+    console.log('寄')
+    if (dataContainerIds.length === 0) {
+      console.log('为0为0')
+      handleTabClick(null)
+    }
+  }, [dataContainerIds])
+
   const handleChange = async (value) => {
     // props.onDataContainerChange(value)
   }
@@ -117,7 +125,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
 
   // item: {id?: string}
   const handleTabClick = async (item) => {
-    if (item.id) {
+    if (item && item.id) {
       const dataContainer = bar.dataContainerList.find(it => it.id === item.id)
       let data = {}
       if (dataContainer.dataType === 'static') {
@@ -131,6 +139,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
       setResultData({ ...resultData, value: JSON.stringify(data, null, 2) })
       setTabValue(item.id)
     } else {
+      console.log('哈哈哈哈哈哈哈哈哈哈哈哈')
       setResultData(resultCodeData)
     }
   }

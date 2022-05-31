@@ -6,7 +6,8 @@ import cloneDeep from 'lodash/cloneDeep';
  * @param {*} componentConfig 当前组件的配置信息
  * @param {*} componentFilters 当前画布所有的过滤器信息
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
- * @returns 
+ * @param {*} dataContainerList 当前画布的所有数据容器集合
+ * @returns
  */
 const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList) => {
   const dataFrom = componentConfig.dataFrom || 0
@@ -99,15 +100,21 @@ const handleDataFilter = (data, allFilters, componentFilters) => {
  * 获取组件数据容器的数据
  * @param {*} componentConfig 当前组件的配置信息
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
- * @returns 
+ * @param {*} dataContainerList 当前画布的所有数据容器集合
+ * @param {*} componentFilters 当前画布的过滤器集合
+ * @returns
  */
 const setDataContainerResult = (componentConfig, dataContainerDataList, dataContainerList, componentFilters) => {
   if (componentConfig.dataContainers) {
     if (componentConfig.dataContainers.length === 1) {
+      console.log('componentConfig.dataContainers', componentConfig.dataContainers)
+      console.log('length', componentConfig.dataContainers.length)
       const id = componentConfig.dataContainers[0].id
-      console.log('dataContainerList', dataContainerList)
       const container = dataContainerList.find(item => item.id === id)
+      console.log('id', id)
+      console.log('dataContainerDataList', dataContainerDataList)
       let data = dataContainerDataList.find(item => item.id === id).data
+      console.log('data', data)
       if (container.useFilter) {
         data = handleDataFilter(data, container.filters, componentFilters )
       }
@@ -118,10 +125,6 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
       return dataContainerDataList.reduce((pre, cur) => {
         if (dataContainerIds.includes(cur.id)) {
           const container = dataContainerList.find(item => item.id === cur.id)
-          console.log('哈哈哈哈哈哈红红火火恍恍惚惚')
-          console.log('container', container)
-          console.log('哈哈哈哈哈哈红红火火恍恍惚惚')
-
           let data = cur.data
           if (container.useFilter) {
             data = handleDataFilter(cur.data, container.filters, componentFilters)

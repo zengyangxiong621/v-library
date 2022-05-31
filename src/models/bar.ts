@@ -622,14 +622,15 @@ export default {
       index = state.dataContainerList.findIndex((item: any) => item.id === containerId)
       state.dataContainerList.splice(index, 1)
 
+
+
       // 组件解绑数据容器
       componentIds.forEach((id: string) => {
         const component = state.components.find(item => item.id === id)
-        const index = component.dataContainers.find((item: any) => item.id === containerId)
+        const index = component.dataContainers.findIndex((item: any) => item.id === containerId)
         component.dataContainers.splice(index, 1)
       })
-      console.log('state.dataContainerList', state.dataContainerList)
-      console.log('state.components', state.components)
+
       return { ...state, dataContainerList: state.dataContainerList, components: state.components }
     },
     copyDataContainer(state: IBarState, { payload }: any) {
