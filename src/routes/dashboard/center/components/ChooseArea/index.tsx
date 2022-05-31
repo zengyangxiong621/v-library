@@ -22,10 +22,11 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
 
   useEffect(() => {
     document.onmousedown = (e: any) => {
+      const dom: any = (e.target as any) || null
       let temp = false
       let awayList = [ 'c-canvas', 'draggable-wrapper', 'canvas-draggable' ]
       awayList.forEach(className => {
-        if (e.target.className?.indexOf(className) !== -1) {
+        if (dom && dom.className && Object.prototype.toString.call(dom.className) === '[object String]' && dom.className?.indexOf(className) !== -1) {
           temp = true
         }
       })

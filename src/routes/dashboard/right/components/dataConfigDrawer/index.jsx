@@ -449,16 +449,19 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     }
   }
 
-  const confirmFilter = item => {
+  const confirmFilter = async (item) => {
+    console.log('触发1', item)
     if (item.isNewAdd) {
-      saveNewFifterHandle()
+      await saveNewFifterHandle()
     } else {
-      updateFifterHandle(item)
+      await updateFifterHandle(item)
     }
   }
 
   const saveNewFifterHandle = async () => {
     // 新增保存,创建过滤器，把过滤器添加到当前组件
+    console.log('触发2')
+    console.log('filterOfAdd', filterOfAdd)
     const { id, enable, isEditName, isAddKey, status, isNewAdd, ...rest } = filterOfAdd
     const data = await http({
       url: '/visual/module/filter/create',
@@ -468,42 +471,61 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         dashboardId: bar.dashboardId
       }
     })
-    if (data && props.type === 'component') {
-      props.onSelectedFiltersChange(data.id)
-      return
-    }
+    console.log('触发3')
+    console.log('data', data)
+
     if (data) {
-      // 把过滤器添加到当前组件
-      const res = await http({
-        url: '/visual/module/filter/add',
-        method: 'POST',
-        body: {
-          filterId: data.id,
-          id: bar.key[0]
-        }
-      })
+      if (data && props.type === 'component') {
+        const componentFilters = [...bar.componentFilters]
+        componentFilters.push({
+          id: data.id,
+          name: data.name,
+          content: data.content,
+          callbackKeys: data.callbackKeys,
+          moduleIds: []
+        })
+        await dispatch({
+          type: 'bar/save',
+          payload: {
+            componentFilters
+          }
+        })
+        await props.onSelectedFiltersChange(data.id, componentFilters)
+      } else {
+        // 把过滤器添加到当前组件
+        const res = await http({
+          url: '/visual/module/filter/add',
+          method: 'POST',
+          body: {
+            filterId: data.id,
+            id: bar.key[0]
+          }
+        })
+        const componentConfig = { ...bar.componentConfig }
+        componentConfig.filters = res.filters
+        dispatch({
+          type: 'bar/setComponentConfig',
+          payload: componentConfig
+        })
+        const componentFilters = [...bar.componentFilters]
+        componentFilters.push({
+          id: data.id,
+          name: data.name,
+          content: data.content,
+          callbackKeys: data.callbackKeys,
+          moduleIds: [bar.key[0]]
+        })
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            componentFilters
+          }
+        })
+      }
       // 更新过滤器信息
-      const componentFilters = [...bar.componentFilters]
-      componentFilters.push({
-        id: data.id,
-        name: data.name,
-        content: data.content,
-        callbackKeys: data.callbackKeys,
-        moduleIds: [bar.key[0]]
-      })
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          componentFilters
-        }
-      })
+
       // 跟新组件配置信息
-      const componentConfig = { ...bar.componentConfig }
-      componentConfig.filters = res.filters
-      dispatch({
-        type: 'bar/setComponentConfig',
-        payload: componentConfig
-      })
+
       setFilterOfAdd(null)
     }
   }
@@ -657,7 +679,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             <div className="bottom">
               <div className="btn-group">
                 <Button ghost onClick={() => { resetFilter(item) }} style={{ marginRight: '8px' }}>取消</Button>
-                <Button type="primary" onClick={() => { confirmFilter(item) }}>确认</Button>
+                <Button type="primary" onClick={() => confirmFilter(item)}>确认</Button>
               </div>
             </div>
           </div>

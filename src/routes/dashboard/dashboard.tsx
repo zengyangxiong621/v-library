@@ -73,7 +73,7 @@ function App({ bar, dispatch, location }: any) {
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
     let awayList = ['ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable']
     awayList.forEach(className => {
-      if (dom && dom?.className.indexOf(className) !== -1) {
+      if (dom && dom.className && Object.prototype.toString.call(dom.className) === '[object String]' && dom.className.indexOf(className) !== -1) {
         temp = false
       }
     })

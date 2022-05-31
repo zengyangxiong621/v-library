@@ -60,6 +60,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
             data: containerData.staticData.data
           }
         })
+        console.log('setResultData1')
         setResultData(containerData.staticData.data)
         setCopyData(containerData)
       } else {
@@ -70,11 +71,14 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         if (data) {
           if (props.data.useFilter) {
             resultData = handleDataFilter(data.data, props.data.filters)
+            console.log('setResultData2')
             setResultData(resultData)
           } else {
+            console.log('setResultData3')
             setResultData(data.data)
           }
         } else {
+          console.log('setResultData4')
           setResultData(resultData)
         }
 
@@ -235,20 +239,18 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     setResultData(data)
   }
   // 数据过滤器变化
-  const selectedFiltersChange = async (value) => {
+  const selectedFiltersChange = async (filterId, componentFilters) => {
     // 绑定/解绑过滤器
     const data = await http({
       method: 'post',
       url: '/visual/container/filter',
       body: {
         id: copyData.id,
-        filterId: value,
+        filterId,
         add: true
       }
     })
-    setCopyData({
-      ...copyData, filters: data.filters
-    })
+    setCopyData(data)
     dispatch({
       type: 'bar/updateDataContainer',
       payload: {
@@ -256,13 +258,14 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       }
     })
     let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
-    containerData = handleDataFilter(containerData, data.filters)
+    containerData = handleDataFilter(containerData, data.filters, componentFilters)
     setResultData(containerData)
   }
   // 数据过滤
-  const handleDataFilter = (data, allFilters) => {
+  const handleDataFilter = (data, allFilters, componentFilters = null) => {
     const filters = allFilters.map(item => {
-      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      const filterDetail = (componentFilters || bar.componentFilters).find(jtem => jtem.id === item.id)
+      console.log('filterDetail', filterDetail)
       return {
         ...filterDetail,
         enable: item.enable,
@@ -287,6 +290,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     } catch (e) {
       return []
     }
+    return []
   }
   // 更新过滤器
   const updateFilters = (data) => {

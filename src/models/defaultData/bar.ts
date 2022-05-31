@@ -206,22 +206,22 @@ const data = {
   },
   isAreaChoose: false,
   rulerLines: [
-    {
-      position: {
-        x: 0,
-        y: 0,
-      },
-      direction: 'horizon',
-      display: 'block',
-    },
-    {
-      position: {
-        x: 0,
-        y: 0,
-      },
-      direction: 'vertical',
-      display: 'block',
-    },
+    // {
+    //   position: {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   direction: 'horizon',
+    //   display: 'block',
+    // },
+    // {
+    //   position: {
+    //     x: 0,
+    //     y: 0,
+    //   },
+    //   direction: 'vertical',
+    //   display: 'block',
+    // },
   ],
   leftMenuWidth: 250,
   componentData: {},
