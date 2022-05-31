@@ -388,7 +388,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     draggableRef.current.props.position.y = y
     rulerRef.current.painter()
   }
-
   return (
     <div className="c-canvas">
       <Ruler

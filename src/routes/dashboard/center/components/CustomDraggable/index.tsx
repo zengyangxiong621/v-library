@@ -56,7 +56,6 @@ const CustomDraggable
   const allComponentDOMs = bar.allComponentDOMs
   let supportLinesRef = bar.supportLinesRef
   const [startPosition, setStartPosition] = useState({x: 0, y: 0})
-  const [copyTreeData, setCopyTreeData] = useState(deepClone(treeData))
 
   const nodeRef: any = useRef(null)
   const currentTimes: any = useRef(0)
@@ -68,9 +67,7 @@ const CustomDraggable
     return () => {
     }
   }, [])
-  useEffect(() => {
-    setCopyTreeData(deepClone(treeData).reverse())
-  }, [treeData])
+
   /**
    * 鼠标事件顺序： dragStart, drag, dragEnd, click
    */
@@ -499,7 +496,6 @@ const CustomDraggable
       })
     }
   }
-  // let copyTreeData = deepClone(treeData).reverse()
   return (
     <div className="c-custom-draggable">
       {
@@ -555,10 +551,6 @@ const CustomDraggable
               }
             }
           }
-          console.log('-------------------------------------')
-          console.log('bar.componentData', bar.componentData[layer.id])
-          const compData = getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)
-          console.log('----------------------------------getComDataWithFilters', compData)
           return (
             <SingleDraggable
               dimensionConfig={style_dimension_config}
@@ -628,7 +620,7 @@ const CustomDraggable
                             name={layer.moduleName} 
                             componentConfig={component}
                             fields={getFields(component)}
-                            comData={compData}
+                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)}
                           ></RemoteBaseComponent>
                         }
                       </div>

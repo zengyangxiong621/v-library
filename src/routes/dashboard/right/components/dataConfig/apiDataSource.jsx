@@ -82,6 +82,7 @@ const _paramDataConfig = {
 
 const APIDataSource = ({ bar, dispatch, ...props }) => {
   const _data = props.data
+  const componentType = props.type
   const [requestMethods, setRequestMethods] = useState(_requestMethodConfig)
   const [baseUrlData, setBaseUrlData] = useState(_baseUrlDataConfig)
   const [requestHeaderData, setRequestHeaderData] = useState(_requestHeaderDataConfig)
@@ -142,38 +143,42 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
         data
       }
     }
-    await http({
-      url: '/visual/module/updateDatasource',
-      method: 'post',
-      body: {
-        id: _data.id,
-        data: dataConfig.api.data,
-        dataType: 'api'
-      }
-    })
+    if (componentType !== 'component') {
+      await http({
+        url: '/visual/module/updateDatasource',
+        method: 'post',
+        body: {
+          id: _data.id,
+          data: dataConfig.api.data,
+          dataType: 'api'
+        }
+      })
+    }
     props.onDataSourceChange(dataConfig)
     queryComponentData()
   }
 
   const queryComponentData = async () => {
-    const data = await http({
-      url: '/visual/module/getData',
-      method: 'post',
-      body: {
-        moduleId: _data.id,
-        dataType: 'api'
+    if (componentType !== 'component') {
+      const data = await http({
+        url: '/visual/module/getData',
+        method: 'post',
+        body: {
+          moduleId: _data.id,
+          dataType: 'api'
+        }
+      }, true)
+      if (data.code === 10000 && data.data) {
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            componentData: {
+              ...bar.componentData,
+              [_data.id]: data.data
+            }
+          },
+        })
       }
-    }, true)
-    if (data.code === 10000 && data.data) {
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          componentData: {
-            ...bar.componentData,
-            [_data.id]: data.data
-          }
-        },
-      })
     }
   }
 

@@ -275,6 +275,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
               />
               : dataSourceTypes.value === 'api' ?
                 <APIDataSource
+                  type={componentType}
                   data={_data}
                   onDataSourceChange={props.onDataSourceChange}
                 />
