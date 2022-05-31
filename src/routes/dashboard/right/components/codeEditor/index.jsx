@@ -8,6 +8,8 @@ import {
   ArrowsAltOutlined
 } from '@ant-design/icons';
 
+let hasEditFlag = false
+
 const CodeEditor = props => {
   const _data = props.data
   const [content, setContent] = useState(_data.value)
@@ -19,11 +21,18 @@ const CodeEditor = props => {
   }, [_data.value])
 
   const onChange = debounce((val) => {
+    hasEditFlag = true
     setContent(val)
     setModalContent(val)
-    _data.value = val
-    props.onChange()
   }, 300)
+
+  const onBlur = (e) => {
+    console.log('onBlur', e)
+    if(hasEditFlag){
+      _data.value = content
+      props.onChange()
+    }
+  }
 
   const expandHandle = () => {
     setFullScreen(true)
@@ -42,7 +51,7 @@ const CodeEditor = props => {
   }
 
   return (
-    <div className="code-wraper">
+    <div className="code-wraper" onBlur={onBlur}>
       <MonacoEditor
         language={_data.language}
         theme="vs-dark"
