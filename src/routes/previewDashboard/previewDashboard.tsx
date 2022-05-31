@@ -111,7 +111,7 @@ const PreViewDashboard = ({ history, location }: any) => {
             {
               componentsList.map((item, index) => <>
                 <EveryComponent key={index}
-                  allData={item}
+                  componentData={item}
                   screenWidthRatio={screenWidthRatio}
                   screenHeightRatio={screenHeightRatio}
                 />

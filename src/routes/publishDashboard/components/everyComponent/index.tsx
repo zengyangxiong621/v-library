@@ -3,15 +3,15 @@ import './index.less'
 import { MORENYINCANG, WEIZHICHICUN, WENBENYANGSHI, DUIQIFANGSHI, YINYING } from './type'
 
 import { getTargetStyle } from './type'
+import RemoteBaseComponent from '@/components/RemoteBaseComponent';
+import { getFields } from '@/utils/data'
 
 // 按屏幕比例适配", value: "0"}
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ allData, screenWidthRatio, screenHeightRatio }: any) => {
-  const { id, name, config, staticData: { data } } = allData
-  // 文本信息 | 图片路径
-  const { text, imageUrl } = data[0]
+const EveryComponent = ({ componentData, screenWidthRatio, screenHeightRatio }: any) => {
+  const { moduleName, config, staticData: { data } } = componentData
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -45,11 +45,13 @@ const EveryComponent = ({ allData, screenWidthRatio, screenHeightRatio }: any) =
     <div className='preview-component-wrap'
       style={componentStyle}
     >
-      {
-        text
-          ? <p style={textStyle}>{text}</p>
-          : <img style={{ width: '100%', height: '100%' }} className='fill-img' src={require('../../../../assets/images/发布.png')} alt="图片正在加载…" />
-      }
+      <RemoteBaseComponent
+        version={'1.0.0'}
+        name={moduleName}
+        componentConfig={componentData}
+        fields={getFields(componentData)}
+        comData={data}
+      ></RemoteBaseComponent>
     </div>
   )
 }

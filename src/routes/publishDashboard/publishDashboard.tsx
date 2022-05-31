@@ -92,7 +92,7 @@ const PublishDashboard = ({ history, location }: any) => {
           >
             {
               componentsList.map((item, index) => <>
-                <EveryComponent key={index} allData={item}
+                <EveryComponent key={index} componentData={item}
                   screenWidthRatio={screenWidthRatio}
                   screenHeightRatio={screenHeightRatio}
                 />
