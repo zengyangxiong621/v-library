@@ -5,7 +5,7 @@ export const getLayerIds = (layers: any[]) => {
   const recursiveFn = (arr: any[]) => {
     for(let i=0,len=arr.length; i<len; i++) {
       const item = arr[i]
-      if(!Object.hasOwn(item, MODULES)) {
+      if(!item[MODULES]) {
         res.push(item.id)
       } else {
         recursiveFn(item[MODULES])
