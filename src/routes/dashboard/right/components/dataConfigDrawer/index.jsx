@@ -450,7 +450,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }
 
   const confirmFilter = async (item) => {
-    console.log('触发1', item)
     if (item.isNewAdd) {
       await saveNewFifterHandle()
     } else {
@@ -460,8 +459,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
 
   const saveNewFifterHandle = async () => {
     // 新增保存,创建过滤器，把过滤器添加到当前组件
-    console.log('触发2')
-    console.log('filterOfAdd', filterOfAdd)
     const { id, enable, isEditName, isAddKey, status, isNewAdd, ...rest } = filterOfAdd
     const data = await http({
       url: '/visual/module/filter/create',
@@ -492,6 +489,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         })
         await props.onSelectedFiltersChange(data.id, componentFilters)
       } else {
+        console.log('这里吗这里吗')
         // 把过滤器添加到当前组件
         const res = await http({
           url: '/visual/module/filter/add',
@@ -500,12 +498,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             filterId: data.id,
             id: bar.key[0]
           }
-        })
-        const componentConfig = { ...bar.componentConfig }
-        componentConfig.filters = res.filters
-        dispatch({
-          type: 'bar/setComponentConfig',
-          payload: componentConfig
         })
         const componentFilters = [...bar.componentFilters]
         componentFilters.push({
@@ -520,6 +512,13 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           payload: {
             componentFilters
           }
+        })
+        // 先更新数据过滤器再更新组件内的数据过滤器
+        const componentConfig = { ...bar.componentConfig }
+        componentConfig.filters = res.filters
+        dispatch({
+          type: 'bar/setComponentConfig',
+          payload: componentConfig
         })
       }
       // 更新过滤器信息
