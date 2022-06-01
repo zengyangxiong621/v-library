@@ -384,6 +384,9 @@ export default {
         type: 'updateTree',
         payload: filterNullLayers,
       })
+      yield put({
+        type: 'updateContainersEnableAndModules'
+      })
     },
     // 复制图层
     * copy({ payload }: any, { select, call, put }: any): any {
@@ -1100,13 +1103,16 @@ export default {
       // 更新数据容器的状态、绑定的组件数组
       const enableContainerList: any = []
       state.components.forEach((component) => {
-        component.dataContainers.forEach((container: any) => {
-          enableContainerList.push({
-            componentName: component.name,
-            componentId: component.id,
-            containerId: container.id,
+        const layer = findLayerById(state.treeData, component.id)
+        if (layer) {
+          component.dataContainers.forEach((container: any) => {
+            enableContainerList.push({
+              componentName: component.name,
+              componentId: component.id,
+              containerId: container.id,
+            })
           })
-        })
+        }
       })
       state.dataContainerList.forEach((container: any) => {
         container.enable = !!enableContainerList.find((item: any) => item.containerId === container.id)
