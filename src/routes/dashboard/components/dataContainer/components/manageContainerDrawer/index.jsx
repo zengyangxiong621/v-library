@@ -26,7 +26,6 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
   }
   const handleChoose = (id) => {
     const layer = findLayerById(bar.treeData, id)
-    console.log('layer', layer)
     dispatch({
       type: 'bar/selectLayers',
       payload: [layer]
