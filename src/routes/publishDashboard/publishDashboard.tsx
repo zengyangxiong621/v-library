@@ -18,6 +18,8 @@ const PublishDashboard = ({ history, location }: any) => {
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
   const [pageStyle, setPageStyle] = useState({})
+  // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
+  const [overflowStyle, setOverflowStyle] = useState({})
   const { pathname } = location
   const dashboardId = pathname.split('/').pop()
 
@@ -31,13 +33,6 @@ const PublishDashboard = ({ history, location }: any) => {
       switch (displayName) {
         case '屏幕大小':
           target = { width, height }
-          break;
-        case '缩放设置':
-          if (options && Array.isArray(options)) {
-            target = options.find(x => x.value === value)
-          }
-          break;
-        default:
           break;
       }
       map[displayName] = target
@@ -54,13 +49,10 @@ const PublishDashboard = ({ history, location }: any) => {
     if (Array.isArray(components)) {
       setIsLoaded(true)
       document.title = dashboardName
-    } else {
-      message.error('出错了，请稍后重试');
     }
     // 要根据layers来渲染组件，所以最终需要过滤掉某些components
     const layerIds = getLayerIds(layers)
     // 最终需要渲染的components
-    // eslint-disable-next-line array-callback-return
     const hadFilterComponents = components.filter((item: any) => layerIds.includes(item.id))
     setComponentsList(hadFilterComponents)
     setDashboardConfig(dashboardConfig)
@@ -70,12 +62,44 @@ const PublishDashboard = ({ history, location }: any) => {
     const winW = window.innerWidth
     const winH = window.innerHeight
     const { width, height } = screenInfoMap['屏幕大小']
-    setScreenWidthRatio(winW / width)
-    setScreenHeightRatio(winH / height)
 
     const finalStyle: any = {
       background: screenInfoMap['背景'],
       backgroundImage: screenInfoMap['背景图'] ? require(screenInfoMap['背景图']) : ''
+    }
+    // 根据缩放模式来展示
+    const scaleMode = screenInfoMap['缩放设置']
+    switch (scaleMode) {
+      case '0':
+        finalStyle.width = '100vw'
+        finalStyle.height = '100vh'
+        const wRatio = winW / width
+        const hRatio = winH / height
+        let unifyRatio
+        if (wRatio > hRatio) {
+          unifyRatio = Math.max(wRatio, hRatio)
+        } else {
+          unifyRatio = Math.min(wRatio, hRatio)
+        }
+        setScreenWidthRatio(unifyRatio)
+        setScreenHeightRatio(unifyRatio)
+        break;
+      case '1':
+        finalStyle.width = '100vw'
+        finalStyle.height = '100vh'
+        setScreenWidthRatio(winW / width)
+        setScreenHeightRatio(winH / height)
+        break;
+      case '2':
+        const finalW = winW > width ? width : '100vw'
+        const finalH = winH > height ? height : '100vh'
+        setOverflowStyle({
+          width: finalW,
+          height: finalH,
+          overflow: 'auto',
+          ...finalStyle
+        })
+        break;
     }
     setPageStyle(finalStyle)
   }
@@ -87,17 +111,20 @@ const PublishDashboard = ({ history, location }: any) => {
     <>
       {
         isLoaded ?
-          <div className='PublishDashboard-wrap'
-            style={pageStyle}
-          >
-            {
-              componentsList.map((item, index) => <>
-                <EveryComponent key={index} componentData={item}
-                  screenWidthRatio={screenWidthRatio}
-                  screenHeightRatio={screenHeightRatio}
-                />
-              </>)
-            }
+          <div className='customScrollStyle' style={overflowStyle}>
+            <div className='publishDashboard-wrap'
+              style={pageStyle}
+            >
+              {
+                componentsList.map((item, index) => <>
+                  <EveryComponent key={index}
+                    componentData={item}
+                    screenWidthRatio={screenWidthRatio}
+                    screenHeightRatio={screenHeightRatio}
+                  />
+                </>)
+              }
+            </div>
           </div>
           :
           <Spin
@@ -109,5 +136,4 @@ const PublishDashboard = ({ history, location }: any) => {
     </>
   )
 }
-
 export default memo(withRouter(PublishDashboard))

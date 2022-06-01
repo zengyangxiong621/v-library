@@ -11,7 +11,6 @@ import { getFields } from '@/utils/data'
 // 2: {name: "原比例展示溢出滚动
 
 const EveryComponent = ({ componentData, screenWidthRatio, screenHeightRatio }: any) => {
-  // console.log('w', screenHeightRatio);
   const { moduleName, config, staticData: { data } } = componentData
 
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
