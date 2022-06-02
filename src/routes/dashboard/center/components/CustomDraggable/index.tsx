@@ -7,7 +7,7 @@ import './index.less'
 import {ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse} from './type'
 import {deepClone, layerComponentsFlat, calcGroupPosition} from '../../../../../utils'
 import {generateTreeData} from '../../../../../utils/sideBar'
-
+import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
 
@@ -517,6 +517,7 @@ const CustomDraggable
           let isGroup: boolean = (COMPONENTS in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
+          let events: any
           let style_config, staticData, style_dimension_config
           // 群组
           if (COMPONENTS in layer) {
@@ -537,9 +538,6 @@ const CustomDraggable
           } else {
             // 组件
             component = components.find(item => item.id === layer.id)
-            // console.log('组件 layer id', layer.id)
-            // console.log('组件', component)
-
             if (component) {
               staticData = component.staticData
               style_config = component.config
@@ -553,12 +551,12 @@ const CustomDraggable
                   }
                 })
               }
+
+              events = component.events
+              console.log('events', events)
             }
           }
-          console.log('-------------------------------------')
-          console.log('bar.componentData', bar.componentData[layer.id])
-          const compData = getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)
-          console.log('----------------------------------getComDataWithFilters', compData)
+
           return (
             <SingleDraggable
               dimensionConfig={style_dimension_config}
@@ -588,8 +586,8 @@ const CustomDraggable
                 key={layer.id}
                 onClick={(ev) => handleClick(ev, layer, config)}
                 onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
-                onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
-                onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
+                // onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
+                // onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
                 onContextMenu={(ev) => mouseRightClick(ev, layer, component, config)}
                 className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
                 style={{
@@ -623,18 +621,19 @@ const CustomDraggable
                           // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                           //   <CompImage componentConfig={component}/>
                           
-                          <RemoteBaseComponent 
-                            version={'1.0.0'} 
-                            name={layer.moduleName} 
+                          <SingleComponent
+                            events={events}
+                            version={'1.0.0'}
+                            name={layer.moduleName}
                             componentConfig={component}
                             fields={getFields(component)}
-                            comData={compData}
-                          ></RemoteBaseComponent>
+                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)}
+                          ></SingleComponent>
                         }
                       </div>
                     </>
                 }
-                <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
+                {/*<div style={{position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>*/}
                 {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                 <div className="component-border">
                       <span
