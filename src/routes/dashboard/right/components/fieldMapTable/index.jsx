@@ -112,7 +112,6 @@ export class EditableTable extends React.Component {
         title: '状态',
         dataIndex: 'status',
         render: (text, record, index) => {
-          console.log('text', text, record)
           return (props.fieldsKeys && props.fieldsKeys.includes(record.value) ?
             <CheckOutlined style={{ color: 'green' }} /> :
             <CloseOutlined style={{ color: 'red' }} />)
@@ -128,7 +127,7 @@ export class EditableTable extends React.Component {
 
   handleSave = (row) => {
     const newData = [...this.state.dataSource];
-    const index = newData.findIndex((item) => row.key === item.key);
+    const index = newData.findIndex((item) => row.name === item.name);
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
     this.setState({
