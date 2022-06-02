@@ -152,11 +152,12 @@ function App({ bar, dispatch, location }: any) {
    */
 
   const showWhichBar = (whichBar: string) => {
-    console.log('whitchBar', whichBar)
     if (['zujian', 'sucai'].includes(whichBar)) {
       setZujianORsucai(whichBar)
       setShowTopBar(true)
       return
+    } else {
+      setShowTopBar(false)
     }
     if (whichBar === 'shujurongqi') {
       setDataContainerVisible(true)
