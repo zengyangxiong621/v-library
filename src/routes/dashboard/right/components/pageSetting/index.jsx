@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const dashboardId = window.location.pathname.split('/')[2]
 
-let num = 0
+let isSettingsChange = false
 const PageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
@@ -33,13 +33,13 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if(num <=1){
-      num++
+    if(!isSettingsChange){
       setKey(uuidv4())
     }
   }, [bar.pageConfig])
 
   const settingsChange = debounce(() => {
+    isSettingsChange = true
     saveData()
   }, 300)
 
