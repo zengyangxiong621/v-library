@@ -605,6 +605,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   onChange={val => { selectComponentChange(val, action) }}
                                   treeCheckable={true}
                                   showCheckedStrategy={SHOW_PARENT}
+                                  value={action.component}
                                   placeholder=''
                                   style={{ width: '100%' }}
                                   dropdownClassName="action-select"

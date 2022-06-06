@@ -3,7 +3,7 @@ import './index.less'
 import { MORENYINCANG, WEIZHICHICUN, WENBENYANGSHI, DUIQIFANGSHI, YINYING } from './type'
 
 import { getTargetStyle } from './type'
-
+import ComponentEventContainer from '@/components/componentEventContainer'
 
 const EveryComponent = ({ allData }: any) => {
   const { id, name, config, staticData: { data } } = allData
@@ -39,6 +39,18 @@ const EveryComponent = ({ allData }: any) => {
           : <img className='fill-img' src={require('../../../../assets/images/发布.png')} alt="图片正在加载…" />
       }
     </div>
+    /* 自定义事件
+          <ComponentEventContainer
+        id={id}
+        events={events}
+        version={'1.0.0'}
+        name={moduleName}
+        componentConfig={componentData}
+        fields={getFields(componentData)}
+        comData={data}
+      >
+      </ComponentEventContainer>
+    * */
   )
 }
 
