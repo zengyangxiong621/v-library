@@ -6,16 +6,17 @@ import cloneDeep from 'lodash/cloneDeep';
  * @param {*} componentConfig 当前组件的配置信息
  * @param {*} componentFilters 当前画布所有的过滤器信息
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
- * @returns 
+ * @param {*} dataContainerList 当前画布的所有数据容器集合
+ * @returns
  */
-const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList) => {
+const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList) => {
   const dataFrom = componentConfig.dataFrom || 0
   let resData = null
   let currentData = null
   if (dataFrom === 0) {
     currentData = cloneDeep(componentData[componentConfig.id])
   } else {
-    currentData = setDataContainerResult(componentConfig, dataContainerDataList)
+    currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters)
   }
   if (currentData) {
     // 如果使用数据过滤器，则需要过滤数据
@@ -66,24 +67,69 @@ const dataFilterHandler = (data, componentConfig, componentFilters) => {
   }
 
 }
-
+// 数据容器数据过滤
+const handleDataFilter = (data, allFilters, componentFilters) => {
+  const filters = allFilters.map(item => {
+    const filterDetail = componentFilters.find(jtem => jtem.id === item.id)
+    return {
+      ...filterDetail,
+      enable: item.enable,
+    }
+  }).filter(item => item.enable)
+  if (filters.length === 0) {
+    return data
+  }
+  try {
+    const functions = filters.map(item => {
+      return (new Function('data', item.content))
+    })
+    const resultArr = []
+    functions.forEach((fn, index) => {
+      if (index === 0) {
+        resultArr.push(fn(data))
+      } else {
+        resultArr.push(fn(resultArr[index - 1]))
+      }
+    })
+    return resultArr[resultArr.length - 1]
+  } catch (e) {
+    return []
+  }
+}
 /**
  * 获取组件数据容器的数据
  * @param {*} componentConfig 当前组件的配置信息
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
- * @returns 
+ * @param {*} dataContainerList 当前画布的所有数据容器集合
+ * @param {*} componentFilters 当前画布的过滤器集合
+ * @returns
  */
-const setDataContainerResult = (componentConfig, dataContainerDataList) => {
+const setDataContainerResult = (componentConfig, dataContainerDataList, dataContainerList, componentFilters) => {
   if (componentConfig.dataContainers) {
     if (componentConfig.dataContainers.length === 1) {
+      console.log('componentConfig.dataContainers', componentConfig.dataContainers)
+      console.log('length', componentConfig.dataContainers.length)
       const id = componentConfig.dataContainers[0].id
-      return dataContainerDataList.find(item => item.id === id).data
+      const container = dataContainerList.find(item => item.id === id)
+      console.log('id', id)
+      console.log('dataContainerDataList', dataContainerDataList)
+      let data = dataContainerDataList.find(item => item.id === id).data
+      console.log('data', data)
+      if (container.useFilter) {
+        data = handleDataFilter(data, container.filters, componentFilters )
+      }
+      return data
     }
     if (componentConfig.dataContainers.length > 1) {
       const dataContainerIds = componentConfig.dataContainers.map(item => item.id)
       return dataContainerDataList.reduce((pre, cur) => {
         if (dataContainerIds.includes(cur.id)) {
-          pre.push(cur.data)
+          const container = dataContainerList.find(item => item.id === cur.id)
+          let data = cur.data
+          if (container.useFilter) {
+            data = handleDataFilter(cur.data, container.filters, componentFilters)
+          }
+          pre.push(data)
         }
         return pre
       }, [])

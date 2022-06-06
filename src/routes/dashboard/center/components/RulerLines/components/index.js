@@ -57,27 +57,22 @@ const SingleLine = (props) => {
               padding: '2px',
               height: '1000000px',
               position: 'absolute',
-              top: '-5000px',
-              cursor: 'e-resize',
+              top: '-50000px',
+              cursor: 'ew-resize',
               display: line.display,
               zIndex: 10000000,
             } }>
-            <div>
-              X:{ Math.ceil(position.x) }
-            </div>
             {
               isShow ? <div
                 style={ {
-                  transform: `scale(${ 1 / scale })`,
                   position: 'absolute',
-                  top: '5000px',
-                  width: 40,
-                  height: 20,
-                  background: 'white',
-                  fontSize: 10,
-                  lineHeight: '20px',
+                  top: '50000px',
+                  width: 60,
+                  height: '30px',
+                  fontSize: Math.ceil(20 / scale),
+                  lineHeight: '30px',
                 } }>
-                X:{ Math.ceil(position.x) }
+                Y:{ Math.ceil(position.y) }
               </div> : ''
             }
           </div> :
@@ -87,7 +82,7 @@ const SingleLine = (props) => {
               padding: '2px',
               width: '1000000px',
               position: 'absolute',
-              left: '-5000px',
+              left: '-50000px',
               cursor: 'n-resize',
               display: line.display,
               zIndex: 10000000,
@@ -96,11 +91,10 @@ const SingleLine = (props) => {
               isShow ? <div
                 style={ {
                   position: 'absolute',
-                  left: '5000px',
+                  left: '50000px',
                   width: 60,
                   height: '30px',
-                  background: 'white',
-                  fontSize: 20,
+                  fontSize: Math.ceil(20 / scale),
                   lineHeight: '30px',
                 } }>
                 Y:{ Math.ceil(position.y) }

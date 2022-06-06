@@ -16,7 +16,6 @@ const RemoteBaseComponent = (props: any) => {
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`)
     const { default: component} = (window as any).VComponents;
-    console.log(component, 'component====================')
     setComponent(() => component);
   }, [importComponent, setComponent])
 

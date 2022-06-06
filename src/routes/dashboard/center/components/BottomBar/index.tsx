@@ -76,7 +76,7 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
       </section>
       <section className="left">
       </section>
-      <section className="right">
+      <section className="right g-flex g-items-center">
         <MinusCircleOutlined
           style={ { color: 'white', fontSize: '16px', cursor: 'pointer', marginRight: '16px' } }
           onClick={ () => handleScreen(false) }

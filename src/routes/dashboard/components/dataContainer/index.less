@@ -35,7 +35,8 @@
     background-color: @input-bg;
     border-color: @input-border-color;
     .ant-input-clear-icon {
-      color: @input-icon-color
+      color: @input-icon-color;
+      display: flex;
     }
   }
   .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused {
@@ -99,6 +100,9 @@
         }
         .ant-drawer-body {
           @apply g-p-4;
+          &::-webkit-scrollbar {
+            display:none
+          }
         }
       }
     }

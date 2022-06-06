@@ -24,8 +24,9 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
   const [inputValue, setInputValue] = useState('')
   const [filterDataList, setFilterDataList] = useState(bar.dataContainerList)
   useEffect(() => {
+    console.log('222222222222222', bar.dataContainerList)
     setFilterDataList(bar.dataContainerList)
-  }, [bar.dataContainerList])
+  }, [bar.dataContainerList.length, bar.dataContainerList])
   const showDrawer = () => {
     props.onChange(true)
   }
@@ -49,7 +50,7 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
     setItemVisible(true)
     setItemData(containerData)
   }
-  const handleContainerDelete = async (id) => {
+  const handleContainerDelete = async (id, components) => {
     const data = await http({
       method: 'delete',
       url: `/visual/container/delete/${ id }`,
@@ -57,11 +58,15 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
         dashboardId: bar.dashboardId,
       },
     })
+
     if (data) {
       message.success('操作成功')
       dispatch({
         type: 'bar/deleteDataContainer',
-        payload: id,
+        payload: {
+          containerId: id,
+          componentIds: components.map(item => item.id)
+        },
       })
     }
   }
@@ -154,7 +159,7 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
               maxLength={30}
               suffix={ <SearchOutlined
                 className="input-search-icon"
-                onClick={ handleSearch }
+                onClick={ () => handleSearch(inputValue) }
               /> }
               value={ inputValue }
               onChange={ (e) => setInputValue(e.target.value) }

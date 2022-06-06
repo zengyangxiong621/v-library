@@ -1,15 +1,16 @@
 import {useState, useEffect, useRef} from 'react'
 import {connect} from 'dva'
 import Draggable from 'react-draggable'
-import SingleDraggable from '../SingleDraggable/index'
+import SingleDraggable from "../../../dashboard/center/components/SingleDraggable/index";
 import * as React from 'react'
 import './index.less'
 import {ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse} from './type'
-import {deepClone, layerComponentsFlat, calcGroupPosition} from '../../../../../utils'
-import {generateTreeData} from '../../../../../utils/sideBar'
-import SingleComponent from '../singleComponent'
-import RemoteBaseComponent from '@/components/RemoteBaseComponent';
-import { getComDataWithFilters, getFields } from '@/utils/data'
+import {deepClone, layerComponentsFlat, calcGroupPosition} from '@/utils'
+
+import {generateTreeData} from '@/utils/sideBar'
+// import Text from '../Text'
+import Text from '@/components/charts/custom/text'
+import CompImage from '@/components/charts/custom/image'
 
 import {
   STYLE,
@@ -34,7 +35,7 @@ import {
   SHADOW,
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
-} from '../../../../../constant/home'
+} from '@/constant/home'
 
 
 enum STYLE_ENUM {
@@ -56,6 +57,7 @@ const CustomDraggable
   const allComponentDOMs = bar.allComponentDOMs
   let supportLinesRef = bar.supportLinesRef
   const [startPosition, setStartPosition] = useState({x: 0, y: 0})
+  const [copyTreeData, setCopyTreeData] = useState(deepClone(treeData))
 
   const nodeRef: any = useRef(null)
   const currentTimes: any = useRef(0)
@@ -67,7 +69,9 @@ const CustomDraggable
     return () => {
     }
   }, [])
-
+  useEffect(() => {
+    setCopyTreeData(deepClone(treeData).reverse())
+  }, [treeData])
   /**
    * 鼠标事件顺序： dragStart, drag, dragEnd, click
    */
@@ -496,6 +500,7 @@ const CustomDraggable
       })
     }
   }
+  // let copyTreeData = deepClone(treeData).reverse()
   return (
     <div className="c-custom-draggable">
       {
@@ -513,7 +518,6 @@ const CustomDraggable
           let isGroup: boolean = (COMPONENTS in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
-          let events: any
           let style_config, staticData, style_dimension_config
           // 群组
           if (COMPONENTS in layer) {
@@ -534,6 +538,9 @@ const CustomDraggable
           } else {
             // 组件
             component = components.find(item => item.id === layer.id)
+            // console.log('组件 layer id', layer.id)
+            // console.log('组件', component)
+
             if (component) {
               staticData = component.staticData
               style_config = component.config
@@ -547,9 +554,6 @@ const CustomDraggable
                   }
                 })
               }
-
-              events = component.events
-              console.log('events', events)
             }
           }
           return (
@@ -581,12 +585,12 @@ const CustomDraggable
                 key={layer.id}
                 onClick={(ev) => handleClick(ev, layer, config)}
                 onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
-                // onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
-                // onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
+                onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
+                onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
                 onContextMenu={(ev) => mouseRightClick(ev, layer, component, config)}
                 className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
                 style={{
-                  ...config.style,
+                  // ...config.style,
                   // border: '1px solid gray',
                   visibility: !layer.isShow ? 'hidden' : 'unset',
                 }}>
@@ -613,33 +617,13 @@ const CustomDraggable
                     </div> : <>
                       <div data-id={layer.id} style={{width: '100%', height: '100%'}}>
                         {
-                          // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
-                          //   <CompImage componentConfig={component}/>
-<<<<<<< HEAD
-                          
-                          <SingleComponent
-                            events={events}
-                            version={'1.0.0'}
-                            name={layer.moduleName}
-                            componentConfig={component}
-                            fields={getFields(component)}
-                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)}
-                          ></SingleComponent>
-=======
-                          // <Da componentConfig={component}/>
-                          <RemoteBaseComponent 
-                            version={'1.0.0'} 
-                            name={layer.moduleName} 
-                            componentConfig={component}
-                            fields={getFields(component)}
-                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)}
-                          ></RemoteBaseComponent>
->>>>>>> f3fbd061d4be039954444eab80e6a9270c3c489e
+                          layer.moduleName === 'wordCloud' ? <Text componentConfig={component}/> :
+                            <CompImage componentConfig={component}/>
                         }
                       </div>
                     </>
                 }
-                {/*<div style={{position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>*/}
+                <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
                 {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                 <div className="component-border">
                       <span

@@ -180,7 +180,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
           onPressEnter={(e) => oPressEnter(e)}
           onBlur={(e) => oBlur(e)}
         />
-        <span className='title-text' style={{
+        <span className='left-tree-title-text' style={{
           display: showRenameInput ? 'none' : 'block'
         }}>{name}</span>
       </div>

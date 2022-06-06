@@ -46,11 +46,13 @@
         background: #2482ff;
       }
       .icons-wrap {
+        position: relative;
         display: flex;
         justify-content: flex-end;
         padding: 16px 24px 0 0;
         .more-icon {
-          position: relative;
+          display: flex;
+          align-items: center;
           max-width: 34px;
         }
         .more {
@@ -75,8 +77,8 @@
         .more-icon:hover .more {
           min-width: 100px;
           position: absolute;
-          top: 20px;
-          left: 10px;
+          top: 36px;
+          right: 8px;
           display: block;
           z-index: 99999;
           background-color: gray;

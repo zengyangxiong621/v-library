@@ -26,7 +26,6 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
   }
   const handleChoose = (id) => {
     const layer = findLayerById(bar.treeData, id)
-    console.log('layer', layer)
     dispatch({
       type: 'bar/selectLayers',
       payload: [layer]
@@ -112,7 +111,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
           placeholder="请输入"
           suffix={ <SearchOutlined
             className="input-search-icon"
-            onClick={ (e) => handleSearch(e.target.value) }
+            onClick={ (e) => handleSearch(searchValue) }
           /> }
           value={ searchValue }
           onChange={ (e) => setSearchValue(e.target.value) }

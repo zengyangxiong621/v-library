@@ -60,6 +60,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
             data: containerData.staticData.data
           }
         })
+        console.log('setResultData1')
         setResultData(containerData.staticData.data)
         setCopyData(containerData)
       } else {
@@ -70,10 +71,14 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         if (data) {
           if (props.data.useFilter) {
             resultData = handleDataFilter(data.data, props.data.filters)
+            console.log('setResultData2')
             setResultData(resultData)
+          } else {
+            console.log('setResultData3')
+            setResultData(data.data)
           }
-          setResultData(data.data)
         } else {
+          console.log('setResultData4')
           setResultData(resultData)
         }
 
@@ -109,10 +114,45 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
   // 数据类型切换
   const handleDataTypeChange = async (value) => {
-    console.log('handleDataTypeChange', value)
-
     setCopyData({...copyData, dataType: value})
     await updateDataContainer({...copyData, dataType: value})
+    if (value === 'static') {
+      const data = copyData.staticData.data
+      if (copyData.useFilter) {
+        let filterData = handleDataFilter(data, copyData.filters)
+        setResultData(filterData)
+      } else {
+        setResultData(data)
+      }
+      return 
+    }
+    try {
+      const data = await http({
+        method: 'get',
+        url: '/visual/container/data/get',
+        params: {
+          id: copyData.id
+        }
+      })
+      if (data) {
+        message.success('操作成功')
+        dispatch({
+          type: 'bar/updateDataContainer',
+          payload: {
+            containerData: {...copyData, dataType: value},
+          }
+        })
+        if (copyData.useFilter) {
+          let filterData = handleDataFilter(data, copyData.filters)
+          setResultData(filterData)
+        } else {
+          setResultData(data)
+        }
+      }
+    } catch (err) {
+      setResultData([])
+    }
+
   }
   // 静态数据变化
   const handleStaticDataChange = async (data) => {
@@ -128,6 +168,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         data,
       },
     })
+
     dispatch({
       type: 'bar/updateDataContainer',
       payload: {
@@ -140,9 +181,16 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         data
       }
     })
+    if (copyData.useFilter) {
+      let filterData = handleDataFilter(data, copyData.filters)
+      setResultData(filterData)
+    } else {
+      setResultData(data)
+    }
   }
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
+    console.log('dataConfig', dataConfig)
     setCopyData({...copyData, dataConfig})
     await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
     try {
@@ -153,8 +201,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           id: copyData.id
         }
       })
-      console.log('gggggggggggggggg')
-      console.log('data', data)
       if (data) {
         message.success('操作成功')
         dispatch({
@@ -178,7 +224,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
   // 数据过滤器开关
   const filterBoxChange = async (e) => {
-
     setCopyData({...copyData, useFilter: e.target.checked})
     await updateDataContainer({...copyData, useFilter: e.target.checked})
     dispatch({
@@ -194,20 +239,18 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     setResultData(data)
   }
   // 数据过滤器变化
-  const selectedFiltersChange = async (value) => {
+  const selectedFiltersChange = async (filterId, componentFilters) => {
     // 绑定/解绑过滤器
     const data = await http({
       method: 'post',
       url: '/visual/container/filter',
       body: {
         id: copyData.id,
-        filterId: value,
+        filterId,
         add: true
       }
     })
-    setCopyData({
-      ...copyData, filters: data.filters
-    })
+    setCopyData(data)
     dispatch({
       type: 'bar/updateDataContainer',
       payload: {
@@ -215,13 +258,14 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       }
     })
     let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
-    containerData = handleDataFilter(containerData, data.filters)
+    containerData = handleDataFilter(containerData, data.filters, componentFilters)
     setResultData(containerData)
   }
   // 数据过滤
-  const handleDataFilter = (data, allFilters) => {
+  const handleDataFilter = (data, allFilters, componentFilters = null) => {
     const filters = allFilters.map(item => {
-      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      const filterDetail = (componentFilters || bar.componentFilters).find(jtem => jtem.id === item.id)
+      console.log('filterDetail', filterDetail)
       return {
         ...filterDetail,
         enable: item.enable,
@@ -246,6 +290,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     } catch (e) {
       return []
     }
+    return []
   }
   // 更新过滤器
   const updateFilters = (data) => {
@@ -320,7 +365,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
           <LeftOutlined onClick={onClose} className="g-cursor-pointer" style={{fontSize: 12}}/>
           数据容器
-          <CloseOutlined onClick={onClose} className="g-cursor-pointer" style={{}}/>
+          <CloseOutlined onClick={onClose} className="g-cursor-pointer"/>
         </div>
       }
       closable={false}
@@ -338,6 +383,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         <Input
           ref={inputRef}
           value={copyData.name}
+          maxLength={30}
           onChange={(e) => setCopyData({...copyData, name: e.target.value})}
           onPressEnter={() => {
             updateDataContainerName(copyData)

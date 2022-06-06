@@ -1,10 +1,24 @@
 {
   "id": "3236239",
-  "name": "网络安全运营中心-可视化大屏搭建",
+  "name": "SOC-可视化大屏搭建",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "30131619",
+      "name": "模型-自定义数据容器",
+      "font_class": "moxing-zidingyishujurongqi",
+      "unicode": "f5ec",
+      "unicode_decimal": 62956
+    },
+    {
+      "icon_id": "1312011",
+      "name": "转换",
+      "font_class": "zhuanhuan",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
     {
       "icon_id": "3930485",
       "name": "排序",

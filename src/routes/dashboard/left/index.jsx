@@ -168,6 +168,7 @@ const Left = ({ dispatch, bar, operate }) => {
         break
     }
     activeIconRef.current = icon
+    console.log('icon', icon)
     dispatch({
       type: `bar/${icon}`,
       payload: finalPayload,
@@ -417,7 +418,7 @@ const topBarIcons = [
     icon: 'icon-zhiding',
   },
   {
-    key: 'placeBottom',
+    key: 'placedBottom',
     text: '置底',
     icon: 'icon-zhidi',
   },

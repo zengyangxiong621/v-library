@@ -23,19 +23,27 @@ const DataResult = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
   const type = props.type
   const componentResultData = props.resultData || []
-  const [resultData, setResultData] = useState(resultCodeData)
+  const [resultData, setResultData] = useState({...resultCodeData, value: JSON.stringify(componentResultData, null, 2)})
 
   useEffect(() => {
+    console.log('3')
     init()
   }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
 
   useEffect(() => {
-    initOfComponent()
+    if (type === 'component') {
+      console.log('哈哈哈哈哈哈哈哈哈或')
+      console.log('componentResultData', componentResultData)
+      console.log('哈哈哈哈哈哈哈哈哈或')
+      console.log('1')
+      initOfComponent()
+    }
   }, [componentResultData])
 
   const init = () => {
+    console.log(5)
     if (!type && type !== 'component') {
-      const resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList)
+      const resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)
       const newData = Object.assign({}, resultData, {
         value: resData ? JSON.stringify(resData, null, 2) : ''
       })
@@ -45,6 +53,7 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 
   const initOfComponent = () => {
     if (type === 'component') {
+      console.log('2')
       const newData = Object.assign({}, resultData, {
         value: JSON.stringify(componentResultData, null, 2)
       })
@@ -54,6 +63,7 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 
   const refresh = () => {
     if (type === 'component') {
+      console.log('4')
       initOfComponent()
     } else {
       init()

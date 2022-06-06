@@ -28,11 +28,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     mountAnimation: bar.treeData.find(item => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events
   }
-  // console.log('--------------------')
-  // console.log('componentConfig', bar.componentConfig)
   const styleConfig = componentConfig.config
-  // console.log('styleConfig', styleConfig)
-  // console.log('--------------------')
   const interactionConfig = componentConfig.interaction
 
 
@@ -76,18 +72,25 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const dataContainerChange = (dataContainerIds) => {
-    componentConfig.dataContainers = dataContainerIds.map((id, index) => ({
-      id,
-      enable: true,
-      rank: index
-    }))
     dispatch({
-      type: 'bar/setComponentConfig',
-      payload: componentConfig
+      type: 'bar/componentsBindContainer',
+      payload:{
+        componentConfig,
+        dataContainerIds
+      }
     })
-    dispatch({
-      type: 'bar/updateContainersEnableAndModules'
-    })
+    // componentConfig.dataContainers = dataContainerIds.map((id, index) => ({
+    //   id,
+    //   enable: true,
+    //   rank: index
+    // }))
+    // dispatch({
+    //   type: 'bar/setComponentConfig',
+    //   payload: componentConfig
+    // })
+    // dispatch({
+    //   type: 'bar/updateContainersEnableAndModules'
+    // })
   }
   const staticDataChange = (data) => {
     componentConfig.staticData.data = data

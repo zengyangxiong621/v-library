@@ -81,7 +81,6 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
     showWhichBar(icon)
-    console.log('icon', icon);
     switch (icon) {
       case 'fabu':
         openFabuModal(bar.dashboardId)
@@ -456,7 +455,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
           rightIconArr.map((item, index) => (
             <NavigationItem
               key={index}
-              activeIcon={activeIcon}
+              // activeIcon={activeIcon}
               getActiveIcon={getActiveIcon}
               data={item} />
           ))

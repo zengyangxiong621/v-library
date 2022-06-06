@@ -54,7 +54,7 @@ const AlignmentSetting = ({ bar, dispatch, ...props }) => {
             <i className="iconfont icon-juyouduiqi" onClick={ () => alignmentChange('right') }></i>
           </span>
         </div>
-        <h4 className="pan-title">
+{/*        <h4 className="pan-title">
           <label>排列</label>
         </h4>
         <div className="pan-content">
@@ -64,7 +64,7 @@ const AlignmentSetting = ({ bar, dispatch, ...props }) => {
           <span title="垂直分布">
             <i className="iconfont icon-vertical" onClick={ () => arrangementChange('arrange-vertical') }></i>
           </span>
-        </div>
+        </div>*/}
       </div>
     </div>
   )
