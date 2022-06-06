@@ -581,8 +581,8 @@ const CustomDraggable
                 key={layer.id}
                 onClick={(ev) => handleClick(ev, layer, config)}
                 onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
-                // onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
-                // onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
+                onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
+                onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
                 onContextMenu={(ev) => mouseRightClick(ev, layer, component, config)}
                 className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
                 style={{
@@ -615,17 +615,7 @@ const CustomDraggable
                         {
                           // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                           //   <CompImage componentConfig={component}/>
-<<<<<<< HEAD
-                          
-                          <SingleComponent
-                            events={events}
-                            version={'1.0.0'}
-                            name={layer.moduleName}
-                            componentConfig={component}
-                            fields={getFields(component)}
-                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList)}
-                          ></SingleComponent>
-=======
+
                           // <Da componentConfig={component}/>
                           <RemoteBaseComponent 
                             version={'1.0.0'} 
@@ -634,12 +624,11 @@ const CustomDraggable
                             fields={getFields(component)}
                             comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)}
                           ></RemoteBaseComponent>
->>>>>>> f3fbd061d4be039954444eab80e6a9270c3c489e
                         }
                       </div>
                     </>
                 }
-                {/*<div style={{position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>*/}
+                <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
                 {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                 <div className="component-border">
                       <span

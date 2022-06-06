@@ -13,7 +13,7 @@ import { getFields } from '@/utils/data'
 // 2: {name: "原比例展示溢出滚动
 
 const EveryComponent = ({ componentData, screenWidthRatio, screenHeightRatio }: any) => {
-  const { moduleName, config, staticData: { data } } = componentData
+  const { moduleName, events, id, config, staticData: { data } } = componentData
 
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
@@ -49,21 +49,7 @@ const EveryComponent = ({ componentData, screenWidthRatio, screenHeightRatio }: 
     <div className='preview-component-wrap'
       style={componentStyle}
     >
-      <RemoteBaseComponent
-        version={'1.0.0'}
-        name={moduleName}
-        componentConfig={componentData}
-        fields={getFields(componentData)}
-        comData={data}
-      ></RemoteBaseComponent>
-      {/* {
-        text
-          ? <p style={textStyle}>{text}</p>
-          : <img className='fill-img' src={require('../../../../assets/images/发布.png')} alt="图片正在加载…" />
-      } */}
-    </div>
-    /* 自定义事件
-          <ComponentEventContainer
+      <ComponentEventContainer
         id={id}
         events={events}
         version={'1.0.0'}
@@ -73,7 +59,8 @@ const EveryComponent = ({ componentData, screenWidthRatio, screenHeightRatio }: 
         comData={data}
       >
       </ComponentEventContainer>
-    * */
+    </div>
+
   )
 }
 
