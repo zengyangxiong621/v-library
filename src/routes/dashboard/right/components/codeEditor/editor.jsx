@@ -8,31 +8,20 @@ import {
   ArrowsAltOutlined
 } from '@ant-design/icons';
 
-let hasEditFlag = false
-
 const CodeEditor = props => {
-  const _data = props.data
-  const [content, setContent] = useState(_data.value)
+  const [content, setContent] = useState(props.value)
   const [fullScreen, setFullScreen] = useState(false)
   const [modalContent, setModalContent] = useState(null)
 
   useEffect(() => {
-    setContent(_data.value)
-  }, [_data.value])
+    setContent(props.value)
+  }, [props.value])
 
   const onChange = debounce((val) => {
-    hasEditFlag = true
     setContent(val)
     setModalContent(val)
+    props.onChange(val)
   }, 300)
-
-  const onBlur = (e) => {
-    console.log('onBlur', e)
-    if(hasEditFlag){
-      _data.value = content
-      props.onChange()
-    }
-  }
 
   const expandHandle = () => {
     setFullScreen(true)
@@ -42,8 +31,7 @@ const CodeEditor = props => {
   const handleOk = () => {
     setContent(modalContent)
     setFullScreen(false)
-    _data.value = modalContent
-    props.onChange()
+    props.onChange(modalContent)
   }
 
   const editorDidMountHandle = (editor, monaco) => {
@@ -51,29 +39,26 @@ const CodeEditor = props => {
   }
 
   return (
-    <div className="code-wraper" onBlur={onBlur}>
+    <div className="code-wraper">
       <MonacoEditor
-        language={_data.language}
+        language={props.language}
         theme="vs-dark"
         value={content}
         options={{
           contextmenu: false,
-          readOnly: _data.readOnly
         }}
         onChange={(e) => onChange(e)}
         editorDidMount={editorDidMountHandle}
       />
-      {_data.showExpand
-        ? <Button
-          ghost
-          className="fullscreen-btn"
-          icon={<ArrowsAltOutlined />}
-          onClick={expandHandle}
-        />
-        : null}
+      <Button
+        ghost
+        className="fullscreen-btn"
+        icon={<ArrowsAltOutlined />}
+        onClick={expandHandle}
+      />
       <Modal
         width="70%"
-        title="修改数据"
+        title="编辑"
         okText="确认"
         cancelText="取消"
         visible={fullScreen}
@@ -81,12 +66,11 @@ const CodeEditor = props => {
         onCancel={() => setFullScreen(false)}>
         <MonacoEditor
           height="500"
-          language={_data.language}
+          language={props.language}
           theme="vs-dark"
           value={modalContent}
           options={{
             contextmenu: false,
-            readOnly: _data.readOnly
           }}
           onChange={(e) => setModalContent(e)}
           editorDidMount={editorDidMountHandle}

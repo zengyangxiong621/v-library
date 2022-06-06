@@ -7,7 +7,7 @@ import './index.less'
 import {ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse} from './type'
 import {deepClone, layerComponentsFlat, calcGroupPosition} from '../../../../../utils'
 import {generateTreeData} from '../../../../../utils/sideBar'
-
+import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
 
@@ -513,6 +513,7 @@ const CustomDraggable
           let isGroup: boolean = (COMPONENTS in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
+          let events: any
           let style_config, staticData, style_dimension_config
           // 群组
           if (COMPONENTS in layer) {
@@ -533,9 +534,6 @@ const CustomDraggable
           } else {
             // 组件
             component = components.find(item => item.id === layer.id)
-            // console.log('组件 layer id', layer.id)
-            // console.log('组件', component)
-
             if (component) {
               staticData = component.staticData
               style_config = component.config
@@ -549,6 +547,9 @@ const CustomDraggable
                   }
                 })
               }
+
+              events = component.events
+              console.log('events', events)
             }
           }
           return (
@@ -614,6 +615,7 @@ const CustomDraggable
                         {
                           // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                           //   <CompImage componentConfig={component}/>
+
                           // <Da componentConfig={component}/>
                           <RemoteBaseComponent 
                             version={'1.0.0'} 
