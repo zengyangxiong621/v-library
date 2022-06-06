@@ -72,7 +72,7 @@ const SingleLine = (props) => {
                   fontSize: Math.ceil(20 / scale),
                   lineHeight: '30px',
                 } }>
-                Y:{ Math.ceil(position.y) }
+                X:{ Math.ceil(position.x) }
               </div> : ''
             }
           </div> :
