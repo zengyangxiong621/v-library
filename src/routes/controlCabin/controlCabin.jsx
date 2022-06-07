@@ -54,22 +54,38 @@ const ControlCabin = props => {
   }
 
   const settings = {
-    dots: true,
+    dots: false,
     arrows: true,
     className: "center",
     centerMode: true,
     infinite: true,
-    centerPadding: "8rem",
+    centerPadding: "0",
     slidesToShow: 3,
     speed: 500,
     swipe: false,
     initialSlide: currnetIndex,
 
     afterChange: (index) => {
-      console.log(index)
       setCurrentIndex(index)
+      setStyle()
+    },
+    onInit: () => {
+      setStyle()
     }
   };
+
+  const setStyle = () => {
+    const slickItema = document.getElementsByClassName('slick-slide')
+    for (let i = 0; i < slickItema.length; i++) {
+      slickItema[i].classList.remove('control-cabin-img-active-left')
+      slickItema[i].classList.remove('control-cabin-img-active-center')
+      slickItema[i].classList.remove('control-cabin-img-active-right')
+    }
+    const sliderActives = document.getElementsByClassName('slick-active')
+    sliderActives[0].classList.add('control-cabin-img-active-left')
+    sliderActives[1].classList.add('control-cabin-img-active-center')
+    sliderActives[2].classList.add('control-cabin-img-active-right')
+  }
 
   const onClick = (index, item) => {
     if (index === currnetIndex) {
@@ -85,23 +101,29 @@ const ControlCabin = props => {
 
   return (
     <div className="control-cabin-wraper">
-      {
-        loading ?
-          <Spin tip="加载中..." />
-          : applist.length ?
-            <Slider {...settings}>
-              {applist.map((item, index) => {
-                return (
-                  <div key={index} title={item.name}>
-                    <div className="picture" onClick={() => onClick(index, item)}>
-                      <img src={item.photoUrl} alt={item.name} />
-                    </div>
-                  </div>
-                )
-              })}
-            </Slider>
-            : <Empty description="暂无数据" />
-      }
+      <div className="control-cabin-bg">
+        <div className="slide-wraper">
+          {
+            loading ?
+              <Spin tip="加载中..." />
+              : applist.length ?
+                <Slider {...settings}>
+                  {applist.map((item, index) => {
+                    return (
+                      <div key={index} title={item.name} className="control-cabin-img">
+                        <div className="picture" onClick={() => onClick(index, item)}>
+                          <img src={item.photoUrl} alt={item.name} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </Slider>
+                : <Empty description="暂无数据" />
+          }
+        </div>
+      </div>
+
+
 
     </div>
   )
