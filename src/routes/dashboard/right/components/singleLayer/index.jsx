@@ -8,6 +8,7 @@ import ComponentCard from '../componentCard'
 import DataConfig from '../dataConfig'
 import CusEvent from '../cusEvent'
 import componentLib from '../index'
+import CallbackArgs from '../callbackArgs'
 
 import {
   Tabs,
@@ -182,6 +183,10 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }, 300)
 
+  const callbackArgChange = () => {
+    console.log('callbackArg change', componentConfig)
+  }
+
   const saveEventsData = async (param) => {
     const params = {
       configs: [param],
@@ -228,6 +233,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
               <LoadAnimation data={interactionConfig} onChange={interactionChange} />
+              <CallbackArgs data={componentConfig} onChange={callbackArgChange}/>
               <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
