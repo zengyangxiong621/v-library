@@ -1030,7 +1030,6 @@ export default {
       state: IBarState,
       { payload: { layer, config } }: any,
     ) {
-      console.log('keykey')
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
       if (state.isSupportMultiple) {
