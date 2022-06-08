@@ -77,7 +77,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
       })
       setTableData(table)
     } else {
-      if (bar.componentConfig.dataConfig[dataType].fields) {
+      if (bar.componentConfig.dataConfig[dataType]?.fields) {
         table = bar.componentConfig.dataConfig[dataType].fields.map(item => {
           return {
             field: item.value,
