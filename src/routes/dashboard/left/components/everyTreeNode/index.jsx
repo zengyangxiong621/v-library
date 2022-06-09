@@ -148,7 +148,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   }
   const isSelected = bar.key.includes(id)
   // 左侧图层前组件缩略图小图标
-  const photoPath = `http://10.201.83.166:35034/modules/${moduleName}/1.0.0/thumb-${moduleName}.png`
+  const photoPath = `${window.CONFIG.COMP_URL}/modules/${moduleName}/1.0.0/thumb-${moduleName}.png`
   return (
     <div className={`EveryTreeNode-wrap
         ${hover && 'every-tree-node-hover'}

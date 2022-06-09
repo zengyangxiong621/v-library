@@ -26,7 +26,7 @@ const Text = (props: any) => {
           "Content-Type": "application/json",
         },
         body: {
-          type: [3],// 0:图表 2:文本
+          type: ['assist'],// 0:图表 2:文本
           status: 0,
           pageNo: 0,
           pageSize: 100,
