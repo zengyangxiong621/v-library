@@ -68,7 +68,8 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
         id: callbackId,
         name: `回调${panes.length + 1}`,
         origin: '',
-        target: ''
+        target: '',
+        // action:'click'
       }
     )
     setTabpanes(panes)
@@ -132,7 +133,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
               activeKey={activeTab}>
               {tabpanes.map(pane => (
                 <TabPane tab={pane.name} key={pane.id}>
-                  <Form.Item
+                  {/* <Form.Item
                     name="action"
                     label='匹配动作'
                   >
@@ -147,7 +148,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                         return <Option value={item.value} key={item.value}>{item.name}</Option>
                       })}
                     </Select>
-                  </Form.Item>
+                  </Form.Item> */}
                   <Form.Item
                     name="origin"
                     label='字段值'
