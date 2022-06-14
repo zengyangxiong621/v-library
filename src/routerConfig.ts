@@ -1,5 +1,6 @@
 import BasicLayout from "./components/layouts/basicLayout";
 import Components from "./routes/components/text";
+import ComponentDev from "./routes/componentDev";
 import DashboardManage from "./routes/myDashboard";
 import DashboardTemplate from "./routes/dashboardTemplate";
 import Dashboard from "./routes/dashboard";
@@ -47,6 +48,7 @@ const routesConfig = (app: any) => [
       // },
 
       Components(app),
+      ComponentDev(app),
       DashboardManage(app),
       DashboardTemplate(app),
       Dashboard(app),
