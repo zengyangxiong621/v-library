@@ -11,7 +11,7 @@ export default {
           title: '我的数据',
         },
         {
-          path: '/components',
+          path: '/component-dev',
           title: '组件开发',
         },
         {
