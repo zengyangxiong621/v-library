@@ -1,28 +1,28 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-import {getFields} from "@/utils/data";
-import {useState, useRef} from "react";
-import DateSelect from '@/components/dateSelect'
-import {connect} from "dva"
+import { getFields } from "@/utils/data";
+import { useState, useRef } from "react";
+// import DateSelect from '@/components/dateSelect'
+import { connect } from "dva"
 // import './index.less'
-import {cloneDeep} from 'lodash'
+import { cloneDeep } from 'lodash'
 
-const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props}) => {
+const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props }) => {
   const callbackArgs = bar.callbackArgs
   const callbackParamsList = bar.callbackParamsList
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
   })
   const componentRef = useRef(null)
-  const [opacityStyle, setOpacityStyle] = useState({opacity: 1})
+  const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 })
   const clickEvents = events.filter(item => item.trigger === 'click')
   const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
 
   const handleClick = () => {
     console.log('clickActions', clickActions)
-    const hideShowAction = clickActions.filter(({action}) => ['hide', 'show', 'show/hide'].includes(action))
-    const rotateAction = clickActions.filter(({action}) => ['rotate'].includes(action))
-    const translateAction = clickActions.filter(({action}) => ['translate'].includes(action))
-    const scaleAction = clickActions.filter(({action}) => ['scale'].includes(action))
+    const hideShowAction = clickActions.filter(({ action }) => ['hide', 'show', 'show/hide'].includes(action))
+    const rotateAction = clickActions.filter(({ action }) => ['rotate'].includes(action))
+    const translateAction = clickActions.filter(({ action }) => ['translate'].includes(action))
+    const scaleAction = clickActions.filter(({ action }) => ['scale'].includes(action))
     let animationConfig = null
     clickActions.forEach(action => {
       console.log('action', action)
@@ -62,7 +62,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     // }
   }
 
-  const animation = ({duration, timingFunction}, action, dom) => {
+  const animation = ({ duration, timingFunction }, action, dom) => {
     if (action === 'show') {
       let timer = setInterval(() => {
         if (dom.style.opacity >= 1) {
@@ -85,7 +85,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     }
   }
 
-  const translate3d = ({perspective, rotateX, rotateY, rotateZ}, action, dom) => {
+  const translate3d = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
     if (action === 'rotate') {
       dom.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`
     }
@@ -95,14 +95,14 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   }
 
-  const scale = ({origin, x, y}, action, dom) => {
+  const scale = ({ origin, x, y }, action, dom) => {
     if (action === 'scale') {
       dom.style.transform = `scaleX(${x}) scaleY(${y})`
       dom.style['transform-origin'] = origin
     }
   }
 
-  const translate = ({toX, toY}, action, dom) => {
+  const translate = ({ toX, toY }, action, dom) => {
     if (action === 'translate') {
       dom.style.transform = `translate(${toX}px, ${toY}px)`
     }
@@ -130,7 +130,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   ]
 
   // 数组去重，取最后一个
-  const  duplicateFn = (arr) => {
+  const duplicateFn = (arr) => {
     let map = new Map();
     for (let item of arr.reverse()) {
       if (!map.has(item.target)) {
@@ -195,20 +195,23 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   return (
     <div ref={componentRef} className={`single-component event-id-${id}`} onClick={handleClick}
-         style={{width: '100%', height: '100%', ...animationConfig, ...opacityStyle}}>
+      style={{ width: '100%', height: '100%', ...animationConfig, ...opacityStyle }}>
       {/*      <RemoteBaseComponent
         {...props}
       ></RemoteBaseComponent>     */}
       {
-        props.componentConfig.moduleName === 'timeSelect' ? <DateSelect
-          onChange={handleValueChange}
-          {...props}
-        ></DateSelect> : <RemoteBaseComponent
-          {...props}
-        ></RemoteBaseComponent>
+        props.componentConfig.moduleName === 'timeSelect' ? <></>
+          //  <DateSelect
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </DateSelect>
+          : <RemoteBaseComponent
+            {...props}
+          ></RemoteBaseComponent>
       }
     </div>
   )
 }
 
-export default connect(({bar}) => ({bar}))(ComponentEventContainer)
+export default connect(({ bar }) => ({ bar }))(ComponentEventContainer)

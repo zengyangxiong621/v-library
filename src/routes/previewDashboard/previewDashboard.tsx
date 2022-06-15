@@ -4,34 +4,20 @@ import { withRouter } from 'dva/router'
 import { connect } from 'dva'
 
 import { Spin } from 'antd'
-import { http } from '../../services/request'
 
 
-import { getLayerIds, MODULES } from './types'
-import { getComDataWithFilters } from '@/utils/data'
-import { deepClone } from '@/utils'
-
-
-import EveryComponent from './components/everyComponent'
 import RecursiveComponent from './components/recursiveComponent'
 
 
 const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
-  const [componentLists, setComponentLists] = useState(deepClone(bar.components))
-  const [layersArr, setLayersArr] = useState(deepClone(bar.treeData))
-
-  // const [dashboardConfig, setDashboardConfig] = useState([])
-
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
 
   const [pageStyle, setPageStyle] = useState({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
-  const { pathname } = location
-  const dashboardId = pathname.split('/').pop()
   /**
   * description: 获取屏幕大小、缩放设置等参数
   */
@@ -55,7 +41,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   const getDashboardData = async ({dashboardConfig, dashboardName }: any ) => {
     document.title = dashboardName
     // setDashboardConfig(dashboardConfig)
-
     // 获取屏幕大小、背景等参数
     const screenInfoMap: any = getScreenInfo(dashboardConfig)
     console.log('screenInfoMap', screenInfoMap)
@@ -125,7 +110,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
   const initDashboard = (cb=function (){}) => {
     return new Promise((resolve, reject) => {
       const dashboardId = window.location.pathname.split('/')[2]
@@ -150,8 +135,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
             >
               {
                 <RecursiveComponent
-                  layersArr={layersArr}
-                  componentLists={componentLists}
+                  layersArr={bar.treeData}
+                  componentLists={bar.components}
                   bar={bar}
                   dispatch={dispatch}
                   screenWidthRatio={screenWidthRatio}
