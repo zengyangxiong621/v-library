@@ -14,7 +14,6 @@ import { getFields } from '@/utils/data'
 
 const EveryComponent = ({ componentData, comData, screenWidthRatio, screenHeightRatio }: any) => {
   const { moduleName, events, id, config } = componentData
-  console.log('_________---------------++++++++++', comData);
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
