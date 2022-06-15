@@ -83,6 +83,89 @@ export default {
       })
     },
     * initDashboard ({ payload, cb }: any, { call, put, select }: any): any {
+      // 获取回调参数列表
+      // const callbackParamsList = yield http({
+      //   url: '/visual/callback/list',
+      //   method: 'GET',
+      // })
+      const callbackParamsList = [
+        {
+          "callbackParam": "startTime",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            },
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器"
+            },
+            {
+              "id": "1536990857543454721",
+              "name": "时间选择器3"
+            },
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ]
+        },
+        {
+          "callbackParam": "endTime",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器2"
+            }
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ]
+        },
+        {
+          "callbackParam": "a",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器2"
+            },
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536990857543454721",
+              "name": "时间选择器3"
+            }
+          ]
+        },
+        {
+          "callbackParam": "b",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器2"
+            },
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536990857543454721",
+              "name": "时间选择器3"
+            }
+          ]
+        },
+      ]
       // TODO 怎么造成的
       // 获取所有的数据容器数据
       const data = yield(yield put({
@@ -123,7 +206,8 @@ export default {
         type: 'save',
         payload: {
           dataContainerDataList: bar.dataContainerDataList,
-          componentFilters: filters || []
+          componentFilters: filters || [],
+          callbackParamsList
         }
       })
       yield put({
@@ -158,38 +242,10 @@ export default {
           delete layer.selected
           delete layer.hover
         })
-        const componentData: any = {}
-
-        const func = async (component: any) => {
-          try {
-            const data = await http({
-              url: '/visual/module/getData',
-              method: 'post',
-              body: {
-                moduleId: component.id,
-                dataType: component.dataType
-              }
-            })
-            console.log('1')
-
-            if (data) {
-              componentData[component.id] = component.dataType !== 'static' ? data : data.data
-            } else {
-              throw new Error('请求不到数据')
-            }
-          } catch (err) {
-            componentData[component.id] = null
-          }
-          return componentData[component.id]
-        }
-        yield Promise.all(components.map((item: any) => func(item)))
-        // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
-        yield put({
-          type: 'save',
-          payload: {
-            componentData
-          }
-        })
+        yield yield(put({
+          type: 'getComponentsData',
+          payload: components
+        }))
         yield put({
           type: 'save',
           payload: {
@@ -204,6 +260,40 @@ export default {
       } catch (e) {
         return e
       }
+    },
+    * getComponentsData({ payload }: any, { call, put, select }: any): any {
+      const components = payload
+      const bar: any = yield select(({ bar }: any) => bar)
+      const componentData = bar.componentData
+      const func = async (component: any) => {
+        try {
+          const data = await http({
+            url: '/visual/module/getData',
+            method: 'post',
+            body: {
+              moduleId: component.id,
+              dataType: component.dataType
+            }
+          })
+
+          if (data) {
+            componentData[component.id] = component.dataType !== 'static' ? data : data.data
+          } else {
+            throw new Error('请求不到数据')
+          }
+        } catch (err) {
+          componentData[component.id] = null
+        }
+        return componentData[component.id]
+      }
+      yield Promise.all(components.map((item: any) => func(item)))
+      // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
+      yield put({
+        type: 'save',
+        payload: {
+          componentData
+        }
+      })
     },
     // 重命名
     * changeName({ payload }: any, { call, put, select }: any): any {
@@ -834,6 +924,10 @@ export default {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
+      state.selectedComponentIds = layerComponentsFlat(
+        state.selectedComponentOrGroup,
+      )
+      state.selectedComponents = state.components.filter((component) => state.selectedComponentIds.includes(component.id))
       return { ...state }
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换

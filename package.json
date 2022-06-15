@@ -48,6 +48,7 @@
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
     "mini-css-extract-plugin": "^2.4.5",
+    "moment": "^2.29.3",
     "monaco-editor": "0.33",
     "monaco-editor-webpack-plugin": "^7.0.1",
     "postcss-flexbugs-fixes": "^5.0.2",

@@ -227,42 +227,7 @@ export const defaultData = {
   componentData: {},
   componentFilters: [],
   callbackArgs: {},
-  callbackParamsList: [
-    {
-      "callbackParam": "startTime",   // 变量名
-      "destinationModules": [  // 目标组件
-        {
-          "id": "1536257848293773314",
-          "name": "时间选择器"
-        },
-        {
-          "id": "1536550487244312577",
-          "name": "时间选择器3"
-        },
-      ],
-      "sourceModules": [ // 源组件
-        {
-          "id": "1536284085041025026",
-          "name": "时间选择器2"
-        }
-      ]
-    },
-    {
-      "callbackParam": "endTime",   // 变量名
-      "destinationModules": [  // 目标组件
-        {
-          "id": "1536257848293773314",
-          "name": "时间选择器"
-        }
-      ],
-      "sourceModules": [ // 源组件
-        {
-          "id": "1536284085041025026",
-          "name": "时间选择器2"
-        }
-      ]
-    },
-  ]
+  callbackParamsList: []
 }
 
 export interface IBarState {
@@ -311,4 +276,6 @@ export interface IBarState {
   dataContainerList: any;
   dataContainerDataList: any;
   componentFilters: any;
+  callbackArgs: any;
+  callbackParamsList: any;
 }
