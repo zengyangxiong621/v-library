@@ -1,4 +1,4 @@
-const data = {
+export const defaultData = {
   moduleDefaultConfig: [],
   dashboardId: '',
   dashboardName: '',
@@ -47,7 +47,7 @@ const data = {
     x: 0,
     y: 0,
   },
-  pageConfig: [
+  dashboardConfig: [
     {
       name: 'recommend',
       displayName: '屏幕大小',
@@ -226,6 +226,89 @@ const data = {
   leftMenuWidth: 250,
   componentData: {},
   componentFilters: [],
+  callbackArgs: {},
+  callbackParamsList: [
+    {
+      "callbackParam": "startTime",   // 变量名
+      "destinationModules": [  // 目标组件
+        {
+          "id": "1536257848293773314",
+          "name": "时间选择器"
+        },
+        {
+          "id": "1536550487244312577",
+          "name": "时间选择器3"
+        },
+      ],
+      "sourceModules": [ // 源组件
+        {
+          "id": "1536284085041025026",
+          "name": "时间选择器2"
+        }
+      ]
+    },
+    {
+      "callbackParam": "endTime",   // 变量名
+      "destinationModules": [  // 目标组件
+        {
+          "id": "1536257848293773314",
+          "name": "时间选择器"
+        }
+      ],
+      "sourceModules": [ // 源组件
+        {
+          "id": "1536284085041025026",
+          "name": "时间选择器2"
+        }
+      ]
+    },
+  ]
 }
 
-export default data
+export interface IBarState {
+  moduleDefaultConfig: any[],
+  dashboardId: string;
+  dashboardName: string;
+  key: string[];
+  isShowRightMenu: boolean;
+  rightMenuInfo: any;
+  operate: string;
+  lastRightClick: string;
+  treeData: any[];
+  components: any[];
+  isSupportMultiple: boolean;
+  selectedComponentOrGroup: any[];
+  selectedComponentIds: string[];
+  componentLayers: any;
+  selectedComponentRefs: any;
+  selectedComponentDOMs: any;
+  supportLinesRef: any;
+  scaleDragCompRef: any;
+  selectedComponents: any;
+  scaleDragData: any;
+  componentConfig: any;
+  groupConfig: any;
+  isMultipleTree: boolean;
+  allComponentRefs: any;
+  allComponentDOMs: any;
+  isAreaChoose: boolean;
+  rulerLines: Array<{
+    position: {
+      x: number;
+      y: number;
+    };
+    direction: 'horizon' | 'vertical';
+    display: 'none' | 'block';
+  }>;
+  currentDblTimes: number;
+  isCanClearAllStatus: boolean;
+  leftMenuWidth: number;
+  canvasDraggablePosition: {
+    x: number,
+    y: number
+  };
+  componentData: any;
+  dataContainerList: any;
+  dataContainerDataList: any;
+  componentFilters: any;
+}
