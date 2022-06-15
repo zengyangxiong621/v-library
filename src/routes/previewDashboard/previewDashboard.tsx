@@ -96,9 +96,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   useEffect(() => {
     const init = async () => {
       setIsLoaded(false)
-      const data = await initDashboard()
-      console.log('bar', bar.components)
-      console.log('data', data)
+      await initDashboard()
       await getDashboardData()
       setIsLoaded(true)
 
@@ -108,8 +106,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   }, [])
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      const data = await initDashboard()
-      // await getDashboardData()
+      await initDashboard()
+      await getDashboardData()
     }, 3600 * 1000)
     return () => {
       clearInterval(intervalId)
