@@ -126,13 +126,13 @@ export default {
           componentFilters: filters || []
         }
       })
-
       yield put({
         type: 'getDashboardDetails',
         payload,
+        cb: async (data: any)=> {
+           await cb(data)
+        }
       })
-      console.log('cbcbcb')
-      yield cb()
     },
     * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
@@ -145,7 +145,7 @@ export default {
         }
       })
     },
-    * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
+    * getDashboardDetails({ payload, cb }: any, { call, put, select }: any): any {
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http({
           url: `/visual/application/dashboard/detail/${payload}`,
@@ -153,7 +153,7 @@ export default {
         })
         // let extendedSomeAttrLayers = addSomeAttrInLayers(layers)
         // extendedSomeAttrLayers = deepFilterAttrs(extendedSomeAttrLayers, [ 'selected' ])
-        layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+        yield layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
           layer.singleShowLayer = false
           delete layer.selected
           delete layer.hover
@@ -185,14 +185,13 @@ export default {
         yield Promise.all(components.map((item: any) => func(item)))
         // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
         yield put({
-          type: 'save',
+          type: 'bar/save',
           payload: {
             componentData
           }
         })
-        const bar: any = yield select(({ bar }: any) => bar)
         yield put({
-          type: 'save',
+          type: 'bar/save',
           payload: {
             treeData: layers,
             components,
@@ -201,6 +200,7 @@ export default {
             dashboardName
           },
         })
+        cb({dashboardConfig, dashboardName})
       } catch (e) {
         return e
       }

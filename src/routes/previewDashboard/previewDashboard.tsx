@@ -44,12 +44,12 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   /**
    * description: 进入页面，先获取画布详情
    */
-  const getDashboardData = async () => {
-    document.title = bar.dashboardName
-    setDashboardConfig(bar.dashboardConfig)
-    console.log('bar.dashboardConfig', bar.dashboardConfig)
+  const getDashboardData = async ({dashboardConfig, dashboardName }: any ) => {
+    document.title = dashboardName
+    setDashboardConfig(dashboardConfig)
     // 获取屏幕大小、背景等参数
-    const screenInfoMap: any = getScreenInfo(bar.dashboardConfig)
+    const screenInfoMap: any = getScreenInfo(dashboardConfig)
+    console.log('screenInfoMap', screenInfoMap)
     const winW = window.innerWidth
     const winH = window.innerHeight
     const { width, height } = screenInfoMap['屏幕大小']
@@ -96,18 +96,17 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   useEffect(() => {
     const init = async () => {
       setIsLoaded(false)
-      await initDashboard()
-      await getDashboardData()
+      const {dashboardConfig, dashboardName } : any = await initDashboard()
+      await getDashboardData({dashboardConfig, dashboardName } )
       setIsLoaded(true)
-
     }
     init()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      await initDashboard()
-      await getDashboardData()
+      const {dashboardConfig, dashboardName } : any = await initDashboard()
+      await getDashboardData({dashboardConfig, dashboardName } )
     }, 3600 * 1000)
     return () => {
       clearInterval(intervalId)
@@ -121,9 +120,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       dispatch({
         type: 'bar/initDashboard',
         payload: dashboardId,
-        cb: () => {
-          console.log('成功')
-          resolve('成功')
+        cb: (data: any) => {
+          resolve(data)
         }
       })
     })
