@@ -11,7 +11,7 @@ import * as React from 'react'
 
 const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
   const findItem = (name: string) => {
-    return bar.pageConfig.find((item: any) => {
+    return bar.dashboardConfig.find((item: any) => {
       return item.name === name
     })
   }

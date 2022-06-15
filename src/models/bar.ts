@@ -45,56 +45,7 @@ import {generateLayers} from './utils/generateLayers'
 import {addSomeAttrInLayers, clearNullGroup} from './utils/addSomeAttrInLayers'
 import {http} from '../services/request'
 
-import defaultData from './defaultData/bar'
-import { debug } from 'console'
-
-interface IBarState {
-  moduleDefaultConfig: any[],
-  dashboardId: string;
-  dashboardName: string;
-  key: string[];
-  isShowRightMenu: boolean;
-  rightMenuInfo: any;
-  operate: string;
-  lastRightClick: string;
-  treeData: any[];
-  components: any[];
-  isSupportMultiple: boolean;
-  selectedComponentOrGroup: any[];
-  selectedComponentIds: string[];
-  componentLayers: any;
-  selectedComponentRefs: any;
-  selectedComponentDOMs: any;
-  supportLinesRef: any;
-  scaleDragCompRef: any;
-  selectedComponents: any;
-  scaleDragData: any;
-  componentConfig: any;
-  groupConfig: any;
-  isMultipleTree: boolean;
-  allComponentRefs: any;
-  allComponentDOMs: any;
-  isAreaChoose: boolean;
-  rulerLines: Array<{
-    position: {
-      x: number;
-      y: number;
-    };
-    direction: 'horizon' | 'vertical';
-    display: 'none' | 'block';
-  }>;
-  currentDblTimes: number;
-  isCanClearAllStatus: boolean;
-  leftMenuWidth: number;
-  canvasDraggablePosition: {
-    x: number,
-    y: number
-  };
-  componentData: any;
-  dataContainerList: any;
-  dataContainerDataList: any;
-  componentFilters: any;
-}
+import {defaultData, IBarState} from './defaultData/bar'
 
 export default {
   namespace: 'bar',
@@ -180,7 +131,7 @@ export default {
         type: 'getDashboardDetails',
         payload,
       })
-
+      console.log('cbcbcb')
       yield cb()
     },
     * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {
@@ -246,8 +197,8 @@ export default {
             treeData: layers,
             components,
             dashboardId: payload,
-            pageConfig: dashboardConfig,
-            dashboardName: dashboardName
+            dashboardConfig,
+            dashboardName
           },
         })
       } catch (e) {

@@ -44,31 +44,15 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   /**
    * description: 进入页面，先获取画布详情
    */
-  const getDashboardDetail = async () => {
-    let { components, dashboardName, layers, dashboardConfig }: any = await http({
-      url: `/visual/application/dashboard/detail/${dashboardId}`,
-      method: 'get',
-    })
-
-    if (Array.isArray(components)) {
-      document.title = dashboardName
-    }
-    // 要根据layers来渲染组件，所以最终需要过滤掉某些components
-    const layerIds = getLayerIds(layers)
-    // 最终需要渲染的components
-    const hadFilterComponents = components.filter((item: any) => layerIds.includes(item.id))
-    setComponentsList(hadFilterComponents)
-    setDashboardConfig(dashboardConfig)
-
+  const getDashboardData = async () => {
+    document.title = bar.dashboardName
+    setDashboardConfig(bar.dashboardConfig)
+    console.log('bar.dashboardConfig', bar.dashboardConfig)
     // 获取屏幕大小、背景等参数
-    const screenInfoMap: any = getScreenInfo(dashboardConfig)
-    console.log('screenInfoMap', screenInfoMap);
+    const screenInfoMap: any = getScreenInfo(bar.dashboardConfig)
     const winW = window.innerWidth
     const winH = window.innerHeight
     const { width, height } = screenInfoMap['屏幕大小']
-    console.log('sssssssss', winW);
-    console.log('hhhhhhhh', winH);
-
     const finalStyle: any = {
       background: screenInfoMap['背景'],
       backgroundImage: screenInfoMap['背景图'] ? require(screenInfoMap['背景图']) : ''
@@ -112,15 +96,20 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   useEffect(() => {
     const init = async () => {
       setIsLoaded(false)
-      await getDashboardDetail()
+      const data = await initDashboard()
+      console.log('bar', bar.components)
+      console.log('data', data)
+      await getDashboardData()
       setIsLoaded(true)
+
     }
     init()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      getDashboardDetail()
+    const intervalId = setInterval(async () => {
+      const data = await initDashboard()
+      // await getDashboardData()
     }, 3600 * 1000)
     return () => {
       clearInterval(intervalId)
@@ -128,16 +117,20 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-
-  /********     数据容器部分    ******** */
-  useEffect(() => {
-    const dashboardId = window.location.pathname.split('/')[2]
-    dispatch({
-      type: 'bar/initDashboard',
-      payload: dashboardId,
-      cb: () => { }
+  const initDashboard = (cb=function (){}) => {
+    return new Promise((resolve, reject) => {
+      const dashboardId = window.location.pathname.split('/')[2]
+      dispatch({
+        type: 'bar/initDashboard',
+        payload: dashboardId,
+        cb: () => {
+          console.log('成功')
+          resolve('成功')
+        }
+      })
     })
-  }, [])
+
+  }
 
   return (
     <>
@@ -148,7 +141,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
               style={pageStyle}
             >
               {
-                componentsList.map((item, index) => <>
+                bar.components.map((item: any, index: number) => <>
                   <EveryComponent key={index}
                     componentData={item}
                     comData={getComDataWithFilters(bar.componentData, item, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)}

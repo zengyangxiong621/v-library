@@ -21,7 +21,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const pageConfig = deepClone(bar.pageConfig)
+  const pageConfig = deepClone(bar.dashboardConfig)
   const recommendConfig = find(pageConfig, 'recommend')
   const styleColorConfig = find(pageConfig, 'styleColor')
   const backgroundImg = find(pageConfig, 'backgroundImg')
@@ -36,7 +36,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
     if(!isSettingsChange){
       setKey(uuidv4())
     }
-  }, [bar.pageConfig])
+  }, [bar.dashboardConfig])
 
   const settingsChange = debounce(() => {
     isSettingsChange = true
@@ -57,7 +57,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
     dispatch({
       type: 'bar/save',
       payload: {
-        pageConfig: config
+        dashboardConfig: config
       }
     })
   }
