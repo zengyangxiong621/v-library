@@ -185,13 +185,13 @@ export default {
         yield Promise.all(components.map((item: any) => func(item)))
         // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
         yield put({
-          type: 'bar/save',
+          type: 'save',
           payload: {
             componentData
           }
         })
         yield put({
-          type: 'bar/save',
+          type: 'save',
           payload: {
             treeData: layers,
             components,
