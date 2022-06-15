@@ -6,15 +6,23 @@ import { connect } from 'dva'
 import { Spin } from 'antd'
 import { http } from '../../services/request'
 
-import EveryComponent from './components/everyComponent'
-import { getLayerIds } from './types'
+
+import { getLayerIds, MODULES } from './types'
 import { getComDataWithFilters } from '@/utils/data'
+import { deepClone } from '@/utils'
+
+
+import EveryComponent from './components/everyComponent'
+import RecursiveComponent from './components/recursiveComponent'
+
 
 const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
-  const [componentsList, setComponentsList] = useState([])
-  const [dashboardConfig, setDashboardConfig] = useState([])
+  const [componentLists, setComponentLists] = useState(deepClone(bar.components))
+  const [layersArr, setLayersArr] = useState(deepClone(bar.treeData))
+
+  // const [dashboardConfig, setDashboardConfig] = useState([])
 
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
@@ -46,13 +54,15 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
    */
   const getDashboardData = async ({dashboardConfig, dashboardName }: any ) => {
     document.title = dashboardName
-    setDashboardConfig(dashboardConfig)
+    // setDashboardConfig(dashboardConfig)
+
     // 获取屏幕大小、背景等参数
     const screenInfoMap: any = getScreenInfo(dashboardConfig)
     console.log('screenInfoMap', screenInfoMap)
     const winW = window.innerWidth
     const winH = window.innerHeight
     const { width, height } = screenInfoMap['屏幕大小']
+
     const finalStyle: any = {
       background: screenInfoMap['背景'],
       backgroundImage: screenInfoMap['背景图'] ? require(screenInfoMap['背景图']) : ''
@@ -93,6 +103,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     }
     setPageStyle(finalStyle)
   }
+  // 初入页面 - 获取数据
   useEffect(() => {
     const init = async () => {
       setIsLoaded(false)
@@ -103,6 +114,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     init()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  // 定时刷新页面
   useEffect(() => {
     const intervalId = setInterval(async () => {
       const {dashboardConfig, dashboardName } : any = await initDashboard()
@@ -137,14 +149,14 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
               style={pageStyle}
             >
               {
-                bar.components.map((item: any, index: number) => <>
-                  <EveryComponent key={index}
-                    componentData={item}
-                    comData={getComDataWithFilters(bar.componentData, item, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)}
-                    screenWidthRatio={screenWidthRatio}
-                    screenHeightRatio={screenHeightRatio}
-                  />
-                </>)
+                <RecursiveComponent
+                  layersArr={layersArr}
+                  componentLists={componentLists}
+                  bar={bar}
+                  dispatch={dispatch}
+                  screenWidthRatio={screenWidthRatio}
+                  screenHeightRatio={screenHeightRatio}
+                />
               }
             </div>
           </div>

@@ -5,7 +5,7 @@ import { MORENYINCANG, WEIZHICHICUN, WENBENYANGSHI, DUIQIFANGSHI, YINYING } from
 import { getTargetStyle } from './type'
 import ComponentEventContainer from '@/components/componentEventContainer'
 
-import RemoteBaseComponent from '@/components/RemoteBaseComponent';
+// import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getFields } from '@/utils/data'
 
 // 按屏幕比例适配", value: "0"}
@@ -14,6 +14,8 @@ import { getFields } from '@/utils/data'
 
 const EveryComponent = ({ componentData, comData, screenWidthRatio, screenHeightRatio }: any) => {
   const { moduleName, events, id, config } = componentData
+  console.log('comData', comData);
+  console.log('-----', componentData);
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -42,7 +44,6 @@ const EveryComponent = ({ componentData, comData, screenWidthRatio, screenHeight
   // 文本样式
   const wenbenyangshiArr = allConfigMap.get(WENBENYANGSHI)
   const textStyle = getTargetStyle(wenbenyangshiArr)
-
 
   return (
     <div className='preview-component-wrap'

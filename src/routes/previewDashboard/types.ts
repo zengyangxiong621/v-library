@@ -1,4 +1,4 @@
-const MODULES = 'modules'
+export const MODULES = 'modules'
 
 export const getLayerIds = (layers: any[]) => {
   let res: any = []
