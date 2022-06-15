@@ -1,15 +1,16 @@
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 import { withRouter } from 'dva/router'
-import { Spin, message } from 'antd'
+import { connect } from 'dva'
 
+import { Spin } from 'antd'
 import { http } from '../../services/request'
 
 import EveryComponent from './components/everyComponent'
-import Cus from './components/CustomDraggable/index'
 import { getLayerIds } from './types'
+import { getComDataWithFilters } from '@/utils/data'
 
-const PreViewDashboard = ({ history, location }: any) => {
+const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
   const [componentsList, setComponentsList] = useState([])
@@ -81,7 +82,7 @@ const PreViewDashboard = ({ history, location }: any) => {
         const wRatio = winW / width
         const hRatio = winH / height
         let unifyRatio
-        if(wRatio > hRatio) {
+        if (wRatio > hRatio) {
           unifyRatio = Math.max(wRatio, hRatio)
         } else {
           unifyRatio = Math.min(wRatio, hRatio)
@@ -128,7 +129,15 @@ const PreViewDashboard = ({ history, location }: any) => {
   }, [])
 
 
-
+  /********     数据容器部分    ******** */
+  useEffect(() => {
+    const dashboardId = window.location.pathname.split('/')[2]
+    dispatch({
+      type: 'bar/initDashboard',
+      payload: dashboardId,
+      cb: () => { }
+    })
+  }, [])
 
   return (
     <>
@@ -142,6 +151,7 @@ const PreViewDashboard = ({ history, location }: any) => {
                 componentsList.map((item, index) => <>
                   <EveryComponent key={index}
                     componentData={item}
+                    comData={getComDataWithFilters(bar.componentData, item, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)}
                     screenWidthRatio={screenWidthRatio}
                     screenHeightRatio={screenHeightRatio}
                   />
@@ -160,4 +170,6 @@ const PreViewDashboard = ({ history, location }: any) => {
   )
 }
 
-export default memo(withRouter(PreViewDashboard))
+export default memo(connect(
+  ({ bar }: any) => ({ bar })
+)(withRouter(PreViewDashboard)))

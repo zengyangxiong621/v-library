@@ -12,9 +12,9 @@ import { getFields } from '@/utils/data'
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, screenWidthRatio, screenHeightRatio }: any) => {
-  const { moduleName, events, id, config, staticData: { data } } = componentData
-
+const EveryComponent = ({ componentData, comData, screenWidthRatio, screenHeightRatio }: any) => {
+  const { moduleName, events, id, config } = componentData
+  console.log('_________---------------++++++++++', comData);
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -56,7 +56,7 @@ const EveryComponent = ({ componentData, screenWidthRatio, screenHeightRatio }: 
         name={moduleName}
         componentConfig={componentData}
         fields={getFields(componentData)}
-        comData={data}
+        comData={comData}
       >
       </ComponentEventContainer>
     </div>
