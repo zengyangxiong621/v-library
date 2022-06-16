@@ -45,56 +45,7 @@ import {generateLayers} from './utils/generateLayers'
 import {addSomeAttrInLayers, clearNullGroup} from './utils/addSomeAttrInLayers'
 import {http} from '../services/request'
 
-import defaultData from './defaultData/bar'
-import { debug } from 'console'
-
-interface IBarState {
-  moduleDefaultConfig: any[],
-  dashboardId: string;
-  dashboardName: string;
-  key: string[];
-  isShowRightMenu: boolean;
-  rightMenuInfo: any;
-  operate: string;
-  lastRightClick: string;
-  treeData: any[];
-  components: any[];
-  isSupportMultiple: boolean;
-  selectedComponentOrGroup: any[];
-  selectedComponentIds: string[];
-  componentLayers: any;
-  selectedComponentRefs: any;
-  selectedComponentDOMs: any;
-  supportLinesRef: any;
-  scaleDragCompRef: any;
-  selectedComponents: any;
-  scaleDragData: any;
-  componentConfig: any;
-  groupConfig: any;
-  isMultipleTree: boolean;
-  allComponentRefs: any;
-  allComponentDOMs: any;
-  isAreaChoose: boolean;
-  rulerLines: Array<{
-    position: {
-      x: number;
-      y: number;
-    };
-    direction: 'horizon' | 'vertical';
-    display: 'none' | 'block';
-  }>;
-  currentDblTimes: number;
-  isCanClearAllStatus: boolean;
-  leftMenuWidth: number;
-  canvasDraggablePosition: {
-    x: number,
-    y: number
-  };
-  componentData: any;
-  dataContainerList: any;
-  dataContainerDataList: any;
-  componentFilters: any;
-}
+import {defaultData, IBarState} from './defaultData/bar'
 
 export default {
   namespace: 'bar',
@@ -132,6 +83,89 @@ export default {
       })
     },
     * initDashboard ({ payload, cb }: any, { call, put, select }: any): any {
+      // 获取回调参数列表
+      // const callbackParamsList = yield http({
+      //   url: '/visual/callback/list',
+      //   method: 'GET',
+      // })
+      const callbackParamsList = [
+        {
+          "callbackParam": "startTime",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            },
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器"
+            },
+            {
+              "id": "1536990857543454721",
+              "name": "时间选择器3"
+            },
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ]
+        },
+        {
+          "callbackParam": "endTime",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器2"
+            }
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ]
+        },
+        {
+          "callbackParam": "a",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器2"
+            },
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536990857543454721",
+              "name": "时间选择器3"
+            }
+          ]
+        },
+        {
+          "callbackParam": "b",   // 变量名
+          "destinationModules": [  // 目标组件
+            {
+              "id": "1536904475370229762",
+              "name": "时间选择器2"
+            },
+            {
+              "id": "1536894370780188674",
+              "name": "时间选择器"
+            }
+          ],
+          "sourceModules": [ // 源组件
+            {
+              "id": "1536990857543454721",
+              "name": "时间选择器3"
+            }
+          ]
+        },
+      ]
       // TODO 怎么造成的
       // 获取所有的数据容器数据
       const data = yield(yield put({
@@ -172,16 +206,17 @@ export default {
         type: 'save',
         payload: {
           dataContainerDataList: bar.dataContainerDataList,
-          componentFilters: filters || []
+          componentFilters: filters || [],
+          callbackParamsList
         }
       })
-
       yield put({
         type: 'getDashboardDetails',
         payload,
+        cb: async (data: any)=> {
+           await cb(data)
+        }
       })
-
-      yield cb()
     },
     * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
@@ -194,7 +229,7 @@ export default {
         }
       })
     },
-    * getDashboardDetails({ payload }: any, { call, put, select }: any): any {
+    * getDashboardDetails({ payload, cb }: any, { call, put, select }: any): any {
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http({
           url: `/visual/application/dashboard/detail/${payload}`,
@@ -202,57 +237,63 @@ export default {
         })
         // let extendedSomeAttrLayers = addSomeAttrInLayers(layers)
         // extendedSomeAttrLayers = deepFilterAttrs(extendedSomeAttrLayers, [ 'selected' ])
-        layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+        yield layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
           layer.singleShowLayer = false
           delete layer.selected
           delete layer.hover
         })
-        const componentData: any = {}
-
-        const func = async (component: any) => {
-          try {
-            const data = await http({
-              url: '/visual/module/getData',
-              method: 'post',
-              body: {
-                moduleId: component.id,
-                dataType: component.dataType
-              }
-            })
-            console.log('1')
-
-            if (data) {
-              componentData[component.id] = component.dataType !== 'static' ? data : data.data
-            } else {
-              throw new Error('请求不到数据')
-            }
-          } catch (err) {
-            componentData[component.id] = null
-          }
-          return componentData[component.id]
-        }
-        yield Promise.all(components.map((item: any) => func(item)))
-        // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
-        yield put({
-          type: 'save',
-          payload: {
-            componentData
-          }
-        })
-        const bar: any = yield select(({ bar }: any) => bar)
+        yield yield(put({
+          type: 'getComponentsData',
+          payload: components
+        }))
         yield put({
           type: 'save',
           payload: {
             treeData: layers,
             components,
             dashboardId: payload,
-            pageConfig: dashboardConfig,
-            dashboardName: dashboardName
+            dashboardConfig,
+            dashboardName
           },
         })
+        cb({dashboardConfig, dashboardName})
       } catch (e) {
         return e
       }
+    },
+    * getComponentsData({ payload }: any, { call, put, select }: any): any {
+      const components = payload
+      const bar: any = yield select(({ bar }: any) => bar)
+      const componentData = bar.componentData
+      const func = async (component: any) => {
+        try {
+          const data = await http({
+            url: '/visual/module/getData',
+            method: 'post',
+            body: {
+              moduleId: component.id,
+              dataType: component.dataType
+            }
+          })
+
+          if (data) {
+            componentData[component.id] = component.dataType !== 'static' ? data : data.data
+          } else {
+            throw new Error('请求不到数据')
+          }
+        } catch (err) {
+          componentData[component.id] = null
+        }
+        return componentData[component.id]
+      }
+      yield Promise.all(components.map((item: any) => func(item)))
+      // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
+      yield put({
+        type: 'save',
+        payload: {
+          componentData
+        }
+      })
     },
     // 重命名
     * changeName({ payload }: any, { call, put, select }: any): any {
@@ -883,6 +924,10 @@ export default {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true
       })
+      state.selectedComponentIds = layerComponentsFlat(
+        state.selectedComponentOrGroup,
+      )
+      state.selectedComponents = state.components.filter((component) => state.selectedComponentIds.includes(component.id))
       return { ...state }
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换

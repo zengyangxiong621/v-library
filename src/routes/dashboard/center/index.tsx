@@ -49,7 +49,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   let supportLinesRef = bar.supportLinesRef
 
   const findItem = (name: string) => {
-    return bar.pageConfig.find((item: any) => {
+    return bar.dashboardConfig.find((item: any) => {
       return item.name === name
     })
   }
@@ -156,8 +156,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }, [ bar.canvasScaleValue ])
 
   useEffect(() => {
-    console.log('recommendConfig.width1', bar.pageConfig)
-
     if(bar.canvasScaleValue) {
       window.addEventListener('wheel', calcCanvasScale, { passive: false })
     }
@@ -196,7 +194,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       (document.querySelector('.draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
       // document.removeEventListener('contextmenu', handleContextMenu)
     }
-  }, [bar.pageConfig])
+  }, [bar.dashboardConfig])
   useClickAway(() => {
     // 取消右键菜单
     setIsShowRightMenu(false)

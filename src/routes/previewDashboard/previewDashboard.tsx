@@ -1,28 +1,23 @@
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 import { withRouter } from 'dva/router'
-import { Spin, message } from 'antd'
+import { connect } from 'dva'
 
-import { http } from '../../services/request'
+import { Spin } from 'antd'
 
-import EveryComponent from './components/everyComponent'
-import Cus from './components/CustomDraggable/index'
-import { getLayerIds } from './types'
 
-const PreViewDashboard = ({ history, location }: any) => {
+import RecursiveComponent from './components/recursiveComponent'
+
+
+const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
-  const [componentsList, setComponentsList] = useState([])
-  const [dashboardConfig, setDashboardConfig] = useState([])
-
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
 
   const [pageStyle, setPageStyle] = useState({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
-  const { pathname } = location
-  const dashboardId = pathname.split('/').pop()
   /**
   * description: 获取屏幕大小、缩放设置等参数
   */
@@ -43,30 +38,15 @@ const PreViewDashboard = ({ history, location }: any) => {
   /**
    * description: 进入页面，先获取画布详情
    */
-  const getDashboardDetail = async () => {
-    let { components, dashboardName, layers, dashboardConfig }: any = await http({
-      url: `/visual/application/dashboard/detail/${dashboardId}`,
-      method: 'get',
-    })
-
-    if (Array.isArray(components)) {
-      document.title = dashboardName
-    }
-    // 要根据layers来渲染组件，所以最终需要过滤掉某些components
-    const layerIds = getLayerIds(layers)
-    // 最终需要渲染的components
-    const hadFilterComponents = components.filter((item: any) => layerIds.includes(item.id))
-    setComponentsList(hadFilterComponents)
-    setDashboardConfig(dashboardConfig)
-
+  const getDashboardData = async ({dashboardConfig, dashboardName }: any ) => {
+    document.title = dashboardName
+    // setDashboardConfig(dashboardConfig)
     // 获取屏幕大小、背景等参数
     const screenInfoMap: any = getScreenInfo(dashboardConfig)
-    console.log('screenInfoMap', screenInfoMap);
+    console.log('screenInfoMap', screenInfoMap)
     const winW = window.innerWidth
     const winH = window.innerHeight
     const { width, height } = screenInfoMap['屏幕大小']
-    console.log('sssssssss', winW);
-    console.log('hhhhhhhh', winH);
 
     const finalStyle: any = {
       background: screenInfoMap['背景'],
@@ -81,7 +61,7 @@ const PreViewDashboard = ({ history, location }: any) => {
         const wRatio = winW / width
         const hRatio = winH / height
         let unifyRatio
-        if(wRatio > hRatio) {
+        if (wRatio > hRatio) {
           unifyRatio = Math.max(wRatio, hRatio)
         } else {
           unifyRatio = Math.min(wRatio, hRatio)
@@ -108,27 +88,47 @@ const PreViewDashboard = ({ history, location }: any) => {
     }
     setPageStyle(finalStyle)
   }
+  // 初入页面 - 获取数据
   useEffect(() => {
     const init = async () => {
       setIsLoaded(false)
-      await getDashboardDetail()
+      const {dashboardConfig, dashboardName } : any = await initDashboard()
+      await getDashboardData({dashboardConfig, dashboardName } )
       setIsLoaded(true)
     }
     init()
+    return () => {
+      dispatch({
+        type: 'bar/clearCurrentDashboardData'
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  // 定时刷新页面
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      getDashboardDetail()
+    const intervalId = setInterval(async () => {
+      const {dashboardConfig, dashboardName } : any = await initDashboard()
+      await getDashboardData({dashboardConfig, dashboardName } )
     }, 3600 * 1000)
     return () => {
       clearInterval(intervalId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
+  const initDashboard = (cb=function (){}) => {
+    return new Promise((resolve, reject) => {
+      const dashboardId = window.location.pathname.split('/')[2]
+      dispatch({
+        type: 'bar/initDashboard',
+        payload: dashboardId,
+        cb: (data: any) => {
+          resolve(data)
+        }
+      })
+    })
 
-
-
+  }
 
   return (
     <>
@@ -139,13 +139,14 @@ const PreViewDashboard = ({ history, location }: any) => {
               style={pageStyle}
             >
               {
-                componentsList.map((item, index) => <>
-                  <EveryComponent key={index}
-                    componentData={item}
-                    screenWidthRatio={screenWidthRatio}
-                    screenHeightRatio={screenHeightRatio}
-                  />
-                </>)
+                <RecursiveComponent
+                  layersArr={bar.treeData}
+                  componentLists={bar.components}
+                  bar={bar}
+                  dispatch={dispatch}
+                  screenWidthRatio={screenWidthRatio}
+                  screenHeightRatio={screenHeightRatio}
+                />
               }
             </div>
           </div>
@@ -160,4 +161,6 @@ const PreViewDashboard = ({ history, location }: any) => {
   )
 }
 
-export default memo(withRouter(PreViewDashboard))
+export default memo(connect(
+  ({ bar }: any) => ({ bar })
+)(withRouter(PreViewDashboard)))

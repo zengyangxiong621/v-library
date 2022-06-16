@@ -7,13 +7,17 @@ import "slick-carousel/slick/slick-theme.css";
 import { http } from '../../services/request';
 
 import { Spin, Empty } from 'antd';
+import { CloseOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
 const picUrl = require('../../assets/images/模板默认背景图.png')
 
+let currentFullScreenIndex = 0;
 const ControlCabin = props => {
   const [currnetIndex, setCurrentIndex] = useState(0)
   const [applist, setAppList] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isShowModal, setIsShowModal] = useState(false)
+  const [appSrc, setAppSrc] = useState(null)
 
   useEffect(() => {
     getAppList()
@@ -68,6 +72,7 @@ const ControlCabin = props => {
     afterChange: (index) => {
       setCurrentIndex(index)
       setStyle()
+      currentFullScreenIndex = index
     },
     onInit: () => {
       setStyle()
@@ -94,9 +99,31 @@ const ControlCabin = props => {
   }
 
   const scanDashboard = (id) => {
-    let newTab = window.open('_blank');
-    newTab.location.href = `/bigscreen/${id}`
-    newTab?.history.replaceState(null, '')
+    // let newTab = window.open('_blank');
+    // newTab.location.href = `/bigscreen/${id}`
+    // newTab?.history.replaceState(null, '')
+    setAppSrc(`/bigscreen/${id}`)
+    setIsShowModal(true)
+  }
+
+  const showPreApp = () => {
+    const length = applist.length
+    if (currentFullScreenIndex === 0) {
+      currentFullScreenIndex = length - 1
+    } else {
+      currentFullScreenIndex -= 1
+    }
+    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`)
+  }
+
+  const showNextApp = () => {
+    const length = applist.length
+    if (currentFullScreenIndex === length - 1) {
+      currentFullScreenIndex = 0
+    } else {
+      currentFullScreenIndex += 1
+    }
+    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`)
   }
 
   return (
@@ -120,6 +147,18 @@ const ControlCabin = props => {
                 </Slider>
                 : <Empty description="暂无数据" />
           }
+        </div>
+        <div className="con-cabin-fullscreen" style={{ display: isShowModal ? 'block' : 'none' }}>
+          <iframe src={appSrc} frameborder="0"></iframe>
+          <div className="con-cabin-close-fullscreen" onClick={() => setIsShowModal(false)}>
+            <CloseOutlined />
+          </div>
+          <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-pre" onClick={showPreApp}>
+            <ArrowLeftOutlined />
+          </div>
+          <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-next" onClick={showNextApp}>
+            <ArrowRightOutlined />
+          </div>
         </div>
       </div>
 

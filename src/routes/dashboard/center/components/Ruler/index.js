@@ -14,7 +14,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
 
   const MARGIN_LENGTH = 22
 
-  const recommendConfig = bar.pageConfig.find(item => item.name === 'recommend')
+  const recommendConfig = bar.dashboardConfig.find(item => item.name === 'recommend')
   let [ruler, setRuler] = useState(null)
   const [isRulerLinesShow, setIsRulerLinesShow] = useState(true)
   // 横
