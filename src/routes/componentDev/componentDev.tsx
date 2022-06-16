@@ -5,11 +5,7 @@ import zhCN from 'antd/es/locale/zh_CN'
 import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from 'antd'
 import { PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 
-// later
-// import AddDataSource from '../tempDataSource/components/addDataSource'
-// import EditDataSource from '../tempDataSource/components/editDataSource'
-// import PreviewTable from '../../routes/dashboard/right/components/editTable/previewTable'
-// import PreViewJson from '../../routes/dashboard/right/components/codeEditor/previewJson'
+import ImportComponent from './components/importComponent'
 
 import { http } from '@/services/request'
 
@@ -29,9 +25,7 @@ type TDataSourceParams = {
 const ComponentDev = (props: any) => {
   const [inputValue, setInputValue] = useState('')
   const [status, setStatus] = useState(null) 
-  const [isShowAddModal, setIsShowAddModal] = useState(false) 
-  const [isShowEditModal, setIsShowEditModal] = useState(false)
-  const [editDataSourceInfo, setEditDataSourceInfo] = useState({})
+  const [isShowImportModal, setIsShowImportModal] = useState(false) 
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
     pageSize: 30,
@@ -39,9 +33,6 @@ const ComponentDev = (props: any) => {
   const [tableMap, setTableMap] = useState({})
   const [totalElements, setTotalElements] = useState(0)
   const [tableData, setTableData] = useState([])
-  const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
-  const [previewFileUrl, setPreviewFileUrl] = useState(null)
-  const [previewRecord, setPreviewRecord] = useState({ type: '', id: '' })
   const [tableLoading, setTableLoading] = useState(true)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -114,15 +105,13 @@ const ComponentDev = (props: any) => {
 
   // 导入
   const handldImport = () => {
-    setIsShowAddModal(true)
+    setIsShowImportModal(true)
   }
   // 关闭数据源弹窗
   const changeShowState = (modalType: string) => {
-    modalType === 'add'
-      ?
-      setIsShowAddModal(false)
-      :
-      setIsShowEditModal(false)
+    modalType === 'add' 
+    ? setIsShowImportModal(false)
+    : '' // 无编辑
   }
   // 刷新表格数据
   const refreshTable = () => {
@@ -154,7 +143,7 @@ const ComponentDev = (props: any) => {
       async onOk(close) {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const data = await http({
-          url: `/visual/module-manage/deleteModule/${moduleId}`, // later 接口未完成
+          url: `/visual/module-manage/deleteModule/${moduleId}`, 
           method: 'delete'
         })
         if (data) {
@@ -170,41 +159,22 @@ const ComponentDev = (props: any) => {
     })
   }
   const handldExport = (text: any) => {
+    const a = document.createElement('a');
+    a.href = text.downloadUrl;
+    a.download = text.name;
+    a.click();
+  }
+  const handleExportList = (text: any) => {
+    console.log('批量导出 暂无');
     
-    setIsShowEditModal(true)
-    setEditDataSourceInfo(text)
   }
-  const previewClick = (record: any) => {
-    console.log(record)
-    setPreviewRecord(record)
-    const fileUrl = record.type === 'EXCEL' ?
-      record.excelSourceConfig.fileUrl : record.type === 'CSV' ?
-        record.csvSourceConfig.fileUrl : record.jsonSourceConfig.fileUrl
-    setIsShowPreviewModal(true)
-    setPreviewFileUrl(fileUrl)
+  const handleOn = (record: any) => {
+    console.log(record,'上架')
   }
-  const changePreviewShowState = (val: boolean) => {
-    setIsShowPreviewModal(val)
-    setPreviewFileUrl(null)
+  const handleOff = (record: any) => {
+    console.log(record,'下架')
   }
-  const changeRecordFileUrl = async (fileUrl: string) => {
-    const type = previewRecord.type.toLowerCase()
-    const finalParams = Object.assign({}, previewRecord, {
-      [`${type}SourceConfig`]: {
-        fileUrl
-      }
-    })
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/datasource/update',
-      method: 'post',
-      body: finalParams
-    })
-    if (data) {
-      refreshTable()
-      setPreviewFileUrl(null)
-    }
-  }
+
   // 表格排序
   const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
     if (action === 'sort') {
@@ -320,12 +290,12 @@ const ComponentDev = (props: any) => {
           <Space size="middle" >
             {
               record.status===0 
-              ? <Button type='text' className='buttonBlue' onClickCapture={() => previewClick(record)}>下架</Button>
-              : <Button type='text' className='buttonBlue' onClickCapture={() => previewClick(record)}>上架</Button>
+              ? <Button type='text' className='buttonBlue' onClickCapture={() => handleOff(record)}>下架</Button>
+              : <Button type='text' className='buttonBlue' onClickCapture={() => handleOn(record)}>上架</Button>
             }
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
-            <Button type='text' disabled={ record.status===0 } 
-                    className={ record.status===0?'buttonGray':'buttonBlue' }  
+            <Button type='text' disabled={ !(record.appName?.length>0) } 
+                    className={ record.appName?.length>0?'buttonBlue':'buttonGray' }  
                     onClickCapture={() => handleDelete(record.id)}
                     >删除</Button>
           </Space>
@@ -353,10 +323,9 @@ const ComponentDev = (props: any) => {
           background: '#171a24'
         }}>
           <div className='left-box'>
-            <Button type="primary" className='mr-16' onClick={handldImport}>导入组件</Button>
-            <Button type="primary" className='mr-16' disabled={!hasSelected}>导出</Button>
-            <Button type="primary" className='mr-16' disabled={!hasSelected}>下架</Button>
-            <Button type="primary" className='mr-16' disabled={!hasSelected}>删除</Button>
+            <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
+            <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button>
+            <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>            
             <span className='mr-16'>
               {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''}
             </span>
@@ -394,40 +363,12 @@ const ComponentDev = (props: any) => {
             rowKey="id"
           />
         </div>
-        {/* 添加数据源的弹窗 */}
-        {/* <AddDataSource
-          visible={isShowAddModal}
+        {/* 导入组件的弹窗 */}
+        <ImportComponent
+          visible={isShowImportModal}
           changeShowState={changeShowState}
           refreshTable={refreshTable}
-        /> */}
-        {/* 编辑数据源的弹窗 */}
-        {
-        //   isShowEditModal && <EditDataSource
-        //   editDataSourceInfo={editDataSourceInfo}
-        //   visible={isShowEditModal}
-        //   changeShowState={changeShowState}
-        //   refreshTable={refreshTable}
-        // />
-        }
-        {
-          // ['EXCEL', 'CSV'].includes(previewRecord.type) ?
-          //   // {/* 表格在线预览 */}
-          //   <PreviewTable
-          //     visible={isShowPreviewModal}
-          //     fileUrl={previewFileUrl}
-          //     changeShowState={changePreviewShowState}
-          //     changeRecordFileUrl={changeRecordFileUrl}
-          //   />
-          //   :
-          //   // {/* json在线预览 */}
-          //   <PreViewJson
-          //     visible={isShowPreviewModal}
-          //     fileUrl={previewFileUrl}
-          //     dataSourceId={previewRecord.id}
-          //     changeShowState={changePreviewShowState}
-          //     changeRecordFileUrl={changeRecordFileUrl}
-          //   />
-        }
+        />
       </div>
     </ConfigProvider>
   )
