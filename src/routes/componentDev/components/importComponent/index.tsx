@@ -9,7 +9,7 @@ const { Dragger } = Upload
 const importComponent = (props: any) => {
   const [addForm] = Form.useForm()
   const { visible, changeShowState, refreshTable } = props
-
+  const [fileList, setFileList] = useState([]);
   // 上传的文件在后端存储的地址
   const [fileUrl, setFileUrl] = useState('')
   const [loading, setLoading] = useState()
@@ -18,52 +18,38 @@ const importComponent = (props: any) => {
    */
   const clearModalState = () => {
     setFileUrl('')
+    setFileList([])
   }
   /**
    * description: 上传组件
    */
-  const handleOk = async () => {
-    /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
-    const values: any = await addForm.validateFields()
-    console.log(addForm,'addForm');
-    console.log(values,'vvvvv');
-    const { name,  description, ...rest } = values  // later 
-    let finalSourceConfig = rest
-    // if (['csv', 'json', 'excel'].includes(dataBaseOrNormal)) {
-      if (!fileUrl) {
-        message.error('上传文件格式错误或未上传文件')
-        return
+  const handleOk  = async () => {
+    // const values: any = await addForm.validateFields()
+    if (fileList && fileList.length) { //检验是否有上传文件
+      const formData = new FormData();
+      formData.append('file', fileList[0]['originFileObj']);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const data = await http({
+        method: 'post',
+        url: `/visual/file/uploadModule`,
+        body: formData
+      })
+      if (data) {
+        changeShowState('add')
+        addForm.resetFields()
+        refreshTable()
       }
-      finalSourceConfig = {}
-      finalSourceConfig.fileUrl = fileUrl
-    // }
-    const finalParams = {  // later 只有文件名
-      name,
-      description,
-      // [`${dataBaseOrNormal}SourceConfig`]: finalSourceConfig
-    }
-    // 发送请求
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      method: 'post',
-      url: '/visual/module-manage/importModule',
-      body: finalParams
-    })
-    console.log(data,'dataaaaaa');
-    
-    if (data) {
-      // 成功后  -关闭弹窗 -清除表单- 重置添加数据源表单为初始样式 -刷新表格
-      changeShowState('add')
-      addForm.resetFields()
-      refreshTable()
+    } else {
+        message.error('上传文件格式错误或未上传文件!');
+        return
     }
   }
-
   const handleCancel = () => {
     changeShowState('add')
     addForm.resetFields()
     clearModalState()
   }
+
 
   /**
    * description: 针对不同格式文件的上传 生成 相应的uploadProps
@@ -72,7 +58,6 @@ const importComponent = (props: any) => {
    * return:
    */
   const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
-    
     // 上传框配置
     let uploadProps = {
       name: 'file',
@@ -98,9 +83,11 @@ const importComponent = (props: any) => {
           })
           file.status = 'error'
           return false
-        }
+        }     
+        return false // 上传时不调取接口        
       },
       onChange(info: any) {
+        setFileList(info.fileList);
         const { status, response } = info.file;
         if (status === 'done') {
           message.success(`${info.file.name} 上传成功`);
@@ -127,6 +114,7 @@ const importComponent = (props: any) => {
     if (JSON.stringify(customProps) !== '{}') {
       uploadProps = { ...uploadProps, ...customProps }
     }
+
     return uploadProps
   }
   // .zip 文件
