@@ -6,7 +6,7 @@ import EveryItem from '../everyItem/index'
 
 const DesignMaterial = (props: any) => {
   // const { data } = props
-  const [active, setActive] = useState('all')
+  const [active, setActive] = useState('spsc')
   const liHover = (key: string) => {
     console.log(key);
     setActive(key)
@@ -41,126 +41,50 @@ const DesignMaterial = (props: any) => {
 }
 
 const ChartDataMap: any = {
-  all: [
+  spsc: [
     {
       name: 'assssssssssssssssssddddddddddddddddss',
     },
     {
       name: 'bbbbbbbbbbbbbbbbbbbbbbbbbbb',
-    },
-    {
-      name: 'c',
-    },
-    {
-      name: 'd',
-    },
-    {
-      name: 'e',
-    },
-    {
-      name: 'f',
-    },
-    {
-      name: 'g',
-    },
-    {
-      name: 'h',
-    },
-    {
-      name: 'i',
-    },
-    {
-      name: 'j',
-    },
-    {
-      name: 'k',
-    },
-    {
-      name: 'l',
-    },
-    {
-      name: 'm',
-    },
+    }
   ],
-  bar: [
-    {
-      name: '柱形图1',
-      key: 'a'
-    },
-    {
-      name: '柱形图2',
-      key: 'b'
-    },
-    {
-      name: '柱形图3',
-      key: 'c'
-    },
-    {
-      name: '柱形图4',
-      key: 'd'
-    },
-    {
-      name: '柱形图5',
-      key: 'e'
-    },
+  bjk: [
     {
       name: '柱形图6',
       key: 'y'
     },
   ],
-  line: [
-    {
-      name: '折线图1',
-      key: 'a'
-    },
-    {
-      name: '折线图2',
-      key: 'b'
-    },
-    {
-      name: '折线图3',
-      key: 'c'
-    }
-  ],
-  pie: [
+  bp: [
     {
       name: '饼图1',
       key: 'a'
     },
   ],
-  scatter: [
+  tb: [
     {
       name: '散点图',
       key: 'a'
     }
-  ],
-  other: []
+  ]
 }
 
 const chartType = [
   {
-    text: '全部',
-    key: 'all',
+    text: '视频素材',
+    key: 'spsc',
   },
   {
-    text: '柱形图',
-    key: 'bar',
+    text: '背景框',
+    key: 'bjk',
   },
   {
-    text: '折线图',
-    key: 'line',
+    text: '标牌',
+    key: 'bp',
   },
   {
-    text: '饼图',
-    key: 'pie',
-  },
-  {
-    text: '散点图',
-    key: 'scatter',
-  },
-  {
-    text: '其他',
-    key: 'other',
-  },
+    text: '图标',
+    key: 'tb',
+  }
 ]
 export default memo(DesignMaterial)

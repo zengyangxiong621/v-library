@@ -55,7 +55,7 @@ const Charts = (props: any) => {
           url: '/visual/module-manage/queryModuleList',
           method: 'post',
           body: {
-            type: [0],
+            type: ['chart'],
             status: 0,
             pageNo: 1,
             pageSize: 100,
@@ -63,7 +63,6 @@ const Charts = (props: any) => {
         })
         // ChartDataMap[helplessMapping[type]] = data?.content
         // }
-        console.log('data', data);
         // TODO  把data里的数据按照组件种类放入chartDataMap中
         }
         getData()
