@@ -97,6 +97,11 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       setIsLoaded(true)
     }
     init()
+    return () => {
+      dispatch({
+        type: 'bar/clearCurrentDashboardData'
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   // 定时刷新页面

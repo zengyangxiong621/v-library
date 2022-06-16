@@ -1,7 +1,7 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getFields } from "@/utils/data";
 import { useState, useRef } from "react";
-// import DateSelect from '@/components/dateSelect'
+import DateSelect from '@/components/dateSelect'
 import { connect } from "dva"
 // import './index.less'
 import { cloneDeep } from 'lodash'
@@ -126,6 +126,16 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
       "name": "回调2",
       "origin": "sleepTime",
       "target": "endTime"
+    },    {
+      "id": "回调id-3",
+      "name": "回调2",
+      "origin": "a",
+      "target": "a"
+    },    {
+      "id": "回调id-4",
+      "name": "回调2",
+      "origin": "b",
+      "target": "b"
     },
   ]
 
@@ -169,7 +179,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
                 }
                 dispatch({
-                  type: 'previewDashboard/save',
+                  type: 'bar/save',
                   payload: {
                     callbackArgs
                   }
@@ -181,18 +191,13 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
       })
     })
     activeIds = [...new Set(activeIds)]
-    console.log('activeIds', activeIds)
-    activeIds.forEach(id => {
-      const component = bar.components.find(item => item.id === id)
-      const data = component.staticData.data[0]
-      Object.keys(data).forEach((key) => {
-        data[key] = '2022-06-14'
-      })
-      console.log('component', component)
+    const activeComponents = activeIds.reduce((pre, id) =>  pre.concat( bar.components.find(item => item.id === id)),[])
+    // 重新获取部分组件的数据
+    dispatch({
+      type: 'bar/getComponentsData',
+      payload: activeComponents
     })
-    console.log('activeIds', activeIds)
   }
-
   return (
     <div ref={componentRef} className={`single-component event-id-${id}`} onClick={handleClick}
       style={{ width: '100%', height: '100%', ...animationConfig, ...opacityStyle }}>
@@ -200,12 +205,12 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
         {...props}
       ></RemoteBaseComponent>     */}
       {
-        props.componentConfig.moduleName === 'timeSelect' ? <></>
-          //  <DateSelect
-          //   onChange={handleValueChange}
-          //   {...props}
-          // >
-          // </DateSelect>
+        props.componentConfig.moduleName === 'timeSelect' ?
+           <DateSelect
+            onChange={handleValueChange}
+            {...props}
+          >
+          </DateSelect>
           : <RemoteBaseComponent
             {...props}
           ></RemoteBaseComponent>
