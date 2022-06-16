@@ -319,9 +319,7 @@ const ComponentDev = (props: any) => {
     <ConfigProvider locale={zhCN}>
       <div className='ComponentDev-wrap'>
         <div className='title'>组件开发</div>
-        <header className='header' style={{
-          background: '#171a24'
-        }}>
+        <header className='header' style={{ background: '#171a24' }}>
           <div className='left-box'>
             <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
             <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button>
@@ -360,7 +358,7 @@ const ComponentDev = (props: any) => {
             dataSource={tableData}
             pagination={paginationProps}
             onChange={tableOnChange}
-            rowKey="id"
+            rowKey={record=>record.id}
           />
         </div>
         {/* 导入组件的弹窗 */}
