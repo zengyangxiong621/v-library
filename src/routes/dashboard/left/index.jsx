@@ -89,7 +89,7 @@ const Left = ({ dispatch, bar, operate }) => {
       if (e.key === 'Control') {
         dispatch({
           type: 'bar/save',
-          payload: { isMultipleTree: true },
+          payload: { isMultipleTree: false },
         })
         setIsCtrlKeyPressing(false)
       }

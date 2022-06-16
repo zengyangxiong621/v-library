@@ -15,9 +15,13 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
   }, [props.data, props.visible])
   const dataSourceEnum = {
     static: '静态数据',
-    json: 'JSON',
-    api: 'API',
-    csv: 'CSV'
+    json: 'JSON数据',
+    api: 'API数据',
+    csv: 'CSV数据',
+    excel: 'EXCEL数据',
+    mysql: 'MYSQL数据',
+    postgresql: 'PostgreSQL数据',
+    elasticSearch: 'ES数据',
   }
   const onClose = () => {
     props.onVisibleChange(false)

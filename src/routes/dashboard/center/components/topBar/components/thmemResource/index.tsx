@@ -6,9 +6,8 @@ import EveryItem from '../everyItem/index'
 
 const Charts = (props: any) => {
   // const { data } = props
-  const [active, setActive] = useState('all')
+  const [active, setActive] = useState('jdl')
   const liHover = (key: string) => {
-    console.log(key);
     setActive(key)
   }
   return (
@@ -41,126 +40,62 @@ const Charts = (props: any) => {
 }
 
 const ChartDataMap: any = {
-  all: [
+  jdl: [
     {
       name: 'assssssssssssssssssddddddddddddddddss',
     },
-    {
-      name: 'bbbbbbbbbbbbbbbbbbbbbbbbbbb',
-    },
-    {
-      name: 'c',
-    },
-    {
-      name: 'd',
-    },
-    {
-      name: 'e',
-    },
-    {
-      name: 'f',
-    },
-    {
-      name: 'g',
-    },
-    {
-      name: 'h',
-    },
-    {
-      name: 'i',
-    },
-    {
-      name: 'j',
-    },
-    {
-      name: 'k',
-    },
-    {
-      name: 'l',
-    },
-    {
-      name: 'm',
-    },
   ],
-  bar: [
+  xxmb: [
     {
       name: '柱形图1',
       key: 'a'
     },
-    {
-      name: '柱形图2',
-      key: 'b'
-    },
-    {
-      name: '柱形图3',
-      key: 'c'
-    },
-    {
-      name: '柱形图4',
-      key: 'd'
-    },
-    {
-      name: '柱形图5',
-      key: 'e'
-    },
-    {
-      name: '柱形图6',
-      key: 'y'
-    },
   ],
-  line: [
-    {
-      name: '折线图1',
-      key: 'a'
-    },
-    {
-      name: '折线图2',
-      key: 'b'
-    },
+  dtl: [
     {
       name: '折线图3',
       key: 'c'
     }
   ],
-  pie: [
+  anz: [
     {
       name: '饼图1',
       key: 'a'
     },
   ],
-  scatter: [
+  zsxj: [
     {
       name: '散点图',
       key: 'a'
     }
   ],
-  other: []
+  btzy: []
 }
 
 const chartType = [
   {
-    text: '全部',
-    key: 'all',
+    text: '节点类',
+    key: 'jdl',
   },
   {
-    text: '柱形图',
-    key: 'bar',
+    text: '信息面板',
+    key: 'xxmb',
   },
   {
-    text: '折线图',
-    key: 'line',
+    text: '地图类',
+    key: 'dtl',
   },
   {
-    text: '饼图',
-    key: 'pie',
+    text: '按钮组',
+    key: 'anz',
   },
   {
-    text: '散点图',
-    key: 'scatter',
+    text: '装饰细节',
+    key: 'zsxj',
   },
   {
-    text: '其他',
-    key: 'other',
+    text: '标题资源',
+    key: 'btzy',
   },
 ]
 export default memo(Charts)
