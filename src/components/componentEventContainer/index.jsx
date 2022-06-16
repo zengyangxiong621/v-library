@@ -1,7 +1,7 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getFields } from "@/utils/data";
 import { useState, useRef } from "react";
-// import DateSelect from '@/components/dateSelect'
+import DateSelect from '@/components/dateSelect'
 import { connect } from "dva"
 // import './index.less'
 import { cloneDeep } from 'lodash'
@@ -205,12 +205,12 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
         {...props}
       ></RemoteBaseComponent>     */}
       {
-        props.componentConfig.moduleName === 'timeSelect' ? <></>
-          //  <DateSelect
-          //   onChange={handleValueChange}
-          //   {...props}
-          // >
-          // </DateSelect>
+        props.componentConfig.moduleName === 'timeSelect' ?
+           <DateSelect
+            onChange={handleValueChange}
+            {...props}
+          >
+          </DateSelect>
           : <RemoteBaseComponent
             {...props}
           ></RemoteBaseComponent>
