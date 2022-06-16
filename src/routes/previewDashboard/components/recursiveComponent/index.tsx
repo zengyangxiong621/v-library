@@ -22,13 +22,17 @@ const RecursiveComponent = (props: any) => {
             targetComponent = componentLists.find((item: any) => item.id === layer.id)
           }
           return (
-            <div>
+            <div
+              data-id={isGroup ? layer.id : 'component-' + layer.id}
+              key={layer.id}
+              style={{ visibility: !layer.isShow ? 'hidden' : 'unset', }}
+            >
               {
                 isGroup ?
                   <div className="no-cancel"
-                  style={{
-                    opacity: (layer[OPACITY] || 100) / 100
-                  }}
+                    style={{
+                      opacity: (layer[OPACITY] || 100) / 100
+                    }}
                   >
                     {(layer as any)[MODULES]?.length > 0 &&
                       <div>
