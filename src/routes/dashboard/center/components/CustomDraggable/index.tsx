@@ -192,7 +192,6 @@ const CustomDraggable
     }
   }
   const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-    console.log('dragStop')
     supportLinesRef.handleSetPosition(0, 0, 'none')
     dispatch({
       type: 'bar/selectComponentOrGroup',
@@ -200,6 +199,10 @@ const CustomDraggable
         layer,
         config,
       },
+    })
+    dispatch({
+      type: 'bar/setIsShowRightMenu',
+      payload: false,
     })
     if (component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
       // 单个组件移动
@@ -330,6 +333,7 @@ const CustomDraggable
       dispatch({
         type: 'bar/save',
         payload: {
+          isMultipleTree: true,
           scaleDragData: {
             position: {
               x: xPositionList[0],
@@ -441,8 +445,10 @@ const CustomDraggable
     // })
   }
   const mouseRightClick = (e: any, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-    if (layer.id in bar.selectedComponentRefs) {
+    if (Object.keys(bar.selectedComponentRefs).length > 1 && layer.id in bar.selectedComponentRefs) {
       bar.isSupportMultiple = true
+    } else {
+      bar.isSupportMultiple = false
     }
     e.persist()
     e.preventDefault()

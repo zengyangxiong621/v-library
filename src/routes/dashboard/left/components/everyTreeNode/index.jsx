@@ -14,7 +14,8 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
       payload
     })
   }
-  const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
+  const { name, id, modules, moduleName, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
+  console.log('_++++++++++++++++++++++++++++++++++', restProps);
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
   // 文件夹是展开了还是关闭了
@@ -55,7 +56,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
       id: name,
       isFolder,
     })
-    // console.log('右键', e);
   }
   const inputRef = useRef()
   // 鼠标双击事件
@@ -146,9 +146,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
       }
     })
   }
-  useEffect(() => {
-  }, [])
   const isSelected = bar.key.includes(id)
+  // 左侧图层前组件缩略图小图标
+  const photoPath = `${window.CONFIG.COMP_URL}/modules/${moduleName}/1.0.0/thumb-${moduleName}.png`
   return (
     <div className={`EveryTreeNode-wrap
         ${hover && 'every-tree-node-hover'}
@@ -165,7 +165,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
             }} className='iconfont icon-wenjianjia-zhankai set-margin set-icon-size' /> : <i style={{
               paddingLeft: '13px'
             }} className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
-            : <div className='frame set-margin'></div>
+            : <div className='frame set-margin'>
+              <img style={{width: '100%', height: '100%'}} src={photoPath}></img>
+            </div>
         }
       </div>
       <div className='title' onDoubleClick={(e) => dClick(e)}>

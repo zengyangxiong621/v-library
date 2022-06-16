@@ -31,7 +31,8 @@ const createEnvironmentHash = require('./webpack/persistentCache/createEnvironme
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+// const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const shouldUseSourceMap = false
 
 const reactRefreshRuntimeEntry = require.resolve('react-refresh/runtime');
 const reactRefreshWebpackPluginRuntimeEntry = require.resolve(
@@ -51,7 +52,7 @@ const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true';
-// const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
+// TODO：const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
 const disableESLintPlugin = true;
 
 const imageInlineSizeLimit = parseInt(

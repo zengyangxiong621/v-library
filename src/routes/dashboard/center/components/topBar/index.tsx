@@ -20,6 +20,8 @@ import MyCollection from './components/myCollection'
 import { Menu } from 'antd'
 const { SubMenu, Item } = Menu
 
+
+
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai } = props
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
@@ -33,7 +35,7 @@ const TopBar = (props: any) => {
         {
           menuReflect[zujianORsucai].map((item: any) => {
             return (
-              (<SubMenu className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && '88px' }} >
+              (<SubMenu popupOffset={[0, 0]} className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && '88px'}} >
                 <div
                   className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
                 >
