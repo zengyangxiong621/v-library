@@ -1,0 +1,97 @@
+@backColor: #313239;
+
+.dashboard-node-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  width: 100%;
+  color: #ccc;
+  padding-left: 2px;
+  .title {
+    flex: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 140px;
+
+    .text {
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .icons-wrap {
+    .show-icon {
+      display: none;
+    }
+    .show-nums {
+      display: block;
+    }
+  }
+}
+.set-margin {
+  margin-right: 12px;
+  color: #585c76;
+}
+.set-icon-size {
+  font-size: 14px;
+}
+
+.each-icon {
+  margin: 0 2px;
+}
+
+/* 自定义Input的背景色 */
+.ant-input {
+  color: #fff;
+  background-color: #24262e;
+}
+
+/****** 修改ant Tree的样式 ***/
+
+.ant-tree-node-content-wrapper:hover .eyes-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+// hover节点的时候，去除默认背景色
+.ant-tree .ant-tree-node-content-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0);
+}
+// 选中节点的时候，去除默认背景色
+.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.ant-tree .ant-tree-switcher {
+  align-self: center;
+}
+// 固定左侧列表的宽度
+.ant-tree .ant-tree-treenode {
+  width: 240px;
+  padding-right: 16px;
+  padding-bottom: 0;
+}
+.ant-tree .ant-tree-treenode:hover {
+  background-image: linear-gradient(
+    90deg,
+    #4083ff 0%,
+    rgba(44, 78, 145, 0.62) 55%,
+    rgba(23, 26, 36, 0) 100%
+  );
+}
+.ant-tree .ant-tree-treenode:hover .show-icon {
+  display: flex;
+  align-items: center;
+
+}
+.ant-tree .ant-tree-treenode:hover .show-nums {
+  display: none;
+}
+// 需要去除padding
+.ant-tree .ant-tree-node-content-wrapper {
+  padding: 0;
+}
