@@ -29,7 +29,6 @@ const EveryTreeNode = (props: any) => {
     // 前端校验一遍
     //比如名字一样,不发请求
     if (newGroupName === '') {
-      // message.warning({ content: '分组名不能为空', duration: 2 })
       addGroup()
       return
     }
@@ -174,7 +173,7 @@ const EveryTreeNode = (props: any) => {
             </div>
             <div className='icons-wrap'>
               {
-                name === '应用列表'
+                name === '模板库'
                   ? <IconFont type='icon-xinjianfenzu' onClickCapture={addGroup} />
                   :
                   (name === '全部应用' || name === '未分组')

@@ -87,7 +87,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
       node.key === "aInput" ||
       node.key === "wrap" ||
       node.name === "占位的input" ||
-      node.name === "应用列表"
+      node.name === "模板库"
     ) {
       return;
     }

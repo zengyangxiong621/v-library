@@ -5,7 +5,7 @@ import { connect } from "dva";
 import { Icon } from "@ant-design/compatible";
 import { http, BASEURL } from "@/services/request";
 const UploadFile = (props: any) => {
-  const { uploadVisible, changeShowState,groupList} = props;
+  const { uploadVisible, changeShowState,groupList,refreshList} = props;
   console.log(groupList,'groupList')
   const { Option } = Select;
   const Dragger = Upload.Dragger;
@@ -31,6 +31,7 @@ const UploadFile = (props: any) => {
         changeShowState(false)
         message.success('上传成功')
         uploadForm.resetFields()
+        refreshList()
       }
     }
   };
@@ -115,6 +116,8 @@ const UploadFile = (props: any) => {
       visible={uploadVisible}
       onOk={handleOk}
       onCancel={handleCancel}
+      okText="确定"
+      cancelText="取消"
     >
       <Form name="importComponent"  form={uploadForm}>
         <Form.Item label="上传文件" name='file' rules={generateSingleRules(true, '请选择要上传的组件')}>

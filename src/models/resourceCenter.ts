@@ -11,9 +11,6 @@ export default {
     curSelectedGroupName: "",
   },
   reducers: {
-    // resetTheModels(state: any) {
-    //   return { ...state }
-    // },
     resetModel(state: any, { payload }: any) {
       return { ...state, ...payload };
     },
@@ -55,16 +52,13 @@ export default {
           url: `/visual/resource/queryGroupList?spaceId=1`,
           method: "get",
         }
-        // {
-        //   errorInfo: "应用分组列表请求失败",
-        // }
       );
       yield put({
         type: "setGroupList",
         payload: [
           {
             groupId: "wrap",
-            name: "应用列表",
+            name: "模板库",
             children: data,
           },
         ],
