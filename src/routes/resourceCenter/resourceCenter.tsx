@@ -4,9 +4,12 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import LeftTree from "./components/LeftTree";
+import { Button } from "antd";
+import UploadFile from "./components/uploadFile";
 // 功能
-const ResourceCenter = ({ dispatch, history }: any) => {
+const ResourceCenter = ({ dispatch, history, resourceCenter }: any) => {
   const [inputValue, setInputValue] = useState("");
+  const [uploadVisible, setUploadVisible] = useState(false);
   // 当切换任意分组时，都需要清除输入框里的值
   const clearSearchInputState = () => {
     setInputValue("");
@@ -31,12 +34,32 @@ const ResourceCenter = ({ dispatch, history }: any) => {
     // getDataDispatch(finalBody);
   }, []);
 
+  const handleUpload = () => {
+    setUploadVisible(true);
+  };
+
+  const changeShowState = (modalType: any) => {
+    setUploadVisible(modalType);
+  };
+
   return (
     <div className="resourceCenter-wrap" id="resourceCenterPage">
       <div className="left">
         <LeftTree clearSearchInputState={clearSearchInputState} />
       </div>
-      <div className="right"></div>
+      <div className="right">
+        {/* <Button type="primary" onClick={handleUpload}>
+          上传素材
+        </Button> */}
+      </div>
+      {/* 上传素材弹窗 */}
+      {resourceCenter.groupList.length > 0 && (
+        <UploadFile
+          uploadVisible={uploadVisible}
+          groupList={resourceCenter.groupList}
+          changeShowState={changeShowState}
+        ></UploadFile>
+      )}
     </div>
   );
 };

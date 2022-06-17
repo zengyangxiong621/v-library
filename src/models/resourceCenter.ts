@@ -52,7 +52,7 @@ export default {
     *getGroupTree({ payload }: any, { call, put }: any): any {
       const data  = yield http(
         {
-          url: `/visual/application/queryGroupList?spaceId=1`,
+          url: `/visual/resource/queryGroupList?spaceId=1`,
           method: "get",
         }
         // {
