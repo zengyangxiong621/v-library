@@ -7,7 +7,7 @@ const EveryItem = (props: any) => {
   const { data, type, dispatch, bar } = props
 
   const importComponent = useCallback(() => {
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   }, [type])
 
   const loadComp = useCallback(async () => {
