@@ -506,7 +506,6 @@ const CustomDraggable
     <div className="c-custom-draggable">
       {
         treeData.map((layer: ILayerGroup | ILayerComponent | any) => {
-          
           let config: IConfig = {
             position: {
               x: 0,
@@ -541,6 +540,7 @@ const CustomDraggable
           } else {
             // 组件
             component = components.find(item => item.id === layer.id)
+            console.log(component, 'component==========================')
             if (component) {
               staticData = component.staticData
               style_config = component.config
