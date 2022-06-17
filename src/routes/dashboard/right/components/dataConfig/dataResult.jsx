@@ -23,7 +23,7 @@ const DataResult = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
   const type = props.type
   const componentResultData = props.resultData || []
-  const [resultData, setResultData] = useState({...resultCodeData, value: JSON.stringify(componentResultData, null, 2)})
+  const [resultData, setResultData] = useState({ ...resultCodeData, value: JSON.stringify(componentResultData, null, 2) })
 
   useEffect(() => {
     console.log('3')
@@ -43,7 +43,7 @@ const DataResult = ({ bar, dispatch, ...props }) => {
   const init = () => {
     console.log(5)
     if (!type && type !== 'component') {
-      const resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)
+      const resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)
       const newData = Object.assign({}, resultData, {
         value: resData ? JSON.stringify(resData, null, 2) : ''
       })

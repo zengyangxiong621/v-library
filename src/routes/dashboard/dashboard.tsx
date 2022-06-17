@@ -14,8 +14,9 @@ import CenterHeaderBar from './center/components/topBar/index'
 import CenterBottomBar from './center/components/BottomBar/index'
 import ChooseArea from './center/components/ChooseArea'
 import CenterRightMenu from './left/components/rightClickMenu/rightClickMenu'
-import {menuOptions} from './left/Data/menuOptions'
+import { menuOptions } from './left/Data/menuOptions'
 import DataContainer from './components/dataContainer'
+import CallbackArgs from './components/callbackArgs'
 import useLoading from '@/components/useLoading'
 import { useEventEmitter } from 'ahooks';
 
@@ -25,6 +26,7 @@ function App({ bar, dispatch, location }: any) {
   const [showTopBar, setShowTopBar] = useState(false)
   const [zujianORsucai, setZujianORsucai] = useState('zujian')
   const [dataContainerVisible, setDataContainerVisible] = useState(false)
+  const [callbackArgsVisible, setCallbackArgsVisible] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
   const [loading, setLoading]: any = useLoading(false, document.querySelector('.p-home'))
   // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
@@ -126,7 +128,7 @@ function App({ bar, dispatch, location }: any) {
     dispatch({
       type: 'bar/initDashboard',
       payload: dashboardId,
-      cb: () => {}
+      cb: () => { }
     })
 
     // dispatch({
@@ -152,6 +154,7 @@ function App({ bar, dispatch, location }: any) {
    */
 
   const showWhichBar = (whichBar: string) => {
+    console.log('whichBar', whichBar)
     if (['zujian', 'sucai'].includes(whichBar)) {
       setZujianORsucai(whichBar)
       setShowTopBar(true)
@@ -161,6 +164,10 @@ function App({ bar, dispatch, location }: any) {
     }
     if (whichBar === 'shujurongqi') {
       setDataContainerVisible(true)
+      setCallbackArgsVisible(false)
+    } else if (whichBar === 'huitiaoguanli') {
+      setCallbackArgsVisible(true)
+      setDataContainerVisible(false)
     }
   }
 
@@ -176,6 +183,9 @@ function App({ bar, dispatch, location }: any) {
   }
   const handleDCVisibleChange = (value: boolean) => {
     setDataContainerVisible(value)
+  }
+  const handleCbAvailableChange = (value: boolean) => {
+    setCallbackArgsVisible(value)
   }
   return (
     <Layout>
@@ -194,11 +204,12 @@ function App({ bar, dispatch, location }: any) {
         </div>
         <div className="right-wrap">
           <Right />
-          <DataContainer visible={dataContainerVisible} onChange={handleDCVisibleChange}/>
+          <DataContainer visible={dataContainerVisible} onChange={handleDCVisibleChange} />
+          <CallbackArgs visible={callbackArgsVisible} onChange={handleCbAvailableChange} />
         </div>
         {
           bar.isShowRightMenu &&
-          <CenterRightMenu  menuOptions={customMenuOptions} hideMenu={hideMenu} />
+          <CenterRightMenu menuOptions={customMenuOptions} hideMenu={hideMenu} />
         }
       </div>
     </Layout>

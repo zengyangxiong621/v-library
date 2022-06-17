@@ -668,7 +668,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             </div>
             <div className="body">
               <div className="code-editor">
-                <div className="cus-code">{`function filter(data){`}</div>
+              <div className="cus-code">{`function filter(data,callbackArgs){`}</div>
                 <div className="code-wraper">
                   <CodeEditor value={item.content} language="javascript" onChange={(e) => codeChange(e, item)}></CodeEditor>
                 </div>
