@@ -9,15 +9,25 @@ import { cloneDeep } from 'lodash'
 const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props }) => {
   const callbackArgs = bar.callbackArgs
   const callbackParamsList = bar.callbackParamsList
+  const { componentConfig } = props
+  console.log('componentConfig', componentConfig)
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
   })
   const componentRef = useRef(null)
   const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 })
+  const opacityTimeId = useRef('')
+  const [clickTimes, setClickTimes] = useState(0)
   const clickEvents = events.filter(item => item.trigger === 'click')
   const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
-
-  const handleClick = () => {
+  const handleClick = (event) => {
+    if (clickTimes === 1) {
+      return
+    }
+    if (clickActions.length === 0) {
+      return
+    }
+    setClickTimes(1)
     console.log('clickActions', clickActions)
     const hideShowAction = clickActions.filter(({ action }) => ['hide', 'show', 'show/hide'].includes(action))
     const rotateAction = clickActions.filter(({ action }) => ['rotate'].includes(action))
@@ -36,58 +46,107 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
           Object.keys(action).filter(
             (key) => !['id', 'name', 'trigger', 'componentScope', 'component', 'action'].includes(key)
           ).forEach((key) => {
-            actionConfigFuncList[key](action[key], type, dom)
+            actionConfigFuncList[key](action[key], type, dom, action.id)
           })
         })
       }, delay)
     })
-    // if (hideShowAction && hideShowAction.length > 0) {
-    //   hideShowAction.forEach(action => {
-    //     const type = action.action
-    //     const animation = action.animation
-    //     const delay = animation.delay
-    //     const dom = document.querySelector(`.event-id-${id}`)
-    //     if (delay === 0) {
-    //       action.component.forEach(id => {
-    //         actionConfigFuncList['animation'](action['animation'], type, dom)
-    //       })
-    //     } else {
-    //       setTimeout(() => {
-    //         action.component.forEach(id => {
-    //           actionConfigFuncList['animation'](action['animation'], type, dom)
-    //         })
-    //       }, delay)
-    //     }
-    //   })
-    // }
   }
 
-  const animation = ({ duration, timingFunction }, action, dom) => {
-    if (action === 'show') {
+  const animation = ({ duration, timingFunction, type}, action, dom, id) => {
+    if (['show', 'hide'].includes(action)) {
+      // transform = 'translateY(200px)'
+      let translate = {
+        x: 0,
+        y: 0
+      }
+      console.log('type', type)
+      switch (type) {
+        case 'slideLeft':
+          translate.x = -200
+          break
+        case 'slideRight':
+          translate.x = 200
+          break
+        case 'slideTop':
+          translate.y = -200
+          break
+        case 'slideBottom':
+          translate.y = 200
+          break;
+        default:
+          break
+      }
+      const translateX = /translateX\((.+?)\)/g
+      const translateY = /translateY\((.+?)\)/g
+      if (translateX.test(dom.style.transform)) {
+        let value = dom.style.transform.match(translateX)[0]
+        // 取出数字包括 - 和 . 号
+        let xLength = Number(value.replace(/[^\d|^\.|^\-]/g, ''))
+        xLength = xLength + translate.x
+        dom.style.transform = dom.style.transform.replace(translateX, `translateX(${xLength}px)`)
+      } else {
+        dom.style.transform += `translateX(${translate.x}px)`
+      }
+      if (translateY.test(dom.style.transform)) {
+        let value = dom.style.transform.match(translateY)[0]
+        let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ''))
+        yLength = yLength + translate.y
+        dom.style.transform = dom.style.transform.replace(translateY, `translateY(${yLength}px)`)
+      } else {
+        dom.style.transform += `translateY(${translate.y}px)`
+      }
+
+
+
+      opacityTimeId.current = id
       let timer = setInterval(() => {
-        if (dom.style.opacity >= 1) {
-          dom.style.opacity = 1
+        // 在一个时间端内，只存在一种事件
+        if (opacityTimeId.current !== id) {
           clearInterval(timer)
-        } else {
-          dom.style.opacity = Number(dom.style.opacity) + 0.01
+        }
+        if (action === 'show') {
+          if (dom.style.opacity >= 1) {
+            dom.style.opacity = 1
+            clearInterval(timer)
+          } else {
+            dom.style.opacity = Number(dom.style.opacity) + 0.01
+          }
+        }
+        if (action === 'hide') {
+          if (dom.style.opacity <= 0) {
+            dom.style.opacity = 0
+            clearInterval(timer)
+          } else {
+            dom.style.opacity = Number(dom.style.opacity) - 0.01
+          }
         }
       }, duration / 100)
+
     }
-    if (action === 'hide') {
-      let timer = setInterval(() => {
-        if (dom.style.opacity <= 0) {
-          dom.style.opacity = 0
-          clearInterval(timer)
-        } else {
-          dom.style.opacity = Number(dom.style.opacity) - 0.01
-        }
-      }, duration / 100)
-    }
+
   }
 
-  const translate3d = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
+  const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
     if (action === 'rotate') {
-      dom.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`
+      const rotateRegX = /rotateX\((.+?)\)/g
+      const rotateRegY = /rotateY\((.+?)\)/g
+      const rotateRegZ = /rotateZ\((.+?)\)/g
+      if (rotateRegX.test(dom.style.transform)) {
+        dom.style.transform = dom.style.transform.replace(rotateRegX, `rotateX(${rotateX}deg)`)
+      } else {
+        dom.style.transform += `rotateX(${rotateX}deg)`
+      }
+      if (rotateRegY.test(dom.style.transform)) {
+        dom.style.transform = dom.style.transform.replace(rotateRegY, `rotateY(${rotateY}deg)`)
+      } else {
+        dom.style.transform += `rotateY(${rotateY}deg)`
+      }
+      if (rotateRegZ.test(dom.style.transform)) {
+        dom.style.transform = dom.style.transform.replace(rotateRegZ, `rotateZ(${rotateZ}deg)`)
+      } else {
+        dom.style.transform += `rotateZ(${rotateZ}deg)`
+      }
     }
   }
 
@@ -97,20 +156,36 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
 
   const scale = ({ origin, x, y }, action, dom) => {
     if (action === 'scale') {
-      dom.style.transform = `scaleX(${x}) scaleY(${y})`
+      const scaleRegX = /scaleX\((.+?)\)/g
+      const scaleRegY = /scaleY\((.+?)\)/g
+      if (scaleRegX.test(dom.style.transform)) {
+        dom.style.transform = dom.style.transform.replace(scaleRegX, `scaleX(${x})`)
+      } else {
+        dom.style.transform += `scaleX(${x})`
+      }
+      if (scaleRegY.test(dom.style.transform)) {
+        dom.style.transform = dom.style.transform.replace(scaleRegY, `scaleY(${y})`)
+      } else {
+        dom.style.transform += `scaleY(${y})`
+      }
       dom.style['transform-origin'] = origin
     }
   }
 
   const translate = ({ toX, toY }, action, dom) => {
     if (action === 'translate') {
-      dom.style.transform = `translate(${toX}px, ${toY}px)`
+      const translateReg = /translate3d\((.+?)\)/g
+      if (translateReg.test(dom.style.transform)) {
+        dom.style.transform = dom.style.transform.replace(translateReg, `translate3d(${toX}px, ${toY}px, 0px)`)
+      } else {
+        dom.style.transform += `translate3d(${toX}px, ${toY}px, 0px)`
+      }
     }
   }
 
   const actionConfigFuncList = {
     animation,
-    rotate: translate3d,
+    rotate,
     scale,
     translate,
   }
@@ -157,7 +232,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
     component.callbackArgs = comCallbackArgs
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
-    const callbackParamsList = bar.callbackParamsList
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
     const sourceCallbackList = callbackParamsList.filter(item => item.sourceModules.find(jtem => jtem.id === componentId))
     // 需要作用到哪些组件上
