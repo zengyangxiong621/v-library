@@ -9,7 +9,7 @@ const RemoteBaseComponent = (props: any) => {
   const [Comp, setComponent] = useState<React.FC | null>(null);
   
   const importComponent = useCallback(() => {
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${name}/${version}/${name}.js`).then(res => res.data);
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/chart/${name}/${version}/${name}.js`).then(res => res.data);
   }, [type])
   
   const loadComp = useCallback(async () => {
