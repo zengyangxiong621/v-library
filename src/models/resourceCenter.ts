@@ -1,68 +1,71 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import { http } from "@/services/request";
+import { http } from '@/services/request'
 
 export default {
-  namespace: "resourceCenter",
+  namespace: 'resourceCenter',
   state: {
     templateList: [],
     groupList: [],
     curSelectedGroup: [],
-    curSelectedGroupName: "",
+    curSelectedGroupName: '',
   },
   reducers: {
     resetModel(state: any, { payload }: any) {
-      return { ...state, ...payload };
+      return { ...state, ...payload }
     },
     updateTemplateList(state: any, { payload }: any) {
-      return { ...state, templateList: payload };
+      return { ...state, templateList: payload }
     },
     setGroupList(state: any, { payload }: any) {
-      return { ...state, groupList: payload };
+      return { ...state, groupList: payload }
     },
     updateGroupList(state: any, { payload }: any) {
-      return { ...state, groupList: payload };
+      return { ...state, groupList: payload }
     },
     // 设置当前选中的 应用分组 payload => 当前选中树节点的数组 string[]
     setCurSelectedGroup(state: any, { payload }: any) {
-      return { ...state, curSelectedGroup: payload };
+      return { ...state, curSelectedGroup: payload }
     },
     setCurSelectedGroupName(state: any, { payload }: any) {
-      return { ...state, curSelectedGroupName: payload };
+      return { ...state, curSelectedGroupName: payload }
     },
   },
   effects: {
     *getTemplateList({ payload }: any, { call, put, select }: any): any {
-      const data = yield http(
-        {
-          url: "/visual/application/queryAppList",
-          method: "post",
-          body: payload,
-        }
-      );
-      console.log("dddd", data);
+      const data = yield http({
+        url: '/visual/application/queryAppList',
+        method: 'post',
+        body: payload,
+      })
       yield put({
-        type: "updateTemplateList",
+        type: 'updateTemplateList',
         payload: data?.content || [],
-      });
+      })
     },
     *getGroupTree({ payload }: any, { call, put }: any): any {
-      const data  = yield http(
-        {
-          url: `/visual/resource/queryGroupList?spaceId=1`,
-          method: "get",
-        }
-      );
+      const data = yield http({
+        url: `/visual/resource/queryGroupList?spaceId=1`,
+        method: 'get',
+      })
+      console.log('data', data)
+
       yield put({
-        type: "setGroupList",
+        type: 'setGroupList',
         payload: [
           {
-            groupId: "wrap",
-            name: "模板库",
-            children: data,
+            groupId: 'myMaterial',
+            name: '我的素材',
+            children: [
+              {
+                groupId: 'wrap',
+                name: '模板库',
+                children: data,
+              },
+            ],
           },
         ],
-      });
+      })
     },
   },
-};
+}

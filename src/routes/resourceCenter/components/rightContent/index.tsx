@@ -3,7 +3,7 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from 'dva'
 import { http, BASEURL } from '@/services/request'
-import AppCard from '../appCard/index'
+import MaterialCard from '../materialCard/index'
 import DarkModal from '../darkThemeModal/index'
 
 
@@ -95,7 +95,7 @@ const RightContent = (props: any) => {
   return <div className="RightContent-wrap">
     {
       listData.map((item: any, index: number) => (
-        <AppCard
+        <MaterialCard
           {...item}
           spaceId={spaceId}
           openMoveGroupModal={openMoveGroupModal}

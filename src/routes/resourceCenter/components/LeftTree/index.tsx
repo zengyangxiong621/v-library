@@ -118,14 +118,14 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
     });
   };
   return (
-    <div className="dashboard-leftTree-wrap">
+    <div className="every-tree-wrap">
       {resourceCenter.groupList.length > 0 && (
         <Tree
           className="my-dashboard-tree"
           blockNode
-          defaultExpandedKeys={["wrap"]}
-          defaultSelectedKeys={["-1"]}
-          selectedKeys={resourceCenter.curSelectedGroup}
+          // defaultExpandedKeys={["wrap"]}
+          // defaultSelectedKeys={["-1"]}
+          // selectedKeys={resourceCenter.curSelectedGroup}
           treeData={resourceCenter.groupList}
           switcherIcon={<DownOutlined />}
           fieldNames={{

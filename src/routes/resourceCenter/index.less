@@ -1,8 +1,8 @@
-@import "~antd/dist/antd.dark.css";
+@import '~antd/dist/antd.dark.css';
 
 @backColor: #171a24;
 
-.resourceCenter-wrap  {
+.resourceCenter-wrap {
   display: flex;
   background-color: @backColor;
   width: 100%;
@@ -13,6 +13,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .left {
+    width: 256px;
+    height: 100vh;
+    background-color: @backColor;
+    padding: 16px 0 0 0;
+    margin-right: 24px;
+    background-image: url('../../assets//images/背景图装饰.png');
+    background-repeat: no-repeat;
+    background-position: 50% 85%;
   }
   .right {
     flex: 1;

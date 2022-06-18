@@ -129,8 +129,9 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   return (
     <div className="resourceCenter-wrap">
       <div className="left">
-        {/* 左侧树 */}
+        {/* 模板树 */}
         <LeftTree clearSearchInputState={clearSearchInputState} />
+        {/* 素材树 */}
         <LeftTree clearSearchInputState={clearSearchInputState} />
       </div>
       <div className="right">
