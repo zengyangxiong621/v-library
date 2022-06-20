@@ -102,7 +102,7 @@ const AppCard = (props: any) => {
     }
   }
   // 删除应用
-  const deleteApp = async (appIds: string[]) => {
+  const deleteApp = async (appIds: any) => {
     Modal.confirm({
       title: '删除应用',
       style: {
@@ -157,8 +157,9 @@ const AppCard = (props: any) => {
   }
 
   // 移动分组
-  const moveGroup = (appId: string) => {
-    openMoveGroupModal(appId)
+  const moveGroup = (appId: any) => {
+    console.log(id,'数据123')
+    openMoveGroupModal(id)
   }
   // 鼠标移入更多按钮时，显示下拉菜单
   const moreIconMouseOver = () => {
@@ -191,39 +192,13 @@ const AppCard = (props: any) => {
       >
         <div className='hoverOnImg'>
           <div className='icons-wrap'>
-            {/* <Tooltip
-              placement='bottom' title="拷贝给他人"
-            // tooltip挂载到body下容易被影响样式
-            getPopupContainer={(triggerNode) => triggerNode}
-            >
-              <IconFont className='each-icon' onClickCapture={(e) => {
-                copyToOthers(e)
-              }} type='icon-kaobei' />
-            </Tooltip> */}
-            <Tooltip placement='bottom'
-              title="发布">
-              <IconFont className='each-icon' onClickCapture={(e) => {
-                fabu(e)
-              }} type='icon-fabu' />
-            </Tooltip>
             <div className='more-icon'>
-              <IconFont style={{fontSize: '20px'}} onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
-              <div className="more"
-              >
-                <ul className='more-ul' style={{
-                  display: isShowUL ? 'block' : 'none'
-                }} onClick={(e) => ulClick(e)}>
-                  <li key="move">移入分组</li>
-                  <li>复制</li>
-                  <li>删除</li>
-                  <li>导出应用</li>
-                </ul>
-              </div>
+            <IconFont style={{fontSize: '16px', marginRight: '10px'}} onClick={(e) => moveGroup(e)} className='icon-yidong' type='icon-yidong' />
+            <IconFont style={{fontSize: '16px'}} onClick={(e) => deleteApp(e)} className='icon-huishouzhan1' type='icon-huishouzhan1' />
             </div>
           </div>
           <div className='btns-wrap'>
             <span className='div-to-btns scan-btn' onClickCapture={() => scanDashboard()}>预览</span>
-            <span className='div-to-btns edit-btn' onClickCapture={() => editDashboard()}>编辑</span>
           </div>
         </div>
         <div className="img-wrap">
@@ -246,20 +221,20 @@ const AppCard = (props: any) => {
                 onBlur={changAppName}
               />
               : <div className='icon-and-text'>
-                <IconFont className='bianjiIcon'
+                {/* <IconFont className='bianjiIcon'
                   type="icon-bianji"
                   onClickCapture={() => bianjiClick()}
-                />
+                /> */}
                 <div className='card-name'>{name}</div>
               </div>
           }
         </div>
-        <div className="releaseState">
+        {/* <div className="releaseState">
           <div className='customCircle' style={{
             backgroundColor: status ? '#00FF3D' : '#535353',
           }}></div>
           <span className='text'>{status ? '已' : '未'}发布</span>
-        </div>
+        </div> */}
 
       </div>
     </div>

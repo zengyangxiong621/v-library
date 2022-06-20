@@ -92,6 +92,9 @@ const RightContent = (props: any) => {
   }
 
 
+  console.log(resourceCenter.groupList,'resourceCenter.groupList')
+
+
   return <div className="RightContent-wrap">
     {
       listData.map((item: any, index: number) => (
@@ -136,7 +139,7 @@ const RightContent = (props: any) => {
           <Select onSelect={selectGroup}>
             {
               // 将全部应用这一分组剔除
-              resourceCenter.groupList[0]?.children?.slice(1).map((item: any) =>
+              resourceCenter.groupList[0]?.children[0].children?.slice(1).map((item: any) =>
               (<Option key={item.groupId} value={item.groupId}>      {item.name}
               </Option>)
               )
