@@ -43,7 +43,7 @@ const RightContent = (props: any) => {
       groupId: transformId
     }
     dispatch({
-      type: 'resourceCenter/getTemplateList',
+      type: 'resourceCenter/getRightLists',
       payload: finalBody,
     })
     dispatch({

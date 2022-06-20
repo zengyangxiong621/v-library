@@ -28,7 +28,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   // 获取模板列表数据的方法
   const getDataDispatch = (finalBody: any) => {
     dispatch({
-      type: "resourceCenter/getTemplateList",
+      type: "resourceCenter/getRightLists",
       payload: finalBody
     });
   };
@@ -90,7 +90,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       map: newSortMap
     };
     dispatch({
-      type: "resourceCenter/getTemplateList",
+      type: "resourceCenter/getRightLists",
       payload: finalBody
     });
   };
@@ -109,7 +109,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       groupId: transformId
     };
     dispatch({
-      type: "resourceCenter/getTemplateList",
+      type: "resourceCenter/getRightLists",
       payload: finalBody
     });
     dispatch({
@@ -129,9 +129,6 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   return (
     <div className="resourceCenter-wrap">
       <div className="left">
-        {/* 模板树 */}
-        {/* <LeftTree clearSearchInputState={clearSearchInputState} /> */}
-        {/* 素材树 */}
         <LeftTree clearSearchInputState={clearSearchInputState} />
       </div>
       <div className="right">
@@ -169,7 +166,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           </div>
         </div>
         {/* 右侧 */}
-        <RightContent listData={resourceCenter.templateList} />
+        <RightContent listData={resourceCenter.rightLists} />
         {/* 上传素材 */}
         {resourceCenter.groupList.length > 0 && (
           <UploadFile
