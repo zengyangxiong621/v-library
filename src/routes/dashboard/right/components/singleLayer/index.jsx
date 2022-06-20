@@ -183,10 +183,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     })
   }, 300)
 
-  const callbackArgChange = () => {
-    console.log('callbackArg change', componentConfig)
-  }
-
   const saveEventsData = async (param) => {
     const params = {
       configs: [param],
@@ -194,6 +190,28 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     }
     await http({
       url: '/visual/module/defineEvent',
+      method: 'post',
+      body: params
+    })
+  }
+
+  const callbackArgChange = () => {
+    console.log('callbackArg change', componentConfig)
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+    saveCallbackArg(componentConfig)
+  }
+
+  const saveCallbackArg = async (componentConfig) => {
+    const params = {
+      callbackArgs:componentConfig.callbackArgs,
+      dashboardId: dashboardId,
+      moduleId:componentConfig.id
+    }
+    await http({
+      url: '/visual/module/callbackParam',
       method: 'post',
       body: params
     })

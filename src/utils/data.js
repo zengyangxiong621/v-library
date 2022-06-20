@@ -7,21 +7,22 @@ import cloneDeep from 'lodash/cloneDeep';
  * @param {*} componentFilters 当前画布所有的过滤器信息
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
  * @param {*} dataContainerList 当前画布的所有数据容器集合
+ * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns
  */
-const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList) => {
+const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList, callbackArgs) => {
   const dataFrom = componentConfig.dataFrom || 0
   let resData = null
   let currentData = null
   if (dataFrom === 0) {
     currentData = cloneDeep(componentData[componentConfig.id])
   } else {
-    currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters)
+    currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs)
   }
   if (currentData) {
     // 如果使用数据过滤器，则需要过滤数据
     if (componentConfig.useFilter && componentConfig.filters) {
-      resData = dataFilterHandler(currentData, componentConfig, componentFilters)
+      resData = dataFilterHandler(currentData, componentConfig, componentFilters, callbackArgs)
     } else {
       resData = currentData
     }
@@ -34,9 +35,10 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
  * @param {*} data 当前组件的数据
  * @param {*} componentConfig 当前组件的配置信息
  * @param {*} componentFilters 当前画布所有的过滤器信息
+ * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns 过滤后的数据
  */
-const dataFilterHandler = (data, componentConfig, componentFilters) => {
+const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs) => {
   const filters = componentConfig.filters.map(item => {
     const filterDetail = componentFilters.find(jtem => jtem.id === item.id)
     return {
@@ -47,14 +49,20 @@ const dataFilterHandler = (data, componentConfig, componentFilters) => {
   if (filters.length) {
     try {
       const functions = filters.map(item => {
-        return (new Function('data', item.content))
+        return (new Function('data', 'callbackArgs', item.content))
       })
       const resultArr = []
       functions.forEach((fn, index) => {
+        const cbArgs = filters[index].callbackKeys.reduce((pre, item) => {
+          return {
+            ...pre,
+            [item]: callbackArgs[item]
+          }
+        }, {})
         if (index === 0) {
-          resultArr.push(fn(data))
+          resultArr.push(fn(data, cbArgs))
         } else {
-          resultArr.push(fn(resultArr[index - 1]))
+          resultArr.push(fn(resultArr[index - 1], cbArgs))
         }
       })
       return resultArr[resultArr.length - 1]
@@ -68,7 +76,7 @@ const dataFilterHandler = (data, componentConfig, componentFilters) => {
 
 }
 // 数据容器数据过滤
-const handleDataFilter = (data, allFilters, componentFilters) => {
+const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
   const filters = allFilters.map(item => {
     const filterDetail = componentFilters.find(jtem => jtem.id === item.id)
     return {
@@ -81,14 +89,20 @@ const handleDataFilter = (data, allFilters, componentFilters) => {
   }
   try {
     const functions = filters.map(item => {
-      return (new Function('data', item.content))
+      return (new Function('data', 'callbackArgs', item.content))
     })
     const resultArr = []
     functions.forEach((fn, index) => {
+      const cbArgs = filters[index].callbackKeys.reduce((pre, item) => {
+        return {
+          ...pre,
+          [item]: callbackArgs[item]
+        }
+      }, {})
       if (index === 0) {
-        resultArr.push(fn(data))
+        resultArr.push(fn(data, cbArgs))
       } else {
-        resultArr.push(fn(resultArr[index - 1]))
+        resultArr.push(fn(resultArr[index - 1], cbArgs))
       }
     })
     return resultArr[resultArr.length - 1]
@@ -102,9 +116,10 @@ const handleDataFilter = (data, allFilters, componentFilters) => {
  * @param {*} dataContainerDataList 当前画布的所有数据容器数据
  * @param {*} dataContainerList 当前画布的所有数据容器集合
  * @param {*} componentFilters 当前画布的过滤器集合
+ * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns
  */
-const setDataContainerResult = (componentConfig, dataContainerDataList, dataContainerList, componentFilters) => {
+const setDataContainerResult = (componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs) => {
   if (componentConfig.dataContainers) {
     if (componentConfig.dataContainers.length === 1) {
       console.log('componentConfig.dataContainers', componentConfig.dataContainers)
@@ -113,10 +128,10 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
       const container = dataContainerList.find(item => item.id === id)
       console.log('id', id)
       console.log('dataContainerDataList', dataContainerDataList)
-      let data = dataContainerDataList.find(item => item.id === id).data
+      let data = dataContainerDataList.find(item => item.id === id)?.data || []
       console.log('data', data)
       if (container.useFilter) {
-        data = handleDataFilter(data, container.filters, componentFilters )
+        data = handleDataFilter(data, container.filters, componentFilters, callbackArgs)
       }
       return data
     }
@@ -127,7 +142,7 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
           const container = dataContainerList.find(item => item.id === cur.id)
           let data = cur.data
           if (container.useFilter) {
-            data = handleDataFilter(cur.data, container.filters, componentFilters)
+            data = handleDataFilter(cur.data, container.filters, componentFilters, callbackArgs)
           }
           pre.push(data)
         }
@@ -143,11 +158,11 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
  * @param {*} componentConfig 当前组件的配置信息
  * @returns 
  */
-const getFields = (componentConfig) => {
+const getFields = (componentConfig = {}) => {
   const dataType = componentConfig.dataType
   let fields = null
   if (dataType === 'static' || !dataType) {
-    fields = componentConfig.staticData.fields
+    fields = componentConfig.staticData?.fields || []
   } else {
     if (componentConfig.dataConfig[dataType] && componentConfig.dataConfig[dataType].fields) {
       fields = componentConfig.dataConfig[dataType].fields
