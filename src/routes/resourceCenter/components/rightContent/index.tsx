@@ -91,15 +91,12 @@ const RightContent = (props: any) => {
     setShowMoveGroupModal(false)
   }
 
-
-  console.log(resourceCenter.groupList,'resourceCenter.groupList')
-
-
   return <div className="RightContent-wrap">
     {
       listData.map((item: any, index: number) => (
         <MaterialCard
           {...item}
+          key={index}
           spaceId={spaceId}
           openMoveGroupModal={openMoveGroupModal}
           refreshList={refreshList}

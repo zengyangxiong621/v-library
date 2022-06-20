@@ -123,6 +123,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
         <Tree
           className="my-dashboard-tree"
           blockNode
+          defaultExpandAll={true}
           // defaultExpandedKeys={["wrap"]}
           // defaultSelectedKeys={["-1"]}
           // selectedKeys={resourceCenter.curSelectedGroup}

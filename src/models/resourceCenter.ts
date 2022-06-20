@@ -32,9 +32,10 @@ export default {
     },
   },
   effects: {
+    // 获取素材列表接口
     *getTemplateList({ payload }: any, { call, put, select }: any): any {
       const data = yield http({
-        url: '/visual/application/queryAppList',
+        url: '/visual/resource/queryResourceList',
         method: 'post',
         body: payload,
       })
