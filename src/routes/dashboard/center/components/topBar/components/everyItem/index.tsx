@@ -4,7 +4,6 @@ import axios from 'axios'
 import './index.less'
 
 const EveryItem = (props: any) => {
-  debugger
   const { data, type, dispatch, bar } = props
 
   const importComponent = useCallback(() => {

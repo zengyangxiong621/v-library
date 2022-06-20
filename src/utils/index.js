@@ -9,6 +9,7 @@ import {
 } from '../constant/home'
 
 export function findLayerById (layer, id) {
+  console.log(layer, 'findLayerById-----------------')
   let temp = null
   layer.forEach((item) => {
     if (item.id === id) {

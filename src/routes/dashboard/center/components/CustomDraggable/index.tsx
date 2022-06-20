@@ -625,8 +625,6 @@ const CustomDraggable
 
                           // <Da componentConfig={component}/>
                           <RemoteBaseComponent 
-                            version={'1.0.0'} 
-                            name={layer.moduleName} 
                             componentConfig={component}
                             fields={getFields(component)}
                             comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList)}
