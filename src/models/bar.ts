@@ -523,19 +523,19 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
-      console.log(payload, 'payload======================')
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         state.bar.key.length !== 0
           ? state.bar.key[state.bar.key.length - 1]
           : state.bar.treeData.length !== 0 ? state.bar.treeData[0].id : ''
+
       const { id, children }: any = yield http({
         url: '/visual/module/add',
         method: 'post',
         body: {
           dashboardId: state.bar.dashboardId,
-          component: { ...payload },
+          component: { ...payload, moduleType: itemData.moduleType},
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
@@ -549,9 +549,10 @@ export default {
       })
       yield put({
         type: 'updateComponents',
-        payload: { ...deepClone(payload), id: id, children: children },
+        payload: { ...deepClone(payload), id: id, moduleType: itemData.moduleType, children: children },
       })
       // itemData.id = id
+      
       yield put({
         type: 'addComponent',
         payload: { final: { ...itemData, id: id }, insertId: insertId },
