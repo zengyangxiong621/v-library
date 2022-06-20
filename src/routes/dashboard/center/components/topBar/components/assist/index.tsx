@@ -32,10 +32,6 @@ const Text = (props: any) => {
           pageSize: 100,
         }
       }).then((data: any) => {
-        data.content.forEach((item: any) => {
-          // item.photoPath = `${(window as any).CONFIG.COMP_URL}/modules/${moduleType}/${item.moduleVersion}/thumb-${item.moduleName}.png`// TODO: 最终全部的地址需要从后端取
-          item.photoPath = `${(window as any).CONFIG.COMP_URL}/modules/${item.moduleName}/${item.moduleVersion}/thumb-${item.moduleName}.png`// TODO: 最终全部的地址需要从后端取
-        })
         setDataArr(() => data.content)
       })
     }

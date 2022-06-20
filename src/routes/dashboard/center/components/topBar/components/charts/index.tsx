@@ -42,8 +42,6 @@ const Charts = (props: any) => {
       // }
       // TODO  把data里的数据按照组件种类放入chartDataMap中
 
-      console.log(data, 'data=================')
-
       // data.content.forEach((item: any) => {
       //   item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.moduleType}/${item.moduleName}/${item.moduleVersion}/${item.photoPath}`
       // })
