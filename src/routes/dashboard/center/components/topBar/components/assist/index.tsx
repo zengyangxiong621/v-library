@@ -32,6 +32,9 @@ const Text = (props: any) => {
           pageSize: 100,
         }
       }).then((data: any) => {
+        data.content.forEach((item: any) => {
+          item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`
+        })
         setDataArr(() => data.content)
       })
     }
