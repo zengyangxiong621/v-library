@@ -1,66 +1,238 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-import { getFields } from "@/utils/data";
-import { useState, useRef } from "react";
+import {getFields} from "@/utils/data";
+import {useState, useRef} from "react";
 import DateSelect from '@/components/dateSelect'
-import { connect } from "dva"
+import {connect} from "dva"
 // import './index.less'
-import { cloneDeep } from 'lodash'
+import {cloneDeep} from 'lodash'
+import {debounce} from "@/utils/common";
 
-const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props }) => {
+const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props}) => {
   const callbackArgs = bar.callbackArgs
   const callbackParamsList = bar.callbackParamsList
-  const { componentConfig } = props
-  console.log('componentConfig', componentConfig)
+  const {componentConfig} = props
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
   })
   const componentRef = useRef(null)
-  const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 })
+  const [opacityStyle, setOpacityStyle] = useState({opacity: 1})
   const opacityTimeId = useRef('')
   const [clickTimes, setClickTimes] = useState(0)
-  const clickEvents = events.filter(item => item.trigger === 'click')
-  const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
-  const handleClick = (event) => {
-    if (clickTimes === 1) {
-      return
-    }
+  // 点击
+  const handleClick = debounce((e) => {
+    const clickEvents = events.filter(item => item.trigger === 'click')
+    const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (clickActions.length === 0) {
       return
     }
     setClickTimes(1)
-    console.log('clickActions', clickActions)
-    const hideShowAction = clickActions.filter(({ action }) => ['hide', 'show', 'show/hide'].includes(action))
-    const rotateAction = clickActions.filter(({ action }) => ['rotate'].includes(action))
-    const translateAction = clickActions.filter(({ action }) => ['translate'].includes(action))
-    const scaleAction = clickActions.filter(({ action }) => ['scale'].includes(action))
-    let animationConfig = null
-    clickActions.forEach(action => {
-      console.log('action', action)
-      const type = action.action
-      const animation = action.animation
-      const delay = animation.delay
-      setTimeout(() => {
-        action.component.forEach(id => {
-          const dom = document.querySelector(`.event-id-${id}`)
-          dom.style.transition = `transform ${animation.duration}ms ${animation.timingFunction} 0s`
-          Object.keys(action).filter(
-            (key) => !['id', 'name', 'trigger', 'componentScope', 'component', 'action'].includes(key)
-          ).forEach((key) => {
-            actionConfigFuncList[key](action[key], type, dom, action.id)
+    customEventsFunction(clickEvents)
+  }, 300)
+  // 移入
+  const handleMouseEnter = debounce((e) => {
+    const mouseEnterEvents = events.filter(item => item.trigger === 'mouseEnter')
+    const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
+    if (mouseEnterActions.length === 0) {
+      return
+    }
+    setClickTimes(1)
+    customEventsFunction(mouseEnterEvents, e)
+  }, 300)
+  // 移出
+  const handleMouseOut = debounce((e) => {
+    const mouseOutEvents = events.filter(item => item.trigger === 'mouseOut')
+    const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
+    if (mouseOutActions.length === 0) {
+      return
+    }
+    setClickTimes(1)
+    customEventsFunction(mouseOutEvents, e)
+  }, 300)
+
+  const customEventsFunction = (events, e) => {
+    events.forEach((item) => {
+      const conditions = item.conditions
+      const conditionType = item.conditionType
+      const conditionTypeValue = conditionType.target.value
+      const callbackArgs = {
+        startTime: '2022-06-17',
+        endTime: '2022-06-17'
+      }
+      /*        [
+              {
+                "compare": "==",
+                "code": "return data",
+                "field": "startTime",
+                "expected": "2022-06-17",
+                "name": "条件",
+                "id": "9346fc0b-8a99-441e-8fa9-7d5628290333",
+                "type": "field"
+              }
+              ]*/
+      const conditionJudgeFunc = (condition) => {
+        // 条件值
+        const field = condition.field
+        const type = condition.type
+        const code = condition.code
+        if (type === 'custom') {
+          return new Function('data', code)({startTime: callbackArgs.startTime, endTime: callbackArgs.endTime})
+        }
+        if (condition.compare === '==') {
+          return callbackArgs[field] === condition.expected;
+        }
+        if (condition.compare === '!=') {
+          return callbackArgs[field] !== condition.expected;
+        }
+        if (condition.compare === '<') {
+          return Number(callbackArgs[field]) < Number(condition.expected);
+        }
+        if (condition.compare === '<=') {
+          return Number(callbackArgs[field]) < Number(condition.expected) || callbackArgs[field] === condition.expected
+        }
+        if (condition.compare === '>') {
+          return Number(callbackArgs[field]) > Number(condition.expected);
+        }
+        if (condition.compare === '>=') {
+          return Number(callbackArgs[field]) > Number(condition.expected) || callbackArgs[field] === condition.expected
+        }
+        if (condition.compare === 'include') {
+          return callbackArgs[field].indexOf(condition.expected) !== -1
+        }
+        if (condition.compare === 'exclude') {
+          return callbackArgs[field].indexOf(condition.expected) === -1
+        }
+        return false
+      }
+      let isAllowAction = true
+      if (conditions.length > 0) {
+        isAllowAction = Array.prototype[conditionTypeValue === 'all' ? 'every' : 'some'].call(conditions, conditionJudgeFunc)
+      }
+      if (!isAllowAction) {
+        return
+      }
+
+      item.actions.forEach(action => {
+        const type = action.action
+        const animation = action.animation
+        const delay = animation.delay
+        setTimeout(() => {
+          action.component.forEach(id => {
+            const dom = document.querySelector(`.event-id-${id}`)
+            dom.style.transition = `transform ${animation.duration}ms ${animation.timingFunction} 0s`
+            Object.keys(action).filter(
+              (key) => !['id', 'name', 'trigger', 'unmount', 'componentScope', 'component', 'action'].includes(key)
+            ).forEach((key) => {
+              actionConfigFuncList[key](action[key], type, dom, action.id)
+            })
           })
-        })
-      }, delay)
+        }, delay)
+      })
     })
   }
+  const comCallbackArgs = [
+    {
+      "id": "回调id-1",
+      "name": "回调1",
+      "origin": "cookieTime",
+      "target": "startTime"
+    },
+    {
+      "id": "回调id-2",
+      "name": "回调2",
+      "origin": "sleepTime",
+      "target": "endTime"
+    }, {
+      "id": "回调id-3",
+      "name": "回调2",
+      "origin": "a",
+      "target": "a"
+    }, {
+      "id": "回调id-4",
+      "name": "回调2",
+      "origin": "b",
+      "target": "b"
+    },
+  ]
 
-  const animation = ({ duration, timingFunction, type}, action, dom, id) => {
+  // 数组去重，取最后一个
+  const duplicateFn = (arr) => {
+    let map = new Map();
+    for (let item of arr.reverse()) {
+      if (!map.has(item.target)) {
+        map.set(item.target, item);
+      }
+    }
+    return [...map.values()];
+  }
+
+  const handleValueChange = (data) => {
+    console.log('dataData', data)
+    const componentId = props.componentConfig.id
+    const component = bar.components.find(item => item.id === componentId)
+    component.callbackArgs = comCallbackArgs
+    const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
+    // 回调参数列表
+    // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
+    const sourceCallbackList = callbackParamsList.filter(item => item.sourceModules.find(jtem => jtem.id === componentId))
+    // 需要作用到哪些组件上
+    let activeIds = []
+    let temp = false
+    sourceCallbackList.forEach(item => {
+      item.sourceModules.forEach(sourceItem => {
+        if (sourceItem.id === componentId) {
+          // 回调列表中的当前数据如果有目标组件再进行下一步
+          // 循环组件设置的回调参数，获取变量名和字段的对应关系
+          if (item.destinationModules.length > 0) {
+            compCallbackArgs.forEach(callback => {
+              // 判断是否为同一个源
+              if (item.callbackParam === callback.target) {
+                // 值是否改变
+                // data的值存在并且
+                if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                  temp = true
+                  callbackArgs[callback.target] = data[callback.origin]
+                  activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
+                }
+                dispatch({
+                  type: 'bar/save',
+                  payload: {
+                    callbackArgs
+                  }
+                })
+              }
+            })
+          }
+        }
+      })
+    })
+    if (temp) {
+      console.log('值被修改了')
+      activeIds = [...new Set(activeIds)]
+      const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
+      // 重新获取部分组件的数据
+      dispatch({
+        type: 'bar/getComponentsData',
+        payload: activeComponents
+      })
+      const dataChangeEvents = events.filter(item => item.trigger === 'dataChange')
+      const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
+      if (dataChangeActions.length === 0) {
+        return
+      }
+      customEventsFunction(dataChangeEvents)
+    }
+
+  }
+
+
+
+  const animation = ({duration, timingFunction, type}, action, dom, id) => {
     if (['show', 'hide'].includes(action)) {
       // transform = 'translateY(200px)'
       let translate = {
         x: 0,
         y: 0
       }
-      console.log('type', type)
       switch (type) {
         case 'slideLeft':
           translate.x = -200
@@ -98,7 +270,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
       }
 
 
-
       opacityTimeId.current = id
       let timer = setInterval(() => {
         // 在一个时间端内，只存在一种事件
@@ -127,7 +298,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
 
   }
 
-  const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
+  const rotate = ({perspective, rotateX, rotateY, rotateZ}, action, dom) => {
     if (action === 'rotate') {
       const rotateRegX = /rotateX\((.+?)\)/g
       const rotateRegY = /rotateY\((.+?)\)/g
@@ -154,7 +325,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
 
   }
 
-  const scale = ({ origin, x, y }, action, dom) => {
+  const scale = ({origin, x, y}, action, dom) => {
     if (action === 'scale') {
       const scaleRegX = /scaleX\((.+?)\)/g
       const scaleRegY = /scaleY\((.+?)\)/g
@@ -172,7 +343,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
     }
   }
 
-  const translate = ({ toX, toY }, action, dom) => {
+  const translate = ({toX, toY}, action, dom) => {
     if (action === 'translate') {
       const translateReg = /translate3d\((.+?)\)/g
       if (translateReg.test(dom.style.transform)) {
@@ -189,98 +360,22 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
     scale,
     translate,
   }
-  const comCallbackArgs = [
-    {
-      "id": "回调id-1",
-      "name": "回调1",
-      "origin": "cookieTime",
-      "target": "startTime"
-    },
-    {
-      "id": "回调id-2",
-      "name": "回调2",
-      "origin": "sleepTime",
-      "target": "endTime"
-    },    {
-      "id": "回调id-3",
-      "name": "回调2",
-      "origin": "a",
-      "target": "a"
-    },    {
-      "id": "回调id-4",
-      "name": "回调2",
-      "origin": "b",
-      "target": "b"
-    },
-  ]
 
-  // 数组去重，取最后一个
-  const duplicateFn = (arr) => {
-    let map = new Map();
-    for (let item of arr.reverse()) {
-      if (!map.has(item.target)) {
-        map.set(item.target, item);
-      }
-    }
-    return [...map.values()];
-  }
 
-  const handleValueChange = (data) => {
-    console.log('data', data)
-    const componentId = props.componentConfig.id
-    const component = bar.components.find(item => item.id === componentId)
-    component.callbackArgs = comCallbackArgs
-    const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
-    // 回调参数列表
-    // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
-    const sourceCallbackList = callbackParamsList.filter(item => item.sourceModules.find(jtem => jtem.id === componentId))
-    // 需要作用到哪些组件上
-    let activeIds = []
-    sourceCallbackList.forEach(item => {
-      item.sourceModules.forEach(sourceItem => {
-        if (sourceItem.id === componentId) {
-          // 回调列表中的当前数据如果有目标组件再进行下一步
-          // 循环组件设置的回调参数，获取变量名和字段的对应关系
-          if (item.destinationModules.length > 0) {
-            let temp = false
-            compCallbackArgs.forEach(callback => {
-              // 判断是否为同一个源
-              if (item.callbackParam === callback.target) {
-                // 值是否改变
-                // data的值存在并且
-                if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
-                  callbackArgs[callback.target] = data[callback.origin]
-                  activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
-                }
-                dispatch({
-                  type: 'bar/save',
-                  payload: {
-                    callbackArgs
-                  }
-                })
-              }
-            })
-          }
-        }
-      })
-    })
-    activeIds = [...new Set(activeIds)]
-    const activeComponents = activeIds.reduce((pre, id) =>  pre.concat( bar.components.find(item => item.id === id)),[])
-    // 重新获取部分组件的数据
-    dispatch({
-      type: 'bar/getComponentsData',
-      payload: activeComponents
-    })
-  }
   return (
-    <div ref={componentRef} className={`single-component event-id-${id}`} onClick={handleClick}
-      style={{ width: '100%', height: '100%', ...animationConfig, ...opacityStyle }}>
+    <div
+      ref={componentRef}
+      className={`single-component event-id-${id}`}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseOut={handleMouseOut}
+      style={{width: '100%', height: '100%', ...animationConfig, ...opacityStyle}}>
       {/*      <RemoteBaseComponent
         {...props}
       ></RemoteBaseComponent>     */}
       {
         props.componentConfig.moduleName === 'timeSelect' ?
-           <DateSelect
+          <DateSelect
             onChange={handleValueChange}
             {...props}
           >
@@ -293,4 +388,4 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props 
   )
 }
 
-export default connect(({ bar }) => ({ bar }))(ComponentEventContainer)
+export default connect(({bar}) => ({bar}))(ComponentEventContainer)
