@@ -49,7 +49,6 @@ export default {
         url: `/visual/resource/queryGroupList?spaceId=1`,
         method: 'get',
       })
-      console.log('data', data)
 
       yield put({
         type: 'setGroupList',

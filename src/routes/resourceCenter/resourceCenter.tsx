@@ -162,7 +162,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
                 onChange={selectSortType}
               >
                 <Option value="updated_time">按修改时间排序</Option>
-                <Option value="name_time">按名称排序</Option>
+                <Option value="name">按名称排序</Option>
                 <Option value="created_time">按新建时间排序</Option>
               </Select>
             </div>

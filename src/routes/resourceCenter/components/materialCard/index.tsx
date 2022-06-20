@@ -102,9 +102,9 @@ const AppCard = (props: any) => {
     }
   }
   // 删除应用
-  const deleteApp = async (appIds: any) => {
+  const deleteApp = async () => {
     Modal.confirm({
-      title: '删除应用',
+      title: '删除素材',
       style: {
         top: '30%'
       },
@@ -121,17 +121,16 @@ const AppCard = (props: any) => {
         }
       },
       icon: <ExclamationCircleFilled />,
-      content: '确认删除此应用吗?',
+      content: '确认删除此素材吗?',
       okText: '确定',
       cancelText: '取消',
       bodyStyle: {
         background: '#232630',
       },
       async onOk(close) {
-        const [, data] = await useFetch('/visual/application/deleteApp', {
+        const [, data] = await useFetch(`/visual/resource/delete/${id}`, {
           method: 'delete',
           body: JSON.stringify({
-            appIdList: appIds,
             spaceId
           })
         })
@@ -157,8 +156,7 @@ const AppCard = (props: any) => {
   }
 
   // 移动分组
-  const moveGroup = (appId: any) => {
-    console.log(id,'数据123')
+  const moveGroup = () => {
     openMoveGroupModal(id)
   }
   // 鼠标移入更多按钮时，显示下拉菜单
@@ -170,13 +168,13 @@ const AppCard = (props: any) => {
     const operation = e.target.innerHTML
     switch (operation) {
       case '移入分组':
-        moveGroup(id)
+        moveGroup()
         break;
       case '复制':
         copyApp(id)
         break;
       case '删除':
-        deleteApp([id])
+        deleteApp()
         break;
       case '导出应用':
         exportApp(id)
@@ -193,8 +191,8 @@ const AppCard = (props: any) => {
         <div className='hoverOnImg'>
           <div className='icons-wrap'>
             <div className='more-icon'>
-            <IconFont style={{fontSize: '16px', marginRight: '10px'}} onClick={(e) => moveGroup(e)} className='icon-yidong' type='icon-yidong' />
-            <IconFont style={{fontSize: '16px'}} onClick={(e) => deleteApp(e)} className='icon-huishouzhan1' type='icon-huishouzhan1' />
+            <IconFont style={{fontSize: '16px', marginRight: '10px'}} onClick={moveGroup} className='icon-yidong' type='icon-yidong' />
+            <IconFont style={{fontSize: '16px'}} onClick={deleteApp} className='icon-huishouzhan1' type='icon-huishouzhan1' />
             </div>
           </div>
           <div className='btns-wrap'>

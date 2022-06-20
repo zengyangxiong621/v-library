@@ -67,11 +67,11 @@ const RightContent = (props: any) => {
   // 确认移动分组
   const confirmMoveGroup = async () => {
     const data = await http({
-      url: '/visual/application/updateAppGroup',
+      url: '/visual/resource/changeGroup',
       method: 'post',
       body: {
         spaceId,
-        appId: curAppId,
+        resourceId: curAppId,
         newGroupId: newGroupId,
       }
     })
