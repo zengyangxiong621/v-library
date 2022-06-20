@@ -6,7 +6,6 @@ import { Icon } from "@ant-design/compatible";
 import { http, BASEURL } from "@/services/request";
 const UploadFile = (props: any) => {
   const { uploadVisible, changeShowState,groupList,refreshList} = props;
-  console.log(groupList,'groupList')
   const { Option } = Select;
   const Dragger = Upload.Dragger;
   const [uploadForm] = Form.useForm();
