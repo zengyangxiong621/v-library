@@ -114,8 +114,11 @@ const UploadFile = (props: any) => {
     <Modal
       title="自定义上传素材"
       visible={uploadVisible}
+      maskClosable={false}
+      destroyOnClose
       onOk={handleOk}
       onCancel={handleCancel}
+      getContainer={false}
       okText="确定"
       cancelText="取消"
     >

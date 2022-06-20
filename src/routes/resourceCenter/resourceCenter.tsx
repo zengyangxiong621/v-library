@@ -173,7 +173,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         {resourceCenter.groupList.length > 0 && (
           <UploadFile
             uploadVisible={uploadVisible}
-            groupList={resourceCenter.groupList}
+            groupList={resourceCenter.groupList[0].children}
             changeShowState={changeShowState}
             refreshList={refreshList}
           ></UploadFile>
