@@ -109,7 +109,7 @@ const RightContent = (props: any) => {
     }
     {/* 移入分组弹窗 */}
     <DarkModal
-      title='移入分组'
+      title='移动'
       className="move-dark-modal"
       destroyOnClose={true}
       getContainer={false}
