@@ -63,5 +63,5 @@ class ComSelect extends Component {
   }
 }
 
-export { ComSelect }
+export { ComSelect, componentDefaultConfig }
 export default ComSelect

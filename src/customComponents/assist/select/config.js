@@ -1,19 +1,19 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
+  "id": '', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
   "name": "下拉框", //图层名称
-  "parentId": "0", // 父组件 像是2D地图、3D地图 =================
-  "dashboardId": "11", //画布id
+  "parentId": "", // 父组件 像是2D地图、3D地图 =================
+  "dashboardId": "", //画布id
 
   "moduleName": "select", //组件标识
-  "moduleVersion": "1.1.0", //组件版本号
+  "moduleVersion": "1.0.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
 
   "autoUpdate": { "isAuto": false, "interval": 10 }, // =========
   "thumb": "", // 缩略图 // =========
-
+  "dataFrom":0,
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
   "dataContainers": [],
