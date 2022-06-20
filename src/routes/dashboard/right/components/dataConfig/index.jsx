@@ -75,7 +75,8 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       method: 'post',
       body: {
         moduleId: _data.id,
-        dataType: _data.dataType
+        dataType: _data.dataType,
+        callBackParamValues:bar.callbackArgs
       }
     }, true)
     if (data.code === 10000 && data.data) {
