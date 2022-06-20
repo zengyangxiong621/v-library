@@ -173,12 +173,12 @@ const EveryTreeNode = (props: any) => {
             </div>
             <div className='icons-wrap'>
               {
-                name === '模板库'
+                name === '系统素材'
                   ? <IconFont type='icon-xinjianfenzu' onClickCapture={addGroup} />
                   :
                   (name === '全部应用' || name === '未分组')
                     ? <>{number}</>
-                    :
+                    : name === '素材库' ? <></> :
                     <>
                       <div className='show-icon'>
                         {

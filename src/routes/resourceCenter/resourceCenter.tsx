@@ -130,7 +130,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
     <div className="resourceCenter-wrap">
       <div className="left">
         {/* 模板树 */}
-        <LeftTree clearSearchInputState={clearSearchInputState} />
+        {/* <LeftTree clearSearchInputState={clearSearchInputState} /> */}
         {/* 素材树 */}
         <LeftTree clearSearchInputState={clearSearchInputState} />
       </div>
@@ -169,6 +169,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         </div>
         {/* 右侧 */}
         <RightContent listData={resourceCenter.templateList} />
+        {/* 上传素材 */}
         {resourceCenter.groupList.length > 0 && (
           <UploadFile
             uploadVisible={uploadVisible}

@@ -55,11 +55,11 @@ export default {
         payload: [
           {
             groupId: 'myMaterial',
-            name: '我的素材',
+            name: '素材库',
             children: [
               {
                 groupId: 'wrap',
-                name: '模板库',
+                name: '系统素材',
                 children: data,
               },
             ],
