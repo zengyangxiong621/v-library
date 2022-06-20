@@ -84,88 +84,91 @@ export default {
     },
     * initDashboard({ payload, cb }: any, { call, put, select }: any): any {
       // 获取回调参数列表
-      // const callbackParamsList = yield http({
-      //   url: '/visual/callback/list',
-      //   method: 'GET',
-      // })
-      const callbackParamsList = [
-        {
-          "callbackParam": "startTime",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            },
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器"
-            },
-            {
-              "id": "1536990857543454721",
-              "name": "时间选择器3"
-            },
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ]
-        },
-        {
-          "callbackParam": "endTime",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器2"
-            }
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ]
-        },
-        {
-          "callbackParam": "a",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器2"
-            },
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536990857543454721",
-              "name": "时间选择器3"
-            }
-          ]
-        },
-        {
-          "callbackParam": "b",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器2"
-            },
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536990857543454721",
-              "name": "时间选择器3"
-            }
-          ]
-        },
-      ]
+      const callbackParamsList = yield http({
+        url: '/visual/module/callParam/list',
+        method: 'GET',
+        params: {
+          dashboardId: payload,
+        }
+      })
+      // const callbackParamsList = [
+      //   {
+      //     "callbackParam": "startTime",   // 变量名
+      //     "destinationModules": [  // 目标组件
+      //       {
+      //         "id": "1536894370780188674",
+      //         "name": "时间选择器"
+      //       },
+      //       {
+      //         "id": "1536904475370229762",
+      //         "name": "时间选择器"
+      //       },
+      //       {
+      //         "id": "1536990857543454721",
+      //         "name": "时间选择器3"
+      //       },
+      //     ],
+      //     "sourceModules": [ // 源组件
+      //       {
+      //         "id": "1536894370780188674",
+      //         "name": "时间选择器"
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     "callbackParam": "endTime",   // 变量名
+      //     "destinationModules": [  // 目标组件
+      //       {
+      //         "id": "1536904475370229762",
+      //         "name": "时间选择器2"
+      //       }
+      //     ],
+      //     "sourceModules": [ // 源组件
+      //       {
+      //         "id": "1536894370780188674",
+      //         "name": "时间选择器"
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     "callbackParam": "a",   // 变量名
+      //     "destinationModules": [  // 目标组件
+      //       {
+      //         "id": "1536904475370229762",
+      //         "name": "时间选择器2"
+      //       },
+      //       {
+      //         "id": "1536894370780188674",
+      //         "name": "时间选择器"
+      //       }
+      //     ],
+      //     "sourceModules": [ // 源组件
+      //       {
+      //         "id": "1536990857543454721",
+      //         "name": "时间选择器3"
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     "callbackParam": "b",   // 变量名
+      //     "destinationModules": [  // 目标组件
+      //       {
+      //         "id": "1536904475370229762",
+      //         "name": "时间选择器2"
+      //       },
+      //       {
+      //         "id": "1536894370780188674",
+      //         "name": "时间选择器"
+      //       }
+      //     ],
+      //     "sourceModules": [ // 源组件
+      //       {
+      //         "id": "1536990857543454721",
+      //         "name": "时间选择器3"
+      //       }
+      //     ]
+      //   },
+      // ]
       // TODO 怎么造成的
       // 获取所有的数据容器数据
       const data = yield (yield put({
@@ -272,7 +275,8 @@ export default {
             method: 'post',
             body: {
               moduleId: component.id,
-              dataType: component.dataType
+              dataType: component.dataType,
+              callBackParamValues:bar.callbackArgs
             }
           })
 
@@ -608,7 +612,8 @@ export default {
           method: 'post',
           body: {
             moduleId: component.id,
-            dataType: component.dataType
+            dataType: component.dataType,
+            callBackParamValues:bar.callbackArgs
           }
         })
         if (data) {

@@ -1,9 +1,12 @@
 import React, { memo, useState, useEffect, useRef } from 'react'
+import { connect } from 'dva'
 import './index.less'
 import { Drawer, Button, Input } from 'antd'
 import {
   CloseOutlined, SearchOutlined,
 } from '@ant-design/icons'
+
+import {http} from '../../../../services/request'
 
 const _vdata = [
   {
@@ -44,7 +47,7 @@ const _vdata = [
 
 let orginalDataList = []
 
-const CallbackArgs = (props) => {
+const CallbackArgs = ({ bar, dispatch, ...props }) => {
   const drawerRef = useRef(null)
   const [inputValue, setInputValue] = useState('')
   const [dataList, setDataList] = useState([])
@@ -57,9 +60,15 @@ const CallbackArgs = (props) => {
   }, [props.visible])
 
   const getDataList = async () => {
-    // todo 调用接口获取回调列表
-    orginalDataList = _vdata
-    setDataList(_vdata)
+    const data = await http({
+      url: '/visual/module/callParam/list',
+      method: 'get',
+      params: {
+        dashboardId: bar.dashboardId,
+      }
+    })
+    orginalDataList = data
+    setDataList(data)
   }
 
   const onClose = () => {
@@ -164,5 +173,7 @@ const CallbackArgs = (props) => {
   )
 }
 
-export default CallbackArgs
+export default connect(({ bar }) => ({
+  bar
+}))(CallbackArgs)
 

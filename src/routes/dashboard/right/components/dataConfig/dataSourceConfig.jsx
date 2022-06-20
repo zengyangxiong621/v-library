@@ -182,6 +182,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
         body: {
           moduleId: _data.id,
           dataType: dataSourceTypes.value,
+          callBackParamValues:bar.callbackArgs
         },
       }, true)
       if (data.code === 10000 && data.data) {
