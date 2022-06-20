@@ -50,8 +50,14 @@ export default {
       });
     },
     *getGroupTree({ payload }: any, { call, put }: any): any {
+      // 我的素材接口
+      // const data = yield http({
+      //   url: `/visual/resource/queryGroupList?spaceId=${payload.spaceId}`,
+      //   method: "get",
+      // });
+      // 系统素材接口
       const data = yield http({
-        url: `/visual/resource/queryGroupList?spaceId=${payload.spaceId}`,
+        url: `/visual/resource/queryTypeList`,
         method: "get",
       });
       console.log("data", data);
