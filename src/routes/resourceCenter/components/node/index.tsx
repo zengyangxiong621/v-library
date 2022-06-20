@@ -9,7 +9,8 @@ import { Input, message, Modal } from 'antd'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 
 const EveryTreeNode = (props: any) => {
-  const { groupId, name, number, systemDefined,
+  const { groupId, parentId, name, number,
+    systemDefined, customLevel,
     addGroup, refreshGroupLists, refreshRight } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
@@ -27,18 +28,20 @@ const EveryTreeNode = (props: any) => {
   /** ** 新建分组****** */
   const createGroup = async () => {
     // 前端校验一遍
-    //比如名字一样,不发请求
+    //名字一样,不发请求
     if (newGroupName === '') {
-      addGroup()
+      // 取消输入框显示
+      addGroup(groupId, parentId)
       return
     }
     const finalBody = {
       spaceId: '1',
-      name: newGroupName
+      name: newGroupName,
+      type: '1' // 1-素材，0-模板
     }
     const data = await http({
       method: 'post',
-      url: '/visual/application/addGroup',
+      url: '/visual/resource/addGroup',
       body: finalBody
     })
     // 创建成功，改变父组件传入的变量通知父组件重新获取最新分组列表
@@ -52,25 +55,23 @@ const EveryTreeNode = (props: any) => {
   // 修改分组名字
   const updateGroupName = async (e: any) => {
     e.stopPropagation()
-    // TODO 校验
     // 比如名字一样,不发请求
     if (inputValue === '') {
-      // message.warning({ content: '分组名不能为空', duration: 2 })
       setShowRenameInput(false)
       return
     } else if (inputValue === name) {
-      // message.warning({ content: '新旧分组名不能相同', duration: 2 })
       setShowRenameInput(false)
       return
     }
     const finalBody = {
       id: groupId,
       name: inputValue,
-      spaceId: 1
+      spaceId: 1,
+      type: '1'
     }
     const data = await http({
       method: 'post',
-      url: '/visual/application/updateGroup',
+      url: '/visual/resource/updateGroup',
       body: finalBody
     })
     if (data) {
@@ -118,7 +119,7 @@ const EveryTreeNode = (props: any) => {
       },
       async onOk(close) {
         const data = await http({
-          url: `/visual/application/deleteGroup?groupId=${id}`,
+          url: `/visual/resource/deleteGroup?groupId=${id}`,
           method: 'delete'
         })
         if (data) {
@@ -173,23 +174,24 @@ const EveryTreeNode = (props: any) => {
             </div>
             <div className='icons-wrap'>
               {
-                name === '系统素材'
-                  ? <IconFont type='icon-xinjianfenzu' onClickCapture={addGroup} />
-                  :
-                  (name === '全部应用' || name === '未分组')
-                    ? <>{number}</>
-                    : name === '素材库' ? <></> :
-                    <>
-                      <div className='show-icon'>
-                        {
-                          <IconFont type='icon-bianji' style={{ marginRight: '16px' }} onClickCapture={(e) => editClick(e, groupId)} />
-                        }
-                        {
-                          <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(groupId)} />
-                        }
-                      </div>
-                      <span className='show-nums'>{number}</span>
-                    </>
+                customLevel === 1 ? <></> :
+                  customLevel === 2
+                    ? <IconFont type='icon-xinjianfenzu' onClickCapture={() => addGroup(groupId, parentId)} />
+                    :
+                    (groupId === '-1' || name === '0')
+                      ? <>{number}</>
+                      :
+                      <>
+                        <div className='show-icon'>
+                          {
+                            <IconFont type='icon-bianji' style={{ marginRight: '16px' }} onClickCapture={(e) => editClick(e, groupId)} />
+                          }
+                          {
+                            <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(groupId)} />
+                          }
+                        </div>
+                        <span className='show-nums'>{number}</span>
+                      </>
               }
             </div>
           </>

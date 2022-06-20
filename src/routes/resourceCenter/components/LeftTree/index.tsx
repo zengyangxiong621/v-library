@@ -1,5 +1,7 @@
 import { memo, useEffect } from "react";
 import "./index.less";
+import { SYSTEMMATERIAL, MYMATERIAL, MATERIALLIB } from "@/constant/dvaModels/resourceCenter"
+
 import { connect } from "dva";
 
 import Node from "../node/index";
@@ -40,37 +42,43 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
       groupId: null
     };
     dispatch({
-      type: "resourceCenter/getTemplateList",
+      type: "resourceCenter/getRightLists",
       payload: finalBody
     });
     dispatch({
       type: "resourceCenter/resetModel",
       payload: {
         curSelectedGroup: ["-1"],
-        curSelectedGroupName: "全部应用"
+        curSelectedGroupName: "素材库"
       }
     });
   };
   // 添加分组
   // 创建一个占位数据
-  const addGroup = () => {
+  const addGroup = (groupId: string, parentId: string = '') => {
     const mockItem: any = {
       groupId: "aInput",
       name: "占位的input"
     };
-    // 插入的输入框是在数组的倒数第二个位置
-    const origin = resourceCenter.groupList[0].children;
-    if (origin[origin.length - 2].groupId === "aInput") {
-      resourceCenter.groupList[0].children.splice(-2, 1);
+    // 以素材库为例， ↓ === '素材库'
+    const parentObj = resourceCenter.groupList.find((item: any) => item.groupId === parentId)
+    // ↓ === '我的素材'
+    const originArr = parentObj?.children.find((item: any) => item.groupId === groupId)
+    console.log('originArroriginArr', originArr);
+    // ↓ === 我的素材下的所有组
+    const targetGroups = originArr.children
+    // 插入的输入框是在数组的倒数第二个位置(未分组上一个)
+    if (targetGroups[targetGroups.length - 2].groupId === "aInput") {
+      originArr.children.splice(-2,1)
       const temp = JSON.parse(JSON.stringify(resourceCenter.groupList));
       dispatch({
         type: "resourceCenter/setGroupList",
         payload: temp
       });
-      return;
+      return
     }
     // 增加一个占位数据
-    resourceCenter.groupList[0].children.splice(-1, 0, mockItem);
+    targetGroups.splice(-1, 0, mockItem);
     const temp = JSON.parse(JSON.stringify(resourceCenter.groupList));
     dispatch({
       type: "resourceCenter/setGroupList",
@@ -82,12 +90,11 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
     // 如果是取消选择直接中止
     if (!e.selected) return;
     const { node } = e;
-    console.log("node", node);
+    const isCreateByOurself = node.customLevel === 1 || node.customLevel === 2
     if (
       node.key === "aInput" ||
-      node.key === "wrap" ||
       node.name === "占位的input" ||
-      node.name === "模板库"
+      isCreateByOurself
     ) {
       return;
     }
@@ -108,7 +115,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
       groupId
     };
     dispatch({
-      type: "resourceCenter/getTemplateList",
+      type: "resourceCenter/getRightLists",
       payload: finalBody
     });
     // 每次变更选中的分组时，将当前分组保存至models中
@@ -124,9 +131,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
           className="my-dashboard-tree"
           blockNode
           defaultExpandAll={true}
-          // defaultExpandedKeys={["wrap"]}
-          // defaultSelectedKeys={["-1"]}
-          // selectedKeys={resourceCenter.curSelectedGroup}
+          selectedKeys={resourceCenter.curSelectedGroup}
           treeData={resourceCenter.groupList}
           switcherIcon={<DownOutlined />}
           fieldNames={{
