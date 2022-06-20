@@ -56,12 +56,14 @@ export default {
       //   method: "get",
       // });
       // 系统素材接口
-      const data = yield http({
+      let data = yield http({
         url: `/visual/resource/queryTypeList`,
         method: "get",
       });
-      console.log("data", data);
-
+      (data || []).map((item:any) => {
+        item.groupId = item.type
+        if(!item.type) item.groupId = '-1'
+      })
       yield put({
         type: "setGroupList",
         payload: [

@@ -16,7 +16,7 @@ const { Option } = Select;
 // 功能
 const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   // 空间id
-  let spaceId = 1;
+  let spaceId: any = null;
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
@@ -29,25 +29,18 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   const getDataDispatch = (finalBody: any) => {
     dispatch({
       type: "resourceCenter/getRightLists",
-      payload: finalBody
+      payload: { type: ["design"], map: sortMap, ...finalBody }
     });
   };
 
   // 页面初始化- 请求模板列表数据
   useEffect(() => {
-    dispatch({
-      type: "resourceCenter/resetModel",
-      payload: {
-        curSelectedGroup: ["-1"],
-        curSelectedGroupName: "全部应用"
-      }
-    });
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
-      spaceId: spaceId,
-      map: sortMap,
-      groupId: null
+      spaceId,
+      // groupId: null, // 系统素材下不传
+      subType: []
     };
     getDataDispatch(finalBody);
   }, []);
@@ -71,8 +64,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       pageSize: 1000,
       spaceId,
       name: value,
-      map: sortMap,
-      groupId
+      subType: groupId ? [groupId] : []
     };
     getDataDispatch(finalBody);
   };
@@ -81,18 +73,19 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
     const newSortMap = {
       [value]: false
     };
+    const groupId =
+      resourceCenter.curSelectedGroup[0] === "-1"
+        ? null
+        : resourceCenter.curSelectedGroup[0];
     setSortMap(newSortMap);
     // 选择新标准后，需要发送一次请求
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      map: newSortMap
+      subType: groupId ? [groupId] : []
     };
-    dispatch({
-      type: "resourceCenter/getRightLists",
-      payload: finalBody
-    });
+    getDataDispatch(finalBody);
   };
   /**
    * description:  刷新左侧分组列表和右侧应用列表
@@ -106,12 +99,9 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      groupId: transformId
+      subType: transformId ? [transformId] : []
     };
-    dispatch({
-      type: "resourceCenter/getRightLists",
-      payload: finalBody
-    });
+    getDataDispatch(finalBody);
     dispatch({
       type: "resourceCenter/getGroupTree",
       payload: {
@@ -129,7 +119,10 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   return (
     <div className="resourceCenter-wrap">
       <div className="left">
-        <LeftTree clearSearchInputState={clearSearchInputState} />
+        <LeftTree
+          clearSearchInputState={clearSearchInputState}
+          getDataDispatch={getDataDispatch}
+        />
       </div>
       <div className="right">
         <div className="right-header">

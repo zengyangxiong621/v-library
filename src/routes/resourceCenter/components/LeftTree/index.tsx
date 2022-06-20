@@ -12,7 +12,7 @@ import { DownOutlined } from "@ant-design/icons";
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
 
-const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
+const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispatch }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   const spaceId = "1";
   // 获取应用分组列表
@@ -38,13 +38,9 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
-      spaceId,
-      groupId: null
+      spaceId:null,
     };
-    dispatch({
-      type: "resourceCenter/getRightLists",
-      payload: finalBody
-    });
+    getDataDispatch(finalBody)
     dispatch({
       type: "resourceCenter/resetModel",
       payload: {
@@ -64,7 +60,6 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
     const parentObj = resourceCenter.groupList.find((item: any) => item.groupId === parentId)
     // ↓ === '我的素材'
     const originArr = parentObj?.children.find((item: any) => item.groupId === groupId)
-    console.log('originArroriginArr', originArr);
     // ↓ === 我的素材下的所有组
     const targetGroups = originArr.children
     // 插入的输入框是在数组的倒数第二个位置(未分组上一个)
@@ -111,13 +106,10 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState }: any) => {
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
-      spaceId,
-      groupId
+      spaceId:null,
+      subType: groupId ? [groupId] : [],
     };
-    dispatch({
-      type: "resourceCenter/getRightLists",
-      payload: finalBody
-    });
+    getDataDispatch(finalBody)
     // 每次变更选中的分组时，将当前分组保存至models中
     dispatch({
       type: "resourceCenter/setCurSelectedGroup",
