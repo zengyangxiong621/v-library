@@ -5,6 +5,7 @@ import { connect } from 'dva'
 import { http, BASEURL } from '@/services/request'
 import MaterialCard from '../materialCard/index'
 import DarkModal from '../darkThemeModal/index'
+import PreviewModal from '../previewModal/index'
 
 
 import {
@@ -23,6 +24,8 @@ const RightContent = (props: any) => {
   const spaceId = 1
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)
   const [newGroupId, setNewGroupId] = useState('')
+  const [currentItem, setCurrentItem] = useState({})
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
 
 
   // 发布应用时的参数
@@ -91,6 +94,15 @@ const RightContent = (props: any) => {
     setShowMoveGroupModal(false)
   }
 
+  const getCurrentItem = (data: any) => {
+    setCurrentItem(data)
+    setIsPreviewVisible(true)
+  }
+
+  const changeVisible = (type:any) => {
+    setIsPreviewVisible(type)
+  } 
+
   return <div className="RightContent-wrap">
     {
       listData.map((item: any, index: number) => (
@@ -99,11 +111,14 @@ const RightContent = (props: any) => {
           key={index}
           spaceId={spaceId}
           openMoveGroupModal={openMoveGroupModal}
+          getCurrentItem = { getCurrentItem }
           refreshList={refreshList}
         />
       )
       )
     }
+    {/* 预览功能处理 */}
+    <PreviewModal currentItem={currentItem} isPreviewVisible={isPreviewVisible} changeVisible={changeVisible} ></PreviewModal>
     {/* 移入分组弹窗 */}
     <DarkModal
       title='移动'
