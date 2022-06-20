@@ -132,7 +132,7 @@ const UploadFile = (props: any) => {
           </Dragger>
         </Form.Item>
         {/* <Form.Item label="资源名称"></Form.Item> */}
-        <Form.Item label="选择分组" name='groupId' rules={generateSingleRules(true, '请选择分组')}>
+        <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, '请选择分组')}>
         <Select placeholder="请选择"  onChange={selectChange}>
           {
             (groupList[0].children || []).map((item:any) => {

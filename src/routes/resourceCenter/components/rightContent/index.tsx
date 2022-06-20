@@ -144,11 +144,11 @@ const RightContent = (props: any) => {
         layout="horizontal"
         name='releaseForm'
       >
-        <Form.Item label='可选分组'
+        <Form.Item label='可选分类'
           name="group"
           rules={[{ required: true }]}
         >
-          <Select onSelect={selectGroup}>
+          <Select onSelect={selectGroup} placeholder="请选择">
             {
               // 将全部应用这一分组剔除
               resourceCenter.groupList[0]?.children[0].children?.slice(1).map((item: any) =>

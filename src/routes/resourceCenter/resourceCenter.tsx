@@ -139,9 +139,9 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
             </p>
           </div>
           <div className="add-search">
-            <div className="custom-btn">
+            <div className="custom-btn" onClick={handleUpload}>
               <PlusOutlined style={{ fontSize: "12px", marginRight: "2px" }} />
-              <span onClick={handleUpload}>上传素材</span>
+              <span>上传素材</span>
             </div>
             <div className="search-wrap">
               <Input.Search
