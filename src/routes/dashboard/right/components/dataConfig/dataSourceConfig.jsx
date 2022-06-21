@@ -167,6 +167,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
           id: _data.id,
           data: dataConfig[dataSourceTypes.value].data,
           dataType: dataSourceTypes.value,
+          fields:dataConfig[dataSourceTypes.value].fields || null
         },
       })
     }
