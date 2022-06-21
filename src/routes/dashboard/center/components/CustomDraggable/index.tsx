@@ -10,6 +10,8 @@ import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
+import BasicPieChart from '@/customComponents/echarts/components/basicPie'
+import WorldMap from '@/customComponents/echarts/components/worldMap'
 
 import {
   STYLE,
@@ -624,13 +626,20 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
-                            <RemoteBaseComponent
-                              version={'1.0.0'}
-                              name={layer.moduleName}
+
+                            // <RemoteBaseComponent
+                            //   version={'1.0.0'}
+                            //   name={layer.moduleName}
+                            //   componentConfig={component}
+                            //   fields={getFields(component)}
+                            //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            // ></RemoteBaseComponent>
+
+                            <WorldMap 
                               componentConfig={component}
                               fields={getFields(component)}
-                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                            ></RemoteBaseComponent>
+                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList,  bar.callbackArgs)}
+                          ></WorldMap>
                           }
                         </div>
                       </>

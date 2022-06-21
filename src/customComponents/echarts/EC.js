@@ -82,8 +82,9 @@ class ECharts extends Component {
   };
 
   rerender = () => {
-    const { onEvents, onChartReady } = this.props;
+    const { onEvents, onChartReady,createMap } = this.props;
 
+    this.props.createMap(); // TODO zzl
     this.echartObj = this.renderEchartDom();
     this.bindEvents(this.echartObj, onEvents || {});
 
@@ -163,6 +164,7 @@ ECharts.propTypes = {
   className: PropTypes.string,
   theme: PropTypes.string,
   onChartReady: PropTypes.func,
+  createMap: PropTypes.func, // TODO zzl
   showLoading: PropTypes.bool,
   loadingOption: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onEvents: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -192,7 +194,8 @@ ECharts.defaultProps = {
   },
   className: '',
   theme: null,
-  onChartReady: () => {},
+  onChartReady: () => {}, 
+  createMap: () => {}, // TODO zzl
   showLoading: false,
   loadingOption: null,
   onEvents: {},
