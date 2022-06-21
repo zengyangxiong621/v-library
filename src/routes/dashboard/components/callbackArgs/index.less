@@ -1,0 +1,73 @@
+.cbArgs-table {
+  background: #181b24;
+  color: #dddddd;
+  border-left: 1px solid #393b4a;
+  font-feature-settings: "tnum";
+  border-radius: 2px;
+  box-sizing: border-box;
+  font-size: 12px;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  margin: 16px 0 0 0;
+  padding: 0;
+  position: relative;
+
+  table {
+    border-collapse: separate;
+    border-radius: 2px 2px 0 0;
+    border-spacing: 0;
+    text-align: left;
+    width: 100%;
+    table-layout: fixed;
+
+    thead {
+      th {
+        text-align: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: #2e323e;
+        color: #b4b7c1;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        font-weight: 500;
+        position: relative;
+      }
+    }
+
+    tbody {
+      td {
+        text-align: center;
+        border-right: 1px solid #393b4a;
+        border-bottom: 1px solid #393b4a;
+        overflow-wrap: break-word;
+        padding: 16px;
+        position: relative;
+
+        .component-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 16px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .ant-btn {
+            max-width: 100%;
+            min-width: 96px;
+
+            span {
+              width: 100%;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+  }
+}

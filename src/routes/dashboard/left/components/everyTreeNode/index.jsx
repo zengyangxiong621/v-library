@@ -14,7 +14,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
       payload
     })
   }
-  const { name, id, modules, moduleName, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
+  const { name, id, modules, moduleType, moduleVersion, moduleName, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
   console.log('_++++++++++++++++++++++++++++++++++', restProps);
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
@@ -148,7 +148,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   }
   const isSelected = bar.key.includes(id)
   // 左侧图层前组件缩略图小图标
-  const photoPath = `${window.CONFIG.COMP_URL}/modules/${moduleName}/1.0.0/thumb-${moduleName}.png`
+  const photoPath = `${window.CONFIG.COMP_URL}/${ moduleType }/${moduleName}/${moduleVersion}/thumb-${moduleName}.png`
   return (
     <div className={`EveryTreeNode-wrap
         ${hover && 'every-tree-node-hover'}

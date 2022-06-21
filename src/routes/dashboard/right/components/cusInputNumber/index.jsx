@@ -46,7 +46,7 @@ const CusInputNumber = props => {
             min={_min}
             max={_max}
             step={_step}
-            style={{ ...props.style }}
+            style={{ width:'100%',...props.style }}
             className="size-input"
             value={value}
             onChange={valueChange}

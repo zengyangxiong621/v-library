@@ -11,6 +11,7 @@ import { http } from '@/services/request'
 const Charts = (props: any) => {
   // const { data } = props
   const [active, setActive] = useState('all')
+  const [allModules, setAllModules] = useState<any>([])
   const helplessMapping: { [x in string]: string } = {
     '全部': 'all',
     '柱型图': 'bar',
@@ -24,49 +25,29 @@ const Charts = (props: any) => {
   }
 
   const chartTypes = ['全部', '柱型图', '折线图', '饼图', '散点图', '其他']
-
-  // useEffect(() => {
-    // const init = async () => {
-  //     const getData = async (type?: string) => {
-  //       const data: any = await http({
-  //         url: '/visual/module-manage/queryModuleList',
-  //         method: 'post',
-  //         body: {
-  //           type: [0],
-  //           // subType: type,
-  //           status: 0,
-  //           pageNo: 1,
-  //           pageSize: 100,
-  //         }
-  //       })
-        // ChartDataMap[helplessMapping[type]] = data?.content
-        // }
-  //       console.log('data', data);
-        // for await (let item of chartTypes) {
-          //   await getData(item)
-          // }
-  //       }
-  //       getData()
-    // init()
-  // }, [])
   useEffect(() => {
-      const getData = async () => {
-        const data: any = await http({
-          url: '/visual/module-manage/queryModuleList',
-          method: 'post',
-          body: {
-            type: ['chart'],
-            status: 0,
-            pageNo: 1,
-            pageSize: 100,
-          }
-        })
-        // ChartDataMap[helplessMapping[type]] = data?.content
-        // }
-        // TODO  把data里的数据按照组件种类放入chartDataMap中
+    const getData = async () => {
+      const data: any = await http({
+        url: '/visual/module-manage/queryModuleList',
+        method: 'post',
+        body: {
+          type: ['chart'],
+          status: 0,
+          pageNo: 0,
+          pageSize: 100,
         }
-        getData()
-    // init()
+      })
+
+      // ChartDataMap[helplessMapping[type]] = data?.content
+      // }
+      // TODO  把data里的数据按照组件种类放入chartDataMap中
+
+      data.content.forEach((item: any) => {
+        item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`
+      })
+      setAllModules(() => data.content)
+    }
+    getData()
   }, [])
 
   return (
@@ -87,7 +68,8 @@ const Charts = (props: any) => {
       </ul>
       <div className='charts-list'>
         {
-          ChartDataMap[active]?.map((item: any, index: number) => {
+          allModules?.map((item: any, index: number) => {
+          // ChartDataMap[active]?.map((item: any, index: number) => {
             return (
               <EveryItem data={item} key={index} />
             )
@@ -99,16 +81,11 @@ const Charts = (props: any) => {
 }
 
 const ChartDataMap: any = {
-  all: [
-  ],
-  bar: [
-  ],
-  line: [
-  ],
-  pie: [
-  ],
-  scatter: [
-  ],
+  all: [],
+  bar: [],
+  line: [],
+  pie: [],
+  scatter: [],
   other: []
 }
 
@@ -138,4 +115,5 @@ const chartType = [
     key: 'other',
   },
 ]
+
 export default memo(Charts)

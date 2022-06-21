@@ -46,7 +46,7 @@ const Color = props => {
     } else {
       _data.value = `rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`
     }
-    // props.onChange()
+    props.onChange()
   }
   const handleHexChange = (e) => {
     const hexTmp = e.target.value

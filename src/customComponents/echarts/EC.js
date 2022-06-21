@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import * as echarts from 'echarts';
 import PropTypes from 'prop-types';
-import echarts from 'echarts/lib/echarts';
-import resizeMe from '@/decorator/resizeMe';
+// import echarts from 'echarts/lib/echarts';
+// import resizeMe from '@/decorator/resizeMe';
 import isEqual from 'react-fast-compare';
 
 /**
  * 基于ECharts 4的简单封装 fork自https://github.com/hustcc/echarts-for-react/blob/master/src/core.jsx
  */
-@resizeMe({ refreshRate: 50 })
+// @resizeMe({ refreshRate: 50 })
 class ECharts extends Component {
   componentDidMount() {
     this.rerender();
@@ -185,6 +186,10 @@ ECharts.defaultProps = {
   notMerge: false,
   lazyUpdate: false,
   style: {},
+  size: {
+    width: '600px',
+    height: '400px'
+  },
   className: '',
   theme: null,
   onChartReady: () => {},
