@@ -131,9 +131,9 @@ const DateSelect = (props) => {
     "lineHeight": 0
   }
   * */
-  console.log('calendarBoxTextStyle', calendarBoxTextStyle)
-
-  console.log('textStyle', textStyle)
+  // console.log('calendarBoxTextStyle', calendarBoxTextStyle)
+  //
+  // console.log('textStyle', textStyle)
   useEffect(() => {
     if (selectType === 'range') {
       handleChange([startTime ? moment(startTime, dateFormat) : null, endTime ? moment(endTime, dateFormat) : null], [startTime || null, endTime || null])
@@ -147,7 +147,7 @@ const DateSelect = (props) => {
       const cAntPickerSeparator = dom.querySelector('.ant-picker-separator')
       cAntPickerSeparator.style.height = 'unset'
       cAntPickerSeparator.style.width = 'unset'
-      console.log('cAntPickerSeparator', cAntPickerSeparator)
+      // console.log('cAntPickerSeparator', cAntPickerSeparator)
     })
 
     ;[...inputDom, ...svgDom].forEach(item => {
@@ -184,12 +184,12 @@ const DateSelect = (props) => {
           item.style[key] = calendarBoxTextStyle[key]
         })
       })
-      console.log('allCellsBefore', allCellsBefore)
+      // console.log('allCellsBefore', allCellsBefore)
       ;[...allCellsBefore].forEach(item => {
         Object.keys(calendarBoxTextStyle).forEach(key => {
-          console.log('item.before', item.attributes[1].value)
-          console.log('item.after', item.attributes[2].value)
-          console.log('item.attributes', item.attributes)
+          // console.log('item.before', item.attributes[1].value)
+          // console.log('item.after', item.attributes[2].value)
+          // console.log('item.attributes', item.attributes)
         })
       })
       ;[...cAntPickerHeaderButtons].forEach(item => {
@@ -199,7 +199,7 @@ const DateSelect = (props) => {
         item.style.fontSize = calendarBoxTextStyle.fontSize
       })
       panelDom.style.background = calendarBgColor
-      console.log('calendarCellsThemeColor', calendarCellsThemeColor)
+      // console.log('calendarCellsThemeColor', calendarCellsThemeColor)
     })
   }
   const onPanelChange = (open) => {
@@ -227,15 +227,15 @@ const DateSelect = (props) => {
         item.style.fontSize = calendarBoxTextStyle.fontSize
       })
       panelDom.style.background = calendarBgColor
-      console.log('calendarCellsThemeColor', calendarCellsThemeColor)
+      // console.log('calendarCellsThemeColor', calendarCellsThemeColor)
     })
   }
   const handleChange = (date, dateString) => {
     setDateValue(date)
     if (selectType === 'range') {
-      props.onChange({[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
+      props.onChange({startTime: dateString[0], endTime: dateString[1]})
     } else {
-      props.onChange({[fields[0]]: dateString})
+      props.onChange({startTime: dateString})
     }
   }
 

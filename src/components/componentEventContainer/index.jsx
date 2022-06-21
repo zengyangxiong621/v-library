@@ -2,6 +2,7 @@ import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
 import DateSelect from '@/components/dateSelect'
+import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
 import {cloneDeep} from 'lodash'
@@ -172,18 +173,21 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
+    console.log('-------------------')
+    console.log('data', data)
     console.log('callbackArgs', component.callbackArgs)
     console.log('callbackParamsList', callbackParamsList)
     console.log('---------------')
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
+    console.log('compCallbackArgs', compCallbackArgs)
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
     const sourceCallbackList = callbackParamsList.filter(item => item.sourceModules.find(jtem => jtem.id === componentId))
+    console.log('sourceCallbackList', sourceCallbackList)
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
     sourceCallbackList.forEach(item => {
-
       item.sourceModules.forEach(sourceItem => {
         if (sourceItem.id === componentId) {
           // 回调列表中的当前数据如果有目标组件再进行下一步
@@ -194,9 +198,9 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
               if (item.callbackParam === callback.target) {
                 // 值是否改变
                 // data的值存在并且
-                if (data[callback.target] && callbackArgs[callback.target] !== data[callback.target]) {
+                if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
                   temp = true
-                  callbackArgs[callback.target] = data[callback.target]
+                  callbackArgs[callback.target] = data[callback.origin]
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
                 }
                 console.log('callbackArgs', callbackArgs)
@@ -231,7 +235,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     }
 
   }
-
 
 
   const animation = ({duration, timingFunction, type}, action, dom, id) => {
@@ -388,9 +391,14 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
             {...props}
           >
           </DateSelect>
-          : <RemoteBaseComponent
-            {...props}
-          ></RemoteBaseComponent>
+          : props.componentConfig.moduleName === 'select' ?
+            <Select
+              onChange={handleValueChange}
+              {...props}
+            >
+            </Select> : <RemoteBaseComponent
+              {...props}
+            ></RemoteBaseComponent>
       }
     </div>
   )
