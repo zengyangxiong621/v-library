@@ -25,7 +25,6 @@ const UploadFile = (props: any) => {
         url: `/visual/file/uploadResource`,
         body: formData
       })
-      console.log(formData,'数据',file.file,'iii',data)
       if(data){
         changeShowState(false)
         message.success('上传成功')
