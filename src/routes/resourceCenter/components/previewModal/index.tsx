@@ -4,7 +4,7 @@ import { Modal } from "antd";
 const PreviewModal = (props: any) => {
   const { isPreviewVisible, currentItem, changeVisible } = props;
   const imgUrl = currentItem.preview
-    ? `${(window as any).CONFIG.COMP_URL}/modules${currentItem.preview}`
+    ? `${(window as any).CONFIG.COMP_URL}${currentItem.preview}`
     : "";
   const handleCancelPreview = () => {
     changeVisible(false);
