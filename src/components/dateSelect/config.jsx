@@ -1,91 +1,49 @@
 const componentDefaultConfig = {
   "id": "",
-  "uniqueTag": "",
   "name": "时间选择器",
-  "parentId": "0",
-  "dashboardId": "",
   "moduleName": "timeSelect",
   "moduleVersion": "1.0.0",
-  "createdAt": "2022-04-02T07:22:31.290Z",
-  "updatedAt": "2022-04-02T07:22:39.798Z",
-  "autoUpdate": {
-    "isAuto": false,
-    "interval": 10
-  },
-  "thumb": "",
-  "dataConfig": {},
-  "dataType": "static",
-  "dataFrom": 0,
-  "dataContainers": [],
-  "staticData": {
-    "data": [
-      {
-        "cookieTime": "2022-06-08",
-        "sleepTime": "2023-06-08"
-      }
-    ],
-    "fields": [
-      {
-        "name": "startTime",
-        "value": "cookieTime",
-        "desc": "开始时间",
-        "status": true
-      },
-      {
-        "name": "endTime",
-        "value": "sleepTime",
-        "desc": "结束时间",
-        "status": true
-      }
-    ]
-  },
-  "useFilter": false,
-  "filters": [],
-
-  "events":[],
   "config": [
     {
-      "name": "dimension",
       "displayName": "位置尺寸",
+      "name": "dimension",
       "type": "dimensionGroup",
       "config": {
         "lock": false
       },
       "value": [
         {
-          "name": "left",
           "displayName": "X轴坐标",
-          "value": 100
+          "name": "left",
+          "value": 970
         },
         {
-          "name": "top",
           "displayName": "Y轴坐标",
-          "value": 100
+          "name": "top",
+          "value": 147
         },
         {
-          "name": "width",
           "displayName": "宽度",
-          "value": 288
+          "name": "width",
+          "value": 531.2420091324201
         },
         {
-          "name": "height",
           "displayName": "高度",
-          "value": 32
+          "name": "height",
+          "value": 88.26027397260275
         }
       ]
     },
     {
-      "name": "hideDefault",
       "displayName": "默认隐藏",
+      "name": "hideDefault",
       "type": "checkBox",
       "value": false
     },
     {
-      "name": "selectType",
       "displayName": "选择器类型",
-      "type": "select",
-      "value": "date",
-      "options":[
+      "name": "selectType",
+      "options": [
         {
           "name": "基础选择器",
           "value": "date"
@@ -94,14 +52,14 @@ const componentDefaultConfig = {
           "name": "范围选择器",
           "value": "range"
         }
-      ]
+      ],
+      "type": "select",
+      "value": "range"
     },
     {
-      "name": "pickerType",
       "displayName": "范围类型",
-      "type": "select",
-      "value": "date",
-      "options":[
+      "name": "pickerType",
+      "options": [
         {
           "name": "日期",
           "value": "date"
@@ -126,14 +84,14 @@ const componentDefaultConfig = {
           "name": "年",
           "value": "year"
         }
-      ]
+      ],
+      "type": "select",
+      "value": "date"
     },
     {
-      "name": "dateFormat",
       "displayName": "日期格式",
-      "type": "select",
-      "value": "2",
-      "options":[
+      "name": "dateFormat",
+      "options": [
         {
           "name": "YYYY-MM-DD HH:mm:ss",
           "value": "1"
@@ -154,99 +112,174 @@ const componentDefaultConfig = {
           "name": "YYYY/MM/DD",
           "value": "5"
         }
-      ]
+      ],
+      "type": "select",
+      "value": "2"
     },
     {
-      "name": "textStyle",
       "displayName": "文本样式",
+      "name": "textStyle",
       "type": "textFullStyleGroup",
       "value": [
         {
-          "name": "fontFamily",
           "displayName": "",
+          "name": "fontFamily",
           "value": "Microsoft Yahei"
         },
         {
-          "name": "fontSize",
           "displayName": "",
-          "value": 16
+          "name": "fontSize",
+          "value": 25
         },
         {
-          "name": "color",
           "displayName": "",
+          "name": "color",
           "type": "color",
           "value": "#fff"
         },
         {
+          "displayName": "",
           "name": "bold",
-          "displayName": "",
           "value": false
         },
         {
+          "displayName": "",
           "name": "italic",
-          "displayName": "",
           "value": false
         },
         {
-          "name": "letterSpacing",
           "displayName": "字距",
+          "name": "letterSpacing",
           "value": 0
         },
         {
-          "name": "lineHeight",
           "displayName": "行距",
+          "name": "lineHeight",
           "value": 0
         }
       ]
     },
     {
-      "name": "textIndent",
-      "displayName": "缩进",
-      "type": "input",
-      "value": "",
-    },
-    {
-      "name": "selectBgColor",
       "displayName": "背景色",
-      "value": "#222430",
-      "type":"color"
+      "name": "selectBgColor",
+      "type": "color",
+      "value": "#2e4af1"
+    },
+    {
+      "displayName": "边框颜色",
+      "name": "selectBorderColor",
+      "type": "color",
+      "value": "#fff"
+    },
+    {
+      "name": "calendarBox",
+      "displayName": "日历框",
+      "type": "collapse",
+      "hasSwitch": true,
+      "defaultExpand": true,
+      "value": [
+        {
+          "name": "show",
+          "displayName": "",
+          "value": true,
+          "type": "switch"
+        },
+        {
+          "displayName": "背景色",
+          "name": "bgColor",
+          "type": "color",
+          "value": "#2e4af1"
+        },
+        {
+          "displayName": "文本样式",
+          "name": "textStyle",
+          "type": "textFullStyleGroup",
+          "value": [
+            {
+              "displayName": "",
+              "name": "fontFamily",
+              "value": "Microsoft Yahei"
+            },
+            {
+              "displayName": "",
+              "name": "fontSize",
+              "value": 14
+            },
+            {
+              "displayName": "",
+              "name": "color",
+              "type": "color",
+              "value": "#fff"
+            },
+            {
+              "displayName": "",
+              "name": "bold",
+              "value": false
+            },
+            {
+              "displayName": "",
+              "name": "italic",
+              "value": false
+            },
+            {
+              "displayName": "字距",
+              "name": "letterSpacing",
+              "value": 0
+            },
+            {
+              "displayName": "行距",
+              "name": "lineHeight",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "displayName": "装饰线",
+          "name": "lineColor",
+          "type": "color",
+          "value": "#fff"
+        },
+        {
+          "displayName": "单元格主题色",
+          "name": "themeColor",
+          "type": "color",
+          "value": "#2e4af1"
+        },
+      ]
     }
-    // ,
-    // {
-    //   "name": "calendarConfig",
-    //   "displayName": "日历框",
-    //   "type": "collapse",
-    //   "hasSwitch": false,
-    //   "defaultExpand": true,
-    //   "value": [
-    //     {
-    //       "name": "show",
-    //       "displayName": "",
-    //       "value": true,
-    //       "type": "switch"
-    //     },
-    //     {
-    //       "name": "styleColor",
-    //       "displayName": "背景色",
-    //       "value": "#222430",
-    //       "type":"color"
-    //     }
-    //   ]
-    // }
   ],
-  "themes": [
-    {
-      "id": "theme-default",
-      "name": "系统默认"
-    },
-    {
-      "id": "theme-light",
-      "name": "浅色风格"
-    },
-    {
-      "id": "theme-gov-blue",
-      "name": "政务蓝"
-    }
-  ]
+  "dataConfig": {},
+  "autoUpdate": {},
+  "dataType": "static",
+  "staticData": {
+    "data": [
+      {
+        "cookieTime": "2022-06-08",
+        "sleepTime": "2023-06-08"
+      }
+    ],
+    "fields": [
+      {
+        "name": "startTime",
+        "value": "cookieTime",
+        "desc": "开始时间",
+        "status": true
+      },
+      {
+        "name": "endTime",
+        "value": "sleepTime",
+        "desc": "结束时间",
+        "status": true
+      }
+    ]
+  },
+  "events": [],
+  "triggers": [],
+  "useFilter": false,
+  "filters": [],
+  "actions": [],
+  "dataContainers": [],
+  "dataFrom": 0,
+  "callbackArgs": []
 }
 export default componentDefaultConfig

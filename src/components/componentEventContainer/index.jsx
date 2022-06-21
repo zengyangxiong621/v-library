@@ -35,25 +35,28 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (mouseEnterActions.length === 0) {
       return
     }
-    setClickTimes(1)
+    console.log('mouseEnterEvents', mouseEnterEvents)
     customEventsFunction(mouseEnterEvents, e)
-  }, 300)
+  })
   // 移出
   const handleMouseOut = debounce((e) => {
-    const mouseOutEvents = events.filter(item => item.trigger === 'mouseOut')
+    const mouseOutEvents = events.filter(item => item.trigger === 'mouseLeave')
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (mouseOutActions.length === 0) {
       return
     }
-    setClickTimes(1)
+    console.log('mouseOutEvents', mouseOutEvents)
     customEventsFunction(mouseOutEvents, e)
-  }, 300)
+  })
 
   const customEventsFunction = (events, e) => {
     events.forEach((item) => {
       const conditions = item.conditions
       const conditionType = item.conditionType
-      const conditionTypeValue = conditionType.target.value
+      let conditionTypeValue
+      if (conditionType !== 'all') {
+        conditionTypeValue = conditionType.target.value
+      }
       const callbackArgs = {
         startTime: '2022-06-17',
         endTime: '2022-06-17'
@@ -166,10 +169,12 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
   const handleValueChange = (data) => {
-    console.log('dataData', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
-    component.callbackArgs = comCallbackArgs
+    // component.callbackArgs = comCallbackArgs
+    console.log('callbackArgs', component.callbackArgs)
+    console.log('callbackParamsList', callbackParamsList)
+    console.log('---------------')
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -178,6 +183,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     let activeIds = []
     let temp = false
     sourceCallbackList.forEach(item => {
+
       item.sourceModules.forEach(sourceItem => {
         if (sourceItem.id === componentId) {
           // 回调列表中的当前数据如果有目标组件再进行下一步
@@ -188,11 +194,12 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
               if (item.callbackParam === callback.target) {
                 // 值是否改变
                 // data的值存在并且
-                if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                if (data[callback.target] && callbackArgs[callback.target] !== data[callback.target]) {
                   temp = true
-                  callbackArgs[callback.target] = data[callback.origin]
+                  callbackArgs[callback.target] = data[callback.target]
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
                 }
+                console.log('callbackArgs', callbackArgs)
                 dispatch({
                   type: 'bar/save',
                   payload: {
@@ -206,6 +213,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       })
     })
     if (temp) {
+      console.log('bar', bar.callbackArgs)
       console.log('值被修改了')
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
