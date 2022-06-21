@@ -83,7 +83,8 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      subType: groupId ? [groupId] : []
+      subType: groupId ? [groupId] : [],
+      map: newSortMap
     };
     getDataDispatch(finalBody);
   };

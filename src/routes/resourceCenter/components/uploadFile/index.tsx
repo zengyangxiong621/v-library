@@ -11,25 +11,28 @@ const UploadFile = (props: any) => {
   const [uploadForm] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [fileUrl, setFileUrl] = useState('')
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const handleOk = async () => {
-    // changeShowState(false);
     const value = await uploadForm.validateFields()
     const { file,groupId } = value
-    // console.log(value,'uploadForm')
     if(fileList && fileList.length) {
       const formData = new FormData();
       formData.append('file', file.file);
       formData.append('groupId', groupId);
+      setConfirmLoading(true);
       const data = await http({
         method: 'post',
         url: `/visual/file/uploadResource`,
         body: formData
+      }).catch(() => {
+        setConfirmLoading(false);
       })
       if(data){
         changeShowState(false)
         message.success('上传成功')
         uploadForm.resetFields()
         refreshList()
+        setConfirmLoading(false);
       }
     }
   };
@@ -116,18 +119,19 @@ const UploadFile = (props: any) => {
       destroyOnClose
       onOk={handleOk}
       onCancel={handleCancel}
+      confirmLoading={confirmLoading}
       getContainer={false}
       okText="确定"
       cancelText="取消"
     >
       <Form name="importComponent"  form={uploadForm}>
-        <Form.Item label="上传文件" name='file' rules={generateSingleRules(true, '请选择要上传的组件')}>
+        <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, '请选择要上传的组件')}>
           <Dragger {...fileProps}>
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
             </p>
             <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
-            <p className="ant-upload-hint">不得超过100M</p>
+            <p className="ant-upload-hint">大小不得超过100MB，且必须为.zip格式</p>
           </Dragger>
         </Form.Item>
         {/* <Form.Item label="资源名称"></Form.Item> */}
