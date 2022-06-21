@@ -209,18 +209,23 @@ const AppCard = (props: any) => {
         <div className="hoverOnImg">
           <div className="icons-wrap">
             <div className="more-icon">
-              <IconFont
-                style={{ fontSize: "16px", marginRight: "10px" }}
-                onClick={moveGroup}
-                className="icon-yidong"
-                type="icon-yidong"
-              />
-              <IconFont
-                style={{ fontSize: "16px" }}
-                onClick={deleteApp}
-                className="icon-huishouzhan1"
-                type="icon-huishouzhan1"
-              />
+              {/* 系统素材不允许移动 */}
+              {/* <Tooltip placement="bottom" title="移动">
+                <IconFont
+                  style={{ fontSize: "16px", marginRight: "10px" }}
+                  onClick={moveGroup}
+                  className="icon-yidong"
+                  type="icon-yidong"
+                />
+              </Tooltip> */}
+              <Tooltip placement="bottom" title="删除">
+                <IconFont
+                  style={{ fontSize: "16px" }}
+                  onClick={deleteApp}
+                  className="icon-huishouzhan1"
+                  type="icon-huishouzhan1"
+                />
+              </Tooltip>
             </div>
           </div>
           <div className="btns-wrap">
