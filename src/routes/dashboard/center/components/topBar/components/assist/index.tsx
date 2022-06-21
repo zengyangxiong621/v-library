@@ -15,7 +15,6 @@ const mapStateToProps = (state: any) => {
 
 const Text = (props: any) => {
   const [dataArr, setDataArr] = useState<any>([])
-  const moduleType = 'assist'
 
   useEffect(() => {
     const init = () => {
@@ -46,7 +45,7 @@ const Text = (props: any) => {
       {
         dataArr?.map((item: any, index: number) => {
           return (
-            <EveryItem key={item.moduleName} data={item} type={moduleType} />
+            <EveryItem key={item.moduleName} data={item} />
           )
         })
       }
