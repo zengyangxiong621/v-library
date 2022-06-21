@@ -2,6 +2,7 @@ const componentDefaultConfig = {
   "id": "",
   "name": "时间选择器",
   "moduleName": "timeSelect",
+  "moduleType": "timeSelect",
   "moduleVersion": "1.0.0",
   "config": [
     {
@@ -244,7 +245,7 @@ const componentDefaultConfig = {
           "name": "themeColor",
           "type": "color",
           "value": "#2e4af1"
-        },
+        }
       ]
     }
   ],

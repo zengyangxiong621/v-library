@@ -5,6 +5,7 @@ const componentDefaultConfig = {
   "parentId": "",
   "dashboardId": "",
   "moduleName": "select",
+  "moduleType": "select",
   "moduleVersion": "1.0.0",
   "createdAt": "2022-04-02T07:22:31.290Z",
   "updatedAt": "2022-04-02T07:22:39.798Z",
