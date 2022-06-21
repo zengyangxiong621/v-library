@@ -3,7 +3,6 @@ import axios from 'axios';
 import { connect } from 'dva'
 
 const RemoteBaseComponent = (props: any) => {
-  
   const { componentConfig } = props;
   const { moduleType, moduleName, moduleVersion, } = componentConfig
   const isExit = typeof moduleType === 'undefined'

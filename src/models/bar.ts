@@ -728,7 +728,7 @@ export default {
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
       const extendedSomeAttrLayers = addSomeAttrInLayers(payload)
-      return { ...state, treeData: extendedSomeAttrLayers }
+      return { ...state, treeData: extendedSomeAttrLayers.layers }
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
@@ -1022,6 +1022,7 @@ export default {
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
+      debugger
       const newTree = remove(state.treeData, state.key)
       return { ...state, treeData: newTree }
     },
