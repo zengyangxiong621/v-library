@@ -7,6 +7,9 @@ import { http } from '@/services/request'
 import { IconFont } from '../../../../utils/useIcon'
 import { Input, message, Modal } from 'antd'
 import { ExclamationCircleFilled } from '@ant-design/icons'
+import {
+  EXCLUDELIST
+} from "@/constant/dvaModels/resourceCenter";
 
 const EveryTreeNode = (props: any) => {
   const { groupId, parentId, name, number,
@@ -175,12 +178,13 @@ const EveryTreeNode = (props: any) => {
             <div className='icons-wrap'>
               {
                 customLevel === 1 ? <></> :
-                  customLevel === 2
+                // 系统素材不允许添加，修改，删除分类
+                  customLevel === 2 && groupId !== 'systemMaterial' 
                     ? <IconFont type='icon-xinjianfenzu' onClickCapture={() => addGroup(groupId, parentId)} />
                     :
-                    (groupId === '-1' || name === '0')
+                    (groupId === '-1' || name === '0' || (EXCLUDELIST.indexOf(groupId) > -1 ))
                       ? <>{number}</>
-                      :
+                      : 
                       <>
                         <div className='show-icon'>
                           {

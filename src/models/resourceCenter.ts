@@ -13,7 +13,7 @@ export default {
   state: {
     rightLists: [],
     groupList: [],
-    curSelectedGroup: [],
+    curSelectedGroup: ['-1'],
     curSelectedGroupName: "",
   },
   reducers: {
