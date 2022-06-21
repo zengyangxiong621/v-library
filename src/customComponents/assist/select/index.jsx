@@ -37,7 +37,7 @@ class ComSelect extends Component {
       const data = componentData.filter(item => {
         return item[fieldKey] === value
       })
-      this.props.onChange(data[0])
+      this.props.onChange && this.props.onChange(data[0])
     }
 
     // 处理默认选中
@@ -63,5 +63,5 @@ class ComSelect extends Component {
   }
 }
 
-export { ComSelect }
+export { ComSelect, componentDefaultConfig }
 export default ComSelect

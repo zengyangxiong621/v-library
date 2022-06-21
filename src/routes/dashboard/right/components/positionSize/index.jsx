@@ -110,22 +110,22 @@ const PositionSize = ({ bar, dispatch, ...props }) => {
       <Form.Item label={_data.displayName}>
         <Input.Group compact>
           <Form.Item name="left" noStyle>
-            <CusInputNumber data={_leftCopy} onChange={leftChange} formStyle={{ float: 'left' }} />
+            <CusInputNumber style={{width:"102px"}} data={_leftCopy} onChange={leftChange} formStyle={{ float: 'left' }} />
           </Form.Item>
           <Form.Item name="top" noStyle>
-            <CusInputNumber data={_topCopy} onChange={topChange} formStyle={{ float: 'right' }} />
+            <CusInputNumber style={{width:"102px"}} data={_topCopy} onChange={topChange} formStyle={{ float: 'right' }} />
           </Form.Item>
         </Input.Group>
         <Input.Group compact>
           <Form.Item name="width" noStyle>
-            <CusInputNumber data={_widthCopy} onChange={widthChange} formStyle={{ float: 'left',marginBottom:'-8px' }} />
+            <CusInputNumber style={{width:"102px"}} data={_widthCopy} onChange={widthChange} formStyle={{ float: 'left',marginBottom:'-8px' }} />
           </Form.Item>
           <span className="size-lock" onClick={(e) => sizeLockChange(e)}>
             {sizeLock ? <i className="iconfont icon-lock"></i> :
               <i className="iconfont icon-unlock"></i>}
           </span>
           <Form.Item name="height" noStyle>
-            <CusInputNumber data={_heightCopy} onChange={heightChange} formStyle={{ float: 'right',marginBottom:'-8px' }} />
+            <CusInputNumber style={{width:"102px"}} data={_heightCopy} onChange={heightChange} formStyle={{ float: 'right',marginBottom:'-8px' }} />
           </Form.Item>
         </Input.Group>
       </Form.Item>

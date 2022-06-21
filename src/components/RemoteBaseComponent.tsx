@@ -6,7 +6,7 @@ const RemoteBaseComponent = (props: any) => {
   
   const { componentConfig } = props;
   const { moduleType, moduleName, moduleVersion, } = componentConfig
-  const isExit = typeof moduleVersion === 'undefined'
+  const isExit = typeof moduleType === 'undefined'
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
   
