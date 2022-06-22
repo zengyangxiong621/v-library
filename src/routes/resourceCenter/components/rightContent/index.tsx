@@ -19,7 +19,7 @@ const { Paragraph } = Typography
 
 
 const RightContent = (props: any) => {
-  const { listData, resourceCenter, dispatch } = props
+  const { listData, resourceCenter, dispatch,refreshList } = props
   /** **工作空间id  */
   const spaceId = 1
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)
@@ -34,25 +34,26 @@ const RightContent = (props: any) => {
 
   // ************** 可复用方法 ************
   /**  每个appCard 进行复制、删除等操作后都需要刷新内容列表 && 更新左侧分组树  */
-  const refreshList = () => {
-    const transformId = resourceCenter.curSelectedGroup[0] === '-1' ? null : resourceCenter.curSelectedGroup[0]
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId,
-      groupId: transformId
-    }
-    dispatch({
-      type: 'resourceCenter/getRightLists',
-      payload: finalBody,
-    })
-    dispatch({
-      type: 'resourceCenter/getGroupTree',
-      payload: {
-        spaceId
-      }
-    })
-  }
+  // const refreshList = () => {
+  //   const transformId = resourceCenter.curSelectedGroup[0] === '-1' ? null : resourceCenter.curSelectedGroup[0]
+  //   const finalBody = {
+  //     pageNo: 1,
+  //     pageSize: 1000,
+  //     spaceId,
+  //     subType: transformId ? [null] : [],
+  //     type: ['design']
+  //   }
+  //   dispatch({
+  //     type: 'resourceCenter/getRightLists',
+  //     payload: finalBody,
+  //   })
+  //   dispatch({
+  //     type: 'resourceCenter/getGroupTree',
+  //     payload: {
+  //       spaceId
+  //     }
+  //   })
+  // }
 
   /**** 移动分组Modal相关代码*** */
   const openMoveGroupModal = (appId: string) => {
@@ -80,7 +81,6 @@ const RightContent = (props: any) => {
     })
     if (data) {
       message.success({ content: '移动分组成功', duration: 2 })
-      // refreshList()
       // 移入分组成功后，需要刷新当前分组下的模板以及刷新左侧分组树
       refreshList()
       cancelMoveGroup()

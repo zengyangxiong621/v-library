@@ -160,7 +160,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           </div>
         </div>
         {/* 右侧 */}
-        <RightContent listData={resourceCenter.rightLists} />
+        <RightContent listData={resourceCenter.rightLists} refreshList={refreshList} />
         {/* 上传素材 */}
         {resourceCenter.groupList.length > 0 && uploadVisible && (
           <UploadFile
