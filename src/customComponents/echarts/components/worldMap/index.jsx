@@ -1,10 +1,8 @@
 import React from 'react';
 import EC from '../../EC';
 import * as echarts from 'echarts';
-
-import worldJson from "@/customComponents/echarts/components/world.json"; //自定义的地图文件   世界地图+中国各省地图
+import worldJson from "@/customComponents/echarts/components/world.json";
 import debounce from 'lodash/debounce';
-
 import ComponentDefaultConfig from './config'
 
 
@@ -20,12 +18,6 @@ const data = [
   { name: "丹麦", value: [9.1577, 56.1388, 0.275] },
   { name: "瑞士", value: [8.6649, 47.5276, 0.0354] },
 ];
-
-const symbolSize = {
-  small: false, //小号图标
-  large: true, //大号图标
-  no: false, //没有图标
-};
 
 let mapChart = null;
 
@@ -44,9 +36,7 @@ class WorldMap extends React.PureComponent {
     // 监听浏览器resize
     window.addEventListener("resize", this.resizeDebounce);
   }
-
   componentWillUnmount() {
-    // 别忘了取消监听
     window.removeEventListener("resize", this.resizeDebounce);
   }
 
@@ -57,7 +47,7 @@ class WorldMap extends React.PureComponent {
   };
   
   getOption = () => ({
-      // backgroundColor: "#fff",
+      // backgroundColor: "#fff",   
       title: {
         text: "世界地图",
         left: "left",
@@ -73,6 +63,16 @@ class WorldMap extends React.PureComponent {
         show: true, //是否显示地理坐标系组件
         roam: true, //是否允许鼠标滚动放大，缩小
         map: "world",
+        itemStyle: {
+          normal: {
+            areaColor: '#00BCFF',
+            shadowColor: '#00BCFF',
+            shadowBlur: 1,
+            shadowOffsetX: 0,
+            shadowOffsetY: 5,
+            color: '#00BCFF',
+          }
+        },
         emphasis: {
           //高亮状态下的多边形和标签样式。
           label: {
@@ -82,7 +82,7 @@ class WorldMap extends React.PureComponent {
           },
           itemStyle: {
             //区域
-            areaColor: "#ccc",
+            areaColor: "#f60",
           },
         },
         center: [100.4, 35.9], //视图中心，展示在中国
@@ -102,11 +102,11 @@ class WorldMap extends React.PureComponent {
         max: 10, //最大值
         calculable: true, //是否显示拖拽用的手柄（手柄能拖拽调整选中范围）。
         textStyle: {
-          color: "#fff",
+          color: "blue",
         },
-        textStyle: {
-          color: "#000",
-        },
+        // inRange: {
+        //   color: ['#f60','green']
+        // }
       },
       series: [
         {
@@ -136,71 +136,21 @@ class WorldMap extends React.PureComponent {
 
   
   createMap = (initOption) => {
-    const dom = document.getElementById("chart");
+    const dom = document.getElementById(this.props.componentConfig.id);
     const mapChart = echarts.init(dom);
-
-    echarts.registerMap("world", worldJson); /* 注册world地图 */
+    echarts.registerMap("world", worldJson); // 注册world地图
     const options = initOption || this.getOption();
     mapChart.setOption(options);
-    // mapChart.on("georoam", () => {
-    //   // 监听地图缩放事件
-    //   const { center, zoom } = mapChart.getOption().geo[0];
-
-    //   // 这个缩放范围是自己定的
-    //   if ((zoom > 2 && zoom < 6) || zoom === 2) {
-    //     if (!symbolSize.small) {
-    //       const option = this.getOption();
-    //       // 重新设置图标大小和 当前的缩放比例 视图中心
-    //       option.series[0].symbolSize = 2;
-    //       option.series[0].label.fontSize = 8;
-    //       option.geo.zoom = zoom;
-    //       option.geo.center = center;
-    //       this.createMap(option);
-    //       symbolSize.small = true;
-    //       symbolSize.large = false;
-    //       symbolSize.no = false;
-    //     }
-    //   } else if ((zoom > 0 && zoom < 2) || zoom === 0) {
-    //     if (!symbolSize.no) {
-    //       const option = this.getOption();
-    //       option.series[0].symbolSize = 0;
-    //       option.geo.zoom = zoom;
-    //       option.geo.center = center;
-    //       this.createMap(option);
-    //       symbolSize.small = false;
-    //       symbolSize.large = false;
-    //       symbolSize.no = true;
-    //     }
-    //   } else {
-    //     if (!symbolSize.large) {
-    //       const option = this.getOption();
-    //       option.series[0].symbolSize = 10;
-    //       option.series[0].label.fontSize = 14;
-    //       option.geo.zoom = zoom;
-    //       option.geo.center = center;
-    //       this.createMap(option);
-    //       symbolSize.small = false;
-    //       symbolSize.large = true;
-    //       symbolSize.no = false;
-    //     }
-    //   }
-    // });
     return mapChart;
   };
 
-
-
+  
   onChartClick = (param, echarts) => {
     console.log(param, echarts);
     alert('chart click');
     this.setState({
       cnt: this.state.cnt + 1
     });
-  };
-
-  onChartLegendselectchanged = (param, echart) => {
-    console.log(param, echart);
-    alert('chart legendselectchanged');
   };
 
   onChartReady = echarts => {
@@ -210,12 +160,12 @@ class WorldMap extends React.PureComponent {
   render() {
     let onEvents = {
       click: this.onChartClick,
-      legendselectchanged: this.onChartLegendselectchanged
     };
 
     return (
       <EC
-        id="chart"
+        id={this.props.componentConfig.id}
+        type="map"
         option={this.getOption()}
         onChartReady={this.onChartReady}
         onEvents={onEvents}

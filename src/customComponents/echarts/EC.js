@@ -69,12 +69,13 @@ class ECharts extends Component {
   }
 
   // return the echart object
-  getEchartsInstance = () =>
+  getEchartsInstance = () =>    
     echarts.getInstanceByDom(this.echartsElement) ||
     echarts.init(this.echartsElement, this.props.theme, this.props.opts);
 
   // dispose echarts
   dispose = () => {
+    console.log(this.echartsElement,'***** eee *****');
     if (this.echartsElement) {
       // dispose echarts instance
       echarts.dispose(this.echartsElement);
@@ -82,12 +83,14 @@ class ECharts extends Component {
   };
 
   rerender = () => {
-    const { onEvents, onChartReady,createMap } = this.props;
-
-    this.props.createMap(); // TODO zzl
+    const { onEvents, onChartReady } = this.props;
+    console.log(this,'***** props *****');
+    // 地图组件需执行createMap
+    if (this.props?.type === 'map') {
+      this.props.createMap(); 
+    }
     this.echartObj = this.renderEchartDom();
     this.bindEvents(this.echartObj, onEvents || {});
-
     // on chart ready
     if (typeof onChartReady === 'function')
       this.props.onChartReady(this.echartObj);
@@ -119,11 +122,13 @@ class ECharts extends Component {
     // init the echart object
     const echartObj = this.getEchartsInstance();
     // set the echart option
+
     echartObj.setOption(
       this.props.option,
       this.props.notMerge || false,
       this.props.lazyUpdate || false
     );
+
     // set loading mask
     if (this.props.showLoading)
       echartObj.showLoading(this.props.loadingOption || null);
@@ -164,7 +169,6 @@ ECharts.propTypes = {
   className: PropTypes.string,
   theme: PropTypes.string,
   onChartReady: PropTypes.func,
-  createMap: PropTypes.func, // TODO zzl
   showLoading: PropTypes.bool,
   loadingOption: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onEvents: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -195,7 +199,6 @@ ECharts.defaultProps = {
   className: '',
   theme: null,
   onChartReady: () => {}, 
-  createMap: () => {}, // TODO zzl
   showLoading: false,
   loadingOption: null,
   onEvents: {},

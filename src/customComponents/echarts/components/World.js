@@ -83,7 +83,7 @@ export default class MapChart extends React.PureComponent {
           },
           itemStyle: {
             //区域
-            areaColor: "#ccc",
+            areaColor: "#15326c",
           },
         },
         center: [100.4, 35.9], //视图中心，展示在中国
