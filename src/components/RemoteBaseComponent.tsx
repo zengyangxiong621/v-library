@@ -3,10 +3,10 @@ import axios from 'axios';
 import { connect } from 'dva'
 
 const RemoteBaseComponent = (props: any) => {
-
   const { componentConfig } = props;
   const { moduleType, moduleName, moduleVersion, } = componentConfig
   const isExit = typeof moduleType === 'undefined'
+  console.log('props', props)
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
 
