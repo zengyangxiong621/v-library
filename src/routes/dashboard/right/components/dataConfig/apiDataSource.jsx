@@ -150,7 +150,8 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
         body: {
           id: _data.id,
           data: dataConfig.api.data,
-          dataType: 'api'
+          dataType: 'api',
+          fields:dataConfig['api']?.fields || null
         }
       })
     }

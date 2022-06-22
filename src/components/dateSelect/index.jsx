@@ -233,9 +233,11 @@ const DateSelect = (props) => {
   const handleChange = (date, dateString) => {
     setDateValue(date)
     if (selectType === 'range') {
-      props.onChange({startTime: dateString[0], endTime: dateString[1]})
+      console.log('range', {[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
+      props.onChange({[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
     } else {
-      props.onChange({startTime: dateString})
+      console.log('notRange', {[fields[0]]: dateString})
+      props.onChange({[fields[0]]: dateString})
     }
   }
 
