@@ -34,7 +34,7 @@ const ComSelect = (props) => {
     if (comDataLength) {
       // 如果默认选中项大于数据的长度，则取第一项，否则取默认项
       const index = style.defaultSelect > comDataLength ? 0 : style.defaultSelect - 1
-      defaultValue = setDefaultValue(componentData[index][fieldKey])
+      setDefaultValue(componentData[index][fieldKey])
       handleChange(defaultValue)
     }
   }, [])

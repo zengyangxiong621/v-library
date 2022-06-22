@@ -944,7 +944,6 @@ export default {
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      debugger
       const newTree = remove(state.treeData, state.key)
       return { ...state, treeData: newTree }
     },
