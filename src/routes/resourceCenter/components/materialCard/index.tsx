@@ -122,6 +122,9 @@ const AppCard = (props: any) => {
   };
   // 删除应用
   const deleteApp = async () => {
+    if(props.appName.length) {
+      return false
+    }
     Modal.confirm({
       title: "删除素材",
       style: {
@@ -218,11 +221,11 @@ const AppCard = (props: any) => {
                   type="icon-yidong"
                 />
               </Tooltip> */}
-              <Tooltip placement="bottom" title="删除">
+              <Tooltip placement="bottom" title={`${props.appName.length ? '已被画布引用，不允许删除' : '删除'}`}>
                 <IconFont
                   style={{ fontSize: "16px" }}
                   onClick={deleteApp}
-                  className="icon-huishouzhan1"
+                  className={`icon-huishouzhan1 ${props.appName.length && 'disabled'}`}
                   type="icon-huishouzhan1"
                 />
               </Tooltip>
