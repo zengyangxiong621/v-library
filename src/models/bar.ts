@@ -566,6 +566,35 @@ export default {
       yield put({
         type: 'updateContainersEnableAndModules'
       })
+    },
+    // 获取系统素材分类的数据
+    * getSystemMaterialClass({payload, cb}:any,{ call, put }: any):any{
+      let data = yield http({
+        url: `/visual/resource/queryTypeList`,
+        method: "get",
+      })
+      data.map((item:any) => {
+        item.groupId = item.type
+        if(!item.type) item.groupId = '-1'
+      })
+      yield put({
+        type: 'setSystemMaterialClass',
+        payload: data
+      })
+      cb(data)
+    },
+    // 获取系统素材数据
+    * getSystemMaterialList({payload, cb}:any,{ call, put }: any):any{
+        const data = yield http({
+          url: "/visual/resource/queryResourceList",
+          method: "post",
+          body: payload,
+        });
+        yield put({
+          type: 'setSystemMaterialList',
+          payload: data
+        })
+        cb(data.content)
     }
   },
 
@@ -1349,6 +1378,14 @@ export default {
       return {
         ...defaultData
       }
+    },
+    // 获取系统素材分类数据
+    setSystemMaterialClass(state: any, { payload }: any){
+      return {...state, systemMaterialClass: payload}
+    },
+    // 获取系统素材数据
+    setSystemMaterialList(state: any, { payload }: any){
+      return {...state, systemMaterialList: payload}
     }
   },
 }

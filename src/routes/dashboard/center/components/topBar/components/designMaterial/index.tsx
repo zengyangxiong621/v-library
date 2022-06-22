@@ -1,90 +1,105 @@
-import { memo, useState } from 'react'
+import { memo, useState, useEffect } from 'react'
 import './index.less'
-
+import { connect } from "dva";
 import EveryItem from '../everyItem/index'
 
 
 const DesignMaterial = (props: any) => {
-  // const { data } = props
+  const { bar, dispatch } = props
   const [active, setActive] = useState('spsc')
+  let [chartDataMap, setChartDataMap] = useState<any>({})
   const liHover = (key: string) => {
-    console.log(key);
     setActive(key)
+    if(!chartDataMap[key]){
+      getSystemMaterialList([key])
+    }
   }
+
+  useEffect(() => {
+    getSystemMaterial()
+  }, [])
+
+
+  // 获取系统
+  const getSystemMaterialList = (subType:any) => {
+    dispatch({
+      type: 'bar/getSystemMaterialList',
+      payload: {
+        pageNo: 1,
+        pageSize: 1000,
+        spaceId:null,
+        type: ['design'], // 系统素材
+        subType
+      },
+      cb: (data:any) => {
+        let groupId = subType.length  ? subType[0] : '-1'
+        if(!chartDataMap[groupId]){
+          let obj:any = {}
+          obj[groupId] = data
+          setChartDataMap({...chartDataMap, ...obj})
+        }
+      }
+    })
+  }
+
+    // 获取系统素材分类
+    const getSystemMaterial = () => {
+      dispatch({
+        type: 'bar/getSystemMaterialClass',
+        cb: (data:any) => {
+          if(data.length){
+            setActive(data[0].groupId)
+            let groupId = data[0].groupId
+            if(!chartDataMap[groupId]){
+              getSystemMaterialList([])
+            }
+          }
+        }
+      })
+    }
+  
+
   return (
     <div className='DesignMaterial-wrap'>
-      <ul className='text-list'>
-        {
-          chartType.map((item: any) => {
-            return (
-              <li
-                key={item.key}
-                className={`${active === item.key && 'active-li'}`}
-                onMouseEnter={() => liHover(item.key)}>
-                {item.text}
-              </li>
+    {
+      bar.systemMaterialClass.length && (
+        <>
+          <ul className='text-list'>
+            {
+              bar.systemMaterialClass.map((item: any) => {
+                return (
+                  <li
+                    key={item.groupId}
+                    className={`${active === item.groupId && 'active-li'}`}
+                    onMouseEnter={() => liHover(item.groupId)}>
+                    {item.name}
+                  </li>
+                )
+              })
+            }
+          </ul>
+          {
+            chartDataMap[active] && (
+              chartDataMap[active].length ?
+              <div className='charts-list'>
+                {
+                  chartDataMap[active].map((item: any, index: number) => {
+                    return (
+                      <EveryItem data={item} key={index}/>
+                    )
+                  })
+                }
+              </div> : <div className="charts-list">暂无内容</div>
             )
-          })
-        }
-      </ul>
-      <div className='charts-list'>
-        {
-          ChartDataMap[active].map((item: any, index: number) => {
-            return (
-              <EveryItem data={item} key={index}/>
-            )
-          })
-        }
-      </div>
+          }
+        </>
+      )
+    }
     </div>
   )
 }
 
-const ChartDataMap: any = {
-  spsc: [
-    {
-      name: 'assssssssssssssssssddddddddddddddddss',
-    },
-    {
-      name: 'bbbbbbbbbbbbbbbbbbbbbbbbbbb',
-    }
-  ],
-  bjk: [
-    {
-      name: '柱形图6',
-      key: 'y'
-    },
-  ],
-  bp: [
-    {
-      name: '饼图1',
-      key: 'a'
-    },
-  ],
-  tb: [
-    {
-      name: '散点图',
-      key: 'a'
-    }
-  ]
-}
+export default memo(
+  connect(({ bar }: any) => ({ bar }))(DesignMaterial)
+)
 
-const chartType = [
-  {
-    text: '视频素材',
-    key: 'spsc',
-  },
-  {
-    text: '背景框',
-    key: 'bjk',
-  },
-  {
-    text: '标牌',
-    key: 'bp',
-  },
-  {
-    text: '图标',
-    key: 'tb',
-  }
-]
-export default memo(DesignMaterial)
