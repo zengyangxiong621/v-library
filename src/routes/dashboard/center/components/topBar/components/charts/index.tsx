@@ -47,7 +47,7 @@ const Charts = (props: any) => {
         status: 0,
         pageNo: 0,
         pageSize: 100,
-        subType
+        subType: subType[0] === 'all' ? [] : subType
       }
     }).catch(() => {
       setDataLoading(false)
