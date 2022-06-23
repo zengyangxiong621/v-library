@@ -2,16 +2,19 @@ import { memo, useState, useEffect } from 'react'
 import './index.less'
 import { connect } from "dva";
 import EveryItem from '../everyItem/index'
+import { Spin } from 'antd'
+import { debounce } from "lodash";
 
 
 const DesignMaterial = (props: any) => {
   const { bar, dispatch } = props
   const [active, setActive] = useState('spsc')
   let [chartDataMap, setChartDataMap] = useState<any>({})
+  const [dataLoading, setDataLoading] = useState(false)
   const liHover = (key: string) => {
     setActive(key)
     if(!chartDataMap[key]){
-      getSystemMaterialList([key])
+      debounce(getSystemMaterialList,200)([key])
     }
   }
 
@@ -22,6 +25,7 @@ const DesignMaterial = (props: any) => {
 
   // 获取系统
   const getSystemMaterialList = (subType:any) => {
+    setDataLoading(true)
     dispatch({
       type: 'bar/getSystemMaterialList',
       payload: {
@@ -40,6 +44,7 @@ const DesignMaterial = (props: any) => {
           let obj:any = {}
           obj[groupId] = data
           setChartDataMap({...chartDataMap, ...obj})
+          setDataLoading(false)
         }
       }
     })
@@ -80,6 +85,7 @@ const DesignMaterial = (props: any) => {
             })
           }
         </ul>
+        <Spin className="data-loading" spinning={dataLoading}/>
         {
           chartDataMap[active] && (
             chartDataMap[active].length ?
