@@ -3,7 +3,6 @@ import './index.less'
 import { connect } from "dva";
 import EveryItem from '../everyItem/index'
 import { Spin } from 'antd'
-import { debounce } from "lodash";
 
 
 const DesignMaterial = (props: any) => {
@@ -14,7 +13,7 @@ const DesignMaterial = (props: any) => {
   const liHover = (key: string) => {
     setActive(key)
     if(!chartDataMap[key]){
-      debounce(getSystemMaterialList,200)([key])
+      getSystemMaterialList([key])
     }
   }
 

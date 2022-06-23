@@ -7,7 +7,6 @@ import EveryItem from '../everyItem/index'
 
 import { http } from '@/services/request'
 import { Spin } from 'antd'
-import { debounce } from "lodash";
 
 
 const Charts = (props: any) => {
@@ -32,12 +31,12 @@ const Charts = (props: any) => {
 
   const chartTypes = ['全部', '柱型图', '折线图', '饼图', '散点图', '其他']
   useEffect(() => {
-    getData = debounce(getData,200)([])
+    getData([])
   }, [])
 
 
   // 获取组件数据
-  let getData = async (subType: any) => {
+  const getData = async (subType: any) => {
     setDataLoading(true)
     const data: any = await http({
       url: '/visual/module-manage/queryModuleList',
