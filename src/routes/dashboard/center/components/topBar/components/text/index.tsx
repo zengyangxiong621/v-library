@@ -3,6 +3,7 @@
 import React, { memo, useEffect, useState } from 'react'
 import { connect } from '../../../../../../../utils/connect';
 import './index.less'
+import { Spin } from 'antd'
 
 import { http } from "../../../../../../../services/request";
 
@@ -15,10 +16,12 @@ const mapStateToProps = (state: any) => {
 
 const Text = (props: any) => {
   const [dataArr, setDataArr] = useState<any>([])
+  const [dataLoading, setDataLoading] = useState(true)
   const moduleType = 'text'
 
   useEffect(() => {
     const init = () => {
+      setDataLoading(true)
       http({
         url:'/visual/module-manage/queryModuleList', 
         method: 'post',
@@ -32,25 +35,31 @@ const Text = (props: any) => {
           pageSize: 100,
         }
       }).then((data: any) => {
+        setDataLoading(false)
         data.content.forEach((item: any) => {
           item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`
         })
         setDataArr(() => data.content)
+      }).catch(() => {
+        setDataLoading(false)
       })
     }
     init()
   }, [])
 
   return (
-    <div className='Text-wrap'>
-      {
-        dataArr?.map((item: any, index: number) => {
-          return (
-            <EveryItem key={item.moduleName} data={item} type={moduleType} />
-          )
-        })
-      }
-    </div>
+    <>
+      <Spin className="data-loading" spinning={dataLoading}/>
+      <div className='Text-wrap'>
+        {
+          dataArr?.map((item: any, index: number) => {
+            return (
+              <EveryItem key={item.moduleName} data={item} type={moduleType} />
+            )
+          })
+        }
+      </div>
+    </>
   )
 }
 

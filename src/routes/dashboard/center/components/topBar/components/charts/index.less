@@ -3,6 +3,7 @@
   color: #fff;
   display: flex;
   height: 100%;
+  position: relative;
   .active-li {
     background-color: #3a89fe;
   }
@@ -27,10 +28,17 @@
     // }
   }
 
+  .data-loading{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(40px, -30px);
+  }
+
   .charts-list {
-    // width: 100%;
     flex: 1;
     margin: 0 auto;
+    // width: 100%;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;

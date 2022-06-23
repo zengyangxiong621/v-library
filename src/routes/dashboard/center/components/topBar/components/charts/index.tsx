@@ -6,12 +6,15 @@ import './index.less'
 import EveryItem from '../everyItem/index'
 
 import { http } from '@/services/request'
+import { Spin } from 'antd'
+import { debounce } from "lodash";
 
 
 const Charts = (props: any) => {
   // const { data } = props
   const [active, setActive] = useState('all')
   const [allModules, setAllModules] = useState<any>({})
+  const [dataLoading, setDataLoading] = useState(false)
   const helplessMapping: { [x in string]: string } = {
     '全部': 'all',
     '柱型图': 'bar',
@@ -29,12 +32,13 @@ const Charts = (props: any) => {
 
   const chartTypes = ['全部', '柱型图', '折线图', '饼图', '散点图', '其他']
   useEffect(() => {
-    getData([])
+    getData = debounce(getData,200)([])
   }, [])
 
 
   // 获取组件数据
-  const getData = async (subType: any) => {
+  let getData = async (subType: any) => {
+    setDataLoading(true)
     const data: any = await http({
       url: '/visual/module-manage/queryModuleList',
       method: 'post',
@@ -45,6 +49,8 @@ const Charts = (props: any) => {
         pageSize: 100,
         subType
       }
+    }).catch(() => {
+      setDataLoading(false)
     })
     data.content.forEach((item: any) => {
       item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.moduleType}${item.photoPath}`
@@ -56,6 +62,7 @@ const Charts = (props: any) => {
       obj[classType] = data.content
       setAllModules({...allModules, ...obj})
     }
+    setDataLoading(false)
   }
 
   return (
@@ -74,6 +81,7 @@ const Charts = (props: any) => {
           })
         }
       </ul>
+      <Spin className="data-loading" spinning={dataLoading}/>
       {
         allModules[active] && (
           allModules[active].length ?  
@@ -85,10 +93,9 @@ const Charts = (props: any) => {
                 )
               })
             }
-          </div> : <div className="charts-list">暂无内容</div>
+          </div>: <div className="charts-list">暂无内容</div>
         )
       }
-
     </div>
   )
 }
