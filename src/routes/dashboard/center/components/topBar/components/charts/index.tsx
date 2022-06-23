@@ -11,7 +11,7 @@ import { http } from '@/services/request'
 const Charts = (props: any) => {
   // const { data } = props
   const [active, setActive] = useState('all')
-  const [allModules, setAllModules] = useState<any>([])
+  const [allModules, setAllModules] = useState<any>({})
   const helplessMapping: { [x in string]: string } = {
     '全部': 'all',
     '柱型图': 'bar',
@@ -22,33 +22,41 @@ const Charts = (props: any) => {
   }
   const liHover = (key: string) => {
     setActive(key)
+    if(!allModules[key]){
+      getData([key])
+    }
   }
 
   const chartTypes = ['全部', '柱型图', '折线图', '饼图', '散点图', '其他']
   useEffect(() => {
-    const getData = async () => {
-      const data: any = await http({
-        url: '/visual/module-manage/queryModuleList',
-        method: 'post',
-        body: {
-          type: ['chart'],
-          status: 0,
-          pageNo: 0,
-          pageSize: 100,
-        }
-      })
-
-      // ChartDataMap[helplessMapping[type]] = data?.content
-      // }
-      // TODO  把data里的数据按照组件种类放入chartDataMap中
-
-      data.content.forEach((item: any) => {
-        item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`
-      })
-      setAllModules(() => data.content)
-    }
-    getData()
+    getData([])
   }, [])
+
+
+  // 获取组件数据
+  const getData = async (subType: any) => {
+    const data: any = await http({
+      url: '/visual/module-manage/queryModuleList',
+      method: 'post',
+      body: {
+        type: ['chart'],
+        status: 0,
+        pageNo: 0,
+        pageSize: 100,
+        subType
+      }
+    })
+    // data.content.forEach((item: any) => {
+    //   item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.moduleType}/${item.photoPath}`
+    // })
+    let classType = subType.length ? subType[0] : 'all'
+    // 如果不存在就添加
+    if(!allModules[classType]){
+      let obj:any = {}
+      obj[classType] = data.content
+      setAllModules({...allModules, ...obj})
+    }
+  }
 
   return (
     <div className='Charts-wrap'>
@@ -66,28 +74,33 @@ const Charts = (props: any) => {
           })
         }
       </ul>
-      <div className='charts-list'>
-        {
-          allModules?.map((item: any, index: number) => {
-          // ChartDataMap[active]?.map((item: any, index: number) => {
-            return (
-              <EveryItem data={item} key={index} />
-            )
-          })
-        }
-      </div>
+      {
+        allModules[active] && (
+          allModules[active].length ?  
+            <div className='charts-list'>
+            {
+              allModules[active]?.map((item: any, index: number) => {
+                return (
+                  <EveryItem data={item} key={index} />
+                )
+              })
+            }
+          </div> : <div className="charts-list">暂无内容</div>
+        )
+      }
+
     </div>
   )
 }
 
-const ChartDataMap: any = {
-  all: [],
-  bar: [],
-  line: [],
-  pie: [],
-  scatter: [],
-  other: []
-}
+// const ChartDataMap: any = {
+//   all: [],
+//   bar: [],
+//   line: [],
+//   pie: [],
+//   scatter: [],
+//   other: []
+// }
 
 const chartType = [
   {

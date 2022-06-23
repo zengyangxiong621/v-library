@@ -1,51 +1,41 @@
-import { memo } from 'react'
+import { memo, useEffect, useState } from 'react'
 import './index.less'
 
 import EveryItem from '../everyItem/index'
-
-const dataArr = [
-  {
-    name: 'assssssssssssssssssddddddddddddddddss',
-  },
-  {
-    name: 'bbbbbbbbbbbbbbbbbbbbbbbbbbb',
-  },
-  {
-    name: 'c',
-  },
-  {
-    name: 'd',
-  },
-  {
-    name: 'e',
-  },
-  {
-    name: 'f',
-  },
-  {
-    name: 'g',
-  },
-  {
-    name: 'h',
-  },
-  {
-    name: 'i',
-  },
-  {
-    name: 'j',
-  },
-]
+import { http } from '@/services/request'
 
 const Map = (props: any) => {
   // const { data } = props
+  const [dataArr, setDataArr] = useState<any>([])
+  useEffect(() => {
+    getData()
+  }, [])
+  
+  
+  // 获取地图组件数据
+  const getData = async () => {
+    const data: any = await http({
+      url: '/visual/module-manage/queryModuleList',
+      method: 'post',
+      body: {
+        type: ['map'],
+        status: 0,
+        pageNo: 0,
+        pageSize: 100
+      }
+    })
+    setDataArr(data.content)
+  }
+  
   return (
     <div className='Map-wrap'>
       {
+        dataArr.length ? 
         dataArr.map((item: any, index: number) => {
           return (
             <EveryItem key={index} data={item} />
           )
-        })
+        }): <div className='Map-wrap'>暂无数据</div>
       }
     </div>
   )

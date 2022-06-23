@@ -62,38 +62,36 @@ const DesignMaterial = (props: any) => {
   return (
     <div className='DesignMaterial-wrap'>
     {
-      bar.systemMaterialClass.length && (
-        <>
-          <ul className='text-list'>
-            {
-              bar.systemMaterialClass.map((item: any) => {
-                return (
-                  <li
-                    key={item.groupId}
-                    className={`${active === item.groupId && 'active-li'}`}
-                    onMouseEnter={() => liHover(item.groupId)}>
-                    {item.name}
-                  </li>
-                )
-              })
-            }
-          </ul>
+      <>
+        <ul className='text-list'>
           {
-            chartDataMap[active] && (
-              chartDataMap[active].length ?
-              <div className='charts-list'>
-                {
-                  chartDataMap[active].map((item: any, index: number) => {
-                    return (
-                      <EveryItem data={item} key={index}/>
-                    )
-                  })
-                }
-              </div> : <div className="charts-list">暂无内容</div>
-            )
+            bar.systemMaterialClass?.map((item: any) => {
+              return (
+                <li
+                  key={item.groupId}
+                  className={`${active === item.groupId && 'active-li'}`}
+                  onMouseEnter={() => liHover(item.groupId)}>
+                  {item.name}
+                </li>
+              )
+            })
           }
-        </>
-      )
+        </ul>
+        {
+          chartDataMap[active] && (
+            chartDataMap[active].length ?
+            <div className='charts-list'>
+              {
+                chartDataMap[active].map((item: any, index: number) => {
+                  return (
+                    <EveryItem data={item} key={index}/>
+                  )
+                })
+              }
+            </div> : <div className="charts-list">暂无内容</div>
+          )
+        }
+      </>
     }
     </div>
   )
