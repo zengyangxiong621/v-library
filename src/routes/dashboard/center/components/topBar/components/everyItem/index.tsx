@@ -39,7 +39,7 @@ const EveryItem = (props: any) => {
   return (
     <div className='EveryItem-wrap' onClickCapture={componentCreate}>
       <div className='db-img'>
-        <img src={`${data.photoPath}`} alt='图片加载' />
+        <img src={data.photoPath} alt='' />
       </div>
       <span className='db-text'>{data.name}</span>
     </div>

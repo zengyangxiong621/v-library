@@ -1,22 +1,22 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-import {getFields} from "@/utils/data";
-import {useState, useRef} from "react";
+import { getFields } from "@/utils/data";
+import { useState, useRef } from "react";
 import DateSelect from '@/components/dateSelect'
-import Select from '@/customComponents/assist/select'
-import {connect} from "dva"
+// import Select from '@/customComponents/assist/select'
+import { connect } from "dva"
 // import './index.less'
-import {cloneDeep} from 'lodash'
-import {debounce} from "@/utils/common";
+import { cloneDeep } from 'lodash'
+import { debounce } from "@/utils/common";
 
-const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props}) => {
+const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, ...props }) => {
   const callbackArgs = bar.callbackArgs
   const callbackParamsList = bar.callbackParamsList
-  const {componentConfig} = props
+  const { componentConfig } = props
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
   })
   const componentRef = useRef(null)
-  const [opacityStyle, setOpacityStyle] = useState({opacity: 1})
+  const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 })
   const opacityTimeId = useRef('')
   const [clickTimes, setClickTimes] = useState(0)
   // 点击
@@ -79,7 +79,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         const type = condition.type
         const code = condition.code
         if (type === 'custom') {
-          return new Function('data', code)({startTime: callbackArgs.startTime, endTime: callbackArgs.endTime})
+          return new Function('data', code)({ startTime: callbackArgs.startTime, endTime: callbackArgs.endTime })
         }
         if (condition.compare === '==') {
           return callbackArgs[field] === condition.expected;
@@ -237,7 +237,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
 
-  const animation = ({duration, timingFunction, type}, action, dom, id) => {
+  const animation = ({ duration, timingFunction, type }, action, dom, id) => {
     if (['show', 'hide'].includes(action)) {
       // transform = 'translateY(200px)'
       let translate = {
@@ -309,7 +309,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   }
 
-  const rotate = ({perspective, rotateX, rotateY, rotateZ}, action, dom) => {
+  const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
     if (action === 'rotate') {
       const rotateRegX = /rotateX\((.+?)\)/g
       const rotateRegY = /rotateY\((.+?)\)/g
@@ -336,7 +336,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   }
 
-  const scale = ({origin, x, y}, action, dom) => {
+  const scale = ({ origin, x, y }, action, dom) => {
     if (action === 'scale') {
       const scaleRegX = /scaleX\((.+?)\)/g
       const scaleRegY = /scaleY\((.+?)\)/g
@@ -354,7 +354,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     }
   }
 
-  const translate = ({toX, toY}, action, dom) => {
+  const translate = ({ toX, toY }, action, dom) => {
     if (action === 'translate') {
       const translateReg = /translate3d\((.+?)\)/g
       if (translateReg.test(dom.style.transform)) {
@@ -380,7 +380,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseOut={handleMouseOut}
-      style={{width: '100%', height: '100%', ...animationConfig, ...opacityStyle}}>
+      style={{ width: '100%', height: '100%', ...animationConfig, ...opacityStyle }}>
       {/*      <RemoteBaseComponent
         {...props}
       ></RemoteBaseComponent>     */}
@@ -391,17 +391,12 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
             {...props}
           >
           </DateSelect>
-          : props.componentConfig.moduleName === 'select' ?
-            <Select
-              onChange={handleValueChange}
-              {...props}
-            >
-            </Select> : <RemoteBaseComponent
-              {...props}
-            ></RemoteBaseComponent>
+          : <RemoteBaseComponent
+            {...props}
+          ></RemoteBaseComponent>
       }
     </div>
   )
 }
 
-export default connect(({bar}) => ({bar}))(ComponentEventContainer)
+export default connect(({ bar }) => ({ bar }))(ComponentEventContainer)
