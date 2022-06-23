@@ -32,8 +32,9 @@
 .self-tooltip {
   width: 352px;
   height: 376px;
-  // background: #22252e;
+  background: #22252e;
   color: #ccc;
+  overflow: auto;
   // padding-top: 10px;
 }
 .hasList-self-tooltip {
@@ -41,8 +42,12 @@
   height: 376px;
   background: #22252e;
   color: #ccc;
-  overflow: hidden;
+  // overflow: hidden;
+  overflow: auto;
 }
+
+.self-tooltip::-webkit-scrollbar {display:none}
+.hasList-self-tooltip::-webkit-scrollbar {display:none}
 
 
 // .ant-menu-light .ant-menu-submenu-title:hover {
