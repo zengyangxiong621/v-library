@@ -38,8 +38,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }, [bar.treeData])
 
   const treeDataReverse = (treeData: any) => {
-    treeData = treeData.reverse()
-    treeData.forEach((layer: any) => {
+    treeData = treeData?.reverse()
+    treeData?.forEach((layer: any) => {
       if (COMPONENTS in layer) {
         treeDataReverse(layer[COMPONENTS])
       }
