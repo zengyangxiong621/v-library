@@ -34,6 +34,9 @@ const DesignMaterial = (props: any) => {
       cb: (data:any) => {
         let groupId = subType.length  ? subType[0] : '-1'
         if(!chartDataMap[groupId]){
+          data.forEach((item: any) => {
+            item.photoPath = `${(window as any).CONFIG.COMP_URL}${item.photoPath}`
+          })
           let obj:any = {}
           obj[groupId] = data
           setChartDataMap({...chartDataMap, ...obj})

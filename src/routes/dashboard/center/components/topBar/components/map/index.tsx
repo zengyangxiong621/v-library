@@ -24,6 +24,9 @@ const Map = (props: any) => {
         pageSize: 100
       }
     })
+    data.content.forEach((item: any) => {
+      item.photoPath = `${(window as any).CONFIG.COMP_URL}${item.photoPath}`
+    })
     setDataArr(data.content)
   }
   

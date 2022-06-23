@@ -46,9 +46,9 @@ const Charts = (props: any) => {
         subType
       }
     })
-    // data.content.forEach((item: any) => {
-    //   item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.moduleType}/${item.photoPath}`
-    // })
+    data.content.forEach((item: any) => {
+      item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.moduleType}${item.photoPath}`
+    })
     let classType = subType.length ? subType[0] : 'all'
     // 如果不存在就添加
     if(!allModules[classType]){
