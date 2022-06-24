@@ -295,7 +295,7 @@ const ComponentDev = (props: any) => {
             }
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
             <Button type='text' disabled={ record.appName?.length>0 } 
-                    className={ record.appName?.length>0?'buttonGray':'buttonBlue' }  
+                    className={ record.appName?.length>0 ? 'buttonGray' : 'buttonBlue' }  
                     onClickCapture={() => handleDelete(record.id)}
                     >删除</Button>
           </Space>

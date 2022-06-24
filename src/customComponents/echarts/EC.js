@@ -75,7 +75,6 @@ class ECharts extends Component {
 
   // dispose echarts
   dispose = () => {
-    console.log(this.echartsElement,'***** eee *****');
     if (this.echartsElement) {
       // dispose echarts instance
       echarts.dispose(this.echartsElement);
@@ -84,7 +83,6 @@ class ECharts extends Component {
 
   rerender = () => {
     const { onEvents, onChartReady } = this.props;
-    console.log(this,'***** props *****');
     // 地图组件需执行createMap
     if (this.props?.type === 'map') {
       this.props.createMap(); 
