@@ -11,10 +11,12 @@ export default {
     curWorkSpace: [], // 当前所选中的空间id
     projectQuota: 0, // 项目配额
     remainQuota: 0, // 项目剩余配额
+    minQuota: 0, // 项目配额最小数量 <==> 当前空间里所有的应用总数
   },
   reducers: {
     // 值为基础类型的Key 更新状态的方法
     setBaseTypeKey(state: any, { payload }: { payload: TStingIndex }) {
+      // console.log("pppp", payload);
       return { ...state, ...payload };
     },
     setMemberList(state: any, { payload }: any) {
@@ -31,27 +33,21 @@ export default {
   },
   effects: {
     *getMemberList({ payload }: any, { put }: any): any {
-      console.log("payload", payload);
-      const data = yield http(
-        {
-          url: "/visual/workspace/userList",
-          body: payload,
-        }
-        // { errorInfo: "空间成员列表请求失败" }
-      );
+      const { data } = yield http({
+        url: "/visual/workspace/userList",
+        method: "post",
+        body: payload,
+      });
       yield put({
         type: "setMemberList",
         payload: data?.content || [],
       });
     },
     *getWorkSpaceList({ payload }: any, { call, put, select }: any): any {
-      const data = yield http(
-        {
-          method: "get",
-          url: `/visual/workspace/list/${payload.accountId}`,
-        }
-        // { errorInfo: "获取空间列表请求失败" }
-      );
+      const data = yield http({
+        url: `/visual/workspace/list/${payload.accountId}`,
+        method: "get",
+      });
       yield put({
         type: "setWorkSpaceList",
         payload: [
@@ -62,19 +58,33 @@ export default {
           },
         ],
       });
-      // 设置 默认空间 为选中状态,
-      // 选择默认工作空间时的流程需要先走一遍
-      // TODO  如果当前已经选择了空间了，就不设置默认空间了
+      // 1、设置 默认空间 为选中状态,
+      // 2、选择默认工作空间时的流程需要先走一遍
+      // 3、如果当前已经选择了空间了，就不设置默认空间了
       const self: any = yield select(({ workSpace }: any) => workSpace);
-      const { id, projectQuota, remainQuota } = data[0];
-      const finalWorkSpace = !self.curWorkSpace.length
-        ? [id]
-        : self.curWorkSpace;
-      const finalPayload = {
-        curWorkSpace: finalWorkSpace,
-        projectQuota,
-        remainQuota,
-      };
+      let finalPayload: any = {};
+      if (!self.curWorkSpace.length) {
+        const { id, projectQuota, remainQuota } = data[0];
+        finalPayload = {
+          curWorkSpace: [id],
+          projectQuota,
+          remainQuota,
+          minQuota: projectQuota - remainQuota,
+        };
+      } else {
+        /**
+         * @Mark: 由于后端将每个空间的信息(id,projectQuota,remainQuota)全部放在了空间列表中(即此处的data), 所以，每次更新配额之后都要重新刷新左侧空间列表
+         */
+        const id = self.curWorkSpace[0];
+        const { remainQuota, projectQuota } = data.find((item: any) => {
+          return item.id === id;
+        });
+        finalPayload = {
+          projectQuota,
+          remainQuota,
+          minQuota: projectQuota - remainQuota,
+        };
+      }
       yield put({
         type: "setBaseTypeKey",
         payload: finalPayload,
