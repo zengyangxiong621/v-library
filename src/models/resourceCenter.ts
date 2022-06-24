@@ -56,13 +56,16 @@ export default {
       //   method: "get",
       // });
       // 系统素材接口
-      let data = yield http({
-        url: `/visual/resource/queryTypeList`,
+      let data:any = yield http({
+        url: `/visual/resource/queryResourceTypeList?spaceId=1`,
         method: "get",
       });
-      (data || []).map((item:any) => {
+      data.myTypes.map((item:any) => {
         item.groupId = item.type
-        if(!item.type) item.groupId = '-1'
+      })
+      data.systemTypes.map((item:any) => {
+        item.groupId = item.type
+        if(!item.type) item.groupId = 'sysAll'
       })
       yield put({
         type: "setGroupList",
@@ -74,13 +77,21 @@ export default {
             name: "素材库",
             children: [
               {
+                groupId: MYMATERIAL,
+                customLevel: 2,
+                // 父级id, 用于判断 是哪个子节点发出的 添加分组 事件
+                parentId: MATERIALLIB,
+                name: "我的素材",
+                children: data.myTypes,
+              },
+              {
                 groupId: SYSTEMMATERIAL,
                 customLevel: 2,
                 // 父级id, 用于判断 是哪个子节点发出的 添加分组 事件
                 parentId: MATERIALLIB,
                 name: "系统素材",
-                children: data,
-              },
+                children: data.systemTypes,
+              }
               // {
               //   groupId: MYMATERIAL,
               //   parentId: MATERIALLIB,

@@ -6,6 +6,7 @@ import { Spin } from 'antd'
 
 
 const DesignMaterial = (props: any) => {
+  console.log(props,'lllllll')
   const { bar, dispatch } = props
   const [active, setActive] = useState('spsc')
   let [chartDataMap, setChartDataMap] = useState<any>({})

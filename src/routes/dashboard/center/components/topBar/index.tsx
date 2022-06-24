@@ -25,8 +25,8 @@ const { SubMenu, Item } = Menu
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai } = props
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
-    zujian: zujianMenu,
-    sucai: sucaiMenu,
+    zujian: componentMenu,
+    sucai: MaterialMenu,
   }
 
   return (
@@ -54,7 +54,7 @@ const TopBar = (props: any) => {
 /**
  * description: 组件 、 素材 导航栏选项卡配置
  */
-const zujianMenu = [
+const componentMenu = [
   {
     title: '图表',
     key: 'chart',
@@ -99,15 +99,23 @@ const zujianMenu = [
   },
 
 ]
-const sucaiMenu = [
+const MaterialMenu = [
   {
-    title: '设计素材',
-    key: 'sujisucai',
+    title: '系统素材',
+    key: 'systemMaterial',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: true,
     component: DesignMaterial,
     // customWidth: true,
   }, 
+  {
+    title: '我的素材',
+    key: 'myMaterial',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: DesignMaterial,
+    // customWidth: true,
+  }
   // {
   //   title: '主题资源',
   //   key: 'zhutiziyuan',
