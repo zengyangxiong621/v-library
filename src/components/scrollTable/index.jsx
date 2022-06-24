@@ -1,10 +1,11 @@
 import {useRef, useEffect, useState} from 'react';
-import {componentDefaultConfig} from './config'
+import ComponentDefaultConfig from './config'
 import ScrollBoard from '@jiaminghi/data-view-react/es/scrollBoard'
 import ReactDOM from "react-dom";
 
 const ScrollTable = (props) => {
   const {fields, comData} = props
+  console.log('fields', fields)
   const [oddRowBGC, setOddRowBGC] = useState('#2a2d3c')
   const [evenRowBGC, setEvenRowBGC] = useState('#222430')
   const [indexHeader, setIndexHeader] = useState('#')
@@ -12,6 +13,7 @@ const ScrollTable = (props) => {
   const [waitTime, setWaitTime] = useState(5000)
   const [carousel, setCarousel] = useState('page')
   const componentConfig = props.componentConfig || componentDefaultConfig
+  console.log('componentConfig', componentConfig)
   const {config, staticData} = componentConfig
 
   const allGlobalConfig = config.find(item => item.name === "allGlobal").value
@@ -152,5 +154,8 @@ const ScrollTable = (props) => {
   )
 
 }
-
+export {
+  ComponentDefaultConfig,
+  ScrollTable
+}
 export default ScrollTable

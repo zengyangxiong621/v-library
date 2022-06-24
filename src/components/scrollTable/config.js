@@ -1,4 +1,4 @@
-export const componentDefaultConfig = {
+const ComponentDefaultConfig = {
   "id": "121",
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b",
   "name": "轮播表格",
@@ -471,7 +471,7 @@ export const componentDefaultConfig = {
             {
               "displayName": "映射",
               "name": "mapping",
-              "type": "inputNumber2",
+              "type": "input2",
               "value": [
                 {
                   "displayName": "字段名",
@@ -498,7 +498,7 @@ export const componentDefaultConfig = {
             {
               "displayName": "映射",
               "name": "mapping",
-              "type": "inputNumber2",
+              "type": "input2",
               "value": [
                 {
                   "displayName": "字段名",
@@ -525,7 +525,7 @@ export const componentDefaultConfig = {
             {
               "displayName": "映射",
               "name": "mapping",
-              "type": "inputNumber2",
+              "type": "input2",
               "value": [
                 {
                   "displayName": "字段名",
@@ -563,4 +563,4 @@ export const componentDefaultConfig = {
 }
 
 
-export const defaultTableHeaderConfig = {}
+export default ComponentDefaultConfig

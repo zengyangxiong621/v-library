@@ -544,3 +544,26 @@ export const getLayerDimensionByDomId = (id) => {
     x, y, width, height,
   }
 }
+// 找到最合适的currentIndex值
+// arr: Array<number>
+export const findCurrentIndex = (arr) => {
+  const length = arr.length
+  if (length === 0) {
+    return 1
+  }
+  const newArr = deepClone(arr)
+  newArr.sort()
+  const max = newArr[length - 1] + 1
+  const min = newArr[0]
+  for (let i = 0; i < length; i++) {
+    for (let j = 1; j < max; j++) {
+      if (j < min) {
+        return j
+      }
+      if (j > newArr[i] && j < newArr[i + 1]) {
+        return j
+      }
+    }
+  }
+  return max
+}

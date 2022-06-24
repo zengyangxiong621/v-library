@@ -13,9 +13,12 @@ const RemoteBaseComponent = (props: any) => {
   const importComponent = useCallback(() => {
     return axios.get(`${ (window as any).CONFIG.COMP_URL }/${ moduleType }/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
   }, [moduleType])
-  
+
   const loadComp = useCallback(async () => {
+    // const data = `${await importComponent()}`
+    console.log('到这里了吗')
     window.eval(`${await importComponent()}`)
+    console.log('到这里了吧')
     const { default: component} = (window as any).VComponents;
     setComponent(() => component);
   }, [importComponent, setComponent])
@@ -47,12 +50,12 @@ const RemoteBaseComponent = (props: any) => {
 //   async componentDidMount() {
 //     const aaaa = new Function(`${await this.importComponent()}`)();
 //     const { default: component } = (window as any).MyComponent;
-    
+
 //     this.setState({
 //       component: component
 //     });
 //   }
-  
+
 //   render() {
 //     const C = this.state.component;
 
