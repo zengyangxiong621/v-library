@@ -29,33 +29,7 @@ const TabArray = props => {
       e.preventDefault()
       e.stopPropagation()
       if (type === 'add') {
-        tabs.push({
-          "key": "10",
-          "displayName": "列",
-          "name": "row_10",
-          "type": "object",
-          "value": [
-            {
-              "displayName": "映射",
-              "name": "mapping",
-              "type": "inputNumber2",
-              "value": [
-                {
-                  "displayName": "字段名",
-                  "name": "filedName",
-                  "type": "input",
-                  "value": "column1"
-                },
-                {
-                  "displayName": "显示名",
-                  "name": "displayName",
-                  "type": "input",
-                  "value": "销售地区"
-                }
-              ]
-            }
-          ]
-        },)
+        tabs.push(tabs[0])
       }
       if (type === 'delete') {
         const index = tabs.findIndex(tab => tab.key === activeKey)
@@ -63,13 +37,8 @@ const TabArray = props => {
       }
       if (type === 'copy') {
         const tabValue = tabs.find(tab => tab.key === activeKey)
-        debugger
-        console.log('tabValue', tabValue)
-        tabValue.key = '100'
         tabs.push(tabValue)
       }
-      // tabs = tabs.map((tab, index) => ({...tab, key: String(index + 1)}))
-      console.log('tabs', tabs)
       props.onChange()
     }
 
