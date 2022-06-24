@@ -258,11 +258,11 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       }
     })
     let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
-    containerData = handleDataFilter(containerData, data.filters, componentFilters)
+    containerData = handleDataFilter(containerData, data.filters, componentFilters,bar.callbackArgs)
     setResultData(containerData)
   }
   // 数据过滤
-  const handleDataFilter = (data, allFilters, componentFilters = null) => {
+  const handleDataFilter = (data, allFilters, componentFilters = null,callbackArgs) => {
     const filters = allFilters.map(item => {
       const filterDetail = (componentFilters || bar.componentFilters).find(jtem => jtem.id === item.id)
       console.log('filterDetail', filterDetail)
@@ -276,14 +276,20 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     }
     try {
       const functions = filters.map(item => {
-        return (new Function('data', item.content))
+        return (new Function('data', 'callbackArgs', item.content))
       })
       const resultArr = []
       functions.forEach((fn, index) => {
+        const cbArgs = filters[index].callbackKeys.reduce((pre, item) => {
+          return {
+            ...pre,
+            [item]: callbackArgs[item]
+          }
+        }, {})
         if (index === 0) {
-          resultArr.push(fn(data))
+          resultArr.push(fn(data,cbArgs))
         } else {
-          resultArr.push(fn(resultArr[index - 1]))
+          resultArr.push(fn(resultArr[index - 1],cbArgs))
         }
       })
       return resultArr[resultArr.length - 1]

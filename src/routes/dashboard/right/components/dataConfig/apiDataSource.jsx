@@ -150,7 +150,8 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
         body: {
           id: _data.id,
           data: dataConfig.api.data,
-          dataType: 'api'
+          dataType: 'api',
+          fields:dataConfig['api']?.fields || null
         }
       })
     }
@@ -165,7 +166,8 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
         method: 'post',
         body: {
           moduleId: _data.id,
-          dataType: 'api'
+          dataType: 'api',
+          callBackParamValues:bar.callbackArgs
         }
       }, true)
       if (data.code === 10000 && data.data) {

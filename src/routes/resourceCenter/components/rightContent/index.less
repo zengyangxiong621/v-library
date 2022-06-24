@@ -1,0 +1,101 @@
+@backColor: #171a24;
+
+.RightContent-wrap {
+  width: 100%;
+  max-height: calc(100vh - 164px);
+  background-color: @backColor;
+  overflow-y: auto;
+  // ie 火狐 隐藏滚动条
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  // 排列内部卡片
+  // display: flex;
+  // flex-wrap: wrap;
+  // align-content: flex-start;
+  // justify-content: flex-start;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 24px;
+
+  .setMargin {
+    margin-right: 26px;
+  }
+  // 发布弹窗 内容 的样式
+  .fabu-modal {
+    text-align: center;
+    user-select: none;
+    .img-wrap {
+      height: 160px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 140px;
+        height: 140px;
+      }
+    }
+    .text {
+      height: 24px;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: #ffffff;
+      line-height: 24px;
+      font-weight: 400;
+      margin: 8px 0 10px 0;
+    }
+    .set-flex {
+      display: flex;
+      align-items: center;
+      .set-flex-1 {
+        flex: 1;
+      }
+    }
+    .ant-upload-list {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .icon-wrap {
+      width: 20px;
+      cursor: pointer;
+    }
+    .ant-input {
+      height: 32px;
+      line-height: 32px;
+    }
+  }
+
+  .DarkThemeModal-wrap {
+    .custom-btn-wrap {
+      display: flex;
+      justify-content: flex-end;
+      .my-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        width: 88px;
+        height: 32px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .cancel-btn {
+        background: #4a5068;
+      }
+      .confirm-btn {
+        background: #2482ff;
+        margin-left: 16px;
+      }
+    }
+  }
+  .move-dark-modal {
+    .ant-modal-body {
+      padding-bottom: 0;
+    }
+  }
+}
+
+.RightContent-wrap::-webkit-scrollbar {
+  display: none;
+}

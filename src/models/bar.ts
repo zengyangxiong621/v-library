@@ -23,7 +23,7 @@ import {
   WIDTH,
 } from '../constant/home'
 
-import {ILayerComponent, ILayerGroup,} from '../routes/dashboard/center/components/CustomDraggable/type'
+import { ILayerComponent, ILayerGroup, } from '../routes/dashboard/center/components/CustomDraggable/type'
 
 import {
   cancelGroup,
@@ -39,13 +39,13 @@ import {
   showInput,
   singleShowLayer,
 } from '../utils/sideBar'
-import {DIMENSION} from '../routes/dashboard/center/constant'
+import { DIMENSION } from '../routes/dashboard/center/constant'
 
-import {generateLayers} from './utils/generateLayers'
-import {addSomeAttrInLayers, clearNullGroup} from './utils/addSomeAttrInLayers'
-import {http} from '../services/request'
+import { generateLayers } from './utils/generateLayers'
+import { addSomeAttrInLayers, clearNullGroup } from './utils/addSomeAttrInLayers'
+import { http } from '../services/request'
 
-import {defaultData, IBarState} from './defaultData/bar'
+import { defaultData, IBarState } from './defaultData/bar'
 
 export default {
   namespace: 'bar',
@@ -71,10 +71,10 @@ export default {
 
   effects: {
     * setModuleDefaultConfig({ payload }: any, { call, put, select }: any) {
-        yield put({
-          type: 'changeModuleDefaultConfig',
-          payload,
-        })
+      yield put({
+        type: 'changeModuleDefaultConfig',
+        payload,
+      })
     },
     * getDashboardId({ payload }: any, { call, put, select }: any) {
       yield put({
@@ -82,93 +82,18 @@ export default {
         payload,
       })
     },
-    * initDashboard ({ payload, cb }: any, { call, put, select }: any): any {
+    * initDashboard({ payload, cb }: any, { call, put, select }: any): any {
       // 获取回调参数列表
-      // const callbackParamsList = yield http({
-      //   url: '/visual/callback/list',
-      //   method: 'GET',
-      // })
-      const callbackParamsList = [
-        {
-          "callbackParam": "startTime",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            },
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器"
-            },
-            {
-              "id": "1536990857543454721",
-              "name": "时间选择器3"
-            },
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ]
-        },
-        {
-          "callbackParam": "endTime",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器2"
-            }
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ]
-        },
-        {
-          "callbackParam": "a",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器2"
-            },
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536990857543454721",
-              "name": "时间选择器3"
-            }
-          ]
-        },
-        {
-          "callbackParam": "b",   // 变量名
-          "destinationModules": [  // 目标组件
-            {
-              "id": "1536904475370229762",
-              "name": "时间选择器2"
-            },
-            {
-              "id": "1536894370780188674",
-              "name": "时间选择器"
-            }
-          ],
-          "sourceModules": [ // 源组件
-            {
-              "id": "1536990857543454721",
-              "name": "时间选择器3"
-            }
-          ]
-        },
-      ]
+      const callbackParamsList = yield http({
+        url: '/visual/module/callParam/list',
+        method: 'GET',
+        params: {
+          dashboardId: payload,
+        }
+      })
       // TODO 怎么造成的
       // 获取所有的数据容器数据
-      const data = yield(yield put({
+      const data = yield (yield put({
         type: 'getDataContainerList',
         payload,
       }))
@@ -181,7 +106,7 @@ export default {
         } else {
           data = await http({
             url: '/visual/container/data/get',
-            params:{
+            params: {
               id: item.id
             }
           })
@@ -213,12 +138,12 @@ export default {
       yield put({
         type: 'getDashboardDetails',
         payload,
-        cb: async (data: any)=> {
-           await cb(data)
+        cb: async (data: any) => {
+          await cb(data)
         }
       })
     },
-    * deleteContainerDataById ({ payload }: any, { call, put, select }: any): any {
+    * deleteContainerDataById({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
       const index = bar.dataContainerDataList.findIndex((item: any) => item.id === payload)
       bar.dataContainerDataList.splice(index, 1)
@@ -242,7 +167,7 @@ export default {
           delete layer.selected
           delete layer.hover
         })
-        yield yield(put({
+        yield yield (put({
           type: 'getComponentsData',
           payload: components
         }))
@@ -256,7 +181,7 @@ export default {
             dashboardName
           },
         })
-        cb({dashboardConfig, dashboardName})
+        cb({ dashboardConfig, dashboardName })
       } catch (e) {
         return e
       }
@@ -272,7 +197,8 @@ export default {
             method: 'post',
             body: {
               moduleId: component.id,
-              dataType: component.dataType
+              dataType: component.dataType,
+              callBackParamValues:bar.callbackArgs
             }
           })
 
@@ -523,19 +449,19 @@ export default {
       { payload, itemData }: any,
       { call, put, select }: any,
     ): any {
-      console.log(payload, 'payload======================')
       const state: any = yield select((state: any) => state)
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         state.bar.key.length !== 0
           ? state.bar.key[state.bar.key.length - 1]
           : state.bar.treeData.length !== 0 ? state.bar.treeData[0].id : ''
+
       const { id, children }: any = yield http({
         url: '/visual/module/add',
         method: 'post',
         body: {
           dashboardId: state.bar.dashboardId,
-          component: { ...payload },
+          component: { ...payload, moduleType: itemData.moduleType},
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
@@ -549,9 +475,10 @@ export default {
       })
       yield put({
         type: 'updateComponents',
-        payload: { ...deepClone(payload), id: id, children: children },
+        payload: { ...deepClone(payload), id: id, moduleType: itemData.moduleType, children: children },
       })
       // itemData.id = id
+
       yield put({
         type: 'addComponent',
         payload: { final: { ...itemData, id: id }, insertId: insertId },
@@ -608,7 +535,8 @@ export default {
           method: 'post',
           body: {
             moduleId: component.id,
-            dataType: component.dataType
+            dataType: component.dataType,
+            callBackParamValues:bar.callbackArgs
           }
         })
         if (data) {
@@ -638,6 +566,35 @@ export default {
       yield put({
         type: 'updateContainersEnableAndModules'
       })
+    },
+    // 获取系统素材分类的数据
+    * getSystemMaterialClass({payload, cb}:any,{ call, put }: any):any{
+      let data = yield http({
+        url: `/visual/resource/queryTypeList`,
+        method: "get",
+      })
+      data.map((item:any) => {
+        item.groupId = item.type
+        if(!item.type) item.groupId = '-1'
+      })
+      yield put({
+        type: 'setSystemMaterialClass',
+        payload: data
+      })
+      cb(data)
+    },
+    // 获取系统素材数据
+    * getSystemMaterialList({payload, cb}:any,{ call, put }: any):any{
+        const data = yield http({
+          url: "/visual/resource/queryResourceList",
+          method: "post",
+          body: payload,
+        });
+        yield put({
+          type: 'setSystemMaterialList',
+          payload: data
+        })
+        cb(data.content)
     }
   },
 
@@ -652,7 +609,7 @@ export default {
       }
       return { ...state }
     },
-    deleteComponentData (state: IBarState, { payload }: any) {
+    deleteComponentData(state: IBarState, { payload }: any) {
       // const { id } = payload
       // if (state.componentData[id]) {
       //   // delete state.componentData[id]
@@ -660,7 +617,7 @@ export default {
       return { ...state, componentData: state.componentData }
     },
     deleteDataContainer(state: IBarState, { payload }: any) {
-      const { containerId, componentIds }  = payload
+      const { containerId, componentIds } = payload
       let index = state.dataContainerDataList.findIndex((item: any) => item.id === containerId)
       state.dataContainerDataList.splice(index, 1)
       index = state.dataContainerList.findIndex((item: any) => item.id === containerId)
@@ -679,7 +636,7 @@ export default {
     },
     copyDataContainer(state: IBarState, { payload }: any) {
 
-      return {...state}
+      return { ...state }
     },
     updateDataContainer(state: IBarState, { payload }: any) {
       // containerData 是容器全部的数据信息, data 是 容器的数据 静态/动态数据
@@ -695,7 +652,7 @@ export default {
           container.data = data
         } else {
           // 不存在则新增
-          state.dataContainerDataList.unshift({id: containerData.id, data})
+          state.dataContainerDataList.unshift({ id: containerData.id, data })
         }
       }
       if (index !== -1) {
@@ -704,7 +661,7 @@ export default {
       } else {
         state.dataContainerList.unshift(containerData)
       }
-      return { ...state, dataContainerList: state.dataContainerList, dataContainerDataList: state.dataContainerDataList}
+      return { ...state, dataContainerList: state.dataContainerList, dataContainerDataList: state.dataContainerDataList }
     }, // 设置右键菜单位置的信息
     setRightMenuInfo(state: IBarState, { payload }: any) {
       return { ...state, rightMenuInfo: payload }
@@ -722,7 +679,7 @@ export default {
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
       const extendedSomeAttrLayers = addSomeAttrInLayers(payload)
-      return { ...state, treeData: extendedSomeAttrLayers }
+      return { ...state, treeData: extendedSomeAttrLayers.layers }
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
@@ -1420,6 +1377,14 @@ export default {
       return {
         ...defaultData
       }
+    },
+    // 获取系统素材分类数据
+    setSystemMaterialClass(state: any, { payload }: any){
+      return {...state, systemMaterialClass: payload}
+    },
+    // 获取系统素材数据
+    setSystemMaterialList(state: any, { payload }: any){
+      return {...state, systemMaterialList: payload}
     }
   },
 }

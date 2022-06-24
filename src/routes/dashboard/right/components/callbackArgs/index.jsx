@@ -150,13 +150,11 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                     </Select>
                   </Form.Item> */}
                   <Form.Item
-                    name="origin"
                     label='字段值'
                   >
                     <Input className="cus-input" defaultValue={pane.origin} onBlur={e => originChange(e, pane)} />
                   </Form.Item>
                   <Form.Item
-                    name="target"
                     label='变量名'
                   >
                     <Input className="cus-input" defaultValue={pane.target} onBlur={e => targetChange(e, pane)} />

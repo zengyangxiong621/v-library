@@ -94,7 +94,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
   }
 
   // 数据过滤
-  const handleDataFilter = (data, allFilters) => {
+  const handleDataFilter = (data, allFilters, callbackArgs) => {
     const filters = allFilters.map(item => {
       const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
       return {
@@ -107,14 +107,20 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
     }
     try {
       const functions = filters.map(item => {
-        return (new Function('data', item.content))
+        return (new Function('data', 'callbackArgs', item.content))
       })
       const resultArr = []
       functions.forEach((fn, index) => {
+        const cbArgs = filters[index].callbackKeys.reduce((pre, item) => {
+          return {
+            ...pre,
+            [item]: callbackArgs[item]
+          }
+        }, {})
         if (index === 0) {
-          resultArr.push(fn(data))
+          resultArr.push(fn(data, cbArgs))
         } else {
-          resultArr.push(fn(resultArr[index - 1]))
+          resultArr.push(fn(resultArr[index - 1], cbArgs))
         }
       })
       return resultArr[resultArr.length - 1]
@@ -134,7 +140,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
         data = bar.dataContainerDataList.find(it => it.id === item.id).data
       }
       if (dataContainer.useFilter) {
-        data = handleDataFilter(data, dataContainer.filters)
+        data = handleDataFilter(data, dataContainer.filters, bar.callbackArgs)
       }
       setResultData({ ...resultData, value: JSON.stringify(data, null, 2) })
       setTabValue(item.id)
@@ -147,27 +153,27 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
   return (
     <div className="data-container-config">
       <div className="data-container-select g-flex g-justify-between g-mt-4 g-mb-9"
-           style={ { display: 'flex' } }>
-        <span style={ { minWidth: '73px', lineHeight: '32px' } } className="g-text-left">数据容器</span>
+        style={{ display: 'flex' }}>
+        <span style={{ minWidth: '73px', lineHeight: '32px' }} className="g-text-left">数据容器</span>
         <Select
-          value={ dataContainerIds }
+          value={dataContainerIds}
           mode="multiple"
           className="g-flex-1 g-mr-2"
-          onChange={ handleChange }
-          onDeselect={ handleDeSelect }
-          onSelect={ handleSelect }
-          style={ { flex: 1, minWidth: 150 } }
+          onChange={handleChange}
+          onDeselect={handleDeSelect}
+          onSelect={handleSelect}
+          style={{ flex: 1, minWidth: 150 }}
         >
           {
             bar.dataContainerList.map(item => (
-                <Option key={ item.id } value={ item.id }>
-                  { item.name }
-                </Option>
-              ),
+              <Option key={item.id} value={item.id}>
+                {item.name}
+              </Option>
+            ),
             )
           }
         </Select>
-        <Button className="g-ml-2" onClick={ handleAddDataContainer }>+新建</Button>
+        <Button className="g-ml-2" onClick={handleAddDataContainer}>+新建</Button>
       </div>
       <div className="data-container-tabs g-flex g-flex-wrap">
         {
@@ -176,12 +182,12 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
             if (dataContainer) {
               return (
                 <div
-                  key={ item.id }
-                  title={ dataContainer.name }
-                  className={ `data-container-tabs-item ${ item.id === tabValue ? 'data-container-tabs-item-active ' : '' }g-cursor-pointer g-overflow-hidden g-overflow-ellipsis g-whitespace-nowrap` }
-                  onClick={ () => handleTabClick(item) }
+                  key={item.id}
+                  title={dataContainer.name}
+                  className={`data-container-tabs-item ${item.id === tabValue ? 'data-container-tabs-item-active ' : ''}g-cursor-pointer g-overflow-hidden g-overflow-ellipsis g-whitespace-nowrap`}
+                  onClick={() => handleTabClick(item)}
                 >
-                  { dataContainer.name }
+                  {dataContainer.name}
                 </div>
               )
             }
@@ -192,13 +198,13 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
       </div>
       <div
         className="data-container-show-card"
-        style={ { width: '100%', height: '198px' } }
+        style={{ width: '100%', height: '198px' }}
       >
-        <CodeEditor data={ resultData } onChange={ () => {
-        } }/>
+        <CodeEditor data={resultData} onChange={() => {
+        }} />
       </div>
-      <UpdateContainerDrawer dashboardId={ bar.dashboardId } data={ itemData } visible={ itemVisible }
-                             onVisibleChange={ handleUpdateDrawerClose }/>
+      <UpdateContainerDrawer dashboardId={bar.dashboardId} data={itemData} visible={itemVisible}
+        onVisibleChange={handleUpdateDrawerClose} />
     </div>
   )
 }

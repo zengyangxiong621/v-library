@@ -167,9 +167,9 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     props.onClose()
   }
 
-  const selectChange = (val) => {
-    setConditionType(val)
-    props.setConditionType(val)
+  const selectChange = (event) => {
+    setConditionType(event.target.value)
+    props.setConditionType(event.target.value)
   }
 
   const addConditon = () => {

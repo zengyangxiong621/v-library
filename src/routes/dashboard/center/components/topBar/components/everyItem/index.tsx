@@ -4,11 +4,10 @@ import axios from 'axios'
 import './index.less'
 
 const EveryItem = (props: any) => {
-  const { data, type, dispatch, bar } = props
-
+  const { data, dispatch, bar } = props
   const importComponent = useCallback(() => {
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/modules/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
-  }, [type])
+    return axios.get(`${ (window as any).CONFIG.COMP_URL }/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
+  }, [data.moduleType])
 
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`)
@@ -40,7 +39,7 @@ const EveryItem = (props: any) => {
   return (
     <div className='EveryItem-wrap' onClickCapture={componentCreate}>
       <div className='db-img'>
-        <img src={data.photoPath} alt='图片加载' />
+        <img src={data.photoPath} alt='' />
       </div>
       <span className='db-text'>{data.name}</span>
     </div>

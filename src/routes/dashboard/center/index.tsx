@@ -38,8 +38,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }, [bar.treeData])
 
   const treeDataReverse = (treeData: any) => {
-    treeData = treeData.reverse()
-    treeData.forEach((layer: any) => {
+    treeData = treeData?.reverse()
+    treeData?.forEach((layer: any) => {
       if (COMPONENTS in layer) {
         treeDataReverse(layer[COMPONENTS])
       }
@@ -191,7 +191,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     // document.addEventListener('contextmenu', handleContextMenu)
     return () => {
       window.removeEventListener('resize', calcCanvasSize);
-      (document.querySelector('.draggable-container') as HTMLElement).removeEventListener('contextmenu', handleContextMenu)
+      (document.querySelector('.draggable-container') as HTMLElement)?.removeEventListener('contextmenu', handleContextMenu)
       // document.removeEventListener('contextmenu', handleContextMenu)
     }
   }, [bar.dashboardConfig])
