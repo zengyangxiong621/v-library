@@ -21,7 +21,7 @@ import CheckBoxGroup from './checkBoxGroup'
 import CusTabs from './cusTabs'
 import UploadImg from './uploadImg'
 import CusInputNumber from './cusInputNumber'
-import TableArray from './tabArray'
+import TabArray from './tabArray'
 
 
 const componentLib = {
@@ -46,7 +46,7 @@ const componentLib = {
   tabs:CusTabs,
   image:UploadImg,
   number:CusInputNumber,
-  tabArray: TableArray
+  tabArray: TabArray
 }
 
 export default componentLib
