@@ -8,6 +8,7 @@ import DataSource from "./routes/tempDataSource";
 import ControlCabin from "./routes/controlCabin";
 import PreviewDashboard from "./routes/previewDashboard";
 import PublishDashboard from "./routes/publishDashboard";
+import ResourceCenter from "./routes/resourceCenter";
 import WorkSpace from "./routes/workSpace";
 
 const routesConfig = (app: any) => [
@@ -57,8 +58,9 @@ const routesConfig = (app: any) => [
       PreviewDashboard(app),
       PublishDashboard(app),
       WorkSpace(app),
-    ],
-  },
+      ResourceCenter(app)
+    ]
+  }
 ];
 
 export default routesConfig;

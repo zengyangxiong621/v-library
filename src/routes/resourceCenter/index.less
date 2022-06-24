@@ -1,0 +1,80 @@
+@import '~antd/dist/antd.dark.css';
+
+@backColor: #171a24;
+
+.resourceCenter-wrap {
+  display: flex;
+  background-color: @backColor;
+  width: 100%;
+  height: 100vh;
+  padding: 0 34px 0 0;
+
+  .set-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .left {
+    width: 256px;
+    height: 100vh;
+    background-color: @backColor;
+    padding: 16px 0 0 0;
+    margin-right: 24px;
+    background-image: url('../../assets//images/背景图装饰.png');
+    background-repeat: no-repeat;
+    background-position: 50% 85%;
+    overflow-y: auto;
+  }
+  .left::-webkit-scrollbar {
+    display: none;
+  }
+  .right {
+    flex: 1;
+    height: 100%;
+    .right-header {
+      margin-bottom: 16px;
+      .custom-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        width: 96px;
+        height: 32px;
+        background: #2482ff;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .title {
+        flex: 1;
+        height: 32px;
+        font-size: 16px;
+        color: #ffffff;
+        font-weight: 600;
+        margin-top: 24px;
+      }
+      .set-mr {
+        margin-right: 12px;
+      }
+    }
+
+    .add-search {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      .search {
+        width: 240px;
+        height: 32px;
+        background: #232630;
+        // border: 1px solid rgba(57, 59, 74, 1);
+        border-radius: 3px;
+      }
+      .db-select {
+        color: #ccc;
+        margin-left: 12px;
+        .ant-select-selector {
+          border: none;
+        }
+      }
+    }
+  }
+}

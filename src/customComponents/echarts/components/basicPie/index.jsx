@@ -15,7 +15,6 @@ class BasicPie extends React.PureComponent {
       cnt: 0
     };
   }
-  
   getOption = () => ({
     title: {
       text: '某站点用户访问来源',

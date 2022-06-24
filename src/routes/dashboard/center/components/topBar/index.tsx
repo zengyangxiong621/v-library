@@ -62,13 +62,13 @@ const zujianMenu = [
     isSpecialDropMenu: true,
     component: Charts,
   },
-  // {
-  //   title: '地图',
-  //   key: 'map',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Map
-  // },
+  {
+    title: '地图',
+    key: 'map',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Map
+  },
   {
     title: '文字',
     key: 'text',
@@ -83,20 +83,20 @@ const zujianMenu = [
     isSpecialDropMenu: false,
     component: Assist
   },
-  // {
-  //   title: '交互',
-  //   key: 'interaction',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Interaction
-  // },
-  // {
-  //   title: '其他',
-  //   key: 'other',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Other
-  // },
+  {
+    title: '交互',
+    key: 'interaction',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Interaction
+  },
+  {
+    title: '其他',
+    key: 'other',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Other
+  },
 
 ]
 const sucaiMenu = [
@@ -106,22 +106,23 @@ const sucaiMenu = [
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: true,
     component: DesignMaterial,
-    customWidth: true,
-  }, {
-    title: '主题资源',
-    key: 'zhutiziyuan',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: true,
-    component: ThmemResource,
-    customWidth: true,
-  }, {
-    title: '我的收藏',
-    key: 'wodeshoucang',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: true,
-    component: MyCollection,
-    customWidth: true,
-  },
+    // customWidth: true,
+  }, 
+  // {
+  //   title: '主题资源',
+  //   key: 'zhutiziyuan',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: true,
+  //   component: ThmemResource,
+  //   customWidth: true,
+  // }, {
+  //   title: '我的收藏',
+  //   key: 'wodeshoucang',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: true,
+  //   component: MyCollection,
+  //   customWidth: true,
+  // },
 ]
 
 /**

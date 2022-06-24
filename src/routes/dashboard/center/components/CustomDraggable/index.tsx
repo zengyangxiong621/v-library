@@ -37,6 +37,7 @@ import {
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
+import ScrollTable from "@/components/scrollTable";
 
 
 enum STYLE_ENUM {
@@ -626,7 +627,6 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
-
                             // <RemoteBaseComponent
                             //   version={'1.0.0'}
                             //   name={layer.moduleName}

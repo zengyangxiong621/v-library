@@ -1,7 +1,7 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
-import DateSelect from '@/components/dateSelect'
+import DateSelect from '@/components/timeSelect'
 import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
@@ -391,14 +391,9 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
             {...props}
           >
           </DateSelect>
-          : props.componentConfig.moduleName === 'select' ?
-            <Select
-              onChange={handleValueChange}
-              {...props}
-            >
-            </Select> : <RemoteBaseComponent
-              {...props}
-            ></RemoteBaseComponent>
+          : <RemoteBaseComponent
+            {...props}
+          ></RemoteBaseComponent>
       }
     </div>
   )
