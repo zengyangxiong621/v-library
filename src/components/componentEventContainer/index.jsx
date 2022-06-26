@@ -2,6 +2,7 @@ import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
 import DateSelect from '@/components/timeSelect'
+import ScrollTable from '@/components/scrollTable'
 import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
@@ -373,12 +374,12 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         {...props}
       ></RemoteBaseComponent>     */}
       {
-        props.componentConfig.moduleName === 'timeSelect' ?
-          <DateSelect
+        props.componentConfig.moduleName === 'scrollTable' ?
+          <ScrollTable
             onChange={handleValueChange}
             {...props}
           >
-          </DateSelect>
+          </ScrollTable>
           : <RemoteBaseComponent
             {...props}
           ></RemoteBaseComponent>

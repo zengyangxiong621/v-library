@@ -21,7 +21,7 @@ const mapStateToProps = (state) => {
 class Components extends Component {
   constructor(props) {
     super(props)
-  }                                        
+  }
 
 
   render() {
@@ -34,4 +34,5 @@ class Components extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Components); 
+export default connect(mapStateToProps)(Components);
+

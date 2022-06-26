@@ -29,6 +29,7 @@ const CusInput = props => {
 
   return (
     <Form
+      style={props.formStyle}
       className="custom-form"
       form={form}
       {...formItemLayout}
@@ -36,7 +37,7 @@ const CusInput = props => {
     >
       <Form.Item label={_data.displayName}>
         <Form.Item  name={_data.name} noStyle>
-          <Input style={{ width: '100%' }} disabled={_data.disabled} className="cus-input" defaultValue={value} onChange={valueChange} />
+          <Input style={{ width:'100%', ...props.style }} disabled={_data.disabled} className="cus-input" defaultValue={value} onChange={valueChange} />
         </Form.Item>
       </Form.Item>
     </Form>
