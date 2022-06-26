@@ -79,7 +79,7 @@ const TabArray = props => {
         <Tabs defaultActiveKey={activeKey} onTabClick={handleTabClick}>
           {
             tabs.map(tab => (
-              <TabPane tab={tab.name} key={tab.key}>
+              <TabPane tab={tab.name} key={tab.key} style={{paddingTop: 16}} >
                 {
                   tab.value.map((item, index) => {
                     if (!(item.type && componentLib[item.type])) {

@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react'
 import './index.less'
-import CusInput from './cusInput'
+import CusInput from '../cusInput'
 
 import {
   Form,
@@ -50,7 +50,7 @@ const Input2 = ({ bar, dispatch, ...props }) => {
               data={_firstElCopy}
               onChange={firstChange}
               formStyle={{ float: 'left', marginBottom: '-8px' }}
-              style={{ width: '107px' }}
+              style={{ width: '102px' }}
             />
           </Form.Item>
           <Form.Item name="top" noStyle>
@@ -58,7 +58,7 @@ const Input2 = ({ bar, dispatch, ...props }) => {
               data={_secondElCopy}
               onChange={secondChange}
               formStyle={{ float: 'right', marginBottom: '-8px' }}
-              style={{ width: '107px' }}
+              style={{ width: '102px' }}
             />
           </Form.Item>
         </Input.Group>
