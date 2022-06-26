@@ -30,7 +30,6 @@ const ScrollTable = (props) => {
   const [header, setHeader] = useState([])
   const componentConfig = props.componentConfig || componentDefaultConfig
   const fields = getFields(componentConfig)
-  console.log('componentConfig', componentConfig)
   const {config, staticData} = componentConfig
 
   const allGlobalConfig = config.find(item => item.name === "allGlobal").value
@@ -193,7 +192,7 @@ const ScrollTable = (props) => {
     header,
     data: tableData,
     waitTime,
-    index: true,
+    // index: true,
     hoverPause: true,
     headerBGC: '#222430', // 头部背景色
     oddRowBGC, // 奇数行背景色
