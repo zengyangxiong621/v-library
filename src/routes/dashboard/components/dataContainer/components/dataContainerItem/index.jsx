@@ -40,7 +40,6 @@ const DataContainerItem = props => {
     setIsEdit(false)
   }
   const handleChange = (e) => {
-    console.log('清空')
     setInputValue(e.target.value)
   }
   const handleDelete = () => {
@@ -50,7 +49,6 @@ const DataContainerItem = props => {
         content: '仍有组件绑定该数据容器，删除后不可逆，确认删除？',
         desc: '', // 选填
         onCancel: () => {
-          console.log('取消')
         },
         onOk: () => {
           props.onDelete(data.id, data.modules)

@@ -62,7 +62,7 @@ export const useFetch = async (
       return responseType !== undefined ? response[responseType]() : response.json();
     })
     .catch((err) => {
-      console.log("err", err);
+      console.log("useFetch -- err", err);
     });
 
   let [err, data]: any = await catchErr(finalFetch, customOptions);

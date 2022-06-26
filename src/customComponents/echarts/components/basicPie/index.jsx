@@ -55,8 +55,6 @@ class BasicPie extends React.PureComponent {
   });
 
   onChartClick = (param, echarts) => {
-    console.log(param, echarts);
-    alert('chart click');
     this.setState({
       cnt: this.state.cnt + 1
     });
@@ -68,7 +66,7 @@ class BasicPie extends React.PureComponent {
   };
 
   onChartReady = echarts => {
-    console.log('echart is ready', echarts);
+    // console.log('echart is ready', echarts);
   };
 
   render() {
@@ -87,8 +85,8 @@ class BasicPie extends React.PureComponent {
   }
 }
 
-export { 
-  BasicPie, 
+export {
+  BasicPie,
   ComponentDefaultConfig
 }
 export default BasicPie

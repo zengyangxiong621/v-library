@@ -185,7 +185,6 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   }
 
   const dataSourceChange = async (param) => {
-    console.log('param', param)
     const baseUrlDataNew = { ...baseUrlData }
     baseUrlDataNew.value = param.baseUrl
     setBaseUrlData(baseUrlDataNew)
@@ -193,7 +192,6 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   }
 
   const requestMethodsChange = () => {
-    console.log('requestMethods', requestMethods)
     if (['post', 'put', 'patch'].includes(requestMethods.value)) {
       setIsShowBody(true)
     } else {
@@ -203,7 +201,6 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   }
 
   const requestHeaderDataChange = () => {
-    console.log('requestHeaderData', requestHeaderData)
     if(requestHeaderData.value){
       try {
         JSON.parse(requestHeaderData.value)
@@ -216,7 +213,6 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   }
 
   const requestBodyDataChange = () => {
-    console.log('requestBodyData', requestBodyData)
     try {
       JSON.parse(requestBodyData.value)
     } catch (err) {
@@ -227,17 +223,14 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   }
 
   const pathDataChange = () => {
-    console.log('pathData', pathData)
     saveDataConfig('path', pathData)
   }
 
   const paramDataChange = () => {
-    console.log('paramData', paramData)
     saveDataConfig('params', paramData)
   }
 
   const reqFromBackChange = () => {
-    console.log('reqFromBack', reqFromBack)
     setReqFromBack(!reqFromBack)
     saveDataConfig('reqFromBack', {
       value: !reqFromBack
@@ -245,7 +238,6 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   }
 
   const needCookieChange = () => {
-    console.log('needCookie', needCookie)
     setNeedCookie(!needCookie)
     saveDataConfig('needCookie', {
       value: !needCookie

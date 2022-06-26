@@ -35,13 +35,11 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   };
 
   useEffect(() => {
-    console.log('bar.groupConfig', bar.groupConfig)
     setKey(uuidv4())
   }, [bar.groupConfig])
 
 
   const positionChange = debounce(() => {
-    console.log(groupConfig)
     // 位置信息变化由中间画布保存
     dispatch({
       type: 'bar/save',
@@ -61,7 +59,6 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       method: 'post',
       body: params,
     })
-    console.log('layers', data)
     dispatch({
       type: 'bar/save',
       payload: {
@@ -85,7 +82,6 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const opacityChange = debounce(() => {
-    console.log(opacityConfig)
     dispatch({
       type: 'bar/save',
       payload: {
@@ -100,7 +96,6 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   }, 300)
 
   const interactionChange = debounce(() => {
-    console.log(interactionConfig)
     dispatch({
       type: 'bar/save',
       payload: {

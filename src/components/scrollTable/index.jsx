@@ -34,7 +34,6 @@ const ScrollTable = (props) => {
   }, [])
 
   useEffect(() => {
-    console.log('11')
     // 重新计算大小
     tableRef.current.setWH()
   }, [width, height])
@@ -82,7 +81,6 @@ const ScrollTable = (props) => {
     const oddBgColor = rowConfig.find(item => item.name === "oddBgColor").value
     setEvenRowBGC(evenBgColor)
     setOddRowBGC(oddBgColor)
-    console.log('rowConfig', rowConfig)
 
   }, [tableRowConfig])
 
@@ -101,7 +99,6 @@ const ScrollTable = (props) => {
   }, [tableIndexConfig])
 
   useEffect(() => {
-    console.log('animationConfig', tableAnimationConfig)
     const animationModel = tableAnimationConfig.find(item => item.name === "animationModel").value
     setCarousel(animationModel)
   }, [tableAnimationConfig])
@@ -121,7 +118,6 @@ const ScrollTable = (props) => {
   const header = mappingConfig.map(item => item.displayName)
   // 结构: {column1: 0, column2: 1, column3: 2}
   const columnEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
-    console.log('cur', cur)
     pre[cur] = index
     return pre
   }, {})

@@ -39,7 +39,6 @@ const Header = props => {
   }
   // 选择工作空间
   const selectWorkspace = ({ key }) => {
-    console.log('eieee', typeof key);
     if (key == 1) {
       history.push('/work-space')
     }

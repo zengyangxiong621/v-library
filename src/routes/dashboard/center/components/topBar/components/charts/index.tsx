@@ -59,8 +59,6 @@ const Charts = (props: any) => {
     if(!allModules[classType]){
       let obj:any = {}
       obj[classType] = data.content
-      console.log('??******', {...allModules, ...obj});
-      
       setAllModules({...allModules, ...obj})
     }
     setDataLoading(false)

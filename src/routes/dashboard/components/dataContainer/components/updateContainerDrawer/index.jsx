@@ -60,7 +60,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
             data: containerData.staticData.data
           }
         })
-        console.log('setResultData1')
         setResultData(containerData.staticData.data)
         setCopyData(containerData)
       } else {
@@ -71,14 +70,11 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         if (data) {
           if (props.data.useFilter) {
             resultData = handleDataFilter(data.data, props.data.filters)
-            console.log('setResultData2')
             setResultData(resultData)
           } else {
-            console.log('setResultData3')
             setResultData(data.data)
           }
         } else {
-          console.log('setResultData4')
           setResultData(resultData)
         }
 
@@ -92,7 +88,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
 
   const updateDataContainerName = async (copyData) => {
-    console.log('copyData', copyData)
     await updateDataContainer(copyData)
     dispatch({
       type: 'bar/updateDataContainer',
@@ -190,7 +185,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
-    console.log('dataConfig', dataConfig)
     setCopyData({...copyData, dataConfig})
     await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
     try {
@@ -265,7 +259,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   const handleDataFilter = (data, allFilters, componentFilters = null,callbackArgs) => {
     const filters = allFilters.map(item => {
       const filterDetail = (componentFilters || bar.componentFilters).find(jtem => jtem.id === item.id)
-      console.log('filterDetail', filterDetail)
       return {
         ...filterDetail,
         enable: item.enable,
@@ -331,10 +324,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   // bindFilters
   const bindFilters = async ({id}, status) => {
     // 绑定过滤器
-    console.log('hhhhhhhhhhhhh')
-    console.log('id', id)
-    console.log('status', status)
-    console.log('hhhhhhhhhhhhh')
     const data = await http({
       method: 'post',
       url: '/visual/container/filter/trigger',

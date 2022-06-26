@@ -43,7 +43,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     // setDashboardConfig(dashboardConfig)
     // 获取屏幕大小、背景等参数
     const screenInfoMap: any = getScreenInfo(dashboardConfig)
-    console.log('screenInfoMap', screenInfoMap)
     const winW = window.innerWidth
     const winH = window.innerHeight
     const { width, height } = screenInfoMap['屏幕大小']

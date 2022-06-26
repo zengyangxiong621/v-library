@@ -26,7 +26,6 @@ const EditDataSource = (props: any) => {
   } = props.editDataSourceInfo
 
 
-  console.log('props.editDataSourceInfo', props.editDataSourceInfo);
 
   let spaceId = 1
   // let spaceId = '1513466256657637378'

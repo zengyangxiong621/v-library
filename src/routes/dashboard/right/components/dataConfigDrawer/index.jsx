@@ -283,7 +283,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
 
   const showComponentDetail = (e, id) => {
     const layer = findLayerById(bar.treeData, id)
-    console.log('layer', layer)
     dispatch({
       type: 'bar/selectLayers',
       payload: [layer]
@@ -388,10 +387,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   const enableFifter = async (e, item) => {
     item.enable = e.target.checked
     if (props.type === 'component') {
-      console.log('-----------')
-      console.log('item', item)
-      console.log('checked', e.target.checked)
-      console.log('-----------')
 
       props.onBindFilters(item, e.target.checked)
       return
@@ -463,9 +458,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }
 
   const confirmFilter = async (item) => {
-    console.log('G了呀1')
     if (item.isNewAdd) {
-      console.log('G了呀2')
       await saveNewFifterHandle()
     } else {
       await updateFifterHandle(item)
@@ -473,7 +466,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }
 
   const saveNewFifterHandle = async () => {
-    console.log('G了呀3')
     // 新增保存,创建过滤器，把过滤器添加到当前组件
     const { id, enable, isEditName, isAddKey, status, isNewAdd, ...rest } = filterOfAdd
     const data = await http({
@@ -502,7 +494,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         })
         await props.onSelectedFiltersChange(data.id, componentFilters)
       } else {
-        console.log('这里吗这里吗')
         // 把过滤器添加到当前组件
         const res = await http({
           url: '/visual/module/filter/add',
@@ -679,7 +670,6 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
               <div className="btn-group">
                 <Button ghost onClick={() => { resetFilter(item) }} style={{ marginRight: '8px' }}>取消</Button>
                 <Button type="primary" onClick={async () => {
-                  console.log('点击到了吗')
                   await confirmFilter(item)
                 }}>确认</Button>
               </div>

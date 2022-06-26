@@ -56,7 +56,6 @@ export default {
     setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
       history.listen((location: any) => {
-        // console.log("location", location);
       })
     },
     onResize({ dispatch, history }: any) {
@@ -498,7 +497,6 @@ export default {
     * getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar)
       const dashboardId = bar.dashboardId || payload
-      console.log('bar', bar)
       const data = yield http({
         method: 'get',
         url: `/visual/container/list/${dashboardId}`
@@ -643,9 +641,6 @@ export default {
       const { containerData, data } = payload
       const container = state.dataContainerDataList.find((item: any) => item.id === containerData.id);
       const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
-      console.log('-----------containerData', containerData)
-      console.log('data', data)
-      console.log('-------------')
       if (data) {
         if (container) {
           // container 存在，说明是修改
@@ -657,7 +652,6 @@ export default {
       }
       if (index !== -1) {
         state.dataContainerList[index] = containerData
-        console.log('state.dataContainerList[index]', state.dataContainerList[index])
       } else {
         state.dataContainerList.unshift(containerData)
       }

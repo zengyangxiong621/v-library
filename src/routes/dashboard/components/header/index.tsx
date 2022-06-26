@@ -45,7 +45,6 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   }
   // 修改应用名称
   const reNameApp = async (e: any) => {
-    console.log('e', appName);
     e.stopPropagation()
     setIsRename(false)
     // 没改新名称
@@ -387,7 +386,6 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
       const { status, response } = info.file;
       if (status === 'done') {
         message.success(`图片上传成功`);
-        console.log('response', response.data);
         // 除了设置输入框的回显值，还要覆盖原本的fabuBody里的thumb字段值
         setImgUrl(response.data)
         rePublishByOnBlur(response.data, 'thumb')

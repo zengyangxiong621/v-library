@@ -15,7 +15,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     })
   }
   const { name, id, modules, moduleType, moduleVersion, moduleName, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
-  console.log('_++++++++++++++++++++++++++++++++++', restProps);
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
   // 文件夹是展开了还是关闭了

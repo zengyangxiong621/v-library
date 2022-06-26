@@ -98,14 +98,12 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
 
   // 匹配动作
   const actionChange = (e, pane) => {
-    console.log('e', e, pane)
     pane.action = e
     _data.callbackArgs = tabpanes
     props.onChange()
   }
 
   const originChange = (e, pane) => {
-    console.log('e', e)
     pane.origin = e.target.value
     _data.callbackArgs = tabpanes
     props.onChange()

@@ -77,7 +77,6 @@ const CustomDraggable
      * @return void
      */
     const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-      console.log('dragStart', layer)
       setStartPosition({
         x: data.x,
         y: data.y,
@@ -382,15 +381,12 @@ const CustomDraggable
     const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
       clearTimeout(clickTimer.current)
       clickTimer.current = setTimeout(() => {
-        console.log('单击')
       }, 400)
       localStorage.removeItem('dblComponentTimes')
       e.stopPropagation()
     }
     const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
-      console.log('当前的次数', currentTimes.current)
       clearTimeout(clickTimer.current)
-      console.log('双击')
       const dblComponentTimes = localStorage.getItem('dblComponentTimes')
       if (!currentTimes) {
         currentTimes.current = 1
@@ -557,7 +553,6 @@ const CustomDraggable
                 }
 
                 events = component.events
-                console.log('events', events)
               }
             }
             return (
