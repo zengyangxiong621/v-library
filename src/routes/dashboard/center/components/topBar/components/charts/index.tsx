@@ -52,13 +52,15 @@ const Charts = (props: any) => {
       setDataLoading(false)
     })
     data.content.forEach((item: any) => {
-      item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.moduleType}${item.photoPath}`
+      item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`
     })
     let classType = subType.length ? subType[0] : 'all'
     // 如果不存在就添加
     if(!allModules[classType]){
       let obj:any = {}
       obj[classType] = data.content
+      console.log('??******', {...allModules, ...obj});
+      
       setAllModules({...allModules, ...obj})
     }
     setDataLoading(false)
@@ -83,7 +85,7 @@ const Charts = (props: any) => {
       <Spin className="data-loading" spinning={dataLoading}/>
       {
         allModules[active] && (
-          allModules[active].length ?  
+          allModules[active].length ? 
             <div className='charts-list'>
             {
               allModules[active]?.map((item: any, index: number) => {
