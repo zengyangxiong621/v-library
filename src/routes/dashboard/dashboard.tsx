@@ -106,7 +106,6 @@ function App({ bar, dispatch, location }: any) {
       dispatch({
         type: 'bar/clearCurrentDashboardData'
       })
-      console.log('清除了嘛', bar)
     }
   }, [])
 
