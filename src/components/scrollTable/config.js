@@ -452,8 +452,8 @@ const ComponentDefaultConfig = {
       "value": [
         {
           "key": "1",
-          "displayName": "列",
-          "name": "row_1",
+          "displayName": "列1",
+          "name": "tab",
           "type": "object",
           "value": [
             {
@@ -479,8 +479,8 @@ const ComponentDefaultConfig = {
         },
         {
           "key": "2",
-          "displayName": "列",
-          "name": "row_2",
+          "displayName": "列2",
+          "name": "tab",
           "type": "object",
           "value": [
             {
@@ -506,8 +506,8 @@ const ComponentDefaultConfig = {
         },
         {
           "key": "3",
-          "displayName": "列",
-          "name": "row_3",
+          "displayName": "列3",
+          "name": "tab",
           "type": "object",
           "value": [
             {
