@@ -137,6 +137,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   const changeShowState = (modalType: any) => {
     setUploadVisible(modalType);
   };
+  console.log(resourceCenter.curSelectedGroup,resourceCenter.groupList,'curSelectedGroup')
   return (
     <div className="resourceCenter-wrap">
       <div className="left">
@@ -186,7 +187,8 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         {resourceCenter.groupList.length > 0 && uploadVisible && (
           <UploadFile
             uploadVisible={uploadVisible}
-            groupList={resourceCenter.groupList[0].children}
+            groupList={resourceCenter.curSelectedGroup.origin === 'myresource' ? resourceCenter.groupList[0].children[0] : resourceCenter.groupList[0].children[1]}
+            origin={resourceCenter.curSelectedGroup.origin}
             changeShowState={changeShowState}
             refreshList={refreshGroupLists}
           ></UploadFile>

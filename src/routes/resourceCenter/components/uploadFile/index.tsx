@@ -5,7 +5,7 @@ import { connect } from "dva";
 import { Icon } from "@ant-design/compatible";
 import { http, BASEURL } from "@/services/request";
 const UploadFile = (props: any) => {
-  const { uploadVisible, changeShowState,groupList,refreshList} = props;
+  const { uploadVisible, changeShowState,groupList,refreshList,origin} = props;
   const { Option } = Select;
   const Dragger = Upload.Dragger;
   const [uploadForm] = Form.useForm();
@@ -19,6 +19,9 @@ const UploadFile = (props: any) => {
       const formData = new FormData();
       formData.append('file', file.file);
       formData.append('groupId', groupId);
+      if(origin === 'myresource'){
+        formData.append('spaceId', '1');
+      }
       setConfirmLoading(true);
       const data = await http({
         method: 'post',
@@ -138,8 +141,8 @@ const UploadFile = (props: any) => {
         <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, '请选择分组')}>
         <Select placeholder="请选择"  onChange={selectChange}>
           {
-            (groupList[0].children || []).map((item:any) => {
-              if(item.groupId !== '-1'){
+            (groupList.children || []).map((item:any) => {
+              if(['-1','sysAll'].indexOf(item.groupId) === -1){
                 return (<Option value={item.groupId} key={item.groupId}>{item.name}</Option> )
               }
             })
