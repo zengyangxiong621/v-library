@@ -36,6 +36,7 @@ import {
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
 import ScrollTable from "@/components/scrollTable";
+import Tab from "@/components/tab";
 
 
 enum STYLE_ENUM {
@@ -627,6 +628,13 @@ const CustomDraggable
                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                               >
                               </ScrollTable> :
+                              layer.moduleName === 'tab' ?
+                              <Tab
+                                componentConfig={component}
+                                fields={getFields(component)}
+                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                              >
+                              </Tab> :
                             <RemoteBaseComponent
                               componentConfig={component}
                               fields={getFields(component)}
@@ -636,7 +644,7 @@ const CustomDraggable
                         </div>
                       </>
                   }
-                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
+                  {/*<div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />*/}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span

@@ -455,7 +455,7 @@ export const defaultData = {
             {
               "key": "1",
               "displayName": "列",
-              "name": "row_1",
+              "name": "列1",
               "type": "object",
               "value": [
                 {
@@ -482,7 +482,7 @@ export const defaultData = {
             {
               "key": "2",
               "displayName": "列",
-              "name": "row_2",
+              "name": "列2",
               "type": "object",
               "value": [
                 {
@@ -509,7 +509,7 @@ export const defaultData = {
             {
               "key": "3",
               "displayName": "列",
-              "name": "row_3",
+              "name": "列3",
               "type": "object",
               "value": [
                 {
