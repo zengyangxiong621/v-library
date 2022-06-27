@@ -673,7 +673,11 @@ export default {
     // 更新树
     updateTree(state: IBarState, { payload }: any) {
       const extendedSomeAttrLayers = addSomeAttrInLayers(payload)
-      return { ...state, treeData: extendedSomeAttrLayers.layers }
+      // TODO  涉及到后面的回收站逻辑
+      /** 图层部分接口返回的数据结构为 { layers: [], recycleItems: []},
+      部分其它接口返回的数据结构为layers数组, layers: [] */
+      const targetTreeData = Array.isArray(extendedSomeAttrLayers) ? extendedSomeAttrLayers : extendedSomeAttrLayers.layers
+      return { ...state, treeData: targetTreeData }
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {

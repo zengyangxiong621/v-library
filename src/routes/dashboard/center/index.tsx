@@ -30,7 +30,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)// let supportLinesRef: any = useRef(// null)
   const [ rulerCanvasSpacing, setRulerCanvasSpacing ] = useState({ left: 22, top: 22 })
   const [layers, setLayers] = useState(deepClone(bar.treeData))
-
   useEffect(() => {
     const data = deepClone(bar.treeData)
     treeDataReverse(data)
