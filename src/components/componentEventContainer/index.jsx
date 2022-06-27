@@ -1,8 +1,9 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
-import DateSelect from '@/components/timeSelect'
+import TimeSelect from '@/components/timeSelect'
 import ScrollTable from '@/components/scrollTable'
+import Tab from '@/components/tab'
 import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
@@ -169,7 +170,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
   const handleValueChange = (data) => {
-    console.log('onChange',data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
@@ -381,6 +381,18 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
             {...props}
           >
           </ScrollTable>
+          : props.componentConfig.moduleName === 'tab' ?
+          <Tab
+            onChange={handleValueChange}
+            {...props}
+          >
+          </Tab>
+          : props.componentConfig.moduleName === 'timeSelect' ?
+          <TimeSelect
+            onChange={handleValueChange}
+            {...props}
+          >
+          </TimeSelect>
           : <RemoteBaseComponent
             {...props}
             onChange={handleValueChange}
