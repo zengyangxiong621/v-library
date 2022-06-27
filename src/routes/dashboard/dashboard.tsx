@@ -198,7 +198,9 @@ function App({ bar, dispatch, location }: any) {
           <Left />
         </div>
         <div className="center-wrap">
-          <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
+          {
+            showTopBar && <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
+          }
           <CenterCanvas focus$={focus$} />
           <CenterBottomBar focus$={focus$} />
         </div>

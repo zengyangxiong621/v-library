@@ -6,43 +6,54 @@ import { Spin } from 'antd'
 
 
 const DesignMaterial = (props: any) => {
-  console.log(props,'lllllll')
-  const { bar, dispatch } = props
+  const { bar, dispatch,title } = props
+  const origin = title === '系统素材' ? 'design' : 'myresource'
+  const classList = bar.systemMaterialClass[origin]
   const [active, setActive] = useState('spsc')
   let [chartDataMap, setChartDataMap] = useState<any>({})
   const [dataLoading, setDataLoading] = useState(false)
   const liHover = (key: string) => {
     setActive(key)
     if(!chartDataMap[key]){
-      getSystemMaterialList([key])
+      getSystemMaterialList(key)
     }
   }
 
   useEffect(() => {
-    getSystemMaterial()
-  }, [])
+    if(classList?.length){
+      setActive(classList[0].groupId)
+      if(!chartDataMap[classList[0].groupId]){
+        getSystemMaterialList(null)
+      }
+    }
+  }, [classList])
 
 
   // 获取系统
-  const getSystemMaterialList = (subType:any) => {
+  const getSystemMaterialList = (groupId?:any) => {
     setDataLoading(true)
+    let payload:any = {
+      pageNo: 1,
+      pageSize: 1000,
+      spaceId:origin === 'design' ? null : '1',
+      type: [origin], // 系统素材
+    }
+    if(origin === 'design'){
+      payload.subType = [null, 'sysAll'].indexOf(groupId) > -1 ? [] : [groupId]
+    }else{
+      payload.groupId = [null, '-1'].indexOf(groupId) > -1 ? '' : groupId
+    }
     dispatch({
       type: 'bar/getSystemMaterialList',
-      payload: {
-        pageNo: 1,
-        pageSize: 1000,
-        spaceId:null,
-        type: ['design'], // 系统素材
-        subType
-      },
+      payload: {...payload},
       cb: (data:any) => {
-        let groupId = subType.length  ? subType[0] : '-1'
-        if(!chartDataMap[groupId]){
+        let groupIdC = groupId ? groupId : origin === 'design' ?  'sysAll' : '-1'
+        if(!chartDataMap[groupIdC]){
           data.forEach((item: any) => {
             item.photoPath = `${(window as any).CONFIG.COMP_URL}${item.photoPath}`
           })
           let obj:any = {}
-          obj[groupId] = data
+          obj[groupIdC] = data
           setChartDataMap({...chartDataMap, ...obj})
           setDataLoading(false)
         }
@@ -59,21 +70,19 @@ const DesignMaterial = (props: any) => {
             setActive(data[0].groupId)
             let groupId = data[0].groupId
             if(!chartDataMap[groupId]){
-              getSystemMaterialList([])
+              getSystemMaterialList(null)
             }
           }
         }
       })
     }
-  
-
   return (
     <div className='DesignMaterial-wrap'>
     {
       <>
         <ul className='text-list'>
           {
-            bar.systemMaterialClass?.map((item: any) => {
+            classList?.map((item: any) => {
               return (
                 <li
                   key={item.groupId}

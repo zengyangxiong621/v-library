@@ -568,23 +568,32 @@ export default {
       })
     },
     // 获取系统素材分类的数据
-    * getSystemMaterialClass({payload, cb}:any,{ call, put }: any):any{
+    * getSystemMaterialClass({payload}:any,{ call, put }: any):any{
       let data = yield http({
-        url: `/visual/resource/queryTypeList`,
+        url: `/visual/resource/queryResourceTypeList?spaceId=1`,
         method: "get",
       })
-      data.map((item:any) => {
+      data.myTypes.map((item:any) => {
         item.groupId = item.type
-        if(!item.type) item.groupId = '-1'
+        item.origin = 'myresource'
       })
+      data.systemTypes.map((item:any) => {
+        item.groupId = item.type
+        item.origin = 'design'
+        if(!item.type) item.groupId = 'sysAll'
+      })
+      let result = {
+        design : data.systemTypes,
+        myresource: data.myTypes
+      }
       yield put({
         type: 'setSystemMaterialClass',
-        payload: data
+        payload: result
       })
-      cb(data)
     },
     // 获取系统素材数据
     * getSystemMaterialList({payload, cb}:any,{ call, put }: any):any{
+      console.log('调用接口')
         const data = yield http({
           url: "/visual/resource/queryResourceList",
           method: "post",
