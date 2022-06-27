@@ -119,14 +119,15 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       } else {
         setResultData(data)
       }
-      return 
+      return
     }
     try {
       const data = await http({
-        method: 'get',
+        method: 'post',
         url: '/visual/container/data/get',
-        params: {
-          id: copyData.id
+        body: {
+          id: copyData.id,
+          callBackParamValues: bar.callbackArgs
         }
       })
       if (data) {
@@ -189,10 +190,11 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
     try {
       const data = await http({
-        method: 'get',
+        method: 'post',
         url: '/visual/container/data/get',
-        params: {
-          id: copyData.id
+        body: {
+          id: copyData.id,
+          callBackParamValues: bar.callbackArgs
         }
       })
       if (data) {

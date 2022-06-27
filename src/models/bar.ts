@@ -104,9 +104,11 @@ export default {
           data = item.staticData.data
         } else {
           data = await http({
+            method: 'post',
             url: '/visual/container/data/get',
-            params: {
-              id: item.id
+            body: {
+              id: item.id,
+              callBackParamValues:bar.callbackArgs
             }
           })
         }

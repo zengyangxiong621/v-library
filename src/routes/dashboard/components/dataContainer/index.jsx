@@ -81,10 +81,11 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
         data = containerData.staticData.data
       } else {
         data = await http({
-          method: 'get',
+          method: 'post',
           url: '/visual/container/data/get',
-          params: {
+          body: {
             id: containerData.id,
+            callBackParamValues:bar.callbackArgs
           },
         })
       }
