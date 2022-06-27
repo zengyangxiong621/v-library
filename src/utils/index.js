@@ -567,3 +567,12 @@ export const findCurrentIndex = (arr) => {
   }
   return max
 }
+
+export const treeDataReverse = (treeData) => {
+  treeData = treeData?.reverse()
+  treeData?.forEach((layer) => {
+    if (COMPONENTS in layer) {
+      treeDataReverse(layer[COMPONENTS])
+    }
+  })
+}

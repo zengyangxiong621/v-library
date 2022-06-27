@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react'
 import './index.less'
 import { withRouter } from 'dva/router'
 import { connect } from 'dva'
+import { deepClone, treeDataReverse } from '@/utils'
 
 import { Spin } from 'antd'
 
@@ -21,6 +22,13 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   /**
   * description: 获取屏幕大小、缩放设置等参数
   */
+  const [layers, setLayers] = useState(deepClone(bar.treeData))
+  useEffect(() => {
+    const data = deepClone(bar.treeData)
+    treeDataReverse(data)
+    setLayers(data)
+  }, [bar.treeData])
+
   const getScreenInfo = (config: any) => {
     let map: any = {}
     config.forEach(({ displayName, value, options, width, height }: any) => {
@@ -138,7 +146,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
             >
               {
                 <RecursiveComponent
-                  layersArr={bar.treeData}
+                  layersArr={layers}
                   componentLists={bar.components}
                   bar={bar}
                   dispatch={dispatch}
