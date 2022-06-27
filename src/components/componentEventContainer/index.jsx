@@ -169,6 +169,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
   const handleValueChange = (data) => {
+    console.log('onChange',data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
@@ -382,6 +383,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
           </ScrollTable>
           : <RemoteBaseComponent
             {...props}
+            onChange={handleValueChange}
           ></RemoteBaseComponent>
       }
     </div>
