@@ -15,7 +15,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     })
   }
   const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
-  const { moduleType, moduleName, moduleVersion } = bar.components.find(item => item.id === id) || {}
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
   // 文件夹是展开了还是关闭了
@@ -147,7 +146,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     })
   }
   const isSelected = bar.key.includes(id)
+
   // 左侧图层前组件缩略图小图标
+  const { moduleType, moduleName, moduleVersion } = bar.components.find(item => item.id === id) || {}
   const imgSuffixMap = {
     hydrograph: 'gif',
   }

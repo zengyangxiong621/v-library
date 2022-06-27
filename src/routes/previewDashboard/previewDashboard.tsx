@@ -46,10 +46,9 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     const winW = window.innerWidth
     const winH = window.innerHeight
     const { width, height } = screenInfoMap['屏幕大小']
-
     const finalStyle: any = {
       background: screenInfoMap['背景'],
-      backgroundImage: screenInfoMap['背景图'] ? require(screenInfoMap['背景图']) : ''
+      backgroundImage: screenInfoMap['背景图']
     }
     // 根据缩放模式来展示
     const scaleMode = screenInfoMap['缩放设置']
