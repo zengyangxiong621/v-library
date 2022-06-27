@@ -16,7 +16,11 @@ const { Option } = Select;
 // 功能
 const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   // 空间id
-  let spaceId: any = null;
+  let spaceId: any = 1;
+  let pageParams: any = {
+    pageNo: 1,
+    pageSize: 1000,
+  }
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
@@ -24,25 +28,67 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   });
   const [inputValue, setInputValue] = useState("");
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [firstData, setFirstData] = useState({})
 
   // 获取模板列表数据的方法
-  const getDataDispatch = (finalBody: any) => {
+  const getDataDispatch = (data?: any) => {
+    console.log(data,'数据')
+    const currentClass = data.origin ? data : resourceCenter.curSelectedGroup
+    const groupId =
+      ['-1', 'sysAll'].indexOf(currentClass.groupId) > -1
+        ? null
+        : currentClass.groupId;
+    let finalBody:any = {
+      spaceId:currentClass.origin === 'myresource' ? '1' : null,
+      type: [currentClass.origin],
+      ...pageParams,
+      map: sortMap,
+    };
+    if(currentClass.origin === 'myresource'){
+      finalBody.groupId = groupId
+    }else{
+      finalBody.subType = groupId ? [groupId] : []
+    }
+    finalBody = data.origin ? finalBody : {...finalBody,...data }
     dispatch({
       type: "resourceCenter/getRightLists",
-      payload: { type: ["design"], map: sortMap, ...finalBody }
+      payload: finalBody
     });
   };
 
+  /**
+   * description:  刷新左侧列表
+   */
+  const refreshGroupLists = () => {
+     dispatch({
+      type: "resourceCenter/getGroupTree",
+      payload: {
+        spaceId
+      },
+      cb: (data:any) => {
+        // 默认选中第一个数据
+        const first = data[0].children[0].children[0]
+        // 设置左侧第一个
+        dispatch({
+          type: "resourceCenter/resetModel",
+          payload: {
+            curSelectedGroup: first,
+            curSelectedGroupName: first.name
+          }
+        });
+        let finalBody = {
+          spaceId: first.origin === 'myresource' ? '1' : null,
+          groupId: first.groupId === '-1' ? null : first.groupId, // 系统素材下不传
+          type: [first.origin]
+        };
+        getDataDispatch(finalBody)
+      }
+    });
+  };
   // 页面初始化- 请求模板列表数据
   useEffect(() => {
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId,
-      // groupId: null, // 系统素材下不传
-      subType: []
-    };
-    getDataDispatch(finalBody);
+    // 先获取左侧数据
+    refreshGroupLists()
   }, []);
 
   // 搜索框的值改变
@@ -55,16 +101,8 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   };
   // 搜索应用
   const search = (value: string) => {
-    const groupId =
-      resourceCenter.curSelectedGroup[0] === "-1"
-        ? null
-        : resourceCenter.curSelectedGroup[0];
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId,
+    let finalBody:any = {
       name: value,
-      subType: groupId ? [groupId] : []
     };
     getDataDispatch(finalBody);
   };
@@ -73,17 +111,9 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
     const newSortMap = {
       [value]: false
     };
-    const groupId =
-      resourceCenter.curSelectedGroup[0] === "-1"
-        ? null
-        : resourceCenter.curSelectedGroup[0];
     setSortMap(newSortMap);
     // 选择新标准后，需要发送一次请求
     const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId,
-      subType: groupId ? [groupId] : [],
       map: newSortMap
     };
     getDataDispatch(finalBody);
@@ -91,25 +121,15 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   /**
    * description:  刷新左侧分组列表和右侧应用列表
    */
-  const refreshList = () => {
-    const transformId =
-      resourceCenter.curSelectedGroup[0] === "-1"
-        ? null
-        : resourceCenter.curSelectedGroup[0];
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId,
-      subType: transformId ? [transformId] : []
-    };
-    getDataDispatch(finalBody);
-    dispatch({
-      type: "resourceCenter/getGroupTree",
-      payload: {
-        spaceId
-      }
-    });
-  };
+  // const refreshList = () => {
+  //   getDataDispatch();
+  //   dispatch({
+  //     type: "resourceCenter/getGroupTree",
+  //     payload: {
+  //       spaceId
+  //     }
+  //   });
+  // };
   const handleUpload = () => {
     setUploadVisible(true);
   };
@@ -123,6 +143,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         <LeftTree
           clearSearchInputState={clearSearchInputState}
           getDataDispatch={getDataDispatch}
+          refreshGroupLists={refreshGroupLists}
         />
       </div>
       <div className="right">
@@ -160,14 +181,14 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           </div>
         </div>
         {/* 右侧 */}
-        <RightContent listData={resourceCenter.rightLists} refreshList={refreshList} />
+        <RightContent listData={resourceCenter.rightLists} refreshList={refreshGroupLists} />
         {/* 上传素材 */}
         {resourceCenter.groupList.length > 0 && uploadVisible && (
           <UploadFile
             uploadVisible={uploadVisible}
             groupList={resourceCenter.groupList[0].children}
             changeShowState={changeShowState}
-            refreshList={refreshList}
+            refreshList={refreshGroupLists}
           ></UploadFile>
         )}
       </div>
