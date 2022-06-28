@@ -161,6 +161,12 @@ const ComponentDefaultConfig = {
           "value": 5
         },
         {
+          "name": "isScroll",
+          "displayName": "是否轮播",
+          "type": "switch",
+          "value": true
+        },
+        {
           "name": "waitTime",
           "displayName": "轮播间隔",
           "type": "input",
