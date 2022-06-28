@@ -108,20 +108,20 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       case '1':
         finalStyle.width = '100vw'
         finalStyle.height = '100vh'
-        console.log('winWWWW', winW);
-        const wRatio2 = width / winW
-        const hRatio2 = height / winH
+        const wRatio2 =  winW / width
+        const hRatio2 =  winH / height
         setScreenWidthRatio(wRatio2)
-        console.log('******', winW / width, wRatio2);
         setScreenHeightRatio(hRatio2)
-        finalStyle.transform = `scale(${scaleValue})`
+        // finalStyle.transform = `scale(${scaleValue})`
+        finalStyle.overflow = 'hidden'
         break;
       case '2':
         // const finalW = winW > width ? width : '100vw'
         // const finalH = winH > height ? height : '100vh'
         const finalW = '100vw'
         const finalH = '100vh'
-        setScreenWidthRatio(winW / width)
+        setScreenWidthRatio(width / winW)
+        setScreenHeightRatio(height / winH)
         setOverflowStyle({
           width: finalW,
           height: finalH,

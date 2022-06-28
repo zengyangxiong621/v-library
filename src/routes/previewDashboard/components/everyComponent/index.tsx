@@ -42,12 +42,12 @@ const EveryComponent = ({ componentData, comData, scaleValue, screenWidthRatio, 
     if (['X轴坐标', '宽度'].includes(item.displayName)) {
       return {
         ...item,
-        value: ~~(screenWidthRatio * item.value)
+        value: ~~(screenWidthRatio.toFixed(3) * item.value)
       }
     } else if (['Y轴坐标', '高度'].includes(item.displayName)) {
       return {
         ...item,
-        value: ~~(screenHeightRatio.toFixed(2) * item.value)
+        value: ~~(screenHeightRatio.toFixed(3) * item.value)
       }
     }
     return item
