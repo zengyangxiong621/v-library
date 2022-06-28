@@ -54,6 +54,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
   const [tableData, setTableData] = useState([])
   const [comData, setComData] = useState('')
   const [comDataType, setComDataType] = useState('--')
+  const [refreshKey,setRefreshKey] = useState(uuidv4())
 
   // 监听组件的数据变化，设置popover的弹框table及数据
   useEffect(() => {
@@ -290,6 +291,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
       return rest
     })
     props.confirm(emitConds)
+    setRefreshKey(uuidv4())
   }
 
   const editorDidMountHandle = (editor, monaco) => {
@@ -347,7 +349,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
           </Radio.Group>
         </Form.Item>
         <Button ghost type="primary" style={{ width: '100%', marginBottom: '16px' }} onClick={addConditon}>添加条件</Button>
-        <React.Fragment key={expandKey}>
+        <React.Fragment key={refreshKey}>
           {conditions.map((item) => {
             return (
               <Collapse
