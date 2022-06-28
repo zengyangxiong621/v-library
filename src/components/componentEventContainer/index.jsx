@@ -1,8 +1,9 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
-import DateSelect from '@/components/timeSelect'
+import TimeSelect from '@/components/timeSelect'
 import ScrollTable from '@/components/scrollTable'
+import Tab from '@/components/tab'
 import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
@@ -18,7 +19,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   })
   const componentRef = useRef(null)
   const [opacityStyle, setOpacityStyle] = useState({opacity: 1})
-  const opacityTimeId = useRef('')
+  const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
   // 点击
   const handleClick = debounce((e) => {
@@ -27,6 +28,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (clickActions.length === 0) {
       return
     }
+    console.log('clickActions', clickActions)
     setClickTimes(1)
     customEventsFunction(clickEvents)
   }, 300)
@@ -50,6 +52,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   })
 
   const customEventsFunction = (events, e) => {
+    console.log('events', events)
     events.forEach((item) => {
       const conditions = item.conditions
       const conditionType = item.conditionType
@@ -110,22 +113,26 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       if (conditions.length > 0) {
         isAllowAction = Array.prototype[conditionTypeValue === 'all' ? 'every' : 'some'].call(conditions, conditionJudgeFunc)
       }
+      console.log('isAllowAction', isAllowAction)
       if (!isAllowAction) {
         return
       }
 
       item.actions.forEach(action => {
-        const type = action.action
+
         const animation = action.animation
         const delay = animation.delay
         setTimeout(() => {
           action.component.forEach(id => {
             const dom = document.querySelector(`.event-id-${id}`)
+            console.log('dom', dom)
             dom.style.transition = `transform ${animation.duration}ms ${animation.timingFunction} 0s`
             Object.keys(action).filter(
               (key) => !['id', 'name', 'trigger', 'unmount', 'componentScope', 'component', 'action'].includes(key)
             ).forEach((key) => {
-              actionConfigFuncList[key](action[key], type, dom, action.id)
+              console.log('---------------')
+              console.log('actionType', action)
+              actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
             })
           })
         }, delay)
@@ -169,7 +176,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
   const handleValueChange = (data) => {
-    console.log('onChange',data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
@@ -227,8 +233,10 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
 
-  const animation = ({duration, timingFunction, type}, action, dom, id) => {
-    if (['show', 'hide'].includes(action)) {
+  const animation = ({duration, timingFunction, type}, actionType, dom, actionId, action, componentId) => {
+    console.log('action', action)
+    console.log('actionType', actionType)
+    if (['show', 'hide'].includes(actionType)) {
       // transform = 'translateY(200px)'
       let translate = {
         x: 0,
@@ -269,26 +277,36 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       } else {
         dom.style.transform += `translateY(${translate.y}px)`
       }
-
-
-      opacityTimeId.current = id
-      let timer = setInterval(() => {
-        // 在一个时间端内，只存在一种事件
-        if (opacityTimeId.current !== id) {
-          clearInterval(timer)
-        }
-        if (action === 'show') {
+      let timer = null
+      const index = opacityTimeIds.current.indexOf(componentId)
+      // if (index !== -1) {
+      //   // 说明存在
+      //   clearInterval(timer)
+      //   console.log('清除了不')
+      //   opacityTimeIds.current.splice(index, 1)
+      // } else {
+      //   opacityTimeIds.current.push(componentId)
+      // }
+      console.log('重新开始')
+      timer = setInterval(() => {
+        // 在一个时间段内，只存在一种事件
+        if (actionType === 'show') {
           if (dom.style.opacity >= 1) {
             dom.style.opacity = 1
             clearInterval(timer)
+            const index = opacityTimeIds.current.indexOf(componentId)
+            opacityTimeIds.current.splice(index, 1)
           } else {
+            console.log('dom.style.opacity', dom.style.opacity)
             dom.style.opacity = Number(dom.style.opacity) + 0.01
           }
         }
-        if (action === 'hide') {
+        if (actionType === 'hide') {
           if (dom.style.opacity <= 0) {
             dom.style.opacity = 0
             clearInterval(timer)
+            const index = opacityTimeIds.current.indexOf(componentId)
+            opacityTimeIds.current.splice(index, 1)
           } else {
             dom.style.opacity = Number(dom.style.opacity) - 0.01
           }
@@ -365,6 +383,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   return (
     <div
+      key={id}
       ref={componentRef}
       className={`single-component event-id-${id}`}
       onClick={handleClick}
@@ -381,6 +400,18 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
             {...props}
           >
           </ScrollTable>
+          : props.componentConfig.moduleName === 'tab' ?
+          <Tab
+            onChange={handleValueChange}
+            {...props}
+          >
+          </Tab>
+          : props.componentConfig.moduleName === 'timeSelect' ?
+          <TimeSelect
+            onChange={handleValueChange}
+            {...props}
+          >
+          </TimeSelect>
           : <RemoteBaseComponent
             {...props}
             onChange={handleValueChange}

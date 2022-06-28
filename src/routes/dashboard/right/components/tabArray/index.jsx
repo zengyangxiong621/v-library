@@ -41,10 +41,12 @@ const TabArray = props => {
         value: []
        */
       console.log('type', type)
+
       if (type === 'add') {
         const tabValue = tabs.find(tab => tab.key === activeKey)
         const copyValue = deepClone(tabValue)
-        copyValue.name = '列' + tabs.length + 1
+        const unit = copyValue.displayName.replace(/\d/,'')
+        copyValue.displayName = unit +( tabs.length + 1)
         copyValue.key = String(tabs.length + 1)
         tabs.push(copyValue)
       }
@@ -54,7 +56,8 @@ const TabArray = props => {
         setActiveKey(String(index - 1 > 1 ? index - 1 : 1))
       }
       tabs.forEach((tab, index) => {
-        tab.name = '列' + (index + 1)
+        const unit = tab.displayName.replace(/\d/,'')
+        tab.displayName = unit + (index + 1)
         tab.key = String(index + 1)
       })
       props.onChange()
@@ -79,7 +82,7 @@ const TabArray = props => {
         <Tabs defaultActiveKey={activeKey} onTabClick={handleTabClick}>
           {
             tabs.map(tab => (
-              <TabPane tab={tab.name} key={tab.key} style={{paddingTop: 16}} >
+              <TabPane tab={tab.displayName} key={tab.key} style={{paddingTop: 16}} >
                 {
                   tab.value.map((item, index) => {
                     if (!(item.type && componentLib[item.type])) {
