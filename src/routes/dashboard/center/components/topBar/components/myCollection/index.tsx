@@ -8,7 +8,6 @@ const Charts = (props: any) => {
   // const { data } = props
   const [active, setActive] = useState('sjsc')
   const liHover = (key: string) => {
-    console.log(key);
     setActive(key)
   }
   return (

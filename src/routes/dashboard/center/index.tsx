@@ -30,7 +30,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)// let supportLinesRef: any = useRef(// null)
   const [ rulerCanvasSpacing, setRulerCanvasSpacing ] = useState({ left: 22, top: 22 })
   const [layers, setLayers] = useState(deepClone(bar.treeData))
-
   useEffect(() => {
     const data = deepClone(bar.treeData)
     treeDataReverse(data)
@@ -200,7 +199,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     setIsShowRightMenu(false)
   }, [ document.querySelector('.left-wrap-tree'), document.querySelector('.left-wrap-toolbar'), document.querySelector('.left-wrap>.header'), document.querySelector('.left-menu>.footer'), document.querySelector('.right-wrap'), document.getElementById('draggable-container') ])
   const handleContextMenu = (event: MouseEvent) => {
-    console.log('event', event.target)
     const dom = event.target as HTMLElement
     setIsShowRightMenu(true)
     if(dom.dataset?.id) {

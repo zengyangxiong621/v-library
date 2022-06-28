@@ -27,7 +27,6 @@ const CodeEditor = props => {
   }, 300)
 
   const onBlur = (e) => {
-    console.log('onBlur', e)
     if(hasEditFlag){
       _data.value = content
       props.onChange()

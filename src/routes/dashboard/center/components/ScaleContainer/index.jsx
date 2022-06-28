@@ -26,19 +26,13 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
     onScaleEnd(x, y, width, height)
   }
   const handleMouseDown = (ev) => {
-    console.log('缩放mouseDown')
     const lastScaleDragData = deepClone(bar.scaleDragData)
     const obj = ev.target
     const oEv = ev
     oEv.stopPropagation()
     const oldWidth = boxRef.current.offsetWidth
     const oldHeight = boxRef.current.offsetHeight
-    console.log('-----------------------')
-    console.log('boxRef')
 
-    console.log('elementX', elementX.current)
-    console.log('boxRef', boxRef.current.offsetTop)
-    console.log('-----------------------')
     // const oldX = boxRef.current.getBoundingClientRect().x
     // const oldY = boxRef.current.getBoundingClientRect().y
     // const oldX = oEv.clientX
@@ -51,7 +45,6 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
     const currentY = bar.scaleDragData.position.y
 
     document.onmousemove = function (ev) {
-      console.log('缩放mouseMove')
       ev.stopPropagation()
       const oEv = ev
       let disY = (oldTop + (oEv.clientY - oldY)),
@@ -84,8 +77,6 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         // console.log('clientX', clientX)
         // console.log('xBoundary', xBoundary)
         // console.log('---------------------')
-        console.log('clientY', clientY)
-        console.log('yBoundary', yBoundary)
         const xMoveLength = Math.abs((clientX.current - oldX) / bar.canvasScaleValue)
         const yMoveLength = Math.abs((clientY.current - oldY) / bar.canvasScaleValue)
         if (clientX.current <= xBoundary) {
@@ -108,8 +99,6 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
             bar.scaleDragData.position.y = currentY + yMoveLength
           }
         }
-        console.log('height', bar.scaleDragData.style.height)
-        console.log('---------------------')
 
       } else if (obj.className === 'bl') {
         if (clientX.current >= xBoundary) {
@@ -205,7 +194,6 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
 
     document.onmouseup = function (e) {
       e.stopPropagation()
-      console.log('缩放mouseUp')
       if (['tl', 'r', 'l', 'b', 't', 'br', 'tr', 'bl', 'tl', 'tc', 'bc', 'lc', 'rc'].includes(obj.className)) {
         // bar.scaleDragData.position.x = Math.ceil(bar.scaleDragData.position.x)
         // bar.scaleDragData.position.y = Math.ceil(bar.scaleDragData.position.y)

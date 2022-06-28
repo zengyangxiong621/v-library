@@ -58,7 +58,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         [key: string]: number
       } = {}
       document.onmousemove = (ev: Event) => {
-        console.log('选区mouseMove')
         // 移动的时候让选区显示出来
         e.preventDefault()
         isMouseMove = true
@@ -123,7 +122,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
 
       }
       document.onmouseup = (e) => {
-        console.log('选区mouseUp')
         hide()
         const selectedIds: Array<string> = []
         let b1 = areaPosition.y + areaPosition.height

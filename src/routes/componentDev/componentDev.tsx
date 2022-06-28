@@ -330,7 +330,6 @@ const ComponentDev = (props: any) => {
   ];
   // 多选
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {

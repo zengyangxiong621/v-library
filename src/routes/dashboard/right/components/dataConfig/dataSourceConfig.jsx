@@ -212,21 +212,17 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
 
   // csv,json,excel,postgresql,mysql，es 数据源选择回调
   const dataSourceChange = (data) => {
-    console.log('data', data)
     saveDataSource('data_id', data)
   }
 
   const sqlDataChange = () => {
-    console.log('sqlData', sqlData)
     saveDataSource('sql', sqlData)
   }
 
   const esDataChange = () => {
-    console.log('esData', esData)
     try {
       JSON.parse(esData.value)
     } catch (err) {
-      console.log('err', err)
       message.error('格式错误')
       return
     }

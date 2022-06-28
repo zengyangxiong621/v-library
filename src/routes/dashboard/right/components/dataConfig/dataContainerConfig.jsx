@@ -34,9 +34,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
   }
 
   useEffect(() => {
-    console.log('寄')
     if (dataContainerIds.length === 0) {
-      console.log('为0为0')
       handleTabClick(null)
     }
   }, [dataContainerIds])
@@ -145,7 +143,6 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
       setResultData({ ...resultData, value: JSON.stringify(data, null, 2) })
       setTabValue(item.id)
     } else {
-      console.log('哈哈哈哈哈哈哈哈哈哈哈哈')
       setResultData(resultCodeData)
     }
   }

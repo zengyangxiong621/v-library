@@ -24,7 +24,6 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
   const [inputValue, setInputValue] = useState('')
   const [filterDataList, setFilterDataList] = useState(bar.dataContainerList)
   useEffect(() => {
-    console.log('222222222222222', bar.dataContainerList)
     setFilterDataList(bar.dataContainerList)
   }, [bar.dataContainerList.length, bar.dataContainerList])
   const showDrawer = () => {

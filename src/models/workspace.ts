@@ -16,11 +16,9 @@ export default {
   reducers: {
     // 值为基础类型的Key 更新状态的方法
     setBaseTypeKey(state: any, { payload }: { payload: TStingIndex }) {
-      // console.log("pppp", payload);
       return { ...state, ...payload };
     },
     setMemberList(state: any, { payload }: any) {
-      console.log("hhhh", payload);
       return { ...state, memberList: payload };
     },
     setWorkSpaceList(state: any, { payload }: any) {

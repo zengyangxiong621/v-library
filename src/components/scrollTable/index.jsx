@@ -1,17 +1,35 @@
 import {useRef, useEffect, useState} from 'react';
-import {componentDefaultConfig} from './config'
+import ComponentDefaultConfig from './config'
 import ScrollBoard from '@jiaminghi/data-view-react/es/scrollBoard'
 import ReactDOM from "react-dom";
 
+const getFields = (componentConfig = {}) => {
+  const dataType = componentConfig.dataType
+  let fields = null
+  if (dataType === 'static' || !dataType) {
+    fields = componentConfig.staticData?.fields || []
+  } else {
+    if (componentConfig.dataConfig[dataType] && componentConfig.dataConfig[dataType].fields) {
+      fields = componentConfig.dataConfig[dataType].fields
+    } else {
+      fields = componentConfig.staticData.fields
+    }
+  }
+  return fields
+}
+
 const ScrollTable = (props) => {
-  const {fields, comData} = props
+  const comData = props.comData || ComponentDefaultConfig.staticData.data
   const [oddRowBGC, setOddRowBGC] = useState('#2a2d3c')
   const [evenRowBGC, setEvenRowBGC] = useState('#222430')
   const [indexHeader, setIndexHeader] = useState('#')
   const [align, setAlign] = useState([])
   const [waitTime, setWaitTime] = useState(5000)
   const [carousel, setCarousel] = useState('page')
+  const [tableData, setTableData] = useState([])
+  const [header, setHeader] = useState([])
   const componentConfig = props.componentConfig || componentDefaultConfig
+  const fields = getFields(componentConfig)
   const {config, staticData} = componentConfig
 
   const allGlobalConfig = config.find(item => item.name === "allGlobal").value
@@ -34,10 +52,9 @@ const ScrollTable = (props) => {
   }, [])
 
   useEffect(() => {
-    console.log('11')
     // 重新计算大小
     tableRef.current.setWH()
-  }, [width, height])
+  }, [width, height, customColumnConfig])
 
   useEffect(() => {
     setWaitTime(waitTimeConfig)
@@ -82,7 +99,6 @@ const ScrollTable = (props) => {
     const oddBgColor = rowConfig.find(item => item.name === "oddBgColor").value
     setEvenRowBGC(evenBgColor)
     setOddRowBGC(oddBgColor)
-    console.log('rowConfig', rowConfig)
 
   }, [tableRowConfig])
 
@@ -101,7 +117,6 @@ const ScrollTable = (props) => {
   }, [tableIndexConfig])
 
   useEffect(() => {
-    console.log('animationConfig', tableAnimationConfig)
     const animationModel = tableAnimationConfig.find(item => item.name === "animationModel").value
     setCarousel(animationModel)
   }, [tableAnimationConfig])
@@ -115,31 +130,69 @@ const ScrollTable = (props) => {
       }, {}))
     }, [])
   }
-  // 结构: [{fieldName: 'column1', displayName: '销售地区'}]
-  const mappingConfig = getMapping(customColumnConfig)
-  // 结构: ['销售地区', '完成率', '完成情况']
-  const header = mappingConfig.map(item => item.displayName)
-  // 结构: {column1: 0, column2: 1, column3: 2}
-  const columnEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
-    console.log('cur', cur)
-    pre[cur] = index
-    return pre
-  }, {})
-  //结构:[['北京', '80%', '达标']]
-  const tableData = comData.reduce((pre, cur) => {
-    const arr = []
-    Object.keys(cur).filter(key => key !== "isSticked" && key !== "isSelected").forEach(key => {
-      arr[columnEnum[key]] = cur[key]
+
+  useEffect(() => {
+    const mappingConfig = getMapping(customColumnConfig)
+    const header = mappingConfig.map(item => item.displayName)
+    setHeader(header)
+    let columnEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
+      pre[cur.value] = Number(cur.name.replace(/[^0-9]/ig, "")) - 1
+      return pre
+    }, {})
+    columnEnum = {...columnEnum, column1: 0, column2: 1, column3: 2}
+    let mappingEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
+      pre[cur.name] = cur.value
+      return pre
+    }, {})
+    let tableValue = []
+    comData.forEach((data, index) => {
+      let arr = []
+      mappingConfig.forEach((mapp, index) => {
+        if (mappingEnum[mapp.filedName]) {
+          arr[index] = data[mappingEnum[mapp.filedName]]
+        } else {
+          arr[index] = data[mapp.filedName]
+        }
+      })
+      tableValue.push(arr)
     })
-    pre.push(arr)
-    return pre
-  }, [])
+    setTableData(tableValue)
+  },[])
+
+  useEffect(() => {
+    const mappingConfig = getMapping(customColumnConfig)
+    const header = mappingConfig.map(item => item.displayName)
+    setHeader(header)
+    let columnEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
+      pre[cur.value] = Number(cur.name.replace(/[^0-9]/ig, "")) - 1
+      return pre
+    }, {})
+    columnEnum = {...columnEnum, column1: 0, column2: 1, column3: 2}
+    let mappingEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
+      pre[cur.name] = cur.value
+      return pre
+    }, {})
+    let tableValue = []
+    comData.forEach((data, index) => {
+      let arr = []
+      mappingConfig.forEach((mapp, index) => {
+        if (mappingEnum[mapp.filedName]) {
+          arr[index] = data[mappingEnum[mapp.filedName]]
+        } else {
+          arr[index] = data[mapp.filedName]
+        }
+      })
+      tableValue.push(arr)
+    })
+    setTableData(tableValue)
+  }, [customColumnConfig])
+
 
   const tableConfig = {
     header,
     data: tableData,
     waitTime,
-    index: true,
+    // index: true,
     hoverPause: true,
     headerBGC: '#222430', // 头部背景色
     oddRowBGC, // 奇数行背景色
@@ -156,5 +209,8 @@ const ScrollTable = (props) => {
   )
 
 }
-
+export {
+  ComponentDefaultConfig,
+  ScrollTable
+}
 export default ScrollTable

@@ -49,11 +49,9 @@ const EditTable = props => {
   }
 
   const modalDataChange = data => {
-    console.log(data)
   }
 
   const handleOk = () => {
-    console.log(content)
     setFullScreen(false)
     // TODO 调用接口保存
     // props.onChange()

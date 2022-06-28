@@ -1,4 +1,4 @@
-export const componentDefaultConfig = {
+const ComponentDefaultConfig = {
   "id": "121",
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b",
   "name": "轮播表格",
@@ -166,12 +166,6 @@ export const componentDefaultConfig = {
           "type": "input",
           "value": 5000
         },
-        // {
-        //   "name": "isSwipper",
-        //   "displayName": "是否轮播",
-        //   "type": "checkBox",
-        //   "value": true
-        // },
         {
           "name": "fontFamily",
           "displayName": "字体",
@@ -225,15 +219,15 @@ export const componentDefaultConfig = {
         },
         {
           "name": "scrollInterval",
-          "displayName": "轮播间隔（秒）",
+          "displayName": "轮播间隔",
           "type": "number",
           "config": {
             "min": 0,
-            "max": 24,
-            "step": 1,
-            "suffix": "秒"
+            "max": 24000,
+            "step": 1000,
+            "suffix": "ms"
           },
-          "value": 5
+          "value": 5000
         }
       ]
     },
@@ -357,12 +351,6 @@ export const componentDefaultConfig = {
           "displayName": "偶行背景色",
           "value": "#2a2d3c",
           "type": "color"
-        },
-        {
-          "name": "callbackArg",
-          "displayName": "回调字段",
-          "value": "",
-          "type": "input"
         }
       ]
     },
@@ -471,7 +459,7 @@ export const componentDefaultConfig = {
             {
               "displayName": "映射",
               "name": "mapping",
-              "type": "inputNumber2",
+              "type": "input2",
               "value": [
                 {
                   "displayName": "字段名",
@@ -498,7 +486,7 @@ export const componentDefaultConfig = {
             {
               "displayName": "映射",
               "name": "mapping",
-              "type": "inputNumber2",
+              "type": "input2",
               "value": [
                 {
                   "displayName": "字段名",
@@ -525,7 +513,7 @@ export const componentDefaultConfig = {
             {
               "displayName": "映射",
               "name": "mapping",
-              "type": "inputNumber2",
+              "type": "input2",
               "value": [
                 {
                   "displayName": "字段名",
@@ -563,4 +551,4 @@ export const componentDefaultConfig = {
 }
 
 
-export const defaultTableHeaderConfig = {}
+export default ComponentDefaultConfig

@@ -168,7 +168,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   }
 
   const filterBoxChange = async (e) => {
-    console.log('dataType', _data.dataType)
     await http({
       url: '/visual/module/updateDatasource',
       method: 'post',

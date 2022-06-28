@@ -140,7 +140,6 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   ]
 
   useEffect(() => {
-    console.log('bar', bar)
     setTabpanes(_data.events || [])
     if (_data?.events.length) {
       setActiveTab(_data.events[0].id)
@@ -264,7 +263,6 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
 
   // 事件类型
   const eventTypeChange = (e, pane) => {
-    console.log('e', e, pane)
     pane.trigger = e
     _data.events = tabpanes
     props.onChange()
@@ -281,7 +279,6 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   }
 
   const setCondition = (val) => {
-    console.log('setCondition', val)
     const curPane = tabpanes.find(item => {
       return item.id === activeTab
     })
@@ -391,7 +388,6 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     props.onChange()
   }
   const selectComponentChange = (val, action) => {
-    console.log('val', val)
     action.component = val
     _data.events = tabpanes
     props.onChange()

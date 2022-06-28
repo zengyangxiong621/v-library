@@ -116,7 +116,6 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
   }, [props.data])
 
   useEffect(() => {
-    console.log('props.expandKey', props.expandKey)
     setExpandKey(props.expandKey)
   }, [props.expandKey])
 

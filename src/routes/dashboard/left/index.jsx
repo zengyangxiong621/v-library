@@ -122,7 +122,6 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   // 获取点击的icon
   const getActiveIcon = (icon) => {
-    console.log('icon', icon)
     let finalPayload = {
       dashboardId: bar.dashboardId,
     }
@@ -168,7 +167,6 @@ const Left = ({ dispatch, bar, operate }) => {
         break
     }
     activeIconRef.current = icon
-    console.log('icon', icon)
     dispatch({
       type: `bar/${icon}`,
       payload: finalPayload,
@@ -223,7 +221,6 @@ const Left = ({ dispatch, bar, operate }) => {
     // 否则，重置已选中节点 并 单选中当前节点以及展开右键菜单
     let t = []
     if (selected.length && selected.includes(key)) {
-      console.log('sssss', selected);
       t = selected
       // dispatch({
       //   type: 'bar/save',
@@ -256,7 +253,6 @@ const Left = ({ dispatch, bar, operate }) => {
   }
   //
   const onDrop = info => {
-    console.log('info', info)
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
     const dropPos = info.node.pos.split('-')

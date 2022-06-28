@@ -34,7 +34,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
 
   const styleChange = debounce(() => {
-    console.log('style change', componentConfig)
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig
@@ -146,7 +145,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const interactionChange = debounce(() => {
-    console.log('interaction change', interactionConfig)
     componentConfig.interaction.mountAnimation = interactionConfig.mountAnimation
     dispatch({
       type: 'bar/setComponentConfig',
@@ -196,7 +194,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
 
   const callbackArgChange = () => {
-    console.log('callbackArg change', componentConfig)
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig

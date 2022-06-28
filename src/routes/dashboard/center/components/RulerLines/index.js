@@ -9,7 +9,6 @@ const RulerLines = ({ bar, dispatch }) => {
 
   }, [])
   const handleDragStop = (event, line, index) => {
-    console.log('-----------------------')
     if (line.direction === 'horizon') {
       // 竖
       if (event.clientX < document.querySelector('.home-left-wrap').getBoundingClientRect().width + 22) {

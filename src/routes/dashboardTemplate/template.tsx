@@ -41,7 +41,6 @@ const DashboardTemplate = (props: any) => {
   }
   // 搜索
   const search = (e: any) => {
-    console.log('模板页面的搜索');
   }
   const backClick = () => {
     history.back()

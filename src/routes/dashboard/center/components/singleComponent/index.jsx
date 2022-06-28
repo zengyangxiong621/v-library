@@ -31,7 +31,6 @@ const SingleComponent = ({events = [], ...props}) => {
           ...actionConfigFuncList[key](scaleAction[key], 'scale')
         }), {}
       )
-      console.log('animationConfig', animationConfig)
       setTimeout(() => {
         setAnimationConfig(animationConfig)
       }, delay)
@@ -48,7 +47,6 @@ const SingleComponent = ({events = [], ...props}) => {
           ...actionConfigFuncList[key](translateAction[key], 'translate')
         }), {}
       )
-      console.log('animationConfig', animationConfig)
       setTimeout(() => {
         setAnimationConfig(animationConfig)
       }, delay)

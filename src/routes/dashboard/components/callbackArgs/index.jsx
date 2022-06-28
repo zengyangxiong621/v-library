@@ -53,7 +53,6 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
   const [dataList, setDataList] = useState([])
 
   useEffect(() => {
-    console.log('props.visible', props.visible)
     if (props.visible) {
       getDataList()
     }

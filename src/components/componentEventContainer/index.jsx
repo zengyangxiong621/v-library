@@ -2,6 +2,7 @@ import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
 import DateSelect from '@/components/timeSelect'
+import ScrollTable from '@/components/scrollTable'
 import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
@@ -36,7 +37,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (mouseEnterActions.length === 0) {
       return
     }
-    console.log('mouseEnterEvents', mouseEnterEvents)
     customEventsFunction(mouseEnterEvents, e)
   })
   // 移出
@@ -46,7 +46,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (mouseOutActions.length === 0) {
       return
     }
-    console.log('mouseOutEvents', mouseOutEvents)
     customEventsFunction(mouseOutEvents, e)
   })
 
@@ -170,20 +169,14 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
   const handleValueChange = (data) => {
+    console.log('onChange',data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
-    console.log('-------------------')
-    console.log('data', data)
-    console.log('callbackArgs', component.callbackArgs)
-    console.log('callbackParamsList', callbackParamsList)
-    console.log('---------------')
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
-    console.log('compCallbackArgs', compCallbackArgs)
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
     const sourceCallbackList = callbackParamsList.filter(item => item.sourceModules.find(jtem => jtem.id === componentId))
-    console.log('sourceCallbackList', sourceCallbackList)
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
@@ -203,7 +196,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
                   callbackArgs[callback.target] = data[callback.origin]
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
                 }
-                console.log('callbackArgs', callbackArgs)
                 dispatch({
                   type: 'bar/save',
                   payload: {
@@ -217,8 +209,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       })
     })
     if (temp) {
-      console.log('bar', bar.callbackArgs)
-      console.log('值被修改了')
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
       // 重新获取部分组件的数据
@@ -385,14 +375,15 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         {...props}
       ></RemoteBaseComponent>     */}
       {
-        props.componentConfig.moduleName === 'timeSelect' ?
-          <DateSelect
+        props.componentConfig.moduleName === 'scrollTable' ?
+          <ScrollTable
             onChange={handleValueChange}
             {...props}
           >
-          </DateSelect>
+          </ScrollTable>
           : <RemoteBaseComponent
             {...props}
+            onChange={handleValueChange}
           ></RemoteBaseComponent>
       }
     </div>
