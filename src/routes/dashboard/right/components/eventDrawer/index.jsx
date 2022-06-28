@@ -182,7 +182,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     } else {
       const id = uuidv4()
       conds.push({
-        name: "条件",
+        name: `条件${conds.length+1}`,
         type: "field",
         field: "",
         compare: "==",
