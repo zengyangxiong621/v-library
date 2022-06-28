@@ -294,8 +294,8 @@ const ComponentDev = (props: any) => {
               : <Button type='text' className='buttonBlue' onClickCapture={() => handleOn(record)}>上架</Button>
             }
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
-            <Button type='text' disabled={ !(record.appName?.length>0) } 
-                    className={ record.appName?.length>0?'buttonBlue':'buttonGray' }  
+            <Button type='text' disabled={ record.appName?.length>0 } 
+                    className={ record.appName?.length>0?'buttonGray':'buttonBlue' }  
                     onClickCapture={() => handleDelete(record.id)}
                     >删除</Button>
           </Space>
@@ -306,7 +306,6 @@ const ComponentDev = (props: any) => {
   ];
   // 多选
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {

@@ -35,6 +35,8 @@ import {
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
+import ScrollTable from "@/components/scrollTable";
+import Tab from "@/components/tab";
 
 
 enum STYLE_ENUM {
@@ -76,7 +78,6 @@ const CustomDraggable
      * @return void
      */
     const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-      console.log('dragStart', layer)
       setStartPosition({
         x: data.x,
         y: data.y,
@@ -381,15 +382,12 @@ const CustomDraggable
     const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
       clearTimeout(clickTimer.current)
       clickTimer.current = setTimeout(() => {
-        console.log('单击')
       }, 400)
       localStorage.removeItem('dblComponentTimes')
       e.stopPropagation()
     }
     const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
-      console.log('当前的次数', currentTimes.current)
       clearTimeout(clickTimer.current)
-      console.log('双击')
       const dblComponentTimes = localStorage.getItem('dblComponentTimes')
       if (!currentTimes) {
         currentTimes.current = 1
@@ -556,7 +554,6 @@ const CustomDraggable
                 }
 
                 events = component.events
-                console.log('events', events)
               }
             }
             return (
@@ -624,6 +621,20 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
+                            layer.moduleName === 'scrollTable' ?
+                              <ScrollTable
+                                componentConfig={component}
+                                fields={getFields(component)}
+                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                              >
+                              </ScrollTable> :
+                              layer.moduleName === 'tab' ?
+                              <Tab
+                                componentConfig={component}
+                                fields={getFields(component)}
+                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                              >
+                              </Tab> :
                             <RemoteBaseComponent
                               componentConfig={component}
                               fields={getFields(component)}
@@ -633,7 +644,7 @@ const CustomDraggable
                         </div>
                       </>
                   }
-                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
+                  {/*<div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />*/}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span

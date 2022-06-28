@@ -83,7 +83,6 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState }: any) => 
     // 如果是取消选择直接中止
     if (!e.selected) return
     const { node } = e
-    console.log('node', node);
     if (node.key === 'aInput' || node.key === 'wrap' || node.name === '占位的input' || node.name === '应用列表') {
       return
     }

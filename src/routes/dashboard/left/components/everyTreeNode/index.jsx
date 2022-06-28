@@ -14,8 +14,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
       payload
     })
   }
-  const { name, id, modules, moduleType, moduleVersion, moduleName, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
-  console.log('_++++++++++++++++++++++++++++++++++', restProps);
+  const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
   // 文件夹是展开了还是关闭了
@@ -147,8 +146,15 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     })
   }
   const isSelected = bar.key.includes(id)
+
   // 左侧图层前组件缩略图小图标
-  const photoPath = `${window.CONFIG.COMP_URL}/${ moduleType }/${moduleName}/${moduleVersion}/thumb-${moduleName}.png`
+  const { moduleType, moduleName, moduleVersion } = bar.components.find(item => item.id === id) || {}
+  const imgSuffixMap = {
+    hydrograph: 'gif',
+  }
+  const imgFormat = imgSuffixMap[moduleName] || 'png'
+  const photoPath = `${window.CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/thumb-${moduleName}.${imgFormat}`
+
   return (
     <div className={`EveryTreeNode-wrap
         ${hover && 'every-tree-node-hover'}
@@ -166,7 +172,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
               paddingLeft: '13px'
             }} className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
             : <div className='frame set-margin'>
-              <img style={{width: '100%', height: '100%'}} src={photoPath}></img>
+              <img style={{ width: '100%', height: '100%' }} src={photoPath}></img>
             </div>
         }
       </div>

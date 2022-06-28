@@ -59,7 +59,6 @@ const LoadAnimation = props => {
   }
 
   const durationChange = (e) => {
-    console.log('duration', e)
     const value = parseInt(e.target.value)
     setDuration(value)
     _data.mountAnimation.duration = value
@@ -67,7 +66,6 @@ const LoadAnimation = props => {
   }
 
   const delayChange = (e) => {
-    console.log('delay', e)
     const value = parseInt(e.target.value)
     setDuration(value)
     _data.mountAnimation.delay = value

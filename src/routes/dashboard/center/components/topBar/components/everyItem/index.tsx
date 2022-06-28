@@ -5,6 +5,7 @@ import './index.less'
 
 const EveryItem = (props: any) => {
   const { data, dispatch, bar } = props
+
   const importComponent = useCallback(() => {
     return axios.get(`${ (window as any).CONFIG.COMP_URL }/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   }, [data.moduleType])

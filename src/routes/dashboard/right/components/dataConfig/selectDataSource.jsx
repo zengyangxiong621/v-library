@@ -48,7 +48,6 @@ const SelectDataSource = props => {
             ? 'ELASTIC_SEARCH' : props.type.toUpperCase(),
       }
     })
-    console.log('content', content)
     const options = content.map(item => {
       if (props.type === 'api') {
         return {
@@ -69,13 +68,11 @@ const SelectDataSource = props => {
   }
 
   const dataSourceChange = () => {
-    console.log('selectDatas', selectDatas)
     const dataSource = selectDatas.options.find(item => item.value === selectDatas.value)
     props.onChange(dataSource)
   }
 
   const addDataSource = () => {
-    console.log('addDataSource')
     setIsShowAddModal(true)
   }
 

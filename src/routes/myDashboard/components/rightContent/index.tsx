@@ -64,7 +64,6 @@ const RightContent = (props: any) => {
 
   useEffect(() => {
     if (showMoveGroupModal) {
-      console.log('每次执行', dashboardManage.groupList);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showMoveGroupModal])
@@ -394,7 +393,6 @@ const RightContent = (props: any) => {
       const { status, response } = info.file;
       if (status === 'done') {
         message.success(`图片上传成功`);
-        console.log('response', response.data);
         // 除了设置输入框的回显值，还要覆盖原本的fabuBody里的thumb字段值
         setImgUrl(response.data)
         rePublishByOnBlur(response.data, 'thumb')

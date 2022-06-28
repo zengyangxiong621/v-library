@@ -12,7 +12,6 @@ export default {
   },
   effects: {
     *create(action: any, { call, put, select}: any) {
-      console.log(action, 'action=============================')
       yield put({
         type: 'componentCreate',
         payload: action.payload

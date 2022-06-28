@@ -14,6 +14,7 @@ import PaMargin from './paMargin'
 import CusSelect from './cusSelect'
 import ChartText from './chartText'
 import InputNumber2 from './inputNumber2'
+import Input2 from './input2'
 import TextStroke from './textStroke'
 import RadioGroup from './radioGroup'
 import CusInput from './cusInput'
@@ -21,6 +22,7 @@ import CheckBoxGroup from './checkBoxGroup'
 import CusTabs from './cusTabs'
 import UploadImg from './uploadImg'
 import CusInputNumber from './cusInputNumber'
+import TabArray from './tabArray'
 
 
 const componentLib = {
@@ -40,11 +42,13 @@ const componentLib = {
   textStroke:TextStroke,
   radioGroup:RadioGroup,
   inputNumber2:InputNumber2,
+  input2:Input2,
   input:CusInput,
   checkBoxGroup:CheckBoxGroup,
   tabs:CusTabs,
   image:UploadImg,
-  number:CusInputNumber
+  number:CusInputNumber,
+  tabArray: TabArray
 }
 
 export default componentLib

@@ -15,7 +15,6 @@ const RecursiveComponent = (props: any) => {
     <div className='recursive-component-wrap'>
       {
         layersArr?.map((layer: any, ind: any) => {
-          console.log('layer', layer);
           let isGroup: boolean = MODULES in layer
           let targetComponent
           if (!isGroup) {

@@ -65,7 +65,6 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList }: any) => {
     if (key === 'aInput' || key === 'wrap' || name === '占位的input' || key === 'wrap') {
       return
     }
-    console.log('选中树节点的key', key);
     // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)
     // 重新设置  配额、成员列表
     dispatch({

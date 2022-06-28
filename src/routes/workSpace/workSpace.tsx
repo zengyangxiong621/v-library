@@ -73,15 +73,6 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
   useEffect(() => {
     getDataDispatch({ accountId: workSpace.accountId }, 'getWorkSpaceList')
   }, []);
-  useEffect(() => {
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 10,
-      spaceId: workSpace.curWorkSpace[0],
-      map: sortMap,
-    };
-    getTableData(finalBody)
-  }, [workSpace.curWorkSpace])
   // 设置项目配额
   useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota])
 
@@ -102,7 +93,6 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
       getDataDispatch({ accountId: workSpace.accountId }, 'getWorkSpaceList')
     }
   }
-
   // 刷新右侧成员列表
   const refreshMemberList = async (workSpaceId: string) => {
     // 在点击了左侧空间后，右侧在重新刷新表格之前需要清除上一个表格的缓存信息，比如pageNo,pageSize……
@@ -150,7 +140,6 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
     // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
     const { field, order } = sorter;
-    console.log("sort", order);
     if (action === "sort") {
       // setTableMap({
       //   [field]: order

@@ -170,7 +170,6 @@ const DataSource = (props: any) => {
     setEditDataSourceInfo(text)
   }
   const previewClick = (record: any) => {
-    console.log(record)
     setPreviewRecord(record)
     const fileUrl = record.type === 'EXCEL' ?
       record.excelSourceConfig.fileUrl : record.type === 'CSV' ?

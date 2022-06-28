@@ -1,8 +1,7 @@
 const componentDefaultConfig = {
-  "id": "",
   "name": "时间选择器",
   "moduleName": "timeSelect",
-  "moduleType": "timeSelect",
+  "moduleType": "assist",
   "moduleVersion": "1.0.0",
   "config": [
     {

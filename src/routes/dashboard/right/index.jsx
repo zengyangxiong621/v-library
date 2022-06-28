@@ -13,8 +13,6 @@ import AlignmentSetting from './components/alignmentSetting'
  *
  */
 
-
-
 const Right = ({ dispatch, bar }) => {
   const [whichShow, setWhichShow] = useState('pageSetting')
   const [key, setKey] = useState(bar.key.join(''))

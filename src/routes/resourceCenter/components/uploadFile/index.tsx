@@ -111,7 +111,6 @@ const UploadFile = (props: any) => {
   const fileProps = generateUploadProps(".zip");
 
   const selectChange = (value: any) => {
-    console.log(value,'数据')
   }
 
   return (

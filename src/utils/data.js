@@ -122,14 +122,9 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
 const setDataContainerResult = (componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs) => {
   if (componentConfig.dataContainers) {
     if (componentConfig.dataContainers.length === 1) {
-      console.log('componentConfig.dataContainers', componentConfig.dataContainers)
-      console.log('length', componentConfig.dataContainers.length)
       const id = componentConfig.dataContainers[0].id
       const container = dataContainerList.find(item => item.id === id)
-      console.log('id', id)
-      console.log('dataContainerDataList', dataContainerDataList)
       let data = dataContainerDataList.find(item => item.id === id)?.data || []
-      console.log('data', data)
       if (container.useFilter) {
         data = handleDataFilter(data, container.filters, componentFilters, callbackArgs)
       }
