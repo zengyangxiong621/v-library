@@ -87,6 +87,7 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
   if (filters.length === 0) {
     return data
   }
+
   try {
     const functions = filters.map(item => {
       return (new Function('data', 'callbackArgs', item.content))
@@ -99,6 +100,7 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
           [item]: callbackArgs[item]
         }
       }, {})
+
       if (index === 0) {
         resultArr.push(fn(data, cbArgs))
       } else {
@@ -151,7 +153,7 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
 /**
  * 获取组件数据映射字段
  * @param {*} componentConfig 当前组件的配置信息
- * @returns 
+ * @returns
  */
 const getFields = (componentConfig = {}) => {
   const dataType = componentConfig.dataType

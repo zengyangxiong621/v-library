@@ -185,7 +185,7 @@ const ScrollTable = (props) => {
       tableValue.push(arr)
     })
     setTableData(tableValue)
-  }, [customColumnConfig])
+  }, [customColumnConfig, comData])
 
 
   const tableConfig = {
