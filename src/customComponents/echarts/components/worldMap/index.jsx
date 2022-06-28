@@ -1,8 +1,8 @@
 import React from 'react';
-import EC from '../../EC';
+// import EC from '../../EC';
 import * as echarts from 'echarts';
 import worldJson from "@/customComponents/echarts/components/world.json";
-import debounce from 'lodash/debounce';
+import { debounce } from "@/utils/common";
 import ComponentDefaultConfig from './config'
 
 let mapChart = null;
@@ -42,7 +42,7 @@ let coordData = {
   上海: [121.4648, 31.2891],
   美国: [-93.310319, 36.908779],
   丹麦: [9.1577, 56.1388,],
-  瑞士: [8.6649, 47.5276] 
+  瑞士: [8.6649, 47.5276]
 }
 // 飞线点数据
 let flyLineArr = [
@@ -110,10 +110,10 @@ let convertData = function (data) {
     let toCoord = [108.384366, 30.439702] //中心点地理坐标
     if (fromCoord && toCoord) {
       res.push([
-        {      
+        {
           coord: toCoord, // 飞线从哪里出发
         },
-        {       
+        {
           coord: fromCoord, // 飞线去往哪里
           value: dataItem[0].value,
         },
@@ -291,9 +291,6 @@ let options = {
 class WorldMap extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      cnt: 0
-    };
     this.resizeDebounce = debounce(this.chartsResize, 250);
   }
 
@@ -311,20 +308,16 @@ class WorldMap extends React.PureComponent {
     }
   };
 
-  createMap = (initOption) => {
+  createMap = () => {
     const dom = document.getElementById(this.props.componentConfig.id);
     const mapChart = echarts.init(dom);
-    echarts.registerMap("world", worldJson);    
+    echarts.registerMap("world", worldJson);
     mapChart.setOption(options);
     return mapChart;
   };
 
   onChartClick = (param, echarts) => {
     console.log(param, echarts);
-    alert('chart click');
-    this.setState({
-      cnt: this.state.cnt + 1
-    });
   };
 
   onChartReady = echarts => {
@@ -335,15 +328,18 @@ class WorldMap extends React.PureComponent {
     let onEvents = {
       click: this.onChartClick,
     };
+    let mapSize = {
+      width: '1000px',
+      height: '600px'
+    };
 
     return (
-      <EC
+      <div
         id={this.props.componentConfig.id}
-        type="map"
+        style={mapSize}
         option={options}
         onChartReady={this.onChartReady}
         onEvents={onEvents}
-        createMap={this.createMap}
       />
     );
   }
