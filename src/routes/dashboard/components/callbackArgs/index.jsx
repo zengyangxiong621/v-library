@@ -6,7 +6,8 @@ import {
   CloseOutlined, SearchOutlined,
 } from '@ant-design/icons'
 
-import {http} from '../../../../services/request'
+import { http } from '../../../../services/request'
+import { findLayerById } from '@/utils/index'
 
 const _vdata = [
   {
@@ -82,8 +83,20 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     }))
   }
 
-  const componentClick = source => {
+  const componentClick = id => {
     // todo 画布上高亮显示当前的组件
+    // console.log('source', id);
+    // const layer = findLayerById(bar.treeData, id)
+    // dispatch({
+    //   type: 'bar/selectLayers',
+    //   payload: [layer]
+    // })
+    // dispatch({
+    //   type: 'bar/save',
+    //   payload: {
+    //     key: [id]
+    //   }
+    // })
   }
 
   return (
@@ -142,7 +155,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                             {item.sourceModules.length ?
                               item.sourceModules.map(component => {
                                 return <div key={component.id} className="component-item">
-                                  <Button title={component.name} onClick={component => componentClick(component)}>{component.name}</Button>
+                                  <Button title={component.name} onClick={() => componentClick(component.id)}>{component.name}</Button>
                                 </div>
                               }) : '无对应组件'
                             }
@@ -152,7 +165,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                             {item.destinationModules.length ?
                               item.destinationModules.map(component => {
                                 return <div key={component.id} className="component-item">
-                                  <Button title={component.name} onClick={component => componentClick(component)}>{component.name}</Button>
+                                  <Button title={component.name} onClick={() => componentClick(component.id)}>{component.name}</Button>
                                 </div>
                               }) : '无对应组件'
                             }
