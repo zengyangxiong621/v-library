@@ -15,8 +15,9 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   const [isLoaded, setIsLoaded] = useState(false)
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
-  const [dashboardConfig , setDashboardConfig] = useState([])
+  const [dashboardConfig, setDashboardConfig] = useState([])
   const [pageStyle, setPageStyle] = useState({})
+  const [screenInfoMap, setScreenInfoMap] = useState<any>({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
   const [scaleValue, setScaleValue] = useState(1)
@@ -39,9 +40,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   }
 
   useEffect(() => {
-    if (dashboardConfig.length === 0) {
-
-    } else {
+    if (!dashboardConfig.length) {
       window.addEventListener('resize', setCanvasSize)
       return () => {
         window.addEventListener('resize', setCanvasSize)
@@ -49,13 +48,13 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     }
   }, [dashboardConfig])
   const calcCanvasScale = (e: any) => {
-    if(e.ctrlKey) {
+    if (e.ctrlKey) {
       e.preventDefault()
     }
   }
 
   useEffect(() => {
-    if(scaleValue) {
+    if (scaleValue) {
       window.addEventListener('wheel', calcCanvasScale, { passive: false })
     }
     return () => {
@@ -80,44 +79,49 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   /**
    * description: 进入页面，先获取画布详情
    */
-  const getDashboardData = async ({dashboardConfig, dashboardName }: any ) => {
+  const getDashboardData = async ({ dashboardConfig, dashboardName }: any) => {
     document.title = dashboardName
     // setDashboardConfig(dashboardConfig)
     // 获取屏幕大小、背景等参数
-    const screenInfoMap: any = getScreenInfo(dashboardConfig)
+    const configInfo: any = getScreenInfo(dashboardConfig)
+    setScreenInfoMap(configInfo)
     const winW = window.innerWidth
     const winH = window.innerHeight
-    const { width, height } = screenInfoMap['屏幕大小']
+    const { width, height } = configInfo['屏幕大小']
+    console.log('相关配置++++++++', configInfo);
     const finalStyle: any = {
-      background: screenInfoMap['背景'],
-      backgroundImage: screenInfoMap['背景图']
+      background: configInfo['背景'],
+      // backgroundImage: screenInfoMap['背景图']
     }
     // 根据缩放模式来展示
-    const scaleMode = screenInfoMap['缩放设置']
+    const scaleMode = configInfo['缩放设置']
     switch (scaleMode) {
       case '0':
         finalStyle.width = '100vw'
         finalStyle.height = '100vh'
         const wRatio = winW / width
         const hRatio = winH / height
-        let unifyRatio
-        if (wRatio > hRatio) {
-          unifyRatio = Math.max(wRatio, hRatio)
-        } else {
-          unifyRatio = Math.min(wRatio, hRatio)
-        }
-        setScreenWidthRatio(unifyRatio)
-        setScreenHeightRatio(unifyRatio)
+        setScreenWidthRatio(wRatio)
+        setScreenHeightRatio(hRatio)
+        finalStyle.transform = `scale(${scaleValue})`
         break;
       case '1':
         finalStyle.width = '100vw'
         finalStyle.height = '100vh'
-        setScreenWidthRatio(winW / width)
-        setScreenHeightRatio(winH / height)
+        console.log('winWWWW', winW);
+        const wRatio2 = width / winW
+        const hRatio2 = height / winH
+        setScreenWidthRatio(wRatio2)
+        console.log('******', winW / width, wRatio2);
+        setScreenHeightRatio(hRatio2)
+        finalStyle.transform = `scale(${scaleValue})`
         break;
       case '2':
-        const finalW = winW > width ? width : '100vw'
-        const finalH = winH > height ? height : '100vh'
+        // const finalW = winW > width ? width : '100vw'
+        // const finalH = winH > height ? height : '100vh'
+        const finalW = '100vw'
+        const finalH = '100vh'
+        setScreenWidthRatio(winW / width)
         setOverflowStyle({
           width: finalW,
           height: finalH,
@@ -132,11 +136,11 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   useEffect(() => {
     const init = async () => {
       setIsLoaded(false)
-      const {dashboardConfig, dashboardName } : any = await initDashboard()
+      const { dashboardConfig, dashboardName }: any = await initDashboard()
       setDashboardConfig(dashboardConfig)
       setCanvasSize(dashboardConfig)
 
-      await getDashboardData({dashboardConfig, dashboardName } )
+      await getDashboardData({ dashboardConfig, dashboardName })
       setIsLoaded(true)
     }
     init()
@@ -150,8 +154,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 定时刷新页面
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      const {dashboardConfig, dashboardName } : any = await initDashboard()
-      await getDashboardData({dashboardConfig, dashboardName } )
+      const { dashboardConfig, dashboardName }: any = await initDashboard()
+      await getDashboardData({ dashboardConfig, dashboardName })
     }, 3600 * 1000)
     return () => {
       clearInterval(intervalId)
@@ -159,7 +163,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
-  const initDashboard = (cb=function (){}) => {
+  const initDashboard = (cb = function () { }) => {
     return new Promise((resolve, reject) => {
       const dashboardId = window.location.pathname.split('/')[2]
       dispatch({
@@ -172,21 +176,25 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     })
 
   }
-
+  console.log('pageStylepageStylepageStylepageStyle', pageStyle);
   return (
     <>
       {
         isLoaded ?
           <div className='customScrollStyle' style={overflowStyle}>
             <div className='previewDashboard-wrap'
-              style={{...pageStyle, transform: `scale(${ scaleValue })`}}
+              style={{
+                ...pageStyle,
+              }}
             >
+              <img style={{ position: 'absolute', width: '100%', height: '100%' }} src={screenInfoMap['背景图']} alt="" />
               {
                 <RecursiveComponent
                   layersArr={layers}
                   componentLists={bar.components}
                   bar={bar}
                   dispatch={dispatch}
+                  scaleValue={scaleValue}
                   screenWidthRatio={screenWidthRatio}
                   screenHeightRatio={screenHeightRatio}
                 />

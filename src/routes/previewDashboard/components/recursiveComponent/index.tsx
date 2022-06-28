@@ -9,7 +9,7 @@ const OPACITY = 'opacity'
 
 const RecursiveComponent = (props: any) => {
   const { layersArr, componentLists, bar, dispatch,
-    screenHeightRatio, screenWidthRatio
+    screenHeightRatio, screenWidthRatio, scaleValue
   } = props
   return (
     <div className='recursive-component-wrap'>
@@ -24,7 +24,9 @@ const RecursiveComponent = (props: any) => {
             <div
               data-id={isGroup ? layer.id : 'component-' + layer.id}
               key={layer.id}
-              style={{ visibility: !layer.isShow ? 'hidden' : 'unset', }}
+              style={{
+                visibility: !layer.isShow ? 'hidden' : 'unset',
+              }}
             >
               {
                 isGroup ?
@@ -40,6 +42,7 @@ const RecursiveComponent = (props: any) => {
                           componentLists={componentLists}
                           bar={bar}
                           dispatch={dispatch}
+                          scaleValue={scaleValue}
                           screenWidthRatio={screenWidthRatio}
                           screenHeightRatio={screenHeightRatio}
                         />
@@ -51,7 +54,8 @@ const RecursiveComponent = (props: any) => {
                       {
                         <EveryComponent key={ind}
                           componentData={targetComponent}
-                          comData={getComDataWithFilters(bar.componentData, targetComponent, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList,bar.callbackArgs)}
+                          comData={getComDataWithFilters(bar.componentData, targetComponent, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          scaleValue={scaleValue}
                           screenWidthRatio={screenWidthRatio}
                           screenHeightRatio={screenHeightRatio}
                         />
