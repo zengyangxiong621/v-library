@@ -8,17 +8,18 @@ import { Spin } from 'antd'
 
 
 import RecursiveComponent from './components/recursiveComponent'
-
+import { calcCanvasSize } from '../../utils'
 
 const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
-
+  const [dashboardConfig , setDashboardConfig] = useState([])
   const [pageStyle, setPageStyle] = useState({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
+  const [scaleValue, setScaleValue] = useState(1)
   /**
   * description: 获取屏幕大小、缩放设置等参数
   */
@@ -28,6 +29,39 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     treeDataReverse(data)
     setLayers(data)
   }, [bar.treeData])
+
+  const setCanvasSize = (config: any) => {
+    config = config || dashboardConfig
+    const screenInfoMap: any = getScreenInfo(config)
+    const { width, height } = screenInfoMap['屏幕大小']
+    const scaleValue = calcCanvasSize({ width, height })
+    setScaleValue(scaleValue)
+  }
+
+  useEffect(() => {
+    if (dashboardConfig.length === 0) {
+
+    } else {
+      window.addEventListener('resize', setCanvasSize)
+      return () => {
+        window.addEventListener('resize', setCanvasSize)
+      }
+    }
+  }, [dashboardConfig])
+  const calcCanvasScale = (e: any) => {
+    if(e.ctrlKey) {
+      e.preventDefault()
+    }
+  }
+
+  useEffect(() => {
+    if(scaleValue) {
+      window.addEventListener('wheel', calcCanvasScale, { passive: false })
+    }
+    return () => {
+      window.removeEventListener('wheel', calcCanvasScale)
+    }
+  }, [scaleValue])
 
   const getScreenInfo = (config: any) => {
     let map: any = {}
@@ -99,6 +133,9 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     const init = async () => {
       setIsLoaded(false)
       const {dashboardConfig, dashboardName } : any = await initDashboard()
+      setDashboardConfig(dashboardConfig)
+      setCanvasSize(dashboardConfig)
+
       await getDashboardData({dashboardConfig, dashboardName } )
       setIsLoaded(true)
     }
@@ -142,7 +179,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
         isLoaded ?
           <div className='customScrollStyle' style={overflowStyle}>
             <div className='previewDashboard-wrap'
-              style={pageStyle}
+              style={{...pageStyle, transform: `scale(${ scaleValue })`}}
             >
               {
                 <RecursiveComponent

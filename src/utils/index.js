@@ -576,3 +576,33 @@ export const treeDataReverse = (treeData) => {
     }
   })
 }
+
+// 计算画布的大小
+export const calcCanvasSize = function (recommendConfig, cb){
+  console.log('这里了吗')
+  let getCurrentDocumentWidth = document.documentElement.clientWidth
+  // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
+  const getCurrentDocumentHeight = document.documentElement.clientHeight
+  // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
+  if(getCurrentDocumentWidth < 1366) {
+    getCurrentDocumentWidth = 1366
+  }
+  // width、 height 是我们希望的当前 canvas 实际宽高
+  // bar.leftMenuWidth 是左侧菜单的宽度, 333 是右侧菜单的高度， 66 是 3 个尺子的宽度
+  const width = getCurrentDocumentWidth
+  // 64 是顶部菜单的高度,  32 是底部菜单的高度, 66 是 3 个尺子的高度
+  const height = getCurrentDocumentHeight
+  const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
+  let canvasScaleValue = 0
+  if(canvasHeight > height) {
+    canvasScaleValue = Number((height / recommendConfig.height).toFixed(3))
+    console.log('canvasScaleValue1', canvasScaleValue)
+  } else {
+    // 如果中间区域刚好能装下画布
+    // 那么尺子组件距离画布的横向距离就是 22
+    canvasScaleValue = Number((width / recommendConfig.width).toFixed(3))
+    console.log('canvasScaleValue2', canvasScaleValue)
+
+  }
+  return canvasScaleValue
+}
