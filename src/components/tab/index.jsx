@@ -53,7 +53,7 @@ const Tab = (props) => {
     color: 'white',
     borderBottom: '1px solid #1E8EFF',
     marginRight: 0,
-    borderRadius: '10px 10px 0 0'
+    borderRadius: '3px 3px 0 0'
     // border: '4px solid #373f4e'
   }
 
@@ -69,7 +69,6 @@ const Tab = (props) => {
 
 
   const handleTabChange = (data) => {
-    console.log('data', data)
     if (data[finalFields[0]] !== activeKey) {
       setActiveKey(data[finalFields[0]])
       props.onChange({[finalFields[0]]: data[finalFields[0]], [finalFields[1]]: data[finalFields[1]]})

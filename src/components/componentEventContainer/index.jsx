@@ -39,7 +39,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (mouseEnterActions.length === 0) {
       return
     }
-    customEventsFunction(mouseEnterEvents, e)
+    customEventsFunction(mouseEnterEvents)
   })
   // 移出
   const handleMouseOut = debounce((e) => {
@@ -48,10 +48,10 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (mouseOutActions.length === 0) {
       return
     }
-    customEventsFunction(mouseOutEvents, e)
+    customEventsFunction(mouseOutEvents)
   })
 
-  const customEventsFunction = (events, e) => {
+  const customEventsFunction = (events, data) => {
     console.log('events', events)
     events.forEach((item) => {
       const conditions = item.conditions
@@ -60,10 +60,10 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       if (conditionType !== 'all') {
         conditionTypeValue = conditionType.target.value
       }
-      const callbackArgs = {
-        startTime: '2022-06-17',
-        endTime: '2022-06-17'
-      }
+      // const callbackArgs = {
+      //   startTime: '2022-06-17',
+      //   endTime: '2022-06-17'
+      // }
       /*        [
               {
                 "compare": "==",
@@ -81,31 +81,31 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         const type = condition.type
         const code = condition.code
         if (type === 'custom') {
-          return new Function('data', code)({startTime: callbackArgs.startTime, endTime: callbackArgs.endTime})
+          return new Function('data', code)(data)
         }
         if (condition.compare === '==') {
-          return callbackArgs[field] === condition.expected;
+          return data[field] === condition.expected;
         }
         if (condition.compare === '!=') {
-          return callbackArgs[field] !== condition.expected;
+          return data[field] !== condition.expected;
         }
         if (condition.compare === '<') {
-          return Number(callbackArgs[field]) < Number(condition.expected);
+          return Number(data[field]) < Number(condition.expected);
         }
         if (condition.compare === '<=') {
-          return Number(callbackArgs[field]) < Number(condition.expected) || callbackArgs[field] === condition.expected
+          return Number(data[field]) < Number(condition.expected) || data[field] === condition.expected
         }
         if (condition.compare === '>') {
-          return Number(callbackArgs[field]) > Number(condition.expected);
+          return Number(data[field]) > Number(condition.expected);
         }
         if (condition.compare === '>=') {
-          return Number(callbackArgs[field]) > Number(condition.expected) || callbackArgs[field] === condition.expected
+          return Number(data[field]) > Number(condition.expected) || data[field] === condition.expected
         }
         if (condition.compare === 'include') {
-          return callbackArgs[field].indexOf(condition.expected) !== -1
+          return data[field].indexOf(condition.expected) !== -1
         }
         if (condition.compare === 'exclude') {
-          return callbackArgs[field].indexOf(condition.expected) === -1
+          return data[field].indexOf(condition.expected) === -1
         }
         return false
       }
@@ -113,13 +113,10 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       if (conditions.length > 0) {
         isAllowAction = Array.prototype[conditionTypeValue === 'all' ? 'every' : 'some'].call(conditions, conditionJudgeFunc)
       }
-      console.log('isAllowAction', isAllowAction)
       if (!isAllowAction) {
         return
       }
-
       item.actions.forEach(action => {
-
         const animation = action.animation
         const delay = animation.delay
         setTimeout(() => {
@@ -175,7 +172,8 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     return [...map.values()];
   }
 
-  const handleValueChange = (data) => {
+  const handleValueChange = debounce((data) => {
+    console.log('data', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
@@ -222,15 +220,15 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         type: 'bar/getComponentsData',
         payload: activeComponents
       })
-      const dataChangeEvents = events.filter(item => item.trigger === 'dataChange')
-      const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
-      if (dataChangeActions.length === 0) {
-        return
-      }
-      customEventsFunction(dataChangeEvents)
     }
+    const dataChangeEvents = events.filter(item => item.trigger === 'dataChange')
+    const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
+    if (dataChangeActions.length === 0) {
+      return
+    }
+    customEventsFunction(dataChangeEvents, data)
 
-  }
+  }, 300)
 
 
   const animation = ({duration, timingFunction, type}, actionType, dom, actionId, action, componentId) => {
