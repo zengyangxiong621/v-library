@@ -118,6 +118,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     setExpandKey(props.expandKey)
+    setRefreshKey(uuidv4())
   }, [props.expandKey])
 
   const getFieldType = (data, field) => {
@@ -272,14 +273,14 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     item.code = e
   }
 
-  const resetCondition = (item) => {
-    item.type = 'field'
-    item.field = ''
-    item.compare = '=='
-    item.expected = ''
-    item.code = 'return data'
+  const resetCondition = (condition) => {
     const conds = [...conditions]
-    setConditions(conds)
+    if(condition.isAdd){
+      const condsNew = conds.filter(item=>item.id !== condition.id)
+      setConditions(condsNew)
+    }
+    setRefreshKey(uuidv4())
+    setExpandKey('null')
   }
 
   const confirmConditon = (item) => {
@@ -292,6 +293,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     })
     props.confirm(emitConds)
     setRefreshKey(uuidv4())
+    setExpandKey('null')
   }
 
   const editorDidMountHandle = (editor, monaco) => {
@@ -353,7 +355,6 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
           {conditions.map((item) => {
             return (
               <Collapse
-                accordion
                 key={item.id}
                 defaultActiveKey={expandKey}
                 className="custom-collapse">
