@@ -573,7 +573,9 @@ const CustomDraggable
                   }
                 }}
                 disabled={layer.isLock}
-                cancel=".no-cancel" key={layer.id} position={config.position}
+                cancel=".no-cancel"
+                key={layer.id}
+                position={config.position}
                 onStart={(ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config)}
                 onDrag={(ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config)}
                 onStop={(ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config)}
@@ -604,7 +606,9 @@ const CustomDraggable
                         width: '100%',
                         height: '100%',
                         backgroundColor: 'rgba(76, 255, 231, 0.15)',
-                      }} /> : isGroup ? <div className="no-cancel" style={{
+                      }} /> :
+                      isGroup ?
+                      <div className="no-cancel" style={{
                         opacity: (layer[OPACITY] || 100) / 100,
                       }}>
                         {(layer as any)[COMPONENTS]?.length > 0 ?
@@ -645,7 +649,7 @@ const CustomDraggable
                                 fields={getFields(component)}
                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                               >
-                              </TimeSelect> :                              
+                              </TimeSelect> :
                             <RemoteBaseComponent
                               componentConfig={component}
                               fields={getFields(component)}
