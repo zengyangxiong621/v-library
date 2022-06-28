@@ -1,5 +1,6 @@
-import React, { memo } from 'react'
+import React, { memo,useEffect } from 'react'
 import './index.less'
+import { connect } from "dva";
 /**
  * description: 组件导航栏菜单
  */
@@ -23,38 +24,55 @@ const { SubMenu, Item } = Menu
 
 
 const TopBar = (props: any) => {
-  const { showTopBar, zujianORsucai } = props
+  const { showTopBar, zujianORsucai, dispatch } = props
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
-    zujian: zujianMenu,
-    sucai: sucaiMenu,
+    zujian: componentMenu,
+    sucai: MaterialMenu,
+  }
+
+  useEffect(() => {
+    if(zujianORsucai === 'sucai'){
+      getSystemMaterial()
+    }
+  }, [zujianORsucai])
+
+  // 获取所有素材分类
+  const getSystemMaterial = () => {
+    dispatch({
+      type: 'bar/getSystemMaterialClass'
+    })
+  }
+  
+  const menuSelect = (data:any) => {
+    console.log(data,'menu选中数据')
   }
 
   return (
     <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
-      <Menu className='TopBar-wrap' mode="horizontal">
-        {
-          menuReflect[zujianORsucai].map((item: any) => {
-            return (
-              (<SubMenu popupOffset={[0, 0]} className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && '88px'}} >
-                <div
-                  className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
-                >
-                  {React.createElement(item.component)}
-                </div>
-              </SubMenu>)
-            )
-          })
-        }
+    <Menu className='TopBar-wrap' mode="horizontal" onClick={menuSelect}>
+      {
+        menuReflect[zujianORsucai].map((item: any) => {
+          return (
+            (<SubMenu popupOffset={[0, 0]} className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && '88px'}} >
+              <div
+                className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
+              >
+                {React.createElement(item.component,item)}
+              </div>
+            </SubMenu>)
+          )
+        })
+      }
+    </Menu>
+  </div>
 
-      </Menu>
-    </div>
   )
 }
 
 /**
  * description: 组件 、 素材 导航栏选项卡配置
  */
-const zujianMenu = [
+const componentMenu = [
   {
     title: '图表',
     key: 'chart',
@@ -99,15 +117,23 @@ const zujianMenu = [
   },
 
 ]
-const sucaiMenu = [
+const MaterialMenu = [
   {
-    title: '设计素材',
-    key: 'sujisucai',
+    title: '系统素材',
+    key: 'systemMaterial',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: true,
     component: DesignMaterial,
     // customWidth: true,
   }, 
+  {
+    title: '我的素材',
+    key: 'myMaterial',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: DesignMaterial,
+    // customWidth: true,
+  }
   // {
   //   title: '主题资源',
   //   key: 'zhutiziyuan',
@@ -138,4 +164,4 @@ type TComponentMenuItem = {
   component: any
 }
 
-export default memo(TopBar)
+export default memo( connect(({ bar }: any) => ({ bar }))(TopBar))

@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+ import { memo, useEffect } from "react";
 import "./index.less";
 import { SYSTEMMATERIAL, MYMATERIAL, MATERIALLIB } from "@/constant/dvaModels/resourceCenter"
 
@@ -12,43 +12,9 @@ import { DownOutlined } from "@ant-design/icons";
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
 
-const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispatch }: any) => {
+const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispatch,refreshGroupLists }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   const spaceId = "1";
-  // 获取应用分组列表
-  useEffect(() => {
-    refreshGroupLists();
-  }, []);
-
-  /**
-   * description:  刷新左侧列表
-   */
-  const refreshGroupLists = () => {
-    dispatch({
-      type: "resourceCenter/getGroupTree",
-      payload: {
-        spaceId
-      }
-    });
-  };
-  /**
-   * description:  刷新右侧
-   */
-  const refreshRight = () => {
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId:null,
-    };
-    getDataDispatch(finalBody)
-    dispatch({
-      type: "resourceCenter/resetModel",
-      payload: {
-        curSelectedGroup: ["-1"],
-        curSelectedGroupName: "素材库"
-      }
-    });
-  };
   // 添加分组
   // 创建一个占位数据
   const addGroup = (groupId: string, parentId: string = '') => {
@@ -100,21 +66,17 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
     // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)
     const key = keys[0];
     // 每次切换分组，都要将搜索框内的值清除掉
-    clearSearchInputState();
-    // 全部分组后端的数据里是-1, 但是要求传值时为Null
-    const groupId = key === "-1" ? null : key;
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 1000,
-      spaceId:null,
-      subType: groupId ? [groupId] : [],
-    };
-    getDataDispatch(finalBody)
+    clearSearchInputState(); 
     // 每次变更选中的分组时，将当前分组保存至models中
     dispatch({
       type: "resourceCenter/setCurSelectedGroup",
-      payload: keys
+      payload: node
     });
+    getDataDispatch({
+      origin: node.origin,
+      groupId: key
+    })
+
   };
   return (
     <div className="every-tree-wrap">
@@ -123,7 +85,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
           className="my-dashboard-tree"
           blockNode
           defaultExpandAll={true}
-          selectedKeys={resourceCenter.curSelectedGroup}
+          selectedKeys={[resourceCenter.curSelectedGroup.groupId]}
           treeData={resourceCenter.groupList}
           switcherIcon={<DownOutlined />}
           fieldNames={{
@@ -134,7 +96,6 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
           titleRender={(nodeData: any) => (
             <Node
               refreshGroupLists={refreshGroupLists}
-              refreshRight={refreshRight}
               addGroup={addGroup}
               {...nodeData}
             ></Node>

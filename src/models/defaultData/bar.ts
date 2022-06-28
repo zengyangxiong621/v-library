@@ -786,7 +786,7 @@ export const defaultData = {
   componentFilters: [],
   callbackArgs: {},
   callbackParamsList: [],
-  systemMaterialClass: [], // 获取系统素材分类数据
+  systemMaterialClass: {}, // 获取系统素材分类数据
   systemMaterialList: [] // 获取系统素材数据
 }
 

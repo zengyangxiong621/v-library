@@ -119,44 +119,64 @@ const ComponentDev = (props: any) => {
   }
 
   /**********  删除、编辑 操作 *************/
-  const handleDelete = (moduleId: string) => {
-    Modal.confirm({
-      title: '删除组件',
-      okButtonProps: {
-        style: {
-          backgroundColor: '#e9535d',
-          border: 'none',
-        }
-      },
-      cancelButtonProps: {
-        style: {
-          backgroundColor: '#3d404d'
-        }
-      },
-      icon: <ExclamationCircleFilled />,
-      content: '删除后不可恢复，确认删除此组件吗?',
-      okText: '确定',
-      cancelText: '取消',
-      bodyStyle: {
-        background: '#232630',
-      },
-      async onOk(close) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const data = await http({
-          url: `/visual/module-manage/deleteModule/${moduleId}`, 
-          method: 'delete'
-        })
-        if (data) {
+  const handleDelete = (moduleId: string,appName: Array<string>) => {
+    // 暂时更改
+    if (appName.length > 0) {
+      Modal.confirm({
+        title: '删除组件',
+        cancelButtonProps: {
+          style: {
+            display: 'none'
+          }
+        },
+        icon: <ExclamationCircleFilled />,
+        content: `当前组件被 ${appName.join('、')} 应用使用，不能进行删除操作。`,
+        okText: '确定',
+        // cancelText: '取消',
+        bodyStyle: {
+          background: '#232630',
+        },
+      })
+    
+    } else {
+      Modal.confirm({
+        title: '删除组件',
+        okButtonProps: {
+          style: {
+            backgroundColor: '#e9535d',
+            border: 'none',
+          }
+        },
+        cancelButtonProps: {
+          style: {
+            backgroundColor: '#3d404d'
+          }
+        },
+        icon: <ExclamationCircleFilled />,
+        content: '删除后不可恢复，确认删除此组件吗?',
+        okText: '确定',
+        cancelText: '取消',
+        bodyStyle: {
+          background: '#232630',
+        },
+        async onOk(close) {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const data = await http({
+            url: `/visual/module-manage/deleteModule/${moduleId}`, 
+            method: 'delete'
+          })
+          if (data) {
+            close()
+            refreshTable()
+          } else {
+            message.error({ content: '删除失败', duration: 2 })
+          }
+        },
+        onCancel(close) {
           close()
-          refreshTable()
-        } else {
-          message.error({ content: '删除失败', duration: 2 })
         }
-      },
-      onCancel(close) {
-        close()
-      }
-    })
+      })
+    }
   }
   const handldExport = (text: any) => {
     const a = document.createElement('a');
@@ -294,10 +314,14 @@ const ComponentDev = (props: any) => {
               : <Button type='text' className='buttonBlue' onClickCapture={() => handleOn(record)}>上架</Button>
             }
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
-            <Button type='text' disabled={ record.appName?.length>0 } 
-                    className={ record.appName?.length>0?'buttonGray':'buttonBlue' }  
-                    onClickCapture={() => handleDelete(record.id)}
-                    >删除</Button>
+            <Button type='text'  
+                    className='buttonBlue'  
+                    onClickCapture={() => handleDelete(record.id,record.appName)}
+                    >删除</Button>      
+            {/* <Button type='text' disabled={ record.appName?.length>0 } 
+                className={ record.appName?.length>0 ? 'buttonGray' : 'buttonBlue' }  
+                onClickCapture={() => handleDelete(record.id)}
+                >删除</Button> */}
           </Space>
         )
       }
@@ -318,9 +342,7 @@ const ComponentDev = (props: any) => {
     <ConfigProvider locale={zhCN}>
       <div className='ComponentDev-wrap'>
         <div className='title'>组件开发</div>
-        <header className='header' style={{
-          background: '#171a24'
-        }}>
+        <header className='header' style={{ background: '#171a24' }}>
           <div className='left-box'>
             <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
             <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button>
@@ -359,7 +381,7 @@ const ComponentDev = (props: any) => {
             dataSource={tableData}
             pagination={paginationProps}
             onChange={tableOnChange}
-            rowKey="id"
+            rowKey={record=>record.id}
           />
         </div>
         {/* 导入组件的弹窗 */}

@@ -14,7 +14,7 @@ import {
 const EveryTreeNode = (props: any) => {
   const { groupId, parentId, name, number,
     systemDefined, customLevel,
-    addGroup, refreshGroupLists, refreshRight } = props || {}
+    addGroup, refreshGroupLists } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -129,7 +129,6 @@ const EveryTreeNode = (props: any) => {
           // 删除成功，需要刷新左侧树列表、和整个列表
           close()
           refreshGroupLists()
-          refreshRight()
         } else {
           close()
           message.error({ content: '删除失败', duration: 2 })

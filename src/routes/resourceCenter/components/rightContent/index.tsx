@@ -10,7 +10,7 @@ import PreviewModal from '../previewModal/index'
 
 import {
   Row, Col, Button, Spin, message, Form,
-  Switch, Input, Upload, Select, Typography, Tooltip
+  Switch, Input, Upload, Select, Typography, Tooltip,Empty 
 } from 'antd'
 import { IconFont } from '../../../../utils/useIcon'
 
@@ -103,20 +103,25 @@ const RightContent = (props: any) => {
     setIsPreviewVisible(type)
   } 
 
-  return <div className="RightContent-wrap">
+  return <> 
     {
-      listData.map((item: any, index: number) => (
-        <MaterialCard
-          {...item}
-          key={index}
-          spaceId={spaceId}
-          openMoveGroupModal={openMoveGroupModal}
-          getCurrentItem = { getCurrentItem }
-          refreshList={refreshList}
-        />
-      )
-      )
-    }
+      listData.length ?
+        <div className="RightContent-wrap">
+          {
+            listData.map((item: any, index: number) => (
+              <MaterialCard
+                {...item}
+                key={index}
+                spaceId={spaceId}
+                openMoveGroupModal={openMoveGroupModal}
+                getCurrentItem = { getCurrentItem }
+                refreshList={refreshList}
+              />
+            )
+            ) 
+          }
+        </div >: <Empty className="empty" description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    } 
     {/* 预览功能处理 */}
     <PreviewModal currentItem={currentItem} isPreviewVisible={isPreviewVisible} changeVisible={changeVisible} ></PreviewModal>
     {/* 移入分组弹窗 */}
@@ -160,7 +165,7 @@ const RightContent = (props: any) => {
         </Form.Item>
       </Form>
     </DarkModal>
-  </div >;
+  </>
 };
 
 export default memo(connect(
