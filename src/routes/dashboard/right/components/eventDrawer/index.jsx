@@ -54,6 +54,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
   const [tableData, setTableData] = useState([])
   const [comData, setComData] = useState('')
   const [comDataType, setComDataType] = useState('--')
+  const [refreshKey,setRefreshKey] = useState(uuidv4())
 
   // 监听组件的数据变化，设置popover的弹框table及数据
   useEffect(() => {
@@ -117,6 +118,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     setExpandKey(props.expandKey)
+    setRefreshKey(uuidv4())
   }, [props.expandKey])
 
   const getFieldType = (data, field) => {
@@ -181,7 +183,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     } else {
       const id = uuidv4()
       conds.push({
-        name: "条件",
+        name: `条件${conds.length+1}`,
         type: "field",
         field: "",
         compare: "==",
@@ -271,14 +273,14 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     item.code = e
   }
 
-  const resetCondition = (item) => {
-    item.type = 'field'
-    item.field = ''
-    item.compare = '=='
-    item.expected = ''
-    item.code = 'return data'
+  const resetCondition = (condition) => {
     const conds = [...conditions]
-    setConditions(conds)
+    if(condition.isAdd){
+      const condsNew = conds.filter(item=>item.id !== condition.id)
+      setConditions(condsNew)
+    }
+    setRefreshKey(uuidv4())
+    setExpandKey('null')
   }
 
   const confirmConditon = (item) => {
@@ -290,6 +292,8 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
       return rest
     })
     props.confirm(emitConds)
+    setRefreshKey(uuidv4())
+    setExpandKey('null')
   }
 
   const editorDidMountHandle = (editor, monaco) => {
@@ -347,11 +351,10 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
           </Radio.Group>
         </Form.Item>
         <Button ghost type="primary" style={{ width: '100%', marginBottom: '16px' }} onClick={addConditon}>添加条件</Button>
-        <React.Fragment key={expandKey}>
+        <React.Fragment key={refreshKey}>
           {conditions.map((item) => {
             return (
               <Collapse
-                accordion
                 key={item.id}
                 defaultActiveKey={expandKey}
                 className="custom-collapse">
