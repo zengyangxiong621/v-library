@@ -598,7 +598,6 @@ export const calcCanvasSize = function (recommendConfig, cb){
     // 如果中间区域刚好能装下画布
     // 那么尺子组件距离画布的横向距离就是 22
     canvasScaleValue = Number((width / recommendConfig.width).toFixed(3))
-
   }
   return canvasScaleValue
 }

@@ -17,7 +17,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
   const [dashboardConfig, setDashboardConfig] = useState([])
   const [pageStyle, setPageStyle] = useState({})
-  const [screenInfoMap, setScreenInfoMap] = useState<any>({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
   const [scaleValue, setScaleValue] = useState(1)
@@ -25,13 +24,74 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   * description: 获取屏幕大小、缩放设置等参数
   */
   const [layers, setLayers] = useState(deepClone(bar.treeData))
-  useEffect(() => {
-    const data = deepClone(bar.treeData)
-    treeDataReverse(data)
-    setLayers(data)
-  }, [bar.treeData])
 
-  const setCanvasSize = (config: any) => {
+  /**
+   * description: 进入页面，先获取画布详情
+   */
+  const getDashboardData = async ({ dashboardConfig, dashboardName }: any) => {
+    document.title = dashboardName
+    // setDashboardConfig(dashboardConfig)
+    // 获取屏幕大小、背景等参数
+    const configInfo: any = getScreenInfo(dashboardConfig)
+    // const winW = window.innerWidth
+    // const winH = window.innerHeight
+    const winW = document.body.clientWidth
+    const winH = document.body.clientHeight
+    const { width, height } = configInfo['屏幕大小']
+    let finalStyle: any = {
+      background: configInfo['背景'],
+      backgroundImage: configInfo['背景图'],
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center center',
+      pointerEvents: 'none',
+      overflow: 'hidden',
+      filter: 'unset',
+    }
+
+    // 根据缩放模式来展示
+    const scaleMode = configInfo['缩放设置']
+    switch (scaleMode) {
+      case '0':
+        // widthRatio
+        finalStyle.width = width
+        finalStyle.height = height
+        finalStyle.position = 'absolute'
+        finalStyle.top = `${Math.ceil((winH - height) / 2)}px`
+        finalStyle.left = `${Math.ceil((winW - width) / 2)}px`
+
+        const scaleValue = calcCanvasSize({ width, height })
+        finalStyle.transform = `scale(${scaleValue})`
+        setScaleValue(scaleValue)
+        finalStyle.backgroundImage = `url(${configInfo['背景图']})`
+        break;
+      case '1':
+        finalStyle.width = '100vw'
+        finalStyle.height = '100vh'
+        const wRatio2 = winW / width
+        const hRatio2 = winH / height
+        setScreenWidthRatio(wRatio2)
+        setScreenHeightRatio(hRatio2)
+        finalStyle.overflow = 'hidden'
+        break;
+      case '2':
+        const finalW = '100vw'
+        const finalH = '100vh'
+        setScreenWidthRatio(width / winW)
+        setScreenHeightRatio(height / winH)
+        setOverflowStyle({
+          width: finalW,
+          height: finalH,
+          overflow: 'auto',
+          ...finalStyle
+        })
+        break;
+    }
+    setPageStyle(finalStyle)
+  }
+
+
+  const setCanvasSize = (config?: any) => {
     config = config || dashboardConfig
     const screenInfoMap: any = getScreenInfo(config)
     const { width, height } = screenInfoMap['屏幕大小']
@@ -42,9 +102,9 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   useEffect(() => {
     if (!dashboardConfig.length) {
       window.addEventListener('resize', setCanvasSize)
-      return () => {
-        window.addEventListener('resize', setCanvasSize)
-      }
+    }
+    return () => {
+      window.addEventListener('resize', setCanvasSize)
     }
   }, [dashboardConfig])
   const calcCanvasScale = (e: any) => {
@@ -62,76 +122,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     }
   }, [scaleValue])
 
-  const getScreenInfo = (config: any) => {
-    let map: any = {}
-    config.forEach(({ displayName, value, options, width, height }: any) => {
-      let target = value
-      switch (displayName) {
-        case '屏幕大小':
-          target = { width, height }
-          break;
-      }
-      map[displayName] = target
-    })
-    return map
-  }
 
-  /**
-   * description: 进入页面，先获取画布详情
-   */
-  const getDashboardData = async ({ dashboardConfig, dashboardName }: any) => {
-    document.title = dashboardName
-    // setDashboardConfig(dashboardConfig)
-    // 获取屏幕大小、背景等参数
-    const configInfo: any = getScreenInfo(dashboardConfig)
-    setScreenInfoMap(configInfo)
-    const winW = window.innerWidth
-    const winH = window.innerHeight
-    const { width, height } = configInfo['屏幕大小']
-    console.log('相关配置++++++++', configInfo);
-    const finalStyle: any = {
-      background: configInfo['背景'],
-      // backgroundImage: screenInfoMap['背景图']
-    }
-    // 根据缩放模式来展示
-    const scaleMode = configInfo['缩放设置']
-    switch (scaleMode) {
-      case '0':
-        finalStyle.width = '100vw'
-        finalStyle.height = '100vh'
-        const wRatio = winW / width
-        const hRatio = winH / height
-        setScreenWidthRatio(wRatio)
-        setScreenHeightRatio(hRatio)
-        finalStyle.transform = `scale(${scaleValue})`
-        break;
-      case '1':
-        finalStyle.width = '100vw'
-        finalStyle.height = '100vh'
-        const wRatio2 =  winW / width
-        const hRatio2 =  winH / height
-        setScreenWidthRatio(wRatio2)
-        setScreenHeightRatio(hRatio2)
-        // finalStyle.transform = `scale(${scaleValue})`
-        finalStyle.overflow = 'hidden'
-        break;
-      case '2':
-        // const finalW = winW > width ? width : '100vw'
-        // const finalH = winH > height ? height : '100vh'
-        const finalW = '100vw'
-        const finalH = '100vh'
-        setScreenWidthRatio(width / winW)
-        setScreenHeightRatio(height / winH)
-        setOverflowStyle({
-          width: finalW,
-          height: finalH,
-          overflow: 'auto',
-          ...finalStyle
-        })
-        break;
-    }
-    setPageStyle(finalStyle)
-  }
+
   // 初入页面 - 获取数据
   useEffect(() => {
     const init = async () => {
@@ -174,32 +166,55 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
         }
       })
     })
-
   }
-  console.log('pageStylepageStylepageStylepageStyle', pageStyle);
+  useEffect(() => {
+    const data = deepClone(bar.treeData)
+    treeDataReverse(data)
+    setLayers(data)
+  }, [bar.treeData])
+
+
+  const getScreenInfo = (config: any) => {
+    let map: any = {}
+    config.forEach(({ displayName, value, options, width, height }: any) => {
+      let target = value
+      switch (displayName) {
+        case '屏幕大小':
+          target = { width, height }
+          break;
+      }
+      map[displayName] = target
+    })
+    return map
+  }
   return (
-    <>
+    <div id="easyv-app">
       {
         isLoaded ?
-          <div className='customScrollStyle' style={overflowStyle}>
-            <div className='previewDashboard-wrap'
-              style={{
-                ...pageStyle,
-              }}
-            >
-              <img style={{ position: 'absolute', width: '100%', height: '100%' }} src={screenInfoMap['背景图']} alt="" />
-              {
-                <RecursiveComponent
-                  layersArr={layers}
-                  componentLists={bar.components}
-                  bar={bar}
-                  dispatch={dispatch}
-                  scaleValue={scaleValue}
-                  screenWidthRatio={screenWidthRatio}
-                  screenHeightRatio={screenHeightRatio}
-                />
-              }
+          <div id='bigscreen-container'>
+            <div className='customScrollStyle' style={{ ...overflowStyle }}>
+              <div className='previewDashboard-wrap'
+              >
+                <div id="scaleDiv"
+                  style={{
+                    ...pageStyle,
+                  }}
+                >
+                  {
+                    <RecursiveComponent
+                      layersArr={layers}
+                      componentLists={bar.components}
+                      bar={bar}
+                      dispatch={dispatch}
+                      scaleValue={scaleValue}
+                      screenWidthRatio={screenWidthRatio}
+                      screenHeightRatio={screenHeightRatio}
+                    />
+                  }
+                </div>
+              </div>
             </div>
+
           </div>
           :
           <Spin
@@ -208,7 +223,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
             <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
           </Spin>
       }
-    </>
+    </div>
   )
 }
 
