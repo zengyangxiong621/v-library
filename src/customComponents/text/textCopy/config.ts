@@ -104,12 +104,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 100
+          "value": 500
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 100
+          "value": 200
         }
       ]
     },
@@ -118,11 +118,6 @@ const componentDefaultConfig = {
       "displayName": "默认隐藏",
       "type": "checkBox",
       "value": false
-    },
-    {
-      name: 'opacity',
-      displayName: '透明度',
-      value: 70,
     },
     {
       "name": "textStyle",
@@ -148,12 +143,12 @@ const componentDefaultConfig = {
         {
           "name": "bold",
           "displayName": "",
-          "value": true
+          "value": false
         },
         {
           "name": "italic",
           "displayName": "",
-          "value": true
+          "value": false
         },
         {
           "name": "letterSpacing",
@@ -176,7 +171,7 @@ const componentDefaultConfig = {
           "name": "textAlign",
           "displayName": "水平对齐",
           "type": "align",
-          "value": "center" // left , center, right,bothEnds
+          "value": "bothEnds" // left , center, right,bothEnds
         },
         {
           "name": "textVertical",

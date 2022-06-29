@@ -19,7 +19,7 @@ class TextCopy extends Component<Props, State> {
     const componentConfig = this.props.componentConfig || componentDefaultConfig
     const {config, staticData} = componentConfig
   
-    let style: CSSProperties = config.filter((item: any) => ['iconSize', 'dimension'].indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
+    let style: CSSProperties = config.filter((item: any) => ['iconSize'].indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
       if(Array.isArray(cur.value)) {
         const obj = cur.value.reduce((p: any, c: any) => {
           p[c.name] = c.value
@@ -47,12 +47,54 @@ class TextCopy extends Component<Props, State> {
     const iconSize = findItem('iconSize')
 
     const textStyle = deepClone(style)
-    
-    console.log(textStyle,'style',config)
+  
+    const textRow  = () => {
+      let obj:any = {}
+      switch(textStyle.textAlign){
+        case 'left': 
+          obj.alignItems='flex-start';
+          break;
+        case 'center':
+          obj.alignItems='center';
+          break;
+        case 'right':
+          obj.alignItems = 'flex-end'
+          break;
+        case 'bothEnds':
+          obj={
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }
+          break;
+      }
+      return obj;
+    }
+
+    const textCol = () => {
+      let obj:any = {}
+      switch(textStyle.textVertical){
+        case 'top': 
+          textStyle.textAlign !== 'bothEnds' ? obj.justifyContent='flex-start' : obj.alignItems='flex-start';
+          break;
+        case 'bottom':
+          textStyle.textAlign !== 'bothEnds' ? obj.justifyContent = 'flex-end' :  obj.alignItems = 'flex-end'
+        break;
+        case 'vertical':
+          textStyle.textAlign !== 'bothEnds' ? obj.justifyContent = 'center' :  obj.alignItems = 'center'
+          break;
+      }
+      return obj;
+    }
+
+    const textAlign = textRow()
+    const textVertical = textCol()
+
 
     return (
       <div style={ {
         ...style,
+        ...textAlign,
+        ...textVertical,
         background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
         fontWeight: textStyle.bold ? 'bold' : '',
         fontStyle: textStyle.italic ? 'italic' : ''
@@ -60,10 +102,13 @@ class TextCopy extends Component<Props, State> {
         { staticData.data.map((item:any, i:any) => (
           // <span key={item.text}><img src={require('@/assets/images/controlCabin/btn-left.png')}></img> { item.text } </span>
           <div className="text-name">
-            <img className="icon-img" style={{
-              width: iconSize.value[0].value,
-              height: iconSize.value[1].value
-            }} src={`${iconImg.value}`}></img> 
+             {
+               iconImg.value &&
+               <img className="icon-img" style={{
+                width: iconSize.value[0].value,
+                height: iconSize.value[1].value
+              }} src={`${iconImg.value}`}></img> 
+             }
             <span key={item.text}> { item.text } </span>
           </div>
         ))}
