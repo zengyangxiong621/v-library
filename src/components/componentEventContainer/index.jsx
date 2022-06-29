@@ -3,6 +3,7 @@ import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
 import TimeSelect from '@/components/timeSelect'
 import ScrollTable from '@/components/scrollTable'
+import Bar from '@/customComponents/echarts/components/bar/index'
 import Tab from '@/components/tab'
 import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
@@ -401,6 +402,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'bar' ?
+        <Bar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </Bar>
+        : 
         props.componentConfig.moduleName === 'scrollTable' ?
           <ScrollTable
             onChange={handleValueChange}
