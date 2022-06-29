@@ -23,6 +23,7 @@ import CusTabs from './cusTabs'
 import UploadImg from './uploadImg'
 import CusInputNumber from './cusInputNumber'
 import TabArray from './tabArray'
+import CusSwitch from './switch'
 
 
 const componentLib = {
@@ -48,7 +49,8 @@ const componentLib = {
   tabs:CusTabs,
   image:UploadImg,
   number:CusInputNumber,
-  tabArray: TabArray
+  tabArray: TabArray,
+  switch: CusSwitch
 }
 
 export default componentLib

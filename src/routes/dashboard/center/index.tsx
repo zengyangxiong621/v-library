@@ -14,7 +14,7 @@ import { IScaleDragData, IStyleConfig } from './type'
 import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from './constant'
 import RulerLines from './components/RulerLines'
 import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
-import { deepClone, deepForEach} from '../../../utils'
+import { deepClone, deepForEach, treeDataReverse} from '../../../utils'
 import RightClickMenu from '../left/components/rightClickMenu/rightClickMenu'
 import { menuOptions } from '../left/Data/menuOptions'
 
@@ -35,15 +35,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     treeDataReverse(data)
     setLayers(data)
   }, [bar.treeData])
-
-  const treeDataReverse = (treeData: any) => {
-    treeData = treeData?.reverse()
-    treeData?.forEach((layer: any) => {
-      if (COMPONENTS in layer) {
-        treeDataReverse(layer[COMPONENTS])
-      }
-    })
-  }
 
   let supportLinesRef = bar.supportLinesRef
 
@@ -185,7 +176,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   useEffect(() => {
     calcCanvasSize()
-    window.addEventListener('resize', calcCanvasSize);
+    window.addEventListener('resize', () => {
+      return calcCanvasSize});
     (document.querySelector('.draggable-container') as HTMLElement).addEventListener('contextmenu', handleContextMenu)
     // document.addEventListener('contextmenu', handleContextMenu)
     return () => {
@@ -439,7 +431,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     height: recommendConfig.height,
                     transform: `scale(${ bar.canvasScaleValue })`,
                     backgroundColor: styleColor.value,
-                    background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
+                    background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : styleColor.value,
                     backgroundSize: 'cover',
                   } }
                 >

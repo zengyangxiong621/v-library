@@ -97,6 +97,7 @@ export default {
         payload,
       }))
       const bar: any = yield select(({ bar }: any) => bar)
+      console.log('bar.dataContainerList', bar.dataContainerList)
       bar.dataContainerList.forEach(async (item: any) => {
         let data: any = null
         item.enable = (item.modules.length > 0)
@@ -104,16 +105,17 @@ export default {
           data = item.staticData.data
         } else {
           data = await http({
+            method: 'post',
             url: '/visual/container/data/get',
-            params: {
-              id: item.id
+            body: {
+              id: item.id,
+              callBackParamValues:bar.callbackArgs
             }
           })
         }
         bar.dataContainerDataList.push({ id: item.id, data })
       })
       // 获取当前画布所有的数据过滤器
-
       const filters = yield http({
         url: '/visual/module/filter/list',
         method: 'GET',
@@ -217,6 +219,34 @@ export default {
         type: 'save',
         payload: {
           componentData
+        }
+      })
+    },
+    * getContainersData({ payload }: any, { call, put, select }: any): any {
+      const dataContainerList = payload
+      const bar: any = yield select(({ bar }: any) => bar)
+      dataContainerList.forEach(async (item: any) => {
+        const container = bar.dataContainerList.find((container: any) => container.id === item.id)
+        let data: any = null
+        if (container.dataType === 'static') {
+          data = container.staticData.data
+        } else {
+          data = await http({
+            method: 'post',
+            url: '/visual/container/data/get',
+            body: {
+              id: container.id,
+              callBackParamValues:bar.callbackArgs
+            }
+          })
+        }
+        bar.dataContainerDataList.find((data: any) => data.id === item.id).data = data
+      })
+      console.log('bar.dataContainerDataList', bar.dataContainerDataList)
+      yield put({
+        type: 'save',
+        payload: {
+          dataContainerDataList: bar.dataContainerDataList
         }
       })
     },

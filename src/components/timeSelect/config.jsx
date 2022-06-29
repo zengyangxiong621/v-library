@@ -1,4 +1,4 @@
-const componentDefaultConfig = {
+const ComponentDefaultConfig = {
   "name": "时间选择器",
   "moduleName": "timeSelect",
   "moduleType": "assist",
@@ -282,4 +282,4 @@ const componentDefaultConfig = {
   "dataFrom": 0,
   "callbackArgs": []
 }
-export default componentDefaultConfig
+export default ComponentDefaultConfig

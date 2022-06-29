@@ -28,10 +28,11 @@ const formatEnum = [
   },
 ]
 
-const DateSelect = (props) => {
+const TimeSelect = (props) => {
+  console.log('嘻嘻嘻嘻');
   const [dateValue, setDateValue] = useState(null)
   const dateRef = useRef(null)
-  const componentConfig = props.componentConfig || componentDefaultConfig
+  const componentConfig = ComponentDefaultConfig
   const {config} = componentConfig
   const componentData = props.comData || [{
     "startTime": "",
@@ -233,10 +234,10 @@ const DateSelect = (props) => {
   const handleChange = (date, dateString) => {
     setDateValue(date)
     if (selectType === 'range') {
-      // console.log('range', {[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
+      console.log('range', {[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
       props.onChange({[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
     } else {
-      // console.log('notRange', {[fields[0]]: dateString})
+      console.log('notRange', {[fields[0]]: dateString})
       props.onChange({[fields[0]]: dateString})
     }
   }
@@ -275,4 +276,4 @@ const DateSelect = (props) => {
 
 }
 
-export default DateSelect
+export default TimeSelect
