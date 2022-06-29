@@ -10,8 +10,8 @@ import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data';
-import textConfig from '@/customComponents/text/iconText/config'
-import IconText from '@/customComponents/text/iconText'
+// import textConfig from '@/customComponents/text/iconText/config'
+// import IconText from '@/customComponents/text/iconText'
 
 import {
   STYLE,
