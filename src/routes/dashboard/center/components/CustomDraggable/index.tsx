@@ -10,6 +10,8 @@ import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
+import BasicPieChart from '@/customComponents/echarts/components/basicPie'
+import WorldMap from '@/customComponents/echarts/components/worldMap'
 
 import {
   STYLE,
@@ -36,6 +38,8 @@ import {
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
 import ScrollTable from "@/components/scrollTable";
+import TimeSelect from "@/components/timeSelect";
+
 import Tab from "@/components/tab";
 
 
@@ -628,18 +632,25 @@ const CustomDraggable
                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                               >
                               </ScrollTable> :
-                              layer.moduleName === 'tab' ?
+                            layer.moduleName === 'tab' ?
                               <Tab
                                 componentConfig={component}
                                 fields={getFields(component)}
                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                               >
                               </Tab> :
+                            layer.moduleName === 'timeSelect' ?
+                              <TimeSelect
+                                componentConfig={component}
+                                fields={getFields(component)}
+                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                              >
+                              </TimeSelect> :                              
                             <RemoteBaseComponent
                               componentConfig={component}
                               fields={getFields(component)}
-                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                            ></RemoteBaseComponent>
+                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList,  bar.callbackArgs)}
+                          ></RemoteBaseComponent>
                           }
                         </div>
                       </>

@@ -161,6 +161,12 @@ const ComponentDefaultConfig = {
           "value": 5
         },
         {
+          "name": "isScroll",
+          "displayName": "是否轮播",
+          "type": "switch",
+          "value": true
+        },
+        {
           "name": "waitTime",
           "displayName": "轮播间隔",
           "type": "input",
@@ -452,8 +458,8 @@ const ComponentDefaultConfig = {
       "value": [
         {
           "key": "1",
-          "displayName": "列",
-          "name": "row_1",
+          "displayName": "列1",
+          "name": "tab",
           "type": "object",
           "value": [
             {
@@ -479,8 +485,8 @@ const ComponentDefaultConfig = {
         },
         {
           "key": "2",
-          "displayName": "列",
-          "name": "row_2",
+          "displayName": "列2",
+          "name": "tab",
           "type": "object",
           "value": [
             {
@@ -506,8 +512,8 @@ const ComponentDefaultConfig = {
         },
         {
           "key": "3",
-          "displayName": "列",
-          "name": "row_3",
+          "displayName": "列3",
+          "name": "tab",
           "type": "object",
           "value": [
             {

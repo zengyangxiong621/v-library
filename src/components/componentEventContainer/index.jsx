@@ -1,8 +1,9 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
-import DateSelect from '@/components/timeSelect'
+import TimeSelect from '@/components/timeSelect'
 import ScrollTable from '@/components/scrollTable'
+import Tab from '@/components/tab'
 import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
@@ -18,7 +19,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   })
   const componentRef = useRef(null)
   const [opacityStyle, setOpacityStyle] = useState({opacity: 1})
-  const opacityTimeId = useRef('')
+  const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
   // 点击
   const handleClick = debounce((e) => {
@@ -27,6 +28,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (clickActions.length === 0) {
       return
     }
+    console.log('clickActions', clickActions)
     setClickTimes(1)
     customEventsFunction(clickEvents)
   }, 300)
@@ -37,7 +39,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (mouseEnterActions.length === 0) {
       return
     }
-    customEventsFunction(mouseEnterEvents, e)
+    customEventsFunction(mouseEnterEvents)
   })
   // 移出
   const handleMouseOut = debounce((e) => {
@@ -46,10 +48,11 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (mouseOutActions.length === 0) {
       return
     }
-    customEventsFunction(mouseOutEvents, e)
+    customEventsFunction(mouseOutEvents)
   })
 
-  const customEventsFunction = (events, e) => {
+  const customEventsFunction = (events, data) => {
+    console.log('events', events)
     events.forEach((item) => {
       const conditions = item.conditions
       const conditionType = item.conditionType
@@ -57,10 +60,10 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       if (conditionType !== 'all') {
         conditionTypeValue = conditionType.target.value
       }
-      const callbackArgs = {
-        startTime: '2022-06-17',
-        endTime: '2022-06-17'
-      }
+      // const callbackArgs = {
+      //   startTime: '2022-06-17',
+      //   endTime: '2022-06-17'
+      // }
       /*        [
               {
                 "compare": "==",
@@ -78,31 +81,31 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         const type = condition.type
         const code = condition.code
         if (type === 'custom') {
-          return new Function('data', code)({startTime: callbackArgs.startTime, endTime: callbackArgs.endTime})
+          return new Function('data', code)(data)
         }
         if (condition.compare === '==') {
-          return callbackArgs[field] === condition.expected;
+          return data[field] === condition.expected;
         }
         if (condition.compare === '!=') {
-          return callbackArgs[field] !== condition.expected;
+          return data[field] !== condition.expected;
         }
         if (condition.compare === '<') {
-          return Number(callbackArgs[field]) < Number(condition.expected);
+          return Number(data[field]) < Number(condition.expected);
         }
         if (condition.compare === '<=') {
-          return Number(callbackArgs[field]) < Number(condition.expected) || callbackArgs[field] === condition.expected
+          return Number(data[field]) < Number(condition.expected) || data[field] === condition.expected
         }
         if (condition.compare === '>') {
-          return Number(callbackArgs[field]) > Number(condition.expected);
+          return Number(data[field]) > Number(condition.expected);
         }
         if (condition.compare === '>=') {
-          return Number(callbackArgs[field]) > Number(condition.expected) || callbackArgs[field] === condition.expected
+          return Number(data[field]) > Number(condition.expected) || data[field] === condition.expected
         }
         if (condition.compare === 'include') {
-          return callbackArgs[field].indexOf(condition.expected) !== -1
+          return data[field].indexOf(condition.expected) !== -1
         }
         if (condition.compare === 'exclude') {
-          return callbackArgs[field].indexOf(condition.expected) === -1
+          return data[field].indexOf(condition.expected) === -1
         }
         return false
       }
@@ -113,19 +116,20 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       if (!isAllowAction) {
         return
       }
-
       item.actions.forEach(action => {
-        const type = action.action
         const animation = action.animation
         const delay = animation.delay
         setTimeout(() => {
           action.component.forEach(id => {
             const dom = document.querySelector(`.event-id-${id}`)
+            console.log('dom', dom)
             dom.style.transition = `transform ${animation.duration}ms ${animation.timingFunction} 0s`
             Object.keys(action).filter(
               (key) => !['id', 'name', 'trigger', 'unmount', 'componentScope', 'component', 'action'].includes(key)
             ).forEach((key) => {
-              actionConfigFuncList[key](action[key], type, dom, action.id)
+              console.log('---------------')
+              console.log('actionType', action)
+              actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
             })
           })
         }, delay)
@@ -168,8 +172,8 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     return [...map.values()];
   }
 
-  const handleValueChange = (data) => {
-    console.log('onChange',data)
+  const handleValueChange = debounce((data) => {
+    console.log('data', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
@@ -216,19 +220,21 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         type: 'bar/getComponentsData',
         payload: activeComponents
       })
-      const dataChangeEvents = events.filter(item => item.trigger === 'dataChange')
-      const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
-      if (dataChangeActions.length === 0) {
-        return
-      }
-      customEventsFunction(dataChangeEvents)
     }
+    const dataChangeEvents = events.filter(item => item.trigger === 'dataChange')
+    const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
+    if (dataChangeActions.length === 0) {
+      return
+    }
+    customEventsFunction(dataChangeEvents, data)
 
-  }
+  }, 300)
 
 
-  const animation = ({duration, timingFunction, type}, action, dom, id) => {
-    if (['show', 'hide'].includes(action)) {
+  const animation = ({duration, timingFunction, type}, actionType, dom, actionId, action, componentId) => {
+    console.log('action', action)
+    console.log('actionType', actionType)
+    if (['show', 'hide'].includes(actionType)) {
       // transform = 'translateY(200px)'
       let translate = {
         x: 0,
@@ -269,26 +275,36 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       } else {
         dom.style.transform += `translateY(${translate.y}px)`
       }
-
-
-      opacityTimeId.current = id
-      let timer = setInterval(() => {
-        // 在一个时间端内，只存在一种事件
-        if (opacityTimeId.current !== id) {
-          clearInterval(timer)
-        }
-        if (action === 'show') {
+      let timer = null
+      const index = opacityTimeIds.current.indexOf(componentId)
+      // if (index !== -1) {
+      //   // 说明存在
+      //   clearInterval(timer)
+      //   console.log('清除了不')
+      //   opacityTimeIds.current.splice(index, 1)
+      // } else {
+      //   opacityTimeIds.current.push(componentId)
+      // }
+      console.log('重新开始')
+      timer = setInterval(() => {
+        // 在一个时间段内，只存在一种事件
+        if (actionType === 'show') {
           if (dom.style.opacity >= 1) {
             dom.style.opacity = 1
             clearInterval(timer)
+            const index = opacityTimeIds.current.indexOf(componentId)
+            opacityTimeIds.current.splice(index, 1)
           } else {
+            console.log('dom.style.opacity', dom.style.opacity)
             dom.style.opacity = Number(dom.style.opacity) + 0.01
           }
         }
-        if (action === 'hide') {
+        if (actionType === 'hide') {
           if (dom.style.opacity <= 0) {
             dom.style.opacity = 0
             clearInterval(timer)
+            const index = opacityTimeIds.current.indexOf(componentId)
+            opacityTimeIds.current.splice(index, 1)
           } else {
             dom.style.opacity = Number(dom.style.opacity) - 0.01
           }
@@ -365,6 +381,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   return (
     <div
+      key={id}
       ref={componentRef}
       className={`single-component event-id-${id}`}
       onClick={handleClick}
@@ -381,6 +398,18 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
             {...props}
           >
           </ScrollTable>
+          : props.componentConfig.moduleName === 'tab' ?
+          <Tab
+            onChange={handleValueChange}
+            {...props}
+          >
+          </Tab>
+          : props.componentConfig.moduleName === 'timeSelect' ?
+          <TimeSelect
+            onChange={handleValueChange}
+            {...props}
+          >
+          </TimeSelect>
           : <RemoteBaseComponent
             {...props}
             onChange={handleValueChange}

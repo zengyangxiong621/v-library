@@ -69,7 +69,7 @@ class ECharts extends Component {
   }
 
   // return the echart object
-  getEchartsInstance = () =>
+  getEchartsInstance = () =>    
     echarts.getInstanceByDom(this.echartsElement) ||
     echarts.init(this.echartsElement, this.props.theme, this.props.opts);
 
@@ -83,10 +83,12 @@ class ECharts extends Component {
 
   rerender = () => {
     const { onEvents, onChartReady } = this.props;
-
+    // 地图组件需执行createMap
+    if (this.props?.type === 'map') {
+      this.props.createMap(); 
+    }
     this.echartObj = this.renderEchartDom();
     this.bindEvents(this.echartObj, onEvents || {});
-
     // on chart ready
     if (typeof onChartReady === 'function')
       this.props.onChartReady(this.echartObj);
@@ -118,11 +120,13 @@ class ECharts extends Component {
     // init the echart object
     const echartObj = this.getEchartsInstance();
     // set the echart option
+
     echartObj.setOption(
       this.props.option,
       this.props.notMerge || false,
       this.props.lazyUpdate || false
     );
+
     // set loading mask
     if (this.props.showLoading)
       echartObj.showLoading(this.props.loadingOption || null);
@@ -192,7 +196,7 @@ ECharts.defaultProps = {
   },
   className: '',
   theme: null,
-  onChartReady: () => {},
+  onChartReady: () => {}, 
   showLoading: false,
   loadingOption: null,
   onEvents: {},

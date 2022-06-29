@@ -48,6 +48,7 @@ const EveryComponent = ({ componentData, comData, screenWidthRatio, screenHeight
       style={componentStyle}
     >
       <ComponentEventContainer
+        key={id}
         id={id}
         events={events}
         version={'1.0.0'}
