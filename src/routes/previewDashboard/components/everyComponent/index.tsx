@@ -12,7 +12,7 @@ import { getFields } from '@/utils/data'
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, screenWidthRatio, screenHeightRatio }: any) => {
+const EveryComponent = ({ componentData, comData, scaleValue, screenWidthRatio, screenHeightRatio }: any) => {
   const { moduleName, events, id, config } = componentData
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
@@ -22,27 +22,42 @@ const EveryComponent = ({ componentData, comData, screenWidthRatio, screenHeight
   /**
    * description: 位置尺寸 需要根据屏幕的宽高比例等比例放大或者缩小
    */
+
+
   const weizhichicunArr = allConfigMap.get(WEIZHICHICUN).map((item: any) => {
-    if(['X轴坐标', '宽度'].includes(item.displayName)) {
+    // if (['X轴坐标'].includes(item.displayName)) {
+    //   return {
+    //     ...item,
+    //     value: ~~(screenWidthRatio * item.value)
+    //   }
+    // }
+    // if (['Y轴坐标'].includes(item.displayName)) {
+    //   return {
+    //     ...item,
+    //     value: ~~(screenWidthRatio * item.value)
+    //   }
+    // }
+
+    // return item
+    if (['X轴坐标', '宽度'].includes(item.displayName)) {
       return {
         ...item,
-        value: screenWidthRatio * item.value
+        value: ~~(screenWidthRatio.toFixed(3) * item.value)
       }
-    } else {
+    } else if (['Y轴坐标', '高度'].includes(item.displayName)) {
       return {
         ...item,
-        value: screenHeightRatio * item.value
+        value: ~~(screenHeightRatio.toFixed(3) * item.value)
       }
     }
+    return item
   })
 
-  const componentStyle = getTargetStyle(weizhichicunArr, {
+  console.log('scaleValuescaleValuescaleValue', scaleValue);
+  let componentStyle = getTargetStyle(weizhichicunArr, {
     position: 'absolute',
+    // transform: `scale(${ scaleValue })`
   })
-  // 文本样式
-  const wenbenyangshiArr = allConfigMap.get(WENBENYANGSHI)
-  const textStyle = getTargetStyle(wenbenyangshiArr)
-
   return (
     <div className='preview-component-wrap'
       style={componentStyle}

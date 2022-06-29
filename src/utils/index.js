@@ -9,7 +9,6 @@ import {
 } from '../constant/home'
 
 export function findLayerById (layer, id) {
-  console.log(layer, 'findLayerById-----------------')
   let temp = null
   layer.forEach((item) => {
     if (item.id === id) {
@@ -579,7 +578,6 @@ export const treeDataReverse = (treeData) => {
 
 // 计算画布的大小
 export const calcCanvasSize = function (recommendConfig, cb){
-  console.log('这里了吗')
   let getCurrentDocumentWidth = document.documentElement.clientWidth
   // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
   const getCurrentDocumentHeight = document.documentElement.clientHeight
@@ -596,12 +594,10 @@ export const calcCanvasSize = function (recommendConfig, cb){
   let canvasScaleValue = 0
   if(canvasHeight > height) {
     canvasScaleValue = Number((height / recommendConfig.height).toFixed(3))
-    console.log('canvasScaleValue1', canvasScaleValue)
   } else {
     // 如果中间区域刚好能装下画布
     // 那么尺子组件距离画布的横向距离就是 22
     canvasScaleValue = Number((width / recommendConfig.width).toFixed(3))
-    console.log('canvasScaleValue2', canvasScaleValue)
 
   }
   return canvasScaleValue

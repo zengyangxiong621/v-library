@@ -48,11 +48,14 @@ const ScrollTable = (props) => {
 
   useEffect(() => {
     // 重新计算大小
+    // setTableWH()
+    // tableRef.current.setWH()
     tableRef.current.setWH()
   }, [])
 
   useEffect(() => {
     // 重新计算大小
+    setTableWH()
     tableRef.current.setWH()
   }, [width, height, customColumnConfig])
 
@@ -62,6 +65,7 @@ const ScrollTable = (props) => {
 
   useEffect(() => {
     // boolean
+
     const switchConfig = tableHeaderConfig.find(item => item.name === 'show').value
     let headerConfig
     if (switchConfig) {
@@ -88,6 +92,7 @@ const ScrollTable = (props) => {
 
 
   useEffect(() => {
+    console.log(5)
     const switchConfig = tableRowConfig.find(item => item.name === 'show').value
     let rowConfig
     if (switchConfig) {
@@ -103,6 +108,7 @@ const ScrollTable = (props) => {
   }, [tableRowConfig])
 
   useEffect(() => {
+    console.log(6)
     const switchConfig = tableIndexConfig.find(item => item.name === 'show').value
     let indexConfig
     if (switchConfig) {
@@ -117,6 +123,7 @@ const ScrollTable = (props) => {
   }, [tableIndexConfig])
 
   useEffect(() => {
+    console.log(7)
     const animationModel = tableAnimationConfig.find(item => item.name === "animationModel").value
     setCarousel(animationModel)
   }, [tableAnimationConfig])
@@ -132,6 +139,7 @@ const ScrollTable = (props) => {
   }
 
   useEffect(() => {
+    console.log(8)
     const mappingConfig = getMapping(customColumnConfig)
     const header = mappingConfig.map(item => item.displayName)
     setHeader(header)
@@ -160,6 +168,7 @@ const ScrollTable = (props) => {
   },[])
 
   useEffect(() => {
+    console.log(9)
     const mappingConfig = getMapping(customColumnConfig)
     const header = mappingConfig.map(item => item.displayName)
     setHeader(header)
@@ -185,8 +194,19 @@ const ScrollTable = (props) => {
       tableValue.push(arr)
     })
     setTableData(tableValue)
+    setTableWH()
   }, [customColumnConfig, comData])
 
+  const setTableWH = () => {
+    setTimeout(() => {
+      const tableDom = ReactDOM.findDOMNode(tableContainerRef.current);
+      const tableRowItems = tableDom.querySelectorAll('.row-item')
+      tableRowItems.forEach(dom => {
+        dom.style.height = (height - 23.17) / 5 + 'px'
+        dom.style.lineHeight = (height - 23.17) / 5 + 'px'
+      })
+    })
+  }
 
   const tableConfig = {
     header,

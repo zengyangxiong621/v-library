@@ -643,13 +643,13 @@ const CustomDraggable
                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                               >
                               </Tab> :
-                            layer.moduleName === 'timeSelect' ?
-                              <TimeSelect
-                                componentConfig={component}
-                                fields={getFields(component)}
-                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                              >
-                              </TimeSelect> :
+                              layer.moduleName === 'worldMap' ?
+                            <WorldMap
+                              componentConfig={component}
+                              fields={getFields(component)}
+                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList,  bar.callbackArgs)}
+                          ></WorldMap> 
+                          :
                             <RemoteBaseComponent
                               componentConfig={component}
                               fields={getFields(component)}

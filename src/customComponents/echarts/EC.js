@@ -83,10 +83,6 @@ class ECharts extends Component {
 
   rerender = () => {
     const { onEvents, onChartReady } = this.props;
-    // 地图组件需执行createMap
-    if (this.props?.type === 'map') {
-      this.props.createMap(); 
-    }
     this.echartObj = this.renderEchartDom();
     this.bindEvents(this.echartObj, onEvents || {});
     // on chart ready
@@ -138,6 +134,7 @@ class ECharts extends Component {
   render() {
     const { size, style, id, className } = this.props;
     const { width, height } = size;
+
 
     const newStyle = {
       height,
