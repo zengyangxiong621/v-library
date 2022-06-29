@@ -32,7 +32,6 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
 
   // 获取模板列表数据的方法
   const getDataDispatch = (data?: any) => {
-    console.log(data,'数据')
     const currentClass = data.origin ? data : resourceCenter.curSelectedGroup
     const groupId =
       ['-1', 'sysAll'].indexOf(currentClass.groupId) > -1
@@ -77,6 +76,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           }
         });
         let finalBody = {
+          ...first,
           spaceId: first.origin === 'myresource' ? '1' : null,
           groupId: first.groupId === '-1' ? null : first.groupId, // 系统素材下不传
           type: [first.origin]
@@ -137,7 +137,6 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   const changeShowState = (modalType: any) => {
     setUploadVisible(modalType);
   };
-  console.log(resourceCenter.curSelectedGroup,resourceCenter.groupList,'curSelectedGroup')
   return (
     <div className="resourceCenter-wrap">
       <div className="left">
