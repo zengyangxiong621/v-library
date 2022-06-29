@@ -9,7 +9,7 @@ interface Props {
 
 interface State {}
 
-class TextCopy extends Component<Props, State> {
+class IconText extends Component<Props, State> {
   constructor(Props: any) {
     super(Props)
   }
@@ -118,5 +118,5 @@ class TextCopy extends Component<Props, State> {
   }
 }
 
-export { TextCopy }
-export default TextCopy
+export { IconText }
+export default IconText

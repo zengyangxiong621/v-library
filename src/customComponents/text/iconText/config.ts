@@ -1,11 +1,11 @@
 const componentDefaultConfig = {
   "id": '121', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "文字图标组件", //图层名称
+  "name": "标题图标", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
-  "moduleName": "textCopy", //组件标识
+  "moduleName": "iconText", //组件标识
   "moduleVersion": "1.0.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
@@ -185,7 +185,8 @@ const componentDefaultConfig = {
       'name': 'iconImg',
       'displayName': '上传图标',
       'type':'image',
-      'value': 'https://img2.baidu.com/it/u=2113220341,3117661873&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', // 有背景图则返回背景图的url，没有背景图返回空或者null
+      'value': ''
+      // 'value': 'https://img2.baidu.com/it/u=2113220341,3117661873&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', // 有背景图则返回背景图的url，没有背景图返回空或者null
     },
     {
       name:"iconSize",
@@ -219,7 +220,8 @@ const componentDefaultConfig = {
       'name': 'backgroundImg',
       'displayName': '标题背景图',
       'type':'image',
-      'value': 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F25%2F20200425173132_svsej.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658998305&t=e66659d4f05a9e35629aeb89425ad381', // 有背景图则返回背景图的url，没有背景图返回空或者null
+      'value': ''
+      // 'value': 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F25%2F20200425173132_svsej.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658998305&t=e66659d4f05a9e35629aeb89425ad381', // 有背景图则返回背景图的url，没有背景图返回空或者null
     },
     // {
     //   "name": "shadow",

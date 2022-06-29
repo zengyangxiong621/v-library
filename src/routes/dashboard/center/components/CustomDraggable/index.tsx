@@ -10,8 +10,8 @@ import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data';
-import textConfig from '@/customComponents/text/textCopy/config'
-import TextCopy from '@/customComponents/text/textCopy'
+import textConfig from '@/customComponents/text/iconText/config'
+import IconText from '@/customComponents/text/iconText'
 
 import {
   STYLE,
@@ -543,8 +543,8 @@ const CustomDraggable
               component = components.find(item => item.id === layer.id)
 
 
-              component.config = textConfig.config
-              component.staticData = textConfig.staticData
+              // component.config = textConfig.config
+              // component.staticData = textConfig.staticData
 
 
               if (component) {
@@ -628,30 +628,30 @@ const CustomDraggable
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
-                            <TextCopy
-                              componentConfig={component}
-                            ></TextCopy>
+                            // <IconText
+                            //   componentConfig={component}
+                            // ></IconText>
 
                             // <Da componentConfig={component}/>
-                            // layer.moduleName === 'scrollTable' ?
-                            //   <ScrollTable
-                            //     componentConfig={component}
-                            //     fields={getFields(component)}
-                            //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                            //   >
-                            //   </ScrollTable> :
-                            //   layer.moduleName === 'tab' ?
-                            //   <Tab
-                            //     componentConfig={component}
-                            //     fields={getFields(component)}
-                            //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                            //   >
-                            //   </Tab> :
-                            // <RemoteBaseComponent
-                            //   componentConfig={component}
-                            //   fields={getFields(component)}
-                            //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                            // ></RemoteBaseComponent>
+                            layer.moduleName === 'scrollTable' ?
+                              <ScrollTable
+                                componentConfig={component}
+                                fields={getFields(component)}
+                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                              >
+                              </ScrollTable> :
+                              layer.moduleName === 'tab' ?
+                              <Tab
+                                componentConfig={component}
+                                fields={getFields(component)}
+                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                              >
+                              </Tab> :
+                            <RemoteBaseComponent
+                              componentConfig={component}
+                              fields={getFields(component)}
+                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            ></RemoteBaseComponent>
                           }
                         </div>
                       </>
