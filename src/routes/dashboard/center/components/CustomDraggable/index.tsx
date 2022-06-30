@@ -13,6 +13,7 @@ import { getComDataWithFilters, getFields } from '@/utils/data'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
 import BasicBar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
+import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 
 import {
   STYLE,
@@ -630,13 +631,7 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
-                            layer.moduleName === 'bar' ?
-                              <BasicBar
-                                componentConfig={component}
-                                fields={getFields(component)}
-                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                              >
-                              </BasicBar> :
+                            
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
                                 componentConfig={component}
