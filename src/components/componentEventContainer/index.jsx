@@ -5,7 +5,6 @@ import TimeSelect from '@/components/timeSelect'
 import ScrollTable from '@/components/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import Tab from '@/components/tab'
-import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
 import {cloneDeep} from 'lodash'
@@ -169,6 +168,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   }
 
   const handleValueChange = debounce((data) => {
+    console.log('data', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
     // component.callbackArgs = comCallbackArgs
@@ -408,7 +408,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
           {...props}
         >
         </Bar>
-        : 
+        :
         props.componentConfig.moduleName === 'scrollTable' ?
           <ScrollTable
             onChange={handleValueChange}

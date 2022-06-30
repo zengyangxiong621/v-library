@@ -16,7 +16,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
   const [dashboardConfig, setDashboardConfig] = useState([])
-  const [pageStyle, setPageStyle] = useState({})
+  const [absolutePosition, setAbsolutePosition] = useState({left: 0, top: 0})
+  const [pageStyle, setPageStyle]: any = useState({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
   const [scaleValue, setScaleValue] = useState(1)
@@ -30,14 +31,16 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
    */
   const getDashboardData = async ({ dashboardConfig, dashboardName }: any) => {
     document.title = dashboardName
-    // setDashboardConfig(dashboardConfig)
+    setDashboardConfig(dashboardConfig)
     // 获取屏幕大小、背景等参数
     const configInfo: any = getScreenInfo(dashboardConfig)
     // const winW = window.innerWidth
     // const winH = window.innerHeight
-    const winW = document.body.clientWidth
-    const winH = document.body.clientHeight
+    const winW = document.documentElement.clientWidth
+    const winH = document.documentElement.clientHeight
     const { width, height } = configInfo['屏幕大小']
+
+
     let finalStyle: any = {
       background: configInfo['背景'],
       backgroundImage: configInfo['背景图'],
@@ -54,14 +57,12 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     switch (scaleMode) {
       case '0':
         // widthRatio
-        finalStyle.width = width
+        finalStyle.width = width // recommandConfig.width
         finalStyle.height = height
         finalStyle.position = 'absolute'
-        finalStyle.top = `${Math.ceil((winH - height) / 2)}px`
-        finalStyle.left = `${Math.ceil((winW - width) / 2)}px`
-
-        const scaleValue = calcCanvasSize({ width, height })
-        finalStyle.transform = `scale(${scaleValue})`
+        const { scaleValue, absolutePosition } = calcCanvasSize({ width, height })
+        setAbsolutePosition(absolutePosition)
+        finalStyle.transformOrigin = 'left top'
         setScaleValue(scaleValue)
         finalStyle.backgroundImage = `url(${configInfo['背景图']})`
         break;
@@ -92,15 +93,23 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
 
 
   const setCanvasSize = (config?: any) => {
-    config = config || dashboardConfig
-    const screenInfoMap: any = getScreenInfo(config)
-    const { width, height } = screenInfoMap['屏幕大小']
-    const scaleValue = calcCanvasSize({ width, height })
-    setScaleValue(scaleValue)
+    if (config instanceof Event) {
+      config = dashboardConfig
+    } else {
+      config = config || dashboardConfig
+    }
+    if (config.length > 0) {
+      const screenInfoMap: any = getScreenInfo(config)
+      const { width, height } = screenInfoMap['屏幕大小']
+      const { scaleValue, absolutePosition } = calcCanvasSize({ width, height })
+      setScaleValue(scaleValue)
+      setAbsolutePosition(absolutePosition)
+    }
   }
 
   useEffect(() => {
-    if (!dashboardConfig.length) {
+    if (dashboardConfig.length > 0) {
+      console.log('1', dashboardConfig)
       window.addEventListener('resize', setCanvasSize)
     }
     return () => {
@@ -188,16 +197,23 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     return map
   }
   return (
-    <div id="easyv-app">
+    <div id="gs-v-library-app">
       {
         isLoaded ?
           <div id='bigscreen-container'>
             <div className='customScrollStyle' style={{ ...overflowStyle }}>
               <div className='previewDashboard-wrap'
+                   style={{
+                     position: 'absolute',
+                     width: pageStyle.width * scaleValue,
+                     height: pageStyle.height * scaleValue,
+                     ...absolutePosition,
+                   }}
               >
                 <div id="scaleDiv"
                   style={{
                     ...pageStyle,
+                    transform: `scale(${scaleValue})`
                   }}
                 >
                   {
