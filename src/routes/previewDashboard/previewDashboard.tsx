@@ -47,9 +47,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center center',
-      pointerEvents: 'none',
-      overflow: 'hidden',
-      filter: 'unset',
     }
 
     // 根据缩放模式来展示
@@ -200,7 +197,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     <div id="gs-v-library-app">
       {
         isLoaded ?
-          <div id='bigscreen-container'>
             <div className='customScrollStyle' style={{ ...overflowStyle }}>
               <div className='previewDashboard-wrap'
                    style={{
@@ -229,8 +225,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
                   }
                 </div>
               </div>
-            </div>
-
           </div>
           :
           <Spin

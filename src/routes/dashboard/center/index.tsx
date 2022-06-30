@@ -176,8 +176,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   useEffect(() => {
     calcCanvasSize()
-    window.addEventListener('resize', () => {
-      return calcCanvasSize});
+    window.addEventListener('resize', calcCanvasSize);
     (document.querySelector('.draggable-container') as HTMLElement).addEventListener('contextmenu', handleContextMenu)
     // document.addEventListener('contextmenu', handleContextMenu)
     return () => {
