@@ -1,7 +1,7 @@
 const componentDefaultConfig = {
   "id": '121', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "标题图标", //图层名称
+  "name": "图标标题", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
@@ -27,9 +27,6 @@ const componentDefaultConfig = {
     "data": [
       {
         "text": "文字组件",
-      },
-      {
-        "text": "测试组件",
       }
     ],
     "fields": [
@@ -171,7 +168,7 @@ const componentDefaultConfig = {
           "name": "textAlign",
           "displayName": "水平对齐",
           "type": "align",
-          "value": "bothEnds" // left , center, right,bothEnds
+          "value": "left" // left , center, right,bothEnds
         },
         {
           "name": "textVertical",
@@ -182,36 +179,53 @@ const componentDefaultConfig = {
       ]
     },
     {
+      'name':"underline",
+      'displayName':'标题下划线',
+      'type':'radioGroup',
+      'direction':'horizontal', // 方向
+      'value': false,
+      'options': [
+        {
+          'name': '显示',
+          'value': true
+        },
+        {
+          'name': '隐藏',
+          'value': false
+        }
+      ]
+    },
+    {
       'name': 'iconImg',
       'displayName': '上传图标',
       'type':'image',
       'value': ''
-      // 'value': 'https://img2.baidu.com/it/u=2113220341,3117661873&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', // 有背景图则返回背景图的url，没有背景图返回空或者null
+      // 'value': 'http://10.201.81.47:9000/soc-visualization-public/static/png/多边形-蓝色.png', // 有背景图则返回背景图的url，没有背景图返回空或者null
     },
     {
-      name:"iconSize",
-      displayName:'图标尺寸',
-      type:'inputNumber2',
-      showDetail:true, // 是否展示下面的文字说明
-      value:[
+      'name':"iconSize",
+      'displayName':'图标尺寸',
+      'type':'inputNumber2',
+      'showDetail':true, // 是否展示下面的文字说明
+      'value':[
           {
-              name:'width',
-              displayName:'宽度',
-              type:'number',
-              value:50,
-              config:{
-                  min:0,
-                  suffix:'px',  // 输入框后缀
+              'name':'width',
+              'displayName':'宽度',
+              'type':'number',
+              'value':20,
+              'config':{
+                  'min':0,
+                  'suffix':'px',  // 输入框后缀
               }
           },
           {
-              name:'height',
-              displayName:'长度',
-              type:'number',
-              value:50,
-              config:{
-                  min:0,
-                  suffix:'px',  // 输入框后缀
+              'name':'height',
+              'displayName':'长度',
+              'type':'number',
+              'value':20,
+              'config':{
+                  'min':0,
+                  'suffix':'px',  // 输入框后缀
               }
           },
       ]

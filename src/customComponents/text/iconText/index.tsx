@@ -1,7 +1,6 @@
 import React, { Component, CSSProperties } from 'react';
 import componentDefaultConfig from './config'
 import './index.less'
-import { deepClone } from '@/utils'
 
 interface Props {
   componentConfig?: any
@@ -46,7 +45,7 @@ class IconText extends Component<Props, State> {
     const iconImg = findItem('iconImg')
     const iconSize = findItem('iconSize')
 
-    const textStyle = deepClone(style)
+    const textStyle = JSON.parse(JSON.stringify(style))
   
     const textRow  = () => {
       let obj:any = {}
@@ -88,27 +87,41 @@ class IconText extends Component<Props, State> {
 
     const textAlign = textRow()
     const textVertical = textCol()
-
-
+    let textStyleObj:any = {
+      ...style,
+      ...textVertical,
+      background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
+      fontWeight: textStyle.bold ? 'bold' : '',
+      fontStyle: textStyle.italic ? 'italic' : ''
+    }
+    if(!textStyle.underline || textStyle.textAlign === 'bothEnds'){
+      textStyleObj = {...textStyleObj,  ...textAlign}
+    }
+    let textNameObj:any = {}
+    if(textStyle.underline){
+      switch(textStyle.textAlign){
+        case 'left':
+          textNameObj.justifyContent = 'flex-start'
+          break;
+        case 'center':
+          textNameObj.justifyContent = 'center'
+          break;
+        case 'right':
+          textNameObj.justifyContent = 'flex-end'
+          break;
+      }
+    }
     return (
-      <div style={ {
-        ...style,
-        ...textAlign,
-        ...textVertical,
-        background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
-        fontWeight: textStyle.bold ? 'bold' : '',
-        fontStyle: textStyle.italic ? 'italic' : ''
-      } } className="text">
+      <div style={ textStyleObj } className="text">
         { staticData.data.map((item:any, i:any) => (
-          // <span key={item.text}><img src={require('@/assets/images/controlCabin/btn-left.png')}></img> { item.text } </span>
-          <div className="text-name">
-             {
-               iconImg.value &&
-               <img className="icon-img" style={{
+          <div className={`text-name ${textStyle.underline &&'showText'}`} style={textNameObj}>
+            {
+              iconImg.value &&
+              <img className="icon-img" style={{
                 width: iconSize.value[0].value,
                 height: iconSize.value[1].value
               }} src={`${iconImg.value}`}></img> 
-             }
+            }
             <span key={item.text}> { item.text } </span>
           </div>
         ))}
