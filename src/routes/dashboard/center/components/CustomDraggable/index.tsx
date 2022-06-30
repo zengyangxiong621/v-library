@@ -12,6 +12,7 @@ import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
+import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 
 import {
   STYLE,
@@ -629,6 +630,7 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
+                            
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
                                 componentConfig={component}
