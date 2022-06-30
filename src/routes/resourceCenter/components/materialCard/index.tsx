@@ -23,8 +23,11 @@ const AppCard = (props: any) => {
     changeFabuModal,
     refreshList,
     history,
-    getCurrentItem
+    getCurrentItem,
+    moduleType
   } = props;
+
+  console.log(moduleType,'llllllll')
 
   // 后端返回的photoUrl为空，则使用默认图片
   const picUrl =
@@ -213,14 +216,17 @@ const AppCard = (props: any) => {
           <div className="icons-wrap">
             <div className="more-icon">
               {/* 系统素材不允许移动 */}
-              {/* <Tooltip placement="bottom" title="移动">
-                <IconFont
-                  style={{ fontSize: "16px", marginRight: "10px" }}
-                  onClick={moveGroup}
-                  className="icon-yidong"
-                  type="icon-yidong"
-                />
-              </Tooltip> */}
+              {
+                moduleType === 'myresource' &&
+                <Tooltip placement="bottom" title="移动">
+                  <IconFont
+                    style={{ fontSize: "16px", marginRight: "10px" }}
+                    onClick={moveGroup}
+                    className="icon-yidong"
+                    type="icon-yidong"
+                  />
+                </Tooltip>
+              }
               <Tooltip placement="bottom" title={`${props.appName.length ? '已被画布引用，不允许删除' : '删除'}`}>
                 <IconFont
                   style={{ fontSize: "16px" }}
