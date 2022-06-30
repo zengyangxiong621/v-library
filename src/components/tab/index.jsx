@@ -60,20 +60,19 @@ const Tab = (props) => {
   const activeStyle = {
     background: 'linear-gradient(to bottom, #3EE6FF, rgba(29,129,255,0.97))',
     color: 'black'
-
   }
 
   useEffect(() => {
-    // handleTabChange(finalData[0])
+    handleTabChange(finalData[0])
   }, [])
-
 
   const handleTabChange = (data) => {
     if (data[finalFields[0]] !== activeKey) {
       setActiveKey(data[finalFields[0]])
-      props.onChange({[finalFields[0]]: data[finalFields[0]], [finalFields[1]]: data[finalFields[1]]})
+      props.onChange && props.onChange({[finalFields[0]]: data[finalFields[0]], [finalFields[1]]: data[finalFields[1]]})
     }
   }
+
   return (
     <div
       className='tab-wrap'

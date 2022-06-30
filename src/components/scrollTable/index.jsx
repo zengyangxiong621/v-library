@@ -28,14 +28,17 @@ const ScrollTable = (props) => {
   const [carousel, setCarousel] = useState('page')
   const [tableData, setTableData] = useState([])
   const [header, setHeader] = useState([])
-  const componentConfig = props.componentConfig || componentDefaultConfig
+  const [isHeader, setIsHeader] = useState(true)
+  const componentConfig = props.componentConfig || ComponentDefaultConfig
   const fields = getFields(componentConfig)
   const {config, staticData} = componentConfig
 
   const allGlobalConfig = config.find(item => item.name === "allGlobal").value
-  const waitTimeConfig = allGlobalConfig.find(item => item.name === "waitTime").value
+  const rowNumConfig = allGlobalConfig.find(item => item.name === "rowNums").value
   const dimensionConfig = config.find(item => item.name === "dimension").value
   const tableAnimationConfig = config.find(item => item.name === 'animation').value
+  const waitTimeConfig = tableAnimationConfig.find(item => item.name === "scrollInterval").value
+
   const tableHeaderConfig = config.find(item => item.name === "tableHeader").value
   const tableRowConfig = config.find(item => item.name === "tableRow").value
   const tableIndexConfig = config.find(item => item.name === "tableIndex").value
@@ -49,56 +52,58 @@ const ScrollTable = (props) => {
   useEffect(() => {
     // 重新计算大小
     // setTableWH()
-    // tableRef.current.setWH()
     tableRef.current.setWH()
   }, [])
 
   useEffect(() => {
     // 重新计算大小
-    setTableWH()
+    // setTableWH()
     tableRef.current.setWH()
   }, [width, height, customColumnConfig])
 
   useEffect(() => {
     setWaitTime(waitTimeConfig)
   }, [waitTimeConfig])
+  useEffect(() => {
+    setTableWH()
+  }, [rowNumConfig])
 
   useEffect(() => {
     // boolean
-
     const switchConfig = tableHeaderConfig.find(item => item.name === 'show').value
     let headerConfig
     if (switchConfig) {
       headerConfig = tableHeaderConfig
-    } else {
-      headerConfig = componentDefaultConfig.config.find(item => item.name === "tableHeader").value
-    }
-    setTimeout(() => {
-      const lineHeight = headerConfig.find(item => item.name === 'lineHeight').value
-      const bgColor = headerConfig.find(item => item.name === 'bgColor').value
-      const textAlign = headerConfig.find(item => item.name === 'textAlign').value
-      const tableDom = ReactDOM.findDOMNode(tableContainerRef.current);
-      const tableHeaderItemDOMs = tableDom.querySelectorAll(".dv-scroll-board>.header>.header-item")
-      const tableHeader = tableDom.querySelector(".dv-scroll-board>.header")
-      tableHeader.style.backgroundColor = bgColor
-      tableHeaderItemDOMs.forEach(dom => {
-        dom.style.lineHeight = lineHeight + 'px'
-        dom.style.textAlign = textAlign
+      setTimeout(() => {
+        const lineHeight = headerConfig.find(item => item.name === 'lineHeight').value
+        const bgColor = headerConfig.find(item => item.name === 'bgColor').value
+        const textAlign = headerConfig.find(item => item.name === 'textAlign').value
+        const tableDom = ReactDOM.findDOMNode(tableContainerRef.current);
+        const tableHeaderItemDOMs = tableDom.querySelectorAll(".dv-scroll-board>.header>.header-item")
+        const tableHeader = tableDom.querySelector(".dv-scroll-board>.header")
+        tableHeader.style.backgroundColor = bgColor
+        tableHeaderItemDOMs.forEach(dom => {
+          dom.style.lineHeight = lineHeight + 'px'
+          dom.style.textAlign = textAlign
+        })
       })
+      setIsHeader(true)
+    } else {
+      headerConfig = ComponentDefaultConfig.config.find(item => item.name === "tableHeader").value
+      setIsHeader(false)
+    }
+    setTableWH()
 
-      // todo 文本样式
-    })
-  }, [tableHeaderConfig])
+  }, [tableHeaderConfig.find(item => item.name === 'show').value])
 
 
   useEffect(() => {
-    console.log(5)
     const switchConfig = tableRowConfig.find(item => item.name === 'show').value
     let rowConfig
     if (switchConfig) {
       rowConfig = tableRowConfig
     } else {
-      rowConfig = componentDefaultConfig.config.find(item => item.name === "tableRow").value
+      rowConfig = ComponentDefaultConfig.config.find(item => item.name === "tableRow").value
     }
     const evenBgColor = rowConfig.find(item => item.name === "evenBgColor").value
     const oddBgColor = rowConfig.find(item => item.name === "oddBgColor").value
@@ -114,7 +119,7 @@ const ScrollTable = (props) => {
     if (switchConfig) {
       indexConfig = tableIndexConfig
     } else {
-      indexConfig = componentDefaultConfig.config.find(item => item.name === "tableIndex").value
+      indexConfig = ComponentDefaultConfig.config.find(item => item.name === "tableIndex").value
     }
     const indexTitle = indexConfig.find(item => item.name === "title").value
     const indexAlign = indexConfig.find(item => item.name === "textAlign").value
@@ -123,7 +128,6 @@ const ScrollTable = (props) => {
   }, [tableIndexConfig])
 
   useEffect(() => {
-    console.log(7)
     const animationModel = tableAnimationConfig.find(item => item.name === "animationModel").value
     setCarousel(animationModel)
   }, [tableAnimationConfig])
@@ -139,8 +143,9 @@ const ScrollTable = (props) => {
   }
 
   useEffect(() => {
-    console.log(8)
     const mappingConfig = getMapping(customColumnConfig)
+    const isHeader = tableHeaderConfig.find(item => item.name === 'show').value
+    setIsHeader(isHeader)
     const header = mappingConfig.map(item => item.displayName)
     setHeader(header)
     let columnEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
@@ -157,9 +162,9 @@ const ScrollTable = (props) => {
       let arr = []
       mappingConfig.forEach((mapp, index) => {
         if (mappingEnum[mapp.filedName]) {
-          arr[index] = data[mappingEnum[mapp.filedName]]
+          arr[index] = `<span tilte="${data[mappingEnum[mapp.filedName]]}">${data[mappingEnum[mapp.filedName]] ? data[mappingEnum[mapp.filedName]] : '--'}<span>`
         } else {
-          arr[index] = data[mapp.filedName]
+          arr[index] = `<span tilte="${data[mapp.filedName]}">${data[mappingEnum[mapp.filedName]] ? data[mappingEnum[mapp.filedName]] : '--'}<span>`
         }
       })
       tableValue.push(arr)
@@ -168,8 +173,8 @@ const ScrollTable = (props) => {
   },[])
 
   useEffect(() => {
-    console.log(9)
     const mappingConfig = getMapping(customColumnConfig)
+    setTableWH()
     const header = mappingConfig.map(item => item.displayName)
     setHeader(header)
     let columnEnum = fields.filter(item => item.name !== "isSticked" && item.name !== "isSelected").reduce((pre, cur, index) => {
@@ -186,15 +191,14 @@ const ScrollTable = (props) => {
       let arr = []
       mappingConfig.forEach((mapp, index) => {
         if (mappingEnum[mapp.filedName]) {
-          arr[index] = data[mappingEnum[mapp.filedName]]
+          arr[index] = `<span tilte="${data[mappingEnum[mapp.filedName]]}">${data[mappingEnum[mapp.filedName]] ? data[mappingEnum[mapp.filedName]] : '--'}<span>`
         } else {
-          arr[index] = data[mapp.filedName]
+          arr[index] = `<span tilte="${data[mapp.filedName]}">${data[mappingEnum[mapp.filedName]] ? data[mappingEnum[mapp.filedName]] : '--'}<span>`
         }
       })
       tableValue.push(arr)
     })
     setTableData(tableValue)
-    setTableWH()
   }, [customColumnConfig, comData])
 
   const setTableWH = () => {
@@ -202,14 +206,14 @@ const ScrollTable = (props) => {
       const tableDom = ReactDOM.findDOMNode(tableContainerRef.current);
       const tableRowItems = tableDom.querySelectorAll('.row-item')
       tableRowItems.forEach(dom => {
-        dom.style.height = (height - 23.17) / 5 + 'px'
-        dom.style.lineHeight = (height - 23.17) / 5 + 'px'
+        dom.style.height = (height - (isHeader? 23.17 : 0)) / rowNumConfig + 'px'
+        dom.style.lineHeight = (height - (isHeader? 23.17 : 0)) / rowNumConfig + 'px'
       })
     })
   }
 
   const tableConfig = {
-    header,
+    header: isHeader ? header : [],
     data: tableData,
     waitTime,
     // index: true,
@@ -218,7 +222,7 @@ const ScrollTable = (props) => {
     oddRowBGC, // 奇数行背景色
     evenRowBGC, // 偶数行背景色
     carousel,
-    rowNum: 5,
+    rowNum: rowNumConfig,
     indexHeader,
     align
   }
