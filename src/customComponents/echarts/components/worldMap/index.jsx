@@ -275,6 +275,7 @@ let series = [];
 })
 let options = {
   // bgColor: '#1a1e45',
+  radius: '100%',
   tooltip: {
     trigger: 'item',
   },
@@ -366,8 +367,8 @@ class WorldMap extends React.PureComponent {
       click: this.onChartClick,
     };
     let mapSize = {
-      width: '1000px',
-      height: '600px'
+      width: '1200px',
+      height: '800px'
     };
 
     return (

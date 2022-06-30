@@ -62,12 +62,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 600
+          "value": 1200
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 400
+          "value": 800
         }
       ]
     },
