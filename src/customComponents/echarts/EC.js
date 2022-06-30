@@ -188,8 +188,8 @@ ECharts.defaultProps = {
   lazyUpdate: false,
   style: {},
   size: {
-    width: '600px',
-    height: '400px'
+    width: '100%',
+    height: '100%'
   },
   className: '',
   theme: null,
