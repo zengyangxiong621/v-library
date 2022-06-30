@@ -585,7 +585,6 @@ export const calcCanvasSize = function (recommendConfig, cb){
     canvasScaleValue = Number((getCurrentDocumentHeight / recommendConfig.height).toFixed(3))
     absolutePosition.left = (getCurrentDocumentWidth - recommendConfig.width * canvasScaleValue) / 2
   } else {
-
     absolutePosition.top = (getCurrentDocumentHeight - recommendConfig.height * canvasScaleValue) / 2
   }
   return { scaleValue: canvasScaleValue, absolutePosition }
