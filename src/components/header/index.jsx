@@ -12,20 +12,46 @@ const createMenu = ((menuData, props) => {  //创建菜单
 
   let menu = [];
   for (let i = 0; i < menuData.length; i++) {
-    //如果没有子级菜单
-    menu.push(
-      <Menu.Item
-        key={menuData[i].path}
-        title={menuData[i].title}
-        onClick={() => {
-          history.push(menuData[i].path)
-        }}
-      >
-        <Link to={menuData[i].path}>
-          <span>{menuData[i].title}</span>
-        </Link>
-      </Menu.Item>
-    )
+    const menuItem = menuData[i]
+    if(menuItem?.children){
+      // 存在子菜单
+      menu.push(
+        <Menu.SubMenu title={menuItem.title}>
+          {
+            menuItem.children.map(subItem => {
+              return (
+                <Menu.Item
+                  key={subItem.path}
+                  title={subItem.title}
+                  onClick={() => {
+                    history.push(subItem.path)
+                  }}
+                >
+                  <Link to={subItem.path}>
+                    <span>{subItem.title}</span>
+                  </Link>
+                </Menu.Item>
+              )
+            })
+          }
+        </Menu.SubMenu>
+      )
+    }else{
+      //如果没有子级菜单
+      menu.push(
+        <Menu.Item
+          key={menuData[i].path}
+          title={menuData[i].title}
+          onClick={() => {
+            history.push(menuData[i].path)
+          }}
+        >
+          <Link to={menuData[i].path}>
+            <span>{menuData[i].title}</span>
+          </Link>
+        </Menu.Item>
+      )
+    }
   }
   return menu;
 });

@@ -21,6 +21,15 @@ export default {
       {
         path: "/resource-center",
         title: "资源中心"
+      },
+      {
+        title: "权限管理",
+        children: [
+          {
+            title: '用户管理',
+            path: '/authority-manage/user-manage'
+          }
+        ]
       }
     ]
   }
