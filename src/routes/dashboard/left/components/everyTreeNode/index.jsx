@@ -159,10 +159,10 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   // 处理组下已经没有图层的情况 //TODO 没有图层是否需要删除
   const isEmptyGroup = id.startsWith('group') && (Array.isArray(modules) && !modules.length)
   return (
-    <>
+    <div>
       {
-        isEmptyGroup ? <></>
-          :
+        // isEmptyGroup ? <div style={{height: '60px',background: 'red'}}>hhh</div>
+        //   :
           <div className={`EveryTreeNode-wrap
         ${hover && 'every-tree-node-hover'}
         ${isSelected && 'set-back-color'}
@@ -218,7 +218,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
             </div>
           </div>
       }
-    </>
+    </div>
 
   )
 }
