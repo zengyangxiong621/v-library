@@ -112,8 +112,8 @@ class IconText extends Component<Props, State> {
       }
     }
     return (
-      <div style={ textStyleObj } className="text">
-        { staticData.data.map((item:any, i:any) => (
+      <div style={ textStyleObj } className={`text ${textStyle.hideDefault && 'hide'}`}>
+        { !textStyle.hideDefault && staticData.data.map((item:any, i:any) => (
           <div className={`text-name ${textStyle.underline &&'showText'}`} style={textNameObj}>
             {
               iconImg.value &&
