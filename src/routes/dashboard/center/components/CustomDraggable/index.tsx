@@ -41,6 +41,7 @@ import {
 } from '../../../../../constant/home'
 import ScrollTable from "@/components/scrollTable";
 import TimeSelect from "@/components/timeSelect";
+import Bar from '@/customComponents/echarts/components/bar/index'
 
 import Tab from "@/components/tab";
 
@@ -631,6 +632,14 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
+                            layer.moduleName === 'bar' ?
+                              <Bar
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </Bar> :
 
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
