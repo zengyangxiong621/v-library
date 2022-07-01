@@ -10,7 +10,7 @@ import {connect} from "dva"
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
 
-const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props}) => {
+const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, ...props}) => {
   const callbackArgs = bar.callbackArgs
   const callbackParamsList = bar.callbackParamsList
   const {componentConfig} = props
@@ -352,7 +352,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   }
 
-  const scale = ({origin, x, y}, action, dom) => {
+  const scaleFunc = ({origin, x, y}, action, dom) => {
     if (action === 'scale') {
       const scaleRegX = /scaleX\((.+?)\)/g
       const scaleRegY = /scaleY\((.+?)\)/g
@@ -384,7 +384,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   const actionConfigFuncList = {
     animation,
     rotate,
-    scale,
+    scale: scaleFunc,
     translate,
   }
 
@@ -411,6 +411,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         :
         props.componentConfig.moduleName === 'scrollTable' ?
           <ScrollTable
+            scale={scale}
             onChange={handleValueChange}
             {...props}
           >

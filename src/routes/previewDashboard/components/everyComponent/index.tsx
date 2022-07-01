@@ -40,6 +40,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, screenWidthRatio, 
         id={id}
         events={events}
         version={'1.0.0'}
+        scale={scaleValue}
         name={moduleName}
         componentConfig={componentData}
         fields={getFields(componentData)}

@@ -242,6 +242,7 @@ export default {
         }
         bar.dataContainerDataList.find((data: any) => data.id === item.id).data = data
       })
+      console.log('bar.dataContainerDataList', bar.dataContainerDataList)
       yield put({
         type: 'save',
         payload: {
