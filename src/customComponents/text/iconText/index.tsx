@@ -122,7 +122,9 @@ class IconText extends Component<Props, State> {
                 height: iconSize.value[1].value
               }} src={`${iconImg.value}`}></img> 
             }
-            <span key={item.text}> { item.text } </span>
+            <span key={item.text}  style={ {
+              filter: textStyle.show ? `drop-shadow(${textStyle.shadow.color} ${textStyle.shadow.vShadow}px ${textStyle.shadow.hShadow}px ${textStyle.shadow.blur}px)` : ''
+            }}  dangerouslySetInnerHTML={{ __html: item.text }}></span>
           </div>
         ))}
       </div>

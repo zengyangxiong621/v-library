@@ -237,32 +237,32 @@ const componentDefaultConfig = {
       'value': ''
       // 'value': 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F25%2F20200425173132_svsej.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658998305&t=e66659d4f05a9e35629aeb89425ad381', // 有背景图则返回背景图的url，没有背景图返回空或者null
     },
-    // {
-    //   "name": "shadow",
-    //   "displayName": "阴影",
-    //   "type": 'collapse',
-    //   "hasSwitch": true,
-    //   "defaultExpand": true,
-    //   "value": [
-    //     {
-    //       "name": "show",
-    //       "displayName": "",
-    //       "value": true,
-    //       "type": "switch"
-    //     },
-    //     {
-    //       "name": "shadow",
-    //       "displayName": "外阴影",
-    //       "type": "boxShadow",
-    //       "value": {
-    //         "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-    //         "vShadow": 0, // 垂直阴影的位置
-    //         "hShadow": 0, // 水平阴影的位置
-    //         "blur": 8 // 模糊的距离
-    //       }
-    //     }
-    //   ]
-    // }
+    {
+      "name": "shadow",
+      "displayName": "阴影",
+      "type": 'collapse',
+      "hasSwitch": true,
+      "defaultExpand": true,
+      "value": [
+        {
+          "name": "show",
+          "displayName": "",
+          "value": false,
+          "type": "switch"
+        },
+        {
+          "name": "shadow",
+          "displayName": "文本阴影",
+          "type": "boxShadow",
+          "value": {
+            "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+            "vShadow": 0, // 垂直阴影的位置
+            "hShadow": 0, // 水平阴影的位置
+            "blur": 8 // 模糊的距离
+          }
+        }
+      ]
+    }
   ],
   themes: [{
     id: 'theme-default',
