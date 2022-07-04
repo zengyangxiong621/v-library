@@ -627,7 +627,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   <div className="translate-x" style={{ marginRight: '8px' }}>
                                     <InputNumber
                                       step="1"
-                                      className="size-input"
+                                      max={10000}
+                                      className="size-input sc-input"
                                       style={{ width: '100%' }}
                                       defaultValue={action.translate.toX}
                                       onChange={e => translateXchange(e, action)}
@@ -637,7 +638,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   <div className="translate-y">
                                     <InputNumber
                                       step="1"
-                                      className="size-input"
+                                      max={10000}
+                                      className="size-input sc-input"
                                       style={{ width: '100%' }}
                                       defaultValue={action.translate.toY}
                                       onChange={e => translateYchange(e, action)}
@@ -655,7 +657,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                         <Form.Item name={action.id + 'scalex'} style={{ marginBottom: 0 }}>
                                           <InputNumber
                                             step="1"
-                                            className="size-input"
+                                            min={-1000}
+                                            max={1000}
+                                            className="size-input sc-input"
                                             style={{ width: '100%' }}
                                             defaultValue={action.scale.x * 100}
                                             onChange={e => scaleXchange(e, action)}
@@ -671,7 +675,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                         <Form.Item name={action.id + 'scaley'} style={{ marginBottom: 0 }}>
                                           <InputNumber
                                             step="1"
-                                            className="size-input"
+                                            min={-1000}
+                                            max={1000}
+                                            className="size-input sc-input"
                                             style={{ width: '100%' }}
                                             defaultValue={action.scale.y * 100}
                                             onChange={e => scaleYchange(e, action)}
@@ -819,6 +825,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               <InputNumber
                                 className="po-size-input sc-input"
                                 min={0}
+                                max={1000}
                                 step={1}
                                 style={{ width: '100%' }}
                                 defaultValue={action.animation.duration}
@@ -828,6 +835,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               <InputNumber
                                 className="po-size-input  sc-input"
                                 min={0}
+                                max={10000}
                                 step={1}
                                 style={{ width: '100%' }}
                                 defaultValue={action.animation.delay}
