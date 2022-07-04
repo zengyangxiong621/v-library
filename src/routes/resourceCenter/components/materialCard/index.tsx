@@ -28,7 +28,6 @@ const AppCard = (props: any) => {
     moduleType
   } = props;
 
-
   // 后端返回的photoUrl为空，则使用默认图片
   let picUrl =
     photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png");
@@ -188,6 +187,10 @@ const AppCard = (props: any) => {
   const moveGroup = () => {
     openMoveGroupModal(id);
   };
+  // 导出功能
+  const exportDesign = () => {
+    window.location.href = props.downloadUrl
+  };
   // 鼠标移入更多按钮时，显示下拉菜单
   const moreIconMouseOver = () => {
     setIsShowUL(true);
@@ -219,6 +222,19 @@ const AppCard = (props: any) => {
         <div className="hoverOnImg">
           <div className="icons-wrap">
             <div className="more-icon">
+              <Tooltip placement="bottom" title="导出">
+                <span 
+                  className="icon iconfont icon-zhuanfa"
+                  style={{ fontSize: "16px", marginRight: "10px" }}
+                  onClick={exportDesign}
+                ></span>
+                {/* <IconFont
+                  style={{ fontSize: "16px", marginRight: "10px" }}
+                  onClick={exportDesign}
+                  className="icon-zhuanfa"
+                  type="icon-zhuanfa"
+                /> */}
+              </Tooltip>
               {/* 系统素材不允许移动 */}
               {
                 moduleType === 'myresource' &&
