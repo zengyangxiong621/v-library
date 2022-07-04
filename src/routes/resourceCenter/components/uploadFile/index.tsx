@@ -26,18 +26,20 @@ const UploadFile = (props: any) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const handleOk = async () => {
     const value = await uploadForm.validateFields()
-    const { file,groupId } = value
+    let { file,groupId } = value
     if(fileList && fileList.length) {
       const formData = new FormData();
+      groupId = ['myTempOhter', 'sysTempOhter'].indexOf(groupId) > -1 ? 0 : groupId
       formData.append('file', file.file);
       formData.append('groupId', groupId);
-      if(origin === 'myresource'){
+      if(['myresource', 'myTemp'].indexOf(origin) > -1){
         formData.append('spaceId', '1');
       }
+      let url = ['myTemp','systemTemp'].indexOf(origin) > -1 ? '/visual/appTemplate/import' : '/visual/file/uploadResource'
       setConfirmLoading(true);
       const data = await http({
         method: 'post',
-        url: `/visual/file/uploadResource`,
+        url,
         body: formData
       }).catch(() => {
         setConfirmLoading(false);
