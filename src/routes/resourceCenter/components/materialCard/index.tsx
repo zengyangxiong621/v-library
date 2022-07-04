@@ -92,7 +92,7 @@ const AppCard = (props: any) => {
     // let newTab = window.open('_blank');
     // newTab!.location.href = `/bigscreen/${id}`
     // newTab?.history.replaceState(null, '')
-    getCurrentItem(props);
+    getCurrentItem(props,'preview');
   };
   const editDashboard = () => {
     //TODO 通过id跳转到主画布
@@ -185,6 +185,7 @@ const AppCard = (props: any) => {
 
   // 移动分组
   const moveGroup = () => {
+    getCurrentItem(props,'move');
     openMoveGroupModal(id);
   };
   // 导出功能
@@ -237,7 +238,7 @@ const AppCard = (props: any) => {
               </Tooltip>
               {/* 系统素材不允许移动 */}
               {
-                moduleType === 'myresource' &&
+                ['myTemp', 'myresource'].indexOf(moduleType) > -1 &&
                 <Tooltip placement="bottom" title="移动">
                   <IconFont
                     style={{ fontSize: "16px", marginRight: "10px" }}
