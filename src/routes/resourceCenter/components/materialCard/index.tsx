@@ -128,11 +128,12 @@ const AppCard = (props: any) => {
   };
   // 删除应用
   const deleteApp = async () => {
-    if(props?.appName.length) {
+    if(props.appName && props.appName.length) {
       return false
     }
+    let delText = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? '模板' : '素材'
     Modal.confirm({
-      title: "删除素材",
+      title: `删除${delText}`,
       style: {
         top: "30%"
       },
@@ -149,19 +150,18 @@ const AppCard = (props: any) => {
         }
       },
       icon: <ExclamationCircleFilled />,
-      content: "确认删除此素材吗?",
+      content: `确认删除此${delText}吗?`,
       okText: "确定",
       cancelText: "取消",
       bodyStyle: {
         background: "#232630"
       },
-      async onOk(close) {
-        const [, data] = await useFetch(`/visual/resource/delete/${id}`, {
-          method: "delete",
-          body: JSON.stringify({
-            spaceId
-          })
-        });
+      async onOk() {
+        let url = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? '/visual/appTemplate/delete' : `/visual/resource/delete/${id}`
+        const [,data] = await useFetch(`${url}`, {
+            method: "delete",
+            body: JSON.stringify(`${ ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId}}`)
+          });
         if (data) {
           refreshList();
           message.success({ content: "删除成功", duration: 2 });
@@ -169,7 +169,7 @@ const AppCard = (props: any) => {
           message.error({ content: "删除失败", duration: 2 });
         }
       },
-      onCancel(close) {
+      onCancel(close:any) {
         close();
       }
     });
