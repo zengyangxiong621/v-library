@@ -189,8 +189,8 @@ const AppCard = (props: any) => {
     openMoveGroupModal(id);
   };
   // 导出功能
-  const exportDesign = () => {
-    window.location.href = props.downloadUrl
+  const exportDesign = async() => {
+    window.location.href = moduleType.includes('Temp') ? `${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
   };
   // 鼠标移入更多按钮时，显示下拉菜单
   const moreIconMouseOver = () => {
