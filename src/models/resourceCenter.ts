@@ -113,6 +113,7 @@ export default {
               // 父级id, 用于判断 是哪个子节点发出的 添加分组 事件
               parentId: TEMPLATELIB,
               name: "系统模板",
+              systemDefined: true,
               children: tempData.systemGroup
             }
           ]

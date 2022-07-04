@@ -13,7 +13,7 @@ import {
 
 const EveryTreeNode = (props: any) => {
   const { groupId, parentId, name, number,
-    systemDefined, customLevel,
+    systemDefined, customLevel,currentAdd,
     addGroup, refreshGroupLists } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
@@ -38,9 +38,9 @@ const EveryTreeNode = (props: any) => {
       return
     }
     const finalBody = {
-      spaceId: '1',
+      spaceId: ['myTemplate', 'myMaterial'].indexOf(currentAdd) > -1 ? 1 : null,
       name: newGroupName,
-      type: '1' // 1-素材，0-模板
+      type: ['systemMaterial', 'myMaterial'].indexOf(currentAdd) > -1 ? 1 : 0 // 1-素材，0-模板
     }
     const data = await http({
       method: 'post',
@@ -142,6 +142,7 @@ const EveryTreeNode = (props: any) => {
   const inputWrapClick = (e: any) => {
     // e.stopPropagation()
   }
+
   return (
     <div className={`dashboard-node-wrap`}>
       {
@@ -179,7 +180,7 @@ const EveryTreeNode = (props: any) => {
               {
                 customLevel === 1 ? <></> :
                 // 系统素材不允许添加，修改，删除分类
-                  customLevel === 2 && groupId !== 'systemMaterial' 
+                  customLevel === 2 && ['systemMaterial', 'systemTemplate'].indexOf(groupId) === -1
                     ? <IconFont type='icon-xinjianfenzu' onClickCapture={() => addGroup(groupId, parentId)} />
                     :
                     (systemDefined)
