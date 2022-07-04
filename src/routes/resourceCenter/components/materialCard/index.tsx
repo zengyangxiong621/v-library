@@ -158,9 +158,10 @@ const AppCard = (props: any) => {
       },
       async onOk() {
         let url = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? '/visual/appTemplate/delete' : `/visual/resource/delete/${id}`
+        let params = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId}
         const [,data] = await useFetch(`${url}`, {
             method: "delete",
-            body: JSON.stringify(`${ ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId}}`)
+            body: JSON.stringify(params)
           });
         if (data) {
           refreshList();
