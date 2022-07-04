@@ -817,7 +817,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                             </Form.Item>
                             <Form.Item label='动画时长'>
                               <InputNumber
-                                className="po-size-input"
+                                className="po-size-input sc-input"
                                 min={0}
                                 step={1}
                                 style={{ width: '100%' }}
@@ -826,7 +826,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                             </Form.Item>
                             <Form.Item label='延时'>
                               <InputNumber
-                                className="po-size-input"
+                                className="po-size-input  sc-input"
                                 min={0}
                                 step={1}
                                 style={{ width: '100%' }}
