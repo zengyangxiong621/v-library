@@ -10,8 +10,8 @@ import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
-import BasicPieChart from '@/customComponents/echarts/components/basicPie'
-import WorldMap from '@/customComponents/echarts/components/worldMap'
+// import BasicPieChart from '@/customComponents/echarts/components/basicPie'
+// import WorldMap from '@/customComponents/echarts/components/worldMap'
 
 import {
   STYLE,
