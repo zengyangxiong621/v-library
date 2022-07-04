@@ -6,6 +6,18 @@ import { Icon } from "@ant-design/compatible";
 import { http, BASEURL } from "@/services/request";
 const UploadFile = (props: any) => {
   const { uploadVisible, changeShowState,groupList,refreshList,origin} = props;
+
+  let selectList = []
+  switch(origin){
+    case 'myTemp':
+    case 'myresource':
+      selectList = groupList.children[0].children
+      break
+    case 'systemTemp':
+    case 'design':
+      selectList = groupList.children[1].children
+      break
+  }
   const { Option } = Select;
   const Dragger = Upload.Dragger;
   const [uploadForm] = Form.useForm();
@@ -140,8 +152,8 @@ const UploadFile = (props: any) => {
         <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, '请选择分组')}>
         <Select placeholder="请选择"  onChange={selectChange}>
           {
-            (groupList.children || []).map((item:any) => {
-              if(['-1','sysMatAll'].indexOf(item.groupId) === -1){
+            (selectList || []).map((item:any) => {
+              if(['-1','sysMatAll','myTempAll', 'sysTempAll'].indexOf(item.groupId) === -1){
                 return (<Option value={item.groupId} key={item.groupId}>{item.name}</Option> )
               }
             })

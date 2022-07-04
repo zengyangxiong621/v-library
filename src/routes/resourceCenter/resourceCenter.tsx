@@ -187,7 +187,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         {resourceCenter.groupList.length > 0 && uploadVisible && (
           <UploadFile
             uploadVisible={uploadVisible}
-            groupList={resourceCenter.curSelectedGroup.origin === 'myresource' ? resourceCenter.groupList[0].children[0] : resourceCenter.groupList[0].children[1]}
+            groupList={ ['design','myresource'].indexOf(resourceCenter.curSelectedGroup.origin) > -1 ? resourceCenter.groupList[1] : resourceCenter.groupList[0]}
             origin={resourceCenter.curSelectedGroup.origin}
             changeShowState={changeShowState}
             refreshList={refreshGroupLists}
