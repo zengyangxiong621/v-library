@@ -153,7 +153,7 @@ const RightContent = (props: any) => {
           name="group"
           rules={[{ required: true }]}
         >
-          <Select onSelect={selectGroup} placeholder="请选择">
+          {/* <Select onSelect={selectGroup} placeholder="请选择">
             {
               // 将全部应用这一分组剔除
               resourceCenter.groupList[0]?.children[0].children?.slice(1).map((item: any) =>
@@ -161,7 +161,7 @@ const RightContent = (props: any) => {
               </Option>)
               )
             }
-          </Select>
+          </Select> */}
         </Form.Item>
       </Form>
     </DarkModal>

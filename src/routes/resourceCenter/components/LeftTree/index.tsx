@@ -84,7 +84,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
         <Tree
           className="my-dashboard-tree"
           blockNode
-          defaultExpandAll={true}
+          defaultExpandedKeys={['templateLib', 'myTemplate']}
           selectedKeys={[resourceCenter.curSelectedGroup.groupId]}
           treeData={resourceCenter.groupList}
           switcherIcon={<DownOutlined />}

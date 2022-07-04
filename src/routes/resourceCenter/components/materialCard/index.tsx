@@ -17,6 +17,7 @@ const AppCard = (props: any) => {
     id,
     name,
     status,
+    photoPath,
     photoUrl,
     spaceId,
     openMoveGroupModal,
@@ -27,11 +28,13 @@ const AppCard = (props: any) => {
     moduleType
   } = props;
 
-  console.log(moduleType,'llllllll')
 
   // 后端返回的photoUrl为空，则使用默认图片
-  const picUrl =
-    photoUrl || require("../../../../assets/images/模板默认背景图.png");
+  let picUrl =
+    photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png");
+  if(!picUrl.startsWith("http")&& !picUrl.startsWith("/static")){
+    picUrl = `${(window as any).CONFIG.COMP_URL}${picUrl}`
+  }
 
   const [canEdit, setCanEdit] = useState(false);
   const [appName, setAppName] = useState(name);
@@ -125,7 +128,7 @@ const AppCard = (props: any) => {
   };
   // 删除应用
   const deleteApp = async () => {
-    if(props.appName.length) {
+    if(props?.appName.length) {
       return false
     }
     Modal.confirm({
@@ -227,11 +230,11 @@ const AppCard = (props: any) => {
                   />
                 </Tooltip>
               }
-              <Tooltip placement="bottom" title={`${props.appName.length ? '已被画布引用，不允许删除' : '删除'}`}>
+              <Tooltip placement="bottom" title={`${ ['myTemp', 'systemTemp'].indexOf(moduleType) === -1 && props?.appName.length ? '已被画布引用，不允许删除' : '删除'}`}>
                 <IconFont
                   style={{ fontSize: "16px" }}
                   onClick={deleteApp}
-                  className={`icon-huishouzhan1 ${props.appName.length && 'disabled'}`}
+                  className={`icon-huishouzhan1 ${ ['myTemp', 'systemTemp'].indexOf(moduleType) === -1 && props?.appName.length && 'disabled'}`}
                   type="icon-huishouzhan1"
                 />
               </Tooltip>

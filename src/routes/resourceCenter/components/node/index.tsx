@@ -174,6 +174,7 @@ const EveryTreeNode = (props: any) => {
                   : <div className='text'>{name}</div>
               }
             </div>
+            {/* groupId === '-1' || name === '0' || (EXCLUDELIST.indexOf(groupId) > -1 ) */}
             <div className='icons-wrap'>
               {
                 customLevel === 1 ? <></> :
@@ -181,7 +182,7 @@ const EveryTreeNode = (props: any) => {
                   customLevel === 2 && groupId !== 'systemMaterial' 
                     ? <IconFont type='icon-xinjianfenzu' onClickCapture={() => addGroup(groupId, parentId)} />
                     :
-                    (groupId === '-1' || name === '0' || (EXCLUDELIST.indexOf(groupId) > -1 ))
+                    (systemDefined)
                       ? <>{number}</>
                       : 
                       <>

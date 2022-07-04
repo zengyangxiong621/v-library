@@ -580,7 +580,7 @@ export default {
       data.systemTypes.map((item:any) => {
         item.groupId = item.type
         item.origin = 'design'
-        if(!item.type) item.groupId = 'sysAll'
+        if(!item.type) item.groupId = 'sysMatAll'
       })
       let result = {
         design : data.systemTypes,
