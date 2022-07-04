@@ -591,34 +591,58 @@ export const calcCanvasSize = function (recommendConfig, cb){
 }
 
 
-export const styleTransformFunc = (textStyle) => {
+export const styleTransformFunc = (textStyle, type=false) => {
   const styleTransformFuncList = {
     fontFamily: (value) => ({
-      fontFamily: value
+      [type ? 'fontFamily': 'font-family']: value
     }),
     fontSize: (value) => ({
-      fontSize: value + 'px'
+      [type ? 'fontSize': 'font-size']: value + 'px'
     }),
     color: (value) => ({
       color: value
     }),
     bold: (value) => ({
-      fontWeight: value ? 'bold' : 'unset'
+      [type ? 'fontWeight' : 'font-weight']: value ? 'bold' : 'unset'
     }),
     italic: (value) => ({
-      fontStyle: value ? 'italic' : 'unset'
+      [type ? 'fontStyle' : 'font-style']: value ? 'italic' : 'unset'
     }),
     letterSpacing: (value) => ({
-      letterSpacing: value + 'px'
+      [type ? 'letterSpacing' : 'letter-spacing']: value + 'px'
     }),
     lineHeight: (value) => ({
-      lineHeight: value ? value + 'px' : 'unset'
+      [type ? 'lineHeight' : 'line-height']: value ? value + 'px' : 'unset'
     }),
   }
+  textStyle = textStyle.reduce((pre, cur) => {
+    if (Array.isArray(cur.value)) {
+      const obj = cur.value.reduce((p, c) => {
+        p[c.name] = c.value
+        return p
+      }, {})
+      pre = {
+        ...pre,
+        ...obj,
+      }
+    } else {
+      pre[cur.name] = cur.value
+    }
+    return pre
+  }, {})
   return Object.keys(textStyle).reduce((pre, cur) => {
     return {
       ...pre,
       ...styleTransformFuncList[cur](textStyle[cur])
     }
   }, {})
+}
+// style 对象转成 style 字符串（dom内的）
+export const styleObjectToStr = (style) => {
+  let s = []
+  for(let i in style){
+    s.push(i+':'+style[i]);
+  }
+  s = s.join(';')
+  return  s
 }

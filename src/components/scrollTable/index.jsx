@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 import ComponentDefaultConfig from './config'
 import ScrollBoard from '@jiaminghi/data-view-react/es/scrollBoard'
 import ReactDOM from 'react-dom'
+import { styleObjectToStr, styleTransformFunc } from '../../utils'
 
 const getFields = (componentConfig = {}) => {
   const dataType = componentConfig.dataType
@@ -90,31 +91,31 @@ const ScrollTable = (props) => {
   const tableHeaderLoadFunc = (mappingConfig) => {
     const isHeader = tableHeaderConfig.find(item => item.name === 'show').value
     setIsHeader(isHeader)
-    const header = mappingConfig.map(item => item.displayName)
-    setHeader(header)
+
     const switchConfig = tableHeaderConfig.find(item => item.name === 'show').value     // boolean
     let headerConfig
     if (switchConfig) {
       headerConfig = tableHeaderConfig
-      setTimeout(() => {
-        const lineHeight = headerConfig.find(item => item.name === 'lineHeight').value
-        const bgColor = headerConfig.find(item => item.name === 'bgColor').value
-        const textAlign = headerConfig.find(item => item.name === 'textAlign').value
-        // const textAlign = headerConfig.find(item => item.name === 'align').value.find(item => item.name === 'textAlign').value || 'left'
-        const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
-        const tableHeaderItemDOMs = tableDom.querySelectorAll('.dv-scroll-board>.header>.header-item')
-        const tableHeader = tableDom.querySelector('.dv-scroll-board>.header')
-        tableHeader.style.backgroundColor = bgColor
-        tableHeaderItemDOMs.forEach(dom => {
-          dom.style.lineHeight = lineHeight + 'px'
-          dom.style.textAlign = textAlign
-        })
-      })
       setIsHeader(true)
     } else {
       headerConfig = ComponentDefaultConfig.config.find(item => item.name === 'tableHeader').value
       setIsHeader(false)
     }
+
+    const lineHeight = headerConfig.find(item => item.name === 'lineHeight').value
+    const bgColor = headerConfig.find(item => item.name === 'bgColor').value
+    const textAlign = headerConfig.find(item => item.name === 'textAlign').value
+    let textStyle = styleTransformFunc(headerConfig.find(item => item.name === 'textStyle').value)
+    // const textAlign = headerConfig.find(item => item.name === 'align').value.find(item => item.nafme === 'textAlign').value || 'left'
+    textStyle = styleObjectToStr({ 'line-height': lineHeight + 'px', 'text-align': textAlign, 'font-Family': fontFamilyConfig, ...textStyle})
+    const header = mappingConfig.map(item => `<span style="${textStyle}" tilte="${ item.displayName }">${ item.displayName ? item.displayName : '--' }<span>`)
+    setHeader(header)
+    setTimeout(() => {
+      const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
+      const tableHeader = tableDom.querySelector('.dv-scroll-board>.header')
+      tableHeader.style.backgroundColor = bgColor
+      tableHeader.style.height = lineHeight + 'px'
+    })
   }
 
   const tableIndexLoadFunc = () => {

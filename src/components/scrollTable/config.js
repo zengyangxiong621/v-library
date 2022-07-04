@@ -275,7 +275,7 @@ const ComponentDefaultConfig = {
             {
               "displayName": "",
               "name": "fontSize",
-              "value": 32
+              "value": 14
             },
             {
               "displayName": "",
@@ -301,7 +301,7 @@ const ComponentDefaultConfig = {
             {
               "displayName": "行距",
               "name": "lineHeight",
-              "value": "48px"
+              "value": "35px"
             }
           ]
         }

@@ -57,36 +57,8 @@ const TimeSelect = (props) => {
   const calendarCellsThemeColor = calendarConfig.find(item => item.name === 'themeColor').value
   const dateFormat = formatEnum.find(item => item.value === config.find(item => item.name === 'dateFormat').value).name
   // const textIndent = config.find(item => item.name === 'textIndent' || item.name === 'unitName').value || ''
-  let textStyle = config.filter((item) => ['textStyle'].includes(item.name)).reduce((pre, cur) => {
-    if (Array.isArray(cur.value)) {
-      const obj = cur.value.reduce((p, c) => {
-        p[c.name] = c.value
-        return p
-      }, {})
-      pre = {
-        ...pre,
-        ...obj,
-      }
-    } else {
-      pre[cur.name] = cur.value
-    }
-    return pre
-  }, {})
-  let calendarBoxTextStyle = calendarConfig.find(item => item.name === 'textStyle').value.reduce((pre, cur) => {
-    if (Array.isArray(cur.value)) {
-      const obj = cur.value.reduce((p, c) => {
-        p[c.name] = c.value
-        return p
-      }, {})
-      pre = {
-        ...pre,
-        ...obj,
-      }
-    } else {
-      pre[cur.name] = cur.value
-    }
-    return pre
-  }, {})
+  let textStyle = config.filter((item) => ['textStyle'].includes(item.name))
+  let calendarBoxTextStyle = calendarConfig.find(item => item.name === 'textStyle').value
   textStyle = styleTransformFunc(textStyle)
   calendarBoxTextStyle = styleTransformFunc(calendarBoxTextStyle)
   /*
