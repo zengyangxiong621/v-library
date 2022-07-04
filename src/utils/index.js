@@ -589,3 +589,36 @@ export const calcCanvasSize = function (recommendConfig, cb){
   }
   return { scaleValue: canvasScaleValue, absolutePosition }
 }
+
+
+export const styleTransformFunc = (textStyle) => {
+  const styleTransformFuncList = {
+    fontFamily: (value) => ({
+      fontFamily: value
+    }),
+    fontSize: (value) => ({
+      fontSize: value + 'px'
+    }),
+    color: (value) => ({
+      color: value
+    }),
+    bold: (value) => ({
+      fontWeight: value ? 'bold' : 'unset'
+    }),
+    italic: (value) => ({
+      fontStyle: value ? 'italic' : 'unset'
+    }),
+    letterSpacing: (value) => ({
+      letterSpacing: value + 'px'
+    }),
+    lineHeight: (value) => ({
+      lineHeight: value ? value + 'px' : 'unset'
+    }),
+  }
+  return Object.keys(textStyle).reduce((pre, cur) => {
+    return {
+      ...pre,
+      ...styleTransformFuncList[cur](textStyle[cur])
+    }
+  }, {})
+}

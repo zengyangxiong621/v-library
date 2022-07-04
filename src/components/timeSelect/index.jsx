@@ -3,6 +3,7 @@ import ComponentDefaultConfig from './config'
 import {DatePicker} from 'antd';
 import ReactDOM from 'react-dom';
 import moment from 'moment';
+import { styleTransformFunc } from '../../utils'
 // import './index.less'
 const {RangePicker} = DatePicker;
 const formatEnum = [
@@ -86,41 +87,8 @@ const TimeSelect = (props) => {
     }
     return pre
   }, {})
-  const styleTransformFuncList = {
-    fontFamily: (value) => ({
-      fontFamily: value
-    }),
-    fontSize: (value) => ({
-      fontSize: value + 'px'
-    }),
-    color: (value) => ({
-      color: value
-    }),
-    bold: (value) => ({
-      fontWeight: value ? 'bold' : 'unset'
-    }),
-    italic: (value) => ({
-      fontStyle: value ? 'italic' : 'unset'
-    }),
-    letterSpacing: (value) => ({
-      letterSpacing: value + 'px'
-    }),
-    lineHeight: (value) => ({
-      lineHeight: value ? value + 'px' : 'unset'
-    }),
-  }
-  textStyle = Object.keys(textStyle).reduce((pre, cur) => {
-    return {
-      ...pre,
-      ...styleTransformFuncList[cur](textStyle[cur])
-    }
-  }, {})
-  calendarBoxTextStyle = Object.keys(calendarBoxTextStyle).reduce((pre, cur) => {
-    return {
-      ...pre,
-      ...styleTransformFuncList[cur](calendarBoxTextStyle[cur])
-    }
-  }, {})
+  textStyle = styleTransformFunc(textStyle)
+  calendarBoxTextStyle = styleTransformFunc(calendarBoxTextStyle)
   /*
   {
     "fontFamily": "Microsoft Yahei",
@@ -132,9 +100,6 @@ const TimeSelect = (props) => {
     "lineHeight": 0
   }
   * */
-  // console.log('calendarBoxTextStyle', calendarBoxTextStyle)
-  //
-  // console.log('textStyle', textStyle)
   useEffect(() => {
     if (selectType === 'range') {
       handleChange([startTime ? moment(startTime, dateFormat) : null, endTime ? moment(endTime, dateFormat) : null], [startTime || null, endTime || null])
@@ -234,11 +199,9 @@ const TimeSelect = (props) => {
   const handleChange = (date, dateString) => {
     setDateValue(date)
     if (selectType === 'range') {
-      console.log('range', {[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
-      props.onChange({[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
+      props.onChange && props.onChange({[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
     } else {
-      console.log('notRange', {[fields[0]]: dateString})
-      props.onChange({[fields[0]]: dateString})
+      props.onChange && props.onChange({[fields[0]]: dateString})
     }
   }
 

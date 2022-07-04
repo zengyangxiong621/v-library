@@ -29,6 +29,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
       return
     }
     setClickTimes(1)
+    console.log('点击事件')
     customEventsFunction(clickEvents)
   }, 300)
   // 移入
@@ -38,6 +39,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     if (mouseEnterActions.length === 0) {
       return
     }
+    console.log('鼠标移入')
     customEventsFunction(mouseEnterEvents)
   })
   // 移出
@@ -47,6 +49,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     if (mouseOutActions.length === 0) {
       return
     }
+    console.log('鼠标移出')
     customEventsFunction(mouseOutEvents)
   })
 
@@ -54,10 +57,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     events.forEach((item) => {
       const conditions = item.conditions
       const conditionType = item.conditionType
-      let conditionTypeValue
-      if (conditionType !== 'all') {
-        conditionTypeValue = conditionType.target.value
-      }
       // const callbackArgs = {
       //   startTime: '2022-06-17',
       //   endTime: '2022-06-17'
@@ -109,11 +108,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
       }
       let isAllowAction = true
       if (conditions.length > 0) {
-        isAllowAction = Array.prototype[conditionTypeValue === 'all' ? 'every' : 'some'].call(conditions, conditionJudgeFunc)
+        isAllowAction = Array.prototype[conditionType === 'all' ? 'every' : 'some'].call(conditions, conditionJudgeFunc)
       }
+      console.log('isAllowAction', isAllowAction)
       if (!isAllowAction) {
         return
       }
+      console.log('item', item)
       item.actions.forEach(action => {
         const animation = action.animation
         const delay = animation.delay
@@ -131,30 +132,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
       })
     })
   }
-  const comCallbackArgs = [
-    {
-      "id": "回调id-1",
-      "name": "回调1",
-      "origin": "cookieTime",
-      "target": "startTime"
-    },
-    {
-      "id": "回调id-2",
-      "name": "回调2",
-      "origin": "sleepTime",
-      "target": "endTime"
-    }, {
-      "id": "回调id-3",
-      "name": "回调2",
-      "origin": "a",
-      "target": "a"
-    }, {
-      "id": "回调id-4",
-      "name": "回调2",
-      "origin": "b",
-      "target": "b"
-    },
-  ]
+
 
   // 数组去重，取最后一个
   const duplicateFn = (arr) => {
@@ -168,10 +146,9 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
   }
 
   const handleValueChange = debounce((data) => {
-    console.log('data', data)
+    console.log('值变化')
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
-    // component.callbackArgs = comCallbackArgs
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -327,6 +304,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
 
   const rotate = ({perspective, rotateX, rotateY, rotateZ}, action, dom) => {
     if (action === 'rotate') {
+      console.log('dom', dom)
       const rotateRegX = /rotateX\((.+?)\)/g
       const rotateRegY = /rotateY\((.+?)\)/g
       const rotateRegZ = /rotateZ\((.+?)\)/g

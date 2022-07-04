@@ -559,7 +559,6 @@ const CustomDraggable
                     }
                   })
                 }
-
                 events = component.events
               }
             }
@@ -656,6 +655,13 @@ const CustomDraggable
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                 >
                                 </Tab> :
+                                layer.moduleName === 'timeSelect' ?
+                                <TimeSelect
+                                  componentConfig={ component }
+                                  fields={ getFields(component) }
+                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                >
+                                </TimeSelect> :
                                 layer.moduleName === 'worldMap' ?
                                   <WorldMap
                                     componentConfig={ component }
@@ -666,7 +672,7 @@ const CustomDraggable
                                   <RemoteBaseComponent
                                     componentConfig={ component }
                                     fields={ getFields(component) }
-                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
                                   ></RemoteBaseComponent>
                           }
                         </div>
