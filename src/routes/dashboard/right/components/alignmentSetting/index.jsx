@@ -1,110 +1,75 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react'
 import './index.less'
-import { find } from '../../../../../utils/common'
-import { deepClone } from '@/utils/index.js'
-import {
-  Form,
-} from 'antd';
+import { connect } from 'dva'
+import { Button } from 'antd'
 
-const AlignSetting = props => {
-  const [form] = Form.useForm();
-  const formItemLayout = {
-    labelAlign: 'left'
-  };
-  const _data = props.data
-  // const _align = find(_data, 'align', 'type')
-  const _align = find(_data, 'align', 'type')
-  const _alignRange = _align ? _align?.range?.length > 0 ? deepClone(_align.range) : ['left', 'center', 'right', 'bothEnds'] : []
-  const _vertical = find(_data, 'vertical', 'type')
-  const _verticalRange = _vertical ? _vertical?.range?.length > 0 ? deepClone(_vertical.range) : ['bottom', 'vertical', 'top'] : []
-  const [align, SetAlign] = useState(_align?.value || null);
-  const [vertical, SetVertical] = useState(_vertical?.value || null);
-
-
-  const alignmentChange = (str) => {
-    SetAlign(str)
-    _align.value = str
-    props.onChange()
-  }
-  const verticalChange = (str) => {
-    SetVertical(str)
-    _vertical.value = str
-    props.onChange()
-
+const AlignmentSetting = ({ bar, dispatch, ...props }) => {
+  const alignmentChange = (type) => {
+    dispatch({
+      type: 'bar/setAlignment',
+      payload: type,
+    })
+    dispatch({
+      type: 'bar/updateComponent',
+      payload: bar.selectedComponents,
+    })
+    dispatch({
+      type: 'bar/calcDragScaleData',
+    })
   }
 
-  const _alignList = {
-    left: {
-      title: '左对齐',
-      icon: 'icon-zuoduiqi-'
-    },
-    center: {
-      title: '水平居中对齐',
-      icon: 'icon-shuipingjuzhongduiqi'
-    },
-    right: {
-      title: '右对齐',
-      icon: 'icon-juyouduiqi'
-    },
-    bothEnds: {
-      title: '两端对齐',
-      icon: 'icon-liangduanduiqi'
-    }
+  const arrangementChange = (type) => {
+    dispatch({
+      type: 'bar/setArrangement',
+      payload: type,
+    })
   }
-
-  const _verticalList = {
-    bottom: {
-      title: '底部对齐',
-      icon: 'icon-juxiaduiqi'
-    },
-    vertical: {
-      title: '垂直居中对齐',
-      icon: 'icon-chuizhijuzhongduiqi'
-    },
-    top: {
-      title: '顶部对齐',
-      icon: 'icon-jushangduiqi'
-    }
-  }
-
-
-
 
   return (
-    <Form
-      className="custom-form align-form"
-      form={form}
-      {...formItemLayout}
-      colon={false}
-    >
-      <Form.Item
-        name="style"
-        label={_data.displayName}
-      >
-        {
-          _alignRange.length > 0 ?
-            <div className="align">
-              {
-                _alignRange.map(item => (<span title={_alignList[item].title} className={align === item ? 'align-active' : null} onClick={() => alignmentChange(item)}>
-              <i className={["iconfont", _alignList[item].icon].join(" ")} />
-            </span>))
-              }
-            </div> : <></>
-        }
-        {
-          _verticalRange.length > 0 ?
-            <div className="vertical">
-              {
-                _verticalRange.map(item => (<span title={_verticalList[item].title} className={vertical === item ? 'align-active' : null} onClick={() => verticalChange(item)}>
-              <i className={["iconfont", _verticalList[item].icon].join(" ")} />
-            </span>))
-              }
-            </div>: <></>
-        }
-
-      </Form.Item>
-    </Form>
+    <div className="AlignmentSetting-wrap">
+      <h3 className="alignment-header">
+        对齐设置
+      </h3>
+      <div className="content">
+        <h4 className="pan-title">
+          <label>对齐</label>
+        </h4>
+        <div className="pan-content">
+          <span title="顶部对齐">
+            <i className="iconfont icon-jushangduiqi" onClick={ () => alignmentChange('top') }/>
+          </span>
+          <span title="垂直居中对齐">
+            <i className="iconfont icon-chuizhijuzhongduiqi" onClick={ () => alignmentChange('vertical') }></i>
+          </span>
+          <span title="底部对齐">
+            <i className="iconfont icon-juxiaduiqi" onClick={ () => alignmentChange('bottom') }></i>
+          </span>
+          <span title="左对齐">
+            <i className="iconfont icon-zuoduiqi-" onClick={ () => alignmentChange('left') }></i>
+          </span>
+          <span title="水平居中对齐">
+            <i className="iconfont icon-shuipingjuzhongduiqi" onClick={ () => alignmentChange('horizontal') }></i>
+          </span>
+          <span title="右对齐">
+            <i className="iconfont icon-juyouduiqi" onClick={ () => alignmentChange('right') }></i>
+          </span>
+        </div>
+{/*        <h4 className="pan-title">
+          <label>排列</label>
+        </h4>
+        <div className="pan-content">
+          <span title="水平分布">
+            <i className="iconfont icon-horizontal" onClick={ () => arrangementChange('arrange-horizontal') }></i>
+          </span>
+          <span title="垂直分布">
+            <i className="iconfont icon-vertical" onClick={ () => arrangementChange('arrange-vertical') }></i>
+          </span>
+        </div>*/}
+      </div>
+    </div>
   )
 }
 
-export default memo(AlignSetting)
+export default connect(({ bar }) => ({
+  bar,
+}))(AlignmentSetting)

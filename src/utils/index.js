@@ -591,7 +591,7 @@ export const calcCanvasSize = function (recommendConfig, cb){
 }
 
 
-export const styleTransformFunc = (textStyle, type=false) => {
+export const styleTransformFunc = (textStyle, type=true) => {
   const styleTransformFuncList = {
     fontFamily: (value) => ({
       [type ? 'fontFamily': 'font-family']: value

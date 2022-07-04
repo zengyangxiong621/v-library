@@ -76,7 +76,7 @@ const ComponentDefaultConfig = {
         "desc": "文本"
       },
       {
-        "name": "column3",
+        "name": "column5",
         "value": "column5",
         "desc": "文本"
       }
@@ -392,7 +392,7 @@ const ComponentDefaultConfig = {
             {
               "displayName": "",
               "name": "fontSize",
-              "value": 32
+              "value": 14
             },
             {
               "displayName": "",
@@ -454,6 +454,63 @@ const ComponentDefaultConfig = {
                   "value": "销售地区"
                 }
               ]
+            },
+            {
+              "name": "width",
+              "displayName": "列宽",
+              "type": "number",
+              "config": {
+                "min": 0,
+                "max": 1000,
+                "step": 1,
+                "suffix": "px"
+              },
+              "value": 5
+            },
+            {
+              "name": "spacing",
+              "displayName": "列间距",
+              "type": "number",
+              "config": {
+                "min": 0,
+                "max": 1000,
+                "step": 1,
+                "suffix": "px"
+              },
+              "value": 5
+            },
+            {
+              "displayName": "列偏移",
+              "name": "offset",
+              "type": "inputNumber2",
+              "value": [
+                {
+                  "displayName": "X",
+                  "name": "X",
+                  "type": "number",
+                  "value": 0
+                },
+                {
+                  "displayName": "Y",
+                  "name": "Y",
+                  "type": "number",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "align",
+              "displayName":"对齐方式",
+              "type":"alignFull",
+              "value":[ // 可以只有一种对齐方式
+                {
+                  "name": "textAlign",
+                  "displayName": "水平对齐",
+                  "type": "align",
+                  "range": ["left", "center", "right"],
+                  "value": "left",
+                }
+              ]
             }
           ]
         },
@@ -481,6 +538,70 @@ const ComponentDefaultConfig = {
                   "value": "完成率"
                 }
               ]
+            },
+            {
+              "name": "width",
+              "displayName": "列宽",
+              "type": "number",
+              "config": {
+                "min": 0,
+                "max": 1000,
+                "step": 1,
+                "suffix": "px"
+              },
+              "value": 5
+            },
+            {
+              "name": "spacing",
+              "displayName": "列间距",
+              "type": "number",
+              "config": {
+                "min": 0,
+                "max": 1000,
+                "step": 1,
+                "suffix": "px"
+              },
+              "value": 5
+            },
+            {
+              "displayName": "列偏移",
+              "name": "offset",
+              "type": "inputNumber2",
+              "value": [
+                {
+                  "displayName": "X",
+                  "name": "X",
+                  "type": "number",
+                  "value": 0
+                },
+                {
+                  "displayName": "Y",
+                  "name": "Y",
+                  "type": "number",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "align",
+              "displayName":"对齐方式",
+              "type":"alignFull",
+              "value":[ // 可以只有一种对齐方式
+                {
+                  "name": "textAlign",
+                  "displayName": "水平对齐",
+                  "type": "align",
+                  "range": ["left", "center", "right"],
+                  "value": "left",
+                },
+                {
+                  "name":"textVertical",
+                  "displayName":"垂直对齐",
+                  "range": ["bottom", "vertical", "top"],
+                  "type": "vertical",
+                  "value": "top"
+                }
+              ]
             }
           ]
         },
@@ -506,6 +627,70 @@ const ComponentDefaultConfig = {
                   "name": "displayName",
                   "type": "input",
                   "value": "完成情况"
+                }
+              ]
+            },
+            {
+              "name": "width",
+              "displayName": "列宽",
+              "type": "number",
+              "config": {
+                "min": 0,
+                "max": 1000,
+                "step": 1,
+                "suffix": "px"
+              },
+              "value": 5
+            },
+            {
+              "name": "spacing",
+              "displayName": "列间距",
+              "type": "number",
+              "config": {
+                "min": 0,
+                "max": 1000,
+                "step": 1,
+                "suffix": "px"
+              },
+              "value": 5
+            },
+            {
+              "displayName": "列偏移",
+              "name": "offset",
+              "type": "inputNumber2",
+              "value": [
+                {
+                  "displayName": "X",
+                  "name": "X",
+                  "type": "number",
+                  "value": 0
+                },
+                {
+                  "displayName": "Y",
+                  "name": "Y",
+                  "type": "number",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "align",
+              "displayName":"对齐方式",
+              "type":"alignFull",
+              "value":[ // 可以只有一种对齐方式
+                {
+                  "name": "textAlign",
+                  "displayName": "水平对齐",
+                  "type": "align",
+                  "range": ["left", "center", "right"],
+                  "value": "left",
+                },
+                {
+                  "name":"textVertical",
+                  "displayName":"垂直对齐",
+                  "range": ["bottom", "vertical", "top"],
+                  "type": "vertical",
+                  "value": "top"
                 }
               ]
             }
