@@ -26,7 +26,7 @@ const RightContent = (props: any) => {
   const [newGroupId, setNewGroupId] = useState('')
   const [currentItem, setCurrentItem] = useState<any>({})
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-
+  console.log(props,'props')
 
   // 发布应用时的参数
   const [curAppId, setCurAppId] = useState('')
@@ -70,13 +70,16 @@ const RightContent = (props: any) => {
   }
   // 确认移动分组
   const confirmMoveGroup = async () => {
+    // console.log(spaceId, curAppId, newGroupId)
+    let url = currentItem.moduleType === 'myTemp' ? '/visual/appTemplate/updateTemplateGroup' : '/visual/resource/changeGroup'
+    let obj = currentItem.moduleType === 'myTemp' ? {id: curAppId} : {resourceId: curAppId}
     const data = await http({
-      url: '/visual/resource/changeGroup',
+      url,
       method: 'post',
       body: {
         spaceId,
-        resourceId: curAppId,
         newGroupId: newGroupId,
+        ...obj
       }
     })
     if (data) {
