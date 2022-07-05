@@ -137,7 +137,10 @@ const RightContent = (props: any) => {
         </div >: <Empty className="empty" description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
     } 
     {/* 预览功能处理 */}
-    <PreviewModal currentItem={currentItem} isPreviewVisible={isPreviewVisible} changeVisible={changeVisible} ></PreviewModal>
+    {
+      isPreviewVisible && 
+      <PreviewModal currentItem={currentItem} isPreviewVisible={isPreviewVisible} changeVisible={changeVisible} ></PreviewModal>
+    }
     {/* 移入分组弹窗 */}
      <DarkModal
       title='移动'

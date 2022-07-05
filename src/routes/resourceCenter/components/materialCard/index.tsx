@@ -220,7 +220,7 @@ const AppCard = (props: any) => {
   return (
     <div className="AppCard-wrap">
       <header className="head">
-        <div className="hoverOnImg">
+        <div className="sourceHoverOnImg">
           <div className="icons-wrap">
             <div className="more-icon">
               <Tooltip placement="bottom" title="导出">

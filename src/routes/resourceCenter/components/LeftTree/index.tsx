@@ -81,7 +81,6 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
     })
 
   };
-  console.log(currentAdd,'resourceCenter.curSelectedGroup')
   return (
     <div className="every-tree-wrap">
       {resourceCenter.groupList.length > 0 && (
