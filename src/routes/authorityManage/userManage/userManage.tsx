@@ -4,7 +4,7 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import zhCN from 'antd/es/locale/zh_CN'
-
+import { useFetch } from "@/utils/useFetch";
 enum dataSourceType {
   RDBMS,
   RESTFUL_API,
@@ -44,40 +44,72 @@ const UserManage = (props: any) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
 
+  
+  // 查询用户列表
+  const getUserList = async(param?:any) => {
+    let obj = {
+      ...pageInfo,
+      name:inputValue,
+      ...param
+    }
+    const [,data] = await useFetch('/visual/user/list',{
+      body: JSON.stringify(obj)
+    })
+    if(data){
+      setTotalElements(data.totalElements)
+      setTableData(data.content)
+    }
+  }
+
+  useEffect(() => {
+    getUserList()
+  },[])
+
   const createUser = () => {
 
   }
   const deleteUser = () => {}
 
   const changeInputValue = (value:any) => {
-
+    setInputValue(value)
   }
 
-  const searchByType = () => {}
+  const searchByType = (value:any) => {
+    setPageInfo({
+      pageNo: 1,
+      pageSize:pageInfo.pageSize
+    })
+    getUserList({
+      pageNo: 1,
+      pageSize:pageInfo.pageSize,
+      name: value
+    })
+  }
 
-    // 表格分页配置
-    const paginationProps = {
-      total: totalElements,
-      current: pageInfo.pageNo,
-      pageSize: pageInfo.pageSize,
-      pageSizeOptions: [10, 20, 30],
-      showTotal: (val: number | string) => `共${val}条`,
-  
-      defaultCurrent: 1,
-      showQuickJumper: true,
-      showSizeChanger: true,
-      // locale: {},
-      onChange(page: number, pageSize: number) {
-        const finalParams: TDataSourceParams = {
-          spaceId,
-          type: dataSourceType,
-          name: inputValue === '' ? null : inputValue,
-          pageNo: page,
-          pageSize,
-          map: tableMap
-        }
-      },
-    }
+  // 表格分页配置
+  const paginationProps = {
+    total: totalElements,
+    current: pageInfo.pageNo,
+    pageSize: pageInfo.pageSize,
+    pageSizeOptions: [10, 20, 30],
+    showTotal: (val: number | string) => `共${val}条`,
+
+    defaultCurrent: 1,
+    showQuickJumper: true,
+    showSizeChanger: true,
+    // locale: {},
+    onChange(page: number, pageSize: number) {
+      setPageInfo({
+        pageNo: page,
+        pageSize
+      })
+      getUserList({
+        pageNo: page,
+        pageSize
+      })
+    },
+  }
+
 
 
   const columns = [
@@ -85,7 +117,6 @@ const UserManage = (props: any) => {
       title: '账号',
       dataIndex: 'userName',
       key: 'userName',
-      width: 250,
       className: 'customHeaderColor',
       ellipsis: true,
       render: (text: any) => <span>{text}</span>,
@@ -95,7 +126,6 @@ const UserManage = (props: any) => {
       key: 'name',
       ellipsis: true,
       dataIndex: 'name',
-      width: 250,
     },
     {
       title: '工号',
@@ -107,12 +137,14 @@ const UserManage = (props: any) => {
       title: '邮箱',
       dataIndex: 'email',
       key: 'email',
+      width: 150,
       ellipsis: true,
     },
     {
       title: '手机号',
       dataIndex: 'tel',
       key: 'tel',
+      width: 150,
       ellipsis: true,
     },
     {
@@ -128,13 +160,15 @@ const UserManage = (props: any) => {
       width: 100,
       dataIndex: 'status',
       render: (status: any, data: any) => {
-        // const a = new Date(time)
-        console.log(status)
-        return (
-          <>
-            {`${status === '0' ? '启用':'停用'}`}
-          </>
-        )
+        switch (status) {
+          case '0':
+            return '启用'
+          case '1':
+            return '停用'
+          case '2':
+            return '锁定'
+          default: '无'
+        }
       }
     },
     {
