@@ -2,7 +2,7 @@ import { memo, useState, useRef } from 'react'
 import './index.less'
 
 import { withRouter } from 'dva/router'
-
+import { useFetch } from "@/utils/useFetch";
 const TemplateCard = (props: any) => {
   const { id, name, ratio, fenbianlv, photoUrl,
     getCurImgIndex, addTemplate, curIndex, history } = props
@@ -11,8 +11,18 @@ const TemplateCard = (props: any) => {
   const scanDashboard = () => {
     getCurImgIndex(curIndex)
   }
-  const createProject = () => {
-    addTemplate(id)
+  const createProject = async() => {
+    // addTemplate(id)
+    const [,data] = await useFetch('/visual/appTemplate/createApp', {
+      body: JSON.stringify({
+        id,
+        type: 0,
+        spaceId:1
+      })
+    })
+    if(data){
+      history.push(`/dashboard/${data.id}`)
+    }
   }
   return (
     <div className='TemplateCard-wrap'>
@@ -32,10 +42,10 @@ const TemplateCard = (props: any) => {
         <div className="name">
           {name}
         </div>
-        <div className="info">
+        {/* <div className="info">
           <span>比例：{ratio}</span> /&nbsp;
           <span>分辨率: {fenbianlv}</span>
-        </div>
+        </div> */}
       </div>
     </div>
   )
