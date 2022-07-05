@@ -33,17 +33,17 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   // 获取模板列表数据的方法
   const getDataDispatch = (data?: any) => {
     const currentClass = data.origin ? data : resourceCenter.curSelectedGroup
-    const groupId =
-      ['-1', 'sysAll'].indexOf(currentClass.groupId) > -1
+    let groupId =
+      ['-1', 'sysMatAll','myTempAll','sysTempAll'].indexOf(currentClass.groupId) > -1
         ? null
-        : currentClass.groupId;
+        : ['myTempOhter', 'sysTempOhter'].indexOf(currentClass.groupId) > -1 ? 0 : currentClass.groupId;
     let finalBody:any = {
-      spaceId:currentClass.origin === 'myresource' ? '1' : null,
+      spaceId:['myresource','myTemp'].indexOf(currentClass.origin) > -1 ? spaceId : null,
       type: [currentClass.origin],
       ...pageParams,
       map: sortMap,
     };
-    if(currentClass.origin === 'myresource'){
+    if(['myresource','myTemp','systemTemp'].indexOf(currentClass.origin) > -1){
       finalBody.groupId = groupId
     }else{
       finalBody.subType = groupId ? [groupId] : []
@@ -137,6 +137,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   const changeShowState = (modalType: any) => {
     setUploadVisible(modalType);
   };
+
   return (
     <div className="resourceCenter-wrap">
       <div className="left">
@@ -156,7 +157,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           <div className="add-search">
             <div className="custom-btn" onClick={handleUpload}>
               <PlusOutlined style={{ fontSize: "12px", marginRight: "2px" }} />
-              <span>上传素材</span>
+              <span>{['myTemp', 'systemTemp'].indexOf(resourceCenter.curSelectedGroup?.origin) > -1 ? '上传模板' : '上传素材'}</span>
             </div>
             <div className="search-wrap">
               <Input.Search
@@ -186,7 +187,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         {resourceCenter.groupList.length > 0 && uploadVisible && (
           <UploadFile
             uploadVisible={uploadVisible}
-            groupList={resourceCenter.curSelectedGroup.origin === 'myresource' ? resourceCenter.groupList[0].children[0] : resourceCenter.groupList[0].children[1]}
+            groupList={ ['design','myresource'].indexOf(resourceCenter.curSelectedGroup.origin) > -1 ? resourceCenter.groupList[1] : resourceCenter.groupList[0]}
             origin={resourceCenter.curSelectedGroup.origin}
             changeShowState={changeShowState}
             refreshList={refreshGroupLists}
