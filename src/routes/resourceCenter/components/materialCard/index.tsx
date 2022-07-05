@@ -8,7 +8,7 @@ import { BASEURL } from "@/services/request";
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Input, Tooltip, Dropdown, Menu, message, Modal } from "antd";
+import { Input, Tooltip, Dropdown, Menu, message, Modal, Button } from "antd";
 
 // import M from '@/components/modalConfirm/index'
 
@@ -38,6 +38,7 @@ const AppCard = (props: any) => {
   const [canEdit, setCanEdit] = useState(false);
   const [appName, setAppName] = useState(name);
   const [isShowUL, setIsShowUL] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
 
   const inputRef = useRef<any>();
 
@@ -217,6 +218,21 @@ const AppCard = (props: any) => {
     setIsShowUL(false);
   };
 
+  const handleCreated = async() => {
+    setCreateLoading(true)
+    const [,data] = await useFetch('/visual/appTemplate/createApp', {
+      body: JSON.stringify({
+        id,
+        type: 0,
+        spaceId
+      })
+    })
+    setCreateLoading(false)
+    if(data){
+      history.push(`/dashboard/${data.id}`)
+    }
+  }
+
   return (
     <div className="AppCard-wrap">
       <header className="head">
@@ -263,8 +279,12 @@ const AppCard = (props: any) => {
               className="div-to-btns scan-btn"
               onClickCapture={() => scanDashboard()}
             >
-              预览
+              {moduleType.includes('Temp') ? '预览模板' : '预览'}
             </span>
+            {
+              moduleType.includes('Temp') && 
+              <Button type='primary' loading={createLoading} onClick={handleCreated}>创建应用</Button>
+            }
           </div>
         </div>
         <div className="img-wrap">
