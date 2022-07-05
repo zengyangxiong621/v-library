@@ -173,22 +173,25 @@ const DashboardTemplate = (props: any) => {
         </div>
       </div>
       {/* 预览模板 */}
-      <Modal
-        visible={curImgIndex > -1}
-        width="90vw"
-        footer={null}
-        keyboard={true}
-        closeIcon={() => <></>} // 除去关闭按钮
-        style={{
-          top: '8vh'
-        }}
-        bodyStyle={{
-          padding: '0'
-        }}
-        onCancel={() => modalCancel()}
-      >
-        <Preview srcUrlArr={urlArr} curIndex={curImgIndex} />
-      </Modal>
+      {
+        curImgIndex > -1 &&
+        <Modal
+          visible={curImgIndex > -1}
+          width="90vw"
+          footer={null}
+          keyboard={true}
+          closeIcon={() => <></>} // 除去关闭按钮
+          style={{
+            top: '8vh'
+          }}
+          bodyStyle={{
+            padding: '0'
+          }}
+          onCancel={() => modalCancel()}
+        >
+          <Preview srcUrlArr={urlArr} curIndex={curImgIndex} />
+        </Modal>
+      }
       {/* 创建应用弹窗 */}
       <DarkModal
         title='创建应用'
