@@ -4,6 +4,7 @@ import "./index.less";
 
 import { withRouter } from "dva/router";
 import { useFetch } from "../../../../utils/useFetch";
+import { http } from '@/services/request'
 import { BASEURL } from "@/services/request";
 
 import { IconFont } from "../../../../utils/useIcon";
@@ -220,14 +221,17 @@ const AppCard = (props: any) => {
 
   const handleCreated = async() => {
     setCreateLoading(true)
-    const [,data] = await useFetch('/visual/appTemplate/createApp', {
-      body: JSON.stringify({
+    const data = await http({
+      url: '/visual/appTemplate/createApp',
+      method: 'post',
+      body: {
         id,
         type: 0,
-        spaceId
-      })
+        spaceId:1
+      }
+    }).finally(() => {
+      setCreateLoading(false)
     })
-    setCreateLoading(false)
     if(data){
       history.push(`/dashboard/${data.id}`)
     }
