@@ -2,7 +2,7 @@ import { memo, useState, useRef } from 'react'
 import './index.less'
 
 import { withRouter } from 'dva/router'
-import { useFetch } from "@/utils/useFetch";
+import { http } from '@/services/request'
 const TemplateCard = (props: any) => {
   const { id, name, ratio, fenbianlv, photoUrl,
     getCurImgIndex, addTemplate, curIndex, history } = props
@@ -13,12 +13,14 @@ const TemplateCard = (props: any) => {
   }
   const createProject = async() => {
     // addTemplate(id)
-    const [,data] = await useFetch('/visual/appTemplate/createApp', {
-      body: JSON.stringify({
+    const data = await http({
+      url: '/visual/appTemplate/createApp',
+      method: 'post',
+      body: {
         id,
         type: 0,
         spaceId:1
-      })
+      }
     })
     if(data){
       history.push(`/dashboard/${data.id}`)
