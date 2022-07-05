@@ -1,31 +1,181 @@
 import { memo, useEffect, useState } from 'react'
 import './index.less'
 import { withRouter } from 'dva/router'
-import { Spin, message } from 'antd'
+import { connect } from 'dva'
+import { deepClone, treeDataReverse } from '@/utils'
 
-import { http } from '../../services/request'
+import { Spin } from 'antd'
 
-import EveryComponent from './components/everyComponent'
-import { getLayerIds } from './types'
 
-const PublishDashboard = ({ history, location }: any) => {
+import RecursiveComponent from './components/recursiveComponent'
+import { calcCanvasSize } from '../../utils'
+
+const PublishDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
-  const [componentsList, setComponentsList] = useState([])
-  const [dashboardConfig, setDashboardConfig] = useState([])
-
-
   const [screenWidthRatio, setScreenWidthRatio] = useState(1)
   const [screenHeightRatio, setScreenHeightRatio] = useState(1)
-  const [pageStyle, setPageStyle] = useState({})
+  const [dashboardConfig, setDashboardConfig] = useState([])
+  const [absolutePosition, setAbsolutePosition] = useState({ left: 0, top: 0 })
+  const [pageStyle, setPageStyle]: any = useState({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
-  const { pathname } = location
-  const dashboardId = pathname.split('/').pop()
+  const [scaleValue, setScaleValue] = useState(1)
+  /**
+  * description: 获取屏幕大小、缩放设置等参数
+  */
+  const [layers, setLayers] = useState(deepClone(bar.treeData))
 
   /**
-* description: 获取屏幕大小、缩放设置等参数
-*/
+   * description: 进入页面，先获取画布详情
+   */
+  const getDashboardData = async ({ dashboardConfig, dashboardName }: any) => {
+    document.title = dashboardName
+    setDashboardConfig(dashboardConfig)
+    // 获取屏幕大小、背景等参数
+    const configInfo: any = getScreenInfo(dashboardConfig)
+    // const winW = window.innerWidth
+    // const winH = window.innerHeight
+    const winW = document.documentElement.clientWidth
+    const winH = document.documentElement.clientHeight
+    const { width, height } = configInfo['屏幕大小']
+
+
+    let finalStyle: any = {
+      background: configInfo['背景'],
+      backgroundImage: configInfo['背景图'],
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center center',
+    }
+
+    // 根据缩放模式来展示
+    const scaleMode = configInfo['缩放设置']
+    switch (scaleMode) {
+      case '0':
+        // widthRatio
+        finalStyle.width = width // recommandConfig.width
+        finalStyle.height = height
+        finalStyle.position = 'absolute'
+        finalStyle.transformOrigin = 'left top'
+        finalStyle.backgroundImage = `url(${configInfo['背景图']})`
+        const { scaleValue, absolutePosition } = calcCanvasSize({ width, height })
+        setScaleValue(scaleValue)
+        setAbsolutePosition(absolutePosition)
+        break;
+      case '1':
+        finalStyle.width = '100vw'
+        finalStyle.height = '100vh'
+        const wRatio2 = winW / width
+        const hRatio2 = winH / height
+        setScreenWidthRatio(wRatio2)
+        setScreenHeightRatio(hRatio2)
+        finalStyle.overflow = 'hidden'
+        break;
+      case '2':
+        const finalW = '100vw'
+        const finalH = '100vh'
+        setScreenWidthRatio(width / winW)
+        setScreenHeightRatio(height / winH)
+        setOverflowStyle({
+          width: finalW,
+          height: finalH,
+          overflow: 'auto',
+          ...finalStyle
+        })
+        break;
+    }
+    setPageStyle(finalStyle)
+  }
+
+  const setCanvasSize = (config?: any) => {
+    if (config instanceof Event) {
+      config = dashboardConfig
+    } else {
+      config = config || dashboardConfig
+    }
+    if (config.length > 0) {
+      const screenInfoMap: any = getScreenInfo(config)
+      const { width, height } = screenInfoMap['屏幕大小']
+      const { scaleValue, absolutePosition } = calcCanvasSize({ width, height })
+      setScaleValue(scaleValue)
+      setAbsolutePosition(absolutePosition)
+    }
+  }
+
+  useEffect(() => {
+    if (dashboardConfig.length > 0) {
+      window.addEventListener('resize', setCanvasSize)
+    }
+    return () => {
+      window.addEventListener('resize', setCanvasSize)
+    }
+  }, [dashboardConfig])
+  const calcCanvasScale = (e: any) => {
+    if (e.ctrlKey) {
+      e.preventDefault()
+    }
+  }
+
+  useEffect(() => {
+    if (scaleValue) {
+      window.addEventListener('wheel', calcCanvasScale, { passive: false })
+    }
+    return () => {
+      window.removeEventListener('wheel', calcCanvasScale)
+    }
+  }, [scaleValue])
+
+  // 初入页面 - 获取数据
+  useEffect(() => {
+    const init = async () => {
+      setIsLoaded(false)
+      const { dashboardConfig, dashboardName }: any = await initDashboard()
+      setDashboardConfig(dashboardConfig)
+      setCanvasSize(dashboardConfig)
+
+      await getDashboardData({ dashboardConfig, dashboardName })
+      setIsLoaded(true)
+    }
+    init()
+    return () => {
+      dispatch({
+        type: 'bar/clearCurrentDashboardData'
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  // 定时刷新页面
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const { dashboardConfig, dashboardName }: any = await initDashboard()
+      await getDashboardData({ dashboardConfig, dashboardName })
+    }, 3600 * 1000)
+    return () => {
+      clearInterval(intervalId)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
+  const initDashboard = (cb = function () { }) => {
+    return new Promise((resolve, reject) => {
+      const dashboardId = window.location.pathname.split('/')[2]
+      dispatch({
+        type: 'bar/initDashboard',
+        payload: dashboardId,
+        cb: (data: any) => {
+          resolve(data)
+        }
+      })
+    })
+  }
+  useEffect(() => {
+    const data = deepClone(bar.treeData)
+    treeDataReverse(data)
+    setLayers(data)
+  }, [bar.treeData])
+
+
   const getScreenInfo = (config: any) => {
     let map: any = {}
     config.forEach(({ displayName, value, options, width, height }: any) => {
@@ -39,101 +189,50 @@ const PublishDashboard = ({ history, location }: any) => {
     })
     return map
   }
-  // 进入页面，先获取画布详情
-  const getDashboardDetail = async () => {
-    setIsLoaded(false)
-    let { components, dashboardName, layers, dashboardConfig }: any = await http({
-      url: `/visual/application/dashboard/detail/${dashboardId}`,
-      method: 'get',
-    })
-    if (Array.isArray(components)) {
-      setIsLoaded(true)
-      document.title = dashboardName
-    }
-    // 要根据layers来渲染组件，所以最终需要过滤掉某些components
-    const layerIds = getLayerIds(layers)
-    // 最终需要渲染的components
-    const hadFilterComponents = components.filter((item: any) => layerIds.includes(item.id))
-    setComponentsList(hadFilterComponents)
-    setDashboardConfig(dashboardConfig)
-
-    // 获取屏幕大小、背景等参数
-    const screenInfoMap: any = getScreenInfo(dashboardConfig)
-    const winW = window.innerWidth
-    const winH = window.innerHeight
-    const { width, height } = screenInfoMap['屏幕大小']
-
-    const finalStyle: any = {
-      background: screenInfoMap['背景'],
-      backgroundImage: screenInfoMap['背景图'] ? require(screenInfoMap['背景图']) : ''
-    }
-    // 根据缩放模式来展示
-    const scaleMode = screenInfoMap['缩放设置']
-    switch (scaleMode) {
-      case '0':
-        finalStyle.width = '100vw'
-        finalStyle.height = '100vh'
-        const wRatio = winW / width
-        const hRatio = winH / height
-        let unifyRatio
-        if (wRatio > hRatio) {
-          unifyRatio = Math.max(wRatio, hRatio)
-        } else {
-          unifyRatio = Math.min(wRatio, hRatio)
-        }
-        setScreenWidthRatio(unifyRatio)
-        setScreenHeightRatio(unifyRatio)
-        break;
-      case '1':
-        finalStyle.width = '100vw'
-        finalStyle.height = '100vh'
-        setScreenWidthRatio(winW / width)
-        setScreenHeightRatio(winH / height)
-        break;
-      case '2':
-        const finalW = winW > width ? width : '100vw'
-        const finalH = winH > height ? height : '100vh'
-        setOverflowStyle({
-          width: finalW,
-          height: finalH,
-          overflow: 'auto',
-          ...finalStyle
-        })
-        break;
-    }
-    setPageStyle(finalStyle)
-  }
-  useEffect(() => {
-    getDashboardDetail()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
   return (
-    <>
+    <div id="gs-v-library-app">
       {
         isLoaded ?
-          <div className='customScrollStyle' style={overflowStyle}>
+          <div className='customScrollStyle' style={{ ...overflowStyle }}>
             <div className='publishDashboard-wrap'
-              style={pageStyle}
+              style={{
+                position: 'absolute',
+                width: pageStyle.width * scaleValue,
+                height: pageStyle.height * scaleValue,
+                ...absolutePosition,
+              }}
             >
-              {
-                componentsList.map((item, index) => <>
-                  <EveryComponent key={index}
-                    componentData={item}
+              <div id="scaleDiv"
+                style={{
+                  ...pageStyle,
+                  transform: `scale(${scaleValue})`
+                }}
+              >
+                {
+                  <RecursiveComponent
+                    layersArr={layers}
+                    componentLists={bar.components}
+                    bar={bar}
+                    dispatch={dispatch}
+                    scaleValue={scaleValue}
                     screenWidthRatio={screenWidthRatio}
                     screenHeightRatio={screenHeightRatio}
                   />
-                </>)
-              }
+                }
+              </div>
             </div>
           </div>
           :
           <Spin
-            tip='正在加载中…'
+            tip='正在生成中…'
             style={{ maxHeight: '100%' }}>
             <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
           </Spin>
       }
-    </>
+    </div>
   )
 }
-export default memo(withRouter(PublishDashboard))
+
+export default memo(connect(
+  ({ bar }: any) => ({ bar })
+)(withRouter(PublishDashboard)))

@@ -430,7 +430,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     height: recommendConfig.height,
                     transform: `scale(${ bar.canvasScaleValue })`,
                     backgroundColor: styleColor.value,
-                    background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
+                    background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : styleColor.value,
                     backgroundSize: 'cover',
                   } }
                 >

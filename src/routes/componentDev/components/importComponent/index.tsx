@@ -133,7 +133,7 @@ const importComponent = (props: any) => {
         confirmLoading={loading}
         footer={[
           <div key='footer'>
-            <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel}>取消</Button>,
+            <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel}>取消</Button>
             <Button type='primary' className='modalBtn okBtn' onClick={handleOk}>确定</Button>
           </div>
         ]}

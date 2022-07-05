@@ -41,9 +41,11 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   }
   // 通过右键菜单打开重命名框的时候，需要给input聚焦,否则无法触发失焦事件，会导致选择了其它节点后,input框不消失的问题
   useEffect(() => {
-    inputRef.current.focus({
-      cursor: 'all'
-    })
+    if (inputRef.current) {
+      inputRef.current.focus({
+        cursor: 'all'
+      })
+    }
   }, [showRenameInput])
   // 点击鼠标右键事件
   const mouseRightClick = (e) => {
@@ -154,62 +156,70 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   }
   const imgFormat = imgSuffixMap[moduleName] || 'png'
   const photoPath = `${window.CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/thumb-${moduleName}.${imgFormat}`
-
+  // 处理组下已经没有图层的情况 //TODO 没有图层是否需要删除
+  const isEmptyGroup = id.startsWith('group') && (Array.isArray(modules) && !modules.length)
   return (
-    <div className={`EveryTreeNode-wrap
+    <div>
+      {
+        // isEmptyGroup ? <div style={{height: '60px',background: 'red'}}>hhh</div>
+        //   :
+          <div className={`EveryTreeNode-wrap
         ${hover && 'every-tree-node-hover'}
         ${isSelected && 'set-back-color'}
       `}
-      onContextMenu={(e) => {
-        mouseRightClick(e)
-      }}>
-      <div>
-        {
-          isFolder ?
-            isFolderExpand ? <i style={{
-              paddingLeft: '13px'
-            }} className='iconfont icon-wenjianjia-zhankai set-margin set-icon-size' /> : <i style={{
-              paddingLeft: '13px'
-            }} className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
-            : <div className='frame set-margin'>
-              <img style={{ width: '100%', height: '100%' }} src={photoPath}></img>
+            onContextMenu={(e) => {
+              mouseRightClick(e)
+            }}>
+            <div>
+              {
+                isFolder ?
+                  isFolderExpand ? <i style={{
+                    paddingLeft: '13px'
+                  }} className='iconfont icon-wenjianjia-zhankai set-margin set-icon-size' /> : <i style={{
+                    paddingLeft: '13px'
+                  }} className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
+                  : <div className='frame set-margin'>
+                    <img style={{ width: '100%', height: '100%' }} src={photoPath}></img>
+                  </div>
+              }
             </div>
-        }
-      </div>
-      <div className='title' onDoubleClick={(e) => dClick(e)}>
-        <Input
-          value={inputValue}
-          size='small'
-          ref={inputRef}
-          style={{
-            display: showRenameInput ? 'block' : 'none'
-          }}
-          onChange={(e) => oInputContent(e)}
-          onPressEnter={(e) => oPressEnter(e)}
-          onBlur={(e) => oBlur(e)}
-        />
-        <span className='left-tree-title-text' style={{
-          display: showRenameInput ? 'none' : 'block'
-        }}>{name}</span>
-      </div>
-      <div className='icons-wrap'>
-        <span className='each-icon'>
-          {
-            isLock && <i className='iconfont icon-suoding' onClickCapture={(e) => lockIconClick(e)}></i>
-          }
-        </span>
-        <div className={`${isShow && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
-          {
-            isShow ? <EyeOutlined /> : <EyeInvisibleOutlined />
-          }
-        </div>
-        <span className='each-icon'>
-          {
-            singleShowLayer && <i className='iconfont icon-danduxianshi' onClickCapture={(e) => singleShowLayerClick(e)}></i>
-          }
-        </span>
-      </div>
+            <div className='title' onDoubleClick={(e) => dClick(e)}>
+              <Input
+                value={inputValue}
+                size='small'
+                ref={inputRef}
+                style={{
+                  display: showRenameInput ? 'block' : 'none'
+                }}
+                onChange={(e) => oInputContent(e)}
+                onPressEnter={(e) => oPressEnter(e)}
+                onBlur={(e) => oBlur(e)}
+              />
+              <span className='left-tree-title-text' style={{
+                display: showRenameInput ? 'none' : 'block'
+              }}>{name}</span>
+            </div>
+            <div className='icons-wrap'>
+              <span className='each-icon'>
+                {
+                  isLock && <i className='iconfont icon-suoding' onClickCapture={(e) => lockIconClick(e)}></i>
+                }
+              </span>
+              <div className={`${isShow && 'eyes-icon'} each-icon`} onClick={(e) => changeEyeIconState(e)}>
+                {
+                  isShow ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                }
+              </div>
+              <span className='each-icon'>
+                {
+                  singleShowLayer && <i className='iconfont icon-danduxianshi' onClickCapture={(e) => singleShowLayerClick(e)}></i>
+                }
+              </span>
+            </div>
+          </div>
+      }
     </div>
+
   )
 }
 

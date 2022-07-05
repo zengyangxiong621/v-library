@@ -3,14 +3,14 @@ import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
 import TimeSelect from '@/components/timeSelect'
 import ScrollTable from '@/components/scrollTable'
+import Bar from '@/customComponents/echarts/components/bar/index'
 import Tab from '@/components/tab'
-import Select from '@/customComponents/assist/select'
 import {connect} from "dva"
 // import './index.less'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
 
-const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props}) => {
+const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, ...props}) => {
   const callbackArgs = bar.callbackArgs
   const callbackParamsList = bar.callbackParamsList
   const {componentConfig} = props
@@ -28,7 +28,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (clickActions.length === 0) {
       return
     }
-    console.log('clickActions', clickActions)
     setClickTimes(1)
     customEventsFunction(clickEvents)
   }, 300)
@@ -52,7 +51,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   })
 
   const customEventsFunction = (events, data) => {
-    console.log('events', events)
     events.forEach((item) => {
       const conditions = item.conditions
       const conditionType = item.conditionType
@@ -122,13 +120,10 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         setTimeout(() => {
           action.component.forEach(id => {
             const dom = document.querySelector(`.event-id-${id}`)
-            console.log('dom', dom)
             dom.style.transition = `transform ${animation.duration}ms ${animation.timingFunction} 0s`
             Object.keys(action).filter(
               (key) => !['id', 'name', 'trigger', 'unmount', 'componentScope', 'component', 'action'].includes(key)
             ).forEach((key) => {
-              console.log('---------------')
-              console.log('actionType', action)
               actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
             })
           })
@@ -215,12 +210,31 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
-      // 重新获取部分组件的数据
+      // 绑定数据容器的组件列表
+      const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
+      // 绑定数据源的组件列表
+      const componentsByDataSource = activeComponents.filter(component => component.dataFrom === 0)
+      // 重新获取部分组件（绑定数据源的组件列表）的数据
       dispatch({
         type: 'bar/getComponentsData',
         payload: activeComponents
       })
+      // 重新获取部分数据容器的数据
+      const filterComponentsByDataContainer = []
+      // 去重
+      activeComponents.forEach(component => {
+        component.dataContainers.forEach(container => {
+          if (!filterComponentsByDataContainer.find(item => item.id === container.id)) {
+            filterComponentsByDataContainer.push(container)
+          }
+        })
+      })
+      dispatch({
+        type: 'bar/getContainersData',
+        payload: filterComponentsByDataContainer
+      })
     }
+    // 自定义事件
     const dataChangeEvents = events.filter(item => item.trigger === 'dataChange')
     const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (dataChangeActions.length === 0) {
@@ -232,8 +246,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
 
   const animation = ({duration, timingFunction, type}, actionType, dom, actionId, action, componentId) => {
-    console.log('action', action)
-    console.log('actionType', actionType)
     if (['show', 'hide'].includes(actionType)) {
       // transform = 'translateY(200px)'
       let translate = {
@@ -285,7 +297,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
       // } else {
       //   opacityTimeIds.current.push(componentId)
       // }
-      console.log('重新开始')
       timer = setInterval(() => {
         // 在一个时间段内，只存在一种事件
         if (actionType === 'show') {
@@ -295,7 +306,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
             const index = opacityTimeIds.current.indexOf(componentId)
             opacityTimeIds.current.splice(index, 1)
           } else {
-            console.log('dom.style.opacity', dom.style.opacity)
             dom.style.opacity = Number(dom.style.opacity) + 0.01
           }
         }
@@ -342,7 +352,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
 
   }
 
-  const scale = ({origin, x, y}, action, dom) => {
+  const scaleFunc = ({origin, x, y}, action, dom) => {
     if (action === 'scale') {
       const scaleRegX = /scaleX\((.+?)\)/g
       const scaleRegY = /scaleY\((.+?)\)/g
@@ -374,7 +384,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
   const actionConfigFuncList = {
     animation,
     rotate,
-    scale,
+    scale: scaleFunc,
     translate,
   }
 
@@ -392,8 +402,16 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, ...props})
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'bar' ?
+        <Bar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </Bar>
+        :
         props.componentConfig.moduleName === 'scrollTable' ?
           <ScrollTable
+            scale={scale}
             onChange={handleValueChange}
             {...props}
           >

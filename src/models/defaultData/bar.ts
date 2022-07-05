@@ -23,51 +23,37 @@ export const defaultData = {
           {
             "column1": "北京",
             "column2": 87.2,
-            "column3": "超预期",
-            "isSticked": false,
-            "isSelected": false
+            "column3": "超预期"
           },
           {
             "column1": "上海",
             "column2": 80.5,
-            "column3": "达标",
-            "isSticked": false,
-            "isSelected": false
+            "column3": "达标"
           },
           {
             "column1": "杭州",
             "column2": 72.3,
-            "column3": "达标",
-            "isSticked": false,
-            "isSelected": false
+            "column3": "达标"
           },
           {
             "column1": "重庆",
             "column2": 65.5,
-            "column3": "未达标",
-            "isSticked": false,
-            "isSelected": false
+            "column3": "未达标"
           },
           {
             "column1": "成都",
             "column2": 58.4,
-            "column3": "未达标",
-            "isSticked": false,
-            "isSelected": false
+            "column3": "未达标"
           },
           {
             "column1": "厦门",
             "column2": 52.5,
-            "column3": "未达标",
-            "isSticked": false,
-            "isSelected": false
+            "column3": "未达标"
           },
           {
             "column1": "云南",
             "column2": 40.2,
-            "column3": "未达标",
-            "isSticked": false,
-            "isSelected": false
+            "column3": "未达标"
           }
         ],
         "fields": [
@@ -87,14 +73,14 @@ export const defaultData = {
             "desc": "文本"
           },
           {
-            "name": "isSticked",
-            "value": "isSticked",
-            "desc": "bool"
+            "name": "column4",
+            "value": "column4",
+            "desc": "文本"
           },
           {
-            "name": "isSelected",
-            "value": "isSelected",
-            "desc": "bool"
+            "name": "column5",
+            "value": "column5",
+            "desc": "文本"
           }
         ]
       },
@@ -161,18 +147,6 @@ export const defaultData = {
                 "suffix": ""
               },
               "value": 5
-            },
-            {
-              "name": "isScroll",
-              "displayName": "是否轮播",
-              "type": "switch",
-              "value": true
-            },
-            {
-              "name": "waitTime",
-              "displayName": "轮播间隔",
-              "type": "input",
-              "value": 5000
             },
             {
               "name": "fontFamily",
@@ -460,8 +434,8 @@ export const defaultData = {
           "value": [
             {
               "key": "1",
-              "displayName": "列",
-              "name": "列1",
+              "displayName": "列1",
+              "name": "tab",
               "type": "object",
               "value": [
                 {
@@ -487,8 +461,8 @@ export const defaultData = {
             },
             {
               "key": "2",
-              "displayName": "列",
-              "name": "列2",
+              "displayName": "列2",
+              "name": "tab",
               "type": "object",
               "value": [
                 {
@@ -514,8 +488,8 @@ export const defaultData = {
             },
             {
               "key": "3",
-              "displayName": "列",
-              "name": "列3",
+              "displayName": "列3",
+              "name": "tab",
               "type": "object",
               "value": [
                 {

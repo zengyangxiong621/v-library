@@ -1,84 +1,122 @@
 import React from 'react';
-import EC from '../../EC';
+// import EC from '../../EC';
 import * as echarts from 'echarts';
 import worldJson from "@/customComponents/echarts/components/world.json";
-import debounce from 'lodash/debounce';
+import { debounce } from "@/utils/common";
 import ComponentDefaultConfig from './config'
 
 let mapChart = null;
 
 // 坐标数据
 let coordData = {
-  黑龙江: [127.9688, 45.368],
-  内蒙古: [110.3467, 41.4899],
-  吉林: [125.8154, 44.2584],
-  北京市: [116.4551, 40.2539],
-  辽宁: [123.1238, 42.1216],
-  河北: [114.4995, 38.1006],
-  天津: [117.4219, 39.4189],
-  山西: [112.3352, 37.9413],
-  陕西: [109.1162, 34.2004],
-  甘肃: [103.5901, 36.3043],
-  宁夏: [106.3586, 38.1775],
-  青海: [101.4038, 36.8207],
-  新疆: [87.9236, 43.5883],
-  西藏: [91.11, 29.97],
-  四川: [103.9526, 30.7617],
-  重庆: [108.384366, 30.439702],
-  山东: [117.1582, 36.8701],
-  河南: [113.4668, 34.6234],
-  江苏: [118.8062, 31.9208],
-  安徽: [117.29, 32.0581],
-  湖北: [114.3896, 30.6628],
-  浙江: [119.5313, 29.8773],
-  福建: [119.4543, 25.9222],
-  江西: [116.0046, 28.6633],
-  湖南: [113.0823, 28.2568],
-  贵州: [106.6992, 26.7682],
-  云南: [102.9199, 25.4663],
-  广东: [113.12244, 23.009505],
-  广西: [108.479, 23.1152],
-  海南: [110.3893, 19.8516],
-  上海: [121.4648, 31.2891],
+  昌平数据中心: [116.249193,40.168238],
+  勘探院数据中心: [116.357544,39.992995],
+  吉林数据中心: [126.539923,43.941828],
+  克拉玛依数据中心: [84.902321,45.580525],
+  北京区域中心: [116.536989,39.777354],
+  辽河区域中心: [123.479261,41.79233],
+  吉林区域中心: [126.567982,43.823481],
+  大庆区域中心: [125.268447,45.704549],
+  西安区域中心: [108.979039,34.273485],
+  兰州区域中心: [103.672554,36.505049],
+  新疆区域中心: [87.520211,43.860104],
+  西南区域中心: [104.098755,30.678152],
+  华南区域中心: [113.341111,23.02494],
+  华东区域中心: [120.186041,30.290762],
+  大连区域中心: [121.673286,38.928873],
   美国: [-93.310319, 36.908779],
   丹麦: [9.1577, 56.1388,],
-  瑞士: [8.6649, 47.5276] 
+  瑞士: [8.6649, 47.5276]
 }
 // 飞线点数据
 let flyLineArr = [
   [
     {
-      name: '内蒙古',
+      name: '昌平数据中心',
       value: 0,
     },
   ],
   [
     {
-      name: '西藏',
+      name: '勘探院数据中心',
       value: 0,
     },
   ],
   [
     {
-      name: '福建',
+      name: '吉林数据中心',
       value: 0,
     },
   ],
   [
     {
-      name: '江西',
+      name: '克拉玛依数据中心',
       value: 0,
     },
   ],
   [
     {
-      name: '海南',
-      value: 0,
+      name: '北京区域中心',
+      value: 5,
     },
   ],
   [
     {
-      name: '上海',
+      name: '辽河区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '吉林区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '大庆区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '西安区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '兰州区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '新疆区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '西南区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '华南区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '华东区域中心',
+      value: 1,
+    },
+  ],
+  [
+    {
+      name: '大连区域中心',
       value: 1,
     },
   ],
@@ -107,13 +145,13 @@ let convertData = function (data) {
   for (let i = 0; i < data.length; i++) {
     let dataItem = data[i]
     let fromCoord = coordData[dataItem[0].name]
-    let toCoord = [108.384366, 30.439702] //中心点地理坐标
+    let toCoord = [116.536989,39.777354] //中心点地理坐标
     if (fromCoord && toCoord) {
       res.push([
-        {      
+        {
           coord: toCoord, // 飞线从哪里出发
         },
-        {       
+        {
           coord: fromCoord, // 飞线去往哪里
           value: dataItem[0].value,
         },
@@ -123,7 +161,7 @@ let convertData = function (data) {
   return res
 }
 
-let centerPoint = '重庆' // 中心点
+let centerPoint = '北京区域中心' // 中心点
 let series = [];
 [[centerPoint, flyLineArr]].forEach(function (item, i) {
   series.push(
@@ -168,8 +206,7 @@ let series = [];
           position: 'right', //显示位置
           offset: [5, 0], //偏移设置
           formatter: function (params) {
-            //圆环显示文字
-            return params.data.name
+            return params.data.name //圆环显示文字
           },
           fontSize: 13,
         },
@@ -238,6 +275,7 @@ let series = [];
 })
 let options = {
   // bgColor: '#1a1e45',
+  radius: '100%',
   tooltip: {
     trigger: 'item',
   },
@@ -291,9 +329,6 @@ let options = {
 class WorldMap extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      cnt: 0
-    };
     this.resizeDebounce = debounce(this.chartsResize, 250);
   }
 
@@ -311,20 +346,16 @@ class WorldMap extends React.PureComponent {
     }
   };
 
-  createMap = (initOption) => {
+  createMap = () => {
     const dom = document.getElementById(this.props.componentConfig.id);
     const mapChart = echarts.init(dom);
-    echarts.registerMap("world", worldJson);    
+    echarts.registerMap("world", worldJson);
     mapChart.setOption(options);
     return mapChart;
   };
 
   onChartClick = (param, echarts) => {
     console.log(param, echarts);
-    alert('chart click');
-    this.setState({
-      cnt: this.state.cnt + 1
-    });
   };
 
   onChartReady = echarts => {
@@ -335,15 +366,18 @@ class WorldMap extends React.PureComponent {
     let onEvents = {
       click: this.onChartClick,
     };
+    let mapSize = {
+      width: '1200px',
+      height: '800px'
+    };
 
     return (
-      <EC
+      <div
         id={this.props.componentConfig.id}
-        type="map"
+        style={mapSize}
         option={options}
         onChartReady={this.onChartReady}
         onEvents={onEvents}
-        createMap={this.createMap}
       />
     );
   }

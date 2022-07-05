@@ -206,19 +206,26 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
       method: 'post',
       body: body
     })
-    // {
-    //   errHandleFn: (err: any) => {
-    //     message.error('发布失败');
-    //   },
-    // }
     setFabuSpinning(false)
     return data
   }
   // 发布大屏
   const fabudaping = async () => {
     //发布成功，将弹窗内容替换成发布详情信息
+    const { thumb, needPassword, sharePassword, title, description, open, share, shareUrl } = fabuBody
+    // 这儿后端返回的全是null,需要将null 转为 ‘’ 或者 true/false
+    const formatBody = {
+      "thumb": thumb || '',
+      "needPassword": needPassword || false,
+      "title": title || '',
+      "sharePassword": sharePassword || false,
+      "open": open || false,
+      description: description || '',
+      share: share || false,
+      shareUrl: shareUrl || ''
+    }
     const finalBody = {
-      ...fabuBody,
+      ...formatBody,
       share: true,
       id: bar.dashboardId
     }
