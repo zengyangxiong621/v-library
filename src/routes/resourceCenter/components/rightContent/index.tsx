@@ -26,7 +26,6 @@ const RightContent = (props: any) => {
   const [newGroupId, setNewGroupId] = useState('')
   const [currentItem, setCurrentItem] = useState<any>({})
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  console.log(props,'props')
 
   // 发布应用时的参数
   const [curAppId, setCurAppId] = useState('')
