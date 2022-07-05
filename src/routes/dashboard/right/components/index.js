@@ -24,6 +24,7 @@ import UploadImg from './uploadImg'
 import CusInputNumber from './cusInputNumber'
 import TabArray from './tabArray'
 import CusSwitch from './switch'
+import BorderRadius from './borderRadius'
 
 
 const componentLib = {
@@ -50,7 +51,8 @@ const componentLib = {
   image:UploadImg,
   number:CusInputNumber,
   tabArray: TabArray,
-  switch: CusSwitch
+  switch: CusSwitch,
+  borderRadius:BorderRadius,
 }
 
 export default componentLib
