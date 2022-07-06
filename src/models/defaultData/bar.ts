@@ -457,7 +457,7 @@ export const defaultData = {
                     }
                   ]
                 },
-                {
+/*                {
                   "name": "width",
                   "displayName": "列宽",
                   "type": "number",
@@ -574,7 +574,7 @@ export const defaultData = {
                       "value": "35px"
                     }
                   ]
-                }
+                }*/
               ]
             },
             {
@@ -602,7 +602,7 @@ export const defaultData = {
                     }
                   ]
                 },
-                {
+      /*          {
                   "name": "width",
                   "displayName": "列宽",
                   "type": "number",
@@ -719,7 +719,7 @@ export const defaultData = {
                       "value": "35px"
                     }
                   ]
-                }
+                }*/
               ]
             },
             {
@@ -747,7 +747,7 @@ export const defaultData = {
                     }
                   ]
                 },
-                {
+/*                {
                   "name": "width",
                   "displayName": "列宽",
                   "type": "number",
@@ -848,7 +848,7 @@ export const defaultData = {
                       "value": "35px"
                     }
                   ]
-                }
+                }*/
               ]
             }
           ]
