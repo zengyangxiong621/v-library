@@ -5,6 +5,7 @@ import "./index.less";
 import { connect } from "dva";
 import zhCN from 'antd/es/locale/zh_CN'
 import { useFetch } from "@/utils/useFetch";
+import AddOrEdit from './components/addOrEdit'
 enum dataSourceType {
   RDBMS,
   RESTFUL_API,
@@ -42,6 +43,7 @@ const UserManage = (props: any) => {
   })
   const [tableMap, setTableMap] = useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [showAddOrEdit, setShowAddOrEdit] = useState(false);
 
 
   
@@ -66,7 +68,7 @@ const UserManage = (props: any) => {
   },[])
 
   const createUser = () => {
-
+    setShowAddOrEdit(true)
   }
   const deleteUser = () => {}
 
@@ -128,26 +130,6 @@ const UserManage = (props: any) => {
       dataIndex: 'name',
     },
     {
-      title: '工号',
-      dataIndex: 'code',
-      key: 'code',
-      ellipsis: true,
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
-      key: 'email',
-      width: 150,
-      ellipsis: true,
-    },
-    {
-      title: '手机号',
-      dataIndex: 'tel',
-      key: 'tel',
-      width: 150,
-      ellipsis: true,
-    },
-    {
       title: '角色',
       key: 'roles',
       ellipsis: true,
@@ -172,16 +154,58 @@ const UserManage = (props: any) => {
       }
     },
     {
+      title: '用户类型',
+      key: 'type',
+      width: 100,
+      dataIndex: 'type',
+      render: (type: any, data: any) => {
+        switch (type) {
+          case '1':
+            return 'SSO账户'
+          case '2':
+            return '域账号'
+          case '4':
+            return '内置账号'
+          case '-1':
+            return '管理员账号'
+          case '-2':
+            return '安全管理平台自身内置账号'
+          default: '无'
+        }
+      }
+    },
+    {
+      title: '工号',
+      dataIndex: 'code',
+      key: 'code',
+      ellipsis: true,
+    },
+    {
+      title: '邮箱',
+      dataIndex: 'email',
+      key: 'email',
+      width: 150,
+      ellipsis: true,
+    },
+    {
+      title: '联系方式',
+      dataIndex: 'tel',
+      key: 'tel',
+      width: 150,
+      ellipsis: true,
+    },
+    {
       title: '操作',
       key: 'action',
       ellipsis: true,
-      width: 200,
+      width: 250,
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
             <span className='textInOperationColumn' onClickCapture={() => editClick(text)}>编辑</span>
             <span className='textInOperationColumn' onClickCapture={() => resetClick(text)}>重置密码</span>
             <span className='textInOperationColumn' onClickCapture={() => delClick(record.id)}>删除</span>
+            <span className='textInOperationColumn' onClickCapture={() => stopClick(record)}>{record.status === '1' ? '启用' : '停用'}</span>
           </Space>
         )
       }
@@ -208,8 +232,15 @@ const UserManage = (props: any) => {
   const delClick = (data:any) => {
 
   }
+  const stopClick = (data:any) => {
+
+  }
   const tableOnChange = () => {
 
+  }
+
+  const closeModal = () => {
+    setShowAddOrEdit(false)
   }
 
   return (
@@ -246,6 +277,8 @@ const UserManage = (props: any) => {
             onChange={tableOnChange}
           />
         </div>
+        {/* 新建用户 */}
+        <AddOrEdit showAddOrEdit={showAddOrEdit} closeModal={closeModal}></AddOrEdit>
       </div>
     </ConfigProvider>
   )
