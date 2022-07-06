@@ -6,6 +6,7 @@ import { connect } from "dva";
 import zhCN from 'antd/es/locale/zh_CN'
 import { useFetch } from "@/utils/useFetch";
 import AddOrEdit from './components/addOrEdit'
+import { http } from "@/services/request";
 enum dataSourceType {
   RDBMS,
   RESTFUL_API,
@@ -210,7 +211,7 @@ const UserManage = (props: any) => {
             <Button type="link" size='small' onClickCapture={() => editClick(text)}>编辑</Button>
             <Button type="link" size='small' disabled={handleBtnDisabled(text,'password')} onClickCapture={() => resetClick(text)}>重置密码</Button>
             <Button type="link" size='small' disabled={handleBtnDisabled(text,'delete')} onClickCapture={() => delClick(text)}>删除</Button>
-            <Button type="link" size='small' disabled={handleBtnDisabled(text,'status')} onClickCapture={() => stopClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
+            <Button type="link" size='small' disabled={handleBtnDisabled(text,'status')} onClickCapture={() => changeStatusClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
           </>
         )
       }
@@ -239,8 +240,20 @@ const UserManage = (props: any) => {
   const delClick = (data:any) => {
 
   }
-  const stopClick = (data:any) => {
-
+  const changeStatusClick = async(data:any) => {
+    console.log(data,'数据')
+    const result = await http({
+      url: '/visual/user/updateStatus',
+      method: 'post',
+      body: {
+        status: data.status === '0' ? '1' : '0',
+        id: data.id
+      }
+    })
+    if(result){
+      message.success(`${data.status === '0' ? '停用' : '启用'}成功`)
+      getUserList()
+    }
   }
   const tableOnChange = () => {
 
