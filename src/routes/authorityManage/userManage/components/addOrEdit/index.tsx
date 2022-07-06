@@ -5,10 +5,10 @@ import { Input, Row, Col, Modal, Form, Select, Button,message } from 'antd'
 const { Option } = Select;
 import { useFetch } from "@/utils/useFetch";
 const AddOrEdit = (props: any) => {
-  const {showAddOrEdit,closeModal,getUserList } = props
+  const {showAddOrEdit,closeModal,getUserList,formType,currentUser } = props
   const [addForm] = Form.useForm()
   // const { Option } = Select
-  const [ username, setUserName ] = useState('')
+  const [ userName, setUserName ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ name, setName ] = useState('')
   const [ roleId, setRoleId ] = useState('male')
@@ -22,8 +22,13 @@ const AddOrEdit = (props: any) => {
   }
   const handleOk = async() => {
     let value = await addForm.validateFields()
-    value.roleIds = [value.roleId]
     if(value){
+      value.roleIds = [value.roleId]
+      value.username = value.userName
+      delete value.userName
+      if(formType === 'edit'){
+        value.id = currentUser.id
+      }
       SetConfirmLoading(true)
       const [,data] = await useFetch('/visual/user/save',{
         body: JSON.stringify(value)
@@ -31,7 +36,7 @@ const AddOrEdit = (props: any) => {
         SetConfirmLoading(false)
       })
       if(data){
-        message.success('新建成功');
+        message.success(`${formType === 'edit' ? '编辑' : '新增'}成功`);
         closeModal(false)
         getUserList()
         addForm.resetFields();
@@ -45,6 +50,14 @@ const AddOrEdit = (props: any) => {
   useEffect(() => {
     if(showAddOrEdit){
       geRoleList()
+      if(formType === 'edit'){
+        let arr = ['userName', 'name', 'roleId', 'email', 'tel' ]
+        arr.map((item:any) => {
+          let obj:any = {}
+          obj[item] = currentUser[item]
+          addForm.setFieldsValue(obj)
+        })
+      }
     }
   },[showAddOrEdit])
 
@@ -66,6 +79,20 @@ const AddOrEdit = (props: any) => {
     }
   }
 
+  // 处理编辑状态的禁用模式
+  const handleDisabled = (type:any) => {
+    if(formType === 'add') return false
+    switch(type){
+      case 'userName':
+        return true
+      case 'name':
+      case 'email':
+      case 'tel':
+        return  [1,2].indexOf(currentUser.type) > -1
+      case 'roleId':
+        return false
+    }
+  } 
 
   return (
     <Modal
@@ -94,7 +121,7 @@ const AddOrEdit = (props: any) => {
       >
         <Form.Item
           label='账号'
-          name='username'
+          name='userName'
           style={{ marginTop: '20px' }}
           rules={[
             {required: true, message:''},
@@ -107,16 +134,19 @@ const AddOrEdit = (props: any) => {
               }
             })
           ]}
-        ><Input placeholder='请输入账号' value={username}  showCount maxLength={10} /></Form.Item>
-        <Form.Item
-          label='密码'
-          name='password'
-          rules={generateSingleRules(true, '请输入密码')}
-        ><Input.Password value={password} placeholder='请输入密码' showCount maxLength={20} /></Form.Item>
+        ><Input placeholder='请输入账号' disabled={handleDisabled('userName')} value={userName}  showCount maxLength={10} /></Form.Item>
+        {
+          formType === 'add' &&
+          <Form.Item
+            label='密码'
+            name='password'
+            rules={generateSingleRules(true, '请输入密码')}
+          ><Input.Password value={password}  placeholder='请输入密码' showCount maxLength={20} /></Form.Item>
+        }
         <Form.Item
           label='姓名'
           name='name'
-        ><Input value={name} placeholder='请输入姓名' showCount maxLength={10} /></Form.Item>
+        ><Input value={name} placeholder='请输入姓名'  disabled={handleDisabled('name')} showCount maxLength={10} /></Form.Item>
         <Form.Item
           label='角色'
           name='roleId'
@@ -125,6 +155,7 @@ const AddOrEdit = (props: any) => {
           <Select
             placeholder='请选择角色'
             value={roleId}
+            disabled={handleDisabled('roleId')}
             onChange={handleChangeRole}
           >
             {
@@ -151,7 +182,7 @@ const AddOrEdit = (props: any) => {
               }
             })
           ]}
-        ><Input value={email} placeholder='请输入邮箱' showCount maxLength={50} /></Form.Item>
+        ><Input value={email} placeholder='请输入邮箱' disabled={handleDisabled('email')} showCount maxLength={50} /></Form.Item>
         <Form.Item
           label='联系方式'
           name='tel'
@@ -168,7 +199,7 @@ const AddOrEdit = (props: any) => {
               }
             })
           ]}
-        ><Input value={tel} placeholder='请输入联系方式' showCount maxLength={20} /></Form.Item>
+        ><Input value={tel} placeholder='请输入联系方式' disabled={handleDisabled('tel')} showCount maxLength={20} /></Form.Item>
       </Form>
     </Modal>
   )

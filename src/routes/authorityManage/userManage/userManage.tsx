@@ -44,7 +44,8 @@ const UserManage = (props: any) => {
   const [tableMap, setTableMap] = useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showAddOrEdit, setShowAddOrEdit] = useState(false);
-
+  const [formType, setformType] = useState('');
+  const [currentUser, setCurrentUser] = useState<any>({});
 
   
   // 查询用户列表
@@ -54,8 +55,11 @@ const UserManage = (props: any) => {
       name:inputValue,
       ...param
     }
+    setTableLoading(true)
     const [,data] = await useFetch('/visual/user/list',{
       body: JSON.stringify(obj)
+    }).finally(() => {
+      setTableLoading(false)
     })
     if(data){
       setTotalElements(data.totalElements)
@@ -68,6 +72,7 @@ const UserManage = (props: any) => {
   },[])
 
   const createUser = () => {
+    setformType('add')
     setShowAddOrEdit(true)
   }
   const deleteUser = () => {}
@@ -131,9 +136,9 @@ const UserManage = (props: any) => {
     },
     {
       title: '角色',
-      key: 'roles',
+      key: 'roleName',
       ellipsis: true,
-      dataIndex: 'roles',
+      dataIndex: 'roleName',
       width: 100,
     },
     {
@@ -200,13 +205,12 @@ const UserManage = (props: any) => {
       ellipsis: true,
       width: 250,
       render: (text: any, record: any) => {
-        console.log(text, '0000', record)
         return (
           <>
             <Button type="link" size='small' onClickCapture={() => editClick(text)}>编辑</Button>
-            <Button type="link" size='small' onClickCapture={() => resetClick(text)}>重置密码</Button>
-            <Button type="link" size='small' onClickCapture={() => delClick(text)}>删除</Button>
-            <Button type="link" size='small' onClickCapture={() => stopClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
+            <Button type="link" size='small' disabled={handleBtnDisabled(text,'password')} onClickCapture={() => resetClick(text)}>重置密码</Button>
+            <Button type="link" size='small' disabled={handleBtnDisabled(text,'delete')} onClickCapture={() => delClick(text)}>删除</Button>
+            <Button type="link" size='small' disabled={handleBtnDisabled(text,'status')} onClickCapture={() => stopClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
           </>
         )
       }
@@ -225,7 +229,9 @@ const UserManage = (props: any) => {
   };
 
   const editClick = (data:any) => {
-
+    setCurrentUser(data)
+    setformType('edit')
+    setShowAddOrEdit(true)
   }
   const resetClick = (data:any) => {
 
@@ -242,6 +248,17 @@ const UserManage = (props: any) => {
 
   const closeModal = () => {
     setShowAddOrEdit(false)
+  }
+
+  // table按钮禁用问题
+  const handleBtnDisabled = (data:any,type:any) => {
+    switch(type){
+      case 'password':
+      case 'delete':
+        return true;
+      case 'status':
+        return data.type === 1
+    }
   }
 
   return (
@@ -279,7 +296,13 @@ const UserManage = (props: any) => {
           />
         </div>
         {/* 新建用户 */}
-        <AddOrEdit showAddOrEdit={showAddOrEdit} closeModal={closeModal} getUserList={getUserList}></AddOrEdit>
+        <AddOrEdit
+          formType={formType}
+          currentUser={currentUser}
+          showAddOrEdit={showAddOrEdit} 
+          closeModal={closeModal} 
+          getUserList={getUserList}
+        ></AddOrEdit>
       </div>
     </ConfigProvider>
   )
