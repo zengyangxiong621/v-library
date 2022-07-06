@@ -130,6 +130,36 @@ const componentDefaultConfig = {
       "value": false
     },
     {
+
+      "name": "allGlobal",
+      "displayName": "全局",
+      "type": "collapse",
+      "hasSwitch": false,
+      "defaultExpand": true,
+      "value": [
+        {
+          "name": "show",
+          "displayName": "",
+          "value": false,
+          "type": "switch"
+        },
+        {
+          "name": "align",
+          "displayName":"对齐方式",
+          "type": "alignFull",
+          "value":[
+            {
+              "name":"textAlign",
+              "displayName":"水平对齐",
+              "type":"align",
+              "range": ["left", "center", "right"],
+              "value": "left"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "style",
       "displayName": "样式",
       "type": "collapse",
@@ -150,78 +180,6 @@ const componentDefaultConfig = {
           "options": [
             {
               "key": "1",
-              "name": "通用",
-              "value": [
-                {
-                  "name": "textStyle",
-                  "displayName": "文本样式",
-                  "type": "textFullStyleGroup",
-                  "value": [
-                    {
-                      "name": "fontFamily",
-                      "displayName": "",
-                      "value": "Microsoft Yahei"
-                    },
-                    {
-                      "name": "fontSize",
-                      "displayName": "",
-                      "value": 32
-                    },
-                    {
-                      "name": "color",
-                      "displayName": "",
-                      "type": "color",
-                      "value": "#fff"
-                    },
-                    {
-                      "name": "bold",
-                      "displayName": "",
-                      "value": true
-                    },
-                    {
-                      "name": "italic",
-                      "displayName": "",
-                      "value": false
-                    },
-                    {
-                      "name": "letterSpacing",
-                      "displayName": "字距",
-                      "value": 0
-                    },
-                    {
-                      "name": "lineHeight",
-                      "displayName": "行距",
-                      "value": "48px"
-                    }
-                  ]
-                },
-                {
-                  "name": "bgColor",
-                  "displayName": "背景",
-                  "type": "color",
-                  "value": "#fff"
-                },
-                {
-                  "name": "bgImg",
-                  "displayName": "背景图",
-                  "type": "image",
-                  "value": ""
-                },
-                {
-                  "name": "border",
-                  "displayName": "描边",
-                  "type": "borderRadius",
-                  "value": {
-                    "type": "solid",
-                    "width": 1,
-                    "color": "#000",
-                    "radius": 0
-                  }
-                }
-              ]
-            },
-            {
-              "key": "2",
               "name": "未选中",
               "value": [
                 {
@@ -293,7 +251,7 @@ const componentDefaultConfig = {
               ]
             },
             {
-              "key": "3",
+              "key": "2",
               "name": "选中",
               "value": [
                 {
@@ -396,9 +354,11 @@ const componentDefaultConfig = {
                   "name": "offsetX",
                   "displayName": "X",
                   "type": "number",
-                  "value": 1,
+                  "value": 0,
                   "config": {
                     "min": 0,
+                    "max": 1000,
+                    "step": 1,
                     "suffix": "px"
                   }
                 },
@@ -406,9 +366,11 @@ const componentDefaultConfig = {
                   "name": "offsetY",
                   "displayName": "Y",
                   "type": "number",
-                  "value": 1,
+                  "value": 0,
                   "config":{
                     "min": 0,
+                    "max": 1000,
+                    "step": 1,
                     "suffix": "px"
                   }
                 }
@@ -424,9 +386,11 @@ const componentDefaultConfig = {
                   "name": "offsetX",
                   "displayName": "X",
                   "type": "number",
-                  "value": 1,
+                  "value": 0,
                   "config": {
                     "min": 0,
+                    "max": 1000,
+                    "step": 1,
                     "suffix": "px"
                   }
                 },
@@ -434,26 +398,52 @@ const componentDefaultConfig = {
                   "name": "offsetY",
                   "displayName": "Y",
                   "type": "number",
-                  "value": 1,
+                  "value": 0,
                   "config":{
                     "min": 0,
+                    "max": 1000,
+                    "step": 1,
                     "suffix": "px"
                   }
                 }
               ]
             },
             {
+              "name": "widthProportion",
+              "displayName": "宽度权重比",
+              "type": "number",
+              "value": 1,
+              "config": {
+                "min": 1,
+                "max": 100,
+                "step": 1,
+                "suffix": ""
+              }
+            },
+            {
               "name": "bgColor",
-              "displayName": "背景",
+              "displayName": "默认背景色",
               "type": "color",
               "value": "#fff"
             },
             {
               "name": "bgImg",
-              "displayName": "背景图",
+              "displayName": "默认背景图",
               "type": "image",
               "value": ""
             },
+            {
+              "name": "selectedBgColor",
+              "displayName": "选中背景色",
+              "type": "color",
+              "value": "#fff"
+            },
+            {
+              "name": "selectedBgImg",
+              "displayName": "选中背景图",
+              "type": "image",
+              "value": ""
+            }
           ]
         }
       ]
