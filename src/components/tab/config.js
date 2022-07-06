@@ -93,7 +93,7 @@ const componentDefaultConfig = {
         {
           "name": "fontSize",
           "displayName": "",
-          "value": 32
+          "value": 14
         },
         {
           "name": "color",
