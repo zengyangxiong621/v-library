@@ -837,7 +837,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               <InputNumber
                                 className="po-size-input sc-input"
                                 min={0}
-                                max={1000}
+                                max={1000000}
                                 step={1}
                                 style={{ width: '100%' }}
                                 defaultValue={action.animation.duration}
