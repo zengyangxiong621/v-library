@@ -156,19 +156,19 @@ const UserManage = (props: any) => {
     {
       title: '用户类型',
       key: 'type',
-      width: 100,
       dataIndex: 'type',
+      ellipsis: true,
       render: (type: any, data: any) => {
         switch (type) {
-          case '1':
+          case 1:
             return 'SSO账户'
-          case '2':
+          case 2:
             return '域账号'
-          case '4':
+          case 4:
             return '内置账号'
-          case '-1':
+          case -1:
             return '管理员账号'
-          case '-2':
+          case -2:
             return '安全管理平台自身内置账号'
           default: '无'
         }
@@ -200,13 +200,14 @@ const UserManage = (props: any) => {
       ellipsis: true,
       width: 250,
       render: (text: any, record: any) => {
+        console.log(text, '0000', record)
         return (
-          <Space size="middle" >
-            <span className='textInOperationColumn' onClickCapture={() => editClick(text)}>编辑</span>
-            <span className='textInOperationColumn' onClickCapture={() => resetClick(text)}>重置密码</span>
-            <span className='textInOperationColumn' onClickCapture={() => delClick(record.id)}>删除</span>
-            <span className='textInOperationColumn' onClickCapture={() => stopClick(record)}>{record.status === '1' ? '启用' : '停用'}</span>
-          </Space>
+          <>
+            <Button type="link" size='small' onClickCapture={() => editClick(text)}>编辑</Button>
+            <Button type="link" size='small' onClickCapture={() => resetClick(text)}>重置密码</Button>
+            <Button type="link" size='small' onClickCapture={() => delClick(text)}>删除</Button>
+            <Button type="link" size='small' onClickCapture={() => stopClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
+          </>
         )
       }
 
@@ -278,7 +279,7 @@ const UserManage = (props: any) => {
           />
         </div>
         {/* 新建用户 */}
-        <AddOrEdit showAddOrEdit={showAddOrEdit} closeModal={closeModal}></AddOrEdit>
+        <AddOrEdit showAddOrEdit={showAddOrEdit} closeModal={closeModal} getUserList={getUserList}></AddOrEdit>
       </div>
     </ConfigProvider>
   )
