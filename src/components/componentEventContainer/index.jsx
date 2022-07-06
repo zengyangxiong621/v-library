@@ -4,6 +4,7 @@ import {useState, useRef} from "react";
 import TimeSelect from '@/components/timeSelect'
 import ScrollTable from '@/components/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
+import SelectV2 from '@/customComponents/assist/select/index'
 import Tab from '@/components/tab'
 import {connect} from "dva"
 // import './index.less'
@@ -380,6 +381,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'select2' ?
+        <SelectV2
+          onChange={handleValueChange}
+          {...props}
+        >
+        </SelectV2>
+        :
         props.componentConfig.moduleName === 'bar' ?
         <Bar
           onChange={handleValueChange}
