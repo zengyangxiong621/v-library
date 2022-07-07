@@ -10,24 +10,7 @@ import SearchHeader from './components/searchHeader'
 import { http } from "@/services/request";
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { STATUSLIST, ACCOUNTLIST } from '@/constant/dvaModels/userManage'
-enum dataSourceType {
-  RDBMS,
-  RESTFUL_API,
-  JSON,
-  CSV,
-  EXCEL,
-}
-
-export type TDataSourceParams = {
-  spaceId: string | number;
-  type?: keyof typeof dataSourceType | null;
-  name?: string | null;
-  pageNo: string | number;
-  pageSize: string | number;
-  map?: {
-    [x: string]: boolean
-  }
-};
+import type { TableRowSelection } from 'antd/lib/table/interface';
 
 
 import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message, Form } from 'antd'
@@ -39,18 +22,17 @@ const UserManage = (props: any) => {
   const [tableLoading, setTableLoading] = useState(false)
   const [tableData, setTableData] = useState([])
   const [totalElements, setTotalElements] = useState(0)
-  const [dataSourceType, setDataSourceType] = useState<any>(null)
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
     pageSize: 30,
   })
-  const [tableMap, setTableMap] = useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showAddOrEdit, setShowAddOrEdit] = useState(false);
   const [formType, setformType] = useState('');
   const [currentUser, setCurrentUser] = useState<any>({});
 
   const [roleList, setRoleList] = useState([])
+  const [userInfo, setUserInfo] = useState<any>({})
 
 
   
@@ -74,8 +56,9 @@ const UserManage = (props: any) => {
 
   // 获取登录用户的信息
   const getAccountInfo = async() => {
-    const [,data] = await useFetch('/visual/user/getAccountInfo',{})
-    console.log(data, '数据')
+    let [,data] = await useFetch('/visual/user/getAccountInfo',{})
+    data.id = '1544886244603461633'
+    setUserInfo(data)
   }
 
   useEffect(() => {
@@ -88,8 +71,6 @@ const UserManage = (props: any) => {
     setformType('add')
     setShowAddOrEdit(true)
   }
-  const deleteUser = () => {}
-
   const searchByType = (value:any) => {
     setPageInfo({
       pageNo: 1,
@@ -203,9 +184,9 @@ const UserManage = (props: any) => {
         return (
           <>
             <Button type="link" size='small' onClickCapture={() => editClick(text)}>编辑</Button>
-            <Button type="link" size='small' disabled={handleBtnDisabled(text,'password')} onClickCapture={() => resetClick(text)}>重置密码</Button>
-            <Button type="link" size='small' disabled={handleBtnDisabled(text,'delete')} onClickCapture={() => delClick(text)}>删除</Button>
-            <Button type="link" size='small' disabled={handleBtnDisabled(text,'status')} onClickCapture={() => changeStatusClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
+            <Button type="link" size='small' disabled={getDisabled(text,'password')} onClickCapture={() => resetClick(text)}>重置密码</Button>
+            <Button type="link" size='small' disabled={getDisabled(text,'del')} onClickCapture={() => delClick([text.id])}>删除</Button>
+            <Button type="link" size='small' disabled={getDisabled(text,'status')} onClickCapture={() => changeStatusClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
           </>
         )
       }
@@ -218,9 +199,28 @@ const UserManage = (props: any) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const rowSelection = {
+  const rowSelection:TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
+    getCheckboxProps: (row:any) => {
+      const isSupAdmin = row.sysDef // true 系统自带的内部超级管理员，账号不能被删除、启动、停用
+      const isStatusOk = row.status !== '0' && row.status !== '2'  // 非启用状态和锁定状态，可操作
+      const isTypeOk = row.type === -2
+      const curIsSupAdmin = userInfo.sysDef
+      let disable = true
+      if (isTypeOk && isStatusOk && !isSupAdmin) { // 超管账号不能删除
+        if (row.id === userInfo.id) { // 当前用户可修改密码
+          disable = false
+        }
+        if (curIsSupAdmin) { // 当前用户是管理员可修改密码，不用是否停用
+          disable = false
+        }
+      }
+      // 选用的antd版本不对，antd 2.0版本不需要props
+      return {
+        disabled: disable
+      }
+    }
   };
 
   const editClick = (data:any) => {
@@ -258,7 +258,7 @@ const UserManage = (props: any) => {
           url: `/visual/visual/user/remove`,
           method: 'post',
           body: {
-            ids: [data.id]
+            ids: data
           }
         })
         if (result) {
@@ -271,6 +271,14 @@ const UserManage = (props: any) => {
         close()
       }
     })
+  }
+  // 批量删除处理
+  const deleteBatchUser = () => {
+    if(!selectedRowKeys.length) {
+      message.warning('请选择待删除的账号')
+    }else{
+      delClick(selectedRowKeys)
+    }
   }
   const changeStatusClick = async(data:any) => {
     const result = await http({
@@ -294,15 +302,46 @@ const UserManage = (props: any) => {
     setShowAddOrEdit(false)
   }
 
-  // table按钮禁用问题
-  const handleBtnDisabled = (data:any,type:any) => {
-    switch(type){
-      case 'password':
-      case 'delete':
-        return false;
-      case 'status':
-        return data.type === 1
+  const getDisabled = (row:any, type:any) => {
+    const isSupAdmin = row.sysDef // true 系统自带的内部超级管理员，账号不能被删除、启动、停用
+    const isStatusOk = row.status !== '0' && row.status !== '2'  // 非启用状态和锁定状态，可操作
+    const isTypeOk = row.type === -2
+    const curIsSupAdmin = userInfo.sysDef
+    if (type === 'password' && isTypeOk) { // 修改系统用户的密码
+      if (row.id === userInfo.id) { // 当前用户可修改密码
+        return false
+      }
+
+      if (curIsSupAdmin) { // 当前用户是管理员可修改密码，不用是否停用
+        return false
+      }
     }
+
+    if (type === 'status') { // 停用、启用状态下可编辑，包括管理员工账号
+      if (row.id === userInfo.id) { // 当前用户可编辑
+        return false
+      }
+
+      if (curIsSupAdmin) { // 当前用户是管理员可编辑
+        return false
+      }
+
+      if(!isSupAdmin) { // 当前被编辑的是超管的话，普通人不能编辑
+        return false
+      }
+    }
+
+    if (type === 'del' && isTypeOk && isStatusOk && !isSupAdmin) { // 超管账号不能删除
+      if (row.id === userInfo.id) { // 当前用户可修改密码
+        return false
+      }
+
+      if (curIsSupAdmin) { // 当前用户是管理员可修改密码，不用是否停用
+        return false
+      }
+    }
+
+    return true
   }
 
   return (
@@ -315,13 +354,12 @@ const UserManage = (props: any) => {
           <SearchHeader roleList={roleList} searchByType={searchByType}></SearchHeader>
           <div className="opt-btn">
             <Button type="primary"  className="btn" onClick={createUser}>新建用户</Button>
-            <Button onClick={deleteUser}>批量删除</Button>
+            <Button onClick={deleteBatchUser}>批量删除</Button>
           </div>
         </header>
         <div className='table-wrap'>
           <Table
             scroll={{ y: '53vh' }}
-            sortDirections={['ascend', 'descend']}
             rowClassName='customRowClass'
             rowSelection={rowSelection}
             loading={tableLoading}
@@ -329,6 +367,7 @@ const UserManage = (props: any) => {
             dataSource={tableData}
             pagination={paginationProps}
             onChange={tableOnChange}
+            rowKey={record=>record.id}
           />
         </div>
         {/* 新建用户 */}
