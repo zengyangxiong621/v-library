@@ -8,6 +8,8 @@ import { useFetch } from "@/utils/useFetch";
 import AddOrEdit from './components/addOrEdit'
 import SearchHeader from './components/searchHeader'
 import { http } from "@/services/request";
+import { ExclamationCircleFilled } from '@ant-design/icons'
+import { STATUSLIST, ACCOUNTLIST } from '@/constant/dvaModels/userManage'
 enum dataSourceType {
   RDBMS,
   RESTFUL_API,
@@ -71,10 +73,15 @@ const UserManage = (props: any) => {
   }
 
   // 获取登录用户的信息
+  const getAccountInfo = async() => {
+    const [,data] = await useFetch('/visual/user/getAccountInfo',{})
+    console.log(data, '数据')
+  }
 
   useEffect(() => {
     getUserList()
     geRoleList()
+    getAccountInfo()
   },[])
 
   const createUser = () => {
@@ -153,15 +160,8 @@ const UserManage = (props: any) => {
       width: 100,
       dataIndex: 'status',
       render: (status: any, data: any) => {
-        switch (status) {
-          case '0':
-            return '启用'
-          case '1':
-            return '停用'
-          case '2':
-            return '锁定'
-          default: '无'
-        }
+        const itemData = STATUSLIST.filter((item:any) => item.value === status)
+        return itemData ? itemData[0].label : ''
       }
     },
     {
@@ -170,19 +170,8 @@ const UserManage = (props: any) => {
       dataIndex: 'type',
       ellipsis: true,
       render: (type: any, data: any) => {
-        switch (type) {
-          case 1:
-            return 'SSO账户'
-          case 2:
-            return '域账号'
-          case 4:
-            return '内置账号'
-          case -1:
-            return '管理员账号'
-          case -2:
-            return '安全管理平台自身内置账号'
-          default: '无'
-        }
+        let index = type.toString()
+        return ACCOUNTLIST[index]
       }
     },
     {
@@ -243,7 +232,45 @@ const UserManage = (props: any) => {
 
   }
   const delClick = (data:any) => {
-
+    Modal.confirm({
+      title: '提示',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#e9535d',
+          border: 'none',
+          // marginLeft: '8px',
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          backgroundColor: '#3d404d'
+        }
+      },
+      icon: <ExclamationCircleFilled />,
+      content: '此操作将删除该内容，是否继续?',
+      okText: '确定',
+      cancelText: '取消',
+      bodyStyle: {
+        background: '#232630',
+      },
+      async onOk(close:any) {
+        const result = await http({
+          url: `/visual/visual/user/remove`,
+          method: 'post',
+          body: {
+            ids: [data.id]
+          }
+        })
+        if (result) {
+          close()
+        } else {
+          message.error({ content: '删除失败', duration: 2 })
+        }
+      },
+      onCancel(close:any) {
+        close()
+      }
+    })
   }
   const changeStatusClick = async(data:any) => {
     const result = await http({
@@ -272,7 +299,7 @@ const UserManage = (props: any) => {
     switch(type){
       case 'password':
       case 'delete':
-        return true;
+        return false;
       case 'status':
         return data.type === 1
     }
