@@ -6,6 +6,7 @@ import { connect } from "dva";
 import zhCN from 'antd/es/locale/zh_CN'
 import { useFetch } from "@/utils/useFetch";
 import AddOrEdit from './components/addOrEdit'
+import SearchHeader from './components/searchHeader'
 import { http } from "@/services/request";
 enum dataSourceType {
   RDBMS,
@@ -27,13 +28,12 @@ export type TDataSourceParams = {
 };
 
 
-import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from 'antd'
+import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message, Form } from 'antd'
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 // 功能
 const UserManage = (props: any) => {
   const spaceId = 1
-  const [inputValue, setInputValue] = useState('')
   const [tableLoading, setTableLoading] = useState(false)
   const [tableData, setTableData] = useState([])
   const [totalElements, setTotalElements] = useState(0)
@@ -48,12 +48,14 @@ const UserManage = (props: any) => {
   const [formType, setformType] = useState('');
   const [currentUser, setCurrentUser] = useState<any>({});
 
+  const [roleList, setRoleList] = useState([])
+
+
   
   // 查询用户列表
   const getUserList = async(param?:any) => {
     let obj = {
       ...pageInfo,
-      name:inputValue,
       ...param
     }
     setTableLoading(true)
@@ -68,8 +70,11 @@ const UserManage = (props: any) => {
     }
   }
 
+  // 获取登录用户的信息
+
   useEffect(() => {
     getUserList()
+    geRoleList()
   },[])
 
   const createUser = () => {
@@ -77,10 +82,6 @@ const UserManage = (props: any) => {
     setShowAddOrEdit(true)
   }
   const deleteUser = () => {}
-
-  const changeInputValue = (value:any) => {
-    setInputValue(value)
-  }
 
   const searchByType = (value:any) => {
     setPageInfo({
@@ -90,8 +91,14 @@ const UserManage = (props: any) => {
     getUserList({
       pageNo: 1,
       pageSize:pageInfo.pageSize,
-      name: value
+      ...value
     })
+  }
+
+  // 获取角色列表数据
+  const geRoleList = async() => {
+    const [,data] = await useFetch('/visual/role/allList',{})
+    setRoleList(data)
   }
 
   // 表格分页配置
@@ -117,8 +124,6 @@ const UserManage = (props: any) => {
       })
     },
   }
-
-
 
   const columns = [
     {
@@ -241,7 +246,6 @@ const UserManage = (props: any) => {
 
   }
   const changeStatusClick = async(data:any) => {
-    console.log(data,'数据')
     const result = await http({
       url: '/visual/user/updateStatus',
       method: 'post',
@@ -281,18 +285,10 @@ const UserManage = (props: any) => {
         <header className='header' style={{
           background: '#171a24'
         }}>
-          <div>
-            <Button type="primary"  className="btn" onClick={createUser}>新建</Button>
+          <SearchHeader roleList={roleList} searchByType={searchByType}></SearchHeader>
+          <div className="opt-btn">
+            <Button type="primary"  className="btn" onClick={createUser}>新建用户</Button>
             <Button onClick={deleteUser}>批量删除</Button>
-          </div>
-          <div className='search'>
-            <Input.Search placeholder="搜索"
-              allowClear
-              maxLength={40}
-              value={inputValue}
-              onChange={(e) => changeInputValue(e.target.value)}
-              onSearch={searchByType}
-            />
           </div>
         </header>
         <div className='table-wrap'>
@@ -311,6 +307,7 @@ const UserManage = (props: any) => {
         {/* 新建用户 */}
         <AddOrEdit
           formType={formType}
+          roleList={roleList}
           currentUser={currentUser}
           showAddOrEdit={showAddOrEdit} 
           closeModal={closeModal} 

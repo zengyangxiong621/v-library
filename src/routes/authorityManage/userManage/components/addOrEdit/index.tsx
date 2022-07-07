@@ -5,7 +5,7 @@ import { Input, Row, Col, Modal, Form, Select, Button,message } from 'antd'
 const { Option } = Select;
 import { useFetch } from "@/utils/useFetch";
 const AddOrEdit = (props: any) => {
-  const {showAddOrEdit,closeModal,getUserList,formType,currentUser } = props
+  const {showAddOrEdit,closeModal,getUserList,formType,currentUser,roleList } = props
   const [addForm] = Form.useForm()
   // const { Option } = Select
   const [ userName, setUserName ] = useState('')
@@ -14,7 +14,6 @@ const AddOrEdit = (props: any) => {
   const [ roleId, setRoleId ] = useState('male')
   const [ email, setEmail ] = useState('')
   const [ tel, setTel ] = useState('')
-  const [roleList, setRoleList] = useState([])
   const [confirmLoading, SetConfirmLoading] = useState(false)
   const handleCancel = () => {
     addForm.resetFields();
@@ -49,7 +48,6 @@ const AddOrEdit = (props: any) => {
 
   useEffect(() => {
     if(showAddOrEdit){
-      geRoleList()
       if(formType === 'edit'){
         let arr = ['userName', 'name', 'roleId', 'email', 'tel' ]
         arr.map((item:any) => {
@@ -60,12 +58,6 @@ const AddOrEdit = (props: any) => {
       }
     }
   },[showAddOrEdit])
-
-  // 获取角色列表数据
-  const geRoleList = async() => {
-    const [,data] = await useFetch('/visual/role/allList',{})
-    setRoleList(data)
-  }
 
   // 联系方式校验
   const ValidatePhone = (val:any) => {
