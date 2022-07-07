@@ -7,7 +7,7 @@ import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import Tab from '@/components/tab'
 import {connect} from "dva"
-// import './index.less'
+// import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
 

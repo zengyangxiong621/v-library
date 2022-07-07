@@ -134,7 +134,6 @@ const Tab = (props) => {
       }
     </div>
   )
-
 }
 
 export {

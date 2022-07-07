@@ -34,7 +34,6 @@ const BorderRadius = props => {
   } else {
     _radius = _range.map((item,index) => ({ value: _data.value.radius[index], config: { min: 0, suffix: 'px' } }))
   }
-  console.log('_radius', _radius)
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [border, setBorder] = useState({
     type: _data.value.type,
