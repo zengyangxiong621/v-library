@@ -11,6 +11,7 @@ import PublishDashboard from "./routes/publishDashboard";
 import ResourceCenter from "./routes/resourceCenter";
 import WorkSpace from "./routes/workSpace";
 import UserManage from './routes/authorityManage/userManage'
+import RoleManage from './routes/authorityManage/roleManage'
 
 const routesConfig = (app: any) => [
   // {
@@ -60,7 +61,8 @@ const routesConfig = (app: any) => [
       PublishDashboard(app),
       WorkSpace(app),
       ResourceCenter(app),
-      UserManage(app)
+      UserManage(app),
+      RoleManage(app)
     ]
   }
 ];

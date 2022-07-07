@@ -28,6 +28,10 @@ export default {
           {
             title: '用户管理',
             path: '/authority-manage/user-manage'
+          },
+          {
+            title: '角色管理',
+            path: '/authority-manage/role-manage'
           }
         ]
       }
