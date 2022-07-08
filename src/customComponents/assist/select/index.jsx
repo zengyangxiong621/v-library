@@ -102,7 +102,7 @@ const ComSelect = (props) => {
     placeholder={input.contentStyle.tipsText}
     value={defaultValue}
     onChange={handleChange}>
-    {componentData && componentData.map((item, index) => {
+    {componentData && Array.isArray(componentData) && componentData.map((item, index) => {
       return <Option key={index} value={item[fieldKey]}>{item[fieldKey]}</Option>
     })}
   </Select>)
