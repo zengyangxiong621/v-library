@@ -92,12 +92,15 @@ class IconText extends Component<Props, State> {
       ...textVertical,
       background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
       fontWeight: textStyle.bold ? 'bold' : '',
-      fontStyle: textStyle.italic ? 'italic' : ''
+      fontStyle: textStyle.italic ? 'italic' : '',
+      lineHeight: 'normal'
     }
     if(!textStyle.underline || textStyle.textAlign === 'bothEnds'){
       textStyleObj = {...textStyleObj,  ...textAlign}
     }
-    let textNameObj:any = {}
+    let textNameObj:any = {
+      lineHeight: style.lineHeight
+    }
     if(textStyle.underline){
       switch(textStyle.textAlign){
         case 'left':
