@@ -46,7 +46,6 @@ export default {
         //   errorInfo: "应用列表请求失败",
         // }
       );
-      console.log("dddd", data);
       yield put({
         type: "updateTemplateList",
         payload: data?.content || [],

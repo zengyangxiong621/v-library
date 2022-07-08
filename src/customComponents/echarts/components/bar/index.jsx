@@ -90,6 +90,7 @@ const Bar = (props) => {
             alignWithLabel: true,
           },
           axisLabel: {
+            interval: 0,
             textStyle: {
               color: "#fff",
             },

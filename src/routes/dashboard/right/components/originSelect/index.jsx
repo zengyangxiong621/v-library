@@ -2,11 +2,11 @@ import React, { memo, useState, useEffect } from 'react'
 import './index.less'
 
 const OriginSelect = props => {
-  const [value,setValue] = useState(props.value)
+  const [value,setValue] = useState(props.psValue)
 
   useEffect(() => {
-    setValue(props.value)
-  },[props.value])
+    setValue(props.psValue)
+  },[props.psValue])
 
   const valueChange = (value) => {
     setValue(value)

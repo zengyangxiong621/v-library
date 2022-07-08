@@ -39,6 +39,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   const { SHOW_PARENT } = TreeSelect;
 
   const _data = props.data || {}
+  const [activeCollapseKey,setActiveCollapseKey] = useState(null)
+  const [activeActionsCollapseKey,setActiveActionsCollapseKey] = useState(['1'])
   const [activeTab, setActiveTab] = useState(null)
   const [tabpanes, setTabpanes] = useState(_data?.events || [])
   const [drawerVisible, setDrawerVisible] = useState(false)
@@ -218,6 +220,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     setActivePane(activePane)
     setActiveActionTab(actionId)
     _data.events = panes
+    setActiveCollapseKey(["1"])
     props.onChange()
   }
 
@@ -233,7 +236,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     setActiveTab(panes.length ? panes[0].id : null)
     setActivePane(panes.length ? panes[0] : null)
     if (panes.length) {
-      const scale = panes.events[0].actions[0].scale
+      const scale = panes[0].actions[0].scale
       setScaleProportion(scale.x / scale.y)
       if (panes[0].actions.length) {
         setActiveActionTab(panes[0].actions[0].id)
@@ -350,6 +353,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     setActiveActionTab(id)
     setScaleProportion(1)
     _data.events = panes
+    setActiveActionsCollapseKey(['1'])
     props.onChange()
   }
 
@@ -508,6 +512,14 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     props.onChange()
   }
 
+  const collapseChange= (e) => {
+    setActiveCollapseKey(e)
+  }
+
+  const actionsCollapseChange = e => {
+    setActiveActionsCollapseKey(e)
+  }
+
 
   return (
     <Form
@@ -516,7 +528,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       {...formItemLayout}
       colon={false}
     >
-      <Collapse className="custom-collapse">
+      <Collapse activeKey={activeCollapseKey} onChange={collapseChange} className="custom-collapse">
         <Panel header="自定义事件" key="1" extra={eventExtra()}>
           {tabpanes.length ? <Tabs
             hideAdd
@@ -571,7 +583,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                     <Button style={{ width: '100%' }} type="primary" onClick={addConditon} ghost>添加条件</Button>
                   </div>
                 </Form.Item>
-                <Collapse className="custom-collapse action-collapse" defaultActiveKey={['1']}>
+                <Collapse  activeKey={activeActionsCollapseKey} onChange={actionsCollapseChange} className="custom-collapse action-collapse" defaultActiveKey={['1']}>
                   <Panel header="动作" key="1" extra={actionExtra()}>
                     {pane.actions.length > 0 ?
                       <Tabs
@@ -627,7 +639,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   <div className="translate-x" style={{ marginRight: '8px' }}>
                                     <InputNumber
                                       step="1"
-                                      className="size-input"
+                                      max={10000}
+                                      className="size-input sc-input"
                                       style={{ width: '100%' }}
                                       defaultValue={action.translate.toX}
                                       onChange={e => translateXchange(e, action)}
@@ -637,7 +650,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   <div className="translate-y">
                                     <InputNumber
                                       step="1"
-                                      className="size-input"
+                                      max={10000}
+                                      className="size-input sc-input"
                                       style={{ width: '100%' }}
                                       defaultValue={action.translate.toY}
                                       onChange={e => translateYchange(e, action)}
@@ -648,14 +662,16 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                 : action.action === 'scale' ?
                                   <React.Fragment>
                                     <Form.Item label='缩放原点'>
-                                      <OriginSelect value={action.scale.origin} onChange={e => sacleOriginChange(e, action)} />
+                                      <OriginSelect psValue={action.scale.origin} onChange={e => sacleOriginChange(e, action)} />
                                     </Form.Item>
                                     <Form.Item label='缩放比例'>
                                       <div className="scale-x">
                                         <Form.Item name={action.id + 'scalex'} style={{ marginBottom: 0 }}>
                                           <InputNumber
                                             step="1"
-                                            className="size-input"
+                                            min={-1000}
+                                            max={1000}
+                                            className="size-input sc-input"
                                             style={{ width: '100%' }}
                                             defaultValue={action.scale.x * 100}
                                             onChange={e => scaleXchange(e, action)}
@@ -671,7 +687,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                         <Form.Item name={action.id + 'scaley'} style={{ marginBottom: 0 }}>
                                           <InputNumber
                                             step="1"
-                                            className="size-input"
+                                            min={-1000}
+                                            max={1000}
+                                            className="size-input sc-input"
                                             style={{ width: '100%' }}
                                             defaultValue={action.scale.y * 100}
                                             onChange={e => scaleYchange(e, action)}
@@ -817,8 +835,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                             </Form.Item>
                             <Form.Item label='动画时长'>
                               <InputNumber
-                                className="po-size-input"
+                                className="po-size-input sc-input"
                                 min={0}
+                                max={1000000}
                                 step={1}
                                 style={{ width: '100%' }}
                                 defaultValue={action.animation.duration}
@@ -826,8 +845,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                             </Form.Item>
                             <Form.Item label='延时'>
                               <InputNumber
-                                className="po-size-input"
+                                className="po-size-input  sc-input"
                                 min={0}
+                                max={10000}
                                 step={1}
                                 style={{ width: '100%' }}
                                 defaultValue={action.animation.delay}

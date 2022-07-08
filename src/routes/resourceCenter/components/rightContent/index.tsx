@@ -24,9 +24,8 @@ const RightContent = (props: any) => {
   const spaceId = 1
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)
   const [newGroupId, setNewGroupId] = useState('')
-  const [currentItem, setCurrentItem] = useState({})
+  const [currentItem, setCurrentItem] = useState<any>({})
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-
 
   // 发布应用时的参数
   const [curAppId, setCurAppId] = useState('')
@@ -70,13 +69,16 @@ const RightContent = (props: any) => {
   }
   // 确认移动分组
   const confirmMoveGroup = async () => {
+    // console.log(spaceId, curAppId, newGroupId)
+    let url = currentItem.moduleType === 'myTemp' ? '/visual/appTemplate/updateTemplateGroup' : '/visual/resource/changeGroup'
+    let obj = currentItem.moduleType === 'myTemp' ? {id: curAppId} : {resourceId: curAppId}
     const data = await http({
-      url: '/visual/resource/changeGroup',
+      url,
       method: 'post',
       body: {
         spaceId,
-        resourceId: curAppId,
         newGroupId: newGroupId,
+        ...obj
       }
     })
     if (data) {
@@ -94,14 +96,28 @@ const RightContent = (props: any) => {
     setShowMoveGroupModal(false)
   }
 
-  const getCurrentItem = (data: any) => {
+  const getCurrentItem = (data: any,type:any) => {
     setCurrentItem(data)
-    setIsPreviewVisible(true)
+    if(type === 'preview'){
+      setIsPreviewVisible(true)
+    }
   }
 
   const changeVisible = (type:any) => {
     setIsPreviewVisible(type)
-  } 
+  }
+  let selectList = []
+  if(showMoveGroupModal){
+    switch(currentItem.moduleType){
+      case 'myTemp':
+      case 'systemTemp':
+        selectList = currentItem && currentItem.moduleType === 'myTemp' ? resourceCenter.groupList[0].children[0].children : resourceCenter.groupList[0].children[1].children
+        break
+      default:
+        selectList = currentItem && currentItem.moduleType === 'myresource' ? resourceCenter.groupList[1].children[0].children : resourceCenter.groupList[1].children[1].children
+        break
+    }
+  }
 
   return <> 
     {
@@ -123,9 +139,12 @@ const RightContent = (props: any) => {
         </div >: <Empty className="empty" description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
     } 
     {/* 预览功能处理 */}
-    <PreviewModal currentItem={currentItem} isPreviewVisible={isPreviewVisible} changeVisible={changeVisible} ></PreviewModal>
+    {
+      isPreviewVisible && 
+      <PreviewModal currentItem={currentItem} isPreviewVisible={isPreviewVisible} changeVisible={changeVisible} ></PreviewModal>
+    }
     {/* 移入分组弹窗 */}
-    <DarkModal
+     <DarkModal
       title='移动'
       className="move-dark-modal"
       destroyOnClose={true}
@@ -156,7 +175,7 @@ const RightContent = (props: any) => {
           <Select onSelect={selectGroup} placeholder="请选择">
             {
               // 将全部应用这一分组剔除
-              resourceCenter.groupList[0]?.children[0].children?.slice(1).map((item: any) =>
+              selectList?.slice(1).map((item: any) =>
               (<Option key={item.groupId} value={item.groupId}>      {item.name}
               </Option>)
               )
