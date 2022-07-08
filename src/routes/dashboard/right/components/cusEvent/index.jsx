@@ -662,7 +662,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                 : action.action === 'scale' ?
                                   <React.Fragment>
                                     <Form.Item label='缩放原点'>
-                                      <OriginSelect value={action.scale.origin} onChange={e => sacleOriginChange(e, action)} />
+                                      <OriginSelect psValue={action.scale.origin} onChange={e => sacleOriginChange(e, action)} />
                                     </Form.Item>
                                     <Form.Item label='缩放比例'>
                                       <div className="scale-x">
@@ -837,7 +837,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               <InputNumber
                                 className="po-size-input sc-input"
                                 min={0}
-                                max={1000}
+                                max={1000000}
                                 step={1}
                                 style={{ width: '100%' }}
                                 defaultValue={action.animation.duration}

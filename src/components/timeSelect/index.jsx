@@ -3,6 +3,7 @@ import ComponentDefaultConfig from './config'
 import {DatePicker} from 'antd';
 import ReactDOM from 'react-dom';
 import moment from 'moment';
+import { styleTransformFunc } from '../../utils'
 // import './index.less'
 const {RangePicker} = DatePicker;
 const formatEnum = [
@@ -56,71 +57,10 @@ const TimeSelect = (props) => {
   const calendarCellsThemeColor = calendarConfig.find(item => item.name === 'themeColor').value
   const dateFormat = formatEnum.find(item => item.value === config.find(item => item.name === 'dateFormat').value).name
   // const textIndent = config.find(item => item.name === 'textIndent' || item.name === 'unitName').value || ''
-  let textStyle = config.filter((item) => ['textStyle'].includes(item.name)).reduce((pre, cur) => {
-    if (Array.isArray(cur.value)) {
-      const obj = cur.value.reduce((p, c) => {
-        p[c.name] = c.value
-        return p
-      }, {})
-      pre = {
-        ...pre,
-        ...obj,
-      }
-    } else {
-      pre[cur.name] = cur.value
-    }
-    return pre
-  }, {})
-  let calendarBoxTextStyle = calendarConfig.find(item => item.name === 'textStyle').value.reduce((pre, cur) => {
-    if (Array.isArray(cur.value)) {
-      const obj = cur.value.reduce((p, c) => {
-        p[c.name] = c.value
-        return p
-      }, {})
-      pre = {
-        ...pre,
-        ...obj,
-      }
-    } else {
-      pre[cur.name] = cur.value
-    }
-    return pre
-  }, {})
-  const styleTransformFuncList = {
-    fontFamily: (value) => ({
-      fontFamily: value
-    }),
-    fontSize: (value) => ({
-      fontSize: value + 'px'
-    }),
-    color: (value) => ({
-      color: value
-    }),
-    bold: (value) => ({
-      fontWeight: value ? 'bold' : 'unset'
-    }),
-    italic: (value) => ({
-      fontStyle: value ? 'italic' : 'unset'
-    }),
-    letterSpacing: (value) => ({
-      letterSpacing: value + 'px'
-    }),
-    lineHeight: (value) => ({
-      lineHeight: value ? value + 'px' : 'unset'
-    }),
-  }
-  textStyle = Object.keys(textStyle).reduce((pre, cur) => {
-    return {
-      ...pre,
-      ...styleTransformFuncList[cur](textStyle[cur])
-    }
-  }, {})
-  calendarBoxTextStyle = Object.keys(calendarBoxTextStyle).reduce((pre, cur) => {
-    return {
-      ...pre,
-      ...styleTransformFuncList[cur](calendarBoxTextStyle[cur])
-    }
-  }, {})
+  let textStyle = config.filter((item) => ['textStyle'].includes(item.name))
+  let calendarBoxTextStyle = calendarConfig.find(item => item.name === 'textStyle').value
+  textStyle = styleTransformFunc(textStyle)
+  calendarBoxTextStyle = styleTransformFunc(calendarBoxTextStyle)
   /*
   {
     "fontFamily": "Microsoft Yahei",
@@ -132,9 +72,6 @@ const TimeSelect = (props) => {
     "lineHeight": 0
   }
   * */
-  // console.log('calendarBoxTextStyle', calendarBoxTextStyle)
-  //
-  // console.log('textStyle', textStyle)
   useEffect(() => {
     if (selectType === 'range') {
       handleChange([startTime ? moment(startTime, dateFormat) : null, endTime ? moment(endTime, dateFormat) : null], [startTime || null, endTime || null])
@@ -234,11 +171,9 @@ const TimeSelect = (props) => {
   const handleChange = (date, dateString) => {
     setDateValue(date)
     if (selectType === 'range') {
-      console.log('range', {[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
-      props.onChange({[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
+      props.onChange && props.onChange({[fields[0]]: dateString[0], [fields[1]]: dateString[1]})
     } else {
-      console.log('notRange', {[fields[0]]: dateString})
-      props.onChange({[fields[0]]: dateString})
+      props.onChange && props.onChange({[fields[0]]: dateString})
     }
   }
 

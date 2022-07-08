@@ -1090,9 +1090,10 @@ export default {
     delete(state: IBarState, { payload }: any) {
       const newTree = remove(state.treeData, state.key);
       // const hadFilterEmptyGroupTree = filterEmptyGroups(newTree);
-      // console.log('新的数树‘', hadFilterEmptyGroupTree)
       // return { ...state, treeData: hadFilterEmptyGroupTree };
-      return { ...state, treeData: newTree };
+
+      // @Mark: 这儿要把state.key(存放当前被选中的图层的数组)重置为空。因为删除之前(比如用的右键选中该图层)会将选中的图层id存入key中，调用接口成功后，图层被删除了，但key中依旧会留存有这个已经被删除的图层的id,如果没有重置key,在“添加组件至画布”这一步中获取insertId处的逻辑会直接将这个已经被删除的图层id作为insertId,从而引发--删除组件后，立即添加组件会导致左侧图层被清空 的bug
+      return { ...state, treeData: newTree, key: [] };
     },
     // 复制
     copy(state: IBarState, { payload }: any) {

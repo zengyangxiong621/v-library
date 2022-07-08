@@ -277,7 +277,7 @@ export const defaultData = {
                 {
                   "displayName": "",
                   "name": "fontSize",
-                  "value": 32
+                  "value": 14
                 },
                 {
                   "displayName": "",
@@ -303,7 +303,7 @@ export const defaultData = {
                 {
                   "displayName": "行距",
                   "name": "lineHeight",
-                  "value": "48px"
+                  "value": "35px"
                 }
               ]
             }
@@ -394,7 +394,7 @@ export const defaultData = {
                 {
                   "displayName": "",
                   "name": "fontSize",
-                  "value": 32
+                  "value": 14
                 },
                 {
                   "displayName": "",
@@ -456,7 +456,125 @@ export const defaultData = {
                       "value": "销售地区"
                     }
                   ]
-                }
+                },
+/*                {
+                  "name": "width",
+                  "displayName": "列宽",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 1000,
+                    "step": 1,
+                    "suffix": "px"
+                  },
+                  "value": 0
+                },
+                {
+                  "name": "spacing",
+                  "displayName": "列间距",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 1000,
+                    "step": 1,
+                    "suffix": "px"
+                  },
+                  "value": 0
+                },
+                {
+                  "displayName": "列偏移",
+                  "name": "offset",
+                  "type": "inputNumber2",
+                  "value": [
+                    {
+                      "displayName": "X",
+                      "name": "X",
+                      "type": "number",
+                      "value": 0
+                    },
+                    {
+                      "displayName": "Y",
+                      "name": "Y",
+                      "type": "number",
+                      "value": 0
+                    }
+                  ]
+                },
+                {
+                  "name": "textType",
+                  "displayName": "内容类型",
+                  "type": "select",
+                  "options": [
+                    {
+                      "name": "逐条滚动",
+                      "value": "single"
+                    },
+                    {
+                      "name": "整页滚动",
+                      "value": "page"
+                    }
+                  ],
+                  "value": "single"
+                },
+                {
+                  "name": "textOverflowType",
+                  "displayName": "文字溢出",
+                  "type": "select",
+                  "options": [
+                    {
+                      "name": "逐条滚动",
+                      "value": "single"
+                    },
+                    {
+                      "name": "整页滚动",
+                      "value": "page"
+                    }
+                  ],
+                  "value": "single"
+                },
+                {
+                  "displayName": "文本样式",
+                  "name": "textStyle",
+                  "type": "textFullStyleGroup",
+                  "value": [
+                    {
+                      "displayName": "",
+                      "name": "fontFamily",
+                      "value": "Microsoft Yahei"
+                    },
+                    {
+                      "displayName": "",
+                      "name": "fontSize",
+                      "value": 14
+                    },
+                    {
+                      "displayName": "",
+                      "name": "color",
+                      "type": "color",
+                      "value": "#fff"
+                    },
+                    {
+                      "displayName": "",
+                      "name": "bold",
+                      "value": false
+                    },
+                    {
+                      "displayName": "",
+                      "name": "italic",
+                      "value": false
+                    },
+                    {
+                      "displayName": "字距",
+                      "name": "letterSpacing",
+                      "value": 0
+                    },
+                    {
+                      "displayName": "行距",
+                      "name": "lineHeight",
+                      "value": "35px"
+                    }
+                  ]
+                }*/
               ]
             },
             {
@@ -483,7 +601,125 @@ export const defaultData = {
                       "value": "完成率"
                     }
                   ]
-                }
+                },
+      /*          {
+                  "name": "width",
+                  "displayName": "列宽",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 1000,
+                    "step": 1,
+                    "suffix": "px"
+                  },
+                  "value": 0
+                },
+                {
+                  "name": "spacing",
+                  "displayName": "列间距",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 1000,
+                    "step": 1,
+                    "suffix": "px"
+                  },
+                  "value": 0
+                },
+                {
+                  "displayName": "列偏移",
+                  "name": "offset",
+                  "type": "inputNumber2",
+                  "value": [
+                    {
+                      "displayName": "X",
+                      "name": "X",
+                      "type": "number",
+                      "value": 0
+                    },
+                    {
+                      "displayName": "Y",
+                      "name": "Y",
+                      "type": "number",
+                      "value": 0
+                    }
+                  ]
+                },
+                {
+                  "name": "textType",
+                  "displayName": "内容类型",
+                  "type": "select",
+                  "options": [
+                    {
+                      "name": "逐条滚动",
+                      "value": "single"
+                    },
+                    {
+                      "name": "整页滚动",
+                      "value": "page"
+                    }
+                  ],
+                  "value": "single"
+                },
+                {
+                  "name": "textOverflowType",
+                  "displayName": "文字溢出",
+                  "type": "select",
+                  "options": [
+                    {
+                      "name": "逐条滚动",
+                      "value": "single"
+                    },
+                    {
+                      "name": "整页滚动",
+                      "value": "page"
+                    }
+                  ],
+                  "value": "single"
+                },
+                {
+                  "displayName": "文本样式",
+                  "name": "textStyle",
+                  "type": "textFullStyleGroup",
+                  "value": [
+                    {
+                      "displayName": "",
+                      "name": "fontFamily",
+                      "value": "Microsoft Yahei"
+                    },
+                    {
+                      "displayName": "",
+                      "name": "fontSize",
+                      "value": 14
+                    },
+                    {
+                      "displayName": "",
+                      "name": "color",
+                      "type": "color",
+                      "value": "#fff"
+                    },
+                    {
+                      "displayName": "",
+                      "name": "bold",
+                      "value": false
+                    },
+                    {
+                      "displayName": "",
+                      "name": "italic",
+                      "value": false
+                    },
+                    {
+                      "displayName": "字距",
+                      "name": "letterSpacing",
+                      "value": 0
+                    },
+                    {
+                      "displayName": "行距",
+                      "name": "lineHeight",
+                      "value": "35px"
+                    }
+                  ]
+                }*/
               ]
             },
             {
@@ -510,7 +746,109 @@ export const defaultData = {
                       "value": "完成情况"
                     }
                   ]
-                }
+                },
+/*                {
+                  "name": "width",
+                  "displayName": "列宽",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 1000,
+                    "step": 1,
+                    "suffix": "px"
+                  },
+                  "value": 0
+                },
+                {
+                  "name": "spacing",
+                  "displayName": "列间距",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 1000,
+                    "step": 1,
+                    "suffix": "px"
+                  },
+                  "value": 0
+                },
+                {
+                  "displayName": "列偏移",
+                  "name": "offset",
+                  "type": "inputNumber2",
+                  "value": [
+                    {
+                      "displayName": "X",
+                      "name": "X",
+                      "type": "number",
+                      "value": 0
+                    },
+                    {
+                      "displayName": "Y",
+                      "name": "Y",
+                      "type": "number",
+                      "value": 0
+                    }
+                  ]
+                },
+                {
+                  "name": "textType",
+                  "displayName": "内容类型",
+                  "type": "select",
+                  "options": [
+                    {
+                      "name": "逐条滚动",
+                      "value": "single"
+                    },
+                    {
+                      "name": "整页滚动",
+                      "value": "page"
+                    }
+                  ],
+                  "value": "single"
+                },
+                {
+                  "displayName": "文本样式",
+                  "name": "textStyle",
+                  "type": "textFullStyleGroup",
+                  "value": [
+                    {
+                      "displayName": "",
+                      "name": "fontFamily",
+                      "value": "Microsoft Yahei"
+                    },
+                    {
+                      "displayName": "",
+                      "name": "fontSize",
+                      "value": 14
+                    },
+                    {
+                      "displayName": "",
+                      "name": "color",
+                      "type": "color",
+                      "value": "#fff"
+                    },
+                    {
+                      "displayName": "",
+                      "name": "bold",
+                      "value": false
+                    },
+                    {
+                      "displayName": "",
+                      "name": "italic",
+                      "value": false
+                    },
+                    {
+                      "displayName": "字距",
+                      "name": "letterSpacing",
+                      "value": 0
+                    },
+                    {
+                      "displayName": "行距",
+                      "name": "lineHeight",
+                      "value": "35px"
+                    }
+                  ]
+                }*/
               ]
             }
           ]

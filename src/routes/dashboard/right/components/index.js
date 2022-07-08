@@ -25,6 +25,7 @@ import CusInputNumber from './cusInputNumber'
 import TabArray from './tabArray'
 import CusSwitch from './switch'
 import BorderRadius from './borderRadius'
+import Origin from './origin'
 
 
 const componentLib = {
@@ -53,6 +54,7 @@ const componentLib = {
   tabArray: TabArray,
   switch: CusSwitch,
   borderRadius:BorderRadius,
+  origin:Origin
 }
 
 export default componentLib

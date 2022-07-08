@@ -42,6 +42,7 @@ import {
 import ScrollTable from "@/components/scrollTable";
 import TimeSelect from "@/components/timeSelect";
 import Bar from '@/customComponents/echarts/components/bar/index'
+import SelectV2 from '@/customComponents/assist/select/index'
 
 import Tab from "@/components/tab";
 
@@ -559,7 +560,6 @@ const CustomDraggable
                     }
                   })
                 }
-
                 events = component.events
               }
             }
@@ -632,6 +632,14 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
+                            layer.moduleName === 'select2' ?
+                              <SelectV2
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </SelectV2> :
                             layer.moduleName === 'bar' ?
                               <Bar
                                 scale={bar.canvasScaleValue}
@@ -656,6 +664,13 @@ const CustomDraggable
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                 >
                                 </Tab> :
+                                layer.moduleName === 'timeSelect' ?
+                                <TimeSelect
+                                  componentConfig={ component }
+                                  fields={ getFields(component) }
+                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                >
+                                </TimeSelect> :
                                 layer.moduleName === 'worldMap' ?
                                   <WorldMap
                                     componentConfig={ component }
@@ -666,7 +681,7 @@ const CustomDraggable
                                   <RemoteBaseComponent
                                     componentConfig={ component }
                                     fields={ getFields(component) }
-                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
                                   ></RemoteBaseComponent>
                           }
                         </div>
