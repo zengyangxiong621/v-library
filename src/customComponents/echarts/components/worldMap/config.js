@@ -62,12 +62,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 1200
+          "value": 1000
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 800
+          "value": 600
         }
       ]
     },
@@ -77,94 +77,6 @@ const componentDefaultConfig = {
       "type": "checkBox",
       "value": false
     },
-    {
-      "name": "textStyle",
-      "displayName": "文本样式",
-      "type": "textFullStyleGroup",
-      "value": [
-        {
-          "name": "fontFamily",
-          "displayName": "",
-          "value": "Microsoft Yahei"
-        },
-        {
-          "name": "fontSize",
-          "displayName": "",
-          "value": 32
-        },
-        {
-          "name": "color",
-          "displayName": "",
-          "type": "color",
-          "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-        },
-        {
-          "name": "bold",
-          "displayName": "",
-          "value": false
-        },
-        {
-          "name": "italic",
-          "displayName": "",
-          "value": false
-        },
-        {
-          "name": "letterSpacing",
-          "displayName": "字距",
-          "value": 0
-        },
-        {
-          "name": "lineHeight",
-          "displayName": "行距",
-          "value": '48px'
-        }
-      ]
-    },
-    {
-      "name": "align",
-      "displayName": "对齐方式",
-      "type": "alignFull",
-      "value": [
-        {
-          "name": "textAlign",
-          "displayName": "水平对齐",
-          "type": "align",
-          "value": "left" // left , center, right,bothEnds
-        },
-        {
-          "name": "textVertical",
-          "displayName": "垂直对齐",
-          "type": "vertical",
-          "value": "top" // top bottom vertical
-        }
-      ]
-    },
-    {
-      "name": "shadow",
-      "displayName": "阴影",
-      "type": 'collapse',
-      "hasSwitch": true,
-      "defaultExpand": true,
-      "value": [
-        {
-          "name": "show",
-          "displayName": "",
-          "value": true,
-          "type": "switch"
-        },
-        {
-          "name": "shadow",
-          "displayName": "外阴影",
-          "type": "boxShadow",
-          "value": {
-            "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-            "vShadow": 0, // 垂直阴影的位置
-            "hShadow": 0, // 水平阴影的位置
-            "blur": 8 // 模糊的距离
-          }
-        }
-      ]
-    }
   ],
   themes: [{
     id: 'theme-default',

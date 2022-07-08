@@ -1,7 +1,7 @@
 import React from 'react';
 // import EC from '../../EC';
 import * as echarts from 'echarts';
-import worldJson from "@/customComponents/echarts/components/world.json";
+import worldJson from "@/customComponents/echarts/components/world-9.json";
 import { debounce } from "@/utils/common";
 import ComponentDefaultConfig from './config'
 
@@ -167,6 +167,7 @@ let series = [];
   series.push(
     {
       type: 'lines',
+      radius: '100%',
       coordinateSystem: 'geo',
       zlevel: 2,
       effect: {
@@ -191,6 +192,7 @@ let series = [];
     },
     {
       type: 'effectScatter',
+      radius: '100%',
       coordinateSystem: 'geo',
       zlevel: 2,
       rippleEffect: {
@@ -235,6 +237,7 @@ let series = [];
     //中心点
     {
       type: 'effectScatter',
+      radius: '100%',
       coordinateSystem: 'geo',
       zlevel: 15,
       rippleEffect: {
@@ -367,8 +370,8 @@ class WorldMap extends React.PureComponent {
       click: this.onChartClick,
     };
     let mapSize = {
-      width: '1200px',
-      height: '800px'
+      width: '100%',
+      height: '100%'
     };
 
     return (

@@ -632,32 +632,32 @@ const CustomDraggable
 
                             // <Da componentConfig={component}/>
                             
-                            layer.moduleName === 'scrollTable' ?
-                              <ScrollTable
-                                componentConfig={component}
-                                fields={getFields(component)}
-                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                              >
-                              </ScrollTable> :
-                            layer.moduleName === 'tab' ?
-                              <Tab
-                                componentConfig={component}
-                                fields={getFields(component)}
-                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                              >
-                              </Tab> :
-                              layer.moduleName === 'worldMap' ?
+                            // layer.moduleName === 'scrollTable' ?
+                            //   <ScrollTable
+                            //     componentConfig={component}
+                            //     fields={getFields(component)}
+                            //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            //   >
+                            //   </ScrollTable> :
+                            // layer.moduleName === 'tab' ?
+                            //   <Tab
+                            //     componentConfig={component}
+                            //     fields={getFields(component)}
+                            //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            //   >
+                            //   </Tab> :
+                            //   layer.moduleName === 'worldMap' ?
                             <WorldMap
                               componentConfig={component}
                               fields={getFields(component)}
                               comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList,  bar.callbackArgs)}
                           ></WorldMap> 
-                          :
-                            <RemoteBaseComponent
-                              componentConfig={component}
-                              fields={getFields(component)}
-                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList,  bar.callbackArgs)}
-                          ></RemoteBaseComponent>
+                          // :
+                          //   <RemoteBaseComponent
+                          //     componentConfig={component}
+                          //     fields={getFields(component)}
+                          //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList,  bar.callbackArgs)}
+                          // ></RemoteBaseComponent>
                           }
                         </div>
                       </>

@@ -34,20 +34,11 @@ const Indicatorcard = (props) => {
     });
     return targetConfig
   }
-  const { circleColor, fontSize, italic, letterSpacing, bold, lineHeight, textColor, circleWidth, dangerLevel } = getConfig(config)
-
+  const { circleColor, fontSize, italic, letterSpacing, bold, fontFamily, lineHeight, textColor, circleWidth, dangerLevel } = getConfig(config)
   const gaugeData = [
     {
       value: percent,
       name: dangerLevel,
-      title: {          
-        offsetCenter: ['0%', '30%'],
-        color: circleColor,        
-      },
-      detail: {
-        valueAnimation: true,
-        offsetCenter: ['0%', '-20%'],
-      }
     },
   ];
 
@@ -56,6 +47,7 @@ const Indicatorcard = (props) => {
       series: [
         {
           type: 'gauge',
+          radius: '100%',
           startAngle: 90,
           endAngle: -270,
           pointer: {
@@ -69,6 +61,7 @@ const Indicatorcard = (props) => {
             itemStyle: {
               borderWidth: 1,
               borderColor: circleColor,
+              color: circleColor,
             }
           },
           axisLine: {
@@ -90,22 +83,28 @@ const Indicatorcard = (props) => {
           },
           data: gaugeData,
           title: {
+            offsetCenter: ['0%', '30%'],
             fontSize: fontSize,
             fontStyle: italic ? 'italic' : 'normal',
             fontWeight: bold ? 'bold' : 'normal',
             letterSpacing: letterSpacing,
-            color: '#fff'
+            color: '#fff',
+            fontFamily: fontFamily,
           },
           detail: { // 环内百分比样式
             width: 50,
             height: 18,
-            color: textColor,
-            borderColor: 'auto',
-            borderRadius: 20,
-            borderWidth: 0,
-            formatter: '{value}%'
+            color: circleColor,
+            fontSize: fontSize,
+            fontStyle: italic ? 'italic' : 'normal',
+            fontWeight: bold ? 'bold' : 'normal',
+            letterSpacing: letterSpacing,
+            formatter: '{value}%',
+            valueAnimation: true,
+            offsetCenter: ['0%', '-20%'],
+            fontFamily: fontFamily,
           }
-        }
+        },
       ]
     }
   )
@@ -118,8 +117,13 @@ const Indicatorcard = (props) => {
   let onEvents = {
     click: onChartClick
   }
+  let size = {
+    width: '100%',
+    height: '100%'
+  }
   return (
     <EC
+      size={size}
       option={getOption()}
       onChartReady={onChartReady}
       onEvents={onEvents}
