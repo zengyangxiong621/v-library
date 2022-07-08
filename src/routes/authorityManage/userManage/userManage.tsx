@@ -6,6 +6,7 @@ import { connect } from "dva";
 import zhCN from 'antd/es/locale/zh_CN'
 import { useFetch } from "@/utils/useFetch";
 import AddOrEdit from './components/addOrEdit'
+import UpdatePassword from './components/updatePassword'
 import SearchHeader from './components/searchHeader'
 import { http } from "@/services/request";
 import { ExclamationCircleFilled } from '@ant-design/icons'
@@ -28,6 +29,7 @@ const UserManage = (props: any) => {
   })
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showAddOrEdit, setShowAddOrEdit] = useState(false);
+  const [showUpdateMode, setShowUpdateMode] = useState(false);
   const [formType, setformType] = useState('');
   const [currentUser, setCurrentUser] = useState<any>({});
 
@@ -57,7 +59,7 @@ const UserManage = (props: any) => {
   // 获取登录用户的信息
   const getAccountInfo = async() => {
     let [,data] = await useFetch('/visual/user/getAccountInfo',{})
-    data.id = '1544886244603461633'
+    // data.id = '1544627259203780609'
     setUserInfo(data)
   }
 
@@ -229,7 +231,8 @@ const UserManage = (props: any) => {
     setShowAddOrEdit(true)
   }
   const resetClick = (data:any) => {
-
+    setCurrentUser(data)
+    setShowUpdateMode(true)
   }
   const delClick = (data:any) => {
     Modal.confirm({
@@ -255,7 +258,7 @@ const UserManage = (props: any) => {
       },
       async onOk(close:any) {
         const result = await http({
-          url: `/visual/visual/user/remove`,
+          url: `/visual/user/remove`,
           method: 'post',
           body: {
             ids: data
@@ -263,6 +266,8 @@ const UserManage = (props: any) => {
         })
         if (result) {
           close()
+          getUserList()
+          message.success({ content: '删除成功', duration: 2 })
         } else {
           message.error({ content: '删除失败', duration: 2 })
         }
@@ -300,6 +305,7 @@ const UserManage = (props: any) => {
 
   const closeModal = () => {
     setShowAddOrEdit(false)
+    setShowUpdateMode(false)
   }
 
   const getDisabled = (row:any, type:any) => {
@@ -379,6 +385,12 @@ const UserManage = (props: any) => {
           closeModal={closeModal} 
           getUserList={getUserList}
         ></AddOrEdit>
+        {/* 修改密码 */}
+        <UpdatePassword  
+          showUpdateMode={showUpdateMode} 
+          currentUser={currentUser} 
+          closeModal={closeModal} 
+        ></UpdatePassword>
       </div>
     </ConfigProvider>
   )

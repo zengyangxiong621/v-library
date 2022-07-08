@@ -625,6 +625,7 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
+                            
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
                                 componentConfig={component}

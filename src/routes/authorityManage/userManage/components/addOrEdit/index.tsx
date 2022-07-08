@@ -17,7 +17,7 @@ const AddOrEdit = (props: any) => {
   const [confirmLoading, SetConfirmLoading] = useState(false)
   const handleCancel = () => {
     addForm.resetFields();
-    closeModal(false)
+    closeModal()
   }
   const handleOk = async() => {
     let value = await addForm.validateFields()
@@ -36,9 +36,8 @@ const AddOrEdit = (props: any) => {
       })
       if(data){
         message.success(`${formType === 'edit' ? '编辑' : '新增'}成功`);
-        closeModal(false)
         getUserList()
-        addForm.resetFields();
+        handleCancel()
       }
     }
   }
