@@ -614,6 +614,7 @@ const CustomDraggable
                     transition: 'width, height 0.3s',
                     // border: '1px solid gray',
                     visibility: !layer.isShow ? 'hidden' : 'unset',
+                    cursor: 'move'
                   }}>
                   {
                     layer[HIDE_DEFAULT] ?
@@ -665,7 +666,6 @@ const CustomDraggable
                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                               >
                               </Bar> :
-
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
                                 scale={bar.canvasScaleValue}
