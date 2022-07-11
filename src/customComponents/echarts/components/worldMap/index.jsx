@@ -1,7 +1,7 @@
 import React from 'react';
 // import EC from '../../EC';
 import * as echarts from 'echarts';
-import worldJson from "@/customComponents/echarts/components/world-9.json";
+import worldJson from "@/customComponents/echarts/components/worldMap/world.json";
 import { debounce } from "@/utils/common";
 import ComponentDefaultConfig from './config'
 
@@ -140,7 +140,7 @@ let flyLineArr = [
   ],
 ]
 // 转换飞线
-let convertData = function (data) {
+let convertData =  (data)=> {
   let res = []
   for (let i = 0; i < data.length; i++) {
     let dataItem = data[i]
@@ -332,7 +332,7 @@ let options = {
 class WorldMap extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.resizeDebounce = debounce(this.chartsResize, 250);
+    this.resizeDebounce = debounce(this.chartsResize, 250);    
   }
 
   componentDidMount() {

@@ -632,57 +632,58 @@ const CustomDraggable
                             //   <CompImage componentConfig={component}/>
 
                             // <Da componentConfig={component}/>
-                            layer.moduleName === 'select2' ?
-                              <SelectV2
-                                scale={bar.canvasScaleValue}
-                                componentConfig={ component }
-                                fields={ getFields(component) }
-                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                              >
-                              </SelectV2> :
-                            layer.moduleName === 'bar' ?
-                              <Bar
-                                scale={bar.canvasScaleValue}
-                                componentConfig={ component }
-                                fields={ getFields(component) }
-                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                              >
-                              </Bar> :
+                            
+                            // layer.moduleName === 'select2' ?
+                            //   <SelectV2
+                            //     scale={bar.canvasScaleValue}
+                            //     componentConfig={ component }
+                            //     fields={ getFields(component) }
+                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                            //   >
+                            //   </SelectV2> :
+                            // layer.moduleName === 'bar' ?
+                            //   <Bar
+                            //     scale={bar.canvasScaleValue}
+                            //     componentConfig={ component }
+                            //     fields={ getFields(component) }
+                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                            //   >
+                            //   </Bar> :
 
-                            layer.moduleName === 'scrollTable' ?
-                              <ScrollTable
-                                scale={bar.canvasScaleValue}
-                                componentConfig={ component }
-                                fields={ getFields(component) }
-                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                              >
-                              </ScrollTable> :
-                              layer.moduleName === 'tab' ?
-                                <Tab
-                                  componentConfig={ component }
-                                  fields={ getFields(component) }
-                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                >
-                                </Tab> :
-                                layer.moduleName === 'timeSelect' ?
-                                <TimeSelect
-                                  componentConfig={ component }
-                                  fields={ getFields(component) }
-                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                >
-                                </TimeSelect> :
-                                layer.moduleName === 'worldMap' ?
+                            // layer.moduleName === 'scrollTable' ?
+                            //   <ScrollTable
+                            //     scale={bar.canvasScaleValue}
+                            //     componentConfig={ component }
+                            //     fields={ getFields(component) }
+                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                            //   >
+                            //   </ScrollTable> :
+                            //   layer.moduleName === 'tab' ?
+                            //     <Tab
+                            //       componentConfig={ component }
+                            //       fields={ getFields(component) }
+                            //       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                            //     >
+                            //     </Tab> :
+                            //     layer.moduleName === 'timeSelect' ?
+                            //     <TimeSelect
+                            //       componentConfig={ component }
+                            //       fields={ getFields(component) }
+                            //       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                            //     >
+                            //     </TimeSelect> :
+                            //     layer.moduleName === 'worldMap' ?
                                   <WorldMap
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                   ></WorldMap>
-                                  :
-                                  <RemoteBaseComponent
-                                    componentConfig={ component }
-                                    fields={ getFields(component) }
-                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                  ></RemoteBaseComponent>
+                                  // :
+                                  // <RemoteBaseComponent
+                                  //   componentConfig={ component }
+                                  //   fields={ getFields(component) }
+                                  //   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
+                                  // ></RemoteBaseComponent>
                           }
                         </div>
                       </>
