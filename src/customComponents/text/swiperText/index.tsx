@@ -10,11 +10,16 @@ interface Props {
   componentConfig?: any
 }
 
-interface State {}
+interface State {
+  swiperDom?:any
+}
 
 class SwipterText extends Component<Props, State> {
   constructor(Props: any) {
     super(Props)
+    this.state = {
+      swiperDom: null
+    }
   }
 
   componentDidMount(){
@@ -45,7 +50,7 @@ class SwipterText extends Component<Props, State> {
     const componentConfig = this.props.componentConfig || componentDefaultConfig
     const {config, staticData} = componentConfig
     const configData = this.formatConfig(config, [])
-    let loopConfig = configData.autoplay ? {
+    let loopConfig = configData.autoplay && staticData.data.length > 1 ? {
         disableOnInteraction: false,
     } : false
     var swiper = new Swiper(".swiper-container", {
@@ -60,10 +65,13 @@ class SwipterText extends Component<Props, State> {
         autoplay: loopConfig,
         centeredSlides: true,
     });
+    this.setState({
+      swiperDom:swiper
+    })
   }
 
   componentDidUpdate(){
-    
+    console.log('动态修改')
   }
 
   render () {
@@ -71,6 +79,7 @@ class SwipterText extends Component<Props, State> {
     // const { data } = dataStatic
     const componentConfig = this.props.componentConfig || componentDefaultConfig
     const {config, staticData} = componentConfig
+    const { swiperDom } = this.state
 
     let style = this.formatConfig(config, [])
     const findItem = (name: string) => {
@@ -80,6 +89,17 @@ class SwipterText extends Component<Props, State> {
     }
     const textStyle = findItem('textStyle')
     const textStyleData = this.formatConfig([textStyle], [])
+    if(swiperDom){
+      // 切换是否自动轮播
+      if(style.autoplay && staticData.data.length > 1){
+        swiperDom.autoplay.start()
+      }else{
+        swiperDom.autoplay.stop()
+      }
+      // swiperDom.passedParams.loop = false
+      // swiperDom.reLoop();
+      console.log(swiperDom,'kkkk')
+    }
     
     return (
       <div className={`swipwe-box swiper-no-swiping ${style.hideDefault && 'hide'}`} style={{
