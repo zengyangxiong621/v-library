@@ -13,6 +13,10 @@ import { getComDataWithFilters, getFields } from '@/utils/data'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
 import BasicBar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
+import IconText from '@/customComponents/text/iconText'
+// import textConfig from  '@/customComponents/text/iconText/config'
+import SwiperText from '@/customComponents/text/swiperText'
+import textConfig from '@/customComponents/text/swiperText/config'
 
 import {
   STYLE,
@@ -545,7 +549,7 @@ const CustomDraggable
               // 组件
               component = components.find(item => item.id === layer.id)
 
-
+              // 将线上配置改为本地配置
               // component.config = textConfig.config
               // component.staticData = textConfig.staticData
 
@@ -640,6 +644,9 @@ const CustomDraggable
                             // ></IconText>
 
                             // <Da componentConfig={component}/>
+                          
+                            // <SwiperText  componentConfig={component}></SwiperText>
+
                             layer.moduleName === 'bar' ?
                               <BasicBar
                                 componentConfig={component}
@@ -677,7 +684,7 @@ const CustomDraggable
                         </div>
                       </>
                   }
-                  {/*<div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />*/}
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span
