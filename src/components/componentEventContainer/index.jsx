@@ -6,8 +6,9 @@ import ScrollTable from '@/components/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import Tab from '@/components/tab'
+import ScrollSelect from '@/components/scrollSelect/index'
 import {connect} from "dva"
-// import './index.less'
+// import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
 
@@ -408,6 +409,12 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </Tab>
+          : props.componentConfig.moduleName === 'scrollSelect' ?
+          <ScrollSelect
+            onChange={handleValueChange}
+            {...props}
+          >
+          </ScrollSelect>
           : props.componentConfig.moduleName === 'timeSelect' ?
           <TimeSelect
             onChange={handleValueChange}

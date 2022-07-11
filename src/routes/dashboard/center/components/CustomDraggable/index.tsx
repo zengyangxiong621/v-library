@@ -49,6 +49,7 @@ import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 
 import Tab from "@/components/tab";
+import ScrollSelect from "@/components/scrollSelect";
 
 
 enum STYLE_ENUM {
@@ -610,8 +611,10 @@ const CustomDraggable
                   className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
                   style={{
                     ...config.style,
+                    transition: 'width, height 0.3s',
                     // border: '1px solid gray',
                     visibility: !layer.isShow ? 'hidden' : 'unset',
+                    cursor: 'move'
                   }}>
                   {
                     layer[HIDE_DEFAULT] ?
@@ -663,7 +666,6 @@ const CustomDraggable
                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                               >
                               </Bar> :
-
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
                                 scale={bar.canvasScaleValue}
@@ -679,6 +681,13 @@ const CustomDraggable
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                 >
                                 </Tab> :
+                                layer.moduleName === 'scrollSelect' ?
+                                  <ScrollSelect
+                                    componentConfig={ component }
+                                    fields={ getFields(component) }
+                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                  >
+                                  </ScrollSelect> :
                                 layer.moduleName === 'timeSelect' ?
                                 <TimeSelect
                                   componentConfig={ component }
