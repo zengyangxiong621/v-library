@@ -52,6 +52,7 @@ class SwipterText extends Component<Props, State> {
     const configData = this.formatConfig(config, [])
     let loopConfig = configData.autoplay && staticData.data.length > 1 ? {
         disableOnInteraction: false,
+        delay: configData.delay
     } : false
     var swiper = new Swiper(".swiper-container", {
         slidesPerView: staticData.data.length,
@@ -59,11 +60,12 @@ class SwipterText extends Component<Props, State> {
         direction: "vertical",
         observer: true,//修改swiper自己或子元素时，自动初始化swiper 
         observeParents: true,//修改swiper的父元素时，自动初始化swiper 
-        loop: configData.isLoop,
+        // loop: configData.isLoop,
+        loop: false,
         autoHeight: true,
         noSwiping: false,   // 手动切换，false 允许，true，不允许
         autoplay: loopConfig,
-        centeredSlides: true,
+        centeredSlides: true
     });
     this.setState({
       swiperDom:swiper
@@ -96,9 +98,10 @@ class SwipterText extends Component<Props, State> {
       }else{
         swiperDom.autoplay.stop()
       }
-      // swiperDom.passedParams.loop = false
-      // swiperDom.reLoop();
-      console.log(swiperDom,'kkkk')
+      swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
+      swiperDom.params.slidesPerView = staticData.data.length  // 更新轮播预览数量
+      swiperDom.params.spaceBetween = style.lineSpace // 更新文本间距
+      swiperDom.update();
     }
     
     return (
