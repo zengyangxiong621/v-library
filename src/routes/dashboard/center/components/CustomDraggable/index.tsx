@@ -687,7 +687,7 @@ const CustomDraggable
                         </div>
                       </>
                   }
-                  {/*<div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />*/}
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span
