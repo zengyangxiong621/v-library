@@ -218,7 +218,7 @@ const componentDefaultConfig = {
     'type':'number',
     "config": {
         "min": 0,
-        "max": 1,
+        "max": 30,
         "step": 1,
         'suffix':'px',  // 输入框后缀
     }
