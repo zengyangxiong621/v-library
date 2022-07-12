@@ -15,11 +15,11 @@ const componentDefaultConfig = {
   "thumb": "", // 缩略图 // =========
 
   "dataFrom": 0,
-  "dataConfig": {}, //数据源配置
-  "dataType": "static", //数据类型：static;mysql;api;clickhouse
+  "dataConfig": {}, // 数据源配置
+  "dataType": "static", // 数据类型：static;mysql;api;clickhouse
   "dataContainers": [],
   "staticData": {
-    //静态数据
+    // 静态数据
     "data": [
       {
         "text": "世界地图"
