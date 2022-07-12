@@ -116,20 +116,6 @@ const componentDefaultConfig = {
           "type": "switch"
         },
         {
-          "name": "align",
-          "displayName":"对齐方式",
-          "type": "alignFull",
-          "value":[
-            {
-              "name":"textAlign",
-              "displayName":"水平对齐",
-              "type":"align",
-              "range": [ "left", "center", "right"],
-              "value": "left"
-            }
-          ]
-        },
-        {
           "name": "defaultSelectedKey",
           "displayName": "默认选中",
           "type": "number",
