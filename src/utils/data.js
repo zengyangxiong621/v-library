@@ -127,7 +127,7 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
       const id = componentConfig.dataContainers[0].id
       const container = dataContainerList.find(item => item.id === id)
       let data = dataContainerDataList.find(item => item.id === id)?.data || []
-      if (container.useFilter) {
+      if (container && container.useFilter) {
         data = handleDataFilter(data, container.filters, componentFilters, callbackArgs)
       }
       return data
