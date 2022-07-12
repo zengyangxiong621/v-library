@@ -26,13 +26,11 @@ const TabArray = props => {
   const _show = find(_data, 'switch', 'type')
   const _outsideShadow = find(_data, 'outsideShadow', 'type')
   const [activeKey, setActiveKey] = useState(_defaultActiveKey)
+  const [unit, setUnit] = useState('列')
   const extraNode = () => {
     const handleIconClick = (type, e) => {
       e.preventDefault()
       e.stopPropagation()
-      console.log('----------')
-      console.log('tabs', tabs)
-      console.log('----------')
       /*
         displayName: "列",
         key: "2",
@@ -57,6 +55,7 @@ const TabArray = props => {
       }
       tabs.forEach((tab, index) => {
         const unit = tab.displayName.replace(/\d/,'')
+        setUnit(unit)
         tab.displayName = unit + (index + 1)
         tab.key = String(index + 1)
       })

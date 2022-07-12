@@ -14,6 +14,10 @@ import BasicPieChart from '@/customComponents/echarts/components/basicPie'
 import BasicBar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
 import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
+import IconText from '@/customComponents/text/iconText'
+// import textConfig from  '@/customComponents/text/iconText/config'
+import SwiperText from '@/customComponents/text/swiperText'
+import textConfig from '@/customComponents/text/swiperText/config'
 
 import {
   STYLE,
@@ -39,12 +43,13 @@ import {
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
-import ScrollTable from "@/components/scrollTable";
-import TimeSelect from "@/components/timeSelect";
+import ScrollTable from "@/customComponents/scrollTable/index";
+import TimeSelect from "@/customComponents/timeSelect/index";
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 
-import Tab from "@/components/tab";
+import Tab from "@/customComponents/tab/index";
+import ScrollSelect from "@/customComponents/scrollSelect/index";
 
 
 enum STYLE_ENUM {
@@ -547,6 +552,12 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
+
+              // 将线上配置改为本地配置
+              // component.config = textConfig.config
+              // component.staticData = textConfig.staticData
+
+
               if (component) {
                 staticData = component.staticData
                 style_config = component.config
@@ -600,8 +611,10 @@ const CustomDraggable
                   className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
                   style={{
                     ...config.style,
+                    transition: 'width, height 0.3s',
                     // border: '1px solid gray',
                     visibility: !layer.isShow ? 'hidden' : 'unset',
+                    cursor: 'move'
                   }}>
                   {
                     layer[HIDE_DEFAULT] ?
@@ -630,6 +643,10 @@ const CustomDraggable
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
+
+                            // <IconText
+                            //   componentConfig={component}
+                            // ></IconText>
 
                             // <Da componentConfig={component}/>
                             
@@ -688,7 +705,7 @@ const CustomDraggable
                         </div>
                       </>
                   }
-                  {/*<div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />*/}
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span

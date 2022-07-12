@@ -614,6 +614,13 @@ export const styleTransformFunc = (textStyle, type=true) => {
     lineHeight: (value) => ({
       [type ? 'lineHeight' : 'line-height']: value ? value + 'px' : 'unset'
     }),
+    shadow: ({ hShadow, vShadow, color, blur }) => ({
+      [type ? 'boxShadow' : 'box-shadow']: `${hShadow}px ${vShadow}px ${blur}px ${color}`
+    }),
+    textShadow: ({ hShadow, vShadow, color, blur }) => ({
+      [type ? 'textShadow' : 'text-shadow']: `${hShadow}px ${vShadow}px ${blur}px ${color}`
+    })
+    ,
   }
   textStyle = textStyle.reduce((pre, cur) => {
     if (Array.isArray(cur.value)) {
