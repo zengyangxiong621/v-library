@@ -43,13 +43,13 @@ import {
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
-import ScrollTable from "@/components/scrollTable";
-import TimeSelect from "@/components/timeSelect";
+import ScrollTable from "@/customComponents/scrollTable/index";
+import TimeSelect from "@/customComponents/timeSelect/index";
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 
-import Tab from "@/components/tab";
-import ScrollSelect from "@/components/scrollSelect";
+import Tab from "@/customComponents/tab/index";
+import ScrollSelect from "@/customComponents/scrollSelect/index";
 
 
 enum STYLE_ENUM {
