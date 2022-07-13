@@ -202,6 +202,18 @@ const componentDefaultConfig = {
         'suffix':'ms',  // 输入框后缀
     }
   },
+  {
+    'name': 'slidesNum',
+    'displayName': '展示行',
+    'value': 3,
+    'type':'number',
+    "config": {
+        "min": 3,
+        "max": 100,
+        "step": 1,
+        'suffix':'',  // 输入框后缀
+    }
+  },
   //   {
   //     name:"isLoop",
   //     displayName:'无限循环',
