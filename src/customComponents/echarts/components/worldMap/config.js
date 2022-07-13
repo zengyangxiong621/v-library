@@ -1,12 +1,12 @@
 const componentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // =========
-  "name": "世界地图", //图层名称
+  "name": "世界地图2", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
-  "moduleName": "worldMap", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleName": "worldMap2", //组件标识
+  "moduleVersion": "1.0.2", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -76,6 +76,78 @@ const componentDefaultConfig = {
       "displayName": "默认隐藏",
       "type": "checkBox",
       "value": false
+    },
+    {
+      "name": "mapStyle",
+      "displayName": "地图样式",
+      "type": "collapse",
+      "hasSwitch": false,
+      "defaultExpand": true,
+      "value": [
+        {
+          "name": "show",
+          "displayName": "",
+          "value": true,
+          "type": "switch"
+        },
+        {
+          "name": "bgColor",
+          "displayName": "地图背景色",
+          "value": "#14376c",
+          "type": "color"
+        },
+        {
+          "name": "selectColor",
+          "displayName": "选中背景色",
+          "value": "#22ccfb",
+          "type": "color"
+        },        
+        {
+          "name": "pointColor",
+          "displayName": "标点颜色",
+          "value": "#fce182",
+          "type": "color"
+        },
+        {
+          "name": "borderColor",
+          "displayName": "边缘颜色",
+          "value": "#2a2d3c",
+          "type": "color"
+        }
+      ]
+    },
+    {
+      "name": "flyStyle",
+      "displayName": "飞线样式",
+      "type": "collapse",
+      "hasSwitch": true,
+      "defaultExpand": true,
+      "value": [
+        {
+          "name": "flyShow",
+          "displayName": "",
+          "value": true,
+          "type": "switch"
+        },
+        {
+          "name": "flyColor",
+          "displayName": "飞线颜色",
+          "value": "#ade9f4",
+          "type": "color"
+        },
+        {
+          "name": "iconColor",
+          "displayName": "图标颜色",
+          "value": "#ade9f4",
+          "type": "color"
+        },
+        {
+          "name": "rippleColor",
+          "displayName": "涟漪颜色",
+          "value": "#ade9f4",
+          "type": "color"
+        }
+      ]
     },
   ],
   themes: [{

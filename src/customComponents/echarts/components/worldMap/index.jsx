@@ -11,6 +11,7 @@ class WorldMap extends React.PureComponent {
     this.state = {
       series: [],
     };
+    
     this.mapChart = null;
     this.centerPoint = '北京区域中心';
     // 坐标数据
@@ -38,7 +39,7 @@ class WorldMap extends React.PureComponent {
       [
         {
           name: '昌平数据中心',
-          value: 0,
+          value: 10000,
         },
       ],
       [
@@ -128,7 +129,7 @@ class WorldMap extends React.PureComponent {
       [
         {
           name: '美国',
-          value: 0,
+          value: 10000,
         },
       ],
       [
@@ -164,10 +165,12 @@ class WorldMap extends React.PureComponent {
         // splitList: [{ start: 0, end: 150000 }],
         show: false,
         // text:['高','低'],// 文本，默认为数值文本
-        // color: ['#1a1e45'],
+        color: ['#ade9f4'],
+        // color: [this.mainData.bgColor], // 暂渲染会报错，拿不到mainData
       },
       geo: {
         map: 'world',
+        type: 'map',
         zoom: 1.2,
         label: {
           normal: {
@@ -183,13 +186,13 @@ class WorldMap extends React.PureComponent {
         roam: false, //是否允许缩放
         itemStyle: {
           normal: {
-            color: this.mainData.color, //地图背景色
-            borderColor: '#22ccfb', //省市边界线00fcff 516a89
+            color: this.mainData.bgColor, //地图背景色
+            borderColor: this.mainData.borderColor, //省市边界线00fcff 516a89
             borderWidth: 1,
             textStyle: '#fff',
           },
           emphasis: {
-            color: '#22ccfb', //悬浮背景
+            areaColor: this.mainData.selectColor, //悬浮背景
           },
         },
         data: [],
@@ -211,7 +214,6 @@ class WorldMap extends React.PureComponent {
   }
 
   chartsResize = () => {
-    console.log('***');
     if (this.mapChart) {
       this.mapChart.resize(); //实例 的resize
     }
@@ -259,12 +261,13 @@ class WorldMap extends React.PureComponent {
       let toCoord = [116.536989,39.777354] //中心点地理坐标
       if (fromCoord && toCoord) {
         res.push([
-          {
-            coord: toCoord, // 飞线从哪里出发
-          },
+          //对换即可调整方向
           {
             coord: fromCoord, // 飞线去往哪里
             value: dataItem[0].value,
+          },
+          {
+            coord: toCoord, // 飞线从哪里出发
           },
         ])
       }
@@ -276,16 +279,15 @@ class WorldMap extends React.PureComponent {
       this.state.series.push(
         {
           type: 'lines',
-          radius: '100%',
           coordinateSystem: 'geo',
           zlevel: 2,
           effect: {
             show: true,
-            period: 4, //箭头指向速度，值越小速度越快
+            period: 5, //箭头指向速度，值越小速度越快
             trailLength: 0, //特效尾迹长度[0,1]值越大，尾迹越长重
             symbol: 'arrow', //箭头图标
             symbolSize: 5, //图标大小
-            color: '#fcdd6e', // 图标颜色
+            color: this.mainData.iconColor, // 图标颜色
           },
           lineStyle: {
             normal: {
@@ -293,9 +295,8 @@ class WorldMap extends React.PureComponent {
               width: 1, //尾迹线条宽度
               opacity: 1, //尾迹线条透明度
               curveness: 0.3, //尾迹线条曲直度
-              color: '#fcdd6e', // 飞线颜色
+              color: this.mainData.flyColor, // 飞线颜色 - 细线
             },
-            color: '#fcdd6e',
           },
           data: this.convertData(item[1]),
         },
@@ -309,7 +310,7 @@ class WorldMap extends React.PureComponent {
             period: 4, //动画时间，值越小速度越快
             brushType: 'stroke', //波纹绘制方式 stroke, fill
             scale: 3, //波纹圆环最大限制，值越大波纹越大
-            color: '#fcdd6e',
+            color: this.mainData.rippleColor,
           },
           label: {
             normal: {
@@ -332,7 +333,11 @@ class WorldMap extends React.PureComponent {
           itemStyle: {
             normal: {
               show: false,
-              color: '#fce182',
+              areaColor: this.mainData.pointColor,
+              // color: this.mainData.pointColor,
+            },
+            emphasis: {
+              areaColor: this.mainData.pointColor,
             },
           },
           data: item[1].map((dataItem)=>{
