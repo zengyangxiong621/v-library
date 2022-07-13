@@ -2,7 +2,7 @@ import { newDynamic, createRoute } from "@/utils/core";
 
 const routesConfig = (app: any) => ({
   path: "/authority-manage/role-manage",
-  title: "用户管理",
+  title: "角色管理",
   component: newDynamic(app, [], () =>
     import("./roleManage")
   )

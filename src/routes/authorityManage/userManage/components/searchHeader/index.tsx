@@ -18,7 +18,7 @@ const SearchHeader = (props: any) => {
 
   const resetClick = () => {
     searchForm.resetFields();
-    searchByType()
+    searchClick()
   }
 
   const changeInputValue = (value:any) => {

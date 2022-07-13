@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React,{ Dispatch, memo, useCallback, useEffect, useReducer, useState } from "react";
-import SearchHeader from './components/searchHeader'
 import { useFetch } from "@/utils/useFetch";
 import "./index.less";
 import { connect } from "dva";
 import zhCN from 'antd/es/locale/zh_CN'
 import {ConfigProvider,Button,Table,Modal,message} from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import type { TableRowSelection,ColumnsType } from 'antd/lib/table/interface';
+import type { ColumnsType } from 'antd/lib/table/interface';
 import {params,dataType,authStateType,authActionType,authContextType, dispatcher} from './interface'
 import AddOrEdit from './components/addOrEdit'
 import RoleDetail from './components/roleDetail'
@@ -39,12 +38,14 @@ const handleaddChecked=(list:any)=>{
   })
 }
 
-// 配置项
+/**
+ * 配置项
+ */
 const baseParams:params={
   pageNo:1,
   pageSize:10
 }
-const columns=(handleEdit:any,handleDetail:any,handledelete:any):ColumnsType<dataType>=>{
+const columns=(handleEdit:any,handleDetail:any,handledelete:any,toAccountList:any):ColumnsType<dataType>=>{
   return [{
       title: '角色名称',
       dataIndex: 'name',
@@ -70,7 +71,7 @@ const columns=(handleEdit:any,handleDetail:any,handledelete:any):ColumnsType<dat
         return (
           <>
             <Button type="link" size='small' onClick={handleDetail(record)}>详情</Button>
-            <Button type="link" size='small'>查看用户</Button>
+            <Button type="link" size='small' onClick={toAccountList(record)}>查看用户</Button>
             <Button type="link" size='small' onClick={handleEdit(record)}>编辑</Button>
             <Button type="link" size='small' onClick={handledelete(record)}>删除</Button>
           </>
@@ -78,7 +79,7 @@ const columns=(handleEdit:any,handleDetail:any,handledelete:any):ColumnsType<dat
       }
   }]
 }
-const paginationProps=(totalElements:number,pageInfo:params,setPageInfo:Function,getTableData:Function)=>{
+const paginationProps=(totalElements:number,pageInfo:params,setPageInfo:Function)=>{
   return {
     total: totalElements,
     current: pageInfo.pageNo,
@@ -105,6 +106,9 @@ const rowSelection = (selectedRowKeys:React.Key[],onSelectChange:any)=>{
   }
 }
 
+/**
+ * store局部数据共享
+ */
 const authState:authStateType={
   authList:[]
 }
@@ -163,10 +167,14 @@ const RoleManage = (prop: any) => {
     const header={
       body: JSON.stringify(getParams)
     }
-    const [err,data,code]=await useFetch('/visual/role/list',header)
-    const {content}=data
-    setTableData(content)
-    setTableLoading(false)
+    const [err,data,code]=await useFetch('/visual/role/list',header).finally(() => {
+      setTableLoading(false)
+    })
+    if(data){
+      const {content,totalElements}=data
+      setTotalElements(totalElements)
+      setTableData(content)
+    }
   },[])
   // 获取权限列表
   const getAuthData=async ()=>{
@@ -259,6 +267,12 @@ const RoleManage = (prop: any) => {
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
+  const toAccountList=(rowData:any)=>{
+    return ()=>{
+      const {history}=prop
+      history.push('/authority-manage/role-user?roleId='+rowData.id)
+    }
+  }
   useEffect(()=>{
     getTableData()
     getAuthData()
@@ -283,9 +297,9 @@ const RoleManage = (prop: any) => {
             rowClassName='customRowClass'
             rowSelection={rowSelection(selectedRowKeys,onSelectChange)}
             loading={tableLoading}
-            columns={columns(handleEdit,handleShowDetailModel,deleteRole)}
+            columns={columns(handleEdit,handleShowDetailModel,deleteRole,toAccountList)}
             dataSource={tableData}
-            pagination={paginationProps(totalElements,pageInfo,setPageInfo,getTableData)}
+            pagination={paginationProps(totalElements,pageInfo,setPageInfo)}
             onChange={tableOnChange}
             rowKey={record=>record.id}
           />
