@@ -639,7 +639,7 @@ const CustomDraggable
                           : ''
                         }
                       </div> : <>
-                        <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                        <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
