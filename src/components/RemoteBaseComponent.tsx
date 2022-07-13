@@ -18,7 +18,6 @@ const RemoteBaseComponent = (props: any) => {
       window.eval(`${await importComponent()}`)
       const { default: component } = (window as any).VComponents;
       setComponent(() => component);
-
   }, [importComponent, setComponent])
 
   useEffect(() => {

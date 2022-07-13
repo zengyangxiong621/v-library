@@ -1,0 +1,159 @@
+import React, { Component, CSSProperties, useEffect } from 'react';
+import componentDefaultConfig from './config'
+// import Swiper from "swiper";
+import Swiper from './swiper.js'
+
+import './index.less'
+
+interface Props {
+  componentConfig?: any,
+  fields?:any,
+  comData?:any
+}
+
+interface State {
+  swiperDom?:any,
+  componentConfig?:any,
+  swiperId?:any
+}
+
+class SwipterText extends Component<Props, State> {
+  constructor(Props: any) {
+    super(Props)
+    this.state = {
+      swiperDom: null,
+      componentConfig: Props.componentConfig || componentDefaultConfig,
+      swiperId: (new Date()).valueOf()
+    }
+  }
+
+  componentDidMount(){
+    this.drawSwiper()
+  }
+
+  // 处理所有配置项
+  formatConfig = (config:any, exclude:any) => {
+    return config.filter((item: any) => exclude.indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
+        if(Array.isArray(cur.value)) {
+          const obj = cur.value.reduce((p: any, c: any) => {
+            p[c.name] = c.value
+            return p
+          }, {})
+          pre = {
+            ...pre,
+            ...obj,
+          }
+        } else {
+          pre[cur.name] = cur.value
+        }
+        return pre
+    }, {})
+  }
+
+  drawSwiper = () => {
+    const {config, staticData} = this.props.componentConfig
+    const { swiperId } = this.state
+    const configData = this.formatConfig(config, [])
+    let loopConfig = configData.autoplay && staticData.data.length > 1 ? {
+        disableOnInteraction: false,
+        delay: configData.delay
+    } : false
+    var swiper = new Swiper(`.swiper-container${swiperId}`, {
+        slidesPerView: 'auto',
+        spaceBetween: configData.lineSpace,
+        direction: "vertical",
+        observer: true,//修改swiper自己或子元素时，自动初始化swiper 
+        observeParents: true,//修改swiper的父元素时，自动初始化swiper 
+        // loop: configData.isLoop,
+        loop: false,
+        autoHeight: true,
+        noSwiping: false,   // 手动切换，false 允许，true，不允许
+        autoplay: loopConfig,
+        centeredSlides: true
+    });
+    this.setState({
+      swiperDom:swiper
+    })
+  }
+
+  // 根据对应的自动来转换
+  formatData = (data:any, fields2ValueMap:any) => {
+    const arr = Array.isArray(data) ? data.map((item:any) => {
+      let res:any = {}
+      for (let k in item) {
+        res[k] = item[fields2ValueMap[k]]
+      }
+      return res
+    }) : []
+    return arr 
+  }
+
+  render () {
+    const { fields, comData,componentConfig } = this.props
+    const {config, staticData} = componentConfig
+    const { swiperDom,swiperId } = this.state
+    // 组件静态或者传入组件的数据
+    const originData = comData || staticData.data
+    // 根据传入的fields来映射对应的值
+    const fields2ValueMap:any = {}
+    const initColumnsName = fields
+    fields.forEach((item:any, index:any) => {
+      fields2ValueMap[initColumnsName[index]] = item
+    })
+    const finalData = this.formatData(originData, fields2ValueMap)
+    let style = this.formatConfig(config, [])
+    const findItem = (name: string) => {
+        return config.find((item: any) => {
+            return item.name === name
+        })
+    }
+    const textStyle = findItem('textStyle')
+    const textStyleData = this.formatConfig([textStyle], [])
+    if(swiperDom && finalData.length){
+      // 切换是否自动轮播
+      if(style.autoplay && finalData.length > 1){
+        swiperDom.autoplay.start()
+      }else{
+        swiperDom.autoplay.stop()
+      }
+      swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
+      swiperDom.params.spaceBetween = style.lineSpace // 更新文本间距
+      swiperDom.update();
+    }
+
+    
+    return (
+      <div className={`swipwe-box swiper-no-swiping ${style.hideDefault && 'hide'}`} style={{
+          width: style.width,
+          height: style.height
+      }}>
+        {
+            !style.hideDefault && (
+              <div className={`swiper-container swiper-container${swiperId}`}>
+                  <div className="swiper-wrapper">
+                  {
+                    finalData.map((item:any,index:any) => {
+                      return (
+                          <div className="swiper-slide" style={{
+                              ...textStyleData,
+                              fontWeight: style.bold ? 'bold' : '',
+                              fontStyle: style.italic ? 'italic' : '',
+                              filter: style.show ? `drop-shadow(${style.shadow.color} ${style.shadow.vShadow}px ${style.shadow.hShadow}px ${style.shadow.blur}px)` : ''
+                          }}  key={index}>
+                              {item[fields[0]]}
+                          </div>
+                      )
+                    })
+                  }
+                  </div>
+              </div>
+            ) 
+        }
+      </div>
+    )
+
+  }
+}
+
+export { SwipterText }
+export default SwipterText

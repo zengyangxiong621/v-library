@@ -1,17 +1,17 @@
 const componentDefaultConfig = {
-  "id": '122', //组件ID
+  "id": '121', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "图片", //图层名称
+  "name": "图标标题", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
-  "moduleName": "imageV2", //组件标识
-  "moduleVersion": "1.1.0", //组件版本号
+  "moduleName": "iconText", //组件标识
+  "moduleVersion": "1.0.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
 
-  "autoUpdate": {"isAuto": false, "interval": 10}, // =========
+  "autoUpdate": { "isAuto": false, "interval": 10 }, // =========
   "thumb": "", // 缩略图 // =========
 
   "dataConfig": {}, //数据源配置
@@ -26,7 +26,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "imageUrl": ""
+        "text": "文字组件",
       }
     ],
     "fields": [
@@ -45,50 +45,39 @@ const componentDefaultConfig = {
     "id": 362505
   }],
 
-  "interaction":{ // 交互
-    "mountAnimation": {
-      // 如果不存在载入动画，该项为null
-      "delay": 2, // 延迟
-      "direction": "right", // 方向
-      "duration": 304, // 持续时间(ms)
-      "opacityOpen": true, // 渐隐渐现
-      "timingFunction": "ease", // 速率
-      "type": "slide" // 动画类型
-    },
-    "events":[{
-        "trigger": "dataChange", // 事件类型 dataChange、click、mouseEnter、mouseLeave
-        "name": "事件1",
-        "id": "key",
-        "conditions": [
-            {
-                "name": "条件",
-                "type": "field", 
-                "field": "a", 
-                "compare": "==", 
-                "expected": "a",
-                "code": "return data",
-                "id": "key"
-            }
-        ],
-        "conditionType": "all", // 判断类型
-        "actions": [
-            {
-                "id": "uuidv4()",
-                "name": "动作",
-                "action":"show", //动作 show hide
-                "componentScope":"current",  //组件scope global\current
-                "unmount":true, // 隐藏卸载
-                "component": [], // 组件id数组
-                "animation": {
-                    "type": "slideLeft", // opacity\slideLeft\slideRight\slideTop\slideBottom
-                    "timingFunction": "ease", // linear\ease\ease-in\ease-out\ease-in-out
-                    "duration": 1000,
-                    "delay": 0
-                }
-            }
-        ]
-    }]
-  },
+  "events": [{
+    "trigger": "dataChange", // 事件类型 dataChange、click、mouseEnter、mouseLeave
+    "name": "事件1",
+    "id": "key",
+    "conditions": [
+      {
+        "name": "条件",
+        "type": "field",
+        "field": "a",
+        "compare": "==",
+        "expected": "a",
+        "code": "return data",
+        "id": "key"
+      }
+    ],
+    "conditionType": "all", // 判断类型
+    "actions": [
+      {
+        "id": "uuidv4()",
+        "name": "动作",
+        "action": "show", //动作 show hide
+        "componentScope": "current",  //组件scope global\current
+        "unmount": true, // 隐藏卸载
+        "component": [], // 组件id数组
+        "animation": {
+          "type": "slideLeft", // opacity\slideLeft\slideRight\slideTop\slideBottom
+          "timingFunction": "ease", // linear\ease\ease-in\ease-out\ease-in-out
+          "duration": 1000,
+          "delay": 0
+        }
+      }
+    ]
+  }],
   "config": [
     // 样式配置
     {
@@ -102,22 +91,22 @@ const componentDefaultConfig = {
         {
           "name": "left",
           "displayName": "X轴坐标",
-          "value": 200
+          "value": 100
         },
         {
           "name": "top",
           "displayName": "Y轴坐标",
-          "value": 200
+          "value": 100
         },
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 754
+          "value": 500
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 398
+          "value": 200
         }
       ]
     },
@@ -140,7 +129,7 @@ const componentDefaultConfig = {
         {
           "name": "fontSize",
           "displayName": "",
-          "value": 64
+          "value": 32
         },
         {
           "name": "color",
@@ -190,20 +179,81 @@ const componentDefaultConfig = {
       ]
     },
     {
+      'name':"underline",
+      'displayName':'标题下划线',
+      'type':'radioGroup',
+      'direction':'horizontal', // 方向
+      'value': false,
+      'options': [
+        {
+          'name': '显示',
+          'value': true
+        },
+        {
+          'name': '隐藏',
+          'value': false
+        }
+      ]
+    },
+    {
+      'name': 'iconImg',
+      'displayName': '上传图标',
+      'type':'image',
+      'value': ''
+      // 'value': 'http://10.201.81.47:9000/soc-visualization-public/static/png/多边形-蓝色.png', // 有背景图则返回背景图的url，没有背景图返回空或者null
+    },
+    {
+      'name':"iconSize",
+      'displayName':'图标尺寸',
+      'type':'inputNumber2',
+      'showDetail':true, // 是否展示下面的文字说明
+      'value':[
+          {
+              'name':'width',
+              'displayName':'宽度',
+              'type':'number',
+              'value':20,
+              'config':{
+                  'min':0,
+                  'suffix':'px',  // 输入框后缀
+              }
+          },
+          {
+              'name':'height',
+              'displayName':'长度',
+              'type':'number',
+              'value':20,
+              'config':{
+                  'min':0,
+                  'suffix':'px',  // 输入框后缀
+              }
+          },
+      ]
+    },
+    {
+      'name': 'backgroundImg',
+      'displayName': '标题背景图',
+      'type':'image',
+      'value': ''
+      // 'value': 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F25%2F20200425173132_svsej.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658998305&t=e66659d4f05a9e35629aeb89425ad381', // 有背景图则返回背景图的url，没有背景图返回空或者null
+    },
+    {
       "name": "shadow",
       "displayName": "阴影",
-      "type": "shadow",
+      "type": 'collapse',
+      "hasSwitch": true,
+      "defaultExpand": true,
       "value": [
         {
           "name": "show",
           "displayName": "",
-          "value": true,
+          "value": false,
           "type": "switch"
         },
         {
           "name": "shadow",
-          "displayName": "外阴影",
-          "type": "outsideShadow",
+          "displayName": "文本阴影",
+          "type": "boxShadow",
           "value": {
             "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
             "vShadow": 0, // 垂直阴影的位置
