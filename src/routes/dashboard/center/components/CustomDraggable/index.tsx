@@ -639,14 +639,19 @@ const CustomDraggable
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
-                            // <IconText
+
+                            // layer.moduleName === 'iconTextCopy' ?
+                            //   <IconText
                             //   componentConfig={component}
-                            // ></IconText>
-
-                            // <Da componentConfig={component}/>
-                          
-                            // <SwiperText  componentConfig={component}></SwiperText>
-
+                            //   fields={getFields(component)}
+                            //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            //   ></IconText> :
+                            // layer.moduleName === 'swiperText' ?
+                            //   <SwiperText
+                            //   componentConfig={component}
+                            //   fields={getFields(component)}
+                            //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            //   ></SwiperText> :
                             layer.moduleName === 'bar' ?
                               <BasicBar
                                 componentConfig={component}

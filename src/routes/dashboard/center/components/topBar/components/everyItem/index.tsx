@@ -10,8 +10,6 @@ const EveryItem = (props: any) => {
     return axios.get(`${ (window as any).CONFIG.COMP_URL }/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   }, [data.moduleType])
 
-  console.log(importComponent,'kkkkkkk')
-
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`)
     const { ComponentDefaultConfig } = (window as any).VComponents;

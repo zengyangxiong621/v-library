@@ -17,11 +17,7 @@ const componentDefaultConfig = {
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
   "dataFrom": 0,
-  "dataContainers": [{// =========
-    "enable": true,
-    "id": 2744,
-    "rank": 0
-  }],
+  "dataContainers": [], // 默认选中容器
   "staticData": {
     //静态数据
     "data": [
@@ -178,23 +174,23 @@ const componentDefaultConfig = {
         }
       ]
     },
-    {
-      'name':"underline",
-      'displayName':'标题下划线',
-      'type':'radioGroup',
-      'direction':'horizontal', // 方向
-      'value': false,
-      'options': [
-        {
-          'name': '显示',
-          'value': true
-        },
-        {
-          'name': '隐藏',
-          'value': false
-        }
-      ]
-    },
+    // {
+    //   'name':"underline",
+    //   'displayName':'标题下划线',
+    //   'type':'radioGroup',
+    //   'direction':'horizontal', // 方向
+    //   'value': false,
+    //   'options': [
+    //     {
+    //       'name': '显示',
+    //       'value': true
+    //     },
+    //     {
+    //       'name': '隐藏',
+    //       'value': false
+    //     }
+    //   ]
+    // },
     {
       'name': 'iconImg',
       'displayName': '上传图标',

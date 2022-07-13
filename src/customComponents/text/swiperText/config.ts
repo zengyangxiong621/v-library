@@ -17,11 +17,7 @@ const componentDefaultConfig = {
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
   "dataFrom": 0,
-  "dataContainers": [{// =========
-    "enable": true,
-    "id": 2744,
-    "rank": 0
-  }],
+  "dataContainers": [], // 容器默认为空
   "staticData": {
     //静态数据
     "data": [
