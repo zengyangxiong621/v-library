@@ -19,6 +19,9 @@ import IconText from '@/customComponents/text/iconText'
 import SwiperText from '@/customComponents/text/swiperText'
 import textConfig from '@/customComponents/text/swiperText/config'
 
+import ErrorCatch from 'react-error-catch'
+import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
+
 import {
   STYLE,
   DIMENSION,
@@ -51,6 +54,7 @@ import SelectV2 from '@/customComponents/assist/select/index'
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
 
+// import Tab from "@/components/tab";
 
 enum STYLE_ENUM {
   BOLD = 'fontBold'
@@ -702,11 +706,22 @@ const CustomDraggable
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                   ></WorldMap>
                                   :
-                                  <RemoteBaseComponent
-                                    componentConfig={ component }
-                                    fields={ getFields(component) }
-                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                  ></RemoteBaseComponent>
+                                  <ErrorCatch
+                                    app={component.name}
+                                    user=""
+                                    token=""
+                                    max={1}
+                                    errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
+                                    onCatch={(errors) => {
+                                      console.log('组件报错信息：', errors);
+                                    }}
+                                  >
+                                    <RemoteBaseComponent
+                                      componentConfig={ component }
+                                      fields={ getFields(component) }
+                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
+                                    ></RemoteBaseComponent>
+                                  </ErrorCatch>
                           }
                         </div>
                       </>
