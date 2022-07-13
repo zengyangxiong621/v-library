@@ -547,6 +547,12 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
+
+              // 将线上配置改为本地配置
+              // component.config = textConfig.config
+              // component.staticData = textConfig.staticData
+
+
               if (component) {
                 staticData = component.staticData
                 style_config = component.config
@@ -626,10 +632,14 @@ const CustomDraggable
                           : ''
                         }
                       </div> : <>
-                        <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                        <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
+
+                            // <IconText
+                            //   componentConfig={component}
+                            // ></IconText>
 
                             // <Da componentConfig={component}/>
                             layer.moduleName === 'select2' ?
