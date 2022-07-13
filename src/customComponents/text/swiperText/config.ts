@@ -178,47 +178,59 @@ const componentDefaultConfig = {
       ]
     },
     {
-      name:"autoplay",
-      displayName:'自动轮播',
-      type:'radioGroup',
-      direction:'horizontal', // 方向
-      value:true,
-      options:[
+      'name':"autoplay",
+      'displayName':'自动轮播',
+      'type':'radioGroup',
+      'direction':'horizontal', // 方向
+      'value':true,
+      'options':[
         {
-          name:'是',
-          value:true
+          'name':'是',
+          'value':true
         },
         {
-          name:'否',
-          value:false
-        },
-      ]
-  },
-    {
-      name:"isLoop",
-      displayName:'无限循环',
-      type:'radioGroup',
-      direction:'horizontal', // 方向
-      value:true,
-      options:[
-        {
-          name:'是',
-          value:true
-        },
-        {
-          name:'否',
-          value:false
+          'name':'否',
+          'value':false
         },
       ]
   },
   {
+    'name': 'delay',
+    'displayName': '轮播速度',
+    'value': 500,
+    'type':'number',
+    "config": {
+        "min": 300,
+        "max": 10000,
+        "step": 100,
+        'suffix':'ms',  // 输入框后缀
+    }
+  },
+  //   {
+  //     name:"isLoop",
+  //     displayName:'无限循环',
+  //     type:'radioGroup',
+  //     direction:'horizontal', // 方向
+  //     value:true,
+  //     options:[
+  //       {
+  //         name:'是',
+  //         value:true
+  //       },
+  //       {
+  //         name:'否',
+  //         value:false
+  //       },
+  //     ]
+  // },
+  {
     'name': 'lineSpace',
     'displayName': '行间距',
-    'value': 20,
+    'value': 10,
     'type':'number',
     "config": {
         "min": 0,
-        "max": 1,
+        "max": 100,
         "step": 1,
         'suffix':'px',  // 输入框后缀
     }

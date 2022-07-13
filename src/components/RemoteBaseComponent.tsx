@@ -9,28 +9,29 @@ const RemoteBaseComponent = (props: any) => {
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
 
-
   const importComponent = useCallback(() => {
     return axios.get(`${ (window as any).CONFIG.COMP_URL }/${ moduleType }/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
   }, [moduleType])
 
+
   const loadComp = useCallback(async () => {
-    // const data = `${await importComponent()}`
-    window.eval(`${await importComponent()}`)
-    const { default: component} = (window as any).VComponents;
-    setComponent(() => component());
+      window.eval(`${await importComponent()}`)
+      const { default: component } = (window as any).VComponents;
+      setComponent(() => component);
   }, [importComponent, setComponent])
 
   useEffect(() => {
-    if (!isExit){
+    if (!isExit) {
       loadComp();
     }
   }, [loadComp]);
 
   if (Comp) {
-    return <Comp {...props}/>
+    return <Comp {...props} />
   }
+
   return null;
+
 }
 
 // class RemoteBaseComponent extends React.Component<any, any> {
