@@ -44,6 +44,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
   const _data = props.data || {}
   const [activeTab, setActiveTab] = useState(null)
   const [tabpanes, setTabpanes] = useState(_data?.callbackArgs || [])
+  const [activeCollapseKey,setActiveCollapseKey] = useState(null)
 
   useEffect(() => {
     setTabpanes(_data.callbackArgs || [])
@@ -75,6 +76,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     setTabpanes(panes)
     setActiveTab(callbackId)
     _data.callbackArgs = panes
+    setActiveCollapseKey(["1"])
     props.onChange()
   }
 
@@ -115,6 +117,10 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     props.onChange()
   }
 
+  const collapseChange= (e) => {
+    setActiveCollapseKey(e)
+  }
+
   return (
     <Form
       className="custom-form callbackArgs-form"
@@ -122,7 +128,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
       {...formItemLayout}
       colon={false}
     >
-      <Collapse className="custom-collapse">
+      <Collapse activeKey={activeCollapseKey} onChange={collapseChange} className="custom-collapse">
         <Panel header="回调参数" key="1" extra={callbackExtra()}>
           {
             tabpanes.length ? <Tabs

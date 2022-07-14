@@ -23,6 +23,7 @@ import RightClickMenu from './components/rightClickMenu/rightClickMenu'
 import { menuOptions } from './Data/menuOptions'
 import { getTargetMenu } from './components/rightClickMenu/getMenuNode'
 import { getFieldStates } from '../../../utils/sideBar'
+import { filterEmptyGroups } from '../../../models/utils/filterEmptyGroups'
 
 const Left = ({ dispatch, bar, operate }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
@@ -367,7 +368,9 @@ const Left = ({ dispatch, bar, operate }) => {
             onExpand={myOnExpand}
             onSelect={onSelect}
             onRightClick={onRightClick}
-            treeData={bar.treeData}
+            // treeData={bar.treeData}
+            // 这儿只是前端删除逻辑，需要后端也改成相同的删除逻辑(删除完图层后，所有分组为空的组都应该一并删除)
+            treeData={filterEmptyGroups(bar.treeData)}
             selectedKeys={bar.key}
             titleRender={(nodeData) => {
               // title 置为空，覆盖antTree 默认的title

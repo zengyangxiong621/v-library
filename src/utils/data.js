@@ -10,24 +10,29 @@ import cloneDeep from 'lodash/cloneDeep';
  * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns
  */
-const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList, callbackArgs) => {
-  const dataFrom = componentConfig.dataFrom || 0
-  let resData = null
-  let currentData = null
-  if (dataFrom === 0) {
-    currentData = cloneDeep(componentData[componentConfig.id])
-  } else {
-    currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs)
-  }
-  if (currentData) {
-    // 如果使用数据过滤器，则需要过滤数据
-    if (componentConfig.useFilter && componentConfig.filters) {
-      resData = dataFilterHandler(currentData, componentConfig, componentFilters, callbackArgs)
+const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList, callbackArgs, layer = {}) => {
+  try {
+    const dataFrom = componentConfig.dataFrom || 0
+    let resData = null
+    let currentData = null
+    if (dataFrom === 0) {
+      currentData = cloneDeep(componentData[componentConfig.id])
     } else {
-      resData = currentData
+      currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs)
     }
+    if (currentData) {
+      // 如果使用数据过滤器，则需要过滤数据
+      if (componentConfig.useFilter && componentConfig.filters) {
+        resData = dataFilterHandler(currentData, componentConfig, componentFilters, callbackArgs)
+      } else {
+        resData = currentData
+      }
+    }
+    return resData
+  } catch (e) {
+    console.log(`报错图层: ${layer.id}-${layer.name}, 报错原因：1、查无组件Config`, e)
   }
-  return resData
+
 }
 
 /**

@@ -90,6 +90,7 @@ const Bar = (props) => {
             alignWithLabel: true,
           },
           axisLabel: {
+            interval: 0,
             textStyle: {
               color: "#fff",
             },
@@ -265,7 +266,7 @@ const Bar = (props) => {
           splitLine: {
             show: false,
           },
-          data: barYData,
+          data: barYData.reverse(),
         },
       ],
       xAxis: {
@@ -298,7 +299,7 @@ const Bar = (props) => {
           type: "bar",
           zlevel: 2,
           barWidth: "10px",
-          data: lineY.reverse(),
+          data: lineY,
           label: {
             normal: {
               color: "#b3ccf8",

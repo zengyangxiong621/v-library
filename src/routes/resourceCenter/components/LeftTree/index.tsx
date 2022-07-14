@@ -1,4 +1,4 @@
- import { memo, useEffect } from "react";
+ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { SYSTEMMATERIAL, MYMATERIAL, MATERIALLIB } from "@/constant/dvaModels/resourceCenter"
 
@@ -15,9 +15,12 @@ import { DownOutlined } from "@ant-design/icons";
 const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispatch,refreshGroupLists }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   const spaceId = "1";
+  const [currentAdd, setCurrentAdd] = useState('')
   // 添加分组
   // 创建一个占位数据
   const addGroup = (groupId: string, parentId: string = '') => {
+    console.log(groupId,parentId,'ooooo' )
+    setCurrentAdd(groupId)
     const mockItem: any = {
       groupId: "aInput",
       name: "占位的input"
@@ -84,7 +87,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
         <Tree
           className="my-dashboard-tree"
           blockNode
-          defaultExpandAll={true}
+          defaultExpandedKeys={['templateLib', 'myTemplate']}
           selectedKeys={[resourceCenter.curSelectedGroup.groupId]}
           treeData={resourceCenter.groupList}
           switcherIcon={<DownOutlined />}
@@ -96,6 +99,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
           titleRender={(nodeData: any) => (
             <Node
               refreshGroupLists={refreshGroupLists}
+              currentAdd={currentAdd}
               addGroup={addGroup}
               {...nodeData}
             ></Node>

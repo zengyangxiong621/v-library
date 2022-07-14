@@ -14,6 +14,7 @@ import { getFields } from '@/utils/data'
 
 const EveryComponent = ({ componentData, comData, scaleValue, screenWidthRatio, screenHeightRatio }: any) => {
   const { moduleName, events, id, config } = componentData
+
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -23,40 +24,12 @@ const EveryComponent = ({ componentData, comData, scaleValue, screenWidthRatio, 
    * description: 位置尺寸 需要根据屏幕的宽高比例等比例放大或者缩小
    */
 
-
-  const weizhichicunArr = allConfigMap.get(WEIZHICHICUN).map((item: any) => {
-    // if (['X轴坐标'].includes(item.displayName)) {
-    //   return {
-    //     ...item,
-    //     value: ~~(screenWidthRatio * item.value)
-    //   }
-    // }
-    // if (['Y轴坐标'].includes(item.displayName)) {
-    //   return {
-    //     ...item,
-    //     value: ~~(screenWidthRatio * item.value)
-    //   }
-    // }
-
-    // return item
-    if (['X轴坐标', '宽度'].includes(item.displayName)) {
-      return {
-        ...item,
-        value: ~~(screenWidthRatio.toFixed(3) * item.value)
-      }
-    } else if (['Y轴坐标', '高度'].includes(item.displayName)) {
-      return {
-        ...item,
-        value: ~~(screenHeightRatio.toFixed(3) * item.value)
-      }
-    }
-    return item
-  })
-
-  console.log('scaleValuescaleValuescaleValue', scaleValue);
+  // const weizhichicunArr = allConfigMap.get(WEIZHICHICUN).map((item: any) => {
+  //   return item
+  // })
+  const weizhichicunArr = allConfigMap.get(WEIZHICHICUN)
   let componentStyle = getTargetStyle(weizhichicunArr, {
     position: 'absolute',
-    // transform: `scale(${ scaleValue })`
   })
   return (
     <div className='preview-component-wrap'
@@ -67,6 +40,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, screenWidthRatio, 
         id={id}
         events={events}
         version={'1.0.0'}
+        scale={scaleValue}
         name={moduleName}
         componentConfig={componentData}
         fields={getFields(componentData)}
