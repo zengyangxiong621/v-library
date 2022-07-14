@@ -1200,9 +1200,9 @@ export default {
           ...state,
         };
       }
-      localStorage.removeItem("dblComponentTimes");
-      localStorage.removeItem("currentTimes");
-      state.currentDblTimes = 0;
+      // localStorage.removeItem("dblComponentTimes");
+      // localStorage.removeItem("currentTimes");
+      // state.currentDblTimes = 0;
       deepForEach(state.treeData, (layer: ILayerGroup | ILayerComponent) => {
         layer.selected = false;
       });

@@ -120,7 +120,7 @@ const componentDefaultConfig = {
               "displayName":"水平对齐",
               "type":"align",
               "range": ["left", "center", "right"],
-              "value": "left"
+              "value": "center"
             }
           ]
         },
@@ -250,7 +250,7 @@ const componentDefaultConfig = {
                     {
                       "name": "bold",
                       "displayName": "",
-                      "value": true
+                      "value": false
                     },
                     {
                       "name": "italic",
@@ -323,7 +323,7 @@ const componentDefaultConfig = {
                     {
                       "name": "bold",
                       "displayName": "",
-                      "value": true
+                      "value": false
                     },
                     {
                       "name": "italic",
@@ -346,7 +346,7 @@ const componentDefaultConfig = {
                   "name": "bgColor",
                   "displayName": "背景",
                   "type": "color",
-                  "value": "#ff0000"
+                  "value": "#02b0f4"
                 },
                 {
                   "name": "bgImg",

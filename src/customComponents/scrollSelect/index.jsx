@@ -216,9 +216,12 @@ const ScrollSelect = (props) => {
       let textStyle = deepClone(config.find(item => item.name === 'textStyle').value)
       let textShadow = config.find(item => item.name === 'shadow')
       let style = styleTransformFunc([...textStyle, { ...textShadow, name: 'textShadow' }])
+      const bgColor = config.find(item => item.name === 'bgColor').value
+      const bgImg = config.find(item => item.name === 'bgImg').value
       setSelectedTabStyle({
         ...selectedTabStyle,
         ...style,
+        background: bgImg ? `url(${ bgImg }) no-repeat center/cover` : bgColor
       })
     } else {
       let fontFamily = config.find(item => item.name === 'fontFamily')
@@ -286,10 +289,7 @@ const ScrollSelect = (props) => {
       const { newArr, activeIndex } = filterActiveOptions(data, _allOptions, _optionsLength, _fields)
       setOptions(newArr)
       setActiveKey(activeIndex)
-      props.onChange && props.onChange({
-        [_fields[0]]: data[_fields[0]],
-        [_fields[1]]: data[_fields[1]],
-      })
+      props.onChange && props.onChange(data)
     }
   }
 

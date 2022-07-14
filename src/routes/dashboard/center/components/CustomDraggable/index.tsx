@@ -383,6 +383,7 @@ const CustomDraggable
           },
         })
       }
+      console.log('点击点击')
       dispatch({
         type: 'bar/updateComponent',
         payload: bar.selectedComponents,
@@ -560,6 +561,7 @@ const CustomDraggable
               // component.config = textConfig.config
               // component.staticData = textConfig.staticData
 
+
               if (component) {
                 staticData = component.staticData
                 style_config = component.config
@@ -641,85 +643,91 @@ const CustomDraggable
                           : ''
                         }
                       </div> : <>
-                      {/* , pointerEvents: 'none' */}
-                        <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                        <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
-                            // <WordText
+                            // <IconText
                             //   componentConfig={component}
                             // ></IconText>
 
                             // <Da componentConfig={component}/>
-                            
-                            // layer.moduleName === 'select2' ?
-                            //   <SelectV2
-                            //     scale={bar.canvasScaleValue}
-                            //     componentConfig={ component }
-                            //     fields={ getFields(component) }
-                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //   >
-                            //   </SelectV2> :
-                            // layer.moduleName === 'bar' ?
-                            //   <Bar
-                            //     scale={bar.canvasScaleValue}
-                            //     componentConfig={ component }
-                            //     fields={ getFields(component) }
-                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //   >
-                            //   </Bar> :
-
-                            // layer.moduleName === 'scrollTable' ?
-                            //   <ScrollTable
-                            //     scale={bar.canvasScaleValue}
-                            //     componentConfig={ component }
-                            //     fields={ getFields(component) }
-                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //   >
-                            //   </ScrollTable> :
-                            //   layer.moduleName === 'tab' ?
-                            //     <Tab
-                            //       componentConfig={ component }
-                            //       fields={ getFields(component) }
-                            //       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //     >
-                            //     </Tab> :
-                            //     layer.moduleName === 'timeSelect' ?
-                            //     <TimeSelect
-                            //       componentConfig={ component }
-                            //       fields={ getFields(component) }
-                            //       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //     >
-                            //     </TimeSelect> :
-                            //     layer.moduleName === 'worldMap' ?
+                            // <SwiperText  componentConfig={component}></SwiperText>
+                            layer.moduleName === 'select2' ?
+                              <SelectV2
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </SelectV2> :
+                            layer.moduleName === 'bar' ?
+                              <Bar
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </Bar> :
+                            layer.moduleName === 'scrollTable' ?
+                              <ScrollTable
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </ScrollTable> :
+                              layer.moduleName === 'tab' ?
+                                <Tab
+                                  componentConfig={ component }
+                                  fields={ getFields(component) }
+                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                >
+                                </Tab> :
+                                layer.moduleName === 'scrollSelect' ?
+                                  <ScrollSelect
+                                    componentConfig={ component }
+                                    fields={ getFields(component) }
+                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                  >
+                                  </ScrollSelect> :
+                                layer.moduleName === 'timeSelect' ?
+                                <TimeSelect
+                                  componentConfig={ component }
+                                  fields={ getFields(component) }
+                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                >
+                                </TimeSelect> :
+                                layer.moduleName === 'worldMap' ?
                                   <WorldMap
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                   ></WorldMap>
-                                  // :
-                                  // <ErrorCatch
-                                  //   app={component.name}
-                                  //   user=""
-                                  //   token=""
-                                  //   max={1}
-                                  //   errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
-                                  //   onCatch={(errors) => {
-                                  //     console.log('组件报错信息：', errors);
-                                  //   }}
-                                  // >
-                                  //   <RemoteBaseComponent
-                                  //     componentConfig={ component }
-                                  //     fields={ getFields(component) }
-                                  //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                  //   ></RemoteBaseComponent>
-                                  // </ErrorCatch>
+                                  :
+                                  <ErrorCatch
+                                    app={component.name}
+                                    user=""
+                                    token=""
+                                    max={1}
+                                    errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
+                                    onCatch={(errors) => {
+                                      console.log('组件报错信息：', errors, '组件id', layer.id);
+                                    }}
+                                  >
+                                    <RemoteBaseComponent
+                                      key={layer.id}
+                                      componentConfig={ component }
+                                      fields={ getFields(component) }
+                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
+                                    ></RemoteBaseComponent>
+                                  </ErrorCatch>
                           }
-                        </div> 
+                        </div>
                       </>
                   }
-                  {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span
