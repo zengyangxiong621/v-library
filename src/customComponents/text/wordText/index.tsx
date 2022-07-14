@@ -19,8 +19,8 @@ class IconText extends Component<Props, State> {
     const componentConfig = this.props.componentConfig || componentDefaultConfig
     const {config, staticData} = componentConfig
     // 组件静态或者传入组件的数据
-    // let originData = comData || staticData.data
-    let originData = staticData.data
+    let originData = comData || staticData.data
+    // let originData = staticData.data
     originData = Array.isArray(originData) ? originData : []
     let style: CSSProperties = config.filter((item: any) => [''].indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
       if(Array.isArray(cur.value)) {
