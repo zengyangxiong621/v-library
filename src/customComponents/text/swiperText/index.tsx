@@ -59,12 +59,14 @@ class SwipterText extends Component<Props, State> {
     slideData = Array.isArray(slideData) ? slideData : []
     let loopConfig = configData.autoplay && slideData.length > 1 ? {
         disableOnInteraction: false,
+        // pauseOnMouseEnter:true, // 版本7才能实现
         delay: configData.delay
     } : false
-    var swiper = new Swiper(`.swiper-container${swiperId}`, {
+    var swiper:any = new Swiper(`.swiper-container${swiperId}`, {
         slidesPerView: configData.slidesNum,
         spaceBetween: configData.lineSpace,
         direction: "vertical",
+        
         loopedSlides: slideData.length + 2,
         observer: true,//修改swiper自己或子元素时，自动初始化swiper 
         observeParents: true,//修改swiper的父元素时，自动初始化swiper 
@@ -75,6 +77,9 @@ class SwipterText extends Component<Props, State> {
         autoplay: loopConfig,
         centeredSlides: true
     });
+    swiper.el.onmouseover = function(){
+      swiper.autoplay.stop();
+    }
     this.setState({
       swiperDom:swiper
     })
@@ -123,18 +128,32 @@ class SwipterText extends Component<Props, State> {
       swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
       swiperDom.params.slidesPerView = style.slidesNum
       swiperDom.params.spaceBetween = style.lineSpace // 更新文本间距
+      if(style.autoplay){
+        swiperDom.el.onmouseout = function(){
+          swiperDom.autoplay.start();
+        }
+      }
       swiperDom.update();
     }
 
+    const handleClickName = (item:any) => {
+      if(style.showLink){
+        style.openNew ?  window.open(item.url) : window.location.href= item.url
+      }
+    }
     
     return (
-      <div className={`swipwe-box swiper-no-swiping ${style.hideDefault && 'hide'}`} style={{
+      <div 
+      className={`swipwe-box swiper-no-swiping ${style.hideDefault && 'hide'}`} 
+      style={{
           width: style.width,
           height: style.height
-      }}>
+      }}
+      >
         {
             !style.hideDefault && (
-              <div className={`swiper-container swiper-container${swiperId}`}>
+              <div 
+                className={`swiper-container swiper-container${swiperId}`}>
                   <div className="swiper-wrapper">
                   {
                     finalData.map((item:any,index:any) => {
@@ -145,7 +164,7 @@ class SwipterText extends Component<Props, State> {
                               fontStyle: style.italic ? 'italic' : '',
                               filter: style.show ? `drop-shadow(${style.shadow.color} ${style.shadow.vShadow}px ${style.shadow.hShadow}px ${style.shadow.blur}px)` : ''
                           }}  key={index}>
-                              {item[fields[0]]}
+                             <span onClickCapture={() => handleClickName(item)}>{item[fields[0]]}</span>
                           </div>
                       )
                     })
