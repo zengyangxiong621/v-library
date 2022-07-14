@@ -6,5 +6,5 @@
 	"subType":"", // 组件所属子类型(类型:全部;柱型图;折线图;饼图;散点图;其他)
 	"photoPath":"\\assets\\images", // 组件主题图片地址
 	"configUrl":"\\config.js", // 组件配置文件路径
-	"author":"chendibo@gridsum.com" // 组件作者
+	"author":"zengyangxiong@gridsum.com" // 组件作者
 }
