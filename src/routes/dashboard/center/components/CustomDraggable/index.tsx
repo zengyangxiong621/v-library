@@ -383,7 +383,6 @@ const CustomDraggable
           },
         })
       }
-      console.log('点击点击')
       dispatch({
         type: 'bar/updateComponent',
         payload: bar.selectedComponents,
@@ -561,7 +560,6 @@ const CustomDraggable
               // component.config = textConfig.config
               // component.staticData = textConfig.staticData
 
-
               if (component) {
                 staticData = component.staticData
                 style_config = component.config
@@ -643,12 +641,13 @@ const CustomDraggable
                           : ''
                         }
                       </div> : <>
-                        <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+                      {/* , pointerEvents: 'none' */}
+                        <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
-                            // <IconText
+                            // <WordText
                             //   componentConfig={component}
                             // ></IconText>
 
@@ -720,7 +719,7 @@ const CustomDraggable
                         </div> 
                       </>
                   }
-                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
+                  {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span

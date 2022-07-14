@@ -20,8 +20,9 @@ class IconText extends Component<Props, State> {
     const {config, staticData} = componentConfig
     // 组件静态或者传入组件的数据
     let originData = comData || staticData.data
+    // let originData = staticData.data
     originData = Array.isArray(originData) ? originData : []
-    let style: CSSProperties = config.filter((item: any) => ['iconSize'].indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
+    let style: CSSProperties = config.filter((item: any) => [''].indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
       if(Array.isArray(cur.value)) {
         const obj = cur.value.reduce((p: any, c: any) => {
           p[c.name] = c.value
@@ -44,9 +45,6 @@ class IconText extends Component<Props, State> {
       })
     }
 
-    const backgroundImg = findItem('backgroundImg')
-    const iconImg = findItem('iconImg')
-    const iconSize = findItem('iconSize')
 
     let textStyle = JSON.parse(JSON.stringify(style))
     textStyle.underline = false  // 标准组件中无须下划线样式，故直接写死false
@@ -94,41 +92,19 @@ class IconText extends Component<Props, State> {
     let textStyleObj:any = {
       ...style,
       ...textVertical,
-      background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat 0/cover` : '',
       fontWeight: textStyle.bold ? 'bold' : '',
       fontStyle: textStyle.italic ? 'italic' : '',
       lineHeight: 'normal'
     }
-    if(!textStyle.underline || textStyle.textAlign === 'bothEnds'){
-      textStyleObj = {...textStyleObj,  ...textAlign}
-    }
+    textStyleObj = {...textStyleObj,  ...textAlign}
     let textNameObj:any = {
       lineHeight: `${style.lineHeight}px`
     }
-    if(textStyle.underline){
-      switch(textStyle.textAlign){
-        case 'left':
-          textNameObj.justifyContent = 'flex-start'
-          break;
-        case 'center':
-          textNameObj.justifyContent = 'center'
-          break;
-        case 'right':
-          textNameObj.justifyContent = 'flex-end'
-          break;
-      }
-    }
+
     return (
       <div style={ textStyleObj } className={`text ${textStyle.hideDefault && 'hide'}`}>
         { !textStyle.hideDefault && originData.map((item:any, i:any) => (
-          <div className={`text-name ${textStyle.underline &&'showText'}`} style={textNameObj}>
-            {
-              iconImg.value &&
-              <img className="icon-img" style={{
-                width: iconSize.value[0].value,
-                height: iconSize.value[1].value
-              }} src={`${iconImg.value}`}></img> 
-            }
+          <div className={`text-name`} style={textNameObj}>
             <span key={item.text}  style={ {
               filter: textStyle.show ? `drop-shadow(${textStyle.shadow.color} ${textStyle.shadow.vShadow}px ${textStyle.shadow.hShadow}px ${textStyle.shadow.blur}px)` : ''
             }}  dangerouslySetInnerHTML={{ __html: item[fields[0]] }}></span>
