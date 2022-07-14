@@ -269,7 +269,6 @@ const AddOrEdit=(props:any)=>{
           label="描述"
           name="description"
           style={{ marginTop: '20px' }}
-          rules={[{ required: true, message: '请输入描述!' }]}
         >
           <TextArea placeholder='请输入描述' />
         </Form.Item>

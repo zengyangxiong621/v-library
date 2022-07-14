@@ -52,16 +52,16 @@ const columns=(handleEdit:any,handleDetail:any,handledelete:any,toAccountList:an
       key: 'name',
     },{
       title: '描述',
-      dataIndex: 'remark',
-      key: 'remark',
+      dataIndex: 'description',
+      key: 'description',
     },{
       title: '更新时间',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
+      dataIndex: 'updatedTime',
+      key: 'updatedTime',
     },{
       title: '操作人',
-      dataIndex: 'updatedBy',
-      key: 'updatedBy',
+      dataIndex: 'updatedUserAccount',
+      key: 'updatedUserAccount',
     },{
       title: '操作',
       key: 'action',
@@ -183,9 +183,9 @@ const RoleManage = (prop: any) => {
   // 点击编辑获取表单数据
   const getDetailFormData=async (id:string,type:string)=>{
     const headers={
-      body:JSON.stringify({id})
+      method:'GET',
     }
-    const [,data]=await useFetch('/visual/role/detail',headers)
+    const [,data]=await useFetch(`/visual/role/detail/${id}`,headers)
     if(data){
       type==='edit' && setEditFormData(data)
       type==='detail' && setDetailFormData(data)
@@ -204,7 +204,7 @@ const RoleManage = (prop: any) => {
       cancelText: '取消',
       async onOk() {
         const [,data]=await useFetch('/visual/role/remove',{
-          body:JSON.stringify({id:selectedRowKeys})
+          body:JSON.stringify(selectedRowKeys)
         })
         if(data){
           message.success('删除成功')
@@ -223,8 +223,9 @@ const RoleManage = (prop: any) => {
         cancelText: '取消',
         async onOk() {
           const {id}=rowData
+          const parmas=[id]
           const [,data]=await useFetch('/visual/role/remove',{
-            body:JSON.stringify({id})
+            body:JSON.stringify(parmas)
           })
           if(data){
             message.success('删除成功')

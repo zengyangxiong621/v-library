@@ -36,8 +36,8 @@ const paginationProps=(totalElements:number,pageInfo:params,setPageInfo:Function
 const tableColumns=(handleDel:any):ColumnsType<any>=>{
   return [{
     title: '账号',
-    dataIndex: 'userName',
-    key: 'userName',
+    dataIndex: 'username',
+    key: 'username',
     className: 'customHeaderColor',
     ellipsis: true,
     render: (text: any) => <span>{text}</span>,
@@ -61,7 +61,7 @@ const tableColumns=(handleDel:any):ColumnsType<any>=>{
     width: 100,
     dataIndex: 'status',
     render: (status: any, data: any) => {
-      const itemData = STATUSLIST.filter((item:any) => item.value === status)
+      const itemData = STATUSLIST.filter((item:any) => item.value === status.toString())
       return itemData ? itemData[0].label : ''
     }
   },
@@ -155,7 +155,7 @@ export default function AccountList(props:any) {
       ...params
     }
     setTableLoading(true)
-    const [,data] = await useFetch('/visual/user/list',{
+    const [,data] = await useFetch(`/visual/role/viewUsers`,{
       body: JSON.stringify(getParams)
     }).finally(() => {
       setTableLoading(false)
@@ -174,9 +174,9 @@ export default function AccountList(props:any) {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        const {id}=rowData
-        const [,data]=await useFetch('/visual/user/remove',{
-          body:JSON.stringify({id})
+        const {roleUserId}=rowData
+        const [,data]=await useFetch('/visual/role/removeRoleUsers',{
+          body:JSON.stringify([roleUserId])
         })
         if(data){
           message.success('删除成功')
