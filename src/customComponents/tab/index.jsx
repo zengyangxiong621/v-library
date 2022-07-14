@@ -6,18 +6,20 @@ import { styleTransformFunc, deepClone } from '../../utils'
 const textAlignEnum = {
   left: 'flex-start',
   center: 'center',
-  right: 'flex-end'
+  right: 'flex-end',
 }
 
 const Tab = (props) => {
-  const [activeKey, setActiveKey] = useState('')
+  const [activeKey, setActiveKey] = useState(0)
+  const [defaultActiveKey, setDefaultActiveKey] = useState(0)
   // 全局的 tab Style
   const [allGlobalTabStyle, setAllGlobalTabStyle] = useState({
     flex: 1,
     display: 'flex',
     alignItems: 'center',
     color: 'white',
-    justifyContent: 'left'
+    justifyContent: 'left',
+    transition: 'all 0.3s',
     // border: '4px solid #373f4e'
   })
   // 全局的 tab 容器 style
@@ -32,16 +34,16 @@ const Tab = (props) => {
   const [dataSeriesStyleList, setDataSeriesStyleList] = useState({})
   const [tabList, setTabList] = useState([])
   // 行数
-  const [rowNums, setRowNums ] = useState(1)
-  const [colNums, setColNums]  = useState(4)
+  const [rowNums, setRowNums] = useState(1)
+  const [colNums, setColNums] = useState(4)
 
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
   // 最新字段
-  const finalFields = props.fields || ['s', 'content']
+  const _fields = props.fields || []
   // 组件静态或者传入组件的数据
-  const _data = props.comData || data
+  const _data = props.comData || [{}]
   // 全局
   const allGlobalConfig = config.find(item => item.name === 'allGlobal').value
   // 未选中 tab 样式
@@ -67,37 +69,39 @@ const Tab = (props) => {
   const allGlobalLoadFunc = () => {
     const textAlign = allGlobalConfig.find(item => item.name === 'align').value.find(item => item.name === 'textAlign').value
     const gridLayoutConfig = allGlobalConfig.find(item => item.name === 'gridLayout').value
-    const layoutConfig = gridLayoutConfig.find(item => item.name === "layout").value
+    const defaultSelectedKey = allGlobalConfig.find(item => item.name === 'defaultSelectedKey').value
+    setDefaultActiveKey(Number(defaultSelectedKey))
+    const layoutConfig = gridLayoutConfig.find(item => item.name === 'layout').value
     // 行数
-    const rowNums = layoutConfig.find(item => item.name === "rowNums").value
+    const rowNums = layoutConfig.find(item => item.name === 'rowNums').value
     // 列数
-    const colNums = layoutConfig.find(item => item.name === "colNums").value
+    const colNums = layoutConfig.find(item => item.name === 'colNums').value
     setRowNums(rowNums)
     setColNums(colNums)
-    const spacingConfig = gridLayoutConfig.find(item => item.name === "spacing").value
+    const spacingConfig = gridLayoutConfig.find(item => item.name === 'spacing').value
     // 行距
-    const rowSpacing = spacingConfig.find(item => item.name === "rowSpacing").value
+    const rowSpacing = spacingConfig.find(item => item.name === 'rowSpacing').value
     // 列距
-    const colSpacing = spacingConfig.find(item => item.name === "colSpacing").value
+    const colSpacing = spacingConfig.find(item => item.name === 'colSpacing').value
     setAllGlobalTabStyle({
       ...allGlobalTabStyle,
       justifyContent: textAlignEnum[textAlign],
     })
     setAllGlobalContainerStyle({
       ...allGlobalContainerStyle,
-      gridTemplate: `repeat(${rowNums}, 1fr) / ${new Array(colNums).fill('1fr').join(' ')}`,
-      gap: `${rowSpacing}px ${colSpacing}px`
+      gridTemplate: `repeat(${ rowNums }, 1fr) / ${ new Array(colNums).fill('1fr').join(' ') }`,
+      gap: `${ rowSpacing }px ${ colSpacing }px`,
     })
   }
 
   // 驼峰转中划线
   const toLine = (name) => {
-    return name.replace(/([A-Z])/g,"-$1").toLowerCase();
+    return name.replace(/([A-Z])/g, '-$1').toLowerCase()
   }
 
   // 首字母大写
-  function titleCase(str) {
-    return str.slice(0,1).toUpperCase() + str.slice(1)
+  function titleCase (str) {
+    return str.slice(0, 1).toUpperCase() + str.slice(1)
   }
 
 
@@ -107,18 +111,18 @@ const Tab = (props) => {
     const bgImg = config.find(item => item.name === 'bgImg').value
     const borderConfig = config.find(item => item.name === 'border')
     const borderRadiusStyle = borderConfig.range.reduce((pre, cur, index) => {
-      pre[`border${titleCase(cur)}Radius`] = `${borderConfig.value.radius[index]}px`
+      pre[`border${ titleCase(cur) }Radius`] = `${ borderConfig.value.radius[index] }px`
       return pre
     }, {})
-    const borderStyle = {border:  `${borderConfig.value.width}px ${borderConfig.value.type} ${borderConfig.value.color}` }
+    const borderStyle = { border: `${ borderConfig.value.width }px ${ borderConfig.value.type } ${ borderConfig.value.color }` }
     textStyle = styleTransformFunc(textStyle)
     const finalStyle = {
       ...selectedTabStyle,
       ...textStyle,
       ...borderRadiusStyle,
       ...borderStyle,
-      backgroundColor: bgColor ?  bgColor : 'unset',
-      backgroundImage: bgImg ? `url(${bgImg})` : 'unset',
+      backgroundColor: bgColor ? bgColor : 'unset',
+      backgroundImage: bgImg ? `url(${ bgImg })` : 'unset',
       backgroundSize: 'cover',
       backgroundPosition: 'center center',
     }
@@ -131,87 +135,87 @@ const Tab = (props) => {
 
 
   const styleFuncObj = {
-    totalOffset(value) {
+    totalOffset (value) {
       return {
-        transform: `translate(${value.find(item => item.name === 'offsetX').value}px, ${value.find(item => item.name === 'offsetY').value}px)`
+        transform: `translate(${ value.find(item => item.name === 'offsetX').value }px, ${ value.find(item => item.name === 'offsetY').value }px)`,
       }
     },
-    textOffset(value) {
+    textOffset (value) {
       return {
-        transform: `translate(${value.find(item => item.name === 'offsetX').value}px, ${value.find(item => item.name === 'offsetY').value}px)`
+        transform: `translate(${ value.find(item => item.name === 'offsetX').value }px, ${ value.find(item => item.name === 'offsetY').value }px)`,
       }
     },
-    widthProportion(value) {
+    widthProportion (value) {
       return {}
     },
-    bgColor(value) {
+    bgColor (value) {
       return {
-        backgroundColor: value
+        backgroundColor: value,
       }
     },
-    bgImg(value) {
+    bgImg (value) {
       return {
-        backgroundImage: `url(${value})`
+        backgroundImage: `url(${ value })`,
       }
     },
-    selectedBgColor(value) {
+    selectedBgColor (value) {
       return {
-        backgroundColor: value
+        backgroundColor: value,
       }
     },
-    selectedBgImg(value) {
+    selectedBgImg (value) {
       return {
-        backgroundImage: `url(${value})`
+        backgroundImage: `url(${ value })`,
       }
-    }
+    },
   }
 
   const dataSeriesConfigLoadFunc = () => {
     if (tabList.length === 0) return
     let temp = true
-    // widthProportionList: {[与filed值对应的tabList集合的[finalFields[0]]的下标值]: 宽度占比值}
+    // widthProportionList: {[与filed值对应的tabList集合的[_fields[0]]的下标值]: 宽度占比值}
     const widthProportionList = dataSeriesConfig.reduce((pre, series) => {
       const config = series.value
       const filed = config.find(item => item.name === 'filed').value
-      const index = tabList.findIndex(item => item[finalFields[0]] === filed)
+      const index = tabList.findIndex(item => item[_fields[0]] === filed)
       if (index === -1) {
         return pre
       }
-      pre[index] = config.find(item => item.name === "widthProportion").value
+      pre[index] = config.find(item => item.name === 'widthProportion').value
       return pre
     }, {})
     const tabColumnProportionList = new Array(colNums).fill(1)
-    for(let key in widthProportionList) {
+    for (let key in widthProportionList) {
       tabColumnProportionList[key] = widthProportionList[key]
     }
     setTabsProportionStyle({
-      gridTemplate: `repeat(${rowNums}, 1fr) / ${tabColumnProportionList.map(item => item + 'fr').join(' ')}`,
+      gridTemplate: `repeat(${ rowNums }, 1fr) / ${ tabColumnProportionList.map(item => item + 'fr').join(' ') }`,
     })
     const styleList = dataSeriesConfig.reduce((totalObj, series, index) => {
       const config = series.value
       const filed = config.find(item => item.name === 'filed').value
       // 数据系列中的未选中
-      const unselectedStyleConfig = config.filter(item => ['totalOffset', "textOffset", "widthProportion", "bgColor", "bgImg"].includes(item.name)).reduce((pre, cur) => {
+      const unselectedStyleConfig = config.filter(item => ['totalOffset', 'textOffset', 'widthProportion', 'bgColor', 'bgImg'].includes(item.name)).reduce((pre, cur) => {
         const style = styleFuncObj[cur.name](cur.value) || {}
         if (cur.name === 'textOffset') {
           pre.text = {
             ...(pre.text || {}),
-            ...style
+            ...style,
           }
         } else {
           pre.container = {
             ...(pre.container || {}),
-            ...style
+            ...style,
           }
         }
         return pre
       }, {})
       // 数据系列中的选中
-      const selectedStyleConfig = config.filter(item => ["selectedBgColor", "selectedBgImg"].includes(item.name)).reduce((pre, cur) => {
+      const selectedStyleConfig = config.filter(item => ['selectedBgColor', 'selectedBgImg'].includes(item.name)).reduce((pre, cur) => {
         const style = styleFuncObj[cur.name](cur.value) || {}
         pre.selected = {
           ...pre.selected,
-          ...style
+          ...style,
         }
         return pre
       }, {})
@@ -219,7 +223,7 @@ const Tab = (props) => {
       // selectedStyleConfig: {selected: {}}
       totalObj[filed] = {
         ...unselectedStyleConfig,
-        ...selectedStyleConfig
+        ...selectedStyleConfig,
       }
       return totalObj
     }, {})
@@ -228,24 +232,39 @@ const Tab = (props) => {
   }
 
 
+  /*
+
+     [
+        {
+            name: "选项一",
+            value: "1",
+        }
+     ]
+
+     */
+
   useEffect(() => {
     // 根据传入的fields来映射对应的值
+
     const fields2ValueMap = {}
-    const initColumnsName = finalFields
-    finalFields.forEach((item, index) => {
-      fields2ValueMap[initColumnsName[index]] = item
-    })
-    // 根据对应的字段来转换data数据
-    const finalData = Array.isArray(_data) ? _data.map((item) => {
-      let res = {}
-      for (let k in item) {
-        res[k] = item[fields2ValueMap[k]]
+    const initFields = ['s', 'content'] // _fields 里第一个对应的是 s，第二个对应的是 content
+    fields2ValueMap[initFields[0]] = _fields[0]
+    fields2ValueMap[initFields[1]] = _fields[1]
+    const tabList = _data.map(item => {
+      return {
+        ...item,
+        [initFields[0]]: item[fields2ValueMap[initFields[0]]],
+        [initFields[1]]: item[fields2ValueMap[initFields[1]]],
       }
-      return res
-    }) : []
-    setTabList(finalData)
-    handleTabChange(finalData[0])
-  }, [])
+    })
+    setTabList(tabList)
+  }, [_fields, _data])
+
+  useEffect(() => {
+    if (defaultActiveKey > 0) {
+      handleChange(tabList[defaultActiveKey - 1], defaultActiveKey)
+    }
+  }, [defaultActiveKey])
 
   useEffect(() => {
     allGlobalLoadFunc()
@@ -263,14 +282,19 @@ const Tab = (props) => {
     dataSeriesConfigLoadFunc()
   }, [dataSeriesConfig, tabList, rowNums, colNums])
 
-  const handleTabChange = (data) => {
-    if (data[finalFields[0]] !== activeKey) {
-      setActiveKey(data[finalFields[0]])
-      props.onChange && props.onChange({
-        [finalFields[0]]: data[finalFields[0]],
-        [finalFields[1]]: data[finalFields[1]],
-      })
-    }
+  const handleChange = (data, index) => {
+    setActiveKey(index)
+    props.onChange && props.onChange(data)
+  }
+
+  const handleClick = (e) => {
+    props.onClick && props.onClick(e, tabList[activeKey])
+  }
+  const handleMouseEnter = (e) => {
+    props.onMouseEnter && props.onMouseEnter(e, tabList[activeKey])
+  }
+  const handleMouseLeave = (e) => {
+    props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey])
   }
 
   return (
@@ -282,8 +306,11 @@ const Tab = (props) => {
         background: 'unset',
         display: 'grid',
         ...allGlobalContainerStyle,
-        ...tabsProportionStyle
+        ...tabsProportionStyle,
       } }
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {
         tabList.map((item, index) => {
@@ -291,17 +318,17 @@ const Tab = (props) => {
             <div
               style={ {
                 ...allGlobalTabStyle,
-                ...(activeKey === item[finalFields[0]]
-                  ? { ...selectedTabStyle, ...(dataSeriesStyleList[item[finalFields[0]]]?.container || {}),...(dataSeriesStyleList[item[finalFields[0]]]?.selected || {})}
-                  : { ...unselectedTabStyle, ...(dataSeriesStyleList[item[finalFields[0]]]?.container || {}) } ),
-                cursor: 'pointer'
+                ...(activeKey === (index + 1)
+                  ? { ...selectedTabStyle, ...(dataSeriesStyleList[item[_fields[0]]]?.container || {}), ...(dataSeriesStyleList[item[_fields[0]]]?.selected || {}) }
+                  : { ...unselectedTabStyle, ...(dataSeriesStyleList[item[_fields[0]]]?.container || {}) }),
+                cursor: 'pointer',
               } }
               className="tab-item"
-              onClick={ () => handleTabChange(item) }
-              key={ item[finalFields[0]] }
+              onClick={ () => handleChange(item, index + 1) }
+              key={ index }
             >
-              <div style={{...(dataSeriesStyleList[item[finalFields[0]]]?.text || {})}}>
-                { item[finalFields[1]] }
+              <div style={ { ...(dataSeriesStyleList[item[_fields[0]]]?.text || {}) } }>
+                { item[_fields[1]] }
               </div>
             </div>
           )

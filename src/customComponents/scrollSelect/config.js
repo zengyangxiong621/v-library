@@ -221,7 +221,7 @@ const componentDefaultConfig = {
                       "name": "min",
                       "displayName": "最小值",
                       "type": "number",
-                      "value": 0,
+                      "value": 10,
                       "config": {
                         "min": 0,
                         "max": 100,
@@ -235,7 +235,7 @@ const componentDefaultConfig = {
                       "type": "number",
                       "value": 0,
                       "config":{
-                        "min": 0,
+                        "min": 20,
                         "max": 1000,
                         "step": 1,
                         "suffix": "px"
@@ -279,7 +279,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontSize",
                       "displayName": "",
-                      "value": 14
+                      "value": 28
                     },
                     {
                       "name": "color",

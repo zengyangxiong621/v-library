@@ -66,6 +66,10 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       name: '鼠标移出',
       value: 'mouseLeave'
     },
+    {
+      name: '状态变化',
+      value: 'statusChange'
+    },
   ]
 
   const actionTypes = [
