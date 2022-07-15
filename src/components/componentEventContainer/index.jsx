@@ -5,6 +5,8 @@ import TimeSelect from '@/customComponents/timeSelect'
 import ScrollTable from '@/customComponents/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
 import {connect} from "dva"
@@ -386,6 +388,20 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'zebraColumn' ?
+        <ZebraColumn
+          onChange={handleValueChange}
+          {...props}
+        >
+        </ZebraColumn>
+        :
+        props.componentConfig.moduleName === 'basicBar' ?
+        <BasicBar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </BasicBar>
+        :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
           onChange={handleValueChange}

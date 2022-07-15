@@ -11,7 +11,7 @@ import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
-import BasicBar from '@/customComponents/echarts/components/bar/index'
+import Bar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
 import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import IconText from '@/customComponents/text/iconText'
@@ -48,8 +48,9 @@ import {
 } from '../../../../../constant/home'
 import ScrollTable from "@/customComponents/scrollTable/index";
 import TimeSelect from "@/customComponents/timeSelect/index";
-import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
@@ -654,6 +655,22 @@ const CustomDraggable
 
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
+                            layer.moduleName === 'zebraColumn' ?
+                              <ZebraColumn
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </ZebraColumn> :
+                            layer.moduleName === 'basicBar' ?
+                              <BasicBar
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </BasicBar> :
                             layer.moduleName === 'select2' ?
                               <SelectV2
                                 scale={bar.canvasScaleValue}
