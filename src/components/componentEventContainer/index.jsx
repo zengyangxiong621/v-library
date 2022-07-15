@@ -5,6 +5,7 @@ import TimeSelect from '@/customComponents/timeSelect'
 import ScrollTable from '@/customComponents/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
+import CusImage from '@/customComponents/assist/image/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import Tab from '@/customComponents/tab'
@@ -388,6 +389,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'image2' ?
+        <CusImage
+          onChange={handleValueChange}
+          {...props}
+        >
+        </CusImage>
+        :
         props.componentConfig.moduleName === 'zebraColumn' ?
         <ZebraColumn
           onChange={handleValueChange}

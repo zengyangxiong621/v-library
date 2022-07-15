@@ -51,6 +51,7 @@ import TimeSelect from "@/customComponents/timeSelect/index";
 import SelectV2 from '@/customComponents/assist/select/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import CusImage from '@/customComponents/assist/image/index'
 
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
@@ -671,6 +672,14 @@ const CustomDraggable
                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                               >
                               </BasicBar> :
+                            layer.moduleName === 'image2' ?
+                              <CusImage
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </CusImage> :
                             layer.moduleName === 'select2' ?
                               <SelectV2
                                 scale={bar.canvasScaleValue}
