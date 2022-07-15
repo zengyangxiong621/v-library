@@ -42,7 +42,8 @@
 .component-select-dropdown {
   max-height: var(--optionsHeight);
   overflow-y: auto;
-  margin-top: var(--optionsMarginTop);
+  transform-origin: left top;
+  transform: var(--scaleSetting);
 }
 
 .component-select-dropdown .ant-select-item {
