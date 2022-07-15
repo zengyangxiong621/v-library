@@ -95,7 +95,7 @@ const AlignSetting = props => {
           _verticalRange.length > 0 ?
             <div className="vertical">
               {
-                _verticalRange.map(item => (<span title={_verticalList[item].title} className={vertical === item ? 'align-active' : null} onClick={() => verticalChange(item)}>
+                _verticalRange.map(item => (<span key={item} title={_verticalList[item].title} className={vertical === item ? 'align-active' : null} onClick={() => verticalChange(item)}>
               <i className={["iconfont", _verticalList[item].icon].join(" ")} />
             </span>))
               }

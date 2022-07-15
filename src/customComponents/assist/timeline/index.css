@@ -1,0 +1,32 @@
+.timeLineContainer{
+  display: flex;
+  flex-direction: column;
+  padding: 15px !important;
+  /* overflow: hidden; */
+}
+.timeLineContainer .ant-timeline-item{
+  flex: 1;
+}
+.timeLineBox{
+  margin-top: 10px;
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 200px;
+  height: auto;
+  padding: 10px 20px 20px 20px;
+}
+.timeLineBox .timeLineTitle{
+  margin: 10px 0;
+}
+.timeLineBox .timeLineTitle::before{
+  display: inline-block;
+  content:'|';
+  width:10px;
+  /* height: 30px; */
+  margin-right: 8px;
+  color: inherit;
+  background-color: inherit;
+}
+.timeLineBox .timeLineContent{
+  text-shadow: none;
+}

@@ -22,6 +22,9 @@ import textConfig from '@/customComponents/text/swiperText/config'
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
+import Timeline from '@/customComponents/assist/timeline'
+import timelineConfig from '@/customComponents/assist/timeline/config'
+
 import {
   STYLE,
   DIMENSION,
@@ -556,12 +559,9 @@ const CustomDraggable
               }
             } else {
               // 组件
-              component = components.find(item => item.id === layer.id)
+              // component = components.find(item => item.id === layer.id)
 
-              // 将线上配置改为本地配置
-              // component.config = textConfig.config
-              // component.staticData = textConfig.staticData
-
+              component=timelineConfig
 
               if (component) {
                 staticData = component.staticData
@@ -733,12 +733,16 @@ const CustomDraggable
                                       console.log('组件报错信息：', errors, '组件id', layer.id);
                                     }}
                                   >
-                                    <RemoteBaseComponent
+                                    <Timeline
+                                      componentConfig={ component }
+                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                    ></Timeline>
+                                    {/* <RemoteBaseComponent
                                       key={layer.id}
                                       componentConfig={ component }
                                       fields={ getFields(component) }
                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                    ></RemoteBaseComponent>
+                                    ></RemoteBaseComponent> */}
                                   </ErrorCatch>
                           }
                         </div>
