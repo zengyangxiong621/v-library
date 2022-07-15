@@ -17,34 +17,37 @@ const componentDefaultConfig = {
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
   "dataFrom": 0,
-  "dataContainers": [{// =========
-    "enable": true,
-    "id": 2744,
-    "rank": 0
-  }],
+  "dataContainers": [], // 容器默认为空
   "staticData": {
     //静态数据
     "data": [
       {
         "text": "https:/ /workspace .easyv.cloud/create/851601",
+        "url": 'https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_10029027259472790743%22%7D&n_type=-1&p_from=-1'
       },
       {
-        'text': 'https:/ /workspace.easyv.cloud/create/851601勒索软件'
+        'text': 'https:/ /workspace.easyv.cloud/create/851601勒索软件',
+        "url": 'https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_10029027259472790743%22%7D&n_type=-1&p_from=-1'
       },
       {
-        'text': 'https:/ /workspace.easyv.cloud/create/ 851601挖矿'
+        'text': 'https:/ /workspace.easyv.cloud/create/ 851601挖矿',
+        "url": 'https:/ /workspace .easyv.cloud/create/851601'
       },
       {
-        'text': 'Ahttps:/ /workspace.easyv.cloud create/851601PT/勒索软件'
+        'text': 'Ahttps:/ /workspace.easyv.cloud create/851601PT/勒索软件',
+        "url": 'https:/ /workspace .easyv.cloud/create/851601'
       },
       {
-        'text': 'https://workspace easyv.cloud/ create/851601网页篡改'
+        'text': 'https://workspace easyv.cloud/ create/851601网页篡改',
+        "url": 'https:/ /workspace .easyv.cloud/create/851601'
       },
       {
-        'text': 'https:/ /workspace.easyv.cloud/ create/851601VPN'
+        'text': 'https:/ /workspace.easyv.cloud/ create/851601VPN',
+        "url": 'https:/ /workspace .easyv.cloud/create/851601'
       },
       {
-        'text': ' https://workspace easyv.cloud/create/851601'
+        'text': ' https://workspace easyv.cloud/create/851601',
+        "url": 'https:/ /workspace .easyv.cloud/create/851601'
       }
     ],
     "fields": [
@@ -53,49 +56,20 @@ const componentDefaultConfig = {
         "value": "text",
         "desc": "文本",
         "status": true // 状态
+      },
+      {
+        "name": "url",
+        "value": "url",
+        "desc": "超链接",
+        "status": true // 状态
       }
     ]
   },
 
   "useFilter": false,// =========
-  "filters": [{// =========
-    "enable": true,
-    "id": 362505
-  }],
+  "filters": [],
 
-  "events": [{
-    "trigger": "dataChange", // 事件类型 dataChange、click、mouseEnter、mouseLeave
-    "name": "事件1",
-    "id": "key",
-    "conditions": [
-      {
-        "name": "条件",
-        "type": "field",
-        "field": "a",
-        "compare": "==",
-        "expected": "a",
-        "code": "return data",
-        "id": "key"
-      }
-    ],
-    "conditionType": "all", // 判断类型
-    "actions": [
-      {
-        "id": "uuidv4()",
-        "name": "动作",
-        "action": "show", //动作 show hide
-        "componentScope": "current",  //组件scope global\current
-        "unmount": true, // 隐藏卸载
-        "component": [], // 组件id数组
-        "animation": {
-          "type": "slideLeft", // opacity\slideLeft\slideRight\slideTop\slideBottom
-          "timingFunction": "ease", // linear\ease\ease-in\ease-out\ease-in-out
-          "duration": 1000,
-          "delay": 0
-        }
-      }
-    ]
-  }],
+  "events": [],
   "config": [
     // 样式配置
     {
@@ -206,6 +180,18 @@ const componentDefaultConfig = {
         'suffix':'ms',  // 输入框后缀
     }
   },
+  {
+    'name': 'slidesNum',
+    'displayName': '展示行',
+    'value': 3,
+    'type':'number',
+    "config": {
+        "min": 3,
+        "max": 100,
+        "step": 1,
+        'suffix':'',  // 输入框后缀
+    }
+  },
   //   {
   //     name:"isLoop",
   //     displayName:'无限循环',
@@ -260,8 +246,29 @@ const componentDefaultConfig = {
         }
       }
     ]
+  },
+  {
+    "name": "hyperlinks",
+    "displayName": "链接设置",
+    "type": 'collapse',
+    "hasSwitch": true,
+    "defaultExpand": true,
+    "value": [
+      {
+        "name": "showLink",
+        "displayName": "",
+        "value": false,
+        "type": "switch"
+      },
+      {
+        "name": "openNew",
+        "displayName": "打开新窗口",
+        "type": "checkBox",
+        "value": false
+      }
+    ]
   }
-  ],
+],
   themes: [{
     id: 'theme-default',
     name: '系统默认'

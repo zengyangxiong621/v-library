@@ -159,7 +159,7 @@ const ScrollSelect = (props) => {
   const { config } = componentConfig
   const { data } = componentConfig.staticData
   // 最新字段
-  const finalFields = props.fields || ['s', 'content']
+  const _fields = props.fields || []
   // 组件静态或者传入组件的数据
   const _data = props.comData || data
   // 全局
@@ -216,9 +216,12 @@ const ScrollSelect = (props) => {
       let textStyle = deepClone(config.find(item => item.name === 'textStyle').value)
       let textShadow = config.find(item => item.name === 'shadow')
       let style = styleTransformFunc([...textStyle, { ...textShadow, name: 'textShadow' }])
+      const bgColor = config.find(item => item.name === 'bgColor').value
+      const bgImg = config.find(item => item.name === 'bgImg').value
       setSelectedTabStyle({
         ...selectedTabStyle,
         ...style,
+        background: bgImg ? `url(${ bgImg }) no-repeat center/cover` : bgColor
       })
     } else {
       let fontFamily = config.find(item => item.name === 'fontFamily')
@@ -248,20 +251,20 @@ const ScrollSelect = (props) => {
   useEffect(() => {
     // 根据传入的fields来映射对应的值
     const fields2ValueMap = {}
-    const initColumnsName = finalFields
-    finalFields.forEach((item, index) => {
-      fields2ValueMap[initColumnsName[index]] = item
-    })
-    // 根据对应的字段来转换data数据
-    const finalData = Array.isArray(_data) ? _data.map((item) => {
-      let res = {}
-      for (let k in item) {
-        res[k] = item[fields2ValueMap[k]]
+    const initFields = ['s', 'content'] // _fields 里第一个对应的是 s，第二个对应的是 content
+    fields2ValueMap[initFields[0]] = _fields[0]
+    fields2ValueMap[initFields[1]] = _fields[1]
+    const allOptions = _data.map(item => {
+      return {
+        ...item,
+        [initFields[0]]: item[fields2ValueMap[initFields[0]]],
+        [initFields[1]]: item[fields2ValueMap[initFields[1]]],
       }
-      return res
-    }) : []
-    setAllOptions(finalData)
-  }, [_data])
+    })
+    setAllOptions(allOptions)
+    const { newArr } = filterActiveOptions(data, allOptions, optionsLength, _fields)
+    setOptions(newArr)
+  }, [_fields, _data, optionsLength])
 
   useEffect(() => {
     allGlobalLoadFunc()
@@ -282,14 +285,11 @@ const ScrollSelect = (props) => {
     if (!_optionsLength) {
       _optionsLength = optionsLength
     }
-    if (data[finalFields[0]] !== activeKey) {
-      const { newArr, activeIndex } = filterActiveOptions(data, _allOptions, _optionsLength, finalFields)
+    if (data[_fields[0]] !== activeKey) {
+      const { newArr, activeIndex } = filterActiveOptions(data, _allOptions, _optionsLength, _fields)
       setOptions(newArr)
       setActiveKey(activeIndex)
-      props.onChange && props.onChange({
-        [finalFields[0]]: data[finalFields[0]],
-        [finalFields[1]]: data[finalFields[1]],
-      })
+      props.onChange && props.onChange(data)
     }
   }
 
@@ -306,8 +306,8 @@ const ScrollSelect = (props) => {
     handleChange(data)
   }
 
-  const filterActiveOptions = (data, arr, optionsLength, finalFields) => {
-    const index = arr.findIndex(item => item[finalFields[0]] === data[finalFields[0]])
+  const filterActiveOptions = (data, arr, optionsLength, _fields) => {
+    const index = arr.findIndex(item => item[_fields[0]] === data[_fields[0]])
     let activeIndex = 0, beforeNums = 0, afterNums = 0
     if (optionsLength % 2 === 0) {
       activeIndex = optionsLength / 2
@@ -322,11 +322,6 @@ const ScrollSelect = (props) => {
     let backArr = []
     let beforeIndex = index - beforeNums
     let afterIndex = index + afterNums + 1
-    console.log('----------')
-    console.log('beforeIndex', beforeIndex)
-    console.log('afterIndex', afterIndex)
-    console.log('arr.length', arr.length)
-    console.log('----------')
     if (afterIndex >= arr.length) {
       frontArr = arr.slice(beforeIndex)
       backArr = arr.slice(0, afterIndex - arr.length)
@@ -384,7 +379,7 @@ const ScrollSelect = (props) => {
             } }
             onClick={ () => handleChange(item) }
           >
-            { item[finalFields[1]] }
+            { item[_fields[1]] }
           </div>
         ))
       }
