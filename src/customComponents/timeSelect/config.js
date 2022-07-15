@@ -264,12 +264,6 @@ const ComponentDefaultConfig = {
           ]
         },
         {
-          "displayName": "装饰线",
-          "name": "lineColor",
-          "type": "color",
-          "value": "#fff"
-        },
-        {
           "displayName": "单元格主题色",
           "name": "themeColor",
           "type": "color",
