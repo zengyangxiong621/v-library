@@ -30,6 +30,7 @@ const EveryItem = (props: any) => {
     const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
       return item.moduleName === data.moduleName
     })
+    console.log(data,'ppppp', moduleDefaultConfig,'kdkk',currentDefaultConfig )
     dispatch({
       type: 'bar/createComponent',
       payload: currentDefaultConfig,

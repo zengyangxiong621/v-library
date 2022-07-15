@@ -11,9 +11,16 @@ import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
-import BasicBar from '@/customComponents/echarts/components/bar/index'
+import Bar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
 import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
+import IconText from '@/customComponents/text/iconText'
+// import textConfig from  '@/customComponents/text/iconText/config'
+import SwiperText from '@/customComponents/text/swiperText'
+import textConfig from '@/customComponents/text/swiperText/config'
+
+import ErrorCatch from 'react-error-catch'
+import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 import {
   STYLE,
@@ -39,13 +46,16 @@ import {
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
-import ScrollTable from "@/components/scrollTable";
-import TimeSelect from "@/components/timeSelect";
-import Bar from '@/customComponents/echarts/components/bar/index'
+import ScrollTable from "@/customComponents/scrollTable/index";
+import TimeSelect from "@/customComponents/timeSelect/index";
 import SelectV2 from '@/customComponents/assist/select/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 
-import Tab from "@/components/tab";
+import Tab from "@/customComponents/tab/index";
+import ScrollSelect from "@/customComponents/scrollSelect/index";
 
+// import Tab from "@/components/tab";
 
 enum STYLE_ENUM {
   BOLD = 'fontBold'
@@ -547,6 +557,12 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
+
+              // 将线上配置改为本地配置
+              // component.config = textConfig.config
+              // component.staticData = textConfig.staticData
+
+
               if (component) {
                 staticData = component.staticData
                 style_config = component.config
@@ -600,8 +616,10 @@ const CustomDraggable
                   className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
                   style={{
                     ...config.style,
+                    transition: 'width, height 0.3s',
                     // border: '1px solid gray',
                     visibility: !layer.isShow ? 'hidden' : 'unset',
+                    cursor: 'move'
                   }}>
                   {
                     layer[HIDE_DEFAULT] ?
@@ -626,12 +644,33 @@ const CustomDraggable
                           : ''
                         }
                       </div> : <>
-                        <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                        <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
+                            // <IconText
+                            //   componentConfig={component}
+                            // ></IconText>
+
                             // <Da componentConfig={component}/>
+                            // <SwiperText  componentConfig={component}></SwiperText>
+                            layer.moduleName === 'zebraColumn' ?
+                              <ZebraColumn
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </ZebraColumn> :
+                            layer.moduleName === 'basicBar' ?
+                              <BasicBar
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </BasicBar> :
                             layer.moduleName === 'select2' ?
                               <SelectV2
                                 scale={bar.canvasScaleValue}
@@ -648,7 +687,6 @@ const CustomDraggable
                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                               >
                               </Bar> :
-
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
                                 scale={bar.canvasScaleValue}
@@ -664,6 +702,13 @@ const CustomDraggable
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                 >
                                 </Tab> :
+                                layer.moduleName === 'scrollSelect' ?
+                                  <ScrollSelect
+                                    componentConfig={ component }
+                                    fields={ getFields(component) }
+                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                  >
+                                  </ScrollSelect> :
                                 layer.moduleName === 'timeSelect' ?
                                 <TimeSelect
                                   componentConfig={ component }
@@ -678,16 +723,28 @@ const CustomDraggable
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                   ></WorldMap>
                                   :
-                                  <RemoteBaseComponent
-                                    componentConfig={ component }
-                                    fields={ getFields(component) }
-                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                  ></RemoteBaseComponent>
+                                  <ErrorCatch
+                                    app={component.name}
+                                    user=""
+                                    token=""
+                                    max={1}
+                                    errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
+                                    onCatch={(errors) => {
+                                      console.log('组件报错信息：', errors, '组件id', layer.id);
+                                    }}
+                                  >
+                                    <RemoteBaseComponent
+                                      key={layer.id}
+                                      componentConfig={ component }
+                                      fields={ getFields(component) }
+                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
+                                    ></RemoteBaseComponent>
+                                  </ErrorCatch>
                           }
                         </div>
                       </>
                   }
-                  {/*<div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />*/}
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span
