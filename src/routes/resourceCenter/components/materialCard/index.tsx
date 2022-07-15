@@ -4,11 +4,12 @@ import "./index.less";
 
 import { withRouter } from "dva/router";
 import { useFetch } from "../../../../utils/useFetch";
+import { http } from '@/services/request'
 import { BASEURL } from "@/services/request";
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Input, Tooltip, Dropdown, Menu, message, Modal } from "antd";
+import { Input, Tooltip, Dropdown, Menu, message, Modal, Button } from "antd";
 
 // import M from '@/components/modalConfirm/index'
 
@@ -17,22 +18,28 @@ const AppCard = (props: any) => {
     id,
     name,
     status,
+    photoPath,
     photoUrl,
     spaceId,
     openMoveGroupModal,
     changeFabuModal,
     refreshList,
     history,
-    getCurrentItem
+    getCurrentItem,
+    moduleType
   } = props;
 
   // 后端返回的photoUrl为空，则使用默认图片
-  const picUrl =
-    photoUrl || require("../../../../assets/images/模板默认背景图.png");
+  let picUrl =
+    photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png");
+  if(!picUrl.startsWith("http")&& !picUrl.startsWith("/static")){
+    picUrl = `${(window as any).CONFIG.COMP_URL}${picUrl}`
+  }
 
   const [canEdit, setCanEdit] = useState(false);
   const [appName, setAppName] = useState(name);
   const [isShowUL, setIsShowUL] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
 
   const inputRef = useRef<any>();
 
@@ -87,7 +94,7 @@ const AppCard = (props: any) => {
     // let newTab = window.open('_blank');
     // newTab!.location.href = `/bigscreen/${id}`
     // newTab?.history.replaceState(null, '')
-    getCurrentItem(props);
+    getCurrentItem(props,'preview');
   };
   const editDashboard = () => {
     //TODO 通过id跳转到主画布
@@ -122,11 +129,12 @@ const AppCard = (props: any) => {
   };
   // 删除应用
   const deleteApp = async () => {
-    if(props.appName.length) {
+    if(props.appName && props.appName.length) {
       return false
     }
+    let delText = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? '模板' : '素材'
     Modal.confirm({
-      title: "删除素材",
+      title: `删除${delText}`,
       style: {
         top: "30%"
       },
@@ -143,19 +151,19 @@ const AppCard = (props: any) => {
         }
       },
       icon: <ExclamationCircleFilled />,
-      content: "确认删除此素材吗?",
+      content: `确认删除此${delText}吗?`,
       okText: "确定",
       cancelText: "取消",
       bodyStyle: {
         background: "#232630"
       },
-      async onOk(close) {
-        const [, data] = await useFetch(`/visual/resource/delete/${id}`, {
-          method: "delete",
-          body: JSON.stringify({
-            spaceId
-          })
-        });
+      async onOk() {
+        let url = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? '/visual/appTemplate/delete' : `/visual/resource/delete/${id}`
+        let params = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId}
+        const [,data] = await useFetch(`${url}`, {
+            method: "delete",
+            body: JSON.stringify(params)
+          });
         if (data) {
           refreshList();
           message.success({ content: "删除成功", duration: 2 });
@@ -163,7 +171,7 @@ const AppCard = (props: any) => {
           message.error({ content: "删除失败", duration: 2 });
         }
       },
-      onCancel(close) {
+      onCancel(close:any) {
         close();
       }
     });
@@ -179,7 +187,12 @@ const AppCard = (props: any) => {
 
   // 移动分组
   const moveGroup = () => {
+    getCurrentItem(props,'move');
     openMoveGroupModal(id);
+  };
+  // 导出功能
+  const exportDesign = async() => {
+    window.location.href = moduleType.includes('Temp') ? `${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
   };
   // 鼠标移入更多按钮时，显示下拉菜单
   const moreIconMouseOver = () => {
@@ -206,26 +219,60 @@ const AppCard = (props: any) => {
     setIsShowUL(false);
   };
 
+  const handleCreated = async() => {
+    setCreateLoading(true)
+    const data = await http({
+      url: '/visual/appTemplate/createApp',
+      method: 'post',
+      body: {
+        id,
+        type: 0,
+        spaceId:1
+      }
+    }).finally(() => {
+      setCreateLoading(false)
+    })
+    if(data){
+      history.push(`/dashboard/${data.id}`)
+    }
+  }
+
   return (
     <div className="AppCard-wrap">
       <header className="head">
-        <div className="hoverOnImg">
+        <div className="sourceHoverOnImg">
           <div className="icons-wrap">
             <div className="more-icon">
-              {/* 系统素材不允许移动 */}
-              {/* <Tooltip placement="bottom" title="移动">
-                <IconFont
+              <Tooltip placement="bottom" title="导出">
+                <span 
+                  className="icon iconfont icon-zhuanfa"
                   style={{ fontSize: "16px", marginRight: "10px" }}
-                  onClick={moveGroup}
-                  className="icon-yidong"
-                  type="icon-yidong"
-                />
-              </Tooltip> */}
-              <Tooltip placement="bottom" title={`${props.appName.length ? '已被画布引用，不允许删除' : '删除'}`}>
+                  onClick={exportDesign}
+                ></span>
+                {/* <IconFont
+                  style={{ fontSize: "16px", marginRight: "10px" }}
+                  onClick={exportDesign}
+                  className="icon-zhuanfa"
+                  type="icon-zhuanfa"
+                /> */}
+              </Tooltip>
+              {/* 系统素材不允许移动 */}
+              {
+                ['myTemp', 'myresource'].indexOf(moduleType) > -1 &&
+                <Tooltip placement="bottom" title="移动">
+                  <IconFont
+                    style={{ fontSize: "16px", marginRight: "10px" }}
+                    onClick={moveGroup}
+                    className="icon-yidong"
+                    type="icon-yidong"
+                  />
+                </Tooltip>
+              }
+              <Tooltip placement="bottom" title={`${ ['myTemp', 'systemTemp'].indexOf(moduleType) === -1 && props?.appName.length ? '已被画布引用，不允许删除' : '删除'}`}>
                 <IconFont
                   style={{ fontSize: "16px" }}
                   onClick={deleteApp}
-                  className={`icon-huishouzhan1 ${props.appName.length && 'disabled'}`}
+                  className={`icon-huishouzhan1 ${ ['myTemp', 'systemTemp'].indexOf(moduleType) === -1 && props?.appName.length && 'disabled'}`}
                   type="icon-huishouzhan1"
                 />
               </Tooltip>
@@ -236,8 +283,12 @@ const AppCard = (props: any) => {
               className="div-to-btns scan-btn"
               onClickCapture={() => scanDashboard()}
             >
-              预览
+              {moduleType.includes('Temp') ? '预览模板' : '预览'}
             </span>
+            {
+              moduleType.includes('Temp') && 
+              <Button type='primary' loading={createLoading} onClick={handleCreated}>创建应用</Button>
+            }
           </div>
         </div>
         <div className="img-wrap">

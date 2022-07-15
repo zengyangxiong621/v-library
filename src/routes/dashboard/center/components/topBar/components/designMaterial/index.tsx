@@ -39,7 +39,7 @@ const DesignMaterial = (props: any) => {
       type: [origin], // 系统素材
     }
     if(origin === 'design'){
-      payload.subType = [null, 'sysAll'].indexOf(groupId) > -1 ? [] : [groupId]
+      payload.subType = [null, 'sysMatAll'].indexOf(groupId) > -1 ? [] : [groupId]
     }else{
       payload.groupId = [null, '-1'].indexOf(groupId) > -1 ? '' : groupId
     }
@@ -47,7 +47,7 @@ const DesignMaterial = (props: any) => {
       type: 'bar/getSystemMaterialList',
       payload: {...payload},
       cb: (data:any) => {
-        let groupIdC = groupId ? groupId : origin === 'design' ?  'sysAll' : '-1'
+        let groupIdC = groupId ? groupId : origin === 'design' ?  'sysMatAll' : '-1'
         if(!chartDataMap[groupIdC]){
           data.forEach((item: any) => {
             item.photoPath = `${(window as any).CONFIG.COMP_URL}${item.photoPath}`

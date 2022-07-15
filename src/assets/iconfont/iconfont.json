@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3996608",
+      "name": "转发",
+      "font_class": "zhuanfa",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
       "icon_id": "30131619",
       "name": "模型-自定义数据容器",
       "font_class": "moxing-zidingyishujurongqi",

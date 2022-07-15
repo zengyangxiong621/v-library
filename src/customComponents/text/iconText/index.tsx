@@ -3,7 +3,9 @@ import componentDefaultConfig from './config'
 import './index.less'
 
 interface Props {
-  componentConfig?: any
+  componentConfig?: any,
+  fields?:any,
+  comData?:any
 }
 
 interface State {}
@@ -13,11 +15,12 @@ class IconText extends Component<Props, State> {
     super(Props)
   }
   render () {
-    // const { dataStatic } = this.props.config
-    // const { data } = dataStatic
+    const { comData,fields } = this.props
     const componentConfig = this.props.componentConfig || componentDefaultConfig
     const {config, staticData} = componentConfig
-  
+    // 组件静态或者传入组件的数据
+    let originData = comData || staticData.data
+    originData = Array.isArray(originData) ? originData : []
     let style: CSSProperties = config.filter((item: any) => ['iconSize'].indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
       if(Array.isArray(cur.value)) {
         const obj = cur.value.reduce((p: any, c: any) => {
@@ -45,7 +48,8 @@ class IconText extends Component<Props, State> {
     const iconImg = findItem('iconImg')
     const iconSize = findItem('iconSize')
 
-    const textStyle = JSON.parse(JSON.stringify(style))
+    let textStyle = JSON.parse(JSON.stringify(style))
+    textStyle.underline = false  // 标准组件中无须下划线样式，故直接写死false
   
     const textRow  = () => {
       let obj:any = {}
@@ -99,7 +103,7 @@ class IconText extends Component<Props, State> {
       textStyleObj = {...textStyleObj,  ...textAlign}
     }
     let textNameObj:any = {
-      lineHeight: style.lineHeight
+      lineHeight: `${style.lineHeight}px`
     }
     if(textStyle.underline){
       switch(textStyle.textAlign){
@@ -116,7 +120,7 @@ class IconText extends Component<Props, State> {
     }
     return (
       <div style={ textStyleObj } className={`text ${textStyle.hideDefault && 'hide'}`}>
-        { !textStyle.hideDefault && staticData.data.map((item:any, i:any) => (
+        { !textStyle.hideDefault && originData.map((item:any, i:any) => (
           <div className={`text-name ${textStyle.underline &&'showText'}`} style={textNameObj}>
             {
               iconImg.value &&
@@ -127,7 +131,7 @@ class IconText extends Component<Props, State> {
             }
             <span key={item.text}  style={ {
               filter: textStyle.show ? `drop-shadow(${textStyle.shadow.color} ${textStyle.shadow.vShadow}px ${textStyle.shadow.hShadow}px ${textStyle.shadow.blur}px)` : ''
-            }}  dangerouslySetInnerHTML={{ __html: item.text }}></span>
+            }}  dangerouslySetInnerHTML={{ __html: item[fields[0]] }}></span>
           </div>
         ))}
       </div>

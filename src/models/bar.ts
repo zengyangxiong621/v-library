@@ -643,16 +643,16 @@ export default {
       let data = yield http({
         url: `/visual/resource/queryResourceTypeList?spaceId=1`,
         method: "get",
-      });
-      data.myTypes.map((item: any) => {
-        item.groupId = item.type;
-        item.origin = "myresource";
-      });
-      data.systemTypes.map((item: any) => {
-        item.groupId = item.type;
-        item.origin = "design";
-        if (!item.type) item.groupId = "sysAll";
-      });
+      })
+      data.myTypes.map((item:any) => {
+        item.groupId = item.type
+        item.origin = 'myresource'
+      })
+      data.systemTypes.map((item:any) => {
+        item.groupId = item.type
+        item.origin = 'design'
+        if(!item.type) item.groupId = 'sysMatAll'
+      })
       let result = {
         design: data.systemTypes,
         myresource: data.myTypes,
@@ -1200,9 +1200,9 @@ export default {
           ...state,
         };
       }
-      localStorage.removeItem("dblComponentTimes");
-      localStorage.removeItem("currentTimes");
-      state.currentDblTimes = 0;
+      // localStorage.removeItem("dblComponentTimes");
+      // localStorage.removeItem("currentTimes");
+      // state.currentDblTimes = 0;
       deepForEach(state.treeData, (layer: ILayerGroup | ILayerComponent) => {
         layer.selected = false;
       });
