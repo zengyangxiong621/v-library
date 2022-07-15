@@ -40,10 +40,11 @@
 }
 
 .component-select-dropdown {
+  min-width:var(--width) !important;
+  width:var(--width) !important;
   max-height: var(--optionsHeight);
   overflow-y: auto;
-  transform-origin: left top;
-  transform: var(--scaleSetting);
+  top:var(--top) !important;
 }
 
 .component-select-dropdown .ant-select-item {
