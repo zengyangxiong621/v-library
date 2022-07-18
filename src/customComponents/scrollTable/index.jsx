@@ -1,8 +1,8 @@
-import { useRef, useEffect, useState } from 'react'
+import {useRef, useEffect, useState} from 'react'
 import ComponentDefaultConfig from './config'
-import { ScrollBoard } from '../dataV'
+import {ScrollBoard} from '../dataV'
 import ReactDOM from 'react-dom'
-import { styleObjectToStr, styleTransformFunc } from '../../utils'
+import {styleObjectToStr, styleTransformFunc} from '../../utils'
 
 const getFields = (componentConfig = {}) => {
   const dataType = componentConfig.dataType
@@ -27,10 +27,18 @@ const ScrollTable = (props) => {
   const comData = props.comData || [{}]
   const scale = props.scale
   const [state, setState] = useState({
+    mappingConfig: [],
     columnsSettings: [
       {
         textAlign: 'left',
-        overflowType: ''
+        overflowType: '',
+        textStyle: {},
+        customStyle: [
+          {
+            filedName: "",
+            textStyle: {},
+          }
+        ]
       }
     ]
   })
@@ -46,7 +54,7 @@ const ScrollTable = (props) => {
   const [isIndex, setIsIndex] = useState(false)
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const fields = getFields(componentConfig)
-  const { config, staticData } = componentConfig
+  const {config, staticData} = componentConfig
 
   const allGlobalConfig = config.find(item => item.name === 'allGlobal').value
   const rowNumConfig = allGlobalConfig.find(item => item.name === 'rowNums').value
@@ -85,10 +93,43 @@ const ScrollTable = (props) => {
       comData.forEach((data, index) => {
         let arr = []
         mappingConfig.forEach((mapp, index) => {
+          console.log('mapp', mapp)
+          let style = {}
+          const {customStyle, overflowType, textAlign, textStyle} = mapp
+          style = {
+            ...style,
+            ...textStyle
+          }
+          style['text-align'] = textAlign
+          if (overflowType === 'ellipsis') {
+            style = {
+              ...style,
+              overflow: 'hidden',
+              ['text-overflow']: 'ellipsis',
+              ['white-space']: 'nowrap'
+            }
+          } else if (overflowType === 'wrap') {
+            style = {
+              ...style,
+              ['white-space']: 'wrap'
+            }
+          }
           if (mappingEnum[mapp.filedName]) {
-            arr[index] = `<div style="font-family: ${ fontFamilyConfig }" tilte="${ data[mappingEnum[mapp.filedName]] }">${ data[mappingEnum[mapp.filedName]] ? data[mappingEnum[mapp.filedName]] : '--' }<div>`
+            if (data[mappingEnum[mapp.filedName]]) {
+              const currentCustomStyle = customStyle.find(item => item.filedValue === data[mappingEnum[mapp.filedName]]) || {}
+              const styleStr = styleObjectToStr({...style, ...currentCustomStyle.textStyle})
+              arr[index] = `<div style="font-family: ${fontFamilyConfig}; ${styleStr}" tilte="${data[mappingEnum[mapp.filedName]]}">${data[mappingEnum[mapp.filedName]]}<div>`
+            } else {
+              arr[index] = `<div>--<div>`
+            }
           } else {
-            arr[index] = `<div style="font-family: ${ fontFamilyConfig }" tilte="${ data[mapp.filedName] }">${ data[mapp.filedName] ? data[mapp.filedName] : '--' }<div>`
+            if (data[mapp.filedName]) {
+              const currentCustomStyle = customStyle.find(item => item.filedValue === data[mapp.filedName]) || {}
+              const styleStr = styleObjectToStr({...style, ...currentCustomStyle.textStyle})
+              arr[index] = `<div style="font-family: ${fontFamilyConfig}; ${styleStr}" tilte="${data[mapp.filedName]}">${data[mapp.filedName]}<div>`
+            } else {
+              arr[index] = `<div>--<div>`
+            }
           }
         })
         tableValue.push(arr)
@@ -122,7 +163,7 @@ const ScrollTable = (props) => {
       'font-Family': fontFamilyConfig,
       ...textStyle,
     })
-    const header = mappingConfig.map(item => `<div style="${ textStyle }" tilte="${ item.displayName }">${ item.displayName ? item.displayName : '--' }<div>`)
+    const header = mappingConfig.map(item => `<div style="${textStyle}" tilte="${item.displayName}">${item.displayName ? item.displayName : '--'}<div>`)
     setHeader(header)
     setTimeout(() => {
       const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
@@ -145,8 +186,8 @@ const ScrollTable = (props) => {
     const indexTitle = indexConfig.find(item => item.name === 'title').value
     const indexAlign = indexConfig.find(item => item.name === 'textAlign').value
     let textStyle = styleTransformFunc(tableIndexConfig.find(item => item.name === 'textStyle').value, false)
-    textStyle = styleObjectToStr({ 'text-align': indexAlign, ...textStyle })
-    setIndexHeader(`<div style="${ textStyle }">${ indexTitle }</div>`)
+    textStyle = styleObjectToStr({'text-align': indexAlign, ...textStyle})
+    setIndexHeader(`<div style="${textStyle}">${indexTitle}</div>`)
   }
 
   const tableRowLoadFunc = () => {
@@ -206,10 +247,66 @@ const ScrollTable = (props) => {
 
   const getMapping = (customColumnConfig) => {
     return customColumnConfig.value.reduce((pre, cur) => {
-      return pre.concat(cur.value.find(item => item.name === 'mapping').value.reduce((p, c) => {
-        p[c.name] = c.value
-        return p
-      }, {}))
+      const obj = cur.value.reduce((total, config) => {
+        if (config.name === 'mapping') {
+          const obj = config.value.reduce((p, c) => {
+            p[c.name] = c.value
+            return p
+          }, {})
+          return {
+            ...obj,
+            ...total
+          }
+        }
+        if (config.name === 'align') {
+          const textAlign = config.value.find(item => item.name === 'textAlign').value
+          return {
+            textAlign,
+            ...total
+          }
+        }
+        if (config.name === 'overflowType') {
+          const overflowType = config.value
+          return {
+            overflowType,
+            ...total
+          }
+        }
+        if (config.name === 'textStyle') {
+          const textStyle = styleTransformFunc(config.value, false)
+          return {
+            textStyle,
+            ...total
+          }
+        }
+        if (config.name === 'customStyle') {
+          const customStyle = config.value.reduce((columnTotal, columnConfig) => {
+            const obj = columnConfig.value.reduce((t, c) => {
+              if (c.name === 'filedValue') {
+                t[c.name] = c.value
+              }
+              if (c.name === 'textStyle') {
+                const textStyle = styleTransformFunc(c.value, false)
+                t['textStyle'] = textStyle
+              }
+              return t
+            }, {})
+            return columnTotal.concat(obj)
+          }, [])
+          return {
+            ...total,
+            customStyle
+          }
+        }
+        return total
+      }, {})
+      // const cur.value.find(item => item.name === 'mapping').value.reduce((p, c) => {
+      //   p[c.name] = c.value
+      //   return p
+      // }, {})
+      return pre.concat(
+        obj
+      )
     }, [])
   }
 
@@ -217,24 +314,33 @@ const ScrollTable = (props) => {
     setTableWH()
   }, [])
 
+  const customColumnLoadFunc = () => {
+  }
+
   useEffect(() => {
     const mappingConfig = getMapping(customColumnConfig)
+    console.log('mappingConfig', mappingConfig)
     tableHeaderLoadFunc(mappingConfig)
     tableDataLoadFunc(mappingConfig)
+    setState({
+      ...state,
+      mappingConfig
+    })
+    customColumnLoadFunc()
   }, [customColumnConfig, comData])
 
   const setTableWH = () => {
     tableRef.current.setWH()
-    setTimeout(() => {
-      const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
-      const tableRowItems = tableDom.querySelectorAll('.row-item')
-      const height = dimensionConfig.find(item => item.name === 'height').value
-      tableRowItems.forEach(dom => {
-        const rowHeight = (height - (isHeader ? 35 * Number(scale) : 0)) / rowNumConfig
-        dom.style.height = rowHeight + 'px'
-        dom.style.lineHeight = rowHeight + 'px'
-      })
-    })
+    // setTimeout(() => {
+    //   const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
+    //   const tableRowItems = tableDom.querySelectorAll('.row-item')
+    //   const height = dimensionConfig.find(item => item.name === 'height').value
+    //   tableRowItems.forEach(dom => {
+    //     const rowHeight = (height - (isHeader ? 35 * Number(scale) : 0)) / rowNumConfig
+    //     dom.style.height = rowHeight + 'px'
+    //     dom.style.lineHeight = rowHeight + 'px'
+    //   })
+    // })
   }
 
   const tableConfig = {
@@ -253,8 +359,8 @@ const ScrollTable = (props) => {
     height,
   }
   return (
-    <div style={ { width: '100%', height: '100%' } } ref={ tableContainerRef }>
-      <ScrollBoard ref={ tableRef } className="scroll-board" config={ tableConfig }/>
+    <div style={{width: '100%', height: '100%'}} ref={tableContainerRef}>
+      <ScrollBoard ref={tableRef} className="scroll-board" config={tableConfig}/>
     </div>
   )
 
