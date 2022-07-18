@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Timeline } from 'antd';
+import ComponentDefaultConfig from './config'
 import './index.css'
 
+const spotDom=(spotStyle)=>{
+  const {color,width}=spotStyle
+  const getSpotStyle={
+    "display":"inline-block",
+    "width":width,
+    "height":width,
+    "border":`${width/4}px solid ${color}`,
+    "borderRadius":'50%',
+    "backgroundColor":'transparent'
+  }
+  return (
+    <span style={getSpotStyle}></span>
+  )
+}
+
 export default function TimelineRender(props) {
-  const {componentConfig,comData}=props
-  const { config,staticData } = componentConfig
-  const {data}=staticData
+  const componentConfig = props.componentConfig || ComponentDefaultConfig
+  const componentData = props.comData  // 过滤后的数据
+  const { config } = componentConfig
 
   const getStyle=(config)=>{
     const style={}
@@ -27,7 +43,7 @@ export default function TimelineRender(props) {
 
   const style=getStyle(config)
   console.log(style);
-  const {dimension,backgroundColor,labelStyle,fontStyle}=style
+  const {dimension,backgroundColor,labelStyle,fontStyle,spotStyle}=style
 
   const positionStyle=dimension
 
@@ -35,35 +51,69 @@ export default function TimelineRender(props) {
   const {content:{styleController:contentStyle}}=fontStyle
   const {label:{styleController:timeStyle,show,labelOutShadow}}=labelStyle
 
+  const formatPxStyle=(Obj)=>{
+    Object.keys(Obj).forEach(item=>{
+      if(typeof Obj[item]==='number'){
+        Obj[item]=Obj[item]+'px'
+      }
+    })
+  }
 
   const getShadowVal=(dom)=>{
     const {color,vShadow,hShadow,blur}=dom['shadow']
     return `${hShadow}px ${vShadow}px ${blur}px ${color}`
   }
-  // const getLabelShadow=()=>{
-  //   const {color,vShadow,hShadow,blur}=labelOutShadow.shadow
-  //   const shadowVal=`${hShadow}px ${vShadow}px ${blur}px ${color}`
-  //   return shadowVal
-  // }
-  // const getContentTitleShadow=()=>{
-  //   const {color,vShadow,hShadow,blur}=outShadow.shadow
-  //   const shadowVal=`${hShadow}px ${vShadow}px ${blur}px ${color}`
-  //   return shadowVal
-  // }
+  const getArrowStyle=(color)=>{
+    return {
+      position: 'absolute',
+      right: '100%',
+      top: 0,
+      borderTop: `5px solid ${color}`,
+      borderRight: `5px solid ${color}`,
+      borderBottom: '5px solid transparent',
+      borderLeft: '5px solid transparent'
+    }
+  }
+  const getTitleLineStyle=(textStyle)=>{
+    return {
+      position: 'absolute',
+      width: '8px',
+      height: '60%',
+      backgroundColor:textStyle.color,
+      boxShadow:textStyle.textShadow
+    }
+  }
 
+  const getTimeLineTitleStyle=(isOutShadow)=>{
+    formatPxStyle(titleStyle)
+    const baseStyle={
+      ...titleStyle,...align
+    }
+    return isOutShadow ? {...baseStyle,textShadow:getShadowVal(outShadow)}:baseStyle
+  }
+  const getLableStyle=(isLabelOutShadow)=>{
+    formatPxStyle(timeStyle)
+    return isLabelOutShadow ? {...timeStyle,textShadow:getShadowVal(labelOutShadow)}:timeStyle
+  }
+
+  formatPxStyle(contentStyle)
 
   return (
     <Timeline
       mode='left'
       className='timeLineContainer'
       style={positionStyle}>
-      {data.map(item=>{
-        const timeLineTitleStyle=outShadow.show ? {...titleStyle,...align,textShadow:getShadowVal(outShadow)}:{...titleStyle,...align}
-        const labelStyle=labelOutShadow.show? {...timeStyle,textShadow:getShadowVal(labelOutShadow)}:timeStyle
+      {componentData?.map(item=>{
+        const timeLineTitleStyle=getTimeLineTitleStyle(outShadow.show)
+        const labelStyle=getLableStyle(labelOutShadow.show)
         return (
-        <Timeline.Item label={show && item.time} style={labelStyle}>
-          <div className='timeLineBox' style={{backgroundColor}}>
-            <div className='timeLineTitle' style={timeLineTitleStyle}>{item.title}</div>
+        <Timeline.Item dot={spotDom(spotStyle)} label={show && item.time} style={labelStyle}>
+          <div className='timeLineBox' style={{backgroundColor,borderColor:backgroundColor}}>
+            <div className='timeLineArrow' style={getArrowStyle(backgroundColor)}></div>
+            <div className='timeLineTitle' style={timeLineTitleStyle}>
+              <div className='titleLine' style={getTitleLineStyle(timeLineTitleStyle)}></div>
+              <span className='titleVal'>{item.title}</span>
+            </div>
             <div className='timeLineContent' style={contentStyle}>{item.content}</div>
           </div>
         </Timeline.Item>
@@ -72,4 +122,6 @@ export default function TimelineRender(props) {
     </Timeline>
   )
 }
+
+export { ComponentDefaultConfig }
 

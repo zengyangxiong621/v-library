@@ -5,8 +5,8 @@ const componentDefaultConfig = {
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
 
-  "moduleName": "wordCloud", //组件标识
-  "moduleVersion": "1.1.0", //组件版本号
+  "moduleName": "timeline", //组件标识
+  "moduleVersion": "1.0.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -93,7 +93,7 @@ const componentDefaultConfig = {
       "type": "tabs",
       'options':[
         {
-          "name": "时间样式",
+          "name": "时间轴样式",
           "key":'labelStyle',
           'value':[{
             "name": "label",
@@ -181,7 +181,7 @@ const componentDefaultConfig = {
           }]
         },
         {
-          "name": "文本样式",
+          "name": "内容样式",
           "key":'fontStyle',
           "value":[
             {
@@ -236,7 +236,7 @@ const componentDefaultConfig = {
                     {
                       "name": "lineHeight",
                       "displayName": "行距",
-                      "value": '48px'
+                      "value": 48
                     }
                   ]
                 },
@@ -283,7 +283,7 @@ const componentDefaultConfig = {
             },
             {
               "name":'content',
-              "displayName": "内容",
+              "displayName": "正文",
               "type": 'collapse',
               "hasSwitch": false,
               "defaultExpand": true,
@@ -333,7 +333,7 @@ const componentDefaultConfig = {
                     {
                       "name": "lineHeight",
                       "displayName": "行距",
-                      "value": '48px'
+                      "value":48
                     }
                   ]
                 }
@@ -348,6 +348,15 @@ const componentDefaultConfig = {
       "displayName": "背景颜色",
       "type": "color",
       "value": 'rgba(255,255,255,0.1)'
+    },
+    {
+      "name":"spotStyle",
+      "displayName":'圆点样式',
+      "type":'textStroke',
+      "value":{
+        "width":20,
+        "color":'#fff'
+      }
     }
   ],
   themes: [{
