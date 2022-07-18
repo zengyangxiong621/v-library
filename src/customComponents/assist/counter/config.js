@@ -171,7 +171,7 @@ const componentDefaultConfig = {
                       {
                         "name": "lineHeight",
                         "displayName": "行距",
-                        "value": '48px'
+                        "value": '48'
                       }
                     ]
                   },
@@ -225,7 +225,7 @@ const componentDefaultConfig = {
                         "name": "support",
                         "displayName": "开启",
                         "type": "checkBox",
-                        "value": false
+                        "value": true
                       },
                       {
                         'name':"content",
@@ -252,7 +252,7 @@ const componentDefaultConfig = {
                             "name": "color",
                             "displayName": "",
                             "type": "color",
-                            "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                            "value": "#999" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                           },
                           {
                             "name": "bold",
@@ -272,7 +272,7 @@ const componentDefaultConfig = {
                           {
                             "name": "lineHeight",
                             "displayName": "行距",
-                            "value": '48px'
+                            "value": '48'
                           }
                         ]
                       },
@@ -362,7 +362,7 @@ const componentDefaultConfig = {
                               {
                                 "name": "lineHeight",
                                 "displayName": "行距",
-                                "value": '48px'
+                                "value": '48'
                               }
                             ]
                           },
@@ -653,7 +653,7 @@ const componentDefaultConfig = {
                           {
                             "name": "lineHeight",
                             "displayName": "行距",
-                            "value": '48px'
+                            "value": '48'
                           }
                         ]
                       },

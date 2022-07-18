@@ -105,6 +105,8 @@ class Counter extends Component {
     })
     originData = this.formatData(originData, fields2ValueMap)
     originData = originData.length ? originData[0] : []
+    // 设置文本的大小问题
+    const dimension = this.formatConfig([this.getStyleData(config, "dimension")],[])
     // 获取标题样式
     const titleStyle = this.formatConfig([this.getStyleData(config, "title")],[])
     const displayStyle = this.getAllStyle(config)
@@ -141,16 +143,24 @@ class Counter extends Component {
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
     // 补充前缀功能
     const prefixConfig = this.formatConfig([this.getStyleData(config, "前缀")],[])
-
+    console.log(prefixConfig,'fields')
     return (
-      <div className='counter' style={displayStyle}>
+      <div className='counter' style={{
+        ...displayStyle,
+        width: dimension.width,
+        height: dimension.height
+      }}>
         {/* 翻牌器标题 */}
-        <div style={{
-          ...titleStyle,
-          fontWeight: titleStyle.bold ? 'bold' : '',
-          fontStyle: titleStyle.italic ? 'italic' : '',
-          transform: `translate(${titleStyle.x}px, ${titleStyle.y}px)`
-        }}>{originData[fields[0]]}</div>
+        {
+          titleStyle.show && 
+          <div style={{
+            ...titleStyle,
+            fontWeight: titleStyle.bold ? 'bold' : '',
+            fontStyle: titleStyle.italic ? 'italic' : '',
+            lineHeight: `${titleStyle.lineHeight}px`,
+            transform: `translate(${titleStyle.x}px, ${titleStyle.y}px)`
+          }}>{originData[fields[0]]}</div>
+        }
         {/* 数值 */}
         <div className="number">
           {
@@ -159,13 +169,15 @@ class Counter extends Component {
               ...prefixConfig,
               fontWeight: prefixConfig.bold ? 'bold' : '',
               fontStyle: prefixConfig.italic ? 'italic' : '',
-              transform: `translate(${prefixConfig.x}px, ${prefixConfig.y}px)`
+              transform: `translate(${prefixConfig.x}px, ${prefixConfig.y}px)`,
+              lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{prefixConfig.content}</span> 
           }
           <div style={{
             ...dataRangConfig,
             fontWeight: dataRangConfig.bold ? 'bold' : '',
             fontStyle: dataRangConfig.italic ? 'italic' : '',
+            lineHeight: 'normal',
             textShadow: dataRangConfig.show ? `${dataRangConfig.shadow.color} ${dataRangConfig.shadow.vShadow}px ${dataRangConfig.shadow.hShadow}px ${dataRangConfig.shadow.blur}px` : ''
           }}>
             {
@@ -187,7 +199,8 @@ class Counter extends Component {
                         width: layoutConfig.width,
                         height: layoutConfig.height,
                         marginLeft: layoutConfig.left,
-                        marginRight: layoutConfig.right
+                        marginRight: layoutConfig.right,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }} key={index}>{item}</span>
                     }
                   </Fragment>
@@ -201,7 +214,8 @@ class Counter extends Component {
               ...suffixConfig,
               fontWeight: suffixConfig.bold ? 'bold' : '',
               fontStyle: suffixConfig.italic ? 'italic' : '',
-              transform: `translate(${suffixConfig.x}px, ${suffixConfig.y}px)`
+              transform: `translate(${suffixConfig.x}px, ${suffixConfig.y}px)`,
+              lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{suffixConfig.content}</span> 
           }
         </div>
