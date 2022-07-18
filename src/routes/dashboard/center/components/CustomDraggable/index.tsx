@@ -17,7 +17,7 @@ import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import IconText from '@/customComponents/text/iconText'
 // import textConfig from  '@/customComponents/text/iconText/config'
 import SwiperText from '@/customComponents/text/swiperText'
-import textConfig from '@/customComponents/text/swiperText/config'
+import textConfig from '@/customComponents/echarts/components/worldMap/config'
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
@@ -560,7 +560,8 @@ const CustomDraggable
               // 将线上配置改为本地配置
               // component.config = textConfig.config
               // component.staticData = textConfig.staticData
-
+              // console.log(textConfig.staticData,'#textConfig');
+              
 
               if (component) {
                 staticData = component.staticData
@@ -720,7 +721,7 @@ const CustomDraggable
                         </div> 
                       </>
                   }
-                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
+                  {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span
