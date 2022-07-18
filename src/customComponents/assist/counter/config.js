@@ -20,10 +20,12 @@ const componentDefaultConfig = {
   "dataContainers": [],
   "staticData": {
     //静态数据
-    "data":  {
-      "name": "翻牌器标题",
-      "value": "-121.23"
-    },
+    "data": [
+      {
+        "name": "翻牌器标题",
+        "value": "-1121.23"
+      }
+    ],
     "fields": [
       {
         "name": "name",
@@ -414,7 +416,7 @@ const componentDefaultConfig = {
                                   name:'decimalCount',
                                   displayName:'位数',
                                   type:'number',
-                                  value:2,
+                                  value:3,
                                   config:{
                                       min:0,
                                       max:10,
@@ -469,12 +471,12 @@ const componentDefaultConfig = {
                                   type:'number',
                                   value:3,
                                   config:{
-                                      min:0,
+                                      min:1,
                                       max:10,
                                   }
                                 },
                                 {
-                                  name:"spacingConfig",
+                                  name:"splitSpacingConfig",
                                   displayName:'分割符间距',
                                   type:'inputNumber2',
                                   showDetail:true, // 是否展示下面的文字说明
@@ -536,13 +538,13 @@ const componentDefaultConfig = {
                             {
                               "name": "fontSize",
                               "displayName": "",
-                              "value": 32
+                              "value": 18
                             },
                             {
                               "name": "color",
                               "displayName": "",
                               "type": "color",
-                              "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                              "value": "#0F92FF" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                             },
                             {
                               "name": "bold",

@@ -1,15 +1,11 @@
-import React, { Component, CSSProperties } from 'react';
-import componentDefaultConfig from './config'
+import React, { Component, CSSProperties,Fragment } from 'react';
+import ComponentDefaultConfig from './config'
 import './index.css'
 
 
 class Counter extends Component {
   constructor(Props) {
     super(Props)
-    this.state = {
-      componentConfig: Props.componentConfig || componentDefaultConfig,
-      currentStyle: {}
-    }
   }
   // 处理所有配置项
   formatConfig = (config, exclude) => {
@@ -82,22 +78,40 @@ class Counter extends Component {
   componentDidMount(){
   }
 
+  // 根据对应的自动来转换
+  formatData = (data, fields2ValueMap) => {
+    const arr = Array.isArray(data) ? data.map((item) => {
+      let res = {}
+      for (let k in item) {
+        res[k] = item[fields2ValueMap[k]]
+      }
+      return res
+    }) : []
+    return arr 
+  }
+
+  
+
   render () {
     const { comData,fields } = this.props
-    const {componentConfig} = this.state
+    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const {config, staticData} = componentConfig
     // 组件静态或者传入组件的数据
-    // let originData = comData || staticData.data
-    let originData = staticData.data
+    let originData = comData || staticData.data
+    const fields2ValueMap = {}
+    const initColumnsName = fields
+    fields.forEach((item, index) => {
+      fields2ValueMap[initColumnsName[index]] = item
+    })
+    originData = this.formatData(originData, fields2ValueMap)
+    originData = originData.length ? originData[0] : []
     // 获取标题样式
     const titleStyle = this.formatConfig([this.getStyleData(config, "title")],[])
     const displayStyle = this.getAllStyle(config)
-
     // 获取数值样式
     const dataRangConfig =  this.formatConfig([this.getStyleData(config, "dataRangConfig")],[])
     // 获取布局
     const layoutConfig = this.formatConfig([this.getStyleData(config, "layoutConfig")],[])
-    console.log(layoutConfig,'layoutConfig')
     // 补零位数
     const zeroize = this.getStyleData(config, "zeroize").value
     // 小数位数
@@ -105,26 +119,26 @@ class Counter extends Component {
     // 分割数
     const splitCount = this.getStyleData(config, 'splitCount').value
     // 校验value是否为数值
-    const reg = /^-?[0-9]+\.?[0-9]*$/;
-    let numList = reg.test(originData.value) ? originData.value.split('') : []
-    if(reg.test(originData.value)){
-      let value = Number(originData.value).toFixed(decimalCount)
+    const reg = /^[-,+]?[0-9]+\.?[0-9]*$/;
+    let numList = []
+    const numValue = originData[fields[1]]
+    if(reg.test(numValue)){
+      let value = Number(numValue).toFixed(decimalCount); // 小数位长度处理
       let intNumber = value.split('.')[0]
       let floatNumber = value.split('.')[1]
       intNumber = Math.abs(intNumber).toString().padStart(zeroize, 0)  // 补位处理
-      intNumber = intNumber.match(/.{1,3}/g)
-      // if(Number(intNumber) > 0) {
-      //   intNumber = intNumber.padStart(zeroize, 0)
-      // }else{
-      //   let num = intNumber.substr(1,intNumber.length)
-      //   intNumber = `-${num.padStart(zeroize, 0)}`
-      // }
-      console.log()
-      // value = `${intNumber}.${floatNumber}`
-      // numList = value.split('')
+      intNumber = intNumber.replace(eval(`/(\\d{1,${splitCount}})(?=(?:\\d{${splitCount}})+(?!\\d))/g`),'$1,')  // 分隔符处理
+      let sign = ['-','+'].indexOf(numValue.slice(0,1))>-1 ? numValue.slice(0,1) : ''
+      // 数据格式完成后整合处理
+      intNumber = `${sign}${intNumber}.${floatNumber}`
+      numList = intNumber.split('')
     }
-    // console.log(intNumber, floatNumber,'floatNumber')
-
+    //小数点点间距处理
+    const pointSpacingConfig =  this.formatConfig([this.getStyleData(config, "pointSpacingConfig")],[])
+    // 分隔符间距
+    const splitSpacingConfig =  this.formatConfig([this.getStyleData(config, "splitSpacingConfig")],[])
+    // 后缀功能
+    const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
 
     return (
       <div className='counter' style={displayStyle}>
@@ -134,7 +148,7 @@ class Counter extends Component {
           fontWeight: titleStyle.bold ? 'bold' : '',
           fontStyle: titleStyle.italic ? 'italic' : '',
           transform: `translate(${titleStyle.x}px, ${titleStyle.y}px)`
-        }}>{originData.name}</div>
+        }}>{originData[fields[0]]}</div>
         {/* 数值 */}
         <div className="number">
           <div style={{
@@ -144,20 +158,41 @@ class Counter extends Component {
             textShadow: dataRangConfig.show ? `${dataRangConfig.shadow.color} ${dataRangConfig.shadow.vShadow}px ${dataRangConfig.shadow.hShadow}px ${dataRangConfig.shadow.blur}px` : ''
           }}>
             {
-              numList.map(item => {
+              numList.map((item,index) => {
                 return (
-                  item === ',' ? <span>,</span> : item === ',' ? <span>.</span> :
-                  <span style={{
-                    width: layoutConfig.width,
-                    height: layoutConfig.height,
-                    marginLeft: layoutConfig.left,
-                    marginRight: layoutConfig.right
-                  }}>{item}</span>
+                  <Fragment  key={index}>
+                    {
+                      item === ',' ? 
+                      <span key={index} style={{
+                        marginLeft: splitSpacingConfig.left,
+                        marginRight: splitSpacingConfig.right
+                      }}>,</span> : 
+                      item === '.' ? 
+                      <span key={index} style={{
+                        marginLeft: pointSpacingConfig.left,
+                        marginRight: pointSpacingConfig.right
+                      }}>.</span> :
+                      <span style={{
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        marginLeft: layoutConfig.left,
+                        marginRight: layoutConfig.right
+                      }} key={index}>{item}</span>
+                    }
+                  </Fragment>
                 )
               })
             }
           </div>
-          <span>/单位</span>
+          {
+            suffixConfig.support &&
+            <span style={{
+              ...suffixConfig,
+              fontWeight: suffixConfig.bold ? 'bold' : '',
+              fontStyle: suffixConfig.italic ? 'italic' : '',
+              transform: `translate(${suffixConfig.x}px, ${suffixConfig.y}px)`
+            }}>{suffixConfig.content}</span> 
+          }
         </div>
       </div>
     )
