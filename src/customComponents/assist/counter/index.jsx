@@ -139,6 +139,8 @@ class Counter extends Component {
     const splitSpacingConfig =  this.formatConfig([this.getStyleData(config, "splitSpacingConfig")],[])
     // 后缀功能
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
+    // 补充前缀功能
+    const prefixConfig = this.formatConfig([this.getStyleData(config, "前缀")],[])
 
     return (
       <div className='counter' style={displayStyle}>
@@ -151,6 +153,15 @@ class Counter extends Component {
         }}>{originData[fields[0]]}</div>
         {/* 数值 */}
         <div className="number">
+          {
+            prefixConfig.support &&
+            <span style={{
+              ...prefixConfig,
+              fontWeight: prefixConfig.bold ? 'bold' : '',
+              fontStyle: prefixConfig.italic ? 'italic' : '',
+              transform: `translate(${prefixConfig.x}px, ${prefixConfig.y}px)`
+            }}>{prefixConfig.content}</span> 
+          }
           <div style={{
             ...dataRangConfig,
             fontWeight: dataRangConfig.bold ? 'bold' : '',

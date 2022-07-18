@@ -215,389 +215,478 @@ const componentDefaultConfig = {
                 name:'xxx',
                 displayName:'xxx',
                 type:'tabs',
-                activeKey:'numberConfig', // 默认选中第一项
+                activeKey:'prefixConfig', // 默认选中第一项
                 options:[
-                    {
-                       key:'numberConfig',
-                       name:'数值',
-                       value:[
-                        {
-                          'name': 'dataRangConfig',
-                          'displayName': '数值样式',
-                          'type': 'collapse',
-                          'hasSwitch':false, // 是否有切换按钮
-                          'defaultExpand':false,  // 是否默认展开
-                          'value':[
+                  {
+                    key:'prefixConfig',
+                    name:'前缀',
+                    value:[
+                      {
+                        "name": "support",
+                        "displayName": "开启",
+                        "type": "checkBox",
+                        "value": false
+                      },
+                      {
+                        'name':"content",
+                        'displayName':'内容',
+                        'type':'input',
+                        'value':'￥',
+                      },
+                      {
+                        "name": "textStyle",
+                        "displayName": "文本样式",
+                        "type": "textFullStyleGroup",
+                        "value": [
+                          {
+                            "name": "fontFamily",
+                            "displayName": "",
+                            "value": "Microsoft Yahei"
+                          },
+                          {
+                            "name": "fontSize",
+                            "displayName": "",
+                            "value": 24
+                          },
+                          {
+                            "name": "color",
+                            "displayName": "",
+                            "type": "color",
+                            "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                          },
+                          {
+                            "name": "bold",
+                            "displayName": "",
+                            "value": false
+                          },
+                          {
+                            "name": "italic",
+                            "displayName": "",
+                            "value": false
+                          },
+                          {
+                            "name": "letterSpacing",
+                            "displayName": "字距",
+                            "value": 0
+                          },
+                          {
+                            "name": "lineHeight",
+                            "displayName": "行距",
+                            "value": '48px'
+                          }
+                        ]
+                      },
+                      {
+                        name:"offsetConfig",
+                        displayName:'偏移',
+                        type:'inputNumber2',
+                        showDetail:true, // 是否展示下面的文字说明
+                        value:[
                             {
-                              "name": "show",
-                              "displayName": "",
-                              "value": true,
-                              "type": "switch"
-                            },
-                            {
-                              "name": "textStyle",
-                              "displayName": "文本样式",
-                              "type": "textFullStyleGroup",
-                              "value": [
-                                {
-                                  "name": "fontFamily",
-                                  "displayName": "",
-                                  "value": "Microsoft Yahei"
-                                },
-                                {
-                                  "name": "fontSize",
-                                  "displayName": "",
-                                  "value": 32
-                                },
-                                {
-                                  "name": "color",
-                                  "displayName": "",
-                                  "type": "color",
-                                  "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                                },
-                                {
-                                  "name": "bold",
-                                  "displayName": "",
-                                  "value": false
-                                },
-                                {
-                                  "name": "italic",
-                                  "displayName": "",
-                                  "value": false
-                                },
-                                {
-                                  "name": "letterSpacing",
-                                  "displayName": "字距",
-                                  "value": 0
-                                },
-                                {
-                                  "name": "lineHeight",
-                                  "displayName": "行距",
-                                  "value": '48px'
+                                name:'x',
+                                displayName:'X',
+                                type:'number',
+                                value:0,
+                                config:{
+                                    min:0,
+                                    suffix:'px',  // 输入框后缀
                                 }
-                              ]
                             },
                             {
-                              "name": "numShadow",
-                              "displayName": "阴影",
-                              "type": 'collapse',
-                              "hasSwitch": true,
-                              "defaultExpand": false,
-                              "value": [
-                                {
-                                  "name": "show",
-                                  "displayName": "",
-                                  "value": true,
-                                  "type": "switch"
-                                },
-                                {
-                                  "name": "shadow",
-                                  "displayName": "外阴影",
-                                  "type": "boxShadow",
-                                  "value": {
-                                    "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                                    "vShadow": 0, // 垂直阴影的位置
-                                    "hShadow": 0, // 水平阴影的位置
-                                    "blur": 8 // 模糊的距离
-                                  }
+                                name:'y',
+                                displayName:'Y',
+                                type:'number',
+                                value:0,
+                                config:{
+                                    min:0,
+                                    suffix:'px',  // 输入框后缀
                                 }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          'name': 'layoutConfig',
-                          'displayName': '布局',
-                          'type': 'collapse',
-                          'hasSwitch':false, // 是否有切换按钮
-                          'defaultExpand':false,  // 是否默认展开
-                          'value':[
-                            {
-                              "name": "show",
-                              "displayName": "",
-                              "value": true,
-                              "type": "switch"
                             },
-                            {
-                              name:"sizeConfig",
-                              displayName:'尺寸',
-                              type:'inputNumber2',
-                              showDetail:true, // 是否展示下面的文字说明
-                              value:[
-                                  {
-                                      name:'width',
-                                      displayName:'宽度',
-                                      type:'number',
-                                      value:30,
-                                      config:{
-                                          min:0,
-                                          suffix:'px',  // 输入框后缀
-                                      }
-                                  },
-                                  {
-                                      name:'height',
-                                      displayName:'高度',
-                                      type:'number',
-                                      value:40,
-                                      config:{
-                                          min:0,
-                                          suffix:'px',  // 输入框后缀
-                                      }
-                                  },
-                              ]
-                            },
-                            {
-                              name:"spacingConfig",
-                              displayName:'间距',
-                              type:'inputNumber2',
-                              showDetail:true, // 是否展示下面的文字说明
-                              value:[
-                                  {
-                                      name:'left',
-                                      displayName:'左',
-                                      type:'number',
-                                      value:2,
-                                      config:{
-                                          min:0,
-                                          suffix:'px',  // 输入框后缀
-                                      }
-                                  },
-                                  {
-                                      name:'right',
-                                      displayName:'右',
-                                      type:'number',
-                                      value:2,
-                                      config:{
-                                          min:0,
-                                          suffix:'px',  // 输入框后缀
-                                      }
-                                  },
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          'name': 'formateConfig',
-                          'displayName': '格式化',
-                          'type': 'collapse',
-                          'hasSwitch':false, // 是否有切换按钮
-                          'defaultExpand':false,  // 是否默认展开
-                          'value':[
-                            {
-                              "name": "numShow",
-                              "displayName": "",
-                              "value": true,
-                              "type": "switch"
-                            },
-                            {
-                              name:'zeroize',
-                              displayName:'补零位数',
-                              type:'number',
-                              value:5,
-                              config:{
-                                  min:0,
-                                  max:20,
-                              }
-                            },
-                            {
-                              'name': 'decimalConfig',
-                              'displayName': '小数',
-                              'type': 'collapse',
-                              'hasSwitch':false, // 是否有切换按钮
-                              'defaultExpand':false,  // 是否默认展开
-                              'value':[
-                                {
-                                  "name": "decimalShow",
-                                  "displayName": "",
-                                  "value": true,
-                                  "type": "switch"
-                                },
-                                {
-                                  name:'decimalCount',
-                                  displayName:'位数',
-                                  type:'number',
-                                  value:3,
-                                  config:{
-                                      min:0,
-                                      max:10,
-                                  }
-                                },
-                                {
-                                  name:"pointSpacingConfig",
-                                  displayName:'点间距',
-                                  type:'inputNumber2',
-                                  showDetail:true, // 是否展示下面的文字说明
-                                  value:[
-                                      {
-                                          name:'left',
-                                          displayName:'左',
-                                          type:'number',
-                                          value:0,
-                                          config:{
-                                              min:0,
-                                              suffix:'px',  // 输入框后缀
-                                          }
-                                      },
-                                      {
-                                          name:'right',
-                                          displayName:'右',
-                                          type:'number',
-                                          value:0,
-                                          config:{
-                                              min:0,
-                                              suffix:'px',  // 输入框后缀
-                                          }
-                                      },
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              'name': 'splitConfig',
-                              'displayName': '分割',
-                              'type': 'collapse',
-                              'hasSwitch':false, // 是否有切换按钮
-                              'defaultExpand':false,  // 是否默认展开
-                              'value':[
-                                {
-                                  "name": "show",
-                                  "displayName": "",
-                                  "value": true,
-                                  "type": "switch"
-                                },
-                                {
-                                  name:'splitCount',
-                                  displayName:'分割位数',
-                                  type:'number',
-                                  value:3,
-                                  config:{
-                                      min:1,
-                                      max:10,
-                                  }
-                                },
-                                {
-                                  name:"splitSpacingConfig",
-                                  displayName:'分割符间距',
-                                  type:'inputNumber2',
-                                  showDetail:true, // 是否展示下面的文字说明
-                                  value:[
-                                      {
-                                          name:'left',
-                                          displayName:'左',
-                                          type:'number',
-                                          value:0,
-                                          config:{
-                                              min:0,
-                                              suffix:'px',  // 输入框后缀
-                                          }
-                                      },
-                                      {
-                                          name:'right',
-                                          displayName:'右',
-                                          type:'number',
-                                          value:0,
-                                          config:{
-                                              min:0,
-                                              suffix:'px',  // 输入框后缀
-                                          }
-                                      },
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                       ]
-                    },
-                    {
-                      key:'suffixConfig',
-                      name:'后缀',
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                      key:'numberConfig',
+                      name:'数值',
                       value:[
-                        {
-                          "name": "support",
-                          "displayName": "开启",
-                          "type": "checkBox",
-                          "value": true
-                        },
-                        {
-                          'name':"content",
-                          'displayName':'内容',
-                          'type':'input',
-                          'value':'/单位',
-                        },
-                        {
-                          "name": "textStyle",
-                          "displayName": "文本样式",
-                          "type": "textFullStyleGroup",
-                          "value": [
-                            {
-                              "name": "fontFamily",
-                              "displayName": "",
-                              "value": "Microsoft Yahei"
-                            },
-                            {
-                              "name": "fontSize",
-                              "displayName": "",
-                              "value": 18
-                            },
-                            {
-                              "name": "color",
-                              "displayName": "",
-                              "type": "color",
-                              "value": "#0F92FF" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                            },
-                            {
-                              "name": "bold",
-                              "displayName": "",
-                              "value": false
-                            },
-                            {
-                              "name": "italic",
-                              "displayName": "",
-                              "value": false
-                            },
-                            {
-                              "name": "letterSpacing",
-                              "displayName": "字距",
-                              "value": 0
-                            },
-                            {
-                              "name": "lineHeight",
-                              "displayName": "行距",
-                              "value": '48px'
+                      {
+                        'name': 'dataRangConfig',
+                        'displayName': '数值样式',
+                        'type': 'collapse',
+                        'hasSwitch':false, // 是否有切换按钮
+                        'defaultExpand':false,  // 是否默认展开
+                        'value':[
+                          {
+                            "name": "show",
+                            "displayName": "",
+                            "value": true,
+                            "type": "switch"
+                          },
+                          {
+                            "name": "textStyle",
+                            "displayName": "文本样式",
+                            "type": "textFullStyleGroup",
+                            "value": [
+                              {
+                                "name": "fontFamily",
+                                "displayName": "",
+                                "value": "Microsoft Yahei"
+                              },
+                              {
+                                "name": "fontSize",
+                                "displayName": "",
+                                "value": 32
+                              },
+                              {
+                                "name": "color",
+                                "displayName": "",
+                                "type": "color",
+                                "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                              },
+                              {
+                                "name": "bold",
+                                "displayName": "",
+                                "value": false
+                              },
+                              {
+                                "name": "italic",
+                                "displayName": "",
+                                "value": false
+                              },
+                              {
+                                "name": "letterSpacing",
+                                "displayName": "字距",
+                                "value": 0
+                              },
+                              {
+                                "name": "lineHeight",
+                                "displayName": "行距",
+                                "value": '48px'
+                              }
+                            ]
+                          },
+                          {
+                            "name": "numShadow",
+                            "displayName": "阴影",
+                            "type": 'collapse',
+                            "hasSwitch": true,
+                            "defaultExpand": false,
+                            "value": [
+                              {
+                                "name": "show",
+                                "displayName": "",
+                                "value": true,
+                                "type": "switch"
+                              },
+                              {
+                                "name": "shadow",
+                                "displayName": "外阴影",
+                                "type": "boxShadow",
+                                "value": {
+                                  "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                                  "vShadow": 0, // 垂直阴影的位置
+                                  "hShadow": 0, // 水平阴影的位置
+                                  "blur": 8 // 模糊的距离
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        'name': 'layoutConfig',
+                        'displayName': '布局',
+                        'type': 'collapse',
+                        'hasSwitch':false, // 是否有切换按钮
+                        'defaultExpand':false,  // 是否默认展开
+                        'value':[
+                          {
+                            "name": "show",
+                            "displayName": "",
+                            "value": true,
+                            "type": "switch"
+                          },
+                          {
+                            name:"sizeConfig",
+                            displayName:'尺寸',
+                            type:'inputNumber2',
+                            showDetail:true, // 是否展示下面的文字说明
+                            value:[
+                                {
+                                    name:'width',
+                                    displayName:'宽度',
+                                    type:'number',
+                                    value:30,
+                                    config:{
+                                        min:0,
+                                        suffix:'px',  // 输入框后缀
+                                    }
+                                },
+                                {
+                                    name:'height',
+                                    displayName:'高度',
+                                    type:'number',
+                                    value:40,
+                                    config:{
+                                        min:0,
+                                        suffix:'px',  // 输入框后缀
+                                    }
+                                },
+                            ]
+                          },
+                          {
+                            name:"spacingConfig",
+                            displayName:'间距',
+                            type:'inputNumber2',
+                            showDetail:true, // 是否展示下面的文字说明
+                            value:[
+                                {
+                                    name:'left',
+                                    displayName:'左',
+                                    type:'number',
+                                    value:2,
+                                    config:{
+                                        min:0,
+                                        suffix:'px',  // 输入框后缀
+                                    }
+                                },
+                                {
+                                    name:'right',
+                                    displayName:'右',
+                                    type:'number',
+                                    value:2,
+                                    config:{
+                                        min:0,
+                                        suffix:'px',  // 输入框后缀
+                                    }
+                                },
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        'name': 'formateConfig',
+                        'displayName': '格式化',
+                        'type': 'collapse',
+                        'hasSwitch':false, // 是否有切换按钮
+                        'defaultExpand':false,  // 是否默认展开
+                        'value':[
+                          {
+                            "name": "numShow",
+                            "displayName": "",
+                            "value": true,
+                            "type": "switch"
+                          },
+                          {
+                            name:'zeroize',
+                            displayName:'补零位数',
+                            type:'number',
+                            value:5,
+                            config:{
+                                min:0,
+                                max:20,
                             }
-                          ]
-                        },
-                        {
-                          name:"offsetConfig",
-                          displayName:'偏移',
-                          type:'inputNumber2',
-                          showDetail:true, // 是否展示下面的文字说明
-                          value:[
+                          },
+                          {
+                            'name': 'decimalConfig',
+                            'displayName': '小数',
+                            'type': 'collapse',
+                            'hasSwitch':false, // 是否有切换按钮
+                            'defaultExpand':false,  // 是否默认展开
+                            'value':[
                               {
-                                  name:'x',
-                                  displayName:'X',
-                                  type:'number',
-                                  value:0,
-                                  config:{
-                                      min:0,
-                                      suffix:'px',  // 输入框后缀
-                                  }
+                                "name": "decimalShow",
+                                "displayName": "",
+                                "value": true,
+                                "type": "switch"
                               },
                               {
-                                  name:'y',
-                                  displayName:'Y',
-                                  type:'number',
-                                  value:0,
-                                  config:{
-                                      min:0,
-                                      suffix:'px',  // 输入框后缀
-                                  }
+                                name:'decimalCount',
+                                displayName:'位数',
+                                type:'number',
+                                value:3,
+                                config:{
+                                    min:0,
+                                    max:10,
+                                }
                               },
-                          ]
-                        }
+                              {
+                                name:"pointSpacingConfig",
+                                displayName:'点间距',
+                                type:'inputNumber2',
+                                showDetail:true, // 是否展示下面的文字说明
+                                value:[
+                                    {
+                                        name:'left',
+                                        displayName:'左',
+                                        type:'number',
+                                        value:0,
+                                        config:{
+                                            min:0,
+                                            suffix:'px',  // 输入框后缀
+                                        }
+                                    },
+                                    {
+                                        name:'right',
+                                        displayName:'右',
+                                        type:'number',
+                                        value:0,
+                                        config:{
+                                            min:0,
+                                            suffix:'px',  // 输入框后缀
+                                        }
+                                    },
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            'name': 'splitConfig',
+                            'displayName': '分割',
+                            'type': 'collapse',
+                            'hasSwitch':false, // 是否有切换按钮
+                            'defaultExpand':false,  // 是否默认展开
+                            'value':[
+                              {
+                                "name": "show",
+                                "displayName": "",
+                                "value": true,
+                                "type": "switch"
+                              },
+                              {
+                                name:'splitCount',
+                                displayName:'分割位数',
+                                type:'number',
+                                value:3,
+                                config:{
+                                    min:1,
+                                    max:10,
+                                }
+                              },
+                              {
+                                name:"splitSpacingConfig",
+                                displayName:'分割符间距',
+                                type:'inputNumber2',
+                                showDetail:true, // 是否展示下面的文字说明
+                                value:[
+                                    {
+                                        name:'left',
+                                        displayName:'左',
+                                        type:'number',
+                                        value:0,
+                                        config:{
+                                            min:0,
+                                            suffix:'px',  // 输入框后缀
+                                        }
+                                    },
+                                    {
+                                        name:'right',
+                                        displayName:'右',
+                                        type:'number',
+                                        value:0,
+                                        config:{
+                                            min:0,
+                                            suffix:'px',  // 输入框后缀
+                                        }
+                                    },
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
                       ]
-                    }
+                  },
+                  {
+                    key:'suffixConfig',
+                    name:'后缀',
+                    value:[
+                      {
+                        "name": "support",
+                        "displayName": "开启",
+                        "type": "checkBox",
+                        "value": true
+                      },
+                      {
+                        'name':"content",
+                        'displayName':'内容',
+                        'type':'input',
+                        'value':'/单位',
+                      },
+                      {
+                        "name": "textStyle",
+                        "displayName": "文本样式",
+                        "type": "textFullStyleGroup",
+                        "value": [
+                          {
+                            "name": "fontFamily",
+                            "displayName": "",
+                            "value": "Microsoft Yahei"
+                          },
+                          {
+                            "name": "fontSize",
+                            "displayName": "",
+                            "value": 18
+                          },
+                          {
+                            "name": "color",
+                            "displayName": "",
+                            "type": "color",
+                            "value": "#0F92FF" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                          },
+                          {
+                            "name": "bold",
+                            "displayName": "",
+                            "value": false
+                          },
+                          {
+                            "name": "italic",
+                            "displayName": "",
+                            "value": false
+                          },
+                          {
+                            "name": "letterSpacing",
+                            "displayName": "字距",
+                            "value": 0
+                          },
+                          {
+                            "name": "lineHeight",
+                            "displayName": "行距",
+                            "value": '48px'
+                          }
+                        ]
+                      },
+                      {
+                        name:"offsetConfig",
+                        displayName:'偏移',
+                        type:'inputNumber2',
+                        showDetail:true, // 是否展示下面的文字说明
+                        value:[
+                            {
+                                name:'x',
+                                displayName:'X',
+                                type:'number',
+                                value:0,
+                                config:{
+                                    min:0,
+                                    suffix:'px',  // 输入框后缀
+                                }
+                            },
+                            {
+                                name:'y',
+                                displayName:'Y',
+                                type:'number',
+                                value:0,
+                                config:{
+                                    min:0,
+                                    suffix:'px',  // 输入框后缀
+                                }
+                            },
+                        ]
+                      }
+                    ]
+                  }
                 ]
               }
             ]

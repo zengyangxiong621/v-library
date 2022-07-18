@@ -560,8 +560,8 @@ const CustomDraggable
               component = components.find(item => item.id === layer.id)
 
               // 将线上配置改为本地配置
-              component.config = textConfig.config
-              component.staticData = textConfig.staticData
+              // component.config = textConfig.config
+              // component.staticData = textConfig.staticData
 
 
               if (component) {
