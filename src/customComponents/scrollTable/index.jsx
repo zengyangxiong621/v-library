@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import ComponentDefaultConfig from './config'
-import {ScrollBoard} from '../dataV'
+import { ScrollBoard } from '../dataV'
 import ReactDOM from 'react-dom'
 import { styleObjectToStr, styleTransformFunc } from '../../utils'
 
@@ -26,6 +26,14 @@ const ScrollTable = (props) => {
   // }
   const comData = props.comData || [{}]
   const scale = props.scale
+  const [state, setState] = useState({
+    columnsSettings: [
+      {
+        textAlign: 'left',
+        overflowType: ''
+      }
+    ]
+  })
   const [oddRowBGC, setOddRowBGC] = useState('#2a2d3c')
   const [evenRowBGC, setEvenRowBGC] = useState('#222430')
   const [indexHeader, setIndexHeader] = useState('#')
@@ -137,8 +145,8 @@ const ScrollTable = (props) => {
     const indexTitle = indexConfig.find(item => item.name === 'title').value
     const indexAlign = indexConfig.find(item => item.name === 'textAlign').value
     let textStyle = styleTransformFunc(tableIndexConfig.find(item => item.name === 'textStyle').value, false)
-    textStyle = styleObjectToStr({'text-align': indexAlign, ...textStyle})
-    setIndexHeader(`<div style="${textStyle}">${ indexTitle }</div>`)
+    textStyle = styleObjectToStr({ 'text-align': indexAlign, ...textStyle })
+    setIndexHeader(`<div style="${ textStyle }">${ indexTitle }</div>`)
   }
 
   const tableRowLoadFunc = () => {
@@ -242,6 +250,7 @@ const ScrollTable = (props) => {
     rowNum: rowNumConfig,
     indexHeader,
     align,
+    height,
   }
   return (
     <div style={ { width: '100%', height: '100%' } } ref={ tableContainerRef }>
