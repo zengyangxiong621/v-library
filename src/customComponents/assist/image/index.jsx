@@ -57,7 +57,8 @@ class ComImage extends Component {
       <div style={{
         ...finalStyle,
         width: '100%',
-        height: '100%'
+        height: '100%',
+        "--rotate":finalStyle.transform
       }}>
         {
           bgUrl ?

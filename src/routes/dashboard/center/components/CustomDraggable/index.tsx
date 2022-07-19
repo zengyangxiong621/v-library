@@ -17,7 +17,9 @@ import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import IconText from '@/customComponents/text/iconText'
 // import textConfig from  '@/customComponents/text/iconText/config'
 import SwiperText from '@/customComponents/text/swiperText'
-import textConfig from '@/customComponents/text/swiperText/config'
+// import textConfig from '@/customComponents/text/swiperText/config'
+import Counter from  '@/customComponents/assist/counter'
+import textConfig from  '@/customComponents/assist/counter/config'
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
@@ -54,6 +56,7 @@ import TimeSelect from "@/customComponents/timeSelect/index";
 import SelectV2 from '@/customComponents/assist/select/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import CusImage from '@/customComponents/assist/image/index'
 
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
@@ -648,9 +651,11 @@ const CustomDraggable
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
-                            // <IconText
-                            //   componentConfig={component}
-                            // ></IconText>
+                          //   <Counter
+                          //   componentConfig={component}
+                          //   fields={getFields(component)}
+                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          // ></Counter>
 
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
@@ -670,6 +675,14 @@ const CustomDraggable
                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                               >
                               </BasicBar> :
+                            layer.moduleName === 'image2' ?
+                              <CusImage
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </CusImage> :
                             layer.moduleName === 'select2' ?
                               <SelectV2
                                 scale={bar.canvasScaleValue}
