@@ -536,7 +536,7 @@ const ComponentDefaultConfig = {
               "value": [
                 {
                   "key": "1",
-                  "displayName": "列1",
+                  "displayName": "1",
                   "name": "tab",
                   "type": "object",
                   "value": [
@@ -701,7 +701,7 @@ const ComponentDefaultConfig = {
               "value": [
                 {
                   "key": "1",
-                  "displayName": "列1",
+                  "displayName": "1",
                   "name": "tab",
                   "type": "object",
                   "value": [
@@ -866,7 +866,7 @@ const ComponentDefaultConfig = {
               "value": [
                 {
                   "key": "1",
-                  "displayName": "列1",
+                  "displayName": "1",
                   "name": "tab",
                   "type": "object",
                   "value": [

@@ -93,25 +93,33 @@ const ScrollTable = (props) => {
       comData.forEach((data, index) => {
         let arr = []
         mappingConfig.forEach((mapp, index) => {
-          console.log('mapp', mapp)
-          let style = {}
+          let style = {
+            width: '100%',
+            height: '100%'
+          }
           const {customStyle, overflowType, textAlign, textStyle} = mapp
           style = {
             ...style,
             ...textStyle
           }
-          style['text-align'] = textAlign
           if (overflowType === 'ellipsis') {
             style = {
               ...style,
-              overflow: 'hidden',
-              ['text-overflow']: 'ellipsis',
-              ['white-space']: 'nowrap'
+              'overflow': 'hidden',
+              'text-overflow': 'ellipsis',
+              'white-space': 'nowrap',
+              'display': 'block',
+              'text-align': textAlign
             }
           } else if (overflowType === 'wrap') {
             style = {
               ...style,
-              ['white-space']: 'wrap'
+              'word-break': 'break-all',
+              'overflow-wrap': 'break-word',
+              'line-height': 'normal',
+              'display': 'flex',
+              'align-items': 'center',
+              'justify-content': textAlign === 'left' ? 'flex-start' : textAlign === 'center' ? 'center' : textAlign === 'right' ? 'flex-end' : 'unset'
             }
           }
           if (mappingEnum[mapp.filedName]) {
@@ -357,6 +365,7 @@ const ScrollTable = (props) => {
     indexHeader,
     align,
     height,
+    width
   }
   return (
     <div style={{width: '100%', height: '100%'}} ref={tableContainerRef}>
