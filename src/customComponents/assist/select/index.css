@@ -13,6 +13,7 @@
 
 .component-select .ant-select-selector .ant-select-selection-placeholder {
   align-self: center;
+  color: var(--inputColor);
 }
 
 .component-select .ant-select-selector {
@@ -40,11 +41,11 @@
 }
 
 .component-select-dropdown {
-  min-width:var(--width) !important;
-  width:var(--width) !important;
+  min-width: var(--width) !important;
+  width: var(--width) !important;
   max-height: var(--optionsHeight);
   overflow-y: auto;
-  top:var(--top) !important;
+  top: var(--top) !important;
 }
 
 .component-select-dropdown .ant-select-item {
@@ -76,5 +77,9 @@
   color: var(--itemSelectedColor);
   font-family: var(--itemSelectedFontFamily);
   font-weight: var(--itemSelectedFontWeight);
-  background-color: var(--itemSelectedBgc)
+  background-color: var(--itemSelectedBgc);
+}
+
+.component-select-dropdown .ant-select-item-option-content {
+  transform: scale(var(--scale));
 }
