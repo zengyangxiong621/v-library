@@ -17,10 +17,15 @@ import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import IconText from '@/customComponents/text/iconText'
 // import textConfig from  '@/customComponents/text/iconText/config'
 import SwiperText from '@/customComponents/text/swiperText'
-import textConfig from '@/customComponents/text/swiperText/config'
+// import textConfig from '@/customComponents/text/swiperText/config'
+import Counter from  '@/customComponents/assist/counter'
+import textConfig from  '@/customComponents/assist/counter/config'
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
+
+import Timeline from '@/customComponents/assist/timeline'
+import timelineConfig from '@/customComponents/assist/timeline/config'
 
 import {
   STYLE,
@@ -51,6 +56,7 @@ import TimeSelect from "@/customComponents/timeSelect/index";
 import SelectV2 from '@/customComponents/assist/select/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import CusImage from '@/customComponents/assist/image/index'
 
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
@@ -557,11 +563,7 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-
-              // 将线上配置改为本地配置
-              // component.config = textConfig.config
-              // component.staticData = textConfig.staticData
-
+              // component=timelineConfig
 
               if (component) {
                 staticData = component.staticData
@@ -649,9 +651,11 @@ const CustomDraggable
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
-                            // <IconText
-                            //   componentConfig={component}
-                            // ></IconText>
+                          //   <Counter
+                          //   componentConfig={component}
+                          //   fields={getFields(component)}
+                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          // ></Counter>
 
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
@@ -671,6 +675,14 @@ const CustomDraggable
                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                               >
                               </BasicBar> :
+                            layer.moduleName === 'image2' ?
+                              <CusImage
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </CusImage> :
                             layer.moduleName === 'select2' ?
                               <SelectV2
                                 scale={bar.canvasScaleValue}
@@ -721,25 +733,33 @@ const CustomDraggable
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                  ></WorldMap>
-                                  :
-                                  <ErrorCatch
-                                    app={component.name}
-                                    user=""
-                                    token=""
-                                    max={1}
-                                    errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
-                                    onCatch={(errors) => {
-                                      console.log('组件报错信息：', errors, '组件id', layer.id);
-                                    }}
-                                  >
-                                    <RemoteBaseComponent
-                                      key={layer.id}
+                                  ></WorldMap>:
+                                  layer.moduleName === 'timeline'?
+                                    <Timeline
                                       componentConfig={ component }
-                                      fields={ getFields(component) }
-                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                    ></RemoteBaseComponent>
-                                  </ErrorCatch>
+                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                    ></Timeline>:
+                                    <ErrorCatch
+                                      app={component.name}
+                                      user=""
+                                      token=""
+                                      max={1}
+                                      errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
+                                      onCatch={(errors) => {
+                                        console.log('组件报错信息：', errors, '组件id', layer.id);
+                                      }}
+                                    >
+                                    {/* <Timeline
+                                      componentConfig={ component }
+                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                    ></Timeline> */}
+                                      <RemoteBaseComponent
+                                        key={layer.id}
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
+                                      ></RemoteBaseComponent>
+                                    </ErrorCatch>
                           }
                         </div>
                       </>

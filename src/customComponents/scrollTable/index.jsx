@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import ComponentDefaultConfig from './config'
-import ScrollBoard from '@jiaminghi/data-view-react/es/scrollBoard'
+import {ScrollBoard} from '../dataV'
 import ReactDOM from 'react-dom'
 import { styleObjectToStr, styleTransformFunc } from '../../utils'
 
