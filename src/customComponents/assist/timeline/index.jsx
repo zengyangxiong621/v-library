@@ -20,9 +20,9 @@ const spotDom=(spotStyle)=>{
 
 export default function TimelineRender(props) {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
-  const componentData = props.comData  // 过滤后的数据
-  const { config } = componentConfig
-
+  const { config,staticData } = componentConfig
+  const componentData = props.comData || staticData.data  // 过滤后的数据
+  const _fields = props.fields
   const getStyle=(config)=>{
     const style={}
     if(Array.isArray(config)){
@@ -107,14 +107,14 @@ export default function TimelineRender(props) {
         const timeLineTitleStyle=getTimeLineTitleStyle(outShadow.show)
         const labelStyle=getLableStyle(labelOutShadow.show)
         return (
-        <Timeline.Item dot={spotDom(spotStyle)} label={show && item.time} style={labelStyle}>
+        <Timeline.Item dot={spotDom(spotStyle)} label={show && item[_fields[0]]} style={labelStyle}>
           <div className='timeLineBox' style={{backgroundColor,borderColor:backgroundColor}}>
             <div className='timeLineArrow' style={getArrowStyle(backgroundColor)}></div>
             <div className='timeLineTitle' style={timeLineTitleStyle}>
               <div className='titleLine' style={getTitleLineStyle(timeLineTitleStyle)}></div>
-              <span className='titleVal'>{item.title}</span>
+              <span className='titleVal'>{item[_fields[1]]}</span>
             </div>
-            <div className='timeLineContent' style={contentStyle}>{item.content}</div>
+            <div className='timeLineContent' style={contentStyle}>{item[_fields[2]]}</div>
           </div>
         </Timeline.Item>
         )
