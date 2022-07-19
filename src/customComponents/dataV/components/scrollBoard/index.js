@@ -101,7 +101,8 @@ const defaultConfig = {
    * @default hoverPause = true
    * @example hoverPause = true | false
    */
-  hoverPause: true
+  hoverPause: true,
+  height: 100
 }
 
 function calcHeaderData({ header, index, indexHeader }) {
@@ -152,8 +153,8 @@ function calcAligns(mergedConfig, header) {
 }
 
 const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMouseOver }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
-
+  const { domRef } = useAutoResize(ref)
+  const { height, width } = config
   const [state, setState] = useState({
     mergedConfig: null,
 
