@@ -20,6 +20,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   const [scaleMode, setScaleMode] = useState<string>('')
   const [absolutePosition, setAbsolutePosition] = useState({ left: 0, top: 0 })
   const [pageStyle, setPageStyle]: any = useState({})
+  const [scaleStyle, setScaleStyle] = useState({})
   // 如果是 “按屏幕比例适配” 的情况下
   const [previewDashboardStyle, setPreviewDashboardStyle] = useState({})
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
@@ -47,6 +48,10 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center center',
+      position: 'absolute',
+      transformOrigin: 'left top',
+      width: width,
+      height: height,
     }
 
     // 根据缩放模式来展示
@@ -57,10 +62,10 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       case '0':
         // 只有在这种预览模式下 才需要执行 setCanvasSize()
         setCanvasSize(dashboardConfig)
-        finalStyle.width = width // recommandConfig.width
-        finalStyle.height = height
-        finalStyle.position = 'absolute'
-        finalStyle.transformOrigin = 'left top'
+        // finalStyle.width = width // recommandConfig.width
+        // finalStyle.height = height
+        // finalStyle.position = 'absolute'
+        // finalStyle.transformOrigin = 'left top'
         const { scaleValue, absolutePosition } = calcCanvasSize({ width, height })
         setAbsolutePosition(absolutePosition)
         // setScaleValue(scaleValue)
@@ -70,17 +75,20 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
           height: pageStyle.height * scaleValue,
         }
         setPreviewDashboardStyle(tempStyle)
+        const originScale = {
+          transform: `scale(${scaleValue})`
+        }
+        setScaleStyle(originScale)
         break;
       // 强制铺满
       case '1':
-        finalStyle.width = '100vw'
-        finalStyle.height = '100vh'
-        // finalStyle.transformOrigin = 'left top'
-        const wRatio2 = winW / width
-        const hRatio2 = winH / height
-        setScreenWidthRatio(wRatio2)
-        setScreenHeightRatio(hRatio2)
-        finalStyle.overflow = 'hidden'
+        const wRatio = winW / width
+        const hRatio = winH / height
+        const forceCovered = {
+          transform: `scaleX(${wRatio}) scaleY(${hRatio})`
+        }
+        setScaleStyle(forceCovered)
+
         break;
       // 原比例展示溢出滚动
       case '2':
@@ -92,7 +100,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
           width: finalW,
           height: finalH,
           overflow: 'auto',
-          ...finalStyle
+          // ...finalStyle
         })
         break;
     }
@@ -218,7 +226,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
               <div id="scaleDiv"
                 style={{
                   ...pageStyle,
-                  transform: `scale(${scaleValue})`
+                  ...scaleStyle
                 }}
               >
                 {
@@ -228,6 +236,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
                     bar={bar}
                     dispatch={dispatch}
                     scaleValue={scaleValue}
+                    scaleMode={scaleMode}
                     screenWidthRatio={screenWidthRatio}
                     screenHeightRatio={screenHeightRatio}
                   />
