@@ -201,6 +201,7 @@ class Counter extends Component {
                         marginLeft: layoutConfig.left,
                         marginRight: layoutConfig.right,
                         lineHeight: `${dataRangConfig.lineHeight}px`,
+                        display: 'inline-block'
                       }} key={index}>{item}</span>
                     }
                   </Fragment>
