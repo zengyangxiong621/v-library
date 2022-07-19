@@ -1,0 +1,33 @@
+.timeLineContainer{
+  display: flex;
+  flex-direction: column;
+  padding: 15px !important;
+}
+.timeLineContainer .ant-timeline-item{
+  flex: 1;
+}
+.timeLineContainer .ant-timeline-item .ant-timeline-item-head{
+  background-color: transparent;
+}
+.timeLineBox{
+  margin-top: 10px;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  min-width: 200px;
+  height: auto;
+  padding: 10px 20px 20px 20px;
+}
+.timeLineBox .timeLineTitle{
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  position: relative;
+}
+.timeLineBox .timeLineTitle .titleVal{
+  margin-left: 16px;
+  flex: 1;
+}
+.timeLineBox .timeLineContent{
+  text-shadow: none;
+}
