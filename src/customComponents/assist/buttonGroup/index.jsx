@@ -29,8 +29,6 @@ class ButtonGroup extends Component {
       return pre
     }, {})
 
-    console.log('style', style)
-
     const handleChange = value => {
       const data = componentData.filter(item => {
         return item[fieldKey] === value
@@ -101,7 +99,7 @@ class ButtonGroup extends Component {
           return <button
             style={{ flex: (1 / componentData.length).toFixed(2) }}
             onClick={() => handleClick(index)}
-            className={["cus-component-br-btn", index + 1 === this.state.active ? "active" : null].join(' ')}
+            className={["cus-component-button-group-btn", index + 1 === this.state.active ? "active" : null].join(' ')}
           >{item[fieldKey]}</button>
         })
         }
