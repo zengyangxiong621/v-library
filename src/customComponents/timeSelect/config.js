@@ -198,7 +198,7 @@ const ComponentDefaultConfig = {
           "name": "selectBorderColor",
           "type": "color",
           "value": "#fff"
-        },
+        }
       ]
     },
     {
@@ -218,7 +218,7 @@ const ComponentDefaultConfig = {
           "displayName": "背景色",
           "name": "bgColor",
           "type": "color",
-          "value": "#2e4af1"
+          "value": "#fef"
         },
         {
           "displayName": "文本样式",
@@ -239,7 +239,7 @@ const ComponentDefaultConfig = {
               "displayName": "",
               "name": "color",
               "type": "color",
-              "value": "#fff"
+              "value": "#000"
             },
             {
               "displayName": "",
@@ -262,12 +262,6 @@ const ComponentDefaultConfig = {
               "value": 0
             }
           ]
-        },
-        {
-          "displayName": "单元格主题色",
-          "name": "themeColor",
-          "type": "color",
-          "value": "#2e4af1"
         }
       ]
     }

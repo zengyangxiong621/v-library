@@ -37,7 +37,7 @@ const Input2 = ({ bar, dispatch, ...props }) => {
 
   return (
     <Form
-      className="custom-form position-form"
+      className="custom-form input-form-2"
       name="validate_other"
       form={form}
       {...formItemLayout}

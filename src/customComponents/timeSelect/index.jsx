@@ -60,7 +60,6 @@ const TimeSelect = (props) => {
   const selectBorderColor = selectorConfig.find(item => item.name === 'selectBorderColor').value
   const calendarConfig = config.find(item => item.name === 'calendarBox').value
   const calendarBgColor = calendarConfig.find(item => item.name === 'bgColor').value
-  const calendarCellsThemeColor = calendarConfig.find(item => item.name === 'themeColor').value
   const dateFormat = formatEnum.find(item => item.value === allGlobalConfig.find(item => item.name === 'dateFormat').value).name
   // const textIndent = config.find(item => item.name === 'textIndent' || item.name === 'unitName').value || ''
   let textStyleConfig = selectorConfig.filter((item) => ['textStyle'].includes(item.name))
