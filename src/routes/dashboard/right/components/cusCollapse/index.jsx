@@ -31,17 +31,15 @@ const CusCollapse = props => {
   return (
     <Collapse accordion className="custom-collapse" defaultActiveKey={_defaultActiveKey} >
       <Panel header={_data.displayName} key="1" extra={extraNode}>
-        {
-          _show.value && otherNode.map((item, index) => {
-            if (!(item.type && componentLib[item.type])) {
-              return null;
-            }
-            const TagName = componentLib[item.type];
-            return (
-              <TagName data={item} onChange={props.onChange} key={index} />
-            )
-          })
-        }
+        {otherNode.map((item, index) => {
+          if (!(item.type && componentLib[item.type])) {
+            return null;
+          }
+          const TagName = componentLib[item.type];
+          return (
+            <TagName data={item} onChange={props.onChange} key={index} />
+          )
+        })}
       </Panel>
     </Collapse>
   )

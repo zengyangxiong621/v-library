@@ -96,6 +96,12 @@ const ComponentDefaultConfig = {
       hasSwitch: false, // 是否有切换按钮
       defaultExpand: true,  // 是否默认展开
       value: [
+        {	// 如果有后面的按钮，则该项必须放在第一个
+          'name': 'show',
+          'displayName': '',
+          'value': false,
+          'type': 'switch',
+        },
         {
           'name': 'defaultBgColor',
           'displayName': '背景',
@@ -132,6 +138,12 @@ const ComponentDefaultConfig = {
       hasSwitch: false, // 是否有切换按钮
       defaultExpand: true,  // 是否默认展开
       value: [
+        {	// 如果有后面的按钮，则该项必须放在第一个
+          'name': 'show',
+          'displayName': '',
+          'value': false,
+          'type': 'switch',
+        },
         {
           'name': 'selectedBgColor',
           'displayName': '背景',
