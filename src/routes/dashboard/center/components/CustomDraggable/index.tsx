@@ -737,6 +737,7 @@ const CustomDraggable
                                   layer.moduleName === 'timeline'?
                                     <Timeline
                                       componentConfig={ component }
+                                      fields={ getFields(component) }
                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                     ></Timeline>:
                                     <ErrorCatch
@@ -749,10 +750,11 @@ const CustomDraggable
                                         console.log('组件报错信息：', errors, '组件id', layer.id);
                                       }}
                                     >
-                                    {/* <Timeline
-                                      componentConfig={ component }
-                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                    ></Timeline> */}
+                                      {/* <Timeline
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></Timeline> */}
                                       <RemoteBaseComponent
                                         key={layer.id}
                                         componentConfig={ component }

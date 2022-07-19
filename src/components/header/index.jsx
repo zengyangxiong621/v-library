@@ -16,7 +16,7 @@ const createMenu = ((menuData, props) => {  //创建菜单
     if(menuItem?.children){
       // 存在子菜单
       menu.push(
-        <Menu.SubMenu title={menuItem.title}>
+        <Menu.SubMenu key={menuItem.title} title={menuItem.title}>
           {
             menuItem.children.map(subItem => {
               return (
