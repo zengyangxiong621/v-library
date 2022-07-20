@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import * as echarts from 'echarts';
 import worldJson from "./world.json";
 import ComponentDefaultConfig from './config'
+import img from './img'
 
 class WorldMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
       options: {},
+      ipOptions: {},
       mapChart: null,
     };
   }
@@ -36,6 +38,21 @@ class WorldMap extends Component {
     }
     return res
   }
+  // IP显示-数据转换
+  convertIPData = (data, gdGeoCoordMap) => {
+    let res = [];
+    for (let i = 0; i < data.length; i++) {
+      let geoCoord = gdGeoCoordMap[data[i].name];
+      if (geoCoord) {
+        res.push({
+          name: data[i].name,
+          value: geoCoord.concat(data[i].value),
+        });
+      }
+    }
+    return res;
+  };
+
   getSeries = (centerPoint, mainData, flyLineArr, coordData) => {
     let series = [];
     [[centerPoint, flyLineArr]].forEach((item, i) => {
@@ -159,7 +176,8 @@ class WorldMap extends Component {
     const { comData, componentConfig, fields } = this.props
     const { config, staticData } = componentConfig || ComponentDefaultConfig
     const mainData = this.formatConfig(config, [])
-    const { bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = mainData
+    console.log(mainData, '#mainData');
+    const { displayMode, bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = mainData
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
     const fields2ValueMap = {}
@@ -170,10 +188,136 @@ class WorldMap extends Component {
     const finalData = this.formatData(originData, fields2ValueMap)
 
     const centerPoint = '北京区域中心';
-    const coordData = finalData[0].x
-    const flyLineArr = finalData[0].y
+    const coordData = finalData[0].coordData;
+    const flyLineArr = finalData[0].flyLineArr;
+
+    // IP地址数据
+    const ipData = finalData[0].ipData;
+    const ipCoordData = finalData[0].ipCoordData;
+
+    const ipOptions = {
+      tooltip: {
+        backgroundColor: "rgba(0,0,0,0)",
+        trigger: "axis",
+      },
+      legend: {
+        show: false,
+      },
+      geo: {
+        map: 'world',
+        type: 'map',
+        zoom: 1.2,
+        label: {
+          normal: {
+            show: false,
+            textStyle: {
+              color: '#FFFFFF',
+            },
+          },
+          emphasis: {
+            show: false,
+          },
+        },
+        roam: false, //是否允许缩放
+        itemStyle: {
+          normal: {
+            color: bgColor, //地图背景色
+            borderColor: borderColor, //省市边界线00fcff 516a89
+            borderWidth: 1,
+            textStyle: '#fff',
+          },
+          emphasis: {
+            areaColor: selectColor, //悬浮背景
+          },
+        },
+        data: [],
+      },
+      series: [
+        {
+          tooltip: {
+            show: false,
+          },
+          type: "effectScatter",
+          coordinateSystem: "geo",
+          rippleEffect: {
+            scale: 10,
+            brushType: "stroke",
+          },
+          showEffectOn: "render",
+          itemStyle: {
+            normal: {
+              color: "#00FFFF", //ip 涟漪颜色
+            },
+          },
+          label: {
+            normal: {
+              color: "#fff",
+            },
+          },
+          symbol: "circle",
+          symbolSize: [10, 5],
+          data: this.convertIPData(ipData, ipCoordData),
+          zlevel: 1,
+        },
+        {
+          type: "scatter",
+          coordinateSystem: "geo",
+          itemStyle: {
+            color: "#00FFF6",  // 光标颜色
+          },
+          symbol: img.arrow,
+          // symbol: 'arrow',
+          symbolSize: [44, 34],
+          symbolOffset: [0, -10],
+          // symbolRotate: 180,
+          z: 999,
+          data: this.convertIPData(ipData, ipCoordData),
+        },
+        {
+          type: "scatter",
+          coordinateSystem: "geo",
+          label: {
+            normal: {
+              show: true,
+              formatter: function (params) {
+                let name = params.name;
+                let value = params.value[2];
+                let text = `{fline|${value}}`;
+                return text;
+              },
+              color: "#fff",
+              rich: {
+                fline: {
+                  padding: [0, 25],
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 400,
+                },
+                tline: {
+                  padding: [0, 27],
+                  color: "#ABF8FF",
+                  fontSize: 12,
+                },
+              },
+            },
+            emphasis: {
+              show: true,
+            },
+          },
+          itemStyle: {
+            color: "#00FFF6",
+          },
+          symbol: img.ipbg,
+          // symbol: "roundRect",
+          symbolSize: [111, 32],
+          symbolOffset: [0, -35],
+          z: 999,
+          data: this.convertIPData(ipData, ipCoordData),
+        },
+      ],
+    };
+
     const options = {
-      // bgColor: '#1a1e45',
       radius: '100%',
       tooltip: {
         trigger: 'item',
@@ -229,8 +373,8 @@ class WorldMap extends Component {
     const dom = document.getElementById(componentConfig.id);
     var mapChart = echarts.init(dom);
     echarts.registerMap("world", worldJson);
-    this.setState({ options })
-    mapChart.setOption(options);
+    this.setState({ options, ipOptions }); // 飞线、IP都存state
+    mapChart.setOption(displayMode === 0 ? options : ipOptions);
     this.setState({ mapChart })
   };
 
@@ -269,7 +413,7 @@ class WorldMap extends Component {
     // ----------- 更新数据 -----------
     const { fields, comData, componentConfig } = this.props
     const { config, staticData } = componentConfig || ComponentDefaultConfig
-    let { mapChart, options } = this.state
+    let { mapChart, options, ipOptions } = this.state
     // 组件静态或者传入组件的数据
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
@@ -281,17 +425,30 @@ class WorldMap extends Component {
     const finalData = this.formatData(originData, fields2ValueMap)
     // 配置飞线数据
     let centerPoint = '北京区域中心';
-    let coordData = finalData[0].x;
-    let flyLineArr = finalData[0].y;
+    let coordData = finalData[0].coordData;
+    let flyLineArr = finalData[0].flyLineArr;
+    let ipData = finalData[0].ipData;
+    let ipCoordData = finalData[0].ipCoordData;
     let style = this.formatConfig(config, [])
-    const { bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = style
+    console.log(style, '#style render');
+    const { displayMode, bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = style
     if (mapChart) {
       options.geo.itemStyle.normal.color = bgColor;
       options.geo.itemStyle.normal.borderColor = borderColor;
       options.geo.itemStyle.emphasis.areaColor = selectColor;
-      options.series = this.getSeries(centerPoint, style, flyLineArr, coordData)
-      options.series[0].effect.color = iconColor;
-      mapChart.setOption(options);
+      ipOptions.geo.itemStyle.normal.color = bgColor;
+      ipOptions.geo.itemStyle.normal.borderColor = borderColor;
+      ipOptions.geo.itemStyle.emphasis.areaColor = selectColor;
+
+      if (displayMode === 0) {
+        options.series = this.getSeries(centerPoint, style, flyLineArr, coordData)
+        options.series[0].effect.color = iconColor;
+      } else {
+        ipOptions.series.map(item => {
+          item.data = this.convertIPData(ipData, ipCoordData);
+        })       
+      }
+      mapChart.setOption(displayMode === 0 ? options : ipOptions);
     }
 
     let mapSize = {
@@ -303,7 +460,7 @@ class WorldMap extends Component {
       <div
         id={this.props.componentConfig.id}
         style={mapSize}
-        option={options}
+        option={displayMode === 0 ? options : ipOptions}
       />
     );
   }

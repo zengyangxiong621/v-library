@@ -560,7 +560,7 @@ const CustomDraggable
               // 将线上配置改为本地配置
               // component.config = textConfig.config
               // component.staticData = textConfig.staticData
-              // console.log(textConfig.staticData,'#textConfig');
+              console.log(textConfig.staticData,'#textConfig');
               
 
               if (component) {
