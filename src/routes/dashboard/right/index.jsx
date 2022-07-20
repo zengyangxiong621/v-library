@@ -7,6 +7,8 @@ import GroupConfig from './components/groupConfig'
 import SingleLayer from './components/singleLayer'
 import PageSetting from './components/pageSetting'
 import AlignmentSetting from './components/alignmentSetting'
+import ReferenceSetting from './components/referenceSetting'
+import DynamicSetting from './components/dynamicSetting'
 
 /**
  * 1. 组配置、单个图层配置、页面设置、多选时对齐设置
@@ -21,6 +23,7 @@ const Right = ({ dispatch, bar }) => {
     'singleLayer': SingleLayer,
     'pageSetting': PageSetting,
     'alignmentSetting': AlignmentSetting,
+    'referenceSetting': ReferenceSetting,
   }
   useEffect(() => {
     if (!bar.selectedComponentOrGroup.length) {
@@ -33,8 +36,17 @@ const Right = ({ dispatch, bar }) => {
         // 组设置
         setWhichShow('groupConfig')
       } else {
-        // 组件设置
-        setWhichShow('singleLayer')
+        // 单个设置
+        if ('panelType' in layer) {
+          if (layer.panelType === 0) {
+            setWhichShow('dynamicSetting')
+          }
+          if (layer.panelType === 1) {
+            setWhichShow('referenceSetting')
+          }
+        } else {
+          setWhichShow('singleLayer')
+        }
       }
     }
     // 对齐设置
@@ -51,7 +63,10 @@ const Right = ({ dispatch, bar }) => {
         whichShow === 'groupConfig' ? <GroupConfig key={ key }/>
           : whichShow === 'singleLayer' ? <SingleLayer key={ key }/>
           : whichShow === 'pageSetting' ? <PageSetting key={ key }/>
-          : whichShow === 'alignmentSetting' ? <AlignmentSetting key={ key }/> : <></>
+            : whichShow === 'alignmentSetting' ? <AlignmentSetting key={ key }/>
+              : whichShow === 'referenceSetting' ? <ReferenceSetting key={ key }/>
+              : whichShow === 'dynamicSetting' ? <DynamicSetting key={ key }/>
+                : <></>
       }
     </div>
   )

@@ -71,8 +71,10 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import CusImage from '@/customComponents/assist/image/index'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 
-import Tab from "@/customComponents/tab/index";
-import ScrollSelect from "@/customComponents/scrollSelect/index";
+import Tab from '@/customComponents/tab/index'
+import ScrollSelect from '@/customComponents/scrollSelect/index'
+import ReferencePanel from '@/customComponents/referencePanel/index'
+import DynamicPanel from '@/customComponents/dynamicPanel/index'
 import { cloneDeep } from "lodash"
 
 // import Tab from "@/components/tab";
@@ -634,132 +636,146 @@ const CustomDraggable
         {
           treeData.map((layer: ILayerGroup | ILayerComponent | any) => {
 
-            let config: IConfig = {
+          let config: IConfig = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
+          }
+          let isGroup: boolean = (COMPONENTS in layer)
+          let isPanel: boolean = ('panelType' in layer)
+          let group: ILayerGroup | undefined
+          let component: IComponent | undefined
+          let events: any
+          let style_config, staticData, style_dimension_config
+          // 群组
+          if(COMPONENTS in layer) {
+            group = layer
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components)
+            xPositionList = xPositionList.sort((a, b) => a - b)
+            yPositionList = yPositionList.sort((a, b) => a - b)
+            config = {
               position: {
-                x: 0,
-                y: 0,
+                x: xPositionList[0],
+                y: yPositionList[0],
               },
               style: {
-                width: 0,
-                height: 0,
+                width: xPositionList[xPositionList.length - 1] - xPositionList[0],
+                height: yPositionList[yPositionList.length - 1] - yPositionList[0],
               },
             }
-            let isGroup: boolean = (COMPONENTS in layer)
-            let group: ILayerGroup | undefined
-            let component: IComponent | undefined
-            let events: any
-            let style_config, staticData, style_dimension_config
-            // 群组
-            if (COMPONENTS in layer) {
-              group = layer
-              let [xPositionList, yPositionList] = calcGroupPosition(layer[COMPONENTS], components)
-              xPositionList = xPositionList.sort((a, b) => a - b)
-              yPositionList = yPositionList.sort((a, b) => a - b)
-              config = {
-                position: {
-                  x: xPositionList[0],
-                  y: yPositionList[0],
-                },
-                style: {
-                  width: xPositionList[xPositionList.length - 1] - xPositionList[0],
-                  height: yPositionList[yPositionList.length - 1] - yPositionList[0],
-                },
-              }
-            } else {
-              // 组件
-              component = components.find(item => item.id === layer.id)
-              // component=timelineConfig
+          } else {
+            // 组件
+            component = components.find(item => item.id === layer.id)
+            // component=timelineConfig
 
-              // 将线上配置改为本地配置
-              // component.config = radarChartConfig.config
-              // component.staticData = radarChartConfig.staticData
-
-
-              if (component) {
-                staticData = component.staticData
-                style_config = component.config
-                style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-                if (style_dimension_config) {
-                  Object.values(style_dimension_config.value).forEach((obj: any) => {
-                    if ([TOP, LEFT].includes(obj.name)) {
-                      config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-                    } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-                      config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
-                    }
-                  })
-                }
-                events = component.events
-              }
-            }
-            return (
-              <SingleDraggable
-                dimensionConfig={style_dimension_config}
-                scale={bar.canvasScaleValue}
-                nodeRef={nodeRef}
-                id={layer.id}
-                cRef={(ref: any) => {
-                  if (layer.id in allComponentRefs) {
-                  } else {
-                    allComponentRefs[layer.id] = ref
+            if(component) {
+              staticData = component.staticData
+              style_config = component.config
+              style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
+              if(style_dimension_config) {
+                Object.values(style_dimension_config.value).forEach((obj: any) => {
+                  if([ TOP, LEFT ].includes(obj.name)) {
+                    config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+                  } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
+                    config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
                   }
-                }}
-                disabled={layer.isLock}
-                cancel=".no-cancel"
-                key={layer.id}
-                position={config.position}
-                onStart={(ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config)}
-                onDrag={(ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config)}
-                onStop={(ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config)}
-              >
-                <div
-                  ref={(ref: any) => {
-                    if (layer.id in allComponentDOMs) {
-                    } else {
-                      allComponentDOMs[layer.id] = ref
-                    }
-                  }}                // onClickCapture={(ev) => handleClick(ev, layer, config)}
-                  data-id={isGroup ? layer.id : 'component-' + layer.id}
-                  key={layer.id}
-                  onClick={(ev) => handleClick(ev, layer, config)}
-                  onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
-                  onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
-                  onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
-                  onContextMenu={(ev) => mouseRightClick(ev, layer, component, config)}
-                  className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
-                  style={{
-                    ...config.style,
-                    transition: 'width, height 0.3s',
-                    // border: '1px solid gray',
-                    visibility: !layer.isShow ? 'hidden' : 'unset',
-                    cursor: 'move'
-                  }}>
-                  {
-                    layer[HIDE_DEFAULT] ?
-                      <div style={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(76, 255, 231, 0.15)',
-                      }} /> :
+                })
+              }
+              events = component.events
+            }
+          }
+          return (
+            <SingleDraggable
+              dimensionConfig={ style_dimension_config }
+              scale={ bar.canvasScaleValue }
+              nodeRef={ nodeRef }
+              id={ layer.id }
+              cRef={ (ref: any) => {
+                if(layer.id in allComponentRefs) {
+                } else {
+                  allComponentRefs[layer.id] = ref
+                }
+              } }
+              disabled={ layer.isLock }
+              cancel=".no-cancel"
+              key={ layer.id }
+              position={ config.position }
+              onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config) }
+              onDrag={ (ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config) }
+              onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
+            >
+              <div
+                ref={ (ref: any) => {
+                  if(layer.id in allComponentDOMs) {
+                  } else {
+                    allComponentDOMs[layer.id] = ref
+                  }
+                } }                // onClickCapture={(ev) => handleClick(ev, layer, config)}
+                data-id={ isPanel ? (layer.panelType === 0 ? `panel_${ layer.id }` : `ref_${ layer.id }`) : isGroup ? layer.id : `component-${ layer.id }` }
+                key={ layer.id }
+                onClick={ (ev) => handleClick(ev, layer, config) }
+                onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
+                onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
+                onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
+                onContextMenu={ (ev) => mouseRightClick(ev, layer, component, config) }
+                className={ `box ${ layer.selected ? 'selected' : '' }${ layer.hover ? 'hovered' : '' }` }
+                style={ {
+                  ...config.style,
+                  transition: 'width, height 0.3s',
+                  // border: '1px solid gray',
+                  visibility: !layer.isShow ? 'hidden' : 'unset',
+                  cursor: 'move',
+                } }>
+                {
+                  layer[HIDE_DEFAULT] ?
+                    <div style={ {
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: 'rgba(76, 255, 231, 0.15)',
+                    } }/> :
+                    isPanel ?
+                      (layer.panelType === 0 ?
+                          <DynamicPanel
+                            history={ history }
+                            id={layer.id}
+                          /> :
+                          <ReferencePanel
+                            history={ history }
+                            id={layer.id}
+                          />
+                      ) :
                       isGroup ?
-                      <div className="no-cancel" style={{
-                        opacity: (layer[OPACITY] || 100) / 100,
-                      }}>
-                        {(layer as any)[COMPONENTS]?.length > 0 ?
-                          <div style={{ position: 'absolute', left: -config.position.x, top: -config.position.y }}>
-                            <CustomDraggable
-                              mouse={layer.selected ? mouse : 0}
-                              bar={bar}
-                              dispatch={dispatch}
-                              treeData={(layer as any)[COMPONENTS]}
-                            />
-                          </div>
-                          : ''
-                        }
-                      </div> : <>
-                        {/* <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}> */}
-                          {
-                            // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
-                            //   <CompImage componentConfig={component}/>
+                        <div className="no-cancel" style={ {
+                          opacity: (layer[OPACITY] || 100) / 100,
+                        } }>
+                          { (layer as any)[COMPONENTS]?.length > 0 ?
+                            <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
+                              <CustomDraggable
+                                mouse={ layer.selected ? mouse : 0 }
+                                bar={ bar }
+                                dispatch={ dispatch }
+                                history={ history }
+                                treeData={ (layer as any)[COMPONENTS] }
+                              />
+                            </div>
+                            : ''
+                          }
+                        </div> : <>
+                          <div data-id={ layer.id } style={ { width: '100%', height: '100%', pointerEvents: 'none' } }>
+                            {
+                              // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
+                              //   <CompImage componentConfig={component}/>
+
+                          //   <Counter
+                          //   componentConfig={component}
+                          //   fields={getFields(component)}
+                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          // ></Counter>
                           // <RadarChart
                           //   componentConfig={component}
                           //   fields={getFields(component)}
@@ -769,7 +785,7 @@ const CustomDraggable
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
 
-                            layer.moduleName === 'counter' ? 
+                            layer.moduleName === 'counter' ?
                             <Counter
                               componentConfig={component}
                               fields={getFields(component)}
@@ -937,7 +953,7 @@ const CustomDraggable
                                       ></RemoteBaseComponent>
                                     </ErrorCatch>
                           }
-                        {/* </div> */}
+                         </div>
                       </>
                   }
                   {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}

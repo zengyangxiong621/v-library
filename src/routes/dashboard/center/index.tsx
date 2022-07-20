@@ -439,7 +439,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                 } }
               >
                 <div
-                  className="canvas-screen"
+                  className={`canvas-screen screen-${bar.dashboardId}`}
                   style={ {
                     width: recommendConfig.width,
                     height: recommendConfig.height,

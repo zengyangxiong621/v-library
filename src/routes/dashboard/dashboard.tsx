@@ -23,6 +23,7 @@ import CallbackArgs from './components/callbackArgs'
 import DataFilters from './components/dataFilters'
 import ModuleUpdate from './components/moduleUpdate'
 import useLoading from '@/components/useLoading'
+import DynamicPanel from '@/routes/dashboard/left/components/dynamicPanel'
 import { useEventEmitter } from 'ahooks';
 
 const { Header } = Layout
@@ -274,6 +275,7 @@ function App({ bar, dispatch, location }: any) {
       </Header>
       <div className="p-home">
         <div className="home-left-wrap">
+          <DynamicPanel />
           <Left />
         </div>
         <div className="center-wrap">

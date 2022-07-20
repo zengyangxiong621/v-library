@@ -41,7 +41,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const headerRef = useRef(null)
   // TODO  待删除
   const [single, setSingle] = useState(true)
-
+  const copyNode = useRef(null)
 
   const clearStatus = (event) => {
     const dom = event.target || null
@@ -337,6 +337,20 @@ const Left = ({ dispatch, bar, operate }) => {
       payload: false,
     })
   }
+
+  const handleRemove = () => {
+    const dom = document.querySelector('.screen-1547488985443020802')
+    const domParent = document.querySelector('.canvas-container')
+    copyNode.current = {
+      [bar.dashboardId]: dom
+    }
+    domParent.removeChild(dom)
+  }
+  const handleReset = () => {
+    const domParent = document.querySelector('.canvas-container')
+    domParent.appendChild(copyNode.current[bar.dashboardId])
+  }
+
   return (
     <div className="left-menu">
       <div className="left-wrap">
@@ -387,6 +401,12 @@ const Left = ({ dispatch, bar, operate }) => {
         {/* {bar.isShowRightMenu &&
           <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />} */}
       </div>
+      <Button onClick={() => handleRemove()}>
+        移除
+      </Button>
+      <Button onClick={() => handleReset()}>
+        还原
+      </Button>
       <div className="footer" ref={bottomBarRef}>
         <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
         </ToolBar>

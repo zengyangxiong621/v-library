@@ -62,7 +62,9 @@ export default {
   subscriptions: {
     setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
-      history.listen((location: any) => {});
+      history.listen((location: any) => {
+        console.log('location', location)
+      });
     },
     onResize({ dispatch, history }: any) {
       window.onresize = (e) => {};
