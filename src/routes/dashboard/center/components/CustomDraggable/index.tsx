@@ -27,6 +27,8 @@ import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 import Timeline from '@/customComponents/assist/timeline'
 import timelineConfig from '@/customComponents/assist/timeline/config'
 
+import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+
 import {
   STYLE,
   DIMENSION,
@@ -740,6 +742,12 @@ const CustomDraggable
                                       fields={ getFields(component) }
                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                     ></Timeline>:
+                                    layer.moduleName === 'CardFlipper_1'?
+                                      <CardFlipper1
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></CardFlipper1>:
                                     <ErrorCatch
                                       app={component.name}
                                       user=""
