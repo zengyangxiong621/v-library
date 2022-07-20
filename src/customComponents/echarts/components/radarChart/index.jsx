@@ -1,15 +1,30 @@
 import React from 'react';
 import * as echarts from 'echarts';
-import { debounce } from "@/utils/common";
 import ComponentDefaultConfig from './config'
-
+const debounce = (fn, delay = 200) => {
+  let timer = null
+  return function () {
+    if (timer) clearTimeout(timer) // 因为防抖是最后一次才执行，所以只要timer存在就清除定时器重新赋值
+    timer = setTimeout(() => {
+      fn.apply(this, arguments)
+      timer = null
+    }, delay)
+  }
+}
 class RadarChart extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.resizeDebounce = debounce(this.chartsResize, 250); 
+    this.canvasDom = null  
     this.state = {
       chartDom: null
     }
   }
+  chartsResize = () => {
+    if (this.state.chartDom) {
+      this.state.chartDom.resize(); //实例 的resize
+    }
+  };
   // 将某个配置项的值转成键值对的形式
   formatConfig = (config, exclude) => {
     return config.filter((item) => exclude.indexOf(item.name) == -1).reduce((pre, cur) => {
@@ -79,10 +94,10 @@ class RadarChart extends React.PureComponent {
             color: dataSeriesConfig.color,
             type: dataSeriesConfig.lineType
           }
-          obj.data = [item.value]
+          obj.data =  [{value:item.value}]
         }else{
           obj.name = item.name
-          obj.data = [item.value]
+          obj.data = [{value:item.value}]
         }
         arr.push(obj)
       })
@@ -90,21 +105,14 @@ class RadarChart extends React.PureComponent {
     return arr
   }
   // 设置option
-  getOption(config,list,dataValue) {
-    const { comData,fields } = this.props
+  getOption(config,list) {
     // 坐标轴
     const circleAxis = this.formatConfig([this.getStyleData(config, 'circleAxis')],[])
     // 极轴
     const lineAxis = this.formatConfig([this.getStyleData(config, 'lineAxis')],[])
-    // 数据系类
-    const dataSeries = this.getStyleData(config, 'dataSeries')
     // 外围字体配置
     const outsideValue = this.formatConfig([this.getStyleData(config, 'outsideValue')],[])
     let seriesData = []
-    if(dataValue.length){
-      // 数据格式化
-      seriesData = this.formatDataSeries(dataSeries,dataValue[0][fields[1]])
-    }
     return {
       backgroundColor: '#0D2753',
       tooltip: {
@@ -201,52 +209,42 @@ class RadarChart extends React.PureComponent {
   }
 
   initChart(){
-    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
-    const dom = document.getElementById(this.props.componentConfig.id);
-    const radarChart = echarts.init(dom);
-    const { staticData, config } = componentConfig
-    const list = this.formatChartData(staticData.data,config)
-    const option = this.getOption(config,list,staticData.data)
-    radarChart.setOption(option);
+    this.canvasDom = document.getElementById(this.props.componentConfig.id);
+    const radarChart = echarts.init(this.canvasDom);
     this.setState({
       chartDom: radarChart
     })
   }
-
-  // 根据对应的自动来转换
-  // formatData = (data, fields) => {
-  //   const arr = Array.isArray(data) ? data.map((item) => {
-  //       item.list = item[fields[0]]
-  //       item.seriesData = item[fields[1]]
-  //     return item
-  //   }) : []
-  //   return arr 
-  // }
-
   render() {
     const { comData,fields } = this.props
-    console.log(fields,'fieldsfields')
     const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const {config, staticData} = componentConfig
     const { chartDom } = this.state
+    const dimension = this.formatConfig([this.getStyleData(config, 'dimension')],[])
     // 组件静态或者传入组件的数据
     let originData = comData || staticData.data
-    console.log(originData,'originData')
-    // originData = this.formatData(originData, fields)
-    const list = this.formatChartData(originData,config)
-    const option = this.getOption(config,list,originData)
-    if(chartDom && option){
-      chartDom.clear();
-      chartDom.setOption(option);
+    // 数据系类
+    if(!originData.length){
+      chartDom.clear()
+    }else{
+      const dataSeries = this.getStyleData(config, 'dataSeries')
+      const seriesData = this.formatDataSeries(dataSeries,originData[0][fields[1]])
+      const list = this.formatChartData(originData,config)
+      const option = this.getOption(config,list)
+      option.series = seriesData
+      if(chartDom && option){
+        chartDom.clear()
+        chartDom.setOption(option);
+        this.resizeDebounce()
+      }
     }
-    let mapSize = {
-      width: '100%',
-      height: '100%'
-    };
     return (
       <div
         id={this.props.componentConfig.id}
-        style={mapSize}
+        style={{
+          width:dimension.width,
+          height:dimension.height
+        }}
       />
     );
   }
