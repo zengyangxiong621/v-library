@@ -2,11 +2,10 @@ import React, { memo, useState, useEffect } from 'react';
 import { Link } from 'dva/router';
 
 import './index.less'
-import { Layout, Menu, Dropdown,Modal,Form, Input } from 'antd';
+import { Layout, Menu, Dropdown,Modal,Form, Input, message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import logo from '@/assets/images/logo.svg';
 import { useFetch } from "@/utils/useFetch";
-
 
 const createMenu = ((menuData, props) => {  //创建菜单
   const { location, history } = props
@@ -58,14 +57,17 @@ const createMenu = ((menuData, props) => {  //创建菜单
 });
 
 const Header = props => {
-  const { menuData, defaultPath, location, history } = props
+  const { menuData, defaultPath, location, history,global,dispatch } = props
   const { pathname } = location
+  const {userInfo}=global
   let currentPathname = pathname
   if (pathname === '/') {
     currentPathname = '/dashboard-manage'
   }
-
+  const [modifyForm] = Form.useForm();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [modifyLoading,setModifyLoding]=useState(false)
+
   // 选择工作空间
   const selectWorkspace = ({ key }) => {
     if (key == 1) {
@@ -82,19 +84,48 @@ const Header = props => {
     })
     return !!data
   }
+  const handleHadLogouted=async ()=>{
+    const isLogoutSuccess=await handleLogout()
+    if(isLogoutSuccess){
+      localStorage.removeItem('token')
+      history.replace('/login')
+    }
+  }
   const handleUserMenuClick=async ({key}) => {
     if(key==='1'){
-      const isLogoutSuccess=await handleLogout()
-      if(isLogoutSuccess){
-        localStorage.removeItem('token')
-        history.replace('/login')
-      }
+      handleHadLogouted()
     }else{
       setModalVisible(true)
     }
   }
-  const handleConfirm=()=>{
-
+  const handleConfirm=async ()=>{
+    const value=await modifyForm.validateFields()
+    const {oldpsd,newpsd,reNewpsd}=value
+    if(newpsd!==reNewpsd){
+      message.warning('两次密码不一致')
+      return
+    }
+    setModifyLoding(true)
+    const {id}=userInfo
+    try {
+      const params={
+        id,
+        oldPassword:oldpsd,
+        password:newpsd
+      }
+      const [,data]=await useFetch('/visual/user/changeMyPassword',{
+        body:JSON.stringify(params)
+      })
+      if(data){
+        message.success('修改成功')
+        handleHadLogouted()
+      }
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setModifyLoding(false)
+      handleCancel()
+    }
   }
   const handleCancel=()=>{
     setModalVisible(false)
@@ -161,12 +192,18 @@ const Header = props => {
         </div>
       </div>
 
-      <Modal title="修改密码" visible={isModalVisible} getContainer={false} onOk={handleConfirm} onCancel={handleCancel} okText='确认' cancelText='取消'>
+      <Modal title="修改密码" visible={isModalVisible} confirmLoading={modifyLoading} getContainer={false} onOk={handleConfirm} onCancel={handleCancel} okText='确认' cancelText='取消'>
         <Form
+          form={modifyForm}
           name="basic"
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 18 }}
           autoComplete="off"
+          initialValues={{
+            oldpsd:'',
+            newpsd:'',
+            reNewpsd:''
+          }}
         >
           <Form.Item
             label="旧密码"
@@ -186,7 +223,7 @@ const Header = props => {
 
           <Form.Item
             label="新密码"
-            name="newpsd"
+            name="reNewpsd"
           >
             <Input.Password placeholder='请再次输入新密码' />
           </Form.Item>

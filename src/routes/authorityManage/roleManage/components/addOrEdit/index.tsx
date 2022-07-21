@@ -233,6 +233,7 @@ const AddOrEdit=(props:any)=>{
   },[editFormData])
   return (
     <Modal
+      className='roleModal'
       title={modelTitle}
       visible={isModalVisible}
       width={1000}

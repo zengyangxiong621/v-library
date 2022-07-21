@@ -157,7 +157,7 @@ const AddOrEdit = (props: any) => {
             {
               roleList?.map((item:any) => {
                 return (
-                  <Option value={item.id}>{item.name}</Option>
+                  <Option key={item.id} value={item.id}>{item.name}</Option>
                 )
               })
             }
