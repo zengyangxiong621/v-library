@@ -1,0 +1,19 @@
+@keyframes opacityAnimate {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleAnimate {
+  from {
+    transform: scaleX(0) scaleY(0) var(--rotate);
+  }
+
+  to {
+    transform: scaleX(1) scaleY(1) var(--rotate);
+  }
+}

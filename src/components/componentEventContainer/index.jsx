@@ -1,13 +1,17 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
-import TimeSelect from '@/components/timeSelect'
-import ScrollTable from '@/components/scrollTable'
+import TimeSelect from '@/customComponents/timeSelect'
+import ScrollTable from '@/customComponents/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
-import Tab from '@/components/tab'
+import CusImage from '@/customComponents/assist/image/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import Tab from '@/customComponents/tab'
+import ScrollSelect from '@/customComponents/scrollSelect/index'
 import {connect} from "dva"
-// import './index.less'
+// import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
 
@@ -23,35 +27,35 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
   const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
   // 点击
-  const handleClick = debounce((e) => {
+  const handleClick = debounce((e, data) => {
     const clickEvents = events.filter(item => item.trigger === 'click')
     const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (clickActions.length === 0) {
       return
     }
     setClickTimes(1)
-    console.log('点击事件')
-    customEventsFunction(clickEvents)
+    console.log('点击事件', data)
+    customEventsFunction(clickEvents, data)
   }, 300)
   // 移入
-  const handleMouseEnter = debounce((e) => {
+  const handleMouseEnter = debounce((e, data) => {
     const mouseEnterEvents = events.filter(item => item.trigger === 'mouseEnter')
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (mouseEnterActions.length === 0) {
       return
     }
-    console.log('鼠标移入')
-    customEventsFunction(mouseEnterEvents)
+    console.log('鼠标移入', data)
+    customEventsFunction(mouseEnterEvents, data)
   })
   // 移出
-  const handleMouseOut = debounce((e) => {
+  const handleMouseLeave = debounce((e, data) => {
     const mouseOutEvents = events.filter(item => item.trigger === 'mouseLeave')
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (mouseOutActions.length === 0) {
       return
     }
-    console.log('鼠标移出')
-    customEventsFunction(mouseOutEvents)
+    console.log('鼠标移出', data)
+    customEventsFunction(mouseOutEvents, data)
   })
 
   const customEventsFunction = (events, data) => {
@@ -147,9 +151,12 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
   }
 
   const handleValueChange = debounce((data) => {
-    console.log('值变化')
+    console.log('-------------')
+    console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
+    console.log('component', component)
+    console.log('-------------')
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -157,6 +164,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
+    console.log('sourceCallbackList', sourceCallbackList)
     sourceCallbackList.forEach(item => {
       item.sourceModules.forEach(sourceItem => {
         if (sourceItem.id === componentId) {
@@ -185,8 +193,11 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         }
       })
     })
+    console.log('activeIds1', activeIds)
+    console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
+      console.log('activeIds2', activeIds)
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
@@ -213,11 +224,12 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
       })
     }
     // 自定义事件
-    const dataChangeEvents = events.filter(item => item.trigger === 'dataChange')
+    const dataChangeEvents = events.filter(item => item.trigger === 'dataChange' || item.trigger === 'statusChange')
     const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (dataChangeActions.length === 0) {
       return
     }
+    console.log('自定义事件触发了吗')
     customEventsFunction(dataChangeEvents, data)
 
   }, 300)
@@ -373,14 +385,35 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
       key={id}
       ref={componentRef}
       className={`single-component event-id-${id}`}
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseOut={handleMouseOut}
+      // onClick={handleClick}
+      // onMouseEnter={handleMouseEnter}
+      // onMouseLeave={handleMouseLeave}
       style={{width: '100%', height: '100%', ...animationConfig, ...opacityStyle}}>
       {/*      <RemoteBaseComponent
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'image2' ?
+        <CusImage
+          onChange={handleValueChange}
+          {...props}
+        >
+        </CusImage>
+        :
+        props.componentConfig.moduleName === 'zebraColumn' ?
+        <ZebraColumn
+          onChange={handleValueChange}
+          {...props}
+        >
+        </ZebraColumn>
+        :
+        props.componentConfig.moduleName === 'basicBar' ?
+        <BasicBar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </BasicBar>
+        :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
           onChange={handleValueChange}
@@ -404,18 +437,29 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
           </ScrollTable>
           : props.componentConfig.moduleName === 'tab' ?
           <Tab
-            onChange={handleValueChange}
+            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+            onClick={handleClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             {...props}
           >
           </Tab>
+          : props.componentConfig.moduleName === 'scrollSelect' ?
+          <ScrollSelect
+            onChange={handleValueChange}
+            {...props}
+          >
+          </ScrollSelect>
           : props.componentConfig.moduleName === 'timeSelect' ?
           <TimeSelect
+            scale={scale}
             onChange={handleValueChange}
             {...props}
           >
           </TimeSelect>
           : <RemoteBaseComponent
             {...props}
+            scale={scale}
             onChange={handleValueChange}
           ></RemoteBaseComponent>
       }

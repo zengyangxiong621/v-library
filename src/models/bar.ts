@@ -386,22 +386,6 @@ export default {
       });
       const filterNullLayers = clearNullGroup(layers);
       yield put({
-        type: "save",
-        payload: {
-          scaleDragData: {
-            position: {
-              x: 0,
-              y: 0,
-            },
-            style: {
-              width: 0,
-              height: 0,
-              display: "none",
-            },
-          },
-        },
-      });
-      yield put({
         type: "updateTree",
         payload: filterNullLayers,
       });
@@ -676,6 +660,15 @@ export default {
       });
       cb(data.content);
     },
+    *setComponentConfigAndCalcDragScaleData({ payload, cb }: any, { call, put }: any): any {
+      yield put({
+        type: "setComponentConfig",
+        payload,
+      })
+      yield put({
+        type: 'calcDragScaleData'
+      })
+    }
   },
 
   reducers: {
@@ -1200,9 +1193,9 @@ export default {
           ...state,
         };
       }
-      localStorage.removeItem("dblComponentTimes");
-      localStorage.removeItem("currentTimes");
-      state.currentDblTimes = 0;
+      // localStorage.removeItem("dblComponentTimes");
+      // localStorage.removeItem("currentTimes");
+      // state.currentDblTimes = 0;
       deepForEach(state.treeData, (layer: ILayerGroup | ILayerComponent) => {
         layer.selected = false;
       });
@@ -1258,6 +1251,7 @@ export default {
         return item.id === payload.id;
       });
       state.components.splice(index, 1, state.componentConfig);
+      // calcDragScaleData
       return { ...state };
     },
     setGroupConfig(state: IBarState, { payload }: any) {

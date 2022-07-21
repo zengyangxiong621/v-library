@@ -69,6 +69,7 @@
     "react-dev-utils": "^12.0.0",
     "react-dom": "17.0.2",
     "react-draggable": "^4.4.4",
+    "react-error-catch": "^1.0.13",
     "react-fast-compare": "^3.2.0",
     "react-monaco-editor": "^0.48.0",
     "react-refresh": "^0.11.0",
@@ -82,6 +83,7 @@
     "slick-carousel": "^1.8.1",
     "source-map-loader": "^3.0.0",
     "style-loader": "^3.3.1",
+    "swiper": "^5.4.5",
     "terser-webpack-plugin": "^5.2.5",
     "typescript": "^4.5.5",
     "uuid": "^8.3.2",
@@ -101,7 +103,11 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    }
   },
   "browserslist": {
     "production": [
@@ -172,6 +178,8 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/swiper": "^6.0.0",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.13",
     "query-string": "^7.1.1",

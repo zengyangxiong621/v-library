@@ -614,6 +614,13 @@ export const styleTransformFunc = (textStyle, type=true) => {
     lineHeight: (value) => ({
       [type ? 'lineHeight' : 'line-height']: value ? value + 'px' : 'unset'
     }),
+    shadow: ({ hShadow, vShadow, color, blur }) => ({
+      [type ? 'boxShadow' : 'box-shadow']: `${hShadow}px ${vShadow}px ${blur}px ${color}`
+    }),
+    textShadow: ({ hShadow, vShadow, color, blur }) => ({
+      [type ? 'textShadow' : 'text-shadow']: `${hShadow}px ${vShadow}px ${blur}px ${color}`
+    })
+    ,
   }
   textStyle = textStyle.reduce((pre, cur) => {
     if (Array.isArray(cur.value)) {
@@ -645,4 +652,15 @@ export const styleObjectToStr = (style) => {
   }
   s = s.join(';')
   return  s
+}
+
+export const getRandowString=(len)=>{
+  const _Len=len || 32
+  var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678' /** **默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+  var maxPos = $chars.length
+  var pwd = ''
+  for (let i = 0; i < _Len; i++) {
+    pwd += $chars.charAt(Math.floor(Math.random() * maxPos))
+  }
+  return pwd
 }

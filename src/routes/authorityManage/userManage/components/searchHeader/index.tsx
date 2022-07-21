@@ -53,18 +53,18 @@ const SearchHeader = (props: any) => {
      </Form.Item>
      <Form.Item label='角色' name='roleId'>
       <Select
-          placeholder='请选择角色'
-          value={roleId}
-          style={{ width: 200 }}
-        >
-          {
-            roleList.map((item:any) => {
-              return (
-                <Select.Option value={item.id}>{item.name}</Select.Option>
-              )
-            })
-          }
-        </Select>
+        placeholder='请选择角色'
+        value={roleId}
+        style={{ width: 200 }}
+      >
+        {
+          roleList?.map((item:any) => {
+            return (
+              <Select.Option value={item.id}>{item.name}</Select.Option>
+            )
+          })
+        }
+      </Select>
      </Form.Item>
      <Form.Item>
         <Space>
