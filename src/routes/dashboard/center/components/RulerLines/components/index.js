@@ -61,6 +61,7 @@ const SingleLine = (props) => {
               cursor: 'ew-resize',
               display: line.display,
               zIndex: 10000000,
+              opacity: 1
             } }>
             {
               isShow ? <div
@@ -86,6 +87,7 @@ const SingleLine = (props) => {
               cursor: 'n-resize',
               display: line.display,
               zIndex: 10000000,
+              opacity: 1
             } }>
             {
               isShow ? <div
