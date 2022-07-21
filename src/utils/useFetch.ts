@@ -23,13 +23,16 @@ const catchErr = <T, U = Error>(
 };
 
 export const BASE_URL = (window as any).CONFIG.BASE_URL
+
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",
   headers: {
     "Content-Type": "application/json",
+    "Token": ''
   },
 };
+
 /**
  * description: 处理数据，对请求成功或者失败做统一处理
  * params:  @path -- 请求路径
@@ -54,6 +57,9 @@ export const useFetch = async (
   // 最终路径 & 最终配置、参数
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
+
+  const token=localStorage.getItem('token')
+  finalParams.headers['Token']=token
 
   // 格式由fetchOptions中的responseType来决定，默认是json
   const finalFetch = fetch(finalPath, finalParams)
@@ -86,8 +92,15 @@ export const useFetch = async (
   // TODO 外部传入 对应状态码的处理逻辑
   if (code === 500) {
     message.error({
-      content: "请求数据失败",
+      content: data?.message || "请求数据失败",
     });
+  }
+  if(code===401){
+    message.error({
+      content: data?.message,
+    });
+    window.history.replaceState(null,'','/login')
+    window.location.reload();
   }
   if (data) {
     // data = data.data.content

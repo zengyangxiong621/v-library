@@ -653,3 +653,14 @@ export const styleObjectToStr = (style) => {
   s = s.join(';')
   return  s
 }
+
+export const getRandowString=(len)=>{
+  const _Len=len || 32
+  var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678' /** **默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+  var maxPos = $chars.length
+  var pwd = ''
+  for (let i = 0; i < _Len; i++) {
+    pwd += $chars.charAt(Math.floor(Math.random() * maxPos))
+  }
+  return pwd
+}

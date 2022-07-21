@@ -122,6 +122,16 @@
       }
     }
   }
+
+  .ant-modal-wrap::-webkit-scrollbar {
+    display: none;
+  }
+  
+  // 兼容ie和火狐
+  .ant-table-body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 .cus-dropdown-menu {

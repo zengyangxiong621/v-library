@@ -2,8 +2,8 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import { Input, Row, Col, Modal, Form, Select, Button,message } from 'antd'
-const { Option } = Select;
 import { useFetch } from "@/utils/useFetch";
+const { Option } = Select;
 const AddOrEdit = (props: any) => {
   const {showAddOrEdit,closeModal,getUserList,formType,currentUser,roleList } = props
   const [addForm] = Form.useForm()
@@ -155,7 +155,7 @@ const AddOrEdit = (props: any) => {
             onChange={handleChangeRole}
           >
             {
-              roleList.map((item:any) => {
+              roleList?.map((item:any) => {
                 return (
                   <Option value={item.id}>{item.name}</Option>
                 )
