@@ -28,6 +28,7 @@ import Timeline from '@/customComponents/assist/timeline'
 import timelineConfig from '@/customComponents/assist/timeline/config'
 
 import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 
 import {
   STYLE,
@@ -748,6 +749,12 @@ const CustomDraggable
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                       ></CardFlipper1>:
+                                      layer.moduleName === 'CardFlipper_2'?
+                                      <CardFlipper2
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></CardFlipper2>:
                                     <ErrorCatch
                                       app={component.name}
                                       user=""

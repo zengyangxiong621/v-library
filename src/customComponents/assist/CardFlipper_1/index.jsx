@@ -101,7 +101,6 @@ class ProtectionRange extends Component {
       return targetConfig
     }
 
-    console.log(getTargetConfig(config));
 
     const {numberStyles,hideDefault,dimension,container,break:breakObj } = getTargetConfig(config)
     const {containerSize,containerMarginLeft,containerCounter} = container
@@ -124,7 +123,6 @@ class ProtectionRange extends Component {
 
 
     const arr = this.renderNumber(numberValue,containerCounter,showBreak,breakDigits)
-    console.log('render================')
     return (
       <div className='protection-range-container'>
         <div className="protection-range" style={{
@@ -150,7 +148,12 @@ class ProtectionRange extends Component {
                 {/* {item} */}
                 {/* <DigitalFlop config={this.state.Tdata[index].config} style={{width: '100%', height: '100%',marginTop: '20%' }} /> */}
                 <DigitalFlop config={
-                  {number: [Number(item)],content: '{nt}',style: { fontSize: textNumberStyle.fontSize, fill: textNumberStyle.color }}
+                  {number: [Number(item)],content: '{nt}',style: {
+                    fontSize: textNumberStyle.fontSize,
+                    fontWeight: textNumberStyle.bold ? 'bold' : 'normal',
+                    fontStyle: textNumberStyle.italic ? 'italic' : 'normal',
+                    fill: textNumberStyle.color,
+                  }}
                 } style={{width: '100%', height: '100%',marginTop: '20%' }} />
               </div> :
               <div className='image' key={index} style={{
