@@ -12,8 +12,14 @@ import ResourceCenter from "./routes/resourceCenter";
 import WorkSpace from "./routes/workSpace";
 import UserManage from './routes/authorityManage/userManage'
 import RoleManage from './routes/authorityManage/roleManage'
+import Login from './routes/login'
 
 const routesConfig = (app: any) => [
+  {
+    name:'登录',
+    path:'/login',
+    component:Login,
+  },
   // {
   //   path: '/sign',
   //   name: '登录',
