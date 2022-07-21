@@ -8,6 +8,7 @@ import SelectV2 from '@/customComponents/assist/select/index'
 import CusImage from '@/customComponents/assist/image/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
 import {connect} from "dva"
@@ -393,6 +394,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'rankingBar' ?
+        <RankingBar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </RankingBar>
+        :
         props.componentConfig.moduleName === 'image2' ?
         <CusImage
           onChange={handleValueChange}
