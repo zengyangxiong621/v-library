@@ -19,13 +19,17 @@ import IconText from '@/customComponents/text/iconText'
 import SwiperText from '@/customComponents/text/swiperText'
 // import textConfig from '@/customComponents/text/swiperText/config'
 import Counter from  '@/customComponents/assist/counter'
-import textConfig from  '@/customComponents/assist/counter/config'
+// import textConfig from  '@/customComponents/assist/counter/config'
+import RadarChart from '@/customComponents/echarts/components/radarChart'
+import radarChartConfig from '@/customComponents/echarts/components/radarChart/config'
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 import Timeline from '@/customComponents/assist/timeline'
 import timelineConfig from '@/customComponents/assist/timeline/config'
+
+import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 
 import {
   STYLE,
@@ -565,6 +569,11 @@ const CustomDraggable
               component = components.find(item => item.id === layer.id)
               // component=timelineConfig
 
+              // 将线上配置改为本地配置
+              // component.config = radarChartConfig.config
+              // component.staticData = radarChartConfig.staticData
+
+
               if (component) {
                 staticData = component.staticData
                 style_config = component.config
@@ -656,6 +665,11 @@ const CustomDraggable
                           //   fields={getFields(component)}
                           //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                           // ></Counter>
+                          // <RadarChart
+                          //   componentConfig={component}
+                          //   fields={getFields(component)}
+                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          // ></RadarChart>
 
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
@@ -740,6 +754,12 @@ const CustomDraggable
                                       fields={ getFields(component) }
                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                     ></Timeline>:
+                                    layer.moduleName === 'CardFlipper_1'?
+                                      <CardFlipper1
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></CardFlipper1>:
                                     <ErrorCatch
                                       app={component.name}
                                       user=""
