@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
+import { withRouter } from 'dva/router'
+
 import Draggable from 'react-draggable'
 import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
@@ -90,8 +92,9 @@ const CustomDraggable
     dispatch,
     treeData,
     mouse,
-  }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0 }) => {
-    const components: Array<IComponent> = bar.components
+       history,
+       components
+     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>}) => {
     const callbackParamsList = bar.callbackParamsList
     const callbackArgs = bar.callbackArgs
     const scaleDragData = bar.scaleDragData
@@ -716,14 +719,14 @@ const CustomDraggable
                     allComponentDOMs[layer.id] = ref
                   }
                 } }                // onClickCapture={(ev) => handleClick(ev, layer, config)}
-                data-id={ isPanel ? (layer.panelType === 0 ? `panel_${ layer.id }` : `ref_${ layer.id }`) : isGroup ? layer.id : `component-${ layer.id }` }
+                data-id={ isPanel ? (layer.panelType === 0 ? `panel-${ layer.id }` : `ref-${ layer.id }`) : isGroup ? layer.id : `component-${ layer.id }` }
                 key={ layer.id }
                 onClick={ (ev) => handleClick(ev, layer, config) }
                 onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
                 onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
                 onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 onContextMenu={ (ev) => mouseRightClick(ev, layer, component, config) }
-                className={ `box ${ layer.selected ? 'selected' : '' }${ layer.hover ? 'hovered' : '' }` }
+                className={ ['box', `box ${ layer.selected ? 'selected' : '' }`, `${ layer.hover ? 'hovered' : '' }`].join(' ') }
                 style={ {
                   ...config.style,
                   transition: 'width, height 0.3s',
@@ -761,6 +764,7 @@ const CustomDraggable
                                 dispatch={ dispatch }
                                 history={ history }
                                 treeData={ (layer as any)[COMPONENTS] }
+                                components={components}
                               />
                             </div>
                             : ''
@@ -1006,4 +1010,4 @@ const CustomDraggable
   }
 export default connect(({ bar }: any) => ({
   bar,
-}))(CustomDraggable)
+}))(withRouter(CustomDraggable as any))

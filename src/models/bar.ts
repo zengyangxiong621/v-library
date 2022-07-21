@@ -388,7 +388,7 @@ export default {
     },
     // 删除图层、分组
     *delete({ payload }: any, { select, call, put }: any): any {
-      console.log("payload", payload);
+      console.log('payload', payload)
       const layers = yield http({
         url: "/visual/layer/delete",
         method: "delete",
@@ -673,18 +673,33 @@ export default {
       });
       cb(data.content);
     },
-    *setComponentConfigAndCalcDragScaleData(
-      { payload, cb }: any,
-      { call, put }: any
-    ): any {
+    *setComponentConfigAndCalcDragScaleData({ payload, cb }: any, { call, put }: any): any {
       yield put({
         type: "setComponentConfig",
         payload,
-      });
+      })
       yield put({
-        type: "calcDragScaleData",
-      });
+        type: 'calcDragScaleData'
+      })
     },
+    *changeDashboardOrPanel({ payload: {dashboardId, panelId}, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const currentDashboardDom: HTMLElement | null = document.querySelector(`.screen-${dashboardId}`)
+      const allDashboardParentDom: HTMLElement | null = document.querySelector('.draggable-wrapper')
+      const toPanelDom: HTMLElement | null = document.querySelector(`.panel-${panelId}`)
+      put({
+        type: 'bar/save',
+        payload: {
+          ...bar.allDashboardDom,
+          [`.screen-${dashboardId}`]: currentDashboardDom,
+          [`.panel-${panelId}`]: toPanelDom
+        }
+      })
+      if (allDashboardParentDom && currentDashboardDom && toPanelDom) {
+        allDashboardParentDom.removeChild(currentDashboardDom)
+        allDashboardParentDom.appendChild(toPanelDom)
+      }
+    }
   },
 
   reducers: {

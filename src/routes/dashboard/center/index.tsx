@@ -173,7 +173,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     }, 300)
   }, [ bar.leftMenuWidth ])
 
-
   useEffect(() => {
     calcCanvasSize()
     window.addEventListener('resize', calcCanvasSize);
@@ -439,7 +438,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                 } }
               >
                 <div
-                  className={`canvas-screen screen-${bar.dashboardId}`}
+                  className="canvas-screen"
                   style={ {
                     width: recommendConfig.width,
                     height: recommendConfig.height,
@@ -464,8 +463,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     />
                     <RulerLines/>
 
-                    <div className="draggable-container" ref={ draggableContainerRef }>
-                      <CustomDraggable mouse={ 0 } treeData={ layers }/>
+                    <div className={`draggable-container screen-${bar.dashboardId}`} ref={ draggableContainerRef }>
+                      <CustomDraggable mouse={ 0 } treeData={ layers } components={bar.components}/>
                     </div>
                   </div>
                 </div>
