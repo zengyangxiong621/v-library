@@ -23,7 +23,7 @@ const catchErr = <T, U = Error>(
 };
 
 export const BASE_URL = (window as any).CONFIG.BASE_URL
-
+// export const BASE_URL='http://10.141.0.74:9572'
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",

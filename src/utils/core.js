@@ -52,7 +52,7 @@ export const createRoute = (app, routerConfig) => {
     }
   }
 
-  const routePorps = Object.assign({
+  const routeProps = Object.assign({
     key: path || '/404',
     render: props => {
       return <Comp routerData={otherProps} {...props} />
@@ -63,5 +63,5 @@ export const createRoute = (app, routerConfig) => {
     path: path
   });
 
-  return <Route {...routePorps} />;
+  return <Route {...routeProps} />;
 }

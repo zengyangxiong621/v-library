@@ -35,7 +35,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const styleChange = debounce(() => {
     dispatch({
-      type: 'bar/setComponentConfig',
+      type: 'bar/setComponentConfigAndCalcDragScaleData',
       payload: componentConfig
     })
     saveStyleData({

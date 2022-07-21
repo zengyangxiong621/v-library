@@ -61,6 +61,7 @@ import SelectV2 from '@/customComponents/assist/select/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import CusImage from '@/customComponents/assist/image/index'
+import RankingBar from '@/customComponents/echarts/components/rankingBar'
 
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
@@ -673,6 +674,14 @@ const CustomDraggable
 
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
+                            layer.moduleName === 'rankingBar' ?
+                              <RankingBar
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </RankingBar> :
                             layer.moduleName === 'zebraColumn' ?
                               <ZebraColumn
                                 scale={bar.canvasScaleValue}
