@@ -27,6 +27,7 @@ const UserManage = (props: any) => {
     pageNo: 1,
     pageSize: 30,
   })
+  const [searchParams,setSearchParams]=useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showAddOrEdit, setShowAddOrEdit] = useState(false);
   const [showUpdateMode, setShowUpdateMode] = useState(false);
@@ -42,6 +43,7 @@ const UserManage = (props: any) => {
   const getUserList = async(param?:any) => {
     let obj = {
       ...pageInfo,
+      ...searchParams,
       ...param
     }
     setTableLoading(true)
@@ -73,16 +75,22 @@ const UserManage = (props: any) => {
     setformType('add')
     setShowAddOrEdit(true)
   }
+  const resetPageInfo=()=>{
+    const newPageInfo={
+      pageNo: 1,
+      pageSize: pageInfo.pageSize,
+    }
+    setPageInfo(newPageInfo)
+    return newPageInfo
+  }
   const searchByType = (value:any) => {
-    setPageInfo({
-      pageNo: 1,
-      pageSize:pageInfo.pageSize
-    })
-    getUserList({
-      pageNo: 1,
-      pageSize:pageInfo.pageSize,
+    const newSearchParams={
+      ...searchParams,
       ...value
-    })
+    }
+    setSearchParams(newSearchParams)
+    const newPageInfo=resetPageInfo()
+    getUserList({...newPageInfo,...newSearchParams})
   }
 
   // 获取角色列表数据
