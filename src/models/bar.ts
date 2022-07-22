@@ -274,11 +274,21 @@ export default {
     // 重命名
     *changeName({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const newTree = reName(bar.treeData, bar.key, payload.newName);
+      // 需要改变当前画布中components中此次被重命名组件的name
+      const components = bar.components;
+      const state = bar.state
+      const { value, id } = payload.configs[0];
+      const newComponents = components.map((item: any) => {
+        if (item.id === id) {
+          item.name = value;
+        }
+        return item;
+      });
       yield put({
         type: "bar/change",
         payload,
       });
+      return { ...state, components: newComponents };
     },
     *group({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
