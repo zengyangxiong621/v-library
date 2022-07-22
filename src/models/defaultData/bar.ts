@@ -2197,6 +2197,7 @@ export const defaultData = {
   callbackParamsList: [],
   systemMaterialClass: {}, // 获取系统素材分类数据
   systemMaterialList: [], // 获取系统素材数据
+  isPanel: false,
 }
 
 export interface IBarState {
@@ -2250,4 +2251,5 @@ export interface IBarState {
   callbackParamsList: any;
   systemMaterialClass: any;
   systemMaterialList: any;
+  isPanel: boolean;
 }

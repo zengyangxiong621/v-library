@@ -53,8 +53,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const recommendConfig = findItem('recommend')
   const styleColor = findItem('styleColor')
   const backgroundImg = findItem('backgroundImg')
-  const gridSpacing = findItem('gridSpacing')
-  const zoomConfig = findItem('zoom')
 
   // 计算画布的大小
   const calcCanvasSize = () => {

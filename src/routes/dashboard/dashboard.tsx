@@ -28,7 +28,7 @@ import { useEventEmitter } from 'ahooks';
 
 const { Header } = Layout
 
-function App({ bar, dispatch, location }: any) {
+function App({ bar, dispatch, location, history }: any) {
   const [showTopBar, setShowTopBar] = useState(false)
   const [zujianORsucai, setZujianORsucai] = useState('zujian')
   const [dataContainerVisible, setDataContainerVisible] = useState(false)
@@ -177,11 +177,27 @@ function App({ bar, dispatch, location }: any) {
   }
 
   useEffect(() => {
-    const dashboardId = window.location.pathname.split('/')[2]
-
+    const windowPathList = window.location.pathname.split('/')
+    const dashboardId = windowPathList[2]
+    let panelId = null, statusId = null
+    if (windowPathList[3]) {
+      panelId = windowPathList[3].split('-')[1]
+    }
+    if (windowPathList[4]) {
+      statusId = windowPathList[4].split('-')[1]
+    }
+    let isPanel = false
+    if (statusId) {
+      isPanel = true
+    }
     dispatch({
       type: 'bar/initDashboard',
-      payload: dashboardId,
+      payload: {
+        dashboardId,
+        isPanel,
+        panelId,
+        statusId,
+      },
       cb: () => { }
     })
 
@@ -303,4 +319,4 @@ function App({ bar, dispatch, location }: any) {
 
 export default withRouter(connect(({ bar }: any) => (
   { bar }
-))(App))
+))(withRouter(App)))

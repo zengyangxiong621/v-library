@@ -87,23 +87,23 @@ export default {
         payload,
       });
     },
-    *initDashboard({ payload, cb }: any, { call, put, select }: any): any {
+      *initDashboard({ payload: {dashboardId, isPanel, statusId, panelId}, cb }: any, { call, put, select }: any): any {
+      console.log('isPanel', isPanel)
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",
         method: "GET",
         params: {
-          dashboardId: payload,
+          dashboardId,
         },
       });
       // TODO 怎么造成的
       // 获取所有的数据容器数据
       const data = yield yield put({
         type: "getDataContainerList",
-        payload,
+        payload: dashboardId,
       });
       const bar: any = yield select(({ bar }: any) => bar);
-      console.log("bar.dataContainerList", bar.dataContainerList);
       bar.dataContainerList.forEach(async (item: any) => {
         let data: any = null;
         item.enable = item.modules.length > 0;
@@ -126,25 +126,38 @@ export default {
         url: "/visual/module/filter/list",
         method: "GET",
         params: {
-          id: payload,
+          id: dashboardId,
           type: "screen",
         },
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
-
       yield put({
         type: "save",
         payload: {
           dataContainerDataList: bar.dataContainerDataList,
           componentFilters: filters || [],
           callbackParamsList,
+          isPanel,
+          statusId,
+          dashboardId,
+          panelId
         },
       });
+      let panelConfig = {}
+      if (isPanel) {
+        const { config } = yield http({
+          url: `/visual/panel/detail/${ panelId }`,
+          method: 'get',
+        })
+        panelConfig = config
+        const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === 'recommend')
+        recommendConfig.width = config.width
+        recommendConfig.height = config.height
+      }
       yield put({
         type: "getDashboardDetails",
-        payload,
         cb: async (data: any) => {
           await cb(data);
         },
@@ -167,13 +180,16 @@ export default {
       });
     },
     *getDashboardDetails(
-      { payload, cb }: any,
+      { cb }: any,
       { call, put, select }: any
     ): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const {dashboardId, statusId, panelId, isPanel} = bar
       try {
+
         let { layers, components, dashboardConfig, dashboardName } = yield http(
           {
-            url: `/visual/application/dashboard/detail/${payload}`,
+            url: `/visual/application/dashboard/detail/${ isPanel ? statusId : dashboardId}`,
             method: "get",
           }
         );
@@ -191,6 +207,12 @@ export default {
           type: "getComponentsData",
           payload: components,
         });
+        const bar: any = yield select(({ bar }: any) => bar);
+        console.log('dashboardConfig', [
+          ...bar.dashboardConfig,
+          ...dashboardConfig,
+        ])
+
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
         yield put({
@@ -198,8 +220,11 @@ export default {
           payload: {
             treeData: noEmptyGroupLayers,
             components,
-            dashboardId: payload,
-            dashboardConfig,
+            dashboardId: isPanel ? statusId : dashboardId,
+            dashboardConfig: [
+              ...bar.dashboardConfig,
+              ...dashboardConfig,
+            ],
             dashboardName,
           },
         });
@@ -681,27 +706,8 @@ export default {
       yield put({
         type: 'calcDragScaleData'
       })
-    },
-    *changeDashboardOrPanel({ payload: {dashboardId, panelId}, cb }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
-      const currentDashboardDom: HTMLElement | null = document.querySelector(`.screen-${dashboardId}`)
-      const allDashboardParentDom: HTMLElement | null = document.querySelector('.draggable-wrapper')
-      const toPanelDom: HTMLElement | null = document.querySelector(`.panel-${panelId}`)
-      put({
-        type: 'bar/save',
-        payload: {
-          ...bar.allDashboardDom,
-          [`.screen-${dashboardId}`]: currentDashboardDom,
-          [`.panel-${panelId}`]: toPanelDom
-        }
-      })
-      if (allDashboardParentDom && currentDashboardDom && toPanelDom) {
-        allDashboardParentDom.removeChild(currentDashboardDom)
-        allDashboardParentDom.appendChild(toPanelDom)
-      }
     }
   },
-
   reducers: {
     changeModuleDefaultConfig(state: IBarState, { payload }: any) {
       const isExit = state.moduleDefaultConfig.filter((item) => {

@@ -27,19 +27,13 @@ const DynamicPanel = ({ bar, id }: any) => {
         url: `/visual/panel/detail/${ id }`,
         method: 'get',
       })
-      console.log('panelConfig', panelConfig)
       // 获取面板想起接口
       const { states, config: recommendConfig } = panelConfig
-      console.log('config', recommendConfig)
       const dom: HTMLElement | null = document.querySelector(`[data-id=panel-${id}]`)
       if (dom) {
-        console.log('dom', dom)
-        console.log('width', recommendConfig.width)
-        console.log('height', recommendConfig.height)
         dom.style.width = recommendConfig.width + 'px'
         dom.style.height = recommendConfig.height + 'px'
         dom.style.transform = `translate(${recommendConfig.left}px, ${recommendConfig.top}px)`
-
       }
       // 默认取第一个
       const defaultStateId = states[0] || ''
