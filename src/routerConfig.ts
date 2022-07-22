@@ -39,24 +39,6 @@ const routesConfig = (app: any) => [
     },
     component: BasicLayout,
     childRoutes: [
-      // {
-      //   name: 'workspace',
-      //   title: '工作空间',
-      //   path: '/workspace',
-      //   models: [],
-      //   component: Dashboard,
-      //   childRoutes: []
-      // },
-
-      // {
-      //   name: 'resource',
-      //   title: '资源中心',
-      //   path: '/resource',
-      //   models: [],
-      //   component: Dashboard,
-      //   childRoutes: []
-      // },
-
       Components(app),
       ComponentDev(app),
       DashboardManage(app),

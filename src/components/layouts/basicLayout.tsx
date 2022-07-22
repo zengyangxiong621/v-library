@@ -11,6 +11,7 @@ import DashboardManage from '../../routes/myDashboard/myDashboard';
 const { Content } = Layout;
 interface Props {
   config?: any,
+  dispatch?:any,
   routerData?: any,
   component?: any,
   location?: any,
@@ -23,10 +24,19 @@ interface State { }
 const mapStateToProps = (state: any) => {
   return state
 }
-
 class BasicLayout extends Component<Props, State> {
-  constructor(Props: any) {
-    super(Props)
+  handleGetAccountInfo=()=>{
+    const {global,dispatch}=this.props
+    const {userInfo}=global
+    const token=localStorage.getItem('token')
+    if(token && !userInfo){
+      dispatch({
+        type:'global/getCurUserInfo'
+      })
+    }
+  }
+  componentDidMount(): void {
+    this.handleGetAccountInfo()
   }
   render() {
     const { routerData, location, global, history } = this.props

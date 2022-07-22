@@ -107,6 +107,7 @@ export const http = (config: any, isDownload: boolean = false): any => {
       const { code, message: errMessage } = err;
       message.error(errMessage);
       if(code===401){
+        localStorage.removeItem('token')
         window.history.replaceState(null,'','/login')
         window.location.reload();
       }

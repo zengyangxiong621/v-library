@@ -59,8 +59,10 @@ export const useFetch = async (
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
 
   const token=localStorage.getItem('token')
-  finalParams.headers['Token']=token
-
+  if(path!=='/visual/login/login'){
+    finalParams.headers['Token']=token
+  }
+  
   // 格式由fetchOptions中的responseType来决定，默认是json
   const finalFetch = fetch(finalPath, finalParams)
     .then((response: any) => {
@@ -99,6 +101,7 @@ export const useFetch = async (
     message.error({
       content: data?.message,
     });
+    localStorage.removeItem('token')
     window.history.replaceState(null,'','/login')
     window.location.reload();
   }
