@@ -104,30 +104,6 @@ const initialFormData={
 }
 
 /**
- * 工具方法
- */
-const handleToTree=(list:any)=>{
-  return list.reduce((res:any,cur:any)=>{
-    if(!cur.parentId){
-      cur.children=[]
-      res.push(cur)
-    }else{
-      const parentNode=list.find((item:any)=>item.id===cur.parentId)
-      if(!parentNode.children){
-        parentNode.children=[]
-      }
-      parentNode.children.push(cur);
-    }
-    return res
-  },[])
-}
-const handleHasChecked=(list:any)=>{
-  return list.map((item:any)=>{
-    item.checkedList=[]
-    return item
-  })
-}
-/**
  * 校验方法
  */
 const validRoleName=(isEdit:boolean)=>{

@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React,{ Dispatch, memo, useCallback, useEffect, useReducer, useState } from "react";
 import { useFetch } from "@/utils/useFetch";
+import {handleToTree,handleAddChecked} from '@/utils'
 import "./index.less";
 import { connect } from "dva";
 import zhCN from 'antd/es/locale/zh_CN'
@@ -12,31 +13,6 @@ import {params,dataType,authStateType,authActionType,authContextType, dispatcher
 import AddOrEdit from './components/addOrEdit'
 import RoleDetail from './components/roleDetail'
 const { confirm } = Modal;
-
-/**
- * 工具方法
- */
-const handleToTree=(list:any)=>{
-  return list.reduce((res:any,cur:any)=>{
-    if(!cur.parentId){
-      cur.children=[]
-      res.push(cur)
-    }else{
-      const parentNode=list.find((item:any)=>item.id===cur.parentId)
-      if(!parentNode.children){
-        parentNode.children=[]
-      }
-      parentNode.children.push(cur);
-    }
-    return res
-  },[])
-}
-const handleaddChecked=(list:any)=>{
-  return list.map((item:any)=>{
-    item.checkedList=[]
-    return item
-  })
-}
 
 /**
  * 配置项
@@ -129,7 +105,7 @@ const dispatchMiddle=(next:Dispatch<authActionType>):dispatcher=>{
         }
         const [,data]=await useFetch('/visual/menu/listAll',headers);
         const treeData=handleToTree(data)
-        const newData=handleaddChecked(treeData)
+        const newData=handleAddChecked(treeData)
         next({type:'updateState',update:{authList:newData}})
         break;
       default:

@@ -1,6 +1,5 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useMemo } from 'react';
 import { Link } from 'dva/router';
-
 import './index.less'
 import { Layout, Menu, Dropdown,Modal,Form, Input, message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -56,10 +55,38 @@ const createMenu = ((menuData, props) => {  //创建菜单
   return menu;
 });
 
+const filterMenu=(menuData,menusNameArr)=>{
+  return menuData.filter(item=>{
+    if(menusNameArr.includes(item.title)){
+      if(Array.isArray(item.children)){
+        item.children=filterMenu(item.children,menusNameArr)
+      }
+      return true
+    }else{
+      return false
+    }
+  })
+}
+
 const Header = props => {
-  const { menuData, defaultPath, location, history,global,dispatch } = props
-  const { pathname } = location
-  const {userInfo}=global
+  const { defaultPath,menuData, location:{pathname}, history,global:{userInfo},dispatch } = props
+
+  const curUserid=useMemo(()=>{
+    if(userInfo && userInfo.id){
+      return userInfo.id
+    }
+    return ''
+  },[userInfo])
+  const curUserMenu=useMemo(()=>{
+    if(userInfo && userInfo.menus && userInfo.menus.length){
+      return userInfo.menus
+    }
+    return []
+  },[userInfo])
+  const menusNameArr=curUserMenu.map(item=>item.name)
+
+  const _menuData=filterMenu(menuData,menusNameArr)
+
   let currentPathname = pathname
   if (pathname === '/') {
     currentPathname = '/dashboard-manage'
@@ -106,10 +133,9 @@ const Header = props => {
       return
     }
     setModifyLoding(true)
-    const {id}=userInfo
     try {
       const params={
-        id,
+        id:curUserid,
         oldPassword:oldpsd,
         password:newpsd
       }
@@ -169,7 +195,7 @@ const Header = props => {
         selectedKeys={[currentPathname]}
       >
         {
-          createMenu(menuData, props)
+          createMenu(_menuData, props)
         }
       </Menu>
 
