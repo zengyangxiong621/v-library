@@ -30,7 +30,6 @@ const DEFAULT_OPTIONS = {
   mode: "cors",
   headers: {
     "Content-Type": "application/json",
-    "Token": ''
   },
 };
 
