@@ -150,9 +150,10 @@ const AppCard = (props: any) => {
 
   // 导出应用
   const exportApp = async (appId: string) => {
-    // console.log(`${BASEURL}/visual/application/export/${appId}`);
+    const token=localStorage.getItem('token')
+    console.log(`${BASEURL}/visual/application/export/${appId}?token=${token}`);
     const toolA = document.createElement('a')
-    toolA.href = `${BASEURL}/visual/application/export/${appId}`
+    toolA.href = `${BASEURL}/visual/application/export/${appId}token=${token}`
     toolA.click()
   }
 
