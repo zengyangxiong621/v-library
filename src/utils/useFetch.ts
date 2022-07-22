@@ -1,4 +1,5 @@
 import { message } from "antd";
+import { forwardLogin } from '@/services/loginApi'
 
 /**
  * description: 执行请求、获取数据、捕获异常
@@ -96,11 +97,16 @@ export const useFetch = async (
     });
   }
   if(code===401){
+    if (token?.endsWith('x-gridsumdissector')) {
+      forwardLogin()
+    }else{
+      window.history.replaceState(null,'','/login')
+      window.location.reload();
+    }
+
     message.error({
       content: data?.message,
     });
-    window.history.replaceState(null,'','/login')
-    window.location.reload();
   }
   if (data) {
     // data = data.data.content

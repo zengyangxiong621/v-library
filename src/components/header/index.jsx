@@ -6,11 +6,13 @@ import { Layout, Menu, Dropdown,Modal,Form, Input } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import logo from '@/assets/images/logo.svg';
 import { useFetch } from "@/utils/useFetch";
+import {localStore} from "@/services/LocalStoreService"
+import { logout, forwardLogin } from '@/services/loginApi'
 
 
+const userInfo = JSON.parse(localStore.getUserInfo())
 const createMenu = ((menuData, props) => {  //创建菜单
   const { location, history } = props
-
   let menu = [];
   for (let i = 0; i < menuData.length; i++) {
     const menuItem = menuData[i]
@@ -84,10 +86,16 @@ const Header = props => {
   }
   const handleUserMenuClick=async ({key}) => {
     if(key==='1'){
-      const isLogoutSuccess=await handleLogout()
-      if(isLogoutSuccess){
-        localStorage.removeItem('token')
-        history.replace('/login')
+      const token=localStorage.getItem('token')
+      if (token && token.endsWith('x-gridsumdissector')) {
+        logout()
+        forwardLogin()
+      }else{
+        const isLogoutSuccess=await handleLogout()
+        if(isLogoutSuccess){
+          localStore.clearAll()
+          history.replace('/login')
+        }
       }
     }else{
       setModalVisible(true)
@@ -117,9 +125,12 @@ const Header = props => {
       className="cus-dropdown-menu"
       onClick={handleUserMenuClick}
     >
+     {
+       userInfo && userInfo.type === -2 &&
       <Menu.Item key="0">
         修改密码
       </Menu.Item>
+     }
       <Menu.Item key="1">
         退出登录
       </Menu.Item>

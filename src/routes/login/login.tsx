@@ -5,6 +5,8 @@ import { Button, Form, Input, Radio } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useFetch } from "@/utils/useFetch";
 import {getRandowString} from '@/utils/'
+import { http } from "@/services/request";
+import {localStore} from "@/services/LocalStoreService"
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
 
@@ -30,7 +32,13 @@ export default function Login(props:any) {
       body:JSON.stringify(params)
     })
     if(data){
+      // 登录成功后获取用户信息
       localStorage.setItem('token',data)
+      const res = await http({
+        method: 'post',
+        url: '/visual/user/getAccountInfo',
+      })
+      localStore.setUserInfo(res)
       history.replace('/')
     }else{
       getIdentifyingCode()

@@ -9,6 +9,6 @@
     'SSO_URL': 'http://10.201.83.191:53422/sso',
     // SSOAPI地址
     'SSO_API': 'http://10.201.83.191:53422/sso/api/v2',
-    'TICKET_KEY': 'token'
+    'TICKET_KEY': 'token',
   }
 })(window)
