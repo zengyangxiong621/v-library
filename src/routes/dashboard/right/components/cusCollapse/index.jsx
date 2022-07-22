@@ -40,7 +40,7 @@ const CusCollapse = props => {
   return (
     <Collapse accordion className="custom-collapse" defaultActiveKey={_defaultActiveKey} >
       <Panel header={_data.displayName} key="1" extra={extraNode}>
-        {otherNode.map((item, index) => {
+        {/* {otherNode.map((item, index) => {
           if (!(item.type && componentLib[item.type])) {
             return null;
           }
@@ -48,7 +48,7 @@ const CusCollapse = props => {
           return (
             <TagName data={item} onChange={props.onChange} key={index} />
           )
-        })}
+        })} */}
         {
           _data.isHide? _show.value && CollapseNode: CollapseNode
         }
