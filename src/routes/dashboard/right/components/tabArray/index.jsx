@@ -27,6 +27,7 @@ const TabArray = props => {
   const _show = find(_data, 'switch', 'type')
   const _outsideShadow = find(_data, 'outsideShadow', 'type')
   const [activeKey, setActiveKey] = useState(_defaultActiveKey)
+  console.log('activeKey', activeKey)
   const [unit, setUnit] = useState('列')
   const extraNode = () => {
     const handleIconClick = (type, e) => {
@@ -42,12 +43,19 @@ const TabArray = props => {
       console.log('type', type)
 
       if (type === 'add') {
-        const tabValue = tabs.find(tab => tab.key === activeKey)
-        const copyValue = deepClone(tabValue)
-        const unit = copyValue.displayName.replace(/\d/, '')
-        copyValue.displayName = unit + (tabs.length + 1)
-        copyValue.key = String(tabs.length + 1)
-        tabs.push(copyValue)
+        if (tabs.length === 0) {
+          tabs = tabs.concat(_data.config.template)
+          _data.value = tabs
+          setActiveKey(tabs[0].key)
+        } else {
+          const tabValue = tabs.find(tab => tab.key === activeKey)
+          const copyValue = deepClone(tabValue)
+          const unit = copyValue.displayName.replace(/\d/, '')
+          copyValue.displayName = unit + (tabs.length + 1)
+          copyValue.key = String(tabs.length + 1)
+          setActiveKey(copyValue.key)
+          tabs.push(copyValue)
+        }
       }
       if (type === 'delete') {
         const index = tabs.findIndex(tab => tab.key === activeKey)

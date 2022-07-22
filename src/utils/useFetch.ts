@@ -24,7 +24,7 @@ const catchErr = <T, U = Error>(
 };
 
 export const BASE_URL = (window as any).CONFIG.BASE_URL
-
+// export const BASE_URL='http://10.141.0.74:9572'
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",
@@ -60,8 +60,10 @@ export const useFetch = async (
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
 
   const token=localStorage.getItem('token')
-  finalParams.headers['Token']=token
-
+  if(path!=='/visual/login/login'){
+    finalParams.headers['Token']=token
+  }
+  
   // 格式由fetchOptions中的responseType来决定，默认是json
   const finalFetch = fetch(finalPath, finalParams)
     .then((response: any) => {
@@ -97,11 +99,12 @@ export const useFetch = async (
     });
   }
   if(code===401){
-    if (token?.endsWith('x-gridsumdissector')) {
+    if (token && token.endsWith('x-gridsumdissector')) {
       forwardLogin()
     }else{
       window.history.replaceState(null,'','/login')
       window.location.reload();
+      localStorage.removeItem('token')
     }
 
     message.error({

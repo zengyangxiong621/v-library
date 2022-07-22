@@ -1,13 +1,19 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import './index.less'
-import { Button, Form, Input, Radio } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { useFetch } from "@/utils/useFetch";
+import { useFetch,BASE_URL } from "@/utils/useFetch";
 import {getRandowString} from '@/utils/'
 import { http } from "@/services/request";
 import {localStore} from "@/services/LocalStoreService"
 type LayoutType = Parameters<typeof Form>[0]['layout'];
+
+type formDataTyle={
+  userName:string,
+  password:string,
+  captcha:string
+}
 
 
 export default function Login(props:any) {
@@ -16,32 +22,47 @@ export default function Login(props:any) {
   const [form] = Form.useForm();
   const [clientId,setClientId]=useState('')
   const [qrCode,setQrCode]=useState('')
+  const [loginLoading,setLoginLoading]=useState(false)
   const getIdentifyingCode=()=>{
     const randomCode=getRandowString(32)
-    const qrImg=`http://10.201.83.166:31088/visual/login/captcha.jpg?clientId=${randomCode}`
+    const qrImg=`${BASE_URL}/visual/login/captcha.jpg?clientId=${randomCode}`
     setClientId(randomCode)
     setQrCode(qrImg)
   }
+  const handleLoginForm=(formData:formDataTyle)=>{
+    let flag=false
+    const {userName,password,captcha}=formData
+    if(userName && password && captcha){
+      flag=true
+    }else{
+      message.warning('请填写完整');
+    }
+    return flag
+  }
   const handleLogin=async ()=>{
     const formData=form.getFieldsValue(true)
-    const params={
-      ...formData,
-      clientId
+    if(!handleLoginForm(formData)){
+      return
     }
-    const [,data]=await useFetch('/visual/login/login',{
-      body:JSON.stringify(params)
-    })
-    if(data){
-      // 登录成功后获取用户信息
-      localStorage.setItem('token',data)
-      const res = await http({
-        method: 'post',
-        url: '/visual/user/getAccountInfo',
+    setLoginLoading(true)
+    try {
+      const params={
+        ...formData,
+        clientId
+      }
+      const [,data]=await useFetch('/visual/login/login',{
+        body:JSON.stringify(params)
       })
-      localStore.setUserInfo(res)
-      history.replace('/')
-    }else{
+      if(data){
+        localStorage.setItem('token',data)
+        history.replace('/')
+      }else{
+        getIdentifyingCode()
+      }
+    } catch (error) {
       getIdentifyingCode()
+    } finally {
+      setLoginLoading(false)
     }
   }
   useEffect(()=>{
@@ -64,6 +85,11 @@ export default function Login(props:any) {
             layout='vertical'
             form={form}
             size='large'
+            initialValues={{
+              userName:'',
+              password:"",
+              captcha:''
+            }}
           >
             <Form.Item label="账号" name='userName'>
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="请输入账号"/>
@@ -78,7 +104,7 @@ export default function Login(props:any) {
               </div>
             </Form.Item>
             <Form.Item className='formButton' wrapperCol={{ span: 24 }}>
-              <Button type="primary" block onClick={handleLogin}>登录</Button>
+              <Button type="primary" block loading={loginLoading} onClick={handleLogin}>登录</Button>
             </Form.Item>
           </Form>
         </div>

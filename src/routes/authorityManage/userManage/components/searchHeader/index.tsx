@@ -18,7 +18,7 @@ const SearchHeader = (props: any) => {
 
   const resetClick = () => {
     searchForm.resetFields();
-    searchByType()
+    searchClick()
   }
 
   const changeInputValue = (value:any) => {
@@ -45,7 +45,7 @@ const SearchHeader = (props: any) => {
         {
           STATUSLIST.map((item:any) => {
             return (
-              <Select.Option value={item.value}>{item.label}</Select.Option>
+              <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
             )
           })
         }
@@ -60,7 +60,7 @@ const SearchHeader = (props: any) => {
         {
           roleList?.map((item:any) => {
             return (
-              <Select.Option value={item.id}>{item.name}</Select.Option>
+              <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
             )
           })
         }

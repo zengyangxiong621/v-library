@@ -14,17 +14,17 @@ export const newDynamic = (app, models, component) => {
  * @param {func} routesConfig
  */
 export const createRoutes = (app, routesConfig) => {
-    const routes = routesConfig(app)
-    .map(config => createRoute(app, () => config))
-    .reduce((p, n) => {
-      if (n.length) {
-        return [...p, ...n];
-      } else {
-        return p.concat(n);
-      }
-    }, []);
-
+  const routes = routesConfig(app)
+  .map(config => createRoute(app, () => config))
+  .reduce((p, n) => {
+    if (n.length) {
+      return [...p, ...n];
+    } else {
+      return p.concat(n);
+    }
+  }, []);
   return (<Switch> { routes } </Switch>)
+
 }
 
 // 路由映射表
@@ -52,16 +52,15 @@ export const createRoute = (app, routerConfig) => {
     }
   }
 
-  const routePorps = Object.assign({
+  const routeProps = Object.assign({
     key: path || '/404',
     render: props => {
       return <Comp routerData={otherProps} {...props} />
     }
   },
-
   path && {
     path: path
   });
 
-  return <Route {...routePorps} />;
+  return <Route {...routeProps} />;
 }

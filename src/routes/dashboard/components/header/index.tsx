@@ -670,6 +670,10 @@ const centerIconArr = [
     icon: 'shujurongqi',
     text: '数据容器'
   },
+  {
+    icon: 'zujiangengxin',
+    text: '组件更新'
+  }
 ]
 
 const rightIconArr = [

@@ -26,11 +26,6 @@ export async function authorize () {
       data:  {},
     })
   }
-  const res = await http({
-    method: 'post',
-    url: '/visual/user/getAccountInfo',
-  })
-  localStore.setUserInfo(res)
 }
 
 export async function logout() {

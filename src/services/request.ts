@@ -107,11 +107,12 @@ export const http = (config: any, isDownload: boolean = false): any => {
       const { code, message: errMessage } = err;
       message.error(errMessage);
       if(code===401){
-        if (token?.endsWith('x-gridsumdissector')) {
+        if (token && token.endsWith('x-gridsumdissector')) {
           forwardLogin()
         }else{
           window.history.replaceState(null,'','/login')
           window.location.reload();
+          localStorage.removeItem('token')
         }
       }
       return Promise.reject(err);
