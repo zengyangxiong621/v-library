@@ -13,6 +13,7 @@ import { getComDataWithFilters, getFields } from '@/utils/data'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
 import BasicBar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
+import ChinaMap from '@/customComponents/echarts/components/chinaMap'
 import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import IconText from '@/customComponents/text/iconText'
 // import textConfig from  '@/customComponents/text/iconText/config'
@@ -695,11 +696,16 @@ const CustomDraggable
                             //     >
                             //     </TimeSelect> :
                             //     layer.moduleName === 'worldMap' ?
-                                  <WorldMap
+                            //       <WorldMap
+                            //         componentConfig={ component }
+                            //         fields={ getFields(component) }
+                            //         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                            //       ></WorldMap>
+                                  <ChinaMap
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                  ></WorldMap>
+                                  ></ChinaMap>
                                   // :
                                   // <ErrorCatch
                                   //   app={component.name}
@@ -721,7 +727,7 @@ const CustomDraggable
                         </div> 
                       </>
                   }
-                  {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span
