@@ -104,7 +104,7 @@ const ComponentDefaultConfig = {
               "name": "batteryStyle",
               "displayName": "电池风格",
               "type": "switch",
-              "value": false
+              "value": true
             },
             {
               name: 'spacing',
@@ -345,6 +345,12 @@ const ComponentDefaultConfig = {
               "value": true
             },
             {
+              "name": "isRadius",
+              "displayName": "圆角柱状",
+              "type": "switch",
+              "value": false
+            },
+            {
               name: 'barColor',
               displayName: '柱状颜色',
               value: '#1890ff',
@@ -366,7 +372,7 @@ const ComponentDefaultConfig = {
                 {
                   name: 'show',
                   displayName: '',
-                  value: true,
+                  value: false,
                   type: 'switch',
                 },
                 {
