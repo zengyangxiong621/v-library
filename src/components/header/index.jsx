@@ -222,7 +222,9 @@ const Header = props => {
           <Dropdown overlay={userMenu} trigger={['click']}>
             <div className='curUser'>
               <i className="iconfont icon-yonghu" style={{ color: '#2482FF', fontSize: '18px' }}></i>
-              <span title="admin">admin</span>
+              {
+                userInfo && <span title={userInfo.username}>{userInfo.username}</span>
+              }
             </div>
           </Dropdown>
         </div>
