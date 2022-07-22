@@ -653,3 +653,36 @@ export const styleObjectToStr = (style) => {
   s = s.join(';')
   return  s
 }
+
+export const getRandowString=(len)=>{
+  const _Len=len || 32
+  var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678' /** **默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+  var maxPos = $chars.length
+  var pwd = ''
+  for (let i = 0; i < _Len; i++) {
+    pwd += $chars.charAt(Math.floor(Math.random() * maxPos))
+  }
+  return pwd
+}
+
+export const handleToTree=(list)=>{
+  return list.reduce((res,cur)=>{
+    if(!cur.parentId){
+      cur.children=[]
+      res.push(cur)
+    }else{
+      const parentNode=list.find((item)=>item.id===cur.parentId)
+      if(!parentNode.children){
+        parentNode.children=[]
+      }
+      parentNode.children.push(cur);
+    }
+    return res
+  },[])
+}
+export const handleAddChecked=(list)=>{
+  return list.map((item)=>{
+    item.checkedList=[]
+    return item
+  })
+}

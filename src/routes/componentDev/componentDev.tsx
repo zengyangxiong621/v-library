@@ -33,7 +33,7 @@ const ComponentDev = (props: any) => {
   const [tableMap, setTableMap] = useState({})
   const [totalElements, setTotalElements] = useState(0)
   const [tableData, setTableData] = useState([])
-  const [tableLoading, setTableLoading] = useState(true)
+  const [tableLoading, setTableLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
 
@@ -60,22 +60,20 @@ const ComponentDev = (props: any) => {
   // 获取列表数据
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/module-manage/queryModuleList',
-      method: 'post',
-      body: differentParams
-    })
-    if (data) {
+    try {
+      const data = await http({
+        url: '/visual/module-manage/queryModuleList',
+        method: 'post',
+        body: differentParams
+      })
+      data && await resetTableInfo(data)
+    } catch (error) {
+      console.log(error);
+    }finally{
       setTableLoading(false)
-    } else {
-      setTimeout(() => {
-        setTableLoading(false)
-      }, 3000);
     }
-
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     // 请求完成，冲着表格的数据和页码信息
-    await resetTableInfo(data)
   }
   // 获取表格数据
   useEffect(() => {

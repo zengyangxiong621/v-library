@@ -1,4 +1,5 @@
 import { message } from "antd";
+import { forwardLogin } from '@/services/loginApi'
 
 /**
  * description: 执行请求、获取数据、捕获异常
@@ -23,13 +24,16 @@ const catchErr = <T, U = Error>(
 };
 
 export const BASE_URL = (window as any).CONFIG.BASE_URL
+// export const BASE_URL='http://10.141.0.74:9572'
 const DEFAULT_OPTIONS = {
   method: "POST",
   mode: "cors",
   headers: {
     "Content-Type": "application/json",
+    "Token": ''
   },
 };
+
 /**
  * description: 处理数据，对请求成功或者失败做统一处理
  * params:  @path -- 请求路径
@@ -55,6 +59,11 @@ export const useFetch = async (
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
 
+  const token=localStorage.getItem('token')
+  if(path!=='/visual/login/login'){
+    finalParams.headers['Token']=token
+  }
+  
   // 格式由fetchOptions中的responseType来决定，默认是json
   const finalFetch = fetch(finalPath, finalParams)
     .then((response: any) => {
@@ -86,7 +95,20 @@ export const useFetch = async (
   // TODO 外部传入 对应状态码的处理逻辑
   if (code === 500) {
     message.error({
-      content: "请求数据失败",
+      content: data?.message || "请求数据失败",
+    });
+  }
+  if(code===401){
+    if (token && token.endsWith('x-gridsumdissector')) {
+      forwardLogin()
+    }else{
+      window.history.replaceState(null,'','/login')
+      window.location.reload();
+      localStorage.removeItem('token')
+    }
+
+    message.error({
+      content: data?.message,
     });
   }
   if (data) {

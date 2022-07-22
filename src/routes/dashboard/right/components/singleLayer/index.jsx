@@ -12,7 +12,6 @@ import CallbackArgs from '../callbackArgs'
 
 import {
   Tabs,
-
 } from 'antd';
 import debounce from 'lodash/debounce';
 import { http } from '../../../../../services/request'
@@ -32,10 +31,9 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
 
-
   const styleChange = debounce(() => {
     dispatch({
-      type: 'bar/setComponentConfig',
+      type: 'bar/setComponentConfigAndCalcDragScaleData',
       payload: componentConfig
     })
     saveStyleData({
@@ -74,7 +72,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const dataContainerChange = (dataContainerIds) => {
     dispatch({
       type: 'bar/componentsBindContainer',
-      payload:{
+      payload: {
         componentConfig,
         dataContainerIds
       }
@@ -203,9 +201,9 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const saveCallbackArg = async (componentConfig) => {
     const params = {
-      callbackArgs:componentConfig.callbackArgs,
+      callbackArgs: componentConfig.callbackArgs,
       dashboardId: dashboardId,
-      moduleId:componentConfig.id
+      moduleId: componentConfig.id
     }
     await http({
       url: '/visual/module/callbackParam',
@@ -219,7 +217,9 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       <div className="content">
         <Tabs defaultActiveKey="1" type="card" className="custom-tabs">
           <TabPane tab="样式" key="1">
-            <ComponentCard data={componentConfig}>
+            <ComponentCard data={componentConfig}
+              allModulesConfig={bar.moduleDefaultConfig}
+              dispatch={dispatch}>
               {styleConfig.map((item, index) => {
                 if (!(item.type && componentLib[item.type])) {
                   return null;
@@ -248,7 +248,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
               <LoadAnimation data={interactionConfig} onChange={interactionChange} />
-              <CallbackArgs data={componentConfig} onChange={callbackArgChange}/>
+              <CallbackArgs data={componentConfig} onChange={callbackArgChange} />
               <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
