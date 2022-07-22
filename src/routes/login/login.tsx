@@ -5,6 +5,8 @@ import { Button, Form, Input, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useFetch,BASE_URL } from "@/utils/useFetch";
 import {getRandowString} from '@/utils/'
+import { http } from "@/services/request";
+import {localStore} from "@/services/LocalStoreService"
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
 type formDataTyle={
