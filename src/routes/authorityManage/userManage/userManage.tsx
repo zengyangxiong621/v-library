@@ -38,9 +38,7 @@ const UserManage = (props: any) => {
   const [currentUser, setCurrentUser] = useState<any>({});
 
   const [roleList, setRoleList] = useState([])
-  // const [userInfo, setUserInfo] = useState<any>({})
-  const {global:{userInfo} } = props
-  console.log(userInfo,'kkkkk')
+  const userInfo = props.global.userInfo || {}
 
 
   

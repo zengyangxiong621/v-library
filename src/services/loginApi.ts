@@ -1,5 +1,6 @@
 import { http } from "./request";
-import SsoSdk from '@components/sso-jssdk'
+// import SsoSdk from '@components/sso-jssdk'
+import SsoSdk from '@/assets/js/sso-jssdk/src'
 import {localStore} from "./LocalStoreService"
 
 const SSO_API = (window as any).CONFIG.SSO_API || process.env.SSO_API || ""

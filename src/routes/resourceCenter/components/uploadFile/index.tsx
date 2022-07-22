@@ -142,8 +142,6 @@ const UploadFile = (props: any) => {
       <Form name="importComponent"  form={uploadForm}>
         <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, '请选择要上传的组件')}>
           <Dragger {...fileProps}>
-            <p className="ant-upload-drag-icon">
-            </p>
             <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
             <p className="ant-upload-hint">大小不得超过100MB，且必须为.zip格式</p>
           </Dragger>
