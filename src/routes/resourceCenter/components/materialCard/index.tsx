@@ -4,8 +4,7 @@ import "./index.less";
 
 import { withRouter } from "dva/router";
 import { useFetch } from "../../../../utils/useFetch";
-import { http } from '@/services/request'
-import { BASEURL } from "@/services/request";
+import { BASEURL,http,downLoad } from '@/services/request'
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -179,10 +178,7 @@ const AppCard = (props: any) => {
 
   // 导出应用
   const exportApp = async (appId: string) => {
-    // console.log(`${BASEURL}/visual/application/export/${appId}`);
-    const toolA = document.createElement("a");
-    toolA.href = `${BASEURL}/visual/application/export/${appId}`;
-    toolA.click();
+    downLoad(`${BASEURL}/visual/application/export/${appId}`)
   };
 
   // 移动分组
@@ -192,7 +188,9 @@ const AppCard = (props: any) => {
   };
   // 导出功能
   const exportDesign = async() => {
-    window.location.href = moduleType.includes('Temp') ? `${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
+    const downloadUrl=moduleType.includes('Temp') ? `${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
+    downLoad(downloadUrl,true)
+    // window.location.href = moduleType.includes('Temp') ? downLoad`${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
   };
   // 鼠标移入更多按钮时，显示下拉菜单
   const moreIconMouseOver = () => {

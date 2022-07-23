@@ -7,7 +7,7 @@ import { connect } from 'dva'
 
 import { Input, Select, Upload, message } from 'antd'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
-
+import type { UploadProps } from 'antd';
 
 import LeftTree from './components/LeftTree';
 import RightContent from './components/rightContent'
@@ -119,14 +119,15 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     })
   }
   // 导入应用
-  const importAppUploadprops = {
+  const importAppUploadprops:UploadProps = {
     name: 'file',
     multiple: false,
     maxCount: 1,
     accept: 'application/zip',
     action: `${BASEURL}/visual/application/import/${spaceId}`,
     headers: {
-      'Response-Type': 'application/json'
+      'Response-Type': 'application/json',
+      'authorization':localStorage.getItem('token') || ''
     },
     // data: {
     // },
