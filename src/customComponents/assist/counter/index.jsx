@@ -125,14 +125,14 @@ class Counter extends Component {
     let numList = []
     const numValue = originData[fields[1]]
     if(reg.test(numValue)){
-      let value = Number(numValue).toFixed(decimalCount); // 小数位长度处理
+      let value = decimalCount>0 ? Number(numValue).toFixed(decimalCount) : numValue.split('.')[0] ; // 小数位长度处理
       let intNumber = value.split('.')[0]
-      let floatNumber = value.split('.')[1]
+      let floatNumber = value.split('.')[1] || ''
       intNumber = Math.abs(intNumber).toString().padStart(zeroize, 0)  // 补位处理
       intNumber = intNumber.replace(eval(`/(\\d{1,${splitCount}})(?=(?:\\d{${splitCount}})+(?!\\d))/g`),'$1,')  // 分隔符处理
       let sign = ['-','+'].indexOf(numValue.slice(0,1))>-1 ? numValue.slice(0,1) : ''
       // 数据格式完成后整合处理
-      intNumber = `${sign}${intNumber}.${floatNumber}`
+      intNumber = `${sign}${intNumber}${decimalCount>0 ? '.' : ''}${floatNumber}`
       numList = intNumber.split('')
     }
     //小数点点间距处理
@@ -143,7 +143,6 @@ class Counter extends Component {
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
     // 补充前缀功能
     const prefixConfig = this.formatConfig([this.getStyleData(config, "前缀")],[])
-    console.log(prefixConfig,'fields')
     return (
       <div className='counter' style={{
         ...displayStyle,

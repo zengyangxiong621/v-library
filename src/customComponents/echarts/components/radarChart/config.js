@@ -1,12 +1,12 @@
 const componentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // =========
-  "name": "世界地图2", //图层名称
+  "name": "雷达图", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
-  "moduleName": "worldMap2", //组件标识
-  "moduleVersion": "1.0.2", //组件版本号
+  "moduleName": "radarChart", //组件标识
+  "moduleVersion": "1.0.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
