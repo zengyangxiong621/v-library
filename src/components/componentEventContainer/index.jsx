@@ -5,6 +5,10 @@ import TimeSelect from '@/customComponents/timeSelect'
 import ScrollTable from '@/customComponents/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
+import CusImage from '@/customComponents/assist/image/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
 import {connect} from "dva"
@@ -161,6 +165,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
+    console.log('sourceCallbackList', sourceCallbackList)
     sourceCallbackList.forEach(item => {
       item.sourceModules.forEach(sourceItem => {
         if (sourceItem.id === componentId) {
@@ -189,9 +194,11 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         }
       })
     })
+    console.log('activeIds1', activeIds)
+    console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      console.log('activeIds', activeIds)
+      console.log('activeIds2', activeIds)
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
@@ -223,6 +230,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     if (dataChangeActions.length === 0) {
       return
     }
+    console.log('自定义事件触发了吗')
     customEventsFunction(dataChangeEvents, data)
 
   }, 300)
@@ -386,6 +394,34 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'rankingBar' ?
+        <RankingBar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </RankingBar>
+        :
+        props.componentConfig.moduleName === 'image2' ?
+        <CusImage
+          onChange={handleValueChange}
+          {...props}
+        >
+        </CusImage>
+        :
+        props.componentConfig.moduleName === 'zebraColumn' ?
+        <ZebraColumn
+          onChange={handleValueChange}
+          {...props}
+        >
+        </ZebraColumn>
+        :
+        props.componentConfig.moduleName === 'basicBar' ?
+        <BasicBar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </BasicBar>
+        :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
           onChange={handleValueChange}
@@ -424,12 +460,14 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
           </ScrollSelect>
           : props.componentConfig.moduleName === 'timeSelect' ?
           <TimeSelect
+            scale={scale}
             onChange={handleValueChange}
             {...props}
           >
           </TimeSelect>
           : <RemoteBaseComponent
             {...props}
+            scale={scale}
             onChange={handleValueChange}
           ></RemoteBaseComponent>
       }

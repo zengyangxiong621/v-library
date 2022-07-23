@@ -17,11 +17,7 @@ const componentDefaultConfig = {
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
   "dataFrom": 0,
-  "dataContainers": [{// =========
-    "enable": true,
-    "id": 2744,
-    "rank": 0
-  }],
+  "dataContainers": [], // 默认选中容器
   "staticData": {
     //静态数据
     "data": [
@@ -40,44 +36,9 @@ const componentDefaultConfig = {
   },
 
   "useFilter": false,// =========
-  "filters": [{// =========
-    "enable": true,
-    "id": 362505
-  }],
+  "filters": [],
 
-  "events": [{
-    "trigger": "dataChange", // 事件类型 dataChange、click、mouseEnter、mouseLeave
-    "name": "事件1",
-    "id": "key",
-    "conditions": [
-      {
-        "name": "条件",
-        "type": "field",
-        "field": "a",
-        "compare": "==",
-        "expected": "a",
-        "code": "return data",
-        "id": "key"
-      }
-    ],
-    "conditionType": "all", // 判断类型
-    "actions": [
-      {
-        "id": "uuidv4()",
-        "name": "动作",
-        "action": "show", //动作 show hide
-        "componentScope": "current",  //组件scope global\current
-        "unmount": true, // 隐藏卸载
-        "component": [], // 组件id数组
-        "animation": {
-          "type": "slideLeft", // opacity\slideLeft\slideRight\slideTop\slideBottom
-          "timingFunction": "ease", // linear\ease\ease-in\ease-out\ease-in-out
-          "duration": 1000,
-          "delay": 0
-        }
-      }
-    ]
-  }],
+  "events": [],
   "config": [
     // 样式配置
     {
@@ -178,23 +139,23 @@ const componentDefaultConfig = {
         }
       ]
     },
-    {
-      'name':"underline",
-      'displayName':'标题下划线',
-      'type':'radioGroup',
-      'direction':'horizontal', // 方向
-      'value': false,
-      'options': [
-        {
-          'name': '显示',
-          'value': true
-        },
-        {
-          'name': '隐藏',
-          'value': false
-        }
-      ]
-    },
+    // {
+    //   'name':"underline",
+    //   'displayName':'标题下划线',
+    //   'type':'radioGroup',
+    //   'direction':'horizontal', // 方向
+    //   'value': false,
+    //   'options': [
+    //     {
+    //       'name': '显示',
+    //       'value': true
+    //     },
+    //     {
+    //       'name': '隐藏',
+    //       'value': false
+    //     }
+    //   ]
+    // },
     {
       'name': 'iconImg',
       'displayName': '上传图标',

@@ -274,11 +274,21 @@ export default {
     // 重命名
     *changeName({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const newTree = reName(bar.treeData, bar.key, payload.newName);
+      // 需要改变当前画布中components中此次被重命名组件的name
+      const components = bar.components;
+      const state = bar.state
+      const { value, id } = payload.configs[0];
+      const newComponents = components.map((item: any) => {
+        if (item.id === id) {
+          item.name = value;
+        }
+        return item;
+      });
       yield put({
         type: "bar/change",
         payload,
       });
+      return { ...state, components: newComponents };
     },
     *group({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -385,22 +395,6 @@ export default {
         payload: { id: payload.id },
       });
       const filterNullLayers = clearNullGroup(layers);
-      yield put({
-        type: "save",
-        payload: {
-          scaleDragData: {
-            position: {
-              x: 0,
-              y: 0,
-            },
-            style: {
-              width: 0,
-              height: 0,
-              display: "none",
-            },
-          },
-        },
-      });
       yield put({
         type: "updateTree",
         payload: filterNullLayers,
@@ -676,6 +670,15 @@ export default {
       });
       cb(data.content);
     },
+    *setComponentConfigAndCalcDragScaleData({ payload, cb }: any, { call, put }: any): any {
+      yield put({
+        type: "setComponentConfig",
+        payload,
+      })
+      yield put({
+        type: 'calcDragScaleData'
+      })
+    }
   },
 
   reducers: {
@@ -1200,9 +1203,9 @@ export default {
           ...state,
         };
       }
-      localStorage.removeItem("dblComponentTimes");
-      localStorage.removeItem("currentTimes");
-      state.currentDblTimes = 0;
+      // localStorage.removeItem("dblComponentTimes");
+      // localStorage.removeItem("currentTimes");
+      // state.currentDblTimes = 0;
       deepForEach(state.treeData, (layer: ILayerGroup | ILayerComponent) => {
         layer.selected = false;
       });
@@ -1258,6 +1261,7 @@ export default {
         return item.id === payload.id;
       });
       state.components.splice(index, 1, state.componentConfig);
+      // calcDragScaleData
       return { ...state };
     },
     setGroupConfig(state: IBarState, { payload }: any) {

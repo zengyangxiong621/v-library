@@ -457,80 +457,35 @@ export const defaultData = {
                     }
                   ]
                 },
-/*                {
-                  "name": "width",
-                  "displayName": "列宽",
-                  "type": "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    "suffix": "px"
-                  },
-                  "value": 0
-                },
                 {
-                  "name": "spacing",
-                  "displayName": "列间距",
-                  "type": "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    "suffix": "px"
-                  },
-                  "value": 0
-                },
-                {
-                  "displayName": "列偏移",
-                  "name": "offset",
-                  "type": "inputNumber2",
-                  "value": [
+                  "name": "align",
+                  "displayName":"对齐方式",
+                  "type":"alignFull",
+                  "value":[
                     {
-                      "displayName": "X",
-                      "name": "X",
-                      "type": "number",
-                      "value": 0
-                    },
-                    {
-                      "displayName": "Y",
-                      "name": "Y",
-                      "type": "number",
-                      "value": 0
+                      "name": "textAlign",
+                      "displayName": "水平对齐",
+                      "type": "align",
+                      "range": ["left", "center", "right"],
+                      "value": "left"
                     }
                   ]
                 },
                 {
-                  "name": "textType",
-                  "displayName": "内容类型",
-                  "type": "select",
-                  "options": [
-                    {
-                      "name": "逐条滚动",
-                      "value": "single"
-                    },
-                    {
-                      "name": "整页滚动",
-                      "value": "page"
-                    }
-                  ],
-                  "value": "single"
-                },
-                {
-                  "name": "textOverflowType",
+                  "name": "overflowType",
                   "displayName": "文字溢出",
                   "type": "select",
                   "options": [
                     {
-                      "name": "逐条滚动",
-                      "value": "single"
+                      "name": "省略号",
+                      "value": "ellipsis"
                     },
                     {
-                      "name": "整页滚动",
-                      "value": "page"
+                      "name": "换行",
+                      "value": "wrap"
                     }
                   ],
-                  "value": "single"
+                  "value": "ellipsis"
                 },
                 {
                   "displayName": "文本样式",
@@ -574,7 +529,72 @@ export const defaultData = {
                       "value": "35px"
                     }
                   ]
-                }*/
+                },
+                {
+                  "name": "customStyle",
+                  "displayName": "样式指定",
+                  "type": "tabArray",
+                  "defaultActiveKey": "1",
+                  "value": [
+                    {
+                      "key": "1",
+                      "displayName": "1",
+                      "name": "tab",
+                      "type": "object",
+                      "value": [
+                        {
+                          "name": "filedValue",
+                          "displayName": "字段值",
+                          "type": "input",
+                          "value": ""
+                        },
+                        {
+                          "displayName": "文本样式",
+                          "name": "textStyle",
+                          "type": "textFullStyleGroup",
+                          "value": [
+                            {
+                              "displayName": "",
+                              "name": "fontFamily",
+                              "value": "Microsoft Yahei"
+                            },
+                            {
+                              "displayName": "",
+                              "name": "fontSize",
+                              "value": 14
+                            },
+                            {
+                              "displayName": "",
+                              "name": "color",
+                              "type": "color",
+                              "value": "#fff"
+                            },
+                            {
+                              "displayName": "",
+                              "name": "bold",
+                              "value": false
+                            },
+                            {
+                              "displayName": "",
+                              "name": "italic",
+                              "value": false
+                            },
+                            {
+                              "displayName": "字距",
+                              "name": "letterSpacing",
+                              "value": 0
+                            },
+                            {
+                              "displayName": "行距",
+                              "name": "lineHeight",
+                              "value": "35px"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
               ]
             },
             {
@@ -602,80 +622,35 @@ export const defaultData = {
                     }
                   ]
                 },
-      /*          {
-                  "name": "width",
-                  "displayName": "列宽",
-                  "type": "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    "suffix": "px"
-                  },
-                  "value": 0
-                },
                 {
-                  "name": "spacing",
-                  "displayName": "列间距",
-                  "type": "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    "suffix": "px"
-                  },
-                  "value": 0
-                },
-                {
-                  "displayName": "列偏移",
-                  "name": "offset",
-                  "type": "inputNumber2",
-                  "value": [
+                  "name": "align",
+                  "displayName":"对齐方式",
+                  "type":"alignFull",
+                  "value":[
                     {
-                      "displayName": "X",
-                      "name": "X",
-                      "type": "number",
-                      "value": 0
-                    },
-                    {
-                      "displayName": "Y",
-                      "name": "Y",
-                      "type": "number",
-                      "value": 0
+                      "name": "textAlign",
+                      "displayName": "水平对齐",
+                      "type": "align",
+                      "range": ["left", "center", "right"],
+                      "value": "left"
                     }
                   ]
                 },
                 {
-                  "name": "textType",
-                  "displayName": "内容类型",
-                  "type": "select",
-                  "options": [
-                    {
-                      "name": "逐条滚动",
-                      "value": "single"
-                    },
-                    {
-                      "name": "整页滚动",
-                      "value": "page"
-                    }
-                  ],
-                  "value": "single"
-                },
-                {
-                  "name": "textOverflowType",
+                  "name": "overflowType",
                   "displayName": "文字溢出",
                   "type": "select",
                   "options": [
                     {
-                      "name": "逐条滚动",
-                      "value": "single"
+                      "name": "省略号",
+                      "value": "ellipsis"
                     },
                     {
-                      "name": "整页滚动",
-                      "value": "page"
+                      "name": "换行",
+                      "value": "wrap"
                     }
                   ],
-                  "value": "single"
+                  "value": "ellipsis"
                 },
                 {
                   "displayName": "文本样式",
@@ -719,7 +694,72 @@ export const defaultData = {
                       "value": "35px"
                     }
                   ]
-                }*/
+                },
+                {
+                  "name": "customStyle",
+                  "displayName": "样式指定",
+                  "type": "tabArray",
+                  "defaultActiveKey": "1",
+                  "value": [
+                    {
+                      "key": "1",
+                      "displayName": "1",
+                      "name": "tab",
+                      "type": "object",
+                      "value": [
+                        {
+                          "name": "filedValue",
+                          "displayName": "字段值",
+                          "type": "input",
+                          "value": ""
+                        },
+                        {
+                          "displayName": "文本样式",
+                          "name": "textStyle",
+                          "type": "textFullStyleGroup",
+                          "value": [
+                            {
+                              "displayName": "",
+                              "name": "fontFamily",
+                              "value": "Microsoft Yahei"
+                            },
+                            {
+                              "displayName": "",
+                              "name": "fontSize",
+                              "value": 14
+                            },
+                            {
+                              "displayName": "",
+                              "name": "color",
+                              "type": "color",
+                              "value": "#fff"
+                            },
+                            {
+                              "displayName": "",
+                              "name": "bold",
+                              "value": false
+                            },
+                            {
+                              "displayName": "",
+                              "name": "italic",
+                              "value": false
+                            },
+                            {
+                              "displayName": "字距",
+                              "name": "letterSpacing",
+                              "value": 0
+                            },
+                            {
+                              "displayName": "行距",
+                              "name": "lineHeight",
+                              "value": "35px"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
               ]
             },
             {
@@ -747,64 +787,35 @@ export const defaultData = {
                     }
                   ]
                 },
-/*                {
-                  "name": "width",
-                  "displayName": "列宽",
-                  "type": "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    "suffix": "px"
-                  },
-                  "value": 0
-                },
                 {
-                  "name": "spacing",
-                  "displayName": "列间距",
-                  "type": "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    "suffix": "px"
-                  },
-                  "value": 0
-                },
-                {
-                  "displayName": "列偏移",
-                  "name": "offset",
-                  "type": "inputNumber2",
-                  "value": [
+                  "name": "align",
+                  "displayName":"对齐方式",
+                  "type":"alignFull",
+                  "value":[
                     {
-                      "displayName": "X",
-                      "name": "X",
-                      "type": "number",
-                      "value": 0
-                    },
-                    {
-                      "displayName": "Y",
-                      "name": "Y",
-                      "type": "number",
-                      "value": 0
+                      "name": "textAlign",
+                      "displayName": "水平对齐",
+                      "type": "align",
+                      "range": ["left", "center", "right"],
+                      "value": "left"
                     }
                   ]
                 },
                 {
-                  "name": "textType",
-                  "displayName": "内容类型",
+                  "name": "overflowType",
+                  "displayName": "文字溢出",
                   "type": "select",
                   "options": [
                     {
-                      "name": "逐条滚动",
-                      "value": "single"
+                      "name": "省略号",
+                      "value": "ellipsis"
                     },
                     {
-                      "name": "整页滚动",
-                      "value": "page"
+                      "name": "换行",
+                      "value": "wrap"
                     }
                   ],
-                  "value": "single"
+                  "value": "ellipsis"
                 },
                 {
                   "displayName": "文本样式",
@@ -848,7 +859,584 @@ export const defaultData = {
                       "value": "35px"
                     }
                   ]
-                }*/
+                },
+                {
+                  "name": "customStyle",
+                  "displayName": "样式指定",
+                  "type": "tabArray",
+                  "defaultActiveKey": "1",
+                  "value": [
+                    {
+                      "key": "1",
+                      "displayName": "1",
+                      "name": "tab",
+                      "type": "object",
+                      "value": [
+                        {
+                          "name": "filedValue",
+                          "displayName": "字段值",
+                          "type": "input",
+                          "value": ""
+                        },
+                        {
+                          "displayName": "文本样式",
+                          "name": "textStyle",
+                          "type": "textFullStyleGroup",
+                          "value": [
+                            {
+                              "displayName": "",
+                              "name": "fontFamily",
+                              "value": "Microsoft Yahei"
+                            },
+                            {
+                              "displayName": "",
+                              "name": "fontSize",
+                              "value": 14
+                            },
+                            {
+                              "displayName": "",
+                              "name": "color",
+                              "type": "color",
+                              "value": "#fff"
+                            },
+                            {
+                              "displayName": "",
+                              "name": "bold",
+                              "value": false
+                            },
+                            {
+                              "displayName": "",
+                              "name": "italic",
+                              "value": false
+                            },
+                            {
+                              "displayName": "字距",
+                              "name": "letterSpacing",
+                              "value": 0
+                            },
+                            {
+                              "displayName": "行距",
+                              "name": "lineHeight",
+                              "value": "35px"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "themes": [
+        {
+          "id": "theme-default",
+          "name": "系统默认"
+        },
+        {
+          "id": "theme-light",
+          "name": "浅色风格"
+        },
+        {
+          "id": "theme-gov-blue",
+          "name": "政务蓝"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "uniqueTag": "",
+      "name": "选项卡（测试）",
+      "parentId": "0",
+      "dashboardId": "",
+      "moduleName": "tab（test）",
+      "moduleType": "assist",
+      "moduleVersion": "1.0.0",
+      "autoUpdate": {
+        "isAuto": false,
+        "interval": 10
+      },
+      "thumb": "",
+      "dataConfig": {},
+      "dataType": "static",
+      "dataFrom": 0,
+      "dataContainers": [],
+      "staticData": {
+        "data": [
+          {
+            "s": "1",
+            "content": "选项一"
+          },
+          {
+            "s": "2",
+            "content": "选项二"
+          },
+          {
+            "s": "3",
+            "content": "选项三"
+          },
+          {
+            "s": "4",
+            "content": "选项四"
+          }
+        ],
+        "fields": [
+          {
+            "name": "s",
+            "value": "s"
+          },
+          {
+            "name": "content",
+            "value": "content"
+          }
+        ]
+      },
+      "useFilter": false,
+      "filters": [],
+      "events": [],
+      "config": [
+        {
+          "name": "dimension",
+          "displayName": "位置尺寸",
+          "type": "dimensionGroup",
+          "config": {
+            "lock": false
+          },
+          "value": [
+            {
+              "name": "left",
+              "displayName": "X轴坐标",
+              "value": 100
+            },
+            {
+              "name": "top",
+              "displayName": "Y轴坐标",
+              "value": 200
+            },
+            {
+              "name": "width",
+              "displayName": "宽度",
+              "value": 620
+            },
+            {
+              "name": "height",
+              "displayName": "高度",
+              "value": 60
+            }
+          ]
+        },
+        {
+          "name": "hideDefault",
+          "displayName": "默认隐藏",
+          "type": "checkBox",
+          "value": false
+        },
+        {
+          "name": "allGlobal",
+          "displayName": "全局",
+          "type": "collapse",
+          "hasSwitch": false,
+          "defaultExpand": true,
+          "value": [
+            {
+              "name": "show",
+              "displayName": "",
+              "value": false,
+              "type": "switch"
+            },
+            {
+              "name": "defaultSelectedKey",
+              "displayName": "默认选中",
+              "type": "number",
+              "value": 1,
+              "config": {
+                "min": 0,
+                "max": 50,
+                "step": 1
+              }
+            },
+            {
+              "name": "align",
+              "displayName":"对齐方式",
+              "type": "alignFull",
+              "value":[
+                {
+                  "name":"textAlign",
+                  "displayName":"水平对齐",
+                  "type":"align",
+                  "range": ["left", "center", "right"],
+                  "value": "left"
+                }
+              ]
+            },
+            {
+              "name": "gridLayout",
+              "displayName": "网格布局",
+              "type": "collapse",
+              "hasSwitch": false,
+              "defaultExpand": true,
+              "value": [
+                {
+                  "name": "show",
+                  "displayName": "",
+                  "value": false,
+                  "type": "switch"
+                },
+                {
+                  "name":"layout",
+                  "displayName": "布局",
+                  "type": "inputNumber2",
+                  "showDetail": true,
+                  "value": [
+                    {
+                      "name": "rowNums",
+                      "displayName": "行数",
+                      "type": "number",
+                      "value": 1,
+                      "config": {
+                        "min": 0,
+                        "max": 20,
+                        "step": 1
+                      }
+                    },
+                    {
+                      "name": "colNums",
+                      "displayName": "列数",
+                      "type": "number",
+                      "value": 4,
+                      "config": {
+                        "min": 0,
+                        "max": 20,
+                        "step": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name":"spacing",
+                  "displayName": "间距",
+                  "type": "inputNumber2",
+                  "showDetail": true,
+                  "value": [
+                    {
+                      "name": "rowSpacing",
+                      "displayName": "行距",
+                      "type": "number",
+                      "value": 0,
+                      "config": {
+                        "min": 0,
+                        "max": 1000,
+                        "step": 1,
+                        "suffix": "px"
+                      }
+                    },
+                    {
+                      "name": "colSpacing",
+                      "displayName": "列距",
+                      "type": "number",
+                      "value": 0,
+                      "config": {
+                        "min": 0,
+                        "max": 1000,
+                        "step": 1,
+                        "suffix": "px"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "style",
+          "displayName": "样式",
+          "type": "collapse",
+          "hasSwitch": false,
+          "defaultExpand": true,
+          "value": [
+            {
+              "name": "show",
+              "displayName": "",
+              "value": true,
+              "type": "switch"
+            },
+            {
+              "name": "styleTabs",
+              "displayName": "样式tab栏",
+              "type": "tabs",
+              "activeKey": "1",
+              "options": [
+                {
+                  "key": "1",
+                  "name": "未选中",
+                  "value": [
+                    {
+                      "name": "textStyle",
+                      "displayName": "文本样式",
+                      "type": "textFullStyleGroup",
+                      "value": [
+                        {
+                          "name": "fontFamily",
+                          "displayName": "",
+                          "value": "Microsoft Yahei"
+                        },
+                        {
+                          "name": "fontSize",
+                          "displayName": "",
+                          "value": 14
+                        },
+                        {
+                          "name": "color",
+                          "displayName": "",
+                          "type": "color",
+                          "value": "#000"
+                        },
+                        {
+                          "name": "bold",
+                          "displayName": "",
+                          "value": true
+                        },
+                        {
+                          "name": "italic",
+                          "displayName": "",
+                          "value": false
+                        },
+                        {
+                          "name": "letterSpacing",
+                          "displayName": "字距",
+                          "value": 0
+                        },
+                        {
+                          "name": "lineHeight",
+                          "displayName": "行距",
+                          "value": "48px"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "bgColor",
+                      "displayName": "背景",
+                      "type": "color",
+                      "value": "#fff"
+                    },
+                    {
+                      "name": "bgImg",
+                      "displayName": "背景图",
+                      "type": "image",
+                      "value": ""
+                    },
+                    {
+                      "name": "border",
+                      "displayName": "描边",
+                      "type": "borderRadius",
+                      "range": ["topLeft", "topRight", "bottomRight", "bottomLeft"],
+                      "value": {
+                        "type": "solid",
+                        "width": 1,
+                        "color": "#000",
+                        "radius": [0, 0, 0, 0]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "key": "2",
+                  "name": "选中",
+                  "value": [
+                    {
+                      "name": "textStyle",
+                      "displayName": "文本样式",
+                      "type": "textFullStyleGroup",
+                      "value": [
+                        {
+                          "name": "fontFamily",
+                          "displayName": "",
+                          "value": "Microsoft Yahei"
+                        },
+                        {
+                          "name": "fontSize",
+                          "displayName": "",
+                          "value": 14
+                        },
+                        {
+                          "name": "color",
+                          "displayName": "",
+                          "type": "color",
+                          "value": "#fff"
+                        },
+                        {
+                          "name": "bold",
+                          "displayName": "",
+                          "value": true
+                        },
+                        {
+                          "name": "italic",
+                          "displayName": "",
+                          "value": false
+                        },
+                        {
+                          "name": "letterSpacing",
+                          "displayName": "字距",
+                          "value": 0
+                        },
+                        {
+                          "name": "lineHeight",
+                          "displayName": "行距",
+                          "value": "48px"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "bgColor",
+                      "displayName": "背景",
+                      "type": "color",
+                      "value": "#ff0000"
+                    },
+                    {
+                      "name": "bgImg",
+                      "displayName": "背景图",
+                      "type": "image",
+                      "value": ""
+                    },
+                    {
+                      "name": "border",
+                      "displayName": "描边",
+                      "type": "borderRadius",
+                      "range": ["topLeft", "topRight", "bottomRight", "bottomLeft"],
+                      "value": {
+                        "type": "solid",
+                        "width": 1,
+                        "color": "#000",
+                        "radius": [0, 0, 0, 0]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "dataSeries",
+          "displayName": "数据系列",
+          "type": "tabArray",
+          "defaultActiveKey": "1",
+          "value": [
+            {
+              "key": "1",
+              "displayName": "系列1",
+              "name": "tab",
+              "type": "object",
+              "value": [
+                {
+                  "name": "filed",
+                  "displayName": "s",
+                  "value": "",
+                  "type": "input"
+                },
+                {
+                  "name": "totalOffset",
+                  "displayName": "整体偏移",
+                  "type": "inputNumber2",
+                  "showDetail": true,
+                  "value":[
+                    {
+                      "name": "offsetX",
+                      "displayName": "X",
+                      "type": "number",
+                      "value": 0,
+                      "config": {
+                        "min": 0,
+                        "max": 1000,
+                        "step": 1,
+                        "suffix": "px"
+                      }
+                    },
+                    {
+                      "name": "offsetY",
+                      "displayName": "Y",
+                      "type": "number",
+                      "value": 0,
+                      "config":{
+                        "min": 0,
+                        "max": 1000,
+                        "step": 1,
+                        "suffix": "px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "textOffset",
+                  "displayName": "文字偏移",
+                  "type": "inputNumber2",
+                  "showDetail": true,
+                  "value":[
+                    {
+                      "name": "offsetX",
+                      "displayName": "X",
+                      "type": "number",
+                      "value": 0,
+                      "config": {
+                        "min": 0,
+                        "max": 1000,
+                        "step": 1,
+                        "suffix": "px"
+                      }
+                    },
+                    {
+                      "name": "offsetY",
+                      "displayName": "Y",
+                      "type": "number",
+                      "value": 0,
+                      "config":{
+                        "min": 0,
+                        "max": 1000,
+                        "step": 1,
+                        "suffix": "px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "widthProportion",
+                  "displayName": "宽度权重比",
+                  "type": "number",
+                  "value": 1,
+                  "config": {
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    "suffix": ""
+                  }
+                },
+                {
+                  "name": "bgColor",
+                  "displayName": "默认背景色",
+                  "type": "color",
+                  "value": "#fff"
+                },
+                {
+                  "name": "bgImg",
+                  "displayName": "默认背景图",
+                  "type": "image",
+                  "value": ""
+                },
+                {
+                  "name": "selectedBgColor",
+                  "displayName": "选中背景色",
+                  "type": "color",
+                  "value": "#fff"
+                },
+                {
+                  "name": "selectedBgImg",
+                  "displayName": "选中背景图",
+                  "type": "image",
+                  "value": ""
+                }
               ]
             }
           ]
@@ -1094,7 +1682,8 @@ export const defaultData = {
     // },
   ],
   leftMenuWidth: 250,
-  componentData: {},
+  componentData: {}, // 组件数据，存放方式为{componentId: data}
+  currentActiveCompoentData:{},  // 组件当前状态下的数据，用于编辑时画布中的回调参数，存放方式为{componentId: data}
   componentFilters: [],
   callbackArgs: {},
   callbackParamsList: [],
@@ -1145,6 +1734,7 @@ export interface IBarState {
     y: number
   };
   componentData: any;
+  currentActiveCompoentData: any;
   dataContainerList: any;
   dataContainerDataList: any;
   componentFilters: any;

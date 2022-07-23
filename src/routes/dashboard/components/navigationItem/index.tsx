@@ -12,6 +12,9 @@ const NavigationIcon = (props: any) => {
   if (data.icon === 'shujurongqi') {
     icon = 'moxing-zidingyishujurongqi'
   }
+  if (data.icon === 'zujiangengxin') {
+    icon = 'shujuxiangyingjieguo-shuaxin'
+  }
   return (
     <div className={`${activeIcon === data.icon && 'activeIcon'} GenerateIcon-wrap`}
       onClick={() => getActiveIcon(data.icon)}

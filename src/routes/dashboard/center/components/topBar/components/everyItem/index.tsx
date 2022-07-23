@@ -5,34 +5,11 @@ import './index.less'
 
 const EveryItem = (props: any) => {
   const { data, dispatch, bar } = props
-
-  const importComponent = useCallback(() => {
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
-  }, [data.moduleType])
-
-  console.log(importComponent,'kkkkkkk')
-
-  const loadComp = useCallback(async () => {
-    window.eval(`${await importComponent()}`)
-    const { ComponentDefaultConfig } = (window as any).VComponents;
-    const currentDefaultConfig = ComponentDefaultConfig
-    dispatch({
-      type: 'bar/setModuleDefaultConfig',
-      payload: currentDefaultConfig,
-      itemData: data
-    })
-  }, [importComponent])
-
-  useEffect(() => {
-    loadComp();
-  }, [loadComp]);
-
   const componentCreate = () => {
     const { moduleDefaultConfig } = bar
     const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
       return item.moduleName === data.moduleName
     })
-    console.log(data,'ppppp', moduleDefaultConfig,'kdkk',currentDefaultConfig )
     dispatch({
       type: 'bar/createComponent',
       payload: currentDefaultConfig,

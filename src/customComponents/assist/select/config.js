@@ -171,7 +171,7 @@ const ComponentDefaultConfig = {
                 {
                   'name': 'bgColor',
                   'displayName': '背景颜色',
-                  'value': '#fff',
+                  'value': '#9b9b9b',
                   type: 'color'
                 },
                 {

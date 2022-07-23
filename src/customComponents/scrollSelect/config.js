@@ -87,12 +87,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 620
+          "value": 150
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 60
+          "value": 600
         }
       ]
     },
@@ -233,7 +233,7 @@ const componentDefaultConfig = {
                       "name": "max",
                       "displayName": "最大值",
                       "type": "number",
-                      "value": 0,
+                      "value": 22,
                       "config":{
                         "min": 20,
                         "max": 1000,
@@ -247,17 +247,17 @@ const componentDefaultConfig = {
                   "name": "colorStep",
                   "displayName": "颜色梯度",
                   "type": "color",
-                  "value": "#e11717"
+                  "value": "#918e8e"
                 },
                 {
                   "name": "shadow",
                   "displayName": "阴影",
                   "type": "boxShadow",
                   "value": {
-                    "color": "#0075FF",
+                    "color": "rgba(0,183,255,0)",
                     "vShadow": 0,
                     "hShadow": 0,
-                    "blur": 8
+                    "blur": 0
                   }
                 }
               ]
@@ -311,7 +311,7 @@ const componentDefaultConfig = {
                 },
                 {
                   "name": "shadow",
-                  "displayName": "阴影",
+                  "displayName": "文字阴影",
                   "type": "boxShadow",
                   "value": {
                     "color": "#0075FF",
@@ -319,6 +319,17 @@ const componentDefaultConfig = {
                     "hShadow": 0,
                     "blur": 8
                   }
+                }, {
+                  "name": "bgColor",
+                  "displayName": "背景",
+                  "type": "color",
+                  "value": "rgba(255,255,255,0)"
+                },
+                {
+                  "name": "bgImg",
+                  "displayName": "背景图",
+                  "type": "image",
+                  "value": ""
                 }
               ]
             }

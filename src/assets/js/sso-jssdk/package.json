@@ -1,0 +1,122 @@
+{
+  "_from": "@components/sso-jssdk@^1.0.15",
+  "_id": "@components/sso-jssdk@1.0.15",
+  "_inBundle": false,
+  "_integrity": "sha1-sbigh6Trb4JPSCMuffvq21cb0yQ=",
+  "_location": "/@components/sso-jssdk",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@components/sso-jssdk@^1.0.15",
+    "name": "@components/sso-jssdk",
+    "escapedName": "@components%2fsso-jssdk",
+    "scope": "@components",
+    "rawSpec": "^1.0.15",
+    "saveSpec": null,
+    "fetchSpec": "^1.0.15"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "http://10.201.80.174:7001/@components/sso-jssdk/download/@components/sso-jssdk-1.0.15.tgz",
+  "_shasum": "b1b8a087a4eb6f824f48232e7dfbeadb571bd324",
+  "_spec": "@components/sso-jssdk@^1.0.15",
+  "_where": "D:\\SOC\\项目copy\\v-library",
+  "author": {
+    "name": "maiwenan",
+    "email": "maiwenan@gridsum.com"
+  },
+  "bugs": {
+    "url": "https://gitlab.gridsum.com/frontend/components/sso-jssdk/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "gridsum sso-jssdk",
+  "devDependencies": {
+    "@gs-ui/elf": "^1.0.1",
+    "@gs-ui/eslint-config-standard": "^1.0.0",
+    "@vue/test-utils": "^1.0.0-beta.27",
+    "axios": "^0.18.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "babel-plugin-transform-vue-jsx": "^4.0.1",
+    "eslint": "^5.9.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^4.0.0",
+    "husky": "^1.2.0",
+    "jest": "^23.6.0",
+    "lint-staged": "^8.1.0",
+    "regenerator-runtime": "^0.13.1",
+    "rimraf": "^2.6.2",
+    "sass-lint": "^1.12.1",
+    "sass-lint-auto-fix": "^0.15.0",
+    "vue": "^2.5.17",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "jest": {
+    "testURL": "http://localhost/",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      ".*\\.(css|scss)$": "<rootDir>/test/style-helper.js"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules(?!/gs-ui)/"
+    ]
+  },
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "src/**/*.s+(a|c)ss": [
+      "sass-lint -v -q"
+    ]
+  },
+  "main": "lib/index.js",
+  "name": "@components/sso-jssdk",
+  "peerDependencies": {
+    "axios": "^0.18.0",
+    "babel-runtime": "^6.26.0"
+  },
+  "repository": {
+    "type": "gitlab",
+    "url": "https://gitlab.gridsum.com/frontend/components/sso-jssdk"
+  },
+  "scripts": {
+    "build": "rimraf lib && npm run umd && npm run lib && npm run dist && npm run zip",
+    "dist": "rimraf dist && elf dist",
+    "eslint": "eslint -f html -o ./report/eslint.html src/**/*.{js,vue}",
+    "fix": "eslint --fix src/**/*.{js,vue}",
+    "lib": "elf lib",
+    "sasslint": "sass-lint -v -q -o ./report/sasslint.html -f html",
+    "start": "elf start",
+    "umd": "elf umd",
+    "unittest": "jest",
+    "zip": "elf zip"
+  },
+  "version": "1.0.15"
+}

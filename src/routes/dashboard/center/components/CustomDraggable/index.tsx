@@ -11,17 +11,31 @@ import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
-import BasicBar from '@/customComponents/echarts/components/bar/index'
+import Bar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap'
 import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import IconText from '@/customComponents/text/iconText'
 // import textConfig from  '@/customComponents/text/iconText/config'
 import SwiperText from '@/customComponents/text/swiperText'
+<<<<<<< HEAD
 import textConfig from '@/customComponents/echarts/components/worldMap/config'
+=======
+// import textConfig from '@/customComponents/text/swiperText/config'
+import Counter from  '@/customComponents/assist/counter'
+// import textConfig from  '@/customComponents/assist/counter/config'
+import RadarChart from '@/customComponents/echarts/components/radarChart'
+import radarChartConfig from '@/customComponents/echarts/components/radarChart/config'
+>>>>>>> develop
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
+
+import Timeline from '@/customComponents/assist/timeline'
+import timelineConfig from '@/customComponents/assist/timeline/config'
+
+import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 
 import {
   STYLE,
@@ -49,8 +63,11 @@ import {
 } from '../../../../../constant/home'
 import ScrollTable from "@/customComponents/scrollTable/index";
 import TimeSelect from "@/customComponents/timeSelect/index";
-import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import CusImage from '@/customComponents/assist/image/index'
+import RankingBar from '@/customComponents/echarts/components/rankingBar'
 
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
@@ -518,6 +535,17 @@ const CustomDraggable
         })
       }
     }
+
+    const handleValueChange = (value:any,componentId:any) => {
+      const currentActiveCompoentData = bar.currentActiveCompoentData
+      currentActiveCompoentData[componentId] = value
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          currentActiveCompoentData
+        },
+      })
+    }
     return (
       <div className="c-custom-draggable">
         {
@@ -557,12 +585,12 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
+              // component=timelineConfig
 
               // 将线上配置改为本地配置
-              // component.config = textConfig.config
-              // component.staticData = textConfig.staticData
-              console.log(textConfig.staticData,'#textConfig');
-              
+              // component.config = radarChartConfig.config
+              // component.staticData = radarChartConfig.staticData
+
 
               if (component) {
                 staticData = component.staticData
@@ -650,81 +678,159 @@ const CustomDraggable
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
 
-                            // <IconText
-                            //   componentConfig={component}
-                            // ></IconText>
+                          //   <Counter
+                          //   componentConfig={component}
+                          //   fields={getFields(component)}
+                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          // ></Counter>
+                          // <RadarChart
+                          //   componentConfig={component}
+                          //   fields={getFields(component)}
+                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          // ></RadarChart>
 
                             // <Da componentConfig={component}/>
-                            
-                            // layer.moduleName === 'select2' ?
-                            //   <SelectV2
-                            //     scale={bar.canvasScaleValue}
-                            //     componentConfig={ component }
-                            //     fields={ getFields(component) }
-                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //   >
-                            //   </SelectV2> :
-                            // layer.moduleName === 'bar' ?
-                            //   <Bar
-                            //     scale={bar.canvasScaleValue}
-                            //     componentConfig={ component }
-                            //     fields={ getFields(component) }
-                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //   >
-                            //   </Bar> :
-
-                            // layer.moduleName === 'scrollTable' ?
-                            //   <ScrollTable
-                            //     scale={bar.canvasScaleValue}
-                            //     componentConfig={ component }
-                            //     fields={ getFields(component) }
-                            //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //   >
-                            //   </ScrollTable> :
-                            //   layer.moduleName === 'tab' ?
-                            //     <Tab
-                            //       componentConfig={ component }
-                            //       fields={ getFields(component) }
-                            //       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //     >
-                            //     </Tab> :
-                            //     layer.moduleName === 'timeSelect' ?
-                            //     <TimeSelect
-                            //       componentConfig={ component }
-                            //       fields={ getFields(component) }
-                            //       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //     >
-                            //     </TimeSelect> :
-                            //     layer.moduleName === 'worldMap' ?
-                            //       <WorldMap
-                            //         componentConfig={ component }
-                            //         fields={ getFields(component) }
-                            //         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //       ></WorldMap>
-                                  <ChinaMap
+                            // <SwiperText  componentConfig={component}></SwiperText>
+                            layer.moduleName === 'rankingBar' ?
+                              <RankingBar
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </RankingBar> :
+                            layer.moduleName === 'zebraColumn' ?
+                              <ZebraColumn
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </ZebraColumn> :
+                            layer.moduleName === 'basicBar' ?
+                              <BasicBar
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </BasicBar> :
+                            layer.moduleName === 'image2' ?
+                              <CusImage
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </CusImage> :
+                            layer.moduleName === 'select2' ?
+                              <SelectV2
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </SelectV2> :
+                            layer.moduleName === 'bar' ?
+                              <Bar
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </Bar> :
+                            layer.moduleName === 'scrollTable' ?
+                              <ScrollTable
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                scale={bar.canvasScaleValue}
+                                componentConfig={ component }
+                                fields={ getFields(component) }
+                                comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              >
+                              </ScrollTable> :
+                              layer.moduleName === 'tab' ?
+                                <Tab
+                                  onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                  componentConfig={ component }
+                                  fields={ getFields(component) }
+                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                >
+                                </Tab> :
+                                layer.moduleName === 'scrollSelect' ?
+                                  <ScrollSelect
+                                    onChange={(val:any)=>handleValueChange(val,layer.id)}
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                  ></ChinaMap>
-                                  // :
-                                  // <ErrorCatch
-                                  //   app={component.name}
-                                  //   user=""
-                                  //   token=""
-                                  //   max={1}
-                                  //   errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
-                                  //   onCatch={(errors) => {
-                                  //     console.log('组件报错信息：', errors);
-                                  //   }}
-                                  // >
-                                  //   <RemoteBaseComponent
-                                  //     componentConfig={ component }
-                                  //     fields={ getFields(component) }
-                                  //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                  //   ></RemoteBaseComponent>
-                                  // </ErrorCatch>
+                                  >
+                                  </ScrollSelect> :
+                                layer.moduleName === 'timeSelect' ?
+                                <TimeSelect
+                                  onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                  componentConfig={ component }
+                                  fields={ getFields(component) }
+                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                >
+                                </TimeSelect> :
+                                layer.moduleName === 'worldMap' ?
+                                  <WorldMap
+                                    onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                    componentConfig={ component }
+                                    fields={ getFields(component) }
+                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                  ></WorldMap>:
+                                  layer.moduleName === 'timeline'?
+                                    <Timeline
+                                      onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                      componentConfig={ component }
+                                      fields={ getFields(component) }
+                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                    ></Timeline>:
+                                    layer.moduleName === 'CardFlipper_1'?
+                                      <CardFlipper1
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></CardFlipper1>:
+                                      layer.moduleName === 'CardFlipper_2'?
+                                      <CardFlipper2
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></CardFlipper2>:
+                                    <ErrorCatch
+                                      app={component.name}
+                                      user=""
+                                      token=""
+                                      max={1}
+                                      errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
+                                      onCatch={(errors) => {
+                                        console.log('组件报错信息：', errors, '组件id', layer.id);
+                                      }}
+                                    >
+                                      {/* <Timeline
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></Timeline> */}
+                                      <RemoteBaseComponent
+                                        key={layer.id}
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                      ></RemoteBaseComponent>
+                                    </ErrorCatch>
                           }
-                        </div> 
+                        </div>
                       </>
                   }
                   <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />

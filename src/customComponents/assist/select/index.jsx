@@ -12,6 +12,12 @@ const ComSelect = (props) => {
   const componentData = props.comData  // 过滤后的数据
   const fieldKey = props.fields[0]
   const [defaultValue, setDefaultValue] = useState(null)
+  let scaleValue = 1;
+  const scaleDivEl = document.getElementById('scaleDiv')
+  console.log('scaleDivEl', scaleDivEl)
+  if (scaleDivEl) {
+    scaleValue = scaleDivEl.style.transform.replace(/[^0-9.]/ig, "")
+  }
 
   const getStyle = (config, isOptions = false) => {
     const result = {}
@@ -35,6 +41,7 @@ const ComSelect = (props) => {
 
   const style = getStyle(config)
   const { input, options } = style.selectStyle
+  console.log('style', style)
 
   useEffect(() => {
     // 处理默认选中
@@ -46,7 +53,7 @@ const ComSelect = (props) => {
       setDefaultValue(componentData[index][fieldKey])
       handleChange(componentData[index][fieldKey])
     }
-  }, [])
+  }, [componentData])
 
   const handleChange = value => {
     const data = componentData.filter(item => {
@@ -96,6 +103,10 @@ const ComSelect = (props) => {
       "--itemSelectedFontFamily": options.selectedStyle.font.fontFamily,
       "--itemSelectedFontSize": options.selectedStyle.font.fontSize + 'px',
       "--itemSelectedFontWeight": options.selectedStyle.font.fontWeight,
+      "--scaleValue": scaleValue,
+      "--width": style.dimension.width * scaleValue + 'px',
+      "--top": (style.dimension.height + style.dimension.top + options.select.marginTop) * scaleValue + 'px',
+      "--scale": scaleValue,
     }}
     dropdownClassName="component-select-dropdown"
     className="component-select"
