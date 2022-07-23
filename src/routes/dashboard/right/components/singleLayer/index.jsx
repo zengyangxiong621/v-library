@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import debounce from 'lodash/debounce';
 import { http } from '../../../../../services/request'
+import { getCallbackParams } from '@/utils/data.js'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -210,6 +211,21 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       method: 'post',
       body: params
     })
+    // 把组件定义的回调参数键值对写入callbackArgs中
+    if(componentConfig.callbackArgs.length) {
+      const currentActiveCompoentData = bar.currentActiveCompoentData
+      const callbackParams = getCallbackParams(componentConfig.callbackArgs,currentActiveCompoentData[componentConfig.id])
+      const callbackArgs = bar.callbackArgs
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          callbackArgs:{
+            ...callbackArgs,
+            ...callbackParams
+          }
+        }
+      })
+    }
   }
 
   return (

@@ -4,7 +4,7 @@ import './index.less'
 
 import { withRouter } from 'dva/router'
 import { useFetch } from '../../../../utils/useFetch'
-import { BASEURL } from '@/services/request'
+import { BASEURL, http,downLoad } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { ExclamationCircleFilled } from '@ant-design/icons'
@@ -150,10 +150,7 @@ const AppCard = (props: any) => {
 
   // 导出应用
   const exportApp = async (appId: string) => {
-    // console.log(`${BASEURL}/visual/application/export/${appId}`);
-    const toolA = document.createElement('a')
-    toolA.href = `${BASEURL}/visual/application/export/${appId}`
-    toolA.click()
+    downLoad(`/visual/application/export/${appId}`)
   }
 
   // 移动分组
