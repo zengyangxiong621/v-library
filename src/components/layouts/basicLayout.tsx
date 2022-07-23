@@ -83,17 +83,15 @@ class BasicLayout extends Component<Props, State> {
           <Spin className='full-spin' tip="Loading..."></Spin> :
           <Layout>
             {!needHeader && <CustomHeader {...this.props} menuData={_menuData} defaultPath={defaultPath}></CustomHeader>}
-            {
-              _menuData && _menuData.length ? (
-                <Fragment>
-                  <Content>
-                    {
-                      isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch>
-                    }
-                  </Content>
-                </Fragment>
-              ) : <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
-            }
+            <Content>
+              <div className="content-class">
+                {
+                  _menuData && _menuData.length ? 
+                  isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch> :
+                  <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
+                }
+              </div>
+            </Content>
           </Layout>
         }
       </Fragment>
