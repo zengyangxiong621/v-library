@@ -18,6 +18,8 @@ export default {
     groupList: [],
     curSelectedGroup: {},
     curSelectedGroupName: "",
+    treeLoading: false,
+    resourceLoading: false
   },
   reducers: {
     resetModel(state: any, { payload }: any) {
@@ -39,11 +41,21 @@ export default {
     setCurSelectedGroupName(state: any, { payload }: any) {
       return { ...state, curSelectedGroupName: payload };
     },
+    setTreeLoading(state: any, { payload }: any) {
+      return { ...state, treeLoading: payload };
+    },
+    setResourceLoading(state: any, { payload }: any) {
+      return { ...state, resourceLoading: payload };
+    },
   },
   effects: {
     *getRightLists({ payload }: any, { call, put, select }: any): any {
       // 获取模板类别接口 
       let url = ['myTemp','systemTemp'].indexOf(payload.type[0]) > -1 ? '/visual/appTemplate/list'  : '/visual/resource/queryResourceList'
+      yield put({
+        type: "setResourceLoading",
+        payload: true
+      });
       // 获取素材类别接口
       let data = yield http({
         url,
@@ -56,11 +68,19 @@ export default {
         })
       }
       yield put({
+        type: "setResourceLoading",
+        payload: false
+      });
+      yield put({
         type: "updateRightLists",
         payload: data?.content || [],
       });
     },
     *getGroupTree({ payload,cb }: any, { call, put }: any): any {
+      yield put({
+        type: 'setTreeLoading',
+        payload: true
+      })
       // 获取所有素材分类
       let designData:any = yield http({
         url: `/visual/resource/queryResourceTypeList?spaceId=1`,
@@ -70,6 +90,11 @@ export default {
       let tempData:any = yield http({
         url: `/visual/appTemplate/queryGroupList?spaceId=1`,
         method: "get",
+      })
+
+      yield put({
+        type: 'setTreeLoading',
+        payload: false
       })
 
       // 因为模板和素材用的不同接口，其中每个菜单中包含全部和其他，全部和其他对应的id不是唯一的，前端要做特殊处理
