@@ -94,6 +94,39 @@ const componentDefaultConfig = {
     //   "value": false
     // },
     {
+      "name": "layoutColor",
+      "displayName": "布局",
+      "type": "collapse",
+      "hasSwitch": false,
+      "defaultExpand": false,
+      "value": [
+        {
+          "name": "show",
+          "displayName": "",
+          "value": true,
+          "type": "switch"
+        },
+        {
+          'name': 'color',
+          'displayName': '颜色',
+          'value': '#0D2753', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          'type':'color'
+        },
+        {
+          'name': 'radius',
+          'displayName': '半径',
+          'value': 50,
+          'type':'number',
+          "config": {
+            min: 0,
+            max: 100,
+            step: 1,
+            suffix: "%",
+          }
+        },
+      ]
+    },
+    {
       "name": "outsideValue",
       "displayName": "外围字体",
       "type": "collapse",
@@ -119,7 +152,7 @@ const componentDefaultConfig = {
           'type':'number',
           "config": {
               "min": 12,
-              "step": 48,
+              "step": 1,
           }
         },
         {
