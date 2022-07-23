@@ -188,7 +188,7 @@ const AppCard = (props: any) => {
   };
   // 导出功能
   const exportDesign = async() => {
-    const downloadUrl=moduleType.includes('Temp') ? `${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
+    const downloadUrl=moduleType.includes('Temp') ? `${(window as any).CONFIG.BASE_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
     downLoad(downloadUrl,true)
     // window.location.href = moduleType.includes('Temp') ? downLoad`${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
   };
