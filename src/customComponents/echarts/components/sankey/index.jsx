@@ -15,7 +15,8 @@ const RingRatio = (props) => {
   const originData = props.comData || data
   // originData中有多项数据，只取第一项
   const firstData = originData[0]
-  const numberValue = firstData[finalFieldsArr[0]]
+  const nodes = firstData[finalFieldsArr[0]]
+  const links = firstData[finalFieldsArr[1]]
 
   // 获取config中的配置
   const getTargetConfig = (Arr) => {
@@ -38,13 +39,30 @@ const RingRatio = (props) => {
     })
     return targetConfig
   }
-
+  console.log(getTargetConfig(config));
   const {globalStyle,margin,label,linksLineStyle,tooltip,dataSeries} = getTargetConfig(config)
   const {nodeWidth,nodeGap,emphasis,draggable} = globalStyle
   const {left,top,right,bottom} = margin
-  // const {left,top,right,bottom} = label
-  // const {left,top,right,bottom} = linksLineStyle
-  // const {left,top,right,bottom} = tooltip
+  const {labelTextStyle,numberLabel,offset:{x,y},position} = label
+  const {color,opacity,curveness,customColor:{customColorShow,styleColor}} = linksLineStyle
+  const {backgroundColor,tooltipTextStyle} = tooltip
+
+  links.forEach(item => {
+    item.lineStyle = {
+      color: !customColorShow ? color : styleColor, // target 或 自定义
+      opacity: '0.1', // 0.1
+      curveness: '0.5'// 0-1
+    }
+  })
+  const allSource = links.map(item => item.source)
+  const surce =  [...new Set(allSource)]
+  nodes.forEach(item => {
+    if(surce.includes(item.name)){
+      item.label = {
+        position: "right"
+      }
+    }
+  })
 
 
   // 环形宽度
@@ -53,162 +71,39 @@ const RingRatio = (props) => {
       trigger: 'item',
       triggerOn: 'mousemove',
     },
-    nodeWidth,
-    nodeGap,
-    draggable,
-    emphasis: {
-      focus: emphasis ? 'adjacency' : 'none',
-    },
-    left,
-    top,
-    right,
-    bottom,
     series: {
       type: 'sankey',
-      data: [
-        {
-          // name: 'a',
-          name: '21.3.1.3 美国',
-          itemStyle: {
-            color: '#8ec753'
-          },
-          label: {
-            position: 'right',
-            color: 'red',
-            fontSize: '30px',
-            fontStyle: 'normal',
-            fontWeight: 'normal'
-          },
-        },
-        {
-          name: 'a1',
-          itemStyle: {
-            color: '#60d9ac'
-          },
-          label: {
-            position: 'left',
-            color: 'red',
-            fontSize: '30px',
-            fontStyle: 'normal',
-            fontWeight: 'normal'
-          },
-        },
-        {
-          name: 'a2',
-          itemStyle: {
-            color: '#5b6e96'
-          },
-          label: {
-            position: 'left',
-            color: 'red',
-            fontSize: '30px',
-            fontStyle: 'normal',
-            fontWeight: 'normal'
-          },
-        },
-        {
-          name: 'a3',
-          itemStyle: {
-            color: '#a9dffb'
-          },
-          label: {
-            position: 'left',
-            color: 'red',
-            fontSize: '30px',
-            fontStyle: 'normal',
-            fontWeight: 'normal'
-          },
-        },
-        {
-          name: 'a4',
-          itemStyle: {
-            color: '#ffdd4c'
-          },
-          label: {
-            position: 'left',
-            color: 'red',
-            fontSize: '30px',
-            fontStyle: 'normal',
-            fontWeight: 'normal'
-          },
-        },
-        {
-          name: 'a5', 
-          itemStyle: {
-            color: '#ff994d'
-          },
-          label: {
-            position: 'left',
-            color: 'red',
-            fontSize: '30px',
-            fontStyle: 'normal',
-            fontWeight: 'normal'
-          },
-        },
-        {
-          name: 'a6',
-          itemStyle: {
-            color: '#e65a56'
-          },
-          label: {
-            position: 'left',
-            color: 'red',
-            fontSize: '30px',
-            fontStyle: 'normal',
-            fontWeight: 'normal'
-          },
-        },
-      ],
-      links: [
-        {
-          source: '21.3.1.3 美国',
-          target: 'a1',
-          value: 7,
-          lineStyle: {
-            color: '#06196b'
-          }
-        },
-        {
-          source: '21.3.1.3 美国',
-          target: 'a2',
-          value: 4,
-          lineStyle: {
-            color: '#06196b'
-          }
-        },
-        {
-          source: '21.3.1.3 美国',
-          target: 'a3',
-          value: 3,
-          lineStyle: {
-            color: '#06196b'
-          }
-        },
-              {
-          source: '21.3.1.3 美国',
-          target: 'a4',
-          value: 3,
-          lineStyle: {
-            color: '#06196b'
-          }
-        },
-        {
-          source: '21.3.1.3 美国',
-          target: 'a5',
-          value: 3,
-          lineStyle: {
-            color: '#06196b'
-          }
-        },
-        {
-          source: '21.3.1.3 美国',
-          target: 'a6',
-          value: 10,
-          lineStyle: {
-            color: '#06196b'
-          }
-        },
-      ],
+      nodeWidth,
+      nodeGap,
+      draggable,
+      left,
+      top,
+      right,
+      bottom,
+      emphasis: {
+        focus: emphasis ? 'adjacency' : 'none',
+      },
+      tooltip: {
+        backgroundColor,
+        textStyle: {
+          color: tooltipTextStyle.color,
+          fontFamily: tooltipTextStyle.fontFamily,
+          fontSize: tooltipTextStyle.fontSize,
+          fontWeight: tooltipTextStyle.fontWeight
+        }
+      },
+      label: {
+        show: true,
+        position,
+        offset: [x,y],
+        color: labelTextStyle.color,
+        fontFamily: labelTextStyle.fontFamily,
+        fontSize: labelTextStyle.fontSize,
+        fontWeight: labelTextStyle.fontWeight,
+      },
+      nodes,
+      links
+
     }
   })
 

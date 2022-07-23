@@ -5,7 +5,7 @@ const componentDefaultConfig = {
   parentId: "0",
   dashboardId: "",
   moduleName: "sankey",
-  moduleVersion: "1.0.0",
+  moduleVersion: "1.0.2",
   autoUpdate: {
     isAuto: false,
     interval: 10,
@@ -299,7 +299,7 @@ const componentDefaultConfig = {
           value:{
             fontFamily: 'Microsoft YaHei',
             fontSize: 12,
-            color: '#232630',
+            color: '#ea7ccc',
             fontWeight: 'normal' // bold bolder lighter
           }
         }
