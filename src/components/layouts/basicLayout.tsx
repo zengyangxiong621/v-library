@@ -80,7 +80,7 @@ class BasicLayout extends Component<Props, State> {
       <Fragment>
         {
           !userInfo ? 
-          <Spin className='full-spin' tip="Loading..."></Spin> :
+          <Spin size="large" className='full-spin' tip="Loading..."></Spin> :
           <Layout>
             {!needHeader && <CustomHeader {...this.props} menuData={_menuData} defaultPath={defaultPath}></CustomHeader>}
             <Content>
