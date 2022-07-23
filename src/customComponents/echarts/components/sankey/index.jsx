@@ -39,7 +39,9 @@ const RingRatio = (props) => {
     return targetConfig
   }
 
-  console.log(getTargetConfig(config))
+  const {globalStyle,margin,label,linksLineStyle,tooltip,dataSeries} = getTargetConfig(config)
+  const {nodeWidth,nodeGap,emphasis,draggable} = globalStyle
+  const {left,top,right,bottom} = margin
 
 
   // 环形宽度
@@ -48,10 +50,18 @@ const RingRatio = (props) => {
       trigger: 'item',
       triggerOn: 'mousemove',
     },
-    width: '90%',
+    nodeWidth,
+    nodeGap,
+    draggable,
+    emphasis: {
+      focus: emphasis ? 'adjacency' : 'none',
+    },
+    left,
+    top,
+    right,
+    bottom,
     series: {
       type: 'sankey',
-      layout: 'none',
       data: [
         {
           // name: 'a',
@@ -196,7 +206,6 @@ const RingRatio = (props) => {
           }
         },
       ],
-      draggable: false,
     }
   })
 
