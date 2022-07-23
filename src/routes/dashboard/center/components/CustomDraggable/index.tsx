@@ -18,15 +18,12 @@ import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import IconText from '@/customComponents/text/iconText'
 // import textConfig from  '@/customComponents/text/iconText/config'
 import SwiperText from '@/customComponents/text/swiperText'
-<<<<<<< HEAD
 import textConfig from '@/customComponents/echarts/components/worldMap/config'
-=======
 // import textConfig from '@/customComponents/text/swiperText/config'
 import Counter from  '@/customComponents/assist/counter'
 // import textConfig from  '@/customComponents/assist/counter/config'
 import RadarChart from '@/customComponents/echarts/components/radarChart'
 import radarChartConfig from '@/customComponents/echarts/components/radarChart/config'
->>>>>>> develop
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
