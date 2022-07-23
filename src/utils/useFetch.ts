@@ -1,4 +1,5 @@
 import { message } from "antd";
+import { forwardLogin } from '@/services/loginApi'
 
 /**
  * description: 执行请求、获取数据、捕获异常
@@ -29,7 +30,6 @@ const DEFAULT_OPTIONS = {
   mode: "cors",
   headers: {
     "Content-Type": "application/json",
-    "Token": ''
   },
 };
 
@@ -59,8 +59,10 @@ export const useFetch = async (
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
 
   const token=localStorage.getItem('token')
-  finalParams.headers['Token']=token
-
+  if(path!=='/visual/login/login'){
+    finalParams.headers['Token']=token
+  }
+  
   // 格式由fetchOptions中的responseType来决定，默认是json
   const finalFetch = fetch(finalPath, finalParams)
     .then((response: any) => {
@@ -96,11 +98,17 @@ export const useFetch = async (
     });
   }
   if(code===401){
+    if (token && token.endsWith('x-gridsumdissector')) {
+      forwardLogin()
+    }else{
+      window.history.replaceState(null,'','/login')
+      window.location.reload();
+      localStorage.removeItem('token')
+    }
+
     message.error({
       content: data?.message,
     });
-    window.history.replaceState(null,'','/login')
-    window.location.reload();
   }
   if (data) {
     // data = data.data.content

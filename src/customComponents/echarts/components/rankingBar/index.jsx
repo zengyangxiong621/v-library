@@ -33,7 +33,7 @@ const RankingBar = (props) => {
   console.log('allSettings', allSettings)
   const { autoSort, sortOrder, maxBars, spacing, batteryStyle } = allSettings['图表']
   const { classify, numerical } = allSettings['文本']
-  const { bySystem, barColor, bgColor, highLight } = allSettings['柱状']
+  const { bySystem,isRadius, barColor, bgColor, highLight } = allSettings['柱状']
 
   let resultTempData = Array.isArray(componentData) ? componentData.reduce((pre, cur) => {
     return pre.concat({
@@ -128,7 +128,7 @@ const RankingBar = (props) => {
           },
           itemStyle: {
             normal: {
-              barBorderRadius: 30,
+              barBorderRadius: isRadius?30:0,
               color: function (params) {
                 var colorList = ['rgba(72,255,156,1)', 'rgba(72,168,255, 1)', 'rgba(255,251,116, 1)', 'rgba(255,115,104, 1)', 'rgba(113,129,226, 1)'];
                 return bySystem ? colorList[params.dataIndex % 5] : barColor;
@@ -148,7 +148,7 @@ const RankingBar = (props) => {
             normal: {
               show: true,
               position: [`${numerical.offset.offsetX}%`, `${numerical.offset.offsetY}px`],
-              formatter: data => salvProMax[data.dataIndex],
+              formatter: data => salvProValue[data.dataIndex],
               textStyle: {
                 color: numerical.font.color,
                 fontSize: numerical.font.fontSize,
@@ -164,7 +164,7 @@ const RankingBar = (props) => {
                 var colorList = ['rgba(72,255,156, .4)', 'rgba(72,168,255, .4)', 'rgba(255,251,116, .4)', 'rgba(255,115,104, .4)', 'rgba(113,129,226, .4)'];
                 return bySystem ? colorList[params.dataIndex % 5] : bgColor;
               },
-              barBorderRadius: 30,
+              barBorderRadius: isRadius?30:0,
             },
           },
         },
@@ -182,7 +182,7 @@ const RankingBar = (props) => {
         batteryStyle && {
           type: "pictorialBar",
           itemStyle: {
-            color: bgColor,
+            color: bySystem? '#':bgColor,
           },
           symbolRepeat: "fixed",
           symbolMargin: 4,
@@ -193,7 +193,6 @@ const RankingBar = (props) => {
           symbolOffset: [6, 0],
           data: salvProValue,
           zlevel: 2,
-          animationEasing: "elasticOut",
         },
       ],
     }

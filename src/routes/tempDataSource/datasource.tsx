@@ -34,7 +34,7 @@ const DataSource = (props: any) => {
   const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
   const [previewFileUrl, setPreviewFileUrl] = useState(null)
   const [previewRecord, setPreviewRecord] = useState({ type: '', id: '' })
-  const [tableLoading, setTableLoading] = useState(true)
+  const [tableLoading, setTableLoading] = useState(false)
 
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
@@ -60,22 +60,20 @@ const DataSource = (props: any) => {
   }
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/datasource/list',
-      method: 'post',
-      body: differentParams
-    })
-    if (data) {
+    try {
+      const data = await http({
+        url: '/visual/datasource/list',
+        method: 'post',
+        body: differentParams
+      })
+      if(data){
+        await resetTableInfo(data)
+      }
+    } catch (error) {
+      console.log(error);
+    }finally{
       setTableLoading(false)
-    } else {
-      setTimeout(() => {
-        setTableLoading(false)
-      }, 3000);
     }
-
-    // 请求完成，冲着表格的数据和页码信息
-    await resetTableInfo(data)
   }
   // 获取表格数据
   useEffect(() => {
@@ -399,7 +397,7 @@ const DataSource = (props: any) => {
 const selectOptions = [
   {
     name: '全部类型',
-    key: null,
+    key: '',
   },
   {
     name: 'API',

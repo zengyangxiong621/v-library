@@ -532,6 +532,17 @@ const CustomDraggable
         })
       }
     }
+
+    const handleValueChange = (value:any,componentId:any) => {
+      const currentActiveCompoentData = bar.currentActiveCompoentData
+      currentActiveCompoentData[componentId] = value
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          currentActiveCompoentData
+        },
+      })
+    }
     return (
       <div className="c-custom-draggable">
         {
@@ -679,6 +690,7 @@ const CustomDraggable
                             // <SwiperText  componentConfig={component}></SwiperText>
                             layer.moduleName === 'rankingBar' ?
                               <RankingBar
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -687,6 +699,7 @@ const CustomDraggable
                               </RankingBar> :
                             layer.moduleName === 'zebraColumn' ?
                               <ZebraColumn
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -695,6 +708,7 @@ const CustomDraggable
                               </ZebraColumn> :
                             layer.moduleName === 'basicBar' ?
                               <BasicBar
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -703,6 +717,7 @@ const CustomDraggable
                               </BasicBar> :
                             layer.moduleName === 'image2' ?
                               <CusImage
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -711,6 +726,7 @@ const CustomDraggable
                               </CusImage> :
                             layer.moduleName === 'select2' ?
                               <SelectV2
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -719,6 +735,7 @@ const CustomDraggable
                               </SelectV2> :
                             layer.moduleName === 'bar' ?
                               <Bar
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -727,6 +744,7 @@ const CustomDraggable
                               </Bar> :
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
+                                onChange={(val:any)=>handleValueChange(val,layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -735,6 +753,7 @@ const CustomDraggable
                               </ScrollTable> :
                               layer.moduleName === 'tab' ?
                                 <Tab
+                                  onChange={(val:any)=>handleValueChange(val,layer.id)}
                                   componentConfig={ component }
                                   fields={ getFields(component) }
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -742,6 +761,7 @@ const CustomDraggable
                                 </Tab> :
                                 layer.moduleName === 'scrollSelect' ?
                                   <ScrollSelect
+                                    onChange={(val:any)=>handleValueChange(val,layer.id)}
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -749,6 +769,7 @@ const CustomDraggable
                                   </ScrollSelect> :
                                 layer.moduleName === 'timeSelect' ?
                                 <TimeSelect
+                                  onChange={(val:any)=>handleValueChange(val,layer.id)}
                                   componentConfig={ component }
                                   fields={ getFields(component) }
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -756,24 +777,28 @@ const CustomDraggable
                                 </TimeSelect> :
                                 layer.moduleName === 'worldMap' ?
                                   <WorldMap
+                                    onChange={(val:any)=>handleValueChange(val,layer.id)}
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                   ></WorldMap>:
                                   layer.moduleName === 'timeline'?
                                     <Timeline
+                                      onChange={(val:any)=>handleValueChange(val,layer.id)}
                                       componentConfig={ component }
                                       fields={ getFields(component) }
                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                     ></Timeline>:
                                     layer.moduleName === 'CardFlipper_1'?
                                       <CardFlipper1
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                       ></CardFlipper1>:
                                       layer.moduleName === 'CardFlipper_2'?
                                       <CardFlipper2
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }

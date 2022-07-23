@@ -398,7 +398,7 @@ const ComponentDev = (props: any) => {
 const selectOptions = [
   {
     name: '全部',
-    key: null,
+    key: '',
   },
   {
     name: '已上架',

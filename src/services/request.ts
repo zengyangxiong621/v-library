@@ -1,6 +1,6 @@
 import { message } from "antd";
 import qs from "qs";
-
+import { forwardLogin } from './loginApi'
 const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === "[object Object]";
 };
@@ -52,7 +52,7 @@ export const http = (config: any, isDownload: boolean = false): any => {
 
   // 类似于Axios的请求拦截器，例如：把存储在客户端本地的token信息携带给服务器「根据当前后台要求处理」
   let token = localStorage.getItem("token");
-  if (token) headers["Authorization"] = token;
+  if (token) headers["token"] = token;
 
   // 发送请求
   method = method.toUpperCase();
@@ -107,8 +107,13 @@ export const http = (config: any, isDownload: boolean = false): any => {
       const { code, message: errMessage } = err;
       message.error(errMessage);
       if(code===401){
-        window.history.replaceState(null,'','/login')
-        window.location.reload();
+        if (token && token.endsWith('x-gridsumdissector')) {
+          forwardLogin()
+        }else{
+          window.history.replaceState(null,'','/login')
+          window.location.reload();
+          localStorage.removeItem('token')
+        }
       }
       return Promise.reject(err);
     });

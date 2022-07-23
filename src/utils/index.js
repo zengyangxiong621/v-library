@@ -664,3 +664,25 @@ export const getRandowString=(len)=>{
   }
   return pwd
 }
+
+export const handleToTree=(list)=>{
+  return list.reduce((res,cur)=>{
+    if(!cur.parentId){
+      cur.children=[]
+      res.push(cur)
+    }else{
+      const parentNode=list.find((item)=>item.id===cur.parentId)
+      if(!parentNode.children){
+        parentNode.children=[]
+      }
+      parentNode.children.push(cur);
+    }
+    return res
+  },[])
+}
+export const handleAddChecked=(list)=>{
+  return list.map((item)=>{
+    item.checkedList=[]
+    return item
+  })
+}

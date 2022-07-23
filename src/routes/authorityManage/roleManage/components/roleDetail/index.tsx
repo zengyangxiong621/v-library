@@ -90,7 +90,8 @@ export default memo(function RoleDetail(props:any) {
     hideModel()
   }
   return (
-    <Modal 
+    <Modal
+      className='roleDetailModel'
       title="查看详情"
       visible={isModalVisible}
       footer={null}

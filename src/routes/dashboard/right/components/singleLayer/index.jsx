@@ -12,10 +12,10 @@ import CallbackArgs from '../callbackArgs'
 
 import {
   Tabs,
-
 } from 'antd';
 import debounce from 'lodash/debounce';
 import { http } from '../../../../../services/request'
+import { getCallbackParams } from '@/utils/data.js'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -31,7 +31,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   }
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
-
 
   const styleChange = debounce(() => {
     dispatch({
@@ -74,7 +73,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const dataContainerChange = (dataContainerIds) => {
     dispatch({
       type: 'bar/componentsBindContainer',
-      payload:{
+      payload: {
         componentConfig,
         dataContainerIds
       }
@@ -203,15 +202,30 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const saveCallbackArg = async (componentConfig) => {
     const params = {
-      callbackArgs:componentConfig.callbackArgs,
+      callbackArgs: componentConfig.callbackArgs,
       dashboardId: dashboardId,
-      moduleId:componentConfig.id
+      moduleId: componentConfig.id
     }
     await http({
       url: '/visual/module/callbackParam',
       method: 'post',
       body: params
     })
+    // 把组件定义的回调参数键值对写入callbackArgs中
+    if(componentConfig.callbackArgs.length) {
+      const currentActiveCompoentData = bar.currentActiveCompoentData
+      const callbackParams = getCallbackParams(componentConfig.callbackArgs,currentActiveCompoentData[componentConfig.id])
+      const callbackArgs = bar.callbackArgs
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          callbackArgs:{
+            ...callbackArgs,
+            ...callbackParams
+          }
+        }
+      })
+    }
   }
 
   return (
@@ -219,7 +233,9 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       <div className="content">
         <Tabs defaultActiveKey="1" type="card" className="custom-tabs">
           <TabPane tab="样式" key="1">
-            <ComponentCard data={componentConfig}>
+            <ComponentCard data={componentConfig}
+              allModulesConfig={bar.moduleDefaultConfig}
+              dispatch={dispatch}>
               {styleConfig.map((item, index) => {
                 if (!(item.type && componentLib[item.type])) {
                   return null;
@@ -248,7 +264,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
               <LoadAnimation data={interactionConfig} onChange={interactionChange} />
-              <CallbackArgs data={componentConfig} onChange={callbackArgChange}/>
+              <CallbackArgs data={componentConfig} onChange={callbackArgChange} />
               <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
