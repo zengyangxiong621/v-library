@@ -176,7 +176,51 @@ const getFields = (componentConfig = {}) => {
 
 }
 
+// 数组去重，取最后一个
+const duplicateFn = (arr) => {
+  let arrTemp = JSON.parse(JSON.stringify(arr))
+  arrTemp = arrTemp.reverse()
+  let map = new Map();
+  for (let item of arrTemp) {
+    if (!map.has(item.target)) {
+      map.set(item.target, item);
+    }
+  }
+  return [...map.values()];
+}
+
+const filterEmptyCallParam = (callParam) => {
+  let arrTemp = JSON.parse(JSON.stringify(callParam))
+  arrTemp = arrTemp.filter(param => !(!param.origin || !param.target))
+  return arrTemp
+}
+
+/**
+ * 获取组件回调参数定义的数据
+ * @param {*} componentCallbackArgs 组件回调参数
+ * @param {*} currnetData 当前状态下组件的数据
+ * @returns 
+ */
+const getCallbackParams = (componentCallbackArgs, currnetData) => {
+  if(!currnetData || Object.prototype.toString.call(currnetData)!=="[object Object]"){
+    return {}
+  }
+  const result = {}
+  // 过滤掉target或orgin为空的回调
+  let filteredParams = filterEmptyCallParam(JSON.parse(JSON.stringify(componentCallbackArgs)))
+  // 去重处理
+  let comCallbackArgs = JSON.parse(JSON.stringify(filteredParams))
+  // 给comCallbackArgs拥有相同变量的去重
+  comCallbackArgs = duplicateFn(comCallbackArgs) // 后面覆盖前面
+  console.log('componentCallbackArgs,currnetData',componentCallbackArgs,currnetData)
+  componentCallbackArgs.forEach(item=>{
+    result[item.target] = currnetData[item.origin]
+  })
+  return result
+}
+
 export {
   getComDataWithFilters,
-  getFields
+  getFields,
+  getCallbackParams
 }

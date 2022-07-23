@@ -84,6 +84,9 @@ const UploadImg = props => {
             beforeUpload={beforeUpload}
             onChange={handleBgChange}
             onRemove={handleBgRemove}
+            headers={{
+              authorization:localStorage.getItem('token')
+            }}
           >
             {!bgUrl ? '点击这里进行修改' : <div style={{ width: '100%' }} class="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card">
               <div class="ant-upload-list-item-info">

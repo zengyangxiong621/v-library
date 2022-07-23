@@ -11,6 +11,7 @@ import {
   Row, Col, Button, Spin, message, Form,
   Switch, Input, Upload, Select, Typography, Tooltip
 } from 'antd'
+import type { UploadProps } from 'antd';
 import { IconFont } from '../../../../utils/useIcon'
 
 const { Option } = Select
@@ -369,12 +370,15 @@ const RightContent = (props: any) => {
   }
 
   // 上传图片
-  const uploadImgProps = {
+  const uploadImgProps:UploadProps = {
     name: 'file',
     multiple: false,
     maxCount: 1,
     accept: 'image/png, image/jpeg',
     action: `${BASEURL}/visual/file/upload`,
+    headers:{
+      authorization:localStorage.getItem('token') || ''
+    },
     beforeUpload(file: any) {
       const { name }: { name: string } = file
       // 考虑 cdb.la...yer.json 这个文件名
@@ -424,6 +428,7 @@ const RightContent = (props: any) => {
         // <Col span={6} key={index}>
         <AppCard
           {...item}
+          key={item.id}
           spaceId={spaceId}
           changeFabuModal={changeFabuModal}
           openMoveGroupModal={openMoveGroupModal}

@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/compatible": "^1.1.0",
     "@babel/core": "^7.16.0",
     "@jiaminghi/data-view-react": "^1.2.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
@@ -182,6 +181,7 @@
     "@types/swiper": "^6.0.0",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.13",
+    "query-string": "^7.1.1",
     "tailwindcss": "^3.0.24"
   }
 }

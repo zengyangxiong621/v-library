@@ -20,7 +20,6 @@ const AlignSetting = props => {
   const [align, SetAlign] = useState(_align?.value || null);
   const [vertical, SetVertical] = useState(_vertical?.value || null);
 
-
   const alignmentChange = (str) => {
     SetAlign(str)
     _align.value = str
@@ -85,7 +84,7 @@ const AlignSetting = props => {
           _alignRange.length > 0 ?
             <div className="align">
               {
-                _alignRange.map(item => (<span title={_alignList[item].title} className={align === item ? 'align-active' : null} onClick={() => alignmentChange(item)}>
+                _alignRange.map(item => (<span key={item} title={_alignList[item].title} className={align === item ? 'align-active' : null} onClick={() => alignmentChange(item)}>
               <i className={["iconfont", _alignList[item].icon].join(" ")} />
             </span>))
               }
@@ -95,7 +94,7 @@ const AlignSetting = props => {
           _verticalRange.length > 0 ?
             <div className="vertical">
               {
-                _verticalRange.map(item => (<span title={_verticalList[item].title} className={vertical === item ? 'align-active' : null} onClick={() => verticalChange(item)}>
+                _verticalRange.map(item => (<span key={item} title={_verticalList[item].title} className={vertical === item ? 'align-active' : null} onClick={() => verticalChange(item)}>
               <i className={["iconfont", _verticalList[item].icon].join(" ")} />
             </span>))
               }

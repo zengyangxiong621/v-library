@@ -17,6 +17,9 @@ import type { TableRowSelection } from 'antd/lib/table/interface';
 import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message, Form } from 'antd'
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
+const mapStateToProps = (state: any) => {
+  return state
+}
 // 功能
 const UserManage = (props: any) => {
   const spaceId = 1
@@ -27,6 +30,7 @@ const UserManage = (props: any) => {
     pageNo: 1,
     pageSize: 30,
   })
+  const [searchParams,setSearchParams]=useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [showAddOrEdit, setShowAddOrEdit] = useState(false);
   const [showUpdateMode, setShowUpdateMode] = useState(false);
@@ -34,7 +38,7 @@ const UserManage = (props: any) => {
   const [currentUser, setCurrentUser] = useState<any>({});
 
   const [roleList, setRoleList] = useState([])
-  const [userInfo, setUserInfo] = useState<any>({})
+  const userInfo = props.global.userInfo || {}
 
 
   
@@ -42,6 +46,7 @@ const UserManage = (props: any) => {
   const getUserList = async(param?:any) => {
     let obj = {
       ...pageInfo,
+      ...searchParams,
       ...param
     }
     setTableLoading(true)
@@ -55,34 +60,31 @@ const UserManage = (props: any) => {
       setTableData(data.content)
     }
   }
-
-  // 获取登录用户的信息
-  const getAccountInfo = async() => {
-    let [,data] = await useFetch('/visual/user/getAccountInfo',{})
-    // data.id = '1544627259203780609'
-    setUserInfo(data)
-  }
-
   useEffect(() => {
     getUserList()
     geRoleList()
-    getAccountInfo()
   },[])
 
   const createUser = () => {
     setformType('add')
     setShowAddOrEdit(true)
   }
+  const resetPageInfo=()=>{
+    const newPageInfo={
+      pageNo: 1,
+      pageSize: pageInfo.pageSize,
+    }
+    setPageInfo(newPageInfo)
+    return newPageInfo
+  }
   const searchByType = (value:any) => {
-    setPageInfo({
-      pageNo: 1,
-      pageSize:pageInfo.pageSize
-    })
-    getUserList({
-      pageNo: 1,
-      pageSize:pageInfo.pageSize,
+    const newSearchParams={
+      ...searchParams,
       ...value
-    })
+    }
+    setSearchParams(newSearchParams)
+    const newPageInfo=resetPageInfo()
+    getUserList({...newPageInfo,...newSearchParams})
   }
 
   // 获取角色列表数据
@@ -396,6 +398,8 @@ const UserManage = (props: any) => {
   )
 };
 
-export default memo(
-  connect(({ userManage }: any) => ({ userManage }))(UserManage)
-);
+export default connect(mapStateToProps)(UserManage);
+
+// export default memo(
+//   UserManage
+// );

@@ -377,6 +377,124 @@ const componentDefaultConfig = {
       "displayName": "数据系列",
       "type": "tabArray",
       "defaultActiveKey": "1",
+      "config": {
+        "template": [
+          {
+            "key": "1",
+            "displayName": "系列1",
+            "name": "tab",
+            "type": "object",
+            "value": [
+              {
+                "name": "filed",
+                "displayName": "s",
+                "value": "",
+                "type": "input"
+              },
+              {
+                "name": "totalOffset",
+                "displayName": "整体偏移",
+                "type": "inputNumber2",
+                "showDetail": true,
+                "value":[
+                  {
+                    "name": "offsetX",
+                    "displayName": "X",
+                    "type": "number",
+                    "value": 0,
+                    "config": {
+                      "min": 0,
+                      "max": 1000,
+                      "step": 1,
+                      "suffix": "px"
+                    }
+                  },
+                  {
+                    "name": "offsetY",
+                    "displayName": "Y",
+                    "type": "number",
+                    "value": 0,
+                    "config":{
+                      "min": 0,
+                      "max": 1000,
+                      "step": 1,
+                      "suffix": "px"
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "textOffset",
+                "displayName": "文字偏移",
+                "type": "inputNumber2",
+                "showDetail": true,
+                "value":[
+                  {
+                    "name": "offsetX",
+                    "displayName": "X",
+                    "type": "number",
+                    "value": 0,
+                    "config": {
+                      "min": 0,
+                      "max": 1000,
+                      "step": 1,
+                      "suffix": "px"
+                    }
+                  },
+                  {
+                    "name": "offsetY",
+                    "displayName": "Y",
+                    "type": "number",
+                    "value": 0,
+                    "config":{
+                      "min": 0,
+                      "max": 1000,
+                      "step": 1,
+                      "suffix": "px"
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "widthProportion",
+                "displayName": "宽度权重比",
+                "type": "number",
+                "value": 1,
+                "config": {
+                  "min": 1,
+                  "max": 100,
+                  "step": 1,
+                  "suffix": ""
+                }
+              },
+              {
+                "name": "bgColor",
+                "displayName": "默认背景色",
+                "type": "color",
+                "value": "#fff"
+              },
+              {
+                "name": "bgImg",
+                "displayName": "默认背景图",
+                "type": "image",
+                "value": ""
+              },
+              {
+                "name": "selectedBgColor",
+                "displayName": "选中背景色",
+                "type": "color",
+                "value": "#fff"
+              },
+              {
+                "name": "selectedBgImg",
+                "displayName": "选中背景图",
+                "type": "image",
+                "value": ""
+              }
+            ]
+          }
+        ]
+      },
       "value": [
         {
           "key": "1",

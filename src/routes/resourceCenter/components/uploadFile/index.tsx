@@ -2,8 +2,8 @@ import { memo, useEffect,useState } from "react";
 import "./index.less";
 import { Modal, Upload, Form, Select, message } from "antd";
 import { connect } from "dva";
-import { Icon } from "@ant-design/compatible";
 import { http, BASEURL } from "@/services/request";
+import type { UploadProps } from 'antd';
 const UploadFile = (props: any) => {
   const { uploadVisible, changeShowState,groupList,refreshList,origin} = props;
 
@@ -63,12 +63,15 @@ const UploadFile = (props: any) => {
     customProps?: object
   ) => {
     // 上传框配置
-    let uploadProps = {
+    let uploadProps:UploadProps = {
       name: "file",
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || "",
       action: `${BASEURL}/visual/file/uploadResource`,
+      headers:{
+        authorization:localStorage.getItem('token') || ''
+      },
       beforeUpload(file: any) {
         const { name, size }: { name: string, size: number } = file
         if (size > 1024 * 1024 * 100) {
@@ -143,9 +146,6 @@ const UploadFile = (props: any) => {
       <Form name="importComponent"  form={uploadForm}>
         <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, '请选择要上传的组件')}>
           <Dragger {...fileProps}>
-            <p className="ant-upload-drag-icon">
-              <Icon type="inbox" />
-            </p>
             <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
             <p className="ant-upload-hint">大小不得超过100MB，且必须为.zip格式</p>
           </Dragger>

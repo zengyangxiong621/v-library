@@ -221,6 +221,7 @@ const ScrollSelect = (props) => {
       setSelectedTabStyle({
         ...selectedTabStyle,
         ...style,
+        lineHeight: 'unset',
         background: bgImg ? `url(${ bgImg }) no-repeat center/cover` : bgColor
       })
     } else {
@@ -243,6 +244,7 @@ const ScrollSelect = (props) => {
       setUnselectedTabStyle({
         ...unselectedTabStyle,
         ...style,
+        lineHeight: 'unset',
       })
     }
   }

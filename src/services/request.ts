@@ -1,6 +1,6 @@
 import { message } from "antd";
 import qs from "qs";
-
+import { forwardLogin } from './loginApi'
 const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === "[object Object]";
 };
@@ -8,7 +8,7 @@ const isPlainObject = (config: any) => {
 export const BASEURL = (window as any).CONFIG.BASE_URL;
 
 /* 核心方法 */
-export const http = (config: any, isDownload: boolean = false): any => {
+export const http = (config: any, isDownload: boolean = false,isAllurl:boolean=false): any => {
   // init config & validate
   if (!isPlainObject(config)) config = {};
   config = Object.assign(
@@ -19,7 +19,7 @@ export const http = (config: any, isDownload: boolean = false): any => {
       headers: null,
       body: null,
       params: null,
-      responseType: "json",
+      responseType: isDownload ? 'blob':"json",
       signal: null,
     },
     config
@@ -40,7 +40,7 @@ export const http = (config: any, isDownload: boolean = false): any => {
 
   // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
   if (params) url += `${url.includes("?") ? "&" : "?"}${qs.stringify(params)}`;
-  url = BASEURL + url;
+  url = isAllurl ? url:BASEURL + url;
   // 处理请求主体:只针对于POST系列请求；body是个纯粹对象，根据当前后台要求，把其变为urlencoded格式！
 
   if (isPlainObject(body)) {
@@ -52,7 +52,7 @@ export const http = (config: any, isDownload: boolean = false): any => {
 
   // 类似于Axios的请求拦截器，例如：把存储在客户端本地的token信息携带给服务器「根据当前后台要求处理」
   let token = localStorage.getItem("token");
-  if (token) headers["Authorization"] = token;
+  if (token) headers["token"] = token;
 
   // 发送请求
   method = method.toUpperCase();
@@ -106,6 +106,15 @@ export const http = (config: any, isDownload: boolean = false): any => {
     .catch((err) => {
       const { code, message: errMessage } = err;
       message.error(errMessage);
+      if(code===401){
+        if (token && token.endsWith('x-gridsumdissector')) {
+          forwardLogin()
+        }else{
+          window.history.replaceState(null,'','/login')
+          window.location.reload();
+          localStorage.removeItem('token')
+        }
+      }
       return Promise.reject(err);
     });
 };
@@ -132,3 +141,16 @@ export const http = (config: any, isDownload: boolean = false): any => {
     return http(config);
   };
 });
+
+export const downLoad=async (url:string , isAllurl:boolean=false) => {
+  const config={
+    url:url,
+    method:'GET'
+  }
+  const res=await http(config,true,isAllurl)
+  let a = document.createElement('a');
+  let downloadUrl = window.URL.createObjectURL(res);
+  a.href = downloadUrl;
+  a.click();
+  window.URL.revokeObjectURL(downloadUrl);
+}
