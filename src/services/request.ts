@@ -106,6 +106,10 @@ export const http = (config: any, isDownload: boolean = false): any => {
     .catch((err) => {
       const { code, message: errMessage } = err;
       message.error(errMessage);
+      if(code===401){
+        window.history.replaceState(null,'','/login')
+        window.location.reload();
+      }
       return Promise.reject(err);
     });
 };

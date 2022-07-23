@@ -92,21 +92,32 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
         break;
       // 原比例展示溢出滚动
       case '2':
-        const finalW = '100vw'
-        const finalH = '100vh'
-        setScreenWidthRatio(width / winW)
-        setScreenHeightRatio(height / winH)
-        setOverflowStyle({
-          width: finalW,
-          height: finalH,
-          overflow: 'auto',
-          // ...finalStyle
-        })
+        const wRatio2 = winW / width
+        const hRatio2 = winH / height
+        console.log('2模式下宽度比', wRatio2);
+        console.log('2模式下高度比', hRatio2);
+        // 在 宽高比中找一个大的
+        let finalOverflowStyle: any = {
+          width: 0,
+          height: 0,
+        }
+        if(hRatio2 > wRatio2) {
+          finalOverflowStyle.width = '100vw'
+          finalOverflowStyle.height = `${winH}px`
+          finalOverflowStyle.overflowX = 'auto'
+          setScaleStyle({transform: `scale(${hRatio2})`})
+        } else {
+          finalOverflowStyle.height = '100vh'
+          finalOverflowStyle.width = `${winW}px}`
+          finalOverflowStyle.overflowY = 'auto'
+          setScaleStyle({transform: `scale(${wRatio2})`})
+        }
+        // console.log('finalOverflowStyle', finalOverflowStyle);
+        setOverflowStyle(finalOverflowStyle)
         break;
     }
     setPageStyle(finalStyle)
   }
-
 
   const setCanvasSize = (config?: any) => {
     if (config instanceof Event) {
