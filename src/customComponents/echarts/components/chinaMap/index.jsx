@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as echarts from 'echarts';
 import chinaJson from "./china.json";
+import outline from "./chinaoutline.json";
 import ComponentDefaultConfig from './config';
 import img from './img'
 
@@ -169,35 +170,89 @@ class ChinaMap extends Component {
         show: false,
       },
       geo: {
-        map: 'china',
-        type: 'map',
-        zoom: 1.2,
+        silent: true,
+        map: "outline",
+        zoom: 0.8,
+        top: "-6%",
         label: {
           normal: {
             show: false,
             textStyle: {
-              color: '#FFFFFF',
+              color: "#fff",
             },
           },
           emphasis: {
-            show: false,
+            textStyle: {
+              color: "#fff",
+            },
           },
         },
-        roam: false, //是否允许缩放
+        roam: false,
         itemStyle: {
           normal: {
-            color: bgColor, //地图背景色
-            borderColor: borderColor, //省市边界线00fcff 516a89
-            borderWidth: 1,
-            textStyle: '#fff',
+            areaColor: "rgba(0,255,255,.02)",
+            borderColor: {
+              type: 'linear',
+              x: 0,
+              y: 1,
+              x2: .5,
+              y2: 0,
+              colorStops: [{
+                offset: 0, color: '#f7e914'
+              }, {
+                offset: 0.5, color: '#fbaa0e'
+              }, {
+                offset: 1, color: '#306a9f'
+              }],
+              global: false
+            },
+            borderWidth: 1.5,
+            shadowColor: "#3071a7",
+            shadowOffsetX: 0,
+            shadowOffsetY: 7,
+            shadowBlur: 10,
           },
           emphasis: {
-            areaColor: selectColor, //悬浮背景
+            areaColor: "transparent", //悬浮背景
+            textStyle: {
+              color: "#fff",
+            },
           },
         },
-        data: [],
       },
       series: [
+        // 地图
+        {
+          map: 'china',
+          type: 'map',
+          zoom: 1.19,
+          label: {
+            normal: {
+              show: false,
+              textStyle: {
+                color: '#FFFFFF',
+              },
+            },
+            emphasis: {
+              show: false,
+            },
+          },
+          roam: false, //是否允许缩放
+          itemStyle: {
+            normal: {
+              // color: bgColor, //地图背景色
+              areaColor: bgColor, //地图背景色
+              borderColor: borderColor, //内边缘颜色
+              borderWidth: 1,
+              textStyle: '#fff',
+            },
+            emphasis: {
+              // areaColor: selectColor, //悬浮背景
+              areaColor: "#315b8f", //悬浮背景
+            },
+          },
+          data: [],
+        },      
         // 点位
         {
           tooltip: {
@@ -294,8 +349,6 @@ class ChinaMap extends Component {
             normal: {
               show: true,
               formatter: function (params) {
-                console.log(params, '#p');
-                let name = params.name;
                 let value = params.value[2];
                 let text = `{fline|${value}}`;
                 return text;
@@ -406,12 +459,14 @@ class ChinaMap extends Component {
           silent: true,
           data: this.scatterData2(dataCenter, ipCoordData),
         },
+
       ],
     };
 
     const dom = document.getElementById(componentConfig.id);
     var mapChart = echarts.init(dom);
     echarts.registerMap("china", chinaJson);
+    echarts.registerMap("outline", outline);
     this.setState({ options });
     mapChart.setOption(options);
     this.setState({ mapChart })
@@ -512,16 +567,17 @@ class ChinaMap extends Component {
     console.log(finalData, '#finalData');
     const { bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = style
     if (mapChart) {
-      options.geo.itemStyle.normal.color = bgColor;
-      options.geo.itemStyle.normal.borderColor = borderColor;
-      options.geo.itemStyle.emphasis.areaColor = selectColor;
+      options.series[0].itemStyle.normal.areaColor = bgColor;
+      options.series[0].itemStyle.normal.borderColor = borderColor;
+      // options.series[0].itemStyle.emphasis.areaColor = selectColor;
 
-      options.series[0].data = this.convertIPData(ipData, ipCoordData);
-      options.series[1].data = this.convertIPData2(dataCenter, ipCoordData);
-      options.series[2].data = this.convertIPData(ipData, ipCoordData);
-      options.series[3].data = this.lineData(dataCenter, ipCoordData);
-      options.series[4].data = this.scatterData(dataCenter, ipCoordData);
-      options.series[5].data = this.scatterData2(dataCenter, ipCoordData);
+
+      options.series[1].data = this.convertIPData(ipData, ipCoordData);
+      options.series[2].data = this.convertIPData2(dataCenter, ipCoordData);
+      options.series[3].data = this.convertIPData(ipData, ipCoordData);
+      options.series[4].data = this.lineData(dataCenter, ipCoordData);
+      options.series[5].data = this.scatterData(dataCenter, ipCoordData);
+      options.series[6].data = this.scatterData2(dataCenter, ipCoordData);
       mapChart.setOption(options);
     }
 

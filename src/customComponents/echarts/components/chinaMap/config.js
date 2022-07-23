@@ -190,25 +190,19 @@ const componentDefaultConfig = {
         {
           name: "bgColor",
           displayName: "地图背景色",
-          value: "#14376c",
+          value: "#032056",
           type: "color",
         },
-        {
-          name: "selectColor",
-          displayName: "选中背景色",
-          value: "#22ccfb",
-          type: "color",
-        },
-        {
-          name: "pointColor",
-          displayName: "标点颜色",
-          value: "#fce182",
-          type: "color",
-        },
+        // {
+        //   name: "selectColor",
+        //   displayName: "选中背景色",
+        //   value: "#315b8f",
+        //   type: "color",
+        // },
         {
           name: "borderColor",
           displayName: "边缘颜色",
-          value: "#2a2d3c",
+          value: "#093b6f",
           type: "color",
         },
       ],
