@@ -42,6 +42,9 @@ const RingRatio = (props) => {
   const {globalStyle,margin,label,linksLineStyle,tooltip,dataSeries} = getTargetConfig(config)
   const {nodeWidth,nodeGap,emphasis,draggable} = globalStyle
   const {left,top,right,bottom} = margin
+  // const {left,top,right,bottom} = label
+  // const {left,top,right,bottom} = linksLineStyle
+  // const {left,top,right,bottom} = tooltip
 
 
   // 环形宽度
