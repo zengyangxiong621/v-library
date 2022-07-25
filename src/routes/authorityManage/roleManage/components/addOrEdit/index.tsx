@@ -236,6 +236,7 @@ const AddOrEdit=(props:any)=>{
           label="名称"
           name="name"
           style={{ marginTop: '20px' }}
+          validateTrigger='onBlur'
           rules={[
             {required: true,validator:validRoleName(isEdit)}
           ]}
