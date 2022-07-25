@@ -165,8 +165,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
-    console.log('component', component)
-    console.log('-------------')
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
