@@ -11,7 +11,13 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
+import WorldMap from '@/customComponents/echarts/components/worldMap'
+import Timeline from '@/customComponents/assist/timeline'
+
+import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 import {connect} from "dva"
+
 // import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
@@ -465,6 +471,26 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </TimeSelect>
+          : props.componentConfig.moduleName === 'worldMap' ?
+          <WorldMap
+            {...props}
+          >
+          </WorldMap>
+                : props.componentConfig.moduleName === 'timeline' ?
+          <Timeline
+            {...props}
+          >
+          </Timeline>
+                  : props.componentConfig.moduleName === 'CardFlipper_1' ?
+          <CardFlipper1
+            {...props}
+          >
+          </CardFlipper1>
+                    : props.componentConfig.moduleName === 'CardFlipper_2' ?
+          <CardFlipper2
+            {...props}
+          >
+          </CardFlipper2>
           : <RemoteBaseComponent
             {...props}
             scale={scale}
