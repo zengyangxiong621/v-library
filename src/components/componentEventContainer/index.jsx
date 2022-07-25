@@ -11,16 +11,19 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
-import WorldMap from '@/customComponents/echarts/components/worldMap'
-import Timeline from '@/customComponents/assist/timeline'
 
-import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
-import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 import {connect} from "dva"
 
 // import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
+
+import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
+import Timeline from '@/customComponents/assist/timeline'
+import WorldMap from '@/customComponents/echarts/components/worldMap'
+import ErrorCatch from 'react-error-catch'
+import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, ...props}) => {
   const callbackArgs = bar.callbackArgs
@@ -491,11 +494,37 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </CardFlipper2>
-          : <RemoteBaseComponent
-            {...props}
+          : props.componentConfig.moduleName === 'CardFlipper_1' ?
+          <CardFlipper1
             scale={scale}
             onChange={handleValueChange}
-          ></RemoteBaseComponent>
+            {...props}
+          >
+          </CardFlipper1>
+          : props.componentConfig.moduleName === 'CardFlipper_2' ?
+          <CardFlipper2
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          >
+          </CardFlipper2>
+          : 
+          <ErrorCatch
+            app={componentConfig.name}
+            user=""
+            token=""
+            max={1}
+            errorRender={<RemoteComponentErrorRender errorComponent={componentConfig.name}></RemoteComponentErrorRender>}
+            onCatch={(errors) => {
+              console.log('组件报错信息：', errors, '组件id', componentConfig.id);
+            }}
+          >
+            <RemoteBaseComponent
+              {...props}
+              scale={scale}
+              onChange={handleValueChange}
+            ></RemoteBaseComponent>
+          </ErrorCatch>
       }
     </div>
   )
