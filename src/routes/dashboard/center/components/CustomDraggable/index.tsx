@@ -669,7 +669,7 @@ const CustomDraggable
                           : ''
                         }
                       </div> : <>
-                        <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+                        {/* <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}> */}
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
@@ -783,6 +783,13 @@ const CustomDraggable
                             //         fields={ getFields(component) }
                             //         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                             //       ></WorldMap>:
+                            //     layer.moduleName === 'chinaMap' ?
+                            //       <ChinaMap
+                            //         onChange={(val:any)=>handleValueChange(val,layer.id)}
+                            //         componentConfig={ component }
+                            //         fields={ getFields(component) }
+                            //         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                            //       ></ChinaMap>:
                             //       layer.moduleName === 'timeline'?
                             //         <Timeline
                             //           onChange={(val:any)=>handleValueChange(val,layer.id)}
@@ -829,10 +836,10 @@ const CustomDraggable
                                     //   ></RemoteBaseComponent>
                                     // </ErrorCatch> */}
                           }
-                        </div>
+                        {/* </div> */}
                       </>
                   }
-                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} />
+                  {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span

@@ -7,6 +7,8 @@ import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import CusImage from '@/customComponents/assist/image/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ChinaMap from '@/customComponents/echarts/components/chinaMap'
+import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
@@ -421,6 +423,20 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
           {...props}
         >
         </BasicBar>
+        :
+        props.componentConfig.moduleName === 'worldMap' ?
+        <WorldMap
+          onChange={handleValueChange}
+          {...props}
+        >
+        </WorldMap>
+        :
+        props.componentConfig.moduleName === 'chinaMap' ?
+        <ChinaMap
+          onChange={handleValueChange}
+          {...props}
+        >
+        </ChinaMap>
         :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
