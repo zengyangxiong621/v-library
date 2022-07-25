@@ -251,7 +251,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
   ) => {
     if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
-      const component = bar.selectedComponents[0]
+      const component = deepClone(bar.selectedComponents[0])
       const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
       styleDimensionConfig.forEach((item: IStyleConfig) => {
         switch(item.name) {
@@ -266,6 +266,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             break
           case HEIGHT:
             item.value = height
+        }
+      })
+      dispatch({
+        type: 'bar/setComponentConfig',
+        payload: component
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          isCanClearAllStatus: false,
         }
       })
     } else {
@@ -333,18 +343,19 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           }
         })
       })
+      dispatch({
+        type: 'bar/setGroupConfig',
+        payload: {
+          config: { position: { x, y }, style: { width, height } },
+          isCanClearAllStatus: false,
+        },
+      })
     }
     dispatch({
       type: 'bar/updateComponent',
       payload: bar.selectedComponents,
     })
-    dispatch({
-      type: 'bar/setGroupConfig',
-      payload: {
-        config: { position: { x, y }, style: { width, height } },
-        isCanClearAllStatus: false,
-      },
-    })
+
   }
 
   const handleCanvasDrag = function(event: DraggableEvent, data: DraggableData) {

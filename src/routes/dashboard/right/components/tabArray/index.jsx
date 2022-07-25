@@ -27,7 +27,6 @@ const TabArray = props => {
   const _show = find(_data, 'switch', 'type')
   const _outsideShadow = find(_data, 'outsideShadow', 'type')
   const [activeKey, setActiveKey] = useState(_defaultActiveKey)
-  console.log('activeKey', activeKey)
   const [unit, setUnit] = useState('列')
   const extraNode = () => {
     const handleIconClick = (type, e) => {
