@@ -33,6 +33,15 @@ export async function logout() {
   return await sdk.logout()
 }
 
+export async function validateST(data:any){
+  return await sdk.validateST(data)
+}
+
+export function GetQueryString(name:any){
+  var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+  var r = window.location.search.substr(1).match(reg);
+  if(r!=null)return  unescape(r[2]); return null;
+}
 
 
 export const forwardLogin = () => {

@@ -326,16 +326,15 @@ const ScrollTable = (props) => {
   }
 
   useEffect(() => {
+    console.log('轮播表格渲染')
     const mappingConfig = getMapping(customColumnConfig)
-    console.log('mappingConfig', mappingConfig)
     tableHeaderLoadFunc(mappingConfig)
     tableDataLoadFunc(mappingConfig)
     setState({
       ...state,
       mappingConfig
     })
-    customColumnLoadFunc()
-  }, [customColumnConfig, comData])
+  }, [customColumnConfig, JSON.stringify(comData)])
 
   const setTableWH = () => {
     tableRef.current.setWH()

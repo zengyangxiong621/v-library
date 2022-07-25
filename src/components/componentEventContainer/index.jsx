@@ -11,7 +11,9 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
+
 import {connect} from "dva"
+
 // import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
@@ -163,8 +165,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
-    console.log('component', component)
-    console.log('-------------')
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -474,18 +474,24 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
           </TimeSelect>
           : props.componentConfig.moduleName === 'worldMap' ?
           <WorldMap
-            scale={scale}
-            onChange={handleValueChange}
             {...props}
           >
           </WorldMap>
-          : props.componentConfig.moduleName === 'timeline' ?
+                : props.componentConfig.moduleName === 'timeline' ?
           <Timeline
-            scale={scale}
-            onChange={handleValueChange}
             {...props}
           >
           </Timeline>
+                  : props.componentConfig.moduleName === 'CardFlipper_1' ?
+          <CardFlipper1
+            {...props}
+          >
+          </CardFlipper1>
+                    : props.componentConfig.moduleName === 'CardFlipper_2' ?
+          <CardFlipper2
+            {...props}
+          >
+          </CardFlipper2>
           : props.componentConfig.moduleName === 'CardFlipper_1' ?
           <CardFlipper1
             scale={scale}
