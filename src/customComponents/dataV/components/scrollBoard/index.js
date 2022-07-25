@@ -362,7 +362,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
               style={{
                 height: `${mergedConfig.headerHeight}px`,
                 lineHeight: `${mergedConfig.headerHeight}px`,
-                width: `${widths[i]}px`
+                width: `${widths[i]}px`,
               }}
               align={aligns[i]}
               dangerouslySetInnerHTML={{ __html: headerItem }}
@@ -386,7 +386,8 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
               style={{
                 height: `${heights[ri]}px`,
                 lineHeight: `${heights[ri]}px`,
-                backgroundColor: `${getBackgroundColor(row.rowIndex)}`
+                backgroundColor: `${getBackgroundColor(row.rowIndex)}`,
+                display: ri === 0 ? 'none' : 'flex'
               }}
             >
               {row.ceils.map((ceil, ci) => (
