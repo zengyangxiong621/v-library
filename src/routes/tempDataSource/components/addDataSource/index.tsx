@@ -3,6 +3,7 @@ import { memo, useEffect, useState } from 'react'
 import './index.less'
 
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
+import type { UploadProps } from 'antd';
 
 import { http, BASEURL } from '@/services/request'
 
@@ -251,12 +252,15 @@ const AddDataSource = (props: any) => {
    */
   const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
-    let uploadProps = {
+    let uploadProps:UploadProps = {
       name: 'file',
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || '',
       action: `${BASEURL}/visual/file/upload`,
+      headers:{
+        authorization:localStorage.getItem('token') || ''
+      },
       beforeUpload(file: any) {
         const { name, size }: { name: string, size: number } = file
         if (size > 1024 * 1024 * 10) {

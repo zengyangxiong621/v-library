@@ -41,7 +41,6 @@ const ComSelect = (props) => {
 
   const style = getStyle(config)
   const { input, options } = style.selectStyle
-  console.log('style', style)
 
   useEffect(() => {
     // 处理默认选中
@@ -53,7 +52,7 @@ const ComSelect = (props) => {
       setDefaultValue(componentData[index][fieldKey])
       handleChange(componentData[index][fieldKey])
     }
-  }, [componentData])
+  }, [])
 
   const handleChange = value => {
     const data = componentData.filter(item => {
