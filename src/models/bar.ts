@@ -189,10 +189,12 @@ export default {
           type: "getComponentsData",
           payload: components,
         });
+        // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
+        const noEmptyGroupLayers = filterEmptyGroups(layers);
         yield put({
           type: "save",
           payload: {
-            treeData: layers,
+            treeData: noEmptyGroupLayers,
             components,
             dashboardId: payload,
             dashboardConfig,
@@ -276,7 +278,7 @@ export default {
       const bar: any = yield select(({ bar }: any) => bar);
       // 需要改变当前画布中components中此次被重命名组件的name
       const components = bar.components;
-      const state = bar.state
+      const state = bar.state;
       const { value, id } = payload.configs[0];
       const newComponents = components.map((item: any) => {
         if (item.id === id) {
@@ -384,7 +386,7 @@ export default {
     },
     // 删除图层、分组
     *delete({ payload }: any, { select, call, put }: any): any {
-      console.log('payload', payload)
+      console.log("payload", payload);
       const layers = yield http({
         url: "/visual/layer/delete",
         method: "delete",
@@ -637,16 +639,16 @@ export default {
       let data = yield http({
         url: `/visual/resource/queryResourceTypeList?spaceId=1`,
         method: "get",
-      })
-      data.myTypes.map((item:any) => {
-        item.groupId = item.type
-        item.origin = 'myresource'
-      })
-      data.systemTypes.map((item:any) => {
-        item.groupId = item.type
-        item.origin = 'design'
-        if(!item.type) item.groupId = 'sysMatAll'
-      })
+      });
+      data.myTypes.map((item: any) => {
+        item.groupId = item.type;
+        item.origin = "myresource";
+      });
+      data.systemTypes.map((item: any) => {
+        item.groupId = item.type;
+        item.origin = "design";
+        if (!item.type) item.groupId = "sysMatAll";
+      });
       let result = {
         design: data.systemTypes,
         myresource: data.myTypes,
@@ -670,15 +672,18 @@ export default {
       });
       cb(data.content);
     },
-    *setComponentConfigAndCalcDragScaleData({ payload, cb }: any, { call, put }: any): any {
+    *setComponentConfigAndCalcDragScaleData(
+      { payload, cb }: any,
+      { call, put }: any
+    ): any {
       yield put({
         type: "setComponentConfig",
         payload,
-      })
+      });
       yield put({
-        type: 'calcDragScaleData'
-      })
-    }
+        type: "calcDragScaleData",
+      });
+    },
   },
 
   reducers: {
@@ -779,7 +784,8 @@ export default {
       const targetTreeData = Array.isArray(extendedSomeAttrLayers)
         ? extendedSomeAttrLayers
         : extendedSomeAttrLayers.layers;
-      return { ...state, treeData: targetTreeData };
+      const noEmptyGroupLayers = filterEmptyGroups(targetTreeData);
+      return { ...state, treeData: noEmptyGroupLayers };
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
