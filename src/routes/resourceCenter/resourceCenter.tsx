@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, Fragment } from "react";
 import "./index.less";
 import { BASEURL } from "@/services/request";
 import { connect } from "dva";
 
-import { Input, Select, Upload, message } from "antd";
+import { Input, Select, Upload, Spin } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
@@ -141,13 +141,18 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   return (
     <div className="resourceCenter-wrap">
       <div className="left">
-        <LeftTree
-          clearSearchInputState={clearSearchInputState}
-          getDataDispatch={getDataDispatch}
-          refreshGroupLists={refreshGroupLists}
-        />
+        {  
+          resourceCenter.treeLoading ?
+          <Spin className='tree-loading' size="large" /> :
+          <LeftTree
+            clearSearchInputState={clearSearchInputState}
+            getDataDispatch={getDataDispatch}
+            refreshGroupLists={refreshGroupLists}
+          />
+        }
       </div>
       <div className="right">
+      <Fragment>
         <div className="right-header">
           <div className="set-flex">
             <p className="title">
@@ -182,7 +187,11 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           </div>
         </div>
         {/* 右侧 */}
-        <RightContent listData={resourceCenter.rightLists} refreshList={refreshGroupLists} />
+        {
+          resourceCenter.resourceLoading ?  <Spin size="large" className='right-loading' /> :
+          <RightContent listData={resourceCenter.rightLists} refreshList={refreshGroupLists} />
+        }
+      </Fragment>
         {/* 上传素材 */}
         {resourceCenter.groupList.length > 0 && uploadVisible && (
           <UploadFile

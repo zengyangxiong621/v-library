@@ -127,6 +127,21 @@ gradientColor.prototype.colorHex = function (rgb) {
   }
 }
 
+const getTargetStyle = (Arr) => {
+  const targetStyle = {}
+  Arr.forEach(({ name, value }) => {
+    if (Array.isArray(value)) {
+      value.forEach(({ name, value }) => {
+        targetStyle[name] = value
+      })
+    } else {
+      targetStyle[name] = value
+    }
+  })
+  return targetStyle
+}
+
+
 const ScrollSelect = (props) => {
   const [activeKey, setActiveKey] = useState(7)
   // 公共的 tab style
@@ -168,44 +183,35 @@ const ScrollSelect = (props) => {
   const unselectedConfig = config.find(item => item.name === 'style').value.find(item => item.name === 'styleTabs').options.find(item => item.name === '未选中').value
   // 已选中 tab 样式
   const selectedConfig = config.find(item => item.name === 'style').value.find(item => item.name === 'styleTabs').options.find(item => item.name === '选中').value
-  const getTargetStyle = (Arr) => {
-    const targetStyle = {}
-    Arr.forEach(({ name, value }) => {
-      if (Array.isArray(value)) {
-        value.forEach(({ name, value }) => {
-          targetStyle[name] = value
-        })
-      } else {
-        targetStyle[name] = value
-      }
-    })
-    return targetStyle
-  }
 
   const allGlobalLoadFunc = () => {
-    if (allOptions.length === 0) {
-      return
-    }
     const defaultSelectedKey = allGlobalConfig.find(item => item.name === 'defaultSelectedKey').value
     let optionsLength = allGlobalConfig.find(item => item.name === 'displayNums').value
     const spacing = allGlobalConfig.find(item => item.name === 'spacing').value
     const directionType = allGlobalConfig.find(item => item.name === 'directionType').value
-    setFlexDirection(directionType === 'horizontal' ? 'column' : 'row')
-    optionsLength = optionsLength > allOptions.length ? allOptions.length : optionsLength
+    // 根据传入的fields来映射对应的值
+    const fields2ValueMap = {}
+    const initFields = ['s', 'content'] // _fields 里第一个对应的是 s，第二个对应的是 content
+    fields2ValueMap[initFields[0]] = _fields[0]
+    fields2ValueMap[initFields[1]] = _fields[1]
+    const allOptions = _data.map(item => {
+      return {
+        ...item,
+        [initFields[0]]: item[fields2ValueMap[initFields[0]]],
+        [initFields[1]]: item[fields2ValueMap[initFields[1]]],
+      }
+    })
+    const { newArr, activeIndex } = filterActiveOptions(allOptions[defaultSelectedKey - 1], allOptions, optionsLength, _fields)
     setOptionsLength(optionsLength)
+    setActiveKey(activeIndex)
+    setOptions(newArr)
+    setAllOptions(allOptions)
     setCommonTabStyle({
       ...commonTabStyle,
       flexBasis: `calc(${ (100 / optionsLength).toFixed(4) }% - ${ spacing }px)`,
     })
-    handleChange(allOptions[defaultSelectedKey - 1] || allOptions[0], allOptions, optionsLength)
+    setFlexDirection(directionType === 'horizontal' ? 'column' : 'row')
   }
-
-
-  // 首字母大写
-  function titleCase (str) {
-    return str.slice(0, 1).toUpperCase() + str.slice(1)
-  }
-
 
   const isSelectedConfigLoadFunc = (config, isSelected) => {
     if (optionsLength === 0) {
@@ -249,8 +255,9 @@ const ScrollSelect = (props) => {
     }
   }
 
-
   useEffect(() => {
+    const defaultSelectedKey = allGlobalConfig.find(item => item.name === 'defaultSelectedKey').value
+    let optionsLength = allGlobalConfig.find(item => item.name === 'displayNums').value
     // 根据传入的fields来映射对应的值
     const fields2ValueMap = {}
     const initFields = ['s', 'content'] // _fields 里第一个对应的是 s，第二个对应的是 content
@@ -263,14 +270,12 @@ const ScrollSelect = (props) => {
         [initFields[1]]: item[fields2ValueMap[initFields[1]]],
       }
     })
-    setAllOptions(allOptions)
-    const { newArr } = filterActiveOptions(data, allOptions, optionsLength, _fields)
-    setOptions(newArr)
-  }, [_fields, _data, optionsLength])
+    handleChange(allOptions[defaultSelectedKey - 1])
+  }, [])
 
   useEffect(() => {
     allGlobalLoadFunc()
-  }, [allGlobalConfig, allOptions, _data])
+  }, [allGlobalConfig])
 
   useEffect(() => {
     isSelectedConfigLoadFunc(unselectedConfig, false)
@@ -280,19 +285,11 @@ const ScrollSelect = (props) => {
     isSelectedConfigLoadFunc(selectedConfig, true)
   }, [selectedConfig, optionsLength])
 
-  const handleChange = (data, _allOptions, _optionsLength) => {
-    if (!_allOptions) {
-      _allOptions = allOptions
-    }
-    if (!_optionsLength) {
-      _optionsLength = optionsLength
-    }
-    if (data[_fields[0]] !== activeKey) {
-      const { newArr, activeIndex } = filterActiveOptions(data, _allOptions, _optionsLength, _fields)
-      setOptions(newArr)
-      setActiveKey(activeIndex)
-      props.onChange && props.onChange(data)
-    }
+  const handleChange = (data) => {
+    const { newArr } = filterActiveOptions(data, allOptions, optionsLength, _fields)
+    console.log('handleChange-newArr', newArr)
+    setOptions(newArr)
+    props.onChange && props.onChange(data)
   }
 
   const handleScroll = (e) => {
@@ -377,7 +374,7 @@ const ScrollSelect = (props) => {
             key={ index }
             style={ {
               ...commonTabStyle,
-              ...(index === activeKey ? selectedTabStyle : { ...unselectedTabStyle, fontSize: fontSizeCalc(index), color: colorCalc(index) }),
+              ...((index) === activeKey ? selectedTabStyle : { ...unselectedTabStyle, fontSize: fontSizeCalc(index), color: colorCalc(index) }),
             } }
             onClick={ () => handleChange(item) }
           >

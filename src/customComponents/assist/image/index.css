@@ -10,10 +10,10 @@
 
 @keyframes scaleAnimate {
   from {
-    transform: scaleX(0) scaleY(0) var(--rotate);
+    transform: scaleX(0) scaleY(0);
   }
 
   to {
-    transform: scaleX(1) scaleY(1) var(--rotate);
+    transform: scaleX(1) scaleY(1);
   }
 }

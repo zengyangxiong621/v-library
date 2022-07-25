@@ -283,7 +283,6 @@ const Tab = (props) => {
   }, [dataSeriesConfig, tabList, rowNums, colNums])
 
   const handleChange = (data, index) => {
-    console.log('tab是这样里吗')
     setActiveKey(index)
     props.onChange && props.onChange(data)
   }

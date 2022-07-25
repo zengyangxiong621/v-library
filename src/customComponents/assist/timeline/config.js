@@ -42,7 +42,22 @@ const componentDefaultConfig = {
     ],
     "fields": [
       {
-        "status": true // 状态
+        "name": "time",
+        "value": "time",
+        "desc": "时间结点",
+        "status":true
+      },
+      {
+        "name": "title",
+        "value": "title",
+        "desc": "内容标题",
+        "status":true
+      },
+      {
+        "name": "content",
+        "value": "content",
+        "desc": "内容正文",
+        "status":true
       }
     ]
   },
@@ -101,6 +116,7 @@ const componentDefaultConfig = {
             "type": 'collapse',
             "hasSwitch": true,
             "defaultExpand": true,
+            "isHide":true,
             "value":[
               {
                 "name": "show",

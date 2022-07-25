@@ -73,6 +73,9 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
           children: []
         }))
         customPayload.layers = l
+        dispatch({
+          type: 'bar/clearAllStatus'
+        })
         break;
       case 'copy':
         customPayload = {

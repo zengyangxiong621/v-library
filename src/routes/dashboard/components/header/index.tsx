@@ -7,6 +7,7 @@ import { connect } from 'dva'
 import { useFetch } from '../../../../utils/useFetch'
 import { http, BASEURL } from '@/services/request'
 import { Input, message, Tooltip, Spin, Button, Form, Switch, Typography, Select, Upload } from 'antd'
+import type { UploadProps } from 'antd';
 import { IconFont } from '../../../../utils/useIcon'
 
 import NavigationItem from '../navigationItem/index'
@@ -369,12 +370,15 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   }
 
   // 上传图片
-  const uploadImgProps = {
+  const uploadImgProps:UploadProps = {
     name: 'file',
     multiple: false,
     maxCount: 1,
     accept: 'image/png, image/jpeg',
     action: `${BASEURL}/visual/file/upload`,
+    headers:{
+      authorization:localStorage.getItem('token') || ''
+    },
     beforeUpload(file: any) {
       const { name }: { name: string } = file
       // 考虑 cdb.la...yer.json 这个文件名
@@ -670,6 +674,10 @@ const centerIconArr = [
     icon: 'shujurongqi',
     text: '数据容器'
   },
+  {
+    icon: 'zujiangengxin',
+    text: '组件更新'
+  }
 ]
 
 const rightIconArr = [
