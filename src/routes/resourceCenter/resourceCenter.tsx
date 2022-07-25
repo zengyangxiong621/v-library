@@ -49,6 +49,10 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       finalBody.subType = groupId ? [groupId] : []
     }
     finalBody = data.origin ? finalBody : {...finalBody,...data }
+    // 我的素材，全部选择的type传空数组
+    if(finalBody.type[0] === "myresource"){
+      finalBody.type = []
+    }
     dispatch({
       type: "resourceCenter/getRightLists",
       payload: finalBody
