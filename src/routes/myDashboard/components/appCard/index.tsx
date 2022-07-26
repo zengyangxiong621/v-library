@@ -150,7 +150,7 @@ const AppCard = (props: any) => {
 
   // 导出应用
   const exportApp = async (appId: string) => {
-    downLoad(`/visual/application/export/${appId}`)
+    downLoad(`/visual/application/export/${appId}`, false, name)
   }
 
   // 移动分组
