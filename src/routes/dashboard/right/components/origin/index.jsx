@@ -12,7 +12,7 @@ const Origin = props => {
   };
   const [form] = Form.useForm();
   const _data = props.data
-
+  const _type = _data.config.type
   const valueChange = (e) => {
     _data.value = e
     props.onChange()
@@ -27,7 +27,7 @@ const Origin = props => {
     >
       <Form.Item label={_data.displayName}>
         <Form.Item name={_data.name} noStyle>
-          <OriginSelect psValue={_data.value} onChange={valueChange} />
+          <OriginSelect type={_type} psValue={_data.value} onChange={valueChange} />
         </Form.Item>
       </Form.Item>
     </Form>

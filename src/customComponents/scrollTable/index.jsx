@@ -160,13 +160,12 @@ const ScrollTable = (props) => {
       setIsHeader(false)
     }
 
-    const lineHeight = headerConfig.find(item => item.name === 'lineHeight').value
     const bgColor = headerConfig.find(item => item.name === 'bgColor').value
     const textAlign = headerConfig.find(item => item.name === 'textAlign').value
     let textStyle = styleTransformFunc(headerConfig.find(item => item.name === 'textStyle').value, false)
+    console.log('textStyle', textStyle)
     // const textAlign = headerConfig.find(item => item.name === 'align').value.find(item => item.nafme === 'textAlign').value || 'left'
     textStyle = styleObjectToStr({
-      'line-height': lineHeight + 'px',
       'text-align': textAlign,
       'font-Family': fontFamilyConfig,
       ...textStyle,
@@ -177,7 +176,6 @@ const ScrollTable = (props) => {
       const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
       const tableHeader = tableDom.querySelector('.dv-scroll-board>.header')
       tableHeader.style.backgroundColor = bgColor
-      tableHeader.style.height = lineHeight + 'px'
     })
   }
 
