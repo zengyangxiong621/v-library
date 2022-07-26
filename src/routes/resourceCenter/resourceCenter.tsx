@@ -49,6 +49,10 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       finalBody.subType = groupId ? [groupId] : []
     }
     finalBody = data.origin ? finalBody : {...finalBody,...data }
+    // 我的素材，全部选择的type传空数组
+    if(finalBody.type[0] === "myresource"){
+      finalBody.type = []
+    }
     dispatch({
       type: "resourceCenter/getRightLists",
       payload: finalBody
@@ -58,7 +62,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   /**
    * description:  刷新左侧列表
    */
-  const refreshGroupLists = () => {
+  const refreshGroupLists = (change?:any) => {
      dispatch({
       type: "resourceCenter/getGroupTree",
       payload: {
@@ -67,20 +71,32 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       cb: (data:any) => {
         // 默认选中第一个数据
         const first = data[0].children[0].children[0]
-        // 设置左侧第一个
-        dispatch({
-          type: "resourceCenter/resetModel",
-          payload: {
-            curSelectedGroup: first,
-            curSelectedGroupName: first.name
-          }
-        });
-        let finalBody = {
-          ...first,
-          spaceId: first.origin === 'myresource' ? '1' : null,
-          groupId: first.groupId === '-1' ? null : first.groupId, // 系统素材下不传
-          type: [first.origin]
-        };
+        if(!change){
+          // 设置左侧第一个
+          dispatch({
+            type: "resourceCenter/resetModel",
+            payload: {
+              curSelectedGroup: first,
+              curSelectedGroupName: first.name
+            }
+          });
+        }
+        let finalBody = {}
+        if(!change){
+          finalBody = {
+            ...first,
+            spaceId: first.origin === 'myresource' ? '1' : null,
+            groupId: first.groupId === '-1' ? null : first.groupId, // 系统素材下不传
+            type: [first.origin]
+          };
+        }else{
+          finalBody = {
+            ...resourceCenter.curSelectedGroup,
+            spaceId: resourceCenter.curSelectedGroup.origin === 'myresource' ? '1' : null,
+            groupId: resourceCenter.curSelectedGroup.groupId === '-1' ? null : resourceCenter.curSelectedGroup.groupId, // 系统素材下不传
+            type: [resourceCenter.curSelectedGroup.origin]
+          };
+        }
         getDataDispatch(finalBody)
       }
     });

@@ -31,7 +31,7 @@ const AddOrEdit = (props: any) => {
       SetConfirmLoading(false)
     })
     if(data){
-      message.error('修改成功')
+      message.success('修改成功')
       handleCancel()
     }
   }
@@ -43,7 +43,7 @@ const AddOrEdit = (props: any) => {
       title="修改密码"
       getContainer={false}
       bodyStyle={{
-        padding: '0'
+        padding: '10'
       }}
       confirmLoading={confirmLoading}
       onOk={handleOk}

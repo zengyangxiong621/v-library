@@ -119,6 +119,10 @@ export const http = (
           localStorage.removeItem("token");
         }
       }
+      if(code === 500){
+        window.history.replaceState(null,'','/404')
+        window.location.reload();
+      }
       return Promise.reject(err);
     });
 };

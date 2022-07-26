@@ -25,9 +25,8 @@ const AppCard = (props: any) => {
     refreshList,
     history,
     getCurrentItem,
-    moduleType
+    moduleType,
   } = props;
-
   // 后端返回的photoUrl为空，则使用默认图片
   let picUrl =
     photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png");
@@ -164,7 +163,7 @@ const AppCard = (props: any) => {
             body: JSON.stringify(params)
           });
         if (data) {
-          refreshList();
+          refreshList(true);
           message.success({ content: "删除成功", duration: 2 });
         } else {
           message.error({ content: "删除失败", duration: 2 });
