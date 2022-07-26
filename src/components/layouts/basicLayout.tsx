@@ -84,13 +84,11 @@ class BasicLayout extends Component<Props, State> {
           <Layout>
             {!needHeader && <CustomHeader {...this.props} menuData={_menuData} defaultPath={defaultPath}></CustomHeader>}
             <Content>
-              <div className="content-class">
-                {
-                  _menuData && _menuData.length ? 
-                  isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch> :
-                  <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
-                }
-              </div>
+              {
+                _menuData && _menuData.length ? 
+                isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch> :
+                <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
+              }
             </Content>
           </Layout>
         }

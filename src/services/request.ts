@@ -115,6 +115,10 @@ export const http = (config: any, isDownload: boolean = false,isAllurl:boolean=f
           localStorage.removeItem('token')
         }
       }
+      if(code === 500){
+        window.history.replaceState(null,'','/404')
+        window.location.reload();
+      }
       return Promise.reject(err);
     });
 };
