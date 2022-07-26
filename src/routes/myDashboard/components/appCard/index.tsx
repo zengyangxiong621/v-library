@@ -4,7 +4,7 @@ import './index.less'
 
 import { withRouter } from 'dva/router'
 import { useFetch } from '../../../../utils/useFetch'
-import { BASEURL, http,downLoad } from '@/services/request'
+import { BASEURL, http, downLoad } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { ExclamationCircleFilled } from '@ant-design/icons'
@@ -84,7 +84,7 @@ const AppCard = (props: any) => {
 
   // 复制应用
   const copyApp = async (appId: string) => {
-    if(name.length>15) {
+    if (name.length > 15) {
       message.warning('复制后应用名称超过长度限制')
       return
     }
@@ -150,7 +150,7 @@ const AppCard = (props: any) => {
 
   // 导出应用
   const exportApp = async (appId: string) => {
-    downLoad(`/visual/application/export/${appId}`)
+    downLoad(`/visual/application/export/${appId}`, false, name)
   }
 
   // 移动分组
@@ -204,7 +204,7 @@ const AppCard = (props: any) => {
               }} type='icon-fabu' />
             </Tooltip>
             <div className='more-icon'>
-              <IconFont style={{fontSize: '20px'}} onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
+              <IconFont style={{ fontSize: '20px' }} onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
               <div className="more"
               >
                 <ul className='more-ul' style={{
@@ -247,7 +247,10 @@ const AppCard = (props: any) => {
                   type="icon-bianji"
                   onClickCapture={() => bianjiClick()}
                 />
-                <div className='card-name'>{name}</div>
+                <div className='card-name'
+                  title={name.length > 12 ? name : ''}>
+                  {name}
+                </div>
               </div>
           }
         </div>
