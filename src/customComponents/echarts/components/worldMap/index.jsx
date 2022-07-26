@@ -449,6 +449,7 @@ class WorldMap extends Component {
         })       
       }
       mapChart.setOption(displayMode === 0 ? options : ipOptions);
+      mapChart.resize();
     }
 
     let mapSize = {

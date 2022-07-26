@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as echarts from 'echarts';
 import chinaJson from "./china.json";
-import outline from "./chinaoutline.json";
+// import outline from "./chinaoutline.json";
 import ComponentDefaultConfig from './config';
 import img from './img'
 
@@ -133,9 +133,10 @@ class ChinaMap extends Component {
       geo: {
         silent: true,
         radius: '100%',
-        map: "outline",
-        zoom: 0.8,
-        top: "-6%",
+        map: "china",
+        zoom: 1.20,
+        // zoom: 0.8,
+        // top: "-6%",
         label: {
           normal: {
             show: false,
@@ -483,7 +484,7 @@ class ChinaMap extends Component {
     const dom = document.getElementById(componentConfig.id);
     var mapChart = echarts.init(dom);
     echarts.registerMap("china", chinaJson);
-    echarts.registerMap("outline", outline);
+    // echarts.registerMap("outline", outline);
     this.setState({ options });
     mapChart.setOption(options);
     this.setState({ mapChart })
