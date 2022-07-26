@@ -38,7 +38,8 @@ class ChinaMap extends Component {
   // IP显示-数据转换
   convertIPData2 = (dataCenter, gdGeoCoordMap) => {    
     // 标牌位置调整，做判断删去“昌平”
-    if(dataCenter.length > 1){ dataCenter = dataCenter.slice(1) }
+    if(!dataCenter){return}
+    if(dataCenter.length > 1){ dataCenter = dataCenter.slice(2) }
     let res = [];
     console.log(dataCenter, '#datac');
     for (let i = 0; i < dataCenter.length; i++) {
@@ -58,14 +59,16 @@ class ChinaMap extends Component {
 
   // 动态计算柱形图的高度（定一个max）
   lineMaxHeight = (dataCenter) => {
+    if (!dataCenter) { return }
     const maxValue = Math.max(
       ...dataCenter.map((item) => item.times)
     );
 
-    return 6 / maxValue; // 调解max柱状长度
+    return 5 / maxValue; // 调解max柱状长度
   }
   // 柱状体的主干
   lineData = (dataCenter, ipCoordData) => {
+    if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return {
         coords: [
@@ -81,6 +84,7 @@ class ChinaMap extends Component {
 
   // 柱状体的顶部
   scatterData = (dataCenter, ipCoordData) => {
+    if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return [
         ipCoordData[item.name][0],
@@ -90,6 +94,7 @@ class ChinaMap extends Component {
   }
   // 柱状体的底部
   scatterData2 = (dataCenter, ipCoordData) => {
+    if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return {
         name: item.name,
@@ -119,6 +124,7 @@ class ChinaMap extends Component {
     console.log(finalData[0].dataCenter,'123123');
     const dataCenter = finalData[0].dataCenter;
     const dataCenter2 = finalData[0].dataCenter?.slice(0,1);
+    const dataCenter3 = finalData[0].dataCenter?.slice(1,2);
     const ipCoordData = finalData[0].ipCoordData;
 
 
@@ -170,10 +176,11 @@ class ChinaMap extends Component {
               global: false
             },
             borderWidth: 4.5,
-            shadowColor: "#3071a7",
+            shadowColor: "#35a8ff",
+            // shadowColor: "#3071a7",
             shadowOffsetX: 0,
-            shadowOffsetY: 21,
-            shadowBlur: 30,
+            shadowOffsetY: 38,
+            shadowBlur: 38,
           },
           emphasis: {
             areaColor: "transparent", //悬浮背景
@@ -278,16 +285,34 @@ class ChinaMap extends Component {
               color: "#fff",
               rich: {
                 fline: {
-                  padding: [0, 75], // 调整标牌文字位置
+                  padding: [0, 25], // 调整标牌文字位置
                   // color: "#fff",  // 优化
+                  // backgroundColor: "#f7c91c",
+                  backgroundColor: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                        offset: 0, color: '#f7c91c' // 0% 处的颜色
+                    }, {
+                        offset: 1, color: '#ffffff00' // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false                
+                  },
+                  // margin: [0, 20],
                   lineHeight: 72,
                   fontSize: 42,
+                  width: 500,
+                  height: 80,
                 },
                 tline: {
-                  padding: [0, 81],
+                  padding: [0, 25],
                   color: "#fff",
                   fontSize: 36,
-                  lineHeight: 48
+                  lineHeight: 60,
+                  width: 500,
                 },
               },
             },
@@ -435,12 +460,13 @@ class ChinaMap extends Component {
           silent: true,
           data: this.scatterData2(dataCenter, ipCoordData),
         },
+        // 昌平
         {
           type: "scatter",
           coordinateSystem: "geo",
           label: {
             normal: {
-              // position: 'left',
+              // position: 'top',
               show: true,
               formatter: function (params) {
                 let value = params.value[2];
@@ -452,16 +478,34 @@ class ChinaMap extends Component {
               color: "#fff",
               rich: {
                 fline: {
-                  padding: [0, 75], // 调整标牌文字位置
+                  padding: [0, 25], // 调整标牌文字位置
                   // color: "#fff",  // 优化
+                  // backgroundColor: "#f7c91c",
+                  backgroundColor: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                        offset: 0, color: '#f7c91c' // 0% 处的颜色
+                    }, {
+                        offset: 1, color: '#ffffff00' // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false                
+                  },
+                  // margin: [0, 20],
                   lineHeight: 72,
                   fontSize: 42,
+                  width: 500,
+                  height: 80,
                 },
                 tline: {
-                  padding: [0, 81],
+                  padding: [0, 25],
                   color: "#fff",
                   fontSize: 36,
-                  lineHeight: 48
+                  lineHeight: 60,
+                  width: 500,
                 },
               },
             },
@@ -474,9 +518,72 @@ class ChinaMap extends Component {
           },
           symbol: img.yellow,
           symbolSize: [600, 240],
-          symbolOffset: [-360, -150],
+          symbolOffset: [0, -320],
+          // symbolOffset: [-360, -150],
           z: 999,
           data: this.convertIPData2(dataCenter2, ipCoordData),
+        },
+        // 勘探院
+        {
+          type: "scatter",
+          coordinateSystem: "geo",
+          label: {
+            normal: {
+              // position: 'top',
+              show: true,
+              formatter: function (params) {
+                let value = params.value[2];
+                let times = params.data.times;
+                let system = params.data.system;
+                let text = `{fline|中国石油数据中心（${value}）}\n{tline|攻击总量：${times} 次}\n{tline|攻击系统：${system} 个}`;
+                return text;
+              },
+              color: "#fff",
+              rich: {
+                fline: {
+                  padding: [0, 25], // 调整标牌文字位置
+                  // color: "#fff",  // 优化
+                  // backgroundColor: "#f7c91c",
+                  backgroundColor: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                        offset: 0, color: '#f7c91c' // 0% 处的颜色
+                    }, {
+                        offset: 1, color: '#ffffff00' // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false                
+                  },
+                  // margin: [0, 20],
+                  lineHeight: 72,
+                  fontSize: 42,
+                  width: 500,
+                  height: 80,
+                },
+                tline: {
+                  padding: [0, 25],
+                  color: "#fff",
+                  fontSize: 36,
+                  lineHeight: 60,
+                  width: 500,
+                },
+              },
+            },
+            emphasis: {
+              show: true,
+            },
+          },
+          itemStyle: {
+            color: "#00FFF6",
+          },
+          symbol: img.yellow,
+          symbolSize: [600, 240],
+          symbolOffset: [360, 0],
+          z: 999,
+          data: this.convertIPData2(dataCenter3, ipCoordData),
         },
       ],
     };
@@ -538,6 +645,7 @@ class ChinaMap extends Component {
     let ipData = finalData[0].ipData;
     let dataCenter = finalData[0].dataCenter;
     let dataCenter2 = finalData[0].dataCenter?.slice(0,1);
+    let dataCenter3 = finalData[0].dataCenter?.slice(1,2);
 
     let ipCoordData = finalData[0].ipCoordData;
 
@@ -556,6 +664,7 @@ class ChinaMap extends Component {
       options.series[5].data = this.scatterData(dataCenter, ipCoordData);
       options.series[6].data = this.scatterData2(dataCenter, ipCoordData);
       options.series[7].data = this.convertIPData2(dataCenter2, ipCoordData);
+      options.series[8].data = this.convertIPData2(dataCenter3, ipCoordData);
       mapChart.setOption(options);
       mapChart.resize();
     }
