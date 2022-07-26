@@ -204,12 +204,12 @@ const TimeSelect = (props) => {
             border: `1px solid ${ selectBorderColor }`,
           } }
           placeholder={['开始时间', '结束时间']}
+          popupStyle={{transform: `scale(${scale})`, transformOrigin: 'left top'}}
           separator="至"
-          popupStyle={ { dimensionWidth } }
           showTime={ dateFormat.indexOf('HH:mm:ss') !== -1 }
-          getPopupContainer={ triggerNode => triggerNode.parentNode }
-          onOpenChange={ onOpenChange }
-          onPanelChange={ onOpenChange }
+          // getPopupContainer={ triggerNode => triggerNode.parentNode }
+          // onOpenChange={ onOpenChange }
+          // onPanelChange={ onOpenChange }
           allowClear={ false }
           dropdownClassName="date-panel"
           onChange={ handleChange }
@@ -218,6 +218,7 @@ const TimeSelect = (props) => {
           picker={ pickerType }
           format={ dateFormat }
           placeholder="请选择时间"
+          popupStyle={{transform: `scale(${scale})`, transformOrigin: 'left top'}}
           style={ {
             width: '100%',
             height: '100%',
@@ -225,9 +226,9 @@ const TimeSelect = (props) => {
             border: `1px solid ${ selectBorderColor }`,
           } }
           showTime={ dateFormat.indexOf('HH:mm:ss') !== -1 }
-          getPopupContainer={ triggerNode => triggerNode.parentNode }
-          onOpenChange={ onOpenChange }
-          onPanelChange={ onOpenChange }
+          // getPopupContainer={ triggerNode => triggerNode.parentNode }
+          // onOpenChange={ onOpenChange }
+          // onPanelChange={ onOpenChange }
           allowClear={ false }
           dropdownClassName="date-panel"
           onChange={ handleChange }
