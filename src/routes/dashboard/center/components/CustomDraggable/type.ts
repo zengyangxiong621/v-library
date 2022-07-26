@@ -70,3 +70,20 @@ export interface IMouse {
   elementPosX: number,
   elementPosY: number,
 }
+
+export interface ILayerPanel extends ILayerComponent{
+  panelType: 0 | 1
+}
+
+export interface IPanel {
+  name: string;
+  id: string;
+  type: 0 | 1;
+  states: Array<string>;
+  config: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }
+}

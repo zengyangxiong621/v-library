@@ -571,15 +571,17 @@ export default {
       });
     },
     *updateComponent({ payload }: any, { call, put, select }: any): any {
-      const state: any = yield select((state: any) => state);
-      yield http({
-        url: "/visual/module/update",
-        method: "post",
-        body: {
-          dashboardId: state.bar.dashboardId,
-          configs: payload,
-        },
-      });
+      if (payload.length > 0) {
+        const state: any = yield select((state: any) => state);
+        yield http({
+          url: "/visual/module/update",
+          method: "post",
+          body: {
+            dashboardId: state.bar.dashboardId,
+            configs: payload,
+          },
+        });
+      }
     },
     *getDataContainerList(
       { payload, cb }: any,

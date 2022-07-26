@@ -6,7 +6,7 @@ import Draggable from 'react-draggable'
 import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
 import './index.less'
-import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
+import { ILayerGroup, ILayerComponent, IComponent, ILayerPanel, DraggableEvent, DraggableData, IConfig, IMouse, IPanel } from './type'
 import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
@@ -101,6 +101,7 @@ const CustomDraggable
     const isSupportMultiple: boolean = bar.isSupportMultiple
     const allComponentRefs = bar.allComponentRefs
     const allComponentDOMs = bar.allComponentDOMs
+    const panels = bar.panels
     let supportLinesRef = bar.supportLinesRef
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 })
 
@@ -122,13 +123,27 @@ const CustomDraggable
      * @desc 开始拖拽
      * @return void
      */
-    const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
+    const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
       setStartPosition({
         x: data.x,
         y: data.y,
       })
       bar.selectedComponents = []
       bar.dragStatus = '一组件'
+      if ('panelType' in layer) {
+        bar.dragStatus = '一面板'
+        const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
+        config = {
+          position: {
+            x: panel.config.x,
+            y: panel.config.y,
+          },
+          style: {
+            width: panel.config.width,
+            height: panel.config.height
+          }
+        }
+      }
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
         dispatch({
@@ -154,12 +169,10 @@ const CustomDraggable
         if (COMPONENTS in layer) {
           bar.dragStatus = '一分组'
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS])
-
-        } else {
-
         }
       }
-      bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
+      bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))]
+      console.log('bar.selectedComponents', bar.selectedComponents)
     }
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       ev.stopPropagation()
@@ -170,12 +183,8 @@ const CustomDraggable
       const xMoveLength = data.x - data.lastX
       const yMoveLength = data.y - data.lastY
       bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength)
-
-      if (component && bar.dragStatus === '一组件') {
-        // 单个组件移动
-        if ('config' in component) {
-
-        }
+      if ((component && bar.dragStatus === '一组件') || bar.dragStatus === '一面板') {
+        // 单个组件/面板移动
         supportLinesRef.handleSetPosition(aroundX, aroundY)
       }
       if (bar.dragStatus === '一分组') {
@@ -237,7 +246,7 @@ const CustomDraggable
         }
       }
     }
-    const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
+    const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
       supportLinesRef.handleSetPosition(0, 0, 'none')
       dispatch({
         type: 'bar/selectComponentOrGroup',
@@ -250,7 +259,30 @@ const CustomDraggable
         type: 'bar/setIsShowRightMenu',
         payload: false,
       })
-      if (component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
+      if ('panelType' in layer) {
+        // 说明是面板,且一定是单个
+        const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
+        console.log('data', data)
+        panel.config.x = data.x
+        panel.config.y = data.y
+        console.log('handleStop-panel', panel)
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            scaleDragData: {
+              position: {
+                x: panel.config.x,
+                y: panel.config.y,
+              },
+              style: {
+                display: 'block',
+                width: panel.config.width,
+                height: panel.config.height,
+              }
+            }
+          }
+        })
+      } else if (component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
         // 单个组件移动
         const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
         if (style_dimension_config) {
@@ -394,7 +426,7 @@ const CustomDraggable
           },
         })
       } else {
-        dispatch({
+/*        dispatch({
           type: 'bar/save',
           payload: {
             scaleDragData: {
@@ -409,9 +441,8 @@ const CustomDraggable
               },
             },
           },
-        })
+        })*/
       }
-      console.log('点击点击')
       dispatch({
         type: 'bar/updateComponent',
         payload: bar.selectedComponents,
@@ -653,10 +684,25 @@ const CustomDraggable
           let isPanel: boolean = ('panelType' in layer)
           let group: ILayerGroup | undefined
           let component: IComponent | undefined
+          let panel : IPanel | undefined
           let events: any
           let style_config, staticData, style_dimension_config
           // 群组
-          if(COMPONENTS in layer) {
+          if ('panelType' in layer) {
+            const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
+            if (panel) {
+              config = {
+                position: {
+                  x: panel.config.x,
+                  y: panel.config.y
+                },
+                style: {
+                  width: panel.config.width,
+                  height: panel.config.height
+                }
+              }
+            }
+          } else if(COMPONENTS in layer) {
             group = layer
             let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components)
             xPositionList = xPositionList.sort((a, b) => a - b)
@@ -726,7 +772,7 @@ const CustomDraggable
                 onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
                 onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
                 onContextMenu={ (ev) => mouseRightClick(ev, layer, component, config) }
-                className={ ['box', `box ${ layer.selected ? 'selected' : '' }`, `${ layer.hover ? 'hovered' : '' }`].join(' ') }
+                className={ ['box', `${ layer.selected ? 'selected' : '' }`, `${ layer.hover ? 'hovered' : '' }`].filter(item => item).join(' ') }
                 style={ {
                   ...config.style,
                   transition: 'width, height 0.3s',

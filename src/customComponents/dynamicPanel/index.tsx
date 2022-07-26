@@ -12,7 +12,7 @@ interface State {
   [key: string]: any;
 }
 
-const DynamicPanel = ({ bar, id }: any) => {
+const DynamicPanel = ({ bar, id, dispatch }: any) => {
 
   const [ state, setState ] = useSetState<State>({
     states: [],
@@ -28,7 +28,8 @@ const DynamicPanel = ({ bar, id }: any) => {
         method: 'get',
       })
       // 获取面板想起接口
-      const { states, config: recommendConfig } = panelConfig
+      const { states, config: recommendConfig, name, type } = panelConfig
+      console.log('recommendConfig', recommendConfig)
       const dom: HTMLElement | null = document.querySelector(`[data-id=panel-${id}]`)
       if (dom) {
         dom.style.width = recommendConfig.width + 'px'
@@ -47,6 +48,26 @@ const DynamicPanel = ({ bar, id }: any) => {
         components,
         layers,
         dashboardConfig,
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          panels: [
+            ...bar.panels,
+            {
+              id,
+              name,
+              states,
+              type,
+              config: {
+                x: recommendConfig.left,
+                y: recommendConfig.top,
+                width: recommendConfig.width,
+                height: recommendConfig.height
+              }
+            }
+          ]
+        }
       })
     })()
 
