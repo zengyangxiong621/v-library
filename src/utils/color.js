@@ -2,7 +2,10 @@ const isHex = (str) => {
   return str.startsWith('#')
 }
 const rgbToHex = (rgba) => {
-  const { r, g, b } = rgba
+  let { r, g, b } = rgba
+  r=parseInt(r)
+  g=parseInt(g)
+  b=parseInt(b)
   let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   return hex;
 }
@@ -24,6 +27,7 @@ const hexToRgb = (hexValue) => {
 }
 const getRgbaNum = (rgba) => {
   let value = rgba.match(/(\d(\.\d+)?)+/g)
+  console.log('value',value)
   return {
     r: value[0],
     g: value[1],
