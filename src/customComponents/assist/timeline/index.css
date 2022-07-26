@@ -5,9 +5,14 @@
 }
 .timeLineContainer .ant-timeline-item{
   flex: 1;
+  position: relative;
 }
 .timeLineContainer .ant-timeline-item .ant-timeline-item-head{
   background-color: transparent;
+}
+.timeLineContainer .ant-timeline-item .ant-timeline-item-content{
+  position: absolute;
+  height: 100%;
 }
 .timeLineBox{
   margin-top: 10px;
@@ -15,13 +20,14 @@
   position: relative;
   box-sizing: border-box;
   min-width: 200px;
+  width: 100%;
   height: auto;
   padding: 10px 20px 20px 20px;
 }
 .timeLineBox .timeLineTitle{
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  margin: 0!important;
   position: relative;
 }
 .timeLineBox .timeLineTitle .titleVal{

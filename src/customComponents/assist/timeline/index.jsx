@@ -6,15 +6,29 @@ import './index.css'
 const spotDom=(spotStyle)=>{
   const {color,width}=spotStyle
   const getSpotStyle={
+    "position":'relative',
     "display":"inline-block",
     "width":width,
     "height":width,
-    "border":`${width/4}px solid ${color}`,
+    "border":`${width/5}px solid ${color}`,
     "borderRadius":'50%',
     "backgroundColor":'transparent'
   }
+  const getSpotInlineStyle={
+    "position":"absolute",
+    "display":"inline-block",
+    "borderRadius":'50%',
+    "width":`${width/4}px`,
+    "height":`${width/4}px`,
+    "left":'50%',
+    "top":'50%',
+    "transform": `translate(-50%,-50%)`,
+    "backgroundColor":'#fff',
+  }
   return (
-    <span style={getSpotStyle}></span>
+    <span style={getSpotStyle}>
+      <span style={getSpotInlineStyle}></span>
+    </span>
   )
 }
 
