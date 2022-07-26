@@ -135,7 +135,6 @@ const Header = props => {
       console.log(error);
     }finally{
       setModifyLoding(false)
-      handleCancel()
     }
   }
   const handleCancel=()=>{
