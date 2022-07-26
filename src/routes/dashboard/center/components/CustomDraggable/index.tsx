@@ -789,31 +789,31 @@ const CustomDraggable
                             //         componentConfig={ component }
                             //         fields={ getFields(component) }
                             //         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //       ></ChinaMap>:
-                            //       layer.moduleName === 'timeline'?
-                            //         <Timeline
-                            //           onChange={(val:any)=>handleValueChange(val,layer.id)}
-                            //           componentConfig={ component }
-                            //           fields={ getFields(component) }
-                            //           comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //         ></Timeline>:
-                            //         layer.moduleName === 'CardFlipper_1'?
-                            //           <CardFlipper1
-                            //             onChange={(val:any)=>handleValueChange(val,layer.id)}
-                            //             componentConfig={ component }
-                            //             fields={ getFields(component) }
-                            //             comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //           ></CardFlipper1>:
-                            //           layer.moduleName === 'CardFlipper_2'?
-                            //           <CardFlipper2
-                            //             onChange={(val:any)=>handleValueChange(val,layer.id)}
-                            //             componentConfig={ component }
-                            //             fields={ getFields(component) }
-                            //             comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                            //           ></CardFlipper2>:
-                            //         <ErrorCatch
-                            //           app={component.name}
-                            //           user=""
+                              //       ></ChinaMap>:
+                              //       layer.moduleName === 'timeline'?
+                              //         <Timeline
+                              //           onChange={(val:any)=>handleValueChange(val,layer.id)}
+                              //           componentConfig={ component }
+                              //           fields={ getFields(component) }
+                              //           comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              //         ></Timeline>:
+                              //         layer.moduleName === 'CardFlipper_1'?
+                              //           <CardFlipper1
+                              //             onChange={(val:any)=>handleValueChange(val,layer.id)}
+                              //             componentConfig={ component }
+                              //             fields={ getFields(component) }
+                              //             comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              //           ></CardFlipper1>:
+                              //           layer.moduleName === 'CardFlipper_2'?
+                              //           <CardFlipper2
+                              //             onChange={(val:any)=>handleValueChange(val,layer.id)}
+                              //             componentConfig={ component }
+                              //             fields={ getFields(component) }
+                              //             comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                              //           ></CardFlipper2>:
+                              //         <ErrorCatch
+                              //           app={component.name}
+                              //           user=""
                             //           token=""
                             //           max={1}
                             //           errorRender= {<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
