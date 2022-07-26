@@ -5,7 +5,7 @@ const componentDefaultConfig = {
   parentId: "0",
   dashboardId: "",
   moduleName: "sankey",
-  moduleVersion: "1.0.2",
+  moduleVersion: "1.1.0",
   autoUpdate: {
     isAuto: false,
     interval: 10,
@@ -197,25 +197,25 @@ const componentDefaultConfig = {
           name:"top",
           displayName:'上边距',
           type:'input',
-          value:'10%',
+          value:'50',
         },
         {
           name:"left",
           displayName:'左边距',
           type:'input',
-          value:'160',
+          value:'50',
         },
         {
           name:"bottom",
           displayName:'下边距',
           type:'input',
-          value:'10%',
+          value:'50',
         },
         {
           name:"right",
           displayName:'右边距',
           type:'input',
-          value:'40',
+          value:'50',
         },
       ]
     },
@@ -223,7 +223,7 @@ const componentDefaultConfig = {
       'name': 'label',
       'displayName': '标签',
       'type': 'collapse',
-      hasSwitch: true,
+      hasSwitch: false,
       defaultExpand: false,  // 是否默认展开
       value: [
         {	// 如果有后面的按钮，则该项必须放在第一个
@@ -232,12 +232,12 @@ const componentDefaultConfig = {
           'value': true,
           'type': 'switch',
         },
-        {
-          'name': 'numberLabel',
-          'displayName': '数值标签',
-          'type': 'checkBox',
-          'value': false,
-        },
+        // {
+        //   'name': 'numberLabel',
+        //   'displayName': '数值标签',
+        //   'type': 'checkBox',
+        //   'value': false,
+        // },
         {
           name:"position",
           displayName:'位置',
@@ -298,8 +298,8 @@ const componentDefaultConfig = {
           type:'chartText',
           value:{
             fontFamily: 'Microsoft YaHei',
-            fontSize: 12,
-            color: '#ea7ccc',
+            fontSize: 16,
+            color: '#ffffff',
             fontWeight: 'normal' // bold bolder lighter
           }
         }
@@ -414,19 +414,159 @@ const componentDefaultConfig = {
       ]
     },
     {
-      'name': 'dataSeries',
-      'displayName': '数据系列',
-      'type': 'collapse',
-      hasSwitch: false,
-      defaultExpand: false,  // 是否默认展开
+      name: 'dataSeries',
+      displayName: '数据系列',
+      type: 'tabArray',
+      defaultActiveKey: '1',
       value: [
-        {	// 如果有后面的按钮，则该项必须放在第一个
-          'name': 'dataSeriesShow',
-          'displayName': '',
-          'value': true,
-          'type': 'switch',
+        {
+          key: '1',
+          displayName: '系列1',
+          flag: 'specialItem',
+          name: 'series1',
+          type: 'object',
+          value: [
+            {
+              displayName: '字段名',
+              name: 'fieldName',
+              type: 'input',
+              value: '北京',
+            },
+            {
+              name: 'barColor',
+              displayName: '颜色',
+              type: 'color',
+              value: '#336bd7',
+            }
+          ],
         },
-      ]
+        {
+          key: '2',
+          displayName: '系列2',
+          flag: 'specialItem',
+          name: 'series1',
+          type: 'object',
+          value: [
+            {
+              displayName: '字段名',
+              name: 'fieldName',
+              type: 'input',
+              value: '深圳',
+            },
+            {
+              name: 'barColor',
+              displayName: '颜色',
+              type: 'color',
+              value: '#f21d10',
+            }
+          ],
+        },
+        {
+          key: '3',
+          displayName: '系列3',
+          flag: 'specialItem',
+          name: 'series1',
+          type: 'object',
+          value: [
+            {
+              displayName: '字段名',
+              name: 'fieldName',
+              type: 'input',
+              value: '上海',
+            },
+            {
+              name: 'barColor',
+              displayName: '颜色',
+              type: 'color',
+              value: '#fc850b',
+            }
+          ],
+        },
+        {
+          key: '4',
+          displayName: '系列4',
+          flag: 'specialItem',
+          name: 'series1',
+          type: 'object',
+          value: [
+            {
+              displayName: '字段名',
+              name: 'fieldName',
+              type: 'input',
+              value: '广州',
+            },
+            {
+              name: 'barColor',
+              displayName: '颜色',
+              type: 'color',
+              value: '#c1e71e',
+            }
+          ],
+        },
+        {
+          key: '5',
+          displayName: '系列5',
+          flag: 'specialItem',
+          name: 'series1',
+          type: 'object',
+          value: [
+            {
+              displayName: '字段名',
+              name: 'fieldName',
+              type: 'input',
+              value: '西安',
+            },
+            {
+              name: 'barColor',
+              displayName: '颜色',
+              type: 'color',
+              value: '#1ee731',
+            }
+          ],
+        },
+        {
+          key: '6',
+          displayName: '系列6',
+          flag: 'specialItem',
+          name: 'series1',
+          type: 'object',
+          value: [
+            {
+              displayName: '字段名',
+              name: 'fieldName',
+              type: 'input',
+              value: '成都',
+            },
+            {
+              name: 'barColor',
+              displayName: '颜色',
+              type: 'color',
+              value: '#1e8ce7',
+            }
+          ],
+        },
+        {
+          key: '7',
+          displayName: '系列7',
+          flag: 'specialItem',
+          name: 'series1',
+          type: 'object',
+          value: [
+            {
+              displayName: '字段名',
+              name: 'fieldName',
+              type: 'input',
+              value: '苏州',
+            },
+            {
+              name: 'barColor',
+              displayName: '颜色',
+              type: 'color',
+              value: '#b01ee7',
+            }
+          ],
+        },
+      ],
     },
   ],
   themes: [

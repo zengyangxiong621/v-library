@@ -4,6 +4,24 @@ import EC from '../../EC'
 import * as echarts from 'echarts';
 import ComponentDefaultConfig from './config'
 
+// 深拷贝
+const deepClone =  (obj) =>  {
+  if (obj === null || typeof obj !== 'object') {
+    return obj
+  }
+  const result = Array.isArray(obj) ? [] : {}
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      result[i] = typeof obj[i] === 'object' ? deepClone(obj[i]) : obj[i]
+    }
+  } else if (typeof obj === 'object') {
+    Object.keys(obj).forEach((k) => {
+      result[k] = typeof obj[k] === 'object' ? deepClone(obj[k]) : obj[k]
+    })
+  }
+  return result
+}
+
 
 const RingRatio = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
@@ -15,8 +33,8 @@ const RingRatio = (props) => {
   const originData = props.comData || data
   // originData中有多项数据，只取第一项
   const firstData = originData[0]
-  const nodes = firstData[finalFieldsArr[0]]
-  const links = firstData[finalFieldsArr[1]]
+  const nodes = deepClone(firstData[finalFieldsArr[0]])
+  const links = deepClone(firstData[finalFieldsArr[1]])
 
   // 获取config中的配置
   const getTargetConfig = (Arr) => {
@@ -39,13 +57,19 @@ const RingRatio = (props) => {
     })
     return targetConfig
   }
-  console.log(getTargetConfig(config));
+  // console.log(getTargetConfig(config));
   const {globalStyle,margin,label,linksLineStyle,tooltip,dataSeries} = getTargetConfig(config)
   const {nodeWidth,nodeGap,emphasis,draggable} = globalStyle
   const {left,top,right,bottom} = margin
   const {labelTextStyle,numberLabel,offset:{x,y},position} = label
   const {color,opacity,curveness,customColor:{customColorShow,styleColor}} = linksLineStyle
   const {backgroundColor,tooltipTextStyle} = tooltip
+
+  const dataSeriesValues = Object.values(dataSeries)
+  const dataSeriesObj = {}
+  dataSeriesValues.forEach(item => {
+    dataSeriesObj[item.fieldName] = item.barColor
+  })
 
   links.forEach(item => {
     item.lineStyle = {
@@ -62,7 +86,11 @@ const RingRatio = (props) => {
         position: "right"
       }
     }
+    item.itemStyle = {
+      color: dataSeriesObj[item.name] || 'rgb(0,0,0)'
+    }
   })
+
 
 
   // 环形宽度
