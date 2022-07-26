@@ -660,7 +660,6 @@ export default {
     },
     // 获取系统素材数据
     *getSystemMaterialList({ payload, cb }: any, { call, put }: any): any {
-      console.log("调用接口");
       const data = yield http({
         url: "/visual/resource/queryResourceList",
         method: "post",
