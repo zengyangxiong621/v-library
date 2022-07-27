@@ -190,7 +190,7 @@ const ScrollTable = (props) => {
   const gradientConfigFunc = ({ gradientOrigin, gradientStartColor, gradientEndColor }) => {
     let backgroundImage = ""
     if (gradientOrigin === 'center') {
-      backgroundImage = `linear-gradient(to right, ${gradientEndColor}, ${gradientStartColor}, ${gradientEndColor})`
+      backgroundImage = `linear-gradient(to right, ${gradientStartColor}, ${gradientEndColor}, ${gradientStartColor})`
     } else {
       backgroundImage = `linear-gradient(to ${gradientOrigin}, ${gradientStartColor}, ${gradientEndColor})`
     }
