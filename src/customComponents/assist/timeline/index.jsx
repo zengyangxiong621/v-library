@@ -4,32 +4,49 @@ import ComponentDefaultConfig from './config'
 // import './index.css'
 import './index.less'
 
-const spotDom=(spotStyle)=>{
-  const {color,width}=spotStyle
+const spotDom=(spotType,index)=>{
   const getSpotStyle={
     "position":'relative',
     "display":"inline-block",
-    "width":width,
-    "height":width,
+    "width":'20px',
+    "height":'20px',
     "borderRadius":'50%',
     "backgroundImage":`linear-gradient(#00D9FF,#095EFF)`
   }
   const getSpotInlineStyle={
     "position":"absolute",
     "display":"inline-block",
-    "width":`${width/1.5}px`,
-    "height":`${width/1.5}px`,
-    "border":`${width/6}px solid #333`,
+    "width":`13px`,
+    "height":`13px`,
+    "border":`3px solid #333`,
     "borderRadius":'50%',
     "left":'50%',
     "top":'50%',
     "transform": `translate(-50%,-50%)`,
     "backgroundColor":'#fff',
   }
-  return (
+  const singleStyle={
+    "display":"inline-block",
+    "width":`8px`,
+    "height":`8px`,
+    "borderRadius":'50%',
+    "backgroundColor":'#fff',
+  }
+  const single=(
+    <span style={singleStyle}></span>
+  )
+  const double=(
     <span style={getSpotStyle}>
       <span style={getSpotInlineStyle}></span>
     </span>
+  )
+  return (
+    <>
+      {
+        spotType ? index % 2===0 ? double : single :
+        double
+      }
+    </>
   )
 }
 
@@ -58,7 +75,7 @@ export default function TimelineRender(props) {
 
   const style=getStyle(config)
   console.log(style);
-  const {dimension,backgroundColor,labelStyle,fontStyle,spotStyle}=style
+  const {dimension,backgroundColor,labelStyle,fontStyle,spotType}=style
 
   const positionStyle=dimension
 
@@ -143,10 +160,10 @@ export default function TimelineRender(props) {
       mode='left'
       className='timeLineContainer'
       style={positionStyle}>
-      {componentData?.map(item=>{
+      {componentData?.map((item,index)=>{
         const timeLineTitleStyle=getTimeLineTitleStyle(outShadow.show)
         return (
-        <Timeline.Item dot={spotDom(spotStyle)} label={show && item[_fields[0]]}>
+        <Timeline.Item dot={spotDom(spotType,index)} label={show && item[_fields[0]]}>
           <div className='timeLineBox' style={{backgroundColor,borderColor:backgroundColor}}>
             <div className='timeLineArrow' style={getArrowStyle(backgroundColor)}></div>
             <div className='timeLineTitle' style={timeLineTitleStyle}>
