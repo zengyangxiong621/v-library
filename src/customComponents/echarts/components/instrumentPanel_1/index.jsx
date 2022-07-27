@@ -4,7 +4,6 @@ import EC from '../../EC'
 import * as echarts from 'echarts';
 import ComponentDefaultConfig from './config'
 
-
 const InstrumentPanel = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
@@ -50,7 +49,7 @@ const InstrumentPanel = (props) => {
   const { innerRadius,outerRadius } = allSettings ? allSettings['表盘'] : {}
   const { numberRange:{min,max},numberStyles:{textStylerNumbe,offset:numberOffset}} = allSettings ? allSettings['指标'] : {}
   const { titleStyles:{showTitleStyles,offset,textStyleTitle} } = allSettings ? allSettings['标题'] : {}
-  const { ringColor } = allSettings ? allSettings['圆环'] : {}
+  const { axisLine:{axisLineColor},progress:{progressColor1,progressColor2} } = allSettings ? allSettings['圆环'] : {}
 
 
 
@@ -59,7 +58,7 @@ const InstrumentPanel = (props) => {
       show: true,
       text: titleText,
       left: '50%',
-      top: '85%',
+      top: '82%',
       textAlign: 'center',
       textStyle: {
         color: textStyleTitle.color,
@@ -67,12 +66,31 @@ const InstrumentPanel = (props) => {
         fontFamily: textStyleTitle.fontFamily,
         fontWeight: textStyleTitle.bold ? 'bold' : 'normal',
         fontStyle: textStyleTitle.italic ? 'italic' : 'normal',
-        overflow: 'breakAll'
       },
       padding:[offset.vertical,offset.horizontal],
     },
-  
     series: [
+      //内圆1
+      {
+        type: 'pie',
+        radius: '85%',
+        center: ['50%', '50%'],
+        z: 2,
+        itemStyle: {
+          normal: {
+            color: '#02004d',
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            }
+          }
+        },
+        hoverAnimation: false,
+        data: [100],
+        animation: false
+      },
       //内圆1
       {
         type: 'pie',
@@ -106,12 +124,13 @@ const InstrumentPanel = (props) => {
           }
         },
         hoverAnimation: false,
-        data: [100]
+        data: [100],
+        animation: false
       },
       //内圆2
       {
         type: 'pie',
-        radius: innerRadius*100+5+'%',
+        radius: innerRadius*100+7+'%',
         center: ['50%', '50%'],
         z: 1,
         itemStyle: {
@@ -126,6 +145,7 @@ const InstrumentPanel = (props) => {
           }
         },
         hoverAnimation: false,
+        animation: false,
         data: [100]
       },
       //外线1(渐变线)
@@ -183,66 +203,66 @@ const InstrumentPanel = (props) => {
           show: true,
           lineStyle: {
             color: [
-              [0.1, '#00FFFF'],
+              [0.1, '#75dcf5'],
               //...
               [0.11, 'rgba(1,1,1,0)'],
-              [0.12, '#00FFFF'],
+              [0.12, '#75dcf5'],
               [0.13, 'rgba(1,1,1,0)'],
-              [0.14, '#00FFFF'],
+              [0.14, '#75dcf5'],
               [0.15, 'rgba(1,1,1,0)'],
-              [0.16, '#00FFFF'],
+              [0.16, '#75dcf5'],
               [0.17, 'rgba(1,1,1,0)'],
-              [0.18, '#00FFFF'],
+              [0.18, '#75dcf5'],
               //...
-              [0.28, '#00FFFF'],
+              [0.28, '#75dcf5'],
               //...
               [0.29, 'rgba(1,1,1,0)'],
-              [0.30, '#00FFFF'],
+              [0.30, '#75dcf5'],
               [0.31, 'rgba(1,1,1,0)'],
-              [0.32, '#00FFFF'],
+              [0.32, '#75dcf5'],
               [0.33, 'rgba(1,1,1,0)'],
-              [0.34, '#00FFFF'],
+              [0.34, '#75dcf5'],
               [0.35, 'rgba(1,1,1,0)'],
-              [0.36, '#00FFFF'],
+              [0.36, '#75dcf5'],
               //...
-              [0.46, '#00FFFF'],
+              [0.46, '#75dcf5'],
               //...
               [0.47, 'rgba(1,1,1,0)'],
-              [0.48, '#00FFFF'],
+              [0.48, '#75dcf5'],
               [0.49, 'rgba(1,1,1,0)'],
-              [0.5, '#00FFFF'],
+              [0.5, '#75dcf5'],
               [0.51, 'rgba(1,1,1,0)'],
-              [0.52, '#00FFFF'],
+              [0.52, '#75dcf5'],
               [0.53, 'rgba(1,1,1,0)'],
-              [0.54, '#00FFFF'],
+              [0.54, '#75dcf5'],
               //...
-              [0.64, '#00FFFF'],
+              [0.64, '#75dcf5'],
               //...
               [0.65, 'rgba(1,1,1,0)'],
-              [0.66, '#00FFFF'],
+              [0.66, '#75dcf5'],
               [0.67, 'rgba(1,1,1,0)'],
-              [0.68, '#00FFFF'],
+              [0.68, '#75dcf5'],
               [0.69, 'rgba(1,1,1,0)'],
-              [0.7, '#00FFFF'],
+              [0.7, '#75dcf5'],
               [0.71, 'rgba(1,1,1,0)'],
-              [0.72, '#00FFFF'],
+              [0.72, '#75dcf5'],
               //...
-              [0.82, '#00FFFF'],
+              [0.82, '#75dcf5'],
               //...
               [0.83, 'rgba(1,1,1,0)'],
-              [0.84, '#00FFFF'],
+              [0.84, '#75dcf5'],
               [0.85, 'rgba(1,1,1,0)'],
-              [0.86, '#00FFFF'],
+              [0.86, '#75dcf5'],
               [0.87, 'rgba(1,1,1,0)'],
-              [0.88, '#00FFFF'],
+              [0.88, '#75dcf5'],
               [0.89, 'rgba(1,1,1,0)'],
-              [0.9, '#00FFFF'],
+              [0.9, '#75dcf5'],
               //...
-              [1, '#00FFFF'],
+              [1, '#75dcf5'],
               
             ],
             width: 2,
-            opacity: 0.6
+            opacity: 0.8
           }
         },
         splitLine: {
@@ -291,7 +311,7 @@ const InstrumentPanel = (props) => {
           show: true,
           lineStyle: {
             color: [
-              [1, '#171871']
+              [1, axisLineColor]
             ],
             width: outerRadius*100,
             opacity: 1
@@ -310,7 +330,16 @@ const InstrumentPanel = (props) => {
           show:true,
           width: outerRadius*100,
           itemStyle:{
-            color: ringColor
+            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              {
+                offset: 0,
+                color: progressColor1 // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: progressColor2 // 100% 处的颜色
+              }
+            ])
           }
         },
         splitLine: {

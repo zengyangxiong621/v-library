@@ -1,12 +1,12 @@
 const componentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
-  "name": "定制指标卡4", //图层名称
+  "name": "定制指标卡6-1", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
-  "moduleName": "instrumentPanel_4", //组件标识
-  "moduleVersion": "1.1.1", //组件版本号
+  "moduleName": "instrumentPanel_6-1", //组件标识
+  "moduleVersion": "1.0.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -66,12 +66,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 600
+          "value": 500
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 600
+          "value": 500
         }
       ]
     },

@@ -56,7 +56,7 @@ const InstrumentPanel = (props) => {
     unitStyles:{textStylerUnit,offset:unitOffset}
   } = allSettings ? allSettings['指标'] : {}
   const { titleStyles:{showTitleStyles,offset,textStyleTitle} } = allSettings ? allSettings['标题'] : {}
-  const { ringColor } = allSettings ? allSettings['圆环'] : {}
+  const { axisLine:{axisLineColor},progress:{progressColor1,progressColor2} } = allSettings ? allSettings['圆环'] : {}
 
 
   const getOption1 = () => ({
@@ -64,7 +64,7 @@ const InstrumentPanel = (props) => {
       show: true,
       text: titleText,
       left: '50%',
-      top: '88%',
+      top: '85%',
       textAlign: 'center',
       textStyle: {
         color: textStyleTitle.color,
@@ -72,7 +72,6 @@ const InstrumentPanel = (props) => {
         fontFamily: textStyleTitle.fontFamily,
         fontWeight: textStyleTitle.bold ? 'bold' : 'normal',
         fontStyle: textStyleTitle.italic ? 'italic' : 'normal',
-        overflow: 'breakAll'
       },
       padding:[offset.vertical,offset.horizontal],
     },
@@ -87,7 +86,7 @@ const InstrumentPanel = (props) => {
         center: ['50%', '50%'],
         min,
         max,
-        splitNumber: 10,
+        // splitNumber: 10,
         detail: {
           formatter: function (value) {
             return '{num|'+value+'}';
@@ -116,7 +115,7 @@ const InstrumentPanel = (props) => {
           show:true,
           lineStyle:{
             color: [
-              [1,'#073b70']
+              [1, axisLineColor]
             ],
             width: outerRadius*100
           }
@@ -125,30 +124,17 @@ const InstrumentPanel = (props) => {
           show:true,
           width: outerRadius*100,
           itemStyle:{
-            // color:new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-            //   {
-            //     offset: 0,
-            //     color: 'rgb(102, 255, 255)' // 0% 处的颜色
-            //   },
-            //   {
-            //     offset: 0.25,
-            //     color: 'rgb(0, 102, 255)' // 100% 处的颜色
-            //   },
-            //   {
-            //     offset: 0.5,
-            //     color: 'rgb(153, 102, 255)' // 100% 处的颜色
-            //   },
-            //   {
-            //     offset: 1,
-            //     color: 'rgb(51, 51, 204)' // 100% 处的颜色
-            //   }
-            // ])
-            color: ringColor
+            color:new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              {
+                offset: 0,
+                color: progressColor1 // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: progressColor2 // 100% 处的颜色
+              }
+            ])
           }
-        },
-        
-        axisLabel:{
-          show: false
         },
         pointer: {
           show: true,
@@ -161,12 +147,12 @@ const InstrumentPanel = (props) => {
                 color: 'rgba(0, 102, 255,0)' // 0% 处的颜色
               },
               {
-                offset: 0.25,
+                offset: 0.5,
                 color: 'rgba(0, 102, 255,0)' 
               },
               {
-                offset: 0.5,
-                color: 'rgba(115, 250, 246,0.2)'
+                offset: 0.7,
+                color: 'rgba(115, 250, 246,0.3)'
               },
               {
                 offset: 1,
@@ -175,6 +161,15 @@ const InstrumentPanel = (props) => {
             ]),
             
           }
+        },
+        axisTick:{
+          show: false
+        },
+        splitLine:{
+          show: false
+        },
+        axisLabel:{
+          show: false
         },
       },
       // 刻度的线
@@ -195,25 +190,25 @@ const InstrumentPanel = (props) => {
             opacity: 0.3
           }
         },
-        //dd
         splitLine: {
           show: true,
-          length: 40,
-          distance: -35,
+          length: '20%',
+          distance: -20,
           lineStyle:{
             color: '#4796fd',
-            width: 4
+            width: 2,
+            opacity: 0.3
           }
         },
-        //dd
         axisTick: {
           show: true,
           splitNumber: 10,
           length:10,
-          distance: 0,
+          distance: -10,
           lineStyle:{
             color: '#4796fd',
-            width: 2
+            width: 2,
+            opacity: 0.3
           }
         },
         pointer: {
@@ -230,36 +225,39 @@ const InstrumentPanel = (props) => {
         z:2,
         startAngle: 245,
         endAngle: -65,
-        pointer: {
-          show: false
-        },
-        detail: {
-          show: false
-        },
         axisLine: {
           show: true,
           lineStyle:{
+            width: 5,
             color:[
               [1, new echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
                   offset: 0,
-                  color: '#4796fd' // 0% 处的颜色
+                  color: '#4796fd'
+                },
+                {
+                  offset: 0.1,
+                  color: 'rgba(108, 229, 246, 0.2)'
                 },
                 {
                   offset: 0.2,
-                  color: 'rgba(108, 229, 246, 0)', // 100% 处的颜色
+                  color: 'rgba(108, 229, 246, 0)', 
                 },
                 {
                   offset: 0.8,
-                  color: 'rgba(108, 229, 246, 0)', // 100% 处的颜色
+                  color: 'rgba(108, 229, 246, 0)',
+                },
+                {
+                  offset: 0.9,
+                  color: 'rgba(108, 229, 246, 0.2)'
                 },
                 {
                   offset: 1,
-                  color: '#4796fd', // 100% 处的颜色
+                  color: '#4796fd', 
                 }
               ])],
             ],
-            opacity: 0.5
+            opacity: 1
           }
         },
         axisTick: {
@@ -299,6 +297,12 @@ const InstrumentPanel = (props) => {
               global: false // 缺省为 false
             }
           }
+        },
+        pointer: {
+          show: false
+        },
+        detail: {
+          show: false
         },
         axisLabel: {
           show: false
@@ -340,7 +344,8 @@ const InstrumentPanel = (props) => {
           }
         },
         hoverAnimation: false,
-        data: [100]
+        data: [100],
+        animation: false
       },
       // 最里面的仪表盘样式
       {

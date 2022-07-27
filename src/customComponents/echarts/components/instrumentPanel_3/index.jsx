@@ -7,17 +7,10 @@ import protectionLevel2 from './protectionLevel2.png'
 
 
 class ProtectionLevel extends Component {
-    constructor() {
-        super()
-    }
-
-    componentDidMount() {
-      console.log('componentDidMount=======================')
-    }
-    componentWillUnmount() {
+    constructor(Props) {
+        super(Props)
     }
     render() {
-      console.log('render=======================')
       const componentConfig = this.props.componentConfig || ComponentDefaultConfig
       const { config } = componentConfig
       const { data } = componentConfig.staticData
@@ -57,7 +50,6 @@ class ProtectionLevel extends Component {
       }
       const hadFilterArr = config.filter((item) => item.name !== 'dimension')
       const { allSettings } = getTargetConfig(hadFilterArr)
-      console.log('allSettings',allSettings)
       const { innerSpeed,outerSpeed } = allSettings ? allSettings['表盘'] : {}
       const {
         numberStyles:{textStylerNumber,offsetNumber},
@@ -69,8 +61,8 @@ class ProtectionLevel extends Component {
       return (
         <div className='protection-level'>
           <div className="bg">
-            <img className='circle1' src={protectionLevel1} alt="bg1" style={{animation: `circle1 ${1/innerSpeed}s linear infinite`}}/>
-            <img className='circle2' src={protectionLevel2} alt="bg2" style={{animation: `circle2 ${1/outerSpeed}s linear infinite`}}/>
+            <img className='circle1' src={protectionLevel1} alt="bg1" style={{animation: `circle1 ${1/outerSpeed}s linear infinite`}}/>
+            <img className='circle2' src={protectionLevel2} alt="bg2" style={{animation: `circle2 ${1/innerSpeed}s linear infinite`}}/>
             <div className='bottom'></div>
           </div>
           <div className='score'>

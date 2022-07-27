@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_1", //组件标识
-  "moduleVersion": "1.0.1", //组件版本号
+  "moduleVersion": "1.1.2", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -22,7 +22,7 @@ const componentDefaultConfig = {
     data: [
       {
         text: "风险IP",
-        value: 345,
+        value: 34567,
       },
     ],
     fields: [
@@ -61,12 +61,12 @@ const componentDefaultConfig = {
         {
           displayName: '宽度',
           name: 'width',
-          value: 800,
+          value: 450,
         },
         {
           displayName: '高度',
           name: 'height',
-          value: 600,
+          value: 450,
         },
       ],
     },
@@ -89,7 +89,7 @@ const componentDefaultConfig = {
             {
               'name': 'outerRadius',
               'displayName': '外圆半径',
-              'value': 0.6,
+              'value': 0.25,
               type:'range',
               "config": {
                   "min": 0,
@@ -101,7 +101,7 @@ const componentDefaultConfig = {
             {
               'name': 'innerRadius',
               'displayName': '内圆半径',
-              'value': 0.45,
+              'value': 0.5,
               type:'range',
               "config": {
                   "min": 0,
@@ -126,9 +126,8 @@ const componentDefaultConfig = {
                   name:'min',
                   displayName:'最小值',
                   type:'number',
-                  value:1,
+                  value:0,
                   config:{
-                    min:0,
                     suffix:'',  // 输入框后缀
                   }
               },
@@ -136,9 +135,8 @@ const componentDefaultConfig = {
                   name:'max',
                   displayName:'最大值',
                   type:'number',
-                  value:500,
+                  value:50000,
                   config:{
-                    min:0,
                     suffix:'',  // 输入框后缀
                   }
                 },
@@ -149,7 +147,7 @@ const componentDefaultConfig = {
               'displayName': '数值',
               'type': 'collapse',
               hasSwitch:false, // 是否有切换按钮
-              defaultExpand:true,  // 是否默认展开
+              defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
                     'name': 'showNumberStyles',
@@ -170,7 +168,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontSize",
                       "displayName": "",
-                      "value": 90
+                      "value": 45
                     },
                     {
                       "name": "color",
@@ -212,7 +210,6 @@ const componentDefaultConfig = {
                       type:'number',
                       value:0,
                       config:{
-                        // min:0,
                         suffix:'px',  // 输入框后缀
                       }
                   },
@@ -222,7 +219,6 @@ const componentDefaultConfig = {
                       type:'number',
                       value:0,
                       config:{
-                        // min:0,
                         suffix:'px',  // 输入框后缀
                       }
                     },
@@ -241,7 +237,7 @@ const componentDefaultConfig = {
               'displayName': '数值',
               'type': 'collapse',
               hasSwitch:false, // 是否有切换按钮
-              defaultExpand:true,  // 是否默认展开
+              defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
                     'name': 'showTitleStyles',
@@ -262,7 +258,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontSize",
                       "displayName": "",
-                      "value": 90
+                      "value": 30
                     },
                     {
                       "name": "color",
@@ -273,7 +269,7 @@ const componentDefaultConfig = {
                     {
                       "name": "bold",
                       "displayName": "",
-                      "value": false
+                      "value": true
                     },
                     {
                       "name": "italic",
@@ -304,7 +300,6 @@ const componentDefaultConfig = {
                       type:'number',
                       value:0,
                       config:{
-                        // min:0,
                         suffix:'px',  // 输入框后缀
                       }
                   },
@@ -314,7 +309,6 @@ const componentDefaultConfig = {
                       type:'number',
                       value:0,
                       config:{
-                        // min:0,
                         suffix:'px',  // 输入框后缀
                       }
                     },
@@ -329,10 +323,52 @@ const componentDefaultConfig = {
           name:'圆环',
           value:[
             {
-              displayName: "颜色",
-              name: "ringColor",
-              type: "color",
-              value: "#87ceeb",
+              'name': 'axisLine',
+              'displayName': '仪表盘轴线',
+              'type': 'collapse',
+              hasSwitch:false, // 是否有切换按钮
+              defaultExpand:false,  // 是否默认展开
+              value:[
+                {	// 如果有后面的按钮，则该项必须放在第一个
+                  'name': 'showTitleStyles',
+                  'displayName': '',
+                  'value': true,
+                  'type': 'switch',
+                },
+                {
+                  displayName: "颜色",
+                  name: "axisLineColor",
+                  type: "color",
+                  value: "#150c71",
+                }
+              ]
+            },
+            {
+              'name': 'progress',
+              'displayName': '进度条',
+              'type': 'collapse',
+              hasSwitch:false, // 是否有切换按钮
+              defaultExpand:false,  // 是否默认展开
+              value:[
+                {	// 如果有后面的按钮，则该项必须放在第一个
+                  'name': 'showTitleStyles',
+                  'displayName': '',
+                  'value': true,
+                  'type': 'switch',
+                },
+                {
+                  displayName: "渐变颜色1",
+                  name: "progressColor1",
+                  type: "color",
+                  value: "#73f3f5",
+                },
+                {
+                  displayName: "渐变颜色2",
+                  name: "progressColor2",
+                  type: "color",
+                  value: "#6332ec",
+                }
+              ]
             },
           ]
         },

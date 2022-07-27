@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_3", //组件标识
-  "moduleVersion": "1.0.1", //组件版本号
+  "moduleVersion": "1.1.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -71,12 +71,12 @@ const componentDefaultConfig = {
         {
           displayName: '宽度',
           name: 'width',
-          value: 800,
+          value: 500,
         },
         {
           displayName: '高度',
           name: 'height',
-          value: 600,
+          value: 500,
         },
       ],
     },
@@ -152,13 +152,13 @@ const componentDefaultConfig = {
                     {
                       "name": "fontSize",
                       "displayName": "",
-                      "value": 60
+                      "value":55
                     },
                     {
                       "name": "color",
                       "displayName": "",
                       "type": "color",
-                      "value": '#ffffff'
+                      "value": '#eeff00'
                     },
                     {
                       "name": "bold",
@@ -236,7 +236,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontSize",
                       "displayName": "",
-                      "value": 30
+                      "value": 18
                     },
                     {
                       "name": "color",
@@ -313,7 +313,7 @@ const componentDefaultConfig = {
                 {
                   "name": "fontSize",
                   "displayName": "",
-                  "value": 40
+                  "value":28 
                 },
                 {
                   "name": "color",
@@ -339,7 +339,7 @@ const componentDefaultConfig = {
                 {
                   "name": "lineHeight",
                   "displayName": "行距",
-                  "value": 40
+                  "value": 28
                 }
               ]
             },
@@ -349,7 +349,7 @@ const componentDefaultConfig = {
               type:'chartText',
               value:{
                 fontFamily:'Microsoft Yahei',
-                fontSize:40,
+                fontSize:28,
                 color:'#40DF10',
                 fontWeight:'normal' // bold bolder lighter
               }

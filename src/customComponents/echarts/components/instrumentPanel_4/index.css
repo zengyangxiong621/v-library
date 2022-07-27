@@ -29,6 +29,7 @@
   padding: 0 2px;
   position: absolute;
   transform: translate(-50%,-150%);
+  white-space: nowrap;
 }
 .threat-warning1 .left .unit {
     text-align: center;
@@ -37,6 +38,7 @@
     padding: 0 2px;
     position: absolute;
     transform: translate(-50%,-30%);
+    white-space: nowrap;
 }
 .threat-warning1 .left .title {
     text-align: center;
@@ -47,4 +49,5 @@
     /* padding: 0 2px; */
     position: absolute;
     transform: translate(-50%,100%);
+    white-space: nowrap;
 }
