@@ -41,7 +41,6 @@ class ChinaMap extends Component {
     if(!dataCenter){return}
     if(dataCenter.length > 1){ dataCenter = dataCenter.slice(2) }
     let res = [];
-    console.log(dataCenter, '#datac');
     for (let i = 0; i < dataCenter.length; i++) {
       let geoCoord = gdGeoCoordMap[dataCenter[i].name];
       if (geoCoord) {
@@ -109,7 +108,7 @@ class ChinaMap extends Component {
     const { config, staticData } = componentConfig || ComponentDefaultConfig
     const mainData = this.formatConfig(config, [])
     console.log(mainData, '#mainData');
-    const { bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = mainData
+    const { bgColor, selectColor, borderColor } = mainData
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
     const fields2ValueMap = {}
@@ -121,7 +120,6 @@ class ChinaMap extends Component {
 
     // IP地址数据
     const ipData = finalData[0].ipData;
-    console.log(finalData[0].dataCenter,'123123');
     const dataCenter = finalData[0].dataCenter;
     const dataCenter2 = finalData[0].dataCenter?.slice(0,1);
     const dataCenter3 = finalData[0].dataCenter?.slice(1,2);
@@ -218,8 +216,8 @@ class ChinaMap extends Component {
               textStyle: '#fff',
             },
             emphasis: {
-              // areaColor: selectColor, //悬浮背景
-              areaColor: "#315b8f", //悬浮背景
+              areaColor: selectColor, //悬浮背景
+              // areaColor: "#315b8f", //悬浮背景
             },
           },
           data: [],
@@ -285,9 +283,7 @@ class ChinaMap extends Component {
               color: "#fff",
               rich: {
                 fline: {
-                  padding: [0, 25], // 调整标牌文字位置
-                  // color: "#fff",  // 优化
-                  // backgroundColor: "#f7c91c",
+                  padding: [0, 5], // 调整标牌文字位置
                   backgroundColor: {
                     type: 'linear',
                     x: 0,
@@ -479,8 +475,6 @@ class ChinaMap extends Component {
               rich: {
                 fline: {
                   padding: [0, 25], // 调整标牌文字位置
-                  // color: "#fff",  // 优化
-                  // backgroundColor: "#f7c91c",
                   backgroundColor: {
                     type: 'linear',
                     x: 0,
@@ -542,8 +536,6 @@ class ChinaMap extends Component {
               rich: {
                 fline: {
                   padding: [0, 25], // 调整标牌文字位置
-                  // color: "#fff",  // 优化
-                  // backgroundColor: "#f7c91c",
                   backgroundColor: {
                     type: 'linear',
                     x: 0,
@@ -651,11 +643,11 @@ class ChinaMap extends Component {
 
     let style = this.formatConfig(config, [])
     console.log(finalData, '#finalData');
-    const { bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = style
+    const { bgColor, selectColor, borderColor } = style
     if (mapChart) {
       options.series[0].itemStyle.normal.areaColor = bgColor;
       options.series[0].itemStyle.normal.borderColor = borderColor;
-      // options.series[0].itemStyle.emphasis.areaColor = selectColor;
+      options.series[0].itemStyle.emphasis.areaColor = selectColor;
 
       options.series[1].data = this.convertIPData(ipData, ipCoordData);
       options.series[2].data = this.convertIPData2(dataCenter, ipCoordData);

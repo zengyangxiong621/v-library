@@ -193,12 +193,12 @@ const componentDefaultConfig = {
           value: "#032056",
           type: "color",
         },
-        // {
-        //   name: "selectColor",
-        //   displayName: "选中背景色",
-        //   value: "#315b8f",
-        //   type: "color",
-        // },
+        {
+          name: "selectColor",
+          displayName: "选中背景色",
+          value: "#315b8f",
+          type: "color",
+        },
         {
           name: "borderColor",
           displayName: "边缘颜色",
