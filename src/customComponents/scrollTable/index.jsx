@@ -54,6 +54,7 @@ const ScrollTable = (props) => {
   const [header, setHeader] = useState([])
   const [isHeader, setIsHeader] = useState(true)
   const [isIndex, setIsIndex] = useState(false)
+  const [indexAlign ,setIndexAlign] = useState('left')
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const fields = getFields(componentConfig)
   const {config, staticData} = componentConfig
@@ -213,6 +214,7 @@ const ScrollTable = (props) => {
     const indexAlign = indexConfig.find(item => item.name === 'textAlign').value
     let textStyle = styleTransformFunc(tableIndexConfig.find(item => item.name === 'textStyle').value, false)
     textStyle = styleObjectToStr({'text-align': indexAlign, ...textStyle})
+    setIndexAlign(indexAlign)
     setIndexHeader(`<div style="${textStyle}">${indexTitle}</div>`)
   }
 
@@ -380,6 +382,7 @@ const ScrollTable = (props) => {
     evenRowBGC, // 偶数行背景色
     carousel,
     rowNum: rowNumConfig,
+    indexAlign,
     indexHeader,
     align,
     height,
