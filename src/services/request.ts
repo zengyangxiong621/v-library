@@ -142,15 +142,17 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
   };
 });
 
-export const downLoad = async (url: string, isAllurl: boolean = false) => {
-  const config = {
-    url: url,
-    method: 'GET'
+export const downLoad=async (url:string , isAllurl:boolean=false, fileName?:string) => {
+  const config={
+    url:url,
+    method:'GET',
+    responseType:'blob'
   }
   const res = await http(config, true, isAllurl)
   let a = document.createElement('a');
   let downloadUrl = window.URL.createObjectURL(res);
   a.href = downloadUrl;
+  a.download=(fileName || '') + '.zip';
   a.click();
   window.URL.revokeObjectURL(downloadUrl);
 }
