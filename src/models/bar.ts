@@ -9,6 +9,7 @@ import {
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
+  layersPanelsFlat
 } from "../utils";
 
 import {
@@ -26,6 +27,8 @@ import {
 import {
   ILayerComponent,
   ILayerGroup,
+  IPanel,
+  IComponent
 } from "../routes/dashboard/center/components/CustomDraggable/type";
 
 import {
@@ -193,8 +196,19 @@ export default {
             method: "get",
           }
         );
-        // let extendedSomeAttrLayers = addSomeAttrInLayers(layers)
-        // extendedSomeAttrLayers = deepFilterAttrs(extendedSomeAttrLayers, [ 'selected' ])
+        const layerPanels: any = layersPanelsFlat(layers)
+        const func = async (layerPanel: any) => {
+          try {
+            const panelConfig = await http({
+              url: `/visual/panel/detail/${ layerPanel.id }`,
+              method: 'get',
+            })
+            return panelConfig
+          } catch(e) {
+            return null
+          }
+        }
+        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => func(item)));
         yield (layers = deepForEach(
           layers,
           (layer: ILayerGroup | ILayerComponent) => {
@@ -208,11 +222,6 @@ export default {
           payload: components,
         });
         const bar: any = yield select(({ bar }: any) => bar);
-        console.log('dashboardConfig', [
-          ...bar.dashboardConfig,
-          ...dashboardConfig,
-        ])
-
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
         yield put({
@@ -220,6 +229,7 @@ export default {
           payload: {
             treeData: noEmptyGroupLayers,
             components,
+            panels,
             dashboardId: isPanel ? statusId : dashboardId,
             dashboardConfig: [
               ...bar.dashboardConfig,
@@ -571,14 +581,32 @@ export default {
       });
     },
     *updateComponent({ payload }: any, { call, put, select }: any): any {
+      console.log('payload', payload)
       if (payload.length > 0) {
+        const components: Array<IComponent> = []
+        const panels = []
+        payload.forEach((item: IPanel | IComponent) => {
+          if ('type' in item) {
+            panels.push(item)
+          } else {
+            components.push(item)
+          }
+        })
         const state: any = yield select((state: any) => state);
         yield http({
           url: "/visual/module/update",
           method: "post",
           body: {
             dashboardId: state.bar.dashboardId,
-            configs: payload,
+            configs: components,
+          },
+        });
+        yield http({
+          url: "/visual/panel/update",
+          method: "post",
+          body: {
+            dashboardId: state.bar.dashboardId,
+            configs: components,
           },
         });
       }
@@ -855,9 +883,11 @@ export default {
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup
       );
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
+      state.selectedComponents = [
+        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
+        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
+      ]
+      console.log('selectedComponents', state.selectedComponents)
       state.selectedComponentRefs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
@@ -1230,9 +1260,11 @@ export default {
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key];
         }
       });
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
+      state.selectedComponents = [
+        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
+        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
+      ]
+      console.log('state.selectedComponents', state.selectedComponents)
       return {
         ...state,
       };

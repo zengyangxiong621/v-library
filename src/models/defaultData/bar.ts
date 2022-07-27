@@ -1,3 +1,6 @@
+import {
+  IPanel
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
 export const defaultData = {
   moduleDefaultConfig: [
     {
@@ -2198,7 +2201,8 @@ export const defaultData = {
   systemMaterialClass: {}, // 获取系统素材分类数据
   systemMaterialList: [], // 获取系统素材数据
   isPanel: false,
-  panels: []
+  panels: [],
+  panelConfig: {}
 }
 
 export interface IBarState {
@@ -2253,16 +2257,6 @@ export interface IBarState {
   systemMaterialClass: any;
   systemMaterialList: any;
   isPanel: boolean;
-  panels: Array<{
-    name: string;
-    id: string;
-    type: 0 | 1;
-    states: Array<string>;
-    config: {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }
-  }>
+  panels: Array<IPanel>,
+  panelConfig: IPanel | {}
 }

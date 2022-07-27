@@ -130,20 +130,7 @@ const CustomDraggable
       })
       bar.selectedComponents = []
       bar.dragStatus = '一组件'
-      if ('panelType' in layer) {
-        bar.dragStatus = '一面板'
-        const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
-        config = {
-          position: {
-            x: panel.config.x,
-            y: panel.config.y,
-          },
-          style: {
-            width: panel.config.width,
-            height: panel.config.height
-          }
-        }
-      }
+
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
         dispatch({
@@ -159,7 +146,9 @@ const CustomDraggable
           },
         })
       }
-
+      if ('panelType' in layer) {
+        bar.dragStatus = '一面板'
+      }
       if (bar.selectedComponentOrGroup.length > 1) {
         // 注意一下
         // 选中多个组件、或者多个分组时
@@ -172,7 +161,6 @@ const CustomDraggable
         }
       }
       bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))]
-      console.log('bar.selectedComponents', bar.selectedComponents)
     }
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       ev.stopPropagation()
@@ -262,10 +250,8 @@ const CustomDraggable
       if ('panelType' in layer) {
         // 说明是面板,且一定是单个
         const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
-        console.log('data', data)
         panel.config.x = data.x
         panel.config.y = data.y
-        console.log('handleStop-panel', panel)
         dispatch({
           type: 'bar/save',
           payload: {
@@ -279,7 +265,8 @@ const CustomDraggable
                 width: panel.config.width,
                 height: panel.config.height,
               }
-            }
+            },
+            panelConfig: panel
           }
         })
       } else if (component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
@@ -322,18 +309,25 @@ const CustomDraggable
         }
       } else if (COMPONENTS in layer && bar.selectedComponentOrGroup.length === 1) {
         // 单个组移动
+        console.log('单个组', layer)
+        console.log('bar.selectedComponents', bar.selectedComponents)
         const xMoveLength = Math.ceil(data.x - startPosition.x)
         const yMoveLength = Math.ceil(data.y - startPosition.y)
-        bar.selectedComponents.forEach((item: IComponent) => {
-          const dimensionConfig = item.config.find((item: any) => item.name === DIMENSION).value
-          if (dimensionConfig) {
-            dimensionConfig.forEach((item: any) => {
-              if (item.name === LEFT) {
-                item.value += xMoveLength
-              } else if (item.name === TOP) {
-                item.value += yMoveLength
-              }
-            })
+        bar.selectedComponents.forEach((item: IComponent | IPanel) => {
+          if ('type' in item) {
+            item.config.left += xMoveLength
+            item.config.top += yMoveLength
+          } else {
+            const dimensionConfig = item.config.find((item: any) => item.name === DIMENSION).value
+            if (dimensionConfig) {
+              dimensionConfig.forEach((item: any) => {
+                if (item.name === LEFT) {
+                  item.value += xMoveLength
+                } else if (item.name === TOP) {
+                  item.value += yMoveLength
+                }
+              })
+            }
           }
         })
         dispatch({
@@ -690,21 +684,20 @@ const CustomDraggable
           // 群组
           if ('panelType' in layer) {
             const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
-            if (panel) {
-              config = {
-                position: {
-                  x: panel.config.x,
-                  y: panel.config.y
-                },
-                style: {
-                  width: panel.config.width,
-                  height: panel.config.height
-                }
+            const { config: {left, top, width, height}} = panel
+            config = {
+              position: {
+                x: left,
+                y: top
+              },
+              style: {
+                width: width,
+                height: height
               }
             }
           } else if(COMPONENTS in layer) {
             group = layer
-            let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components)
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components, panels)
             xPositionList = xPositionList.sort((a, b) => a - b)
             yPositionList = yPositionList.sort((a, b) => a - b)
             config = {

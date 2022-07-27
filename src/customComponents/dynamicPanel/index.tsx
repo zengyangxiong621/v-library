@@ -5,7 +5,9 @@ import { useSetState } from 'ahooks'
 import CustomDraggable from '../../routes/dashboard/center/components/CustomDraggable'
 import { http } from '@/services/request'
 import * as React from 'react'
-
+import {
+  IPanel
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
 interface State {
   states: string[];
 
@@ -23,19 +25,9 @@ const DynamicPanel = ({ bar, id, dispatch }: any) => {
 
   useEffect(() => {
     (async function() {
-      const panelConfig = await http({
-        url: `/visual/panel/detail/${ id }`,
-        method: 'get',
-      })
+      const panel = bar.panels.find((item: IPanel) => item.id === id)
       // 获取面板想起接口
-      const { states, config: recommendConfig, name, type } = panelConfig
-      console.log('recommendConfig', recommendConfig)
-      const dom: HTMLElement | null = document.querySelector(`[data-id=panel-${id}]`)
-      if (dom) {
-        dom.style.width = recommendConfig.width + 'px'
-        dom.style.height = recommendConfig.height + 'px'
-        dom.style.transform = `translate(${recommendConfig.left}px, ${recommendConfig.top}px)`
-      }
+      const { states, config: recommendConfig, name, type } = panel
       // 默认取第一个
       const defaultStateId = states[0] || ''
       // 获取画布详情接口
@@ -48,26 +40,6 @@ const DynamicPanel = ({ bar, id, dispatch }: any) => {
         components,
         layers,
         dashboardConfig,
-      })
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          panels: [
-            ...bar.panels,
-            {
-              id,
-              name,
-              states,
-              type,
-              config: {
-                x: recommendConfig.left,
-                y: recommendConfig.top,
-                width: recommendConfig.width,
-                height: recommendConfig.height
-              }
-            }
-          ]
-        }
       })
     })()
 

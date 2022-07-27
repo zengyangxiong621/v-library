@@ -76,14 +76,17 @@ export interface ILayerPanel extends ILayerComponent{
 }
 
 export interface IPanel {
-  name: string;
-  id: string;
-  type: 0 | 1;
-  states: Array<string>;
+  dashboardId: string,
+  name: string,
+  id: string,
+  type: 0 | 1,
   config: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }
+    allowScroll: boolean;
+    top: number,
+    left: number,
+    width: number,
+    hideDefault: boolean,
+    height: number
+  },
+  states: Array<string>
 }
