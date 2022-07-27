@@ -459,6 +459,7 @@ class WorldMap extends Component {
       mapChart.resize();
     }
 
+
     let mapSize = {
       width: '100%',
       height: '100%'

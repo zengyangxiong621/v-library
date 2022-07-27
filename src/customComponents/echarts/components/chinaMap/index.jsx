@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import './chMap.css';
 import * as echarts from 'echarts';
 import chinaJson from "./china.json";
-// import outline from "./chinaoutline.json";
 import ComponentDefaultConfig from './config';
-import img from './img'
+import img from './assets/img';
+import chMap1 from './assets/chMap1.png';
+import chMap2 from './assets/chMap2.png';
 
 class ChinaMap extends Component {
   constructor(props) {
@@ -20,6 +22,7 @@ class ChinaMap extends Component {
 
   // IP显示-数据转换
   convertIPData = (data, gdGeoCoordMap) => {
+    if (!data) { return }
     let res = [];
     for (let i = 0; i < data.length; i++) {
       let geoCoord = gdGeoCoordMap[data[i].name];
@@ -36,10 +39,10 @@ class ChinaMap extends Component {
   };
 
   // IP显示-数据转换
-  convertIPData2 = (dataCenter, gdGeoCoordMap) => {    
+  convertIPData2 = (dataCenter, gdGeoCoordMap) => {
     // 标牌位置调整，做判断删去“昌平”
-    if(!dataCenter){return}
-    if(dataCenter.length > 1){ dataCenter = dataCenter.slice(2) }
+    if (!dataCenter) { return }
+    if (dataCenter.length > 1) { dataCenter = dataCenter.slice(2) }
     let res = [];
     for (let i = 0; i < dataCenter.length; i++) {
       let geoCoord = gdGeoCoordMap[dataCenter[i].name];
@@ -107,7 +110,7 @@ class ChinaMap extends Component {
     const { comData, componentConfig, fields } = this.props
     const { config, staticData } = componentConfig || ComponentDefaultConfig
     const mainData = this.formatConfig(config, [])
-    console.log(mainData, '#mainData');
+    // console.log(mainData, '#mainData');
     const { bgColor, selectColor, borderColor } = mainData
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
@@ -121,8 +124,8 @@ class ChinaMap extends Component {
     // IP地址数据
     const ipData = finalData[0].ipData;
     const dataCenter = finalData[0].dataCenter;
-    const dataCenter2 = finalData[0].dataCenter?.slice(0,1);
-    const dataCenter3 = finalData[0].dataCenter?.slice(1,2);
+    const dataCenter2 = finalData[0].dataCenter?.slice(0, 1);
+    const dataCenter3 = finalData[0].dataCenter?.slice(1, 2);
     const ipCoordData = finalData[0].ipCoordData;
 
 
@@ -178,7 +181,7 @@ class ChinaMap extends Component {
             // shadowColor: "#3071a7",
             shadowOffsetX: 0,
             shadowOffsetY: 38,
-            shadowBlur: 38,
+            shadowBlur: 45,
           },
           emphasis: {
             areaColor: "transparent", //悬浮背景
@@ -291,9 +294,9 @@ class ChinaMap extends Component {
                     x2: 1,
                     y2: 0,
                     colorStops: [{
-                        offset: 0, color: '#f7c91c' // 0% 处的颜色
+                      offset: 0, color: '#f7c91c' // 0% 处的颜色
                     }, {
-                        offset: 1, color: '#ffffff00' // 100% 处的颜色
+                      offset: 1, color: '#ffffff00' // 100% 处的颜色
                     }],
                     globalCoord: false // 缺省为 false                
                   },
@@ -482,9 +485,9 @@ class ChinaMap extends Component {
                     x2: 1,
                     y2: 0,
                     colorStops: [{
-                        offset: 0, color: '#f7c91c' // 0% 处的颜色
+                      offset: 0, color: '#f7c91c' // 0% 处的颜色
                     }, {
-                        offset: 1, color: '#ffffff00' // 100% 处的颜色
+                      offset: 1, color: '#ffffff00' // 100% 处的颜色
                     }],
                     globalCoord: false // 缺省为 false                
                   },
@@ -543,9 +546,9 @@ class ChinaMap extends Component {
                     x2: 1,
                     y2: 0,
                     colorStops: [{
-                        offset: 0, color: '#f7c91c' // 0% 处的颜色
+                      offset: 0, color: '#f7c91c' // 0% 处的颜色
                     }, {
-                        offset: 1, color: '#ffffff00' // 100% 处的颜色
+                      offset: 1, color: '#ffffff00' // 100% 处的颜色
                     }],
                     globalCoord: false // 缺省为 false                
                   },
@@ -636,13 +639,13 @@ class ChinaMap extends Component {
     const finalData = this.formatData(originData, fields2ValueMap)
     let ipData = finalData[0].ipData;
     let dataCenter = finalData[0].dataCenter;
-    let dataCenter2 = finalData[0].dataCenter?.slice(0,1);
-    let dataCenter3 = finalData[0].dataCenter?.slice(1,2);
+    let dataCenter2 = finalData[0].dataCenter?.slice(0, 1);
+    let dataCenter3 = finalData[0].dataCenter?.slice(1, 2);
 
     let ipCoordData = finalData[0].ipCoordData;
 
     let style = this.formatConfig(config, [])
-    console.log(finalData, '#finalData');
+    // console.log(finalData, '#finalData');
     const { bgColor, selectColor, borderColor } = style
     if (mapChart) {
       options.series[0].itemStyle.normal.areaColor = bgColor;
@@ -661,17 +664,19 @@ class ChinaMap extends Component {
       mapChart.resize();
     }
 
-    let mapSize = {
-      width: '100%',
-      height: '100%'
-    };
 
     return (
-      <div
-        id={this.props.componentConfig.id}
-        style={mapSize}
-        option={options}
-      />
+      <div className='ch-map'>
+        <div className='map-content'>
+          <div
+            className='map'
+            id={this.props.componentConfig.id}
+            option={options}
+          />
+          <img className='bg1' src={chMap1} alt='背景1' />
+          <img className='bg2' src={chMap2} alt='背景2' />
+        </div>
+      </div>
     );
   }
 }
