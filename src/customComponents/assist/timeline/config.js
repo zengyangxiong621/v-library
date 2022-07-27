@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "timeline", //组件标识
-  "moduleVersion": "1.1.0", //组件版本号
+  "moduleVersion": "1.1.2", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -179,7 +179,7 @@ const componentDefaultConfig = {
                         type:'number',
                         value:-20,
                         config:{
-                            min:0,
+                            min:-50,
                             suffix:'px',  // 输入框后缀
                         }
                     },
@@ -189,7 +189,7 @@ const componentDefaultConfig = {
                         type:'number',
                         value:0,
                         config:{
-                            min:0,
+                            min:-50,
                             suffix:'px',  // 输入框后缀
                         }
                     },
@@ -394,13 +394,10 @@ const componentDefaultConfig = {
       "value": 'rgba(255,255,255,0.1)'
     },
     {
-      "name":"spotStyle",
-      "displayName":'圆点样式',
-      "type":'textStroke',
-      "value":{
-        "width":20,
-        "color":'#fff'
-      }
+      "name": "spotType",
+      "displayName": "单双标签",
+      "type": "switch",
+      "value": true
     }
   ],
   themes: [{
