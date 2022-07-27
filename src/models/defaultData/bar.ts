@@ -166,7 +166,7 @@ export const defaultData = {
           "displayName": "标题",
           "value": "#",
           "type": "input",
-        }, { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" }, {
+        }, {
           "name": "textAlign",
           "displayName": "文本对齐",
           "type": "select",
