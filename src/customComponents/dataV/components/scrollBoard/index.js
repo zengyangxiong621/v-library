@@ -40,9 +40,15 @@ const defaultConfig = {
    */
   headerBGC: '#00BAFF',
   /**
-   * @description Odd row background color
+   * @description Header background color
    * @type {String}
-   * @default oddRowBGC = '#003B51'
+   * @default headerBGC = '#00BAFF'
+   */
+  headerBGI: 'unset',
+  /**
+   * @description Odd row background Image
+   * @type {String}
+   * @default oddRowBGC = 'unset'
    */
   oddRowBGC: '#003B51',
   /**
@@ -117,12 +123,12 @@ function calcHeaderData({ header, index, indexHeader }) {
   return header
 }
 
-function calcRows({ data, index, headerBGC, rowNum }) {
+function calcRows({ data, index, headerBGC, headerBGI, rowNum }) {
   if (index) {
     data = data.map((row, i) => {
       row = [...row]
 
-      const indexTag = `<span class="index" style="background-color: ${headerBGC};">${i +
+      const indexTag = `<span class="index" style="background-color: ${headerBGC};background-image: ${headerBGI}">${i +
       1}</span>`
 
       row.unshift(indexTag)
@@ -353,7 +359,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
       {!!header.length && !!mergedConfig && (
         <div
           className='header'
-          style={{ backgroundColor: `${mergedConfig.headerBGC}` }}
+          style={{ backgroundColor: `${mergedConfig.headerBGC}`, backgroundImage: `${mergedConfig.headerBGI}` }}
         >
           {header.map((headerItem, i) => (
             <div

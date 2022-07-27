@@ -12,7 +12,7 @@ const Origin = props => {
   };
   const [form] = Form.useForm();
   const _data = props.data
-  const _type = _data.config.type
+  const _type = _data?.config?.type || 'normal'
   const valueChange = (e) => {
     _data.value = e
     props.onChange()

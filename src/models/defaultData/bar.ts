@@ -106,13 +106,13 @@ export const defaultData = {
           { "name": "show", "displayName": "", "value": true, "type": "switch" },
           { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" },
           {
-            "name": "gradientsOrigin",
+            "name": "gradientOrigin",
             "displayName": "渐变色方向",
             "type": "origin",
             "config": {
               "type": "direction"
             },
-            "value": "50% 50%"
+            "value": "unset"
           },
           { "name": "gradientStartColor", "displayName": "渐变色-开始", "value": "#222430", "type": "color" },
           { "name": "gradientEndColor", "displayName": "渐变色-结束", "value": "#222430", "type": "color" },

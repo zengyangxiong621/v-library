@@ -28,13 +28,13 @@ const OriginSelect = props => {
 
   const _directionEnum = [
     "left top",
-    "left",
-    "left bottom",
     "top",
-    "center",
-    "bottom",
     "right top",
+    "left",
+    "center",
     "right",
+    "left bottom",
+    "bottom",
     "right bottom"
   ]
 
@@ -43,9 +43,9 @@ const OriginSelect = props => {
     <div className="origin-select-container">
       <div className="origin-select-grid">
         {
-          _enum.map(item => {
+          (_type === 'direction' ? _directionEnum : _enum).map(item => {
             return (
-              <span onClick={()=>{valueChange(item)}} className={[ 'origin-select-item', value === item? 'origin-select-active': null ].join(' ')}></span>
+              <span onClick={()=>{valueChange(item)}} title={item} className={[ 'origin-select-item', value === item? 'origin-select-active': null ].join(' ')}></span>
             )
           })
         }
