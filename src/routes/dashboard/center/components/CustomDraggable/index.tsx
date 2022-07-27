@@ -534,6 +534,7 @@ const CustomDraggable
     }
 
     const handleValueChange = (value:any,componentId:any) => {
+      // 编辑时回调参数生效逻辑
       const currentActiveCompoentData = bar.currentActiveCompoentData
       currentActiveCompoentData[componentId] = value
       dispatch({
@@ -542,6 +543,9 @@ const CustomDraggable
           currentActiveCompoentData
         },
       })
+
+      // 页面刷新或者进入画布时回调参数生效逻辑
+
     }
     return (
       <div className="c-custom-draggable">
