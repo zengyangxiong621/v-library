@@ -149,8 +149,8 @@ const AppCard = (props: any) => {
   }
 
   // 导出应用
-  const exportApp = async (appId: string) => {
-    downLoad(`/visual/application/export/${appId}`, false, name)
+  const exportApp = async (appId: string,name:string) => {
+    downLoad(`/visual/application/export/${appId}`,false,name)
   }
 
   // 移动分组
@@ -175,7 +175,7 @@ const AppCard = (props: any) => {
         deleteApp([id])
         break;
       case '导出应用':
-        exportApp(id)
+        exportApp(id,name)
         break;
     }
     // 点击任意菜单子项后，需要隐藏ul
