@@ -168,6 +168,34 @@ const componentDefaultConfig = {
                 ]
               },
               {
+                name:"offsetConfig",
+                displayName:'偏移',
+                type:'inputNumber2',
+                showDetail:true, // 是否展示下面的文字说明
+                value:[
+                    {
+                        name:'x',
+                        displayName:'X',
+                        type:'number',
+                        value:-20,
+                        config:{
+                            min:0,
+                            suffix:'px',  // 输入框后缀
+                        }
+                    },
+                    {
+                        name:'y',
+                        displayName:'Y',
+                        type:'number',
+                        value:0,
+                        config:{
+                            min:0,
+                            suffix:'px',  // 输入框后缀
+                        }
+                    },
+                ]
+              },
+              {
                 "name": "labelOutShadow",
                 "displayName": "阴影",
                 "type": 'collapse',
