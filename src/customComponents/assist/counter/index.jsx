@@ -1,7 +1,7 @@
 import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
-
+import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 
 class Counter extends Component {
   constructor(Props) {
@@ -201,7 +201,19 @@ class Counter extends Component {
                         marginRight: layoutConfig.right,
                         lineHeight: `${dataRangConfig.lineHeight}px`,
                         display: 'inline-block'
-                      }} key={index}>{item}</span>
+                      }} key={index}>
+                      {
+                        (item === '-' || item === '+') ? item : 
+                        <DigitalFlop config={
+                          {number: [Number(item)],content: '{nt}', style:{
+                            fontSize: dataRangConfig.fontSize,
+                            fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
+                            fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
+                            fill: dataRangConfig.color,
+                          }}
+                        } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                      }
+                      </span>
                     }
                   </Fragment>
                 )
