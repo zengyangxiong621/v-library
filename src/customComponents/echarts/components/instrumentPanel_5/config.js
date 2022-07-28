@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_5", //组件标识
-  "moduleVersion": "1.1.2", //组件版本号
+  "moduleVersion": "1.1.3", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -184,7 +184,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontFamily",
                       "displayName": "",
-                      "value": "Microsoft Yahei"
+                      "value": "Microsoft Yahei"
                     },
                     {
                       "name": "fontSize",
@@ -268,7 +268,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontFamily",
                       "displayName": "",
-                      "value": "Microsoft Yahei"
+                      "value": "Microsoft Yahei"
                     },
                     {
                       "name": "fontSize",
@@ -330,7 +330,7 @@ const componentDefaultConfig = {
                 {
                   "name": "fontFamily",
                   "displayName": "",
-                  "value": "Microsoft Yahei"
+                  "value": "Microsoft Yahei"
                 },
                 {
                   "name": "fontSize",

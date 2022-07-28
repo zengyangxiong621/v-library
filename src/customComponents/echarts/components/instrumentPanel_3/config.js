@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_3", //组件标识
-  "moduleVersion": "1.1.0", //组件版本号
+  "moduleVersion": "1.1.1", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -147,7 +147,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontFamily",
                       "displayName": "",
-                      "value": "Microsoft Yahei"
+                      "value": "Microsoft Yahei"
                     },
                     {
                       "name": "fontSize",
@@ -231,7 +231,7 @@ const componentDefaultConfig = {
                     {
                       "name": "fontFamily",
                       "displayName": "",
-                      "value": "Microsoft Yahei"
+                      "value": "Microsoft Yahei"
                     },
                     {
                       "name": "fontSize",
@@ -308,12 +308,12 @@ const componentDefaultConfig = {
                 {
                   "name": "fontFamily",
                   "displayName": "",
-                  "value": "Microsoft Yahei"
+                  "value": "Microsoft Yahei"
                 },
                 {
                   "name": "fontSize",
                   "displayName": "",
-                  "value":28 
+                  "value":28
                 },
                 {
                   "name": "color",
@@ -348,7 +348,7 @@ const componentDefaultConfig = {
               displayName:'等级样式',
               type:'chartText',
               value:{
-                fontFamily:'Microsoft Yahei',
+                fontFamily:'Microsoft Yahei',
                 fontSize:28,
                 color:'#40DF10',
                 fontWeight:'normal' // bold bolder lighter

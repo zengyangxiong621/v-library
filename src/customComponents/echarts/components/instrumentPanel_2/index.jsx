@@ -51,12 +51,12 @@ const InstrumentPanel = (props) => {
   console.log('allSettings',allSettings)
   const { innerRadius,outerRadius } = allSettings ? allSettings['表盘'] : {}
   const { 
-    numberRange:{min,max},
+    numberRange,
     numberStyles:{textStylerNumber,offset:numberOffset},
     unitStyles:{textStylerUnit,offset:unitOffset}
   } = allSettings ? allSettings['指标'] : {}
   const { titleStyles:{showTitleStyles,offset,textStyleTitle} } = allSettings ? allSettings['标题'] : {}
-  const { axisLine:{axisLineColor},progress:{progressColor1,progressColor2} } = allSettings ? allSettings['圆环'] : {}
+  const { axisLine:{axisLineColor} } = allSettings ? allSettings['圆环'] : {}
 
 
   const getOption1 = () => ({
@@ -64,7 +64,7 @@ const InstrumentPanel = (props) => {
       show: true,
       text: titleText,
       left: '50%',
-      top: '85%',
+      top: '90%',
       textAlign: 'center',
       textStyle: {
         color: textStyleTitle.color,
@@ -84,10 +84,11 @@ const InstrumentPanel = (props) => {
         startAngle: 245,
         endAngle: -65,
         center: ['50%', '50%'],
-        min,
-        max,
+        min:0,
+        max:numberValue*3,
         // splitNumber: 10,
         detail: {
+          valueAnimation:true,
           formatter: function (value) {
             return '{num|'+value+'}';
           },
@@ -124,16 +125,32 @@ const InstrumentPanel = (props) => {
           show:true,
           width: outerRadius*100,
           itemStyle:{
-            color:new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-              {
-                offset: 0,
-                color: progressColor1 // 0% 处的颜色
-              },
-              {
-                offset: 1,
-                color: progressColor2 // 100% 处的颜色
-              }
-            ])
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                    offset: 0,
+                    color: '#6648FF' // 0% 处的颜色
+                },
+                {
+                    offset: 0.17,
+                    color: '#6648FF' // 100% 处的颜色
+                },
+                {
+                    offset: 0.9,
+                    color: '#18FFE5' // 100% 处的颜色
+                },
+                {
+                    offset: 1,
+                    color: '#18FFE5' // 100% 处的颜色
+                }
+                ],
+              global: false // 缺省为 false
+            }
           }
         },
         pointer: {
@@ -172,219 +189,219 @@ const InstrumentPanel = (props) => {
           show: false
         },
       },
-      // 刻度的线
-      {
-        type: 'gauge',
-        radius: '66%',
-        z:2,
-        startAngle: 245,
-        endAngle: -65,
-        detail: {
-          show: false
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: [[1, '#4796fd']],
-            width: 2,
-            opacity: 0.3
-          }
-        },
-        splitLine: {
-          show: true,
-          length: '20%',
-          distance: -20,
-          lineStyle:{
-            color: '#4796fd',
-            width: 2,
-            opacity: 0.3
-          }
-        },
-        axisTick: {
-          show: true,
-          splitNumber: 10,
-          length:10,
-          distance: -10,
-          lineStyle:{
-            color: '#4796fd',
-            width: 2,
-            opacity: 0.3
-          }
-        },
-        pointer: {
-          show: false
-        },
-        axisLabel: {
-          show: false
-        },
-      },
-      // 最外面的刻度线
-      {
-        type: 'gauge',
-        radius: '85%',
-        z:2,
-        startAngle: 245,
-        endAngle: -65,
-        axisLine: {
-          show: true,
-          lineStyle:{
-            width: 5,
-            color:[
-              [1, new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                {
-                  offset: 0,
-                  color: '#4796fd'
-                },
-                {
-                  offset: 0.1,
-                  color: 'rgba(108, 229, 246, 0.2)'
-                },
-                {
-                  offset: 0.2,
-                  color: 'rgba(108, 229, 246, 0)', 
-                },
-                {
-                  offset: 0.8,
-                  color: 'rgba(108, 229, 246, 0)',
-                },
-                {
-                  offset: 0.9,
-                  color: 'rgba(108, 229, 246, 0.2)'
-                },
-                {
-                  offset: 1,
-                  color: '#4796fd', 
-                }
-              ])],
-            ],
-            opacity: 1
-          }
-        },
-        axisTick: {
-          show: false,
-          splitNumber: 40,
-          length: 10,
-          lineStyle:{
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0.5,
-              y2: 0.9,
-              colorStops: [
-                // {
-                //   offset: 0,
-                //   color: '#4796fd' // 0% 处的颜色
-                // },
-                // {
-                //   offset: 0.2,
-                //   color: 'rgba(108, 229, 246, 0)', 
-                // },
-                // {
-                //   offset: 0.8,
-                //   color: 'rgba(108, 229, 246, 0)', 
-                // },
-                // {
-                //   offset: 1,
-                //   color: '#4796fd',
-                // }
-                {
-                    offset: 0, color: 'red' // 0% 处的颜色
-                }, {
-                    offset: 1, color: 'blue' // 100% 处的颜色
-                }
-              ],
-              global: false // 缺省为 false
-            }
-          }
-        },
-        pointer: {
-          show: false
-        },
-        detail: {
-          show: false
-        },
-        axisLabel: {
-          show: false
-        },
-        splitLine: {
-          show: false,
-        },
-      },
-      // 最里面的饼图样式
-      {
-        type: 'pie',
-        radius: innerRadius*100+'%',
-        center: ['50%', '50%'],
-        z: 1,
-        itemStyle: {
-          normal: {
-            color: new echarts.graphic.RadialGradient(
-              0.5,
-              0.5,
-              0.85,
-              [
-                {
-                  offset: 0.5,
-                  color: '#02004d'
-                },
-                {
-                  offset: 1,
-                  color: '#ffffff'
-                },
-              ],
-              false
-            ),
-            label: {
-              show: false
-            },
-            labelLine: {
-              show: false
-            }
-          }
-        },
-        hoverAnimation: false,
-        data: [100],
-        animation: false
-      },
-      // 最里面的仪表盘样式
-      {
-        type: 'gauge',
-        radius: innerRadius*100+'%',
-        z:2,
-        startAngle: 270,
-        endAngle: -90,
-        splitNumber: 4,
-        detail: {
-          show: false
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: [[1, '#73faf6']],
-            width: 2,
-            shadowBlur: 10,
-            opacity: 0.5
-          }
-        },
-        pointer: {
-          show: false
-        },
-        axisTick: {
-          show: false
-        },
-        axisLabel: {
-          show: false,
-        },
-        splitLine: {
-          show: true,
-          distance: 0,
-          length: 17,
-          lineStyle:{
-            color: '#73faf6'
-          }
-        },
-      },
+      // // 刻度的线
+      // {
+      //   type: 'gauge',
+      //   radius: '66%',
+      //   z:2,
+      //   startAngle: 245,
+      //   endAngle: -65,
+      //   detail: {
+      //     show: false
+      //   },
+      //   axisLine: {
+      //     show: true,
+      //     lineStyle: {
+      //       color: [[1, '#4796fd']],
+      //       width: 2,
+      //       opacity: 0.3
+      //     }
+      //   },
+      //   splitLine: {
+      //     show: true,
+      //     length: '20%',
+      //     distance: -20,
+      //     lineStyle:{
+      //       color: '#4796fd',
+      //       width: 2,
+      //       opacity: 0.3
+      //     }
+      //   },
+      //   axisTick: {
+      //     show: true,
+      //     splitNumber: 10,
+      //     length:10,
+      //     distance: -10,
+      //     lineStyle:{
+      //       color: '#4796fd',
+      //       width: 2,
+      //       opacity: 0.3
+      //     }
+      //   },
+      //   pointer: {
+      //     show: false
+      //   },
+      //   axisLabel: {
+      //     show: false
+      //   },
+      // },
+      // // 最外面的刻度线
+      // {
+      //   type: 'gauge',
+      //   radius: '85%',
+      //   z:2,
+      //   startAngle: 245,
+      //   endAngle: -65,
+      //   axisLine: {
+      //     show: true,
+      //     lineStyle:{
+      //       width: 5,
+      //       color:[
+      //         [1, new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+      //           {
+      //             offset: 0,
+      //             color: '#4796fd'
+      //           },
+      //           {
+      //             offset: 0.1,
+      //             color: 'rgba(108, 229, 246, 0.2)'
+      //           },
+      //           {
+      //             offset: 0.2,
+      //             color: 'rgba(108, 229, 246, 0)', 
+      //           },
+      //           {
+      //             offset: 0.8,
+      //             color: 'rgba(108, 229, 246, 0)',
+      //           },
+      //           {
+      //             offset: 0.9,
+      //             color: 'rgba(108, 229, 246, 0.2)'
+      //           },
+      //           {
+      //             offset: 1,
+      //             color: '#4796fd', 
+      //           }
+      //         ])],
+      //       ],
+      //       opacity: 1
+      //     }
+      //   },
+      //   axisTick: {
+      //     show: false,
+      //     splitNumber: 40,
+      //     length: 10,
+      //     lineStyle:{
+      //       color: {
+      //         type: 'linear',
+      //         x: 0,
+      //         y: 0,
+      //         x2: 0.5,
+      //         y2: 0.9,
+      //         colorStops: [
+      //           // {
+      //           //   offset: 0,
+      //           //   color: '#4796fd' // 0% 处的颜色
+      //           // },
+      //           // {
+      //           //   offset: 0.2,
+      //           //   color: 'rgba(108, 229, 246, 0)', 
+      //           // },
+      //           // {
+      //           //   offset: 0.8,
+      //           //   color: 'rgba(108, 229, 246, 0)', 
+      //           // },
+      //           // {
+      //           //   offset: 1,
+      //           //   color: '#4796fd',
+      //           // }
+      //           {
+      //               offset: 0, color: 'red' // 0% 处的颜色
+      //           }, {
+      //               offset: 1, color: 'blue' // 100% 处的颜色
+      //           }
+      //         ],
+      //         global: false // 缺省为 false
+      //       }
+      //     }
+      //   },
+      //   pointer: {
+      //     show: false
+      //   },
+      //   detail: {
+      //     show: false
+      //   },
+      //   axisLabel: {
+      //     show: false
+      //   },
+      //   splitLine: {
+      //     show: false,
+      //   },
+      // },
+      // // 最里面的饼图样式
+      // {
+      //   type: 'pie',
+      //   radius: innerRadius*100+'%',
+      //   center: ['50%', '50%'],
+      //   z: 1,
+      //   itemStyle: {
+      //     normal: {
+      //       color: new echarts.graphic.RadialGradient(
+      //         0.5,
+      //         0.5,
+      //         0.85,
+      //         [
+      //           {
+      //             offset: 0.5,
+      //             color: '#02004d'
+      //           },
+      //           {
+      //             offset: 1,
+      //             color: '#ffffff'
+      //           },
+      //         ],
+      //         false
+      //       ),
+      //       label: {
+      //         show: false
+      //       },
+      //       labelLine: {
+      //         show: false
+      //       }
+      //     }
+      //   },
+      //   hoverAnimation: false,
+      //   data: [100],
+      //   animation: false
+      // },
+      // // 最里面的仪表盘样式
+      // {
+      //   type: 'gauge',
+      //   radius: innerRadius*100+'%',
+      //   z:2,
+      //   startAngle: 270,
+      //   endAngle: -90,
+      //   splitNumber: 4,
+      //   detail: {
+      //     show: false
+      //   },
+      //   axisLine: {
+      //     show: true,
+      //     lineStyle: {
+      //       color: [[1, '#73faf6']],
+      //       width: 2,
+      //       shadowBlur: 10,
+      //       opacity: 0.5
+      //     }
+      //   },
+      //   pointer: {
+      //     show: false
+      //   },
+      //   axisTick: {
+      //     show: false
+      //   },
+      //   axisLabel: {
+      //     show: false,
+      //   },
+      //   splitLine: {
+      //     show: true,
+      //     distance: 0,
+      //     length: 17,
+      //     lineStyle:{
+      //       color: '#73faf6'
+      //     }
+      //   },
+      // },
     ]
   })
 

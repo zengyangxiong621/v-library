@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_1", //组件标识
-  "moduleVersion": "1.1.2", //组件版本号
+  "moduleVersion": "1.2.1", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -61,12 +61,12 @@ const componentDefaultConfig = {
         {
           displayName: '宽度',
           name: 'width',
-          value: 450,
+          value: 500,
         },
         {
           displayName: '高度',
           name: 'height',
-          value: 450,
+          value: 500,
         },
       ],
     },
@@ -116,32 +116,32 @@ const componentDefaultConfig = {
           key:'zhibiao',
           name:'指标',
           value:[
-            {
-              name:"numberRange",
-              displayName:'数值范围',
-              type:'inputNumber2',
-              showDetail:true, // 是否展示下面的文字说明
-              value:[
-                {
-                  name:'min',
-                  displayName:'最小值',
-                  type:'number',
-                  value:0,
-                  config:{
-                    suffix:'',  // 输入框后缀
-                  }
-              },
-              {
-                  name:'max',
-                  displayName:'最大值',
-                  type:'number',
-                  value:50000,
-                  config:{
-                    suffix:'',  // 输入框后缀
-                  }
-                },
-              ]
-            },
+            // {
+            //   name:"numberRange",
+            //   displayName:'数值范围',
+            //   type:'inputNumber2',
+            //   showDetail:true, // 是否展示下面的文字说明
+            //   value:[
+            //     {
+            //       name:'min',
+            //       displayName:'最小值',
+            //       type:'number',
+            //       value:0,
+            //       config:{
+            //         suffix:'',  // 输入框后缀
+            //       }
+            //   },
+            //   {
+            //       name:'max',
+            //       displayName:'最大值',
+            //       type:'number',
+            //       value:50000,
+            //       config:{
+            //         suffix:'',  // 输入框后缀
+            //       }
+            //     },
+            //   ]
+            // },
             {
               'name': 'numberStyles',
               'displayName': '数值',
@@ -163,12 +163,12 @@ const componentDefaultConfig = {
                     {
                       "name": "fontFamily",
                       "displayName": "",
-                      "value": "Microsoft Yahei"
+                      "value": "Microsoft Yahei"
                     },
                     {
                       "name": "fontSize",
                       "displayName": "",
-                      "value": 45
+                      "value": 64
                     },
                     {
                       "name": "color",
@@ -253,12 +253,12 @@ const componentDefaultConfig = {
                     {
                       "name": "fontFamily",
                       "displayName": "",
-                      "value": "Microsoft Yahei"
+                      "value": "Microsoft Yahei"
                     },
                     {
                       "name": "fontSize",
                       "displayName": "",
-                      "value": 30
+                      "value": 36
                     },
                     {
                       "name": "color",
@@ -343,33 +343,33 @@ const componentDefaultConfig = {
                 }
               ]
             },
-            {
-              'name': 'progress',
-              'displayName': '进度条',
-              'type': 'collapse',
-              hasSwitch:false, // 是否有切换按钮
-              defaultExpand:false,  // 是否默认展开
-              value:[
-                {	// 如果有后面的按钮，则该项必须放在第一个
-                  'name': 'showTitleStyles',
-                  'displayName': '',
-                  'value': true,
-                  'type': 'switch',
-                },
-                {
-                  displayName: "渐变颜色1",
-                  name: "progressColor1",
-                  type: "color",
-                  value: "#73f3f5",
-                },
-                {
-                  displayName: "渐变颜色2",
-                  name: "progressColor2",
-                  type: "color",
-                  value: "#6332ec",
-                }
-              ]
-            },
+            // {
+            //   'name': 'progress',
+            //   'displayName': '进度条',
+            //   'type': 'collapse',
+            //   hasSwitch:false, // 是否有切换按钮
+            //   defaultExpand:false,  // 是否默认展开
+            //   value:[
+            //     {	// 如果有后面的按钮，则该项必须放在第一个
+            //       'name': 'showTitleStyles',
+            //       'displayName': '',
+            //       'value': true,
+            //       'type': 'switch',
+            //     },
+            //     {
+            //       displayName: "渐变颜色1",
+            //       name: "progressColor1",
+            //       type: "color",
+            //       value: "#73f3f5",
+            //     },
+            //     {
+            //       displayName: "渐变颜色2",
+            //       name: "progressColor2",
+            //       type: "color",
+            //       value: "#6332ec",
+            //     }
+            //   ]
+            // },
           ]
         },
       ]

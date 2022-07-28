@@ -47,9 +47,9 @@ const InstrumentPanel = (props) => {
   const { allSettings } = getTargetConfig(hadFilterArr)
   console.log('allSettings',allSettings)
   const { innerRadius,outerRadius } = allSettings ? allSettings['表盘'] : {}
-  const { numberRange:{min,max},numberStyles:{textStylerNumbe,offset:numberOffset}} = allSettings ? allSettings['指标'] : {}
+  const { numberRange,numberStyles:{textStylerNumbe,offset:numberOffset}} = allSettings ? allSettings['指标'] : {}
   const { titleStyles:{showTitleStyles,offset,textStyleTitle} } = allSettings ? allSettings['标题'] : {}
-  const { axisLine:{axisLineColor},progress:{progressColor1,progressColor2} } = allSettings ? allSettings['圆环'] : {}
+  const { axisLine:{axisLineColor},progress } = allSettings ? allSettings['圆环'] : {}
 
 
 
@@ -75,7 +75,7 @@ const InstrumentPanel = (props) => {
         type: 'pie',
         radius: '85%',
         center: ['50%', '50%'],
-        z: 2,
+        z: -10,
         itemStyle: {
           normal: {
             color: '#02004d',
@@ -288,9 +288,10 @@ const InstrumentPanel = (props) => {
         startAngle: '225',
         endAngle: '-45',
         z: 3,
-        min,
-        max,
+        min:0,
+        max:numberValue*1.5,
         detail: {
+          valueAnimation: true,
           formatter: function (value) {
             return '{num|'+value+'}';
           },
@@ -304,7 +305,6 @@ const InstrumentPanel = (props) => {
             },
           },
           offsetCenter: [numberOffset.horizontal, numberOffset.vertical],
-          
         },
         data: chartData,
         axisLine: {
@@ -330,16 +330,42 @@ const InstrumentPanel = (props) => {
           show:true,
           width: outerRadius*100,
           itemStyle:{
-            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-              {
-                offset: 0,
-                color: progressColor1 // 0% 处的颜色
-              },
-              {
-                offset: 1,
-                color: progressColor2 // 100% 处的颜色
-              }
-            ])
+            // color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            //   {
+            //     offset: 0,
+            //     color: progressColor1 // 0% 处的颜色
+            //   },
+            //   {
+            //     offset: 1,
+            //     color: progressColor2 // 100% 处的颜色
+            //   }
+            // ])
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                    offset: 0,
+                    color: '#6648FF' // 0% 处的颜色
+                },
+                {
+                    offset: 0.17,
+                    color: '#6648FF' // 100% 处的颜色
+                },
+                {
+                    offset: 0.9,
+                    color: '#18FFE5' // 100% 处的颜色
+                },
+                {
+                    offset: 1,
+                    color: '#18FFE5' // 100% 处的颜色
+                }
+                ],
+              global: false // 缺省为 false
+            }
           }
         },
         splitLine: {

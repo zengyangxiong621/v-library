@@ -1,12 +1,12 @@
 const componentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
-  "name": "翻牌器_2", //图层名称
+  "name": "定制翻牌器2", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
   "moduleName": "CardFlipper_2", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleVersion": "1.0.5", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -92,7 +92,7 @@ const componentDefaultConfig = {
             {
               "name": "fontFamily",
               "displayName": "",
-              "value": "Microsoft Yahei"
+              "value": "Microsoft Yahei"
             },
             {
               "name": "fontSize",

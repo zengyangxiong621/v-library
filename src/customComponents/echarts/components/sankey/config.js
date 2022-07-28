@@ -5,7 +5,7 @@ const componentDefaultConfig = {
   parentId: "0",
   dashboardId: "",
   moduleName: "sankey",
-  moduleVersion: "1.1.0",
+  moduleVersion: "1.1.2",
   autoUpdate: {
     isAuto: false,
     interval: 10,
@@ -245,23 +245,23 @@ const componentDefaultConfig = {
           value:'right',
           options:[
             {
-              name:'top',
+              name:'上侧',
               value:'top'
             },
             {
-              name:'left',
+              name:'左侧',
               value:'left'
             },
             {
-              name:'bottom',
+              name:'下侧',
               value:'bottom'
             },
             {
-              name:'right',
+              name:'右侧',
               value:'right'
             },
             {
-              name:'inside',
+              name:'内侧',
               value:'inside'
             },
           ]
@@ -297,7 +297,7 @@ const componentDefaultConfig = {
           displayName:'文字样式',
           type:'chartText',
           value:{
-            fontFamily: 'Microsoft YaHei',
+            fontFamily: 'Microsoft Yahei',
             fontSize: 16,
             color: '#ffffff',
             fontWeight: 'normal' // bold bolder lighter
@@ -405,7 +405,7 @@ const componentDefaultConfig = {
           displayName:'文本样式',
           type:'chartText',
           value:{
-            fontFamily: 'Microsoft YaHei',
+            fontFamily: 'Microsoft Yahei',
             fontSize: 12,
             color:'#ffffff',
             fontWeight: 'normal' // bold bolder lighter

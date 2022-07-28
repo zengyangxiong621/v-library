@@ -34,7 +34,7 @@ import timelineConfig from '@/customComponents/assist/timeline/config'
 import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 
-import InstrumentPanel from '@/customComponents/echarts/components/instrumentPanel_1'
+import InstrumentPanel from '@/customComponents/echarts/components/instrumentPanel_2'
 
 import {
   STYLE,
@@ -815,18 +815,12 @@ const CustomDraggable
                                         console.log('组件报错信息：', errors, '组件id', layer.id);
                                       }}
                                     >
-                                      {/* <Timeline
-                                        componentConfig={ component }
-                                        fields={ getFields(component) }
-                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                      ></Timeline> */}
-                                      <InstrumentPanel></InstrumentPanel>
-                                      {/* <RemoteBaseComponent
+                                      <RemoteBaseComponent
                                         key={layer.id}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                      ></RemoteBaseComponent> */}
+                                      ></RemoteBaseComponent>
                                     </ErrorCatch>
                           }
                         </div>
