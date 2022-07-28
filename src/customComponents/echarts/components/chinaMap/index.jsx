@@ -72,7 +72,6 @@ class ChinaMap extends Component {
   lineData = (dataCenter, ipCoordData) => {
     if (!dataCenter) { return }
     return dataCenter.map((item) => {
-      console.log(item.name,'#123');
       return {
         coords: [
           ipCoordData[item.name] || [114.249193, 40.168238], // 校验：dataCenter.name被修改，则默认赋值 昌平
