@@ -8,11 +8,7 @@ const isPlainObject = (config: any) => {
 export const BASEURL = (window as any).CONFIG.BASE_URL;
 
 /* 核心方法 */
-export const http = (
-  config: any,
-  isDownload: boolean = false,
-  isAllurl: boolean = false
-): any => {
+export const http = (config: any, isDownload: boolean = false, isAllurl: boolean = false): any => {
   // init config & validate
   if (!isPlainObject(config)) config = {};
   config = Object.assign(
@@ -23,7 +19,7 @@ export const http = (
       headers: null,
       body: null,
       params: null,
-      responseType: isDownload ? "blob" : "json",
+      responseType: "json",
       signal: null,
     },
     config
@@ -111,13 +107,17 @@ export const http = (
       const { code, message: errMessage } = err;
       message.error(errMessage);
       if (code === 401) {
-        if (token && token.endsWith("x-gridsumdissector")) {
-          forwardLogin();
+        if (token && token.endsWith('x-gridsumdissector')) {
+          forwardLogin()
         } else {
-          window.history.replaceState(null, "", "/login");
+          window.history.replaceState(null, '', '/login')
           window.location.reload();
           localStorage.removeItem("token");
         }
+      }
+      if(code === 500){
+        window.history.replaceState(null,'','/404')
+        window.location.reload();
       }
       return Promise.reject(err);
     });
@@ -146,22 +146,17 @@ export const http = (
   };
 });
 
-export const downLoad = async (
-  url: string,
-  isAllurl: boolean = false,
-  customFileName?: string,
-) => {
-  const config = {
-    url: url,
-    method: "GET",
-  };
-  const res = await http(config, true, isAllurl);
-  let a = document.createElement("a");
+export const downLoad=async (url:string , isAllurl:boolean=false, fileName?:string) => {
+  const config={
+    url:url,
+    method:'GET',
+    responseType:'blob'
+  }
+  const res = await http(config, true, isAllurl)
+  let a = document.createElement('a');
   let downloadUrl = window.URL.createObjectURL(res);
   a.href = downloadUrl;
-  if(customFileName) {
-    a.download = customFileName as string;
-  }
+  a.download=(fileName || '') + '.zip';
   a.click();
   window.URL.revokeObjectURL(downloadUrl);
 };

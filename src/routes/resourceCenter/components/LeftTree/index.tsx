@@ -19,7 +19,6 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
   // 添加分组
   // 创建一个占位数据
   const addGroup = (groupId: string, parentId: string = '') => {
-    console.log(groupId,parentId,'ooooo' )
     setCurrentAdd(groupId)
     const mockItem: any = {
       groupId: "aInput",
@@ -28,7 +27,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
     // 以素材库为例， ↓ === '素材库'
     const parentObj = resourceCenter.groupList.find((item: any) => item.groupId === parentId)
     // ↓ === '我的素材'
-    const originArr = parentObj?.children.find((item: any) => item.groupId === groupId)
+    const originArr = parentObj?.children.find((item: any) => item.groupId === groupId);
     // ↓ === 我的素材下的所有组
     const targetGroups = originArr.children
     // 插入的输入框是在数组的倒数第二个位置(未分组上一个)
@@ -87,7 +86,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
         <Tree
           className="my-dashboard-tree"
           blockNode
-          defaultExpandedKeys={['templateLib', 'myTemplate']}
+          defaultExpandAll
           selectedKeys={[resourceCenter.curSelectedGroup.groupId]}
           treeData={resourceCenter.groupList}
           switcherIcon={<DownOutlined />}

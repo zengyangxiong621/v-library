@@ -102,13 +102,21 @@ export const defaultData = {
         "type": "collapse",
         "hasSwitch": true,
         "defaultExpand": false,
-        "value": [ { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
-          "name": "lineHeight",
-          "displayName": "行高",
-          "value": 35,
-          "type": "range",
-          "config": { "min": 0, "max": 100, "step": 1, "suffix": "px" },
-        }, { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" }, {
+        "value": [
+          { "name": "show", "displayName": "", "value": true, "type": "switch" },
+          { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" },
+          {
+            "name": "gradientOrigin",
+            "displayName": "渐变色方向",
+            "type": "origin",
+            "config": {
+              "type": "direction"
+            },
+            "value": "unset"
+          },
+          { "name": "gradientStartColor", "displayName": "渐变色-开始", "value": "#222430", "type": "color" },
+          { "name": "gradientEndColor", "displayName": "渐变色-结束", "value": "#222430", "type": "color" },
+          {
           "name": "textAlign",
           "displayName": "文本对齐",
           "type": "select",
@@ -158,7 +166,7 @@ export const defaultData = {
           "displayName": "标题",
           "value": "#",
           "type": "input",
-        }, { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" }, {
+        }, {
           "name": "textAlign",
           "displayName": "文本对齐",
           "type": "select",

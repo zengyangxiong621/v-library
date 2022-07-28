@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "timeline", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleVersion": "1.1.2", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -27,17 +27,27 @@ const componentDefaultConfig = {
       {
         'time':'12:03:04',
         'title':'123.456.789',
-        'content':'Solve initial network problems 2015-09-01'
+        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_'
       },
       {
         'time':'12:03:04',
         'title':'123.456.789',
-        'content':'Solve initial network problems 2015-09-01'
+        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为'
       },
       {
         'time':'12:03:04',
         'title':'123.456.789',
-        'content':'1231312313131231434356565577777777777777777777777777777777777777777777777777777777777777777777777'
+        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为'
+      },
+      {
+        'time':'12:03:04',
+        'title':'123.456.789',
+        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为'
+      },
+      {
+        'time':'12:03:04',
+        'title':'123.456.789',
+        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为'
       }
     ],
     "fields": [
@@ -165,6 +175,34 @@ const componentDefaultConfig = {
                     "displayName": "行距",
                     "value": '24px'
                   }
+                ]
+              },
+              {
+                name:"offsetConfig",
+                displayName:'偏移',
+                type:'inputNumber2',
+                showDetail:true, // 是否展示下面的文字说明
+                value:[
+                    {
+                        name:'x',
+                        displayName:'X',
+                        type:'number',
+                        value:-20,
+                        config:{
+                            min:-50,
+                            suffix:'px',  // 输入框后缀
+                        }
+                    },
+                    {
+                        name:'y',
+                        displayName:'Y',
+                        type:'number',
+                        value:0,
+                        config:{
+                            min:-50,
+                            suffix:'px',  // 输入框后缀
+                        }
+                    },
                 ]
               },
               {
@@ -366,13 +404,10 @@ const componentDefaultConfig = {
       "value": 'rgba(255,255,255,0.1)'
     },
     {
-      "name":"spotStyle",
-      "displayName":'圆点样式',
-      "type":'textStroke',
-      "value":{
-        "width":20,
-        "color":'#fff'
-      }
+      "name": "spotType",
+      "displayName": "单双标签",
+      "type": "switch",
+      "value": true
     }
   ],
   themes: [{
