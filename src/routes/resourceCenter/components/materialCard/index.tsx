@@ -4,8 +4,7 @@ import "./index.less";
 
 import { withRouter } from "dva/router";
 import { useFetch } from "../../../../utils/useFetch";
-import { http } from '@/services/request'
-import { BASEURL } from "@/services/request";
+import { BASEURL,http,downLoad } from '@/services/request'
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -178,11 +177,8 @@ const AppCard = (props: any) => {
   };
 
   // 导出应用
-  const exportApp = async (appId: string) => {
-    // console.log(`${BASEURL}/visual/application/export/${appId}`);
-    const toolA = document.createElement("a");
-    toolA.href = `${BASEURL}/visual/application/export/${appId}`;
-    toolA.click();
+  const exportApp = async (appId: string,name:string) => {
+    downLoad(`${BASEURL}/visual/application/export/${appId}`,false,name)
   };
 
   // 移动分组
@@ -192,7 +188,9 @@ const AppCard = (props: any) => {
   };
   // 导出功能
   const exportDesign = async() => {
-    window.location.href = moduleType.includes('Temp') ? `${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
+    const downloadUrl=moduleType.includes('Temp') ? `${(window as any).CONFIG.BASE_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
+    downLoad(downloadUrl,true)
+    // window.location.href = moduleType.includes('Temp') ? downLoad`${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
   };
   // 鼠标移入更多按钮时，显示下拉菜单
   const moreIconMouseOver = () => {
@@ -212,7 +210,7 @@ const AppCard = (props: any) => {
         deleteApp();
         break;
       case "导出应用":
-        exportApp(id);
+        exportApp(id,name);
         break;
     }
     // 点击任意菜单子项后，需要隐藏ul

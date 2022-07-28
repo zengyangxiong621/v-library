@@ -83,6 +83,7 @@ const PreviewTable = props => {
 
   /** 上传excel */
   const uploadExcel = () => {
+    const token=localStorage.getItem('token')
     const fileName = fileUrl.split('/').pop()
     const new_wb = xtos(currentSheetData);
     const wbout = XLSX.write(new_wb, { type: 'binary' })
@@ -91,7 +92,11 @@ const PreviewTable = props => {
     forms.append('file', file,`${fileName}`)
     fetch(`${BASEURL}/visual/file/upload`, {
       method: 'POST',
-      body: forms
+      body: forms,
+      credentials: 'include',
+      headers:{
+        'token':token
+      }
     }).then(res => {
       return res.json()
     }).then(res => {

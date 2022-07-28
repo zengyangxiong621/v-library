@@ -14,7 +14,6 @@ const ComSelect = (props) => {
   const [defaultValue, setDefaultValue] = useState(null)
   let scaleValue = 1;
   const scaleDivEl = document.getElementById('scaleDiv')
-  console.log('scaleDivEl', scaleDivEl)
   if (scaleDivEl) {
     scaleValue = scaleDivEl.style.transform.replace(/[^0-9.]/ig, "")
   }
@@ -41,7 +40,8 @@ const ComSelect = (props) => {
 
   const style = getStyle(config)
   const { input, options } = style.selectStyle
-  console.log('style', style)
+
+  console.log('styleinput', input)
 
   useEffect(() => {
     // 处理默认选中
@@ -53,7 +53,7 @@ const ComSelect = (props) => {
       setDefaultValue(componentData[index][fieldKey])
       handleChange(componentData[index][fieldKey])
     }
-  }, [componentData])
+  }, [])
 
   const handleChange = value => {
     const data = componentData.filter(item => {
@@ -76,7 +76,7 @@ const ComSelect = (props) => {
       "--borderHoverColor": input.borderStyle.borderHover.color,
       "--borderHoverRadius": input.borderStyle.borderHover.radius + 'px',
       "--inputAlign": input.contentStyle.align.textAlign,
-      "--inputBgc": input.contentStyle.bgColor,
+      "--inputBg": input.contentStyle.backgroundImg ? `url(${input.contentStyle.backgroundImg})` :input.contentStyle.bgColor,
       "--inputColor": input.contentStyle.contentFont.color,
       "--inputFontFamily": input.contentStyle.contentFont.fontFamily,
       "--inputFontSize": input.contentStyle.contentFont.fontSize + 'px',

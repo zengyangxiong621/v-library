@@ -4,7 +4,7 @@ import dva from 'dva';
 import { Router } from 'dva/router';
 import { createBrowserHistory } from 'history'
 import reportWebVitals from './reportWebVitals';
-import { authorize, forwardLogin } from './services/loginApi'
+import { authorize, forwardLogin,GetQueryString } from './services/loginApi'
 import {localStore} from "./services/LocalStoreService"
 
 import './index.css';
@@ -41,10 +41,11 @@ const init = () => {
 }
 
 const checkToken = async() => {
+  const ticket = GetQueryString('ticket')
   // 入口文件中校验登录信息
   const token = localStore.getToken()
   const pn = location.origin + location.pathname;
-  if(!token){
+  if(!token && ticket){
     try{
       await authorize()
     }catch(err){

@@ -4,7 +4,7 @@ import './index.less'
 
 import { withRouter } from 'dva/router'
 import { useFetch } from '../../../../utils/useFetch'
-import { BASEURL } from '@/services/request'
+import { BASEURL, http,downLoad } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { ExclamationCircleFilled } from '@ant-design/icons'
@@ -149,11 +149,8 @@ const AppCard = (props: any) => {
   }
 
   // 导出应用
-  const exportApp = async (appId: string) => {
-    // console.log(`${BASEURL}/visual/application/export/${appId}`);
-    const toolA = document.createElement('a')
-    toolA.href = `${BASEURL}/visual/application/export/${appId}`
-    toolA.click()
+  const exportApp = async (appId: string,name:string) => {
+    downLoad(`/visual/application/export/${appId}`,false,name)
   }
 
   // 移动分组
@@ -178,7 +175,7 @@ const AppCard = (props: any) => {
         deleteApp([id])
         break;
       case '导出应用':
-        exportApp(id)
+        exportApp(id,name)
         break;
     }
     // 点击任意菜单子项后，需要隐藏ul

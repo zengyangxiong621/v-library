@@ -175,6 +175,12 @@ const ComponentDefaultConfig = {
                   type: 'color'
                 },
                 {
+                  name: 'backgroundImg',
+                  displayName: '背景图',
+                  type:'image',
+                  value: '', // 有背景图则返回背景图的url，没有背景图返回空或者null
+                },
+                {
                   name: "contentFont",
                   displayName: '文本样式',
                   type: 'chartText',

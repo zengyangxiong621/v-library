@@ -66,6 +66,7 @@ const PreViewJson = props => {
   }
 
   const upLoadJson = async () => {
+    const token=localStorage.getItem('token')
     const fileName = fileUrl.split('/').pop()
     let blob = new Blob([modalContent], {
       type: "application/json"
@@ -78,7 +79,11 @@ const PreViewJson = props => {
     forms.append('file', file)
     fetch(`${BASEURL}/visual/file/upload`, {
       method: 'POST',
-      body: forms
+      body: forms,
+      credentials: 'include',
+      headers:{
+        'token':token
+      }
     }).then(res => {
       return res.json()
     }).then(res => {

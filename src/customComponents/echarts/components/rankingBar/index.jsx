@@ -33,7 +33,7 @@ const RankingBar = (props) => {
   console.log('allSettings', allSettings)
   const { autoSort, sortOrder, maxBars, spacing, batteryStyle } = allSettings['图表']
   const { classify, numerical } = allSettings['文本']
-  const { bySystem,isRadius, barColor, bgColor, highLight } = allSettings['柱状']
+  const { bySystem, isRadius, barColor, bgColor, highLight } = allSettings['柱状']
 
   let resultTempData = Array.isArray(componentData) ? componentData.reduce((pre, cur) => {
     return pre.concat({
@@ -108,7 +108,7 @@ const RankingBar = (props) => {
         },
       ],
       series: [
-        {
+        !batteryStyle && {
           name: "值",
           type: "bar",
           zlevel: 1,
@@ -128,7 +128,7 @@ const RankingBar = (props) => {
           },
           itemStyle: {
             normal: {
-              barBorderRadius: isRadius?30:0,
+              barBorderRadius: isRadius ? 30 : 0,
               color: function (params) {
                 var colorList = ['rgba(72,255,156,1)', 'rgba(72,168,255, 1)', 'rgba(255,251,116, 1)', 'rgba(255,115,104, 1)', 'rgba(113,129,226, 1)'];
                 return bySystem ? colorList[params.dataIndex % 5] : barColor;
@@ -164,7 +164,7 @@ const RankingBar = (props) => {
                 var colorList = ['rgba(72,255,156, .4)', 'rgba(72,168,255, .4)', 'rgba(255,251,116, .4)', 'rgba(255,115,104, .4)', 'rgba(113,129,226, .4)'];
                 return bySystem ? colorList[params.dataIndex % 5] : bgColor;
               },
-              barBorderRadius: isRadius?30:0,
+              barBorderRadius: isRadius ? 30 : 0,
             },
           },
         },
@@ -174,21 +174,38 @@ const RankingBar = (props) => {
           hoverAnimation: false,
           data: getSymbolData(salvProValue),
           symbol:
-              "image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAMAAADWZboaAAAAZlBMVEUAAABe3uVe3+Vf3uVf3+Zf3uVg3+Zg3+Zf3+Vi4OZh4OZg3+Z86/Bh3+Zi4Odj4Odi4OZ86/B76/B86/Bj4ed56+9x5+xn4umB7/N87PB36e+A7/N+7fF/7vJ/7vJ+7fGA7/OB7/PReX+lAAAAIXRSTlMABQkVDREmIhk3MR10LEFFPHh7cUprXE35h2XnqMLAp+mHAG9cAAAB5ElEQVRIx83WjU7CMBQFYIoiKMqU/XUboHv/l/Tce7t2XamDNSacETEmX86tlK2rx4py150o+MstMBLwWRfHKo6JCVxLnvmFGBjFQ58oF1//sUZhGy/ClSTWObgnL4O+bkeN4nY2okfNMbkRt9/vtxz8InoTsWplJSCzFxPmO8+GpSIByX3YQAuGDWtRKhKjCnxDXhF6Z4yxnZ20Wgko7BMRDmxtSGVaI4kdTIgb+zTYoJQlIMlDlmUFgrcDWWC201qSayqlTkiCddWWeV62VU0YlnpRi9VOKaSUsiyq/N0krwq2Ugt7lVpZl5BfHNiytjagMi+XYp0kCR45hMlivVQrE/uU5pXSrCB5bM6d1t2lOZItMqmliT3q5uVxqxzyW/ccfYLNKx7ZTeykMvNyac2yt2Fbc61MHLSC0rwoxbiNdlQ3GBm1NLHQsHUrtEXppR/ljNpW6DbSCoqlFiVoN6YdaFlgsSFVPs1BdT8OaB5QyQzVcaqWDows/zepxR8ObLglTrdtCRVuRNj4Rrxh+//0ke2f8KVL+Kon3GCSbmsJN9OUW3j6g0Ns+LgCij2u0h+Sghc8mlMPBMgdx5DFh59VmOVHrvmDnoNxCz3J7MFWsMuaLyR089xz/xhlfijvwutR8gv3zk6BLUUeCgAAAABJRU5ErkJggg==",
-          symbolSize: [highLight.radius,highLight.radius],
+            "image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAMAAADWZboaAAAAZlBMVEUAAABe3uVe3+Vf3uVf3+Zf3uVg3+Zg3+Zf3+Vi4OZh4OZg3+Z86/Bh3+Zi4Odj4Odi4OZ86/B76/B86/Bj4ed56+9x5+xn4umB7/N87PB36e+A7/N+7fF/7vJ/7vJ+7fGA7/OB7/PReX+lAAAAIXRSTlMABQkVDREmIhk3MR10LEFFPHh7cUprXE35h2XnqMLAp+mHAG9cAAAB5ElEQVRIx83WjU7CMBQFYIoiKMqU/XUboHv/l/Tce7t2XamDNSacETEmX86tlK2rx4py150o+MstMBLwWRfHKo6JCVxLnvmFGBjFQ58oF1//sUZhGy/ClSTWObgnL4O+bkeN4nY2okfNMbkRt9/vtxz8InoTsWplJSCzFxPmO8+GpSIByX3YQAuGDWtRKhKjCnxDXhF6Z4yxnZ20Wgko7BMRDmxtSGVaI4kdTIgb+zTYoJQlIMlDlmUFgrcDWWC201qSayqlTkiCddWWeV62VU0YlnpRi9VOKaSUsiyq/N0krwq2Ugt7lVpZl5BfHNiytjagMi+XYp0kCR45hMlivVQrE/uU5pXSrCB5bM6d1t2lOZItMqmliT3q5uVxqxzyW/ccfYLNKx7ZTeykMvNyac2yt2Fbc61MHLSC0rwoxbiNdlQ3GBm1NLHQsHUrtEXppR/ljNpW6DbSCoqlFiVoN6YdaFlgsSFVPs1BdT8OaB5QyQzVcaqWDows/zepxR8ObLglTrdtCRVuRNj4Rrxh+//0ke2f8KVL+Kon3GCSbmsJN9OUW3j6g0Ns+LgCij2u0h+Sghc8mlMPBMgdx5DFh59VmOVHrvmDnoNxCz3J7MFWsMuaLyR089xz/xhlfijvwutR8gv3zk6BLUUeCgAAAABJRU5ErkJggg==",
+          symbolSize: [highLight.radius, highLight.radius],
           symbolOffset: [highLight.offset, 0],
           zlevel: 2,
         },
         batteryStyle && {
           type: "pictorialBar",
           itemStyle: {
-            color: bySystem? '#':bgColor,
+            color: function (params) {
+              var colorList = ['rgba(72,255,156, 1)', 'rgba(72,168,255, 1)', 'rgba(255,251,116, 1)', 'rgba(255,115,104, 1)', 'rgba(113,129,226, 1)'];
+              return bySystem ? colorList[params.dataIndex % 5] : barColor;
+            },
+          },
+          label: {
+            normal: {
+              show: true,
+              position: [`${classify.offset.offsetX}px`, `${classify.offset.offsetY}px`],
+              formatter: "{b}",
+              textStyle: {
+                color: classify.font.color,
+                fontSize: classify.font.fontSize,
+                fontFamily: classify.font.fontFamily,
+                fontWeight: classify.font.bold ? 'bold' : 'normal',
+                fontStyle: classify.font.italic ? 'italic' : 'normal',
+              },
+            }
           },
           symbolRepeat: "fixed",
           symbolMargin: 4,
           symbol: "roundRect",
           symbolClip: true,
-          symbolSize: [3, '30%'],
+          symbolSize: [6, '20%'],
           symbolPosition: "start",
           symbolOffset: [6, 0],
           data: salvProValue,
