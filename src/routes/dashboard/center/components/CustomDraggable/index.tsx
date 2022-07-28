@@ -68,6 +68,7 @@ import RankingBar from '@/customComponents/echarts/components/rankingBar'
 
 import Tab from "@/customComponents/tab/index";
 import ScrollSelect from "@/customComponents/scrollSelect/index";
+import { cloneDeep } from "lodash"
 
 // import Tab from "@/components/tab";
 
@@ -84,6 +85,8 @@ const CustomDraggable
     mouse,
   }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0 }) => {
     const components: Array<IComponent> = bar.components
+    const callbackParamsList = bar.callbackParamsList
+    const callbackArgs = bar.callbackArgs
     const scaleDragData = bar.scaleDragData
     const isSupportMultiple: boolean = bar.isSupportMultiple
     const allComponentRefs = bar.allComponentRefs
@@ -532,19 +535,93 @@ const CustomDraggable
         })
       }
     }
-
-    const handleValueChange = (value:any,componentId:any) => {
+    // 数组去重，取最后一个
+    const duplicateFn = (arr: any) => {
+      let map: any = new Map();
+      for (let item of arr.reverse()) {
+        if (!map.has(item.target)) {
+          map.set(item.target, item);
+        }
+      }
+      return [...map.values()];
+    }
+    // 组件初始化时发生 handleValue 传递的值
+    const handleValueChange = (data: {[key: string]: any}, component: IComponent, componentId: string) => {
+      console.log('handleValueChange')
+      console.log('value', data)
       // 编辑时回调参数生效逻辑
       const currentActiveCompoentData = bar.currentActiveCompoentData
-      currentActiveCompoentData[componentId] = value
+      currentActiveCompoentData[componentId] = data
       dispatch({
         type: 'bar/save',
         payload: {
           currentActiveCompoentData
         },
       })
-
       // 页面刷新或者进入画布时回调参数生效逻辑
+      const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
+      // 回调参数列表
+      // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
+      const sourceCallbackList = callbackParamsList.filter((item: any) => item.sourceModules.find((jtem: any) => jtem.id === componentId))
+      // 需要作用到哪些组件上
+      let activeIds: Array<string> = []
+      let temp = false
+      sourceCallbackList.forEach((item: any) => {
+        item.sourceModules.forEach((sourceItem: any) => {
+          if (sourceItem.id === componentId) {
+            // 回调列表中的当前数据如果有目标组件再进行下一步
+            // 循环组件设置的回调参数，获取变量名和字段的对应关系
+            if (item.destinationModules.length > 0) {
+              compCallbackArgs.forEach(callback => {
+                // 判断是否为同一个源
+                if (item.callbackParam === callback.target) {
+                  // 值是否改变
+                  // data的值存在并且
+                  if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                    temp = true
+                    callbackArgs[callback.target] = data[callback.origin]
+                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
+                  }
+                  dispatch({
+                    type: 'bar/save',
+                    payload: {
+                      callbackArgs
+                    }
+                  })
+                }
+              })
+            }
+          }
+        })
+      })
+      console.log('回调参数作用到的组件ID有：', activeIds)
+      if (temp) {
+        activeIds = [...(new Set(activeIds) as any)]
+        const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find((item: IComponent) => item.id === id)), [])
+        // 绑定数据容器的组件列表
+        const componentsByDataContainer = activeComponents.filter((component: IComponent) => component.dataFrom === 1)
+        // 绑定数据源的组件列表
+        const componentsByDataSource = activeComponents.filter((component: IComponent) => component.dataFrom === 0)
+        // 重新获取部分组件（绑定数据源的组件列表）的数据
+        dispatch({
+          type: 'bar/getComponentsData',
+          payload: activeComponents
+        })
+        // 重新获取部分数据容器的数据
+        const filterComponentsByDataContainer: any = []
+        // 去重
+        activeComponents.forEach((component: IComponent) => {
+          component.dataContainers.forEach((container: any) => {
+            if (!filterComponentsByDataContainer.find((item: any) => item.id === container.id)) {
+              filterComponentsByDataContainer.push(container)
+            }
+          })
+        })
+        dispatch({
+          type: 'bar/getContainersData',
+          payload: filterComponentsByDataContainer
+        })
+      }
 
     }
     return (
@@ -694,7 +771,7 @@ const CustomDraggable
                             // <SwiperText  componentConfig={component}></SwiperText>
                             layer.moduleName === 'rankingBar' ?
                               <RankingBar
-                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -703,7 +780,7 @@ const CustomDraggable
                               </RankingBar> :
                             layer.moduleName === 'zebraColumn' ?
                               <ZebraColumn
-                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -712,7 +789,7 @@ const CustomDraggable
                               </ZebraColumn> :
                             layer.moduleName === 'basicBar' ?
                               <BasicBar
-                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -721,7 +798,7 @@ const CustomDraggable
                               </BasicBar> :
                             layer.moduleName === 'image2' ?
                               <CusImage
-                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -730,7 +807,7 @@ const CustomDraggable
                               </CusImage> :
                             layer.moduleName === 'select2' ?
                               <SelectV2
-                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -739,7 +816,7 @@ const CustomDraggable
                               </SelectV2> :
                             layer.moduleName === 'bar' ?
                               <Bar
-                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -748,7 +825,7 @@ const CustomDraggable
                               </Bar> :
                             layer.moduleName === 'scrollTable' ?
                               <ScrollTable
-                                onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                 scale={bar.canvasScaleValue}
                                 componentConfig={ component }
                                 fields={ getFields(component) }
@@ -757,7 +834,7 @@ const CustomDraggable
                               </ScrollTable> :
                               layer.moduleName === 'tab' ?
                                 <Tab
-                                  onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                  onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                   componentConfig={ component }
                                   fields={ getFields(component) }
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -765,7 +842,7 @@ const CustomDraggable
                                 </Tab> :
                                 layer.moduleName === 'scrollSelect' ?
                                   <ScrollSelect
-                                    onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                    onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -773,7 +850,7 @@ const CustomDraggable
                                   </ScrollSelect> :
                                 layer.moduleName === 'timeSelect' ?
                                 <TimeSelect
-                                  onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                  onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                   componentConfig={ component }
                                   fields={ getFields(component) }
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -781,28 +858,28 @@ const CustomDraggable
                                 </TimeSelect> :
                                 layer.moduleName === 'worldMap' ?
                                   <WorldMap
-                                    onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                    onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                     componentConfig={ component }
                                     fields={ getFields(component) }
                                     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                   ></WorldMap>:
                                   layer.moduleName === 'timeline'?
                                     <Timeline
-                                      onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                      onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                       componentConfig={ component }
                                       fields={ getFields(component) }
                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                     ></Timeline>:
                                     layer.moduleName === 'CardFlipper_1'?
                                       <CardFlipper1
-                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                       ></CardFlipper1>:
                                       layer.moduleName === 'CardFlipper_2'?
                                       <CardFlipper2
-                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -827,7 +904,7 @@ const CustomDraggable
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                       ></RemoteBaseComponent>
                                     </ErrorCatch>
                           }

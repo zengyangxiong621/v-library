@@ -172,7 +172,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
-    console.log('sourceCallbackList', sourceCallbackList)
     sourceCallbackList.forEach(item => {
       item.sourceModules.forEach(sourceItem => {
         if (sourceItem.id === componentId) {
@@ -205,7 +204,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      console.log('activeIds2', activeIds)
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
@@ -237,7 +235,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     if (dataChangeActions.length === 0) {
       return
     }
-    console.log('自定义事件触发了吗')
     customEventsFunction(dataChangeEvents, data)
 
   }, 300)
@@ -506,7 +503,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </CardFlipper2>
-          : 
+          :
           <ErrorCatch
             app={componentConfig.name}
             user=""
