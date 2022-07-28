@@ -293,7 +293,10 @@ const InstrumentPanel = (props) => {
         detail: {
           valueAnimation: true,
           formatter: function (value) {
-            return '{num|'+value+'}';
+            console.log('value',value)
+            const string = value +""
+            const number = string.replace(/(?=\B(\d{3})+$)/g,',')
+            return '{num|'+number+'}';
           },
           rich: {
             num: {
