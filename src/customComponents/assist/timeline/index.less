@@ -1,10 +1,12 @@
-.timeLineContainer{
+.myTimeLine{
   display: flex;
   flex-direction: column;
   padding: 15px !important;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   .ant-timeline-item{
-    flex: 1;
-    position: relative;
     .ant-timeline-item-head{
       background-color: transparent;
     }
@@ -17,8 +19,6 @@
     .ant-timeline-item-content{
       left: calc(20% - 4px) !important;
       width: calc(80% - 14px) !important;
-      position: absolute;
-      height: 100%;
       .timeLineBox{
         margin-top: 10px;
         display: inline-block;

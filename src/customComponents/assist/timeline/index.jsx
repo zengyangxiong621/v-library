@@ -90,6 +90,7 @@ export default function TimelineRender(props) {
       }
     })
   }
+  formatPxStyle(contentStyle)
 
   const getShadowVal=(dom)=>{
     const {color,vShadow,hShadow,blur}=dom['shadow']
@@ -152,13 +153,14 @@ export default function TimelineRender(props) {
       item.style.cssText=cssText
     }
   }
-  setLabelStyle()
 
-  formatPxStyle(contentStyle)
+  useEffect(()=>{
+    setLabelStyle()
+  },[])
   return (
     <Timeline
       mode='left'
-      className='timeLineContainer'
+      className='myTimeLine'
       style={positionStyle}>
       {componentData?.map((item,index)=>{
         const timeLineTitleStyle=getTimeLineTitleStyle(outShadow.show)
