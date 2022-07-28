@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 import './index.css'
 import ComponentDefaultConfig from './config'
+import CountUp from 'react-countup'
 
 class ProtectionRange extends Component {
   constructor() {
@@ -105,14 +106,15 @@ class ProtectionRange extends Component {
               }}>
                 {/* {item} */}
                 {/* <DigitalFlop config={this.state.Tdata[index].config} style={{width: '100%', height: '100%',marginTop: '20%' }} /> */}
-                <DigitalFlop config={
+                {/* <DigitalFlop config={
                   {number: [Number(item)],content: '{nt}',style: {
                     fontSize: textNumberStyle.fontSize,
                     fontWeight: textNumberStyle.bold ? 'bold' : 'normal',
                     fontStyle: textNumberStyle.italic ? 'italic' : 'normal',
                     fill: textNumberStyle.color,
                   }}
-                } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                } style={{width: '100%', height: '100%',marginTop: '20%' }} /> */}
+                <CountUp start={0} end={Number(item)} duration={1}></CountUp>
               </div> :
               <div className='image' key={index} style={{
                 background: 'none',
