@@ -156,7 +156,7 @@ export default function TimelineRender(props) {
 
   useEffect(()=>{
     setLabelStyle()
-  },[])
+  },[labelStyle])
   return (
     <Timeline
       mode='left'
