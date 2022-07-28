@@ -161,7 +161,7 @@ class Counter extends Component {
           }}>{originData[fields[0]]}</div>
         }
         {/* 数值 */}
-        <div className="number">
+        <div className="counter-number">
           {
             prefixConfig.support &&
             <span style={{
@@ -172,7 +172,7 @@ class Counter extends Component {
               lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{prefixConfig.content}</span> 
           }
-          <div style={{
+          <div className='number-list' style={{
             ...dataRangConfig,
             fontWeight: dataRangConfig.bold ? 'bold' : '',
             fontStyle: dataRangConfig.italic ? 'italic' : '',
