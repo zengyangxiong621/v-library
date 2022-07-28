@@ -11,7 +11,7 @@ const debounce = (fn, delay = 200) => {
     }, delay)
   }
 }
-class RadarChart extends React.PureComponent {
+class RadarChart extends React {
   constructor(props) {
     super(props);
     this.resizeDebounce = debounce(this.chartsResize, 250); 
@@ -106,6 +106,7 @@ class RadarChart extends React.PureComponent {
   }
   // 设置option
   getOption(config,list) {
+    const layoutColor = this.formatConfig([this.getStyleData(config, 'layoutColor')],[])
     // 坐标轴
     const circleAxis = this.formatConfig([this.getStyleData(config, 'circleAxis')],[])
     // 极轴
@@ -114,7 +115,7 @@ class RadarChart extends React.PureComponent {
     const outsideValue = this.formatConfig([this.getStyleData(config, 'outsideValue')],[])
     let seriesData = []
     return {
-      backgroundColor: '#0D2753',
+      backgroundColor: layoutColor.show ? layoutColor.color  : '',
       tooltip: {
           //雷达图的tooltip不会超出div，也可以设置position属性，position定位的tooltip 不会随着鼠标移动而位置变化，不友好
           confine: true,
@@ -131,7 +132,7 @@ class RadarChart extends React.PureComponent {
           },
           shape: circleAxis.shape,
           center: ['50%', '50%'],
-          radius: '80%',
+          radius: `${layoutColor.radius}%`,
           startAngle: 90,
           scale: true,
           axisLine: {
