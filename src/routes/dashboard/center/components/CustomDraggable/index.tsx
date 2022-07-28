@@ -188,8 +188,8 @@ const CustomDraggable
             xPositionList.push(left, left + width)
             yPositionList.push(top, top + height)
           } else {
-            const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-            if (style_dimension_config) {
+            const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION)
+            if (styleDimensionConfig) {
               const config: IConfig = {
                 position: {
                   x: 0,
@@ -200,7 +200,7 @@ const CustomDraggable
                   height: 0,
                 },
               }
-              Object.values(style_dimension_config.value).forEach((obj: any) => {
+              Object.values(styleDimensionConfig.value).forEach((obj: any) => {
                 if ([TOP, LEFT].includes(obj.name)) {
                   config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
                 } else if ([WIDTH, HEIGHT].includes(obj.name)) {
@@ -215,7 +215,7 @@ const CustomDraggable
         })
         xPositionList.sort((a, b) => a - b)
         yPositionList.sort((a, b) => a - b)
-        console.log('应该处在的位置', {left: xPositionList[0], top: yPositionList[0]})
+        console.log('应该处在的位置', { left: xPositionList[0], top: yPositionList[0] })
         supportLinesRef.handleSetPosition(xPositionList[0], yPositionList[0])
 
         Object.keys(bar.selectedComponentRefs).forEach(key => {
@@ -223,6 +223,7 @@ const CustomDraggable
             delete bar.selectedComponentRefs[key]
           }
         })
+        console.log('bar.selectedComponentRefs', bar.selectedComponentRefs)
         // scaleDragCom 组件实时移动
 
         if (layer.id in bar.selectedComponentRefs) {
@@ -257,10 +258,10 @@ const CustomDraggable
       })
       if ('panelType' in layer) {
         // 说明是面板,且一定是单个
+        console.log('111111111111111111111111')
         const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
         panel.config.left = Math.ceil(data.x)
         panel.config.top = Math.ceil(data.y)
-        console.log('面板的位置', {x: panel.config.left, y: panel.config.top})
         dispatch({
           type: 'bar/save',
           payload: {
@@ -280,9 +281,10 @@ const CustomDraggable
         })
       } else if (component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
         // 单个组件移动
-        const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
-        if (style_dimension_config) {
-          style_dimension_config.value.forEach((item: any) => {
+        console.log('2222222222222222222222222')
+        const styleDimensionConfig: any = component.config.find((item: any) => item.name === DIMENSION)
+        if (styleDimensionConfig) {
+          styleDimensionConfig.value.forEach((item: any) => {
             if (item.name === LEFT) {
               item.value = Math.ceil(data.x)
             } else if (item.name === TOP) {
@@ -318,6 +320,7 @@ const CustomDraggable
         }
       } else if (COMPONENTS in layer && bar.selectedComponentOrGroup.length === 1) {
         // 单个组移动
+        console.log('3333333333333333333333333333')
         console.log('单个组', layer)
         console.log('bar.selectedComponents', bar.selectedComponents)
         const xMoveLength = Math.ceil(data.x - startPosition.x)
@@ -370,47 +373,65 @@ const CustomDraggable
             },
           },
         })
-      } else if (bar.selectedComponentOrGroup.length >= 1) {
-        // todo 多个组件移动
+      }
+      if (bar.selectedComponentOrGroup.length > 1) {
+        console.log('4444444444444444444444444')
+        console.log('selectedComponentOrGroup', bar.selectedComponentOrGroup)
+        console.log('bar.selectedComponentIds', bar.selectedComponentIds)
         const xPositionList: Array<number> = []
         const yPositionList: Array<number> = []
-        bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
-        bar.selectedComponents.forEach((item: IComponent) => {
+        bar.selectedComponents = [
+          ...bar.components.filter((component: IComponent) => bar.selectedComponentIds.includes(component.id)),
+          ...bar.panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))
+        ]
+        bar.selectedComponents.forEach((item: IComponent | IPanel) => {
           // const style_config = item.config.find((item: any) => item.name === STYLE)
-          const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-          if (style_dimension_config) {
-            const config: IConfig = {
+          let config: IConfig = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
+          }
+          if ('type' in item) {
+            const { config: { left, top, width, height } } = item
+            config = {
               position: {
-                x: 0,
-                y: 0,
+                x: left,
+                y: top
               },
               style: {
-                width: 0,
-                height: 0,
-              },
-            }
-            Object.values(style_dimension_config.value).forEach((obj: any) => {
-              if ([TOP, LEFT].includes(obj.name)) {
-                config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-              } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-                config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+                width,
+                height
               }
-            })
-            xPositionList.push(config.position.x, config.position.x + config.style.width)
-            yPositionList.push(config.position.y, config.position.y + config.style.height)
+            }
+          } else {
+            const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION)
+            if(styleDimensionConfig) {
+              Object.values(styleDimensionConfig.value).forEach((obj: any) => {
+                if([ 'top', 'left' ].includes(obj.name)) {
+                  config.position[obj.name === 'top' ? 'y' : 'x'] = obj.value
+                } else if([ 'width', 'height' ].includes(obj.name)) {
+                  config.style[obj.name === 'width' ? 'width' : 'height'] = obj.value
+                }
+              })
+            }
           }
+          xPositionList.push(config.position.x, config.position.x + config.style.width)
+          yPositionList.push(config.position.y, config.position.y + config.style.height)
         })
-        xPositionList.sort((a, b) => {
-          return a - b
-        })
-        yPositionList.sort((a, b) => {
-          return a - b
-        })
+        xPositionList.sort((a, b) => a - b)
+        yPositionList.sort((a, b) => a - b)
         if (layer.id in bar.selectedComponentRefs) {
           const xMoveLength = data.x - data.lastX
           const yMoveLength = data.y - data.lastY
-
         }
+        console.log('----------------------------')
+        console.log('xPositionList', xPositionList)
+        console.log('yPositionList', yPositionList)
         // 在dva里计算
         dispatch({
           type: 'bar/save',
@@ -690,11 +711,12 @@ const CustomDraggable
           let component: IComponent | undefined
           let panel : IPanel | undefined
           let events: any
-          let style_config, staticData, style_dimension_config
+          let style_config, staticData, styleDimensionConfig, recommendConfig
           // 群组
           if ('panelType' in layer) {
             const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
-            const { config: {left, top, width, height}} = panel
+            recommendConfig = panel.config
+            const { left, top, width, height } = recommendConfig
             config = {
               position: {
                 x: left,
@@ -728,13 +750,13 @@ const CustomDraggable
             if(component) {
               staticData = component.staticData
               style_config = component.config
-              style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-              if(style_dimension_config) {
-                Object.values(style_dimension_config.value).forEach((obj: any) => {
-                  if([ TOP, LEFT ].includes(obj.name)) {
-                    config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-                  } else if([ WIDTH, HEIGHT ].includes(obj.name)) {
-                    config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+              styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION)
+              if(styleDimensionConfig) {
+                Object.values(styleDimensionConfig.value).forEach((obj: any) => {
+                  if([ 'top', 'left' ].includes(obj.name)) {
+                    config.position[obj.name === 'top' ? 'y' : 'x'] = obj.value
+                  } else if([ 'width', 'height' ].includes(obj.name)) {
+                    config.style[obj.name === 'width' ? 'width' : 'height'] = obj.value
                   }
                 })
               }
@@ -743,7 +765,8 @@ const CustomDraggable
           }
           return (
             <SingleDraggable
-              dimensionConfig={ style_dimension_config }
+              dimensionConfig={ isPanel ? recommendConfig : styleDimensionConfig }
+              isPanel={isPanel}
               scale={ bar.canvasScaleValue }
               nodeRef={ nodeRef }
               id={ layer.id }

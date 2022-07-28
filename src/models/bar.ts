@@ -986,10 +986,8 @@ export default {
               const { config: { left, top, width, height } } = panel
               console.log('scaleDragData',  { left, top, width, height } )
               state.panelConfig = panel
-              xPositionList.push(left)
-              xPositionList.push(width)
-              yPositionList.push(top)
-              yPositionList.push(height)
+              xPositionList.push(left, width)
+              yPositionList.push(top, height)
             }
           } else {
             const component = state.components.find(
