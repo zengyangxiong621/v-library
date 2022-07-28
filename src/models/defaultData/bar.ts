@@ -1,5 +1,6 @@
 import {
-  IPanel
+  IPanel,
+  IComponent
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
 export const defaultData = {
   moduleDefaultConfig: [
@@ -2224,7 +2225,7 @@ export interface IBarState {
   selectedComponentDOMs: any;
   supportLinesRef: any;
   scaleDragCompRef: any;
-  selectedComponents: any;
+  selectedComponents: Array<IComponent | IPanel>;
   scaleDragData: any;
   componentConfig: any;
   groupConfig: any;

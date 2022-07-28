@@ -182,32 +182,40 @@ const CustomDraggable
       if (bar.dragStatus === '多个') {
         const xPositionList: number[] = []
         const yPositionList: number[] = []
-        bar.selectedComponents.forEach((item: IComponent) => {
-          const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-          if (style_dimension_config) {
-            const config: IConfig = {
-              position: {
-                x: 0,
-                y: 0,
-              },
-              style: {
-                width: 0,
-                height: 0,
-              },
-            }
-            Object.values(style_dimension_config.value).forEach((obj: any) => {
-              if ([TOP, LEFT].includes(obj.name)) {
-                config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-              } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-                config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+        bar.selectedComponents.forEach((item: IComponent | IPanel) => {
+          if ('type' in item) {
+            const {config: {left, top, width, height}} = item
+            xPositionList.push(left, left + width)
+            yPositionList.push(top, top + height)
+          } else {
+            const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
+            if (style_dimension_config) {
+              const config: IConfig = {
+                position: {
+                  x: 0,
+                  y: 0,
+                },
+                style: {
+                  width: 0,
+                  height: 0,
+                },
               }
-            })
-            xPositionList.push(config.position.x, config.position.x + config.style.width)
-            yPositionList.push(config.position.y, config.position.y + config.style.height)
+              Object.values(style_dimension_config.value).forEach((obj: any) => {
+                if ([TOP, LEFT].includes(obj.name)) {
+                  config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+                } else if ([WIDTH, HEIGHT].includes(obj.name)) {
+                  config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+                }
+              })
+              xPositionList.push(config.position.x, config.position.x + config.style.width)
+              yPositionList.push(config.position.y, config.position.y + config.style.height)
+            }
           }
+
         })
         xPositionList.sort((a, b) => a - b)
         yPositionList.sort((a, b) => a - b)
+        console.log('应该处在的位置', {left: xPositionList[0], top: yPositionList[0]})
         supportLinesRef.handleSetPosition(xPositionList[0], yPositionList[0])
 
         Object.keys(bar.selectedComponentRefs).forEach(key => {
@@ -250,15 +258,16 @@ const CustomDraggable
       if ('panelType' in layer) {
         // 说明是面板,且一定是单个
         const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
-        panel.config.x = data.x
-        panel.config.y = data.y
+        panel.config.left = Math.ceil(data.x)
+        panel.config.top = Math.ceil(data.y)
+        console.log('面板的位置', {x: panel.config.left, y: panel.config.top})
         dispatch({
           type: 'bar/save',
           payload: {
             scaleDragData: {
               position: {
-                x: panel.config.x,
-                y: panel.config.y,
+                x: panel.config.left,
+                y: panel.config.top,
               },
               style: {
                 display: 'block',
@@ -362,6 +371,7 @@ const CustomDraggable
           },
         })
       } else if (bar.selectedComponentOrGroup.length >= 1) {
+        // todo 多个组件移动
         const xPositionList: Array<number> = []
         const yPositionList: Array<number> = []
         bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))

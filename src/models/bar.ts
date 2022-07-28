@@ -581,10 +581,9 @@ export default {
       });
     },
     *updateComponent({ payload }: any, { call, put, select }: any): any {
-      console.log('payload', payload)
       if (payload.length > 0) {
         const components: Array<IComponent> = []
-        const panels = []
+        const panels: Array<IPanel> = []
         payload.forEach((item: IPanel | IComponent) => {
           if ('type' in item) {
             panels.push(item)
@@ -593,22 +592,26 @@ export default {
           }
         })
         const state: any = yield select((state: any) => state);
-        yield http({
-          url: "/visual/module/update",
-          method: "post",
-          body: {
-            dashboardId: state.bar.dashboardId,
-            configs: components,
-          },
-        });
-        yield http({
-          url: "/visual/panel/update",
-          method: "post",
-          body: {
-            dashboardId: state.bar.dashboardId,
-            configs: components,
-          },
-        });
+        if (components.length > 0) {
+          yield http({
+            url: "/visual/module/update",
+            method: "post",
+            body: {
+              dashboardId: state.bar.dashboardId,
+              configs: components,
+            },
+          });
+        }
+        if (panels.length > 0) {
+          yield http({
+            url: "/visual/panel/update",
+            method: "post",
+            body: {
+              dashboardId: state.bar.dashboardId,
+              configs: panels,
+            },
+          });
+        }
       }
     },
     *getDataContainerList(
@@ -872,7 +875,7 @@ export default {
         }, [])
         .filter(
           (layer: ILayerGroup | ILayerComponent) =>
-            !layer.isLock && layer.isShow
+            !layer?.isLock && layer?.isShow
         ); // 显示且未被锁
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
@@ -970,25 +973,41 @@ export default {
           status = "分组";
           const positionArr = calcGroupPosition(
             firstLayer[COMPONENTS],
-            state.components
+            state.components,
+            state.panels
           );
           xPositionList = positionArr[0];
           yPositionList = positionArr[1];
         } else {
           // 单个组件
-          const component = state.components.find(
-            (component) => component.id === firstLayer.id
-          );
-          const dimensionConfig: any = component.config.find(
-            (item: any) => item.name === DIMENSION
-          );
-          dimensionConfig.value.forEach((config: any) => {
-            if ([LEFT, WIDTH].includes(config.name)) {
-              xPositionList.push(config.value);
-            } else if ([TOP, HEIGHT].includes(config.name)) {
-              yPositionList.push(config.value);
+          if ('type' in firstLayer) {
+            const panel = state.panels.find((panel: IPanel) => panel.id === firstLayer.id)
+            if (panel) {
+              const { config: { left, top, width, height } } = panel
+              console.log('scaleDragData',  { left, top, width, height } )
+              state.panelConfig = panel
+              xPositionList.push(left)
+              xPositionList.push(width)
+              yPositionList.push(top)
+              yPositionList.push(height)
             }
-          });
+          } else {
+            const component = state.components.find(
+              (component) => component.id === firstLayer.id
+            );
+            const dimensionConfig: any = component.config.find(
+              (item: any) => item.name === DIMENSION
+            );
+            dimensionConfig.value.forEach((config: any) => {
+              if ([LEFT, WIDTH].includes(config.name)) {
+                xPositionList.push(config.value);
+              } else if ([TOP, HEIGHT].includes(config.name)) {
+                yPositionList.push(config.value);
+              }
+            });
+            state.componentConfig = component;
+          }
+
           state.scaleDragData = {
             position: {
               x: xPositionList[0],
@@ -1000,11 +1019,9 @@ export default {
               height: yPositionList[1],
             },
           };
-          state.componentConfig = component;
           state.key = state.selectedComponentOrGroup.map(
             (item: ILayerComponent) => item.id
           );
-
           return { ...state };
         }
       } else if (state.selectedComponentOrGroup.length > 1) {
@@ -1012,7 +1029,8 @@ export default {
         state.selectedComponentOrGroup.forEach((layer: any) => {
           const positionArr = calcGroupPosition(
             state.selectedComponentOrGroup,
-            state.components
+            state.components,
+            state.panels
           );
           xPositionList = positionArr[0];
           yPositionList = positionArr[1];
