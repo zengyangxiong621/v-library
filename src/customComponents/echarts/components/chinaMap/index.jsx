@@ -72,12 +72,13 @@ class ChinaMap extends Component {
   lineData = (dataCenter, ipCoordData) => {
     if (!dataCenter) { return }
     return dataCenter.map((item) => {
+      console.log(item.name,'#123');
       return {
         coords: [
-          ipCoordData[item.name],
+          ipCoordData[item.name] || [114.249193, 40.168238], // 校验：dataCenter.name被修改，则默认赋值 昌平
           [
-            ipCoordData[item.name][0],
-            ipCoordData[item.name][1] + item.times * this.lineMaxHeight(dataCenter),
+            (ipCoordData[item.name]|| [114.249193, 40.168238])[0],
+            (ipCoordData[item.name]|| [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
           ],
         ],
       };
@@ -89,8 +90,8 @@ class ChinaMap extends Component {
     if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return [
-        ipCoordData[item.name][0],
-        ipCoordData[item.name][1] + item.times * this.lineMaxHeight(dataCenter),
+        (ipCoordData[item.name]|| [114.249193, 40.168238])[0],
+        (ipCoordData[item.name]|| [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
       ];
     });
   }
@@ -660,6 +661,7 @@ class ChinaMap extends Component {
       options.series[6].data = this.scatterData2(dataCenter, ipCoordData);
       options.series[7].data = this.convertIPData2(dataCenter2, ipCoordData);
       options.series[8].data = this.convertIPData2(dataCenter3, ipCoordData);
+      mapChart.clear();      
       mapChart.setOption(options);
       mapChart.resize();
     }
