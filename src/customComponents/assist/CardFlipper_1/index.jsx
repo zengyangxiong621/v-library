@@ -2,54 +2,13 @@ import React, { Component } from 'react';
 import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 import './index.css'
 import ComponentDefaultConfig from './config'
-
-const formatter = function (number) {
-  const numbers = number.toString().split('').reverse()
-  const segs = []
-  while (numbers.length) segs.push(numbers.splice(0, 3).join(''))
-  return segs.join(',').split('').reverse().join('')
-}
-const randomExtend = function (minNum, maxNum) {
-    if (arguments.length === 1) {
-      return parseInt(Math.random() * minNum + 1, 10)
-    } else {
-      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
-    }
-  }
+import CountUp from 'react-countup'
 
 class ProtectionRange extends Component {
   constructor() {
     super()
-    this.state = this.getData()
   }
-
-  getData() {
-    return {
-      Tdata: [
-        {title: '受攻击系统', config: {number: [randomExtend(0, 9),],content: '{nt}',style: { fontSize: 100, fill: '#FFF' }}},
-        {title: '受攻击系统', config: {number: [randomExtend(0, 9),],content: '{nt}',style: { fontSize: 100, fill: '#FFF' }}},
-        {title: '受攻击系统', config: {number: [randomExtend(0, 9),],content: '{nt}',style: { fontSize: 100, fill: '#FFF' }}},
-        {title: '受攻击系统', config: {number: [randomExtend(0, 9),],content: '{nt}',style: { fontSize: 100, fill: '#FFF' }}},
-        {title: '受攻击系统', config: {number: [randomExtend(0, 9),],content: '{nt}',style: { fontSize: 100, fill: '#FFF' }}},
-        {title: '受攻击系统', config: {number: [randomExtend(0, 9),],content: '{nt}',style: { fontSize: 100, fill: '#FFF' }}},
-        {title: '受攻击系统', config: {number: [randomExtend(0, 9),],content: '{nt}',style: { fontSize: 100, fill: '#FFF' }}},
-      ],
-    }
-  }
-
-  updateData() {
-    this.setState(() => this.getData())
-  }
-
-  componentDidMount() {
-    // this.timer = setInterval(() => this.updateData(), 5000)
-  }
-
-  componentWillUnmount() {
-    // clearInterval(this.timer)
-  }
-
-  renderNumber(number,counter,showBreak,breakDigits) {
+  renderNumber(number,counter,showBreak) {
     let value = number + ''
     let valueArr = value.split('')
     let flag = counter - valueArr.length
@@ -147,14 +106,15 @@ class ProtectionRange extends Component {
               }}>
                 {/* {item} */}
                 {/* <DigitalFlop config={this.state.Tdata[index].config} style={{width: '100%', height: '100%',marginTop: '20%' }} /> */}
-                <DigitalFlop config={
+                {/* <DigitalFlop config={
                   {number: [Number(item)],content: '{nt}',style: {
                     fontSize: textNumberStyle.fontSize,
                     fontWeight: textNumberStyle.bold ? 'bold' : 'normal',
                     fontStyle: textNumberStyle.italic ? 'italic' : 'normal',
                     fill: textNumberStyle.color,
                   }}
-                } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                } style={{width: '100%', height: '100%',marginTop: '20%' }} /> */}
+                <CountUp start={0} end={Number(item)} duration={1}></CountUp>
               </div> :
               <div className='image' key={index} style={{
                 background: 'none',
