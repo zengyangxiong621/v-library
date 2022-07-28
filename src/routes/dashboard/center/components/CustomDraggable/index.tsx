@@ -844,13 +844,12 @@ const CustomDraggable
                                         console.log('组件报错信息：', errors, '组件id', layer.id);
                                       }}
                                     >
-                                      <InstrumentPanel></InstrumentPanel>
-                                      {/* <RemoteBaseComponent
+                                      <RemoteBaseComponent
                                         key={layer.id}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
-                                      ></RemoteBaseComponent> */}
+                                      ></RemoteBaseComponent>
                                     </ErrorCatch>
                           }
                         </div>
