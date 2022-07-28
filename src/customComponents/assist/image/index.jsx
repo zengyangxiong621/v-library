@@ -36,7 +36,7 @@ class ComImage extends Component {
     }:{}
 
     const finalStyle = {
-      opacity:style.opacity,
+      opacity:style.opacity/100,
       transform:style.rotate.direction === 'horizontal' ? `rotateX(${style.rotate.angle}deg)` :`rotateY(${style.rotate.angle}deg)`,
       ...animationSettings
     }

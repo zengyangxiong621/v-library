@@ -4,7 +4,12 @@
   display: flex;
 }
 
-.number{
+.counter-number{
   display: inline-flex;
+  align-items: center;
+}
+.number-list{
+  display: flex;
+  justify-content: center;
   align-items: center;
 }

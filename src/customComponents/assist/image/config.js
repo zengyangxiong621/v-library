@@ -86,13 +86,13 @@ const componentDefaultConfig = {
     {
       'name': 'opacity',
       'displayName': '透明度',
-      'value': 1,
+      'value': 100,
       type: 'range',
       "config": {
         "min": 0,
-        "max": 1,
-        "step": 0.01,
-        suffix: '',  // 输入框后缀
+        "max": 100,
+        "step": 1,
+        suffix: '%',  // 输入框后缀
       }
     },
     {
