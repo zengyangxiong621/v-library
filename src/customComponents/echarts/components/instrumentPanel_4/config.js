@@ -156,7 +156,7 @@ const componentDefaultConfig = {
               name:'vertical',
               displayName:'垂直',
               type:'number',
-              value:-50,
+              value:0,
               config:{
                 suffix:'px',  // 输入框后缀
               }

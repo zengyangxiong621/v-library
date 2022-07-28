@@ -3,7 +3,7 @@ import ComponentDefaultConfig from './config'
 import './index.css'
 import protectionLevel1 from './protectionLevel1.png'
 import protectionLevel2 from './protectionLevel2.png'
-
+import CountUp from 'react-countup'
 
 
 class ProtectionLevel extends Component {
@@ -76,7 +76,10 @@ class ProtectionLevel extends Component {
                 lineHeight: textStylerNumber.lineHeight+"px",
                 top: offsetNumber.vertical +'px',
                 left: offsetNumber.horizontal + 'px',
-              }}>{numberValue}</div>
+              }}>
+                {/* {numberValue} */}
+                <CountUp start={0} end={numberValue} duration={1}></CountUp>
+              </div>
               <div className='title'  style={{
                 color: textStylerUnit.color,
                 fontSize: textStylerUnit.fontSize,

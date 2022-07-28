@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 import './index.css'
 import ComponentDefaultConfig from './config'
+import CountUp from 'react-countup'
 
 class ThreatWarning extends Component {
   constructor(Props) {
@@ -66,7 +67,10 @@ class ThreatWarning extends Component {
               lineHeight: textNumberStyle.lineHeight+"px",
               top: offsetNumber.vertical + 'px',
               left: offsetNumber.horizontal + 'px',
-            }}>{numberValue}</div>
+            }}>
+              {/* {numberValue} */}
+              <CountUp start={0} end={numberValue} separator={','} duration={1}></CountUp>
+            </div>
             <div className='unit' style={{
               color: textUnitStyle.color,
               fontSize: textUnitStyle.fontSize,

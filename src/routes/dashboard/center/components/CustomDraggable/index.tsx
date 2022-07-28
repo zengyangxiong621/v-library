@@ -33,8 +33,11 @@ import timelineConfig from '@/customComponents/assist/timeline/config'
 
 import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
+import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPanel_1'
+import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
+import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
 
-import InstrumentPanel from '@/customComponents/echarts/components/instrumentPanel_1'
+import InstrumentPanel from '@/customComponents/echarts/components/instrumentPanel_4'
 
 import {
   STYLE,
@@ -805,6 +808,27 @@ const CustomDraggable
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                       ></CardFlipper2>:
+                                      layer.moduleName === 'instrumentPanel_3'?
+                                      <InstrumentPanel3
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></InstrumentPanel3>:
+                                      layer.moduleName === 'instrumentPanel_1'?
+                                      <InstrumentPanel1
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></InstrumentPanel1>:
+                                      layer.moduleName === 'instrumentPanel_4'?
+                                      <InstrumentPanel4
+                                        onChange={(val:any)=>handleValueChange(val,layer.id)}
+                                        componentConfig={ component }
+                                        fields={ getFields(component) }
+                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                      ></InstrumentPanel4>:
                                     <ErrorCatch
                                       app={component.name}
                                       user=""
