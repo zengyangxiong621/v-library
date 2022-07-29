@@ -250,6 +250,9 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     { position: { x, y }, style: { width, height } }: IScaleDragData,
     { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
   ) => {
+    dispatch({
+      type: "bar/updateSelectedComponents"
+    })
     if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
       const component = deepClone(bar.selectedComponents[0])
       const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
@@ -351,6 +354,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         },
       })
     }
+    console.log('bar.selectedComponents', bar.selectedComponents)
     dispatch({
       type: 'bar/updateComponent',
       payload: bar.selectedComponents,
