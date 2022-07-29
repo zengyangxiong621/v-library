@@ -116,7 +116,6 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
         }
       }
       if(code===403){
-        message.error('暂无权限')
         window.history.replaceState(null,'','/404')
         window.location.reload();
       }
