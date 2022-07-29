@@ -49,8 +49,8 @@ const InstrumentPanel = (props) => {
   const { innerRadius,outerRadius } = allSettings ? allSettings['表盘'] : {}
   const { numberRange,numberStyles:{textStylerNumbe,offset:numberOffset}} = allSettings ? allSettings['指标'] : {}
   const { titleStyles:{showTitleStyles,offset,textStyleTitle} } = allSettings ? allSettings['标题'] : {}
-  const { axisLine:{axisLineColor},progress } = allSettings ? allSettings['圆环'] : {}
-
+  const { axisLine,ringColor } = allSettings ? allSettings['圆环'] : {}
+// console.log('axisLine+++++++++++++++++++++++++++++',axisLine)
 
 
   const getOption = () => ({
@@ -314,7 +314,8 @@ const InstrumentPanel = (props) => {
           show: true,
           lineStyle: {
             color: [
-              [1, axisLineColor]
+              [1, axisLine?.axisLineColor || ringColor]
+              // [1, "#150c71"]
             ],
             width: outerRadius*100,
             opacity: 1
