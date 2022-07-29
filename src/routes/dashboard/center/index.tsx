@@ -62,8 +62,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
     const getCurrentDocumentHeight = document.documentElement.clientHeight
     // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
-    if(getCurrentDocumentWidth < 1366) {
-      getCurrentDocumentWidth = 1366
+    if(getCurrentDocumentWidth < 1280) {
+      getCurrentDocumentWidth = 1280
     }
     // width、 height 是我们希望的当前 canvas 实际宽高
     // bar.leftMenuWidth 是左侧菜单的宽度, 333 是右侧菜单的高度， 66 是 3 个尺子的宽度
