@@ -815,10 +815,17 @@ const CustomDraggable
                     } }/> :
                     isPanel ?
                       (layer.panelType === 0 ?
-                          <DynamicPanel
-                            history={ history }
-                            id={layer.id}
-                          /> :
+                          <div
+                            className="panel-container"
+                          >
+                            <div className="hovered">
+                              双击编辑动态面板
+                            </div>
+                            <DynamicPanel
+                              history={ history }
+                              id={layer.id}
+                            />
+                          </div>:
                           <ReferencePanel
                             history={ history }
                             id={layer.id}

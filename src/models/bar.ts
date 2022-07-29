@@ -902,6 +902,7 @@ export default {
       return { ...state };
     },
     setLayerConfig(state: IBarState, { payload }: any) {
+      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup)
       if (state.selectedComponentOrGroup.length === 1) {
         const layer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in layer) {
@@ -942,8 +943,11 @@ export default {
             }
           });
         } else {
-          // 组件
-          state.componentConfig = layer;
+          if ('panelType' in layer) {
+            state.panelConfig = state.selectedComponents.find(item => item.id === layer.id);
+          } else {
+            state.componentConfig = state.selectedComponents.find(item => item.id === layer.id);
+          }
         }
       }
       return {
@@ -980,7 +984,7 @@ export default {
           yPositionList = positionArr[1];
         } else {
           // 单个组件
-          if ('type' in firstLayer) {
+          if ('panelType' in firstLayer) {
             const panel = state.panels.find((panel: IPanel) => panel.id === firstLayer.id)
             if (panel) {
               const { config: { left, top, width, height } } = panel
@@ -1081,6 +1085,7 @@ export default {
     },
     // 选中节点时，保存住整个node对象
     setLayers(state: IBarState, { payload }: any) {
+      console.log('setLayers', payload)
       state.selectedComponentOrGroup = payload;
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
