@@ -402,7 +402,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
                 height: `${heights[ri]}px`,
                 lineHeight: `${heights[ri]}px`,
                 backgroundColor: `${getBackgroundColor(row.rowIndex)}`,
-                // display: ri === 0 ? 'none' : 'flex'
+                overflow: ri === 0 ? 'hidden' : 'unset'
               }}
             >
               {row.ceils.map((ceil, ci) => (
