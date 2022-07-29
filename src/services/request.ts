@@ -105,7 +105,7 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
     })
     .catch((err) => {
       const { code, message: errMessage } = err;
-      message.error(errMessage);
+      message.error(errMessage || '请求数据失败');
       if (code === 401) {
         if (token && token.endsWith('x-gridsumdissector')) {
           forwardLogin()
@@ -115,7 +115,8 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
           localStorage.removeItem("token");
         }
       }
-      if(code === 500){
+      if(code===403){
+        message.error('暂无权限')
         window.history.replaceState(null,'','/404')
         window.location.reload();
       }
