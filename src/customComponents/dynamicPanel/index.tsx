@@ -29,12 +29,39 @@ const DynamicPanel = ({ bar, id, dispatch }: any) => {
       // 获取面板想起接口
       const { states, config: recommendConfig, name, type } = panel
       // 默认取第一个
-      const defaultStateId = states[0] || ''
+      const defaultStateId = states[0].id || ''
+      console.log('defaultStateId', defaultStateId)
       // 获取画布详情接口
       const { components, layers, dashboardConfig } = await http({
         url: `/visual/application/dashboard/detail/${ defaultStateId }`,
         method: 'get',
       })
+      const componentData = bar.componentData;
+
+      const func = async (component: any) => {
+        try {
+          const data = await http({
+            url: "/visual/module/getData",
+            method: "post",
+            body: {
+              moduleId: component.id,
+              dataType: component.dataType,
+              callBackParamValues: bar.callbackArgs,
+            },
+          });
+
+          if (data) {
+            componentData[component.id] =
+              component.dataType !== "static" ? data : data.data;
+          } else {
+            throw new Error("请求不到数据");
+          }
+        } catch (err) {
+          componentData[component.id] = null;
+        }
+        return componentData[component.id];
+      };
+      await Promise.all(components.map((item: any) => func(item)));
       setState({
         states,
         components,

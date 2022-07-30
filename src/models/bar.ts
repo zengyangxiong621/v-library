@@ -90,8 +90,7 @@ export default {
         payload,
       });
     },
-      *initDashboard({ payload: {dashboardId, isPanel, statusId, panelId}, cb }: any, { call, put, select }: any): any {
-      console.log('isPanel', isPanel)
+      *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",
@@ -143,18 +142,22 @@ export default {
           componentFilters: filters || [],
           callbackParamsList,
           isPanel,
-          statusId,
+          stateId,
           dashboardId,
           panelId
         },
       });
-      let panelConfig = {}
       if (isPanel) {
-        const { config } = yield http({
+        const { config, states: panelStatesList } = yield http({
           url: `/visual/panel/detail/${ panelId }`,
           method: 'get',
         })
-        panelConfig = config
+        yield put({
+          type: "save",
+          payload: {
+            panelStatesList,
+          }
+        })
         const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === 'recommend')
         recommendConfig.width = config.width
         recommendConfig.height = config.height
@@ -187,12 +190,12 @@ export default {
       { call, put, select }: any
     ): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const {dashboardId, statusId, panelId, isPanel} = bar
+      const {dashboardId, stateId, panelId, isPanel} = bar
       try {
 
         let { layers, components, dashboardConfig, dashboardName } = yield http(
           {
-            url: `/visual/application/dashboard/detail/${ isPanel ? statusId : dashboardId}`,
+            url: `/visual/application/dashboard/detail/${ isPanel ? stateId : dashboardId}`,
             method: "get",
           }
         );
@@ -230,7 +233,8 @@ export default {
             treeData: noEmptyGroupLayers,
             components,
             panels,
-            dashboardId: isPanel ? statusId : dashboardId,
+            dashboardId,
+            panelId,
             dashboardConfig: [
               ...bar.dashboardConfig,
               ...dashboardConfig,
@@ -739,6 +743,40 @@ export default {
       yield put({
         type: 'calcDragScaleData'
       })
+    },
+    *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const data = yield http({
+        url: '/visual/panel/state/create',
+        method: 'post',
+        body: {
+          dashboardId: bar.dashboardId,
+          panelId: bar.panelId
+        }
+      })
+      yield put({
+        type: 'save',
+        payload: {
+          panelStatesList: bar.panelStatesList.concat({
+            name: data.name,
+            id: data.id
+          })
+        }
+      })
+    },
+    *selectPanelState({ payload: { stateId } }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      if (stateId !== bar.stateId) {
+        yield put({
+          type: 'save',
+          payload: {
+            stateId
+          }
+        })
+        yield put({
+          type: 'getDashboardDetails',
+        })
+      }
     }
   },
   reducers: {

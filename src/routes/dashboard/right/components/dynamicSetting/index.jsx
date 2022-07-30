@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react'
 import { connect } from 'dva'
 import './index.less'
 import { find } from '../../../../../utils/common'
@@ -7,71 +7,143 @@ import UploadImg from '../uploadImg'
 import CusInputNumber from '../cusInputNumber'
 import RadioGroup from '../radioGroup'
 import { deepClone } from '../../../../../utils'
-import { Form } from 'antd';
-import debounce from 'lodash/debounce';
+import { Form } from 'antd'
+import debounce from 'lodash/debounce'
 import { http } from '../../../../../services/request'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
+import ComponentCard from '../componentCard'
+import componentLib from '../index'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
 let isSettingsChange = false
 const PageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
-    labelAlign: 'left'
-  };
-  const pageConfig = deepClone(bar.dashboardConfig)
-  const styleColorConfig = find(pageConfig, 'styleColor')
-  const backgroundImg = find(pageConfig, 'backgroundImg')
-  const thumbImg = find(pageConfig, 'thumbImg')
+    labelAlign: 'left',
+  }
+  const panelConfig = bar.panelConfig
+  const { left, top, width, height, hideDefault } = panelConfig.config
+  const styleConfig = [
+    {
+      'displayName': '位置尺寸',
+      'name': 'dimension',
+      'type': 'dimensionGroup',
+      'config': {
+        'lock': false,
+      },
+      'value': [
+        {
+          'displayName': 'X轴坐标',
+          'name': 'left',
+          'value': left,
+        },
+        {
+          'displayName': 'Y轴坐标',
+          'name': 'top',
+          'value': top,
+        },
+        {
+          'displayName': '宽度',
+          'name': 'width',
+          'value': width,
+        },
+        {
+          'displayName': '高度',
+          'name': 'height',
+          'value': height,
+        },
+      ],
+    },
+    {
+      'displayName': '默认隐藏',
+      'name': 'hideDefault',
+      'type': 'checkBox',
+      'value': hideDefault,
+    },
+  ]
   const [key, setKey] = useState(uuidv4())
-
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
 
   useEffect(() => {
-    if(!isSettingsChange){
+    if (!isSettingsChange) {
       setKey(uuidv4())
     }
-  }, [bar.dashboardConfig])
+  }, [bar.panelConfig])
 
-  const settingsChange = debounce(() => {
-    isSettingsChange = true
-    saveData()
-  }, 300)
-
-  const saveData = async () => {
-    const params = {
-      config: pageConfig,
-      thumb: thumbImg.value,
-      dashboardId: dashboardId
-    }
-    const { config } = await http({
-      url: '/visual/application/update',
-      method: 'post',
-      body: params,
+  const styleChange = debounce(async () => {
+    const dimensionConfig = styleConfig.find(item => item.name === 'dimension').value
+    const hideDefault = styleConfig.find(item => item.name === 'hideDefault').value
+    dimensionConfig.forEach(item => {
+      panelConfig.config[item.name] = item.value
     })
+    panelConfig.config.hideDefault = hideDefault
+    const { config: { left, top, width, height } } = panelConfig
     dispatch({
       type: 'bar/save',
       payload: {
-        dashboardConfig: config
-      }
+        panelConfig,
+        scaleDragData: {
+          position: {
+            x: left,
+            y: top,
+          },
+          style: {
+            width,
+            height,
+            display: 'block',
+          },
+        },
+      },
     })
-  }
+    await http({
+      url: '/visual/panel/update',
+      method: 'post',
+      body: {
+        dashboardId: bar.dashboardId,
+        configs: [
+          panelConfig,
+        ],
+      },
+    })
+  }, 300)
+
+  // const saveStyleData = async (param) => {
+  //   const params = {
+  //     configs: [param],
+  //     dashboardId: dashboardId
+  //   }
+  //   await http({
+  //     url: '/visual/module/update',
+  //     method: 'post',
+  //     body: params
+  //   })
+  // }
 
   return (
     <div className="dynamic-wrap">
       <h3 className="dynamic-set-header">
         动态面板设置
       </h3>
-      <div className="content" key={key}>
+      <div className="content" key={ key }>
         <Form
           className="custom-form"
-          form={form}
-          {...formItemLayout}
-          colon={false}
+          form={ form }
+          { ...formItemLayout }
+          colon={ false }
         >
-          <BackgroundColor data={styleColorConfig} onChange={settingsChange} />
-          <UploadImg data={backgroundImg} onChange={settingsChange} />
-          {/* <EditTable></EditTable> */}
+          <ComponentCard data={ panelConfig }
+                         allModulesConfig={ bar.moduleDefaultConfig }
+                         dispatch={ dispatch }>
+            { styleConfig.map((item, index) => {
+              if (!(item.type && componentLib[item.type])) {
+                return null
+              }
+              const TagName = componentLib[item.type]
+              return (
+                <TagName data={ item } onChange={ styleChange } key={ index }/>
+              )
+            }) }
+          </ComponentCard>
         </Form>
       </div>
     </div>
@@ -79,6 +151,6 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
 }
 
 export default connect(({ bar }) => ({
-  bar
+  bar,
 }))(PageSetting)
 

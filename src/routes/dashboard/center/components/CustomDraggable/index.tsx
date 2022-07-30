@@ -487,46 +487,13 @@ const CustomDraggable
       localStorage.removeItem('dblComponentTimes')
       e.stopPropagation()
     }
-    const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
+    const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent | ILayerPanel, config: IConfig) => {
       clearTimeout(clickTimer.current)
-      const dblComponentTimes = localStorage.getItem('dblComponentTimes')
-      if (!currentTimes) {
-        currentTimes.current = 1
-      } else {
-        currentTimes.current++
+      if ('panelType' in layer) {
+        const panel = panels.find((panel: IPanel) => panel.id === layer.id)
+        // history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+        window.open(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
       }
-      if (Number(dblComponentTimes) === currentTimes.current) {
-        // layer.cancel = false
-        // layer.disabled = false
-        // e.stopPropagation()
-      }
-      // 1    2
-      if (Number(dblComponentTimes) < currentTimes.current) {
-        layer.cancel = true
-        // layer.disabled = true
-        if (COMPONENTS in layer) {
-          (layer[COMPONENTS] as any).forEach((item: any) => {
-            item.cancel = false
-            // item.disabled = false
-          })
-        }
-      }
-      if (!dblComponentTimes) {
-        layer.cancel = true
-        // layer.disabled = true
-        if (COMPONENTS in layer) {
-          (layer[COMPONENTS] as any).forEach((item: any) => {
-            item.cancel = false
-            // item.disabled = false
-          })
-        }
-        localStorage.setItem('dblComponentTimes', '1')
-      } else {
-        localStorage.setItem('dblComponentTimes', (Number(dblComponentTimes) + 1).toString())
-      }
-      // dispatch({
-      //   type: 'bar/save',
-      // })
     }
     const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
       if (component.hover) {
@@ -818,13 +785,13 @@ const CustomDraggable
                           <div
                             className="panel-container"
                           >
-                            <div className="hovered">
-                              双击编辑动态面板
-                            </div>
                             <DynamicPanel
                               history={ history }
                               id={layer.id}
                             />
+                            <div className="hovered">
+                              双击编辑动态面板
+                            </div>
                           </div>:
                           <ReferencePanel
                             history={ history }

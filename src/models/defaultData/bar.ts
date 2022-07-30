@@ -2203,7 +2203,9 @@ export const defaultData = {
   systemMaterialList: [], // 获取系统素材数据
   isPanel: false,
   panels: [],
-  panelConfig: {}
+  panelConfig: {},
+  stateId: "123",
+  panelStatesList: []
 }
 
 export interface IBarState {
@@ -2259,5 +2261,7 @@ export interface IBarState {
   systemMaterialList: any;
   isPanel: boolean;
   panels: Array<IPanel>,
-  panelConfig: IPanel | {}
+  panelConfig: IPanel | {},
+  panelStatesList: Array<{name: string, id: string}>,
+  stateId: string,
 }
