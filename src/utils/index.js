@@ -708,3 +708,14 @@ export const handleAddChecked=(list)=>{
     return item
   })
 }
+
+// dashboardConfig 去重
+export const duplicateDashboardConfig = (preConfig, nowConfig) => {
+  nowConfig.forEach((item)=> {
+    let index = preConfig.findIndex(it => it.name === item.name)
+    if (index !== -1) {
+      preConfig[index] = item
+    }
+  })
+  return preConfig
+}

@@ -482,6 +482,19 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                   top: 5000 + rulerCanvasSpacing.top,
                 } }
               >
+                {
+                  bar.isPanel ? <div
+                    style={ {
+                      position: "absolute",
+                      width: '100%',
+                      height: '100%',
+                      backgroundImage: 'linear-gradient(45deg,#ccc 25%,transparent 0), linear-gradient(45deg,transparent 75%,#ccc 0), linear-gradient(45deg,#ccc 25%,transparent 0), linear-gradient(45deg,transparent 75%,#ccc 0)',
+                      backgroundPosition: '0 0,-15px 15px,15px -15px,30px 30px',
+                      backgroundSize: '10px 10px',
+                      backgroundColor: '#b5b5b5',
+                    } }
+                  /> : <></>
+                }
                 <div
                   className="canvas-screen"
                   style={ {

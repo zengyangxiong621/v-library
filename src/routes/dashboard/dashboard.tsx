@@ -188,7 +188,7 @@ function App({ bar, dispatch, location, history }: any) {
       stateId = windowPathList[4].split('-')[1]
     }
     let isPanel = false
-    if (stateId) {
+    if (panelId) {
       isPanel = true
     }
     dispatch({

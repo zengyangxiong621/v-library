@@ -12,8 +12,6 @@ import debounce from 'lodash/debounce';
 import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid';
 
-const dashboardId = window.location.pathname.split('/')[2]
-
 let isSettingsChange = false
 const DynamicPageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {

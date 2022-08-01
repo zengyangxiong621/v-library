@@ -9,7 +9,8 @@ import {
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
-  layersPanelsFlat
+  layersPanelsFlat,
+  duplicateDashboardConfig
 } from "../utils";
 
 import {
@@ -30,6 +31,7 @@ import {
   IPanel,
   IComponent
 } from "../routes/dashboard/center/components/CustomDraggable/type";
+
 
 import {
   cancelGroup,
@@ -152,10 +154,12 @@ export default {
           url: `/visual/panel/detail/${ panelId }`,
           method: 'get',
         })
+
         yield put({
           type: "save",
           payload: {
             panelStatesList,
+            stateId
           }
         })
         const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === 'recommend')
@@ -190,7 +194,14 @@ export default {
       { call, put, select }: any
     ): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const {dashboardId, stateId, panelId, isPanel} = bar
+      let {dashboardId, stateId, panelId, isPanel, panelStatesList} = bar
+      if (isPanel) {
+        // 默认路由跳转到当前面板的第一个状态
+        if (!stateId) {
+          stateId = panelStatesList[0].id
+        }
+        window.history.replaceState('', '', `/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`);
+      }
       try {
 
         let { layers, components, dashboardConfig, dashboardName } = yield http(
@@ -227,6 +238,7 @@ export default {
         const bar: any = yield select(({ bar }: any) => bar);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
+        const newDashboardConfig = duplicateDashboardConfig(deepClone(bar.dashboardConfig), dashboardConfig)
         yield put({
           type: "save",
           payload: {
@@ -234,15 +246,13 @@ export default {
             components,
             panels,
             dashboardId,
+            stateId,
             panelId,
-            dashboardConfig: [
-              ...bar.dashboardConfig,
-              ...dashboardConfig,
-            ],
+            dashboardConfig: newDashboardConfig,
             dashboardName,
           },
         });
-        cb({ dashboardConfig, dashboardName });
+        cb({ dashboardConfig: newDashboardConfig, dashboardName });
       } catch (e) {
         return e;
       }
@@ -393,11 +403,12 @@ export default {
     // 更改图层组织
     *update({ payload }: any, { select, call, put }: any): any {
       const state: any = yield select((state: any) => state);
+      const { stateId, isPanel, dashboardId } = state.bar
       const layers = yield http({
         url: "/visual/layer/update",
         method: "post",
         body: {
-          dashboardId: state.bar.dashboardId,
+          dashboardId: isPanel ? stateId : dashboardId,
           layers: payload,
         },
       });
@@ -764,6 +775,76 @@ export default {
         }
       })
     },
+    *deletePanelState({ payload, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { panelId, dashboardId, panelStatesList } = bar
+      const { stateId } = payload
+      try {
+        const data = yield http({
+          url: '/visual/panel/state/delete',
+          method: 'post',
+          body: {
+            dashboardId,
+            panelId,
+            stateId
+          }
+        })
+        const index = panelStatesList.findIndex((state: {id: string, name: string}) => state.id === stateId)
+        const toStateId = panelStatesList[0].id
+        panelStatesList.splice(index, 1)
+        yield put({
+          type: 'save',
+          payload: {
+            panelStatesList,
+            stateId: toStateId
+          }
+        })
+        yield put({
+          type: 'getDashboardDetails'
+        })
+      } catch(err) {
+        console.log('err', err)
+      }
+    },
+    *copyPanelState({ payload, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { panelId, dashboardId, panelStatesList } = bar
+      const { stateId } = payload
+      try {
+        const data = yield http({
+          url: '/visual/panel/state/copy',
+          method: 'post',
+          body: {
+            dashboardId,
+            panelId,
+            stateId
+          }
+        })
+        panelStatesList.push(data)
+        const toStateId = data.id
+        yield put({
+          type: 'save',
+          payload: {
+            panelStatesList,
+            stateId: toStateId
+          }
+        })
+        yield put({
+          type: 'getDashboardDetails'
+        })
+      } catch(err) {
+        console.log('err', err)
+      }
+      // yield put({
+      //   type: 'save',
+      //   payload: {
+      //     panelStatesList: bar.panelStatesList.concat({
+      //       name: data.name,
+      //       id: data.id
+      //     })
+      //   }
+      // })
+    },
     *selectPanelState({ payload: { stateId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       if (stateId !== bar.stateId) {
@@ -775,6 +856,28 @@ export default {
         })
         yield put({
           type: 'getDashboardDetails',
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            scaleDragData: {
+              position: {
+                x: 0,
+                y: 0
+              },
+              style: {
+                width: 0,
+                height: 0,
+                display: 'none',
+              }
+            },
+            selectedComponentOrGroup: [],
+            selectedComponentIds: [],
+            selectedComponentRefs: {},
+            selectedComponentDOMs: {},
+            selectedComponents: [],
+            key: [bar.panelId]
+          }
         })
       }
     }

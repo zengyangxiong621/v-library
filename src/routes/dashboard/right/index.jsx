@@ -28,38 +28,36 @@ const Right = ({ dispatch, bar }) => {
     'referenceSetting': ReferenceSetting,
   }
   useEffect(() => {
-    if (bar.isPanel) {
+
+    if (bar.isPanel && !bar.selectedComponentOrGroup.length) {
       setWhichShow('dynamicPageSetting')
-    } else {
-      if (!bar.selectedComponentOrGroup.length) {
-        setWhichShow('pageSetting')
-      }
-      // 组件设置/组设置
-      if (bar.selectedComponentOrGroup.length === 1) {
-        const layer = bar.selectedComponentOrGroup[0]
-        if (COMPONENTS in layer) {
-          // 组设置
-          setWhichShow('groupConfig')
-        } else {
-          // 单个设置
-          if ('panelType' in layer) {
-            if (layer.panelType === 0) {
-              setWhichShow('dynamicSetting')
-            }
-            if (layer.panelType === 1) {
-              setWhichShow('referenceSetting')
-            }
-          } else {
-            setWhichShow('singleLayer')
+    } else if (!bar.selectedComponentOrGroup.length) {
+      setWhichShow('pageSetting')
+    }
+    // 组件设置/组设置
+    if (bar.selectedComponentOrGroup.length === 1) {
+      const layer = bar.selectedComponentOrGroup[0]
+      if (COMPONENTS in layer) {
+        // 组设置
+        setWhichShow('groupConfig')
+      } else {
+        // 单个设置
+        if ('panelType' in layer) {
+          if (layer.panelType === 0) {
+            setWhichShow('dynamicSetting')
           }
+          if (layer.panelType === 1) {
+            setWhichShow('referenceSetting')
+          }
+        } else {
+          setWhichShow('singleLayer')
         }
       }
-      // 对齐设置
-      if (bar.selectedComponentOrGroup.length > 1) {
-        setWhichShow('alignmentSetting')
-      }
     }
-
+    // 对齐设置
+    if (bar.selectedComponentOrGroup.length > 1) {
+      setWhichShow('alignmentSetting')
+    }
     const key = bar.key
     setKey(key.join(''))
   }, [bar.key, bar.isPanel])
@@ -81,11 +79,11 @@ const Right = ({ dispatch, bar }) => {
 }
 
 export default connect((
-{
-  bar,
-},
+  {
+    bar,
+  },
 ) => (
-{
-  bar,
-}
+  {
+    bar,
+  }
 ))(Right)

@@ -27,7 +27,6 @@ const hexToRgb = (hexValue) => {
 }
 const getRgbaNum = (rgba) => {
   let value = rgba.match(/(\d(\.\d+)?)+/g)
-  console.log('value',value)
   return {
     r: value[0],
     g: value[1],
