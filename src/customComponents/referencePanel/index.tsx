@@ -14,7 +14,7 @@ interface State {
   [key: string]: any;
 }
 
-const DynamicPanel = ({ bar, id, dispatch }: any) => {
+const ReferencePanel = ({ bar, id, dispatch }: any) => {
 
   const [ state, setState ] = useSetState<State>({
     states: [],
@@ -31,7 +31,6 @@ const DynamicPanel = ({ bar, id, dispatch }: any) => {
       // 默认取第一个
       const defaultStateId = states[0].id || ''
       if (!defaultStateId) return
-      console.log('defaultStateId', defaultStateId)
       // 获取画布详情接口
       const { components, layers, dashboardConfig } = await http({
         url: `/visual/application/dashboard/detail/${ defaultStateId }`,
@@ -80,4 +79,4 @@ const DynamicPanel = ({ bar, id, dispatch }: any) => {
   )
 }
 
-export default connect(({ bar }: any) => ({ bar }))(DynamicPanel)
+export default connect(({ bar }: any) => ({ bar }))(ReferencePanel)

@@ -2205,7 +2205,8 @@ export const defaultData = {
   panels: [],
   panelConfig: {},
   stateId: "123",
-  panelStatesList: []
+  panelStatesList: [],
+  allDashboardList: []
 }
 
 export interface IBarState {
@@ -2264,4 +2265,5 @@ export interface IBarState {
   panelConfig: IPanel | {},
   panelStatesList: Array<{name: string, id: string}>,
   stateId: string,
+  allDashboardList: Array<{name: string, id: string, [key: string]: any}>
 }

@@ -75,7 +75,7 @@ import RankingBar from '@/customComponents/echarts/components/rankingBar'
 
 import Tab from '@/customComponents/tab/index'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
-import ReferencePanel from '@/customComponents/referencePanel/index'
+import ReferencePanel from '@/customComponents/referencePanel'
 import DynamicPanel from '@/customComponents/dynamicPanel/index'
 import { cloneDeep } from "lodash"
 
@@ -793,10 +793,18 @@ const CustomDraggable
                               双击编辑动态面板
                             </div>
                           </div>:
-                          <ReferencePanel
-                            history={ history }
-                            id={layer.id}
-                          />
+                          <div
+                            className="panel-container"
+                          >
+                            <ReferencePanel
+                              history={ history }
+                              id={layer.id}
+                            />
+                            <div className="hovered">
+                              双击编辑引用面板
+                            </div>
+                          </div>
+
                       ) :
                       isGroup ?
                         <div className="no-cancel" style={ {

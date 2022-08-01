@@ -172,6 +172,32 @@ export default {
           await cb(data);
         },
       });
+      yield put({
+        type: "getAllDashboardList",
+      })
+    },
+    *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
+      const data = yield http({
+        url: '/visual/application/queryAppList',
+        method: 'post',
+        body: {
+          "pageNo": 1,
+          "pageSize": 1000,
+          "spaceId": 1,
+          "map": {
+            "updated_time": false
+          },
+          "groupId": null
+        }
+      })
+      yield put(
+        {
+          type: 'save',
+          payload: {
+            allDashboardList: data.content.map((item: any) => ({name: item.name, value: item.id}))
+          }
+        }
+      )
     },
     *deleteContainerDataById(
       { payload }: any,
@@ -554,6 +580,7 @@ export default {
       { call, put, select }: any
     ): any {
       const state: any = yield select((state: any) => state);
+      const { isPanel, stateId, dashboardId } = state.bar
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         state.bar.key.length !== 0
@@ -569,7 +596,7 @@ export default {
         url: "/visual/module/add",
         method: "post",
         body: {
-          dashboardId: state.bar.dashboardId,
+          dashboardId: isPanel ? stateId : dashboardId,
           component: { ...payload, moduleType: itemData.moduleType },
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
@@ -588,14 +615,14 @@ export default {
           ...deepClone(payload),
           id: id,
           moduleType: itemData.moduleType,
-          children: children,
+          children,
         },
       });
       // itemData.id = id
 
       yield put({
         type: "addComponent",
-        payload: { final: { ...itemData, id: id }, insertId: insertId },
+        payload: { final: { ...itemData, id: id }, insertId },
       });
     },
     *updateComponent({ payload }: any, { call, put, select }: any): any {

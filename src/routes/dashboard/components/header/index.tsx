@@ -81,7 +81,13 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   const createDynamicPanel = () => {
     dispatch({
       type: 'bar/createComponent',
-      createType: 'panel'
+      createType: 'dynamicPanel'
+    })
+  }
+  const createReferencePanel = () => {
+    dispatch({
+      type: 'bar/createComponent',
+      createType: 'referencePanel'
     })
   }
   // 获取当前活跃的按钮, 并执行对应逻辑
@@ -98,6 +104,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
         break;
       case 'dongtaimianban':
         createDynamicPanel()
+        break;
+      case 'yinyongmianban':
+        createReferencePanel()
         break;
     }
   }
