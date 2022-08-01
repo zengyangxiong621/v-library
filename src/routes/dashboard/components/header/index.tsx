@@ -78,16 +78,26 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
     }, 4);
 
   }
+  const createDynamicPanel = () => {
+    dispatch({
+      type: 'bar/createComponent',
+      createType: 'panel'
+    })
+  }
   // 获取当前活跃的按钮, 并执行对应逻辑
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
     showWhichBar(icon)
+    console.log('icon', icon)
     switch (icon) {
       case 'fabu':
         openFabuModal(bar.dashboardId)
         break;
       case 'yulan':
         toPreviewOrPublish(icon)
+        break;
+      case 'dongtaimianban':
+        createDynamicPanel()
         break;
     }
   }

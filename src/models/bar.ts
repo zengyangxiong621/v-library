@@ -550,7 +550,7 @@ export default {
       });
     },
     *createComponent(
-      { payload, itemData }: any,
+      { payload, itemData, createType='component' }: any,
       { call, put, select }: any
     ): any {
       const state: any = yield select((state: any) => state);
@@ -561,7 +561,10 @@ export default {
           : state.bar.treeData.length !== 0
           ? state.bar.treeData[0].id
           : "";
-
+      if (createType === 'component') {
+        console.log('itemData', itemData)
+        console.log('payload', payload)
+      }
       const { id, children }: any = yield http({
         url: "/visual/module/add",
         method: "post",
@@ -880,6 +883,9 @@ export default {
           }
         })
       }
+    },
+    *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {
+
     }
   },
   reducers: {
