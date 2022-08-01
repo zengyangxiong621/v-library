@@ -1,7 +1,6 @@
 import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
-import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 import CountUp from 'react-countup'
 
 class Counter extends Component {
