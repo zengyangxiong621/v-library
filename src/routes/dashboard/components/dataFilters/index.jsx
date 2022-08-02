@@ -180,11 +180,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
       content: '删除后可能导致相关组件不可用，是否删除数据过滤器？',
       onOk() {
         const filterIds = delFilters.map(item => item.id)
-        let filterModules = delFilters.reduce((pre, cur, index) => {
-          return pre.concat(...cur.moduleIds)
-        }, [])
-        filterModules = [...new Set(filterModules)]
-        batchDeleteFilterHandle(filterIds, filterModules)
+        batchDeleteFilterHandle(filterIds)
       },
       onCancel() {
         // do nothing
@@ -192,13 +188,12 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
     });
   }
 
-  const batchDeleteFilterHandle = async (filterIds, modules) => {
+  const batchDeleteFilterHandle = async (filterIds) => {
     const data = await http({
       url: '/visual/module/filter/delete',
       method: 'POST',
       body: {
-        filterIds,
-        modules
+        filterIds
       }
     })
     // 更新bar中的过滤器
