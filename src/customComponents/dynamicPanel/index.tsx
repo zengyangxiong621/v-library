@@ -15,23 +15,23 @@ interface State {
 }
 
 const DynamicPanel = ({ bar, id, dispatch }: any) => {
-
+  const panel = bar.panels.find((item: IPanel) => item.id === id)
+  // 获取面板想起接口
+  const { states, config, name, type } = panel
+  const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = config
   const [ state, setState ] = useSetState<State>({
     states: [],
     defaultState: '',
     components: [],
     layers: [],
+    overflow: 'hidden'
   })
 
   useEffect(() => {
     (async function() {
-      const panel = bar.panels.find((item: IPanel) => item.id === id)
-      // 获取面板想起接口
-      const { states, config: recommendConfig, name, type } = panel
       // 默认取第一个
-      if (state.length === 0) return
+      if (states.length === 0) return
       const defaultStateId = states[0].id || ''
-      console.log('defaultStateId', defaultStateId)
       // 获取画布详情接口
       const { components, layers, dashboardConfig } = await http({
         url: `/visual/application/dashboard/detail/${ defaultStateId }`,
@@ -73,8 +73,19 @@ const DynamicPanel = ({ bar, id, dispatch }: any) => {
 
   }, [])
 
+  useEffect(() => {
+    setState({overflow: isScroll ? 'auto' : 'none'})
+  }, [isScroll])
+
+  useEffect(() => {
+    console.log('变化', {
+      allowScroll, animationType, scrollTime, animationTime
+    })
+  }, [allowScroll, animationType, scrollTime, animationTime])
+
+
   return (
-    <div className={`reference-panel panel-${id}`} style={{ pointerEvents: 'none' }}>
+    <div className={`reference-panel panel-${id}`} style={{ pointerEvents: 'none', overflow: state.overflow }}>
       <CustomDraggable mouse={ 0 } treeData={ state.layers } components = {state.components}/>
     </div>
   )

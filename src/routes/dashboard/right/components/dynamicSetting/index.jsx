@@ -7,7 +7,7 @@ import UploadImg from '../uploadImg'
 import CusInputNumber from '../cusInputNumber'
 import RadioGroup from '../radioGroup'
 import { deepClone } from '../../../../../utils'
-import { Form } from 'antd'
+import { Button, Form } from 'antd'
 import debounce from 'lodash/debounce'
 import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid'
@@ -22,7 +22,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left',
   }
   const panelConfig = bar.panelConfig
-  const { left, top, width, height, hideDefault } = panelConfig.config
+  const { left, top, width, height, hideDefault, isScroll, allowScroll, animationType, scrollTime, animationTime } = panelConfig.config
   const styleConfig = [
     {
       'displayName': '位置尺寸',
@@ -60,6 +60,42 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
       'type': 'checkBox',
       'value': hideDefault,
     },
+    {
+      "displayName": "启用滚轮",
+      "name": "isScroll",
+      "type": "checkBox",
+      "value": isScroll
+    },
+    {
+      "displayName": "自动轮播",
+      "name": "allowScroll",
+      "type": "checkBox",
+      "value": allowScroll
+    },
+    {
+      "displayName": "动画类型",
+      "name": "animationType",
+      "type": "select",
+      "value": animationType,
+      "options": [
+        {
+          "name": "渐隐渐现",
+          "value": "0",
+        }
+      ]
+    },
+    {
+      "displayName": "更新时间",
+      "name": "scrollTime",
+      "type": "number",
+      "value": scrollTime,
+    },
+    {
+      "displayName": "动画时长",
+      "name": "animationTime",
+      "type": "number",
+      "value": animationTime,
+    }
   ]
   const [key, setKey] = useState(uuidv4())
   const [form] = Form.useForm()
@@ -73,10 +109,20 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   const styleChange = debounce(async () => {
     const dimensionConfig = styleConfig.find(item => item.name === 'dimension').value
     const hideDefault = styleConfig.find(item => item.name === 'hideDefault').value
+    const isScroll = styleConfig.find(item => item.name === 'isScroll').value
+    const allowScroll = styleConfig.find(item => item.name === 'allowScroll').value
+    const animationType = styleConfig.find(item => item.name === 'animationType').value
+    const scrollTime = styleConfig.find(item => item.name === 'scrollTime').value
+    const animationTime = styleConfig.find(item => item.name === 'animationTime').value
     dimensionConfig.forEach(item => {
       panelConfig.config[item.name] = item.value
     })
     panelConfig.config.hideDefault = hideDefault
+    panelConfig.config.isScroll = isScroll
+    panelConfig.config.allowScroll = allowScroll
+    panelConfig.config.animationType = animationType
+    panelConfig.config.scrollTime = scrollTime
+    panelConfig.config.animationTime = animationTime
     const { config: { left, top, width, height } } = panelConfig
     dispatch({
       type: 'bar/save',
@@ -118,7 +164,9 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   //     body: params
   //   })
   // }
+  const handleEditDashboard = () => {
 
+  }
   return (
     <div className="dynamic-wrap">
       <h3 className="dynamic-set-header">
@@ -144,6 +192,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
               )
             }) }
           </ComponentCard>
+          <Button onClick={handleEditDashboard} className="g-my-2" type="primary" style={{width: "calc(100% - 24px)"}}>编辑动态面板</Button>
         </Form>
       </div>
     </div>

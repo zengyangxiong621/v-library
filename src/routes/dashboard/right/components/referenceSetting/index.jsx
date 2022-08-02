@@ -22,7 +22,7 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left',
   }
   const panelConfig = bar.panelConfig
-  const { config: {left, top, width, height, hideDefault}, states } = panelConfig
+  const { config: { left, top, width, height, hideDefault, allowScroll, isScroll=false }, states } = panelConfig
   const styleConfig = [
     {
       'displayName': '位置尺寸',
@@ -84,26 +84,10 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
           }
         ]
       },
-      "value": [
+      "value": states.map((item, index) => (
         {
-          "key": `1`,
-          "displayName": `应用1`,
-          "name": "tab",
-          "type": "object",
-          "value": [
-            {
-              "displayName": "应用选择",
-              "name": "dashboardSelect",
-              "type": "select",
-              "value": "",
-              "options": bar.allDashboardList.filter(item => item.id !== panelConfig.id)
-            }
-          ],
-        }
-      ].concat(states.map((item, index) => (
-        {
-          "key": `${index + 2}`,
-          "displayName": `应用${index + 2}`,
+          "key": `${index + 1}`,
+          "displayName": `应用${index + 1}`,
           "name": "tab",
           "type": "object",
           "value": [
@@ -112,11 +96,24 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
               "name": "dashboardSelect",
               "type": "select",
               "value": item.id,
+              "label": item.name,
               "options": bar.allDashboardList.filter(item => item.id !== panelConfig.id)
             }
           ],
         }
-      )))
+      ))
+    },
+    {
+      "displayName": "启用滚轮",
+      "name": "isScroll",
+      "type": "checkBox",
+      "value": isScroll
+    },
+    {
+      "displayName": "自动轮播",
+      "name": "allowScroll",
+      "type": "checkBox",
+      "value": allowScroll
     },
     // {
     //   "displayName": "编辑引用应用",
@@ -205,9 +202,9 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
   //   })
   // }
   const handleEditDashboard = () => {
-    const referenceList = styleConfig.find(item => item.name === 'styleConfig')
+    const referenceList = styleConfig.find(item => item.name === 'referenceList')
     const defaultActiveKey = referenceList.defaultActiveKey
-    const currentReference = referenceList.value.find(item => item.key === defaultActiveKey)
+    const currentReference = referenceList.value.find(item => item.key === defaultActiveKey).value
     const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
     if (currentReferenceId) {
       window.open(`/dashboard/${currentReferenceId}`)

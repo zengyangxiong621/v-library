@@ -14,8 +14,10 @@ interface State {
   [key: string]: any;
 }
 
-const ReferencePanel = ({ bar, id, dispatch }: any) => {
-
+const ReferencePanel = ({ bar, id, dispatch, isDashboard = true }: any) => {
+  const panel = bar.panels.find((item: IPanel) => item.id === id)
+  const { states, config: recommendConfig, name, type } = panel
+  const defaultStateId = (states.length > 0 && states[0].id) || ''
   const [ state, setState ] = useSetState<State>({
     states: [],
     defaultState: '',
@@ -25,10 +27,8 @@ const ReferencePanel = ({ bar, id, dispatch }: any) => {
 
   useEffect(() => {
     (async function() {
-      const panel = bar.panels.find((item: IPanel) => item.id === id)
       // 获取面板想起接口
-      const { states, config: recommendConfig, name, type } = panel
-      if (state.length === 0) return
+      if (states.length === 0) return
       // 默认取第一个
       const defaultStateId = states[0].id || ''
       // 获取画布详情接口
@@ -69,8 +69,58 @@ const ReferencePanel = ({ bar, id, dispatch }: any) => {
         dashboardConfig,
       })
     })()
+  }, [])
+
+  useEffect(() => {
+    console.log('引用面板', states)
+    ;(async function() {
+      // 获取面板想起接口
+      if (states.length === 0) return
+      // 获取画布详情接口
+      const { components, layers, dashboardConfig } = await http({
+        url: `/visual/application/dashboard/detail/${ defaultStateId }`,
+        method: 'get',
+      })
+      const componentData = bar.componentData;
+
+      const func = async (component: any) => {
+        try {
+          const data = await http({
+            url: "/visual/module/getData",
+            method: "post",
+            body: {
+              moduleId: component.id,
+              dataType: component.dataType,
+              callBackParamValues: bar.callbackArgs,
+            },
+          });
+
+          if (data) {
+            componentData[component.id] =
+              component.dataType !== "static" ? data : data.data;
+          } else {
+            throw new Error("请求不到数据");
+          }
+        } catch (err) {
+          componentData[component.id] = null;
+        }
+        return componentData[component.id];
+      };
+      await Promise.all(components.map((item: any) => func(item)));
+      setState({
+        states,
+        components,
+        layers,
+        dashboardConfig,
+      })
+    })()
+  }, [defaultStateId])
+
+
+  useEffect(() => {
 
   }, [])
+
 
   return (
     <div className={`reference-panel panel-${id}`} style={{ pointerEvents: 'none' }}>
