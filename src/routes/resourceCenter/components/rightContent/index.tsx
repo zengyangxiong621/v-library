@@ -84,7 +84,7 @@ const RightContent = (props: any) => {
     if (data) {
       message.success({ content: '移动分组成功', duration: 2 })
       // 移入分组成功后，需要刷新当前分组下的模板以及刷新左侧分组树
-      refreshList()
+      refreshList(true)
       cancelMoveGroup()
       setNewGroupId('')
     } else {
@@ -118,7 +118,7 @@ const RightContent = (props: any) => {
         break
     }
   }
-
+  console.log(listData,'listData')
   return <> 
     {
       listData.length ?

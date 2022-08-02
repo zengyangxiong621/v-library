@@ -68,6 +68,12 @@ export default {
             item.moduleType = payload.type[0]
           })
         }
+        if(!payload.type.length){
+          // 处理我的素材
+          data.content.map((item:any) => {
+            item.moduleType = "myresource"
+          })
+        }
         yield put({
           type: "setResourceLoading",
           payload: false

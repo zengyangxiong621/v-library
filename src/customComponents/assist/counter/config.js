@@ -447,7 +447,6 @@ const componentDefaultConfig = {
                                     type:'number',
                                     value:2,
                                     config:{
-                                        min:0,
                                         suffix:'px',  // 输入框后缀
                                     }
                                 },
@@ -457,7 +456,6 @@ const componentDefaultConfig = {
                                     type:'number',
                                     value:2,
                                     config:{
-                                        min:0,
                                         suffix:'px',  // 输入框后缀
                                     }
                                 },
@@ -482,7 +480,7 @@ const componentDefaultConfig = {
                             name:'zeroize',
                             displayName:'补零位数',
                             type:'number',
-                            value:5,
+                            value:3,
                             config:{
                                 min:0,
                                 max:20,
@@ -505,7 +503,7 @@ const componentDefaultConfig = {
                                 name:'decimalCount',
                                 displayName:'位数',
                                 type:'number',
-                                value:3,
+                                value:0,
                                 config:{
                                     min:0,
                                     max:10,

@@ -48,7 +48,7 @@ const UploadFile = (props: any) => {
         changeShowState(false)
         message.success('上传成功')
         uploadForm.resetFields()
-        refreshList()
+        refreshList(true)
         setConfirmLoading(false);
       }
     }

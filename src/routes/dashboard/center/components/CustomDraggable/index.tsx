@@ -755,12 +755,6 @@ const CustomDraggable
                           {
                             // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                             //   <CompImage componentConfig={component}/>
-
-                          //   <Counter
-                          //   componentConfig={component}
-                          //   fields={getFields(component)}
-                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                          // ></Counter>
                           // <RadarChart
                           //   componentConfig={component}
                           //   fields={getFields(component)}
@@ -769,6 +763,13 @@ const CustomDraggable
 
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
+
+                            layer.moduleName === 'counter' ? 
+                            <Counter
+                              componentConfig={component}
+                              fields={getFields(component)}
+                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            ></Counter> :
                             layer.moduleName === 'rankingBar' ?
                               <RankingBar
                                 onChange={(val:any)=>handleValueChange(val, component, layer.id)}

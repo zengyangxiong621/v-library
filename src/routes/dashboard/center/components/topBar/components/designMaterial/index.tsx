@@ -43,6 +43,10 @@ const DesignMaterial = (props: any) => {
     }else{
       payload.groupId = [null, '-1'].indexOf(groupId) > -1 ? '' : groupId
     }
+    // 我的素材，全部选择的type传空数组
+    if(payload.type[0] === "myresource"){
+      payload.type = []
+    }
     dispatch({
       type: 'bar/getSystemMaterialList',
       payload: {...payload},
