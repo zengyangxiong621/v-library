@@ -29,8 +29,8 @@ import {
   ILayerComponent,
   ILayerGroup,
   IPanel,
-  IComponent
-} from "../routes/dashboard/center/components/CustomDraggable/type";
+  IComponent, ILayerPanel,
+} from "../routes/dashboard/center/components/CustomDraggable/type"
 
 
 import {
@@ -485,15 +485,23 @@ export default {
     },
     // 复制图层
     *copy({ payload }: any, { select, call, put }: any): any {
-      const { layers, components } = yield http({
+      const { layers, components, panels } = yield http({
         url: "/visual/layer/copy",
         method: "post",
         body: payload,
       });
-      yield put({
-        type: "updateComponents",
-        payload: components,
-      });
+      if (components.length > 0) {
+        yield put({
+          type: "updateComponents",
+          payload: components,
+        });
+      }
+      if (panels.length > 0) {
+        yield put({
+          type: "updatePanels",
+          payload: panels,
+        });
+      }
       yield put({
         type: "updateTree",
         payload: layers,
@@ -588,42 +596,68 @@ export default {
           : state.bar.treeData.length !== 0
           ? state.bar.treeData[0].id
           : "";
-      if (createType === 'component') {
-        console.log('itemData', itemData)
-        console.log('payload', payload)
-      }
-      const { id, children }: any = yield http({
-        url: "/visual/module/add",
-        method: "post",
-        body: {
-          dashboardId: isPanel ? stateId : dashboardId,
-          component: { ...payload, moduleType: itemData.moduleType },
-          insertId: insertId,
-          children: [], // TODO: 需要确定children从哪里来
-        },
-      });
-      yield put({
-        type: "addComponentData",
-        payload: {
-          id,
-          dataType: "static",
-        },
-      });
-      yield put({
-        type: "updateComponents",
-        payload: {
-          ...deepClone(payload),
-          id: id,
-          moduleType: itemData.moduleType,
-          children,
-        },
-      });
-      // itemData.id = id
+        // 新建的是组件
+        const { id, children }: any = yield http({
+          url: "/visual/module/add",
+          method: "post",
+          body: {
+            dashboardId: isPanel ? stateId : dashboardId,
+            component: { ...payload, moduleType: itemData.moduleType },
+            insertId: insertId,
+            children: [], // TODO: 需要确定children从哪里来
+          },
+        });
+        yield put({
+          type: "addComponentData",
+          payload: {
+            id,
+            dataType: "static",
+          },
+        });
+        yield put({
+          type: "updateComponents",
+          payload: [{
+            ...deepClone(payload),
+            id,
+            moduleType: itemData.moduleType,
+            children,
+          }],
+        });
+        yield put({
+          type: "addComponent",
+          payload: { final: { ...itemData, id }, insertId },
+        });
+    },
+    *createPanel({ payload: { panelType } }: {payload: {panelType: 0 | 1}}, { call, put, select }: any): any {
 
-      yield put({
-        type: "addComponent",
-        payload: { final: { ...itemData, id: id }, insertId },
-      });
+      const bar: any = yield select((state: any) => state.bar);
+      const { isPanel, stateId, dashboardId, key, treeData } = bar
+      // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
+      const insertId =
+        key.length !== 0
+          ? key[key.length - 1]
+            : treeData.length !== 0
+          ? treeData[0].id
+            : ""
+      const data: IPanel = yield http({
+        url: '/visual/panel/add',
+        method: 'post',
+        body: {
+          type: panelType,
+          dashboardId: isPanel ? stateId : dashboardId,
+          insertId
+        }
+      })
+      if (data) {
+        const { id, name } = data
+        const layerPanel: ILayerPanel = { id, name, isLock: false, isShow: true, disabled: false, panelType }
+        bar.panels.push(data)
+        yield put({
+          type: "addComponent",
+          payload: { final: { ...layerPanel, id }, insertId },
+        });
+      }
+
     },
     *updateComponent({ payload }: any, { call, put, select }: any): any {
       if (payload.length > 0) {
@@ -1029,8 +1063,13 @@ export default {
       return { ...state, treeData: newLayers };
     },
     // 添加新的图层和组件
-    updateComponents(state: IBarState, { payload }: any) {
+    updateComponents(state: IBarState, { payload }: { payload: Array<any>}) {
       state.components = state.components.concat(payload);
+      return { ...state };
+    },
+    // 添加新的图层和面板
+    updatePanels(state: IBarState, { payload }: { payload: Array<any>}) {
+      state.panels = state.panels.concat(payload);
       return { ...state };
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {

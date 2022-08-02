@@ -78,18 +78,15 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
     }, 4);
 
   }
-  const createDynamicPanel = () => {
+  const createPanel = (panelType: 0 | 1) => {
     dispatch({
-      type: 'bar/createComponent',
-      createType: 'dynamicPanel'
+      type: 'bar/createPanel',
+      payload: {
+        panelType
+      }
     })
   }
-  const createReferencePanel = () => {
-    dispatch({
-      type: 'bar/createComponent',
-      createType: 'referencePanel'
-    })
-  }
+
   // 获取当前活跃的按钮, 并执行对应逻辑
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
@@ -103,10 +100,10 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
         toPreviewOrPublish(icon)
         break;
       case 'dongtaimianban':
-        createDynamicPanel()
+        createPanel(0)
         break;
       case 'yinyongmianban':
-        createReferencePanel()
+        createPanel(1)
         break;
     }
   }

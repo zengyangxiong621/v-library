@@ -29,8 +29,8 @@ const DynamicPanel = ({ bar, id, dispatch }: any) => {
       // 获取面板想起接口
       const { states, config: recommendConfig, name, type } = panel
       // 默认取第一个
+      if (state.length === 0) return
       const defaultStateId = states[0].id || ''
-      if (!defaultStateId) return
       console.log('defaultStateId', defaultStateId)
       // 获取画布详情接口
       const { components, layers, dashboardConfig } = await http({

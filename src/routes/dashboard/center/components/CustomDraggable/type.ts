@@ -19,14 +19,14 @@ export type IComponent = any
 
 export interface ILayerComponent {
   id: string,
-  groupId: string,
+  groupId?: string,
   name: string,
   isLock: boolean, // 是否锁定
   isShow: boolean, // 是否展示
   selected?: boolean,
   hover?: boolean,
-  cancel: boolean,
-  disabled: boolean,
+  cancel?: boolean,
+  disabled?: boolean,
   singleShowLayer?: boolean
 }
 

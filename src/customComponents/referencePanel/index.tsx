@@ -28,9 +28,9 @@ const ReferencePanel = ({ bar, id, dispatch }: any) => {
       const panel = bar.panels.find((item: IPanel) => item.id === id)
       // 获取面板想起接口
       const { states, config: recommendConfig, name, type } = panel
+      if (state.length === 0) return
       // 默认取第一个
       const defaultStateId = states[0].id || ''
-      if (!defaultStateId) return
       // 获取画布详情接口
       const { components, layers, dashboardConfig } = await http({
         url: `/visual/application/dashboard/detail/${ defaultStateId }`,

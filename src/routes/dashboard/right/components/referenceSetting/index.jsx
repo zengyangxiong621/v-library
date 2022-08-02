@@ -150,7 +150,6 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
         name: data.label
       }
     } )
-    console.log('referenceList', referenceList)
     dimensionConfig.forEach(item => {
       panelConfig.config[item.name] = item.value
     })
@@ -174,16 +173,24 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
         },
       },
     })
-    await http({
-      url: '/visual/panel/update',
-      method: 'post',
-      body: {
-        dashboardId: bar.dashboardId,
-        configs: [
-          panelConfig,
-        ],
-      },
-    })
+    try {
+      const data = await http({
+        url: '/visual/panel/update',
+        method: 'post',
+        body: {
+          dashboardId: bar.dashboardId,
+          configs: [
+            panelConfig,
+          ],
+        },
+      })
+      if (data) {
+
+      }
+    } catch (e) {
+      console.log('引用面板引用错误, id: ', panelConfig.id)
+    }
+
   }, 300)
 
   // const saveStyleData = async (param) => {
