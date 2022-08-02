@@ -150,21 +150,9 @@ export default {
         },
       });
       if (isPanel) {
-        const { config, states: panelStatesList } = yield http({
-          url: `/visual/panel/detail/${ panelId }`,
-          method: 'get',
-        })
-
         yield put({
-          type: "save",
-          payload: {
-            panelStatesList,
-            stateId
-          }
+          type: 'getPanelDetails'
         })
-        const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === 'recommend')
-        recommendConfig.width = config.width
-        recommendConfig.height = config.height
       }
       yield put({
         type: "getDashboardDetails",
@@ -174,6 +162,23 @@ export default {
       });
       yield put({
         type: "getAllDashboardList",
+      })
+    },
+    *getPanelDetails({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { panelId } = bar
+      const { config, states: panelStatesList } = yield http({
+        url: `/visual/panel/detail/${ panelId }`,
+        method: 'get',
+      })
+      const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === 'recommend')
+      recommendConfig.width = config.width
+      recommendConfig.height = config.height
+      yield put({
+        type: "save",
+        payload: {
+          panelStatesList,
+        }
       })
     },
     *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
@@ -278,6 +283,16 @@ export default {
             dashboardName,
           },
         });
+        console.log('结果', {
+          treeData: noEmptyGroupLayers,
+          components,
+          panels,
+          dashboardId,
+          stateId,
+          panelId,
+          dashboardConfig: newDashboardConfig,
+          dashboardName,
+        })
         cb({ dashboardConfig: newDashboardConfig, dashboardName });
       } catch (e) {
         return e;

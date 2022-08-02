@@ -1,4 +1,6 @@
 import React, { memo, useState, useEffect } from 'react'
+import { withRouter } from 'dva/router'
+
 import { connect } from 'dva'
 import './index.less'
 import { find } from '../../../../../utils/common'
@@ -13,11 +15,12 @@ import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid'
 import ComponentCard from '../componentCard'
 import componentLib from '../index'
+import {IPanel} from "@/routes/dashboard/center/components/CustomDraggable/type";
 
 const dashboardId = window.location.pathname.split('/')[2]
 
 let isSettingsChange = false
-const PageSetting = ({ bar, dispatch, ...props }) => {
+const PageSetting = ({ bar, dispatch, history, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left',
   }
@@ -165,7 +168,24 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
   //   })
   // }
   const handleEditDashboard = () => {
-
+    const panel = bar.panels.find((panel) => panel.id === panelConfig.id)
+    history.push(`/dashboard/${bar.dashboardId}/panel-${panel.id}/state-${panel.states[0].id}`)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        isPanel: true,
+        panelId: panel.id
+      }
+    })
+    dispatch({
+      type: 'bar/getPanelDetails'
+    })
+    dispatch({
+      type: 'bar/selectPanelState',
+      payload: {
+        stateId: panel.states[0].id
+      }
+    })
   }
   return (
     <div className="dynamic-wrap">
@@ -201,5 +221,5 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
 
 export default connect(({ bar }) => ({
   bar,
-}))(PageSetting)
+}))(withRouter(PageSetting))
 

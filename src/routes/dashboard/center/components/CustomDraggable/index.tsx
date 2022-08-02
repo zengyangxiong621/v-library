@@ -93,15 +93,15 @@ const CustomDraggable
     treeData,
     mouse,
        history,
-       components
-     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>}) => {
+       components,
+    panels
+     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>, panels: Array<IPanel>}) => {
     const callbackParamsList = bar.callbackParamsList
     const callbackArgs = bar.callbackArgs
     const scaleDragData = bar.scaleDragData
     const isSupportMultiple: boolean = bar.isSupportMultiple
     const allComponentRefs = bar.allComponentRefs
     const allComponentDOMs = bar.allComponentDOMs
-    const panels = bar.panels
     let supportLinesRef = bar.supportLinesRef
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 })
 
@@ -259,7 +259,7 @@ const CustomDraggable
       if ('panelType' in layer) {
         // 说明是面板,且一定是单个
         console.log('111111111111111111111111')
-        const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
+        const panel: any = panels.find((panel: IPanel) => panel.id === layer.id)
         panel.config.left = Math.ceil(data.x)
         panel.config.top = Math.ceil(data.y)
         dispatch({
@@ -381,8 +381,8 @@ const CustomDraggable
         const xPositionList: Array<number> = []
         const yPositionList: Array<number> = []
         bar.selectedComponents = [
-          ...bar.components.filter((component: IComponent) => bar.selectedComponentIds.includes(component.id)),
-          ...bar.panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))
+          ...components.filter((component: IComponent) => bar.selectedComponentIds.includes(component.id)),
+          ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))
         ]
         bar.selectedComponents.forEach((item: IComponent | IPanel) => {
           // const style_config = item.config.find((item: any) => item.name === STYLE)
@@ -490,9 +490,25 @@ const CustomDraggable
     const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent | ILayerPanel, config: IConfig) => {
       clearTimeout(clickTimer.current)
       if ('panelType' in layer) {
-        const panel = panels.find((panel: IPanel) => panel.id === layer.id)
-        // history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
-        window.open(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+        const panel: any = panels.find((panel: IPanel) => panel.id === layer.id)
+        history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            isPanel: true,
+            panelId: layer.id
+          }
+        })
+        dispatch({
+          type: 'bar/getPanelDetails'
+        })
+        dispatch({
+          type: 'bar/selectPanelState',
+          payload: {
+            stateId: panel.states[0].id
+          }
+        })
+        // window.open(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
       }
     }
     const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
@@ -630,7 +646,7 @@ const CustomDraggable
       console.log('回调参数作用到的组件ID有：', activeIds)
       if (temp) {
         activeIds = [...(new Set(activeIds) as any)]
-        const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find((item: IComponent) => item.id === id)), [])
+        const activeComponents = activeIds.reduce((pre, id) => pre.concat(components.find((item: IComponent) => item.id === id)), [])
         // 绑定数据容器的组件列表
         const componentsByDataContainer = activeComponents.filter((component: IComponent) => component.dataFrom === 1)
         // 绑定数据源的组件列表
@@ -681,17 +697,20 @@ const CustomDraggable
           let style_config, staticData, styleDimensionConfig, recommendConfig
           // 群组
           if ('panelType' in layer) {
-            const panel = bar.panels.find((panel: IPanel) => panel.id === layer.id)
-            recommendConfig = panel.config
-            const { left, top, width, height } = recommendConfig
-            config = {
-              position: {
-                x: left,
-                y: top
-              },
-              style: {
-                width: width,
-                height: height
+            const panel = panels.find((panel: IPanel) => panel.id === layer.id)
+            console.log('panel', panel)
+            if (panel) {
+              recommendConfig = panel.config
+              const { left, top, width, height } = recommendConfig
+              config = {
+                position: {
+                  x: left,
+                  y: top
+                },
+                style: {
+                  width: width,
+                  height: height
+                }
               }
             }
           } else if(COMPONENTS in layer) {
@@ -730,6 +749,9 @@ const CustomDraggable
               events = component.events
             }
           }
+            console.log('-----------------')
+            console.log('components', components)
+            console.log('component', component, 'layer', layer)
           return (
             <SingleDraggable
               dimensionConfig={ isPanel ? recommendConfig : styleDimensionConfig }
@@ -788,6 +810,7 @@ const CustomDraggable
                             <DynamicPanel
                               history={ history }
                               id={layer.id}
+                              panels={panels}
                             />
                             <div className="hovered">
                               双击编辑动态面板
@@ -799,6 +822,7 @@ const CustomDraggable
                             <ReferencePanel
                               history={ history }
                               id={layer.id}
+                              panels={panels}
                             />
                             <div className="hovered">
                               双击编辑引用面板
@@ -819,6 +843,7 @@ const CustomDraggable
                                 history={ history }
                                 treeData={ (layer as any)[COMPONENTS] }
                                 components={components}
+                                panels={panels}
                               />
                             </div>
                             : ''

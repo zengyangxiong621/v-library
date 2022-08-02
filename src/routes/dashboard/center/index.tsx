@@ -29,11 +29,15 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [ customMenuOptions, setCustomMenuOptions ] = useState(menuOptions)
   const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)// let supportLinesRef: any = useRef(// null)
   const [ rulerCanvasSpacing, setRulerCanvasSpacing ] = useState({ left: 22, top: 22 })
-  const [layers, setLayers] = useState(deepClone(bar.treeData))
+  const [layers, setLayers] = useState([])
+  const [components, setComponents] = useState([])
+  const [panels, setPanels] = useState([])
   useEffect(() => {
     const data = deepClone(bar.treeData)
     treeDataReverse(data)
     setLayers(data)
+    setComponents(bar.components)
+    setPanels(bar.panels)
   }, [bar.treeData])
 
   let supportLinesRef = bar.supportLinesRef
@@ -522,7 +526,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     <RulerLines/>
 
                     <div className={`draggable-container screen-${bar.dashboardId}`} ref={ draggableContainerRef }>
-                      <CustomDraggable mouse={ 0 } treeData={ layers } components={bar.components}/>
+                      <CustomDraggable mouse={ 0 } treeData={ layers } components={components} panels={panels}/>
                     </div>
                   </div>
                 </div>
