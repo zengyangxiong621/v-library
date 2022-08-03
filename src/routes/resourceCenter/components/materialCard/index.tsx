@@ -25,9 +25,8 @@ const AppCard = (props: any) => {
     refreshList,
     history,
     getCurrentItem,
-    moduleType
+    moduleType,
   } = props;
-
   // 后端返回的photoUrl为空，则使用默认图片
   let picUrl =
     photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png");
@@ -164,7 +163,7 @@ const AppCard = (props: any) => {
             body: JSON.stringify(params)
           });
         if (data) {
-          refreshList();
+          refreshList(true);
           message.success({ content: "删除成功", duration: 2 });
         } else {
           message.error({ content: "删除失败", duration: 2 });
@@ -189,7 +188,7 @@ const AppCard = (props: any) => {
   // 导出功能
   const exportDesign = async() => {
     const downloadUrl=moduleType.includes('Temp') ? `${(window as any).CONFIG.BASE_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
-    downLoad(downloadUrl,true)
+    downLoad(downloadUrl,true,name)
     // window.location.href = moduleType.includes('Temp') ? downLoad`${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
   };
   // 鼠标移入更多按钮时，显示下拉菜单

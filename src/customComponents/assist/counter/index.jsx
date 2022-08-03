@@ -1,7 +1,7 @@
 import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
-
+import CountUp from 'react-countup'
 
 class Counter extends Component {
   constructor(Props) {
@@ -125,14 +125,14 @@ class Counter extends Component {
     let numList = []
     const numValue = originData[fields[1]]
     if(reg.test(numValue)){
-      let value = Number(numValue).toFixed(decimalCount); // 小数位长度处理
+      let value = decimalCount>0 ? Number(numValue).toFixed(decimalCount) : numValue.split('.')[0] ; // 小数位长度处理
       let intNumber = value.split('.')[0]
-      let floatNumber = value.split('.')[1]
+      let floatNumber = value.split('.')[1] || ''
       intNumber = Math.abs(intNumber).toString().padStart(zeroize, 0)  // 补位处理
       intNumber = intNumber.replace(eval(`/(\\d{1,${splitCount}})(?=(?:\\d{${splitCount}})+(?!\\d))/g`),'$1,')  // 分隔符处理
       let sign = ['-','+'].indexOf(numValue.slice(0,1))>-1 ? numValue.slice(0,1) : ''
       // 数据格式完成后整合处理
-      intNumber = `${sign}${intNumber}.${floatNumber}`
+      intNumber = `${sign}${intNumber}${decimalCount>0 ? '.' : ''}${floatNumber}`
       numList = intNumber.split('')
     }
     //小数点点间距处理
@@ -143,7 +143,6 @@ class Counter extends Component {
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
     // 补充前缀功能
     const prefixConfig = this.formatConfig([this.getStyleData(config, "前缀")],[])
-    console.log(prefixConfig,'fields')
     return (
       <div className='counter' style={{
         ...displayStyle,
@@ -162,7 +161,7 @@ class Counter extends Component {
           }}>{originData[fields[0]]}</div>
         }
         {/* 数值 */}
-        <div className="number">
+        <div className="counter-number">
           {
             prefixConfig.support &&
             <span style={{
@@ -173,7 +172,7 @@ class Counter extends Component {
               lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{prefixConfig.content}</span> 
           }
-          <div style={{
+          <div className='number-list' style={{
             ...dataRangConfig,
             fontWeight: dataRangConfig.bold ? 'bold' : '',
             fontStyle: dataRangConfig.italic ? 'italic' : '',
@@ -188,12 +187,18 @@ class Counter extends Component {
                       item === ',' ? 
                       <span key={index} style={{
                         marginLeft: splitSpacingConfig.left,
-                        marginRight: splitSpacingConfig.right
+                        marginRight: splitSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>,</span> : 
                       item === '.' ? 
                       <span key={index} style={{
                         marginLeft: pointSpacingConfig.left,
-                        marginRight: pointSpacingConfig.right
+                        marginRight: pointSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>.</span> :
                       <span style={{
                         width: layoutConfig.width,
@@ -201,8 +206,20 @@ class Counter extends Component {
                         marginLeft: layoutConfig.left,
                         marginRight: layoutConfig.right,
                         lineHeight: `${dataRangConfig.lineHeight}px`,
-                        display: 'inline-block'
-                      }} key={index}>{item}</span>
+                      }} key={index}>
+                      {
+                        (item === '-' || item === '+') ? item : 
+                        // <DigitalFlop config={
+                        //   {number: [Number(item)],content: '{nt}', style:{
+                        //     fontSize: dataRangConfig.fontSize,
+                        //     fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
+                        //     fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
+                        //     fill: dataRangConfig.color,
+                        //   }}
+                        // } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                        <CountUp start={0} end={Number(item)} duration={1}></CountUp>
+                      }
+                      </span>
                     }
                   </Fragment>
                 )

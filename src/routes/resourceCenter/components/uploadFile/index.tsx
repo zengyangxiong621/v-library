@@ -48,7 +48,7 @@ const UploadFile = (props: any) => {
         changeShowState(false)
         message.success('上传成功')
         uploadForm.resetFields()
-        refreshList()
+        refreshList(true)
         setConfirmLoading(false);
       }
     }
@@ -132,7 +132,7 @@ const UploadFile = (props: any) => {
 
   return (
     <Modal
-      title="自定义上传素材"
+      title={`自定义上传${['myTemp','systemTemp'].indexOf(origin) > -1 ? '模板' : '素材'}`}
       visible={uploadVisible}
       maskClosable={false}
       destroyOnClose

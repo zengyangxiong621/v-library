@@ -15,6 +15,7 @@ const mapStateToProps = (state: any) => {
 }
 
 const Text = (props: any) => {
+  const {current, index} = props
   const [dataArr, setDataArr] = useState<any>([])
   const [dataLoading, setDataLoading] = useState(true)
   useEffect(() => {
@@ -42,12 +43,14 @@ const Text = (props: any) => {
         setDataLoading(false)
       })
     }
-    init()
+    if(current.length && current[0] === index){
+      init()
+    }
   }, [])
 
   return (
     <>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="assit-loading" spinning={dataLoading}/>
       <div className='Text-wrap'>
         {
           dataArr?.map((item: any, index: number) => {

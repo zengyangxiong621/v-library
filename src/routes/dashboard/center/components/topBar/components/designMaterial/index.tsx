@@ -6,7 +6,7 @@ import { Spin } from 'antd'
 
 
 const DesignMaterial = (props: any) => {
-  const { bar, dispatch,title } = props
+  const { bar, dispatch,title,current, index } = props
   const origin = title === '系统素材' ? 'design' : 'myresource'
   const classList = bar.systemMaterialClass[origin]
   const [active, setActive] = useState('spsc')
@@ -20,10 +20,12 @@ const DesignMaterial = (props: any) => {
   }
 
   useEffect(() => {
-    if(classList?.length){
-      setActive(classList[0].groupId)
-      if(!chartDataMap[classList[0].groupId]){
-        getSystemMaterialList(null)
+    if(current.length && current[0] === index){
+      if(classList?.length){
+        setActive(classList[0].groupId)
+        if(!chartDataMap[classList[0].groupId]){
+          getSystemMaterialList(null)
+        }
       }
     }
   }, [classList])
@@ -42,6 +44,10 @@ const DesignMaterial = (props: any) => {
       payload.subType = [null, 'sysMatAll'].indexOf(groupId) > -1 ? [] : [groupId]
     }else{
       payload.groupId = [null, '-1'].indexOf(groupId) > -1 ? '' : groupId
+    }
+    // 我的素材，全部选择的type传空数组
+    if(payload.type[0] === "myresource"){
+      payload.type = []
     }
     dispatch({
       type: 'bar/getSystemMaterialList',
@@ -94,7 +100,7 @@ const DesignMaterial = (props: any) => {
             })
           }
         </ul>
-        <Spin className="data-loading" spinning={dataLoading}/>
+        <Spin className="design-loading" spinning={dataLoading}/>
         {
           chartDataMap[active] && (
             chartDataMap[active].length ?

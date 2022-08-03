@@ -660,7 +660,6 @@ export default {
     },
     // 获取系统素材数据
     *getSystemMaterialList({ payload, cb }: any, { call, put }: any): any {
-      console.log("调用接口");
       const data = yield http({
         url: "/visual/resource/queryResourceList",
         method: "post",
@@ -892,6 +891,18 @@ export default {
       return {
         ...state,
       };
+    },
+    updateSelectedComponents(state: IBarState, { payload }: any) {
+      state.selectedComponentIds = layerComponentsFlat(
+        state.selectedComponentOrGroup
+      );
+      // todo 这里需要添加 panel 的（来自 develop 分支）
+      state.selectedComponents = state.components.filter((component) =>
+        state.selectedComponentIds.includes(component.id)
+      );
+      return {
+        ...state
+      }
     },
     calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = [];

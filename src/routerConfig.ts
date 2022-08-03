@@ -14,6 +14,7 @@ import UserManage from './routes/authorityManage/userManage'
 import RoleManage from './routes/authorityManage/roleManage'
 import AccountList from './routes/authorityManage/roleManage/accountList'
 import Login from './routes/login'
+import NoFound from './routes/ErrorPage/404'
 
 const routesConfig = (app: any) => [
   {
@@ -52,7 +53,8 @@ const routesConfig = (app: any) => [
       ResourceCenter(app),
       UserManage(app),
       RoleManage(app),
-      AccountList(app)
+      AccountList(app),
+      NoFound(app)
     ]
   }
 ];

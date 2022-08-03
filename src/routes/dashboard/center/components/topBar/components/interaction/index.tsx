@@ -8,10 +8,13 @@ import { http } from '@/services/request'
 // const dataArr = []
 
 const Interaction = (props: any) => {
+  const {current, index} = props
   const [dataArr, setDataArr] = useState<any>([])
   const [dataLoading, setDataLoading] = useState(false)
   useEffect(() => {
-    getData()
+    if(current.length && current[0] === index){
+      getData()
+    }
   }, [])
 
   // 获取地图组件数据
@@ -37,7 +40,7 @@ const Interaction = (props: any) => {
   }
   return (
     <>    
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="Interaction-loading" spinning={dataLoading}/>
       <div className='Interaction-wrap'>
         {
           dataArr.length ? 

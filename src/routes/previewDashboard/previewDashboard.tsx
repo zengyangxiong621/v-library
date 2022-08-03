@@ -94,8 +94,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       case '2':
         const wRatio2 = winW / width
         const hRatio2 = winH / height
-        console.log('2模式下宽度比', wRatio2);
-        console.log('2模式下高度比', hRatio2);
         // 在 宽高比中找一个大的
         let finalOverflowStyle: any = {
           width: 0,

@@ -85,11 +85,15 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     }
     setSortMap(newSortMap)
     // 选择新标准后，需要发送一次请求
+    // 全部应用分组的groupId('-1')是前端自己构造出来的, 选中全部应用分组时后端要求传 null
+    const curGroupId = dashboardManage.curSelectedGroup[0]
+    const groupId = curGroupId === '-1' ? null : curGroupId
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      map: newSortMap
+      map: newSortMap,
+      groupId
     }
     dispatch({
       type: 'dashboardManage/getTemplateList',
@@ -119,7 +123,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     })
   }
   // 导入应用
-  const importAppUploadprops:UploadProps = {
+  const importAppUploadprops: UploadProps = {
     name: 'file',
     multiple: false,
     maxCount: 1,
@@ -127,7 +131,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     action: `${BASEURL}/visual/application/import/${spaceId}`,
     headers: {
       'Response-Type': 'application/json',
-      'authorization':localStorage.getItem('token') || ''
+      'authorization': localStorage.getItem('token') || ''
     },
     // data: {
     // },

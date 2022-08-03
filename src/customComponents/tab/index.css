@@ -4,7 +4,8 @@
 }
 
 .tab-wrap .tab-item {
-  /*padding: 12px 20px;*/
+  margin-right: 0 !important;
+  padding: 12px 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

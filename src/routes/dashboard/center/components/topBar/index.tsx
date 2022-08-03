@@ -1,4 +1,4 @@
-import React, { memo,useEffect } from 'react'
+import React, { memo,useEffect,useState } from 'react'
 import './index.less'
 import { connect } from "dva";
 /**
@@ -17,7 +17,6 @@ import DesignMaterial from './components/designMaterial'
 import ThmemResource from './components/thmemResource'
 import MyCollection from './components/myCollection'
 
-
 import { Menu } from 'antd'
 const { SubMenu, Item } = Menu
 
@@ -25,10 +24,12 @@ const { SubMenu, Item } = Menu
 
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai, dispatch } = props
+  const [current, setCurrent] = useState<any>([])
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
     zujian: componentMenu,
     sucai: MaterialMenu,
   }
+
 
   useEffect(() => {
     if(zujianORsucai === 'sucai'){
@@ -44,12 +45,12 @@ const TopBar = (props: any) => {
   }
   
   const menuSelect = (data:any) => {
-    console.log(data,'menu选中数据')
+    setCurrent(data)
   }
 
   return (
-    <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
-    <Menu className='TopBar-wrap' mode="horizontal" onClick={menuSelect}>
+  <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
+    <Menu className='TopBar-wrap' mode="horizontal" onOpenChange={menuSelect}>
       {
         menuReflect[zujianORsucai].map((item: any) => {
           return (
@@ -57,7 +58,10 @@ const TopBar = (props: any) => {
               <div
                 className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
               >
-                {React.createElement(item.component,item)}
+              {
+                // React.createElement(item.component,{...item,index: item.key, current})
+                React.createElement(item.component,{...item,index:item.key,current})
+              }
               </div>
             </SubMenu>)
           )
@@ -69,7 +73,7 @@ const TopBar = (props: any) => {
   )
 }
 
-/**
+  /**
  * description: 组件 、 素材 导航栏选项卡配置
  */
 const componentMenu = [
@@ -81,13 +85,6 @@ const componentMenu = [
     component: Charts,
   },
   {
-    title: '地图',
-    key: 'map',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: false,
-    component: Map
-  },
-  {
     title: '文字',
     key: 'text',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
@@ -95,11 +92,25 @@ const componentMenu = [
     component: Text
   },
   {
-    title: '辅助',
-    key: 'assist',
+    title: '指标',
+    key: 'indicator',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Assist
+    component: Text
+  },
+  {
+    title: '表格',
+    key: 'table',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Text
+  },
+  {
+    title: '地图',
+    key: 'map',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Map
   },
   {
     title: '交互',
@@ -109,14 +120,28 @@ const componentMenu = [
     component: Interaction
   },
   {
+    title: '辅助',
+    key: 'assist',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Assist
+  },
+  {
     title: '其他',
     key: 'other',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
     component: Other
   },
-
+  {
+    title: '我的',
+    key: 'my',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Text
+  },
 ]
+
 const MaterialMenu = [
   {
     title: '系统素材',
