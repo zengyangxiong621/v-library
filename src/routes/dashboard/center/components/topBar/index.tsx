@@ -1,4 +1,4 @@
-import React, { memo,useEffect,useState,useRef } from 'react'
+import React, { memo,useEffect,useState } from 'react'
 import './index.less'
 import { connect } from "dva";
 /**
@@ -24,6 +24,56 @@ const { SubMenu, Item } = Menu
 
 
 const TopBar = (props: any) => {
+  const { showTopBar, zujianORsucai, dispatch } = props
+  const [current, setCurrent] = useState<any>([])
+  const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
+    zujian: componentMenu,
+    sucai: MaterialMenu,
+  }
+
+
+  useEffect(() => {
+    if(zujianORsucai === 'sucai'){
+      getSystemMaterial()
+    }
+  }, [zujianORsucai])
+
+  // 获取所有素材分类
+  const getSystemMaterial = () => {
+    dispatch({
+      type: 'bar/getSystemMaterialClass'
+    })
+  }
+  
+  const menuSelect = (data:any) => {
+    setCurrent(data)
+  }
+
+  return (
+  <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
+    <Menu className='TopBar-wrap' triggerSubMenuAction='click' mode="horizontal" onOpenChange={menuSelect}>
+      {
+        menuReflect[zujianORsucai].map((item: any) => {
+          return (
+            (<SubMenu popupOffset={[0, 0]} className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && '88px'}} >
+              <div
+                className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
+              >
+              {
+                // React.createElement(item.component,{...item,index: item.key, current})
+                React.createElement(item.component,{...item,index:item.key,current})
+              }
+              </div>
+            </SubMenu>)
+          )
+        })
+      }
+    </Menu>
+  </div>
+
+  )
+}
+
   /**
  * description: 组件 、 素材 导航栏选项卡配置
  */
@@ -31,7 +81,6 @@ const componentMenu = [
   {
     title: '图表',
     key: 'chart',
-    childRef: useRef(),
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: true,
     component: Charts,
@@ -72,63 +121,6 @@ const componentMenu = [
   //   component: Other
   // },
 ]
-  const { showTopBar, zujianORsucai, dispatch } = props
-  const [current, setCurrent] = useState<any>([])
-  const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
-    zujian: componentMenu,
-    sucai: MaterialMenu,
-  }
-
-
-  useEffect(() => {
-    if(zujianORsucai === 'sucai'){
-      getSystemMaterial()
-    }
-  }, [zujianORsucai])
-
-  // 获取所有素材分类
-  const getSystemMaterial = () => {
-    dispatch({
-      type: 'bar/getSystemMaterialClass'
-    })
-  }
-  
-  const menuSelect = (data:any) => {
-    if(data.length){
-      let dataList = deepClone(componentMenu)
-      let dom = dataList.find((item:any) => item.key === data[0])
-      if(dom){
-        console.log(dom,'dom')
-        dom.childRef.current.initPage()
-      }
-    }
-  }
-
-  return (
-  <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
-    <Menu className='TopBar-wrap' triggerSubMenuAction='click' mode="horizontal" onOpenChange={menuSelect}>
-      {
-        menuReflect[zujianORsucai].map((item: any) => {
-          return (
-            (<SubMenu popupOffset={[0, 0]} className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && '88px'}} >
-              <div
-                className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
-              >
-              {
-                // React.createElement(item.component,{...item,index: item.key, current})
-                React.createElement(item.component,item)
-              }
-              </div>
-            </SubMenu>)
-          )
-        })
-      }
-    </Menu>
-  </div>
-
-  )
-}
-
 
 const MaterialMenu = [
   {

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { memo, useEffect, useState,useImperativeHandle } from 'react'
+import { memo, useEffect, useState } from 'react'
 import './index.less'
 import EveryItem from '../everyItem/index'
 
@@ -10,27 +10,21 @@ import { Spin } from 'antd'
 
 const Charts = (props: any) => {
   const [active, setActive] = useState('all')
+  const {current, index} = props
   const [allModules, setAllModules] = useState<any>({})
   const [dataLoading, setDataLoading] = useState(false)
   const liHover = (key: string) => {
-    console.log(allModules,'allModules')
     setActive(key)
     if(!allModules[key]){
       getData([key])
     }
   }
-  useImperativeHandle(props.childRef, () => ({
-    initPage: () => {
-      console.log(props,'初始化')
+
+  useEffect(() => {
+    if(current.length && current[0] === index){
       getData([])
     }
-  }) )
-
-  // useEffect(() => {
-  //   if(current.length && current[0] === index){
-  //     getData([])
-  //   }
-  // }, [props.current])
+  }, [])
 
 
   // 获取组件数据
@@ -57,12 +51,11 @@ const Charts = (props: any) => {
     if(!allModules[classType]){
       let obj:any = {}
       obj[classType] = data.content
-      setAllModules({...allModules, ...obj})
+      let list = {...allModules, ...obj}
+      setAllModules(list);
     }
     setDataLoading(false)
   }
-
-  console.log(allModules[active],'allModules')
 
   return (
     <div className='Charts-wrap'>
