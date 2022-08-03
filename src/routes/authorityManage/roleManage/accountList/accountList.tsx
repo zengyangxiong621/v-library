@@ -190,8 +190,8 @@ export default function AccountList(props:any) {
     const query=queryString.parse(props.location.search)
     const searchParams={
       roleId:query.roleId,
-      name:'',
-      status:''
+      userName:'',
+      status:null
     }
     setSearchParams(searchParams)
     getTableData(searchParams)

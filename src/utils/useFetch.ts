@@ -96,6 +96,9 @@ export const useFetch = async (
     message.error({
       content: data?.message || "请求数据失败"
     });
+  }
+  if(code===403){
+    message.error('暂无权限')
     window.history.replaceState(null,'','/404')
     window.location.reload();
   }

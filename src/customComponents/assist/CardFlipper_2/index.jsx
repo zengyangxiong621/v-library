@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './index.css'
 import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 import ComponentDefaultConfig from './config'
+import CountUp from 'react-countup'
+
 
 
 class ChMap extends Component {
@@ -79,14 +81,15 @@ class ChMap extends Component {
               lineHeight: textNumberStyle.lineHeight+"px",
             }}>
               {/* {item} */}
-              <DigitalFlop config={
+              {/* <DigitalFlop config={
                 {number: [Number(item)],content: '{nt}',style: {
                   fontSize: textNumberStyle.fontSize,
                   fontWeight: textNumberStyle.bold ? 'bold' : 'normal',
                   fontStyle: textNumberStyle.italic ? 'italic' : 'normal',
                   fill: textNumberStyle.color,
                 }}
-              } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+              } style={{width: '100%', height: '100%',marginTop: '20%' }} /> */}
+              <CountUp start={0} end={Number(item)} duration={1}></CountUp>
             </div>
           ))
         }

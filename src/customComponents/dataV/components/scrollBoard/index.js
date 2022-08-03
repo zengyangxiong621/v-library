@@ -40,9 +40,15 @@ const defaultConfig = {
    */
   headerBGC: '#00BAFF',
   /**
-   * @description Odd row background color
+   * @description Header background color
    * @type {String}
-   * @default oddRowBGC = '#003B51'
+   * @default headerBGC = '#00BAFF'
+   */
+  headerBGI: 'unset',
+  /**
+   * @description Odd row background Image
+   * @type {String}
+   * @default oddRowBGC = 'unset'
    */
   oddRowBGC: '#003B51',
   /**
@@ -94,6 +100,13 @@ const defaultConfig = {
    * @default carousel = 'single'
    * @example carousel = 'single' | 'page'
    */
+  indexAlign: 'left',
+  /**
+   * @description Carousel type
+   * @type {String}
+   * @default carousel = 'type'
+   * @example carousel = 'left' | 'center' | 'right'
+   */
   carousel: 'single',
   /**
    * @description Pause scroll when mouse hovered
@@ -117,13 +130,14 @@ function calcHeaderData({ header, index, indexHeader }) {
   return header
 }
 
-function calcRows({ data, index, headerBGC, rowNum }) {
+function calcRows({ data, index, headerBGC, headerBGI, rowNum }) {
   if (index) {
     data = data.map((row, i) => {
       row = [...row]
 
-      const indexTag = `<span class="index" style="background-color: ${headerBGC};">${i +
-      1}</span>`
+      // const indexTag = `<span class="index" style="background-color: ${headerBGC};background-image: ${headerBGI}">${i +
+      // 1}</span>`
+      const indexTag = `<span class="index">${i + 1}</span>`
 
       row.unshift(indexTag)
 
@@ -243,10 +257,11 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
     return deepMerge(widths, columnWidth)
   }
 
-  function calcHeights({ headerHeight, rowNum, data }, header) {
+  function calcHeights({ rowNum, data }, header) {
     let allHeight = height
 
-    if (header.length) allHeight -= headerHeight
+    // 如果头部存在的话
+    if (header.length) rowNum += 1
 
     const avgHeight = allHeight / rowNum
 
@@ -353,16 +368,16 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
       {!!header.length && !!mergedConfig && (
         <div
           className='header'
-          style={{ backgroundColor: `${mergedConfig.headerBGC}` }}
+          style={{ backgroundColor: `${mergedConfig.headerBGC}`, backgroundImage: `${mergedConfig.headerBGI}` }}
         >
           {header.map((headerItem, i) => (
             <div
               className='header-item'
               key={`${headerItem}-${i}`}
               style={{
-                height: `${mergedConfig.headerHeight}px`,
-                lineHeight: `${mergedConfig.headerHeight}px`,
-                width: `${widths[i]}px`
+                height: `${heights[1]}px`,
+                lineHeight: `${heights[1]}px`,
+                width: `${widths[i]}px`,
               }}
               align={aligns[i]}
               dangerouslySetInnerHTML={{ __html: headerItem }}
@@ -376,7 +391,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
           className='rows'
           style={{
             height: `${height -
-            (header.length ? mergedConfig.headerHeight : 0)}px`
+            (header.length ? heights[1] : 0)}px`
           }}
         >
           {rows.map((row, ri) => (
@@ -386,7 +401,8 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
               style={{
                 height: `${heights[ri]}px`,
                 lineHeight: `${heights[ri]}px`,
-                backgroundColor: `${getBackgroundColor(row.rowIndex)}`
+                backgroundColor: `${getBackgroundColor(row.rowIndex)}`,
+                overflow: ri === 0 ? 'hidden' : 'unset'
               }}
             >
               {row.ceils.map((ceil, ci) => (
@@ -394,7 +410,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
                   className='ceil'
                   key={`${ceil}-${ri}-${ci}`}
                   style={{ width: `${widths[ci]}px` }}
-                  align={aligns[ci]}
+                  align={ci === 0 ? mergedConfig.indexAlign : aligns[ci]}
                   dangerouslySetInnerHTML={{ __html: ceil }}
                   onClick={() => emitEvent(onClick, ri, ci, row, ceil)}
                   onMouseEnter={() => handleHover(true, ri, ci, row, ceil)}

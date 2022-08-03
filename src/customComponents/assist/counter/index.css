@@ -12,4 +12,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
+.number-list > span{
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }

@@ -123,6 +123,7 @@ const Tab = (props) => {
       ...borderStyle,
       backgroundColor: bgColor ? bgColor : 'unset',
       backgroundImage: bgImg ? `url(${ bgImg })` : 'unset',
+      backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       backgroundPosition: 'center center',
     }

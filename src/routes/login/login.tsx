@@ -80,7 +80,7 @@ export default function Login(props:any) {
       </div>
       <div className='righFform'>
         <div className='formContainer'>
-          <div className='formTitle'>安全应用管理系统</div>
+          <div className='formTitle'>可视化态势平台</div>
           <Form
             layout='vertical'
             form={form}
