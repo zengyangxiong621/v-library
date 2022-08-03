@@ -1,4 +1,4 @@
-import {DOMElement, useEffect, useRef, useState} from 'react'
+import {DOMElement, useEffect, useRef, useState, RefObject} from 'react'
 import {connect} from 'dva'
 import {Button} from 'antd'
 import {useSetState} from 'ahooks'
@@ -15,7 +15,7 @@ interface State {
   [key: string]: any;
 }
 
-const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
+const DynamicPanel = ({bar, id, dispatch, isDashboard = false, panels}: any) => {
   const componentData = bar.componentData;
   const panel = panels.find((item: IPanel) => item.id === id)
   // 获取面板想起接口
@@ -30,9 +30,8 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
     overflow: 'hidden',
     allData: [],
     activeIndex: 0,
-    isLoading: false
+    isLoading: false,
   })
-
   const getPanelDetails = async ({name, id}: { name: string; id: string }) => {
     const {components, layers, dashboardConfig, panels} = await http({
       url: `/visual/application/dashboard/detail/${id}`,
@@ -73,17 +72,12 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
   };
   useEffect(() => {
     (async function () {
-      // 默认取第一个
       if (states.length === 0) return
       const data = await Promise.all(states.map((item: { name: string; id: string }) => getPanelDetails(item)));
-      const allComponents = data.map(item => item.components)
-      const allLayers = data.map(item => item.layers)
       setState({
         allData: data,
         isLoading: true
       })
-
-      console.log('动态面板', data)
     })()
 
   }, [])
@@ -91,12 +85,6 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
   useEffect(() => {
     setState({overflow: isScroll ? 'auto' : 'none'})
   }, [isScroll])
-
-  useEffect(() => {
-    console.log('变化', {
-      allowScroll, animationType, scrollTime, animationTime
-    })
-  }, [allowScroll, animationType, scrollTime, animationTime])
 
   // 0
   // length 2
@@ -110,7 +98,42 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
         if (currentIndex === state.allData.length) {
           currentIndex = 0
         }
-        setState({activeIndex: currentIndex})
+        if (animationTime === 0) {
+          setState({activeIndex: currentIndex})
+        } else if (animationTime > 0) {
+          let opacityTimer = setInterval(() => {
+            const statusWrapDOMs: any = document.querySelectorAll(`.panel-${id} .status-wrap`)
+            if (statusWrapDOMs.length === 0) return
+            if (!statusWrapDOMs[0].style.opacity) {
+              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
+                if (index === currentIndex) {
+                  dom.style.opacity = '0'
+                } else{
+                  dom.style.opacity = '1'
+                }
+              })
+            } else {
+              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
+                if (index === currentIndex) {
+                  dom.style.opacity = `${Number(dom.style.opacity) + 0.5}`
+                  dom.style.display = 'block'
+                  if (Number(dom.style.opacity) >= 1) {
+                    dom.style.opacity = ''
+                  }
+                } else{
+                  dom.style.opacity = `${Number(dom.style.opacity) - 0.5}`
+                  dom.style.display = 'block'
+                  if (Number(dom.style.opacity) <= 0) {
+                    dom.style.opacity = ''
+                    setState({activeIndex: currentIndex})
+                    clearInterval(opacityTimer)
+                  }
+                }
+              })
+            }
+          }, 500)
+        }
+
       }, scrollTime)
     }
     return () => {
@@ -121,14 +144,22 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
   }, [state.isLoading, state.activeIndex])
 
   return (
-    <div className={`reference-panel panel-${id}`} style={{pointerEvents: 'none', overflow: state.overflow, width: '100%', height: '100%'}}>
+    <div className={`dynamic-panel panel-${id}`} style={{pointerEvents: 'none', overflow: state.overflow, width: '100%', height: '100%'}}>
       {
         (isDashboard && state.allData.length) >
         0 ? <CustomDraggable mouse={0} treeData={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
           :
           state.allData.map((item: any, index: number) =>
             (
-              <div style={{width: '100%', height: '100%', display: state.activeIndex === index ? 'block' : 'none', transition: 'all 3s' }}>
+              <div
+                className="status-wrap"
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  display: state.activeIndex === index ? 'block' : 'none',
+                  transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
+              }}>
                 <CustomDraggable mouse={0} treeData={item.layers} components={item.components} panels={item.panels}/>
               </div>
             )

@@ -26,6 +26,8 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   }
   const panelConfig = bar.panelConfig
   const { left, top, width, height, hideDefault, isScroll, allowScroll, animationType, scrollTime, animationTime } = panelConfig.config
+  const [key, setKey] = useState(uuidv4())
+  const [form] = Form.useForm()
   const styleConfig = [
     {
       'displayName': '位置尺寸',
@@ -100,8 +102,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       "value": animationTime,
     }
   ]
-  const [key, setKey] = useState(uuidv4())
-  const [form] = Form.useForm()
+
 
   useEffect(() => {
     if (!isSettingsChange) {

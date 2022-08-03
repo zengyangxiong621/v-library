@@ -14,108 +14,127 @@ interface State {
   [key: string]: any;
 }
 
-const ReferencePanel = ({ bar, id, dispatch, isDashboard = true }: any) => {
+const ReferencePanel = ({ bar, id, dispatch, isDashboard = false }: any) => {
+  const componentData = bar.componentData
   const panel = bar.panels.find((item: IPanel) => item.id === id)
   const { states, config: recommendConfig, name, type } = panel
+  const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig
   const defaultStateId = (states.length > 0 && states[0].id) || ''
   const [ state, setState ] = useSetState<State>({
     states: [],
     defaultState: '',
     components: [],
     layers: [],
+    allLayers: [],
+    AllComponents: [],
+    overflow: 'hidden',
+    allData: [],
+    activeIndex: 0,
+    isLoading: false,
   })
 
+  const getComponentData = async (component: any) => {
+    try {
+      const data = await http({
+        url: "/visual/module/getData",
+        method: "post",
+        body: {
+          moduleId: component.id,
+          dataType: component.dataType,
+          callBackParamValues: bar.callbackArgs,
+        },
+      });
+
+      if (data) {
+        componentData[component.id] =
+          component.dataType !== "static" ? data : data.data;
+      } else {
+        throw new Error("请求不到数据");
+      }
+    } catch (err) {
+      componentData[component.id] = null;
+    }
+    return componentData[component.id];
+  };
+  const getReferenceDetails = async ({name, id}: { name: string; id: string }) => {
+    const {components, layers, dashboardConfig, panels} = await http({
+      url: `/visual/application/dashboard/detail/${id}`,
+      method: "get",
+    });
+    await Promise.all(components.map((item: any) => getComponentData(item)));
+    return {
+      components,
+      layers,
+      dashboardConfig,
+      id,
+      name,
+      panels
+    }
+  }
+
   useEffect(() => {
-    (async function() {
-      // 获取面板想起接口
+  ;(async function() {
       if (states.length === 0) return
-      // 默认取第一个
-      const defaultStateId = states[0].id || ''
-      // 获取画布详情接口
-      const { components, layers, dashboardConfig } = await http({
-        url: `/visual/application/dashboard/detail/${ defaultStateId }`,
-        method: 'get',
-      })
-      const componentData = bar.componentData;
-
-      const func = async (component: any) => {
-        try {
-          const data = await http({
-            url: "/visual/module/getData",
-            method: "post",
-            body: {
-              moduleId: component.id,
-              dataType: component.dataType,
-              callBackParamValues: bar.callbackArgs,
-            },
-          });
-
-          if (data) {
-            componentData[component.id] =
-              component.dataType !== "static" ? data : data.data;
-          } else {
-            throw new Error("请求不到数据");
-          }
-        } catch (err) {
-          componentData[component.id] = null;
-        }
-        return componentData[component.id];
-      };
-      await Promise.all(components.map((item: any) => func(item)));
+      const data = await Promise.all(states.map((item: { name: string; id: string }) => getReferenceDetails(item)));
+      console.log('引用面板所有的data', data)
       setState({
-        states,
-        components,
-        layers,
-        dashboardConfig,
+        allData: data,
+        isLoading: true
       })
     })()
   }, [])
 
   useEffect(() => {
-    console.log('引用面板', states)
-    ;(async function() {
-      // 获取面板想起接口
-      if (states.length === 0) return
-      // 获取画布详情接口
-      const { components, layers, dashboardConfig } = await http({
-        url: `/visual/application/dashboard/detail/${ defaultStateId }`,
-        method: 'get',
-      })
-      const componentData = bar.componentData;
-
-      const func = async (component: any) => {
-        try {
-          const data = await http({
-            url: "/visual/module/getData",
-            method: "post",
-            body: {
-              moduleId: component.id,
-              dataType: component.dataType,
-              callBackParamValues: bar.callbackArgs,
-            },
-          });
-
-          if (data) {
-            componentData[component.id] =
-              component.dataType !== "static" ? data : data.data;
-          } else {
-            throw new Error("请求不到数据");
-          }
-        } catch (err) {
-          componentData[component.id] = null;
+    let timer: any = null
+    if (!isDashboard && state.isLoading && allowScroll) {
+      timer = setInterval(() => {
+        let currentIndex = state.activeIndex + 1
+        if (currentIndex === state.allData.length) {
+          currentIndex = 0
         }
-        return componentData[component.id];
-      };
-      await Promise.all(components.map((item: any) => func(item)));
-      setState({
-        states,
-        components,
-        layers,
-        dashboardConfig,
-      })
-    })()
-  }, [defaultStateId])
-
+        if (animationTime === 0) {
+          setState({activeIndex: currentIndex})
+        } else if (animationTime > 0) {
+          let opacityTimer = setInterval(() => {
+            const statusWrapDOMs: any = document.querySelectorAll(`.panel-${id} .status-wrap`)
+            if (statusWrapDOMs.length === 0) return
+            if (!statusWrapDOMs[0].style.opacity) {
+              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
+                if (index === currentIndex) {
+                  dom.style.opacity = '0'
+                } else{
+                  dom.style.opacity = '1'
+                }
+              })
+            } else {
+              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
+                if (index === currentIndex) {
+                  dom.style.opacity = `${Number(dom.style.opacity) + 0.5}`
+                  dom.style.display = 'block'
+                  if (Number(dom.style.opacity) >= 1) {
+                    dom.style.opacity = ''
+                  }
+                } else{
+                  dom.style.opacity = `${Number(dom.style.opacity) - 0.5}`
+                  dom.style.display = 'block'
+                  if (Number(dom.style.opacity) <= 0) {
+                    dom.style.opacity = ''
+                    setState({activeIndex: currentIndex})
+                    clearInterval(opacityTimer)
+                  }
+                }
+              })
+            }
+          }, 500)
+        }
+      }, scrollTime)
+    }
+    return () => {
+      if (timer) {
+        clearInterval(timer)
+      }
+    }
+  }, [state.isLoading, state.activeIndex])
 
   useEffect(() => {
 
@@ -123,8 +142,27 @@ const ReferencePanel = ({ bar, id, dispatch, isDashboard = true }: any) => {
 
 
   return (
-    <div className={`reference-panel panel-${id}`} style={{ pointerEvents: 'none' }}>
-      <CustomDraggable mouse={ 0 } treeData={ state.layers } components = {state.components}/>
+    <div className={`reference-panel panel-${id}`} style={{pointerEvents: 'none', overflow: state.overflow, width: '100%', height: '100%'}}>
+      {
+        (isDashboard && state.allData.length) >
+        0 ? <CustomDraggable mouse={0} treeData={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
+          :
+          state.allData.map((item: any, index: number) =>
+            (
+              <div
+                className="status-wrap"
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  display: state.activeIndex === index ? 'block' : 'none',
+                  transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
+                }}>
+                <CustomDraggable mouse={0} treeData={item.layers} components={item.components} panels={item.panels}/>
+              </div>
+            )
+          )
+      }
     </div>
   )
 }

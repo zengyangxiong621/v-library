@@ -92,8 +92,8 @@ const CustomDraggable
     dispatch,
     treeData,
     mouse,
-       history,
-       components,
+    history,
+    components,
     panels
      }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>, panels: Array<IPanel>}) => {
     const callbackParamsList = bar.callbackParamsList
@@ -496,7 +496,8 @@ const CustomDraggable
           type: 'bar/save',
           payload: {
             isPanel: true,
-            panelId: layer.id
+            panelId: layer.id,
+            layers: [],
           }
         })
         dispatch({
@@ -698,7 +699,6 @@ const CustomDraggable
           // 群组
           if ('panelType' in layer) {
             const panel = panels.find((panel: IPanel) => panel.id === layer.id)
-            console.log('panel', panel)
             if (panel) {
               recommendConfig = panel.config
               const { left, top, width, height } = recommendConfig
@@ -749,9 +749,14 @@ const CustomDraggable
               events = component.events
             }
           }
+          if (layer.id === '1554747784623529985') {
             console.log('-----------------')
             console.log('components', components)
-            console.log('component', component, 'layer', layer)
+            console.log('component', component)
+            console.log('layer', layer)
+            console.log('bar.componentData', bar.componentData[layer.id])
+            console.log('-----------------')
+          }
           return (
             <SingleDraggable
               dimensionConfig={ isPanel ? recommendConfig : styleDimensionConfig }

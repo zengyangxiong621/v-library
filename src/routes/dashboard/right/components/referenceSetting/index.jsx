@@ -22,7 +22,23 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left',
   }
   const panelConfig = bar.panelConfig
-  const { config: { left, top, width, height, hideDefault, allowScroll, isScroll=false }, states } = panelConfig
+  const {
+    config: {
+      left,
+      top,
+      width,
+      height,
+      hideDefault,
+      allowScroll,
+      isScroll = false,
+      animationType,
+      scrollTime,
+      animationTime,
+    },
+    states,
+  } = panelConfig
+  const [key, setKey] = useState(uuidv4())
+  const [form] = Form.useForm()
   const styleConfig = [
     {
       'displayName': '位置尺寸',
@@ -61,59 +77,83 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
       'value': hideDefault,
     },
     {
+      'displayName': '启用滚轮',
+      'name': 'isScroll',
+      'type': 'checkBox',
+      'value': isScroll,
+    },
+    {
+      'displayName': '自动轮播',
+      'name': 'allowScroll',
+      'type': 'checkBox',
+      'value': allowScroll,
+    },
+    {
+      'displayName': '动画类型',
+      'name': 'animationType',
+      'type': 'select',
+      'value': animationType,
+      'options': [
+        {
+          'name': '渐隐渐现',
+          'value': '0',
+        },
+      ],
+    },
+    {
+      'displayName': '更新时间',
+      'name': 'scrollTime',
+      'type': 'number',
+      'value': scrollTime,
+    },
+    {
+      'displayName': '动画时长',
+      'name': 'animationTime',
+      'type': 'number',
+      'value': animationTime,
+    },
+    {
       'displayName': '引用列表',
       'name': 'referenceList',
       'type': 'tabArray',
-      "defaultActiveKey": "1",
-      "config": {
-        "template": [
+      'defaultActiveKey': '1',
+      'config': {
+        'template': [
           {
-            "key": `1`,
-            "displayName": `应用1`,
-            "name": "tab",
-            "type": "object",
-            "value": [
+            'key': `1`,
+            'displayName': `应用1`,
+            'name': 'tab',
+            'type': 'object',
+            'value': [
               {
-                "displayName": "应用选择",
-                "name": "dashboardSelect",
-                "type": "select",
-                "value": "",
-                "options": bar.allDashboardList.filter(item => item.id !== panelConfig.id)
-              }
+                'displayName': '应用选择',
+                'name': 'dashboardSelect',
+                'type': 'select',
+                'value': '',
+                'options': bar.allDashboardList.filter(item => item.id !== panelConfig.id),
+              },
             ],
-          }
-        ]
+          },
+        ],
       },
-      "value": states.map((item, index) => (
+      'value': states.map((item, index) => (
         {
-          "key": `${index + 1}`,
-          "displayName": `应用${index + 1}`,
-          "name": "tab",
-          "type": "object",
-          "value": [
+          'key': `${ index + 1 }`,
+          'displayName': `应用${ index + 1 }`,
+          'name': 'tab',
+          'type': 'object',
+          'value': [
             {
-              "displayName": "应用选择",
-              "name": "dashboardSelect",
-              "type": "select",
-              "value": item.id,
-              "label": item.name,
-              "options": bar.allDashboardList.filter(item => item.id !== panelConfig.id)
-            }
+              'displayName': '应用选择',
+              'name': 'dashboardSelect',
+              'type': 'select',
+              'value': item.id,
+              'label': item.name,
+              'options': bar.allDashboardList.filter(item => item.id !== panelConfig.id),
+            },
           ],
         }
-      ))
-    },
-    {
-      "displayName": "启用滚轮",
-      "name": "isScroll",
-      "type": "checkBox",
-      "value": isScroll
-    },
-    {
-      "displayName": "自动轮播",
-      "name": "allowScroll",
-      "type": "checkBox",
-      "value": allowScroll
+      )),
     },
     // {
     //   "displayName": "编辑引用应用",
@@ -128,29 +168,31 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     //   }
     // }
   ]
-  const [key, setKey] = useState(uuidv4())
-  const [form] = Form.useForm()
-
-  useEffect(() => {
-    if (!isSettingsChange) {
-      setKey(uuidv4())
-    }
-  }, [bar.panelConfig])
 
   const styleChange = debounce(async () => {
     const dimensionConfig = styleConfig.find(item => item.name === 'dimension').value
     const hideDefault = styleConfig.find(item => item.name === 'hideDefault').value
+    const isScroll = styleConfig.find(item => item.name === 'isScroll').value
+    const allowScroll = styleConfig.find(item => item.name === 'allowScroll').value
+    const animationType = styleConfig.find(item => item.name === 'animationType').value
+    const scrollTime = styleConfig.find(item => item.name === 'scrollTime').value
+    const animationTime = styleConfig.find(item => item.name === 'animationTime').value
     const referenceList = styleConfig.find(item => item.name === 'referenceList').value.map(item => {
       const data = item.value.find(it => it.name === 'dashboardSelect')
       return {
         id: data.value,
-        name: data.label
+        name: data.label,
       }
-    } )
+    })
     dimensionConfig.forEach(item => {
       panelConfig.config[item.name] = item.value
     })
     panelConfig.config.hideDefault = hideDefault
+    panelConfig.config.isScroll = isScroll
+    panelConfig.config.allowScroll = allowScroll
+    panelConfig.config.animationType = animationType
+    panelConfig.config.scrollTime = scrollTime
+    panelConfig.config.animationTime = animationTime
     panelConfig.states = referenceList
     const { config: { left, top, width, height } } = panelConfig
     dispatch({
@@ -170,24 +212,16 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
         },
       },
     })
-    try {
-      const data = await http({
-        url: '/visual/panel/update',
-        method: 'post',
-        body: {
-          dashboardId: bar.dashboardId,
-          configs: [
-            panelConfig,
-          ],
-        },
-      })
-      if (data) {
-
-      }
-    } catch (e) {
-      console.log('引用面板引用错误, id: ', panelConfig.id)
-    }
-
+    await http({
+      url: '/visual/panel/update',
+      method: 'post',
+      body: {
+        dashboardId: bar.dashboardId,
+        configs: [
+          panelConfig,
+        ],
+      },
+    })
   }, 300)
 
   // const saveStyleData = async (param) => {
@@ -207,7 +241,7 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     const currentReference = referenceList.value.find(item => item.key === defaultActiveKey).value
     const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
     if (currentReferenceId) {
-      window.open(`/dashboard/${currentReferenceId}`)
+      window.open(`/dashboard/${ currentReferenceId }`)
     }
   }
   return (
@@ -238,7 +272,8 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
           <div className="g-text-left g-m-4">
             提示：所选应用必须为已发布状态
           </div>
-          <Button onClick={handleEditDashboard} className="g-my-2" type="primary" style={{width: "calc(100% - 24px)"}}>编辑引用应用</Button>
+          <Button onClick={ handleEditDashboard } className="g-my-2" type="primary"
+                  style={ { width: 'calc(100% - 24px)' } }>编辑引用应用</Button>
         </Form>
       </div>
     </div>

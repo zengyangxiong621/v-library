@@ -38,7 +38,20 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
         isPanel: false,
         stateId: null,
         panelId: null,
-        panelStatesList: []
+        panelStatesList: [],
+        key: [bar.dashboardId],
+        layers: [],
+        scaleDragData: {
+          position:{
+            x: 0,
+            y:0
+          },
+          style: {
+            width: 0,
+            height: 0,
+            display: 'none'
+          }
+        }
       }
     })
     dispatch({
