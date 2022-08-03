@@ -527,7 +527,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </CardFlipper2>
-<<<<<<< HEAD
           : props.componentConfig.moduleName === 'instrumentPanel_3' ?
           <InstrumentPanel3
             scale={scale}
@@ -550,9 +549,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
           >
           </InstrumentPanel4>
           : 
-=======
-          :
->>>>>>> develop
           <ErrorCatch
             app={componentConfig.name}
             user=""
