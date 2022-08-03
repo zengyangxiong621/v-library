@@ -32,6 +32,18 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   // 返回首页
   const toBack = () => {
     history.back()
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        isPanel: false,
+        stateId: null,
+        panelId: null,
+        panelStatesList: []
+      }
+    })
+    dispatch({
+      type: 'bar/getDashboardDetails'
+    })
   }
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {

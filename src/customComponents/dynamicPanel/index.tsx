@@ -104,16 +104,12 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
   //
   useEffect(() => {
     let timer: any = null
-    console.log('currentIndex', scrollTime)
-    console.log('scrollTime', isDashboard)
     if (!isDashboard && state.isLoading && allowScroll) {
       timer = setInterval(() => {
         let currentIndex = state.activeIndex + 1
-        console.log('state.allData.length', state.allData.length)
         if (currentIndex === state.allData.length) {
           currentIndex = 0
         }
-        console.log('currentIndex', currentIndex)
         setState({activeIndex: currentIndex})
       }, scrollTime)
     }
