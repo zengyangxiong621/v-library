@@ -40,7 +40,7 @@ const Interaction = (props: any) => {
   }
   return (
     <>    
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="Interaction-loading" spinning={dataLoading}/>
       <div className='Interaction-wrap'>
         {
           dataArr.length ? 

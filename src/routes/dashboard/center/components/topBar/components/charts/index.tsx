@@ -73,7 +73,7 @@ const Charts = (props: any) => {
           })
         }
       </ul>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="chart-loading" spinning={dataLoading}/>
       {
         allModules[active] && (
           allModules[active].length ? 

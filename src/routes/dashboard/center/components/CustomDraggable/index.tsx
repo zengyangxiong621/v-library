@@ -899,7 +899,7 @@ const CustomDraggable
                                       ></CardFlipper2>:
                                       layer.moduleName === 'instrumentPanel_3'?
                                       <InstrumentPanel3
-                                      onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                        onChange={(val:any)=>handleValueChange(val,component,layer.id)}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
@@ -913,7 +913,7 @@ const CustomDraggable
                                       ></InstrumentPanel1>:
                                       layer.moduleName === 'instrumentPanel_4'?
                                       <InstrumentPanel4
-                                      onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                        onChange={(val:any)=>handleValueChange(val,component,layer.id)}
                                         componentConfig={ component }
                                         fields={ getFields(component) }
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }

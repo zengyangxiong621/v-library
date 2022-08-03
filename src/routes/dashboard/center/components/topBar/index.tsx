@@ -85,13 +85,6 @@ const componentMenu = [
     component: Charts,
   },
   {
-    title: '地图',
-    key: 'map',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: false,
-    component: Map
-  },
-  {
     title: '文字',
     key: 'text',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
@@ -99,11 +92,25 @@ const componentMenu = [
     component: Text
   },
   {
-    title: '辅助',
-    key: 'assist',
+    title: '指标',
+    key: 'indicator',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Assist
+    component: Text
+  },
+  {
+    title: '表格',
+    key: 'table',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Text
+  },
+  {
+    title: '地图',
+    key: 'map',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Map
   },
   {
     title: '交互',
@@ -113,11 +120,11 @@ const componentMenu = [
     component: Interaction
   },
   {
-    title: '指标',
-    key: 'interaction1',
+    title: '辅助',
+    key: 'assist',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Interaction
+    component: Assist
   },
   {
     title: '其他',
@@ -125,6 +132,13 @@ const componentMenu = [
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
     component: Other
+  },
+  {
+    title: '我的',
+    key: 'my',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Text
   },
 ]
 
