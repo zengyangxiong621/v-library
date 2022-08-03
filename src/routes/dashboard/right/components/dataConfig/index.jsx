@@ -26,18 +26,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     if (currentData) {
       const keys = getKeys(currentData)
       setFieldkeys(keys)
-    } else {
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          componentData: {
-            ...bar.componentData,
-            [_data.id]: _data.staticData.data
-          }
-        },
-      })
-      const keys = getKeys(_data.staticData.data)
-      setFieldkeys(keys)
     }
     setTableKey(uuidv4())
   }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, bar.componentConfig.dataFrom, bar.componentConfig.dataContainers])
