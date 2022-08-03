@@ -40,7 +40,7 @@ const Map = (props: any) => {
   
   return (
     <>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="map-loading" spinning={dataLoading}/>
       <div className='Map-wrap'>
         {
           dataArr.length ? 

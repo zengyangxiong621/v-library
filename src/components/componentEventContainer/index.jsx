@@ -527,7 +527,28 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </CardFlipper2>
-          :
+          : props.componentConfig.moduleName === 'instrumentPanel_3' ?
+          <InstrumentPanel3
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          >
+          </InstrumentPanel3>
+          : props.componentConfig.moduleName === 'instrumentPanel_1' ?
+          <InstrumentPanel1
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          >
+          </InstrumentPanel1>
+          : props.componentConfig.moduleName === 'instrumentPanel_4' ?
+          <InstrumentPanel4
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          >
+          </InstrumentPanel4>
+          : 
           <ErrorCatch
             app={componentConfig.name}
             user=""

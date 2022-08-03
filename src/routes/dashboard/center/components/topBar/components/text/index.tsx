@@ -30,7 +30,7 @@ const Text = (props: any) => {
           "Content-Type": "application/json",
         },
         body: {
-          type: ['text'],
+          type: [index],
           status: 0,
           pageNo: 0,
           pageSize: 100,
@@ -52,14 +52,15 @@ const Text = (props: any) => {
 
   return (
     <>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="text-loading" spinning={dataLoading}/>
       <div className='Text-wrap'>
         {
-          dataArr?.map((item: any, index: number) => {
+          dataArr.length ?
+          dataArr.map((item: any, index: number) => {
             return (
               <EveryItem key={item.moduleName} data={item} type={moduleType} />
             )
-          })
+          }) : <div className='Other-wrap'>暂无数据</div>
         }
       </div>
     </>

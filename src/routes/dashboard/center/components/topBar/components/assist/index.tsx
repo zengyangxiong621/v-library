@@ -50,7 +50,7 @@ const Text = (props: any) => {
 
   return (
     <>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="assit-loading" spinning={dataLoading}/>
       <div className='Text-wrap'>
         {
           dataArr?.map((item: any, index: number) => {

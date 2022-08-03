@@ -37,7 +37,7 @@ const Other = (props: any) => {
   }
   return (
     <>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="other-loading" spinning={dataLoading}/>
       <div className='Other-wrap'>
         {
           dataArr.length ? 

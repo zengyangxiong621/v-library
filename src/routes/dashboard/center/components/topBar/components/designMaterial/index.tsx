@@ -100,7 +100,7 @@ const DesignMaterial = (props: any) => {
             })
           }
         </ul>
-        <Spin className="data-loading" spinning={dataLoading}/>
+        <Spin className="design-loading" spinning={dataLoading}/>
         {
           chartDataMap[active] && (
             chartDataMap[active].length ?
