@@ -2,15 +2,17 @@ import React, { memo, useEffect, useState } from 'react'
 import './index.less'
 import { Button } from 'antd'
 import { http } from '@/services/request'
-import { mergeSameAndAddDiff } from "@/routes/dashboard/components/moduleUpdate/methods/mergeModuleConfig";
+import { mergeSameAndAddDiff } from '@/routes/dashboard/components/moduleUpdate/methods/mergeModuleConfig'
+import importComponent from '@/routes/dashboard/components/moduleUpdate/methods/fetchComponentJsFile'
+
 
 // import { deepClone } from '@/utils/index'
 
 const ComponentCard = props => {
   const [targetConfig, setTargetConfig] = useState({})
-  const { allModulesConfig, dispatch } = props
+  const { allModulesConfig, dispatch, bar } = props
   const {
-    lastModuleVersion, id, name,
+    lastModuleVersion, id, name, moduleType,
     moduleName, dashboardId, moduleVersion, config: oldConfig,
   } = props.data;
 
@@ -18,7 +20,6 @@ const ComponentCard = props => {
     const targetObj = Array.isArray(allModulesConfig) ? allModulesConfig.find((item) =>
       item.moduleName === moduleName
     ) : {}
-    console.log('aaa')
     if (targetObj) {
       // const deepCopyTargetObj = deepClone(targetObj)
       // console.log('deepCopyTargetObj', deepCopyTargetObj.config)
@@ -54,10 +55,32 @@ const ComponentCard = props => {
         ...finalBody,
         lastModuleVersion: null
       }
+      // 不同于批量更新组件，这儿没有必要再调用getDashboardDetails发一次请求去更改全局状态中的componentConfig,直接前端更改即可
       dispatch({
         type: 'bar/setComponentConfig',
         payload: newComponentConfig
       })
+      // 更新组件成功后,重新请求最新版本组件的js文件
+      const fetchComponentOptions = {
+        moduleType,
+        moduleName,
+        moduleVersion: lastModuleVersion
+      }
+      // alert('执行咯')
+      window.eval(`${await importComponent(fetchComponentOptions)}`)
+      const { ComponentDefaultConfig } = window.VComponents;
+      const currentDefaultConfig = ComponentDefaultConfig
+      const index = bar.components.findIndex(item => item.id === id)
+      console.log('currentDefaultConfig', currentDefaultConfig);
+      bar.components.splice(index, 1, { ...currentDefaultConfig, id })
+      dispatch({
+        type: 'bar/save'
+      })
+      // dispatch({
+      //   type: 'bar/setModuleDefaultConfig',
+      //   payload: currentDefaultConfig,
+      //   itemData: data
+      // })
       // dispatch({
       //   type: 'bar/getDashboardDetails',
       //   payload: dashboardId
