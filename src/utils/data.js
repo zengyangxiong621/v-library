@@ -72,7 +72,6 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
       })
       return resultArr[resultArr.length - 1]
     } catch (e) {
-      console.error(e)
       return {}
     }
   } else {
@@ -202,7 +201,7 @@ const filterEmptyCallParam = (callParam) => {
  * @returns 
  */
 const getCallbackParams = (componentCallbackArgs, currnetData) => {
-  if(!currnetData || Object.prototype.toString.call(currnetData)!=="[object Object]"){
+  if (!currnetData || Object.prototype.toString.call(currnetData) !== "[object Object]") {
     return {}
   }
   const result = {}
@@ -212,8 +211,8 @@ const getCallbackParams = (componentCallbackArgs, currnetData) => {
   let comCallbackArgs = JSON.parse(JSON.stringify(filteredParams))
   // 给comCallbackArgs拥有相同变量的去重
   comCallbackArgs = duplicateFn(comCallbackArgs) // 后面覆盖前面
-  console.log('componentCallbackArgs,currnetData',componentCallbackArgs,currnetData)
-  componentCallbackArgs.forEach(item=>{
+  console.log('componentCallbackArgs,currnetData', componentCallbackArgs, currnetData)
+  componentCallbackArgs.forEach(item => {
     result[item.target] = currnetData[item.origin]
   })
   return result

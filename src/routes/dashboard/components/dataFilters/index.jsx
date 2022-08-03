@@ -57,6 +57,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     if (props.visible) {
+      console.log('bar.components---------', bar.components)
       const dataFiltersTmp = cloneDeep(bar.componentFilters)
       dataFiltersTmp.forEach(item => {
         item.isEditName = false
@@ -85,7 +86,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
         return item.name.indexOf(value) !== -1
       })
       setIsSearch(true)
-    }else{
+    } else {
       setIsSearch(false)
     }
     setDataFilters(dataFiltersTmp)
@@ -180,7 +181,11 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
       content: '删除后可能导致相关组件不可用，是否删除数据过滤器？',
       onOk() {
         const filterIds = delFilters.map(item => item.id)
-        batchDeleteFilterHandle(filterIds)
+        let moduleIds = delFilters.reduce((pre, cur, index) => {
+          return pre.concat(...cur.moduleIds)
+        }, [])
+        moduleIds = [...new Set(moduleIds)]
+        batchDeleteFilterHandle(filterIds,moduleIds)
       },
       onCancel() {
         // do nothing
@@ -188,7 +193,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
     });
   }
 
-  const batchDeleteFilterHandle = async (filterIds) => {
+  const batchDeleteFilterHandle = async (filterIds,moduleIds) => {
     const data = await http({
       url: '/visual/module/filter/delete',
       method: 'POST',
@@ -215,6 +220,32 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
     setDataFilters(dataFiltersTmp)
     // 设置删除数据列表为空
     setDelFilters([])
+    // 更新组件配置信息
+    const componentConfig = { ...bar.componentConfig }
+    if (moduleIds.includes(componentConfig.id)) {
+      componentConfig.filters = componentConfig.filters.filter(item => !moduleIds.includes(item.id))
+      dispatch({
+        type: 'bar/setComponentConfig',
+        payload: componentConfig
+      })
+    }
+    // 更新所有组件中使用到该过滤器的配置信息
+    if (moduleIds.length) {
+      const components = [...bar.components]
+      moduleIds.forEach(id => {
+        components.forEach(component => {
+          if (id === component.id) {
+            component.filters = component.filters.filter(item => !moduleIds.includes(item.id))
+          }
+        })
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          components
+        }
+      })
+    }
   }
 
   const cancelOperation = () => {
@@ -283,8 +314,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
       url: '/visual/module/filter/delete',
       method: 'POST',
       body: {
-        filterIds: [filter.id],
-        modules: [...filter.moduleIds]
+        filterIds: [filter.id]
       }
     })
     // 更新bar中的过滤器
@@ -300,6 +330,32 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
     let dataFiltersTmp = [...dataFilters]
     dataFiltersTmp = dataFiltersTmp.filter(item => item.id !== filter.id)
     setDataFilters(dataFiltersTmp)
+    // 更新组件配置信息
+    const componentConfig = { ...bar.componentConfig }
+    if (filter.moduleIds.includes(componentConfig.id)) {
+      componentConfig.filters = componentConfig.filters.filter(item => item.id !== filter.id)
+      dispatch({
+        type: 'bar/setComponentConfig',
+        payload: componentConfig
+      })
+    }
+    // 更新所有组件中使用到该过滤器的配置信息
+    if (filter.moduleIds.length) {
+      const components = [...bar.components]
+      filter.moduleIds.forEach(id => {
+        components.forEach(component => {
+          if (id === component.id) {
+            component.filters = component.filters.filter(item => item.id !== filter.id)
+          }
+        })
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          components
+        }
+      })
+    }
   }
 
   const genHeader = filter => (
