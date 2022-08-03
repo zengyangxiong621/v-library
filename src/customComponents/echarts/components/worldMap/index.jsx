@@ -40,6 +40,13 @@ class WorldMap extends Component {
   }
   // IP显示-数据转换
   convertIPData = (data, gdGeoCoordMap) => {
+    // 校验
+    if (!data) {
+      console.log(data,'无数据');
+      return
+    } else{
+      console.log(data,'data');
+    }
     let res = [];
     for (let i = 0; i < data.length; i++) {
       let geoCoord = gdGeoCoordMap[data[i].name];
@@ -449,7 +456,9 @@ class WorldMap extends Component {
         })       
       }
       mapChart.setOption(displayMode === 0 ? options : ipOptions);
+      mapChart.resize();
     }
+
 
     let mapSize = {
       width: '100%',

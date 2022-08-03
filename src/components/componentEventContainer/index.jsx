@@ -7,6 +7,8 @@ import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import CusImage from '@/customComponents/assist/image/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ChinaMap from '@/customComponents/echarts/components/chinaMap'
+import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
@@ -25,7 +27,6 @@ import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPa
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
 import Timeline from '@/customComponents/assist/timeline'
-import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
@@ -176,7 +177,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
-    console.log('sourceCallbackList', sourceCallbackList)
     sourceCallbackList.forEach(item => {
       item.sourceModules.forEach(sourceItem => {
         if (sourceItem.id === componentId) {
@@ -209,7 +209,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      console.log('activeIds2', activeIds)
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
@@ -241,7 +240,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     if (dataChangeActions.length === 0) {
       return
     }
-    console.log('自定义事件触发了吗')
     customEventsFunction(dataChangeEvents, data)
 
   }, 300)
@@ -438,6 +436,20 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         >
         </BasicBar>
         :
+        props.componentConfig.moduleName === 'worldMap' ?
+        <WorldMap
+          onChange={handleValueChange}
+          {...props}
+        >
+        </WorldMap>
+        :
+        props.componentConfig.moduleName === 'chinaMap' ?
+        <ChinaMap
+          onChange={handleValueChange}
+          {...props}
+        >
+        </ChinaMap>
+        :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
           onChange={handleValueChange}
@@ -515,6 +527,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </CardFlipper2>
+<<<<<<< HEAD
           : props.componentConfig.moduleName === 'instrumentPanel_3' ?
           <InstrumentPanel3
             scale={scale}
@@ -537,6 +550,9 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
           >
           </InstrumentPanel4>
           : 
+=======
+          :
+>>>>>>> develop
           <ErrorCatch
             app={componentConfig.name}
             user=""

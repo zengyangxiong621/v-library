@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import './chMap.css';
 import * as echarts from 'echarts';
 import chinaJson from "./china.json";
 import ComponentDefaultConfig from './config';
-import img from './img'
+import img from './assets/img';
+import chMap1 from './assets/chMap1.png';
+import chMap2 from './assets/chMap2.png';
 
 class ChinaMap extends Component {
   constructor(props) {
@@ -19,6 +22,7 @@ class ChinaMap extends Component {
 
   // IP显示-数据转换
   convertIPData = (data, gdGeoCoordMap) => {
+    if (!data) { return }
     let res = [];
     for (let i = 0; i < data.length; i++) {
       let geoCoord = gdGeoCoordMap[data[i].name];
@@ -36,8 +40,10 @@ class ChinaMap extends Component {
 
   // IP显示-数据转换
   convertIPData2 = (dataCenter, gdGeoCoordMap) => {
+    // 标牌位置调整，做判断删去“昌平”
+    if (!dataCenter) { return }
+    if (dataCenter.length > 1) { dataCenter = dataCenter.slice(2) }
     let res = [];
-    console.log(dataCenter, '#datac');
     for (let i = 0; i < dataCenter.length; i++) {
       let geoCoord = gdGeoCoordMap[dataCenter[i].name];
       if (geoCoord) {
@@ -55,21 +61,23 @@ class ChinaMap extends Component {
 
   // 动态计算柱形图的高度（定一个max）
   lineMaxHeight = (dataCenter) => {
+    if (!dataCenter) { return }
     const maxValue = Math.max(
       ...dataCenter.map((item) => item.times)
     );
 
-    return 6 / maxValue; // 调解max柱状长度
+    return 5 / maxValue; // 调解max柱状长度
   }
   // 柱状体的主干
   lineData = (dataCenter, ipCoordData) => {
+    if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return {
         coords: [
-          ipCoordData[item.name],
+          ipCoordData[item.name] || [114.249193, 40.168238], // 校验：dataCenter.name被修改，则默认赋值 昌平
           [
-            ipCoordData[item.name][0],
-            ipCoordData[item.name][1] + item.times * this.lineMaxHeight(dataCenter),
+            (ipCoordData[item.name]|| [114.249193, 40.168238])[0],
+            (ipCoordData[item.name]|| [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
           ],
         ],
       };
@@ -78,15 +86,17 @@ class ChinaMap extends Component {
 
   // 柱状体的顶部
   scatterData = (dataCenter, ipCoordData) => {
+    if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return [
-        ipCoordData[item.name][0],
-        ipCoordData[item.name][1] + item.times * this.lineMaxHeight(dataCenter),
+        (ipCoordData[item.name]|| [114.249193, 40.168238])[0],
+        (ipCoordData[item.name]|| [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
       ];
     });
   }
   // 柱状体的底部
   scatterData2 = (dataCenter, ipCoordData) => {
+    if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return {
         name: item.name,
@@ -100,8 +110,8 @@ class ChinaMap extends Component {
     const { comData, componentConfig, fields } = this.props
     const { config, staticData } = componentConfig || ComponentDefaultConfig
     const mainData = this.formatConfig(config, [])
-    console.log(mainData, '#mainData');
-    const { bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = mainData
+    // console.log(mainData, '#mainData');
+    const { bgColor, selectColor, borderColor } = mainData
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
     const fields2ValueMap = {}
@@ -114,51 +124,10 @@ class ChinaMap extends Component {
     // IP地址数据
     const ipData = finalData[0].ipData;
     const dataCenter = finalData[0].dataCenter;
-    // const dataCenter = [
-    //   {
-    //     name: "昌平",
-    //     value: "昌平",
-    //     times: "1000",
-    //     system: "3123",
-    //   },
-    //   {
-    //     name: "勘探院",
-    //     value: "勘探院",
-    //     times: "1000",
-    //     system: "3123",
-    //   },
-    //   {
-    //     name: "吉林",
-    //     value: "吉林",
-    //     times: "2223",
-    //     system: "2123",
-    //   },
-    //   {
-    //     name: "克拉玛依",
-    //     value: "克拉玛依",
-    //     times: "3123",
-    //     system: "3123",
-    //   },
-    // ];
+    const dataCenter2 = finalData[0].dataCenter?.slice(0, 1);
+    const dataCenter3 = finalData[0].dataCenter?.slice(1, 2);
     const ipCoordData = finalData[0].ipCoordData;
 
-    // const ipCoordData = {
-    //   昌平: [116.249193, 40.168238],
-    //   勘探院: [116.357544, 39.992995],
-    //   吉林: [126.539923, 43.941828],
-    //   克拉玛依: [84.902321, 45.580525],
-    //   北京: [116.536989, 39.777354],
-    //   辽河: [123.479261, 41.79233],
-    //   吉林: [126.567982, 43.823481],
-    //   大庆: [125.268447, 45.704549],
-    //   西安: [108.979039, 34.273485],
-    //   兰州: [103.672554, 36.505049],
-    //   新疆: [87.520211, 43.860104],
-    //   西南: [104.098755, 30.678152],
-    //   华南: [113.341111, 23.02494],
-    //   华东: [120.186041, 30.290762],
-    //   大连: [121.653164, 38.979666],
-    // };
 
     const options = {
       tooltip: {
@@ -169,35 +138,93 @@ class ChinaMap extends Component {
         show: false,
       },
       geo: {
-        map: 'china',
-        type: 'map',
-        zoom: 1.2,
+        silent: true,
+        radius: '100%',
+        map: "china",
+        zoom: 1.20,
+        // zoom: 0.8,
+        // top: "-6%",
         label: {
           normal: {
             show: false,
             textStyle: {
-              color: '#FFFFFF',
+              color: "#fff",
             },
           },
           emphasis: {
-            show: false,
+            textStyle: {
+              color: "#fff",
+            },
           },
         },
-        roam: false, //是否允许缩放
+        roam: false,
         itemStyle: {
           normal: {
-            color: bgColor, //地图背景色
-            borderColor: borderColor, //省市边界线00fcff 516a89
-            borderWidth: 1,
-            textStyle: '#fff',
+            areaColor: "rgba(0,255,255,.02)",
+            borderColor: {
+              type: 'linear',
+              x: 0,
+              y: 1,
+              x2: .5,
+              y2: 0,
+              colorStops: [{
+                offset: 0, color: '#f7e914'
+              }, {
+                offset: 0.5, color: '#fbaa0e'
+              }, {
+                offset: 1, color: '#306a9f'
+              }],
+              global: false
+            },
+            borderWidth: 4.5,
+            shadowColor: "#35a8ff",
+            // shadowColor: "#3071a7",
+            shadowOffsetX: 0,
+            shadowOffsetY: 38,
+            shadowBlur: 45,
           },
           emphasis: {
-            areaColor: selectColor, //悬浮背景
+            areaColor: "transparent", //悬浮背景
+            textStyle: {
+              color: "#fff",
+            },
           },
         },
-        data: [],
       },
       series: [
+        // 地图
+        {
+          map: 'china',
+          type: 'map',
+          radius: '100%',
+          zoom: 1.19,
+          label: {
+            normal: {
+              show: false,
+              textStyle: {
+                color: '#FFFFFF',
+              },
+            },
+            emphasis: {
+              show: false,
+            },
+          },
+          roam: false, //是否允许缩放
+          itemStyle: {
+            normal: {
+              // color: bgColor, //地图背景色
+              areaColor: bgColor, //地图背景色
+              borderColor: borderColor, //内边缘颜色
+              borderWidth: 2,
+              textStyle: '#fff',
+            },
+            emphasis: {
+              areaColor: selectColor, //悬浮背景
+              // areaColor: "#315b8f", //悬浮背景
+            },
+          },
+          data: [],
+        },
         // 点位
         {
           tooltip: {
@@ -221,7 +248,7 @@ class ChinaMap extends Component {
             },
           },
           symbol: "circle",
-          symbolSize: [10, 5],
+          symbolSize: [30, 15],
           data: this.convertIPData(ipData, ipCoordData),
           zlevel: 1,
         },
@@ -259,16 +286,32 @@ class ChinaMap extends Component {
               color: "#fff",
               rich: {
                 fline: {
-                  padding: [0, 25], // 调整标牌文字位置
-                  // color: "#fff",  // 优化
-                  lineHeight: 24,
-                  fontSize: 14,
+                  padding: [0, 5], // 调整标牌文字位置
+                  backgroundColor: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                      offset: 0, color: '#f7c91c' // 0% 处的颜色
+                    }, {
+                      offset: 1, color: '#ffffff00' // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false                
+                  },
+                  // margin: [0, 20],
+                  lineHeight: 72,
+                  fontSize: 42,
+                  width: 500,
+                  height: 80,
                 },
                 tline: {
-                  padding: [0, 27],
+                  padding: [0, 25],
                   color: "#fff",
-                  fontSize: 12,
-                  lineHeight: 16
+                  fontSize: 36,
+                  lineHeight: 60,
+                  width: 500,
                 },
               },
             },
@@ -280,8 +323,8 @@ class ChinaMap extends Component {
             color: "#00FFF6",
           },
           symbol: img.yellow,
-          symbolSize: [200, 80],
-          symbolOffset: [120, -50],
+          symbolSize: [600, 240],
+          symbolOffset: [360, -150],
           z: 999,
           data: this.convertIPData2(dataCenter, ipCoordData),
         },
@@ -294,8 +337,6 @@ class ChinaMap extends Component {
             normal: {
               show: true,
               formatter: function (params) {
-                console.log(params, '#p');
-                let name = params.name;
                 let value = params.value[2];
                 let text = `{fline|${value}}`;
                 return text;
@@ -303,15 +344,15 @@ class ChinaMap extends Component {
               color: "#fff",
               rich: {
                 fline: {
-                  padding: [-10, -25, 28, -15], // 调整标牌文字位置
+                  padding: [-30, -75, 84, -45], // 调整标牌文字位置
                   color: "#00d3ff",
-                  fontSize: 14,
+                  fontSize: 42,
                   fontWeight: 400,
                 },
                 tline: {
                   padding: [0, 27],
                   color: "#ABF8FF",
-                  fontSize: 12,
+                  fontSize: 36,
                 },
               },
             },
@@ -324,8 +365,9 @@ class ChinaMap extends Component {
           },
           symbol: img.blue,
           // symbol: "roundRect",
-          symbolSize: [44, 70],
-          symbolOffset: [0, -32],
+          // symbolSize: [44, 70], 
+          symbolSize: [132, 210],
+          symbolOffset: [0, -90],
           z: 999,
           data: this.convertIPData(ipData, ipCoordData),
         },
@@ -343,9 +385,20 @@ class ChinaMap extends Component {
             symbolSize: 5, // 图标大小
           },
           lineStyle: {
-            width: 20, // 尾迹线条宽度
-            color: "#f60", //##柱状颜色
-            opacity: .6, // 尾迹线条透明度
+            width: 60, // 尾迹线条宽度
+            // color: "#f60", //柱状颜色
+            color: {
+              type: 'linear', // 线性渐变
+              x: 0,             // x:  从左向右 1 ——> 0
+              y: 0,             // y:  从上向下 1 ——> 0
+              x2: 0,            // x2: 从右向左 1 ——> 0
+              y2: 1,            // y2: 从下向上 1 ——> 0
+              colorStops: [
+                { offset: 0, color: '#ffd43c' },
+                { offset: 1, color: '#bf5b2d' }
+              ]
+            },
+            opacity: .8, // 尾迹线条透明度
             curveness: 0, // 尾迹线条曲直度
           },
           label: {
@@ -377,8 +430,8 @@ class ChinaMap extends Component {
             // opacity: .9,
           },
           symbol: img.orange,
-          symbolSize: [20, 32],
-          symbolOffset: [1, -10],
+          symbolSize: [60, 96],
+          symbolOffset: [0, -30],
           z: 999,
           // silent: true,
           data: this.scatterData(dataCenter, ipCoordData),
@@ -393,12 +446,12 @@ class ChinaMap extends Component {
             formatter: "{b}",
             position: "bottom",
             color: "#fff",
-            fontSize: 12,
+            fontSize: 36,
             distance: 10,
             show: true,
           },
           symbol: "circle",
-          symbolSize: [20, 10],
+          symbolSize: [60, 30],
           itemStyle: {
             color: '#f60',
             opacity: .6,
@@ -406,12 +459,134 @@ class ChinaMap extends Component {
           silent: true,
           data: this.scatterData2(dataCenter, ipCoordData),
         },
+        // 昌平
+        {
+          type: "scatter",
+          coordinateSystem: "geo",
+          label: {
+            normal: {
+              // position: 'top',
+              show: true,
+              formatter: function (params) {
+                let value = params.value[2];
+                let times = params.data.times;
+                let system = params.data.system;
+                let text = `{fline|中国石油数据中心（${value}）}\n{tline|攻击总量：${times} 次}\n{tline|攻击系统：${system} 个}`;
+                return text;
+              },
+              color: "#fff",
+              rich: {
+                fline: {
+                  padding: [0, 25], // 调整标牌文字位置
+                  backgroundColor: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                      offset: 0, color: '#f7c91c' // 0% 处的颜色
+                    }, {
+                      offset: 1, color: '#ffffff00' // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false                
+                  },
+                  // margin: [0, 20],
+                  lineHeight: 72,
+                  fontSize: 42,
+                  width: 500,
+                  height: 80,
+                },
+                tline: {
+                  padding: [0, 25],
+                  color: "#fff",
+                  fontSize: 36,
+                  lineHeight: 60,
+                  width: 500,
+                },
+              },
+            },
+            emphasis: {
+              show: true,
+            },
+          },
+          itemStyle: {
+            color: "#00FFF6",
+          },
+          symbol: img.yellow,
+          symbolSize: [600, 240],
+          symbolOffset: [0, -320],
+          // symbolOffset: [-360, -150],
+          z: 999,
+          data: this.convertIPData2(dataCenter2, ipCoordData),
+        },
+        // 勘探院
+        {
+          type: "scatter",
+          coordinateSystem: "geo",
+          label: {
+            normal: {
+              // position: 'top',
+              show: true,
+              formatter: function (params) {
+                let value = params.value[2];
+                let times = params.data.times;
+                let system = params.data.system;
+                let text = `{fline|中国石油数据中心（${value}）}\n{tline|攻击总量：${times} 次}\n{tline|攻击系统：${system} 个}`;
+                return text;
+              },
+              color: "#fff",
+              rich: {
+                fline: {
+                  padding: [0, 25], // 调整标牌文字位置
+                  backgroundColor: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                      offset: 0, color: '#f7c91c' // 0% 处的颜色
+                    }, {
+                      offset: 1, color: '#ffffff00' // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false                
+                  },
+                  // margin: [0, 20],
+                  lineHeight: 72,
+                  fontSize: 42,
+                  width: 500,
+                  height: 80,
+                },
+                tline: {
+                  padding: [0, 25],
+                  color: "#fff",
+                  fontSize: 36,
+                  lineHeight: 60,
+                  width: 500,
+                },
+              },
+            },
+            emphasis: {
+              show: true,
+            },
+          },
+          itemStyle: {
+            color: "#00FFF6",
+          },
+          symbol: img.yellow,
+          symbolSize: [600, 240],
+          symbolOffset: [360, 0],
+          z: 999,
+          data: this.convertIPData2(dataCenter3, ipCoordData),
+        },
       ],
     };
 
     const dom = document.getElementById(componentConfig.id);
     var mapChart = echarts.init(dom);
     echarts.registerMap("china", chinaJson);
+    // echarts.registerMap("outline", outline);
     this.setState({ options });
     mapChart.setOption(options);
     this.setState({ mapChart })
@@ -464,78 +639,45 @@ class ChinaMap extends Component {
     const finalData = this.formatData(originData, fields2ValueMap)
     let ipData = finalData[0].ipData;
     let dataCenter = finalData[0].dataCenter;
-    // let dataCenter = [
-    //   {
-    //     name: "昌平",
-    //     value: "昌平",
-    //     times: "1000",
-    //     system: "3123",
-    //   },
-    //   {
-    //     name: "勘探院",
-    //     value: "勘探院",
-    //     times: "1000",
-    //     system: "3123",
-    //   },
-    //   {
-    //     name: "吉林",
-    //     value: "吉林",
-    //     times: "2223",
-    //     system: "2123",
-    //   },
-    //   {
-    //     name: "克拉玛依",
-    //     value: "克拉玛依",
-    //     times: "3123",
-    //     system: "3123",
-    //   },
-    // ];
-    let ipCoordData = finalData[0].ipCoordData;
-    // let ipCoordData = {
-    //   昌平: [116.249193, 40.168238],
-    //   勘探院: [116.357544, 39.992995],
-    //   吉林: [126.539923, 43.941828],
-    //   克拉玛依: [84.902321, 45.580525],
-    //   北京: [116.536989, 39.777354],
-    //   辽河: [123.479261, 41.79233],
-    //   吉林: [126.567982, 43.823481],
-    //   大庆: [125.268447, 45.704549],
-    //   西安: [108.979039, 34.273485],
-    //   兰州: [103.672554, 36.505049],
-    //   新疆: [87.520211, 43.860104],
-    //   西南: [104.098755, 30.678152],
-    //   华南: [113.341111, 23.02494],
-    //   华东: [120.186041, 30.290762],
-    //   大连: [121.653164, 38.979666],
-    // };
-    let style = this.formatConfig(config, [])
-    console.log(finalData, '#finalData');
-    const { bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = style
-    if (mapChart) {
-      options.geo.itemStyle.normal.color = bgColor;
-      options.geo.itemStyle.normal.borderColor = borderColor;
-      options.geo.itemStyle.emphasis.areaColor = selectColor;
+    let dataCenter2 = finalData[0].dataCenter?.slice(0, 1);
+    let dataCenter3 = finalData[0].dataCenter?.slice(1, 2);
 
-      options.series[0].data = this.convertIPData(ipData, ipCoordData);
-      options.series[1].data = this.convertIPData2(dataCenter, ipCoordData);
-      options.series[2].data = this.convertIPData(ipData, ipCoordData);
-      options.series[3].data = this.lineData(dataCenter, ipCoordData);
-      options.series[4].data = this.scatterData(dataCenter, ipCoordData);
-      options.series[5].data = this.scatterData2(dataCenter, ipCoordData);
+    let ipCoordData = finalData[0].ipCoordData;
+
+    let style = this.formatConfig(config, [])
+    // console.log(finalData, '#finalData');
+    const { bgColor, selectColor, borderColor } = style
+    if (mapChart) {
+      options.series[0].itemStyle.normal.areaColor = bgColor;
+      options.series[0].itemStyle.normal.borderColor = borderColor;
+      options.series[0].itemStyle.emphasis.areaColor = selectColor;
+
+      options.series[1].data = this.convertIPData(ipData, ipCoordData);
+      options.series[2].data = this.convertIPData2(dataCenter, ipCoordData);
+      options.series[3].data = this.convertIPData(ipData, ipCoordData);
+      options.series[4].data = this.lineData(dataCenter, ipCoordData);
+      options.series[5].data = this.scatterData(dataCenter, ipCoordData);
+      options.series[6].data = this.scatterData2(dataCenter, ipCoordData);
+      options.series[7].data = this.convertIPData2(dataCenter2, ipCoordData);
+      options.series[8].data = this.convertIPData2(dataCenter3, ipCoordData);
+      mapChart.clear();      
       mapChart.setOption(options);
+      mapChart.resize();
     }
 
-    let mapSize = {
-      width: '100%',
-      height: '100%'
-    };
 
     return (
-      <div
-        id={this.props.componentConfig.id}
-        style={mapSize}
-        option={options}
-      />
+      <div className='ch-map'>
+        <div className='map-content'>
+          <div
+            className='map'
+            id={this.props.componentConfig.id}
+            option={options}
+          />
+          <img className='bg1' src={chMap1} alt='背景1' />
+          <img className='bg2' src={chMap2} alt='背景2' />
+        </div>
+      </div>
     );
   }
 }
