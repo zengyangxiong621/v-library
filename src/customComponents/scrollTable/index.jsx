@@ -129,7 +129,7 @@ const ScrollTable = (props) => {
             if (data[mappingEnum[mapp.filedName]]) {
               const currentCustomStyle = customStyle.find(item => item.filedValue === data[mappingEnum[mapp.filedName]]) || {}
               const styleStr = styleObjectToStr({...style, ...currentCustomStyle.textStyle})
-              arr[index] = `<div style="font-family: ${fontFamilyConfig}; ${styleStr}" tilte="${data[mappingEnum[mapp.filedName]]}">${data[mappingEnum[mapp.filedName]]}<div>`
+              arr[index] = `<div style="font-family: ${fontFamilyConfig}; ${styleStr}" title="${data[mappingEnum[mapp.filedName]]}">${data[mappingEnum[mapp.filedName]]}<div>`
             } else {
               arr[index] = `<div>--<div>`
             }
@@ -137,7 +137,7 @@ const ScrollTable = (props) => {
             if (data[mapp.filedName]) {
               const currentCustomStyle = customStyle.find(item => item.filedValue === data[mapp.filedName]) || {}
               const styleStr = styleObjectToStr({...style, ...currentCustomStyle.textStyle})
-              arr[index] = `<div style="font-family: ${fontFamilyConfig}; ${styleStr}" tilte="${data[mapp.filedName]}">${data[mapp.filedName]}<div>`
+              arr[index] = `<div style="font-family: ${fontFamilyConfig}; ${styleStr}" title="${data[mapp.filedName]}">${data[mapp.filedName]}<div>`
             } else {
               arr[index] = `<div>--<div>`
             }
@@ -177,9 +177,12 @@ const ScrollTable = (props) => {
     textStyle = styleObjectToStr({
       'text-align': textAlign,
       'font-Family': fontFamilyConfig,
+      'overflow': 'hidden',
+      'text-overflow': 'ellipsis',
+      'white-space': 'nowrap',
       ...textStyle,
     })
-    const header = mappingConfig.map(item => `<div style="${textStyle}" tilte="${item.displayName}">${item.displayName ? item.displayName : '--'}<div>`)
+    const header = mappingConfig.map(item => `<div style="${textStyle}" title="${item.displayName}">${item.displayName ? item.displayName : '--'}<div>`)
     setHeader(header)
     setTimeout(() => {
       const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)

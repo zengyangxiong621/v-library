@@ -892,6 +892,18 @@ export default {
         ...state,
       };
     },
+    updateSelectedComponents(state: IBarState, { payload }: any) {
+      state.selectedComponentIds = layerComponentsFlat(
+        state.selectedComponentOrGroup
+      );
+      // todo 这里需要添加 panel 的（来自 develop 分支）
+      state.selectedComponents = state.components.filter((component) =>
+        state.selectedComponentIds.includes(component.id)
+      );
+      return {
+        ...state
+      }
+    },
     calcDragScaleData(state: IBarState, { payload }: any) {
       let xPositionList: number[] = [];
       let yPositionList: number[] = [];

@@ -1,7 +1,6 @@
 import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
-import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 import CountUp from 'react-countup'
 
 class Counter extends Component {
@@ -188,12 +187,18 @@ class Counter extends Component {
                       item === ',' ? 
                       <span key={index} style={{
                         marginLeft: splitSpacingConfig.left,
-                        marginRight: splitSpacingConfig.right
+                        marginRight: splitSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>,</span> : 
                       item === '.' ? 
                       <span key={index} style={{
                         marginLeft: pointSpacingConfig.left,
-                        marginRight: pointSpacingConfig.right
+                        marginRight: pointSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>.</span> :
                       <span style={{
                         width: layoutConfig.width,
@@ -201,7 +206,6 @@ class Counter extends Component {
                         marginLeft: layoutConfig.left,
                         marginRight: layoutConfig.right,
                         lineHeight: `${dataRangConfig.lineHeight}px`,
-                        display: 'inline-block'
                       }} key={index}>
                       {
                         (item === '-' || item === '+') ? item : 

@@ -4,6 +4,7 @@
 }
 
 .tab-wrap .tab-item {
+  margin-right: 0 !important;
   padding: 12px 20px;
   overflow: hidden;
   text-overflow: ellipsis;
