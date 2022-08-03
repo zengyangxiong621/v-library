@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useState,useImperativeHandle } from 'react'
 import './index.less'
-
 import EveryItem from '../everyItem/index'
 
 import { http } from '@/services/request'
@@ -10,29 +9,28 @@ import { Spin } from 'antd'
 
 
 const Charts = (props: any) => {
-  // const { data } = props
   const [active, setActive] = useState('all')
   const [allModules, setAllModules] = useState<any>({})
   const [dataLoading, setDataLoading] = useState(false)
-  const helplessMapping: { [x in string]: string } = {
-    '全部': 'all',
-    '柱型图': 'bar',
-    '折线图': 'line',
-    '饼图': 'pie',
-    '散点图': 'scatter',
-    '其他': 'other'
-  }
   const liHover = (key: string) => {
+    console.log(allModules,'allModules')
     setActive(key)
     if(!allModules[key]){
       getData([key])
     }
   }
+  useImperativeHandle(props.childRef, () => ({
+    initPage: () => {
+      console.log(props,'初始化')
+      getData([])
+    }
+  }) )
 
-  const chartTypes = ['全部', '柱型图', '折线图', '饼图', '散点图', '其他']
-  useEffect(() => {
-    getData([])
-  }, [])
+  // useEffect(() => {
+  //   if(current.length && current[0] === index){
+  //     getData([])
+  //   }
+  // }, [props.current])
 
 
   // 获取组件数据
@@ -63,6 +61,8 @@ const Charts = (props: any) => {
     }
     setDataLoading(false)
   }
+
+  console.log(allModules[active],'allModules')
 
   return (
     <div className='Charts-wrap'>

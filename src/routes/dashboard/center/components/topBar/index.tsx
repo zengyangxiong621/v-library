@@ -1,4 +1,4 @@
-import React, { memo,useEffect } from 'react'
+import React, { memo,useEffect,useState,useRef } from 'react'
 import './index.less'
 import { connect } from "dva";
 /**
@@ -16,7 +16,7 @@ import Other from './components/other/index'
 import DesignMaterial from './components/designMaterial'
 import ThmemResource from './components/thmemResource'
 import MyCollection from './components/myCollection'
-
+import { deepClone} from '@/utils'
 
 import { Menu } from 'antd'
 const { SubMenu, Item } = Menu
@@ -24,11 +24,61 @@ const { SubMenu, Item } = Menu
 
 
 const TopBar = (props: any) => {
+  /**
+ * description: 组件 、 素材 导航栏选项卡配置
+ */
+const componentMenu = [
+  {
+    title: '图表',
+    key: 'chart',
+    childRef: useRef(),
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: true,
+    component: Charts,
+  },
+  // {
+  //   title: '地图',
+  //   key: 'map',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: false,
+  //   component: Map
+  // },
+  // {
+  //   title: '文字',
+  //   key: 'text',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: false,
+  //   component: Text
+  // },
+  // {
+  //   title: '辅助',
+  //   key: 'assist',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: false,
+  //   component: Assist
+  // },
+  // {
+  //   title: '交互',
+  //   key: 'interaction',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: false,
+  //   component: Interaction
+  // },
+  // {
+  //   title: '其他',
+  //   key: 'other',
+  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+  //   isSpecialDropMenu: false,
+  //   component: Other
+  // },
+]
   const { showTopBar, zujianORsucai, dispatch } = props
+  const [current, setCurrent] = useState<any>([])
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
     zujian: componentMenu,
     sucai: MaterialMenu,
   }
+
 
   useEffect(() => {
     if(zujianORsucai === 'sucai'){
@@ -44,12 +94,19 @@ const TopBar = (props: any) => {
   }
   
   const menuSelect = (data:any) => {
-    console.log(data,'menu选中数据')
+    if(data.length){
+      let dataList = deepClone(componentMenu)
+      let dom = dataList.find((item:any) => item.key === data[0])
+      if(dom){
+        console.log(dom,'dom')
+        dom.childRef.current.initPage()
+      }
+    }
   }
 
   return (
-    <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
-    <Menu className='TopBar-wrap' mode="horizontal" onClick={menuSelect}>
+  <div className='TopBar-wrap' style={{ display: showTopBar ? 'block' : 'none' }}>
+    <Menu className='TopBar-wrap' triggerSubMenuAction='click' mode="horizontal" onOpenChange={menuSelect}>
       {
         menuReflect[zujianORsucai].map((item: any) => {
           return (
@@ -57,7 +114,10 @@ const TopBar = (props: any) => {
               <div
                 className={`${item.isSpecialDropMenu ? 'hasList-self-tooltip' : 'self-tooltip'}`}
               >
-                {React.createElement(item.component,item)}
+              {
+                // React.createElement(item.component,{...item,index: item.key, current})
+                React.createElement(item.component,item)
+              }
               </div>
             </SubMenu>)
           )
@@ -69,54 +129,7 @@ const TopBar = (props: any) => {
   )
 }
 
-/**
- * description: 组件 、 素材 导航栏选项卡配置
- */
-const componentMenu = [
-  {
-    title: '图表',
-    key: 'chart',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: true,
-    component: Charts,
-  },
-  {
-    title: '地图',
-    key: 'map',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: false,
-    component: Map
-  },
-  {
-    title: '文字',
-    key: 'text',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: false,
-    component: Text
-  },
-  {
-    title: '辅助',
-    key: 'assist',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: false,
-    component: Assist
-  },
-  {
-    title: '交互',
-    key: 'interaction',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: false,
-    component: Interaction
-  },
-  {
-    title: '其他',
-    key: 'other',
-    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-    isSpecialDropMenu: false,
-    component: Other
-  },
 
-]
 const MaterialMenu = [
   {
     title: '系统素材',
