@@ -6,10 +6,13 @@ import { http } from '@/services/request'
 
 const Map = (props: any) => {
   // const { data } = props
+  const {current, index} = props
   const [dataArr, setDataArr] = useState<any>([])
   const [dataLoading, setDataLoading] = useState(true)
   useEffect(() => {
-    getData()
+    if(current.length && current[0] === index){
+      getData()
+    }
   }, [])
   
   
