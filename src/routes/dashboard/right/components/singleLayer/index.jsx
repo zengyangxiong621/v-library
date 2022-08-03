@@ -17,8 +17,6 @@ import debounce from 'lodash/debounce';
 import { http } from '../../../../../services/request'
 import { getCallbackParams } from '@/utils/data.js'
 
-const dashboardId = window.location.pathname.split('/')[2]
-
 const SingleLayer = ({ bar, dispatch, ...props }) => {
   const { TabPane } = Tabs;
   const formItemLayout = {
@@ -49,7 +47,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const saveStyleData = async (param) => {
     const params = {
       configs: [param],
-      dashboardId: dashboardId
+      dashboardId: bar.dashboardId
     }
     await http({
       url: '/visual/module/update',
@@ -159,7 +157,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const saveAnimationData = async (param) => {
     const params = {
       configs: [param],
-      dashboardId: dashboardId
+      dashboardId: bar.dashboardId
     }
     await http({
       url: '/visual/layer/group/update',
@@ -183,7 +181,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const saveEventsData = async (param) => {
     const params = {
       configs: [param],
-      dashboardId: dashboardId
+      dashboardId: bar.dashboardId
     }
     await http({
       url: '/visual/module/defineEvent',
@@ -203,7 +201,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const saveCallbackArg = async (componentConfig) => {
     const params = {
       callbackArgs: componentConfig.callbackArgs,
-      dashboardId: dashboardId,
+      dashboardId: bar.dashboardId,
       moduleId: componentConfig.id
     }
     await http({
