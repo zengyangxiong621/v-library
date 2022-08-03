@@ -1,11 +1,11 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
-  "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "日期组件", //图层名称
+  "id": '', //组件ID
+  "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
+  "name": "时间器", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
-  "dashboardId": "11", //画布id
+  "dashboardId": "", //画布id
 
-  "moduleName": "wordCloud", //组件标识
+  "moduleName": "date1", //组件标识
   "moduleVersion": "1.1.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
@@ -14,13 +14,10 @@ const componentDefaultConfig = {
   "autoUpdate": {"isAuto": false, "interval": 10}, // =========
   "thumb": "", // 缩略图 // =========
 
+  "dataFrom": 0,
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
-  "dataContainers": [{// =========
-    "enable": true,
-    "id": 2744,
-    "rank": 0
-  }],
+  "dataContainers": [],
   "staticData": {
     //静态数据
     "data": [
@@ -32,7 +29,7 @@ const componentDefaultConfig = {
       {
         "status": true // 状态
       }
-    ]
+    ],
   },
 
   "useFilter": false,// =========
@@ -115,7 +112,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": '48px'
+          "value": 32
         }
       ]
     },
@@ -128,7 +125,7 @@ const componentDefaultConfig = {
           "name": "textAlign",
           "displayName": "水平对齐",
           "type": "align",
-          "value": "left" // left , center, right,bothEnds
+          "value": "right" // left , center, right,bothEnds
         },
         {
           "name": "textVertical",
@@ -163,7 +160,7 @@ const componentDefaultConfig = {
           }
         }
       ]
-    }
+    },
   ],
   themes: [{
     id: 'theme-default',

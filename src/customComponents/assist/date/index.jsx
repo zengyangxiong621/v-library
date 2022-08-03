@@ -1,8 +1,7 @@
-import React, { Component, CSSProperties } from 'react';
-import componentDefaultConfig from './config'
+import React, { Component } from 'react';
+import ComponentDefaultConfig from './config'
 
-
-export default class ShowDate extends Component {
+class ShowDate extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -68,21 +67,39 @@ export default class ShowDate extends Component {
     return targetStyle;
   }
   render() {
-    const componentConfig = this.props.componentConfig || componentDefaultConfig
+    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const { config } = componentConfig
     // const { data } = componentConfig.staticData
     // const timeStamp = data[0].date
 
     const targetStyle = this.getTargetStyle(config)
 
+    console.log(targetStyle)
 
     return <div style={{
+      ...targetStyle,
       width: '100%',
       height: '100%',
-      ...targetStyle,
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"top"===targetStyle.textVertical?"flex-start":"vertical"===targetStyle.textVertical?"center":"flex-end",
+      alignItems:"left"===targetStyle.textAlign?"flex-start":"center"===targetStyle.textAlign?"center":"right"===targetStyle.textAlign?"flex-end":"flex-start",
+      fontWeight:targetStyle.bold ? "bold" : "normal",
+      fontStyle:targetStyle.italic?"italic":"normal",
+      letterSpacing:targetStyle.letterSpacing+"px",
+      lineHeight:targetStyle.lineHeight+'px',
+      textShadow:targetStyle.show ? `${targetStyle.shadow.vShadow}px ${targetStyle.shadow.hShadow}px ${targetStyle.shadow.blur}px ${targetStyle.shadow.color}` : '0 0 black'
     }}>
-      <span style={{ marginRight: '20px' }}>{this.state.finalDate}</span>
-      <span>{this.state.curTime}</span>
+      <div style={{display:"flex",alignItems:"center",position:"relative",padding:"5px 0"}}>
+        <span style={{ marginRight: '20px' }}>{this.state.curTime}</span>
+        <span>{this.state.finalDate}</span>
+      </div>
     </div>
   }
 }
+
+export {
+  ComponentDefaultConfig,
+}
+
+export default ShowDate
