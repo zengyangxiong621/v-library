@@ -20,6 +20,7 @@ import CenterRightMenu from './left/components/rightClickMenu/rightClickMenu'
 import { menuOptions } from './left/Data/menuOptions'
 import DataContainer from './components/dataContainer'
 import CallbackArgs from './components/callbackArgs'
+import DataFilters from './components/dataFilters'
 import ModuleUpdate from './components/moduleUpdate'
 import useLoading from '@/components/useLoading'
 import { useEventEmitter } from 'ahooks';
@@ -31,6 +32,7 @@ function App({ bar, dispatch, location }: any) {
   const [zujianORsucai, setZujianORsucai] = useState('zujian')
   const [dataContainerVisible, setDataContainerVisible] = useState(false)
   const [callbackArgsVisible, setCallbackArgsVisible] = useState(false)
+  const [dataFiltersVisible, setDataFiltersVisible] = useState(false)
   const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
   const [loading, setLoading]: any = useLoading(false, document.querySelector('.p-home'))
@@ -195,16 +197,26 @@ function App({ bar, dispatch, location }: any) {
         setDataContainerVisible(true)
         setCallbackArgsVisible(false)
         setModuleUpdateVisible(false)
+        setDataFiltersVisible(false)
         break;
       case 'huitiaoguanli':
         setCallbackArgsVisible(true)
         setDataContainerVisible(false)
         setModuleUpdateVisible(false)
+        setDataFiltersVisible(false)
         break;
       case 'zujiangengxin':
         setModuleUpdateVisible(true)
         setCallbackArgsVisible(false)
         setDataContainerVisible(false)
+        setDataFiltersVisible(false)
+        break;
+      case 'xiangmuguolvqi':
+        setDataFiltersVisible(true)
+        setCallbackArgsVisible(false)
+        setDataContainerVisible(false)
+        setModuleUpdateVisible(false)
+        break;
     }
   }
 
@@ -226,8 +238,12 @@ function App({ bar, dispatch, location }: any) {
   }
   const handleMUAvailableChange = (value: boolean) => {
     setModuleUpdateVisible(value)
-
   }
+  const handleDataFilterAvailableChange = (value: boolean) => {
+    setDataFiltersVisible(value)
+  }
+
+
   return (
     <Layout>
       <ChooseArea />
@@ -250,6 +266,7 @@ function App({ bar, dispatch, location }: any) {
           <DataContainer visible={dataContainerVisible} onChange={handleDCVisibleChange} />
           <CallbackArgs visible={callbackArgsVisible} onChange={handleCbAvailableChange} />
           <ModuleUpdate visible={moduleUpdateVisible} onChange={handleMUAvailableChange} />
+          <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange}></DataFilters>
         </div>
         {
           bar.isShowRightMenu &&

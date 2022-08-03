@@ -663,10 +663,10 @@ const centerIconArr = [
   {
     icon: 'line',
   },
-  // {
-  //   icon: 'xiangmuguolvqi',
-  //   text: '项目过滤器'
-  // },
+  {
+    icon: 'xiangmuguolvqi',
+    text: '项目过滤器'
+  },
   {
     icon: 'huitiaoguanli',
     text: '回调管理'
