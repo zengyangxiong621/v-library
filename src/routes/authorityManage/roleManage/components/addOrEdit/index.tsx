@@ -236,6 +236,7 @@ const AddOrEdit=(props:any)=>{
           label="名称"
           name="name"
           style={{ marginTop: '20px' }}
+          validateTrigger='onBlur'
           rules={[
             {required: true,validator:validRoleName(isEdit)}
           ]}
@@ -253,7 +254,7 @@ const AddOrEdit=(props:any)=>{
           label="权限管理"
           name="permissionIds"
           style={{ marginTop: '20px' }}
-          rules={[{ required: true, message: '',validator:permissionValidator }]}
+          rules={[{ required: true,validator:permissionValidator }]}
         >
           <Table
             pagination={false}

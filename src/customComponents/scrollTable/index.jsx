@@ -43,6 +43,8 @@ const ScrollTable = (props) => {
     ]
   })
   const [oddRowBGC, setOddRowBGC] = useState('#2a2d3c')
+  const [headerBGC, setHeaderBGC] = useState('#222430')
+  const [headerBGI, setHeaderBGI] = useState('unset')
   const [evenRowBGC, setEvenRowBGC] = useState('#222430')
   const [indexHeader, setIndexHeader] = useState('#')
   const [align, setAlign] = useState([])
@@ -52,6 +54,7 @@ const ScrollTable = (props) => {
   const [header, setHeader] = useState([])
   const [isHeader, setIsHeader] = useState(true)
   const [isIndex, setIsIndex] = useState(false)
+  const [indexAlign ,setIndexAlign] = useState('left')
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const fields = getFields(componentConfig)
   const {config, staticData} = componentConfig
@@ -160,13 +163,18 @@ const ScrollTable = (props) => {
       setIsHeader(false)
     }
 
-    const lineHeight = headerConfig.find(item => item.name === 'lineHeight').value
     const bgColor = headerConfig.find(item => item.name === 'bgColor').value
+    setHeaderBGC(bgColor)
     const textAlign = headerConfig.find(item => item.name === 'textAlign').value
     let textStyle = styleTransformFunc(headerConfig.find(item => item.name === 'textStyle').value, false)
+    const gradientConfig = headerConfig.filter(item => item.name.indexOf('gradient') !== -1).reduce((pre, cur) => {
+      pre[cur.name] = cur.value
+      return pre
+    }, {})
+    const gradientColor = gradientConfigFunc(gradientConfig)
+    setHeaderBGI(gradientColor['background-image'])
     // const textAlign = headerConfig.find(item => item.name === 'align').value.find(item => item.nafme === 'textAlign').value || 'left'
     textStyle = styleObjectToStr({
-      'line-height': lineHeight + 'px',
       'text-align': textAlign,
       'font-Family': fontFamilyConfig,
       ...textStyle,
@@ -176,9 +184,20 @@ const ScrollTable = (props) => {
     setTimeout(() => {
       const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
       const tableHeader = tableDom.querySelector('.dv-scroll-board>.header')
-      tableHeader.style.backgroundColor = bgColor
-      tableHeader.style.height = lineHeight + 'px'
+      // tableHeader.style.backgroundColor = bgColor
     })
+  }
+
+  const gradientConfigFunc = ({ gradientOrigin, gradientStartColor, gradientEndColor }) => {
+    let backgroundImage = ""
+    if (gradientOrigin === 'center') {
+      backgroundImage = `linear-gradient(to right, ${gradientStartColor}, ${gradientEndColor}, ${gradientStartColor})`
+    } else {
+      backgroundImage = `linear-gradient(to ${gradientOrigin}, ${gradientStartColor}, ${gradientEndColor})`
+    }
+    return {
+      "background-image": backgroundImage
+    }
   }
 
   const tableIndexLoadFunc = () => {
@@ -195,6 +214,7 @@ const ScrollTable = (props) => {
     const indexAlign = indexConfig.find(item => item.name === 'textAlign').value
     let textStyle = styleTransformFunc(tableIndexConfig.find(item => item.name === 'textStyle').value, false)
     textStyle = styleObjectToStr({'text-align': indexAlign, ...textStyle})
+    setIndexAlign(indexAlign)
     setIndexHeader(`<div style="${textStyle}">${indexTitle}</div>`)
   }
 
@@ -356,11 +376,13 @@ const ScrollTable = (props) => {
     waitTime,
     index: isIndex,
     hoverPause: true,
-    headerBGC: '#222430', // 头部背景色
+    headerBGC, // 头部背景色
+    headerBGI, // 头部背景图片
     oddRowBGC, // 奇数行背景色
     evenRowBGC, // 偶数行背景色
     carousel,
     rowNum: rowNumConfig,
+    indexAlign,
     indexHeader,
     align,
     height,

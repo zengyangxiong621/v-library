@@ -102,13 +102,21 @@ export const defaultData = {
         "type": "collapse",
         "hasSwitch": true,
         "defaultExpand": false,
-        "value": [ { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
-          "name": "lineHeight",
-          "displayName": "行高",
-          "value": 35,
-          "type": "range",
-          "config": { "min": 0, "max": 100, "step": 1, "suffix": "px" },
-        }, { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" }, {
+        "value": [
+          { "name": "show", "displayName": "", "value": true, "type": "switch" },
+          { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" },
+          {
+            "name": "gradientOrigin",
+            "displayName": "渐变色方向",
+            "type": "origin",
+            "config": {
+              "type": "direction"
+            },
+            "value": "unset"
+          },
+          { "name": "gradientStartColor", "displayName": "渐变色-开始", "value": "#222430", "type": "color" },
+          { "name": "gradientEndColor", "displayName": "渐变色-结束", "value": "#222430", "type": "color" },
+          {
           "name": "textAlign",
           "displayName": "文本对齐",
           "type": "select",
@@ -158,7 +166,7 @@ export const defaultData = {
           "displayName": "标题",
           "value": "#",
           "type": "input",
-        }, { "name": "bgColor", "displayName": "背景颜色", "value": "#222430", "type": "color" }, {
+        }, {
           "name": "textAlign",
           "displayName": "文本对齐",
           "type": "select",
@@ -1633,70 +1641,70 @@ export const defaultData = {
             },
           ],
         },
-        {
-          "name": "calendarBox",
-          "displayName": "日历框",
-          "type": "collapse",
-          "hasSwitch": true,
-          "defaultExpand": true,
-          "value": [
-            {
-              "name": "show",
-              "displayName": "",
-              "value": true,
-              "type": "switch",
-            },
-            {
-              "displayName": "背景色",
-              "name": "bgColor",
-              "type": "color",
-              "value": "#fef",
-            },
-            {
-              "displayName": "文本样式",
-              "name": "textStyle",
-              "type": "textFullStyleGroup",
-              "value": [
-                {
-                  "displayName": "",
-                  "name": "fontFamily",
-                  "value": "Microsoft Yahei",
-                },
-                {
-                  "displayName": "",
-                  "name": "fontSize",
-                  "value": 14,
-                },
-                {
-                  "displayName": "",
-                  "name": "color",
-                  "type": "color",
-                  "value": "#000",
-                },
-                {
-                  "displayName": "",
-                  "name": "bold",
-                  "value": false,
-                },
-                {
-                  "displayName": "",
-                  "name": "italic",
-                  "value": false,
-                },
-                {
-                  "displayName": "字距",
-                  "name": "letterSpacing",
-                  "value": 0,
-                },
-                {
-                  "displayName": "行距",
-                  "name": "lineHeight",
-                  "value": 0,
-                },
-              ],
-            },
-          ],
-        },
+        // {
+        //   "name": "calendarBox",
+        //   "displayName": "日历框",
+        //   "type": "collapse",
+        //   "hasSwitch": true,
+        //   "defaultExpand": true,
+        //   "value": [
+        //     {
+        //       "name": "show",
+        //       "displayName": "",
+        //       "value": true,
+        //       "type": "switch",
+        //     },
+        //     {
+        //       "displayName": "背景色",
+        //       "name": "bgColor",
+        //       "type": "color",
+        //       "value": "#fef",
+        //     },
+        //     {
+        //       "displayName": "文本样式",
+        //       "name": "textStyle",
+        //       "type": "textFullStyleGroup",
+        //       "value": [
+        //         {
+        //           "displayName": "",
+        //           "name": "fontFamily",
+        //           "value": "Microsoft Yahei",
+        //         },
+        //         {
+        //           "displayName": "",
+        //           "name": "fontSize",
+        //           "value": 14,
+        //         },
+        //         {
+        //           "displayName": "",
+        //           "name": "color",
+        //           "type": "color",
+        //           "value": "#000",
+        //         },
+        //         {
+        //           "displayName": "",
+        //           "name": "bold",
+        //           "value": false,
+        //         },
+        //         {
+        //           "displayName": "",
+        //           "name": "italic",
+        //           "value": false,
+        //         },
+        //         {
+        //           "displayName": "字距",
+        //           "name": "letterSpacing",
+        //           "value": 0,
+        //         },
+        //         {
+        //           "displayName": "行距",
+        //           "name": "lineHeight",
+        //           "value": 0,
+        //         },
+        //       ],
+        //     },
+        //   ],
+        // },
       ],
       "dataConfig": {},
       "autoUpdate": {},

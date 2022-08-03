@@ -1,0 +1,10 @@
+{
+	"name":"桑基图", // 组件对外显示的名称
+	"moduleName":"sankey", // 组件唯一编码标识
+	"moduleVersion":"1.1.2", // 组件版本
+	"type": "chart", // 组件所属类型(类型:0-图标;1-地图;2-文字;3-辅助;4-交互;5-其他)
+	"subType":"dashboard", // 组件所属子类型(类型:全部;柱型图;折线图;饼图;散点图;其他)
+	"photoPath":"/chart/sankey/1.1.2/thumb-sankey.png", // 组件主题图片地址
+	"configUrl":"\\config.js", // 组件配置文件路径
+	"author":"linbinbin@gridsum.com" // 组件作者
+}

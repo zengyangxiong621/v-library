@@ -2,6 +2,7 @@ import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
 import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
+import CountUp from 'react-countup'
 
 class Counter extends Component {
   constructor(Props) {
@@ -204,14 +205,15 @@ class Counter extends Component {
                       }} key={index}>
                       {
                         (item === '-' || item === '+') ? item : 
-                        <DigitalFlop config={
-                          {number: [Number(item)],content: '{nt}', style:{
-                            fontSize: dataRangConfig.fontSize,
-                            fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
-                            fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
-                            fill: dataRangConfig.color,
-                          }}
-                        } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                        // <DigitalFlop config={
+                        //   {number: [Number(item)],content: '{nt}', style:{
+                        //     fontSize: dataRangConfig.fontSize,
+                        //     fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
+                        //     fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
+                        //     fill: dataRangConfig.color,
+                        //   }}
+                        // } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                        <CountUp start={0} end={Number(item)} duration={1}></CountUp>
                       }
                       </span>
                     }

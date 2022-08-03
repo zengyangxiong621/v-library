@@ -1,7 +1,14 @@
 import { Input, Row, Col, Modal, Form, Select, Button,message,Space } from 'antd'
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { STATUSLIST } from '@/constant/dvaModels/userManage'
+// import { STATUSLIST } from '@/constant/dvaModels/userManage'
+
+const  STATUSLIST = [
+  { label: '无', value: null },
+  { label: '启用', value: 0 },
+  { label: '停用', value: 1 },
+  { label: '锁定', value: 2 },
+]
 
 
 const SearchContainer=(props:any)=>{
@@ -31,7 +38,7 @@ const SearchContainer=(props:any)=>{
       initialValues={{ remember: true }}
       autoComplete="off"
     >
-    <Form.Item label='用户' name='name'>
+    <Form.Item label='用户' name='userName'>
       <Input  style={{ width: 200 }} placeholder='请输入用户名或账户' />
     </Form.Item>
     <Form.Item label='状态' name='status'>

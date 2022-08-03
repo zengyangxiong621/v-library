@@ -113,6 +113,13 @@ const componentMenu = [
     component: Interaction
   },
   {
+    title: '指标',
+    key: 'interaction1',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Interaction
+  },
+  {
     title: '其他',
     key: 'other',
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
