@@ -16,7 +16,6 @@ import Other from './components/other/index'
 import DesignMaterial from './components/designMaterial'
 import ThmemResource from './components/thmemResource'
 import MyCollection from './components/myCollection'
-import { deepClone} from '@/utils'
 
 import { Menu } from 'antd'
 const { SubMenu, Item } = Menu
@@ -85,41 +84,41 @@ const componentMenu = [
     isSpecialDropMenu: true,
     component: Charts,
   },
-  // {
-  //   title: '地图',
-  //   key: 'map',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Map
-  // },
-  // {
-  //   title: '文字',
-  //   key: 'text',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Text
-  // },
-  // {
-  //   title: '辅助',
-  //   key: 'assist',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Assist
-  // },
-  // {
-  //   title: '交互',
-  //   key: 'interaction',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Interaction
-  // },
-  // {
-  //   title: '其他',
-  //   key: 'other',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
-  //   isSpecialDropMenu: false,
-  //   component: Other
-  // },
+  {
+    title: '地图',
+    key: 'map',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Map
+  },
+  {
+    title: '文字',
+    key: 'text',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Text
+  },
+  {
+    title: '辅助',
+    key: 'assist',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Assist
+  },
+  {
+    title: '交互',
+    key: 'interaction',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Interaction
+  },
+  {
+    title: '其他',
+    key: 'other',
+    // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
+    isSpecialDropMenu: false,
+    component: Other
+  },
 ]
 
 const MaterialMenu = [
