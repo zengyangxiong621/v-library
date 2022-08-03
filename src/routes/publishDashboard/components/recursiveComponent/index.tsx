@@ -54,10 +54,8 @@ const RecursiveComponent = (props: any) => {
                       {
                         <EveryComponent key={ind}
                           componentData={targetComponent}
-                          comData={getComDataWithFilters(bar.componentData, targetComponent, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          comData={getComDataWithFilters(bar.componentData, targetComponent, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
                           scaleValue={scaleValue}
-                          screenWidthRatio={screenWidthRatio}
-                          screenHeightRatio={screenHeightRatio}
                         />
                       }
                     </div>

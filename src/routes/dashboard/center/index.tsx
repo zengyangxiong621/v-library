@@ -62,8 +62,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
     const getCurrentDocumentHeight = document.documentElement.clientHeight
     // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
-    if(getCurrentDocumentWidth < 1366) {
-      getCurrentDocumentWidth = 1366
+    if(getCurrentDocumentWidth < 1280) {
+      getCurrentDocumentWidth = 1280
     }
     // width、 height 是我们希望的当前 canvas 实际宽高
     // bar.leftMenuWidth 是左侧菜单的宽度, 333 是右侧菜单的高度， 66 是 3 个尺子的宽度
@@ -250,8 +250,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     { position: { x, y }, style: { width, height } }: IScaleDragData,
     { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
   ) => {
+    dispatch({
+      type: "bar/updateSelectedComponents"
+    })
     if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
-      const component = bar.selectedComponents[0]
+      const component = deepClone(bar.selectedComponents[0])
       const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
       styleDimensionConfig.forEach((item: IStyleConfig) => {
         switch(item.name) {
@@ -266,6 +269,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             break
           case HEIGHT:
             item.value = height
+        }
+      })
+      dispatch({
+        type: 'bar/setComponentConfig',
+        payload: component
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          isCanClearAllStatus: false,
         }
       })
     } else {
@@ -333,18 +346,20 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           }
         })
       })
+      dispatch({
+        type: 'bar/setGroupConfig',
+        payload: {
+          config: { position: { x, y }, style: { width, height } },
+          isCanClearAllStatus: false,
+        },
+      })
     }
+    console.log('bar.selectedComponents', bar.selectedComponents)
     dispatch({
       type: 'bar/updateComponent',
       payload: bar.selectedComponents,
     })
-    dispatch({
-      type: 'bar/setGroupConfig',
-      payload: {
-        config: { position: { x, y }, style: { width, height } },
-        isCanClearAllStatus: false,
-      },
-    })
+
   }
 
   const handleCanvasDrag = function(event: DraggableEvent, data: DraggableData) {

@@ -228,7 +228,12 @@ const ScrollSelect = (props) => {
         ...selectedTabStyle,
         ...style,
         lineHeight: 'unset',
-        background: bgImg ? `url(${ bgImg }) no-repeat center/cover` : bgColor
+        backgroundImage: bgImg ? `url('${ bgImg }')` : 'unset',
+        backgroundColor: bgColor ? bgColor : 'unset',
+        width: '100%',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center center',
       })
     } else {
       let fontFamily = config.find(item => item.name === 'fontFamily')
@@ -251,6 +256,7 @@ const ScrollSelect = (props) => {
         ...unselectedTabStyle,
         ...style,
         lineHeight: 'unset',
+        width: '100%',
       })
     }
   }

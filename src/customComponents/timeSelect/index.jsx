@@ -58,18 +58,18 @@ const TimeSelect = (props) => {
   const pickerType = allGlobalConfig.find(item => item.name === 'pickerType').value
   const selectBgColor = selectorConfig.find(item => item.name === 'selectBgColor').value
   const selectBorderColor = selectorConfig.find(item => item.name === 'selectBorderColor').value
-  const calendarConfig = config.find(item => item.name === 'calendarBox').value
-  const calendarBgColor = calendarConfig.find(item => item.name === 'bgColor').value
+  // const calendarConfig = config.find(item => item.name === 'calendarBox').value
+  // const calendarBgColor = calendarConfig.find(item => item.name === 'bgColor').value
   const dateFormat = formatEnum.find(item => item.value === allGlobalConfig.find(item => item.name === 'dateFormat').value).name
   // const textIndent = config.find(item => item.name === 'textIndent' || item.name === 'unitName').value || ''
   let textStyleConfig = selectorConfig.filter((item) => ['textStyle'].includes(item.name))
-  let calendarBoxTextStyleConfig = calendarConfig.find(item => item.name === 'textStyle').value
+  // let calendarBoxTextStyleConfig = calendarConfig.find(item => item.name === 'textStyle').value
   let textStyle = useMemo(() => {
     return styleTransformFunc(textStyleConfig)
   }, [textStyleConfig])
-  let calendarBoxTextStyle = useMemo(() => {
-    return styleTransformFunc(calendarBoxTextStyleConfig)
-  }, [calendarBoxTextStyleConfig])
+  // let calendarBoxTextStyle = useMemo(() => {
+  //   return styleTransformFunc(calendarBoxTextStyleConfig)
+  // }, [calendarBoxTextStyleConfig])
   /*
   {
     "fontFamily": "Microsoft Yahei",
@@ -145,23 +145,23 @@ const TimeSelect = (props) => {
         cAntPickerRangeWrapper.style.top = -Number(antPickerDropdownDom.style.left.replace('px', '')) + 10 / scale + 'px'
         console.log('cAntPickerRangeWrapper', cAntPickerRangeWrapper)
       })
-      ;[...cAntPickerCellInner, ...cAntPickerContent].forEach(item => {
-        Object.keys(calendarBoxTextStyle).forEach(key => {
-          item.style[key] = calendarBoxTextStyle[key]
-        })
-      })
-      ;[...allCellsBefore].forEach(item => {
-        Object.keys(calendarBoxTextStyle).forEach(key => {
-          item.style.background = 'pink'
-        })
-      })
-      ;[...cAntPickerHeaderButtons, ...cAntPickerHeaderViews, ...cAntPickerTimePanelCellInners].forEach(item => {
-        item.style.color = calendarBoxTextStyle.color
-        item.style.fontStyle = calendarBoxTextStyle.fontStyle
-        item.style.fontWeight = calendarBoxTextStyle.fontWeight
-        item.style.fontSize = calendarBoxTextStyle.fontSize
-      })
-      panelDom.style.background = calendarBgColor
+      // ;[...cAntPickerCellInner, ...cAntPickerContent].forEach(item => {
+      //   Object.keys(calendarBoxTextStyle).forEach(key => {
+      //     item.style[key] = calendarBoxTextStyle[key]
+      //   })
+      // })
+      // ;[...allCellsBefore].forEach(item => {
+      //   Object.keys(calendarBoxTextStyle).forEach(key => {
+      //     item.style.background = 'pink'
+      //   })
+      // })
+      // ;[...cAntPickerHeaderButtons, ...cAntPickerHeaderViews, ...cAntPickerTimePanelCellInners].forEach(item => {
+      //   item.style.color = calendarBoxTextStyle.color
+      //   item.style.fontStyle = calendarBoxTextStyle.fontStyle
+      //   item.style.fontWeight = calendarBoxTextStyle.fontWeight
+      //   item.style.fontSize = calendarBoxTextStyle.fontSize
+      // })
+      // panelDom.style.background = calendarBgColor
       setIsCalendarOpened(true)
     })
   }
@@ -204,12 +204,12 @@ const TimeSelect = (props) => {
             border: `1px solid ${ selectBorderColor }`,
           } }
           placeholder={['开始时间', '结束时间']}
+          popupStyle={{transform: `scale(${scale})`, transformOrigin: 'left top'}}
           separator="至"
-          popupStyle={ { dimensionWidth } }
           showTime={ dateFormat.indexOf('HH:mm:ss') !== -1 }
-          getPopupContainer={ triggerNode => triggerNode.parentNode }
-          onOpenChange={ onOpenChange }
-          onPanelChange={ onOpenChange }
+          // getPopupContainer={ triggerNode => triggerNode.parentNode }
+          // onOpenChange={ onOpenChange }
+          // onPanelChange={ onOpenChange }
           allowClear={ false }
           dropdownClassName="date-panel"
           onChange={ handleChange }
@@ -218,6 +218,7 @@ const TimeSelect = (props) => {
           picker={ pickerType }
           format={ dateFormat }
           placeholder="请选择时间"
+          popupStyle={{transform: `scale(${scale})`, transformOrigin: 'left top'}}
           style={ {
             width: '100%',
             height: '100%',
@@ -225,9 +226,9 @@ const TimeSelect = (props) => {
             border: `1px solid ${ selectBorderColor }`,
           } }
           showTime={ dateFormat.indexOf('HH:mm:ss') !== -1 }
-          getPopupContainer={ triggerNode => triggerNode.parentNode }
-          onOpenChange={ onOpenChange }
-          onPanelChange={ onOpenChange }
+          // getPopupContainer={ triggerNode => triggerNode.parentNode }
+          // onOpenChange={ onOpenChange }
+          // onPanelChange={ onOpenChange }
           allowClear={ false }
           dropdownClassName="date-panel"
           onChange={ handleChange }

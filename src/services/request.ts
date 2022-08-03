@@ -1,6 +1,6 @@
 import { message } from "antd";
 import qs from "qs";
-import { forwardLogin } from './loginApi'
+import { forwardLogin } from "./loginApi";
 const isPlainObject = (config: any) => {
   return Object.prototype.toString.call(config) === "[object Object]";
 };
@@ -105,17 +105,17 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
     })
     .catch((err) => {
       const { code, message: errMessage } = err;
-      message.error(errMessage);
+      message.error(errMessage || '请求数据失败');
       if (code === 401) {
         if (token && token.endsWith('x-gridsumdissector')) {
           forwardLogin()
         } else {
           window.history.replaceState(null, '', '/login')
           window.location.reload();
-          localStorage.removeItem('token')
+          localStorage.removeItem("token");
         }
       }
-      if(code === 500){
+      if(code===403){
         window.history.replaceState(null,'','/404')
         window.location.reload();
       }
@@ -159,4 +159,4 @@ export const downLoad=async (url:string , isAllurl:boolean=false, fileName?:stri
   a.download=(fileName || '') + '.zip';
   a.click();
   window.URL.revokeObjectURL(downloadUrl);
-}
+};

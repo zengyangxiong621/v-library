@@ -3,6 +3,7 @@ import './index.less'
 
 const OriginSelect = props => {
   const [value,setValue] = useState(props.psValue)
+  const _type = props.type
 
   useEffect(() => {
     setValue(props.psValue)
@@ -13,18 +14,41 @@ const OriginSelect = props => {
     props.onChange(value)
   }
 
+  const _enum = [
+    "0% 0%",
+    "50% 0%",
+    "100% 0%",
+    "0% 50%",
+    "50% 50%",
+    "100% 50%",
+    "0% 100%",
+    "50% 100%",
+    "100% 100%"
+  ]
+
+  const _directionEnum = [
+    "left top",
+    "top",
+    "right top",
+    "left",
+    "center",
+    "right",
+    "left bottom",
+    "bottom",
+    "right bottom"
+  ]
+
+
   return (
     <div className="origin-select-container">
       <div className="origin-select-grid">
-        <span onClick={()=>{valueChange("0% 0%")}} className={['origin-select-item',value==="0% 0%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("50% 0%")}}  className={['origin-select-item',value==="50% 0%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("100% 0%")}}  className={['origin-select-item',value==="100% 0%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("0% 50%")}}  className={['origin-select-item',value==="0% 50%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("50% 50%")}}  className={['origin-select-item',value==="50% 50%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("100% 50%")}}  className={['origin-select-item',value==="100% 50%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("0% 100%")}}  className={['origin-select-item',value==="0% 100%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("50% 100%")}}  className={['origin-select-item',value==="50% 100%"?'origin-select-active':null].join(' ')}></span>
-        <span onClick={()=>{valueChange("100% 100%")}}  className={['origin-select-item',value==="100% 100%"?'origin-select-active':null].join(' ')}></span>
+        {
+          (_type === 'direction' ? _directionEnum : _enum).map(item => {
+            return (
+              <span onClick={()=>{valueChange(item)}} title={item} className={[ 'origin-select-item', value === item? 'origin-select-active': null ].join(' ')}></span>
+            )
+          })
+        }
       </div>
     </div>
   )

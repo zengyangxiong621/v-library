@@ -6,10 +6,13 @@ import { http } from '@/services/request'
 
 const Map = (props: any) => {
   // const { data } = props
+  const {current, index} = props
   const [dataArr, setDataArr] = useState<any>([])
   const [dataLoading, setDataLoading] = useState(true)
   useEffect(() => {
-    getData()
+    if(current.length && current[0] === index){
+      getData()
+    }
   }, [])
   
   
@@ -37,7 +40,7 @@ const Map = (props: any) => {
   
   return (
     <>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="map-loading" spinning={dataLoading}/>
       <div className='Map-wrap'>
         {
           dataArr.length ? 

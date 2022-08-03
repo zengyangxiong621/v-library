@@ -2,7 +2,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { memo, useEffect, useState } from 'react'
 import './index.less'
-
 import EveryItem from '../everyItem/index'
 
 import { http } from '@/services/request'
@@ -10,18 +9,10 @@ import { Spin } from 'antd'
 
 
 const Charts = (props: any) => {
-  // const { data } = props
   const [active, setActive] = useState('all')
+  const {current, index} = props
   const [allModules, setAllModules] = useState<any>({})
   const [dataLoading, setDataLoading] = useState(false)
-  const helplessMapping: { [x in string]: string } = {
-    '全部': 'all',
-    '柱型图': 'bar',
-    '折线图': 'line',
-    '饼图': 'pie',
-    '散点图': 'scatter',
-    '其他': 'other'
-  }
   const liHover = (key: string) => {
     setActive(key)
     if(!allModules[key]){
@@ -29,9 +20,10 @@ const Charts = (props: any) => {
     }
   }
 
-  const chartTypes = ['全部', '柱型图', '折线图', '饼图', '散点图', '其他']
   useEffect(() => {
-    getData([])
+    if(current.length && current[0] === index){
+      getData([])
+    }
   }, [])
 
 
@@ -59,7 +51,8 @@ const Charts = (props: any) => {
     if(!allModules[classType]){
       let obj:any = {}
       obj[classType] = data.content
-      setAllModules({...allModules, ...obj})
+      let list = {...allModules, ...obj}
+      setAllModules(list);
     }
     setDataLoading(false)
   }
@@ -80,7 +73,7 @@ const Charts = (props: any) => {
           })
         }
       </ul>
-      <Spin className="data-loading" spinning={dataLoading}/>
+      <Spin className="chart-loading" spinning={dataLoading}/>
       {
         allModules[active] && (
           allModules[active].length ? 

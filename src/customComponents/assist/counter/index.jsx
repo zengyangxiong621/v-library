@@ -1,7 +1,7 @@
 import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
-import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
+import CountUp from 'react-countup'
 
 class Counter extends Component {
   constructor(Props) {
@@ -187,12 +187,18 @@ class Counter extends Component {
                       item === ',' ? 
                       <span key={index} style={{
                         marginLeft: splitSpacingConfig.left,
-                        marginRight: splitSpacingConfig.right
+                        marginRight: splitSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>,</span> : 
                       item === '.' ? 
                       <span key={index} style={{
                         marginLeft: pointSpacingConfig.left,
-                        marginRight: pointSpacingConfig.right
+                        marginRight: pointSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>.</span> :
                       <span style={{
                         width: layoutConfig.width,
@@ -200,18 +206,18 @@ class Counter extends Component {
                         marginLeft: layoutConfig.left,
                         marginRight: layoutConfig.right,
                         lineHeight: `${dataRangConfig.lineHeight}px`,
-                        display: 'inline-block'
                       }} key={index}>
                       {
                         (item === '-' || item === '+') ? item : 
-                        <DigitalFlop config={
-                          {number: [Number(item)],content: '{nt}', style:{
-                            fontSize: dataRangConfig.fontSize,
-                            fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
-                            fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
-                            fill: dataRangConfig.color,
-                          }}
-                        } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                        // <DigitalFlop config={
+                        //   {number: [Number(item)],content: '{nt}', style:{
+                        //     fontSize: dataRangConfig.fontSize,
+                        //     fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
+                        //     fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
+                        //     fill: dataRangConfig.color,
+                        //   }}
+                        // } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                        <CountUp start={0} end={Number(item)} duration={1}></CountUp>
                       }
                       </span>
                     }

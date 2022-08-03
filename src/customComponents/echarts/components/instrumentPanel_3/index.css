@@ -1,0 +1,88 @@
+.protection-level {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.protection-level .bg {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.protection-level .bg .circle1 {
+  animation: circle1 10s linear infinite;
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  cursor: pointer;
+  object-fit: contain;
+  margin-bottom: 0%;
+}
+@keyframes circle1 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+.protection-level .bg .circle2 {
+  animation: circle2 10s linear infinite;
+  position: absolute;
+  width: 35%;
+  height: 35%;
+  cursor: pointer;
+  object-fit: contain;
+  margin-bottom: 0%;
+}
+@keyframes circle2 {
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+.protection-level .bg .bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 43%;
+  background: url('./protectionLevel3.png') center center no-repeat;
+  background-size: contain;
+}
+.protection-level .score {
+    position: absolute;
+    text-align: center
+}
+.protection-level .score .number {
+  font-size: 60px;
+  text-align: center;
+  position: absolute;
+  transform: translate(-50%,-80%);
+  white-space: nowrap;
+}
+.protection-level .score .title {
+    color: #FFF;
+    font-size: 28px;
+    text-align: center;
+    position: absolute;
+    transform: translate(-50%,10%);
+    white-space: nowrap;
+}
+.protection-level .result {
+  position: absolute;
+  top: 88%;
+  left: 35%;
+  transform: translate(0, 0);
+  width: 100%;
+}
+.protection-level .result .result1{
+  display: flex;
+  position: absolute;
+}

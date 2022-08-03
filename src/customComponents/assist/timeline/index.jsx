@@ -1,20 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { Timeline } from 'antd';
 import ComponentDefaultConfig from './config'
-import './index.css'
+// import './index.css'
+import './index.less'
 
-const spotDom=(spotStyle)=>{
-  const {color,width}=spotStyle
+const spotDom=(spotType,index)=>{
   const getSpotStyle={
+    "position":'relative',
     "display":"inline-block",
-    "width":width,
-    "height":width,
-    "border":`${width/4}px solid ${color}`,
+    "width":'20px',
+    "height":'20px',
     "borderRadius":'50%',
-    "backgroundColor":'transparent'
+    "backgroundImage":`linear-gradient(#00D9FF,#095EFF)`
   }
+  const getSpotInlineStyle={
+    "position":"absolute",
+    "display":"inline-block",
+    "width":`13px`,
+    "height":`13px`,
+    "border":`3px solid #333`,
+    "borderRadius":'50%',
+    "left":'50%',
+    "top":'50%',
+    "transform": `translate(-50%,-50%)`,
+    "backgroundColor":'#fff',
+  }
+  const singleStyle={
+    "display":"inline-block",
+    "width":`8px`,
+    "height":`8px`,
+    "borderRadius":'50%',
+    "backgroundColor":'#fff',
+  }
+  const single=(
+    <span style={singleStyle}></span>
+  )
+  const double=(
+    <span style={getSpotStyle}>
+      <span style={getSpotInlineStyle}></span>
+    </span>
+  )
   return (
-    <span style={getSpotStyle}></span>
+    <>
+      {
+        spotType ? index % 2===0 ? double : single :
+        double
+      }
+    </>
   )
 }
 
@@ -43,13 +75,13 @@ export default function TimelineRender(props) {
 
   const style=getStyle(config)
   console.log(style);
-  const {dimension,backgroundColor,labelStyle,fontStyle,spotStyle}=style
+  const {dimension,backgroundColor,labelStyle,fontStyle,spotType}=style
 
   const positionStyle=dimension
 
   const {title:{styleController:titleStyle,align,outShadow}}=fontStyle
   const {content:{styleController:contentStyle}}=fontStyle
-  const {label:{styleController:timeStyle,show,labelOutShadow}}=labelStyle
+  const {label:{styleController:timeStyle,show,labelOutShadow,offsetConfig}}=labelStyle
 
   const formatPxStyle=(Obj)=>{
     Object.keys(Obj).forEach(item=>{
@@ -58,11 +90,13 @@ export default function TimelineRender(props) {
       }
     })
   }
+  formatPxStyle(contentStyle)
 
   const getShadowVal=(dom)=>{
     const {color,vShadow,hShadow,blur}=dom['shadow']
     return `${hShadow}px ${vShadow}px ${blur}px ${color}`
   }
+  // 对话框尖角样式
   const getArrowStyle=(color)=>{
     return {
       position: 'absolute',
@@ -74,6 +108,7 @@ export default function TimelineRender(props) {
       borderLeft: '5px solid transparent'
     }
   }
+
   const getTitleLineStyle=(textStyle)=>{
     return {
       position: 'absolute',
@@ -83,7 +118,6 @@ export default function TimelineRender(props) {
       boxShadow:textStyle.textShadow
     }
   }
-
   const getTimeLineTitleStyle=(isOutShadow)=>{
     formatPxStyle(titleStyle)
     const baseStyle={
@@ -91,23 +125,47 @@ export default function TimelineRender(props) {
     }
     return isOutShadow ? {...baseStyle,textShadow:getShadowVal(outShadow)}:baseStyle
   }
-  const getLableStyle=(isLabelOutShadow)=>{
+
+  // 设置时间样式
+  const getLableStyleFromConfig=(isLabelOutShadow)=>{
     formatPxStyle(timeStyle)
-    return isLabelOutShadow ? {...timeStyle,textShadow:getShadowVal(labelOutShadow)}:timeStyle
+    const baseCss={
+      ...timeStyle,
+      left:offsetConfig.x+'px',
+      top:`${offsetConfig.y} - ${7}px`,
+    }
+    return isLabelOutShadow ? {...baseCss,textShadow:getShadowVal(labelOutShadow)}:baseCss
+  }
+  const getKebabCase=( str )=>{
+    return str.replace( /[A-Z]/g, function( i ) {
+        return '-' + i.toLowerCase();
+    })
+  }
+  const setLabelStyle=()=>{
+    const labelStyle=getLableStyleFromConfig(labelOutShadow.show)
+    let cssText=''
+    Object.keys(labelStyle).forEach(key=>{
+      cssText+=`${getKebabCase(key)}:${labelStyle[key]};`
+    })
+    const labelDom=document.getElementsByClassName('ant-timeline-item-label')
+    for(let i=0;i<labelDom.length;i++){
+      const item=labelDom[i]
+      item.style.cssText=cssText
+    }
   }
 
-  formatPxStyle(contentStyle)
-
+  useEffect(()=>{
+    setLabelStyle()
+  },[labelStyle])
   return (
     <Timeline
       mode='left'
-      className='timeLineContainer'
+      className='myTimeLine'
       style={positionStyle}>
-      {componentData?.map(item=>{
+      {componentData?.map((item,index)=>{
         const timeLineTitleStyle=getTimeLineTitleStyle(outShadow.show)
-        const labelStyle=getLableStyle(labelOutShadow.show)
         return (
-        <Timeline.Item dot={spotDom(spotStyle)} label={show && item[_fields[0]]} style={labelStyle}>
+        <Timeline.Item dot={spotDom(spotType,index)} label={show && item[_fields[0]]}>
           <div className='timeLineBox' style={{backgroundColor,borderColor:backgroundColor}}>
             <div className='timeLineArrow' style={getArrowStyle(backgroundColor)}></div>
             <div className='timeLineTitle' style={timeLineTitleStyle}>

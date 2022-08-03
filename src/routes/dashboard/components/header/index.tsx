@@ -4,7 +4,6 @@ import './index.less'
 import { withRouter } from 'dva/router'
 import { connect } from 'dva'
 
-import { useFetch } from '../../../../utils/useFetch'
 import { http, BASEURL } from '@/services/request'
 import { Input, message, Tooltip, Spin, Button, Form, Switch, Typography, Select, Upload } from 'antd'
 import type { UploadProps } from 'antd';
@@ -60,11 +59,13 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
       id: bar.dashboardId,
       name: appName
     }
-    const [, data] = await useFetch('/visual/application/updateAppName', {
-      body: JSON.stringify(finalBody)
-    }, { onlyNeedWrapData: true })
-    if (!data.data) {
-      message.error({ content: data.message, duration: 2 })
+    const data: boolean = await http({
+      url: '/visual/application/updateAppName',
+      method: 'POST',
+      body: finalBody
+    })
+    if (!data) {
+      message.error({ content: '修改应用名失败', duration: 2 })
     }
   }
   // 显示修改应用名称的input
@@ -662,10 +663,10 @@ const centerIconArr = [
   {
     icon: 'line',
   },
-  // {
-  //   icon: 'xiangmuguolvqi',
-  //   text: '项目过滤器'
-  // },
+  {
+    icon: 'xiangmuguolvqi',
+    text: '项目过滤器'
+  },
   {
     icon: 'huitiaoguanli',
     text: '回调管理'
