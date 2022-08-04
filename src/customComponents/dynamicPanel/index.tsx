@@ -147,7 +147,7 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = false, panels}: any) => 
     <div className={`dynamic-panel panel-${id}`} style={{pointerEvents: 'none', overflow: state.overflow, width: '100%', height: '100%'}}>
       {
         (isDashboard && state.allData.length) >
-        0 ? <CustomDraggable mouse={0} treeData={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
+        0 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
           :
           state.allData.map((item: any, index: number) =>
             (
@@ -160,7 +160,7 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = false, panels}: any) => 
                   display: state.activeIndex === index ? 'block' : 'none',
                   transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
-                <CustomDraggable mouse={0} treeData={item.layers} components={item.components} panels={item.panels}/>
+                <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels}/>
               </div>
             )
           )

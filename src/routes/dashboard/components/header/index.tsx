@@ -38,9 +38,10 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
         isPanel: false,
         stateId: null,
         panelId: null,
+        panels: [],
         panelStatesList: [],
         key: [bar.dashboardId],
-        layers: [],
+        treeData: [],
         scaleDragData: {
           position:{
             x: 0,

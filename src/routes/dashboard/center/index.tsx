@@ -33,9 +33,10 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [components, setComponents] = useState([])
   const [panels, setPanels] = useState([])
   useEffect(() => {
-    const data = deepClone(bar.treeData)
-    treeDataReverse(data)
-    setLayers(data)
+    const layers = deepClone(bar.treeData)
+    console.log('寄', layers)
+    treeDataReverse(layers)
+    setLayers(layers)
     setComponents(bar.components)
     setPanels(bar.panels)
   }, [bar.treeData])
@@ -526,7 +527,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     <RulerLines/>
 
                     <div className={`draggable-container screen-${bar.dashboardId}`} ref={ draggableContainerRef }>
-                      <CustomDraggable mouse={ 0 } treeData={ layers } components={components} panels={panels}/>
+                      <CustomDraggable mouse={ 0 } layers={ layers } components={components} panels={panels}/>
                     </div>
                   </div>
                 </div>

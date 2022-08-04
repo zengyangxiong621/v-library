@@ -1,5 +1,6 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useState, useEffect, useMemo } from 'react'
 import { connect } from 'dva'
+import { withRouter } from 'dva/router'
 import './index.less'
 import { find } from '../../../../../utils/common'
 import BackgroundColor from '../color'
@@ -17,7 +18,11 @@ import componentLib from '../index'
 const dashboardId = window.location.pathname.split('/')[2]
 
 let isSettingsChange = false
-const ReferenceSetting = ({ bar, dispatch, ...props }) => {
+const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
+  const [key, setKey] = useState(uuidv4())
+  const [form] = Form.useForm()
+  const [activeKey, setActiveKey] = useState("1")
+  const [isEdit, setIsEdit] = useState(true)
   const formItemLayout = {
     labelAlign: 'left',
   }
@@ -37,8 +42,11 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     },
     states,
   } = panelConfig
-  const [key, setKey] = useState(uuidv4())
-  const [form] = Form.useForm()
+
+  const statesLength = useMemo(() => {
+    return states.length
+  }, [states])
+
   const styleConfig = [
     {
       'displayName': '位置尺寸',
@@ -117,6 +125,7 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
       'name': 'referenceList',
       'type': 'tabArray',
       'defaultActiveKey': '1',
+      'activeKey': '1',
       'config': {
         'template': [
           {
@@ -155,6 +164,8 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
         }
       )),
     },
+
+
     // {
     //   "displayName": "编辑引用应用",
     //   "name": "editDashboard",
@@ -168,8 +179,21 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     //   }
     // }
   ]
+  const styleChange = debounce(async (key = "0") => {
+    if (key !== "0") {
+      setActiveKey(key)
+      const referenceList = styleConfig.find(item => item.name === 'referenceList').value
+      if (referenceList.length === 0) return
+      const currentReference = referenceList.find(item => item.key === key).value
+      const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
+      if (currentReferenceId) {
+        setIsEdit(true)
+      } else {
+        setIsEdit(false)
+      }
+      return
+    }
 
-  const styleChange = debounce(async () => {
     const dimensionConfig = styleConfig.find(item => item.name === 'dimension').value
     const hideDefault = styleConfig.find(item => item.name === 'hideDefault').value
     const isScroll = styleConfig.find(item => item.name === 'isScroll').value
@@ -177,13 +201,15 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     const animationType = styleConfig.find(item => item.name === 'animationType').value
     const scrollTime = styleConfig.find(item => item.name === 'scrollTime').value
     const animationTime = styleConfig.find(item => item.name === 'animationTime').value
-    const referenceList = styleConfig.find(item => item.name === 'referenceList').value.map(item => {
-      const data = item.value.find(it => it.name === 'dashboardSelect')
-      return {
-        id: data.value,
-        name: data.label,
-      }
-    })
+    const referenceList = styleConfig.find(item => item.name === 'referenceList').value
+    // 判断当前 active的选项值存不存在
+    const currentReference = referenceList.find(item => item.key === activeKey).value
+    const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
+    if (currentReferenceId) {
+      setIsEdit(true)
+    } else {
+      setIsEdit(false)
+    }
     dimensionConfig.forEach(item => {
       panelConfig.config[item.name] = item.value
     })
@@ -193,7 +219,15 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
     panelConfig.config.animationType = animationType
     panelConfig.config.scrollTime = scrollTime
     panelConfig.config.animationTime = animationTime
-    panelConfig.states = referenceList
+    panelConfig.states = referenceList.map(item => {
+      const data = item.value.find(it => it.name === 'dashboardSelect')
+      return {
+        id: data.value,
+        name: data.label,
+      }
+    })
+    const copyPanelConfig = deepClone(panelConfig)
+    copyPanelConfig.states =  copyPanelConfig.states.filter(state => state.id)
     const { config: { left, top, width, height } } = panelConfig
     dispatch({
       type: 'bar/save',
@@ -218,32 +252,52 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
       body: {
         dashboardId: bar.dashboardId,
         configs: [
-          panelConfig,
+          copyPanelConfig,
         ],
       },
     })
   }, 300)
 
-  // const saveStyleData = async (param) => {
-  //   const params = {
-  //     configs: [param],
-  //     dashboardId: dashboardId
-  //   }
-  //   await http({
-  //     url: '/visual/module/update',
-  //     method: 'post',
-  //     body: params
-  //   })
-  // }
+
   const handleEditDashboard = () => {
-    const referenceList = styleConfig.find(item => item.name === 'referenceList')
-    const defaultActiveKey = referenceList.defaultActiveKey
-    const currentReference = referenceList.value.find(item => item.key === defaultActiveKey).value
+    const referenceList = styleConfig.find(item => item.name === 'referenceList').value
+    if (referenceList.length === 0) return
+    const currentReference = referenceList.find(item => item.key === activeKey).value
     const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
     if (currentReferenceId) {
-      window.open(`/dashboard/${ currentReferenceId }`)
+        history.push(`/dashboard/${currentReferenceId}`)
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            isPanel: false,
+            stateId: null,
+            panelId: null,
+            key: [currentReferenceId],
+            selectedComponentOrGroup: [],
+            dashboardId: currentReferenceId,
+            scaleDragData: {
+              position:{
+                x: 0,
+                y:0
+              },
+              style: {
+                width: 0,
+                height: 0,
+                display: 'none'
+              }
+            }
+          }
+        })
+        dispatch({
+          type: 'bar/getDashboardDetails'
+        })
     }
   }
+
+  useEffect(() => {
+    styleChange("1")
+  }, [])
+
   return (
     <div className="dynamic-wrap">
       <h3 className="dynamic-set-header">
@@ -272,8 +326,13 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
           <div className="g-text-left g-m-4">
             提示：所选应用必须为已发布状态
           </div>
-          <Button onClick={ handleEditDashboard } className="g-my-2" type="primary"
-                  style={ { width: 'calc(100% - 24px)' } }>编辑引用应用</Button>
+          {
+            statesLength > 0 ?
+              <Button disabled={!isEdit} onClick={ handleEditDashboard } className="g-my-2" type="primary"
+                      style={ { width: 'calc(100% - 24px)' } }>编辑引用应用</Button>
+              : <>  </>
+          }
+
         </Form>
       </div>
     </div>
@@ -282,5 +341,5 @@ const ReferenceSetting = ({ bar, dispatch, ...props }) => {
 
 export default connect(({ bar }) => ({
   bar,
-}))(ReferenceSetting)
+}))(withRouter(ReferenceSetting))
 

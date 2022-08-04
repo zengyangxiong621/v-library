@@ -90,12 +90,12 @@ const CustomDraggable
   = ({
     bar,
     dispatch,
-    treeData,
+       layers,
     mouse,
     history,
     components,
     panels
-     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>, panels: Array<IPanel>}) => {
+     }: { bar: any, dispatch: any, layers: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>, panels: Array<IPanel>}) => {
     const callbackParamsList = bar.callbackParamsList
     const callbackArgs = bar.callbackArgs
     const scaleDragData = bar.scaleDragData
@@ -491,24 +491,56 @@ const CustomDraggable
       clearTimeout(clickTimer.current)
       if ('panelType' in layer) {
         const panel: any = panels.find((panel: IPanel) => panel.id === layer.id)
-        history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
-        dispatch({
-          type: 'bar/save',
-          payload: {
-            isPanel: true,
-            panelId: layer.id,
-            layers: [],
+        if (layer.panelType === 0) {
+          history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+          dispatch({
+            type: 'bar/save',
+            payload: {
+              isPanel: true,
+              panelId: layer.id,
+              treeData: [],
+            }
+          })
+          dispatch({
+            type: 'bar/getPanelDetails'
+          })
+          dispatch({
+            type: 'bar/selectPanelState',
+            payload: {
+              stateId: panel.states[0].id
+            }
+          })
+        } else {
+          if (panel.states.length > 1) {
+            history.push(`/dashboard/${panel.states[0].id}`)
+            console.log('到这里了吧啊')
+            dispatch({
+              type: 'bar/save',
+              payload: {
+                isPanel: false,
+                stateId: null,
+                panelId: null,
+                key: [],
+                selectedComponentOrGroup: [],
+                dashboardId: panel.states[0].id,
+                scaleDragData: {
+                  position:{
+                    x: 0,
+                    y:0
+                  },
+                  style: {
+                    width: 0,
+                    height: 0,
+                    display: 'none'
+                  }
+                }
+              }
+            })
+            dispatch({
+              type: 'bar/getDashboardDetails'
+            })
           }
-        })
-        dispatch({
-          type: 'bar/getPanelDetails'
-        })
-        dispatch({
-          type: 'bar/selectPanelState',
-          payload: {
-            stateId: panel.states[0].id
-          }
-        })
+        }
         // window.open(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
       }
     }
@@ -677,7 +709,7 @@ const CustomDraggable
     return (
       <div className="c-custom-draggable">
         {
-          treeData.map((layer: ILayerGroup | ILayerComponent | any) => {
+          layers.map((layer: ILayerGroup | ILayerComponent | any) => {
 
           let config: IConfig = {
             position: {
@@ -749,12 +781,13 @@ const CustomDraggable
               events = component.events
             }
           }
-          if (layer.id === '1554747784623529985') {
+          if ('panelType' in layer) {
             console.log('-----------------')
             console.log('components', components)
             console.log('component', component)
             console.log('layer', layer)
             console.log('bar.componentData', bar.componentData[layer.id])
+            console.log('layers', layers)
             console.log('-----------------')
           }
           return (
@@ -846,7 +879,7 @@ const CustomDraggable
                                 bar={ bar }
                                 dispatch={ dispatch }
                                 history={ history }
-                                treeData={ (layer as any)[COMPONENTS] }
+                                layers={ (layer as any)[COMPONENTS] }
                                 components={components}
                                 panels={panels}
                               />

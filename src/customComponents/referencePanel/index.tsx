@@ -14,12 +14,14 @@ interface State {
   [key: string]: any;
 }
 
-const ReferencePanel = ({ bar, id, dispatch, isDashboard = false }: any) => {
+const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) => {
   const componentData = bar.componentData
-  const panel = bar.panels.find((item: IPanel) => item.id === id)
+  const panel = panels.find((item: IPanel) => item.id === id)
+
   const { states, config: recommendConfig, name, type } = panel
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig
   const defaultStateId = (states.length > 0 && states[0].id) || ''
+  console.log('defaultStateId', defaultStateId)
   const [ state, setState ] = useSetState<State>({
     states: [],
     defaultState: '',
@@ -145,7 +147,7 @@ const ReferencePanel = ({ bar, id, dispatch, isDashboard = false }: any) => {
     <div className={`reference-panel panel-${id}`} style={{pointerEvents: 'none', overflow: state.overflow, width: '100%', height: '100%'}}>
       {
         (isDashboard && state.allData.length) >
-        0 ? <CustomDraggable mouse={0} treeData={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
+        0 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
           :
           state.allData.map((item: any, index: number) =>
             (
@@ -158,7 +160,7 @@ const ReferencePanel = ({ bar, id, dispatch, isDashboard = false }: any) => {
                   display: state.activeIndex === index ? 'block' : 'none',
                   transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
                 }}>
-                <CustomDraggable mouse={0} treeData={item.layers} components={item.components} panels={item.panels}/>
+                <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels}/>
               </div>
             )
           )
