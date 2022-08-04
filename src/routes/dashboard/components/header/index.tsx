@@ -32,6 +32,32 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   // 返回首页
   const toBack = () => {
     history.back()
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        isPanel: false,
+        stateId: null,
+        panelId: null,
+        panels: [],
+        panelStatesList: [],
+        key: [bar.dashboardId],
+        treeData: [],
+        scaleDragData: {
+          position:{
+            x: 0,
+            y:0
+          },
+          style: {
+            width: 0,
+            height: 0,
+            display: 'none'
+          }
+        }
+      }
+    })
+    dispatch({
+      type: 'bar/getDashboardDetails'
+    })
   }
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {
@@ -78,16 +104,32 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
     }, 4);
 
   }
+  const createPanel = (panelType: 0 | 1) => {
+    dispatch({
+      type: 'bar/createPanel',
+      payload: {
+        panelType
+      }
+    })
+  }
+
   // 获取当前活跃的按钮, 并执行对应逻辑
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
     showWhichBar(icon)
+    console.log('icon', icon)
     switch (icon) {
       case 'fabu':
         openFabuModal(bar.dashboardId)
         break;
       case 'yulan':
         toPreviewOrPublish(icon)
+        break;
+      case 'dongtaimianban':
+        createPanel(0)
+        break;
+      case 'yinyongmianban':
+        createPanel(1)
         break;
     }
   }

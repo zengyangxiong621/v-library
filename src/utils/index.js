@@ -333,6 +333,22 @@ export const layerComponentsFlat = (arr) => {
   }, [])
 }
 
+/**
+ * @description 将layers中的动态面板抽离
+ * @type {function(*): *}
+ * @default layers = []
+ * @example layers = [{id: 1, panelType: 0}]
+ */
+export const layersPanelsFlat = (arr) => {
+  return arr.reduce((pre, cur) => {
+    return pre.concat(
+      cur.hasOwnProperty(COMPONENTS)
+        ? layersPanelsFlat(cur[COMPONENTS])
+        : (cur.hasOwnProperty('panelType') ? cur : []),
+    )
+  }, [])
+}
+
 export function throttle (fn, delay) {
   let timer
   return function (...args) {
@@ -350,44 +366,50 @@ const judgeIsGroup = (value) => {
   return value.id.indexOf('group') !== -1
 }
 
-export const calcGroupPosition = (arr, components) => {
+export const calcGroupPosition = (arr, components, panels) => {
   let xPositionList = []
   let yPositionList = []
   arr.forEach((item) => {
     if (judgeIsGroup(item)) {
       if (COMPONENTS in item && item[COMPONENTS].length > 0) {
-        const [xArr, yArr] = calcGroupPosition(item[COMPONENTS], components)
+        const [xArr, yArr] = calcGroupPosition(item[COMPONENTS], components, panels)
         xPositionList = xPositionList.concat(xArr)
         yPositionList = yPositionList.concat(yArr)
       }
     } else {
-      let component = components.find((it) => it.id === item.id)
-      if (component) {
-        // const style_config = component.config.find((item: any) => item.name === STYLE)
+      if ('panelType' in item) {
+        const { config: {left, top, width, height} } = panels.find(it => it.id === item.id)
+        xPositionList.push(left, left + width)
+        yPositionList.push(top, top + height)
+      } else {
+        const component = components.find((it) => it.id === item.id)
+        if (component) {
+          // const style_config = component.config.find((item: any) => item.name === STYLE)
 
-        const style_dimension_config = component.config.find(
-          (item) => item.name === DIMENSION,
-        )
-        if (style_dimension_config) {
-          const config = {
-            position: {
-              x: 0,
-              y: 0,
-            },
-            style: {
-              width: 0,
-              height: 0,
-            },
-          }
-          Object.values(style_dimension_config.value).forEach((obj) => {
-            if ([TOP, LEFT].includes(obj.name)) {
-              config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-            } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-              config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+          const style_dimension_config = component.config.find(
+            (item) => item.name === DIMENSION,
+          )
+          if (style_dimension_config) {
+            const config = {
+              position: {
+                x: 0,
+                y: 0,
+              },
+              style: {
+                width: 0,
+                height: 0,
+              },
             }
-          })
-          xPositionList.push(config.position.x, config.position.x + config.style.width)
-          yPositionList.push(config.position.y, config.position.y + config.style.height)
+            Object.values(style_dimension_config.value).forEach((obj) => {
+              if ([TOP, LEFT].includes(obj.name)) {
+                config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+              } else if ([WIDTH, HEIGHT].includes(obj.name)) {
+                config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+              }
+            })
+            xPositionList.push(config.position.x, config.position.x + config.style.width)
+            yPositionList.push(config.position.y, config.position.y + config.style.height)
+          }
         }
       }
     }
@@ -685,4 +707,15 @@ export const handleAddChecked=(list)=>{
     item.checkedList=[]
     return item
   })
+}
+
+// dashboardConfig 去重
+export const duplicateDashboardConfig = (preConfig, nowConfig) => {
+  nowConfig.forEach((item)=> {
+    let index = preConfig.findIndex(it => it.name === item.name)
+    if (index !== -1) {
+      preConfig[index] = item
+    }
+  })
+  return preConfig
 }

@@ -19,14 +19,14 @@ export type IComponent = any
 
 export interface ILayerComponent {
   id: string,
-  groupId: string,
+  groupId?: string,
   name: string,
   isLock: boolean, // 是否锁定
   isShow: boolean, // 是否展示
   selected?: boolean,
   hover?: boolean,
-  cancel: boolean,
-  disabled: boolean,
+  cancel?: boolean,
+  disabled?: boolean,
   singleShowLayer?: boolean
 }
 
@@ -69,4 +69,24 @@ export interface IMouse {
   elementW: number,
   elementPosX: number,
   elementPosY: number,
+}
+
+export interface ILayerPanel extends ILayerComponent{
+  panelType: 0 | 1
+}
+
+export interface IPanel {
+  dashboardId: string,
+  name: string,
+  id: string,
+  type: 0 | 1,
+  config: {
+    allowScroll: boolean;
+    top: number,
+    left: number,
+    width: number,
+    hideDefault: boolean,
+    height: number
+  },
+  states: Array<string>
 }

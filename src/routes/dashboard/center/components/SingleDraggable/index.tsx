@@ -19,7 +19,7 @@ type DraggableData = {
   y: number
   node: any
 }
-const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig, ...props }: any) => {
+const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig, isPanel, ...props }: any) => {
   const draggableRef: any = useRef(null)
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
@@ -28,8 +28,13 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
       const y = draggableRef.current.props.position.y + yMoveLength
       draggableRef.current.props.position.x = x
       draggableRef.current.props.position.y = y
-      dimensionConfig.value.find((item: any) => item.name === 'left').value = x
-      dimensionConfig.value.find((item: any) => item.name === 'top').value = y
+      if (isPanel) {
+        dimensionConfig.left = x
+        dimensionConfig.top = y
+      } else {
+        dimensionConfig.value.find((item: any) => item.name === 'left').value = x
+        dimensionConfig.value.find((item: any) => item.name === 'top').value = y
+      }
     },
     position: props.position,
     nodeRef: nodeRef,

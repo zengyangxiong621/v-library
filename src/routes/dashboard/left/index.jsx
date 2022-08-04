@@ -41,7 +41,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const headerRef = useRef(null)
   // TODO  待删除
   const [single, setSingle] = useState(true)
-
+  const copyNode = useRef(null)
 
   const clearStatus = (event) => {
     const dom = event.target || null
@@ -337,6 +337,7 @@ const Left = ({ dispatch, bar, operate }) => {
       payload: false,
     })
   }
+
   return (
     <div className="left-menu">
       <div className="left-wrap">
