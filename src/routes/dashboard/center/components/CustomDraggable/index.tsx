@@ -31,7 +31,9 @@ import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 import Timeline from '@/customComponents/assist/timeline'
-import timelineConfig from '@/customComponents/assist/timeline/config'
+// import timelineConfig from '@/customComponents/assist/timeline/config'
+import Media from '@/customComponents/media'
+import MediaConfig from '@/customComponents/media/config'
 
 import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
