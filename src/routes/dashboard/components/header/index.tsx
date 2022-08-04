@@ -675,14 +675,14 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
 }
 
 const centerIconArr = [
-  {
-    icon: 'chexiao',
-    text: '撤销'
-  },
-  {
-    icon: 'huifu',
-    text: '恢复'
-  },
+  // {
+  //   icon: 'chexiao',
+  //   text: '撤销'
+  // },
+  // {
+  //   icon: 'huifu',
+  //   text: '恢复'
+  // },
   {
     icon: 'line',
   },
