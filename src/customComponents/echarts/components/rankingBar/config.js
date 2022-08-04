@@ -339,28 +339,131 @@ const ComponentDefaultConfig = {
           name: '柱状',
           value: [
             {
-              "name": "bySystem",
-              "displayName": "系统自定",
-              "type": "switch",
-              "value": true
+              'name': 'barWidth',
+              'displayName': '柱状宽度',
+              'type': 'collapse',
+              hasSwitch: false, // 是否有切换按钮
+              defaultExpand: false,  // 是否默认展开
+              value: [
+                {	// 如果有后面的按钮，则该项必须放在第一个
+                  'name': 'show',
+                  'displayName': '',
+                  'value': true,
+                  'type': 'switch',
+                },
+                {
+                  name: "unit",
+                  displayName: '宽度单位',
+                  type: 'radioGroup',
+                  direction: 'horizontal', // 方向
+                  value: '%',
+                  options: [
+                    {
+                      name: 'px',
+                      value: 'px'
+                    },
+                    {
+                      name: '百分比',
+                      value: '%'
+                    },
+                  ]
+                },
+                {
+                  'name': 'width',
+                  'displayName': '宽度',
+                  'value': 30,
+                  type: 'number',
+                  "config": {
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    suffix: '',  // 输入框后缀
+                  }
+                }
+              ]
+            },
+            {
+              name: 'colorSetting',
+              displayName: '颜色',
+              type: 'collapse',
+              hasSwitch: false,
+              defaultExpand: false,
+              value: [
+                {
+                  name: 'show',
+                  displayName: '',
+                  value: true,
+                  type: 'switch',
+                },
+                {
+                  "name": "bySystem",
+                  "displayName": "系统自定",
+                  "type": "switch",
+                  "value": true
+                },
+                {
+                  'name': 'barColor',
+                  'displayName': '柱状颜色',
+                  'type': 'collapse',
+                  hasSwitch: false, // 是否有切换按钮
+                  defaultExpand: false,  // 是否默认展开
+                  value: [
+                    {	// 如果有后面的按钮，则该项必须放在第一个
+                      'name': 'show',
+                      'displayName': '',
+                      'value': true,
+                      'type': 'switch',
+                    },
+                    {
+                      name: "type",
+                      displayName: '颜色类型',
+                      type: 'radioGroup',
+                      direction: 'horizontal', // 方向
+                      value: 'pure',
+                      options: [
+                        {
+                          name: '纯色',
+                          value: 'pure'
+                        },
+                        {
+                          name: '渐变色',
+                          value: 'gradient'
+                        },
+                      ]
+                    },
+                    {
+                      name: 'pureColor',
+                      displayName: '纯色',
+                      value: '#1890ff',
+                      type: 'color',
+                    },
+                    {
+                      name: 'gradientStart',
+                      displayName: '渐变色(始)',
+                      value: '#335DA3',
+                      type: 'color',
+                    },
+                    {
+                      name: 'gradientEnd',
+                      displayName: '渐变色(末)',
+                      value: '#95D0FF',
+                      type: 'color',
+                    },
+                  ]
+                },
+                {
+                  name: 'bgColor',
+                  displayName: '背景颜色',
+                  value: 'rgba(230,247,255,0.1)',
+                  type: 'color',
+                },
+              ]
             },
             {
               "name": "isRadius",
               "displayName": "圆角柱状",
               "type": "switch",
               "value": false
-            },
-            {
-              name: 'barColor',
-              displayName: '柱状颜色',
-              value: '#1890ff',
-              type: 'color',
-            },
-            {
-              name: 'bgColor',
-              displayName: '背景颜色',
-              value: 'rgba(230,247,255,0.1)',
-              type: 'color',
             },
             {
               name: 'highLight',
@@ -374,6 +477,12 @@ const ComponentDefaultConfig = {
                   displayName: '',
                   value: false,
                   type: 'switch',
+                },
+                {
+                  name: 'icon',
+                  displayName: '图标',
+                  type: 'image',
+                  value: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAMAAADWZboaAAAAZlBMVEUAAABe3uVe3+Vf3uVf3+Zf3uVg3+Zg3+Zf3+Vi4OZh4OZg3+Z86/Bh3+Zi4Odj4Odi4OZ86/B76/B86/Bj4ed56+9x5+xn4umB7/N87PB36e+A7/N+7fF/7vJ/7vJ+7fGA7/OB7/PReX+lAAAAIXRSTlMABQkVDREmIhk3MR10LEFFPHh7cUprXE35h2XnqMLAp+mHAG9cAAAB5ElEQVRIx83WjU7CMBQFYIoiKMqU/XUboHv/l/Tce7t2XamDNSacETEmX86tlK2rx4py150o+MstMBLwWRfHKo6JCVxLnvmFGBjFQ58oF1//sUZhGy/ClSTWObgnL4O+bkeN4nY2okfNMbkRt9/vtxz8InoTsWplJSCzFxPmO8+GpSIByX3YQAuGDWtRKhKjCnxDXhF6Z4yxnZ20Wgko7BMRDmxtSGVaI4kdTIgb+zTYoJQlIMlDlmUFgrcDWWC201qSayqlTkiCddWWeV62VU0YlnpRi9VOKaSUsiyq/N0krwq2Ugt7lVpZl5BfHNiytjagMi+XYp0kCR45hMlivVQrE/uU5pXSrCB5bM6d1t2lOZItMqmliT3q5uVxqxzyW/ccfYLNKx7ZTeykMvNyac2yt2Fbc61MHLSC0rwoxbiNdlQ3GBm1NLHQsHUrtEXppR/ljNpW6DbSCoqlFiVoN6YdaFlgsSFVPs1BdT8OaB5QyQzVcaqWDows/zepxR8ObLglTrdtCRVuRNj4Rrxh+//0ke2f8KVL+Kon3GCSbmsJN9OUW3j6g0Ns+LgCij2u0h+Sghc8mlMPBMgdx5DFh59VmOVHrvmDnoNxCz3J7MFWsMuaLyR089xz/xhlfijvwutR8gv3zk6BLUUeCgAAAABJRU5ErkJggg==', // 有背景图则返回背景图的url，没有背景图返回空或者null
                 },
                 {
                   'name': 'radius',
