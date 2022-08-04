@@ -378,6 +378,14 @@ const ScrollTable = (props) => {
     data: tableData,
     waitTime,
     index: isIndex,
+    indexBgConfigs: [
+      {
+        "width": '20px',
+        "height": '20px',
+        "background-color": 'red',
+        "background-image": ''
+      }
+    ],
     hoverPause: true,
     headerBGC, // 头部背景色
     headerBGI, // 头部背景图片

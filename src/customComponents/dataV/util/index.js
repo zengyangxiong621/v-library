@@ -115,3 +115,13 @@ export function uuid (hasHyphen) {
     return v.toString(16)
   })
 }
+
+// style 对象转成 style 字符串（dom内的）
+export const styleObjectToStr = (style) => {
+  let s = []
+  for(let i in style){
+    s.push(i+':'+style[i]);
+  }
+  s = s.join(';')
+  return  s
+}
