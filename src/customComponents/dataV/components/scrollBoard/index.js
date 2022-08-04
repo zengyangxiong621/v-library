@@ -9,7 +9,8 @@ import { deepMerge } from '@jiaminghi/charts/lib/util/index'
 import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
 
 import useAutoResize from '../../use/autoResize'
-import { co } from '../../util'
+import { co, styleObjectToStr } from '../../util'
+
 
 import './style.less'
 
@@ -95,6 +96,12 @@ const defaultConfig = {
    */
   indexHeader: '#',
   /**
+   * @description indexBg configs
+   * @type {Array<{width: string, height: string, "background-image": string, "background-color": string}>}
+   * @default indexBgConfigs = []
+   */
+  indexBgConfigs: [],
+  /**
    * @description Carousel type
    * @type {String}
    * @default carousel = 'single'
@@ -130,16 +137,22 @@ function calcHeaderData({ header, index, indexHeader }) {
   return header
 }
 
-function calcRows({ data, index, headerBGC, headerBGI, rowNum }) {
+function calcRows({ data, index, headerBGC, headerBGI, rowNum, indexBgConfigs }) {
   if (index) {
     data = data.map((row, i) => {
       row = [...row]
 
       // const indexTag = `<span class="index" style="background-color: ${headerBGC};background-image: ${headerBGI}">${i +
       // 1}</span>`
-      const indexTag = `<span class="index">${i + 1}</span>`
+      if (indexBgConfigs[i]) {
+        const styleStr = styleObjectToStr(indexBgConfigs[i])
+        const indexTag = `<div class="index" style="display: flex; justify-content: center; align-items: center; ${styleStr}">${i + 1}</div>`
+        row.unshift(indexTag)
+      } else {
+        const indexTag = `<div class="index">${i + 1}</div>`
+        row.unshift(indexTag)
+      }
 
-      row.unshift(indexTag)
 
       return row
     })
@@ -400,7 +413,8 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
               key={`${row.toString()}-${row.scroll}`}
               style={{
                 height: `${heights[ri]}px`,
-                lineHeight: `${heights[ri]}px`,
+                alignItems: 'center',
+                // lineHeight: `${heights[ri]}px`, // maybe reset
                 backgroundColor: `${getBackgroundColor(row.rowIndex)}`,
                 overflow: ri === 0 ? 'hidden' : 'unset'
               }}

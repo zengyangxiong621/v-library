@@ -37,7 +37,7 @@ const CusInput = props => {
     >
       <Form.Item label={_data.displayName}>
         <Form.Item  name={_data.name} noStyle>
-          <Input style={{ width:'100%', ...props.style }} disabled={_data.disabled} className="cus-input" defaultValue={value} onBlur={valueChange} />
+          <Input suffix={_data?.config?.suffix || null} style={{ width:'100%', ...props.style }} disabled={_data.disabled} className="cus-input" defaultValue={value} onBlur={valueChange} />
         </Form.Item>
       </Form.Item>
     </Form>
