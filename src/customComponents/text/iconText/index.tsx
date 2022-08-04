@@ -49,7 +49,7 @@ class IconText extends Component<Props, State> {
     const iconSize = findItem('iconSize')
 
     let textStyle = JSON.parse(JSON.stringify(style))
-    textStyle.underline = false  // 标准组件中无须下划线样式，故直接写死false
+    // textStyle.underline = false  // 标准组件中无须下划线样式，故直接写死false
   
     const textRow  = () => {
       let obj:any = {}
