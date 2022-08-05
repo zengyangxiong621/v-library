@@ -4,6 +4,10 @@ import EC from '../../EC'
 import * as echarts from 'echarts';
 import ComponentDefaultConfig from './config'
 
+import './index.css'
+import ipMapping6 from './ipMapping6.png'
+import ipMapping7 from './ipMapping7.png'
+
 const InstrumentPanel = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
@@ -45,12 +49,10 @@ const InstrumentPanel = (props) => {
   }
   const hadFilterArr = config.filter((item) => item.name !== 'dimension')
   const { allSettings } = getTargetConfig(hadFilterArr)
-  console.log('allSettings',allSettings)
   const { innerRadius,outerRadius } = allSettings ? allSettings['表盘'] : {}
   const { numberRange,numberStyles:{textStylerNumbe,offset:numberOffset}} = allSettings ? allSettings['指标'] : {}
   const { titleStyles:{showTitleStyles,offset,textStyleTitle} } = allSettings ? allSettings['标题'] : {}
   const { axisLine,ringColor } = allSettings ? allSettings['圆环'] : {}
-// console.log('axisLine+++++++++++++++++++++++++++++',axisLine)
 
 
   const getOption = () => ({
@@ -393,11 +395,15 @@ const InstrumentPanel = (props) => {
     click: onChartClick
   }
   return (
-    <EC
-      option={getOption()}
-      onChartReady={onChartReady}
-      onEvents={onEvents}
-    />
+    <div className='ip-mapping1'>
+      <img className='bg-one' src={ipMapping6} alt="背景图片" />
+      <img className='bg-two' src={ipMapping7} alt="背景图片" />
+      <EC
+        option={getOption()}
+        onChartReady={onChartReady}
+        onEvents={onEvents}
+      />
+    </div>
   )
 
 }

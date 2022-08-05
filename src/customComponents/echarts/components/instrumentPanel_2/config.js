@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_2", //组件标识
-  "moduleVersion": "1.3.0", //组件版本号
+  "moduleVersion": "1.3.1", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -107,6 +107,18 @@ const componentDefaultConfig = {
               'name': 'innerRadius',
               'displayName': '内圆半径',
               'value': 0.45,
+              type:'range',
+              "config": {
+                  "min": 0,
+                  "max": 1,
+                  "step": 0.01,
+                   suffix:'',  // 输入框后缀
+              }
+            },
+            {
+              'name': 'radiusSize',
+              'displayName': '表盘大小',
+              'value': 0.6,
               type:'range',
               "config": {
                   "min": 0,
