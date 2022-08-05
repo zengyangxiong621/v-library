@@ -8,4 +8,27 @@
       }
     }
   }
+  .panel-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .hovered {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 20px;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &:hover>.hovered {
+      display: flex;
+      background-color: rgba(59, 144, 235, 0.2);
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }

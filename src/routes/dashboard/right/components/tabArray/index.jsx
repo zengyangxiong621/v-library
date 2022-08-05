@@ -53,6 +53,7 @@ const TabArray = props => {
           copyValue.displayName = unit + (tabs.length + 1)
           copyValue.key = String(tabs.length + 1)
           setActiveKey(copyValue.key)
+          _data.activeKey = copyValue.key
           tabs.push(copyValue)
         }
       }
@@ -60,6 +61,8 @@ const TabArray = props => {
         const index = tabs.findIndex(tab => tab.key === activeKey)
         tabs.splice(index, 1)
         setActiveKey(String(index - 1 > 1 ? index - 1 : 1))
+        _data.activeKey = String(index - 1 > 1 ? index - 1 : 1)
+
       }
       tabs.forEach((tab, index) => {
         const unit = tab.displayName.replace(/\d/, '')
@@ -79,8 +82,9 @@ const TabArray = props => {
   }
 
   const handleTabClick = (key, e) => {
-    console.log('key', key)
     setActiveKey(key)
+    _data.activeKey = key
+    props.onChange(key)
   }
 
   return (

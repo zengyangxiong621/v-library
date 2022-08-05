@@ -199,7 +199,18 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         // bar.scaleDragData.position.y = Math.ceil(bar.scaleDragData.position.y)
         // bar.scaleDragData.style.width = Math.ceil(bar.scaleDragData.style.width)
         // bar.scaleDragData.style.height = Math.ceil(bar.scaleDragData.style.height)
-        console.log('lastScaleDragData', lastScaleDragData)
+        const {position: {x, y}, style: {width, height, display}} = bar.scaleDragData
+        bar.scaleDragData = {
+          position: {
+            x: Math.ceil(x),
+            y: Math.ceil(y)
+          },
+          style: {
+            width: Math.ceil(width),
+            height: Math.ceil(height),
+            display
+          }
+        }
         onScaleEnd(bar.scaleDragData, lastScaleDragData)
         // handleScaleEnd(boxRef.current.offsetLeft, boxRef.current.offsetTop, boxRef.current.offsetWidth, boxRef.current.offsetHeight)
       }

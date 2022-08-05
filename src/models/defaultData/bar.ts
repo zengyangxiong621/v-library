@@ -1,3 +1,7 @@
+import {
+  IPanel,
+  IComponent
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
 export const defaultData = {
   moduleDefaultConfig: [
     {
@@ -2197,6 +2201,12 @@ export const defaultData = {
   callbackParamsList: [],
   systemMaterialClass: {}, // 获取系统素材分类数据
   systemMaterialList: [], // 获取系统素材数据
+  isPanel: false,
+  panels: [],
+  panelConfig: {},
+  stateId: "123",
+  panelStatesList: [],
+  allDashboardList: []
 }
 
 export interface IBarState {
@@ -2218,7 +2228,7 @@ export interface IBarState {
   selectedComponentDOMs: any;
   supportLinesRef: any;
   scaleDragCompRef: any;
-  selectedComponents: any;
+  selectedComponents: Array<IComponent | IPanel>;
   scaleDragData: any;
   componentConfig: any;
   groupConfig: any;
@@ -2250,4 +2260,10 @@ export interface IBarState {
   callbackParamsList: any;
   systemMaterialClass: any;
   systemMaterialList: any;
+  isPanel: boolean;
+  panels: Array<IPanel>,
+  panelConfig: IPanel | {},
+  panelStatesList: Array<{name: string, id: string}>,
+  stateId: string,
+  allDashboardList: Array<{name: string, id: string, [key: string]: any}>
 }

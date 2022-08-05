@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
+import { withRouter } from 'dva/router'
+
 import Draggable from 'react-draggable'
 import SingleDraggable from '../SingleDraggable/index'
 import * as React from 'react'
 import './index.less'
-import { ILayerGroup, ILayerComponent, IComponent, DraggableEvent, DraggableData, IConfig, IMouse } from './type'
+import { ILayerGroup, ILayerComponent, IComponent, ILayerPanel, DraggableEvent, DraggableData, IConfig, IMouse, IPanel } from './type'
 import { deepClone, layerComponentsFlat, calcGroupPosition } from '../../../../../utils'
 import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
@@ -71,8 +73,10 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import CusImage from '@/customComponents/assist/image/index'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 
-import Tab from "@/customComponents/tab/index";
-import ScrollSelect from "@/customComponents/scrollSelect/index";
+import Tab from '@/customComponents/tab/index'
+import ScrollSelect from '@/customComponents/scrollSelect/index'
+import ReferencePanel from '@/customComponents/referencePanel'
+import DynamicPanel from '@/customComponents/dynamicPanel/index'
 import { cloneDeep } from "lodash"
 
 // import Tab from "@/components/tab";
@@ -86,10 +90,12 @@ const CustomDraggable
   = ({
     bar,
     dispatch,
-    treeData,
+       layers,
     mouse,
-  }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0 }) => {
-    const components: Array<IComponent> = bar.components
+    history,
+    components,
+    panels
+     }: { bar: any, dispatch: any, layers: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>, panels: Array<IPanel>}) => {
     const callbackParamsList = bar.callbackParamsList
     const callbackArgs = bar.callbackArgs
     const scaleDragData = bar.scaleDragData
@@ -117,13 +123,14 @@ const CustomDraggable
      * @desc 开始拖拽
      * @return void
      */
-    const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
+    const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
       setStartPosition({
         x: data.x,
         y: data.y,
       })
       bar.selectedComponents = []
       bar.dragStatus = '一组件'
+
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
         dispatch({
@@ -139,7 +146,9 @@ const CustomDraggable
           },
         })
       }
-
+      if ('panelType' in layer) {
+        bar.dragStatus = '一面板'
+      }
       if (bar.selectedComponentOrGroup.length > 1) {
         // 注意一下
         // 选中多个组件、或者多个分组时
@@ -149,12 +158,9 @@ const CustomDraggable
         if (COMPONENTS in layer) {
           bar.dragStatus = '一分组'
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS])
-
-        } else {
-
         }
       }
-      bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
+      bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))]
     }
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       ev.stopPropagation()
@@ -165,12 +171,8 @@ const CustomDraggable
       const xMoveLength = data.x - data.lastX
       const yMoveLength = data.y - data.lastY
       bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength)
-
-      if (component && bar.dragStatus === '一组件') {
-        // 单个组件移动
-        if ('config' in component) {
-
-        }
+      if ((component && bar.dragStatus === '一组件') || bar.dragStatus === '一面板') {
+        // 单个组件/面板移动
         supportLinesRef.handleSetPosition(aroundX, aroundY)
       }
       if (bar.dragStatus === '一分组') {
@@ -180,32 +182,40 @@ const CustomDraggable
       if (bar.dragStatus === '多个') {
         const xPositionList: number[] = []
         const yPositionList: number[] = []
-        bar.selectedComponents.forEach((item: IComponent) => {
-          const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-          if (style_dimension_config) {
-            const config: IConfig = {
-              position: {
-                x: 0,
-                y: 0,
-              },
-              style: {
-                width: 0,
-                height: 0,
-              },
-            }
-            Object.values(style_dimension_config.value).forEach((obj: any) => {
-              if ([TOP, LEFT].includes(obj.name)) {
-                config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-              } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-                config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+        bar.selectedComponents.forEach((item: IComponent | IPanel) => {
+          if ('type' in item) {
+            const {config: {left, top, width, height}} = item
+            xPositionList.push(left, left + width)
+            yPositionList.push(top, top + height)
+          } else {
+            const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION)
+            if (styleDimensionConfig) {
+              const config: IConfig = {
+                position: {
+                  x: 0,
+                  y: 0,
+                },
+                style: {
+                  width: 0,
+                  height: 0,
+                },
               }
-            })
-            xPositionList.push(config.position.x, config.position.x + config.style.width)
-            yPositionList.push(config.position.y, config.position.y + config.style.height)
+              Object.values(styleDimensionConfig.value).forEach((obj: any) => {
+                if ([TOP, LEFT].includes(obj.name)) {
+                  config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
+                } else if ([WIDTH, HEIGHT].includes(obj.name)) {
+                  config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+                }
+              })
+              xPositionList.push(config.position.x, config.position.x + config.style.width)
+              yPositionList.push(config.position.y, config.position.y + config.style.height)
+            }
           }
+
         })
         xPositionList.sort((a, b) => a - b)
         yPositionList.sort((a, b) => a - b)
+        console.log('应该处在的位置', { left: xPositionList[0], top: yPositionList[0] })
         supportLinesRef.handleSetPosition(xPositionList[0], yPositionList[0])
 
         Object.keys(bar.selectedComponentRefs).forEach(key => {
@@ -213,6 +223,7 @@ const CustomDraggable
             delete bar.selectedComponentRefs[key]
           }
         })
+        console.log('bar.selectedComponentRefs', bar.selectedComponentRefs)
         // scaleDragCom 组件实时移动
 
         if (layer.id in bar.selectedComponentRefs) {
@@ -232,7 +243,7 @@ const CustomDraggable
         }
       }
     }
-    const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
+    const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
       supportLinesRef.handleSetPosition(0, 0, 'none')
       dispatch({
         type: 'bar/selectComponentOrGroup',
@@ -245,11 +256,35 @@ const CustomDraggable
         type: 'bar/setIsShowRightMenu',
         payload: false,
       })
-      if (component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
+      if ('panelType' in layer) {
+        // 说明是面板,且一定是单个
+        console.log('111111111111111111111111')
+        const panel: any = panels.find((panel: IPanel) => panel.id === layer.id)
+        panel.config.left = Math.ceil(data.x)
+        panel.config.top = Math.ceil(data.y)
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            scaleDragData: {
+              position: {
+                x: panel.config.left,
+                y: panel.config.top,
+              },
+              style: {
+                display: 'block',
+                width: panel.config.width,
+                height: panel.config.height,
+              }
+            },
+            panelConfig: panel
+          }
+        })
+      } else if (component && 'config' in component && bar.selectedComponentOrGroup.length === 1) {
         // 单个组件移动
-        const style_dimension_config: any = component.config.find((item: any) => item.name === DIMENSION)
-        if (style_dimension_config) {
-          style_dimension_config.value.forEach((item: any) => {
+        console.log('2222222222222222222222222')
+        const styleDimensionConfig: any = component.config.find((item: any) => item.name === DIMENSION)
+        if (styleDimensionConfig) {
+          styleDimensionConfig.value.forEach((item: any) => {
             if (item.name === LEFT) {
               item.value = Math.ceil(data.x)
             } else if (item.name === TOP) {
@@ -285,18 +320,26 @@ const CustomDraggable
         }
       } else if (COMPONENTS in layer && bar.selectedComponentOrGroup.length === 1) {
         // 单个组移动
+        console.log('3333333333333333333333333333')
+        console.log('单个组', layer)
+        console.log('bar.selectedComponents', bar.selectedComponents)
         const xMoveLength = Math.ceil(data.x - startPosition.x)
         const yMoveLength = Math.ceil(data.y - startPosition.y)
-        bar.selectedComponents.forEach((item: IComponent) => {
-          const dimensionConfig = item.config.find((item: any) => item.name === DIMENSION).value
-          if (dimensionConfig) {
-            dimensionConfig.forEach((item: any) => {
-              if (item.name === LEFT) {
-                item.value += xMoveLength
-              } else if (item.name === TOP) {
-                item.value += yMoveLength
-              }
-            })
+        bar.selectedComponents.forEach((item: IComponent | IPanel) => {
+          if ('type' in item) {
+            item.config.left += xMoveLength
+            item.config.top += yMoveLength
+          } else {
+            const dimensionConfig = item.config.find((item: any) => item.name === DIMENSION).value
+            if (dimensionConfig) {
+              dimensionConfig.forEach((item: any) => {
+                if (item.name === LEFT) {
+                  item.value += xMoveLength
+                } else if (item.name === TOP) {
+                  item.value += yMoveLength
+                }
+              })
+            }
           }
         })
         dispatch({
@@ -330,46 +373,65 @@ const CustomDraggable
             },
           },
         })
-      } else if (bar.selectedComponentOrGroup.length >= 1) {
+      }
+      if (bar.selectedComponentOrGroup.length > 1) {
+        console.log('4444444444444444444444444')
+        console.log('selectedComponentOrGroup', bar.selectedComponentOrGroup)
+        console.log('bar.selectedComponentIds', bar.selectedComponentIds)
         const xPositionList: Array<number> = []
         const yPositionList: Array<number> = []
-        bar.selectedComponents = components.filter(component => bar.selectedComponentIds.includes(component.id))
-        bar.selectedComponents.forEach((item: IComponent) => {
+        bar.selectedComponents = [
+          ...components.filter((component: IComponent) => bar.selectedComponentIds.includes(component.id)),
+          ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))
+        ]
+        bar.selectedComponents.forEach((item: IComponent | IPanel) => {
           // const style_config = item.config.find((item: any) => item.name === STYLE)
-          const style_dimension_config = item.config.find((item: any) => item.name === DIMENSION)
-          if (style_dimension_config) {
-            const config: IConfig = {
+          let config: IConfig = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
+          }
+          if ('type' in item) {
+            const { config: { left, top, width, height } } = item
+            config = {
               position: {
-                x: 0,
-                y: 0,
+                x: left,
+                y: top
               },
               style: {
-                width: 0,
-                height: 0,
-              },
-            }
-            Object.values(style_dimension_config.value).forEach((obj: any) => {
-              if ([TOP, LEFT].includes(obj.name)) {
-                config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-              } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-                config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
+                width,
+                height
               }
-            })
-            xPositionList.push(config.position.x, config.position.x + config.style.width)
-            yPositionList.push(config.position.y, config.position.y + config.style.height)
+            }
+          } else {
+            const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION)
+            if(styleDimensionConfig) {
+              Object.values(styleDimensionConfig.value).forEach((obj: any) => {
+                if([ 'top', 'left' ].includes(obj.name)) {
+                  config.position[obj.name === 'top' ? 'y' : 'x'] = obj.value
+                } else if([ 'width', 'height' ].includes(obj.name)) {
+                  config.style[obj.name === 'width' ? 'width' : 'height'] = obj.value
+                }
+              })
+            }
           }
+          xPositionList.push(config.position.x, config.position.x + config.style.width)
+          yPositionList.push(config.position.y, config.position.y + config.style.height)
         })
-        xPositionList.sort((a, b) => {
-          return a - b
-        })
-        yPositionList.sort((a, b) => {
-          return a - b
-        })
+        xPositionList.sort((a, b) => a - b)
+        yPositionList.sort((a, b) => a - b)
         if (layer.id in bar.selectedComponentRefs) {
           const xMoveLength = data.x - data.lastX
           const yMoveLength = data.y - data.lastY
-
         }
+        console.log('----------------------------')
+        console.log('xPositionList', xPositionList)
+        console.log('yPositionList', yPositionList)
         // 在dva里计算
         dispatch({
           type: 'bar/save',
@@ -389,7 +451,7 @@ const CustomDraggable
           },
         })
       } else {
-        dispatch({
+/*        dispatch({
           type: 'bar/save',
           payload: {
             scaleDragData: {
@@ -404,9 +466,8 @@ const CustomDraggable
               },
             },
           },
-        })
+        })*/
       }
-      console.log('点击点击')
       dispatch({
         type: 'bar/updateComponent',
         payload: bar.selectedComponents,
@@ -426,46 +487,62 @@ const CustomDraggable
       localStorage.removeItem('dblComponentTimes')
       e.stopPropagation()
     }
-    const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
+    const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent | ILayerPanel, config: IConfig) => {
       clearTimeout(clickTimer.current)
-      const dblComponentTimes = localStorage.getItem('dblComponentTimes')
-      if (!currentTimes) {
-        currentTimes.current = 1
-      } else {
-        currentTimes.current++
-      }
-      if (Number(dblComponentTimes) === currentTimes.current) {
-        // layer.cancel = false
-        // layer.disabled = false
-        // e.stopPropagation()
-      }
-      // 1    2
-      if (Number(dblComponentTimes) < currentTimes.current) {
-        layer.cancel = true
-        // layer.disabled = true
-        if (COMPONENTS in layer) {
-          (layer[COMPONENTS] as any).forEach((item: any) => {
-            item.cancel = false
-            // item.disabled = false
+      if ('panelType' in layer) {
+        const panel: any = panels.find((panel: IPanel) => panel.id === layer.id)
+        if (layer.panelType === 0) {
+          history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+          dispatch({
+            type: 'bar/save',
+            payload: {
+              isPanel: true,
+              panelId: layer.id,
+              treeData: [],
+            }
           })
-        }
-      }
-      if (!dblComponentTimes) {
-        layer.cancel = true
-        // layer.disabled = true
-        if (COMPONENTS in layer) {
-          (layer[COMPONENTS] as any).forEach((item: any) => {
-            item.cancel = false
-            // item.disabled = false
+          dispatch({
+            type: 'bar/getPanelDetails'
           })
+          dispatch({
+            type: 'bar/selectPanelState',
+            payload: {
+              stateId: panel.states[0].id
+            }
+          })
+        } else {
+          if (panel.states.length > 1) {
+            history.push(`/dashboard/${panel.states[0].id}`)
+            console.log('到这里了吧啊')
+            dispatch({
+              type: 'bar/save',
+              payload: {
+                isPanel: false,
+                stateId: null,
+                panelId: null,
+                key: [],
+                selectedComponentOrGroup: [],
+                dashboardId: panel.states[0].id,
+                scaleDragData: {
+                  position:{
+                    x: 0,
+                    y:0
+                  },
+                  style: {
+                    width: 0,
+                    height: 0,
+                    display: 'none'
+                  }
+                }
+              }
+            })
+            dispatch({
+              type: 'bar/getDashboardDetails'
+            })
+          }
         }
-        localStorage.setItem('dblComponentTimes', '1')
-      } else {
-        localStorage.setItem('dblComponentTimes', (Number(dblComponentTimes) + 1).toString())
+        // window.open(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
       }
-      // dispatch({
-      //   type: 'bar/save',
-      // })
     }
     const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
       if (component.hover) {
@@ -602,7 +679,7 @@ const CustomDraggable
       console.log('回调参数作用到的组件ID有：', activeIds)
       if (temp) {
         activeIds = [...(new Set(activeIds) as any)]
-        const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find((item: IComponent) => item.id === id)), [])
+        const activeComponents = activeIds.reduce((pre, id) => pre.concat(components.find((item: IComponent) => item.id === id)), [])
         // 绑定数据容器的组件列表
         const componentsByDataContainer = activeComponents.filter((component: IComponent) => component.dataFrom === 1)
         // 绑定数据源的组件列表
@@ -632,134 +709,194 @@ const CustomDraggable
     return (
       <div className="c-custom-draggable">
         {
-          treeData.map((layer: ILayerGroup | ILayerComponent | any) => {
+          layers.map((layer: ILayerGroup | ILayerComponent | any) => {
 
-            let config: IConfig = {
-              position: {
-                x: 0,
-                y: 0,
-              },
-              style: {
-                width: 0,
-                height: 0,
-              },
-            }
-            let isGroup: boolean = (COMPONENTS in layer)
-            let group: ILayerGroup | undefined
-            let component: IComponent | undefined
-            let events: any
-            let style_config, staticData, style_dimension_config
-            // 群组
-            if (COMPONENTS in layer) {
-              group = layer
-              let [xPositionList, yPositionList] = calcGroupPosition(layer[COMPONENTS], components)
-              xPositionList = xPositionList.sort((a, b) => a - b)
-              yPositionList = yPositionList.sort((a, b) => a - b)
+          let config: IConfig = {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+            },
+          }
+          let isGroup: boolean = (COMPONENTS in layer)
+          let isPanel: boolean = ('panelType' in layer)
+          let group: ILayerGroup | undefined
+          let component: IComponent | undefined
+          let panel : IPanel | undefined
+          let events: any
+          let style_config, staticData, styleDimensionConfig, recommendConfig
+          // 群组
+          if ('panelType' in layer) {
+            const panel = panels.find((panel: IPanel) => panel.id === layer.id)
+            if (panel) {
+              recommendConfig = panel.config
+              const { left, top, width, height } = recommendConfig
               config = {
                 position: {
-                  x: xPositionList[0],
-                  y: yPositionList[0],
+                  x: left,
+                  y: top
                 },
                 style: {
-                  width: xPositionList[xPositionList.length - 1] - xPositionList[0],
-                  height: yPositionList[yPositionList.length - 1] - yPositionList[0],
-                },
-              }
-            } else {
-              // 组件
-              component = components.find(item => item.id === layer.id)
-              // component=timelineConfig
-
-              // 将线上配置改为本地配置
-              // component.config = radarChartConfig.config
-              // component.staticData = radarChartConfig.staticData
-
-
-              if (component) {
-                staticData = component.staticData
-                style_config = component.config
-                style_dimension_config = component.config.find((item: any) => item.name === DIMENSION)
-                if (style_dimension_config) {
-                  Object.values(style_dimension_config.value).forEach((obj: any) => {
-                    if ([TOP, LEFT].includes(obj.name)) {
-                      config.position[obj.name === TOP ? 'y' : 'x'] = obj.value
-                    } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-                      config.style[obj.name === WIDTH ? 'width' : 'height'] = obj.value
-                    }
-                  })
+                  width: width,
+                  height: height
                 }
-                events = component.events
               }
             }
-            return (
-              <SingleDraggable
-                dimensionConfig={style_dimension_config}
-                scale={bar.canvasScaleValue}
-                nodeRef={nodeRef}
-                id={layer.id}
-                cRef={(ref: any) => {
-                  if (layer.id in allComponentRefs) {
-                  } else {
-                    allComponentRefs[layer.id] = ref
+          } else if(COMPONENTS in layer) {
+            group = layer
+            let [ xPositionList, yPositionList ] = calcGroupPosition(layer[COMPONENTS], components, panels)
+            xPositionList = xPositionList.sort((a, b) => a - b)
+            yPositionList = yPositionList.sort((a, b) => a - b)
+            config = {
+              position: {
+                x: xPositionList[0],
+                y: yPositionList[0],
+              },
+              style: {
+                width: xPositionList[xPositionList.length - 1] - xPositionList[0],
+                height: yPositionList[yPositionList.length - 1] - yPositionList[0],
+              },
+            }
+          } else {
+            // 组件
+            component = components.find(item => item.id === layer.id)
+            // component=timelineConfig
+
+            if(component) {
+              staticData = component.staticData
+              style_config = component.config
+              styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION)
+              if(styleDimensionConfig) {
+                Object.values(styleDimensionConfig.value).forEach((obj: any) => {
+                  if([ 'top', 'left' ].includes(obj.name)) {
+                    config.position[obj.name === 'top' ? 'y' : 'x'] = obj.value
+                  } else if([ 'width', 'height' ].includes(obj.name)) {
+                    config.style[obj.name === 'width' ? 'width' : 'height'] = obj.value
                   }
-                }}
-                disabled={layer.isLock}
-                cancel=".no-cancel"
-                key={layer.id}
-                position={config.position}
-                onStart={(ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config)}
-                onDrag={(ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config)}
-                onStop={(ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config)}
-              >
-                <div
-                  ref={(ref: any) => {
-                    if (layer.id in allComponentDOMs) {
-                    } else {
-                      allComponentDOMs[layer.id] = ref
-                    }
-                  }}                // onClickCapture={(ev) => handleClick(ev, layer, config)}
-                  data-id={isGroup ? layer.id : 'component-' + layer.id}
-                  key={layer.id}
-                  onClick={(ev) => handleClick(ev, layer, config)}
-                  onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
-                  onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
-                  onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
-                  onContextMenu={(ev) => mouseRightClick(ev, layer, component, config)}
-                  className={`box ${layer.selected ? 'selected' : ''} ${layer.hover ? 'hovered' : ''}`}
-                  style={{
-                    ...config.style,
-                    transition: 'width, height 0.3s',
-                    // border: '1px solid gray',
-                    visibility: !layer.isShow ? 'hidden' : 'unset',
-                    cursor: 'move'
-                  }}>
-                  {
-                    layer[HIDE_DEFAULT] ?
-                      <div style={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(76, 255, 231, 0.15)',
-                      }} /> :
-                      isGroup ?
-                      <div className="no-cancel" style={{
-                        opacity: (layer[OPACITY] || 100) / 100,
-                      }}>
-                        {(layer as any)[COMPONENTS]?.length > 0 ?
-                          <div style={{ position: 'absolute', left: -config.position.x, top: -config.position.y }}>
-                            <CustomDraggable
-                              mouse={layer.selected ? mouse : 0}
-                              bar={bar}
-                              dispatch={dispatch}
-                              treeData={(layer as any)[COMPONENTS]}
+                })
+              }
+              events = component.events
+            }
+          }
+          if ('panelType' in layer) {
+            console.log('-----------------')
+            console.log('components', components)
+            console.log('component', component)
+            console.log('layer', layer)
+            console.log('bar.componentData', bar.componentData[layer.id])
+            console.log('layers', layers)
+            console.log('-----------------')
+          }
+          return (
+            <SingleDraggable
+              dimensionConfig={ isPanel ? recommendConfig : styleDimensionConfig }
+              isPanel={isPanel}
+              scale={ bar.canvasScaleValue }
+              nodeRef={ nodeRef }
+              id={ layer.id }
+              cRef={ (ref: any) => {
+                if(layer.id in allComponentRefs) {
+                } else {
+                  allComponentRefs[layer.id] = ref
+                }
+              } }
+              disabled={ layer.isLock }
+              cancel=".no-cancel"
+              key={ layer.id }
+              position={ config.position }
+              onStart={ (ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config) }
+              onDrag={ (ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config) }
+              onStop={ (ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config) }
+            >
+              <div
+                ref={ (ref: any) => {
+                  if(layer.id in allComponentDOMs) {
+                  } else {
+                    allComponentDOMs[layer.id] = ref
+                  }
+                } }                // onClickCapture={(ev) => handleClick(ev, layer, config)}
+                data-id={ isPanel ? (layer.panelType === 0 ? `panel-${ layer.id }` : `ref-${ layer.id }`) : isGroup ? layer.id : `component-${ layer.id }` }
+                key={ layer.id }
+                onClick={ (ev) => handleClick(ev, layer, config) }
+                onDoubleClickCapture={ (ev) => handleDblClick(ev, layer, config) }
+                onMouseOverCapture={ (ev) => handleMouseOver(ev, layer) }
+                onMouseOutCapture={ (ev) => handleMouseOut(ev, layer) }
+                onContextMenu={ (ev) => mouseRightClick(ev, layer, component, config) }
+                className={ ['box', `${ layer.selected ? 'selected' : '' }`, `${ layer.hover ? 'hovered' : '' }`].filter(item => item).join(' ') }
+                style={ {
+                  ...config.style,
+                  transition: 'width, height 0.3s',
+                  // border: '1px solid gray',
+                  visibility: !layer.isShow ? 'hidden' : 'unset',
+                  cursor: 'move',
+                } }>
+                {
+                  layer[HIDE_DEFAULT] ?
+                    <div style={ {
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: 'rgba(76, 255, 231, 0.15)',
+                    } }/> :
+                    isPanel ?
+                      (layer.panelType === 0 ?
+                          <div
+                            className="panel-container"
+                          >
+                            <DynamicPanel
+                              history={ history }
+                              id={layer.id}
+                              panels={panels}
                             />
+                            <div className="hovered">
+                              双击编辑动态面板
+                            </div>
+                          </div>:
+                          <div
+                            className="panel-container"
+                          >
+                            <ReferencePanel
+                              history={ history }
+                              id={layer.id}
+                              panels={panels}
+                            />
+                            <div className="hovered">
+                              双击编辑引用面板
+                            </div>
                           </div>
-                          : ''
-                        }
-                      </div> : <>
-                        {/* <div data-id={layer.id} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}> */}
-                          {
-                            // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
-                            //   <CompImage componentConfig={component}/>
+
+                      ) :
+                      isGroup ?
+                        <div className="no-cancel" style={ {
+                          opacity: (layer[OPACITY] || 100) / 100,
+                        } }>
+                          { (layer as any)[COMPONENTS]?.length > 0 ?
+                            <div style={ { position: 'absolute', left: -config.position.x, top: -config.position.y } }>
+                              <CustomDraggable
+                                mouse={ layer.selected ? mouse : 0 }
+                                bar={ bar }
+                                dispatch={ dispatch }
+                                history={ history }
+                                layers={ (layer as any)[COMPONENTS] }
+                                components={components}
+                                panels={panels}
+                              />
+                            </div>
+                            : ''
+                          }
+                        </div> : <>
+                          <div data-id={ layer.id } style={ { width: '100%', height: '100%', pointerEvents: 'none' } }>
+                            {
+                              // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
+                              //   <CompImage componentConfig={component}/>
+
+                          //   <Counter
+                          //   componentConfig={component}
+                          //   fields={getFields(component)}
+                          //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                          // ></Counter>
                           // <RadarChart
                           //   componentConfig={component}
                           //   fields={getFields(component)}
@@ -769,7 +906,7 @@ const CustomDraggable
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
 
-                            layer.moduleName === 'counter' ? 
+                            layer.moduleName === 'counter' ?
                             <Counter
                               componentConfig={component}
                               fields={getFields(component)}
@@ -937,7 +1074,7 @@ const CustomDraggable
                                       ></RemoteBaseComponent>
                                     </ErrorCatch>
                           }
-                        {/* </div> */}
+                         </div>
                       </>
                   }
                   {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
@@ -990,4 +1127,4 @@ const CustomDraggable
   }
 export default connect(({ bar }: any) => ({
   bar,
-}))(CustomDraggable)
+}))(withRouter(CustomDraggable as any))

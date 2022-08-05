@@ -13,7 +13,7 @@ import Ruler from './components/Ruler'
 import { IScaleDragData, IStyleConfig } from './type'
 import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from './constant'
 import RulerLines from './components/RulerLines'
-import { DraggableData, DraggableEvent } from './components/CustomDraggable/type'
+import { DraggableData, DraggableEvent, IPanel, IComponent } from "./components/CustomDraggable/type"
 import { deepClone, deepForEach, treeDataReverse} from '../../../utils'
 import RightClickMenu from '../left/components/rightClickMenu/rightClickMenu'
 import { menuOptions } from '../left/Data/menuOptions'
@@ -29,11 +29,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [ customMenuOptions, setCustomMenuOptions ] = useState(menuOptions)
   const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)// let supportLinesRef: any = useRef(// null)
   const [ rulerCanvasSpacing, setRulerCanvasSpacing ] = useState({ left: 22, top: 22 })
-  const [layers, setLayers] = useState(deepClone(bar.treeData))
+  const [layers, setLayers] = useState([])
+  const [components, setComponents] = useState([])
+  const [panels, setPanels] = useState([])
   useEffect(() => {
-    const data = deepClone(bar.treeData)
-    treeDataReverse(data)
-    setLayers(data)
+    const layers = deepClone(bar.treeData)
+    console.log('寄', layers)
+    treeDataReverse(layers)
+    setLayers(layers)
+    setComponents(bar.components)
+    setPanels(bar.panels)
   }, [bar.treeData])
 
   let supportLinesRef = bar.supportLinesRef
@@ -53,8 +58,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const recommendConfig = findItem('recommend')
   const styleColor = findItem('styleColor')
   const backgroundImg = findItem('backgroundImg')
-  const gridSpacing = findItem('gridSpacing')
-  const zoomConfig = findItem('zoom')
 
   // 计算画布的大小
   const calcCanvasSize = () => {
@@ -173,7 +176,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     }, 300)
   }, [ bar.leftMenuWidth ])
 
-
   useEffect(() => {
     calcCanvasSize()
     window.addEventListener('resize', calcCanvasSize);
@@ -254,27 +256,40 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       type: "bar/updateSelectedComponents"
     })
     if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
-      const component = deepClone(bar.selectedComponents[0])
-      const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
-      styleDimensionConfig.forEach((item: IStyleConfig) => {
-        switch(item.name) {
-          case LEFT:
-            item.value = x
-            break
-          case TOP:
-            item.value = y
-            break
-          case WIDTH:
-            item.value = width
-            break
-          case HEIGHT:
-            item.value = height
+      // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
+      const panelOrComponent: IComponent | IPanel = deepClone(bar.selectedComponents[0])
+      if ('type' in panelOrComponent) {
+        const panel = panelOrComponent
+        panel.config = {
+          ...panel.config,
+          left: x,
+          top: y,
+          width,
+          height
         }
-      })
-      dispatch({
-        type: 'bar/setComponentConfig',
-        payload: component
-      })
+      } else {
+        const component = panelOrComponent
+        const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+        styleDimensionConfig.forEach((item: IStyleConfig) => {
+          switch(item.name) {
+            case LEFT:
+              item.value = x
+              break
+            case TOP:
+              item.value = y
+              break
+            case WIDTH:
+              item.value = width
+              break
+            case HEIGHT:
+              item.value = height
+          }
+        })
+        dispatch({
+          type: 'bar/setComponentConfig',
+          payload: component
+        })
+      }
       dispatch({
         type: 'bar/save',
         payload: {
@@ -282,69 +297,103 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         }
       })
     } else {
-      bar.selectedComponents.forEach((component: any, cIndex: number) => {
-        const dimensionConfig = component.config.find((config: any) => config.name === DIMENSION).value
-        const data = dimensionConfig.reduce((pre: any, cur: any) => {
-          if(Array.isArray(cur.value)) {
-            const obj = cur.value.reduce((p: any, c: any) => {
-              p[c.name] = c.value
-              return p
-            }, {})
-            pre = {
-              ...pre,
-              ...obj,
-            }
-          } else {
-            pre[cur.name] = cur.value
-          }
-          return pre
-        }, {})
-        dimensionConfig.forEach((config: any) => {
+      bar.selectedComponents.forEach((panelOrComponent: IComponent | IPanel, cIndex: number) => {
+        if ('type' in panelOrComponent) {
+          const panel = panelOrComponent
+          const data = panel.config
+          console.log('动态面板的data', data)
+
           if(x === lastX) {
-            if(config.name === LEFT) {
-              if(config.value !== lastX) {
-                // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
-                config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
-                data[LEFT] = config.value
-              }
+            if (panel.config.left !== lastX) {
+              panel.config.left = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
+              data[LEFT] = panel.config.left
             }
           } else {
-            if(config.name === LEFT) {
-              if(config.value === lastX) {
-                config.value = x
-              } else {
-                // 因为是缩放左侧，所以缩放组件右侧的 x + width 的值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
-                config.value = x + ((data[LEFT] - lastX) / (lastWidth / width))
-              }
+            if (panel.config.left === lastX) {
+              panel.config.left = x
+            } else {
+              panel.config.left = x + ((data[LEFT] - lastX) / (lastWidth / width))
             }
           }
 
           if(y === lastY) {
-            if(config.name === TOP) {
-              if(config.value !== lastY) {
-                config.value = lastY + ((data[TOP] - lastY) / (lastHeight / height))
-                data[TOP] = config.value
-              }
+            if (panel.config.top !== lastY) {
+              panel.config.top = lastY + ((data[TOP] - lastY) / (lastHeight / height))
+              data[TOP] = panel.config.top
             }
           } else {
-            if(config.name === TOP) {
-              if(config.value === lastY) {
-                config.value = y
-              } else {
-                config.value = y + ((data[TOP] - lastY) / (lastHeight / height))
-              }
+            if (panel.config.top === lastY) {
+              panel.config.top = y
+            } else {
+              panel.config.top = y + ((data[TOP] - lastY) / (lastHeight / height))
             }
           }
 
-          if(config.name === WIDTH) {
-            config.value = config.value / (lastWidth / width)
-            data[WIDTH] = config.value
-          }
-          if(config.name === HEIGHT) {
-            config.value = config.value / (lastHeight / height)
-            data[HEIGHT] = config.value
-          }
-        })
+        } else {
+          const component = panelOrComponent
+          const dimensionConfig = component.config.find((config: any) => config.name === DIMENSION).value
+          const data = dimensionConfig.reduce((pre: any, cur: any) => {
+            if(Array.isArray(cur.value)) {
+              const obj = cur.value.reduce((p: any, c: any) => {
+                p[c.name] = c.value
+                return p
+              }, {})
+              pre = {
+                ...pre,
+                ...obj,
+              }
+            } else {
+              pre[cur.name] = cur.value
+            }
+            return pre
+          }, {})
+          dimensionConfig.forEach((config: any) => {
+            if(x === lastX) {
+              if(config.name === LEFT) {
+                if(config.value !== lastX) {
+                  // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
+                  config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
+                  data[LEFT] = config.value
+                }
+              }
+            } else {
+              if(config.name === LEFT) {
+                if(config.value === lastX) {
+                  config.value = x
+                } else {
+                  // 因为是缩放左侧，所以缩放组件右侧的 x + width 的值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
+                  config.value = x + ((data[LEFT] - lastX) / (lastWidth / width))
+                }
+              }
+            }
+
+            if(y === lastY) {
+              if(config.name === TOP) {
+                if(config.value !== lastY) {
+                  config.value = lastY + ((data[TOP] - lastY) / (lastHeight / height))
+                  data[TOP] = config.value
+                }
+              }
+            } else {
+              if(config.name === TOP) {
+                if(config.value === lastY) {
+                  config.value = y
+                } else {
+                  config.value = y + ((data[TOP] - lastY) / (lastHeight / height))
+                }
+              }
+            }
+
+            if(config.name === WIDTH) {
+              config.value = config.value / (lastWidth / width)
+              data[WIDTH] = config.value
+            }
+            if(config.name === HEIGHT) {
+              config.value = config.value / (lastHeight / height)
+              data[HEIGHT] = config.value
+            }
+          })
+        }
       })
       dispatch({
         type: 'bar/setGroupConfig',
@@ -438,6 +487,19 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                   top: 5000 + rulerCanvasSpacing.top,
                 } }
               >
+                {
+                  bar.isPanel ? <div
+                    style={ {
+                      position: "absolute",
+                      width: '100%',
+                      height: '100%',
+                      backgroundImage: 'linear-gradient(45deg,#ccc 25%,transparent 0), linear-gradient(45deg,transparent 75%,#ccc 0), linear-gradient(45deg,#ccc 25%,transparent 0), linear-gradient(45deg,transparent 75%,#ccc 0)',
+                      backgroundPosition: '0 0,-15px 15px,15px -15px,30px 30px',
+                      backgroundSize: '10px 10px',
+                      backgroundColor: '#b5b5b5',
+                    } }
+                  /> : <></>
+                }
                 <div
                   className="canvas-screen"
                   style={ {
@@ -464,8 +526,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     />
                     <RulerLines/>
 
-                    <div className="draggable-container" ref={ draggableContainerRef }>
-                      <CustomDraggable mouse={ 0 } treeData={ layers }/>
+                    <div className={`draggable-container screen-${bar.dashboardId}`} ref={ draggableContainerRef }>
+                      <CustomDraggable mouse={ 0 } layers={ layers } components={components} panels={panels}/>
                     </div>
                   </div>
                 </div>

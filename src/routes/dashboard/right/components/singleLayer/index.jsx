@@ -233,6 +233,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           <TabPane tab="样式" key="1">
             <ComponentCard data={componentConfig}
               allModulesConfig={bar.moduleDefaultConfig}
+              bar={bar}
               dispatch={dispatch}>
               {styleConfig.map((item, index) => {
                 if (!(item.type && componentLib[item.type])) {
