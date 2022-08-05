@@ -1,22 +1,28 @@
 import { memo } from 'react'
 
 import EveryComponent from '../everyComponent'
-
+import ReferencePanel from '@/customComponents/referencePanel'
+import DynamicPanel from '@/customComponents/dynamicPanel/index'
 import { getComDataWithFilters } from '@/utils/data'
+import * as React from "react"
 
 const MODULES = 'modules'
 const OPACITY = 'opacity'
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, bar, dispatch, scaleValue } = props
+  const { layersArr, componentLists, bar, dispatch, scaleValue, panels } = props
   return (
     <div className='recursive-component-wrap'>
       {
         layersArr?.map((layer: any, ind: any) => {
           let isGroup: boolean = MODULES in layer
-          let targetComponent
+          let isPanel: boolean = ('panelType' in layer)
+          let targetComponent, targetPanel
           if (!isGroup) {
             targetComponent = componentLists.find((item: any) => item.id === layer.id)
+          }
+          if (isPanel) {
+            targetPanel = panels.find((item: any) => item.id === layer.id)
           }
           return (
             <div
@@ -27,6 +33,30 @@ const RecursiveComponent = (props: any) => {
               }}
             >
               {
+                isPanel ?
+                  (layer.panelType === 0 ?
+                      <div
+                        className="panel-container"
+                        style={{
+                          position: 'absolute',
+                          left: targetPanel.config.left + 'px',
+                          top: targetPanel.config.top + 'px'
+                        }}
+                      >
+                        <DynamicPanel
+                          id={layer.id}
+                          panels={panels}
+                        />
+                      </div>:
+                      <div
+                        className="panel-container"
+                      >
+                        <ReferencePanel
+                          id={layer.id}
+                          panels={panels}
+                        />
+                      </div>
+                  ) :
                 isGroup ?
                   <div className="no-cancel"
                     style={{
@@ -41,6 +71,7 @@ const RecursiveComponent = (props: any) => {
                           bar={bar}
                           dispatch={dispatch}
                           scaleValue={scaleValue}
+                          panels={panels}
                         />
                       </div>
                     }

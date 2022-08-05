@@ -220,9 +220,7 @@ const ScrollTable = (props) => {
     const indexBgConfigs = indexColumnCustomStyle.reduce((total, cur) => {
       const data = cur.value.reduce((pre, cu) => {
         if (cu.name === 'textStyle') {
-          console.log('cu', cu.value)
           let textStyle = styleTransformFunc(cu.value, false)
-          console.log('textStyle', textStyle)
           return { ...pre, ...textStyle }
         }
         if (cu.name === 'bgSize') {
@@ -234,8 +232,6 @@ const ScrollTable = (props) => {
           if (height.indexOf('%') === -1) {
             height += 'px'
           }
-          console.log('width', width)
-          console.log('height', height)
           return { ...pre, width, height }
         }
         if (cu.name === 'bgColor') {

@@ -955,7 +955,7 @@ export default {
             selectedComponentRefs: {},
             selectedComponentDOMs: {},
             selectedComponents: [],
-            key: [bar.panelId]
+            key: [stateId]
           }
         })
       }
