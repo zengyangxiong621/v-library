@@ -23,7 +23,6 @@ import {debounce} from "@/utils/common";
 
 import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
-import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPanel_1'
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
 import Timeline from '@/customComponents/assist/timeline'
@@ -534,13 +533,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </InstrumentPanel3>
-          : props.componentConfig.moduleName === 'instrumentPanel_1' ?
-          <InstrumentPanel1
-            scale={scale}
-            onChange={handleValueChange}
-            {...props}
-          >
-          </InstrumentPanel1>
           : props.componentConfig.moduleName === 'instrumentPanel_4' ?
           <InstrumentPanel4
             scale={scale}
