@@ -91,8 +91,10 @@ const ComponentCard = props => {
     <React.Fragment>
       <div className="component-wraper g-flex g-justify-between">
         <div>
-          <h4>{`${name}_${id}`}</h4>
-          <p>{`V${moduleVersion}`}</p>
+          <h4 style={{ marginBottom: '0'}}>{`${name}_${id}`}</h4>
+          {
+            moduleVersion ? <p style={{ margin: '12px 0 0 0' }}>{`V${moduleVersion}`}</p> : <></>
+          }
         </div>
         {
           lastModuleVersion &&

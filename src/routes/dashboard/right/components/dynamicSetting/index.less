@@ -1,0 +1,177 @@
+@import "../../../../../assets/style/variable.less";
+
+.dynamic-wrap {
+  text-align: center;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 右侧设置隐藏滚动条 */
+.dynamic-wrap .content::-webkit-scrollbar {
+  display: none;
+  /* Chrome Safari */
+}
+
+.dynamic-wrap .content {
+  scrollbar-width: none;
+  /* firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  padding: 0;
+}
+
+.dynamic-set-header {
+  width: 100%;
+  height: 36px;
+  line-height: 36px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  background-color: #373A4D;
+  margin: 0;
+}
+
+.content {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.custom-form .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.custom-form .ant-form-item-label {
+  width: 80px;
+}
+
+.custom-form .ant-form-item-label>label {
+  color: #ccc;
+  font-size: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.custom-select {
+  margin-bottom: 16px;
+}
+
+.custom-select.ant-select .ant-select-selector {
+  background-color: @componentBgColor  !important;
+  border: 1px solid @borderColor  !important;
+  border-radius: 3px !important;
+  font-size: 14px;
+  color: @fontColor;
+  font-weight: 400;
+}
+
+.custom-select.ant-select .ant-select-arrow {
+  color: @fontColor;
+}
+
+.ant-select-item {
+  color: @fontColor;
+}
+
+.ant-select-dropdown {
+  background-color: #2d2f38;
+  color: @fontColor;
+}
+
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: #3D404C;
+}
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: #3A89FE;
+  color: @fontColor;
+}
+
+.size-input {
+  width: 102px;
+}
+
+.size-input.ant-input-number {
+  background-color: @componentBgColor  !important;
+  border: 1px solid @borderColor  !important;
+  border-radius: 3px !important;
+  font-size: 14px;
+  color: @fontColor;
+  font-weight: 400;
+}
+
+.size-input .ant-input-number-handler-wrap {
+  background-color: @componentBgColor  !important;
+  color: @fontColor;
+}
+
+.size-input .ant-input-number-handler {
+  border-left: 1px solid @borderColor  !important;
+  color: @fontColor;
+}
+
+.size-input .ant-input-number-handler-down {
+  border-top: 1px solid @borderColor  !important;
+}
+
+.size-input .ant-input-number-handler-up-inner,
+.size-input .ant-input-number-handler-down-inner {
+  color: @fontColor;
+}
+
+.detail-txt {
+  text-align: left;
+  font-size: 12px;
+  color: @infoColor;
+  font-weight: 400;
+  line-height: 17px;
+  margin-top: 4px;
+}
+
+.sketch-picker {
+  width:240px !important;
+  background: #181b24 !important;
+  border: 1px solid @borderColor  !important;
+  box-shadow: 0 6px 6px 0 rgb(0 0 0 / 30%) !important;
+}
+
+.input-hex {
+  padding: 4px 11px;
+  width: 95px;
+  height: 32px;
+  background: @componentBgColor;
+  border: 1px solid @borderColor;
+  border-radius: 3px;
+  margin-right: 8px;
+}
+
+.input-opacity {
+  width: 78px;
+}
+
+.bg-uploader .ant-upload-select-picture-card,
+.bg-uploader .ant-upload-list-picture-card-container {
+  width: 221px;
+  height: 104px;
+  background: @componentBgColor;
+  border: 1px solid @borderColor;
+  border-radius: 3px;
+}
+
+.bg-uploader .ant-upload-list-picture-card .ant-upload-list-item {
+  border: 1px solid @borderColor;
+}
+
+.bg-uploader .ant-upload {
+  font-size: 12px;
+  color: @infoColor;
+  font-weight: 400;
+}

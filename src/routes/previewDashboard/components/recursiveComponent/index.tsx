@@ -8,9 +8,7 @@ const MODULES = 'modules'
 const OPACITY = 'opacity'
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, bar, dispatch,
-    screenHeightRatio, screenWidthRatio, scaleValue
-  } = props
+  const { layersArr, componentLists, bar, dispatch, scaleValue } = props
   return (
     <div className='recursive-component-wrap'>
       {
@@ -43,8 +41,6 @@ const RecursiveComponent = (props: any) => {
                           bar={bar}
                           dispatch={dispatch}
                           scaleValue={scaleValue}
-                          screenWidthRatio={screenWidthRatio}
-                          screenHeightRatio={screenHeightRatio}
                         />
                       </div>
                     }

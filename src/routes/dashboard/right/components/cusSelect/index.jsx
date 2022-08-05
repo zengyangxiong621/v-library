@@ -31,6 +31,7 @@ const CusSelect = props => {
   const selectChange = (e) => {
     setSelect(e)
     _data.value = e;
+    _data.label = _data.options.find(item => item.value === e).name;
     props.onChange()
   }
 
