@@ -15,7 +15,7 @@ interface State {
   [key: string]: any;
 }
 
-const DynamicPanel = ({bar, id, dispatch, isDashboard = false, panels}: any) => {
+const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
   const componentData = bar.componentData;
   const panel = panels.find((item: IPanel) => item.id === id)
   // 获取面板想起接口

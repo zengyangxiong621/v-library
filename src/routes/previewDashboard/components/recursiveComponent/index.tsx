@@ -46,6 +46,7 @@ const RecursiveComponent = (props: any) => {
                         <DynamicPanel
                           id={layer.id}
                           panels={panels}
+                          isDashboard={false}
                         />
                       </div>:
                       <div
@@ -54,6 +55,7 @@ const RecursiveComponent = (props: any) => {
                         <ReferencePanel
                           id={layer.id}
                           panels={panels}
+                          isDashboard={false}
                         />
                       </div>
                   ) :
