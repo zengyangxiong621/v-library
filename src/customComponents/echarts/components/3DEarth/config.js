@@ -1,7 +1,7 @@
 const ComponentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // =========
-  "name": "3D地球", //图层名称
+  "name": "3D地图", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 

@@ -37,9 +37,7 @@ import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPa
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
 
-import InstrumentPanel from '@/customComponents/echarts/components/instrumentPanel_4'
 
-import Earth from '@/customComponents/echarts/components/3DEarth'
 
 import {
   STYLE,
