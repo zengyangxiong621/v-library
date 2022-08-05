@@ -1,4 +1,4 @@
-import {useRef, useEffect, useState} from 'react'
+import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
 import {ScrollBoard} from '../dataV'
 import ReactDOM from 'react-dom'
@@ -402,4 +402,4 @@ export {
   ComponentDefaultConfig,
   ScrollTable,
 }
-export default ScrollTable
+export default memo(ScrollTable)

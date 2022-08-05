@@ -17,7 +17,6 @@ const Color = props => {
     labelAlign: 'left'
   };
   const _data = props.data;
-
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [color, setColor] = useState({
     hex: isHex(_data.value) ? _data.value : rgbToHex(getRgbaNum(_data.value)),

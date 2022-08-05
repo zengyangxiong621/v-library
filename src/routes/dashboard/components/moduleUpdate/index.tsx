@@ -10,6 +10,9 @@ import { Drawer, Button, Card, Checkbox, Empty } from 'antd'
 
 import ListItem from './components/listItem'
 import { deepClone } from '@/utils/index'
+import importComponent from './methods/fetchComponentJsFile'
+
+
 
 const ModuleUpdate = (props: any) => {
   const { bar, onChange, visible, dispatch } = props
@@ -110,6 +113,13 @@ const ModuleUpdate = (props: any) => {
         type: 'bar/getDashboardDetails',
         payload: bar.dashboardId
       })
+      // 重新请求最新版本组件的 js 文件
+      console.log('本次需要升级的组件', selectedLists);
+      selectedLists.forEach(async (item: any) => {
+        item.moduleType = 'chart'
+        window.eval(`${await importComponent(item)}`)
+        }
+      )
     }
     setUpdateBtnLoading(false)
   }
