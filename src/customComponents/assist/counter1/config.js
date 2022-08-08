@@ -23,7 +23,7 @@ const componentDefaultConfig = {
     "data": [
       {
         "name": "翻牌器标题",
-        "value": "-1121.23"
+        "value": "1121"
       }
     ],
     "fields": [
@@ -324,74 +324,16 @@ const componentDefaultConfig = {
                             "type": "switch"
                           },
                           {
-                            "name": "textStyle",
-                            "displayName": "文本样式",
-                            "type": "textFullStyleGroup",
-                            "value": [
-                              {
-                                "name": "fontFamily",
-                                "displayName": "",
-                                "value": "Microsoft Yahei"
-                              },
-                              {
-                                "name": "fontSize",
-                                "displayName": "",
-                                "value": 32
-                              },
-                              {
-                                "name": "color",
-                                "displayName": "",
-                                "type": "color",
-                                "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                              },
-                              {
-                                "name": "bold",
-                                "displayName": "",
-                                "value": false
-                              },
-                              {
-                                "name": "italic",
-                                "displayName": "",
-                                "value": false
-                              },
-                              {
-                                "name": "letterSpacing",
-                                "displayName": "字距",
-                                "value": 0
-                              },
-                              {
-                                "name": "lineHeight",
-                                "displayName": "行距",
-                                "value": '48'
-                              }
-                            ]
+                            name:"textStyle",
+                            displayName:'文本样式',
+                            type:'chartText',
+                            value:{
+                                fontFamily:'Microsoft Yahei',
+                                fontSize:32,
+                                color:'#fff',
+                                fontWeight:'normal' // bold bolder lighter
+                            }
                           },
-                          {
-                            "name": "numShadow",
-                            "displayName": "阴影",
-                            "type": 'collapse',
-                            "hasSwitch": true,
-                            "defaultExpand": false,
-                            "value": [
-                              {
-                                "name": "show",
-                                "displayName": "",
-                                "value": true,
-                                "type": "switch"
-                              },
-                              {
-                                "name": "shadow",
-                                "displayName": "外阴影",
-                                "type": "boxShadow",
-                                "value": {
-                                  "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                                  "vShadow": 0, // 垂直阴影的位置
-                                  "hShadow": 0, // 水平阴影的位置
-                                  "blur": 8 // 模糊的距离
-                                }
-                              }
-                            ]
-                          }
                         ]
                       },
                       {
@@ -417,7 +359,7 @@ const componentDefaultConfig = {
                                     name:'width',
                                     displayName:'宽度',
                                     type:'number',
-                                    value:30,
+                                    value:100,
                                     config:{
                                         min:0,
                                         suffix:'px',  // 输入框后缀
@@ -427,7 +369,7 @@ const componentDefaultConfig = {
                                     name:'height',
                                     displayName:'高度',
                                     type:'number',
-                                    value:40,
+                                    value:48,
                                     config:{
                                         min:0,
                                         suffix:'px',  // 输入框后缀
@@ -435,32 +377,6 @@ const componentDefaultConfig = {
                                 },
                             ]
                           },
-                          {
-                            name:"spacingConfig",
-                            displayName:'间距',
-                            type:'inputNumber2',
-                            showDetail:true, // 是否展示下面的文字说明
-                            value:[
-                                {
-                                    name:'left',
-                                    displayName:'左',
-                                    type:'number',
-                                    value:2,
-                                    config:{
-                                        suffix:'px',  // 输入框后缀
-                                    }
-                                },
-                                {
-                                    name:'right',
-                                    displayName:'右',
-                                    type:'number',
-                                    value:2,
-                                    config:{
-                                        suffix:'px',  // 输入框后缀
-                                    }
-                                },
-                            ]
-                          }
                         ]
                       },
                       {
@@ -476,16 +392,16 @@ const componentDefaultConfig = {
                             "value": true,
                             "type": "switch"
                           },
-                          {
-                            name:'zeroize',
-                            displayName:'补零位数',
-                            type:'number',
-                            value:3,
-                            config:{
-                                min:0,
-                                max:20,
-                            }
-                          },
+                          // {
+                          //   name:'zeroize',
+                          //   displayName:'补零位数',
+                          //   type:'number',
+                          //   value:3,
+                          //   config:{
+                          //       min:0,
+                          //       max:20,
+                          //   }
+                          // },
                           {
                             'name': 'decimalConfig',
                             'displayName': '小数',
@@ -509,47 +425,19 @@ const componentDefaultConfig = {
                                     max:10,
                                 }
                               },
-                              {
-                                name:"pointSpacingConfig",
-                                displayName:'点间距',
-                                type:'inputNumber2',
-                                showDetail:true, // 是否展示下面的文字说明
-                                value:[
-                                    {
-                                        name:'left',
-                                        displayName:'左',
-                                        type:'number',
-                                        value:0,
-                                        config:{
-                                            min:0,
-                                            suffix:'px',  // 输入框后缀
-                                        }
-                                    },
-                                    {
-                                        name:'right',
-                                        displayName:'右',
-                                        type:'number',
-                                        value:0,
-                                        config:{
-                                            min:0,
-                                            suffix:'px',  // 输入框后缀
-                                        }
-                                    },
-                                ]
-                              }
                             ]
                           },
                           {
                             'name': 'splitConfig',
                             'displayName': '分割',
                             'type': 'collapse',
-                            'hasSwitch':false, // 是否有切换按钮
+                            'hasSwitch':true, // 是否有切换按钮
                             'defaultExpand':false,  // 是否默认展开
                             'value':[
                               {
                                 "name": "show",
                                 "displayName": "",
-                                "value": true,
+                                "value": false,
                                 "type": "switch"
                               },
                               {
@@ -562,34 +450,6 @@ const componentDefaultConfig = {
                                     max:10,
                                 }
                               },
-                              {
-                                name:"splitSpacingConfig",
-                                displayName:'分割符间距',
-                                type:'inputNumber2',
-                                showDetail:true, // 是否展示下面的文字说明
-                                value:[
-                                    {
-                                        name:'left',
-                                        displayName:'左',
-                                        type:'number',
-                                        value:0,
-                                        config:{
-                                            min:0,
-                                            suffix:'px',  // 输入框后缀
-                                        }
-                                    },
-                                    {
-                                        name:'right',
-                                        displayName:'右',
-                                        type:'number',
-                                        value:0,
-                                        config:{
-                                            min:0,
-                                            suffix:'px',  // 输入框后缀
-                                        }
-                                    },
-                                ]
-                              }
                             ]
                           }
                         ]

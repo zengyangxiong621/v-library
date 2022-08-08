@@ -78,6 +78,26 @@ class Counter extends Component {
     return displayStyle
   }
 
+  // 计算数字宽度
+  getTextWidth = (text, fontSize) => {
+    // 创建临时元素
+    const _span = document.createElement('span')
+    // 放入文本
+    _span.innerText = text
+    // 设置文字大小
+    _span.style.fontSize = fontSize + 'px'
+    // span元素转块级
+    _span.style.position = 'absolute'
+    // span放入body中
+    document.body.appendChild(_span)
+    // 获取span的宽度
+    let width = _span.offsetWidth
+    // 从body中删除该span
+    document.body.removeChild(_span)
+    // 返回span宽度
+    return width
+  }
+
 
   componentDidMount(){
     const { comData,fields } = this.props
@@ -94,8 +114,7 @@ class Counter extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { comData,fields } = nextProps
     let originData = comData.length ? comData[0] : [] ;
-    if(originData[fields[1]] !== prevState.numValue && prevState.numValue){
-      console.log(nextProps, prevState,'nextProps, prevState')
+    if(originData[fields[1]] !== prevState.numValue && prevState.numValue != 0){
         return {
           numValue: originData[fields[1]]
         }
@@ -113,6 +132,19 @@ class Counter extends Component {
       return res
     }) : []
     return arr 
+  }
+
+  // 格式化
+  formatter = (number) => {
+    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
+    const {config} = componentConfig
+    // 分割数
+    const splitConfig =  this.formatConfig([this.getStyleData(config, "splitConfig")],[])
+    if(!splitConfig.show) return number
+    const numbers = number.toString().split('').reverse()
+    const segs = []
+    while (numbers.length) segs.push(numbers.splice(0, splitConfig.splitCount).join(''))
+    return segs.join(',').split('').reverse().join('')
   }
 
   
@@ -141,30 +173,10 @@ class Counter extends Component {
     // 获取布局
     const layoutConfig = this.formatConfig([this.getStyleData(config, "layoutConfig")],[])
     // 补零位数
-    const zeroize = this.getStyleData(config, "zeroize").value
+    // const zeroize = this.getStyleData(config, "zeroize").value
     // 小数位数
     const decimalCount = this.getStyleData(config, "decimalCount").value
-    // 分割数
-    const splitCount = this.getStyleData(config, 'splitCount').value
-    // 校验value是否为数值
-    const reg = /^[-,+]?[0-9]+\.?[0-9]*$/;
-    let numList = []
-    // const numValue = originData[fields[1]]
-    // if(reg.test(numValue)){
-    //   let value = decimalCount>0 ? Number(numValue).toFixed(decimalCount) : numValue.split('.')[0] ; // 小数位长度处理
-    //   let intNumber = value.split('.')[0]
-    //   let floatNumber = value.split('.')[1] || ''
-    //   intNumber = Math.abs(intNumber).toString().padStart(zeroize, 0)  // 补位处理
-    //   intNumber = intNumber.replace(eval(`/(\\d{1,${splitCount}})(?=(?:\\d{${splitCount}})+(?!\\d))/g`),'$1,')  // 分隔符处理
-    //   let sign = ['-','+'].indexOf(numValue.slice(0,1))>-1 ? numValue.slice(0,1) : ''
-    //   // 数据格式完成后整合处理
-    //   intNumber = `${sign}${intNumber}${decimalCount>0 ? '.' : ''}${floatNumber}`
-    //   numList = intNumber.split('')
-    // }
-    //小数点点间距处理
-    const pointSpacingConfig =  this.formatConfig([this.getStyleData(config, "pointSpacingConfig")],[])
-    // 分隔符间距
-    const splitSpacingConfig =  this.formatConfig([this.getStyleData(config, "splitSpacingConfig")],[])
+
     // 后缀功能
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
     // 补充前缀功能
@@ -198,63 +210,17 @@ class Counter extends Component {
               lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{prefixConfig.content}</span> 
           }
-          <div className='number-list' style={{
-            ...dataRangConfig,
-            fontWeight: dataRangConfig.bold ? 'bold' : '',
-            fontStyle: dataRangConfig.italic ? 'italic' : '',
-            lineHeight: 'normal',
-            textShadow: dataRangConfig.show ? `${dataRangConfig.shadow.color} ${dataRangConfig.shadow.vShadow}px ${dataRangConfig.shadow.hShadow}px ${dataRangConfig.shadow.blur}px` : ''
-          }}>
-          <DigitalFlop config={
-              {number: [Number(numValue)],content: '{nt}'}
-            } />
-            {/* {
-              numList.map((item,index) => {
-                return (
-                  <Fragment  key={index}>
-                    {
-                      item === ',' ? 
-                      <span key={index} style={{
-                        marginLeft: splitSpacingConfig.left,
-                        marginRight: splitSpacingConfig.right,
-                        width: layoutConfig.width,
-                        height: layoutConfig.height,
-                        lineHeight: `${dataRangConfig.lineHeight}px`,
-                      }}>,</span> : 
-                      item === '.' ? 
-                      <span key={index} style={{
-                        marginLeft: pointSpacingConfig.left,
-                        marginRight: pointSpacingConfig.right,
-                        width: layoutConfig.width,
-                        height: layoutConfig.height,
-                        lineHeight: `${dataRangConfig.lineHeight}px`,
-                      }}>.</span> :
-                      <span style={{
-                        width: layoutConfig.width,
-                        height: layoutConfig.height,
-                        marginLeft: layoutConfig.left,
-                        marginRight: layoutConfig.right,
-                        lineHeight: `${dataRangConfig.lineHeight}px`,
-                      }} key={index}>
-                      {
-                        (item === '-' || item === '+') ? item : 
-                        <DigitalFlop config={
-                          {number: [Number(item)],content: '{nt}', style:{
-                            fontSize: dataRangConfig.fontSize,
-                            fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
-                            fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
-                            fill: dataRangConfig.color,
-                          }}
-                        } style={{width: '100%', height: '100%',marginTop: '20%' }} />
-                        // <CountUp start={0} end={Number(item)} duration={1}></CountUp>
-                      }
-                      </span>
-                    }
-                  </Fragment>
-                )
-              })
-            } */}
-          </div>
+            <DigitalFlop config={{ 
+                number: [Number(numValue) || null],
+                content: '{nt}',
+                toFixed:{decimalCount},
+                formatter: this.formatter,
+                style: {
+                  ...dataRangConfig.textStyle,
+                  fill: dataRangConfig.textStyle.color,
+
+                }
+            }}  style={{width: `${layoutConfig.width}px`, height: `${layoutConfig.height}px`}}/>
           {
             suffixConfig.support &&
             <span style={{

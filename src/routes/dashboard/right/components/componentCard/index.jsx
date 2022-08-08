@@ -18,7 +18,6 @@ const ComponentCard = props => {
     const targetObj = Array.isArray(allModulesConfig) ? allModulesConfig.find((item) =>
       item.moduleName === moduleName
     ) : {}
-    console.log('aaa')
     if (targetObj) {
       // const deepCopyTargetObj = deepClone(targetObj)
       // console.log('deepCopyTargetObj', deepCopyTargetObj.config)

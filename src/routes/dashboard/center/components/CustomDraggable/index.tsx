@@ -21,9 +21,9 @@ import SwiperText from '@/customComponents/text/swiperText'
 import textConfig from '@/customComponents/echarts/components/worldMap/config'
 // import textConfig from '@/customComponents/text/swiperText/config'
 import Counter from  '@/customComponents/assist/counter1'
-// import textConfig from  '@/customComponents/assist/counter/config'
+import radarChartConfig from  '@/customComponents/assist/counter1/config'
 import RadarChart from '@/customComponents/echarts/components/radarChart'
-import radarChartConfig from '@/customComponents/echarts/components/radarChart/config'
+// import radarChartConfig from '@/customComponents/echarts/components/radarChart/config'
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
@@ -406,7 +406,6 @@ const CustomDraggable
           },
         })
       }
-      console.log('点击点击')
       dispatch({
         type: 'bar/updateComponent',
         payload: bar.selectedComponents,
@@ -671,7 +670,7 @@ const CustomDraggable
               // component=timelineConfig
 
               // 将线上配置改为本地配置
-              // component.config = radarChartConfig.config
+              component.config = radarChartConfig.config
               // component.staticData = radarChartConfig.staticData
 
 
