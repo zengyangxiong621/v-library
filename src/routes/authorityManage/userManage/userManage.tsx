@@ -187,7 +187,7 @@ const UserManage = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <>
-            <Button type="link" size='small' onClickCapture={() => editClick(text)}>编辑</Button>
+            <Button type="link" size='small' disabled={getDisabled(text,'edit')} onClickCapture={() => editClick(text)}>编辑</Button>
             <Button type="link" size='small' disabled={getDisabled(text,'password')} onClickCapture={() => resetClick(text)}>重置密码</Button>
             <Button type="link" size='small' disabled={getDisabled(text,'del')} onClickCapture={() => delClick([text.id])}>删除</Button>
             <Button type="link" size='small' disabled={getDisabled(text,'status')} onClickCapture={() => changeStatusClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
@@ -315,6 +315,10 @@ const UserManage = (props: any) => {
     const isStatusOk = row.status !== '0' && row.status !== '2'  // 非启用状态和锁定状态，可操作
     const isTypeOk = row.type === -2
     const curIsSupAdmin = userInfo.sysDef
+    // 单独处理suadmin账户 
+    if(isTypeOk && row.userName === "suadmin"){
+      return type !== 'password'
+    }
     if (type === 'password' && isTypeOk) { // 修改系统用户的密码
       if (row.id === userInfo.id) { // 当前用户可修改密码
         return false
@@ -347,6 +351,10 @@ const UserManage = (props: any) => {
       if (curIsSupAdmin) { // 当前用户是管理员可修改密码，不用是否停用
         return false
       }
+    }
+
+    if(type === 'edit'){
+      return false
     }
 
     return true

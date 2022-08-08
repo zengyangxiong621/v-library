@@ -265,6 +265,37 @@ const componentDefaultConfig = {
               "step": 1,
           }
         },
+        {
+          "name": "axisLabel",
+          "displayName": "极轴数值",
+          "type": "collapse",
+          "hasSwitch": true,
+          "defaultExpand": false,
+          "value": [
+            {
+              "name": "show",
+              "displayName": "",
+              "value": true,
+              "type": "switch"
+            },
+            {
+              'name': 'axisLabelColor',
+              'displayName': '颜色',
+              'value': '#fff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              'type':'color'
+            },
+            {
+              'name': 'fontSize',
+              'displayName': '大小',
+              'value': 12,
+              'type':'number',
+              "config": {
+                  "min": 12,
+                  "step": 1,
+              }
+            }
+          ]
+        }
       ]
     },
     {
@@ -457,7 +488,7 @@ const componentDefaultConfig = {
               'name': 'line',
               'displayName': '折线',
               'type': 'collapse',
-              hasSwitch:false, // 是否有切换按钮
+              hasSwitch:true, // 是否有切换按钮
               defaultExpand:true,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个

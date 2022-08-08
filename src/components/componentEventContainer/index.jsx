@@ -13,7 +13,7 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
-import Counter from  '@/customComponents/assist/counter'
+import Counter from  '@/customComponents/assist/counter1'
 
 import {connect} from "dva"
 
