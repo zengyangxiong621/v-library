@@ -670,7 +670,7 @@ const CustomDraggable
               // component=timelineConfig
 
               // 将线上配置改为本地配置
-              component.config = radarChartConfig.config
+              // component.config = radarChartConfig.config
               // component.staticData = radarChartConfig.staticData
 
 
