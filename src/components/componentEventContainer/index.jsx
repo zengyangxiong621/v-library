@@ -13,8 +13,7 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
-import Counter from  '@/customComponents/assist/counter'
-import Counter2 from  '@/customComponents/assist/counter2'
+import Counter from  '@/customComponents/assist/counter2'
 import {connect} from "dva"
 
 // import './index.css'
@@ -402,11 +401,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
-        props.componentConfig.moduleName === 'counter2' ? 
-          <Counter2
-            onChange={handleValueChange}
-            {...props}
-          ></Counter2> :
         props.componentConfig.moduleName === 'counter' ? 
         <Counter
           onChange={handleValueChange}

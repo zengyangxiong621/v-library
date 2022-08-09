@@ -116,6 +116,8 @@ class Counter extends Component {
     const decimalCount = this.getStyleData(config, "decimalCount").value
     // 分割数
     const splitCount = this.getStyleData(config, 'splitCount').value
+    // 动画时间
+    const duration = this.getStyleData(config, 'duration')?.value || 2 ;
     // 后缀功能
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
     // 补充前缀功能
@@ -163,7 +165,7 @@ class Counter extends Component {
               decimals={decimalCount}
               delay={0}
               decimal="."
-              duration={1}></CountUp>
+              duration={duration}></CountUp>
           </div>
           {
             suffixConfig.support &&

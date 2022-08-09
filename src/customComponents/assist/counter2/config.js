@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "counter", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleVersion": "1.0.1", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -435,8 +435,18 @@ const componentDefaultConfig = {
                             ]
                           }
                         ]
+                      },
+                      {
+                        name:'duration',
+                        displayName:'动画时间',
+                        type:'number',
+                        value:2,
+                        config:{
+                            min:1,
+                            suffix:'s',  // 输入框后缀
+                        }
                       }
-                      ]
+                    ]
                   },
                   {
                     key:'suffixConfig',

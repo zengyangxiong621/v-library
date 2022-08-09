@@ -22,9 +22,8 @@ import IconText from '@/customComponents/text/iconText'
 import SwiperText from '@/customComponents/text/swiperText'
 import textConfig from '@/customComponents/echarts/components/worldMap/config'
 // import textConfig from '@/customComponents/text/swiperText/config'
-import Counter from  '@/customComponents/assist/counter'
-import Counter2 from  '@/customComponents/assist/counter2'
-// import textConfig from  '@/customComponents/assist/counter/config'
+import Counter from  '@/customComponents/assist/counter2'
+// import radarChartConfig from  '@/customComponents/assist/counter2/config'
 import RadarChart from '@/customComponents/echarts/components/radarChart'
 import radarChartConfig from '@/customComponents/echarts/components/radarChart/config'
 
@@ -893,25 +892,8 @@ const CustomDraggable
                               // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                               //   <CompImage componentConfig={component}/>
 
-                              //   <Counter
-                              //   componentConfig={component}
-                              //   fields={getFields(component)}
-                              //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                              // ></Counter>
-                              // <RadarChart
-                              //   componentConfig={component}
-                              //   fields={getFields(component)}
-                              //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                              // ></RadarChart>
-
                               // <Da componentConfig={component}/>
                               // <SwiperText  componentConfig={component}></SwiperText>
-                              layer.moduleName === 'counter2' ?
-                              <Counter2
-                                componentConfig={component}
-                                fields={getFields(component)}
-                                comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                              ></Counter2> :
                               layer.moduleName === 'counter' ?
                                 <Counter
                                   componentConfig={component}
