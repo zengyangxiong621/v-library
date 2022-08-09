@@ -152,8 +152,6 @@ function calcRows({ data, index, headerBGC, headerBGI, rowNum, indexBgConfigs })
         const indexTag = `<div class="index">${i + 1}</div>`
         row.unshift(indexTag)
       }
-
-
       return row
     })
   }
@@ -220,6 +218,45 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
     setState(state => ({ ...state, ...data }))
   }
 
+  function onScroll (e) {
+    const scrollType = e.deltaY < 0
+    // scrollType: true 往上 false 往下
+    if(scrollType) {
+      console.log('往上')
+    } else {
+      console.log('往下')
+    }
+    let {
+      avgHeight,
+      animationIndex,
+      mergedConfig: { waitTime, carousel, rowNum },
+      rowsData
+    } = stateRef.current
+
+    const rowLength = rowsData.length
+
+    const animationNum = carousel === 'single' ? 1 : rowNum
+
+    let rows = rowsData.slice(animationIndex)
+    rows.push(...rowsData.slice(0, animationIndex))
+    rows = rows.slice(0, carousel === 'page' ? rowNum * 2 : rowNum + 1)
+
+    const heights = new Array(rowLength).fill(avgHeight)
+    setState(state => ({ ...state, rows, heights }))
+
+
+    animationIndex += animationNum
+
+    const back = animationIndex - rowLength
+    if (back >= 0) animationIndex = back
+
+    const newHeights = [...heights]
+    newHeights.splice(0, animationNum, ...new Array(animationNum).fill(0))
+
+    Object.assign(stateRef.current, { animationIndex })
+    setState(state => ({ ...state, heights: newHeights }))
+  }
+
   function calcData() {
     const mergedConfig = deepMerge(
       deepClone(defaultConfig, true),
@@ -284,6 +321,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
   }
 
   function * animation(start = false) {
+    console.log('动画')
     let {
       avgHeight,
       animationIndex,
@@ -325,17 +363,16 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
   }
 
   function handleHover(enter, ri, ci, row, ceil) {
-    if (enter) emitEvent(onMouseOver, ri, ci, row, ceil)
+    // if (enter) emitEvent(onMouseOver, ri, ci, row, ceil)
 
     if (!mergedConfig.hoverPause) return
-
     const { pause, resume } = task.current
-
     enter && pause && resume ? pause() : resume()
   }
 
-  const getBackgroundColor = rowIndex =>
-    mergedConfig[rowIndex % 2 === 0 ? 'evenRowBGC' : 'oddRowBGC']
+  const getBackgroundColor = rowIndex => {
+    return mergedConfig[rowIndex % 2 === 0 ? 'evenRowBGC' : 'oddRowBGC']
+  }
 
   const task = useRef({})
 
@@ -371,13 +408,20 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
   }, [config, domRef.current])
 
   useEffect(onResize, [width, height, domRef.current, header])
-
+  useEffect(() => {
+    domRef.current.addEventListener('wheel', onScroll)
+    return () => {
+      domRef.current.removeEventListener('wheel', onScroll)
+    }
+  }, [domRef.current, stateRef.current])
   const classNames = useMemo(() => classnames('dv-scroll-board', className), [
     className
   ])
-
   return (
-    <div className={classNames} style={style} ref={domRef}>
+    <div
+      onMouseEnter={() => handleHover(true)}
+      onMouseLeave={() => handleHover(false)}
+      className={classNames} style={style} ref={domRef}>
       {!!header.length && !!mergedConfig && (
         <div
           className='header'
@@ -427,8 +471,6 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
                   align={ci === 0 ? mergedConfig.indexAlign : aligns[ci]}
                   dangerouslySetInnerHTML={{ __html: ceil }}
                   onClick={() => emitEvent(onClick, ri, ci, row, ceil)}
-                  onMouseEnter={() => handleHover(true, ri, ci, row, ceil)}
-                  onMouseLeave={() => handleHover(false)}
                 />
               ))}
             </div>
