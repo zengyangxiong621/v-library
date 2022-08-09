@@ -407,7 +407,6 @@ const CustomDraggable
           },
         })
       }
-      console.log('点击点击')
       dispatch({
         type: 'bar/updateComponent',
         payload: bar.selectedComponents,
@@ -600,7 +599,6 @@ const CustomDraggable
           }
         })
       })
-      console.log('回调参数作用到的组件ID有：', activeIds)
       if (temp) {
         activeIds = [...(new Set(activeIds) as any)]
         const activeComponents = activeIds.reduce((pre, id) => pre.concat(components.find((item: IComponent) => item.id === id)), [])
@@ -692,11 +690,6 @@ const CustomDraggable
                 events = component.events
               }
             }
-            console.log('-----------');
-            console.log('components', components);
-            console.log('component', component);
-            console.log('layer', layer);
-            console.log('-----------');
             return (
               <SingleDraggable
                 dimensionConfig={style_dimension_config}
@@ -937,6 +930,8 @@ const CustomDraggable
                                                                     }}
                                                                   >
                                                                     <RemoteBaseComponent
+                                                                      bar={bar}
+                                                                      dispatch={dispatch}
                                                                       key={layer.id}
                                                                       componentConfig={component}
                                                                       fields={getFields(component)}

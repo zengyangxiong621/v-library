@@ -684,7 +684,6 @@ export default {
       });
     },
   },
-
   reducers: {
     changeModuleDefaultConfig(state: IBarState, { payload }: any) {
       const isExit = state.moduleDefaultConfig.filter((item) => {
