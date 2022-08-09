@@ -169,12 +169,24 @@ export const defaultData = {
         "type": "collapse",
         "hasSwitch": true,
         "defaultExpand": false,
-        "value": [ { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
+        "value": [
+          { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
           "name": "title",
           "displayName": "标题",
           "value": "#",
           "type": "input",
         },
+          {
+            "displayName": "宽度",
+            "name": "width",
+            "type": "number",
+            "value": 150,
+            "config": {
+              "suffix": "px",
+              "step": 1,
+              "min": 0
+            }
+          },
           {
             "name": "textAlign",
             "displayName": "文本对齐",
@@ -420,7 +432,8 @@ export const defaultData = {
                 "displayName": "列1",
                 "name": "tab",
                 "type": "object",
-                "value": [ {
+                "value": [
+                  {
                   "displayName": "映射",
                   "name": "mapping",
                   "type": "input2",
@@ -430,7 +443,19 @@ export const defaultData = {
                     "type": "input",
                     "value": "column1",
                   }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "销售地区" } ],
-                }, {
+                },
+                  {
+                    "displayName": "宽度",
+                    "name": "width",
+                    "type": "number",
+                    "value": 150,
+                    "config": {
+                      "suffix": "px",
+                      "step": 1,
+                      "min": 0
+                    }
+                  },
+                  {
                   "name": "align",
                   "displayName": "对齐方式",
                   "type": "alignFull",
@@ -441,13 +466,15 @@ export const defaultData = {
                     "range": [ "left", "center", "right" ],
                     "value": "left",
                   } ],
-                }, {
+                },
+                  {
                   "name": "overflowType",
                   "displayName": "文字溢出",
                   "type": "select",
                   "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
                   "value": "ellipsis",
-                }, {
+                },
+                  {
                   "displayName": "文本样式",
                   "name": "textStyle",
                   "type": "textFullStyleGroup",
@@ -552,7 +579,19 @@ export const defaultData = {
                 "type": "input",
                 "value": "column1",
               }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "销售地区" } ],
-            }, {
+            },
+              {
+                "displayName": "宽度",
+                "name": "width",
+                "type": "number",
+                "value": 150,
+                "config": {
+                  "suffix": "px",
+                  "step": 1,
+                  "min": 0
+                }
+              },
+              {
               "name": "align",
               "displayName": "对齐方式",
               "type": "alignFull",
@@ -669,7 +708,19 @@ export const defaultData = {
                 "type": "input",
                 "value": "column2",
               }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "完成率" } ],
-            }, {
+            },
+              {
+                "displayName": "宽度",
+                "name": "width",
+                "type": "number",
+                "value": 150,
+                "config": {
+                  "suffix": "px",
+                  "step": 1,
+                  "min": 0
+                }
+              },
+              {
               "name": "align",
               "displayName": "对齐方式",
               "type": "alignFull",
@@ -786,7 +837,18 @@ export const defaultData = {
                 "type": "input",
                 "value": "column3",
               }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "完成情况" } ],
-            }, {
+            },
+              {
+                "displayName": "宽度",
+                "name": "width",
+                "type": "number",
+                "value": 150,
+                "config": {
+                  "suffix": "px",
+                  "step": 1,
+                  "min": 0
+                }
+              },{
               "name": "align",
               "displayName": "对齐方式",
               "type": "alignFull",

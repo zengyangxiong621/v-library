@@ -56,6 +56,7 @@ const ScrollTable = (props) => {
   const [isHeader, setIsHeader] = useState(true)
   const [isIndex, setIsIndex] = useState(false)
   const [indexAlign ,setIndexAlign] = useState('left')
+  const [columnWidth, setColumnWidth] = useState([])
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const fields = getFields(componentConfig)
   const {config, staticData} = componentConfig
@@ -84,6 +85,7 @@ const ScrollTable = (props) => {
   }
 
   const tableDataLoadFunc = (mappingConfig) => {
+    let tableColumnWidth = [0]
     let tableValue = []
     let columnEnum = fields.filter(item => item.name !== 'isSticked' && item.name !== 'isSelected').reduce((pre, cur, index) => {
       pre[cur.value] = Number(cur.name.replace(/[^0-9]/ig, '')) - 1
@@ -101,7 +103,8 @@ const ScrollTable = (props) => {
             width: '100%',
             height: '100%'
           }
-          const {customStyle, overflowType, textAlign, textStyle} = mapp
+          const {customStyle, overflowType, textAlign, textStyle, width} = mapp
+          tableColumnWidth.push(width)
           style = {
             ...style,
             ...textStyle
@@ -147,6 +150,7 @@ const ScrollTable = (props) => {
         tableValue.push(arr)
       })
     }
+    setColumnWidth([columnWidth[0],...tableColumnWidth])
     setTableData(tableValue)
   }
 
@@ -215,6 +219,9 @@ const ScrollTable = (props) => {
       indexConfig = ComponentDefaultConfig.config.find(item => item.name === 'tableIndex').value
     }
     const indexTitle = indexConfig.find(item => item.name === 'title').value
+    const indexWidth = indexConfig.find(item => item.name === 'width').value || 150
+    columnWidth[0] = indexWidth
+    setColumnWidth(columnWidth)
     const indexAlign = indexConfig.find(item => item.name === 'textAlign').value.find(item => item.name === 'textAlign').value
     const indexColumnCustomStyle = indexConfig.find(item => item.name === 'indexColumnCustomStyle').value
     const indexBgConfigs = indexColumnCustomStyle.reduce((total, cur) => {
@@ -345,6 +352,13 @@ const ScrollTable = (props) => {
             ...total
           }
         }
+        if (config.name === 'width') {
+          const width = config.value
+          return {
+            width,
+            ...total
+          }
+        }
         if (config.name === 'customStyle') {
           const customStyle = config.value.reduce((columnTotal, columnConfig) => {
             const obj = columnConfig.value.reduce((t, c) => {
@@ -425,7 +439,8 @@ const ScrollTable = (props) => {
     indexHeader,
     align,
     height,
-    width
+    width,
+    columnWidth
   }
   return (
     <div style={{width: '100%', height: '100%'}} ref={tableContainerRef}>
