@@ -37,9 +37,9 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       const reactDraggableDomPosition = [ ...reactDraggableDomList ].map(item => {
         const domInfo = item.getBoundingClientRect()
         return {
-          id: item.dataset.id.indexOf('group-') !== -1 ? item.dataset.id : item.dataset.id.replace('component-', ''),
-          x: Math.floor(domInfo.x),
-          y: Math.floor(domInfo.y),
+          id: item.dataset.id.indexOf('group-') !== -1 ? item.dataset.id : item.dataset.id.indexOf('panel-') !== - 1 ? item.dataset.id.replace('panel-', '')  : item.dataset.id.replace('component-', ''),
+          x: Math.ceil(domInfo.x),
+          y: Math.ceil(domInfo.y),
           width: Math.ceil(domInfo.width),
           height: Math.ceil(domInfo.height),
         }
@@ -135,6 +135,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
             }
           })
           if(selectedIds.length > 0) {
+            console.log('selectedIds', selectedIds)
             dispatch({
               type: 'bar/chooseLayer',
               payload: selectedIds,

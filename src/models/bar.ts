@@ -9,6 +9,8 @@ import {
   layerComponentsFlat,
   mergeComponentLayers,
   setComponentDimension,
+  layersPanelsFlat,
+  duplicateDashboardConfig
 } from "../utils";
 
 import {
@@ -26,7 +28,10 @@ import {
 import {
   ILayerComponent,
   ILayerGroup,
-} from "../routes/dashboard/center/components/CustomDraggable/type";
+  IPanel,
+  IComponent, ILayerPanel,
+} from "../routes/dashboard/center/components/CustomDraggable/type"
+
 
 import {
   cancelGroup,
@@ -62,7 +67,9 @@ export default {
   subscriptions: {
     setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
-      history.listen((location: any) => {});
+      history.listen((location: any) => {
+        console.log('location', location)
+      });
     },
     onResize({ dispatch, history }: any) {
       window.onresize = (e) => {};
@@ -85,23 +92,22 @@ export default {
         payload,
       });
     },
-    *initDashboard({ payload, cb }: any, { call, put, select }: any): any {
+      *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",
         method: "GET",
         params: {
-          dashboardId: payload,
+          dashboardId,
         },
       });
       // TODO 怎么造成的
       // 获取所有的数据容器数据
       const data = yield yield put({
         type: "getDataContainerList",
-        payload,
+        payload: dashboardId,
       });
       const bar: any = yield select(({ bar }: any) => bar);
-      console.log("bar.dataContainerList", bar.dataContainerList);
       bar.dataContainerList.forEach(async (item: any) => {
         let data: any = null;
         item.enable = item.modules.length > 0;
@@ -124,29 +130,79 @@ export default {
         url: "/visual/module/filter/list",
         method: "GET",
         params: {
-          id: payload,
+          id: dashboardId,
           type: "screen",
         },
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
-
       yield put({
         type: "save",
         payload: {
           dataContainerDataList: bar.dataContainerDataList,
           componentFilters: filters || [],
           callbackParamsList,
+          isPanel,
+          stateId,
+          dashboardId,
+          panelId
         },
       });
+      if (isPanel) {
+        yield put({
+          type: 'getPanelDetails'
+        })
+      }
       yield put({
         type: "getDashboardDetails",
-        payload,
         cb: async (data: any) => {
           await cb(data);
         },
       });
+      yield put({
+        type: "getAllDashboardList",
+      })
+    },
+    *getPanelDetails({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { panelId } = bar
+      const { config, states: panelStatesList } = yield http({
+        url: `/visual/panel/detail/${ panelId }`,
+        method: 'get',
+      })
+      const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === 'recommend')
+      recommendConfig.width = config.width
+      recommendConfig.height = config.height
+      yield put({
+        type: "save",
+        payload: {
+          panelStatesList,
+        }
+      })
+    },
+    *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
+      const data = yield http({
+        url: '/visual/application/queryAppList',
+        method: 'post',
+        body: {
+          "pageNo": 1,
+          "pageSize": 1000,
+          "spaceId": 1,
+          "map": {
+            "updated_time": false
+          },
+          "groupId": null
+        }
+      })
+      yield put(
+        {
+          type: 'save',
+          payload: {
+            allDashboardList: data.content.map((item: any) => ({name: item.name, value: item.id}))
+          }
+        }
+      )
     },
     *deleteContainerDataById(
       { payload }: any,
@@ -165,18 +221,39 @@ export default {
       });
     },
     *getDashboardDetails(
-      { payload, cb }: any,
+      { cb }: any,
       { call, put, select }: any
     ): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      let {dashboardId, stateId, panelId, isPanel, panelStatesList} = bar
+      if (isPanel) {
+        // 默认路由跳转到当前面板的第一个状态
+        if (!stateId) {
+          stateId = panelStatesList[0].id
+        }
+        window.history.replaceState('', '', `/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`);
+      }
       try {
+
         let { layers, components, dashboardConfig, dashboardName } = yield http(
           {
-            url: `/visual/application/dashboard/detail/${payload}`,
+            url: `/visual/application/dashboard/detail/${ isPanel ? stateId : dashboardId}`,
             method: "get",
           }
         );
-        // let extendedSomeAttrLayers = addSomeAttrInLayers(layers)
-        // extendedSomeAttrLayers = deepFilterAttrs(extendedSomeAttrLayers, [ 'selected' ])
+        const layerPanels: any = layersPanelsFlat(layers)
+        const func = async (layerPanel: any) => {
+          try {
+            const panelConfig = await http({
+              url: `/visual/panel/detail/${ layerPanel.id }`,
+              method: 'get',
+            })
+            return panelConfig
+          } catch(e) {
+            return null
+          }
+        }
+        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => func(item)));
         yield (layers = deepForEach(
           layers,
           (layer: ILayerGroup | ILayerComponent) => {
@@ -189,19 +266,34 @@ export default {
           type: "getComponentsData",
           payload: components,
         });
+        const bar: any = yield select(({ bar }: any) => bar);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
+        const newDashboardConfig = duplicateDashboardConfig(deepClone(bar.dashboardConfig), dashboardConfig)
         yield put({
           type: "save",
           payload: {
             treeData: noEmptyGroupLayers,
             components,
-            dashboardId: payload,
-            dashboardConfig,
+            panels,
+            dashboardId,
+            stateId,
+            panelId,
+            dashboardConfig: newDashboardConfig,
             dashboardName,
           },
         });
-        cb({ dashboardConfig, dashboardName });
+        console.log('结果', {
+          treeData: noEmptyGroupLayers,
+          components,
+          panels,
+          dashboardId,
+          stateId,
+          panelId,
+          dashboardConfig: newDashboardConfig,
+          dashboardName,
+        })
+        cb({ dashboardConfig: newDashboardConfig, dashboardName });
       } catch (e) {
         return e;
       }
@@ -352,11 +444,12 @@ export default {
     // 更改图层组织
     *update({ payload }: any, { select, call, put }: any): any {
       const state: any = yield select((state: any) => state);
+      const { stateId, isPanel, dashboardId } = state.bar
       const layers = yield http({
         url: "/visual/layer/update",
         method: "post",
         body: {
-          dashboardId: state.bar.dashboardId,
+          dashboardId: isPanel ? stateId : dashboardId,
           layers: payload,
         },
       });
@@ -386,7 +479,7 @@ export default {
     },
     // 删除图层、分组
     *delete({ payload }: any, { select, call, put }: any): any {
-      console.log("payload", payload);
+      console.log('payload', payload)
       const layers = yield http({
         url: "/visual/layer/delete",
         method: "delete",
@@ -407,15 +500,23 @@ export default {
     },
     // 复制图层
     *copy({ payload }: any, { select, call, put }: any): any {
-      const { layers, components } = yield http({
+      const { layers, components, panels } = yield http({
         url: "/visual/layer/copy",
         method: "post",
         body: payload,
       });
-      yield put({
-        type: "updateComponents",
-        payload: components,
-      });
+      if (components.length > 0) {
+        yield put({
+          type: "updateComponents",
+          payload: components,
+        });
+      }
+      if (panels.length > 0) {
+        yield put({
+          type: "updatePanels",
+          payload: panels,
+        });
+      }
       yield put({
         type: "updateTree",
         payload: layers,
@@ -498,10 +599,11 @@ export default {
       });
     },
     *createComponent(
-      { payload, itemData }: any,
+      { payload, itemData, createType='component' }: any,
       { call, put, select }: any
     ): any {
       const state: any = yield select((state: any) => state);
+      const { isPanel, stateId, dashboardId } = state.bar
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         state.bar.key.length !== 0
@@ -509,50 +611,102 @@ export default {
           : state.bar.treeData.length !== 0
           ? state.bar.treeData[0].id
           : "";
+        // 新建的是组件
+        const { id, children }: any = yield http({
+          url: "/visual/module/add",
+          method: "post",
+          body: {
+            dashboardId: isPanel ? stateId : dashboardId,
+            component: { ...payload, moduleType: itemData.moduleType },
+            insertId: insertId,
+            children: [], // TODO: 需要确定children从哪里来
+          },
+        });
+        yield put({
+          type: "addComponentData",
+          payload: {
+            id,
+            dataType: "static",
+          },
+        });
+        yield put({
+          type: "updateComponents",
+          payload: [{
+            ...deepClone(payload),
+            id,
+            moduleType: itemData.moduleType,
+            children,
+          }],
+        });
+        yield put({
+          type: "addComponent",
+          payload: { final: { ...itemData, id }, insertId },
+        });
+    },
+    *createPanel({ payload: { panelType } }: {payload: {panelType: 0 | 1}}, { call, put, select }: any): any {
 
-      const { id, children }: any = yield http({
-        url: "/visual/module/add",
-        method: "post",
+      const bar: any = yield select((state: any) => state.bar);
+      const { isPanel, stateId, dashboardId, key, treeData } = bar
+      // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
+      const insertId =
+        key.length !== 0
+          ? key[key.length - 1]
+            : treeData.length !== 0
+          ? treeData[0].id
+            : ""
+      const data: IPanel = yield http({
+        url: '/visual/panel/add',
+        method: 'post',
         body: {
-          dashboardId: state.bar.dashboardId,
-          component: { ...payload, moduleType: itemData.moduleType },
-          insertId: insertId,
-          children: [], // TODO: 需要确定children从哪里来
-        },
-      });
-      yield put({
-        type: "addComponentData",
-        payload: {
-          id,
-          dataType: "static",
-        },
-      });
-      yield put({
-        type: "updateComponents",
-        payload: {
-          ...deepClone(payload),
-          id: id,
-          moduleType: itemData.moduleType,
-          children: children,
-        },
-      });
-      // itemData.id = id
+          type: panelType,
+          dashboardId: isPanel ? stateId : dashboardId,
+          insertId
+        }
+      })
+      if (data) {
+        const { id, name } = data
+        const layerPanel: ILayerPanel = { id, name, isLock: false, isShow: true, disabled: false, panelType }
+        bar.panels.push(data)
+        yield put({
+          type: "addComponent",
+          payload: { final: { ...layerPanel, id }, insertId },
+        });
+      }
 
-      yield put({
-        type: "addComponent",
-        payload: { final: { ...itemData, id: id }, insertId: insertId },
-      });
     },
     *updateComponent({ payload }: any, { call, put, select }: any): any {
-      const state: any = yield select((state: any) => state);
-      yield http({
-        url: "/visual/module/update",
-        method: "post",
-        body: {
-          dashboardId: state.bar.dashboardId,
-          configs: payload,
-        },
-      });
+      if (payload.length > 0) {
+        const components: Array<IComponent> = []
+        const panels: Array<IPanel> = []
+        payload.forEach((item: IPanel | IComponent) => {
+          if ('type' in item) {
+            panels.push(item)
+          } else {
+            components.push(item)
+          }
+        })
+        const state: any = yield select((state: any) => state);
+        if (components.length > 0) {
+          yield http({
+            url: "/visual/module/update",
+            method: "post",
+            body: {
+              dashboardId: state.bar.dashboardId,
+              configs: components,
+            },
+          });
+        }
+        if (panels.length > 0) {
+          yield http({
+            url: "/visual/panel/update",
+            method: "post",
+            body: {
+              dashboardId: state.bar.dashboardId,
+              configs: panels,
+            },
+          });
+        }
+      }
     },
     *getDataContainerList(
       { payload, cb }: any,
@@ -671,10 +825,7 @@ export default {
       });
       cb(data.content);
     },
-    *setComponentConfigAndCalcDragScaleData(
-      { payload, cb }: any,
-      { call, put }: any
-    ): any {
+    *setComponentConfigAndCalcDragScaleData({ payload, cb }: any, { call, put }: any): any {
       yield put({
         type: "setComponentConfig",
         payload,
@@ -684,6 +835,7 @@ export default {
       });
     },
   },
+
   reducers: {
     changeModuleDefaultConfig(state: IBarState, { payload }: any) {
       const isExit = state.moduleDefaultConfig.filter((item) => {
@@ -798,8 +950,13 @@ export default {
       return { ...state, treeData: newLayers };
     },
     // 添加新的图层和组件
-    updateComponents(state: IBarState, { payload }: any) {
+    updateComponents(state: IBarState, { payload }: { payload: Array<any>}) {
       state.components = state.components.concat(payload);
+      return { ...state };
+    },
+    // 添加新的图层和面板
+    updatePanels(state: IBarState, { payload }: { payload: Array<any>}) {
+      state.panels = state.panels.concat(payload);
       return { ...state };
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {
@@ -818,7 +975,7 @@ export default {
         }, [])
         .filter(
           (layer: ILayerGroup | ILayerComponent) =>
-            !layer.isLock && layer.isShow
+            !layer?.isLock && layer?.isShow
         ); // 显示且未被锁
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
@@ -829,9 +986,11 @@ export default {
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup
       );
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
+      state.selectedComponents = [
+        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
+        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
+      ]
+      console.log('selectedComponents', state.selectedComponents)
       state.selectedComponentRefs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
@@ -843,6 +1002,7 @@ export default {
       return { ...state };
     },
     setLayerConfig(state: IBarState, { payload }: any) {
+      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup)
       if (state.selectedComponentOrGroup.length === 1) {
         const layer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in layer) {
@@ -883,8 +1043,11 @@ export default {
             }
           });
         } else {
-          // 组件
-          state.componentConfig = layer;
+          if ('panelType' in layer) {
+            state.panelConfig = state.selectedComponents.find(item => item.id === layer.id);
+          } else {
+            state.componentConfig = state.selectedComponents.find(item => item.id === layer.id);
+          }
         }
       }
       return {
@@ -914,25 +1077,39 @@ export default {
           status = "分组";
           const positionArr = calcGroupPosition(
             firstLayer[COMPONENTS],
-            state.components
+            state.components,
+            state.panels
           );
           xPositionList = positionArr[0];
           yPositionList = positionArr[1];
         } else {
           // 单个组件
-          const component = state.components.find(
-            (component) => component.id === firstLayer.id
-          );
-          const dimensionConfig: any = component.config.find(
-            (item: any) => item.name === DIMENSION
-          );
-          dimensionConfig.value.forEach((config: any) => {
-            if ([LEFT, WIDTH].includes(config.name)) {
-              xPositionList.push(config.value);
-            } else if ([TOP, HEIGHT].includes(config.name)) {
-              yPositionList.push(config.value);
+          if ('panelType' in firstLayer) {
+            const panel = state.panels.find((panel: IPanel) => panel.id === firstLayer.id)
+            if (panel) {
+              const { config: { left, top, width, height } } = panel
+              console.log('scaleDragData',  { left, top, width, height } )
+              state.panelConfig = panel
+              xPositionList.push(left, width)
+              yPositionList.push(top, height)
             }
-          });
+          } else {
+            const component = state.components.find(
+              (component) => component.id === firstLayer.id
+            );
+            const dimensionConfig: any = component.config.find(
+              (item: any) => item.name === DIMENSION
+            );
+            dimensionConfig.value.forEach((config: any) => {
+              if ([LEFT, WIDTH].includes(config.name)) {
+                xPositionList.push(config.value);
+              } else if ([TOP, HEIGHT].includes(config.name)) {
+                yPositionList.push(config.value);
+              }
+            });
+            state.componentConfig = component;
+          }
+
           state.scaleDragData = {
             position: {
               x: xPositionList[0],
@@ -944,11 +1121,9 @@ export default {
               height: yPositionList[1],
             },
           };
-          state.componentConfig = component;
           state.key = state.selectedComponentOrGroup.map(
             (item: ILayerComponent) => item.id
           );
-
           return { ...state };
         }
       } else if (state.selectedComponentOrGroup.length > 1) {
@@ -956,7 +1131,8 @@ export default {
         state.selectedComponentOrGroup.forEach((layer: any) => {
           const positionArr = calcGroupPosition(
             state.selectedComponentOrGroup,
-            state.components
+            state.components,
+            state.panels
           );
           xPositionList = positionArr[0];
           yPositionList = positionArr[1];
@@ -1009,6 +1185,7 @@ export default {
     },
     // 选中节点时，保存住整个node对象
     setLayers(state: IBarState, { payload }: any) {
+      console.log('setLayers', payload)
       state.selectedComponentOrGroup = payload;
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
@@ -1204,9 +1381,11 @@ export default {
           state.selectedComponentDOMs[key] = state.allComponentDOMs[key];
         }
       });
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
+      state.selectedComponents = [
+        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
+        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
+      ]
+      console.log('state.selectedComponents', state.selectedComponents)
       return {
         ...state,
       };

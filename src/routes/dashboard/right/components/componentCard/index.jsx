@@ -55,10 +55,10 @@ const ComponentCard = props => {
         lastModuleVersion: null
       }
       // 不同于批量更新组件，这儿没有必要再调用getDashboardDetails发一次请求去更改全局状态中的componentConfig,直接前端更改即可
-      // dispatch({
-      //   type: 'bar/setComponentConfig',
-      //   payload: newComponentConfig
-      // })
+      dispatch({
+        type: 'bar/setComponentConfig',
+        payload: newComponentConfig
+      })
       // 更新组件成功后,重新请求最新版本组件的js文件
       const fetchComponentOptions = {
         moduleType,
@@ -71,9 +71,9 @@ const ComponentCard = props => {
       const currentDefaultConfig = ComponentDefaultConfig
       const index = bar.components.findIndex(item => item.id === id)
       bar.components.splice(index, 1, { ...currentDefaultConfig, id })
-      // dispatch({
-      //   type: 'bar/save'
-      // })
+      dispatch({
+        type: 'bar/save'
+      })
       dispatch({
         type: 'bar/getDashboardDetails',
         payload: dashboardId
@@ -84,8 +84,10 @@ const ComponentCard = props => {
     <React.Fragment>
       <div className="component-wraper g-flex g-justify-between">
         <div>
-          <h4>{`${name}_${id}`}</h4>
-          <p>{`V${moduleVersion}`}</p>
+          <h4 style={{ marginBottom: '0'}}>{`${name}_${id}`}</h4>
+          {
+            moduleVersion ? <p style={{ margin: '12px 0 0 0' }}>{`V${moduleVersion}`}</p> : <></>
+          }
         </div>
         {
           lastModuleVersion &&
