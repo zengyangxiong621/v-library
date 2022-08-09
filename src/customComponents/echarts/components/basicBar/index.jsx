@@ -124,14 +124,25 @@ const BasicBar = (props) => {
   ** description: 通过不同的配置来获取不同的渲染配置
   */
   const getSingleSeriesData = (barLabel, barColor, name, value) => {
+    const itemStyleColor = barColor?.type === 'pure' ?
+      barColor?.pureColor :
+      barColor?.type === 'gradient' ?
+        new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+          offset: 0,
+          color: barColor?.gradientStart
+        },
+        {
+          offset: 1,
+          color: barColor?.gradientEnd
+        }
+        ])
+        : '#1890ff'
     const everyLineOptions = [
       {
         name,
         type: "bar",
         barGap: `${bar.barGap * 100}%`,
         barCategoryGap: `${bar.barCategoryGap * 10}%`,
-        xAxisIndex: 0,
-        yAxisIndex: 0,
         label: {
           normal: {
             show: barLabel.show,
@@ -147,7 +158,7 @@ const BasicBar = (props) => {
         },
         itemStyle: {
           normal: {
-            color: barColor,
+            color: itemStyleColor
           },
         },
         data: value,
