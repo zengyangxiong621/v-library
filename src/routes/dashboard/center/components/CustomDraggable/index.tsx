@@ -906,8 +906,7 @@ const CustomDraggable
 
                               // <Da componentConfig={component}/>
                               // <SwiperText  componentConfig={component}></SwiperText>
-
-                              layer.moduleName === 'counter2' ? 
+                              layer.moduleName === 'counter2' ?
                               <Counter2
                                 componentConfig={component}
                                 fields={getFields(component)}
