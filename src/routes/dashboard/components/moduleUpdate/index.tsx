@@ -108,19 +108,25 @@ const ModuleUpdate = (props: any) => {
       getUpdatableModules()
       // 重置复选框等状态
       setSelectedLists([])
-      // 刷新组件中的画布
-      dispatch({
-        type: 'bar/getDashboardDetails',
-        payload: bar.dashboardId
-      })
       // 重新请求最新版本组件的 js 文件
-      console.log('本次需要升级的组件', selectedLists);
       selectedLists.forEach(async (item: any) => {
-        item.moduleType = 'chart'
         window.eval(`${await importComponent(item)}`)
-        }
+        const { ComponentDefaultConfig } = (window as any).VComponents;
+        const currentDefaultConfig = ComponentDefaultConfig
+        const index = bar.components.findIndex((x: any) => x.id === item.id)
+        bar.components.splice(index, 1, { ...currentDefaultConfig, id: item.id })
+      }
       )
     }
+    // alert('batch update')
+    dispatch({
+      type: 'bar/save'
+    })
+    // 刷新组件中的画布
+    dispatch({
+      type: 'bar/getDashboardDetails',
+      payload: bar.dashboardId
+    })
     setUpdateBtnLoading(false)
   }
   const onCheckAllChange = (e: any) => {

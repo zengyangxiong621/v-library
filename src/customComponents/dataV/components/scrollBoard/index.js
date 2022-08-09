@@ -144,11 +144,15 @@ function calcRows({ data, index, headerBGC, headerBGI, rowNum, indexBgConfigs })
 
       // const indexTag = `<span class="index" style="background-color: ${headerBGC};background-image: ${headerBGI}">${i +
       // 1}</span>`
-      const styleStr = styleObjectToStr(indexBgConfigs[i])
-      console.log('styleStr', styleStr)
-      const indexTag = `<div class="index" style="${styleStr}">${i + 1}</div>`
+      if (indexBgConfigs[i]) {
+        const styleStr = styleObjectToStr(indexBgConfigs[i])
+        const indexTag = `<div class="index" style="display: flex; justify-content: center; align-items: center; ${styleStr}">${i + 1}</div>`
+        row.unshift(indexTag)
+      } else {
+        const indexTag = `<div class="index">${i + 1}</div>`
+        row.unshift(indexTag)
+      }
 
-      row.unshift(indexTag)
 
       return row
     })
@@ -409,7 +413,8 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
               key={`${row.toString()}-${row.scroll}`}
               style={{
                 height: `${heights[ri]}px`,
-                lineHeight: `${heights[ri]}px`,
+                alignItems: 'center',
+                // lineHeight: `${heights[ri]}px`, // maybe reset
                 backgroundColor: `${getBackgroundColor(row.rowIndex)}`,
                 overflow: ri === 0 ? 'hidden' : 'unset'
               }}

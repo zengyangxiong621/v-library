@@ -120,7 +120,7 @@ export function uuid (hasHyphen) {
 export const styleObjectToStr = (style) => {
   let s = []
   for(let i in style){
-    s.push(i+':'+style[i]);
+    s.push(i+': '+style[i]);
   }
   s = s.join(';')
   return  s
