@@ -1,12 +1,12 @@
 const ComponentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // =========
-  "name": "按钮组", //图层名称
+  "name": "按钮组2", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
-  "moduleName": "buttonGroup", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleName": "buttonGroup2", //组件标识
+  "moduleVersion": "1.0.3", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -109,6 +109,12 @@ const ComponentDefaultConfig = {
           type: 'color'
         },
         {
+          name: 'defaultBgImg',
+          displayName: '背景图',
+          type:'image',
+          value: '', // 有背景图则返回背景图的url，没有背景图返回空或者null
+        },
+        {
           name: "defaultFont",
           displayName: '文本',
           type: 'chartText',
@@ -149,6 +155,12 @@ const ComponentDefaultConfig = {
           'displayName': '背景',
           'value': '#fff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
           type: 'color'
+        },
+        {
+          name: 'selectedBgImg',
+          displayName: '背景图',
+          type:'image',
+          value: '', // 有背景图则返回背景图的url，没有背景图返回空或者null
         },
         {
           name: "selectedFont",
