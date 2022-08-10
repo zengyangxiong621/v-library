@@ -42,8 +42,11 @@ const ScrollTable = (props) => {
       }
     ]
   })
+  const [isScroll, setIsScroll] = useState(false)
   const [oddRowBGC, setOddRowBGC] = useState('#2a2d3c')
   const [headerBGC, setHeaderBGC] = useState('#222430')
+  const [selectedRowBGC, setSelectedRowBGC] = useState('#2a2d3c')
+  const [selectedRowIMG, setSelectedRowIMG] = useState('')
   const [headerBGI, setHeaderBGI] = useState('unset')
   const [evenRowBGC, setEvenRowBGC] = useState('#222430')
   const [indexHeader, setIndexHeader] = useState('#')
@@ -85,7 +88,7 @@ const ScrollTable = (props) => {
   }
 
   const tableDataLoadFunc = (mappingConfig) => {
-    let tableColumnWidth = [0]
+    let tableColumnWidth = []
     let tableValue = []
     let columnEnum = fields.filter(item => item.name !== 'isSticked' && item.name !== 'isSelected').reduce((pre, cur, index) => {
       pre[cur.value] = Number(cur.name.replace(/[^0-9]/ig, '')) - 1
@@ -103,8 +106,7 @@ const ScrollTable = (props) => {
             width: '100%',
             height: '100%'
           }
-          const {customStyle, overflowType, textAlign, textStyle, width} = mapp
-          tableColumnWidth.push(width)
+          const { customStyle, overflowType, textAlign, textStyle } = mapp
           style = {
             ...style,
             ...textStyle
@@ -149,6 +151,7 @@ const ScrollTable = (props) => {
         })
         tableValue.push(arr)
       })
+      tableColumnWidth = mappingConfig.map(item => item.width)
     }
     setColumnWidth([columnWidth[0],...tableColumnWidth])
     setTableData(tableValue)
@@ -189,11 +192,11 @@ const ScrollTable = (props) => {
     })
     const header = mappingConfig.map(item => `<div style="${textStyle}" title="${item.displayName}">${item.displayName ? item.displayName : '--'}<div>`)
     setHeader(header)
-    setTimeout(() => {
-      const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
-      const tableHeader = tableDom.querySelector('.dv-scroll-board>.header')
+    // setTimeout(() => {
+      // const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
+      // const tableHeader = tableDom.querySelector('.dv-scroll-board>.header')
       // tableHeader.style.backgroundColor = bgColor
-    })
+    // })
   }
 
   const gradientConfigFunc = ({ gradientOrigin, gradientStartColor, gradientEndColor }) => {
@@ -219,7 +222,7 @@ const ScrollTable = (props) => {
       indexConfig = ComponentDefaultConfig.config.find(item => item.name === 'tableIndex').value
     }
     const indexTitle = indexConfig.find(item => item.name === 'title').value
-    const indexWidth = indexConfig.find(item => item.name === 'width').value || 150
+    const indexWidth = indexConfig.find(item => item.name === 'width')?.value || 150
     columnWidth[0] = indexWidth
     setColumnWidth(columnWidth)
     const indexAlign = indexConfig.find(item => item.name === 'textAlign').value.find(item => item.name === 'textAlign').value
@@ -273,8 +276,12 @@ const ScrollTable = (props) => {
     }
     const evenBgColor = rowConfig.find(item => item.name === 'evenBgColor').value
     const oddBgColor = rowConfig.find(item => item.name === 'oddBgColor').value
+    const selectedColor = rowConfig.find(item => item.name === 'selectedBgColor')?.value || '#2a2d3c'
+    const selectedBgImage = rowConfig.find(item => item.name === 'selectedBgImage')?.value || ''
     setEvenRowBGC(evenBgColor)
     setOddRowBGC(oddBgColor)
+    setSelectedRowBGC(selectedColor)
+    setSelectedRowIMG(selectedBgImage)
   }
 
   const tableAllGlobalLoadFunc = () => {
@@ -282,8 +289,14 @@ const ScrollTable = (props) => {
   }
 
   const tableAnimationLoadFunc = () => {
+    let isScroll = tableAnimationConfig.find(item => item.name === 'isScroll')?.value
+    if (isScroll === undefined) {
+      isScroll = true
+    }
     const animationModel = tableAnimationConfig.find(item => item.name === 'animationModel').value
     const waitTimeConfig = tableAnimationConfig.find(item => item.name === 'scrollInterval').value // number
+    console.log('isScroll', isScroll)
+    setIsScroll(isScroll)
     setCarousel(animationModel)
     setWaitTime(waitTimeConfig)
   }
@@ -423,6 +436,7 @@ const ScrollTable = (props) => {
   }
 
   const tableConfig = {
+    isScroll,
     header: isHeader ? header : [],
     data: tableData,
     waitTime,
@@ -433,6 +447,8 @@ const ScrollTable = (props) => {
     headerBGI, // 头部背景图片
     oddRowBGC, // 奇数行背景色
     evenRowBGC, // 偶数行背景色
+    selectedRowBGC, // 被选中行的背景色
+    selectedRowIMG, // 被选中行的背景图片
     carousel,
     rowNum: rowNumConfig,
     indexAlign,
@@ -444,7 +460,7 @@ const ScrollTable = (props) => {
   }
   return (
     <div style={{width: '100%', height: '100%'}} ref={tableContainerRef}>
-      <ScrollBoard ref={tableRef} className="scroll-board" config={tableConfig}/>
+      <ScrollBoard ref={tableRef} className="scroll-board" config={tableConfig} style={{background: evenRowBGC}}/>
     </div>
   )
 
