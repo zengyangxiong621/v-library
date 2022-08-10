@@ -88,7 +88,12 @@ export const defaultData = {
         "type": "collapse",
         "hasSwitch": false,
         "defaultExpand": true,
-        "value": [ { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
+        "value": [
+          { "name": "show", "displayName": "", "value": true, "type": "switch" },
+          {
+            "name": "isScroll", "displayName": "是否轮播", "value": true, "type": "switch"
+          },
+          {
           "name": "animationModel",
           "displayName": "动画模式",
           "type": "select",
@@ -157,24 +162,57 @@ export const defaultData = {
         "type": "collapse",
         "hasSwitch": true,
         "defaultExpand": false,
-        "value": [ { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
-          "name": "evenBgColor",
-          "displayName": "奇行背景色",
-          "value": "#222430",
-          "type": "color",
-        }, { "name": "oddBgColor", "displayName": "偶行背景色", "value": "#2a2d3c", "type": "color" } ],
+        "value": [
+          { "name": "show", "displayName": "", "value": true, "type": "switch" },
+          {
+            "name": "evenBgColor",
+            "displayName": "奇行背景色",
+            "value": "#222430",
+            "type": "color",
+          },
+          {
+            "name": "oddBgColor",
+            "displayName": "偶行背景色",
+            "value": "#2a2d3c",
+            "type": "color"
+          },
+          {
+            "name": "selectedBgColor",
+            "displayName": "选中背景色",
+            "type": "color",
+            "value": "#383d53",
+          },
+          {
+            "name": "selectedBgImage",
+            "displayName": "选中背景图",
+            "type": "image",
+            "value": "",
+          },
+        ],
       }, {
         "name": "tableIndex",
         "displayName": "序号列",
         "type": "collapse",
         "hasSwitch": true,
         "defaultExpand": false,
-        "value": [ { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
+        "value": [
+          { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
           "name": "title",
           "displayName": "标题",
           "value": "#",
           "type": "input",
         },
+          {
+            "displayName": "宽度",
+            "name": "width",
+            "type": "number",
+            "value": 150,
+            "config": {
+              "suffix": "px",
+              "step": 1,
+              "min": 0
+            }
+          },
           {
             "name": "textAlign",
             "displayName": "文本对齐",
@@ -184,7 +222,7 @@ export const defaultData = {
               "displayName": "水平对齐",
               "type": "align",
               "range": [ "left", "center", "right" ],
-              "value": "left",
+              "value": "center",
             } ],
           },
           {
@@ -279,7 +317,7 @@ export const defaultData = {
                           "displayName": "宽度",
                           "name": "width",
                           "type": "input",
-                          "value": "20",
+                          "value": "40",
                           "config":{
                             "suffix":"px",
                           }
@@ -288,7 +326,7 @@ export const defaultData = {
                           "displayName": "高度",
                           "name": "height",
                           "type": "input",
-                          "value": "20",
+                          "value": "40",
                           "config":{
                             "suffix":"px",
                           }
@@ -298,14 +336,14 @@ export const defaultData = {
                     {
                       "name": "bgColor",
                       "displayName": "背景色",
-                      "value": "#06104a",
+                      "value": "rgba(6,16,74,0)",
                       "type": "color",
                     },
                     {
                       "name": "bgImg",
                       "displayName": "背景图",
                       "type": "image",
-                      "value": "",
+                      "value": "http://10.201.81.47:9000/soc-visualization-public/static/png/1%E5%A4%87%E4%BB%BD-HwFPT.png",
                     },
                   ],
                 },
@@ -374,7 +412,7 @@ export const defaultData = {
                         "displayName": "宽度",
                         "name": "width",
                         "type": "input",
-                        "value": "20",
+                        "value": "40",
                         "config":{
                           "suffix":"px",
                         }
@@ -383,7 +421,7 @@ export const defaultData = {
                         "displayName": "高度",
                         "name": "height",
                         "type": "input",
-                        "value": "20",
+                        "value": "40",
                         "config":{
                           "suffix":"px",
                         }
@@ -393,14 +431,198 @@ export const defaultData = {
                   {
                     "name": "bgColor",
                     "displayName": "背景色",
-                    "value": "#06104a",
+                    "value": "rgba(6,16,74,0)",
                     "type": "color",
                   },
                   {
                     "name": "bgImg",
                     "displayName": "背景图",
                     "type": "image",
-                    "value": "",
+                    "value": "http://10.201.81.47:9000/soc-visualization-public/static/png/1%E5%A4%87%E4%BB%BD-HwFPT.png",
+                  },
+                ],
+              },
+              {
+                "key": "2",
+                "displayName": "行2",
+                "name": "tab",
+                "type": "object",
+                "value": [
+                  {
+                    "displayName": "文本样式",
+                    "name": "textStyle",
+                    "type": "textFullStyleGroup",
+                    "value": [
+                      {
+                        "displayName": "",
+                        "name": "fontFamily",
+                        "value": "Microsoft Yahei",
+                      },
+                      {
+                        "displayName": "",
+                        "name": "fontSize",
+                        "value": 14,
+                      },
+                      {
+                        "displayName": "",
+                        "name": "color",
+                        "type": "color",
+                        "value": "#fff",
+                      },
+                      {
+                        "displayName": "",
+                        "name": "bold",
+                        "value": false,
+                      },
+                      {
+                        "displayName": "",
+                        "name": "italic",
+                        "value": false,
+                      },
+                      {
+                        "displayName": "字距",
+                        "name": "letterSpacing",
+                        "value": 0,
+                      },
+                      {
+                        "displayName": "行距",
+                        "name": "lineHeight",
+                        "config": {
+                          "disabled": true,
+                        },
+                        "value": "unset",
+                      },
+                    ],
+                  },
+                  {
+                    "displayName": "背景大小",
+                    "name": "bgSize",
+                    "type": "input2",
+                    "showDetail": true,
+                    "value": [
+                      {
+                        "displayName": "宽度",
+                        "name": "width",
+                        "type": "input",
+                        "value": "40",
+                        "config":{
+                          "suffix":"px",
+                        }
+                      },
+                      {
+                        "displayName": "高度",
+                        "name": "height",
+                        "type": "input",
+                        "value": "40",
+                        "config":{
+                          "suffix":"px",
+                        }
+                      },
+                    ]
+                  },
+                  {
+                    "name": "bgColor",
+                    "displayName": "背景色",
+                    "value": "rgba(6,16,74,0)",
+                    "type": "color",
+                  },
+                  {
+                    "name": "bgImg",
+                    "displayName": "背景图",
+                    "type": "image",
+                    "value": "http://10.201.81.47:9000/soc-visualization-public/static/png/1%E5%A4%87%E4%BB%BD-HwFPT.png",
+                  },
+                ],
+              },
+              {
+                "key": "3",
+                "displayName": "行3",
+                "name": "tab",
+                "type": "object",
+                "value": [
+                  {
+                    "displayName": "文本样式",
+                    "name": "textStyle",
+                    "type": "textFullStyleGroup",
+                    "value": [
+                      {
+                        "displayName": "",
+                        "name": "fontFamily",
+                        "value": "Microsoft Yahei",
+                      },
+                      {
+                        "displayName": "",
+                        "name": "fontSize",
+                        "value": 14,
+                      },
+                      {
+                        "displayName": "",
+                        "name": "color",
+                        "type": "color",
+                        "value": "#fff",
+                      },
+                      {
+                        "displayName": "",
+                        "name": "bold",
+                        "value": false,
+                      },
+                      {
+                        "displayName": "",
+                        "name": "italic",
+                        "value": false,
+                      },
+                      {
+                        "displayName": "字距",
+                        "name": "letterSpacing",
+                        "value": 0,
+                      },
+                      {
+                        "displayName": "行距",
+                        "name": "lineHeight",
+                        "config": {
+                          "disabled": true,
+                        },
+                        "value": "unset",
+                      },
+                    ],
+                  },
+                  {
+                    "displayName": "背景大小",
+                    "name": "bgSize",
+                    "type": "input2",
+                    "showDetail": true,
+                    "value": [
+                      {
+                        "displayName": "宽度",
+                        "name": "width",
+                        "type": "input",
+                        "value": "40",
+                        "config":{
+                          "suffix":"px",
+                        }
+                      },
+                      {
+                        "displayName": "高度",
+                        "name": "height",
+                        "type": "input",
+                        "value": "40",
+                        "config":{
+                          "suffix":"px",
+                        }
+                      },
+                    ]
+                  },
+                  {
+                    "name": "bgColor",
+                    "displayName": "背景色",
+                    "value": "rgba(6,16,74,0)",
+                    "type": "color",
+                  },
+                  {
+                    "name": "bgImg",
+                    "displayName": "背景图",
+                    "type": "image",
+                    "value": "http://10.201.81.47:9000/soc-visualization-public/static/png/1%E5%A4%87%E4%BB%BD-HwFPT.png",
                   },
                 ],
               },
@@ -420,7 +642,8 @@ export const defaultData = {
                 "displayName": "列1",
                 "name": "tab",
                 "type": "object",
-                "value": [ {
+                "value": [
+                  {
                   "displayName": "映射",
                   "name": "mapping",
                   "type": "input2",
@@ -430,7 +653,19 @@ export const defaultData = {
                     "type": "input",
                     "value": "column1",
                   }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "销售地区" } ],
-                }, {
+                },
+                  {
+                    "displayName": "宽度",
+                    "name": "width",
+                    "type": "number",
+                    "value": 150,
+                    "config": {
+                      "suffix": "px",
+                      "step": 1,
+                      "min": 0
+                    }
+                  },
+                  {
                   "name": "align",
                   "displayName": "对齐方式",
                   "type": "alignFull",
@@ -441,13 +676,15 @@ export const defaultData = {
                     "range": [ "left", "center", "right" ],
                     "value": "left",
                   } ],
-                }, {
+                },
+                  {
                   "name": "overflowType",
                   "displayName": "文字溢出",
                   "type": "select",
                   "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
                   "value": "ellipsis",
-                }, {
+                },
+                  {
                   "displayName": "文本样式",
                   "name": "textStyle",
                   "type": "textFullStyleGroup",
@@ -552,7 +789,19 @@ export const defaultData = {
                 "type": "input",
                 "value": "column1",
               }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "销售地区" } ],
-            }, {
+            },
+              {
+                "displayName": "宽度",
+                "name": "width",
+                "type": "number",
+                "value": 150,
+                "config": {
+                  "suffix": "px",
+                  "step": 1,
+                  "min": 0
+                }
+              },
+              {
               "name": "align",
               "displayName": "对齐方式",
               "type": "alignFull",
@@ -669,7 +918,19 @@ export const defaultData = {
                 "type": "input",
                 "value": "column2",
               }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "完成率" } ],
-            }, {
+            },
+              {
+                "displayName": "宽度",
+                "name": "width",
+                "type": "number",
+                "value": 150,
+                "config": {
+                  "suffix": "px",
+                  "step": 1,
+                  "min": 0
+                }
+              },
+              {
               "name": "align",
               "displayName": "对齐方式",
               "type": "alignFull",
@@ -786,7 +1047,18 @@ export const defaultData = {
                 "type": "input",
                 "value": "column3",
               }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "完成情况" } ],
-            }, {
+            },
+              {
+                "displayName": "宽度",
+                "name": "width",
+                "type": "number",
+                "value": 150,
+                "config": {
+                  "suffix": "px",
+                  "step": 1,
+                  "min": 0
+                }
+              },{
               "name": "align",
               "displayName": "对齐方式",
               "type": "alignFull",
