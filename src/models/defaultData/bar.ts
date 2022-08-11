@@ -1176,7 +1176,7 @@ export const defaultData = {
       "dashboardId": "",
       "moduleName": "tab",
       "moduleType": "assist",
-      "moduleVersion": "1.0.0",
+      "moduleVersion": "1.0.1",
       "autoUpdate": {
         "isAuto": false,
         "interval": 10,
@@ -1371,6 +1371,46 @@ export const defaultData = {
                 },
               ],
             },
+            {
+              "name": "isScroll",
+              "displayName": "自动轮播",
+              "type": "collapse",
+              "hasSwitch": true,
+              "defaultExpand": false,
+              "value": [
+                {
+                  "name": "show",
+                  "displayName": "",
+                  "value": false,
+                  "type": "switch"
+                },
+                {
+                  "name": "interval",
+                  "displayName": "间隔时长",
+                  "type": "number",
+                  "config": {
+                    "min": 1000,
+                    "max": 24000,
+                    "step": 1000,
+                    "suffix": "ms"
+                  },
+                  "value": 1000
+                },
+                {
+                  "name": "clickStay",
+                  "displayName": "点击停留",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 24000,
+                    "step": 1000,
+                    "suffix": "ms"
+                  },
+                  "value": 0
+                },
+              ]
+            },
+
           ],
         },
         {

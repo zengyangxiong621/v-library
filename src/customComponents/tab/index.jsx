@@ -10,7 +10,13 @@ const textAlignEnum = {
 }
 
 const Tab = (props) => {
-  const [activeKey, setActiveKey] = useState(0)
+  const [scrollState, setScrollState] = useState({
+    isScroll: false,
+    clickStayTime: 0,
+    intervalTime: 0,
+    isStay: false
+  })
+  let [activeKey, setActiveKey] = useState(0)
   const [defaultActiveKey, setDefaultActiveKey] = useState(0)
   // 全局的 tab Style
   const [allGlobalTabStyle, setAllGlobalTabStyle] = useState({
@@ -92,6 +98,11 @@ const Tab = (props) => {
       gridTemplate: `repeat(${ rowNums }, 1fr) / ${ new Array(colNums).fill('1fr').join(' ') }`,
       gap: `${ rowSpacing }px ${ colSpacing }px`,
     })
+    const scrollConfig = allGlobalConfig.find(item => item.name === 'isScroll').value
+    const isScroll = scrollConfig.find(item => item.name === 'show').value
+    const intervalTime = scrollConfig.find(item => item.name === 'interval').value
+    const clickStayTime = scrollConfig.find(item => item.name === 'clickStay').value
+    setScrollState(({...scrollState, isScroll, intervalTime, clickStayTime}))
   }
 
   // 驼峰转中划线
@@ -268,6 +279,28 @@ const Tab = (props) => {
   }, [defaultActiveKey])
 
   useEffect(() => {
+    let timer = null
+    if (scrollState.isScroll && !scrollState.isStay) {
+      timer = setInterval(() => {
+        if (activeKey + 1 > tabList.length) {
+          activeKey = 0
+        }
+        handleChange(tabList[activeKey + 1 - 1], activeKey + 1)
+      },  scrollState.intervalTime)
+    }
+    // 如果处于停留的状态
+    if (scrollState.isStay) {
+      timer && clearInterval(timer)
+      setTimeout(() => {
+        setScrollState({...scrollState, isStay: false})
+      }, scrollState.clickStayTime)
+    }
+    return () => {
+      timer && clearInterval(timer)
+    }
+  }, [activeKey, scrollState])
+
+  useEffect(() => {
     allGlobalLoadFunc()
   }, [allGlobalConfig])
 
@@ -297,7 +330,12 @@ const Tab = (props) => {
   const handleMouseLeave = (e) => {
     props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey])
   }
-
+  const handleItemClick = (item, index) => {
+    if (scrollState.clickStayTime > 0) {
+      setScrollState({...scrollState, isStay: true})
+    }
+    handleChange(item, index)
+  }
   return (
     <div
       className="tab-wrap"
@@ -325,7 +363,7 @@ const Tab = (props) => {
                 cursor: 'pointer',
               } }
               className="tab-item"
-              onClick={ () => handleChange(item, index + 1) }
+              onClick={ () => handleItemClick(item, index + 1) }
               key={ index }
             >
               <div style={ { ...(dataSeriesStyleList[item[_fields[0]]]?.text || {}) } }>
