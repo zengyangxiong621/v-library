@@ -20,7 +20,7 @@ const { TabPane } = Tabs;
 
 const TabArray = props => {
   const _data = props.data;
-  const _defaultActiveKey = _data.defaultActiveKey
+  const _defaultActiveKey = _data?.defaultExpand ? ['1'] : []
   const _disabled = _data.disabled
   let tabs = _data.value
 

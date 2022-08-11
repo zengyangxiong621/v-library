@@ -153,7 +153,12 @@ const ScrollTable = (props) => {
       })
       tableColumnWidth = mappingConfig.map(item => item.width)
     }
-    setColumnWidth([columnWidth[0],...tableColumnWidth])
+    console.log('[columnWidth[0] || 0 ,...tableColumnWidth]', [columnWidth[0] || 0 ,...tableColumnWidth])
+    if (columnWidth[0]) {
+      setColumnWidth([columnWidth[0] ,...tableColumnWidth])
+    } else {
+      setColumnWidth(tableColumnWidth)
+    }
     setTableData(tableValue)
   }
 
@@ -460,7 +465,7 @@ const ScrollTable = (props) => {
   }
   return (
     <div style={{width: '100%', height: '100%'}} ref={tableContainerRef}>
-      <ScrollBoard ref={tableRef} className="scroll-board" config={tableConfig} style={{background: evenRowBGC}}/>
+      <ScrollBoard ref={tableRef} className="scroll-board" config={tableConfig}/>
     </div>
   )
 
