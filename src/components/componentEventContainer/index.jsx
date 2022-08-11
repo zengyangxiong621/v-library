@@ -20,8 +20,8 @@ import {connect} from "dva"
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
 
-import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
-import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
+// import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+// import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
 import Timeline from '@/customComponents/assist/timeline'
@@ -501,30 +501,20 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </Timeline>
-                  : props.componentConfig.moduleName === 'CardFlipper_1' ?
-          <CardFlipper1
-            {...props}
-          >
-          </CardFlipper1>
-                    : props.componentConfig.moduleName === 'CardFlipper_2' ?
-          <CardFlipper2
-            {...props}
-          >
-          </CardFlipper2>
-          : props.componentConfig.moduleName === 'CardFlipper_1' ?
-          <CardFlipper1
-            scale={scale}
-            onChange={handleValueChange}
-            {...props}
-          >
-          </CardFlipper1>
-          : props.componentConfig.moduleName === 'CardFlipper_2' ?
-          <CardFlipper2
-            scale={scale}
-            onChange={handleValueChange}
-            {...props}
-          >
-          </CardFlipper2>
+          // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+          // <CardFlipper1
+          //   scale={scale}
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </CardFlipper1>
+          // : props.componentConfig.moduleName === 'CardFlipper_2' ?
+          // <CardFlipper2
+          //   scale={scale}
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </CardFlipper2>
           : props.componentConfig.moduleName === 'instrumentPanel_3' ?
           <InstrumentPanel3
             scale={scale}
