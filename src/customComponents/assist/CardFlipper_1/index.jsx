@@ -6,8 +6,38 @@ import CountUp from 'react-countup'
 
 class ProtectionRange extends Component {
   constructor() {
-    super()
+    super(),
+    this.state = {
+      numValue: 0
+    }
   }
+  componentDidMount(){
+    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
+    const { data } = componentConfig.staticData
+    // 最新字段
+    const finalFieldsArr = this.props.fields || ['value']
+    // 组件静态或者传入组件的数据
+    const originData = this.props.comData || data
+    // originData中有多项数据，只取第一项
+    const firstData = originData[0]
+    setTimeout(() => {
+      this.setState({
+        numValue: firstData[finalFieldsArr[0]]
+      })
+    }, 50)
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { comData,fields } = nextProps
+    let originData = comData?.length ? comData[0] : [] ;
+    if(originData[fields[0]] !== prevState.numValue && prevState.numValue != 0){
+        return {
+          numValue: originData[fields[0]]
+        }
+      }
+      return null
+  }
+
   renderNumber(number,counter,showBreak) {
     let value = number + ''
     let valueArr = value.split('')
@@ -31,13 +61,14 @@ class ProtectionRange extends Component {
     const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const { config } = componentConfig
     const { data } = componentConfig.staticData
+    const {numValue} = this.state
     // 最新字段
     const finalFieldsArr = this.props.fields || ['value']
     // 组件静态或者传入组件的数据
     const originData = this.props.comData || data
     // originData中有多项数据，只取第一项
     const firstData = originData[0]
-    const numberValue = firstData[finalFieldsArr[0]]
+    // const numberValue = firstData[finalFieldsArr[0]]
     // 获取config中的配置
     const getTargetConfig = (Arr) => {
       let targetConfig = {}
@@ -81,7 +112,7 @@ class ProtectionRange extends Component {
     }
 
 
-    const arr = this.renderNumber(numberValue,containerCounter,showBreak,breakDigits)
+    const arr = this.renderNumber(numValue,containerCounter,showBreak,breakDigits)
     return (
       <div className='protection-range-container'>
         <div className="protection-range" style={{
@@ -114,7 +145,21 @@ class ProtectionRange extends Component {
                     fill: textNumberStyle.color,
                   }}
                 } style={{width: '100%', height: '100%',marginTop: '20%' }} /> */}
-                <CountUp start={0} end={Number(item)} duration={1}></CountUp>
+                {/* <CountUp start={0} end={Number(item)} duration={1}></CountUp> */}
+                <div className="turn_box_container" style={{width: '80px', height: '100px'}}>
+                  <div className="turn_box" style={ {top:  ( -1 * item * 100) +'px'} }> 
+                    <div className="turn_box_number">0</div>
+                    <div className="turn_box_number">1</div>
+                    <div className="turn_box_number">2</div>
+                    <div className="turn_box_number">3</div>
+                    <div className="turn_box_number">4</div>
+                    <div className="turn_box_number">5</div>
+                    <div className="turn_box_number">6</div>
+                    <div className="turn_box_number">7</div>
+                    <div className="turn_box_number">8</div>
+                    <div className="turn_box_number">9</div>
+                  </div>
+                </div>
               </div> :
               <div className='image' key={index} style={{
                 background: 'none',

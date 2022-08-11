@@ -21,3 +21,34 @@
   font-size: 100px;
   margin-left: 6px;
 }
+
+
+.turn_box_container {
+  margin-left: 10px;
+}
+ 
+.turn_box_container {
+  position: relative;
+  display: inline-block;
+  float: left;
+  overflow: hidden;
+}
+ 
+.turn_box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: auto;
+  width: 100%;
+  transform-origin: 0 0;
+  transition: top 0.8s;
+}
+ 
+.turn_box_number {
+  line-height: 100px;
+  /* font-size: 66px;
+  font-family: MicrosoftYaHei-Bold;
+  font-weight: bold;
+  color: #4898F1; */
+  text-align: center;
+}
