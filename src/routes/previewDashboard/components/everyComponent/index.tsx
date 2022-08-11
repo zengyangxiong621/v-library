@@ -18,6 +18,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
   const { mountAnimation } = layerInfo
   const { delay, direction, duration, opacityOpen, timingFunction, type } = mountAnimation || {}
 
+  console.log('mountAnimation', layerInfo);
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -29,7 +30,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
   })
 
 
-  // 交互动画
   useEffect(() => {
     // 如果没有 设置“载入动画”, 那么后端不会返回mountAnimation字段
     if (mountAnimation) {
@@ -45,6 +45,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
       const pageWrapElInfo = pageWrapEl.getBoundingClientRect()
       const curCmpContainerElInfo: any = curCmpContainerEl.getBoundingClientRect()
 
+      let id2: any = null
       switch (type) {
         case 'none':
           break;
@@ -59,31 +60,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
         case 'wipe':
           curCmpContainerEl.style.height = '400px'
           curCmpContainerEl.style.background = 'red'
-          // curCmpContainerEl.style.opacity = 0
-          // curCmpContainerEl.style.transition = `all 3s linear`
-          // curCmpContainerEl.animate(
-          //   [{
-          //     backgroundColor: 'red',
-          //     height: '10px',
-          //     // transform: 'scale(0)',
-          //     transition: 'height 2s linear',
-          //   }, {
-          //     backgroundColor:'green',
-          //     height: '800px',
-          //     opacity: 1,
-          //     // transform: 'scale(1)',
-          //     transition: 'height 2s linear',
-          //   }],
-          //   {
-          //     duration: 6000,
-          //     delay: 4000,
-          //     fill: 'forwards',
-          //     easing: timingFunction,
-          //     // easing: 'steps(8, end)',
-          //     iterations: 1
-          //   }
-          // )
-
           break;
       }
 
@@ -142,7 +118,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
 
   return (
     <div>
