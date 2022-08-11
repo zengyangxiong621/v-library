@@ -13,8 +13,6 @@ import { calcCanvasSize } from '../../utils'
 const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
-  const [screenWidthRatio, setScreenWidthRatio] = useState(1)
-  const [screenHeightRatio, setScreenHeightRatio] = useState(1)
   // 接口中返回的 当前屏幕设置信息
   const [dashboardConfig, setDashboardConfig] = useState([])
   const [scaleMode, setScaleMode] = useState<string>('')
@@ -227,7 +225,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     })
     return map
   }
-
   return (
     <div id="gs-v-library-app">
       {

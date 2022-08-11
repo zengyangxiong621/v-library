@@ -84,6 +84,7 @@ const RecursiveComponent = (props: any) => {
                           componentData={targetComponent}
                           comData={getComDataWithFilters(bar.componentData, targetComponent, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
                           scaleValue={scaleValue}
+                          layerInfo={layer}
                         />
                       }
                     </div>
