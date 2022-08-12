@@ -456,6 +456,7 @@ const AddDataSource = (props: any) => {
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
                   <Input
                     autoComplete='off'
+                    // autoComplete='new-password'
                     className="setBackColor"
                     placeholder='请输入'
                     maxLength={20}

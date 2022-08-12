@@ -1,10 +1,9 @@
-import { memo } from 'react'
+import React, { memo } from 'react'
 
 import EveryComponent from '../everyComponent'
 import ReferencePanel from '@/customComponents/referencePanel'
 import DynamicPanel from '@/customComponents/dynamicPanel/index'
 import { getComDataWithFilters } from '@/utils/data'
-import * as React from "react"
 
 const MODULES = 'modules'
 const OPACITY = 'opacity'

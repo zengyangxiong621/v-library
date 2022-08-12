@@ -197,6 +197,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     setComponents(bar.components)
     setPanels(bar.panels)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bar.treeData])
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
@@ -227,7 +228,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     return map
   }
 
-  console.log('layers', layers)
   return (
     <div id="gs-v-library-app">
       {
