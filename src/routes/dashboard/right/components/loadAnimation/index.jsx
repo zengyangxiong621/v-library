@@ -81,7 +81,8 @@ const LoadAnimation = props => {
               <Option value="none">无</Option>
               <Option value="slide">移入</Option>
               <Option value="slideSmall">移入(小)</Option>
-              <Option value="wipe">划变</Option>
+              {/* 先不做这个 效果 */}
+              {/* <Option value="wipe">划变</Option> */}
             </Select>
           </Form.Item>
           {animationType !=='none' ? <React.Fragment>
