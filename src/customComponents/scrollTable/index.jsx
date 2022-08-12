@@ -151,14 +151,16 @@ const ScrollTable = (props) => {
         })
         tableValue.push(arr)
       })
-      tableColumnWidth = mappingConfig.map(item => item.width)
     }
-    console.log('[columnWidth[0] || 0 ,...tableColumnWidth]', [columnWidth[0] || 0 ,...tableColumnWidth])
-    if (columnWidth[0]) {
-      setColumnWidth([columnWidth[0] ,...tableColumnWidth])
-    } else {
-      setColumnWidth(tableColumnWidth)
-    }
+    tableColumnWidth = mappingConfig.map(item => item.width)
+
+    console.log('[columnWidth[0] || 0 ,...tableColumnWidth]', )
+    // if (columnWidth[0]) {
+    //   setColumnWidth([columnWidth[0] ,...tableColumnWidth])
+    // } else {
+    // }
+    setColumnWidth([columnWidth[0] || 0 ,...tableColumnWidth])
+
     setTableData(tableValue)
   }
 

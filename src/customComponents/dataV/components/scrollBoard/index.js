@@ -300,7 +300,6 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
     //   newHeights[5] = 0
     //   // newHeights[0] = newHeights[1]
     // }
-    console.log('newHeights', newHeights)
     const newMergedConfig = {...stateRef.current.mergedConfig, scrollDirection}
 
     setTimeout(() => {
@@ -481,8 +480,6 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
   const classNames = useMemo(() => classnames('dv-scroll-board', className), [
     className
   ])
-  console.log('heights', heights)
-  console.log('----------------')
   return (
     <div
       onMouseEnter={() => handleHover(true)}
@@ -491,7 +488,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
       {!!header.length && !!mergedConfig && (
         <div
           className='header'
-          style={{ backgroundColor: `${mergedConfig.headerBGC}`, backgroundImage: `${mergedConfig.headerBGI}` }}
+          style={{ backgroundColor: `${mergedConfig.headerBGC}`, backgroundImage: `${mergedConfig.headerBGI}`, overflow: 'hidden' }}
         >
           {header.map((headerItem, i) => (
             <div
@@ -500,7 +497,9 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
               style={{
                 height: `${stateRef.current.avgHeight}px`,
                 lineHeight: `${stateRef.current.avgHeight}px`,
-                width: `${widths[i]}px`,
+                width: `${mergedConfig.columnWidth[mergedConfig.index ? i : i + 1]}px` ,
+                maxWidth: `${mergedConfig.columnWidth[mergedConfig.index ? i : i + 1]}px` ,
+                minWidth: `${mergedConfig.columnWidth[mergedConfig.index ? i : i + 1]}px` ,
               }}
               align={aligns[i]}
               dangerouslySetInnerHTML={{ __html: headerItem }}
@@ -517,7 +516,6 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
             (header.length ? heights[1] : 0)}px`,
             display: 'flex',
             flexDirection: 'column',
-            background: mergedConfig.oddRowBGC
           }}
         >
           {rows.map((row, ri) => (
@@ -545,7 +543,11 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
                 <div
                   className='ceil'
                   key={`${ceil}-${ri}-${ci}`}
-                  style={{ width: `${widths[ci]}px` }}
+                  style={{
+                    width: `${mergedConfig.columnWidth[mergedConfig.index ? ci : ci + 1]}px` ,
+                    maxWidth: `${mergedConfig.columnWidth[mergedConfig.index ? ci : ci + 1]}px` ,
+                    minWidth: `${mergedConfig.columnWidth[mergedConfig.index ? ci : ci + 1]}px` ,
+                  }}
                   align={ci === 0 ? mergedConfig.indexAlign : aligns[ci]}
                   dangerouslySetInnerHTML={{ __html: ceil }}
                   onClick={() => emitEvent(onClick, ri, ci, row, ceil)}
