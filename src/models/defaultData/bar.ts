@@ -1865,8 +1865,8 @@ export const defaultData = {
       "parentId": "0",
       "dashboardId": "",
       "moduleName": "scrollSelect",
-      "moduleType": "assist",
-      "moduleVersion": "1.0.0",
+      "moduleType": "interactive",
+      "moduleVersion": "1.0.1",
       "autoUpdate": {
         "isAuto": false,
         "interval": 10,
@@ -2026,6 +2026,45 @@ export const defaultData = {
                 },
               ],
             },
+            {
+              "hasSwitch": true,
+              "defaultExpand": false,
+              "displayName": "自动轮播",
+              "name": "isScroll",
+              "type": "collapse",
+              "value": [
+                {
+                  "displayName": "",
+                  "name": "show",
+                  "type": "switch",
+                  "value": false
+                },
+                {
+                  "displayName": "间隔时长",
+                  "name": "interval",
+                  "type": "number",
+                  "config": {
+                    "min": 1000,
+                    "max": 24000,
+                    "step": 1000,
+                    "suffix": "ms"
+                  },
+                  "value": 1000
+                },
+                {
+                  "displayName": "点击停留",
+                  "name": "clickStay",
+                  "type": "number",
+                  "config": {
+                    "min": 0,
+                    "max": 24000,
+                    "step": 1000,
+                    "suffix": "ms"
+                  },
+                  "value": 0
+                }
+              ]
+            }
           ],
         },
         {
@@ -2217,7 +2256,7 @@ export const defaultData = {
       "name": "时间选择器",
       "moduleName": "timeSelect",
       "moduleType": "assist",
-      "moduleVersion": "1.0.0",
+      "moduleVersion": "1.0.1",
       "config": [
         {
           "displayName": "位置尺寸",
