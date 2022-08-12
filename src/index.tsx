@@ -45,7 +45,7 @@ const checkToken = async() => {
   // 入口文件中校验登录信息
   const token = localStore.getToken()
   const pn = location.origin + location.pathname;
-  if(!token && ticket){
+  if(!token){
     try{
       await authorize()
     }catch(err){

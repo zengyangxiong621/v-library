@@ -33,8 +33,8 @@ import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 import Timeline from '@/customComponents/assist/timeline'
 import timelineConfig from '@/customComponents/assist/timeline/config'
 
-import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
-import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
+// import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+// import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPanel_1'
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
@@ -1008,20 +1008,20 @@ const CustomDraggable
                                                       fields={ getFields(component) }
                                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                                     ></Timeline>:
-                                                    layer.moduleName === 'CardFlipper_1'?
-                                                      <CardFlipper1
-                                                        onChange={(val:any)=>handleValueChange(val, component, layer.id)}
-                                                        componentConfig={ component }
-                                                        fields={ getFields(component) }
-                                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                                      ></CardFlipper1>:
-                                                      layer.moduleName === 'CardFlipper_2'?
-                                                        <CardFlipper2
-                                                          onChange={(val:any)=>handleValueChange(val, component, layer.id)}
-                                                          componentConfig={ component }
-                                                          fields={ getFields(component) }
-                                                          comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                                        ></CardFlipper2>:
+                                                    // layer.moduleName === 'CardFlipper_1'?
+                                                    //   <CardFlipper1
+                                                    //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                                    //     componentConfig={ component }
+                                                    //     fields={ getFields(component) }
+                                                    //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                    //   ></CardFlipper1>:
+                                                      // layer.moduleName === 'CardFlipper_2'?
+                                                      //   <CardFlipper2
+                                                      //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                                      //     componentConfig={ component }
+                                                      //     fields={ getFields(component) }
+                                                      //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                      //   ></CardFlipper2>:
                                                         layer.moduleName === 'instrumentPanel_3'?
                                                           <InstrumentPanel3
                                                             onChange={(val:any)=>handleValueChange(val,component,layer.id)}

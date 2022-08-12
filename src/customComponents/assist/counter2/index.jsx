@@ -137,7 +137,7 @@ class Counter extends Component {
             fontStyle: titleStyle.italic ? 'italic' : '',
             lineHeight: `${titleStyle.lineHeight}px`,
             transform: `translate(${titleStyle.x}px, ${titleStyle.y}px)`
-          }}>{originData[fields[0]]}</div>
+          }}>{originData[fields[0]] || titleStyle?.content}</div>
         }
         {/* 数值 */}
         <div className="counter-number">
