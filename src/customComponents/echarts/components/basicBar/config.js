@@ -196,6 +196,27 @@ const ComponentDefaultConfig = {
               ],
             },
             {
+              name: 'bgSetting',
+              displayName: '背景样式',
+              type: 'collapse',
+              hasSwitch: true,
+              defaultExpand: false,
+              value: [
+                {
+                  name: 'show',
+                  displayName: '',
+                  value: true,
+                  type: 'switch',
+                },
+                {
+                  name: 'color',
+                  displayName: '颜色',
+                  value: 'rgba(255,255,255,0.2)',
+                  type: 'color',
+                },
+              ],
+            },
+            {
               name: 'legendSettings',
               displayName: '图例',
               type: 'collapse',
