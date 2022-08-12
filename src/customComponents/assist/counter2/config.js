@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "counter", //组件标识
-  "moduleVersion": "1.0.1", //组件版本号
+  "moduleVersion": "1.0.3", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -131,6 +131,12 @@ const componentDefaultConfig = {
                     "displayName": "",
                     "value": true,
                     "type": "switch"
+                  },
+                  {
+                    'name':"content",
+                    'displayName':'内容',
+                    'type':'input',
+                    'value':'翻牌器标题',
                   },
                   {
                     "name": "textStyle",
