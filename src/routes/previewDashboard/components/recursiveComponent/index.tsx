@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 
 import EveryComponent from '../everyComponent'
 import ReferencePanel from '@/customComponents/referencePanel'

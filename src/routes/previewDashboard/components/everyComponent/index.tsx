@@ -18,7 +18,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
   const { mountAnimation } = layerInfo
   const { delay, direction, duration, opacityOpen, timingFunction, type } = mountAnimation || {}
 
-  console.log('mountAnimation', layerInfo);
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -27,14 +26,10 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
   const weizhichicunArr = allConfigMap.get(WEIZHICHICUN)
   let componentStyle = getTargetStyle(weizhichicunArr, {
     position: 'absolute',
-    // height: '0px',、
-     transition: 'height 3s linear'
   })
-  console.log('comp');
 
 
-
-
+  // 交互动画
   useEffect(() => {
     // 如果没有 设置“载入动画”, 那么后端不会返回mountAnimation字段
     if (mountAnimation) {
@@ -50,12 +45,12 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
       const pageWrapElInfo = pageWrapEl.getBoundingClientRect()
       const curCmpContainerElInfo: any = curCmpContainerEl.getBoundingClientRect()
 
-      let id2: any = null
       switch (type) {
         case 'none':
           break;
         case 'slide':
-          moveDistance = curCmpContainerElInfo.left - pageWrapElInfo.left
+          // moveDistance = curCmpContainerElInfo.left - pageWrapElInfo.left
+          moveDistance = 1000
           break;
         case 'slideSmall':
           moveDistance = +(pageWrapElInfo.left.toFixed(2))
@@ -92,16 +87,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
           break;
       }
 
-      // const finalAnimationOptions = {
-      //   animationName: '',
-      //   animationDuration: `${duration}ms`,
-      //   animationTimingFunction: timingFunction,
-      //   animationDelay: `${delay}ms`,
-      //   // animationDirection: direction,
-      //   animationIterationCount: 1,
-      //   animationFillMode: 'forwards',
-      //   transition: 'all 3s linear'
-      // }
       switch (direction) {
         // 从下至上
         case 'up':
@@ -155,11 +140,14 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
         // clearTimeout(id2)
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+
   return (
     <div>
       <div className={`preview-component-wrap animation-id-${id}`}
-        style={{ ...componentStyle,  height: '0px',}}
+        style={{ ...componentStyle}}
       >
         <ComponentEventContainer
           key={id}

@@ -239,7 +239,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
               <div id="scaleDiv"
                 style={{
                   ...pageStyle,
-                  ...scaleStyle
+                  ...scaleStyle,
+                  overflow: 'hidden'
                 }}
               >
                 {
