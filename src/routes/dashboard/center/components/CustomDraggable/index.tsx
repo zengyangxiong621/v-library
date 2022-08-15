@@ -618,11 +618,11 @@ const CustomDraggable
     }
   }
   // 数组去重，取最后一个
-  const duplicateFn = (arr: any) => {
+  const duplicateFn = (arr = []) => {
     let map: any = new Map();
     for (let item of arr.reverse()) {
-      if (!map.has(item.target)) {
-        map.set(item.target, item);
+      if (!map.has((item as any).target)) {
+        map.set((item as any), item);
       }
     }
     return [...map.values()];
