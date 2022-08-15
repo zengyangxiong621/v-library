@@ -53,7 +53,7 @@ const RankingBar = (props) => {
   console.log('allSettings', allSettings)
   const { autoSort, sortOrder, maxBars, spacing, batteryStyle, animation } = allSettings['图表']
   const { classify, numerical } = allSettings['文本']
-  const { barWidth, colorSetting, isRadius, highLight,symbolMargin } = allSettings['柱状']
+  const { barWidth, colorSetting, isRadius, highLight, symbolMargin } = allSettings['柱状']
 
   let resultTempData = Array.isArray(componentData) ? componentData.reduce((pre, cur) => {
     return pre.concat({
@@ -144,26 +144,28 @@ const RankingBar = (props) => {
                 colorList[params?.dataIndex % 5]
                 : colorSetting?.barColor?.type === 'pure' ?
                   colorSetting?.barColor?.pureColor :
-                  new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
-                    offset: 0,
-                    color: colorSetting?.barColor?.gradientStart
-                  },
-                  {
-                    offset: 1,
-                    color: colorSetting?.barColor?.gradientEnd
-                  }
-                  ])
+                  colorSetting?.barColor?.type === 'gradient' ?
+                    new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                      offset: 0,
+                      color: colorSetting?.barColor?.gradientStart
+                    },
+                    {
+                      offset: 1,
+                      color: colorSetting?.barColor?.gradientEnd
+                    }
+                    ])
+                    : '#1890ff'
                 ;
             },
           },
         },
-        barWidth: barWidth?.unit === '%' ? `${barWidth?.width}%` : barWidth?.width,
+        barWidth: barWidth?.unit === '%' ? `${barWidth?.width}%` : barWidth?.width || '30%',
         data: salvProValue,
       },
       {
         name: "背景",
         type: "bar",
-        barWidth: barWidth?.unit === '%' ? `${barWidth?.width}%` : barWidth?.width,
+        barWidth: barWidth?.unit === '%' ? `${barWidth?.width}%` : barWidth?.width || '30%',
         barGap: "-100%",
         data: salvProMax,
         label: {
@@ -208,6 +210,7 @@ const RankingBar = (props) => {
             return colorSetting?.bySystem ? colorList[params.dataIndex % 5]
               : colorSetting?.barColor?.type === 'pure' ?
                 colorSetting?.barColor?.pureColor :
+                colorSetting?.barColor?.type === 'gradient' ?
                 new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
                   offset: 0,
                   color: colorSetting?.barColor?.gradientStart
@@ -217,6 +220,7 @@ const RankingBar = (props) => {
                   color: colorSetting?.barColor?.gradientEnd
                 }
                 ])
+                :'#1890ff'
               ;
           },
         },
@@ -273,6 +277,7 @@ const RankingBar = (props) => {
                   colorList[params?.dataIndex % 5]
                   : colorSetting?.barColor?.type === 'pure' ?
                     colorSetting?.barColor?.pureColor :
+                    colorSetting?.barColor?.type === 'gradient' ?
                     new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
                       offset: 0,
                       color: colorSetting?.barColor?.gradientStart
@@ -282,6 +287,7 @@ const RankingBar = (props) => {
                       color: colorSetting?.barColor?.gradientEnd
                     }
                     ])
+                    :'#1890ff'
                   ;
               },
             },

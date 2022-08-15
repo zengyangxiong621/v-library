@@ -16,6 +16,9 @@ const BasicBar = (props) => {
   // {x:'01/11', y:'2', s:'系列一'}、{x:'01/11', y:'20', s:'系列二'}
   const axisArr = Array.isArray(componentData) ? componentData.map((item) => item[fieldKey[0]]) : []
   let axisData = [...new Set(axisArr)]
+  const valueData = Array.isArray(componentData) ? componentData.map((item) => item[fieldKey[1]]) : []
+  const maxData = Math.max(...valueData) * 1.5
+  const maxList = new Array(axisData.length).fill(maxData)
 
   // <<<获取每个系列 数据 的map>>>
   // 此时的 seriesMap <===> {'系列一' => {data:[1,2,3]}, '系列二' => {data:[4,5,6]}}
@@ -60,7 +63,7 @@ const BasicBar = (props) => {
   const hadFilterArr = config.filter((item) => item.name !== 'dimension')
   const { allSettings } = getTargetConfig(hadFilterArr)
   // 四个 tab, 分别是 图表、坐标轴、系列、辅助
-  const { legendSettings, bar, spacing } = allSettings ? allSettings['图表'] : {}
+  const { legendSettings, bar, spacing, bgSetting } = allSettings ? allSettings['图表'] : {}
   const { axisSettings } = allSettings ? allSettings['坐标轴'] : {}
   const { dataSeries } = allSettings ? allSettings['系列'] : {}
   const { indicator } = allSettings ? allSettings['辅助'] : {}
@@ -94,7 +97,6 @@ const BasicBar = (props) => {
     }
   })
 
-
   const {
     xAxisLabel: {
       // 暂时不做隐藏
@@ -124,14 +126,25 @@ const BasicBar = (props) => {
   ** description: 通过不同的配置来获取不同的渲染配置
   */
   const getSingleSeriesData = (barLabel, barColor, name, value) => {
+    const itemStyleColor = barColor?.type === 'pure' ?
+      barColor?.pureColor :
+      barColor?.type === 'gradient' ?
+        new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+          offset: 0,
+          color: barColor?.gradientStart
+        },
+        {
+          offset: 1,
+          color: barColor?.gradientEnd
+        }
+        ])
+        : '#1890ff'
     const everyLineOptions = [
       {
         name,
         type: "bar",
         barGap: `${bar.barGap * 100}%`,
         barCategoryGap: `${bar.barCategoryGap * 10}%`,
-        xAxisIndex: 0,
-        yAxisIndex: 0,
         label: {
           normal: {
             show: barLabel.show,
@@ -147,11 +160,12 @@ const BasicBar = (props) => {
         },
         itemStyle: {
           normal: {
-            color: barColor,
+            color: itemStyleColor
           },
         },
         data: value,
-      },
+        z: 2
+      }
     ]
     return everyLineOptions
   }
@@ -184,7 +198,6 @@ const BasicBar = (props) => {
     const curLength = item.data.length
     return preLength >= curLength ? preLength : curLength
   }, 0)
-  const bgBarData = new Array(bgBarDataLength).fill(100)
 
   /**
    ** description: 整合之前所得到的所有参数以生成最终的 echarts Option
@@ -253,6 +266,19 @@ const BasicBar = (props) => {
             fontWeight: xAxisLabelTextStyle.bold ? 'bold' : 'normal',
           },
         },
+        {
+          data: axisData,
+          axisLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          position: "bottom",
+        },
       ],
       yAxis: [
         {
@@ -295,7 +321,25 @@ const BasicBar = (props) => {
           },
         },
       ],
-      series: dynamicSeries
+      series: [
+        ...dynamicSeries,
+        bgSetting?.show && {
+          data: maxList,
+          type: "bar",
+          [dataSeriesValues.length === 1 && 'barGap']: "-100%",
+          [dataSeriesValues.length !== 1 && 'xAxisIndex']: 1,
+          silent: true,
+          itemStyle: {
+            normal: {
+              color: bgSetting?.color || 'rgba(255,255,255,0.2)'
+            }
+          },
+          tooltip: {
+            show: false,
+          },
+          z: 1
+        },
+      ]
     }
     return res
   }

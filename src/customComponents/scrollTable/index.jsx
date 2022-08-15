@@ -47,6 +47,7 @@ const ScrollTable = (props) => {
   const [headerBGI, setHeaderBGI] = useState('unset')
   const [evenRowBGC, setEvenRowBGC] = useState('#222430')
   const [indexHeader, setIndexHeader] = useState('#')
+  const [indexBgConfigs, setIndexBgConfigs] = useState([])
   const [align, setAlign] = useState([])
   const [waitTime, setWaitTime] = useState(5000)
   const [carousel, setCarousel] = useState('page')
@@ -165,7 +166,7 @@ const ScrollTable = (props) => {
 
     const bgColor = headerConfig.find(item => item.name === 'bgColor').value
     setHeaderBGC(bgColor)
-    const textAlign = headerConfig.find(item => item.name === 'textAlign').value
+    const textAlign = headerConfig.find(item => item.name === 'textAlign').value.find(item => item.name === 'textAlign').value
     let textStyle = styleTransformFunc(headerConfig.find(item => item.name === 'textStyle').value, false)
     const gradientConfig = headerConfig.filter(item => item.name.indexOf('gradient') !== -1).reduce((pre, cur) => {
       pre[cur.name] = cur.value
@@ -214,7 +215,41 @@ const ScrollTable = (props) => {
       indexConfig = ComponentDefaultConfig.config.find(item => item.name === 'tableIndex').value
     }
     const indexTitle = indexConfig.find(item => item.name === 'title').value
-    const indexAlign = indexConfig.find(item => item.name === 'textAlign').value
+    const indexAlign = indexConfig.find(item => item.name === 'textAlign').value.find(item => item.name === 'textAlign').value
+    const indexColumnCustomStyle = indexConfig.find(item => item.name === 'indexColumnCustomStyle').value
+    const indexBgConfigs = indexColumnCustomStyle.reduce((total, cur) => {
+      const data = cur.value.reduce((pre, cu) => {
+        if (cu.name === 'textStyle') {
+          let textStyle = styleTransformFunc(cu.value, false)
+          return { ...pre, ...textStyle }
+        }
+        if (cu.name === 'bgSize') {
+          let width = cu.value.find(item => item.name === 'width').value
+          if (width.indexOf('%') === -1) {
+            width += 'px'
+          }
+          let height = cu.value.find(item => item.name === 'height').value
+          if (height.indexOf('%') === -1) {
+            height += 'px'
+          }
+          return { ...pre, width, height }
+        }
+        if (cu.name === 'bgColor') {
+          return { ...pre, 'background-color': cu.value }
+        }
+        if (cu.name === 'bgImg') {
+          return {
+            ...pre,
+            'background-image': `url('${cu.value}')`,
+            'background-size': 'cover',
+            'background-repeat': 'no-repeat',
+            'background-position': 'center center',
+          }
+        }
+      }, {})
+      return total.concat(data)
+    }, [])
+    setIndexBgConfigs(indexBgConfigs)
     let textStyle = styleTransformFunc(tableIndexConfig.find(item => item.name === 'textStyle').value, false)
     textStyle = styleObjectToStr({'text-align': indexAlign, ...textStyle})
     setIndexAlign(indexAlign)
@@ -378,14 +413,7 @@ const ScrollTable = (props) => {
     data: tableData,
     waitTime,
     index: isIndex,
-    indexBgConfigs: [
-      {
-        "width": '20px',
-        "height": '20px',
-        "background-color": 'red',
-        "background-image": ''
-      }
-    ],
+    indexBgConfigs,
     hoverPause: true,
     headerBGC, // 头部背景色
     headerBGI, // 头部背景图片

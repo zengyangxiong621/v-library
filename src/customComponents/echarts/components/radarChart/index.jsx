@@ -11,7 +11,7 @@ const debounce = (fn, delay = 200) => {
     }, delay)
   }
 }
-class RadarChart extends React {
+class RadarChart extends React.PureComponent {
   constructor(props) {
     super(props);
     this.resizeDebounce = debounce(this.chartsResize, 250); 
@@ -195,10 +195,18 @@ class RadarChart extends React {
   formatChartData(data,config){
     const {fields } = this.props
     const wave = this.formatConfig([this.getStyleData(config,'wave')],[])
+    const axisLabel = this.formatConfig([this.getStyleData(config,'axisLabel')],[])
     let list = []
     if(data.length){
       list = data[0][fields[0]] || []
-      list.map(item => {
+      list.map((item,index) => {
+        if(!index && axisLabel.show){
+          item.axisLabel= {
+            show: true,
+            color: axisLabel.axisLabelColor,
+            fontSize: axisLabel.fontSize
+          }
+        }
         item.min = wave.min
         item.max = wave.max
       })

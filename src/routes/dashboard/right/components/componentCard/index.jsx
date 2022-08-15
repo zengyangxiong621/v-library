@@ -5,7 +5,6 @@ import { http } from '@/services/request'
 import { mergeSameAndAddDiff } from '@/routes/dashboard/components/moduleUpdate/methods/mergeModuleConfig'
 import importComponent from '@/routes/dashboard/components/moduleUpdate/methods/fetchComponentJsFile'
 
-
 // import { deepClone } from '@/utils/index'
 
 const ComponentCard = props => {
@@ -71,20 +70,14 @@ const ComponentCard = props => {
       const { ComponentDefaultConfig } = window.VComponents;
       const currentDefaultConfig = ComponentDefaultConfig
       const index = bar.components.findIndex(item => item.id === id)
-      console.log('currentDefaultConfig', currentDefaultConfig);
       bar.components.splice(index, 1, { ...currentDefaultConfig, id })
       dispatch({
         type: 'bar/save'
       })
-      // dispatch({
-      //   type: 'bar/setModuleDefaultConfig',
-      //   payload: currentDefaultConfig,
-      //   itemData: data
-      // })
-      // dispatch({
-      //   type: 'bar/getDashboardDetails',
-      //   payload: dashboardId
-      // })
+      dispatch({
+        type: 'bar/getDashboardDetails',
+        payload: dashboardId
+      })
     }
   }
   return (

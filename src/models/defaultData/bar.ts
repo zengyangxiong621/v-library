@@ -124,13 +124,16 @@ export const defaultData = {
           {
             "name": "textAlign",
             "displayName": "文本对齐",
-            "type": "select",
-            "options": [ { "name": "左对齐", "value": "left" }, { "name": "居中", "value": "center" }, {
-              "name": "右对齐",
-              "value": "right",
+            "type": "alignFull",
+            "value": [ {
+              "name": "textAlign",
+              "displayName": "水平对齐",
+              "type": "align",
+              "range": [ "left", "center", "right" ],
+              "value": "left",
             } ],
-            "value": "left",
-          }, {
+          },
+          {
             "displayName": "文本样式",
             "name": "textStyle",
             "type": "textFullStyleGroup",
@@ -146,7 +149,7 @@ export const defaultData = {
               "displayName": "字距",
               "name": "letterSpacing",
               "value": 0,
-            }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+            }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
           } ],
       }, {
         "name": "tableRow",
@@ -171,16 +174,19 @@ export const defaultData = {
           "displayName": "标题",
           "value": "#",
           "type": "input",
-        }, {
-          "name": "textAlign",
-          "displayName": "文本对齐",
-          "type": "select",
-          "options": [ { "name": "左对齐", "value": "left" }, { "name": "居中", "value": "center" }, {
-            "name": "右对齐",
-            "value": "right",
-          } ],
-          "value": "left",
         },
+          {
+            "name": "textAlign",
+            "displayName": "文本对齐",
+            "type": "alignFull",
+            "value": [ {
+              "name": "textAlign",
+              "displayName": "水平对齐",
+              "type": "align",
+              "range": [ "left", "center", "right" ],
+              "value": "left",
+            } ],
+          },
           {
             "displayName": "文本样式",
             "name": "textStyle",
@@ -197,7 +203,12 @@ export const defaultData = {
               "displayName": "字距",
               "name": "letterSpacing",
               "value": 0,
-            }, { "displayName": "行距", "name": "lineHeight", "value": "48px" } ],
+            }, {
+              "displayName": "行距", "name": "lineHeight",
+              "config": {
+                "disabled": true,
+              }, "value": "unset"
+            } ],
           },
           {
             "name": "indexColumnCustomStyle",
@@ -251,7 +262,10 @@ export const defaultData = {
                         {
                           "displayName": "行距",
                           "name": "lineHeight",
-                          "value": "35px",
+                          "config": {
+                            "disabled": true,
+                          },
+                          "value": "unset",
                         },
                       ],
                     },
@@ -284,7 +298,7 @@ export const defaultData = {
                     {
                       "name": "bgColor",
                       "displayName": "背景色",
-                      "value": "#222430",
+                      "value": "#06104a",
                       "type": "color",
                     },
                     {
@@ -343,7 +357,10 @@ export const defaultData = {
                       {
                         "displayName": "行距",
                         "name": "lineHeight",
-                        "value": "35px",
+                        "config": {
+                          "disabled": true,
+                        },
+                        "value": "unset",
                       },
                     ],
                   },
@@ -376,7 +393,7 @@ export const defaultData = {
                   {
                     "name": "bgColor",
                     "displayName": "背景色",
-                    "value": "#222430",
+                    "value": "#06104a",
                     "type": "color",
                   },
                   {
@@ -446,7 +463,7 @@ export const defaultData = {
                     "displayName": "字距",
                     "name": "letterSpacing",
                     "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                  }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
                 },
                   {
                     "name": "customStyle",
@@ -481,7 +498,7 @@ export const defaultData = {
                               "displayName": "字距",
                               "name": "letterSpacing",
                               "value": 0,
-                            }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                            }, { "displayName": "行距", "name": "lineHeight", "value": "unset" } ],
                           } ],
                         },
                       ],
@@ -512,7 +529,7 @@ export const defaultData = {
                           "displayName": "字距",
                           "name": "letterSpacing",
                           "value": 0,
-                        }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                        }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true},  "value": "unset" } ],
                       } ],
                     } ],
                   },
@@ -568,7 +585,7 @@ export const defaultData = {
                 "displayName": "字距",
                 "name": "letterSpacing",
                 "value": 0,
-              }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+              }, { "displayName": "行距", "name": "lineHeight", "value": "unset" } ],
             }, {
               "name": "customStyle",
               "displayName": "样式指定",
@@ -602,7 +619,7 @@ export const defaultData = {
                         "displayName": "字距",
                         "name": "letterSpacing",
                         "value": 0,
-                      }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                      }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
                     } ],
                   },
                 ],
@@ -633,7 +650,7 @@ export const defaultData = {
                     "displayName": "字距",
                     "name": "letterSpacing",
                     "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                  }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
                 } ],
               } ],
             } ],
@@ -685,7 +702,7 @@ export const defaultData = {
                 "displayName": "字距",
                 "name": "letterSpacing",
                 "value": 0,
-              }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+              }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
             }, {
               "name": "customStyle",
               "displayName": "样式指定",
@@ -719,7 +736,7 @@ export const defaultData = {
                         "displayName": "字距",
                         "name": "letterSpacing",
                         "value": 0,
-                      }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                      }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
                     } ],
                   },
                 ],
@@ -750,7 +767,7 @@ export const defaultData = {
                     "displayName": "字距",
                     "name": "letterSpacing",
                     "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                  }, { "displayName": "行距", "name": "lineHeight","config": {"disabled": true}, "value": "unset" } ],
                 } ],
               } ],
             } ],
@@ -802,7 +819,7 @@ export const defaultData = {
                 "displayName": "字距",
                 "name": "letterSpacing",
                 "value": 0,
-              }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+              }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
             }, {
               "name": "customStyle",
               "displayName": "样式指定",
@@ -836,7 +853,7 @@ export const defaultData = {
                         "displayName": "字距",
                         "name": "letterSpacing",
                         "value": 0,
-                      }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                      }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
                     } ],
                   },
                 ],
@@ -867,7 +884,7 @@ export const defaultData = {
                     "displayName": "字距",
                     "name": "letterSpacing",
                     "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight", "value": "35px" } ],
+                  }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true},  "value": "unset" } ],
                 } ],
               } ],
             } ],
