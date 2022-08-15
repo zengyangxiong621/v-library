@@ -1,154 +1,171 @@
 .control-cabin-wraper {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 64px);
   background-color: #161c2d;
 
   .control-cabin-bg {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     background: url("../../assets/images/controlCabin/page_bg.png") no-repeat bottom;
     background-size: cover;
   }
 
   .slide-wraper {
-    width: 1152px;
+    width: 100%;
     height: 100%;
-    margin: 0 auto;
-    position: relative;
 
-    // 空数据提示
-    .ant-spin-spinning {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+    .carousel_____container {
+      width: 100%;
+      height: 100%;
     }
 
-    .ant-empty {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .center {
-      &.slick-slider {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 406px;
-        transform: translateY(-50%);
-      }
-
-      .control-cabin-img-active-left {
-        width: 216px !important;
-
-        .control-cabin-img {
-          transform: rotateY(-9deg) scale(1, 0.94);
-        }
-      }
-
-      .control-cabin-img-active-right {
-        width: 216px !important;
-
-        .control-cabin-img {
-          transform: rotateY(9deg) scale(1, 0.94);
-        }
-      }
-
-      .control-cabin-img-active-center {
-        width: 676px !important;
-        margin: 0 22px;
-        cursor: pointer;
-
-        .control-cabin-img {
-          padding: 24px 11px 14px !important;
-          background-image: none !important;
-          background: url("../../assets/images/controlCabin/center_item_bg.png") !important;
-          border: 0 !important;
-          border-radius: 0 !important;
-
-          &:hover {
-            background: url(../../assets/images/controlCabin/center_item_bg_hover.png) center !important;
-            background-size: cover;
-          }
-        }
-      }
-
-      .slick-slide {
-        position: relative;
-        height: 406px !important;
-        transition: all .3s ease;
-
-        .control-cabin-img {
-          padding: 10px;
-          border: 2px solid #0d53b7;
-          border-radius: 0 0 10px 10px;
-          background-image: radial-gradient(#0000ff 0%, rgba(13, 83, 183, 0.2) 100%);
-        }
-
-        div {
-          height: 100%;
-          width: 100%;
-
-          img {
-            height: 100%;
-            width: 100%;
-          }
-        }
-      }
-
-      .slick-active {
-        >div {
-          perspective: 300;
-          -webkit-perspective: 300;
-          transform-style: preserve-3d;
-        }
-      }
-
-      .slick-center {
-        height: 406px;
-      }
-
+    .carousel_____overlay-title {
+      letter-spacing: 10px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
     }
   }
 
-  .slick-prev,
-  .slick-next {
-    width: 84px;
-    height: 53px;
+  // .slide-wraper {
+  //   width: 1152px;
+  //   height: 100%;
+  //   margin: 0 auto;
+  //   position: relative;
 
-    &::before {
-      display: none;
-    }
-  }
+  //   // 空数据提示
+  //   .ant-spin-spinning {
+  //     position: absolute;
+  //     left: 50%;
+  //     top: 50%;
+  //     transform: translate(-50%, -50%);
+  //   }
 
-  .slick-prev {
-    left: -70px;
-    background: url(../../assets/images/controlCabin/btn-left.png) no-repeat center;
+  //   .ant-empty {
+  //     position: absolute;
+  //     left: 50%;
+  //     top: 50%;
+  //     transform: translate(-50%, -50%);
+  //   }
 
-    &:hover {
-      background: url(../../assets/images/controlCabin/btn-left.png) no-repeat center;
-    }
+  //   .center {
+  //     &.slick-slider {
+  //       position: absolute;
+  //       top: 50%;
+  //       left: 0;
+  //       right: 0;
+  //       height: 406px;
+  //       transform: translateY(-50%);
+  //     }
 
-    &:focus {
-      background: url(../../assets/images/controlCabin/btn-left.png) no-repeat center;
-    }
-  }
+  //     .control-cabin-img-active-left {
+  //       width: 216px !important;
 
-  .slick-next {
-    right: -70px;
-    background: url(../../assets/images/controlCabin/btn_right.png) no-repeat center;
+  //       .control-cabin-img {
+  //         transform: rotateY(-9deg) scale(1, 0.94);
+  //       }
+  //     }
 
-    &:hover {
-      background: url(../../assets/images/controlCabin/btn_right.png) no-repeat center;
-    }
+  //     .control-cabin-img-active-right {
+  //       width: 216px !important;
 
-    &:focus {
-      background: url(../../assets/images/controlCabin/btn_right.png) no-repeat center;
-    }
-  }
+  //       .control-cabin-img {
+  //         transform: rotateY(9deg) scale(1, 0.94);
+  //       }
+  //     }
+
+  //     .control-cabin-img-active-center {
+  //       width: 676px !important;
+  //       margin: 0 22px;
+  //       cursor: pointer;
+
+  //       .control-cabin-img {
+  //         padding: 24px 11px 14px !important;
+  //         background-image: none !important;
+  //         background: url("../../assets/images/controlCabin/center_item_bg.png") !important;
+  //         border: 0 !important;
+  //         border-radius: 0 !important;
+
+  //         &:hover {
+  //           background: url(../../assets/images/controlCabin/center_item_bg_hover.png) center !important;
+  //           background-size: cover;
+  //         }
+  //       }
+  //     }
+
+  //     .slick-slide {
+  //       position: relative;
+  //       height: 406px !important;
+  //       transition: all .3s ease;
+
+  //       .control-cabin-img {
+  //         padding: 10px;
+  //         border: 2px solid #0d53b7;
+  //         border-radius: 0 0 10px 10px;
+  //         background-image: radial-gradient(#0000ff 0%, rgba(13, 83, 183, 0.2) 100%);
+  //       }
+
+  //       div {
+  //         height: 100%;
+  //         width: 100%;
+
+  //         img {
+  //           height: 100%;
+  //           width: 100%;
+  //         }
+  //       }
+  //     }
+
+  //     .slick-active {
+  //       >div {
+  //         perspective: 300;
+  //         -webkit-perspective: 300;
+  //         transform-style: preserve-3d;
+  //       }
+  //     }
+
+  //     .slick-center {
+  //       height: 406px;
+  //     }
+
+  //   }
+  // }
+
+  // .slick-prev,
+  // .slick-next {
+  //   width: 84px;
+  //   height: 53px;
+
+  //   &::before {
+  //     display: none;
+  //   }
+  // }
+
+  // .slick-prev {
+  //   left: -70px;
+  //   background: url(../../assets/images/controlCabin/btn-left.png) no-repeat center;
+
+  //   &:hover {
+  //     background: url(../../assets/images/controlCabin/btn-left.png) no-repeat center;
+  //   }
+
+  //   &:focus {
+  //     background: url(../../assets/images/controlCabin/btn-left.png) no-repeat center;
+  //   }
+  // }
+
+  // .slick-next {
+  //   right: -70px;
+  //   background: url(../../assets/images/controlCabin/btn_right.png) no-repeat center;
+
+  //   &:hover {
+  //     background: url(../../assets/images/controlCabin/btn_right.png) no-repeat center;
+  //   }
+
+  //   &:focus {
+  //     background: url(../../assets/images/controlCabin/btn_right.png) no-repeat center;
+  //   }
+  // }
 }
 
 .con-cabin-fullscreen {
