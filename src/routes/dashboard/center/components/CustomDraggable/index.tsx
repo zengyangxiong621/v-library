@@ -905,7 +905,7 @@ const CustomDraggable
                             // <Da componentConfig={component}/>
                             // <SwiperText  componentConfig={component}></SwiperText>
 
-                            layer.moduleName === 'counter' ?
+                          /* --  layer.moduleName === 'counter' ?
                             <Counter
                               componentConfig={component}
                               fields={getFields(component)}
@@ -974,6 +974,8 @@ const CustomDraggable
                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                               >
                               </ScrollTable> :
+                              */
+
 /*                              layer.moduleName === 'tab' ?
                                 <Tab
                                   onChange={(val:any)=>handleValueChange(val, component, layer.id)}
@@ -998,7 +1000,15 @@ const CustomDraggable
                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                 >
                                 </TimeSelect> :*/
-                                layer.moduleName === 'worldMap' ?
+
+                                <ChinaMap
+                                    onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                    componentConfig={ component }
+                                    fields={ getFields(component) }
+                                    comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                  ></ChinaMap>
+
+                      /*         layer.moduleName === 'worldMap' ?
                                   <WorldMap
                                     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                     componentConfig={ component }
@@ -1064,7 +1074,8 @@ const CustomDraggable
                                         comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
                                         onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                       ></RemoteBaseComponent>
-                                    </ErrorCatch>
+                                    </ErrorCatch> */
+                                    
                           }
                          </div>
                       </>
