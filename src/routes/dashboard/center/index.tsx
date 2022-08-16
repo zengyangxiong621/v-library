@@ -34,7 +34,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [panels, setPanels] = useState([])
   useEffect(() => {
     const layers = deepClone(bar.treeData)
-    console.log('寄', layers)
     treeDataReverse(layers)
     setLayers(layers)
     setComponents(bar.components)

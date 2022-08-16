@@ -68,7 +68,7 @@ export default {
     setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
       history.listen((location: any) => {
-        console.log('location', location)
+        // console.log('location', location)
       });
     },
     onResize({ dispatch, history }: any) {
@@ -283,16 +283,6 @@ export default {
             dashboardName,
           },
         });
-        console.log('结果', {
-          treeData: noEmptyGroupLayers,
-          components,
-          panels,
-          dashboardId,
-          stateId,
-          panelId,
-          dashboardConfig: newDashboardConfig,
-          dashboardName,
-        })
         cb({ dashboardConfig: newDashboardConfig, dashboardName });
       } catch (e) {
         return e;
@@ -479,20 +469,21 @@ export default {
     },
     // 删除图层、分组
     *delete({ payload }: any, { select, call, put }: any): any {
-      console.log('payload', payload)
       const layers = yield http({
         url: "/visual/layer/delete",
         method: "delete",
         body: payload,
       });
+      if(layers) {
+        const filterNullLayers = clearNullGroup(layers);
+        yield put({
+          type: "updateTree",
+          payload: filterNullLayers,
+        });
+      }
       yield put({
         type: "deleteComponentData",
         payload: { id: payload.id },
-      });
-      const filterNullLayers = clearNullGroup(layers);
-      yield put({
-        type: "updateTree",
-        payload: filterNullLayers,
       });
       yield put({
         type: "updateContainersEnableAndModules",
@@ -990,7 +981,6 @@ export default {
         ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
         ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
       ]
-      console.log('selectedComponents', state.selectedComponents)
       state.selectedComponentRefs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
@@ -1002,7 +992,6 @@ export default {
       return { ...state };
     },
     setLayerConfig(state: IBarState, { payload }: any) {
-      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup)
       if (state.selectedComponentOrGroup.length === 1) {
         const layer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in layer) {
@@ -1185,7 +1174,6 @@ export default {
     },
     // 选中节点时，保存住整个node对象
     setLayers(state: IBarState, { payload }: any) {
-      console.log('setLayers', payload)
       state.selectedComponentOrGroup = payload;
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
@@ -1284,12 +1272,13 @@ export default {
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      const newTree = remove(state.treeData, state.key);
+      // const newTree = remove(state.treeData, state.key);
       // const hadFilterEmptyGroupTree = filterEmptyGroups(newTree);
       // return { ...state, treeData: hadFilterEmptyGroupTree };
 
       // @Mark: 这儿要把state.key(存放当前被选中的图层的数组)重置为空。因为删除之前(比如用的右键选中该图层)会将选中的图层id存入key中，调用接口成功后，图层被删除了，但key中依旧会留存有这个已经被删除的图层的id,如果没有重置key,在“添加组件至画布”这一步中获取insertId处的逻辑会直接将这个已经被删除的图层id作为insertId,从而引发--删除组件后，立即添加组件会导致左侧图层被清空 的bug
-      return { ...state, treeData: newTree, key: [] };
+      // return { ...state, treeData: newTree, key: [] };
+      return {...state, key: []}
     },
     // 复制
     copy(state: IBarState, { payload }: any) {
@@ -1385,7 +1374,6 @@ export default {
         ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
         ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
       ]
-      console.log('state.selectedComponents', state.selectedComponents)
       return {
         ...state,
       };

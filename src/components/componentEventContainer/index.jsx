@@ -529,7 +529,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </InstrumentPanel4>
-          : 
+          :
           <ErrorCatch
             app={componentConfig.name}
             user=""

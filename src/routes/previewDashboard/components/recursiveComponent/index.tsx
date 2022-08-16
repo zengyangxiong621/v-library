@@ -1,10 +1,9 @@
-import { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 
 import EveryComponent from '../everyComponent'
 import ReferencePanel from '@/customComponents/referencePanel'
 import DynamicPanel from '@/customComponents/dynamicPanel/index'
 import { getComDataWithFilters } from '@/utils/data'
-import * as React from "react"
 
 const MODULES = 'modules'
 const OPACITY = 'opacity'
@@ -85,6 +84,7 @@ const RecursiveComponent = (props: any) => {
                           componentData={targetComponent}
                           comData={getComDataWithFilters(bar.componentData, targetComponent, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
                           scaleValue={scaleValue}
+                          layerInfo={layer}
                         />
                       }
                     </div>
