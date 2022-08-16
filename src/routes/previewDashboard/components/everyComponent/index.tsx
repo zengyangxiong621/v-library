@@ -18,7 +18,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
   const { mountAnimation } = layerInfo
   const { delay, direction, duration, opacityOpen, timingFunction, type } = mountAnimation || {}
 
-  console.log('mountAnimation', layerInfo);
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -29,23 +28,25 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
     position: 'absolute',
   })
 
-
+  // 交互-动画
   useEffect(() => {
     // 如果没有 设置“载入动画”, 那么后端不会返回mountAnimation字段
     if (mountAnimation) {
-      const pageWrapEl: any = document.querySelector('.previewDashboard-wrap')
       const curCmpContainerEl: any = document.querySelector(`.animation-id-${id}`)
-      const pageWrapElInfo = pageWrapEl.getBoundingClientRect()
+      const {clientWidth, clientHeight} = curCmpContainerEl
       //*****  移入模式
       let translateDirection = ''
       // 移入模式 1、移入 2、小移入 区别就是动画开始时起始的位置不同
-      // let moveDistance = type === 'slide' ? 3000 : +(pageWrapElInfo.left.toFixed(2))+(pageWrapElInfo.left.toFixed(2))
+      // let moveDistance = type === 'slide' ? 3000 : +(pageWrapElInfo.left.toFixed(2))
+
+      // 移入和划变不同,这个moveDistance可以写死
       let moveDistance = type === 'slide' ? 3000 : 200
 
       let startKeyframe: any = {}
       let endKeyframe: any = {}
 
       if (type === 'slide' || type === 'slideSmall') {
+        //@tip: endKeyframe 需放在 switch() 上方
         endKeyframe = {
           transform: `translate(0,0)`,
         }
@@ -93,51 +94,44 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
       }
 
       if (type === 'wipe') {
+        // 选 宽高中大的 作为边来构建 最终裁剪区域的正方形
+        const squareWidth = clientWidth > clientHeight ? clientWidth : clientHeight
         switch (direction) {
           // 从下至上
           case 'up':
-            startKeyframe = { clipPath: 'polygon(0 3000px, 3000px 3000px, 3000px 3000px, 0 3000px)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
+            startKeyframe = { clipPath: `polygon(0 ${squareWidth}px, ${squareWidth}px ${squareWidth}px, ${squareWidth}px ${squareWidth}px, 0 ${squareWidth}px)` }
             break;
           // 从上至下
           case 'down':
             // alert('down')
-            startKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 0, 0 0)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
+            startKeyframe = { clipPath: `polygon(0 0, ${squareWidth}px 0, ${squareWidth}px 0, 0 0)` }
             break;
           // 从左至右
           case 'left':
-            startKeyframe = { clipPath: 'polygon(0 0, 0 0, 0 3000px, 0 3000px)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
+            startKeyframe = { clipPath: `polygon(0 0, 0 0, 0 ${squareWidth}px, 0 ${squareWidth}px)` }
             break;
           // 从右至左
           case 'right':
-            startKeyframe = { clipPath: 'polygon(3000px 0, 3000px 0, 3000px 3000px, 3000px 3000px)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
+            startKeyframe = { clipPath: `polygon(${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px ${squareWidth}px, ${squareWidth}px ${squareWidth}px)` }
             break;
           // 左上->右下
           case 'rightDown':
             startKeyframe = { clipPath: 'polygon(0 0, 0 0, 0 0, 0 0)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
             break;
           // 右上 -> 左下
           case 'leftDown':
-            startKeyframe = { clipPath: 'polygon(3000px 0, 3000px 0, 3000px 0, 3000px 0)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
+            startKeyframe = { clipPath: `polygon(${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px 0)` }
             break;
           // 左下 -> 右上
           case 'rightUp':
-            alert('hhh')
-            startKeyframe = { clipPath: 'polygon(0 3000px, 0 3000px, 0 3000px, 0 3000px)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
+            startKeyframe = { clipPath: `polygon(0 ${squareWidth}px, 0 ${squareWidth}px, 0 ${squareWidth}px, 0 ${squareWidth}px)` }
             break;
           // 右下 -> 左上
           case 'leftUp':
-            alert('leftUp')
-            startKeyframe = { clipPath: 'polygon(3000px 3000px,3000px 3000px,3000px 3000px,3000px 3000px)' }
-            endKeyframe = { clipPath: 'polygon(0 0, 3000px 0, 3000px 3000px, 0 3000px)' }
+            startKeyframe = { clipPath: `polygon(${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px)` }
             break;
         }
+        endKeyframe = { clipPath: `polygon(0 0, ${squareWidth}px 0, ${squareWidth}px ${squareWidth}px, 0 ${squareWidth}px)` }
       }
 
 
@@ -152,15 +146,13 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
         // 没有选择 “渐隐渐显”, 需要手动在延迟时间后把组件显现出来, 否则组件就一直是透明的状态
         timeoutId = setTimeout(() => curCmpContainerEl.style.opacity = 1, delay)
       }
-      console.log('startKeyframe', startKeyframe);
-      console.log('endKeyframe', endKeyframe);
-      // 移入-动画设置
+      // 最终应用的动画
       curCmpContainerEl.animate(
         [startKeyframe, endKeyframe],
         {
           duration: duration,
           delay: delay,
-          fill: 'forwards',
+          fill: 'both',
           easing: timingFunction,
           // easing: 'steps(8, end)',
           iterations: 1
