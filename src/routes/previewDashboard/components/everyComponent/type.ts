@@ -23,3 +23,38 @@ export const getTargetStyle = (Arr: TArr[], originalStyle?: {}): TArr => {
   }
   return { ...originalStyle, ...targetStyle };
 };
+
+
+
+
+
+// const slideKeyframes = `@keyframes load-animation-slide {
+//   0% {
+//     transform: ${translateDirection};
+//   }
+//   100% {
+//     transform: translate(0,0);
+//   }
+// }`
+
+// // console.log('hhhhhhh', slideKeyframes);
+
+// const slideSmallKeyframes = `@keyframes load-animation-slide-small {
+//   0% {
+//     transform: ${translateDirection};
+//   }
+//   100% {
+//     transform: translate(0,0);
+//   }
+// }`
+// const wipeKeyframes = `@keyframes load-animation-wipe {
+//   0% {
+//     width: '0%',
+//   }
+//   50%{
+//     width: '50%'
+//   }
+//   100% {
+//     width: '100%',
+//   }
+// }`

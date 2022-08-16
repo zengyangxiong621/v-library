@@ -205,7 +205,8 @@ const PublishDashboard = ({ dispatch, bar, history, location }: any) => {
               <div id="scaleDiv"
                 style={{
                   ...pageStyle,
-                  transform: `scale(${scaleValue})`
+                  transform: `scale(${scaleValue})`,
+                  overflow: 'hidden'
                 }}
               >
                 {

@@ -13,8 +13,6 @@ import { calcCanvasSize } from '../../utils'
 const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
-  const [screenWidthRatio, setScreenWidthRatio] = useState(1)
-  const [screenHeightRatio, setScreenHeightRatio] = useState(1)
   // 接口中返回的 当前屏幕设置信息
   const [dashboardConfig, setDashboardConfig] = useState([])
   const [scaleMode, setScaleMode] = useState<string>('')
@@ -197,6 +195,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     setComponents(bar.components)
     setPanels(bar.panels)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bar.treeData])
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
@@ -226,8 +225,6 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     })
     return map
   }
-
-  console.log('layers', layers)
   return (
     <div id="gs-v-library-app">
       {
@@ -242,7 +239,8 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
               <div id="scaleDiv"
                 style={{
                   ...pageStyle,
-                  ...scaleStyle
+                  ...scaleStyle,
+                  overflow: 'hidden'
                 }}
               >
                 {

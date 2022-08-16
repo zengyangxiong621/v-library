@@ -60,7 +60,6 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
   }, [props.visible])
 
   const getDataList = async () => {
-
     const data = await http({
       url: '/visual/module/callParam/list',
       method: 'get',
