@@ -15,7 +15,7 @@
     right: 0;
     bottom: 0;
     margin: auto;
-    z-index: 100;
+    z-index: -999999;
 }
 .ch-map .map-content .bg1,.bg2 {
     position: absolute;
@@ -24,7 +24,7 @@
     right: 0;
     bottom: 0;
     margin: auto;
-    z-index: 10;
+    z-index: -9999999;
 }
 .ch-map .map-content .bg1 {
     animation: bg1 5s linear infinite

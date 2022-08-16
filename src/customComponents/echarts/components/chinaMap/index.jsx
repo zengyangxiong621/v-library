@@ -176,7 +176,7 @@ class ChinaMap extends Component {
               }],
               global: false
             },
-            borderWidth: 4.5,
+            borderWidth: 7,
             shadowColor: "#35a8ff",
             // shadowColor: "#3071a7",
             shadowOffsetX: 0,
@@ -197,7 +197,7 @@ class ChinaMap extends Component {
           map: 'china',
           type: 'map',
           radius: '100%',
-          zoom: 1.19,
+          zoom: 1.20,
           label: {
             normal: {
               show: false,
