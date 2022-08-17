@@ -57,7 +57,8 @@ const createMenu = ((menuData, props) => {  //创建菜单
 });
 
 const Header = props => {
-  const { defaultPath,menuData, location:{pathname}, history,global:{userInfo, workspaceList,curWorkspace},dispatch } = props
+  const { defaultPath,menuData, location:{pathname}, history,global:{userInfo, workspaceList},dispatch } = props
+  let curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
 
   const curUserid=useMemo(()=>{
     if(userInfo && userInfo.id){
@@ -74,16 +75,15 @@ const Header = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modifyLoading,setModifyLoding]=useState(false)
 
+
   // 选择工作空间
   const selectWorkspace = ({key}) => {
     const data = workspaceList.find(item => item.id === key)
     if (key == '-1') {
       history.push('/work-space')
     }else{
-      dispatch({
-        type: 'global/setCurWorkspace',
-        payload: data
-      })
+      localStorage.setItem('curWorkspace',JSON.stringify(data))
+      window.location.reload()
     }
   }
   const handleLogout=async ()=>{

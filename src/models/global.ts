@@ -71,12 +71,6 @@ const globalStroe={
         ...state,
         workspaceList:payload
       }
-    },
-    setCurWorkspace(state:any,{payload}:any){
-      return {
-        ...state,
-        curWorkspace:payload
-      }
     }
   },
   effects: {
@@ -109,10 +103,11 @@ const globalStroe={
             type: "setWorkspaceList",
             payload: data,
           });
-          yield put({
-            type: "setCurWorkspace",
-            payload: data[0],
-          });
+          const curWorkspace=localStorage.getItem('curWorkspace')
+          if(!curWorkspace){
+            // 将当前空间存入到localStorage
+            localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
+          }
         }
       } catch (error) {
         console.log(error);
