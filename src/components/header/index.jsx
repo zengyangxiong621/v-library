@@ -108,6 +108,7 @@ const Header = props => {
           history.replace('/login')
         }
     }
+    localStorage.removeItem('curWorkspace')
   }
   const handleUserMenuClick=async ({key}) => {
     if(key==='1'){
