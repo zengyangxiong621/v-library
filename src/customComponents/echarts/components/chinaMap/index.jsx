@@ -58,7 +58,6 @@ class ChinaMap extends Component {
     return res;
   };
 
-
   // 动态计算柱形图的高度（定一个max）
   lineMaxHeight = (dataCenter) => {
     if (!dataCenter) { return }
@@ -111,7 +110,14 @@ class ChinaMap extends Component {
     const { config, staticData } = componentConfig || ComponentDefaultConfig
     const mainData = this.formatConfig(config, [])
     // console.log(mainData, '#mainData');
-    const { bgColor, selectColor, borderColor } = mainData
+    const { bgColor, selectColor, borderColor, width ,height  } = mainData
+    // 计算地图缩放比例，初始值 width:3325,height:1900,比例 7:4
+    let SCALE = 1;
+    if (width/height < 1.75) {
+      SCALE = width/3325;
+    } else {
+      SCALE = height/1900;
+    }
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
     const fields2ValueMap = {}
@@ -627,6 +633,7 @@ class ChinaMap extends Component {
     // ----------- 更新数据 -----------
     const { fields, comData, componentConfig } = this.props
     const { config, staticData } = componentConfig || ComponentDefaultConfig
+    console.log(config, ' this.config');
     let { mapChart, options } = this.state
     // 组件静态或者传入组件的数据
     const originData = comData || staticData.data
@@ -645,13 +652,20 @@ class ChinaMap extends Component {
     let ipCoordData = finalData[0].ipCoordData;
 
     let style = this.formatConfig(config, [])
-    // console.log(finalData, '#finalData');
-    const { bgColor, selectColor, borderColor } = style
-    if (mapChart) {
+
+    const { bgColor, selectColor, borderColor, width ,height  } = style
+
+    // 计算地图缩放比例，初始值 width:3325,height:1900,比例 7:4
+    let SCALE = 1;
+    if (width/height < 1.75) {
+      SCALE = width/3325;
+    } else {
+      SCALE = height/1900;
+    }    
+    if (mapChart) { 
       options.series[0].itemStyle.normal.areaColor = bgColor;
       options.series[0].itemStyle.normal.borderColor = borderColor;
       options.series[0].itemStyle.emphasis.areaColor = selectColor;
-
       options.series[1].data = this.convertIPData(ipData, ipCoordData);
       options.series[2].data = this.convertIPData2(dataCenter, ipCoordData);
       options.series[3].data = this.convertIPData(ipData, ipCoordData);
@@ -667,7 +681,7 @@ class ChinaMap extends Component {
 
 
     return (
-      <div className='ch-map'>
+      <div className='ch-map' style={{transform:'scale('+SCALE+')',transformOrigin: 'center center'}}>
         <div className='map-content'>
           <div
             className='map'

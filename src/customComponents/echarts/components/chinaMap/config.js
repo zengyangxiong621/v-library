@@ -157,10 +157,11 @@ const componentDefaultConfig = {
           displayName: "Y轴坐标",
           value: 100,
         },
+        // 宽高比 7:4
         {
           name: "width",
           displayName: "宽度",
-          value: 3320,
+          value: 3325,
         },
         {
           name: "height",
