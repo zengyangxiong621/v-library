@@ -5,7 +5,7 @@ import Carousel from './components/3DCarousel'
 import { http } from '../../services/request';
 
 import { Spin, Empty } from 'antd';
-import { CloseOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
 
 const picUrl = require('../../assets/images/模板默认背景图.png')
 
@@ -103,13 +103,13 @@ const ControlCabin = props => {
           isShowModal ? <div className="con-cabin-fullscreen">
             <iframe src={appSrc} frameBorder="0"></iframe>
             <div className="con-cabin-close-fullscreen" onClick={() => setIsShowModal(false)}>
-              <CloseOutlined />
+              <CloseCircleOutlined />
             </div>
             <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-pre" onClick={showPreApp}>
-              <ArrowLeftOutlined />
+              <LeftCircleOutlined />
             </div>
             <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-next" onClick={showNextApp}>
-              <ArrowRightOutlined />
+              <RightCircleOutlined />
             </div>
           </div> : null
         }
