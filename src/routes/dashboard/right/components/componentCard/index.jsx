@@ -11,18 +11,20 @@ const ComponentCard = props => {
   const [targetConfig, setTargetConfig] = useState({})
   const { allModulesConfig, dispatch, bar } = props
   const {
-    lastModuleVersion, id, name, moduleType,
+    lastModuleVersion, id, name,
     moduleName, dashboardId, moduleVersion, config: oldConfig,
   } = props.data;
-
+  let { moduleType } = props.data
   useEffect(() => {
     const targetObj = Array.isArray(allModulesConfig) ? allModulesConfig.find((item) =>
       item.moduleName === moduleName
     ) : {}
     if (targetObj) {
-      // const deepCopyTargetObj = deepClone(targetObj)
-      // console.log('deepCopyTargetObj', deepCopyTargetObj.config)
-      // setTargetConfig(deepCopyTargetObj)
+      // TODO  这儿目前用if是为了兼容那些组件config.js文件中还没加上moduleType字段的组件。
+      // 从原子组件信息中获取该组件目前最新的moduleType
+      if(targetObj.moduleType) {
+        moduleType = targetObj.moduleType
+      }
       setTargetConfig(targetObj.config)
     } else {
       setTargetConfig({})
@@ -32,12 +34,14 @@ const ComponentCard = props => {
   const updateVersion = async () => {
     // debugger
     const hadMergeConfig = mergeSameAndAddDiff(oldConfig, targetConfig)
+    // Temp：暂时为了兼容那些还没有在config.js中添加moduleType的组件
     const finalBody = {
       id,
       name,
       moduleName,
       moduleVersion: lastModuleVersion,
       config: hadMergeConfig,
+      moduleType
     }
 
     const data = await http({
@@ -61,16 +65,14 @@ const ComponentCard = props => {
       })
       // 更新组件成功后,重新请求最新版本组件的js文件
       const fetchComponentOptions = {
-        moduleType,
+        moduleLastType: moduleType,
         moduleName,
         moduleVersion: lastModuleVersion
       }
-      // alert('执行咯')
       window.eval(`${await importComponent(fetchComponentOptions)}`)
       const { ComponentDefaultConfig } = window.VComponents;
-      const currentDefaultConfig = ComponentDefaultConfig
       const index = bar.components.findIndex(item => item.id === id)
-      bar.components.splice(index, 1, { ...currentDefaultConfig, id })
+      bar.components.splice(index, 1, { ...ComponentDefaultConfig, id })
       dispatch({
         type: 'bar/save'
       })
@@ -84,7 +86,7 @@ const ComponentCard = props => {
     <React.Fragment>
       <div className="component-wraper g-flex g-justify-between">
         <div>
-          <h4 style={{ marginBottom: '0'}}>{`${name}_${id}`}</h4>
+          <h4 style={{ marginBottom: '0' }}>{`${name}_${id}`}</h4>
           {
             moduleVersion ? <p style={{ margin: '12px 0 0 0' }}>{`V${moduleVersion}`}</p> : <></>
           }

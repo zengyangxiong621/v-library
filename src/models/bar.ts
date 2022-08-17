@@ -234,7 +234,6 @@ export default {
         window.history.replaceState('', '', `/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`);
       }
       try {
-
         let { layers, components, dashboardConfig, dashboardName } = yield http(
           {
             url: `/visual/application/dashboard/detail/${ isPanel ? stateId : dashboardId}`,

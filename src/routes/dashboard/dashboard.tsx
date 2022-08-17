@@ -87,7 +87,6 @@ function App({ bar, dispatch, location, history }: any) {
   }
 
   const clearAllStatus = (event: MouseEvent) => {
-    console.log('点击率哦')
     const dom: any = (event.target as any) || null
     let temp = true
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
