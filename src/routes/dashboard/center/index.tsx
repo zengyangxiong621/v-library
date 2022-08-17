@@ -245,8 +245,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       type: "bar/updateSelectedComponents"
     })
     if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
-      // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
-      const panelOrComponent: IComponent | IPanel = deepClone(bar.selectedComponents[0])
+      const panelOrComponent: IComponent | IPanel = bar.selectedComponents[0]
       if ('type' in panelOrComponent) {
         const panel = panelOrComponent
         panel.config = {
@@ -257,7 +256,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           height
         }
       } else {
-        const component = panelOrComponent
+        // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
+        const component = deepClone(panelOrComponent)
         const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
         styleDimensionConfig.forEach((item: IStyleConfig) => {
           switch(item.name) {
