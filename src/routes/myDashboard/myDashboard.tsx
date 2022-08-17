@@ -35,19 +35,23 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
 
   // 页面初始化- 请求模板列表数据
   useEffect(() => {
+    // 第一次进入”我的可视化页面时“ curSelectedGroup是[],给他设置为['-1']
+    let curSelectedGroup: string[] = dashboardManage.curSelectedGroup
+    if(!curSelectedGroup.length) curSelectedGroup = ['-1']
     dispatch({
       type: 'dashboardManage/resetModel',
       payload: {
-        curSelectedGroup: ['-1'],
+        curSelectedGroup,
         curSelectedGroupName: '全部应用'
       }
     })
+    const groupId = dashboardManage.curSelectedGroup[0] === '-1' ? null : dashboardManage.curSelectedGroup[0]
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId: spaceId,
       map: sortMap,
-      groupId: null
+      groupId
     }
     getDataDispatch(finalBody)
   }, [])
