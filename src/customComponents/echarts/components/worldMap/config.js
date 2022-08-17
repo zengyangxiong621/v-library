@@ -5,6 +5,7 @@ const componentDefaultConfig = {
   parentId: "", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
 
+  moduleType: "map",
   moduleName: "worldMap", //组件标识
   moduleVersion: "1.0.0", //组件版本号
 
