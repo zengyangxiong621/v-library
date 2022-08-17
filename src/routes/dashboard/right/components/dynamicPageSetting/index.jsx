@@ -17,7 +17,7 @@ const DynamicPageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const pageConfig = bar.dashboardConfig
+  const pageConfig = deepClone(bar.dashboardConfig)
   const styleColorConfig = find(pageConfig, 'styleColor')
   const backgroundImg = find(pageConfig, 'backgroundImg')
   const thumbImg = find(pageConfig, 'thumbImg')
@@ -33,7 +33,6 @@ const DynamicPageSetting = ({ bar, dispatch, ...props }) => {
 
   const settingsChange = debounce(() => {
     isSettingsChange = true
-    console.log('pageConfig配置', find(pageConfig, 'styleColor'))
     saveData()
   }, 300)
 
@@ -44,6 +43,12 @@ const DynamicPageSetting = ({ bar, dispatch, ...props }) => {
       body: {
         config: bar.dashboardConfig.filter(item => ['backgroundImg', 'styleColor'].includes(item.name)),
         dashboardId: bar.stateId
+      }
+    })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        dashboardConfig: pageConfig
       }
     })
   }
