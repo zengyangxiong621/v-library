@@ -73,10 +73,7 @@ const AppCard = (props: any) => {
     //TODO 通过id跳转到主画布
     history.push(`/dashboard/${id}`)
   }
-  // TODO  已确定先不做
-  // 拷贝给他人
-  // const copyToOthers = (e: any) => {
-  // }
+
   const fabu = (e: any) => {
     changeFabuModal(true, id, status)
   }
@@ -106,8 +103,9 @@ const AppCard = (props: any) => {
     Modal.confirm({
       title: '删除应用',
       style: {
-        top: '30%'
+        top: '40%'
       },
+      getContainer: document.getElementById('root') as any,
       okButtonProps: {
         style: {
           backgroundColor: '#e9535d',
