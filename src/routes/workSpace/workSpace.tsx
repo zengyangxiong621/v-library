@@ -271,7 +271,7 @@ const workSpace = (props: any) => {
     {
       title: "添加时间",
       key: "createdTime",
-      sorter: true,
+      // sorter: true,
       width: 300,
       ellipsis: true,
       showSorterTooltip: false,

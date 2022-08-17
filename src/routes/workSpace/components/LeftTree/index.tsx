@@ -13,12 +13,14 @@ import { DownOutlined } from '@ant-design/icons'
 
 const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
-  const spaceId = '1'
   let accountId = userInfo.id
   // 获取应用分组列表
-  // useEffect(() => {
-  //   refreshWorkSpaceLists()
-  // }, [])
+  useEffect(() => {
+    if(workSpace.curWorkSpace.length){
+      // 发送请求刷新右侧成员列表
+      refreshMemberList(workSpace.curWorkSpace[0])
+    }
+  }, [workSpace.curWorkSpace])
 
   // 新建分组或者重命名成功分组，触发刷新
   const refreshWorkSpaceLists = () => {
@@ -79,8 +81,6 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       type: 'workSpace/setCurWorkSpace',
       payload: keys
     })
-    // 发送请求刷新右侧成员列表
-    refreshMemberList(key)
   }
   return (
     <div className='workspace-leftTree-wrap'>
