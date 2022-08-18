@@ -100,7 +100,6 @@ export const useFetch = async (
   if(code===403){
     message.error('暂无权限')
     window.history.replaceState(null,'','/404')
-    window.location.reload();
   }
   if(code===401){
     if (token && token.endsWith('x-gridsumdissector')) {

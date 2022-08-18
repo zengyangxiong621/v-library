@@ -117,7 +117,6 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
       }
       if(code===403){
         window.history.replaceState(null,'','/404')
-        window.location.reload();
       }
       return Promise.reject(err);
     });

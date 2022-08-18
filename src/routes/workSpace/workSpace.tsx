@@ -3,16 +3,17 @@
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
-
+import { ExclamationCircleFilled } from '@ant-design/icons'
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Input, Table, Space, Button, Form,Select, message} from "antd";
+import { ConfigProvider, Input, Table, Space, Button, Form,Select, message, Modal} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
 import DarkModal from "../myDashboard/components/darkThemeModal";
 import { http } from '@/services/request'
+import { ACCOUNTLIST } from '@/constant/dvaModels/userManage'
 const mapStateToProps = (state: any) => {
   return state
 }
@@ -153,7 +154,55 @@ const workSpace = (props: any) => {
     setShowAddMemberModal(!showAddMemberModal);
   };
   // 表格中的删除事件
-  const delClick = (rowId: string) => { };
+  const delClick = async (rowId: string) => {
+    Modal.confirm({
+      title: '删除成员',
+      // centered: true,
+      style: {
+        // 调整浮层位置
+        top: '30%'
+      },
+      okButtonProps: {
+        style: {
+          backgroundColor: '#e9535d',
+          border: 'none',
+          // marginLeft: '8px',
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          backgroundColor: '#3d404d'
+        }
+      },
+      icon: <ExclamationCircleFilled />,
+      content: '是否确认删除当前成员？',
+      okText: '确定',
+      cancelText: '取消',
+      bodyStyle: {
+        background: '#232630',
+      },
+      async onOk(close) {
+        const data = await http({
+          url: `/visual/workspace/deleteUser`,
+          method: 'DELETE',
+          body: {
+            spaceId: workSpace.curWorkSpace[0],
+            userIdList: [rowId]
+          }
+        })
+        console.log(data,'data')
+        if (data) {
+          refreshMemberList(workSpace.curWorkSpace[0])
+        } else {
+          message.error({ content: '删除失败', duration: 2 })
+        }
+        close()
+      },
+      onCancel(close) {
+        close()
+      }
+    })
+   };
 
   // 表格排序 (分页事件在paginationProps中已经定义)
   const tableOnChange = (
@@ -263,10 +312,13 @@ const workSpace = (props: any) => {
     },
     {
       title: "用户类型",
-      dataIndex: "userType",
-      key: "userType",
+      dataIndex: "type",
+      key: "type",
       ellipsis: true,
       width: 250,
+      render:(type:any) => {
+        return <>{ACCOUNTLIST[type]}</>
+      }
     },
     {
       title: "添加时间",
@@ -291,7 +343,7 @@ const workSpace = (props: any) => {
           <Space size="middle">
             <span
               className="textInOperationColumn"
-              onClickCapture={() => delClick(record.id)}
+              onClickCapture={() => delClick(record.userId)}
             >
               删除
             </span>
@@ -385,6 +437,7 @@ const workSpace = (props: any) => {
             ><div className="set-flex">
                 {/* <Input /> */}
                 <Select
+                  optionFilterProp="children"
                   mode="multiple"
                   value={userIdList}
                   placeholder='请选择用户名'
