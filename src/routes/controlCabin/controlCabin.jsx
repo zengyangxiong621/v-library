@@ -12,7 +12,6 @@ let currentFullScreenIndex = 0;
 const ControlCabin = props => {
   const curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
   const spaceId = curWorkspace.id
-  const [currnetIndex, setCurrentIndex] = useState(0)
   const [applist, setAppList] = useState([])
   const [loading, setLoading] = useState(true)
   const [isShowModal, setIsShowModal] = useState(false)
@@ -58,6 +57,12 @@ const ControlCabin = props => {
   }
 
   const appClick = (app) => {
+    for(let i=0; i<applist.length; i++){
+      if(applist[i].id === app.id){
+        currentFullScreenIndex = i
+        break
+      }
+    }
     scanDashboard(app.id)
   }
 
