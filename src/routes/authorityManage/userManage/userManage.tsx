@@ -22,7 +22,6 @@ const mapStateToProps = (state: any) => {
 }
 // 功能
 const UserManage = (props: any) => {
-  const spaceId = 1
   const [tableLoading, setTableLoading] = useState(false)
   const [tableData, setTableData] = useState([])
   const [totalElements, setTotalElements] = useState(0)

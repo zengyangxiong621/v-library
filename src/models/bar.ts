@@ -92,7 +92,9 @@ export default {
         payload,
       });
     },
-      *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
+    *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
+      const curWorkspace:any = localStorage.getItem('curWorkspace')
+      const spaceId =   JSON.parse(curWorkspace).id
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",
@@ -162,6 +164,9 @@ export default {
       });
       yield put({
         type: "getAllDashboardList",
+        payload: {
+          spaceId
+        }
       })
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
@@ -188,7 +193,7 @@ export default {
         body: {
           "pageNo": 1,
           "pageSize": 1000,
-          "spaceId": 1,
+          "spaceId": payload.spaceId,
           "map": {
             "updated_time": false
           },
@@ -781,7 +786,7 @@ export default {
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
       let data = yield http({
-        url: `/visual/resource/queryResourceTypeList?spaceId=1`,
+        url: `/visual/resource/queryResourceTypeList?spaceId=${payload.spaceId}`,
         method: "get",
       });
       data.myTypes.map((item: any) => {

@@ -7,23 +7,29 @@ import { connect } from "dva";
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Input, Table, Space, Button, Form } from "antd";
+import { ConfigProvider, Input, Table, Space, Button, Form,Select, message} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
 import DarkModal from "../myDashboard/components/darkThemeModal";
 import { http } from '@/services/request'
-
-
+const mapStateToProps = (state: any) => {
+  return state
+}
 // 功能
-const workSpace = ({ workSpace, dispatch, history }: any) => {
+const workSpace = (props: any) => {
+  const { workSpace, dispatch, history,global } = props
   // 空间id
-  const addMemberForm: any = Form.useForm()
+  const [addMemberForm]:any = Form.useForm()
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
     // updated_time: false,
   });
+  const [userIdList, setUserIdList] = useState([])
+  // 用户列表
+  const [ userInfoList, setUserInfoList ] = useState([])
+  const [ subLoading, setSubLoading ] = useState(false)
   // 剩余配额
   const [projectQuota, setProjectQuota] = useState<any>(0);
 
@@ -69,17 +75,36 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     }
   }
 
+    /**
+     * description: 获取用户列表名称
+     */
+    const getUserList = async() => {
+      const data = await http({
+        url: `/visual/user/list`,
+        method: 'post',
+        body: {
+          pageNo: 1,
+          pageSize: 1000
+        }
+      })
+      setUserInfoList(data.content)
+    }
+
   // 页面初始化- 获取空间列表数据 & 获取表格数据
   useEffect(() => {
-    getDataDispatch({ accountId: workSpace.accountId }, 'getWorkSpaceList')
+    getDataDispatch({ accountId: global.userInfo.id }, 'getWorkSpaceList')
+    // 获取用户列表
+    getUserList()
   }, []);
   // 设置项目配额
   useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota])
 
+
+
   // 重新设置项目配额
   const resetQuota = async () => {
     const finalBody = {
-      accountId: workSpace.accountId,
+      accountId: global.userInfo.id,
       spaceId: workSpace.curWorkSpace[0],
       projectQuota: projectQuota
     }
@@ -90,7 +115,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     })
     if (data) {
       // 更改配额成功了, 刷新页面
-      getDataDispatch({ accountId: workSpace.accountId }, 'getWorkSpaceList')
+      getDataDispatch({ accountId: global.userInfo.id }, 'getWorkSpaceList')
     }
   }
   // 刷新右侧成员列表
@@ -160,10 +185,40 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
   };
 
   // ****** Modal相关  *****
-  const confirmAddMember = () => { };
+
   const cancelAddMemberModal = () => {
     setShowAddMemberModal(false);
+    setUserIdList([])
   };
+
+  const confirmAddMember = async() => { 
+    if(!userIdList.length){
+      message.warning('请选择用户名')
+    }else{
+      setSubLoading(true)
+      try {
+        const data = await http({
+          url: `/visual/workspace/addUser`,
+          method: 'post',
+          body: {
+            spaceId: workSpace.curWorkSpace[0],
+            userIdList
+          }
+        })
+        console.log(data,'数据')
+        refreshMemberList(workSpace.curWorkSpace[0])
+        cancelAddMemberModal()
+        setSubLoading(false)
+      } catch (error) {
+        setSubLoading(false)
+      }
+    }
+    
+   };
+
+  const handleChangeRole = (data:any) => {
+    setUserIdList(data)
+  }
 
   // 表格分页配置
   const paginationProps = {
@@ -216,7 +271,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
     {
       title: "添加时间",
       key: "createdTime",
-      sorter: true,
+      // sorter: true,
       width: 300,
       ellipsis: true,
       showSorterTooltip: false,
@@ -250,7 +305,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
       <div className="workSpace-wrap">
         <div className="left">
           {/* 左侧树 */}
-          <LeftTree refreshMemberList={refreshMemberList} />
+          <LeftTree refreshMemberList={refreshMemberList} userInfo={global.userInfo} />
         </div>
         <div className="right">
           <div className="right-one">
@@ -304,6 +359,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
               </Button>
               <Button
                 className="my-btn confirm-btn"
+                loading={subLoading}
                 onClickCapture={confirmAddMember}
               >
                 确定
@@ -315,7 +371,7 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
           }}
         >
           <Form
-            ref={addMemberForm}
+            form={addMemberForm}
             labelCol={{
               span: 4,
             }}
@@ -325,10 +381,23 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
             <Form.Item
               colon={false}
               label="用户名"
-              name="name"
-              rules={[{ required: true, message: '请输入用户名' }]}
+              name="userIdList"
             ><div className="set-flex">
-                <Input />
+                {/* <Input /> */}
+                <Select
+                  mode="multiple"
+                  value={userIdList}
+                  placeholder='请选择用户名'
+                  onChange={handleChangeRole}
+                >
+                  {
+                    userInfoList?.map((item:any) => {
+                      return (
+                        <Select.Option key={item.id} value={item.id}>{item.userName}</Select.Option>
+                      )
+                    })
+                  }
+                </Select>
               </div>
             </Form.Item>
           </Form>
@@ -339,5 +408,5 @@ const workSpace = ({ workSpace, dispatch, history }: any) => {
 };
 
 export default memo(
-  connect(({ workSpace }: any) => ({ workSpace }))(workSpace)
+  connect(mapStateToProps)(workSpace)
 );

@@ -101,12 +101,12 @@ export default {
       try{
         // 获取所有素材分类
         let designData:any = yield http({
-          url: `/visual/resource/queryResourceTypeList?spaceId=1`,
+          url: `/visual/resource/queryResourceTypeList?spaceId=${payload.spaceId}`,
           method: "get",
         });
         // 查询模板库分组树
         let tempData:any = yield http({
-          url: `/visual/appTemplate/queryGroupList?spaceId=1`,
+          url: `/visual/appTemplate/queryGroupList?spaceId=${payload.spaceId}`,
           method: "get",
         })
         yield put({

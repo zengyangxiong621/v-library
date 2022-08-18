@@ -5,6 +5,7 @@ const componentDefaultConfig = {
   parentId: "", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
 
+  moduleType: "map",
   moduleName: "chinaMap", //组件标识
   moduleVersion: "1.0.0", //组件版本号
 
@@ -156,10 +157,11 @@ const componentDefaultConfig = {
           displayName: "Y轴坐标",
           value: 100,
         },
+        // 宽高比 7:4
         {
           name: "width",
           displayName: "宽度",
-          value: 3320,
+          value: 3325,
         },
         {
           name: "height",

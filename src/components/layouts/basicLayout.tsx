@@ -59,13 +59,18 @@ class BasicLayout extends Component<Props, State> {
   }
 
   componentDidMount(): void {
+    const {dispatch}=this.props
     this.handleGetAccountInfo()
+    dispatch({
+      type:'global/getWorkspaceList'
+    })
   }
+
   render() {
     const { routerData, location, global, history } = this.props
     const { childRoutes } = routerData
     const { pathname } = location
-    const { menuData,userInfo } = global
+    const { menuData,userInfo, workspaceList } = global
     let _menuData:any = []
     if(userInfo){
       const menusNameArr = (userInfo.menus || []).map((item:any)=>item.name)
@@ -83,13 +88,16 @@ class BasicLayout extends Component<Props, State> {
           <Spin size="large" className='full-spin' tip="Loading..."></Spin> :
           <Layout>
             {!needHeader && <CustomHeader {...this.props} menuData={_menuData} defaultPath={defaultPath}></CustomHeader>}
-            <Content>
-              {
-                _menuData && _menuData.length ? 
-                isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch> :
-                <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
-              }
-            </Content>
+            {
+              workspaceList.length ?
+              <Content>
+                {
+                  _menuData && _menuData.length ? 
+                  isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch> :
+                  <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
+                }
+              </Content> : <Empty className="content-empty" description={<span>请为当前用户分配空间</span>} />
+            }
           </Layout>
         }
       </Fragment>

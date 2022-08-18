@@ -14,12 +14,9 @@ const { Dragger } = Upload
 
 const AddDataSource = (props: any) => {
   // TODO 暂无确定的取得spaceId的方案
-  const spaceId = 1
-  // const spaceId = '1513466256657637378'
 
   const [addForm] = Form.useForm()
-  const { visible, changeShowState, refreshTable } = props
-
+  const { visible, spaceId, changeShowState, refreshTable } = props
   const [curDataType, setCurDataType] = useState('')
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])

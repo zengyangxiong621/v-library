@@ -441,13 +441,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         >
         </WorldMap>
         :
-        props.componentConfig.moduleName === 'chinaMap' ?
-        <ChinaMap
-          onChange={handleValueChange}
-          {...props}
-        >
-        </ChinaMap>
-        :
+        // props.componentConfig.moduleName === 'chinaMap' ?
+        // <ChinaMap
+        //   onChange={handleValueChange}
+        //   {...props}
+        // >
+        // </ChinaMap>
+        // :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
           onChange={handleValueChange}
