@@ -208,7 +208,7 @@ const Header = props => {
         <div className="drop-down">
           <Dropdown overlay={getWorkSpaceMenus()} trigger={['click']}>
             <span className="span" onClick={e => e.preventDefault()}>
-              {curWorkspace.spaceName} <DownOutlined />
+              {curWorkspace?.spaceName} <DownOutlined />
             </span>
           </Dropdown>
         </div>
