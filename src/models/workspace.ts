@@ -74,19 +74,22 @@ export default {
          * @Mark: 由于后端将每个空间的信息(id,projectQuota,remainQuota)全部放在了空间列表中(即此处的data), 所以，每次更新配额之后都要重新刷新左侧空间列表
          */
         const id = self.curWorkSpace[0];
-        const { remainQuota, projectQuota } = data.find((item: any) => {
+        const filterItem  = data.find((item: any) => {
           return item.id === id;
         });
-        finalPayload = {
-          projectQuota,
-          remainQuota,
-          minQuota: projectQuota - remainQuota,
-        };
-      }
-      yield put({
-        type: "setBaseTypeKey",
-        payload: finalPayload,
-      });
+        if(filterItem){
+          const { remainQuota, projectQuota } = filterItem
+            finalPayload = {
+              projectQuota,
+              remainQuota,
+              minQuota: projectQuota - remainQuota,
+            };
+          }
+          yield put({
+            type: "setBaseTypeKey",
+            payload: finalPayload,
+        });
+        }
     },
   },
 };
