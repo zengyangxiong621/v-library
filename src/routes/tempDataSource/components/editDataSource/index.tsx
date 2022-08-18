@@ -26,12 +26,7 @@ const EditDataSource = (props: any) => {
     esSourceConfig,
   } = props.editDataSourceInfo
 
-
-
-  let spaceId = 1
-  // let spaceId = '1513466256657637378'
-
-  const { visible, changeShowState, refreshTable } = props
+  const { visible, spaceId, changeShowState, refreshTable } = props
 
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()

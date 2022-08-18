@@ -5,7 +5,7 @@ import { connect } from "dva";
 import { http, BASEURL } from "@/services/request";
 import type { UploadProps } from 'antd';
 const UploadFile = (props: any) => {
-  const { uploadVisible, changeShowState,groupList,refreshList,origin} = props;
+  const { uploadVisible, changeShowState,groupList,refreshList,origin,spaceId} = props;
 
   let selectList = []
   switch(origin){
@@ -33,7 +33,7 @@ const UploadFile = (props: any) => {
       formData.append('file', file.file);
       formData.append('groupId', groupId);
       if(['myresource', 'myTemp'].indexOf(origin) > -1){
-        formData.append('spaceId', '1');
+        formData.append('spaceId', spaceId);
       }
       let url = ['myTemp','systemTemp'].indexOf(origin) > -1 ? '/visual/appTemplate/import' : '/visual/file/uploadResource'
       setConfirmLoading(true);

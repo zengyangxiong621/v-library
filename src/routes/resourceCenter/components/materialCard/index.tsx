@@ -224,7 +224,7 @@ const AppCard = (props: any) => {
       body: {
         id,
         type: 0,
-        spaceId:1
+        spaceId
       }
     }).finally(() => {
       setCreateLoading(false)

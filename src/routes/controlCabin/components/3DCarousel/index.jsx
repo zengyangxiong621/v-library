@@ -27,9 +27,9 @@ const Carousel = ({
     const imagesTemp = []
     imageList.length && imageList.forEach((img, index) => {
       imagesTemp.push({
+        ...img,
         index,
-        url: img.url,
-        title: img.title
+        url: img.url
       })
     })
     setImages(imagesTemp)
