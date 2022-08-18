@@ -446,7 +446,7 @@ const workSpace = (props: any) => {
                   {
                     userInfoList?.map((item:any) => {
                       return (
-                        <Select.Option key={item.id} value={item.id}>{item.userName}</Select.Option>
+                        <Select.Option key={item.id} value={item.id}>{item.userName}-{item.name}</Select.Option>
                       )
                     })
                   }

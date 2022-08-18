@@ -85,11 +85,11 @@ export default {
               minQuota: projectQuota - remainQuota,
             };
           }
-          yield put({
-            type: "setBaseTypeKey",
-            payload: finalPayload,
-        });
         }
+        yield put({
+          type: "setBaseTypeKey",
+          payload: finalPayload,
+        });
     },
   },
 };

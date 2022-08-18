@@ -13,7 +13,7 @@ const picUrl = require('../../assets/images/模板默认背景图.png')
 let currentFullScreenIndex = 0;
 const ControlCabin = props => {
   const curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
-  const spaceId = curWorkspace.id
+  const spaceId = curWorkspace?.id
   const [currnetIndex, setCurrentIndex] = useState(0)
   const [applist, setAppList] = useState([])
   const [loading, setLoading] = useState(true)
