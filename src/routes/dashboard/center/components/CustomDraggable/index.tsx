@@ -309,8 +309,8 @@ const CustomDraggable
             sizeChange: {
               change: true,
               config: {
-                left: Math.trunc(data.x),
-                top: Math.trunc(data.y),
+                left: Math.ceil(data.x),
+                top: Math.ceil(data.y),
                 width: config.style.width,
                 height: config.style.height,
               },
@@ -492,15 +492,30 @@ const CustomDraggable
     if ('panelType' in layer) {
       const panel: any = panels.find((panel: IPanel) => panel.id === layer.id)
       if (layer.panelType === 0) {
-        history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
         dispatch({
           type: 'bar/save',
           payload: {
             isPanel: true,
             panelId: layer.id,
             treeData: [],
+            selectedComponents: [],
+            selectedComponentOrGroup: [],
+            selectedComponentIds: [],
+            scaleDragData: {
+              position:{
+                x: 0,
+                y:0
+              },
+              style: {
+                width: 0,
+                height: 0,
+                display: 'none'
+              }
+            }
           }
         })
+        history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+
         dispatch({
           type: 'bar/getPanelDetails'
         })
@@ -511,9 +526,9 @@ const CustomDraggable
           }
         })
       } else {
-        if (panel.states.length > 1) {
+        if (panel.states.length > 0) {
           history.push(`/dashboard/${panel.states[0].id}`)
-          // console.log('到这里了吧啊')
+          console.log('到这里了吧啊')
           dispatch({
             type: 'bar/save',
             payload: {
@@ -730,6 +745,9 @@ const CustomDraggable
           let style_config, staticData, styleDimensionConfig, recommendConfig
           // 群组
           if ('panelType' in layer) {
+            console.log('layer', layer.id)
+            console.log('panels', panels)
+            console.log('----------------')
             const panel = panels.find((panel: IPanel) => panel.id === layer.id)
             if (panel) {
               recommendConfig = panel.config

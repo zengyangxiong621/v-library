@@ -32,32 +32,32 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   // 返回首页
   const toBack = () => {
     history.back()
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        isPanel: false,
-        stateId: null,
-        panelId: null,
-        panels: [],
-        panelStatesList: [],
-        key: [bar.dashboardId],
-        treeData: [],
-        scaleDragData: {
-          position:{
-            x: 0,
-            y:0
-          },
-          style: {
-            width: 0,
-            height: 0,
-            display: 'none'
-          }
-        }
-      }
-    })
-    dispatch({
-      type: 'bar/getDashboardDetails'
-    })
+    // dispatch({
+    //   type: 'bar/save',
+    //   payload: {
+    //     isPanel: false,
+    //     stateId: null,
+    //     panelId: null,
+    //     panels: [],
+    //     panelStatesList: [],
+    //     key: [bar.dashboardId],
+    //     treeData: [],
+    //     scaleDragData: {
+    //       position:{
+    //         x: 0,
+    //         y:0
+    //       },
+    //       style: {
+    //         width: 0,
+    //         height: 0,
+    //         display: 'none'
+    //       }
+    //     }
+    //   }
+    // })
+    // dispatch({
+    //   type: 'bar/getDashboardDetails'
+    // })
   }
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {

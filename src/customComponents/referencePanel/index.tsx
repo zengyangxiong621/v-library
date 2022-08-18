@@ -13,11 +13,12 @@ interface State {
 
   [key: string]: any;
 }
+import {treeDataReverse, layersPanelsFlat} from '@/utils/index.js'
 
 const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) => {
   const componentData = bar.componentData
   const panel = panels.find((item: IPanel) => item.id === id)
-
+  console.log('panel', panel)
   const { states, config: recommendConfig, name, type } = panel
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig
   const defaultStateId = (states.length > 0 && states[0].id) || ''
@@ -58,12 +59,26 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
     }
     return componentData[component.id];
   };
+  const getStateDetails = async (layerPanel: any) => {
+    try {
+      const panelConfig = await http({
+        url: `/visual/panel/detail/${ layerPanel.id }`,
+        method: 'get',
+      })
+      return panelConfig
+    } catch(e) {
+      return null
+    }
+  }
   const getReferenceDetails = async ({name, id}: { name: string; id: string }) => {
-    const {components, layers, dashboardConfig, panels} = await http({
+    const {components, layers, dashboardConfig } = await http({
       url: `/visual/application/dashboard/detail/${id}`,
       method: "get",
     });
+    const layerPanels: any = layersPanelsFlat(layers)
+    const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
+    treeDataReverse(layers)
     return {
       components,
       layers,
@@ -139,8 +154,21 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
   }, [state.isLoading, state.activeIndex])
 
   useEffect(() => {
+    (async function() {
+      console.log('panel.states[0].id', panel.states)
+      if (panel?.states[0]?.id) {
+        const data = await getReferenceDetails(panel.states[0]);
+        setState({
+          allData: [data],
+        })
+      } else {
+        setState({
+          allData: []
+        })
+      }
+    })()
 
-  }, [])
+  }, [panel.states[0]?.id || ''])
 
 
   return (

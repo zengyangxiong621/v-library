@@ -126,6 +126,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       'type': 'tabArray',
       'defaultActiveKey': '1',
       'activeKey': '1',
+      'defaultExpand': true,
       'config': {
         'template': [
           {
@@ -139,7 +140,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
                 'name': 'dashboardSelect',
                 'type': 'select',
                 'value': '',
-                'options': bar.allDashboardList.filter(item => item.id !== panelConfig.id),
+                'options': bar.allDashboardList.filter(item => item.value !== bar.dashboardId),
               },
             ],
           },
@@ -158,7 +159,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
               'type': 'select',
               'value': item.id,
               'label': item.name,
-              'options': bar.allDashboardList.filter(item => item.value !== panelConfig.id),
+              'options': bar.allDashboardList.filter(item => item.value !== bar.dashboardId),
             },
           ],
         }
@@ -203,13 +204,17 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     const animationTime = styleConfig.find(item => item.name === 'animationTime').value
     const referenceList = styleConfig.find(item => item.name === 'referenceList').value
     // 判断当前 active的选项值存不存在
-    const currentReference = referenceList.find(item => item.key === activeKey).value
-    const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
-    if (currentReferenceId) {
-      setIsEdit(true)
-    } else {
-      setIsEdit(false)
+    console.log('referenceList', referenceList)
+    if (referenceList.length > 0) {
+      const currentReference = referenceList.find(item => item.key === activeKey).value
+      const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
+      if (currentReferenceId) {
+        setIsEdit(true)
+      } else {
+        setIsEdit(false)
+      }
     }
+
     dimensionConfig.forEach(item => {
       panelConfig.config[item.name] = item.value
     })

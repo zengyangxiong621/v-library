@@ -86,6 +86,23 @@ export default {
             isPanel = true
           }
           dispatch({
+            type: 'save',
+            payload: {
+              treeData: [],
+              scaleDragData: {
+                position:{
+                  x: 0,
+                  y:0
+                },
+                style: {
+                  width: 0,
+                  height: 0,
+                  display: 'none'
+                }
+              }
+            }
+          })
+          dispatch({
             type: 'initDashboard',
             payload: {
               dashboardId,
@@ -1212,7 +1229,7 @@ export default {
         ...state,
       };
     },
-    updateSelectedComponents(state: IBarState, { payload }: any) {
+    updateSelectedComponents(state: IBarState, { payload, cb = function() {} }: any) {
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup
       );
@@ -1221,8 +1238,11 @@ export default {
         ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
         ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
       ]
+      console.log('state.selectedComponents', state.selectedComponents)
+      cb(state.selectedComponents)
       return {
-        ...state
+        ...state,
+        selectedComponents: state.selectedComponents,
       }
     },
     calcDragScaleData(state: IBarState, { payload }: any) {

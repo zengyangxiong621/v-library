@@ -241,6 +241,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     { position: { x, y }, style: { width, height } }: IScaleDragData,
     { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
   ) => {
+    console.log('x', x, 'y', y)
+    console.log('width', width, 'height', height)
     dispatch({
       type: "bar/updateSelectedComponents"
     })
@@ -274,6 +276,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
               item.value = height
           }
         })
+        console.log('component', component)
         dispatch({
           type: 'bar/setComponentConfig',
           payload: component
@@ -392,12 +395,19 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         },
       })
     }
-    console.log('bar.selectedComponents', bar.selectedComponents)
-    dispatch({
-      type: 'bar/updateComponent',
-      payload: bar.selectedComponents,
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: "bar/updateSelectedComponents",
+        cb: (selectedComponents: Array<IComponent | IPanel>) => {
+          resolve(selectedComponents)
+        }
+      })
+    }).then((selectedComponents) => {
+      dispatch({
+        type: 'bar/updateComponent',
+        payload: selectedComponents,
+      })
     })
-
   }
 
   const handleCanvasDrag = function(event: DraggableEvent, data: DraggableData) {
