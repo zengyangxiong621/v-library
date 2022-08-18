@@ -8,6 +8,7 @@ import {
 import AddDataSource from '../../../../tempDataSource/components/addDataSource'
 import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid';
+import {cloneDeep} from 'lodash'
 
 const selectData = {
   name: "xxx",
@@ -28,6 +29,8 @@ const SelectDataSource = props => {
       const newData = { ...res }
       if (_data.dataConfig[props.type]) {
         newData.value = _data.dataConfig[props.type]?.data?.data_id || ''
+      }else{
+        newData.value = ''
       }
       setSelectDatas(newData)
       setKey(uuidv4())
