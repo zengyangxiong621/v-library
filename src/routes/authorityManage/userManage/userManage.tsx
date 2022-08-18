@@ -27,7 +27,7 @@ const UserManage = (props: any) => {
   const [totalElements, setTotalElements] = useState(0)
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
-    pageSize: 30,
+    pageSize: 10,
   })
   const [searchParams,setSearchParams]=useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -374,7 +374,6 @@ const UserManage = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: '53vh' }}
             rowClassName='customRowClass'
             rowSelection={rowSelection}
             loading={tableLoading}
