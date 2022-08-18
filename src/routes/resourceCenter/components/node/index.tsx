@@ -14,7 +14,7 @@ import {
 const EveryTreeNode = (props: any) => {
   const { groupId, parentId, name, number,
     systemDefined, customLevel,currentAdd,
-    addGroup, refreshGroupLists } = props || {}
+    addGroup, refreshGroupLists, spaceId } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -38,7 +38,7 @@ const EveryTreeNode = (props: any) => {
       return
     }
     const finalBody = {
-      spaceId: ['myTemplate', 'myMaterial'].indexOf(currentAdd) > -1 ? 1 : null,
+      spaceId: ['myTemplate', 'myMaterial'].indexOf(currentAdd) > -1 ? spaceId : null,
       name: newGroupName,
       type: ['systemMaterial', 'myMaterial'].indexOf(currentAdd) > -1 ? 1 : 0 // 1-素材，0-模板
     }
@@ -69,7 +69,7 @@ const EveryTreeNode = (props: any) => {
     const finalBody = {
       id: groupId,
       name: inputValue,
-      spaceId: 1,
+      spaceId: spaceId,
       type: '1'
     }
     const data = await http({

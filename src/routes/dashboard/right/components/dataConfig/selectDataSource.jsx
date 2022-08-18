@@ -18,6 +18,8 @@ const selectData = {
 }
 
 const SelectDataSource = props => {
+  const curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
+  const spaceId = curWorkspace.id
   const _data = props.data
   const [selectDatas, setSelectDatas] = useState(selectData)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
@@ -43,7 +45,7 @@ const SelectDataSource = props => {
         name: null,
         pageNo: 1,
         pageSize: 1000,
-        spaceId: 1,
+        spaceId,
         type: ['elasticSearch'].includes(props.type)
             ? 'ELASTIC_SEARCH' : props.type.toUpperCase(),
       }

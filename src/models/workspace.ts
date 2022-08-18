@@ -43,7 +43,7 @@ export default {
     },
     *getWorkSpaceList({ payload }: any, { call, put, select }: any): any {
       const data = yield http({
-        url: `/visual/workspace/list/${payload.accountId}`,
+        url: `/visual/workspace/list`,
         method: "get",
       });
       yield put({

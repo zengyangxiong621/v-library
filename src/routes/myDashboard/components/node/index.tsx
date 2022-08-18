@@ -10,7 +10,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 
 const EveryTreeNode = (props: any) => {
   const { groupId, name, number, systemDefined,
-    addGroup, refreshGroupLists, refreshRight } = props || {}
+    addGroup, refreshGroupLists, refreshRight, spaceId } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -34,7 +34,7 @@ const EveryTreeNode = (props: any) => {
       return
     }
     const finalBody = {
-      spaceId: '1',
+      spaceId,
       name: newGroupName
     }
     const data = await http({
@@ -67,7 +67,7 @@ const EveryTreeNode = (props: any) => {
     const finalBody = {
       id: groupId,
       name: inputValue,
-      spaceId: 1
+      spaceId
     }
     const data = await http({
       method: 'post',

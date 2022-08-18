@@ -16,7 +16,8 @@ const { Option } = Select;
 // 功能
 const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   // 空间id
-  let spaceId: any = 1;
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  let spaceId: any = JSON.parse(curWorkspace).id;
   let pageParams: any = {
     pageNo: 1,
     pageSize: 1000,
@@ -85,14 +86,14 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         if(!change){
           finalBody = {
             ...first,
-            spaceId: first.origin === 'myresource' ? '1' : null,
+            spaceId: first.origin === 'myresource' ? spaceId : null,
             groupId: first.groupId === '-1' ? null : first.groupId, // 系统素材下不传
             type: [first.origin]
           };
         }else{
           finalBody = {
             ...resourceCenter.curSelectedGroup,
-            spaceId: resourceCenter.curSelectedGroup.origin === 'myresource' ? '1' : null,
+            spaceId: resourceCenter.curSelectedGroup.origin === 'myresource' ? spaceId : null,
             groupId: resourceCenter.curSelectedGroup.groupId === '-1' ? null : resourceCenter.curSelectedGroup.groupId, // 系统素材下不传
             type: [resourceCenter.curSelectedGroup.origin]
           };
@@ -105,7 +106,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   useEffect(() => {
     // 先获取左侧数据
     refreshGroupLists()
-  }, []);
+  }, [spaceId]);
 
   // 搜索框的值改变
   const changeSearchValue = (e: any) => {
@@ -161,6 +162,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           resourceCenter.treeLoading ?
           <Spin className='tree-loading' size="large" /> :
           <LeftTree
+            spaceId={spaceId}
             clearSearchInputState={clearSearchInputState}
             getDataDispatch={getDataDispatch}
             refreshGroupLists={refreshGroupLists}
@@ -205,13 +207,14 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
         {/* 右侧 */}
         {
           resourceCenter.resourceLoading ?  <Spin size="large" className='right-loading' /> :
-          <RightContent listData={resourceCenter.rightLists} refreshList={refreshGroupLists} />
+          <RightContent  spaceId={spaceId} listData={resourceCenter.rightLists} refreshList={refreshGroupLists} />
         }
       </Fragment>
         {/* 上传素材 */}
         {resourceCenter.groupList.length > 0 && uploadVisible && (
           <UploadFile
             uploadVisible={uploadVisible}
+            spaceId={spaceId}
             groupList={ ['design','myresource'].indexOf(resourceCenter.curSelectedGroup.origin) > -1 ? resourceCenter.groupList[1] : resourceCenter.groupList[0]}
             origin={resourceCenter.curSelectedGroup.origin}
             changeShowState={changeShowState}

@@ -176,7 +176,7 @@ const EveryTreeNode = (props: any) => {
               {
                 spaceName === '我的空间'
                   ? <IconFont type='icon-xinjianfenzu' onClickCapture={addWorkSpace} />
-                  : spaceName === '默认工作空间' ?
+                  : id === '1' ?
                     <></> :
                     <div className='show-icon'>
                       {

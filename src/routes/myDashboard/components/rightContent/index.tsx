@@ -19,9 +19,7 @@ const { Paragraph } = Typography
 
 
 const RightContent = (props: any) => {
-  const { listData, dashboardManage, dispatch } = props
-  /** **工作空间id  */
-  const spaceId = 1
+  const { listData, dashboardManage, dispatch,spaceId } = props
   // 发布弹窗、移动分组 modal状态
   const [showFabuModal, setShowFabuModal] = useState(false)
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)

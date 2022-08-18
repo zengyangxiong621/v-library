@@ -11,14 +11,16 @@ import { DownOutlined } from '@ant-design/icons'
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
 
-const LeftTree = ({ workSpace, dispatch, refreshMemberList }: any) => {
+const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
-  const spaceId = '1'
-  let accountId = workSpace.accountId
+  let accountId = userInfo.id
   // 获取应用分组列表
-  // useEffect(() => {
-  //   refreshWorkSpaceLists()
-  // }, [])
+  useEffect(() => {
+    if(workSpace.curWorkSpace.length){
+      // 发送请求刷新右侧成员列表
+      refreshMemberList(workSpace.curWorkSpace[0])
+    }
+  }, [workSpace.curWorkSpace])
 
   // 新建分组或者重命名成功分组，触发刷新
   const refreshWorkSpaceLists = () => {
@@ -79,8 +81,6 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList }: any) => {
       type: 'workSpace/setCurWorkSpace',
       payload: keys
     })
-    // 发送请求刷新右侧成员列表
-    refreshMemberList(key)
   }
   return (
     <div className='workspace-leftTree-wrap'>
