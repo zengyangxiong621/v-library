@@ -17,7 +17,7 @@ const { Option } = Select;
 const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   // 空间id
   const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  let spaceId: any = JSON.parse(curWorkspace).id;
+  let spaceId: any = JSON.parse(curWorkspace)?.id;
   let pageParams: any = {
     pageNo: 1,
     pageSize: 1000,

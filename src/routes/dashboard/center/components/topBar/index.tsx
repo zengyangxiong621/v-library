@@ -25,7 +25,7 @@ const { SubMenu, Item } = Menu
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai, dispatch } = props
   const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  const spaceId = JSON.parse(curWorkspace).id
+  const spaceId = JSON.parse(curWorkspace)?.id
   const [current, setCurrent] = useState<any>([])
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
     zujian: componentMenu,

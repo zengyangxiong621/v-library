@@ -25,7 +25,7 @@ const DashboardTemplate = (props: any) => {
   const [inputValue, setInputValue] = useState('')
   const [showCreateAppModal, setShowCreateAppModal] = useState(false)
   const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  const spaceId = JSON.parse(curWorkspace).id
+  const spaceId = JSON.parse(curWorkspace)?.id
 
   const [groupOptions, setGroupOptions] = useState([])
   // 不选择分组的时候，默认选择未分组,未分组的groupId是 0 <string>

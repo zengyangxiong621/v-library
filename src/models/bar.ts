@@ -94,7 +94,7 @@ export default {
     },
     *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
       const curWorkspace:any = localStorage.getItem('curWorkspace')
-      const spaceId =   JSON.parse(curWorkspace).id
+      const spaceId =   JSON.parse(curWorkspace)?.id;
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",

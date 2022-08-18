@@ -59,7 +59,6 @@ const createMenu = ((menuData, props) => {  //创建菜单
 const Header = props => {
   const { defaultPath,menuData, location:{pathname}, history,global:{userInfo, workspaceList},dispatch } = props
   let curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
-
   const curUserid=useMemo(()=>{
     if(userInfo && userInfo.id){
       return userInfo.id

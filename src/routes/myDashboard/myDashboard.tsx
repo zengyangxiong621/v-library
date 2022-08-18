@@ -17,7 +17,7 @@ const { Option } = Select
 const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   // 空间id
   const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  const spaceId = JSON.parse(curWorkspace).id
+  const spaceId = JSON.parse(curWorkspace)?.id
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({

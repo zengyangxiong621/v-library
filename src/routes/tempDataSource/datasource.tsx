@@ -18,7 +18,7 @@ const { Option } = Select
 
 const DataSource = (props: any) => {
   const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  let spaceId = JSON.parse(curWorkspace).id
+  let spaceId = JSON.parse(curWorkspace)?.id
   const [inputValue, setInputValue] = useState('')
   const [dataSourceType, setDataSourceType] = useState<any>(null)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
