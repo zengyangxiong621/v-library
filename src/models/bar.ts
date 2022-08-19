@@ -157,6 +157,7 @@ export default {
             type: "getDataContainerList",
             payload: dashboardId,
           });
+          let bar: any = yield select(({ bar }: any) => bar);
           bar.dataContainerList.forEach(async (item: any) => {
             let data: any = null;
             item.enable = item.modules.length > 0;

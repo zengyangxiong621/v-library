@@ -76,7 +76,7 @@ import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/interactive/tab/index'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import ReferencePanel from '@/customComponents/dashboardEdit/referencePanel'
-import DynamicPanel from '@/customComponents/dashboardEdit/dynamicPanel/index'
+import DynamicPanel from '@/customComponents/dashboardEdit/dynamicPanel'
 import { cloneDeep } from "lodash"
 
 // import Tab from "@/components/tab";
