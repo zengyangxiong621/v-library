@@ -10,9 +10,9 @@ import { Spin } from 'antd'
 import RecursiveComponent from './components/recursiveComponent'
 import { calcCanvasSize } from '../../utils'
 
-const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
+const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
-  const [isLoaded, setIsLoaded] = useState(true)
+  const [isLoaded, setIsLoaded] = useState(false)
   // 接口中返回的 当前屏幕设置信息
   const [dashboardConfig, setDashboardConfig] = useState([])
   const [scaleMode, setScaleMode] = useState<string>('')
@@ -24,12 +24,12 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
   const [scaleValue, setScaleValue] = useState(1)
-  /**
-    * description: 获取屏幕大小、缩放设置等参数
-    */
-  const [layers, setLayers] = useState([])
-  const [panels, setPanels] = useState([])
-  const [components, setComponents] = useState([])
+/**
+  * description: 获取屏幕大小、缩放设置等参数
+  */
+ const [layers, setLayers] = useState([])
+ const [panels, setPanels] = useState([])
+ const [components, setComponents] = useState([])
   /**
    * description: 根据缩放模式来配置页面
    */
@@ -98,18 +98,17 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
           width: 0,
           height: 0,
         }
-        if (hRatio2 > wRatio2) {
+        if(hRatio2 > wRatio2) {
           finalOverflowStyle.width = '100vw'
           finalOverflowStyle.height = `${winH}px`
           finalOverflowStyle.overflowX = 'auto'
-          setScaleStyle({ transform: `scale(${hRatio2})` })
+          setScaleStyle({transform: `scale(${hRatio2})`})
         } else {
           finalOverflowStyle.height = '100vh'
           finalOverflowStyle.width = `${winW}px}`
           finalOverflowStyle.overflowY = 'auto'
-          setScaleStyle({ transform: `scale(${wRatio2})` })
+          setScaleStyle({transform: `scale(${wRatio2})`})
         }
-        // console.log('finalOverflowStyle', finalOverflowStyle);
         setOverflowStyle(finalOverflowStyle)
         break;
     }
@@ -134,22 +133,16 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
   // 初入页面 - 获取数据
   useEffect(() => {
     const init = async () => {
+      setIsLoaded(false)
+      const { dashboardConfig, dashboardName }: any = await initDashboard()
+      setDashboardConfig(dashboardConfig)
+      await previewByScaleMode({ dashboardConfig, dashboardName })
       setIsLoaded(true)
-      try {
-        const { dashboardConfig, dashboardName }: any = await initDashboard()
-        setDashboardConfig(dashboardConfig)
-        await previewByScaleMode({ dashboardConfig, dashboardName })
-      }
-      finally {
-        setTimeout(() => {
-          setIsLoaded(false)
-        }, 500)
-      }
     }
     init()
     return () => {
       dispatch({
-        type: 'bar/clearCurrentDashboardData'
+        type: 'publishDashboard/clearCurrentDashboardData'
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,22 +187,24 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
   useEffect(() => {
-    const data = deepClone(bar.treeData)
+    const data = deepClone(publishDashboard.treeData)
     treeDataReverse(data)
     setLayers(data)
-    setComponents(bar.components)
-    setPanels(bar.panels)
+    setComponents(publishDashboard.components)
+    setPanels(publishDashboard.panels)
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bar.treeData])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [publishDashboard.treeData])
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
   const initDashboard = (cb = function () { }) => {
     return new Promise((resolve, reject) => {
       const dashboardId = window.location.pathname.split('/')[2]
       dispatch({
-        type: 'bar/initDashboard',
-        payload: { dashboardId },
+        type: 'publishDashboard/initDashboard',
+        payload: {
+          dashboardId,
+        },
         cb: (data: any) => {
           resolve(data)
         }
@@ -233,7 +228,7 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
   return (
     <div id="gs-v-library-app">
       {
-        !isLoaded ?
+        isLoaded ?
           <div className='customScrollStyle' style={{ ...overflowStyle }}>
             <div className='publishDashboard-wrap'
               style={{
@@ -250,34 +245,29 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
               >
                 {
                   <RecursiveComponent
-                    layersArr={layers}
-                    componentLists={components}
-                    panels={panels}
-                    bar={bar}
-                    dispatch={dispatch}
-                    scaleValue={scaleValue}
-                    scaleMode={scaleMode}
-                  />
+                  layersArr={layers}
+                  componentLists={components}
+                  panels={panels}
+                  publishDashboard={publishDashboard}
+                  dispatch={dispatch}
+                  scaleValue={scaleValue}
+                  scaleMode={scaleMode}
+                />
                 }
               </div>
             </div>
           </div>
           :
-          <div style={{
-            width: '100vw', height: '100vh',
-          }}
-            className="publish-loading-wrap"
-          ></div>
-        // <Spin
-        //   tip='正在生成中…'
-        //   style={{ maxHeight: '100%' }}>
-        //   <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
-        // </Spin>
+          <Spin
+            tip='正在生成中…'
+            style={{ maxHeight: '100%' }}>
+            <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
+          </Spin>
       }
     </div>
   )
 }
 
 export default memo(connect(
-  ({ bar }: any) => ({ bar })
+  ({ publishDashboard }: any) => ({ publishDashboard })
 )(withRouter(PublishedDashBoard)))
