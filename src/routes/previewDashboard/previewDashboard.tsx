@@ -12,7 +12,7 @@ import { calcCanvasSize } from '../../utils'
 
 const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(true)
   // 接口中返回的 当前屏幕设置信息
   const [dashboardConfig, setDashboardConfig] = useState([])
   const [scaleMode, setScaleMode] = useState<string>('')
@@ -99,16 +99,16 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
           width: 0,
           height: 0,
         }
-        if(hRatio2 > wRatio2) {
+        if (hRatio2 > wRatio2) {
           finalOverflowStyle.width = '100vw'
           finalOverflowStyle.height = `${winH}px`
           finalOverflowStyle.overflowX = 'auto'
-          setScaleStyle({transform: `scale(${hRatio2})`})
+          setScaleStyle({ transform: `scale(${hRatio2})` })
         } else {
           finalOverflowStyle.height = '100vh'
           finalOverflowStyle.width = `${winW}px}`
           finalOverflowStyle.overflowY = 'auto'
-          setScaleStyle({transform: `scale(${wRatio2})`})
+          setScaleStyle({ transform: `scale(${wRatio2})` })
         }
         // console.log('finalOverflowStyle', finalOverflowStyle);
         setOverflowStyle(finalOverflowStyle)
@@ -131,15 +131,25 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       setAbsolutePosition(absolutePosition)
     }
   }
+
+
+
+
   // @Mark --  hooks顺序不能打乱
   // 初入页面 - 获取数据
   useEffect(() => {
     const init = async () => {
-      setIsLoaded(false)
-      const { dashboardConfig, dashboardName }: any = await initDashboard()
-      setDashboardConfig(dashboardConfig)
-      await previewByScaleMode({ dashboardConfig, dashboardName })
       setIsLoaded(true)
+      try {
+        const { dashboardConfig, dashboardName }: any = await initDashboard()
+        setDashboardConfig(dashboardConfig)
+        await previewByScaleMode({ dashboardConfig, dashboardName })
+      }
+      finally {
+        setTimeout(() => {
+          setIsLoaded(false)
+        }, 500)
+      }
     }
     init()
     return () => {
@@ -149,6 +159,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   useEffect(() => {
     if (scaleMode === '0') {
       if (dashboardConfig.length > 0) {
@@ -195,7 +206,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     setComponents(bar.components)
     setPanels(bar.panels)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bar.treeData])
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
@@ -225,10 +236,11 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     })
     return map
   }
+
   return (
     <div id="gs-v-library-app">
       {
-        isLoaded ?
+        !isLoaded ?
           <div className='customScrollStyle' style={{ ...overflowStyle }}>
             <div className='previewDashboard-wrap'
               style={{
@@ -258,11 +270,11 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
             </div>
           </div>
           :
-          <Spin
-            tip='正在生成中…'
-            style={{ maxHeight: '100%' }}>
-            <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
-          </Spin>
+          <div style={{
+            width: '100vw', height: '100vh',
+          }}
+            className="preview-loading-wrap"
+          ></div>
       }
     </div>
   )
