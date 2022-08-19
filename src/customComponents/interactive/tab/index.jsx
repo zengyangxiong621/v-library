@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import ComponentDefaultConfig from './config'
 import './index.css'
-import { styleTransformFunc, deepClone } from '../../utils'
+import { styleTransformFunc, deepClone } from '../../../utils'
 
 const textAlignEnum = {
   left: 'flex-start',

@@ -65,18 +65,18 @@ import {
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from '../../../../../constant/home'
-import ScrollTable from "@/customComponents/scrollTable/index";
-import TimeSelect from "@/customComponents/timeSelect/index";
+import ScrollTable from "@/customComponents/table/scrollTable/index";
+import TimeSelect from "@/customComponents/interactive/timeSelect/index";
 import SelectV2 from '@/customComponents/assist/select/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import CusImage from '@/customComponents/assist/image/index'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 
-import Tab from '@/customComponents/tab/index'
-import ScrollSelect from '@/customComponents/scrollSelect/index'
-import ReferencePanel from '@/customComponents/referencePanel'
-import DynamicPanel from '@/customComponents/dynamicPanel/index'
+import Tab from '@/customComponents/interactive/tab/index'
+import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
+import ReferencePanel from '@/customComponents/dashboardEdit/referencePanel'
+import DynamicPanel from '@/customComponents/dashboardEdit/dynamicPanel/index'
 import { cloneDeep } from "lodash"
 
 // import Tab from "@/components/tab";

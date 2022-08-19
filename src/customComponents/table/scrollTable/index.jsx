@@ -1,8 +1,8 @@
 import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
-import {ScrollBoard} from '../dataV'
+import {ScrollBoard} from '../../dataV'
 import ReactDOM from 'react-dom'
-import {styleObjectToStr, styleTransformFunc} from '../../utils'
+import {styleObjectToStr, styleTransformFunc} from '../../../utils'
 
 const getFields = (componentConfig = {}) => {
   const dataType = componentConfig.dataType

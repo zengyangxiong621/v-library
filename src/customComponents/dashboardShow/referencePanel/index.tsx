@@ -2,7 +2,7 @@ import { DOMElement, useEffect, useRef, useState } from 'react'
 import { connect } from 'dva'
 import { Button } from 'antd'
 import { useSetState } from 'ahooks'
-import CustomDraggable from '../../routes/dashboard/center/components/CustomDraggable'
+import CustomDraggable from '@/routes/dashboard/center/components/CustomDraggable'
 import { http } from '@/services/request'
 import * as React from 'react'
 import {
@@ -15,8 +15,8 @@ interface State {
 }
 import {treeDataReverse, layersPanelsFlat} from '@/utils/index.js'
 
-const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) => {
-  const componentData = bar.componentData
+const ReferencePanel = ({ previewDashboard, id, dispatch, panels, isDashboard = true }: any) => {
+  const componentData = previewDashboard.componentData
   const panel = panels.find((item: IPanel) => item.id === id)
   console.log('panel', panel)
   const { states, config: recommendConfig, name, type } = panel
@@ -44,7 +44,7 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
         body: {
           moduleId: component.id,
           dataType: component.dataType,
-          callBackParamValues: bar.callbackArgs,
+          callBackParamValues: previewDashboard.callbackArgs,
         },
       });
 
@@ -197,4 +197,4 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
   )
 }
 
-export default connect(({ bar }: any) => ({ bar }))(ReferencePanel)
+export default ReferencePanel

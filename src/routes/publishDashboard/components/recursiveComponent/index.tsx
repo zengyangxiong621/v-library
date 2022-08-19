@@ -1,8 +1,8 @@
 import React, { memo, useEffect } from 'react'
 
 import EveryComponent from '../everyComponent'
-import ReferencePanel from '@/customComponents/referencePanel'
-import DynamicPanel from '@/customComponents/dynamicPanel/index'
+import ReferencePanel from '@/customComponents/dashboardShow/referencePanel'
+import DynamicPanel from '@/customComponents/dashboardShow/dynamicPanel/index'
 import { getComDataWithFilters } from '@/utils/data'
 
 const MODULES = 'modules'

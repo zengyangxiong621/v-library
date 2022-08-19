@@ -1,4 +1,4 @@
-import { defaultData } from "./defaultData/publishDashboard"
+import { defaultData } from "./defaultData/previewDashboard"
 import { http } from "../services/request"
 import { ILayerComponent, ILayerGroup, IPanel } from "../routes/dashboard/center/components/CustomDraggable/type"
 import { filterEmptyGroups } from "./utils/filterEmptyGroups"
@@ -16,7 +16,7 @@ import {
 } from "../utils";
 import { IBarState } from "./defaultData/bar"
 export default {
-  namespace: "publishDashboard",
+  namespace: "previewDashboard",
   state: JSON.parse(JSON.stringify(defaultData)),
   reducers: {
     save(state: IBarState, { payload }: any) {
@@ -25,7 +25,7 @@ export default {
   },
   effects: {
     * initDashboard({ payload: { dashboardId }, cb }: any, { call, put, select }: any): any {
-      let publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard)
+      let previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard)
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",
@@ -39,7 +39,7 @@ export default {
         type: "getDataContainerList",
         payload: dashboardId,
       })
-      publishDashboard.dataContainerList.forEach(async(item: any) => {
+      previewDashboard.dataContainerList.forEach(async(item: any) => {
         let data: any = null
         item.enable = item.modules.length > 0
         if(item.dataType === "static") {
@@ -54,7 +54,7 @@ export default {
             },
           })
         }
-        publishDashboard.dataContainerDataList.push({ id: item.id, data })
+        previewDashboard.dataContainerDataList.push({ id: item.id, data })
       })
       // 获取当前画布所有的数据过滤器
       const filters = yield http({
@@ -71,7 +71,7 @@ export default {
       yield put({
         type: "save",
         payload: {
-          dataContainerDataList: publishDashboard.dataContainerDataList,
+          dataContainerDataList: previewDashboard.dataContainerDataList,
           componentFilters: filters || [],
           callbackParamsList,
           dashboardId,
@@ -88,8 +88,8 @@ export default {
       { payload, cb }: any,
       { call, put, select }: any,
     ): any {
-      const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard)
-      const dashboardId = publishDashboard.dashboardId || payload
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard)
+      const dashboardId = previewDashboard.dashboardId || payload
       const data = yield http({
         method: "get",
         url: `/visual/container/list/${ dashboardId }`,
@@ -106,17 +106,13 @@ export default {
       { cb }: any,
       { call, put, select }: any
     ): any {
-      const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      let { dashboardId } = publishDashboard
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
+      let { dashboardId } = previewDashboard
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http(
           {
-            url: `/visual/application/dashboard/show/${dashboardId}`,
-            method: "post",
-            body: {
-              pass: '457123a6fd',
-              dashboardId,
-            }
+            url: `/visual/application/dashboard/detail/${dashboardId}`,
+            method: "get",
           }
         );
         const layerPanels: any = layersPanelsFlat(layers)
@@ -144,10 +140,10 @@ export default {
           type: "getComponentsData",
           payload: components,
         });
-        const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
+        const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
-        const newDashboardConfig = duplicateDashboardConfig(deepClone(publishDashboard.dashboardConfig), dashboardConfig)
+        const newDashboardConfig = duplicateDashboardConfig(deepClone(previewDashboard.dashboardConfig), dashboardConfig)
         yield put({
           type: "save",
           payload: {
@@ -166,19 +162,17 @@ export default {
     },
     *getComponentsData({ payload }: any, { call, put, select }: any): any {
       const components = payload;
-      const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      const { dashboardId, componentData, callbackArgs } = publishDashboard
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
+      const { dashboardId, componentData, callbackArgs } = previewDashboard
       const func = async (component: any) => {
         try {
           const data = await http({
-            url: "/visual/module/getShowData",
+            url: "/visual/module/getData",
             method: "post",
             body: {
               moduleId: component.id,
               dataType: component.dataType,
               callBackParamValues:callbackArgs,
-              dashboardId,
-              pass: '457123a6fd'
             },
           });
 
@@ -204,10 +198,9 @@ export default {
     },
     *getContainersData({ payload }: any, { call, put, select }: any): any {
       const dataContainerList = payload;
-      const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      const {dashboardId, callbackArgs} = publishDashboard
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
       dataContainerList.forEach(async (item: any) => {
-        const container = publishDashboard.dataContainerList.find(
+        const container = previewDashboard.dataContainerList.find(
           (container: any) => container.id === item.id
         );
         let data: any = null;
@@ -216,23 +209,21 @@ export default {
         } else {
           data = await http({
             method: "post",
-            url: "/visual/container/screen/data/get",
+            url: "/visual/container/data/get",
             body: {
               id: container.id,
-              callBackParamValues: callbackArgs,
-              dashboardId,
-              pass: '457123a6fd'
+              callBackParamValues: previewDashboard.callbackArgs,
             },
           });
         }
-        publishDashboard.dataContainerDataList.find(
+        previewDashboard.dataContainerDataList.find(
           (data: any) => data.id === item.id
         ).data = data;
       });
       yield put({
         type: "save",
         payload: {
-          dataContainerDataList: publishDashboard.dataContainerDataList,
+          dataContainerDataList: previewDashboard.dataContainerDataList,
         },
       });
     },

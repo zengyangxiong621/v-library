@@ -143,7 +143,6 @@ export default {
     },
     *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
       let bar: any = yield select(({ bar }: any) => bar);
-        // TODO 怎么造成的
         if (dashboardId !== bar.dashboardId) {
           // 获取回调参数列表
           const callbackParamsList = yield http({

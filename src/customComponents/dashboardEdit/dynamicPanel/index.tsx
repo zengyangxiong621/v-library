@@ -2,7 +2,7 @@ import {DOMElement, useEffect, useRef, useState, RefObject} from 'react'
 import {connect} from 'dva'
 import {Button} from 'antd'
 import {useSetState} from 'ahooks'
-import CustomDraggable from '../../routes/dashboard/center/components/CustomDraggable'
+import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
 import {http} from '@/services/request'
 import * as React from 'react'
 import {
