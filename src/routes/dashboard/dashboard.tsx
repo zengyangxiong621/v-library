@@ -21,6 +21,7 @@ import { menuOptions } from './left/Data/menuOptions'
 import DataContainer from './components/dataContainer'
 import CallbackArgs from './components/callbackArgs'
 import DataFilters from './components/dataFilters'
+import ComponentTheme from './components/componentTheme'
 import ModuleUpdate from './components/moduleUpdate'
 import useLoading from '@/components/useLoading'
 import DynamicPanel from '@/routes/dashboard/left/components/dynamicPanel'
@@ -36,6 +37,7 @@ function App({ bar, dispatch, location, history }: any) {
   const [callbackArgsVisible, setCallbackArgsVisible] = useState(false)
   const [dataFiltersVisible, setDataFiltersVisible] = useState(false)
   const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false)
+  const [componentThemeVisible, setComponentThemeVisible] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
   const [loading, setLoading]: any = useLoading(false, document.querySelector('.p-home'))
   // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
@@ -238,21 +240,32 @@ function App({ bar, dispatch, location, history }: any) {
         setCallbackArgsVisible(false)
         setModuleUpdateVisible(false)
         setDataFiltersVisible(false)
+        setComponentThemeVisible(false)
         break;
       case 'huitiaoguanli':
         setCallbackArgsVisible(true)
         setDataContainerVisible(false)
         setModuleUpdateVisible(false)
         setDataFiltersVisible(false)
+        setComponentThemeVisible(false)
         break;
       case 'zujiangengxin':
         setModuleUpdateVisible(true)
         setCallbackArgsVisible(false)
         setDataContainerVisible(false)
         setDataFiltersVisible(false)
+        setComponentThemeVisible(false)
         break;
       case 'xiangmuguolvqi':
         setDataFiltersVisible(true)
+        setCallbackArgsVisible(false)
+        setDataContainerVisible(false)
+        setModuleUpdateVisible(false)
+        setComponentThemeVisible(false)
+        break;
+      case 'zhutifengge':
+        setComponentThemeVisible(true)
+        setDataFiltersVisible(false)
         setCallbackArgsVisible(false)
         setDataContainerVisible(false)
         setModuleUpdateVisible(false)
@@ -282,6 +295,9 @@ function App({ bar, dispatch, location, history }: any) {
   const handleDataFilterAvailableChange = (value: boolean) => {
     setDataFiltersVisible(value)
   }
+  const handleComponentThemeAvailableChange = (value: boolean) => {
+    setComponentThemeVisible(value)
+  }
 
 
   return (
@@ -309,7 +325,8 @@ function App({ bar, dispatch, location, history }: any) {
           <DataContainer visible={dataContainerVisible} onChange={handleDCVisibleChange} />
           <CallbackArgs visible={callbackArgsVisible} onChange={handleCbAvailableChange} />
           <ModuleUpdate visible={moduleUpdateVisible} onChange={handleMUAvailableChange} />
-          <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange}></DataFilters>
+          <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange} />
+          <ComponentTheme visible={componentThemeVisible} onChange={handleComponentThemeAvailableChange} />
         </div>
         {
           bar.isShowRightMenu &&
