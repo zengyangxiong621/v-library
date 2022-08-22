@@ -154,6 +154,21 @@ const AppCard = (props: any) => {
     downLoad(`/visual/application/export/${appId}`, false, name)
   }
 
+  // 设为模板
+  const setTemplate = async(appId: string, name: string) => {
+    const data = await http({
+      url: '/visual/appTemplate/set',
+      method: 'post',
+      body: {
+        id: appId,
+        type: 1,
+      }
+    })
+    if(data){
+      message.success('设置成功')
+    }
+  }
+
   // 移动分组
   const moveGroup = (appId: string) => {
     openMoveGroupModal(appId)
@@ -177,6 +192,9 @@ const AppCard = (props: any) => {
         break;
       case '导出应用':
         exportApp(id, name)
+        break;
+      case '设为模板':
+        setTemplate(id, name)
         break;
     }
     // 点击任意菜单子项后，需要隐藏ul
@@ -215,6 +233,7 @@ const AppCard = (props: any) => {
                   <li>复制</li>
                   <li>删除</li>
                   <li>导出应用</li>
+                  <li>设为模板</li>
                 </ul>
               </div>
             </div>

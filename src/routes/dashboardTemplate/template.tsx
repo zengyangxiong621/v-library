@@ -47,7 +47,7 @@ const DashboardTemplate = (props: any) => {
         pageNo: 1,
         pageSize: 10,
         groupId: null,
-        spaceId,
+        spaceId: null,
         name: value
       }
     })
