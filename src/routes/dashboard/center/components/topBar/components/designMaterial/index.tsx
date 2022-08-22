@@ -6,7 +6,7 @@ import { Spin } from 'antd'
 
 
 const DesignMaterial = (props: any) => {
-  const { bar, dispatch,title,current, index } = props
+  const { bar, dispatch,title,current, index,spaceId } = props
   const origin = title === '系统素材' ? 'design' : 'myresource'
   const classList = bar.systemMaterialClass[origin]
   const [active, setActive] = useState('spsc')
@@ -37,7 +37,7 @@ const DesignMaterial = (props: any) => {
     let payload:any = {
       pageNo: 1,
       pageSize: 1000,
-      spaceId:origin === 'design' ? null : '1',
+      spaceId:origin === 'design' ? null : spaceId,
       type: [origin], // 系统素材
     }
     if(origin === 'design'){

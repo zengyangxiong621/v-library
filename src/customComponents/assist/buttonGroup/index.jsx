@@ -29,6 +29,8 @@ class ButtonGroup extends Component {
       return pre
     }, {})
 
+    console.log('style', style)
+
     const handleChange = value => {
       const data = componentData.filter(item => {
         return item[fieldKey] === value
@@ -83,13 +85,13 @@ class ButtonGroup extends Component {
         height: '100%',
         display: 'flex',
         "--defaultBorder": `${style.defaultBorder.width}px ${style.defaultBorder.type} ${style.defaultBorder.color}`,
-        "--defalutBgc": style.defaultBgColor,
+        "--defalutBgc": style.defaultBgImg ? `url(${style.defaultBgImg})` : style.defaultBgColor,
         "--defalutColor": style.defaultFont.color,
         "--defalutFontFamily": style.defaultFont.fontFamily,
         "--defalutFontSize": style.defaultFont.fontSize + 'px',
         "--defalutFontWeight": style.defaultFont.fontWeight,
         "--selectedBorder": `${style.selectedBorder.width}px ${style.selectedBorder.type} ${style.selectedBorder.color}`,
-        "--selectedBgc": style.selectedBgColor,
+        "--selectedBgc": style.selectedBgImg ? `url(${style.selectedBgImg})` : style.selectedBgColor,
         "--selectedColor": style.selectedFont.color,
         "--selectedFontFamily": style.selectedFont.fontFamily,
         "--selectedFontSize": style.selectedFont.fontSize + 'px',
@@ -99,7 +101,7 @@ class ButtonGroup extends Component {
           return <button
             style={{ flex: (1 / componentData.length).toFixed(2) }}
             onClick={() => handleClick(index)}
-            className={["cus-component-button-group-btn", index + 1 === this.state.active ? "active" : null].join(' ')}
+            className={["cus-component-br-btn", index + 1 === this.state.active ? "active" : null].join(' ')}
           >{item[fieldKey]}</button>
         })
         }

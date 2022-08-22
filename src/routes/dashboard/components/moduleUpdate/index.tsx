@@ -10,6 +10,9 @@ import { Drawer, Button, Card, Checkbox, Empty } from 'antd'
 
 import ListItem from './components/listItem'
 import { deepClone } from '@/utils/index'
+import importComponent from './methods/fetchComponentJsFile'
+
+
 
 const ModuleUpdate = (props: any) => {
   const { bar, onChange, visible, dispatch } = props
@@ -27,13 +30,7 @@ const ModuleUpdate = (props: any) => {
       setComponentsCopy(componentsCopy)
     }
   }, [visible])
-  // 获取所有原子组件的完整信息，并从中抽取出 moduleName 和 config组成一个map
-  useEffect(() => {
-    if (visible) {
-      const componentsCopy = deepClone(bar.components)
-      setComponentsCopy(componentsCopy)
-    }
-  }, [visible])
+
   // 获取所有原子组件的完整信息，并从中抽取出 moduleName 和 config组成一个map
   useEffect(() => {
     let toolMap = new Map<string, any>()
@@ -78,7 +75,6 @@ const ModuleUpdate = (props: any) => {
       const targetItem = id2configReflect[id]
       oldComponentConfig.push(targetItem)
     });
-    // TODO <@Mark 最终的config应该是 比对新老config之后得到的>, 目前使用的是暴力替换
     // 遍历 本次所选中的待更新组件，依次添加config
     const hasNewConfigArr = selectedLists.map((item: any, index: any) => {
       const { moduleLastVersion, ...targetOptions } = item
@@ -105,12 +101,25 @@ const ModuleUpdate = (props: any) => {
       getUpdatableModules()
       // 重置复选框等状态
       setSelectedLists([])
-      // 刷新组件中的画布
-      dispatch({
-        type: 'bar/getDashboardDetails',
-        payload: bar.dashboardId
-      })
+      // 重新请求最新版本组件的 js 文件
+      selectedLists.forEach(async (item: any) => {
+        window.eval(`${await importComponent(item)}`)
+        const { ComponentDefaultConfig } = (window as any).VComponents;
+        // const currentDefaultConfig = ComponentDefaultConfig
+        const index = bar.components.findIndex((x: any) => x.id === item.id)
+        bar.components.splice(index, 1, { ...ComponentDefaultConfig, id: item.id })
+      }
+      )
     }
+    // alert('batch update')
+    dispatch({
+      type: 'bar/save'
+    })
+    // 刷新组件中的画布
+    dispatch({
+      type: 'bar/getDashboardDetails',
+      payload: bar.dashboardId
+    })
     setUpdateBtnLoading(false)
   }
   const onCheckAllChange = (e: any) => {

@@ -68,7 +68,7 @@ export default {
     setup({ dispatch, history }: { dispatch: any; history: any }) {
       // eslint-disable-line
       history.listen((location: any) => {
-        console.log('location', location)
+        // console.log('location', location)
       });
     },
     onResize({ dispatch, history }: any) {
@@ -92,7 +92,9 @@ export default {
         payload,
       });
     },
-      *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
+    *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
+      const curWorkspace:any = localStorage.getItem('curWorkspace')
+      const spaceId =   JSON.parse(curWorkspace)?.id;
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",
@@ -162,6 +164,9 @@ export default {
       });
       yield put({
         type: "getAllDashboardList",
+        payload: {
+          spaceId
+        }
       })
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
@@ -188,7 +193,7 @@ export default {
         body: {
           "pageNo": 1,
           "pageSize": 1000,
-          "spaceId": 1,
+          "spaceId": payload.spaceId,
           "map": {
             "updated_time": false
           },
@@ -234,7 +239,6 @@ export default {
         window.history.replaceState('', '', `/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`);
       }
       try {
-
         let { layers, components, dashboardConfig, dashboardName } = yield http(
           {
             url: `/visual/application/dashboard/detail/${ isPanel ? stateId : dashboardId}`,
@@ -283,16 +287,6 @@ export default {
             dashboardName,
           },
         });
-        console.log('结果', {
-          treeData: noEmptyGroupLayers,
-          components,
-          panels,
-          dashboardId,
-          stateId,
-          panelId,
-          dashboardConfig: newDashboardConfig,
-          dashboardName,
-        })
         cb({ dashboardConfig: newDashboardConfig, dashboardName });
       } catch (e) {
         return e;
@@ -479,20 +473,21 @@ export default {
     },
     // 删除图层、分组
     *delete({ payload }: any, { select, call, put }: any): any {
-      console.log('payload', payload)
       const layers = yield http({
         url: "/visual/layer/delete",
         method: "delete",
         body: payload,
       });
+      if(layers) {
+        const filterNullLayers = clearNullGroup(layers);
+        yield put({
+          type: "updateTree",
+          payload: filterNullLayers,
+        });
+      }
       yield put({
         type: "deleteComponentData",
         payload: { id: payload.id },
-      });
-      const filterNullLayers = clearNullGroup(layers);
-      yield put({
-        type: "updateTree",
-        payload: filterNullLayers,
       });
       yield put({
         type: "updateContainersEnableAndModules",
@@ -791,7 +786,7 @@ export default {
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
       let data = yield http({
-        url: `/visual/resource/queryResourceTypeList?spaceId=1`,
+        url: `/visual/resource/queryResourceTypeList?spaceId=${payload.spaceId}`,
         method: "get",
       });
       data.myTypes.map((item: any) => {
@@ -829,141 +824,13 @@ export default {
       yield put({
         type: "setComponentConfig",
         payload,
-      })
+      });
       yield put({
-        type: 'calcDragScaleData'
-      })
+        type: "calcDragScaleData",
+      });
     },
-    *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
-      const data = yield http({
-        url: '/visual/panel/state/create',
-        method: 'post',
-        body: {
-          dashboardId: bar.dashboardId,
-          panelId: bar.panelId
-        }
-      })
-      yield put({
-        type: 'save',
-        payload: {
-          panelStatesList: bar.panelStatesList.concat({
-            name: data.name,
-            id: data.id
-          })
-        }
-      })
-    },
-    *deletePanelState({ payload, cb }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
-      const { panelId, dashboardId, panelStatesList } = bar
-      const { stateId } = payload
-      try {
-        const data = yield http({
-          url: '/visual/panel/state/delete',
-          method: 'post',
-          body: {
-            dashboardId,
-            panelId,
-            stateId
-          }
-        })
-        const index = panelStatesList.findIndex((state: {id: string, name: string}) => state.id === stateId)
-        const toStateId = panelStatesList[0].id
-        panelStatesList.splice(index, 1)
-        yield put({
-          type: 'save',
-          payload: {
-            panelStatesList,
-            stateId: toStateId
-          }
-        })
-        yield put({
-          type: 'getDashboardDetails'
-        })
-      } catch(err) {
-        console.log('err', err)
-      }
-    },
-    *copyPanelState({ payload, cb }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
-      const { panelId, dashboardId, panelStatesList } = bar
-      const { stateId } = payload
-      try {
-        const data = yield http({
-          url: '/visual/panel/state/copy',
-          method: 'post',
-          body: {
-            dashboardId,
-            panelId,
-            stateId
-          }
-        })
-        panelStatesList.push(data)
-        const toStateId = data.id
-        yield put({
-          type: 'save',
-          payload: {
-            panelStatesList,
-            stateId: toStateId
-          }
-        })
-        yield put({
-          type: 'getDashboardDetails'
-        })
-      } catch(err) {
-        console.log('err', err)
-      }
-      // yield put({
-      //   type: 'save',
-      //   payload: {
-      //     panelStatesList: bar.panelStatesList.concat({
-      //       name: data.name,
-      //       id: data.id
-      //     })
-      //   }
-      // })
-    },
-    *selectPanelState({ payload: { stateId } }: any, { call, put, select }: any): any {
-      const bar: any = yield select(({ bar }: any) => bar);
-      if (stateId !== bar.stateId) {
-        yield put({
-          type: 'save',
-          payload: {
-            stateId
-          }
-        })
-        yield put({
-          type: 'getDashboardDetails',
-        })
-        yield put({
-          type: 'save',
-          payload: {
-            scaleDragData: {
-              position: {
-                x: 0,
-                y: 0
-              },
-              style: {
-                width: 0,
-                height: 0,
-                display: 'none',
-              }
-            },
-            selectedComponentOrGroup: [],
-            selectedComponentIds: [],
-            selectedComponentRefs: {},
-            selectedComponentDOMs: {},
-            selectedComponents: [],
-            key: [bar.panelId]
-          }
-        })
-      }
-    },
-    *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {
-
-    }
   },
+
   reducers: {
     changeModuleDefaultConfig(state: IBarState, { payload }: any) {
       const isExit = state.moduleDefaultConfig.filter((item) => {
@@ -1118,7 +985,6 @@ export default {
         ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
         ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
       ]
-      console.log('selectedComponents', state.selectedComponents)
       state.selectedComponentRefs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
@@ -1130,7 +996,6 @@ export default {
       return { ...state };
     },
     setLayerConfig(state: IBarState, { payload }: any) {
-      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup)
       if (state.selectedComponentOrGroup.length === 1) {
         const layer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in layer) {
@@ -1313,7 +1178,6 @@ export default {
     },
     // 选中节点时，保存住整个node对象
     setLayers(state: IBarState, { payload }: any) {
-      console.log('setLayers', payload)
       state.selectedComponentOrGroup = payload;
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
@@ -1412,12 +1276,13 @@ export default {
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      const newTree = remove(state.treeData, state.key);
+      // const newTree = remove(state.treeData, state.key);
       // const hadFilterEmptyGroupTree = filterEmptyGroups(newTree);
       // return { ...state, treeData: hadFilterEmptyGroupTree };
 
       // @Mark: 这儿要把state.key(存放当前被选中的图层的数组)重置为空。因为删除之前(比如用的右键选中该图层)会将选中的图层id存入key中，调用接口成功后，图层被删除了，但key中依旧会留存有这个已经被删除的图层的id,如果没有重置key,在“添加组件至画布”这一步中获取insertId处的逻辑会直接将这个已经被删除的图层id作为insertId,从而引发--删除组件后，立即添加组件会导致左侧图层被清空 的bug
-      return { ...state, treeData: newTree, key: [] };
+      // return { ...state, treeData: newTree, key: [] };
+      return {...state, key: []}
     },
     // 复制
     copy(state: IBarState, { payload }: any) {
@@ -1513,7 +1378,6 @@ export default {
         ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
         ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
       ]
-      console.log('state.selectedComponents', state.selectedComponents)
       return {
         ...state,
       };

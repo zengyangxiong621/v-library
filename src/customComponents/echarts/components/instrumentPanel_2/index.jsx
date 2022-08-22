@@ -4,6 +4,9 @@ import EC from '../../EC'
 import * as echarts from 'echarts';
 import ComponentDefaultConfig from './config'
 
+import bc from './bc.png'
+import './index.css'
+
 
 const InstrumentPanel = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
@@ -49,7 +52,7 @@ const InstrumentPanel = (props) => {
   const hadFilterArr = config.filter((item) => item.name !== 'dimension')
   const { allSettings } = getTargetConfig(hadFilterArr)
   console.log('allSettings',allSettings)
-  const { innerRadius,outerRadius } = allSettings ? allSettings['表盘'] : {}
+  const { innerRadius,outerRadius,radiusSize } = allSettings ? allSettings['表盘'] : {}
   const { 
     numberRange,
     numberStyles:{textStylerNumber,offset:numberOffset},
@@ -79,7 +82,7 @@ const InstrumentPanel = (props) => {
       // 基本仪表盘
       {
         type: 'gauge',
-        radius: '60%',
+        radius: radiusSize*100+'%',
         z:2,
         startAngle: 245,
         endAngle: -65,
@@ -413,11 +416,14 @@ const InstrumentPanel = (props) => {
     click: onChartClick
   }
   return (
-    <EC
-      option={getOption1()}
-      onChartReady={onChartReady}
-      onEvents={onEvents}
-    />
+    <div className='ip-mapping222'>
+      <img className='bg-one' src={bc} alt="背景图片" />
+      <EC
+        option={getOption1()}
+        onChartReady={onChartReady}
+        onEvents={onEvents}
+      />
+    </div>
   )
 
 }

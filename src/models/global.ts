@@ -3,6 +3,8 @@ const globalStroe={
   namespace: "global",
   state: {
     userInfo:null,
+    workspaceList: [],
+    curWorkspace: {},
     menuData: [
       {
         path: "/dashboard-manage",
@@ -63,6 +65,12 @@ const globalStroe={
         ...state,
         userInfo:payload
       }
+    },
+    setWorkspaceList(state:any,{payload}:any){
+      return {
+        ...state,
+        workspaceList:payload
+      }
     }
   },
   effects: {
@@ -77,6 +85,29 @@ const globalStroe={
             type: "setUserInfo",
             payload: data,
           });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // 获取所有工作空间
+    *getWorkspaceList({ payload }: any, { put }: any):any{
+      try {
+        const data=yield http({
+          url: `/visual/workspace/list`,
+          method: "get",
+        })
+        if(data.length){
+          // 设置工作空间
+          yield put({
+            type: "setWorkspaceList",
+            payload: data,
+          });
+          const curWorkspace=localStorage.getItem('curWorkspace')
+          if(!curWorkspace){
+            // 将当前空间存入到localStorage
+            localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
+          }
         }
       } catch (error) {
         console.log(error);

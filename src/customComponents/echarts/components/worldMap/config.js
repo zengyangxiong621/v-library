@@ -5,6 +5,7 @@ const componentDefaultConfig = {
   parentId: "", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
 
+  moduleType: "map",
   moduleName: "worldMap", //组件标识
   moduleVersion: "1.0.0", //组件版本号
 
@@ -22,6 +23,9 @@ const componentDefaultConfig = {
     // 静态数据
     data: [
       {
+        centerPoint:{
+          北京区域中心: [116.536989, 39.777354]
+        },
         coordData: {
           昌平数据中心: [116.249193, 40.168238],
           勘探院数据中心: [116.357544, 39.992995],
@@ -181,6 +185,11 @@ const componentDefaultConfig = {
     ],
     fields: [
       {
+        name: "centerPoint",
+        value: "centerPoint",
+        desc: "飞线中心点",
+      },
+      {
         name: "coordData",
         value: "coordData",
         desc: "坐标数据",
@@ -287,16 +296,16 @@ const componentDefaultConfig = {
           value: "#22ccfb",
           type: "color",
         },
-        {
-          name: "pointColor",
-          displayName: "标点颜色",
-          value: "#fce182",
-          type: "color",
-        },
+        // {
+        //   name: "pointColor",
+        //   displayName: "标点颜色",
+        //   value: "#fce182",
+        //   type: "color",
+        // },
         {
           name: "borderColor",
           displayName: "边缘颜色",
-          value: "#2a2d3c",
+          value: "#36a0e1",
           type: "color",
         },
       ],
@@ -315,9 +324,26 @@ const componentDefaultConfig = {
           type: "switch",
         },
         {
+          name: "flyDirection",
+          displayName: "飞线方向",
+          type: "radioGroup",
+          direction: "horizontal", // 方向
+          value: 0,
+          options: [
+            {
+              name: "聚拢",
+              value: 0,
+            },
+            {
+              name: "发散",
+              value: 1,
+            },
+          ],
+        },
+        {
           name: "flyColor",
           displayName: "飞线颜色",
-          value: "#ade9f4",
+          value: "#B1FFFE",
           type: "color",
         },
         {

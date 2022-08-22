@@ -356,6 +356,19 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
         }
       })
     }
+    // 更新所有数据容器中使用到该过滤器的配置信息
+    const dataContainerList = [...bar.dataContainerList]
+    if(dataContainerList.length){
+      dataContainerList.forEach(item => {
+        item.filters = item.filters.filter(fi => fi.id !==filter.id)
+      })
+    }
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        dataContainerList
+      }
+    })
   }
 
   const genHeader = filter => (

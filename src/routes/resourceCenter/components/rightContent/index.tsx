@@ -19,9 +19,7 @@ const { Paragraph } = Typography
 
 
 const RightContent = (props: any) => {
-  const { listData, resourceCenter, dispatch,refreshList } = props
-  /** **工作空间id  */
-  const spaceId = 1
+  const { listData, resourceCenter, dispatch,refreshList, spaceId } = props
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)
   const [newGroupId, setNewGroupId] = useState('')
   const [currentItem, setCurrentItem] = useState<any>({})
@@ -69,7 +67,6 @@ const RightContent = (props: any) => {
   }
   // 确认移动分组
   const confirmMoveGroup = async () => {
-    // console.log(spaceId, curAppId, newGroupId)
     let url = currentItem.moduleType === 'myTemp' ? '/visual/appTemplate/updateTemplateGroup' : '/visual/resource/changeGroup'
     let obj = currentItem.moduleType === 'myTemp' ? {id: curAppId} : {resourceId: curAppId}
     const data = await http({
@@ -118,7 +115,6 @@ const RightContent = (props: any) => {
         break
     }
   }
-  console.log(listData,'listData')
   return <> 
     {
       listData.length ?

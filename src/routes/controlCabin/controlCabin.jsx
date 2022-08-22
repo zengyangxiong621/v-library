@@ -1,18 +1,17 @@
 import React, { memo, useState, useEffect } from 'react';
 import './index.less'
-import Slider from "react-slick";
+import Carousel from './components/3DCarousel'
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { http } from '../../services/request';
 
 import { Spin, Empty } from 'antd';
-import { CloseOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
 
 const picUrl = require('../../assets/images/模板默认背景图.png')
-
 let currentFullScreenIndex = 0;
 const ControlCabin = props => {
+  const curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
+  const spaceId = curWorkspace?.id
   const [currnetIndex, setCurrentIndex] = useState(0)
   const [applist, setAppList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -21,35 +20,36 @@ const ControlCabin = props => {
 
   useEffect(() => {
     getAppList()
-  }, [])
+  }, [spaceId])
 
   const getAppList = async () => {
     const data = await http({
       url: '/visual/application/cockpitAppList ',
       method: 'post',
       body: {
-        spaceId: 1,
+        spaceId,
       }
     })
     setLoading(false)
     data && data.forEach(item => {
-      item.photoUrl = item.photoUrl || picUrl
+      item.url = item.photoUrl || picUrl
+      item.title = item.name
     })
     if (!data || !data.length) {
       setAppList([])
-    } else if (data.length <= 3) {
-      const result = fillArrTo4(data)
+    } else if (data.length <= 2) {
+      const result = fillArrTo3(data)
       setAppList(result)
     } else {
       setAppList(data)
     }
   }
 
-  const fillArrTo4 = (data) => {
+  const fillArrTo3 = (data) => {
     const result = data
     let len = data.length
     let i = 0
-    while (4 - len > 0) {
+    while (3 - len > 0) {
       result.push(result[i])
       len++
       i++
@@ -57,51 +57,17 @@ const ControlCabin = props => {
     return result
   }
 
-  const settings = {
-    dots: false,
-    arrows: true,
-    className: "center",
-    centerMode: true,
-    infinite: true,
-    centerPadding: "0",
-    slidesToShow: 3,
-    speed: 500,
-    swipe: false,
-    initialSlide: currnetIndex,
-
-    afterChange: (index) => {
-      setCurrentIndex(index)
-      setStyle()
-      currentFullScreenIndex = index
-    },
-    onInit: () => {
-      setStyle()
+  const appClick = (app) => {
+    for(let i=0; i<applist.length; i++){
+      if(applist[i].id === app.id){
+        currentFullScreenIndex = i
+        break
+      }
     }
-  };
-
-  const setStyle = () => {
-    const slickItema = document.getElementsByClassName('slick-slide')
-    for (let i = 0; i < slickItema.length; i++) {
-      slickItema[i].classList.remove('control-cabin-img-active-left')
-      slickItema[i].classList.remove('control-cabin-img-active-center')
-      slickItema[i].classList.remove('control-cabin-img-active-right')
-    }
-    const sliderActives = document.getElementsByClassName('slick-active')
-    sliderActives[0].classList.add('control-cabin-img-active-left')
-    sliderActives[1].classList.add('control-cabin-img-active-center')
-    sliderActives[2].classList.add('control-cabin-img-active-right')
-  }
-
-  const onClick = (index, item) => {
-    if (index === currnetIndex) {
-      scanDashboard(item.id)
-    }
+    scanDashboard(app.id)
   }
 
   const scanDashboard = (id) => {
-    // let newTab = window.open('_blank');
-    // newTab.location.href = `/bigscreen/${id}`
-    // newTab?.history.replaceState(null, '')
     setAppSrc(`/bigscreen/${id}`)
     setIsShowModal(true)
   }
@@ -134,36 +100,28 @@ const ControlCabin = props => {
             loading ?
               <Spin tip="加载中..." />
               : applist.length ?
-                <Slider {...settings}>
-                  {applist.map((item, index) => {
-                    return (
-                      <div key={index} title={item.name} className="control-cabin-img">
-                        <div className="picture" onClick={() => onClick(index, item)}>
-                          <img src={item.photoUrl} alt={item.name} />
-                        </div>
-                      </div>
-                    )
-                  })}
-                </Slider>
+                <Carousel
+                  imageList={applist}
+                  onClick={(app) => appClick(app)}
+                />
                 : <Empty description="暂无数据" />
           }
         </div>
-        <div className="con-cabin-fullscreen" style={{ display: isShowModal ? 'block' : 'none' }}>
-          <iframe src={appSrc} frameborder="0"></iframe>
-          <div className="con-cabin-close-fullscreen" onClick={() => setIsShowModal(false)}>
-            <CloseOutlined />
-          </div>
-          <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-pre" onClick={showPreApp}>
-            <ArrowLeftOutlined />
-          </div>
-          <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-next" onClick={showNextApp}>
-            <ArrowRightOutlined />
-          </div>
-        </div>
+        {
+          isShowModal ? <div className="con-cabin-fullscreen">
+            <iframe src={appSrc} frameBorder="0"></iframe>
+            <div className="con-cabin-close-fullscreen" onClick={() => setIsShowModal(false)}>
+              <CloseCircleOutlined />
+            </div>
+            <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-pre" onClick={showPreApp}>
+              <LeftCircleOutlined />
+            </div>
+            <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-next" onClick={showNextApp}>
+              <RightCircleOutlined />
+            </div>
+          </div> : null
+        }
       </div>
-
-
-
     </div>
   )
 }

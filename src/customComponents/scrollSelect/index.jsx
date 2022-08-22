@@ -27,7 +27,6 @@ function rgb2hex(arr){
   return '#' + arr.map(v=> parseInt(v,10).toString(16)).join('');
 }
 function rgbaToRgb(color) {
-  console.log('color', color)
   let rgbaAttr = color.match(/[\d.]+/g);
   if (rgbaAttr.length >= 3) {
     var r, g, b;
@@ -143,6 +142,12 @@ const getTargetStyle = (Arr) => {
 
 
 const ScrollSelect = (props) => {
+  const [scrollState, setScrollState] = useState({
+    isScroll: false,
+    clickStayTime: 0,
+    intervalTime: 0,
+    isStay: false
+  })
   const [activeKey, setActiveKey] = useState(7)
   // 公共的 tab style
   const [commonTabStyle, setCommonTabStyle] = useState({
@@ -211,6 +216,11 @@ const ScrollSelect = (props) => {
       flexBasis: `calc(${ (100 / optionsLength).toFixed(4) }% - ${ spacing }px)`,
     })
     setFlexDirection(directionType === 'horizontal' ? 'column' : 'row')
+    const scrollConfig = allGlobalConfig.find(item => item.name === 'isScroll').value
+    const isScroll = scrollConfig.find(item => item.name === 'show').value
+    const intervalTime = scrollConfig.find(item => item.name === 'interval').value
+    const clickStayTime = scrollConfig.find(item => item.name === 'clickStay').value
+    setScrollState({...scrollState, isScroll, intervalTime, clickStayTime})
   }
 
   const isSelectedConfigLoadFunc = (config, isSelected) => {
@@ -278,7 +288,24 @@ const ScrollSelect = (props) => {
     })
     handleChange(allOptions[defaultSelectedKey - 1])
   }, [])
-
+  useEffect(() => {
+    let timer = null
+    if (scrollState.isScroll && !scrollState.isStay) {
+      timer = setInterval(() => {
+        handleChange(options[activeKey + 1])
+      },  scrollState.intervalTime)
+    }
+    // 如果处于停留的状态
+    if (scrollState.isStay) {
+      timer && clearInterval(timer)
+      setTimeout(() => {
+        setScrollState({...scrollState, isStay: false})
+      }, scrollState.clickStayTime)
+    }
+    return () => {
+      timer && clearInterval(timer)
+    }
+  }, [scrollState, allOptions, options])
   useEffect(() => {
     allGlobalLoadFunc()
   }, [allGlobalConfig])
@@ -293,7 +320,6 @@ const ScrollSelect = (props) => {
 
   const handleChange = (data) => {
     const { newArr } = filterActiveOptions(data, allOptions, optionsLength, _fields)
-    console.log('handleChange-newArr', newArr)
     setOptions(newArr)
     props.onChange && props.onChange(data)
   }
@@ -361,6 +387,14 @@ const ScrollSelect = (props) => {
       return colorStepGradient[optionsLength - (index + 1)]
     }
   }
+
+  const handleItemClick = (item) => {
+    if (scrollState.clickStayTime > 0) {
+      setScrollState({...scrollState, isStay: true})
+    }
+    handleChange(item)
+  }
+
   return (
     <div
       className="scroll-select-wrapper"
@@ -382,7 +416,7 @@ const ScrollSelect = (props) => {
               ...commonTabStyle,
               ...((index) === activeKey ? selectedTabStyle : { ...unselectedTabStyle, fontSize: fontSizeCalc(index), color: colorCalc(index) }),
             } }
-            onClick={ () => handleChange(item) }
+            onClick={ () => handleItemClick(item) }
           >
             { item[_fields[1]] }
           </div>

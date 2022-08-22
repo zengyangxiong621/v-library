@@ -14,12 +14,9 @@ const { Dragger } = Upload
 
 const AddDataSource = (props: any) => {
   // TODO 暂无确定的取得spaceId的方案
-  const spaceId = 1
-  // const spaceId = '1513466256657637378'
 
   const [addForm] = Form.useForm()
-  const { visible, changeShowState, refreshTable } = props
-
+  const { visible, spaceId, changeShowState, refreshTable } = props
   const [curDataType, setCurDataType] = useState('')
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
@@ -98,26 +95,29 @@ const AddDataSource = (props: any) => {
     //！ 请求数据库列表
     setGetDBListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/datasource/queryDataBaseList',
-      method: 'post',
-      body: finalParams
-    })
-    setGetDBListLoading(false)
-    if (Array.isArray(data)) {
-      if (!data.length) {
-        message.error('没有可用的数据库')
-        setDataBaseList([])
-      } else {
-        // data 只是个数组，处理成select需要的形式
-        const formatData: any = data.map((item: any) => ({
-          label: item,
-          value: item
-        }))
-        setDataBaseList(formatData)
+    try {
+      const data = await http({
+        url: '/visual/datasource/queryDataBaseList',
+        method: 'post',
+        body: finalParams
+      })
+      setGetDBListLoading(false)
+      if (Array.isArray(data)) {
+        if (!data.length) {
+          message.error('没有可用的数据库')
+          setDataBaseList([])
+        } else {
+          // data 只是个数组，处理成select需要的形式
+          const formatData: any = data.map((item: any) => ({
+            label: item,
+            value: item
+          }))
+          setDataBaseList(formatData)
+        }
       }
-    } else {
+    } catch {
       message.error('获取数据库列表失败')
+      setGetDBListLoading(false)
     }
   }
   /**
@@ -211,8 +211,8 @@ const AddDataSource = (props: any) => {
       // 成功后  -关闭弹窗 -清除表单- 重置添加数据源表单为初始样式 -刷新表格
       changeShowState('add')
       addForm.resetFields()
-      setCurDataType('')
       refreshTable()
+      clearModalState()
     }
     /** 要把相关数据重置,不然会有缓存,后面的数据库都不用点击测试连接即可直接创建 */
     setIsConnect(false)
@@ -252,14 +252,14 @@ const AddDataSource = (props: any) => {
    */
   const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
-    let uploadProps:UploadProps = {
+    let uploadProps: UploadProps = {
       name: 'file',
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || '',
       action: `${BASEURL}/visual/file/upload`,
-      headers:{
-        authorization:localStorage.getItem('token') || ''
+      headers: {
+        authorization: localStorage.getItem('token') || ''
       },
       beforeUpload(file: any) {
         const { name, size }: { name: string, size: number } = file
@@ -456,6 +456,7 @@ const AddDataSource = (props: any) => {
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, '请输入用户名')}>
                   <Input
                     autoComplete='off'
+                    // autoComplete='new-password'
                     className="setBackColor"
                     placeholder='请输入'
                     maxLength={20}

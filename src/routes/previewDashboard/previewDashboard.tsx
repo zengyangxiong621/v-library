@@ -13,8 +13,6 @@ import { calcCanvasSize } from '../../utils'
 const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
-  const [screenWidthRatio, setScreenWidthRatio] = useState(1)
-  const [screenHeightRatio, setScreenHeightRatio] = useState(1)
   // 接口中返回的 当前屏幕设置信息
   const [dashboardConfig, setDashboardConfig] = useState([])
   const [scaleMode, setScaleMode] = useState<string>('')
@@ -29,7 +27,9 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
   /**
   * description: 获取屏幕大小、缩放设置等参数
   */
-  const [layers, setLayers] = useState(deepClone(bar.treeData))
+  const [layers, setLayers] = useState([])
+  const [panels, setPanels] = useState([])
+  const [components, setComponents] = useState([])
 
   /**
    * description: 根据缩放模式来配置页面
@@ -192,6 +192,10 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
     const data = deepClone(bar.treeData)
     treeDataReverse(data)
     setLayers(data)
+    setComponents(bar.components)
+    setPanels(bar.panels)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bar.treeData])
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
@@ -200,7 +204,7 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
       const dashboardId = window.location.pathname.split('/')[2]
       dispatch({
         type: 'bar/initDashboard',
-        payload: dashboardId,
+        payload: { dashboardId },
         cb: (data: any) => {
           resolve(data)
         }
@@ -235,19 +239,19 @@ const PreViewDashboard = ({ dispatch, bar, history, location }: any) => {
               <div id="scaleDiv"
                 style={{
                   ...pageStyle,
-                  ...scaleStyle
+                  ...scaleStyle,
+                  overflow: 'hidden'
                 }}
               >
                 {
                   <RecursiveComponent
                     layersArr={layers}
-                    componentLists={bar.components}
+                    componentLists={components}
+                    panels={panels}
                     bar={bar}
                     dispatch={dispatch}
                     scaleValue={scaleValue}
                     scaleMode={scaleMode}
-                    screenWidthRatio={screenWidthRatio}
-                    screenHeightRatio={screenHeightRatio}
                   />
                 }
               </div>

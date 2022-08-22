@@ -17,8 +17,8 @@ const { Option } = Select
 
 
 const DataSource = (props: any) => {
-  // let spaceId = '1513466256657637378'
-  let spaceId = 1
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  let spaceId = JSON.parse(curWorkspace)?.id
   const [inputValue, setInputValue] = useState('')
   const [dataSourceType, setDataSourceType] = useState<any>(null)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
@@ -79,7 +79,7 @@ const DataSource = (props: any) => {
   useEffect(() => {
     getTableData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [spaceId])
 
   // 保证每次拿到最新的dataSourceType值
   useEffect(() => {
@@ -356,6 +356,7 @@ const DataSource = (props: any) => {
         {/* 添加数据源的弹窗 */}
         <AddDataSource
           visible={isShowAddModal}
+          spaceId={spaceId}
           changeShowState={changeShowState}
           refreshTable={refreshTable}
         />
@@ -363,6 +364,7 @@ const DataSource = (props: any) => {
         {
           isShowEditModal && <EditDataSource
           editDataSourceInfo={editDataSourceInfo}
+          spaceId={spaceId}
           visible={isShowEditModal}
           changeShowState={changeShowState}
           refreshTable={refreshTable}

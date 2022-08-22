@@ -123,25 +123,38 @@ const ZebraColumn = (props) => {
   /**
   ** description: 通过不同的配置来获取不同的渲染配置
   */
-  const getSingleSeriesData = (barLabel, barColor, name, value) => {
+  const getSingleSeriesData = (barWidth, barLabel, barColor, splitLineColor, name, value) => {
+    const maxData = Math.max(...value) * 1.5
+    const maxValue = new Array(value.length).fill(maxData)
+    const itemStyleColor = barColor?.type === 'pure' ?
+      barColor?.pureColor :
+      barColor?.type === 'gradient' ?
+        new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+          offset: 0,
+          color: barColor?.gradientStart
+        },
+        {
+          offset: 1,
+          color: barColor?.gradientEnd
+        }
+        ])
+        : '#1890ff'
     const everyLineOptions = [
+      // 值
       {
         name,
-        type: "pictorialBar",
-        symbol: "rect",
-        symbolSize: ["100%", 5],
-        symbolRepeat: true,
-        symbolMargin: 2,
-        zlevel: 1,
+        xAxisIndex: 1,
+        type: "bar",
         itemStyle: {
           normal: {
-            color: barColor,
+            color: itemStyleColor
           },
         },
         label: {
           normal: {
             show: barLabel.show,
             position: "top",
+            offset: [0, -5],
             textStyle: {
               color: barLabel.font.color,
               fontSize: barLabel.font.fontSize,
@@ -151,22 +164,44 @@ const ZebraColumn = (props) => {
             },
           },
         },
-        barWidth: '30%',
+        barWidth: barWidth?.unit === '%' ? `${barWidth?.width * 0.425}%` : barWidth?.width * 0.425 || 17,
         data: value,
+        z: 2
       },
+      // 分割线
+      {
+        name,
+        type: "pictorialBar",
+        symbol: "rect",
+        symbolSize: ["100%", 5],
+        symbolRepeat: true,
+        symbolMargin: '2!',
+        itemStyle: {
+          color: splitLineColor || "#102862",
+        },
+        label: {
+          show: false
+        },
+        barWidth: barWidth?.unit === '%' ? `${barWidth?.width * 0.425}%` : barWidth?.width * 0.425 || 17,
+        data: value,
+        z: 3,
+      },
+      // 背景
       {
         type: "bar",
-        barWidth: "50%",
+        barWidth: barWidth?.unit === '%' ? `${barWidth?.width}%` : barWidth?.width || 40,
         showBackground: true,
         backgroundStyle: {
           color: bar.barBgColor,
         },
+        barGap: "-100%",
         itemStyle: {
           normal: {
             color: "transparent",
           },
         },
-        data: value,
+        data: maxValue,
+        z: 1,
       },
     ]
     return everyLineOptions
@@ -175,6 +210,7 @@ const ZebraColumn = (props) => {
   // @Mark 需要动态的计算折线图的数量, 最终将使用dynamicSeries来作为最终的series属性的值
   const dynamicSeries = []
   const legendTextReflect = {}
+  let legendItemStyle = {}
   seriesMap.forEach((value, key) => {
     // 假如：系列设置中用户设置了多个'系列一'
     // 利用find只返回第一个 key为'系列一'的特性即可实现“先设置者先生效”
@@ -185,11 +221,12 @@ const ZebraColumn = (props) => {
     // 假如：数据中只有“系列一、二”，但是用户可以定义出“系列三、s系列……”，所以此时targetObj一定不存在
     if (targetObj) {
       // 获取 最终折线绘制的配置
-      const { barLabel, barColor } = targetObj
-      singleSeriesData = getSingleSeriesData(barLabel, barColor, key, value.data)
+      const { barLabel, barColor, splitLineColor, barWidth } = targetObj
+      singleSeriesData = getSingleSeriesData(barWidth, barLabel, barColor, splitLineColor, key, value.data)
       // 获取 最终每个图例应该展示的文本
       const { displayName } = targetObj.mapping || { displayName: key }
       legendTextReflect[key] = displayName
+      legendItemStyle = barColor
     }
     dynamicSeries.push(...singleSeriesData)
   })
@@ -209,7 +246,7 @@ const ZebraColumn = (props) => {
             type: 'solid',
           },
         },
-        formatter: '{b0}:{c0}'
+        formatter: '{b0}<br/>{c0}'
       },
       [isUseLegend && 'legend']: {
         formatter: function (name) {
@@ -261,6 +298,11 @@ const ZebraColumn = (props) => {
             fontStyle: xAxisLabelTextStyle.italic ? 'italic' : 'normal',
             fontWeight: xAxisLabelTextStyle.bold ? 'bold' : 'normal',
           },
+        },
+        {
+          type: "category",
+          data: axisData,
+          show: false
         },
       ],
       yAxis: [

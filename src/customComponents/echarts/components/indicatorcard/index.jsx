@@ -66,7 +66,8 @@ const Indicatorcard = (props) => {
           },
           axisLine: {
             lineStyle: {
-              width: circleWidth // 环形宽度 
+              width: circleWidth, // 环形宽度 
+              color: [[1,'#2e385f']] // 环图背景色
             }
           },
           splitLine: {

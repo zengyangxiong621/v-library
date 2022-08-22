@@ -1,12 +1,12 @@
 const componentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
-  "name": "定制仪表盘", //图层名称
+  "name": "仪表盘", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_5", //组件标识
-  "moduleVersion": "1.1.3", //组件版本号
+  "moduleVersion": "1.3.1", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -315,7 +315,33 @@ const componentDefaultConfig = {
                   }
               }
               ]
-            }
+            },
+            {
+              'name': 'axisLabelStyles',
+              'displayName': '刻度标签',
+              'type': 'collapse',
+              hasSwitch:false, // 是否有切换按钮
+              defaultExpand:false,  // 是否默认展开
+              value:[
+                {	// 如果有后面的按钮，则该项必须放在第一个
+                    'name': 'showUnitStyles',
+                    'displayName': '',
+                    'value': true,
+                    'type': 'switch',
+                },
+                {
+                  name:"textStyleAxisLabel",
+                  displayName:'文本样式',
+                  type:'chartText',
+                  value:{
+                      fontFamily:'Microsoft Yahei',
+                      fontSize:38,
+                      color:'#ffffff',
+                      fontWeight:'normal' // bold bolder lighter
+                  }
+                },
+              ]
+            },
           ]
         },
         {

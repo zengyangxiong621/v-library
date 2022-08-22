@@ -16,7 +16,8 @@ const { Option } = Select
 // 功能
 const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   // 空间id
-  let spaceId = 1
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  const spaceId = JSON.parse(curWorkspace)?.id
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
@@ -35,22 +36,26 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
 
   // 页面初始化- 请求模板列表数据
   useEffect(() => {
+    // 第一次进入”我的可视化页面时“ curSelectedGroup是[],给他设置为['-1']
+    let curSelectedGroup: string[] = dashboardManage.curSelectedGroup
+    if(!curSelectedGroup.length) curSelectedGroup = ['-1']
     dispatch({
       type: 'dashboardManage/resetModel',
       payload: {
-        curSelectedGroup: ['-1'],
+        curSelectedGroup,
         curSelectedGroupName: '全部应用'
       }
     })
+    const groupId = dashboardManage.curSelectedGroup[0] === '-1' ? null : dashboardManage.curSelectedGroup[0]
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId: spaceId,
       map: sortMap,
-      groupId: null
+      groupId
     }
     getDataDispatch(finalBody)
-  }, [])
+  }, [spaceId])
 
   // 新建应用
   const addDashboard = () => {
@@ -169,7 +174,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     <div className='MyApplication-wrap' id='myApplicationPage'>
       <div className="left">
         {/* 左侧树 */}
-        <LeftTree clearSearchInputState={clearSearchInputState} />
+        <LeftTree clearSearchInputState={clearSearchInputState} spaceId={spaceId} />
       </div>
       <div className="right">
         <div className="right-header">
@@ -209,7 +214,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
           </div>
         </div>
         {/* 右侧 */}
-        <RightContent listData={dashboardManage.templateList} />
+        <RightContent spaceId={spaceId} listData={dashboardManage.templateList} />
       </div>
     </div>
   )

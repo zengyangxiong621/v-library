@@ -57,8 +57,8 @@ const createMenu = ((menuData, props) => {  //创建菜单
 });
 
 const Header = props => {
-  const { defaultPath,menuData, location:{pathname}, history,global:{userInfo},dispatch } = props
-
+  const { defaultPath,menuData, location:{pathname}, history,global:{userInfo, workspaceList},dispatch } = props
+  let curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
   const curUserid=useMemo(()=>{
     if(userInfo && userInfo.id){
       return userInfo.id
@@ -74,10 +74,15 @@ const Header = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modifyLoading,setModifyLoding]=useState(false)
 
+
   // 选择工作空间
-  const selectWorkspace = ({ key }) => {
-    if (key == 1) {
+  const selectWorkspace = ({key}) => {
+    const data = workspaceList.find(item => item.id === key)
+    if (key == '-1') {
       history.push('/work-space')
+    }else{
+      localStorage.setItem('curWorkspace',JSON.stringify(data))
+      window.location.reload()
     }
   }
   const handleLogout=async ()=>{
@@ -102,6 +107,7 @@ const Header = props => {
           history.replace('/login')
         }
     }
+    localStorage.removeItem('curWorkspace')
   }
   const handleUserMenuClick=async ({key}) => {
     if(key==='1'){
@@ -140,19 +146,30 @@ const Header = props => {
   const handleCancel=()=>{
     setModalVisible(false)
   }
-  const workSpaceMenu = (
-    <Menu
-      className="cus-dropdown-menu"
-      onClick={selectWorkspace}
-    >
-      <Menu.Item key="0">
-        默认工作空间
-      </Menu.Item>
-      <Menu.Item key="1">
-        工作空间管理
-      </Menu.Item>
-    </Menu>
-  );
+  const getWorkSpaceMenus = () => {
+    let isFindSpace = userInfo.menus.find(item => item.url === '/work-space')
+    return (
+      <Menu
+        className="cus-dropdown-menu"
+        onClick={selectWorkspace}
+      > 
+        {
+          workspaceList.map(item => {
+            return (
+              <Menu.Item key={item.id}>
+                {item.spaceName}
+              </Menu.Item>
+            )
+          })
+        }
+        {
+          isFindSpace &&  <Menu.Item key="-1">
+            工作空间管理
+          </Menu.Item>
+        }
+      </Menu>
+    )
+  }
   const userMenu=(
     <Menu
       className="cus-dropdown-menu"
@@ -188,9 +205,9 @@ const Header = props => {
 
       <div className="user-wraper">
         <div className="drop-down">
-          <Dropdown overlay={workSpaceMenu} trigger={['click']}>
+          <Dropdown overlay={getWorkSpaceMenus()} trigger={['click']}>
             <span className="span" onClick={e => e.preventDefault()}>
-              默认工作空间 <DownOutlined />
+              {curWorkspace?.spaceName} <DownOutlined />
             </span>
           </Dropdown>
         </div>

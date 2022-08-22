@@ -4,8 +4,9 @@ const componentDefaultConfig = {
   "name": "指标卡",
   "parentId": "0",
   "dashboardId": "",
+  "moduleType": "indicator",
   "moduleName": "indicatorcard",
-  "moduleVersion": "1.0.0",
+  "moduleVersion": "1.0.1",
   "autoUpdate": {
     "isAuto": false,
     "interval": 10

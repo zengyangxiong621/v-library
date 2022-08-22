@@ -158,7 +158,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
               'type': 'select',
               'value': item.id,
               'label': item.name,
-              'options': bar.allDashboardList.filter(item => item.id !== panelConfig.id),
+              'options': bar.allDashboardList.filter(item => item.value !== panelConfig.id),
             },
           ],
         }

@@ -5,7 +5,7 @@ const componentDefaultConfig = {
   parentId: "0",
   dashboardId: "",
   moduleName: "sankey",
-  moduleVersion: "1.1.2",
+  moduleVersion: "1.2.0",
   autoUpdate: {
     isAuto: false,
     interval: 10,

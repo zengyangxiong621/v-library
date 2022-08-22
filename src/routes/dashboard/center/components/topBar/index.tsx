@@ -24,6 +24,8 @@ const { SubMenu, Item } = Menu
 
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai, dispatch } = props
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  const spaceId = JSON.parse(curWorkspace)?.id
   const [current, setCurrent] = useState<any>([])
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
     zujian: componentMenu,
@@ -40,7 +42,10 @@ const TopBar = (props: any) => {
   // 获取所有素材分类
   const getSystemMaterial = () => {
     dispatch({
-      type: 'bar/getSystemMaterialClass'
+      type: 'bar/getSystemMaterialClass',
+      payload: {
+        spaceId
+      }
     })
   }
   
@@ -60,7 +65,7 @@ const TopBar = (props: any) => {
               >
               {
                 // React.createElement(item.component,{...item,index: item.key, current})
-                React.createElement(item.component,{...item,index:item.key,current})
+                React.createElement(item.component,{...item,index:item.key,current,spaceId})
               }
               </div>
             </SubMenu>)

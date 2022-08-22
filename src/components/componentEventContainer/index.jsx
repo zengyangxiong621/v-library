@@ -13,17 +13,15 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
-import Counter from  '@/customComponents/assist/counter'
-
+import Counter from  '@/customComponents/assist/counter2'
 import {connect} from "dva"
 
 // import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
 
-import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
-import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
-import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPanel_1'
+// import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+// import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
 import Timeline from '@/customComponents/assist/timeline'
@@ -443,13 +441,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         >
         </WorldMap>
         :
-        props.componentConfig.moduleName === 'chinaMap' ?
-        <ChinaMap
-          onChange={handleValueChange}
-          {...props}
-        >
-        </ChinaMap>
-        :
+        // props.componentConfig.moduleName === 'chinaMap' ?
+        // <ChinaMap
+        //   onChange={handleValueChange}
+        //   {...props}
+        // >
+        // </ChinaMap>
+        // :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
           onChange={handleValueChange}
@@ -503,30 +501,20 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </Timeline>
-                  : props.componentConfig.moduleName === 'CardFlipper_1' ?
-          <CardFlipper1
-            {...props}
-          >
-          </CardFlipper1>
-                    : props.componentConfig.moduleName === 'CardFlipper_2' ?
-          <CardFlipper2
-            {...props}
-          >
-          </CardFlipper2>
-          : props.componentConfig.moduleName === 'CardFlipper_1' ?
-          <CardFlipper1
-            scale={scale}
-            onChange={handleValueChange}
-            {...props}
-          >
-          </CardFlipper1>
-          : props.componentConfig.moduleName === 'CardFlipper_2' ?
-          <CardFlipper2
-            scale={scale}
-            onChange={handleValueChange}
-            {...props}
-          >
-          </CardFlipper2>
+          // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+          // <CardFlipper1
+          //   scale={scale}
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </CardFlipper1>
+          // : props.componentConfig.moduleName === 'CardFlipper_2' ?
+          // <CardFlipper2
+          //   scale={scale}
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </CardFlipper2>
           : props.componentConfig.moduleName === 'instrumentPanel_3' ?
           <InstrumentPanel3
             scale={scale}
@@ -534,13 +522,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </InstrumentPanel3>
-          : props.componentConfig.moduleName === 'instrumentPanel_1' ?
-          <InstrumentPanel1
-            scale={scale}
-            onChange={handleValueChange}
-            {...props}
-          >
-          </InstrumentPanel1>
           : props.componentConfig.moduleName === 'instrumentPanel_4' ?
           <InstrumentPanel4
             scale={scale}
@@ -548,7 +529,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </InstrumentPanel4>
-          : 
+          :
           <ErrorCatch
             app={componentConfig.name}
             user=""

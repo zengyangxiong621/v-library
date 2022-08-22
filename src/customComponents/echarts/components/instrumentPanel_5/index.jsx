@@ -3,7 +3,7 @@ import EC from '../../EC'
 
 import * as echarts from 'echarts';
 import ComponentDefaultConfig from './config'
-import bottom from './bottom.png';
+// import bottom from './bottom.png';
 
 
 const InstrumentPanel = (props) => {
@@ -51,7 +51,7 @@ const InstrumentPanel = (props) => {
   console.log('allSettings',allSettings)
   const { innerRadius,outerRadius,axisLine:{axisLineColor} } = allSettings ? allSettings['圆环'] : {}
   const { numberRange:{min,max},numberStyles:{textStylerNumbe,offset:numberOffset},
-  unitStyles:{textStyleUnit,padding}
+  unitStyles:{textStyleUnit,padding}, axisLabelStyles:{textStyleAxisLabel}
         } = allSettings ? allSettings['指标'] : {}
   const { offset,textStyleTitle} = allSettings ? allSettings['标题'] : {}
 
@@ -161,8 +161,10 @@ const InstrumentPanel = (props) => {
         axisLabel: {
           show: true,
           formatter: function(value) { return  value},
-          fontSize: 38,
-          color: '#FFFFFF'
+          fontSize: textStyleAxisLabel.fontSize,
+          color: textStyleAxisLabel.color,
+          fontFamily: textStyleAxisLabel.fontFamily,
+          fontWeight: textStyleAxisLabel.fontWeight
         },
         pointer: {
           show: false
@@ -185,7 +187,7 @@ const InstrumentPanel = (props) => {
         axisLine: {
           show: true,
           lineStyle:{
-            width: 120,
+            width: outerRadius*100+30,
             color: [
               [1,{
                 type: 'linear',
@@ -239,15 +241,15 @@ const InstrumentPanel = (props) => {
         endAngle: -90,
         min: 0,
         max: 100,
-        title:{
-          show:true,
-          offsetCenter:[0, '120%'],
-          backgroundColor: {
-            image: bottom
-          },
-          width:330,
-          height:120,
-        },
+        // title:{
+        //   show:true,
+        //   offsetCenter:[0, '120%'],
+        //   backgroundColor: {
+        //     image: bottom
+        //   },
+        //   width:330,
+        //   height:120,
+        // },
         data:[{
           value:100
         }],

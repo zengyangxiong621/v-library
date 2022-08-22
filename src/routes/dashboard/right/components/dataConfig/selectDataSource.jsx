@@ -8,6 +8,7 @@ import {
 import AddDataSource from '../../../../tempDataSource/components/addDataSource'
 import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid';
+import {cloneDeep} from 'lodash'
 
 const selectData = {
   name: "xxx",
@@ -18,6 +19,8 @@ const selectData = {
 }
 
 const SelectDataSource = props => {
+  const curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
+  const spaceId = curWorkspace?.id
   const _data = props.data
   const [selectDatas, setSelectDatas] = useState(selectData)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
@@ -28,6 +31,8 @@ const SelectDataSource = props => {
       const newData = { ...res }
       if (_data.dataConfig[props.type]) {
         newData.value = _data.dataConfig[props.type]?.data?.data_id || ''
+      }else{
+        newData.value = ''
       }
       setSelectDatas(newData)
       setKey(uuidv4())
@@ -43,7 +48,7 @@ const SelectDataSource = props => {
         name: null,
         pageNo: 1,
         pageSize: 1000,
-        spaceId: 1,
+        spaceId,
         type: ['elasticSearch'].includes(props.type)
             ? 'ELASTIC_SEARCH' : props.type.toUpperCase(),
       }

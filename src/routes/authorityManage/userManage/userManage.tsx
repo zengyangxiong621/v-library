@@ -22,13 +22,12 @@ const mapStateToProps = (state: any) => {
 }
 // 功能
 const UserManage = (props: any) => {
-  const spaceId = 1
   const [tableLoading, setTableLoading] = useState(false)
   const [tableData, setTableData] = useState([])
   const [totalElements, setTotalElements] = useState(0)
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
-    pageSize: 30,
+    pageSize: 10,
   })
   const [searchParams,setSearchParams]=useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -187,7 +186,7 @@ const UserManage = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <>
-            <Button type="link" size='small' onClickCapture={() => editClick(text)}>编辑</Button>
+            <Button type="link" size='small' disabled={getDisabled(text,'edit')} onClickCapture={() => editClick(text)}>编辑</Button>
             <Button type="link" size='small' disabled={getDisabled(text,'password')} onClickCapture={() => resetClick(text)}>重置密码</Button>
             <Button type="link" size='small' disabled={getDisabled(text,'del')} onClickCapture={() => delClick([text.id])}>删除</Button>
             <Button type="link" size='small' disabled={getDisabled(text,'status')} onClickCapture={() => changeStatusClick(text)}>{record.status === '1' ? '启用' : '停用'}</Button>
@@ -315,6 +314,10 @@ const UserManage = (props: any) => {
     const isStatusOk = row.status !== '0' && row.status !== '2'  // 非启用状态和锁定状态，可操作
     const isTypeOk = row.type === -2
     const curIsSupAdmin = userInfo.sysDef
+    // 单独处理suadmin账户 
+    if(isTypeOk && row.userName === "suadmin"){
+      return type !== 'password'
+    }
     if (type === 'password' && isTypeOk) { // 修改系统用户的密码
       if (row.id === userInfo.id) { // 当前用户可修改密码
         return false
@@ -349,6 +352,10 @@ const UserManage = (props: any) => {
       }
     }
 
+    if(type === 'edit'){
+      return false
+    }
+
     return true
   }
 
@@ -367,7 +374,6 @@ const UserManage = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: '53vh' }}
             rowClassName='customRowClass'
             rowSelection={rowSelection}
             loading={tableLoading}

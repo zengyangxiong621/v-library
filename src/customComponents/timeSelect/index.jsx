@@ -83,7 +83,6 @@ const TimeSelect = (props) => {
   * */
   useEffect(() => {
     if (selectType === 'range') {
-      console.log('是这里触发了吗')
       handleChange([startTime ? moment(startTime, dateFormat) : null, endTime ? moment(endTime, dateFormat) : null], [startTime || null, endTime || null])
     } else {
       handleChange(startTime ? moment(startTime, dateFormat) : null, null)
@@ -92,11 +91,12 @@ const TimeSelect = (props) => {
 
   useEffect(() => {
     if (selectType === 'range') {
+      console.log('[startTime ? moment(startTime, dateFormat) : null, endTime ? moment(endTime, dateFormat) : null]', [startTime ? moment(startTime, dateFormat) : null, endTime ? moment(endTime, dateFormat) : null])
       setRangeValue([startTime ? moment(startTime, dateFormat) : null, endTime ? moment(endTime, dateFormat) : null])
     } else {
       setDateValue(startTime ? moment(startTime, dateFormat) : null)
     }
-  }, [selectType])
+  }, [selectType, startTime, endTime])
 
   useEffect(() => {
     const dom = ReactDOM.findDOMNode(dateRef.current)

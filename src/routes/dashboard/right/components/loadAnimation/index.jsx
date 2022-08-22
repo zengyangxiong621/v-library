@@ -103,6 +103,10 @@ const LoadAnimation = props => {
                 <Option value="right">从右至左</Option>
                 <Option value="down">从上至下</Option>
                 <Option value="up">从下至上</Option>
+                <Option value="rightDown">从左上至右下</Option>
+                <Option value="leftDown">从右上至左下</Option>
+                <Option value="rightUp">从左下至右上</Option>
+                <Option value="leftUp">从右下至左上</Option>
               </Select>
             </Form.Item>
             <Form.Item label="持续时间(ms)" name="duration">

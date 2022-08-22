@@ -149,6 +149,32 @@ const ComponentDefaultConfig = {
                 "step": 1,
                 suffix: '条',  // 输入框后缀
               }
+            },
+            {
+              name: 'animation',
+              displayName: '轮播动画',
+              type: 'collapse',
+              hasSwitch: true,
+              defaultExpand: false,
+              value: [
+                {
+                  name: 'show',
+                  displayName: '',
+                  value: true,
+                  type: 'switch',
+                },
+                {
+                  name: 'intervalTime',
+                  displayName: '间隔时间',
+                  type: 'number',
+                  value: 5,
+                  config: {
+                    min: 1,
+                    max: 1000,
+                    suffix: 's',
+                  },
+                },
+              ]
             }
           ],
         },
@@ -233,11 +259,11 @@ const ComponentDefaultConfig = {
                       name: 'offsetY',
                       displayName: 'Y',
                       type: 'number',
-                      value: 0,
+                      value: 40,
                       config: {
                         min: -10000,
                         max: 10000,
-                        suffix: 'px',
+                        suffix: '%',
                       },
                     },
                   ],
@@ -383,6 +409,18 @@ const ComponentDefaultConfig = {
               ]
             },
             {
+              'name': 'symbolMargin',
+              'displayName': '分割宽度',
+              'value': 2,
+              type: 'number',
+              "config": {
+                "min": 1,
+                "max": 10000,
+                "step": 1,
+                suffix: 'px',  // 输入框后缀
+              }
+            },
+            {
               name: 'colorSetting',
               displayName: '颜色',
               type: 'collapse',
@@ -447,6 +485,12 @@ const ComponentDefaultConfig = {
                       name: 'gradientEnd',
                       displayName: '渐变色(末)',
                       value: '#95D0FF',
+                      type: 'color',
+                    },
+                    {
+                      name: 'splitLineColor',
+                      displayName: '分割线',
+                      value: '#102862',
                       type: 'color',
                     },
                   ]

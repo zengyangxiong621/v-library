@@ -306,11 +306,11 @@ const ComponentDev = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
-            {
+            {/* {
               record.status===0 
               ? <Button type='text' className='buttonBlue' onClickCapture={() => handleOff(record)}>下架</Button>
               : <Button type='text' className='buttonBlue' onClickCapture={() => handleOn(record)}>上架</Button>
-            }
+            } */}
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
             <Button type='text'  
                     className='buttonBlue'  
@@ -344,7 +344,7 @@ const ComponentDev = (props: any) => {
           <div className='left-box'>
             <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
             <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button>
-            <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>            
+            {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>             */}
             <span className='mr-16'>
               {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''}
             </span>

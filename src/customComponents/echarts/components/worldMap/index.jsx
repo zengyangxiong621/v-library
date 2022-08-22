@@ -19,21 +19,23 @@ class WorldMap extends Component {
   }
 
   // 转换飞线
-  convertData = (data, coordData) => {
+  convertData = (data, coordData, flyDirection, centerPointValue) => {    
+    if (!data) { return }
     let res = []
     for (let i = 0; i < data.length; i++) {
       let dataItem = data[i]
       let fromCoord = coordData[dataItem[0].name]
-      let toCoord = [116.536989, 39.777354] //中心点地理坐标 优化
+      // let toCoord = [116.536989, 39.777354] //中心点地理坐标 优化      
+      let toCoord = centerPointValue //中心点地理坐标 优化      
       if (fromCoord && toCoord) {
-        res.push([ //调换即可调整飞线攻击方向
-          {
+        let coordArr = [{
             coord: fromCoord, // 飞线去往哪里
             value: dataItem[0].value,
           }, {
             coord: toCoord, // 飞线从哪里出发
           },
-        ])
+        ];
+        res.push( flyDirection === 0 ? coordArr : coordArr.reverse() )
       }
     }
     return res
@@ -42,10 +44,7 @@ class WorldMap extends Component {
   convertIPData = (data, gdGeoCoordMap) => {
     // 校验
     if (!data) {
-      console.log(data,'无数据');
       return
-    } else{
-      console.log(data,'data');
     }
     let res = [];
     for (let i = 0; i < data.length; i++) {
@@ -60,9 +59,12 @@ class WorldMap extends Component {
     return res;
   };
 
-  getSeries = (centerPoint, mainData, flyLineArr, coordData) => {
+  getSeries = (centerPoint, mainData, flyLineArr, coordData, flyDirection) => {
     let series = [];
-    [[centerPoint, flyLineArr]].forEach((item, i) => {
+    // let centerPointName =  '北京区域中心';
+    let centerPointName = Object.keys(centerPoint)[0] || '北京区域中心';
+    let centerPointValue = Object.values(centerPoint)[0] || [116.536989, 39.777354];
+    [[centerPointName, flyLineArr]].forEach((item, i) => {
       series.push(
         {
           type: 'lines',
@@ -85,7 +87,7 @@ class WorldMap extends Component {
               color: mainData.flyColor, // 飞线颜色 - 细线
             },
           },
-          data: this.convertData(item[1], coordData),
+          data: this.convertData(item[1], coordData, flyDirection, centerPointValue),
         },
         {
           type: 'effectScatter',
@@ -118,12 +120,15 @@ class WorldMap extends Component {
           },
           itemStyle: {
             normal: {
-              show: false,
+              show: true,
               // areaColor: mainData.pointColor,
-              color: mainData.pointColor,
+              // color: mainData.pointColor,
+              areaColor: "#ade9f4",
+              color: "#ade9f4",
             },
             emphasis: {
-              areaColor: mainData.pointColor,
+              // areaColor: mainData.pointColor,
+              areaColor: "#ade9f4",
             },
           },
           data: item[1].map((dataItem) => {
@@ -144,28 +149,28 @@ class WorldMap extends Component {
             period: 4,
             brushType: 'stroke',
             scale: 4,
-            color: '#38ff85',
+            color: '#FFD246',
           },
           label: {
             normal: {
               show: false,
               position: 'right',
               //offset:[5, 0],
-              color: '#38ff85',
+              color: '#FFD246',
               formatter: '{b}',
               textStyle: {
-                color: '#38ff85',
+                color: '#FFD246',
               },
             },
             emphasis: {
               show: false,
-              color: '#38ff85',
+              color: '#FFD246',
             },
           },
           symbol: 'circle',
           symbolSize: 5,
           itemStyle: {
-            color: '#38ff85',
+            color: '#FFD246',
           },
           data: [
             {
@@ -183,8 +188,8 @@ class WorldMap extends Component {
     const { comData, componentConfig, fields } = this.props
     const { config, staticData } = componentConfig || ComponentDefaultConfig
     const mainData = this.formatConfig(config, [])
-    console.log(mainData, '#mainData');
-    const { displayMode, bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = mainData
+    // console.log(mainData, '#mainData');
+    const { displayMode, bgColor, selectColor, pointColor, flyDirection, borderColor, flyColor, iconColor, rippleColor } = mainData
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
     const fields2ValueMap = {}
@@ -194,7 +199,7 @@ class WorldMap extends Component {
     })
     const finalData = this.formatData(originData, fields2ValueMap)
 
-    const centerPoint = '北京区域中心';
+    const centerPoint = finalData[0].centerPoint || { 北京区域中心: [116.536989, 39.777354] };
     const coordData = finalData[0].coordData;
     const flyLineArr = finalData[0].flyLineArr;
 
@@ -244,6 +249,7 @@ class WorldMap extends Component {
           tooltip: {
             show: false,
           },
+
           type: "effectScatter",
           coordinateSystem: "geo",
           rippleEffect: {
@@ -262,6 +268,7 @@ class WorldMap extends Component {
             },
           },
           symbol: "circle",
+          // symbolSize: [10, 5],
           symbolSize: [10, 5],
           data: this.convertIPData(ipData, ipCoordData),
           zlevel: 1,
@@ -298,7 +305,7 @@ class WorldMap extends Component {
                   padding: [0, 25],
                   color: "#fff",
                   fontSize: 14,
-                  fontWeight: 400,
+                  fontWeight: 600,
                 },
                 tline: {
                   padding: [0, 27],
@@ -316,7 +323,7 @@ class WorldMap extends Component {
           },
           symbol: img.ipbg,
           // symbol: "roundRect",
-          symbolSize: [111, 32],
+          symbolSize: [125, 32],
           symbolOffset: [0, -35],
           z: 999,
           data: this.convertIPData(ipData, ipCoordData),
@@ -374,7 +381,7 @@ class WorldMap extends Component {
         },
         data: [],
       },
-      series: this.getSeries(centerPoint, mainData, flyLineArr, coordData),
+      series: this.getSeries(centerPoint, mainData, flyLineArr, coordData, flyDirection),
     }
 
     const dom = document.getElementById(componentConfig.id);
@@ -431,14 +438,15 @@ class WorldMap extends Component {
     })
     const finalData = this.formatData(originData, fields2ValueMap)
     // 配置飞线数据
-    let centerPoint = '北京区域中心';
+    // let centerPoint = '北京区域中心';
+    let centerPoint = finalData[0].centerPoint || { 北京区域中心: [116.536989, 39.777354] };
     let coordData = finalData[0].coordData;
     let flyLineArr = finalData[0].flyLineArr;
     let ipData = finalData[0].ipData;
     let ipCoordData = finalData[0].ipCoordData;
     let style = this.formatConfig(config, [])
-    console.log(style, '#style render');
-    const { displayMode, bgColor, selectColor, pointColor, borderColor, flyColor, iconColor, rippleColor } = style
+    // console.log(style, '#style render');
+    const { displayMode, bgColor, selectColor, pointColor, borderColor, flyDirection, flyColor, iconColor, rippleColor } = style
     if (mapChart) {
       options.geo.itemStyle.normal.color = bgColor;
       options.geo.itemStyle.normal.borderColor = borderColor;
@@ -448,12 +456,12 @@ class WorldMap extends Component {
       ipOptions.geo.itemStyle.emphasis.areaColor = selectColor;
 
       if (displayMode === 0) {
-        options.series = this.getSeries(centerPoint, style, flyLineArr, coordData)
+        options.series = this.getSeries(centerPoint, style, flyLineArr, coordData, flyDirection)
         options.series[0].effect.color = iconColor;
       } else {
         ipOptions.series.map(item => {
           item.data = this.convertIPData(ipData, ipCoordData);
-        })       
+        })
       }
       mapChart.setOption(displayMode === 0 ? options : ipOptions);
       mapChart.resize();
