@@ -97,17 +97,15 @@ const globalStroe={
           url: `/visual/workspace/list`,
           method: "get",
         })
-        if(data.length){
-          // 设置工作空间
-          yield put({
-            type: "setWorkspaceList",
-            payload: data,
-          });
-          const curWorkspace=localStorage.getItem('curWorkspace')
-          if(!curWorkspace){
-            // 将当前空间存入到localStorage
-            localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
-          }
+        // 设置工作空间
+        yield put({
+          type: "setWorkspaceList",
+          payload: data,
+        });
+        const curWorkspace=localStorage.getItem('curWorkspace')
+        if(!curWorkspace && data.length){
+          // 将当前空间存入到localStorage
+          localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
         }
       } catch (error) {
         console.log(error);
