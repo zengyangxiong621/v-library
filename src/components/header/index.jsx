@@ -97,18 +97,18 @@ const Header = props => {
   }
   const handleHadLogouted=async ()=>{
     const token=localStorage.getItem('token')
-      if (token && token.endsWith('x-gridsumdissector')) {
-        logout()
-        forwardLogin()
-      }else{
-        const isLogoutSuccess=await handleLogout()
-        if(isLogoutSuccess){
-          localStorage.removeItem('token')
-          history.replace('/login')
-        }
+    if (token && token.endsWith('x-gridsumdissector')) {
+      logout()
+      forwardLogin()
+    }else{
+      const isLogoutSuccess=await handleLogout()
+      if(isLogoutSuccess){
+        localStorage.removeItem('token')
+        history.replace('/login')
+      }
     }
     localStorage.removeItem('curWorkspace')
-  }
+}
   const handleUserMenuClick=async ({key}) => {
     if(key==='1'){
       handleHadLogouted()
@@ -205,11 +205,14 @@ const Header = props => {
 
       <div className="user-wraper">
         <div className="drop-down">
+        {
+          workspaceList.length ? 
           <Dropdown overlay={getWorkSpaceMenus()} trigger={['click']}>
             <span className="span" onClick={e => e.preventDefault()}>
               {curWorkspace?.spaceName} <DownOutlined />
             </span>
-          </Dropdown>
+          </Dropdown> : <></>
+        }
         </div>
         <div className="user">
           {/* <img src={require('@/assets/images/avatar.png')} alt="" /> */}
