@@ -184,14 +184,13 @@ const themeListTmp = [
     backgroundColor: '#000000'
   }
 ]
-
+let componentThemeId = null
 const ComponentTheme = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
 
   const drawerRef = useRef(null)
   const [activeId, setActiveId] = useState(null)
   const [themeList, setThemeList] = useState([])
-
   useEffect(() => {
     if (props.visible) {
       console.log('init---------')
@@ -199,14 +198,18 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
     }
   }, [props.visible])
 
+  useEffect(() => {
+    componentThemeId = bar.themeId
+  }, [bar.themeId])
+
   const onClose = () => {
     setActiveId(null)
     props.onChange(false)
     // 如果当前画布没有使用主题风格及画布配置themeId为空或不存在，设置bar.componentThemeConfig = null
     // 如果画布配置themeId不为空，则把themeId对应的主题风格写入bar.componentThemeConfig中
     let componentThemeConfig = null
-    if(bar.themeId){
-      componentThemeConfig = themeList.filter(theme => theme.id === bar.themeId)[0]
+    if (componentThemeId) {
+      componentThemeConfig = themeList.filter(theme => theme.id === componentThemeId)[0]
     }
     dispatch({
       type: 'bar/save',
@@ -227,7 +230,7 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
     })
   }
 
-  const onComfirm = () => {
+  const onComfirm = async () => {
     // TODO: 调用后端接口，保存当前主题的id到画布配置themeId中，同时把当前主题的id更新到bar.themeId中
     // activeId 当前主题的id
     dispatch({
@@ -236,6 +239,19 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
         themeId: activeId
       }
     })
+    componentThemeId = activeId
+    // const data = await http({
+    //   url: '/visual/module/filter/update',
+    //   method: 'POST',
+    //   body: {
+    //     id,
+    //     name,
+    //     callbackKeys,
+    //     content,
+    //     dashboardId: bar.dashboardId
+    //   }
+    // })
+    onClose()
   }
 
   return (
