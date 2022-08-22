@@ -139,13 +139,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   }
 
-  const calcCanvasPosition = () => {
 
-  }
-
-  useEffect(() => {
-
-  }, [ bar.canvasScaleValue ])
 
   useEffect(() => {
     if(bar.canvasScaleValue) {
@@ -236,10 +230,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const mouse = useMouse(canvasRef)
   // const mouse = 0
 
-
-  const calcScaleAfterComponentsConfig = () => {
-
-  }
 
   /**
    * @desc 缩放组件在缩放结束后的回调
