@@ -270,7 +270,7 @@ const RoleManage = (prop: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: '53vh' }}
+            scroll={{ y: 'calc(100vh - 300px)' }}
             rowClassName='customRowClass'
             rowSelection={rowSelection(selectedRowKeys,onSelectChange)}
             loading={tableLoading}
