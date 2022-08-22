@@ -171,7 +171,7 @@ const componentDefaultConfig = {
                       {
                         "name": "lineHeight",
                         "displayName": "行距",
-                        "value": '48px'
+                        "value": '48'
                       }
                     ]
                   },
@@ -225,7 +225,7 @@ const componentDefaultConfig = {
                         "name": "support",
                         "displayName": "开启",
                         "type": "checkBox",
-                        "value": false
+                        "value": true
                       },
                       {
                         'name':"content",
@@ -252,7 +252,7 @@ const componentDefaultConfig = {
                             "name": "color",
                             "displayName": "",
                             "type": "color",
-                            "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                            "value": "#999" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                           },
                           {
                             "name": "bold",
@@ -272,7 +272,7 @@ const componentDefaultConfig = {
                           {
                             "name": "lineHeight",
                             "displayName": "行距",
-                            "value": '48px'
+                            "value": '48'
                           }
                         ]
                       },
@@ -362,7 +362,7 @@ const componentDefaultConfig = {
                               {
                                 "name": "lineHeight",
                                 "displayName": "行距",
-                                "value": '48px'
+                                "value": '48'
                               }
                             ]
                           },
@@ -447,7 +447,6 @@ const componentDefaultConfig = {
                                     type:'number',
                                     value:2,
                                     config:{
-                                        min:0,
                                         suffix:'px',  // 输入框后缀
                                     }
                                 },
@@ -457,7 +456,6 @@ const componentDefaultConfig = {
                                     type:'number',
                                     value:2,
                                     config:{
-                                        min:0,
                                         suffix:'px',  // 输入框后缀
                                     }
                                 },
@@ -482,7 +480,7 @@ const componentDefaultConfig = {
                             name:'zeroize',
                             displayName:'补零位数',
                             type:'number',
-                            value:5,
+                            value:3,
                             config:{
                                 min:0,
                                 max:20,
@@ -505,7 +503,7 @@ const componentDefaultConfig = {
                                 name:'decimalCount',
                                 displayName:'位数',
                                 type:'number',
-                                value:3,
+                                value:0,
                                 config:{
                                     min:0,
                                     max:10,
@@ -653,7 +651,7 @@ const componentDefaultConfig = {
                           {
                             "name": "lineHeight",
                             "displayName": "行距",
-                            "value": '48px'
+                            "value": '48'
                           }
                         ]
                       },

@@ -2,8 +2,8 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import { Input, Row, Col, Modal, Form, Select, Button,message } from 'antd'
-const { Option } = Select;
 import { useFetch } from "@/utils/useFetch";
+const { Option } = Select;
 const AddOrEdit = (props: any) => {
   const {showAddOrEdit,closeModal,getUserList,formType,currentUser,roleList } = props
   const [addForm] = Form.useForm()
@@ -29,7 +29,12 @@ const AddOrEdit = (props: any) => {
         value.id = currentUser.id
       }
       SetConfirmLoading(true)
-      const [,data] = await useFetch('/visual/user/save',{
+      let httpUrl = currentUser.type === 1 && formType === 'edit' ? '/visual/user/saveUserRole' : '/visual/user/save'
+      value = currentUser.type === 1 && formType === 'edit' ? {
+        userId:currentUser.id,
+        roleIds: value.roleIds
+      } : value
+      const [,data] = await useFetch(httpUrl,{
         body: JSON.stringify(value)
       }).finally(() => {
         SetConfirmLoading(false)
@@ -89,7 +94,7 @@ const AddOrEdit = (props: any) => {
     <Modal
       visible={showAddOrEdit}
       keyboard={true}
-      title="新建用户"
+      title={formType === 'edit'? '编辑用户': '新增用户'}
       getContainer={false}
       closeIcon={() => <></>} // 除去关闭按钮
       style={{
@@ -150,9 +155,9 @@ const AddOrEdit = (props: any) => {
             onChange={handleChangeRole}
           >
             {
-              roleList.map((item:any) => {
+              roleList?.map((item:any) => {
                 return (
-                  <Option value={item.id}>{item.name}</Option>
+                  <Option key={item.id} value={item.id}>{item.name}</Option>
                 )
               })
             }
@@ -181,9 +186,9 @@ const AddOrEdit = (props: any) => {
             {required: false, message:''},
             () => ({
               validator(_:any,value:any){
-                var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;//手机号码
+                var isPhone = /^1[3-9]\d{9}$/;//手机号码
                 var isMob= /^0?1[3|4|5|8][0-9]\d{8}$/;// 座机格式  区号之后用'-'隔开
-                if(value&&!isMob.test(value)&&!isPhone.test(value)){
+                if(value&&!isMob.test(value) && !isPhone.test(value)){
                   return Promise.reject(new Error('联系方式格式有误'));
                 }
                 return Promise.resolve(); 

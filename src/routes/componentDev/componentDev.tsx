@@ -33,7 +33,7 @@ const ComponentDev = (props: any) => {
   const [tableMap, setTableMap] = useState({})
   const [totalElements, setTotalElements] = useState(0)
   const [tableData, setTableData] = useState([])
-  const [tableLoading, setTableLoading] = useState(true)
+  const [tableLoading, setTableLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
 
@@ -60,22 +60,20 @@ const ComponentDev = (props: any) => {
   // 获取列表数据
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/module-manage/queryModuleList',
-      method: 'post',
-      body: differentParams
-    })
-    if (data) {
+    try {
+      const data = await http({
+        url: '/visual/module-manage/queryModuleList',
+        method: 'post',
+        body: differentParams
+      })
+      data && await resetTableInfo(data)
+    } catch (error) {
+      console.log(error);
+    }finally{
       setTableLoading(false)
-    } else {
-      setTimeout(() => {
-        setTableLoading(false)
-      }, 3000);
     }
-
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     // 请求完成，冲着表格的数据和页码信息
-    await resetTableInfo(data)
   }
   // 获取表格数据
   useEffect(() => {
@@ -308,11 +306,11 @@ const ComponentDev = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
-            {
+            {/* {
               record.status===0 
               ? <Button type='text' className='buttonBlue' onClickCapture={() => handleOff(record)}>下架</Button>
               : <Button type='text' className='buttonBlue' onClickCapture={() => handleOn(record)}>上架</Button>
-            }
+            } */}
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
             <Button type='text'  
                     className='buttonBlue'  
@@ -346,7 +344,7 @@ const ComponentDev = (props: any) => {
           <div className='left-box'>
             <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
             <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button>
-            <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>            
+            {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>             */}
             <span className='mr-16'>
               {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''}
             </span>
@@ -400,7 +398,7 @@ const ComponentDev = (props: any) => {
 const selectOptions = [
   {
     name: '全部',
-    key: null,
+    key: '',
   },
   {
     name: '已上架',

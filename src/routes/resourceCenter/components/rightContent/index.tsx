@@ -19,9 +19,7 @@ const { Paragraph } = Typography
 
 
 const RightContent = (props: any) => {
-  const { listData, resourceCenter, dispatch,refreshList } = props
-  /** **工作空间id  */
-  const spaceId = 1
+  const { listData, resourceCenter, dispatch,refreshList, spaceId } = props
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)
   const [newGroupId, setNewGroupId] = useState('')
   const [currentItem, setCurrentItem] = useState<any>({})
@@ -69,7 +67,6 @@ const RightContent = (props: any) => {
   }
   // 确认移动分组
   const confirmMoveGroup = async () => {
-    // console.log(spaceId, curAppId, newGroupId)
     let url = currentItem.moduleType === 'myTemp' ? '/visual/appTemplate/updateTemplateGroup' : '/visual/resource/changeGroup'
     let obj = currentItem.moduleType === 'myTemp' ? {id: curAppId} : {resourceId: curAppId}
     const data = await http({
@@ -84,7 +81,7 @@ const RightContent = (props: any) => {
     if (data) {
       message.success({ content: '移动分组成功', duration: 2 })
       // 移入分组成功后，需要刷新当前分组下的模板以及刷新左侧分组树
-      refreshList()
+      refreshList(true)
       cancelMoveGroup()
       setNewGroupId('')
     } else {
@@ -118,7 +115,6 @@ const RightContent = (props: any) => {
         break
     }
   }
-
   return <> 
     {
       listData.length ?

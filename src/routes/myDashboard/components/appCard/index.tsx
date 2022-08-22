@@ -3,8 +3,7 @@ import React, { memo, useState, useRef } from 'react'
 import './index.less'
 
 import { withRouter } from 'dva/router'
-import { useFetch } from '../../../../utils/useFetch'
-import { BASEURL } from '@/services/request'
+import { BASEURL, http, downLoad } from '@/services/request'
 
 import { IconFont } from '../../../../utils/useIcon'
 import { ExclamationCircleFilled } from '@ant-design/icons'
@@ -46,19 +45,19 @@ const AppCard = (props: any) => {
       setCanEdit(false)
       return
     }
-    const [, data] = await useFetch('/visual/application/updateAppName', {
-      body: JSON.stringify({
+    const data: boolean = await http({
+      url: '/visual/application/updateAppName',
+      method: 'POST',
+      body: {
         id,
         name: appName
-      })
-    }, {
-      onlyNeedWrapData: true
+      }
     })
-    if (data.data) {
+    if (data) {
       message.success({ content: '应用名修改成功', duration: 2 })
       refreshList()
     } else {
-      message.error({ content: data.message || '应用名称修改失败', duration: 2 })
+      message.error({ content: '应用名称修改失败', duration: 2 })
     }
     setCanEdit(false)
   }
@@ -74,25 +73,23 @@ const AppCard = (props: any) => {
     //TODO 通过id跳转到主画布
     history.push(`/dashboard/${id}`)
   }
-  // TODO  已确定先不做
-  // 拷贝给他人
-  // const copyToOthers = (e: any) => {
-  // }
+
   const fabu = (e: any) => {
     changeFabuModal(true, id, status)
   }
 
   // 复制应用
   const copyApp = async (appId: string) => {
-    if(name.length>15) {
+    if (name.length > 20) {
       message.warning('复制后应用名称超过长度限制')
       return
     }
-    const [, data] = await useFetch('/visual/application/copy', {
-      body: JSON.stringify({
-        appId
-      })
+    const data = await http({
+      url: '/visual/application/copy',
+      method: 'POST',
+      body: {appId}
     })
+    console.log('复制data', data);
     // 返回的数据有id, 视为复制成功
     if (data && data.id) {
       refreshList()
@@ -106,8 +103,9 @@ const AppCard = (props: any) => {
     Modal.confirm({
       title: '删除应用',
       style: {
-        top: '30%'
+        top: '40%'
       },
+      getContainer: document.getElementById('root') as any,
       okButtonProps: {
         style: {
           backgroundColor: '#e9535d',
@@ -128,12 +126,13 @@ const AppCard = (props: any) => {
         background: '#232630',
       },
       async onOk(close) {
-        const [, data] = await useFetch('/visual/application/deleteApp', {
+        const data = await http({
+          url: '/visual/application/deleteApp',
           method: 'delete',
-          body: JSON.stringify({
+          body: {
             appIdList: appIds,
             spaceId
-          })
+          }
         })
         if (data) {
           refreshList()
@@ -149,11 +148,8 @@ const AppCard = (props: any) => {
   }
 
   // 导出应用
-  const exportApp = async (appId: string) => {
-    // console.log(`${BASEURL}/visual/application/export/${appId}`);
-    const toolA = document.createElement('a')
-    toolA.href = `${BASEURL}/visual/application/export/${appId}`
-    toolA.click()
+  const exportApp = async (appId: string, name: string) => {
+    downLoad(`/visual/application/export/${appId}`, false, name)
   }
 
   // 移动分组
@@ -178,7 +174,7 @@ const AppCard = (props: any) => {
         deleteApp([id])
         break;
       case '导出应用':
-        exportApp(id)
+        exportApp(id, name)
         break;
     }
     // 点击任意菜单子项后，需要隐藏ul
@@ -207,7 +203,7 @@ const AppCard = (props: any) => {
               }} type='icon-fabu' />
             </Tooltip>
             <div className='more-icon'>
-              <IconFont style={{fontSize: '20px'}} onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
+              <IconFont style={{ fontSize: '20px' }} onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
               <div className="more"
               >
                 <ul className='more-ul' style={{
@@ -250,7 +246,10 @@ const AppCard = (props: any) => {
                   type="icon-bianji"
                   onClickCapture={() => bianjiClick()}
                 />
-                <div className='card-name'>{name}</div>
+                <div className='card-name'
+                  title={name.length > 12 ? name : ''}>
+                  {name}
+                </div>
               </div>
           }
         </div>

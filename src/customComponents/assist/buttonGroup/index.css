@@ -1,4 +1,4 @@
-.cus-component-button-group-btn {
+.cus-component-br-btn {
   cursor: pointer;
   height: 100%;
   border-radius: 3px;
@@ -8,20 +8,34 @@
   font-family: var(--defalutFontFamily);
   font-size: var(--defalutFontSize);
   font-weight: var(--defalutFontWeight);
-  background-color: var(--defalutBgc);
+  background: var(--defalutBgc) !important;
   border: var(--defaultBorder);
+  background-position: center center;
+  /* 背景图不平铺 */
+  background-repeat: no-repeat;
+  /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+  background-attachment: fixed;
+  /* 让背景图基于容器大小伸缩 */
+  background-size: cover;
 }
 
-.cus-component-button-group-btn.active {
+.cus-component-br-btn.active {
   opacity: 1;
   color: var(--selectedColor);
   font-family: var(--selectedFontFamily);
   font-size: var(--selectedFontSize);
   font-weight: var(--selectedFontWeight);
-  background-color: var(--selectedBgc);
+  background: var(--selectedBgc) !important;
   border: var(--selectedBorder);
+  background-position: center center;
+  /* 背景图不平铺 */
+  background-repeat: no-repeat;
+  /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+  background-attachment: fixed;
+  /* 让背景图基于容器大小伸缩 */
+  background-size: cover;
 }
 
-.cus-component-button-group-btn:last-child {
+.cus-component-br-btn:last-child {
   margin-right: 0;
 }

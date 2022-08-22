@@ -17,7 +17,6 @@ const Color = props => {
     labelAlign: 'left'
   };
   const _data = props.data;
-
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [color, setColor] = useState({
     hex: isHex(_data.value) ? _data.value : rgbToHex(getRgbaNum(_data.value)),
@@ -49,7 +48,7 @@ const Color = props => {
     props.onChange()
   }
   const handleHexChange = (e) => {
-    const hexTmp = e.target.value
+    const hexTmp = e.target.value.trim()
     const flag =
       /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hexTmp)
     const hex = flag ? hexTmp : '#000000';

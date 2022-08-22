@@ -3,6 +3,7 @@ import { memo, useEffect, useState } from 'react'
 import './index.less'
 
 import { Modal, Form, Select, Input, Radio, Upload, message, Button, Spin } from 'antd'
+import type { UploadProps } from 'antd';
 
 import { http, BASEURL } from '@/services/request'
 
@@ -25,12 +26,7 @@ const EditDataSource = (props: any) => {
     esSourceConfig,
   } = props.editDataSourceInfo
 
-
-
-  let spaceId = 1
-  // let spaceId = '1513466256657637378'
-
-  const { visible, changeShowState, refreshTable } = props
+  const { visible, spaceId, changeShowState, refreshTable } = props
 
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm()
@@ -46,23 +42,23 @@ const EditDataSource = (props: any) => {
   const [dataSourceType, setDataSourceType] = useState()
   useEffect(() => {
     // if (type === 'RDBMS') {
-      // 获取当前是那种类型的数据库
-      // setDataSourceType(rdbmsSourceConfig.dataBaseType)
+    // 获取当前是那种类型的数据库
+    // setDataSourceType(rdbmsSourceConfig.dataBaseType)
     // } else {
-      // 根据数据源类型来获取fileUrl
-      setDataSourceType(type)
-      switch (type) {
-        case 'CSV':
-          setFileUrl(csvSourceConfig?.fileUrl);
-          break;
-        case 'JSON':
-          setFileUrl(jsonSourceConfig?.fileUrl);
-          break;
-        case 'EXCEL':
-          setFileUrl(excelSourceConfig?.fileUrl);
-          break;
-        default: break;
-      }
+    // 根据数据源类型来获取fileUrl
+    setDataSourceType(type)
+    switch (type) {
+      case 'CSV':
+        setFileUrl(csvSourceConfig?.fileUrl);
+        break;
+      case 'JSON':
+        setFileUrl(jsonSourceConfig?.fileUrl);
+        break;
+      case 'EXCEL':
+        setFileUrl(excelSourceConfig?.fileUrl);
+        break;
+      default: break;
+    }
     // }
   }, [])
 
@@ -127,27 +123,32 @@ const EditDataSource = (props: any) => {
     //！ 请求数据库列表
     setGetDBListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/datasource/queryDataBaseList',
-      method: 'post',
-      body: finalParams
-    })
-    setGetDBListLoading(false)
-    if (Array.isArray(data)) {
-      if (!data.length) {
-        message.error('没有可用的数据库')
-        setDataBaseList([])
-      } else {
-        // data 只是个数组，处理成select需要的形式
-        const formatData: any = data.map((item: any) => ({
-          label: item,
-          value: item
-        }))
-        setDataBaseList(formatData)
+    try {
+      const data = await http({
+        url: '/visual/datasource/queryDataBaseList',
+        method: 'post',
+        body: finalParams
+      })
+      setGetDBListLoading(false)
+      if (Array.isArray(data)) {
+        if (!data.length) {
+          message.error('没有可用的数据库')
+          setDataBaseList([])
+        } else {
+          // data 只是个数组，处理成select需要的形式
+          const formatData: any = data.map((item: any) => ({
+            label: item,
+            value: item
+          }))
+          setDataBaseList(formatData)
+        }
       }
-    } else {
-      message.error('获取数据库列表失败')
     }
+    catch {
+      message.error('获取数据库列表失败')
+      setGetDBListLoading(false)
+    }
+
   }
 
   /**
@@ -295,12 +296,15 @@ const EditDataSource = (props: any) => {
    */
   const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
     // 上传框配置
-    let uploadProps = {
+    let uploadProps: UploadProps = {
       name: 'file',
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || '',
       action: `${BASEURL}/visual/file/upload`,
+      headers: {
+        authorization: localStorage.getItem('token') || ''
+      },
       beforeUpload(file: any) {
         const { name, size }: { name: string, size: number } = file
         if (size > 1024 * 1024 * 10) {

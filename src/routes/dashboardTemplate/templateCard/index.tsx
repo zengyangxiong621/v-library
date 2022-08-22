@@ -5,7 +5,7 @@ import { withRouter } from 'dva/router'
 import { http } from '@/services/request'
 const TemplateCard = (props: any) => {
   const { id, name, ratio, fenbianlv, photoUrl,
-    getCurImgIndex, addTemplate, curIndex, history } = props
+    getCurImgIndex, addTemplate, curIndex, history,spaceId } = props
   // 后端返回的photoUrl为空，则使用默认图片
   const finalPicUrl = photoUrl ?? require('../../../assets/images/模板默认背景图.png')
   const scanDashboard = () => {
@@ -19,7 +19,7 @@ const TemplateCard = (props: any) => {
       body: {
         id,
         type: 0,
-        spaceId:1
+        spaceId
       }
     })
     if(data){

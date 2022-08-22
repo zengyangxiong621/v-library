@@ -119,7 +119,7 @@ const TextStyle = props => {
             <InputNumber defaultValue={fontSetting.letterSpacing} style={{ marginRight: '8px' }} className="po-size-input unit-input" onBlur={letterSpacingChange} />
           </Form.Item>
           <Form.Item name="lineHeight" noStyle>
-            <InputNumber defaultValue={fontSetting.lineHeight} className="po-size-input unit-input" onBlur={lineHeightChange} />
+            <InputNumber disabled={_lineHeight?.config?.disabled || false} defaultValue={fontSetting.lineHeight} className="po-size-input unit-input" onBlur={lineHeightChange} />
           </Form.Item>
         </Input.Group>
         <Row>

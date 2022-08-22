@@ -41,7 +41,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const headerRef = useRef(null)
   // TODO  待删除
   const [single, setSingle] = useState(true)
-
+  const copyNode = useRef(null)
 
   const clearStatus = (event) => {
     const dom = event.target || null
@@ -337,6 +337,7 @@ const Left = ({ dispatch, bar, operate }) => {
       payload: false,
     })
   }
+
   return (
     <div className="left-menu">
       <div className="left-wrap">
@@ -368,9 +369,7 @@ const Left = ({ dispatch, bar, operate }) => {
             onExpand={myOnExpand}
             onSelect={onSelect}
             onRightClick={onRightClick}
-            // treeData={bar.treeData}
-            // 这儿只是前端删除逻辑，需要后端也改成相同的删除逻辑(删除完图层后，所有分组为空的组都应该一并删除)
-            treeData={filterEmptyGroups(bar.treeData)}
+            treeData={bar.treeData}
             selectedKeys={bar.key}
             titleRender={(nodeData) => {
               // title 置为空，覆盖antTree 默认的title

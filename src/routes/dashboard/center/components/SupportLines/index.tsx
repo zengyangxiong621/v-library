@@ -1,4 +1,4 @@
-import { useState, useEffect, Props, forwardRef, useImperativeHandle } from 'react'
+import { useState, useEffect, Props, forwardRef, useImperativeHandle, useRef } from 'react'
 import { connect } from 'dva'
 import './index.css'
 
@@ -12,7 +12,7 @@ let SupportLines = ({ bar, cRef }: SupportLineProperty) => {
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (left: number, top: number, display: string = 'block') => {
       setStyle({ left, top, display })
-    },
+    }
   }))
 
   const [ style, setStyle ] = useState({
@@ -20,10 +20,11 @@ let SupportLines = ({ bar, cRef }: SupportLineProperty) => {
     top: 0,
     display: 'none',
   })
-
+  const lineRef: any = useRef(null)
   return (
     <div
       className="SupportLines"
+      ref={lineRef}
       style={ { position: 'absolute', ...style } }
     >
       <div className="v-line" style={ { borderTop: `${ 1 / bar.canvasScaleValue }px dashed #b6b2b2` } }/>

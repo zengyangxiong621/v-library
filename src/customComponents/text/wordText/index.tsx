@@ -102,7 +102,7 @@ class IconText extends Component<Props, State> {
     }
 
     return (
-      <div style={ textStyleObj } className={`text ${textStyle.hideDefault && 'hide'}`}>
+      <div style={ textStyleObj } className={`wordText ${textStyle.hideDefault && 'hide'}`}>
         { !textStyle.hideDefault && originData.map((item:any, i:any) => (
           <div className={`text-name`} style={textNameObj}>
             <span key={item.text}  style={ {

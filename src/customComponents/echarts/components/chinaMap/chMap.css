@@ -1,0 +1,51 @@
+.ch-map {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.ch-map .map-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.ch-map .map-content .map {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: -999999;
+}
+.ch-map .map-content .bg1,.bg2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: -9999999;
+}
+.ch-map .map-content .bg1 {
+    animation: bg1 5s linear infinite
+}
+@keyframes bg1 {
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+.ch-map .map-content .bg2 {
+    animation: bg2 5s linear infinite
+}
+@keyframes bg2 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+

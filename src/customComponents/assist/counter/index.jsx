@@ -1,7 +1,7 @@
 import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
-
+import CountUp from 'react-countup'
 
 class Counter extends Component {
   constructor(Props) {
@@ -105,6 +105,8 @@ class Counter extends Component {
     })
     originData = this.formatData(originData, fields2ValueMap)
     originData = originData.length ? originData[0] : []
+    // 设置文本的大小问题
+    const dimension = this.formatConfig([this.getStyleData(config, "dimension")],[])
     // 获取标题样式
     const titleStyle = this.formatConfig([this.getStyleData(config, "title")],[])
     const displayStyle = this.getAllStyle(config)
@@ -123,14 +125,14 @@ class Counter extends Component {
     let numList = []
     const numValue = originData[fields[1]]
     if(reg.test(numValue)){
-      let value = Number(numValue).toFixed(decimalCount); // 小数位长度处理
+      let value = decimalCount>0 ? Number(numValue).toFixed(decimalCount) : numValue.split('.')[0] ; // 小数位长度处理
       let intNumber = value.split('.')[0]
-      let floatNumber = value.split('.')[1]
+      let floatNumber = value.split('.')[1] || ''
       intNumber = Math.abs(intNumber).toString().padStart(zeroize, 0)  // 补位处理
       intNumber = intNumber.replace(eval(`/(\\d{1,${splitCount}})(?=(?:\\d{${splitCount}})+(?!\\d))/g`),'$1,')  // 分隔符处理
       let sign = ['-','+'].indexOf(numValue.slice(0,1))>-1 ? numValue.slice(0,1) : ''
       // 数据格式完成后整合处理
-      intNumber = `${sign}${intNumber}.${floatNumber}`
+      intNumber = `${sign}${intNumber}${decimalCount>0 ? '.' : ''}${floatNumber}`
       numList = intNumber.split('')
     }
     //小数点点间距处理
@@ -141,31 +143,40 @@ class Counter extends Component {
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
     // 补充前缀功能
     const prefixConfig = this.formatConfig([this.getStyleData(config, "前缀")],[])
-
     return (
-      <div className='counter' style={displayStyle}>
+      <div className='counter' style={{
+        ...displayStyle,
+        width: dimension.width,
+        height: dimension.height
+      }}>
         {/* 翻牌器标题 */}
-        <div style={{
-          ...titleStyle,
-          fontWeight: titleStyle.bold ? 'bold' : '',
-          fontStyle: titleStyle.italic ? 'italic' : '',
-          transform: `translate(${titleStyle.x}px, ${titleStyle.y}px)`
-        }}>{originData[fields[0]]}</div>
+        {
+          titleStyle.show && 
+          <div style={{
+            ...titleStyle,
+            fontWeight: titleStyle.bold ? 'bold' : '',
+            fontStyle: titleStyle.italic ? 'italic' : '',
+            lineHeight: `${titleStyle.lineHeight}px`,
+            transform: `translate(${titleStyle.x}px, ${titleStyle.y}px)`
+          }}>{originData[fields[0]]}</div>
+        }
         {/* 数值 */}
-        <div className="number">
+        <div className="counter-number">
           {
             prefixConfig.support &&
             <span style={{
               ...prefixConfig,
               fontWeight: prefixConfig.bold ? 'bold' : '',
               fontStyle: prefixConfig.italic ? 'italic' : '',
-              transform: `translate(${prefixConfig.x}px, ${prefixConfig.y}px)`
+              transform: `translate(${prefixConfig.x}px, ${prefixConfig.y}px)`,
+              lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{prefixConfig.content}</span> 
           }
-          <div style={{
+          <div className='number-list' style={{
             ...dataRangConfig,
             fontWeight: dataRangConfig.bold ? 'bold' : '',
             fontStyle: dataRangConfig.italic ? 'italic' : '',
+            lineHeight: 'normal',
             textShadow: dataRangConfig.show ? `${dataRangConfig.shadow.color} ${dataRangConfig.shadow.vShadow}px ${dataRangConfig.shadow.hShadow}px ${dataRangConfig.shadow.blur}px` : ''
           }}>
             {
@@ -176,19 +187,39 @@ class Counter extends Component {
                       item === ',' ? 
                       <span key={index} style={{
                         marginLeft: splitSpacingConfig.left,
-                        marginRight: splitSpacingConfig.right
+                        marginRight: splitSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>,</span> : 
                       item === '.' ? 
                       <span key={index} style={{
                         marginLeft: pointSpacingConfig.left,
-                        marginRight: pointSpacingConfig.right
+                        marginRight: pointSpacingConfig.right,
+                        width: layoutConfig.width,
+                        height: layoutConfig.height,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
                       }}>.</span> :
                       <span style={{
                         width: layoutConfig.width,
                         height: layoutConfig.height,
                         marginLeft: layoutConfig.left,
-                        marginRight: layoutConfig.right
-                      }} key={index}>{item}</span>
+                        marginRight: layoutConfig.right,
+                        lineHeight: `${dataRangConfig.lineHeight}px`,
+                      }} key={index}>
+                      {
+                        (item === '-' || item === '+') ? item : 
+                        // <DigitalFlop config={
+                        //   {number: [Number(item)],content: '{nt}', style:{
+                        //     fontSize: dataRangConfig.fontSize,
+                        //     fontWeight: dataRangConfig.bold ? 'bold' : 'normal',
+                        //     fontStyle: dataRangConfig.italic ? 'italic' : 'normal',
+                        //     fill: dataRangConfig.color,
+                        //   }}
+                        // } style={{width: '100%', height: '100%',marginTop: '20%' }} />
+                        <CountUp start={0} end={Number(item)} duration={1}></CountUp>
+                      }
+                      </span>
                     }
                   </Fragment>
                 )
@@ -201,7 +232,8 @@ class Counter extends Component {
               ...suffixConfig,
               fontWeight: suffixConfig.bold ? 'bold' : '',
               fontStyle: suffixConfig.italic ? 'italic' : '',
-              transform: `translate(${suffixConfig.x}px, ${suffixConfig.y}px)`
+              transform: `translate(${suffixConfig.x}px, ${suffixConfig.y}px)`,
+              lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{suffixConfig.content}</span> 
           }
         </div>

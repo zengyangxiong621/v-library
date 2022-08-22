@@ -7,13 +7,26 @@ import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import CusImage from '@/customComponents/assist/image/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar'
+import ChinaMap from '@/customComponents/echarts/components/chinaMap'
+import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import RankingBar from '@/customComponents/echarts/components/rankingBar'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
+import Counter from  '@/customComponents/assist/counter2'
 import {connect} from "dva"
+
 // import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
+
+// import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
+// import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
+import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
+import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
+import Timeline from '@/customComponents/assist/timeline'
+import ErrorCatch from 'react-error-catch'
+import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, ...props}) => {
   const callbackArgs = bar.callbackArgs
@@ -155,8 +168,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = bar.components.find(item => item.id === componentId)
-    console.log('component', component)
-    console.log('-------------')
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -164,7 +175,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
-    console.log('sourceCallbackList', sourceCallbackList)
     sourceCallbackList.forEach(item => {
       item.sourceModules.forEach(sourceItem => {
         if (sourceItem.id === componentId) {
@@ -197,7 +207,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      console.log('activeIds2', activeIds)
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
@@ -229,7 +238,6 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     if (dataChangeActions.length === 0) {
       return
     }
-    console.log('自定义事件触发了吗')
     customEventsFunction(dataChangeEvents, data)
 
   }, 300)
@@ -393,6 +401,18 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
+        props.componentConfig.moduleName === 'counter' ? 
+        <Counter
+          onChange={handleValueChange}
+          {...props}
+        ></Counter> :
+        props.componentConfig.moduleName === 'rankingBar' ?
+        <RankingBar
+          onChange={handleValueChange}
+          {...props}
+        >
+        </RankingBar>
+        :
         props.componentConfig.moduleName === 'image2' ?
         <CusImage
           onChange={handleValueChange}
@@ -414,6 +434,20 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         >
         </BasicBar>
         :
+        props.componentConfig.moduleName === 'worldMap' ?
+        <WorldMap
+          onChange={handleValueChange}
+          {...props}
+        >
+        </WorldMap>
+        :
+        // props.componentConfig.moduleName === 'chinaMap' ?
+        // <ChinaMap
+        //   onChange={handleValueChange}
+        //   {...props}
+        // >
+        // </ChinaMap>
+        // :
         props.componentConfig.moduleName === 'select2' ?
         <SelectV2
           onChange={handleValueChange}
@@ -457,11 +491,61 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
             {...props}
           >
           </TimeSelect>
-          : <RemoteBaseComponent
+          : props.componentConfig.moduleName === 'worldMap' ?
+          <WorldMap
             {...props}
+          >
+          </WorldMap>
+                : props.componentConfig.moduleName === 'timeline' ?
+          <Timeline
+            {...props}
+          >
+          </Timeline>
+          // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+          // <CardFlipper1
+          //   scale={scale}
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </CardFlipper1>
+          // : props.componentConfig.moduleName === 'CardFlipper_2' ?
+          // <CardFlipper2
+          //   scale={scale}
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </CardFlipper2>
+          : props.componentConfig.moduleName === 'instrumentPanel_3' ?
+          <InstrumentPanel3
             scale={scale}
             onChange={handleValueChange}
-          ></RemoteBaseComponent>
+            {...props}
+          >
+          </InstrumentPanel3>
+          : props.componentConfig.moduleName === 'instrumentPanel_4' ?
+          <InstrumentPanel4
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          >
+          </InstrumentPanel4>
+          :
+          <ErrorCatch
+            app={componentConfig.name}
+            user=""
+            token=""
+            max={1}
+            errorRender={<RemoteComponentErrorRender errorComponent={componentConfig.name}></RemoteComponentErrorRender>}
+            onCatch={(errors) => {
+              console.log('组件报错信息：', errors, '组件id', componentConfig.id);
+            }}
+          >
+            <RemoteBaseComponent
+              {...props}
+              scale={scale}
+              onChange={handleValueChange}
+            ></RemoteBaseComponent>
+          </ErrorCatch>
       }
     </div>
   )

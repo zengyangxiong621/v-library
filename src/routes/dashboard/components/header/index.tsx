@@ -4,9 +4,9 @@ import './index.less'
 import { withRouter } from 'dva/router'
 import { connect } from 'dva'
 
-import { useFetch } from '../../../../utils/useFetch'
 import { http, BASEURL } from '@/services/request'
 import { Input, message, Tooltip, Spin, Button, Form, Switch, Typography, Select, Upload } from 'antd'
+import type { UploadProps } from 'antd';
 import { IconFont } from '../../../../utils/useIcon'
 
 import NavigationItem from '../navigationItem/index'
@@ -32,6 +32,32 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   // 返回首页
   const toBack = () => {
     history.back()
+    // dispatch({
+    //   type: 'bar/save',
+    //   payload: {
+    //     isPanel: false,
+    //     stateId: null,
+    //     panelId: null,
+    //     panels: [],
+    //     panelStatesList: [],
+    //     key: [bar.dashboardId],
+    //     treeData: [],
+    //     scaleDragData: {
+    //       position:{
+    //         x: 0,
+    //         y:0
+    //       },
+    //       style: {
+    //         width: 0,
+    //         height: 0,
+    //         display: 'none'
+    //       }
+    //     }
+    //   }
+    // })
+    // dispatch({
+    //   type: 'bar/getDashboardDetails'
+    // })
   }
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {
@@ -59,11 +85,13 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
       id: bar.dashboardId,
       name: appName
     }
-    const [, data] = await useFetch('/visual/application/updateAppName', {
-      body: JSON.stringify(finalBody)
-    }, { onlyNeedWrapData: true })
-    if (!data.data) {
-      message.error({ content: data.message, duration: 2 })
+    const data: boolean = await http({
+      url: '/visual/application/updateAppName',
+      method: 'POST',
+      body: finalBody
+    })
+    if (!data) {
+      message.error({ content: '修改应用名失败', duration: 2 })
     }
   }
   // 显示修改应用名称的input
@@ -76,6 +104,15 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
     }, 4);
 
   }
+  const createPanel = (panelType: 0 | 1) => {
+    dispatch({
+      type: 'bar/createPanel',
+      payload: {
+        panelType
+      }
+    })
+  }
+
   // 获取当前活跃的按钮, 并执行对应逻辑
   const getActiveIcon = (icon: any) => {
     setActiveIcon(icon)
@@ -87,6 +124,12 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
       case 'yulan':
         toPreviewOrPublish(icon)
         break;
+      // case 'dongtaimianban':
+      //   createPanel(0)
+      //   break;
+      // case 'yinyongmianban':
+      //   createPanel(1)
+      //   break;
     }
   }
 
@@ -369,12 +412,15 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   }
 
   // 上传图片
-  const uploadImgProps = {
+  const uploadImgProps:UploadProps = {
     name: 'file',
     multiple: false,
     maxCount: 1,
     accept: 'image/png, image/jpeg',
     action: `${BASEURL}/visual/file/upload`,
+    headers:{
+      authorization:localStorage.getItem('token') || ''
+    },
     beforeUpload(file: any) {
       const { name }: { name: string } = file
       // 考虑 cdb.la...yer.json 这个文件名
@@ -628,14 +674,14 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
 }
 
 const centerIconArr = [
-  {
-    icon: 'chexiao',
-    text: '撤销'
-  },
-  {
-    icon: 'huifu',
-    text: '恢复'
-  },
+  // {
+  //   icon: 'chexiao',
+  //   text: '撤销'
+  // },
+  // {
+  //   icon: 'huifu',
+  //   text: '恢复'
+  // },
   {
     icon: 'line',
   },
@@ -658,10 +704,10 @@ const centerIconArr = [
   {
     icon: 'line',
   },
-  // {
-  //   icon: 'xiangmuguolvqi',
-  //   text: '项目过滤器'
-  // },
+  {
+    icon: 'xiangmuguolvqi',
+    text: '项目过滤器'
+  },
   {
     icon: 'huitiaoguanli',
     text: '回调管理'
@@ -670,6 +716,10 @@ const centerIconArr = [
     icon: 'shujurongqi',
     text: '数据容器'
   },
+  {
+    icon: 'zujiangengxin',
+    text: '组件更新'
+  }
 ]
 
 const rightIconArr = [

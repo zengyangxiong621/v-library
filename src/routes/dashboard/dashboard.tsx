@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react'
 // ant
 import { connect } from 'dva'
 import './index.less'
+import axios from 'axios'
+import { http } from '@/services/request'
+
 import { Layout } from 'antd'
 import { withRouter } from 'dva/router'
 
@@ -17,16 +20,22 @@ import CenterRightMenu from './left/components/rightClickMenu/rightClickMenu'
 import { menuOptions } from './left/Data/menuOptions'
 import DataContainer from './components/dataContainer'
 import CallbackArgs from './components/callbackArgs'
+import DataFilters from './components/dataFilters'
+import ModuleUpdate from './components/moduleUpdate'
 import useLoading from '@/components/useLoading'
+import DynamicPanel from '@/routes/dashboard/left/components/dynamicPanel'
 import { useEventEmitter } from 'ahooks';
 
 const { Header } = Layout
 
-function App({ bar, dispatch, location }: any) {
+function App({ bar, dispatch, location, history }: any) {
+  const isPanel = bar.isPanel
   const [showTopBar, setShowTopBar] = useState(false)
   const [zujianORsucai, setZujianORsucai] = useState('zujian')
   const [dataContainerVisible, setDataContainerVisible] = useState(false)
   const [callbackArgsVisible, setCallbackArgsVisible] = useState(false)
+  const [dataFiltersVisible, setDataFiltersVisible] = useState(false)
+  const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false)
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
   const [loading, setLoading]: any = useLoading(false, document.querySelector('.p-home'))
   // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
@@ -52,13 +61,6 @@ function App({ bar, dispatch, location }: any) {
     }
     return ratio
   }
-  const isScale = () => {
-    let rate = detectZoom()
-    if (rate != 100) {
-      //如何让页面的缩放比例自动为100,'transform':'scale(1,1)'没有用，又无法自动条用键盘事件，目前只能提示让用户如果想使用100%的比例手动去触发按ctrl+0
-      // alert('当前页面不是100%显示，请按键盘ctrl+0恢复100%显示标准，以防页面显示错乱！')
-    }
-  }
   const keyCodeMap: any = {
     // 91: true, // command
     61: true,
@@ -68,6 +70,22 @@ function App({ bar, dispatch, location }: any) {
     187: true, // +
     189: true, // -
   }
+
+  const documentRightClick = (event: any) => {
+    const dom: any = (event.target as any) || null
+    let temp = true
+    // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
+    let awayList = ['ant-layout', 'draggable-wrapper', 'left-wrap', 'use-away', 'canvas-draggable']
+    awayList.forEach(className => {
+      if (dom && dom.className && Object.prototype.toString.call(dom.className) === '[object String]' && dom.className.indexOf(className) !== -1) {
+        temp = false
+      }
+    })
+    if (!temp) {
+      event.preventDefault()
+    }
+  }
+
   const clearAllStatus = (event: MouseEvent) => {
     const dom: any = (event.target as any) || null
     let temp = true
@@ -101,13 +119,51 @@ function App({ bar, dispatch, location }: any) {
 
   useEffect(() => {
     document.addEventListener('click', clearAllStatus)
+    document.addEventListener('contextMenu', documentRightClick)
+    document.oncontextmenu = documentRightClick
+
     return () => {
       document.removeEventListener('click', clearAllStatus)
+      document.oncontextmenu = null
+      document.removeEventListener('contextMenu', documentRightClick)
       dispatch({
         type: 'bar/clearCurrentDashboardData'
       })
     }
   }, [])
+
+  // 进入画布时，直接加载所有的组件，并将这些组件的config放入bar.moduleDefaultConfig中
+  const importComponent = (data: any) => {
+    return axios.get(`${(window as any).CONFIG.COMP_URL}/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
+  }
+  const loadComp = async (data: any) => {
+    window.eval(`${await importComponent(data)}`)
+    const { ComponentDefaultConfig } = (window as any).VComponents;
+    const currentDefaultConfig = ComponentDefaultConfig
+    dispatch({
+      type: 'bar/setModuleDefaultConfig',
+      payload: currentDefaultConfig,
+      itemData: data
+    })
+  }
+  //@Mark 因组件更新中需要获取各个原子组件的初始config,所以需要在画布初始化时进行处理
+  useEffect(() => {
+    const getAllModulesConfig = async () => {
+      const { content }: any = await http({
+        url: '/visual/module-manage/queryModuleList',
+        method: 'post',
+        body: {
+          status: 0,
+          pageNo: 0,
+          pageSize: 100,
+        }
+      }).catch(() => { })
+      content.forEach((item: any) => {
+        loadComp(item);
+      })
+    }
+    getAllModulesConfig()
+  }, []);
 
   // 阻止 window 缩放
   const handleStopWindowWheel = (event: any) => {
@@ -121,11 +177,27 @@ function App({ bar, dispatch, location }: any) {
   }
 
   useEffect(() => {
-    const dashboardId = window.location.pathname.split('/')[2]
-
+    const windowPathList = window.location.pathname.split('/')
+    const dashboardId = windowPathList[2]
+    let panelId = null, stateId = null
+    if (windowPathList[3]) {
+      panelId = windowPathList[3].split('-')[1]
+    }
+    if (windowPathList[4]) {
+      stateId = windowPathList[4].split('-')[1]
+    }
+    let isPanel = false
+    if (panelId) {
+      isPanel = true
+    }
     dispatch({
       type: 'bar/initDashboard',
-      payload: dashboardId,
+      payload: {
+        dashboardId,
+        isPanel,
+        panelId,
+        stateId,
+      },
       cb: () => { }
     })
 
@@ -159,12 +231,31 @@ function App({ bar, dispatch, location }: any) {
     } else {
       setShowTopBar(false)
     }
-    if (whichBar === 'shujurongqi') {
-      setDataContainerVisible(true)
-      setCallbackArgsVisible(false)
-    } else if (whichBar === 'huitiaoguanli') {
-      setCallbackArgsVisible(true)
-      setDataContainerVisible(false)
+    switch (whichBar) {
+      case 'shujurongqi':
+        setDataContainerVisible(true)
+        setCallbackArgsVisible(false)
+        setModuleUpdateVisible(false)
+        setDataFiltersVisible(false)
+        break;
+      case 'huitiaoguanli':
+        setCallbackArgsVisible(true)
+        setDataContainerVisible(false)
+        setModuleUpdateVisible(false)
+        setDataFiltersVisible(false)
+        break;
+      case 'zujiangengxin':
+        setModuleUpdateVisible(true)
+        setCallbackArgsVisible(false)
+        setDataContainerVisible(false)
+        setDataFiltersVisible(false)
+        break;
+      case 'xiangmuguolvqi':
+        setDataFiltersVisible(true)
+        setCallbackArgsVisible(false)
+        setDataContainerVisible(false)
+        setModuleUpdateVisible(false)
+        break;
     }
   }
 
@@ -184,6 +275,14 @@ function App({ bar, dispatch, location }: any) {
   const handleCbAvailableChange = (value: boolean) => {
     setCallbackArgsVisible(value)
   }
+  const handleMUAvailableChange = (value: boolean) => {
+    setModuleUpdateVisible(value)
+  }
+  const handleDataFilterAvailableChange = (value: boolean) => {
+    setDataFiltersVisible(value)
+  }
+
+
   return (
     <Layout>
       <ChooseArea />
@@ -192,6 +291,9 @@ function App({ bar, dispatch, location }: any) {
       </Header>
       <div className="p-home">
         <div className="home-left-wrap">
+          {
+            isPanel ? <DynamicPanel /> : <></>
+          }
           <Left />
         </div>
         <div className="center-wrap">
@@ -205,6 +307,8 @@ function App({ bar, dispatch, location }: any) {
           <Right />
           <DataContainer visible={dataContainerVisible} onChange={handleDCVisibleChange} />
           <CallbackArgs visible={callbackArgsVisible} onChange={handleCbAvailableChange} />
+          <ModuleUpdate visible={moduleUpdateVisible} onChange={handleMUAvailableChange} />
+          <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange}></DataFilters>
         </div>
         {
           bar.isShowRightMenu &&
@@ -217,4 +321,4 @@ function App({ bar, dispatch, location }: any) {
 
 export default withRouter(connect(({ bar }: any) => (
   { bar }
-))(App))
+))(withRouter(App)))

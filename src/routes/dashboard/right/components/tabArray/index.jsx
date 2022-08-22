@@ -20,7 +20,7 @@ const { TabPane } = Tabs;
 
 const TabArray = props => {
   const _data = props.data;
-  const _defaultActiveKey = _data.defaultActiveKey
+  const _defaultActiveKey = _data?.defaultExpand ? ['1'] : []
   const _disabled = _data.disabled
   let tabs = _data.value
 
@@ -42,17 +42,27 @@ const TabArray = props => {
       console.log('type', type)
 
       if (type === 'add') {
-        const tabValue = tabs.find(tab => tab.key === activeKey)
-        const copyValue = deepClone(tabValue)
-        const unit = copyValue.displayName.replace(/\d/, '')
-        copyValue.displayName = unit + (tabs.length + 1)
-        copyValue.key = String(tabs.length + 1)
-        tabs.push(copyValue)
+        if (tabs.length === 0) {
+          tabs = tabs.concat(_data.config.template)
+          _data.value = tabs
+          setActiveKey(tabs[0].key)
+        } else {
+          const tabValue = tabs.find(tab => tab.key === activeKey)
+          const copyValue = deepClone(tabValue)
+          const unit = copyValue.displayName.replace(/\d/, '')
+          copyValue.displayName = unit + (tabs.length + 1)
+          copyValue.key = String(tabs.length + 1)
+          setActiveKey(copyValue.key)
+          _data.activeKey = copyValue.key
+          tabs.push(copyValue)
+        }
       }
       if (type === 'delete') {
         const index = tabs.findIndex(tab => tab.key === activeKey)
         tabs.splice(index, 1)
         setActiveKey(String(index - 1 > 1 ? index - 1 : 1))
+        _data.activeKey = String(index - 1 > 1 ? index - 1 : 1)
+
       }
       tabs.forEach((tab, index) => {
         const unit = tab.displayName.replace(/\d/, '')
@@ -72,8 +82,9 @@ const TabArray = props => {
   }
 
   const handleTabClick = (key, e) => {
-    console.log('key', key)
     setActiveKey(key)
+    _data.activeKey = key
+    props.onChange(key)
   }
 
   return (

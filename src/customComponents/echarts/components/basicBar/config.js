@@ -196,6 +196,27 @@ const ComponentDefaultConfig = {
               ],
             },
             {
+              name: 'bgSetting',
+              displayName: '背景样式',
+              type: 'collapse',
+              hasSwitch: true,
+              defaultExpand: false,
+              value: [
+                {
+                  name: 'show',
+                  displayName: '',
+                  value: true,
+                  type: 'switch',
+                },
+                {
+                  name: 'color',
+                  displayName: '颜色',
+                  value: 'rgba(255,255,255,0.2)',
+                  type: 'color',
+                },
+              ],
+            },
+            {
               name: 'legendSettings',
               displayName: '图例',
               type: 'collapse',
@@ -719,10 +740,54 @@ const ComponentDefaultConfig = {
                       ],
                     },
                     {
-                      name: 'barColor',
-                      displayName: '颜色',
-                      type: 'color',
-                      value: '#336bd7',
+                      'name': 'barColor',
+                      'displayName': '柱状颜色',
+                      'type': 'collapse',
+                      hasSwitch: false, // 是否有切换按钮
+                      defaultExpand: false,  // 是否默认展开
+                      value: [
+                        {	// 如果有后面的按钮，则该项必须放在第一个
+                          'name': 'show',
+                          'displayName': '',
+                          'value': true,
+                          'type': 'switch',
+                        },
+                        {
+                          name: "type",
+                          displayName: '颜色类型',
+                          type: 'radioGroup',
+                          direction: 'horizontal', // 方向
+                          value: 'gradient',
+                          options: [
+                            {
+                              name: '纯色',
+                              value: 'pure'
+                            },
+                            {
+                              name: '渐变色',
+                              value: 'gradient'
+                            },
+                          ]
+                        },
+                        {
+                          name: 'pureColor',
+                          displayName: '纯色',
+                          value: '#1890ff',
+                          type: 'color',
+                        },
+                        {
+                          name: 'gradientStart',
+                          displayName: '渐变色(始)',
+                          value: '#3074FF',
+                          type: 'color',
+                        },
+                        {
+                          name: 'gradientEnd',
+                          displayName: '渐变色(末)',
+                          value: '#1CCCFF',
+                          type: 'color',
+                        },
+                      ]
                     },
                     {
                       name: 'barLabel',
@@ -811,10 +876,54 @@ const ComponentDefaultConfig = {
                       ],
                     },
                     {
-                      name: 'barColor',
-                      displayName: '颜色',
-                      type: 'color',
-                      value: '#1ee7e7',
+                      'name': 'barColor',
+                      'displayName': '柱状颜色',
+                      'type': 'collapse',
+                      hasSwitch: false, // 是否有切换按钮
+                      defaultExpand: false,  // 是否默认展开
+                      value: [
+                        {	// 如果有后面的按钮，则该项必须放在第一个
+                          'name': 'show',
+                          'displayName': '',
+                          'value': true,
+                          'type': 'switch',
+                        },
+                        {
+                          name: "type",
+                          displayName: '颜色类型',
+                          type: 'radioGroup',
+                          direction: 'horizontal', // 方向
+                          value: 'gradient',
+                          options: [
+                            {
+                              name: '纯色',
+                              value: 'pure'
+                            },
+                            {
+                              name: '渐变色',
+                              value: 'gradient'
+                            },
+                          ]
+                        },
+                        {
+                          name: 'pureColor',
+                          displayName: '纯色',
+                          value: '#1890ff',
+                          type: 'color',
+                        },
+                        {
+                          name: 'gradientStart',
+                          displayName: '渐变色(始)',
+                          value: '#4693EC',
+                          type: 'color',
+                        },
+                        {
+                          name: 'gradientEnd',
+                          displayName: '渐变色(末)',
+                          value: '#00FFE3',
+                          type: 'color',
+                        },
+                      ]
                     },
                     {
                       name: 'barLabel',

@@ -49,7 +49,7 @@ class IconText extends Component<Props, State> {
     const iconSize = findItem('iconSize')
 
     let textStyle = JSON.parse(JSON.stringify(style))
-    textStyle.underline = false  // 标准组件中无须下划线样式，故直接写死false
+    // textStyle.underline = false  // 标准组件中无须下划线样式，故直接写死false
   
     const textRow  = () => {
       let obj:any = {}
@@ -119,7 +119,7 @@ class IconText extends Component<Props, State> {
       }
     }
     return (
-      <div style={ textStyleObj } className={`text ${textStyle.hideDefault && 'hide'}`}>
+      <div style={ textStyleObj } className={`iconText ${textStyle.hideDefault && 'hide'}`}>
         { !textStyle.hideDefault && originData.map((item:any, i:any) => (
           <div className={`text-name ${textStyle.underline &&'showText'}`} style={textNameObj}>
             {

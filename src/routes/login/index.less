@@ -1,0 +1,130 @@
+.login{
+  height: 100vh;
+  background-image: url('../../assets/images/背景.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  .leftImage{
+    height: 100%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .welcomeText{
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      color: #fff;
+      .titleText{
+        color:transparent;
+        font-family: MicrosoftYaHeiSemibold;
+        font-weight: 400;
+        font-size: 32px;
+        background-image: linear-gradient(to bottom, #fff,rgba(255,255,255,0.5) 90%,rgba(255,255,255,0.5));
+        background-clip: text;
+      }
+      .enText{
+        color: rgba(255, 255, 255, 0.3);
+        font-family: MicrosoftYaHeiSemibold;
+        font-size: 16px;
+        line-height: 21px;
+      }
+      .introductionText{
+        display: inline-block;
+        font-family: MicrosoftYaHeiLight;
+        font-size: 22px;
+        color: transparent;
+        font-weight: 200;
+        background-image: linear-gradient(to right, #83FFFA,#0064FF,#9E73FF);
+        background-clip: text;
+      }
+    }
+    img{
+      width: 60%;
+      object-fit:contain
+    }
+  }
+  .righFform{
+    width: 40%;
+    margin: 0 60px;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    .formContainer{
+      display: flex;
+      align-items: center; 
+      flex-direction: column;
+      width: 550px;
+      height: 575px;
+      background-image: linear-gradient(180deg, rgba(41,51,73,0.75) 0%, #171A24 100%);
+      box-shadow: 0px 0px 9px 0px rgba(12,24,56,0.15);
+      padding: 40px 60px;
+      border-radius: 10px;
+      .formTitle{
+        font-family: MicrosoftYaHeiSemibold;
+        font-size: 24px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 32px;
+        font-weight: 400;
+      }
+      .ant-form{
+        width: 100%;
+        flex: 1;
+        margin-top: 40px;
+        label{
+          color: #fff;
+          height: auto;
+        }
+        .ant-input-affix-wrapper {
+          border: 1px solid rgba(57,59,74,1);
+          background: #232630;
+          .ant-input-prefix{
+            color: #fff;
+          }
+          input{
+            background: #232630 !important;
+            color: #fff !important;
+          }
+        }
+
+        .formIdentify{
+          .ant-form-item-control-input-content{
+            position: relative;
+            input{
+              width: 70%;
+              border: 1px solid rgba(57,59,74,1);
+              background: #232630;
+              color: #fff;
+            }
+            .identifyingCode{
+              height: 100%;
+              width: 30%;
+              position: absolute;
+              right: 0;
+              top: 50%;
+              transform: translateY(-50%);
+            }
+          }
+        }
+        .formButton{
+          margin-top: 50px;
+        }
+      }
+    }
+  }
+  // 在使用浏览器保存的数据时 输入框的样式
+  input:-webkit-autofill , textarea:-webkit-autofill, select:-webkit-autofill {
+    // 字体颜色
+    -webkit-text-fill-color: #fff !important;
+    // 背景颜色
+    background: #232630 !important;
+    //设置input输入框的背景颜色为透明色
+    box-shadow: 0 0 0px 1000px transparent inset;
+    transition: background-color 50000s ease-in-out 0s; 
+  }
+}

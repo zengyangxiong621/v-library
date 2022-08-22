@@ -84,18 +84,21 @@ const UploadImg = props => {
             beforeUpload={beforeUpload}
             onChange={handleBgChange}
             onRemove={handleBgRemove}
+            headers={{
+              authorization:localStorage.getItem('token')
+            }}
           >
-            {!bgUrl ? '点击这里进行修改' : <div style={{ width: '100%' }} class="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card">
-              <div class="ant-upload-list-item-info">
-                <span class="ant-upload-span">
+            {!bgUrl ? '点击这里进行修改' : <div style={{ width: '100%' }} className="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card">
+              <div className="ant-upload-list-item-info">
+                <span className="ant-upload-span">
                   <img className='bg-img' src={bgUrl} alt="" />
                 </span>
               </div>
-              <span class="ant-upload-list-item-actions">
+              <span className="ant-upload-list-item-actions">
                 <button title="删除文件" type="button"
                   onClick={removeHandle}
-                  class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn">
-                  <span role="img" aria-label="delete" tabindex="-1" class="anticon anticon-delete">
+                  className="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn">
+                  <span role="img" aria-label="delete" tabindex="-1" className="anticon anticon-delete">
                     <svg viewBox="64 64 896 896" focusable="false" data-icon="delete" width="1em" height="1em" fill="currentColor"
                       aria-hidden="true">
                       <path

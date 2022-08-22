@@ -1,6 +1,10 @@
-export default {
+import { http } from "@/services/request";
+const globalStroe={
   namespace: "global",
   state: {
+    userInfo:null,
+    workspaceList: [],
+    curWorkspace: {},
     menuData: [
       {
         path: "/dashboard-manage",
@@ -36,5 +40,79 @@ export default {
         ]
       }
     ]
-  }
+  },
+  subscriptions:{
+    setup({ dispatch, history }: { dispatch: any; history: any }){
+      history.listen((location: any) => {
+        const pathName=location.pathname || location.location.pathname
+        if(pathName==='/login'){
+          dispatch({
+            type:'global/setUserInfo',
+            payload:null
+          })
+          return
+        }
+        const token=localStorage.getItem('token')
+        if(!token){
+          history.replace('/login')
+        }
+      });
+    }
+  },
+  reducers: {
+    setUserInfo(state:any,{payload}:any){
+      return {
+        ...state,
+        userInfo:payload
+      }
+    },
+    setWorkspaceList(state:any,{payload}:any){
+      return {
+        ...state,
+        workspaceList:payload
+      }
+    }
+  },
+  effects: {
+    *getCurUserInfo({ payload }: any, { put }: any):any {
+      try {
+        const data=yield http({
+          url:'/visual/user/getAccountInfo',
+          method:'post'
+        })
+        if(data){
+          yield put({
+            type: "setUserInfo",
+            payload: data,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // 获取所有工作空间
+    *getWorkspaceList({ payload }: any, { put }: any):any{
+      try {
+        const data=yield http({
+          url: `/visual/workspace/list`,
+          method: "get",
+        })
+        if(data.length){
+          // 设置工作空间
+          yield put({
+            type: "setWorkspaceList",
+            payload: data,
+          });
+          const curWorkspace=localStorage.getItem('curWorkspace')
+          if(!curWorkspace){
+            // 将当前空间存入到localStorage
+            localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
 };
+export default globalStroe

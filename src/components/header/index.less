@@ -102,6 +102,10 @@
       display: flex;
       align-items: center;
 
+      .curUser{
+        display: flex;
+      }
+
       img {
         width: 32px;
         height: 32px;
@@ -122,12 +126,27 @@
       }
     }
   }
+
+  .ant-modal-wrap::-webkit-scrollbar {
+    display: none;
+  }
+  
+  // 兼容ie和火狐
+  .ant-table-body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 .cus-dropdown-menu {
   background-color: #2D3143 !important;
   border: 1px solid #2D3143 !important;
   border-radius: 3px !important;
+  max-height: 280px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .ant-dropdown-menu-item {
     font-size: 14px;

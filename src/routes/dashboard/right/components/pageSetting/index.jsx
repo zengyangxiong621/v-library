@@ -12,34 +12,35 @@ import { Form } from 'antd';
 import EditTable from '../editTable'
 import debounce from 'lodash/debounce';
 import { http } from '../../../../../services/request'
-import { v4 as uuidv4 } from 'uuid';
 
-const dashboardId = window.location.pathname.split('/')[2]
-
-let isSettingsChange = false
 const PageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left'
   };
-  const pageConfig = deepClone(bar.dashboardConfig)
-  const recommendConfig = find(pageConfig, 'recommend')
-  const styleColorConfig = find(pageConfig, 'styleColor')
-  const backgroundImg = find(pageConfig, 'backgroundImg')
-  const gridSpacing = find(pageConfig, 'gridSpacing')
-  const zoomConfig = find(pageConfig, 'zoom')
-  const thumbImg = find(pageConfig, 'thumbImg')
-  const [key, setKey] = useState(uuidv4())
+  const [pageConfig, setPageConfig] = useState(null)
+  const [recommendConfig, setRecommendConfig] = useState(null)
+  const [styleColorConfig, setStyleColorConfig] = useState(null)
+  const [backgroundImg, setBackgroundImg] = useState(null)
+  const [gridSpacing, setGridSpacing] = useState(null)
+  const [zoomConfig, setZoomConfig] = useState(null)
+  const [thumbImg, setThumbImg] = useState(null)
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if(!isSettingsChange){
-      setKey(uuidv4())
+    if (bar.dashboardConfig) {
+      const pageConfigTmp = deepClone(bar.dashboardConfig)
+      setPageConfig(pageConfigTmp)
+      setRecommendConfig(find(pageConfigTmp, 'recommend'))
+      setStyleColorConfig(find(pageConfigTmp, 'styleColor'))
+      setBackgroundImg(find(pageConfigTmp, 'backgroundImg'))
+      setGridSpacing(find(pageConfigTmp, 'gridSpacing'))
+      setZoomConfig(find(pageConfigTmp, 'zoom'))
+      setThumbImg(find(pageConfigTmp, 'thumbImg'))
     }
   }, [bar.dashboardConfig])
 
   const settingsChange = debounce(() => {
-    isSettingsChange = true
     saveData()
   }, 300)
 
@@ -47,7 +48,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
     const params = {
       config: pageConfig,
       thumb: thumbImg.value,
-      dashboardId: dashboardId
+      dashboardId: bar.dashboardId
     }
     const { config } = await http({
       url: '/visual/application/update',
@@ -67,20 +68,26 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
       <h3 className="pageset-header">
         页面设置
       </h3>
-      <div className="content" key={key}>
+      <div className="content">
         <Form
           className="custom-form"
           form={form}
           {...formItemLayout}
           colon={false}
         >
-          <PageSize data={recommendConfig} onChange={settingsChange} />
-          <BackgroundColor data={styleColorConfig} onChange={settingsChange} />
-          <UploadImg data={backgroundImg} onChange={settingsChange} />
-          <CusInputNumber data={gridSpacing} onChange={settingsChange} style={{ width: '100%' }} />
-          <RadioGroup data={zoomConfig} onChange={settingsChange} />
-          <UploadImg data={thumbImg} onChange={settingsChange} />
-          {/* <EditTable></EditTable> */}
+          {
+            pageConfig ?
+              <React.Fragment>
+                <PageSize key={JSON.stringify(recommendConfig)} data={recommendConfig} onChange={settingsChange} />
+                <BackgroundColor key={JSON.stringify(styleColorConfig)} data={styleColorConfig} onChange={settingsChange} />
+                <UploadImg key={JSON.stringify(backgroundImg)} data={backgroundImg} onChange={settingsChange} />
+                <CusInputNumber key={JSON.stringify(gridSpacing)} data={gridSpacing} onChange={settingsChange} style={{ width: '100%' }} />
+                <RadioGroup key={JSON.stringify(zoomConfig)} data={zoomConfig} onChange={settingsChange} />
+                <UploadImg key={JSON.stringify(thumbImg)} data={thumbImg} onChange={settingsChange} />
+              </React.Fragment>
+              : '暂无数据'
+          }
+
         </Form>
       </div>
     </div>

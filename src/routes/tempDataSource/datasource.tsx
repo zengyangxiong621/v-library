@@ -17,8 +17,8 @@ const { Option } = Select
 
 
 const DataSource = (props: any) => {
-  // let spaceId = '1513466256657637378'
-  let spaceId = 1
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  let spaceId = JSON.parse(curWorkspace)?.id
   const [inputValue, setInputValue] = useState('')
   const [dataSourceType, setDataSourceType] = useState<any>(null)
   const [isShowAddModal, setIsShowAddModal] = useState(false)
@@ -34,7 +34,7 @@ const DataSource = (props: any) => {
   const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
   const [previewFileUrl, setPreviewFileUrl] = useState(null)
   const [previewRecord, setPreviewRecord] = useState({ type: '', id: '' })
-  const [tableLoading, setTableLoading] = useState(true)
+  const [tableLoading, setTableLoading] = useState(false)
 
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
@@ -60,28 +60,26 @@ const DataSource = (props: any) => {
   }
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
     setTableLoading(true)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/datasource/list',
-      method: 'post',
-      body: differentParams
-    })
-    if (data) {
+    try {
+      const data = await http({
+        url: '/visual/datasource/list',
+        method: 'post',
+        body: differentParams
+      })
+      if(data){
+        await resetTableInfo(data)
+      }
+    } catch (error) {
+      console.log(error);
+    }finally{
       setTableLoading(false)
-    } else {
-      setTimeout(() => {
-        setTableLoading(false)
-      }, 3000);
     }
-
-    // 请求完成，冲着表格的数据和页码信息
-    await resetTableInfo(data)
   }
   // 获取表格数据
   useEffect(() => {
     getTableData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [spaceId])
 
   // 保证每次拿到最新的dataSourceType值
   useEffect(() => {
@@ -358,6 +356,7 @@ const DataSource = (props: any) => {
         {/* 添加数据源的弹窗 */}
         <AddDataSource
           visible={isShowAddModal}
+          spaceId={spaceId}
           changeShowState={changeShowState}
           refreshTable={refreshTable}
         />
@@ -365,6 +364,7 @@ const DataSource = (props: any) => {
         {
           isShowEditModal && <EditDataSource
           editDataSourceInfo={editDataSourceInfo}
+          spaceId={spaceId}
           visible={isShowEditModal}
           changeShowState={changeShowState}
           refreshTable={refreshTable}
@@ -399,7 +399,7 @@ const DataSource = (props: any) => {
 const selectOptions = [
   {
     name: '全部类型',
-    key: null,
+    key: '',
   },
   {
     name: 'API',
