@@ -91,7 +91,7 @@ class ShowDate extends Component {
       textShadow:targetStyle.show ? `${targetStyle.shadow.vShadow}px ${targetStyle.shadow.hShadow}px ${targetStyle.shadow.blur}px ${targetStyle.shadow.color}` : '0 0 black'
     }}>
       <div style={{display:"flex",alignItems:"center",position:"relative",padding:"5px 0"}}>
-        <span style={{ marginRight: '20px' }}>{this.state.curTime}</span>
+        <span style={{ marginRight: targetStyle.spacing+'px' }}>{this.state.curTime}</span>
         <span>{this.state.finalDate}</span>
       </div>
     </div>

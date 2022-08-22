@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "date1", //组件标识
-  "moduleVersion": "1.1.2", //组件版本号
+  "moduleVersion": "1.1.4", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -117,6 +117,16 @@ const componentDefaultConfig = {
       ]
     },
     {
+      'name': 'spacing',
+      'displayName': '间距',
+      'value': 20,
+      type:'number',
+      "config": {
+          "step": 1,
+          suffix:'px',  // 输入框后缀
+      }
+    },
+    {
       "name": "align",
       "displayName": "对齐方式",
       "type": "alignFull",
@@ -125,7 +135,7 @@ const componentDefaultConfig = {
           "name": "textAlign",
           "displayName": "水平对齐",
           "type": "align",
-          "value": "right" // left , center, right,bothEnds
+          "value": "left" // left , center, right,bothEnds
         },
         {
           "name": "textVertical",
@@ -145,7 +155,7 @@ const componentDefaultConfig = {
         {
           "name": "show",
           "displayName": "",
-          "value": true,
+          "value": false,
           "type": "switch"
         },
         {
