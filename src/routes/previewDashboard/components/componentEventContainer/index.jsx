@@ -28,9 +28,9 @@ import Timeline from '@/customComponents/assist/timeline'
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
-const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, ...props}) => {
-  const callbackArgs = bar.callbackArgs
-  const callbackParamsList = bar.callbackParamsList
+const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 0, scale=1, ...props}) => {
+  const callbackArgs = previewDashboard.callbackArgs
+  const callbackParamsList = previewDashboard.callbackParamsList
   const {componentConfig} = props
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
@@ -167,7 +167,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('-------------')
     console.log('数据变化data', data)
     const componentId = props.componentConfig.id
-    const component = bar.components.find(item => item.id === componentId)
+    const component = previewDashboard.components.find(item => item.id === componentId)
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -192,7 +192,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
                 }
                 dispatch({
-                  type: 'bar/save',
+                  type: 'previewDashboard/save',
                   payload: {
                     callbackArgs
                   }
@@ -207,14 +207,14 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
     console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
+      const activeComponents = activeIds.reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
       // 绑定数据源的组件列表
       const componentsByDataSource = activeComponents.filter(component => component.dataFrom === 0)
       // 重新获取部分组件（绑定数据源的组件列表）的数据
       dispatch({
-        type: 'bar/getComponentsData',
+        type: 'previewDashboard/getComponentsData',
         payload: activeComponents
       })
       // 重新获取部分数据容器的数据
@@ -228,7 +228,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         })
       })
       dispatch({
-        type: 'bar/getContainersData',
+        type: 'previewDashboard/getContainersData',
         payload: filterComponentsByDataContainer
       })
     }
@@ -551,4 +551,4 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
   )
 }
 
-export default connect(({bar}) => ({bar}))(ComponentEventContainer)
+export default connect(({previewDashboard}) => ({previewDashboard}))(ComponentEventContainer)

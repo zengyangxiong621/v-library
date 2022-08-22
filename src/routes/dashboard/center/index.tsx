@@ -241,12 +241,13 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     { position: { x, y }, style: { width, height } }: IScaleDragData,
     { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
   ) => {
+    console.log('x', x, 'y', y)
+    console.log('width', width, 'height', height)
     dispatch({
       type: "bar/updateSelectedComponents"
     })
     if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
-      // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
-      const panelOrComponent: IComponent | IPanel = deepClone(bar.selectedComponents[0])
+      const panelOrComponent: IComponent | IPanel = bar.selectedComponents[0]
       if ('type' in panelOrComponent) {
         const panel = panelOrComponent
         panel.config = {
@@ -257,7 +258,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           height
         }
       } else {
-        const component = panelOrComponent
+        // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
+        const component = deepClone(panelOrComponent)
         const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
         styleDimensionConfig.forEach((item: IStyleConfig) => {
           switch(item.name) {
@@ -274,6 +276,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
               item.value = height
           }
         })
+        console.log('component', component)
         dispatch({
           type: 'bar/setComponentConfig',
           payload: component
@@ -392,12 +395,19 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         },
       })
     }
-    console.log('bar.selectedComponents', bar.selectedComponents)
-    dispatch({
-      type: 'bar/updateComponent',
-      payload: bar.selectedComponents,
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: "bar/updateSelectedComponents",
+        cb: (selectedComponents: Array<IComponent | IPanel>) => {
+          resolve(selectedComponents)
+        }
+      })
+    }).then((selectedComponents) => {
+      dispatch({
+        type: 'bar/updateComponent',
+        payload: selectedComponents,
+      })
     })
-
   }
 
   const handleCanvasDrag = function(event: DraggableEvent, data: DraggableData) {

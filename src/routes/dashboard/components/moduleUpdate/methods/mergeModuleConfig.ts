@@ -50,15 +50,19 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
     const optionMap = new Map();
     oldConfig.forEach((x: TConfigItem) => {
       const { name, value, options } = x;
-      if (Array.isArray(value)) {
-        //@Mark 开发者配置组件时，应该保证同一层级(value || options)下 每项配置名(name)的唯一性，如果不小心copy多了一份，在map中重复set相同的key也仅仅只是覆盖，所以此处不判断map中是否已经有key为 name 的项
-        valueMap.set(name, value);
-      } else {
-        otherMap.set(name, value);
+
+      if(name !== 'customColumn') {
+        if (Array.isArray(value)) {
+          //@Mark 开发者配置组件时，应该保证同一层级(value || options)下 每项配置名(name)的唯一性，如果不小心copy多了一份，在map中重复set相同的key也仅仅只是覆盖，所以此处不判断map中是否已经有key为 name 的项
+          valueMap.set(name, value);
+        } else {
+          otherMap.set(name, value);
+        }
+        if (Array.isArray(options)) {
+          optionMap.set(name, options);
+        }
       }
-      if (Array.isArray(options)) {
-        optionMap.set(name, options);
-      }
+
     });
     newConfig.forEach((item: TConfigItem) => {
       const { name, value, options } = item;

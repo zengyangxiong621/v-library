@@ -123,6 +123,7 @@ function App({ bar, dispatch, location, history }: any) {
     document.oncontextmenu = documentRightClick
 
     return () => {
+      console.log('这里触发不')
       document.removeEventListener('click', clearAllStatus)
       document.oncontextmenu = null
       document.removeEventListener('contextMenu', documentRightClick)
@@ -177,29 +178,29 @@ function App({ bar, dispatch, location, history }: any) {
   }
 
   useEffect(() => {
-    const windowPathList = window.location.pathname.split('/')
-    const dashboardId = windowPathList[2]
-    let panelId = null, stateId = null
-    if (windowPathList[3]) {
-      panelId = windowPathList[3].split('-')[1]
-    }
-    if (windowPathList[4]) {
-      stateId = windowPathList[4].split('-')[1]
-    }
-    let isPanel = false
-    if (panelId) {
-      isPanel = true
-    }
-    dispatch({
-      type: 'bar/initDashboard',
-      payload: {
-        dashboardId,
-        isPanel,
-        panelId,
-        stateId,
-      },
-      cb: () => { }
-    })
+    // const windowPathList = window.location.pathname.split('/')
+    // const dashboardId = windowPathList[2]
+    // let panelId = null, stateId = null
+    // if (windowPathList[3]) {
+    //   panelId = windowPathList[3].split('-')[1]
+    // }
+    // if (windowPathList[4]) {
+    //   stateId = windowPathList[4].split('-')[1]
+    // }
+    // let isPanel = false
+    // if (panelId) {
+    //   isPanel = true
+    // }
+    // dispatch({
+    //   type: 'bar/initDashboard',
+    //   payload: {
+    //     dashboardId,
+    //     isPanel,
+    //     panelId,
+    //     stateId,
+    //   },
+    //   cb: () => { }
+    // })
 
     // dispatch({
     //   type: 'bar/getDashboardDetails',
@@ -308,7 +309,7 @@ function App({ bar, dispatch, location, history }: any) {
           <DataContainer visible={dataContainerVisible} onChange={handleDCVisibleChange} />
           <CallbackArgs visible={callbackArgsVisible} onChange={handleCbAvailableChange} />
           <ModuleUpdate visible={moduleUpdateVisible} onChange={handleMUAvailableChange} />
-          <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange}></DataFilters>
+          <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange} />
         </div>
         {
           bar.isShowRightMenu &&

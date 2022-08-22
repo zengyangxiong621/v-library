@@ -595,12 +595,8 @@ export const calcCanvasSize = function (recommendConfig, cb){
   let canvasScaleValue = 0
   let absolutePosition = {left: 0, top: 0}
   let getCurrentDocumentWidth = document.documentElement.clientWidth
-  // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
   const getCurrentDocumentHeight = document.documentElement.clientHeight
   // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
-  // if(getCurrentDocumentWidth < 1366) {
-  //   getCurrentDocumentWidth = 1366
-  // }
   canvasScaleValue = Number((getCurrentDocumentWidth / recommendConfig.width).toFixed(3))
   const canvasHeight = canvasScaleValue * recommendConfig.height
   if(canvasHeight > getCurrentDocumentHeight) {
