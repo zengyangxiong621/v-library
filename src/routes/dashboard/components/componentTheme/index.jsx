@@ -202,6 +202,9 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
   const onClose = () => {
     setActiveId(null)
     props.onChange(false)
+    // TODO:
+    // 如果当前画布没有使用主题风格及画布配置themeId为空或不存在，设置bar.componentThemeConfig = null
+    // 如果画布配置themeId不为空，则把themeId对应的主题风格写入bar.componentThemeConfig中
     dispatch({
       type: 'bar/save',
       payload: {
@@ -222,9 +225,8 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
   }
 
   const onComfirm = () => {
-    // TODO: 替换画布配置信息及组件配置信息
-    const currentTheme = themeList.filter(theme => theme.id === activeId)[0]
-    console.log('1111111',currentTheme)
+    // TODO: 调用后端接口，保存当前主题的id到画布配置themeId中
+    // activeId 当前主题的id
     onClose()
   }
 

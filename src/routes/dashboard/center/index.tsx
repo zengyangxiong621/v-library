@@ -14,7 +14,7 @@ import { IScaleDragData, IStyleConfig } from './type'
 import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from './constant'
 import RulerLines from './components/RulerLines'
 import { DraggableData, DraggableEvent, IPanel, IComponent } from "./components/CustomDraggable/type"
-import { deepClone, deepForEach, treeDataReverse} from '../../../utils'
+import { deepClone, deepForEach, treeDataReverse } from '../../../utils'
 import RightClickMenu from '../left/components/rightClickMenu/rightClickMenu'
 import { menuOptions } from '../left/Data/menuOptions'
 
@@ -24,11 +24,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const draggableRef: any = useRef(null)
   const rulerRef: any = useRef(null)
   const canvasRef = useRef(null)
-  const [ isShowRightMenu, setIsShowRightMenu ] = useState(false)
-  const [ menuInfo, setMenuInfo ] = useState({ x: 0, y: 0, id: '', isFolder: false })
-  const [ customMenuOptions, setCustomMenuOptions ] = useState(menuOptions)
-  const [ isCanvasDraggable, setIsCanvasDraggable ] = useState(false)// let supportLinesRef: any = useRef(// null)
-  const [ rulerCanvasSpacing, setRulerCanvasSpacing ] = useState({ left: 22, top: 22 })
+  const [isShowRightMenu, setIsShowRightMenu] = useState(false)
+  const [menuInfo, setMenuInfo] = useState({ x: 0, y: 0, id: '', isFolder: false })
+  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions)
+  const [isCanvasDraggable, setIsCanvasDraggable] = useState(false)// let supportLinesRef: any = useRef(// null)
+  const [rulerCanvasSpacing, setRulerCanvasSpacing] = useState({ left: 22, top: 22 })
   const [layers, setLayers] = useState([])
   const [components, setComponents] = useState([])
   const [panels, setPanels] = useState([])
@@ -64,7 +64,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
     const getCurrentDocumentHeight = document.documentElement.clientHeight
     // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
-    if(getCurrentDocumentWidth < 1280) {
+    if (getCurrentDocumentWidth < 1280) {
       getCurrentDocumentWidth = 1280
     }
     // width、 height 是我们希望的当前 canvas 实际宽高
@@ -74,7 +74,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     const height = getCurrentDocumentHeight - 64 - 35 - 66
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height
     let canvasScaleValue = 0
-    if(canvasHeight > height) {
+    if (canvasHeight > height) {
       canvasScaleValue = Number((height / recommendConfig.height).toFixed(3))
       const left = (getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 22 - recommendConfig.width * canvasScaleValue) / 2
       setRulerCanvasSpacing({ top: 22, left })
@@ -98,11 +98,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
-    if(e.ctrlKey) {
+    if (e.ctrlKey) {
       e.preventDefault()
       const type = e.deltaY < 0
       // type: true 为放大 false 缩小
-      if(bar.canvasScaleValue <= 0.1) {
+      if (bar.canvasScaleValue <= 0.1) {
         if (type) { // 可以放大
           dispatch({
             type: 'bar/save',
@@ -121,7 +121,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           })
         }
       } else {
-        let canvasScaleValue =  Number((bar.canvasScaleValue + (type ? 0.03 : -0.03)).toFixed(3))
+        let canvasScaleValue = Number((bar.canvasScaleValue + (type ? 0.03 : -0.03)).toFixed(3))
         if (canvasScaleValue <= 0.1) {
           canvasScaleValue = 0.1
         }
@@ -145,16 +145,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   useEffect(() => {
 
-  }, [ bar.canvasScaleValue ])
+  }, [bar.canvasScaleValue])
 
   useEffect(() => {
-    if(bar.canvasScaleValue) {
+    if (bar.canvasScaleValue) {
       window.addEventListener('wheel', calcCanvasScale, { passive: false })
     }
     return () => {
       window.removeEventListener('wheel', calcCanvasScale)
     }
-  }, [ bar.canvasScaleValue ])
+  }, [bar.canvasScaleValue])
 
   useEffect(() => {
     calcCanvasSize()
@@ -167,13 +167,13 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         },
       },
     })
-  }, [ recommendConfig.width, recommendConfig.height ])
+  }, [recommendConfig.width, recommendConfig.height])
 
   useEffect(() => {
     setTimeout(() => {
       calcCanvasSize()
     }, 300)
-  }, [ bar.leftMenuWidth ])
+  }, [bar.leftMenuWidth])
 
   useEffect(() => {
     calcCanvasSize()
@@ -189,11 +189,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   useClickAway(() => {
     // 取消右键菜单
     setIsShowRightMenu(false)
-  }, [ document.querySelector('.left-wrap-tree'), document.querySelector('.left-wrap-toolbar'), document.querySelector('.left-wrap>.header'), document.querySelector('.left-menu>.footer'), document.querySelector('.right-wrap'), document.getElementById('draggable-container') ])
+  }, [document.querySelector('.left-wrap-tree'), document.querySelector('.left-wrap-toolbar'), document.querySelector('.left-wrap>.header'), document.querySelector('.left-menu>.footer'), document.querySelector('.right-wrap'), document.getElementById('draggable-container')])
   const handleContextMenu = (event: MouseEvent) => {
     const dom = event.target as HTMLElement
     setIsShowRightMenu(true)
-    if(dom.dataset?.id) {
+    if (dom.dataset?.id) {
       setMenuInfo({
         x: event.clientX,
         y: event.clientY,
@@ -223,13 +223,13 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   //   events: [ 'keydown', 'keyup' ],
   // })
 
-  useKeyPress([ 'space' ], (event) => {
-    if(event.type === 'keydown' && isCanvasDraggable) {
+  useKeyPress(['space'], (event) => {
+    if (event.type === 'keydown' && isCanvasDraggable) {
       return
     }
     setIsCanvasDraggable(event.type === 'keydown')
   }, {
-    events: [ 'keydown', 'keyup' ],
+    events: ['keydown', 'keyup'],
   })
 
 
@@ -254,7 +254,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     dispatch({
       type: "bar/updateSelectedComponents"
     })
-    if(bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
+    if (bar.selectedComponentOrGroup.length === 1 && !(COMPONENTS in bar.selectedComponentOrGroup[0])) {
       // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
       const panelOrComponent: IComponent | IPanel = deepClone(bar.selectedComponents[0])
       if ('type' in panelOrComponent) {
@@ -270,7 +270,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         const component = panelOrComponent
         const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
         styleDimensionConfig.forEach((item: IStyleConfig) => {
-          switch(item.name) {
+          switch (item.name) {
             case LEFT:
               item.value = x
               break
@@ -302,7 +302,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           const data = panel.config
           console.log('动态面板的data', data)
 
-          if(x === lastX) {
+          if (x === lastX) {
             if (panel.config.left !== lastX) {
               panel.config.left = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
               data[LEFT] = panel.config.left
@@ -315,7 +315,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             }
           }
 
-          if(y === lastY) {
+          if (y === lastY) {
             if (panel.config.top !== lastY) {
               panel.config.top = lastY + ((data[TOP] - lastY) / (lastHeight / height))
               data[TOP] = panel.config.top
@@ -332,7 +332,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           const component = panelOrComponent
           const dimensionConfig = component.config.find((config: any) => config.name === DIMENSION).value
           const data = dimensionConfig.reduce((pre: any, cur: any) => {
-            if(Array.isArray(cur.value)) {
+            if (Array.isArray(cur.value)) {
               const obj = cur.value.reduce((p: any, c: any) => {
                 p[c.name] = c.value
                 return p
@@ -347,17 +347,17 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             return pre
           }, {})
           dimensionConfig.forEach((config: any) => {
-            if(x === lastX) {
-              if(config.name === LEFT) {
-                if(config.value !== lastX) {
+            if (x === lastX) {
+              if (config.name === LEFT) {
+                if (config.value !== lastX) {
                   // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
                   config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
                   data[LEFT] = config.value
                 }
               }
             } else {
-              if(config.name === LEFT) {
-                if(config.value === lastX) {
+              if (config.name === LEFT) {
+                if (config.value === lastX) {
                   config.value = x
                 } else {
                   // 因为是缩放左侧，所以缩放组件右侧的 x + width 的值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
@@ -366,16 +366,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
               }
             }
 
-            if(y === lastY) {
-              if(config.name === TOP) {
-                if(config.value !== lastY) {
+            if (y === lastY) {
+              if (config.name === TOP) {
+                if (config.value !== lastY) {
                   config.value = lastY + ((data[TOP] - lastY) / (lastHeight / height))
                   data[TOP] = config.value
                 }
               }
             } else {
-              if(config.name === TOP) {
-                if(config.value === lastY) {
+              if (config.name === TOP) {
+                if (config.value === lastY) {
                   config.value = y
                 } else {
                   config.value = y + ((data[TOP] - lastY) / (lastHeight / height))
@@ -383,11 +383,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
               }
             }
 
-            if(config.name === WIDTH) {
+            if (config.name === WIDTH) {
               config.value = config.value / (lastWidth / width)
               data[WIDTH] = config.value
             }
-            if(config.name === HEIGHT) {
+            if (config.name === HEIGHT) {
               config.value = config.value / (lastHeight / height)
               data[HEIGHT] = config.value
             }
@@ -410,7 +410,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   }
 
-  const handleCanvasDrag = function(event: DraggableEvent, data: DraggableData) {
+  const handleCanvasDrag = function (event: DraggableEvent, data: DraggableData) {
     handleCalcPosition({ x: data.x, y: data.y })
   }
 
@@ -427,13 +427,13 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   const handleCalcPosition = ({ x, y }: { x: number, y: number }) => {
     const canvasDraggableDOM: any = document.querySelector('.canvas-draggable')
-    if(x >= 5000) {
+    if (x >= 5000) {
       x = 5000
     }
-    if(y >= 5000) {
+    if (y >= 5000) {
       y = 5000
     }
-    canvasDraggableDOM.style.transform = `translate(${ x }px, ${ y }px)`
+    canvasDraggableDOM.style.transform = `translate(${x}px, ${y}px)`
     draggableRef.current.props.position.x = x
     draggableRef.current.props.position.y = y
     rulerRef.current.painter()
@@ -441,54 +441,54 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   return (
     <div className="c-canvas">
       <Ruler
-        cRef={ rulerRef }
-        mouse={ mouse }
+        cRef={rulerRef}
+        mouse={mouse}
       />
       {/*      {
         isShowRightMenu &&
         <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }*/ }
       <div
-        style={ {
+        style={{
           width: 'calc(100% - 22px)',
           height: 'calc(100% - 54px)',
           position: 'absolute',
           overflow: 'hidden',
-        } }
+        }}
       >
         <Draggable
-          ref={ draggableRef }
-          disabled={ !isCanvasDraggable }
-          onDrag={ handleCanvasDrag }
-          onStop={ handleCanvasDragStop }
-          position={ bar.canvasDraggablePosition }
+          ref={draggableRef}
+          disabled={!isCanvasDraggable}
+          onDrag={handleCanvasDrag}
+          onStop={handleCanvasDragStop}
+          position={bar.canvasDraggablePosition}
         >
           <div
             className="canvas-draggable"
-            style={ {
+            style={{
               width: 100000,
               height: 100000,
               position: 'absolute',
               left: -5000,
               top: -5000,
               background: '#181a24'
-            } }
+            }}
           >
 
             <div>
               <div
-                ref={ canvasRef }
+                ref={canvasRef}
                 className="canvas-container"
-                style={ {
+                style={{
                   width: recommendConfig.width * bar.canvasScaleValue,
                   height: recommendConfig.height * bar.canvasScaleValue,
                   position: 'absolute',
                   left: 5000 + rulerCanvasSpacing.left,
                   top: 5000 + rulerCanvasSpacing.top,
-                } }
+                }}
               >
                 {
                   bar.isPanel ? <div
-                    style={ {
+                    style={{
                       position: "absolute",
                       width: '100%',
                       height: '100%',
@@ -496,44 +496,50 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                       backgroundPosition: '0 0,-15px 15px,15px -15px,30px 30px',
                       backgroundSize: '10px 10px',
                       backgroundColor: '#b5b5b5',
-                    } }
+                    }}
                   /> : <></>
                 }
                 <div
                   className="canvas-screen"
-                  style={ {
+                  style={{
                     width: recommendConfig.width,
                     height: recommendConfig.height,
-                    transform: `scale(${ bar.canvasScaleValue })`,
-                    backgroundColor: styleColor.value,
-                    background: backgroundImg.value ? `url(${ backgroundImg.value }) no-repeat center/cover` : styleColor.value,
+                    transform: `scale(${bar.canvasScaleValue})`,
+                    backgroundColor: bar.componentThemeConfig
+                      ? bar.componentThemeConfig.backgroundColor
+                      : styleColor.value,
+                    background: backgroundImg.value
+                      ? `url(${backgroundImg.value}) no-repeat center/cover`
+                      : bar.componentThemeConfig
+                        ? bar.componentThemeConfig.backgroundColor
+                        : styleColor.value,
                     backgroundSize: 'cover',
-                  } }
+                  }}
                 >
                   <div className="draggable-wrapper">
                     <ScaleDragCom
-                      mouse={ mouse }
-                      cRef={ (ref: any) => {
+                      mouse={mouse}
+                      cRef={(ref: any) => {
                         bar.scaleDragCompRef = ref
-                      } }
-                      onScaleEnd={ handleScaleEnd }
+                      }}
+                      onScaleEnd={handleScaleEnd}
                     />
                     <SupportLines
-                      cRef={ (ref: any) => {
+                      cRef={(ref: any) => {
                         bar.supportLinesRef = ref
-                      } }
+                      }}
                     />
-                    <RulerLines/>
+                    <RulerLines />
 
-                    <div className={`draggable-container screen-${bar.dashboardId}`} ref={ draggableContainerRef }>
-                      <CustomDraggable mouse={ 0 } layers={ layers } components={components} panels={panels}/>
+                    <div className={`draggable-container screen-${bar.dashboardId}`} ref={draggableContainerRef}>
+                      <CustomDraggable mouse={0} layers={layers} components={components} panels={panels} />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             {
-              isCanvasDraggable ? <div className="canvas-mask" style={ { position: 'absolute', inset: 0 } }/> : <></>
+              isCanvasDraggable ? <div className="canvas-mask" style={{ position: 'absolute', inset: 0 }} /> : <></>
             }
           </div>
         </Draggable>
@@ -544,9 +550,9 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   )
 }
 export default connect(({
-                          bar,
-                        }
-                          : any,
+  bar,
+}
+  : any,
 ) => (
   {
     bar,
