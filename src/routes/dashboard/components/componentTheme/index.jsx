@@ -202,13 +202,16 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
   const onClose = () => {
     setActiveId(null)
     props.onChange(false)
-    // TODO:
     // 如果当前画布没有使用主题风格及画布配置themeId为空或不存在，设置bar.componentThemeConfig = null
     // 如果画布配置themeId不为空，则把themeId对应的主题风格写入bar.componentThemeConfig中
+    let componentThemeConfig = null
+    if(bar.themeId){
+      componentThemeConfig = themeList.filter(theme => theme.id === bar.themeId)[0]
+    }
     dispatch({
       type: 'bar/save',
       payload: {
-        componentThemeConfig: null
+        componentThemeConfig
       }
     })
   }
@@ -225,9 +228,14 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
   }
 
   const onComfirm = () => {
-    // TODO: 调用后端接口，保存当前主题的id到画布配置themeId中
+    // TODO: 调用后端接口，保存当前主题的id到画布配置themeId中，同时把当前主题的id更新到bar.themeId中
     // activeId 当前主题的id
-    onClose()
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        themeId: activeId
+      }
+    })
   }
 
   return (

@@ -2793,6 +2793,7 @@ export const defaultData = {
   panelStatesList: [],
   allDashboardList: [],
   componentThemeConfig:null,  // 当前的组件主题配置
+  themeId:null, // 当前画布保存在后端的themeId
 }
 
 export interface IBarState {
@@ -2852,5 +2853,6 @@ export interface IBarState {
   panelStatesList: Array<{ name: string, id: string }>,
   stateId: string,
   allDashboardList: Array<{ name: string, id: string, [key: string]: any }>
-  componentThemeConfig:any
+  componentThemeConfig:any,
+  themeId:any,
 }

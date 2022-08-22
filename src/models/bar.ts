@@ -240,7 +240,7 @@ export default {
       }
       try {
 
-        let { layers, components, dashboardConfig, dashboardName } = yield http(
+        let { layers, components, dashboardConfig, dashboardName,themeId } = yield http(
           {
             url: `/visual/application/dashboard/detail/${ isPanel ? stateId : dashboardId}`,
             method: "get",
@@ -286,6 +286,7 @@ export default {
             panelId,
             dashboardConfig: newDashboardConfig,
             dashboardName,
+            themeId,
           },
         });
         cb({ dashboardConfig: newDashboardConfig, dashboardName });
