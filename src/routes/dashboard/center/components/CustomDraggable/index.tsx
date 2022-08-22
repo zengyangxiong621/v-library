@@ -762,8 +762,8 @@ const CustomDraggable
             }
           } else {
             // 组件
-            component = components.find(item => item.id === layer.id)
-            // component=timelineConfig
+            // component = components.find(item => item.id === layer.id)
+            component=timelineConfig
 
             if(component) {
               staticData = component.staticData
