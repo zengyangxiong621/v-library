@@ -99,7 +99,6 @@ const Header = props => {
   const handleHadLogouted=async ()=>{
     const token=localStorage.getItem('token')
     if (token && token.endsWith('x-gridsumdissector')) {
-      logout()
       forwardLogin()
     }else{
       const isLogoutSuccess=await handleLogout()
