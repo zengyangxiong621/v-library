@@ -102,11 +102,22 @@ const globalStroe={
           type: "setWorkspaceList",
           payload: data,
         });
-        const curWorkspace=localStorage.getItem('curWorkspace')
-        if(!curWorkspace && data.length){
-          // 将当前空间存入到localStorage
-          localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
+        let curWorkspace:any=localStorage.getItem('curWorkspace')
+        if(data.length){
+          if(curWorkspace){
+            const spaceItem = data?.find((item:any) => item.id === curWorkspace.id);
+            if(!spaceItem){
+              curWorkspace = null
+            }
+          }
+          if(!curWorkspace){
+            // 将当前空间存入到localStorage
+            localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
+          }
+        }else{
+          localStorage.removeItem('curWorkspace')
         }
+
       } catch (error) {
         console.log(error);
       }
