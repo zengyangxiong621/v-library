@@ -39,6 +39,7 @@ export default {
         type: "getDataContainerList",
         payload: dashboardId,
       })
+      previewDashboard = yield select(({ previewDashboard }: any) => previewDashboard)
       previewDashboard.dataContainerList.forEach(async(item: any) => {
         let data: any = null
         item.enable = item.modules.length > 0
