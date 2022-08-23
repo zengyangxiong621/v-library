@@ -61,7 +61,7 @@ export default {
       // 3、如果当前已经选择了空间了，就不设置默认空间了
       const self: any = yield select(({ workSpace }: any) => workSpace);
       let finalPayload: any = {};
-      if (!self.curWorkSpace.length) {
+      if (!self.curWorkSpace.length && data.length) {
         const { id, projectQuota, remainQuota } = data[0];
         finalPayload = {
           curWorkSpace: [id],
