@@ -10,7 +10,9 @@ import { DownOutlined } from '@ant-design/icons'
 
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
-
+const mapStateToProps = (state: any) => {
+  return state
+}
 const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   let accountId = userInfo.id
@@ -29,6 +31,11 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       payload: {
         accountId
       }
+    })
+    console.log('更新处理')
+    // 在这里调全局的方法
+    dispatch({
+      type:'global/getWorkspaceList'
     })
   }
   // 添加分组
@@ -112,5 +119,5 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
 }
 
 export default memo(connect(
-  ({ workSpace }: any) => ({ workSpace })
+  mapStateToProps
 )(LeftTree))
