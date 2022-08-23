@@ -56,7 +56,7 @@ const AddDataSource = (props: any) => {
    */
   const testConnect = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
-    const values = await addForm.validateFields(['port', 'username', 'password', 'host', 'database'])
+    const values = await addForm.validateFields(['port', 'username', 'password', 'host', 'database', 'serviceType'])
     const finalParams = {
       type: curDataType,
       rdbmsSourceConfig: {
@@ -86,7 +86,7 @@ const AddDataSource = (props: any) => {
    */
   const getDataBaseList = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
-    const values = await addForm.validateFields(['port', 'username', 'password', 'host'])
+    const values = await addForm.validateFields(['port', 'username', 'password', 'host', 'serviceType'])
     // 攒成目标参数
     const finalParams = {
       ...values,
@@ -228,7 +228,7 @@ const AddDataSource = (props: any) => {
   const selectedChange = (val: string) => {
     setCurDataType(val)
     // 清除剩余表单中已录入的信息
-    addForm.resetFields(['host', 'port', 'username', 'password', 'database',])
+    addForm.resetFields(['host', 'port', 'username', 'password', 'database','serviceType'])
   }
   // 选择数据库名
   const selectDatabase = (val: string) => {
@@ -428,7 +428,7 @@ const AddDataSource = (props: any) => {
           {/*//TODO MYSQL数据库 和 PGSQL暂时先共用一个，已经明确两者有差异，视后续的改动决定是否单独抽出去 */
           }
           {
-            (curDataType === 'MYSQL' || curDataType === 'POSTGRESQL') && (
+            (curDataType === 'MYSQL' || curDataType === 'POSTGRESQL' || curDataType === 'SQLSERVER' || curDataType === 'CLICKHOUSE' || curDataType === 'ORACLE') && (
               <>
                 <Form.Item label="连接地址" name="host" rules={generateSingleRules(true, '请输入链接地址')}>
                   <Input className="setBackColor"
@@ -470,6 +470,27 @@ const AddDataSource = (props: any) => {
                     maxLength={20}
                   />
                 </Form.Item>
+                { curDataType === 'ORACLE' && (
+                    <Form.Item
+                      label="服务类型"
+                      name="serviceType"
+                      rules={generateSingleRules(true, '请选择服务类型')}
+                      initialValue="SERVICE_NAME"
+                    >
+                      <Select
+                        className='setBackColor' placeholder="请选择服务类型"
+                        dropdownStyle={{ backgroundColor: '#232630' }}
+                      >
+                        {
+                          dataServiceType.map((item: any) => (
+                            <Option key={item.value} value={item.value}>
+                              {item.label}
+                            </Option>
+                          ))
+                        }
+                      </Select>
+                    </Form.Item>
+                )}
                 <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, '请选择数据库')}>
                   <div className='dataBaseName'>
                     <Spin spinning={getDBListLoading}>
@@ -640,6 +661,29 @@ const dataSourceType: TSelectOptionItems[] = [
     label: 'ELASTIC_SEARCH',
     value: 'ELASTIC_SEARCH'
   },
+  {
+    label: 'ORACLE',
+    value: 'ORACLE'
+  },
+  {
+    label: 'SQLSERVER',
+    value: 'SQLSERVER'
+  },
+  {
+    label: 'CLICKHOUSE',
+    value: 'CLICKHOUSE'
+  },
+]
+// 可选择的服务类型
+const dataServiceType: TSelectOptionItems[] = [
+  {
+    label: 'SERVICE_NAME',
+    value: 'SERVICE_NAME'
+  },
+  {
+    label: 'SID',
+    value: 'SID',
+  }
 ]
 // @mark 关系型数据库 统一对应的是 'rdbms'
 // 因为后端的类型不一定与界面上展示的数据源类型名一致（例如：api <=> RESTFUL_API) 所以，直接做个映射
@@ -652,6 +696,9 @@ const dataTypeClassify: any = new Map([
   ['POSTGRESQL', 'rdbms'],
   ['MYSQL', 'rdbms'],
   ['ELASTIC_SEARCH', 'es'],
+  ['ORACLE', 'rdbms'],
+  ['SQLSERVER', 'rdbms'],
+  ['CLICKHOUSE', 'rdbms'],
 ])
 
 // 单选框 CSV类型- 编码格式
