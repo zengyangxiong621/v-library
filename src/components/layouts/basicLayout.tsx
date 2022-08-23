@@ -71,6 +71,7 @@ class BasicLayout extends Component<Props, State> {
     const { childRoutes } = routerData
     const { pathname } = location
     const { menuData,userInfo, workspaceList } = global
+    const isWorkspace = window.location.href.indexOf('work-space') > -1
     let _menuData:any = []
     if(userInfo){
       const menusNameArr = (userInfo.menus || []).map((item:any)=>item.name)
@@ -89,7 +90,7 @@ class BasicLayout extends Component<Props, State> {
           <Layout>
             {!needHeader && <CustomHeader {...this.props} menuData={_menuData} defaultPath={defaultPath}></CustomHeader>}
             {
-              workspaceList.length ?
+              workspaceList.length || isWorkspace  ?
               <Content>
                 {
                   _menuData && _menuData.length ? 

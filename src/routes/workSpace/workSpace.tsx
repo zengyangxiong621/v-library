@@ -81,11 +81,12 @@ const workSpace = (props: any) => {
      */
     const getUserList = async() => {
       const data = await http({
-        url: `/visual/user/list`,
+        url: `/visual/user/queryUnjoinedUserList`,
         method: 'post',
         body: {
           pageNo: 1,
-          pageSize: 1000
+          pageSize: 1000,
+          spaceId: workSpace.curWorkSpace[0]
         }
       })
       setUserInfoList(data.content)
@@ -95,7 +96,7 @@ const workSpace = (props: any) => {
   useEffect(() => {
     getDataDispatch({ accountId: global.userInfo.id }, 'getWorkSpaceList')
     // 获取用户列表
-    getUserList()
+    // getUserList()
   }, []);
   // 设置项目配额
   useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota])
@@ -152,6 +153,7 @@ const workSpace = (props: any) => {
   // 添加成员
   const changeAddMemberModal = () => {
     setShowAddMemberModal(!showAddMemberModal);
+    getUserList()
   };
   // 表格中的删除事件
   const delClick = async (rowId: string) => {
@@ -248,7 +250,6 @@ const workSpace = (props: any) => {
             userIdList
           }
         })
-        console.log(data,'数据')
         refreshMemberList(workSpace.curWorkSpace[0])
         cancelAddMemberModal()
         setSubLoading(false)
@@ -256,7 +257,6 @@ const workSpace = (props: any) => {
         setSubLoading(false)
       }
     }
-    
    };
 
   const handleChangeRole = (data:any) => {

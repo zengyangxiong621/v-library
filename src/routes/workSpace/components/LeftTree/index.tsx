@@ -38,10 +38,10 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       id: 'aInput',
       name: "占位的input",
     }
-    // 插入的输入框是在数组的倒数第二个位置
+    // 插入的输入框是在数组的最后一位
     const origin = workSpace.workSpaceList[0].children
-    if (origin[origin.length - 2].id === 'aInput') {
-      workSpace.workSpaceList[0].children.splice(-2, 1)
+    if (origin[origin.length - 1]?.id === 'aInput') {
+      workSpace.workSpaceList[0].children.splice(origin.length - 1, 1)
       const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList))
       dispatch({
         type: 'workSpace/setWorkSpaceList',
@@ -50,7 +50,7 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       return
     }
     // 增加一个占位数据
-    workSpace.workSpaceList[0].children.splice(-1, 0, mockItem)
+    workSpace.workSpaceList[0].children.splice(origin.length, 0, mockItem)
     const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList))
     dispatch({
       type: 'workSpace/setWorkSpaceList',
