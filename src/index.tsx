@@ -48,13 +48,18 @@ const checkToken = async() => {
   if(!token){
     try{
       await authorize()
+      init()
     }catch(err){
       if (!pn.endsWith('/login')) {
         forwardLogin()
+      }else{
+        init()
       }
     }
+  }else{
+    init()
   }
-  init()
+ 
 }
 checkToken()
 
