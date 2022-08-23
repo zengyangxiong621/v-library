@@ -105,6 +105,7 @@ const globalStroe={
         let curWorkspace:any=localStorage.getItem('curWorkspace')
         if(data.length){
           if(curWorkspace){
+            curWorkspace = JSON.parse(curWorkspace)
             const spaceItem = data?.find((item:any) => item.id === curWorkspace.id);
             if(!spaceItem){
               curWorkspace = null
