@@ -62,7 +62,7 @@ const TabArray = props => {
         tabs.splice(index, 1)
         setActiveKey(String(index - 1 > 1 ? index - 1 : 1))
         _data.activeKey = String(index - 1 > 1 ? index - 1 : 1)
-
+        console.log('_data.activeKey', _data.activeKey)
       }
       tabs.forEach((tab, index) => {
         const unit = tab.displayName.replace(/\d/, '')
@@ -70,7 +70,7 @@ const TabArray = props => {
         tab.displayName = unit + (index + 1)
         tab.key = String(index + 1)
       })
-      props.onChange()
+      props.onChange(_data.activeKey)
     }
 
     return (

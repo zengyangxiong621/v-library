@@ -261,7 +261,7 @@ const InstrumentPanel = (props) => {
               [0.9, '#75dcf5'],
               //...
               [1, '#75dcf5'],
-              
+
             ],
             width: 2,
             opacity: 0.8
@@ -295,7 +295,6 @@ const InstrumentPanel = (props) => {
         detail: {
           valueAnimation: true,
           formatter: function (value) {
-            console.log('value',value)
             const string = value +""
             const number = string.replace(/(?=\B(\d{3})+$)/g,',')
             return '{num|'+number+'}';

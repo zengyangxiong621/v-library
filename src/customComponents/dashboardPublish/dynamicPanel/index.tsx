@@ -3,6 +3,7 @@ import {connect} from 'dva'
 import {Button} from 'antd'
 import {useSetState} from 'ahooks'
 import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
+import RecursiveComponent from '@/routes/publishDashboard/components/recursiveComponent'
 import {http} from '@/services/request'
 import * as React from 'react'
 import {
@@ -15,8 +16,8 @@ interface State {
   [key: string]: any;
 }
 import {layersPanelsFlat} from '@/utils'
-const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panels}: any) => {
-  const componentData = previewDashboard.componentData;
+const DynamicPanel = ({publishDashboard, id, dispatch, panels}: any) => {
+  const componentData = publishDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id)
   // 获取面板想起接口
   const {states, config, name, type} = panel
@@ -69,7 +70,7 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
         body: {
           moduleId: component.id,
           dataType: component.dataType,
-          callBackParamValues: previewDashboard.callbackArgs,
+          callBackParamValues: publishDashboard.callbackArgs,
         },
       });
 
@@ -106,7 +107,7 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
   //
   useEffect(() => {
     let timer: any = null
-    if (!isDashboard && state.isLoading && allowScroll) {
+    if (state.isLoading && allowScroll && state.allData.length > 1) {
       timer = setInterval(() => {
         let currentIndex = state.activeIndex + 1
         if (currentIndex === state.allData.length) {
@@ -155,13 +156,17 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
         clearInterval(timer)
       }
     }
-  }, [state.isLoading, state.activeIndex])
+  }, [state.isLoading, state.activeIndex, state.allData.length])
 
   return (
     <div className={`dynamic-panel panel-${id}`} style={{ overflow: state.overflow, width: '100%', height: '100%'}}>
       {
-        (isDashboard && state.allData.length) >
-        0 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
+        state.allData.length === 1 ? <RecursiveComponent
+            layersArr={state.allData[0].layers}
+            publishDashboard={publishDashboard}
+            dispatch={dispatch}
+            componentLists={state.allData[0].components}
+            panels={state.allData[0].panels}/>
           :
           state.allData.map((item: any, index: number) =>
             (
@@ -174,7 +179,12 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
                   display: state.activeIndex === index ? 'block' : 'none',
                   transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
-                <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels}/>
+                <RecursiveComponent
+                  layersArr={item.layers}
+                  publishDashboard={publishDashboard}
+                  dispatch={dispatch}
+                  componentLists={item.components}
+                  panels={item.panels}/>
               </div>
             )
           )

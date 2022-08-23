@@ -94,12 +94,24 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       "name": "scrollTime",
       "type": "number",
       "value": scrollTime,
+      "config": {
+        "suffix": "ms",
+        "max": 100000000,
+        "min": 0,
+        "step": 1000
+      }
     },
     {
       "displayName": "动画时长",
       "name": "animationTime",
       "type": "number",
       "value": animationTime,
+      "config": {
+        "suffix": "ms",
+        "max": 24000,
+        "min": 0,
+        "step": 1000
+      }
     }
   ]
 
