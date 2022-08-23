@@ -245,13 +245,13 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
               >
                 {
                   <RecursiveComponent
-                  layersArr={layers}
-                  componentLists={components}
-                  panels={panels}
-                  publishDashboard={publishDashboard}
-                  dispatch={dispatch}
-                  scaleValue={scaleValue}
-                  scaleMode={scaleMode}
+                    layersArr={layers}
+                    componentLists={components}
+                    panels={panels}
+                    publishDashboard={publishDashboard}
+                    dispatch={dispatch}
+                    scaleValue={scaleValue}
+                    scaleMode={scaleMode}
                 />
                 }
               </div>
