@@ -253,7 +253,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
         },
       },
     })
-    await http({
+    const data = await http({
       url: '/visual/panel/update',
       method: 'post',
       body: {
@@ -263,6 +263,9 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
         ],
       },
     })
+    if (!data) {
+      copyPanelConfig.states.pop()
+    }
   }, 300)
 
 
