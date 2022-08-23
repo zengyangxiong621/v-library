@@ -10,7 +10,7 @@ import { Spin } from 'antd'
 import RecursiveComponent from './components/recursiveComponent'
 import { calcCanvasSize } from '../../utils'
 
-const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
+const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(false)
   // 接口中返回的 当前屏幕设置信息
@@ -109,7 +109,6 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
           finalOverflowStyle.overflowY = 'auto'
           setScaleStyle({transform: `scale(${wRatio2})`})
         }
-        // console.log('finalOverflowStyle', finalOverflowStyle);
         setOverflowStyle(finalOverflowStyle)
         break;
     }
@@ -143,7 +142,7 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
     init()
     return () => {
       dispatch({
-        type: 'bar/clearCurrentDashboardData'
+        type: 'publishDashboard/clearCurrentDashboardData'
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,22 +187,24 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
   useEffect(() => {
-    const data = deepClone(bar.treeData)
+    const data = deepClone(publishDashboard.treeData)
     treeDataReverse(data)
     setLayers(data)
-    setComponents(bar.components)
-    setPanels(bar.panels)
+    setComponents(publishDashboard.components)
+    setPanels(publishDashboard.panels)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bar.treeData])
+  }, [publishDashboard.treeData])
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
   const initDashboard = (cb = function () { }) => {
     return new Promise((resolve, reject) => {
       const dashboardId = window.location.pathname.split('/')[2]
       dispatch({
-        type: 'bar/initDashboard',
-        payload: {dashboardId},
+        type: 'publishDashboard/initDashboard',
+        payload: {
+          dashboardId,
+        },
         cb: (data: any) => {
           resolve(data)
         }
@@ -247,7 +248,7 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
                   layersArr={layers}
                   componentLists={components}
                   panels={panels}
-                  bar={bar}
+                  publishDashboard={publishDashboard}
                   dispatch={dispatch}
                   scaleValue={scaleValue}
                   scaleMode={scaleMode}
@@ -268,5 +269,5 @@ const PublishedDashBoard = ({ dispatch, bar, history, location }: any) => {
 }
 
 export default memo(connect(
-  ({ bar }: any) => ({ bar })
+  ({ publishDashboard }: any) => ({ publishDashboard })
 )(withRouter(PublishedDashBoard)))

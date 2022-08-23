@@ -157,11 +157,6 @@ const workSpace = (props: any) => {
   const delClick = async (rowId: string) => {
     Modal.confirm({
       title: '删除成员',
-      // centered: true,
-      style: {
-        // 调整浮层位置
-        top: '30%'
-      },
       okButtonProps: {
         style: {
           backgroundColor: '#e9535d',
@@ -190,7 +185,6 @@ const workSpace = (props: any) => {
             userIdList: [rowId]
           }
         })
-        console.log(data,'data')
         if (data) {
           refreshMemberList(workSpace.curWorkSpace[0])
         } else {
@@ -304,10 +298,20 @@ const workSpace = (props: any) => {
       render: (text: any) => <span>{text}</span>,
     },
     {
-      title: "ID",
-      key: "id",
+      title: "账户名",
+      dataIndex: "userName",
+      key: "userName",
+      // showSorterTooltip: false,
+      width: 250,
+      className: "customHeaderColor",
       ellipsis: true,
-      dataIndex: "id",
+      render: (text: any) => <span>{text}</span>,
+    },
+    {
+      title: "用户Id",
+      key: "userId",
+      ellipsis: true,
+      dataIndex: "userId",
       width: 250,
     },
     {

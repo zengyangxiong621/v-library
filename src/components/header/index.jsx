@@ -147,7 +147,7 @@ const Header = props => {
     setModalVisible(false)
   }
   const getWorkSpaceMenus = () => {
-    let isFindSpace = userInfo.menus.find(item => item.url === '/work-space')
+    let isFindSpace = userInfo?.menus.find(item => item.url === '/work-space');
     return (
       <Menu
         className="cus-dropdown-menu"

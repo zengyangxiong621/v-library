@@ -3,7 +3,7 @@ import ComponentDefaultConfig from './config'
 import { DatePicker } from 'antd'
 import ReactDOM from 'react-dom'
 import moment from 'moment'
-import { styleTransformFunc } from '../../utils'
+import { styleTransformFunc } from '@/utils'
 // import './index.less'
 const { RangePicker } = DatePicker
 const formatEnum = [

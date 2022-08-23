@@ -2,7 +2,7 @@ import {DOMElement, useEffect, useRef, useState, RefObject} from 'react'
 import {connect} from 'dva'
 import {Button} from 'antd'
 import {useSetState} from 'ahooks'
-import CustomDraggable from '../../routes/dashboard/center/components/CustomDraggable'
+import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
 import {http} from '@/services/request'
 import * as React from 'react'
 import {
@@ -14,7 +14,7 @@ interface State {
 
   [key: string]: any;
 }
-
+import {layersPanelsFlat} from '@/utils'
 const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
   const componentData = bar.componentData;
   const panel = panels.find((item: IPanel) => item.id === id)
@@ -33,11 +33,14 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
     isLoading: false,
   })
   const getPanelDetails = async ({name, id}: { name: string; id: string }) => {
-    const {components, layers, dashboardConfig, panels} = await http({
+    const {components, layers, dashboardConfig} = await http({
       url: `/visual/application/dashboard/detail/${id}`,
       method: "get",
     });
+    const layerPanels: any = layersPanelsFlat(layers)
+    const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
+    treeDataReverse(layers)
     return {
       components,
       layers,
@@ -45,6 +48,17 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
       id,
       name,
       panels
+    }
+  }
+  const getStateDetails = async (layerPanel: any) => {
+    try {
+      const panelConfig = await http({
+        url: `/visual/panel/detail/${ layerPanel.id }`,
+        method: 'get',
+      })
+      return panelConfig
+    } catch(e) {
+      return null
     }
   }
   const getComponentData = async (component: any) => {
@@ -144,7 +158,7 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
   }, [state.isLoading, state.activeIndex])
 
   return (
-    <div className={`dynamic-panel panel-${id}`} style={{pointerEvents: 'none', overflow: state.overflow, width: '100%', height: '100%'}}>
+    <div className={`dynamic-panel panel-${id}`} style={{ overflow: state.overflow, width: '100%', height: '100%'}}>
       {
         (isDashboard && state.allData.length) >
         0 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>

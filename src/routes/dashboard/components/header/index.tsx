@@ -124,12 +124,12 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
       case 'yulan':
         toPreviewOrPublish(icon)
         break;
-      // case 'dongtaimianban':
-      //   createPanel(0)
-      //   break;
-      // case 'yinyongmianban':
-      //   createPanel(1)
-      //   break;
+      case 'dongtaimianban':
+        createPanel(0)
+        break;
+      case 'yinyongmianban':
+        createPanel(1)
+        break;
     }
   }
 
