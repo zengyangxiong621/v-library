@@ -1,6 +1,6 @@
 import ComponentDefaultConfig from './config'
 import * as echarts from 'echarts'
-import EC from '../../EC'
+import EC from '../../../EC'
 import React from 'react'
 
 const BasicBar = (props) => {
@@ -8,7 +8,6 @@ const BasicBar = (props) => {
   const { config } = componentConfig
   const { data } = componentConfig.staticData
   const componentData = props.comData || data // 过滤后的数据
-  const componentThemeConfig = props.themeConfig
 
   const fieldKey = props.fields || ['x', 'y', 's']
 
@@ -25,19 +24,16 @@ const BasicBar = (props) => {
   // 此时的 seriesMap <===> {'系列一' => {data:[1,2,3]}, '系列二' => {data:[4,5,6]}}
   // @Mark 后面还需要根据用户在“系列设置”中定义的<映射字段>再处理一次seriesMap
   let seriesMap = new Map()
-  let index = 0
   Array.isArray(componentData) && componentData.forEach((item) => {
     const seriesKey = item[fieldKey[2]]
     const newValue = item[fieldKey[1]]
     if (!seriesMap.has(seriesKey)) {
-      seriesMap.set(seriesKey, { data: [newValue], index })
-      index += 1
+      seriesMap.set(seriesKey, { data: [newValue] })
     } else {
       //@Mark newValue 需要放在后面，不然最后的得到的bar的data会颠倒
       const val = seriesMap.get(seriesKey)
       const barData = val.data || []
-      const indexTem = val.index
-      seriesMap.set(seriesKey, { data: [...barData, newValue], index: indexTem })
+      seriesMap.set(seriesKey, { data: [...barData, newValue] })
     }
   })
   /**
@@ -129,25 +125,17 @@ const BasicBar = (props) => {
   /**
   ** description: 通过不同的配置来获取不同的渲染配置
   */
-  const getSingleSeriesData = (barLabel, barColor, name, value, index) => {
-    const itemStyleColor = barColor?.type === 'pure'
-      ?
-      componentThemeConfig
-        ? componentThemeConfig.pureColors[index % 7]
-        : barColor?.pureColor
-      :
+  const getSingleSeriesData = (barLabel, barColor, name, value) => {
+    const itemStyleColor = barColor?.type === 'pure' ?
+      barColor?.pureColor :
       barColor?.type === 'gradient' ?
         new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
           offset: 0,
-          color: componentThemeConfig
-            ? componentThemeConfig.gradientColors[index % 7][0].color
-            : barColor?.gradientStart
+          color: barColor?.gradientStart
         },
         {
           offset: 1,
-          color: componentThemeConfig
-            ? componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
-            : barColor?.gradientEnd
+          color: barColor?.gradientEnd
         }
         ])
         : '#1890ff'
@@ -162,9 +150,7 @@ const BasicBar = (props) => {
             show: barLabel.show,
             position: "top",
             textStyle: {
-              color: componentThemeConfig
-                ? componentThemeConfig.textColor
-                : barLabel.font.color,
+              color: barLabel.font.color,
               fontSize: barLabel.font.fontSize,
               fontFamily: barLabel.font.fontFamily,
               fontWeight: barLabel.font.bold ? 'bold' : 'normal',
@@ -198,7 +184,7 @@ const BasicBar = (props) => {
     if (targetObj) {
       // 获取 最终折线绘制的配置
       const { barLabel, barColor } = targetObj
-      singleSeriesData = getSingleSeriesData(barLabel, barColor, key, value.data, value.index)
+      singleSeriesData = getSingleSeriesData(barLabel, barColor, key, value.data)
       // 获取 最终每个图例应该展示的文本
       const { displayName } = targetObj.mapping || { displayName: key }
       legendTextReflect[key] = displayName
@@ -224,9 +210,7 @@ const BasicBar = (props) => {
           type: 'line',
           lineStyle: {
             width: indicatorWidth,
-            color: componentThemeConfig
-              ? componentThemeConfig.assistColor
-              : indicatorStyleColor,
+            color: indicatorStyleColor,
             type: 'solid',
           },
         },
@@ -242,9 +226,7 @@ const BasicBar = (props) => {
         itemWidth: iconSize.iconWidth,
         itemHeight: iconSize.iconHeight,
         textStyle: {
-          color: componentThemeConfig
-            ? componentThemeConfig.textColor
-            : legendTextStyle && legendTextStyle.color,
+          color: legendTextStyle && legendTextStyle.color,
           fontSize: legendTextStyle && legendTextStyle.fontSize,
           fontFamily: legendTextStyle && legendTextStyle.fontFamily,
           fontWeight:
@@ -267,9 +249,7 @@ const BasicBar = (props) => {
             show: xAxisLineShow,
             lineStyle: {
               width: xAxisLineWeight,
-              color: componentThemeConfig
-                ? componentThemeConfig.assistColor
-                : xAxisLineColor,
+              color: xAxisLineColor,
             },
           },
           axisTick: {
@@ -279,9 +259,7 @@ const BasicBar = (props) => {
             show: true,
             fontFamily: xAxisLabelTextStyle.fontFamily,
             lineHeight: xAxisLabelTextStyle.lineHeight,
-            color: componentThemeConfig
-              ? componentThemeConfig.textColor
-              : xAxisLabelTextStyle.color,
+            color: xAxisLabelTextStyle.color,
             rotate: xAxisLabelRotate,
             fontSize: xAxisLabelTextStyle.fontSize,
             fontStyle: xAxisLabelTextStyle.italic ? 'italic' : 'normal',
@@ -309,9 +287,7 @@ const BasicBar = (props) => {
           [yAxisUnitShow && 'nameGap']: yAxisUnitOffset.yAxisUnitOffsetY,
           [yAxisUnitShow && 'nameTextStyle']: {
             padding: [0, 0, 0, yAxisUnitOffset.yAxisUnitOffsetX],
-            color: componentThemeConfig
-              ? componentThemeConfig.textColor
-              : yAxisUnitTextStyle.color,
+            color: yAxisUnitTextStyle.color,
             fontSize: yAxisUnitTextStyle.fontSize,
             fontStyle: yAxisUnitTextStyle.italic ? 'italic' : 'normal',
             fontWeight: yAxisUnitTextStyle.bold ? 'bold' : 'normal',
@@ -321,16 +297,12 @@ const BasicBar = (props) => {
             show: yAxisLineShow,
             lineStyle: {
               width: yAxisLineWeight,
-              color: componentThemeConfig
-                ? componentThemeConfig.assistColor
-                : yAxisLineColor,
+              color: yAxisLineColor,
             },
           },
           axisLabel: {
             show: true,
-            color: componentThemeConfig
-              ? componentThemeConfig.textColor
-              : yAxisLabelTextStyle.color,
+            color: yAxisLabelTextStyle.color,
             rotate: yAxisLabelRotate,
             fontSize: yAxisLabelTextStyle.fontSize,
             fontStyle: yAxisLabelTextStyle.italic ? 'italic' : 'normal',
@@ -344,9 +316,7 @@ const BasicBar = (props) => {
             lineStyle: {
               type: 'dotted',
               width: ySplitLineWeight,
-              color: [componentThemeConfig
-                ? componentThemeConfig.gridColor
-                : ySplitLineColor],
+              color: [ySplitLineColor],
             }
           },
         },

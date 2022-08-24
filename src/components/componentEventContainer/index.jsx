@@ -6,11 +6,11 @@ import ScrollTable from '@/customComponents/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import CusImage from '@/customComponents/assist/image/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar'
+import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
-import RankingBar from '@/customComponents/echarts/components/rankingBar'
+import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.0'
 import Tab from '@/customComponents/tab'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
 import Counter from '@/customComponents/assist/counter2'
@@ -403,13 +403,11 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
       {
         props.componentConfig.moduleName === 'counter' ?
           <Counter
-            themeConfig={bar.componentThemeConfig}
             onChange={handleValueChange}
             {...props}
           ></Counter> :
           props.componentConfig.moduleName === 'rankingBar' ?
             <RankingBar
-              themeConfig={bar.componentThemeConfig}
               onChange={handleValueChange}
               {...props}
             >
@@ -417,7 +415,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
             :
             props.componentConfig.moduleName === 'image2' ?
               <CusImage
-                themeConfig={bar.componentThemeConfig}
                 onChange={handleValueChange}
                 {...props}
               >
@@ -425,7 +422,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
               :
               props.componentConfig.moduleName === 'zebraColumn' ?
                 <ZebraColumn
-                  themeConfig={bar.componentThemeConfig}
                   onChange={handleValueChange}
                   {...props}
                 >
@@ -433,7 +429,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                 :
                 props.componentConfig.moduleName === 'basicBar' ?
                   <BasicBar
-                    themeConfig={bar.componentThemeConfig}
                     onChange={handleValueChange}
                     {...props}
                   >
@@ -441,7 +436,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                   :
                   props.componentConfig.moduleName === 'worldMap' ?
                     <WorldMap
-                      themeConfig={bar.componentThemeConfig}
                       onChange={handleValueChange}
                       {...props}
                     >
@@ -456,7 +450,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                     // :
                     props.componentConfig.moduleName === 'select2' ?
                       <SelectV2
-                        themeConfig={bar.componentThemeConfig}
                         onChange={handleValueChange}
                         {...props}
                       >
@@ -464,7 +457,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                       :
                       props.componentConfig.moduleName === 'bar' ?
                         <Bar
-                          themeConfig={bar.componentThemeConfig}
                           onChange={handleValueChange}
                           {...props}
                         >
@@ -472,7 +464,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                         :
                         props.componentConfig.moduleName === 'scrollTable' ?
                           <ScrollTable
-                            themeConfig={bar.componentThemeConfig}
                             scale={scale}
                             onChange={handleValueChange}
                             {...props}
@@ -480,7 +471,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                           </ScrollTable>
                           : props.componentConfig.moduleName === 'tab' ?
                             <Tab
-                              themeConfig={bar.componentThemeConfig}
                               onChange={handleValueChange} // 状态变化，当请求完成/数据变化
                               onClick={handleClick}
                               onMouseEnter={handleMouseEnter}
@@ -490,14 +480,12 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                             </Tab>
                             : props.componentConfig.moduleName === 'scrollSelect' ?
                               <ScrollSelect
-                                themeConfig={bar.componentThemeConfig}
                                 onChange={handleValueChange}
                                 {...props}
                               >
                               </ScrollSelect>
                               : props.componentConfig.moduleName === 'timeSelect' ?
                                 <TimeSelect
-                                  themeConfig={bar.componentThemeConfig}
                                   scale={scale}
                                   onChange={handleValueChange}
                                   {...props}
@@ -505,13 +493,11 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                                 </TimeSelect>
                                 : props.componentConfig.moduleName === 'worldMap' ?
                                   <WorldMap
-                                    themeConfig={bar.componentThemeConfig}
                                     {...props}
                                   >
                                   </WorldMap>
                                   : props.componentConfig.moduleName === 'timeline' ?
                                     <Timeline
-                                      themeConfig={bar.componentThemeConfig}
                                       {...props}
                                     >
                                     </Timeline>
@@ -531,7 +517,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                                     // </CardFlipper2>
                                     : props.componentConfig.moduleName === 'instrumentPanel_3' ?
                                       <InstrumentPanel3
-                                        themeConfig={bar.componentThemeConfig}
                                         scale={scale}
                                         onChange={handleValueChange}
                                         {...props}
@@ -539,7 +524,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                                       </InstrumentPanel3>
                                       : props.componentConfig.moduleName === 'instrumentPanel_4' ?
                                         <InstrumentPanel4
-                                          themeConfig={bar.componentThemeConfig}
                                           scale={scale}
                                           onChange={handleValueChange}
                                           {...props}
@@ -559,7 +543,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                                           <RemoteBaseComponent
                                             {...props}
                                             scale={scale}
-                                            themeConfig={bar.componentThemeConfig}
                                             onChange={handleValueChange}
                                           ></RemoteBaseComponent>
                                         </ErrorCatch>

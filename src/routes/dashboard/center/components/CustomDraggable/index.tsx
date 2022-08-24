@@ -12,6 +12,7 @@ import { generateTreeData } from '../../../../../utils/sideBar'
 import SingleComponent from '../singleComponent'
 import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getComDataWithFilters, getFields } from '@/utils/data'
+import { setComponentThemeConfigs } from '@/utils/syncJitStorage'
 import BasicPieChart from '@/customComponents/echarts/components/basicPie'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
@@ -68,10 +69,10 @@ import {
 import ScrollTable from "@/customComponents/scrollTable/index";
 import TimeSelect from "@/customComponents/timeSelect/index";
 import SelectV2 from '@/customComponents/assist/select/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar'
+import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
 import CusImage from '@/customComponents/assist/image/index'
-import RankingBar from '@/customComponents/echarts/components/rankingBar'
+import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.0'
 
 import Tab from '@/customComponents/tab/index'
 import ScrollSelect from '@/customComponents/scrollSelect/index'
@@ -706,6 +707,10 @@ const CustomDraggable
       }
 
     }
+
+    const onThemeChange = (val:any) => {
+      setComponentThemeConfigs(val.id,val)
+    }
     return (
       <div className="c-custom-draggable">
         {
@@ -899,6 +904,7 @@ const CustomDraggable
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}
+                                    onThemeChange={onThemeChange}
                                     componentConfig={component}
                                     fields={getFields(component)}
                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
@@ -906,6 +912,7 @@ const CustomDraggable
                                   layer.moduleName === 'rankingBar' ?
                                     <RankingBar
                                       themeConfig={bar.componentThemeConfig}
+                                      onThemeChange={onThemeChange}
                                       onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                       scale={bar.canvasScaleValue}
                                       componentConfig={component}
@@ -916,6 +923,7 @@ const CustomDraggable
                                     layer.moduleName === 'zebraColumn' ?
                                       <ZebraColumn
                                         themeConfig={bar.componentThemeConfig}
+                                        onThemeChange={onThemeChange}
                                         onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                         scale={bar.canvasScaleValue}
                                         componentConfig={component}
@@ -926,6 +934,7 @@ const CustomDraggable
                                       layer.moduleName === 'basicBar' ?
                                         <BasicBar
                                           themeConfig={bar.componentThemeConfig}
+                                          onThemeChange={onThemeChange}
                                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                           scale={bar.canvasScaleValue}
                                           componentConfig={component}
@@ -936,6 +945,7 @@ const CustomDraggable
                                         layer.moduleName === 'image2' ?
                                           <CusImage
                                             themeConfig={bar.componentThemeConfig}
+                                            onThemeChange={onThemeChange}
                                             onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                             scale={bar.canvasScaleValue}
                                             componentConfig={component}
@@ -946,6 +956,7 @@ const CustomDraggable
                                           layer.moduleName === 'select2' ?
                                             <SelectV2
                                               themeConfig={bar.componentThemeConfig}
+                                              onThemeChange={onThemeChange}
                                               onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                               scale={bar.canvasScaleValue}
                                               componentConfig={component}
@@ -956,6 +967,7 @@ const CustomDraggable
                                             layer.moduleName === 'bar' ?
                                               <Bar
                                                 themeConfig={bar.componentThemeConfig}
+                                                onThemeChange={onThemeChange}
                                                 onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                 scale={bar.canvasScaleValue}
                                                 componentConfig={component}
@@ -966,6 +978,7 @@ const CustomDraggable
                                               layer.moduleName === 'scrollTable' ?
                                                 <ScrollTable
                                                   themeConfig={bar.componentThemeConfig}
+                                                  onThemeChange={onThemeChange}
                                                   onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                   scale={bar.canvasScaleValue}
                                                   componentConfig={component}
@@ -976,6 +989,7 @@ const CustomDraggable
                                                 layer.moduleName === 'tab' ?
                                                   <Tab
                                                     themeConfig={bar.componentThemeConfig}
+                                                    onThemeChange={onThemeChange}
                                                     onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                     componentConfig={component}
                                                     fields={getFields(component)}
@@ -985,6 +999,7 @@ const CustomDraggable
                                                   layer.moduleName === 'scrollSelect' ?
                                                     <ScrollSelect
                                                       themeConfig={bar.componentThemeConfig}
+                                                      onThemeChange={onThemeChange}
                                                       onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                       componentConfig={component}
                                                       fields={getFields(component)}
@@ -994,6 +1009,7 @@ const CustomDraggable
                                                     layer.moduleName === 'timeSelect' ?
                                                       <TimeSelect
                                                         themeConfig={bar.componentThemeConfig}
+                                                        onThemeChange={onThemeChange}
                                                         onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                         componentConfig={component}
                                                         fields={getFields(component)}
@@ -1003,6 +1019,7 @@ const CustomDraggable
                                                       layer.moduleName === 'worldMap' ?
                                                         <WorldMap
                                                           themeConfig={bar.componentThemeConfig}
+                                                          onThemeChange={onThemeChange}
                                                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                           componentConfig={component}
                                                           fields={getFields(component)}
@@ -1011,6 +1028,7 @@ const CustomDraggable
                                                         layer.moduleName === 'chinaMap' ?
                                                           <ChinaMap
                                                             themeConfig={bar.componentThemeConfig}
+                                                            onThemeChange={onThemeChange}
                                                             onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                             componentConfig={component}
                                                             fields={getFields(component)}
@@ -1019,6 +1037,7 @@ const CustomDraggable
                                                           layer.moduleName === 'timeline' ?
                                                             <Timeline
                                                               themeConfig={bar.componentThemeConfig}
+                                                              onThemeChange={onThemeChange}
                                                               onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                               componentConfig={component}
                                                               fields={getFields(component)}
@@ -1044,6 +1063,7 @@ const CustomDraggable
                                                             layer.moduleName === 'instrumentPanel_3' ?
                                                               <InstrumentPanel3
                                                                 themeConfig={bar.componentThemeConfig}
+                                                                onThemeChange={onThemeChange}
                                                                 onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                 componentConfig={component}
                                                                 fields={getFields(component)}
@@ -1052,6 +1072,7 @@ const CustomDraggable
                                                               layer.moduleName === 'instrumentPanel_1' ?
                                                                 <InstrumentPanel1
                                                                   themeConfig={bar.componentThemeConfig}
+                                                                  onThemeChange={onThemeChange}
                                                                   onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                   componentConfig={component}
                                                                   fields={getFields(component)}
@@ -1060,6 +1081,7 @@ const CustomDraggable
                                                                 layer.moduleName === 'instrumentPanel_4' ?
                                                                   <InstrumentPanel4
                                                                     themeConfig={bar.componentThemeConfig}
+                                                                    onThemeChange={onThemeChange}
                                                                     onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                     componentConfig={component}
                                                                     fields={getFields(component)}
@@ -1078,6 +1100,7 @@ const CustomDraggable
                                                                     <RemoteBaseComponent
                                                                       key={layer.id}
                                                                       themeConfig={bar.componentThemeConfig}
+                                                                      onThemeChange={onThemeChange}
                                                                       componentConfig={component}
                                                                       fields={getFields(component)}
                                                                       comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}

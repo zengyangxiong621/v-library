@@ -6,6 +6,7 @@ import {
   Drawer,
   Collapse,
   Button,
+  message,
 } from 'antd';
 
 import {
@@ -15,8 +16,9 @@ import {
 import ThemeItem from './themeItem'
 
 import { cloneDeep } from 'lodash'
-import { v4 as uuidv4 } from 'uuid';
 import { http } from '../../../../services/request'
+import { find } from '../../../../utils/common'
+import { deleteAllComponentThemeConfigs, getComponentThemeConfigs } from '@/utils/syncJitStorage'
 
 const themeListTmp = [
   {
@@ -184,44 +186,47 @@ const themeListTmp = [
     backgroundColor: '#000000'
   }
 ]
-let componentThemeId = null
 const ComponentTheme = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
 
   const drawerRef = useRef(null)
   const [activeId, setActiveId] = useState(null)
-  const [themeList, setThemeList] = useState([])
+  const [themeData, setThemeData] = useState({})
   useEffect(() => {
     if (props.visible) {
-      console.log('init---------')
-      setThemeList(themeListTmp)
+      getThemeList()
     }
   }, [props.visible])
 
-  useEffect(() => {
-    componentThemeId = bar.themeId
-  }, [bar.themeId])
+  const getThemeList = async () => {
+    const curWorkspace = localStorage.getItem('curWorkspace')
+    const spaceId = JSON.parse(curWorkspace).id
+    const data = await http({
+      url: `/visual/theme/list/${spaceId}`,
+      method: 'get',
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+    setThemeData(data)
+  }
+
 
   const onClose = () => {
     setActiveId(null)
     props.onChange(false)
-    // 如果当前画布没有使用主题风格及画布配置themeId为空或不存在，设置bar.componentThemeConfig = null
-    // 如果画布配置themeId不为空，则把themeId对应的主题风格写入bar.componentThemeConfig中
-    let componentThemeConfig = null
-    if (componentThemeId) {
-      componentThemeConfig = themeList.filter(theme => theme.id === componentThemeId)[0]
-    }
+    // 设置bar.componentThemeConfig = null
     dispatch({
       type: 'bar/save',
       payload: {
-        componentThemeConfig
+        componentThemeConfig: null
       }
     })
   }
 
   const onActiveIdChange = id => {
     setActiveId(id)
-    const currentTheme = themeList.filter(theme => theme.id === id)[0]
+    const currentTheme = [...themeData.custom, ...themeData.system].filter(theme => theme.id === id)[0]
     dispatch({
       type: 'bar/save',
       payload: {
@@ -231,27 +236,56 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
   }
 
   const onComfirm = async () => {
-    // TODO: 调用后端接口，保存当前主题的id到画布配置themeId中，同时把当前主题的id更新到bar.themeId中
-    // activeId 当前主题的id
+    const currentTheme = [...themeData.custom, ...themeData.system].filter(theme => theme.id === activeId)[0]
+    // 保存页面配置
+    const dashboardConfig = cloneDeep(bar.dashboardConfig)
+    const pageBgConfig = find(dashboardConfig, 'styleColor')
+    pageBgConfig.value = currentTheme.backgroundColor
+    const pageConfigParams = {
+      config: dashboardConfig,
+      dashboardId: bar.dashboardId
+    }
+    const { config } = await http({
+      url: '/visual/application/update',
+      method: 'post',
+      body: pageConfigParams,
+    })
     dispatch({
       type: 'bar/save',
       payload: {
-        themeId: activeId
+        dashboardConfig: config
       }
     })
-    componentThemeId = activeId
-    // const data = await http({
-    //   url: '/visual/module/filter/update',
-    //   method: 'POST',
-    //   body: {
-    //     id,
-    //     name,
-    //     callbackKeys,
-    //     content,
-    //     dashboardId: bar.dashboardId
-    //   }
-    // })
+
+    // 更新组件样式配置信息
+    const componentsStyleLists = Object.values(getComponentThemeConfigs())
+    const componentsStyleParams = {
+      configs: componentsStyleLists,
+      dashboardId: bar.dashboardId
+    }
+    await http({
+      url: '/visual/module/update',
+      method: 'post',
+      body: componentsStyleParams
+    })
+    deleteAllComponentThemeConfigs()
+
+    // 刷新组件中的画布
+    await dispatch({
+      type: 'bar/getDashboardDetails',
+      payload: bar.dashboardId
+    })
+    // 显示页面设置
+    await dispatch({
+      type: 'bar/save',
+      payload: {
+        key: [],
+        isPanel: false,
+        selectedComponentOrGroup: [],
+      }
+    })
     onClose()
+    message.success('主题应用成功')
   }
 
   return (
@@ -279,8 +313,8 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
           <Collapse defaultActiveKey={['1', '2']} className='custom-collapse'>
             <Panel header="系统主题" key="1">
               {
-                themeList.length ?
-                  themeList.map(theme => {
+                themeData?.system && themeData?.system.length ?
+                  themeData.system.map(theme => {
                     return <ThemeItem
                       key={theme.id}
                       detail={theme}
@@ -297,9 +331,21 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
 
             </Panel>
             {/* <Panel header="自定义主题" key="2">
-              <div className="com-theme-empty-info">
-                暂无数据
-              </div>
+            {
+                themeData?.custom && themeData?.custom.length ?
+                  themeData.custom.map(theme => {
+                    return <ThemeItem
+                      key={theme.id}
+                      detail={theme}
+                      activeId={activeId}
+                      onActiveIdChange={onActiveIdChange}
+                    />
+                  })
+                  :
+                  <div className="com-theme-empty-info">
+                    暂无数据
+                  </div>
+              }
             </Panel> */}
           </Collapse>
           <div className="com-theme-footer">
