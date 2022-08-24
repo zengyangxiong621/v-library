@@ -88,6 +88,8 @@ const DataSource = (props: any) => {
 
   // 下拉框选择
   const selectChange = (value: any) => {
+    // 全部类型 的  value为'', 传给后端需要转换一遍
+    if(value === '') value = null
     setDataSourceType(value)
   }
   // 按类型搜索
