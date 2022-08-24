@@ -168,7 +168,7 @@ const RightContent = (props: any) => {
       if (data) {
         let host = window.location.host
         const idInUrl = data.shareUrl.split('/').pop()
-        setFxljInputValue(`${host}/publishScreen/${idInUrl}`)
+        setFxljInputValue(`${host}/publishScreen/${idInUrl}?encrypt=${data.needPassword}`)
         if (data.needPassword) {
           // setJmfxValue()
           setIsShowJmfxInput(true)
@@ -222,7 +222,7 @@ const RightContent = (props: any) => {
       refreshList()
       let host = window.location.host
       const idInUrl = result.shareUrl.split('/').pop()
-      setFxljInputValue(`${host}/publishScreen/${idInUrl}`)
+      setFxljInputValue(`${host}/publishScreen/${idInUrl}?encrypt=${isShowJmfxInput}`)
       // 打开发布开关
       setFabuChecked(true)
       setIsShared(true)
@@ -280,6 +280,8 @@ const RightContent = (props: any) => {
       id: curAppId
     }
     setFabuBody(finalBody)
+    let curUrl = fxljInputValue.split('?')[0]
+    setFxljInputValue(`${curUrl}?encrypt=${isCheck}`)
     const result: any = await publishByDiffParams(finalBody)
     if (!result) {
       message.error({ content: '发布失败', duration: 2 })
