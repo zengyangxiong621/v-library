@@ -185,7 +185,7 @@ const RankingBar = (props) => {
             textStyle: {
               color: componentThemeConfig
                 ? componentThemeConfig.textColor
-                : classify.font.themeTextColor,
+                : classify?.font?.themeTextColor || '#fff',
               fontSize: classify.font.fontSize,
               fontFamily: classify.font.fontFamily,
               fontWeight: classify.font.bold ? 'bold' : 'normal',
@@ -203,19 +203,19 @@ const RankingBar = (props) => {
                 : colorSetting?.barColor?.type === 'pure' ?
                   componentThemeConfig
                     ? componentThemeConfig.pureColors[0]
-                    : colorSetting?.barColor?.themePureColor :
+                    : colorSetting?.barColor?.themePureColor || '#1890ff' :
                   colorSetting?.barColor?.type === 'gradient' ?
                     new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
                       offset: 0,
                       color: componentThemeConfig
                         ? componentThemeConfig.gradientColors[0].find(item => item.offset === 0).color
-                        : colorSetting?.barColor?.themeGradientColorStart
+                        : colorSetting?.barColor?.themeGradientColorStart || '#335DA3'
                     },
                     {
                       offset: 1,
                       color: componentThemeConfig
                         ? componentThemeConfig.gradientColors[0].find(item => item.offset === 100).color
-                        : colorSetting?.barColor?.themeGradientColorEnd
+                        : colorSetting?.barColor?.themeGradientColorEnd || '#95D0FF'
                     }
                     ])
                     : '#1890ff'
@@ -240,7 +240,7 @@ const RankingBar = (props) => {
             textStyle: {
               color: componentThemeConfig
                 ? componentThemeConfig.textColor
-                : numerical.font.themeTextColor,
+                : numerical?.font?.themeTextColor || '#fff',
               fontSize: numerical.font.fontSize,
               fontFamily: numerical.font.fontFamily,
               fontWeight: numerical.font.bold ? 'bold' : 'normal',
@@ -277,19 +277,19 @@ const RankingBar = (props) => {
               : colorSetting?.barColor?.type === 'pure' ?
                 componentThemeConfig
                   ? componentThemeConfig.pureColors[0]
-                  : colorSetting?.barColor?.themePureColor :
+                  : colorSetting?.barColor?.themePureColor || '#1890ff' :
                 colorSetting?.barColor?.type === 'gradient' ?
                   new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
                     offset: 0,
                     color: componentThemeConfig
                       ? componentThemeConfig.gradientColors[0].find(item => item.offset === 0).color
-                      : colorSetting?.barColor?.themeGradientColorStart
+                      : colorSetting?.barColor?.themeGradientColorStart || '#335DA3'
                   },
                   {
                     offset: 1,
                     color: componentThemeConfig
                       ? componentThemeConfig.gradientColors[0].find(item => item.offset === 100).color
-                      : colorSetting?.barColor?.themeGradientColorEnd
+                      : colorSetting?.barColor?.themeGradientColorEnd || '#95D0FF'
                   }
                   ])
                   : '#1890ff'
@@ -304,7 +304,7 @@ const RankingBar = (props) => {
             textStyle: {
               color: componentThemeConfig
                 ? componentThemeConfig.textColor
-                : classify.font.themeTextColor,
+                : classify?.font?.themeTextColor || '#fff',
               fontSize: classify.font.fontSize,
               fontFamily: classify.font.fontFamily,
               fontWeight: classify.font.bold ? 'bold' : 'normal',
@@ -336,7 +336,7 @@ const RankingBar = (props) => {
               textStyle: {
                 color: componentThemeConfig
                   ? componentThemeConfig.textColor
-                  : classify.font.themeTextColor,
+                  : classify?.font?.themeTextColor || "#fff",
                 fontSize: classify.font.fontSize,
                 fontFamily: classify.font.fontFamily,
                 fontWeight: classify.font.bold ? 'bold' : 'normal',
@@ -354,19 +354,19 @@ const RankingBar = (props) => {
                   : colorSetting?.barColor?.type === 'pure' ?
                     componentThemeConfig
                       ? componentThemeConfig.pureColors[0]
-                      : colorSetting?.barColor?.themePureColor :
+                      : colorSetting?.barColor?.themePureColor || '#1890ff' :
                     colorSetting?.barColor?.type === 'gradient' ?
                       new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
                         offset: 0,
                         color: componentThemeConfig
                           ? componentThemeConfig.gradientColors[0].find(item => item.offset === 0).color
-                          : colorSetting?.barColor?.themeGradientColorStart
+                          : colorSetting?.barColor?.themeGradientColorStart || '#335DA3'
                       },
                       {
                         offset: 1,
                         color: componentThemeConfig
                           ? componentThemeConfig.gradientColors[0].find(item => item.offset === 100).color
-                          : colorSetting?.barColor?.themeGradientColorEnd
+                          : colorSetting?.barColor?.themeGradientColorEnd || '#95D0FF'
                       }
                       ])
                       : '#1890ff'
@@ -419,7 +419,7 @@ const RankingBar = (props) => {
               textStyle: {
                 color: componentThemeConfig
                   ? componentThemeConfig.textColor
-                  : numerical.font.themeTextColor,
+                  : numerical?.font?.themeTextColor || '#fff',
                 fontSize: numerical.font.fontSize,
                 fontFamily: numerical.font.fontFamily,
                 fontWeight: numerical.font.bold ? 'bold' : 'normal',

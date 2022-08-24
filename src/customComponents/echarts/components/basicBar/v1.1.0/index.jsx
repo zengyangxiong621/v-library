@@ -60,11 +60,11 @@ const BasicBar = (props) => {
     const configOfTheme = JSON.parse(JSON.stringify(config))
     replaceThemeColor(configOfTheme)
     props.onThemeChange({
-        id:componentConfig.id,
-        name: componentConfig.name,
-        moduleName: componentConfig.moduleName,
-        moduleVersion: componentConfig.moduleVersion,
-        config:configOfTheme
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
+      config: configOfTheme
     })
   }
 
@@ -192,20 +192,20 @@ const BasicBar = (props) => {
       ?
       componentThemeConfig
         ? componentThemeConfig.pureColors[index % 7]
-        : barColor?.themePureColor
+        : barColor?.themePureColor || '#1890ff'
       :
       barColor?.type === 'gradient' ?
         new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
           offset: 0,
           color: componentThemeConfig
             ? componentThemeConfig.gradientColors[index % 7][0].color
-            : barColor?.themeGradientColorStart
+            : barColor?.themeGradientColorStart || '#1890ff'
         },
         {
           offset: 1,
           color: componentThemeConfig
             ? componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
-            : barColor?.themeGradientColorEnd
+            : barColor?.themeGradientColorEnd || '#1890ff'
         }
         ])
         : '#1890ff'
@@ -222,7 +222,7 @@ const BasicBar = (props) => {
             textStyle: {
               color: componentThemeConfig
                 ? componentThemeConfig.textColor
-                : barLabel.font.themeTextColor,
+                : barLabel?.font?.themeTextColor || '#fff',
               fontSize: barLabel.font.fontSize,
               fontFamily: barLabel.font.fontFamily,
               fontWeight: barLabel.font.bold ? 'bold' : 'normal',
@@ -300,7 +300,7 @@ const BasicBar = (props) => {
         textStyle: {
           color: componentThemeConfig
             ? componentThemeConfig.textColor
-            : legendTextStyle && legendTextStyle.themeTextColor,
+            : legendTextStyle && legendTextStyle?.themeTextColor || '#fff',
           fontSize: legendTextStyle && legendTextStyle.fontSize,
           fontFamily: legendTextStyle && legendTextStyle.fontFamily,
           fontWeight:
@@ -325,7 +325,7 @@ const BasicBar = (props) => {
               width: xAxisLineWeight,
               color: componentThemeConfig
                 ? componentThemeConfig.assistColor
-                : xAxisLineColor,
+                : xAxisLineColor || '#fff',
             },
           },
           axisTick: {
@@ -337,7 +337,7 @@ const BasicBar = (props) => {
             lineHeight: xAxisLabelTextStyle.lineHeight,
             color: componentThemeConfig
               ? componentThemeConfig.textColor
-              : xAxisLabelTextStyle.themeTextColor,
+              : xAxisLabelTextStyle?.themeTextColor || '#fff',
             rotate: xAxisLabelRotate,
             fontSize: xAxisLabelTextStyle.fontSize,
             fontStyle: xAxisLabelTextStyle.italic ? 'italic' : 'normal',
@@ -367,7 +367,7 @@ const BasicBar = (props) => {
             padding: [0, 0, 0, yAxisUnitOffset.yAxisUnitOffsetX],
             color: componentThemeConfig
               ? componentThemeConfig.textColor
-              : yAxisUnitTextStyle.themeTextColor,
+              : yAxisUnitTextStyle?.themeTextColor || '#fff',
             fontSize: yAxisUnitTextStyle.fontSize,
             fontStyle: yAxisUnitTextStyle.italic ? 'italic' : 'normal',
             fontWeight: yAxisUnitTextStyle.bold ? 'bold' : 'normal',
@@ -379,14 +379,14 @@ const BasicBar = (props) => {
               width: yAxisLineWeight,
               color: componentThemeConfig
                 ? componentThemeConfig.assistColor
-                : yAxisLineColor,
+                : yAxisLineColor || '#fff',
             },
           },
           axisLabel: {
             show: true,
             color: componentThemeConfig
               ? componentThemeConfig.textColor
-              : yAxisLabelTextStyle.themeTextColor,
+              : yAxisLabelTextStyle?.themeTextColor || '#fff',
             rotate: yAxisLabelRotate,
             fontSize: yAxisLabelTextStyle.fontSize,
             fontStyle: yAxisLabelTextStyle.italic ? 'italic' : 'normal',
@@ -402,7 +402,7 @@ const BasicBar = (props) => {
               width: ySplitLineWeight,
               color: [componentThemeConfig
                 ? componentThemeConfig.gridColor
-                : ySplitLineColor],
+                : ySplitLineColor || '#fff'],
             }
           },
         },
