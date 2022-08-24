@@ -6,7 +6,7 @@ const ComponentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "basicBar", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleVersion": "1.1.0", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -245,7 +245,7 @@ const ComponentDefaultConfig = {
                       value: 20,
                     },
                     {
-                      name: 'color',
+                      name: 'themeTextColor',
                       displayName: '',
                       type: 'color',
                       value: '#fff',
@@ -387,7 +387,7 @@ const ComponentDefaultConfig = {
                               value: 12,
                             },
                             {
-                              name: 'color',
+                              name: 'themeTextColor',
                               displayName: '',
                               type: 'color',
                               value: '#fff',
@@ -442,7 +442,7 @@ const ComponentDefaultConfig = {
                           type: 'switch',
                         },
                         {
-                          name: 'xAxisLineColor',
+                          name: 'themeAssistColor',
                           displayName: '颜色',
                           type: 'color',
                           value: '#fff',
@@ -496,7 +496,7 @@ const ComponentDefaultConfig = {
                               value: 12,
                             },
                             {
-                              name: 'color',
+                              name: 'themeTextColor',
                               displayName: '',
                               type: 'color',
                               value: '#fff',
@@ -572,7 +572,7 @@ const ComponentDefaultConfig = {
                               value: 12,
                             },
                             {
-                              name: 'color',
+                              name: 'themeTextColor',
                               displayName: '',
                               type: 'color',
                               value: '#fff',
@@ -645,7 +645,7 @@ const ComponentDefaultConfig = {
                           type: 'switch',
                         },
                         {
-                          name: 'yAxisLineColor',
+                          name: 'themeAssistColor',
                           displayName: '颜色',
                           type: 'color',
                           value: '#fff',
@@ -678,7 +678,7 @@ const ComponentDefaultConfig = {
                           type: 'switch',
                         },
                         {
-                          name: 'ySplitLineColor',
+                          name: 'themeGridColor',
                           displayName: '颜色',
                           type: 'color',
                           value: '#ccc',
@@ -770,19 +770,19 @@ const ComponentDefaultConfig = {
                           ]
                         },
                         {
-                          name: 'pureColor',
+                          name: 'themePureColor',
                           displayName: '纯色',
                           value: '#1890ff',
                           type: 'color',
                         },
                         {
-                          name: 'gradientStart',
+                          name: 'themeGradientColorStart',
                           displayName: '渐变色(始)',
                           value: '#3074FF',
                           type: 'color',
                         },
                         {
-                          name: 'gradientEnd',
+                          name: 'themeGradientColorEnd',
                           displayName: '渐变色(末)',
                           value: '#1CCCFF',
                           type: 'color',
@@ -818,7 +818,7 @@ const ComponentDefaultConfig = {
                               value: 12,
                             },
                             {
-                              name: 'color',
+                              name: 'themeTextColor',
                               displayName: '',
                               type: 'color',
                               value: '#fff',
@@ -906,19 +906,19 @@ const ComponentDefaultConfig = {
                           ]
                         },
                         {
-                          name: 'pureColor',
+                          name: 'themePureColor',
                           displayName: '纯色',
                           value: '#1890ff',
                           type: 'color',
                         },
                         {
-                          name: 'gradientStart',
+                          name: 'themeGradientColorStart',
                           displayName: '渐变色(始)',
                           value: '#4693EC',
                           type: 'color',
                         },
                         {
-                          name: 'gradientEnd',
+                          name: 'themeGradientColorEnd',
                           displayName: '渐变色(末)',
                           value: '#00FFE3',
                           type: 'color',
@@ -954,7 +954,7 @@ const ComponentDefaultConfig = {
                               value: 12,
                             },
                             {
-                              name: 'color',
+                              name: 'themeTextColor',
                               displayName: '',
                               type: 'color',
                               value: '#fff',

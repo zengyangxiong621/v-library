@@ -719,7 +719,11 @@ const centerIconArr = [
   {
     icon: 'zujiangengxin',
     text: '组件更新'
-  }
+  },
+  {
+    icon: 'zhutifengge',
+    text: '主题风格'
+  },
 ]
 
 const rightIconArr = [
