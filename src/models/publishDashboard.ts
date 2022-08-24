@@ -51,6 +51,8 @@ export default {
             body: {
               id: item.id,
               callBackParamValues: dashboardId.callbackArgs,
+              dashboardId,
+              pass,
             },
           })
         }
