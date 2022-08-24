@@ -117,8 +117,13 @@ const ComponentDev = (props: any) => {
   }
 
   /**********  删除、编辑 操作 *************/
-  const handleDelete = (moduleId: string,appName: Array<string>) => {
-    // 暂时更改
+  // const handleDelete = async (moduleId: string,appName: Array<string>) => {
+  const handleDelete = async (moduleId: string) => {
+    // 点击删除 先调查询接口
+    const appName = await http({
+      url: `/visual/module-manage/usedModuleAppList/${moduleId}`, 
+      method: 'get'
+    })
     if (appName.length > 0) {
       Modal.confirm({
         title: '删除组件',
@@ -314,7 +319,8 @@ const ComponentDev = (props: any) => {
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
             <Button type='text'  
                     className='buttonBlue'  
-                    onClickCapture={() => handleDelete(record.id,record.appName)}
+                    // onClickCapture={() => handleDelete(record.id,record.appName)}
+                    onClickCapture={() => handleDelete(record.id)}
                     >删除</Button>      
             {/* <Button type='text' disabled={ record.appName?.length>0 } 
                 className={ record.appName?.length>0 ? 'buttonGray' : 'buttonBlue' }  
