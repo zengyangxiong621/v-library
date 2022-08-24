@@ -47,7 +47,7 @@ export default {
         } else {
           data = await http({
             method: "post",
-            url: "/visual/container/data/get",
+            url: "/visual/container/screen/data/get",
             body: {
               id: item.id,
               callBackParamValues: dashboardId.callbackArgs,
