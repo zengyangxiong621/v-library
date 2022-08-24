@@ -262,20 +262,20 @@ const ComponentDev = (props: any) => {
       ellipsis: true,
       dataIndex: 'moduleVersion',
     },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      ellipsis: true,
-      render: (text:any) => {
-        return (
-          <>
-          <span className='statusCircle' style={{backgroundColor: text===0?'#a1ea2b':'#c0c0c0'}}></span>
-            {text === 0?'已上架':'未上架'}
-          </>
-        )
-      }
-    },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'status',
+    //   key: 'status',
+    //   ellipsis: true,
+    //   render: (text:any) => {
+    //     return (
+    //       <>
+    //       <span className='statusCircle' style={{backgroundColor: text===0?'#a1ea2b':'#c0c0c0'}}></span>
+    //         {text === 0?'已上架':'未上架'}
+    //       </>
+    //     )
+    //   }
+    // },
     {
       title: '开发者',
       dataIndex: 'updatedBy',
@@ -350,7 +350,7 @@ const ComponentDev = (props: any) => {
             </span>
           </div>
           <div className='search'>
-            <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部" onChange={selectChange}>
+            {/* <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
                   return (
@@ -358,7 +358,7 @@ const ComponentDev = (props: any) => {
                   )
                 })
               }
-            </Select>
+            </Select> */}
             <Input.Search placeholder="搜索"
               allowClear
               maxLength={40}
