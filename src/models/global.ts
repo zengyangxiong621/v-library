@@ -53,7 +53,8 @@ const globalStroe={
           return
         }
         const token=localStorage.getItem('token')
-        if(!token){
+        const isPublishScreen = window.location.href.indexOf('publishScreen') > -1
+        if(!token && !isPublishScreen){
           history.replace('/login')
         }
       });

@@ -24,7 +24,7 @@ export default {
     },
   },
   effects: {
-    * initDashboard({ payload: { dashboardId }, cb }: any, { call, put, select }: any): any {
+    * initDashboard({ payload: { dashboardId,pass }, cb }: any, { call, put, select }: any): any {
       let publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard)
       // 获取回调参数列表
       const callbackParamsList = yield http({
@@ -79,6 +79,9 @@ export default {
       })
       yield put({
         type: "getDashboardDetails",
+        payload:{
+          pass
+        },
         cb: async(data: any) => {
           await cb(data)
         },
@@ -103,7 +106,7 @@ export default {
       return data
     },
     *getDashboardDetails(
-      { cb }: any,
+      { payload: {pass}, cb }: any,
       { call, put, select }: any
     ): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
@@ -114,7 +117,7 @@ export default {
             url: `/visual/application/dashboard/show/${dashboardId}`,
             method: "post",
             body: {
-              pass: '457123a6fd',
+              pass,
               dashboardId,
             }
           }
@@ -142,7 +145,10 @@ export default {
         ));
         yield yield put({
           type: "getComponentsData",
-          payload: components,
+          payload: {
+            components,
+            pass
+          },
         });
         const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
@@ -161,11 +167,12 @@ export default {
         });
         cb({ dashboardConfig: newDashboardConfig, dashboardName });
       } catch (e) {
+        cb(e)
         return e;
       }
     },
     *getComponentsData({ payload }: any, { call, put, select }: any): any {
-      const components = payload;
+      const {components, pass} = payload;
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
       const { dashboardId, componentData, callbackArgs } = publishDashboard
       const func = async (component: any) => {
@@ -178,7 +185,7 @@ export default {
               dataType: component.dataType,
               callBackParamValues:callbackArgs,
               dashboardId,
-              pass: '457123a6fd'
+              pass
             },
           });
 
@@ -206,6 +213,7 @@ export default {
       const dataContainerList = payload;
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
       const {dashboardId, callbackArgs} = publishDashboard
+      const pass = localStorage.getItem(dashboardId)
       dataContainerList.forEach(async (item: any) => {
         const container = publishDashboard.dataContainerList.find(
           (container: any) => container.id === item.id
@@ -221,7 +229,7 @@ export default {
               id: container.id,
               callBackParamValues: callbackArgs,
               dashboardId,
-              pass: '457123a6fd'
+              pass
             },
           });
         }
