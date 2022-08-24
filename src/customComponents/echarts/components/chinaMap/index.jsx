@@ -82,7 +82,6 @@ class ChinaMap extends Component {
       };
     });
   }
-
   // 柱状体的顶部
   scatterData = (dataCenter, ipCoordData) => {
     if (!dataCenter) { return }
