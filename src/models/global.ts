@@ -3,6 +3,8 @@ const globalStroe={
   namespace: "global",
   state: {
     userInfo:null,
+    workspaceList: [],
+    curWorkspace: {},
     menuData: [
       {
         path: "/dashboard-manage",
@@ -51,7 +53,8 @@ const globalStroe={
           return
         }
         const token=localStorage.getItem('token')
-        if(!token){
+        const isPublishScreen = window.location.href.indexOf('publishScreen') > -1
+        if(!token && !isPublishScreen){
           history.replace('/login')
         }
       });
@@ -62,6 +65,12 @@ const globalStroe={
       return {
         ...state,
         userInfo:payload
+      }
+    },
+    setWorkspaceList(state:any,{payload}:any){
+      return {
+        ...state,
+        workspaceList:payload
       }
     }
   },
@@ -78,6 +87,39 @@ const globalStroe={
             payload: data,
           });
         }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // 获取所有工作空间
+    *getWorkspaceList({ payload }: any, { put }: any):any{
+      try {
+        const data=yield http({
+          url: `/visual/workspace/list`,
+          method: "get",
+        })
+        // 设置工作空间
+        yield put({
+          type: "setWorkspaceList",
+          payload: data,
+        });
+        let curWorkspace:any=localStorage.getItem('curWorkspace')
+        if(data.length){
+          if(curWorkspace){
+            curWorkspace = JSON.parse(curWorkspace)
+            const spaceItem = data?.find((item:any) => item.id === curWorkspace.id);
+            if(!spaceItem){
+              curWorkspace = null
+            }
+          }
+          if(!curWorkspace){
+            // 将当前空间存入到localStorage
+            localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
+          }
+        }else{
+          localStorage.removeItem('curWorkspace')
+        }
+
       } catch (error) {
         console.log(error);
       }

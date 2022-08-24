@@ -1,0 +1,100 @@
+@import "../../../../assets/style/variable.less";
+
+.com-theme-wrap {
+  .com-theme-drawer {
+    position: absolute;
+
+    .ant-drawer-content-wrapper {
+      .ant-drawer-content {
+        background-color: @bgColor;
+
+        .ant-drawer-wrapper-body {
+          .ant-drawer-header {
+            @apply g-p-2 g-text-center;
+            background: #373A4D;
+            color: @fontColor;
+            border-bottom: unset;
+
+            .ant-drawer-close {
+              color: @fontColor;
+            }
+
+            .ant-drawer-title {
+              color: #ccc;
+            }
+          }
+
+          .ant-drawer-body {
+            @apply g-p-4;
+            padding: 8px 0 0 0;
+
+            &::-webkit-scrollbar {
+              display: none
+            }
+
+            .com-theme-body-wrapper {
+              min-height: 100%;
+              position: relative;
+              padding-bottom: 100px;
+
+              .com-theme-footer {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+                .add-custom-com-theme {
+                  height: 32px;
+                  margin-bottom: 24px;
+                  padding-left: 18px;
+
+                  .ant-btn {
+                    width: 296px;
+                  }
+                }
+
+                .com-theme-opt-btn {
+                  height: 48px;
+                  background: #2A2F3D;
+                  display: flex;
+                  align-items: center;
+                  justify-content:end;
+                }
+              }
+            }
+
+            .ant-collapse-item {
+              border-bottom: none;
+            }
+
+            .ant-collapse-header {
+              height: 32px;
+              line-height: 32px;
+              background: #292B38 !important;
+              border-top: 1px solid #393B4A;
+              border-bottom: 1px solid #393B4A;
+              padding-left: 16px !important;
+            }
+
+            .ant-collapse-content {
+              min-height: 200px;
+              position: relative;
+
+              .com-theme-empty-info {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%);
+                font-size: 14px;
+                color: #666666;
+                font-weight: 400;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+}

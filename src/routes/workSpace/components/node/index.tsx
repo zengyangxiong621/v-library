@@ -3,14 +3,14 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import './index.less'
 
 import { http } from '@/services/request'
-
+import { connect } from 'dva'
 import { IconFont } from '../../../../utils/useIcon'
 import { Input, message, Modal } from 'antd'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 
 const EveryTreeNode = (props: any) => {
   const { id, spaceName, addWorkSpace,
-    refreshWorkSpaceLists, accountId } = props || {}
+    refreshWorkSpaceLists, accountId, dispatch } = props || {}
   const inputRef = useRef<any>()
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState('')
@@ -123,19 +123,23 @@ const EveryTreeNode = (props: any) => {
       bodyStyle: {
         background: '#232630',
       },
-      async onOk(close) {
+      async onOk(close:any) {
         const data = await http({
           url: `/visual/workspace/delete/${id}`,
           method: 'delete'
         })
         if (data) {
+          dispatch({
+            type: 'workSpace/setCurWorkSpace',
+            payload: []
+          })
           refreshWorkSpaceLists()
         } else {
           message.error({ content: '删除失败', duration: 2 })
         }
         close()
       },
-      onCancel(close) {
+      onCancel(close:any) {
         close()
       }
     })
@@ -176,7 +180,7 @@ const EveryTreeNode = (props: any) => {
               {
                 spaceName === '我的空间'
                   ? <IconFont type='icon-xinjianfenzu' onClickCapture={addWorkSpace} />
-                  : spaceName === '默认工作空间' ?
+                  : id === '1' ?
                     <></> :
                     <div className='show-icon'>
                       {
@@ -194,6 +198,6 @@ const EveryTreeNode = (props: any) => {
   )
 }
 
-export default memo(
-  EveryTreeNode
-)
+export default memo(connect(
+  ({ workSpace }: any) => ({ workSpace })
+)(EveryTreeNode))

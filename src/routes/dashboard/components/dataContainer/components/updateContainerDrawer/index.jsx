@@ -42,6 +42,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   const [loading, setLoading] = useLoading(false, document.querySelector('.loading-wrapper'))
   const visible = props.visible
   useEffect(async () => {
+    console.log('触发')
     if (Object.prototype.toString.call(props.data) === '[object Object]') {
       if (Object.keys(props.data).length === 0) {
         setCopyData(testData)
@@ -79,6 +80,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         }
 
       }
+      console.log('里面触发了吗')
     }
   }, [props.data])
 
@@ -101,6 +103,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
 
   // 更新输入容器
   const updateDataContainer = async (body) => {
+    console.log()
     await http({
       url: '/visual/container/source',
       method: 'post',
@@ -164,7 +167,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         data,
       },
     })
-
     dispatch({
       type: 'bar/updateDataContainer',
       payload: {

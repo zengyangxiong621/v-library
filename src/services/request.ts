@@ -105,7 +105,9 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
     })
     .catch((err) => {
       const { code, message: errMessage } = err;
-      message.error(errMessage || '请求数据失败');
+      if(code !== 500){
+        message.error(errMessage || '请求数据失败');
+      }
       if (code === 401) {
         if (token && token.endsWith('x-gridsumdissector')) {
           forwardLogin()
@@ -117,7 +119,6 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
       }
       if(code===403){
         window.history.replaceState(null,'','/404')
-        window.location.reload();
       }
       return Promise.reject(err);
     });

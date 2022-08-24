@@ -24,7 +24,8 @@ const DashboardTemplate = (props: any) => {
   const [curImgIndex, setCurImgIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
   const [showCreateAppModal, setShowCreateAppModal] = useState(false)
-  const spaceId = 1
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  const spaceId = JSON.parse(curWorkspace)?.id
 
   const [groupOptions, setGroupOptions] = useState([])
   // 不选择分组的时候，默认选择未分组,未分组的groupId是 0 <string>
@@ -162,6 +163,7 @@ const DashboardTemplate = (props: any) => {
               listData.map((item: any, index: number) => (
                 <Col span={6} >
                   <TemplateCard {...item}
+                    spaceId={spaceId}
                     curIndex={index}
                     getCurImgIndex={getCurImgIndex}
                     addTemplate={addTemplate}

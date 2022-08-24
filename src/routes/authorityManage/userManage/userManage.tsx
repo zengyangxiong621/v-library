@@ -22,13 +22,12 @@ const mapStateToProps = (state: any) => {
 }
 // 功能
 const UserManage = (props: any) => {
-  const spaceId = 1
   const [tableLoading, setTableLoading] = useState(false)
   const [tableData, setTableData] = useState([])
   const [totalElements, setTotalElements] = useState(0)
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
-    pageSize: 30,
+    pageSize: 10,
   })
   const [searchParams,setSearchParams]=useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -375,7 +374,7 @@ const UserManage = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: '53vh' }}
+            scroll={{ y: 'calc(100vh - 350px)' }}
             rowClassName='customRowClass'
             rowSelection={rowSelection}
             loading={tableLoading}

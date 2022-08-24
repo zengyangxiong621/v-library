@@ -1,8 +1,8 @@
 import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
-import {ScrollBoard} from '../dataV'
+import {ScrollBoard} from '../../dataV'
 import ReactDOM from 'react-dom'
-import {styleObjectToStr, styleTransformFunc} from '../../utils'
+import {styleObjectToStr, styleTransformFunc} from '../../../utils'
 
 const getFields = (componentConfig = {}) => {
   const dataType = componentConfig.dataType
@@ -25,6 +25,7 @@ const ScrollTable = (props) => {
   //   comData = props.comData || ComponentDefaultConfig.staticData.data
   // }
   const comData = props.comData || [{}]
+  console.log('comData', comData)
   const scale = props.scale
   const [state, setState] = useState({
     mappingConfig: [],
