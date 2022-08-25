@@ -19,7 +19,7 @@ class WorldMap extends Component {
   }
 
   // 转换飞线
-  convertData = (data, coordData, flyDirection, centerPointValue) => {    
+  convertData = (data, coordData, flyDirection, centerPointValue) => {
     if (!data) { return }
     let res = []
     for (let i = 0; i < data.length; i++) {
@@ -29,13 +29,13 @@ class WorldMap extends Component {
       let toCoord = centerPointValue //中心点地理坐标 优化      
       if (fromCoord && toCoord) {
         let coordArr = [{
-            coord: fromCoord, // 飞线去往哪里
-            value: dataItem[0].value,
-          }, {
-            coord: toCoord, // 飞线从哪里出发
-          },
+          coord: fromCoord, // 飞线去往哪里
+          value: dataItem[0].value,
+        }, {
+          coord: toCoord, // 飞线从哪里出发
+        },
         ];
-        res.push( flyDirection === 0 ? coordArr : coordArr.reverse() )
+        res.push(flyDirection === 0 ? coordArr : coordArr.reverse())
       }
     }
     return res
@@ -199,13 +199,13 @@ class WorldMap extends Component {
     })
     const finalData = this.formatData(originData, fields2ValueMap)
 
-    const centerPoint = finalData[0].centerPoint || { 北京区域中心: [116.536989, 39.777354] };
-    const coordData = finalData[0].coordData;
-    const flyLineArr = finalData[0].flyLineArr;
+    const centerPoint = finalData[0]?.centerPoint || { 北京区域中心: [116.536989, 39.777354] };
+    const coordData = finalData[0]?.coordData || {};
+    const flyLineArr = finalData[0]?.flyLineArr || [];
 
     // IP地址数据
-    const ipData = finalData[0].ipData;
-    const ipCoordData = finalData[0].ipCoordData;
+    const ipData = finalData[0]?.ipData || [];
+    const ipCoordData = finalData[0]?.ipCoordData || {};
 
     const ipOptions = {
       tooltip: {
@@ -437,13 +437,15 @@ class WorldMap extends Component {
       fields2ValueMap[initColumnsName[index]] = item
     })
     const finalData = this.formatData(originData, fields2ValueMap)
+
+
     // 配置飞线数据
     // let centerPoint = '北京区域中心';
-    let centerPoint = finalData[0].centerPoint || { 北京区域中心: [116.536989, 39.777354] };
-    let coordData = finalData[0].coordData;
-    let flyLineArr = finalData[0].flyLineArr;
-    let ipData = finalData[0].ipData;
-    let ipCoordData = finalData[0].ipCoordData;
+    let centerPoint = finalData[0]?.centerPoint || { 北京区域中心: [116.536989, 39.777354] };
+    let coordData = finalData[0]?.coordData || {};
+    let flyLineArr = finalData[0]?.flyLineArr || [];
+    let ipData = finalData[0]?.ipData || [];
+    let ipCoordData = finalData[0]?.ipCoordData || {};
     let style = this.formatConfig(config, [])
     // console.log(style, '#style render');
     const { displayMode, bgColor, selectColor, pointColor, borderColor, flyDirection, flyColor, iconColor, rippleColor } = style

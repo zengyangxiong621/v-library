@@ -1,6 +1,6 @@
 import ComponentDefaultConfig from './config'
 import * as echarts from 'echarts'
-import EC from '../../EC'
+import EC from '../../../EC'
 import React from 'react'
 
 // 数据升降序排序

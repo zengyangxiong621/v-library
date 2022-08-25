@@ -16,7 +16,9 @@ const AddDataSource = (props: any) => {
   // TODO 暂无确定的取得spaceId的方案
 
   const [addForm] = Form.useForm()
-  const { visible, spaceId, changeShowState, refreshTable } = props
+  const { visible, changeShowState, refreshTable } = props
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  const spaceId = JSON.parse(curWorkspace)?.id;
   const [curDataType, setCurDataType] = useState('')
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])

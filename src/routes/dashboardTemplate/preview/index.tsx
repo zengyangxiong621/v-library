@@ -9,7 +9,7 @@ interface IProps {
   srcUrlArr: string[],
   curIndex: number,
 }
-
+const picUrl = require('@/assets/images/模板默认背景图.png')
 const Preview = (props: IProps) => {
   const {
     srcUrlArr, curIndex
@@ -34,7 +34,7 @@ const Preview = (props: IProps) => {
         />
       </div>
       <div className='img-wrap'>
-        <img className='redefined-img' src={srcUrlArr[(index as any)]} alt='将被预览的图片正在赶来的路上…'></img>
+        <img className='redefined-img' src={srcUrlArr[(index as any)] || picUrl} alt='将被预览的图片正在赶来的路上…'></img>
       </div>
       <div className={`icon-wrap ${index === srcUrlArr.length - 1 && 'iconDisable'}`}>
         <IconFont rotate={180} type='icon-fanhui' style={{ fontSize: '28px' }}

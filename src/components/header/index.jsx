@@ -59,6 +59,7 @@ const createMenu = ((menuData, props) => {  //创建菜单
 const Header = props => {
   const { defaultPath,menuData, location:{pathname}, history,global:{userInfo, workspaceList},dispatch } = props
   let curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
+  let isFindSpace = userInfo?.menus.find(item => item.url === '/work-space');
   const curUserid=useMemo(()=>{
     if(userInfo && userInfo.id){
       return userInfo.id
@@ -98,7 +99,6 @@ const Header = props => {
   const handleHadLogouted=async ()=>{
     const token=localStorage.getItem('token')
     if (token && token.endsWith('x-gridsumdissector')) {
-      logout()
       forwardLogin()
     }else{
       const isLogoutSuccess=await handleLogout()
@@ -147,7 +147,6 @@ const Header = props => {
     setModalVisible(false)
   }
   const getWorkSpaceMenus = () => {
-    let isFindSpace = userInfo?.menus.find(item => item.url === '/work-space');
     return (
       <Menu
         className="cus-dropdown-menu"
@@ -206,7 +205,7 @@ const Header = props => {
       <div className="user-wraper">
         <div className="drop-down">
         {
-          workspaceList.length ? 
+          workspaceList.length || isFindSpace ? 
           <Dropdown overlay={getWorkSpaceMenus()} trigger={['click']}>
             <span className="span" onClick={e => e.preventDefault()}>
               {curWorkspace?.spaceName} <DownOutlined />

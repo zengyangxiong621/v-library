@@ -10,7 +10,9 @@ import { DownOutlined } from '@ant-design/icons'
 
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
-
+const mapStateToProps = (state: any) => {
+  return state
+}
 const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => {
   // TODO  暂定，待确定如何获取spaceId后重写
   let accountId = userInfo.id
@@ -30,6 +32,11 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
         accountId
       }
     })
+    console.log('更新处理')
+    // 在这里调全局的方法
+    dispatch({
+      type:'global/getWorkspaceList'
+    })
   }
   // 添加分组
   // 创建一个占位数据
@@ -38,10 +45,10 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       id: 'aInput',
       name: "占位的input",
     }
-    // 插入的输入框是在数组的倒数第二个位置
+    // 插入的输入框是在数组的最后一位
     const origin = workSpace.workSpaceList[0].children
-    if (origin[origin.length - 2].id === 'aInput') {
-      workSpace.workSpaceList[0].children.splice(-2, 1)
+    if (origin[origin.length - 1]?.id === 'aInput') {
+      workSpace.workSpaceList[0].children.splice(origin.length - 1, 1)
       const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList))
       dispatch({
         type: 'workSpace/setWorkSpaceList',
@@ -50,7 +57,7 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       return
     }
     // 增加一个占位数据
-    workSpace.workSpaceList[0].children.splice(-1, 0, mockItem)
+    workSpace.workSpaceList[0].children.splice(origin.length, 0, mockItem)
     const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList))
     dispatch({
       type: 'workSpace/setWorkSpaceList',
@@ -112,5 +119,5 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
 }
 
 export default memo(connect(
-  ({ workSpace }: any) => ({ workSpace })
+  mapStateToProps
 )(LeftTree))

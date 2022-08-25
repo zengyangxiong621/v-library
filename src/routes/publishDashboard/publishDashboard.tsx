@@ -4,15 +4,25 @@ import { withRouter } from 'dva/router'
 import { connect } from 'dva'
 import { deepClone, treeDataReverse } from '@/utils'
 
-import { Spin } from 'antd'
+import { Spin, Input, Button,message } from 'antd'
 
 
 import RecursiveComponent from './components/recursiveComponent'
 import { calcCanvasSize } from '../../utils'
 
+
+function GetQueryString(name:any) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");  
+  var r = window.location.search.substr(1).match(reg);  
+  if (r != null) {   
+      return unescape(r[2]);  
+  }  
+  return null;  
+} 
+
 const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(true)
   // 接口中返回的 当前屏幕设置信息
   const [dashboardConfig, setDashboardConfig] = useState([])
   const [scaleMode, setScaleMode] = useState<string>('')
@@ -30,6 +40,12 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
  const [layers, setLayers] = useState([])
  const [panels, setPanels] = useState([])
  const [components, setComponents] = useState([])
+ const encrypt = GetQueryString('encrypt')
+ const [inputPassword, setInputPassword] = useState(false)
+ const [password, setPassword] = useState('')
+
+ const pageId = window.location.pathname.split('/')[2]
+ 
   /**
    * description: 根据缩放模式来配置页面
    */
@@ -129,17 +145,22 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
       setAbsolutePosition(absolutePosition)
     }
   }
+  const init = async () => {
+    setIsLoaded(false)
+    const { dashboardConfig, dashboardName }: any = await initDashboard()
+    setDashboardConfig(dashboardConfig)
+    await previewByScaleMode({ dashboardConfig, dashboardName })
+    setIsLoaded(true)
+  }
   // @Mark --  hooks顺序不能打乱
   // 初入页面 - 获取数据
   useEffect(() => {
-    const init = async () => {
-      setIsLoaded(false)
-      const { dashboardConfig, dashboardName }: any = await initDashboard()
-      setDashboardConfig(dashboardConfig)
-      await previewByScaleMode({ dashboardConfig, dashboardName })
-      setIsLoaded(true)
+    const pwd = localStorage.getItem(pageId)
+    if(encrypt === 'true' && !pwd){
+      setInputPassword(true)
+    }else{
+      init()
     }
-    init()
     return () => {
       dispatch({
         type: 'publishDashboard/clearCurrentDashboardData'
@@ -196,17 +217,29 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishDashboard.treeData])
 
+  const setChange = (value:any) => {
+    setPassword(value)
+  }
+
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
   const initDashboard = (cb = function () { }) => {
+    const pwd = localStorage.getItem(pageId)
     return new Promise((resolve, reject) => {
       const dashboardId = window.location.pathname.split('/')[2]
       dispatch({
         type: 'publishDashboard/initDashboard',
         payload: {
           dashboardId,
+          pass: pwd
         },
         cb: (data: any) => {
-          resolve(data)
+          if(data?.code === 500){
+            setIsLoaded(true)
+            localStorage.removeItem(pageId)
+            setInputPassword(true)
+          }else{
+            resolve(data)
+          }
         }
       })
     })
@@ -225,8 +258,33 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     })
     return map
   }
+
+  const handleClick = () => {
+    if(!password){
+      message.error('请输入访问密码')
+      return false
+    }
+    const dashboardId = window.location.pathname.split('/')[2]
+    localStorage.setItem(dashboardId, password)
+    setInputPassword(false)
+    init()
+  }
+
   return (
     <div id="gs-v-library-app">
+      {
+        inputPassword && <div className="input-password">
+          <div className="center">
+            <Input
+              value={password}
+              placeholder="请输入访问密码"
+              className='input-center'
+              onChange={(e) => setChange(e.target.value)}
+            />
+            <Button type="primary" onClick={() => handleClick()}>确定</Button>
+          </div>
+        </div>
+      }
       {
         isLoaded ?
           <div className='customScrollStyle' style={{ ...overflowStyle }}>
