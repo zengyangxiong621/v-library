@@ -13,27 +13,44 @@ const ComponentDefaultConfig = {
   'dataFrom': 0,
   'dataContainers': [],
   'staticData': {
-    'data': [{ 'column1': '北京', 'column2': 87.2, 'column3': '超预期' }, {
-      'id':'1',
-      'column1': '上海',
-      'column2': 80.5,
-      'column3': '达标',
-    }, { 'column1': '杭州', 'column2': 72.3, 'column3': '达标' }, {
-      'id':'2',
-      'column1': '重庆',
-      'column2': 65.5,
-      'column3': '未达标',
-    }, { 'column1': '成都', 'column2': 58.4, 'column3': '未达标' }, {
-      'id':'3',
-      'column1': '厦门',
-      'column2': 52.5,
-      'column3': '未达标',
-    }, {
-      'id':'4',
-      'column1': '云南', 
-      'column2': 40.2, 
-      'column3': '未达标' 
-    }],
+    'data': [
+      {
+        'id':'1',
+        'column1': '北京',
+        'column2': 87.2, 
+        'column3': '超预期' 
+      }, {
+        'id':'2',
+        'column1': '上海',
+        'column2': 80.5,
+        'column3': '达标',
+      }, {
+        'id':'3',
+        'column1': '杭州', 
+        'column2': 72.3, 
+        'column3': '达标' 
+      }, {
+        'id':'4',
+        'column1': '重庆',
+        'column2': 65.5,
+        'column3': '未达标',
+      }, {
+        'id':'5',
+        'column1': '成都', 
+        'column2': 58.4, 
+        'column3': '未达标' 
+      }, {
+        'id':'6',
+        'column1': '厦门',
+        'column2': 52.5,
+        'column3': '未达标',
+      }, {
+        'id':'7',
+        'column1': '云南', 
+        'column2': 40.2, 
+        'column3': '未达标' 
+      }
+    ],
     'fields': [{ 'name': 'column1', 'value': 'column1', 'desc': '文本' }, {
       'name': 'column2',
       'value': 'column2',

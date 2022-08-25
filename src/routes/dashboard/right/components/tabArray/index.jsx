@@ -20,7 +20,7 @@ const { TabPane } = Tabs;
 
 const TabArray = props => {
   const _data = props.data;
-  const _defaultActiveKey = _data?.defaultExpand ? '1' : null
+  const _defaultActiveKey = _data.defaultActiveKey
   const _disabled = _data.disabled
   let tabs = _data.value
 
@@ -88,7 +88,7 @@ const TabArray = props => {
   }
 
   return (
-    <Collapse accordion className="custom-collapse" defaultActiveKey={_defaultActiveKey}>
+    <Collapse accordion className="custom-collapse" defaultActiveKey={['1']}>
       <Panel header={_data.displayName} key="1" extra={extraNode()}>
         <Tabs defaultActiveKey={activeKey} onTabClick={handleTabClick}>
           {
