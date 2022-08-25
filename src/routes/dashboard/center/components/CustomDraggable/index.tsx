@@ -31,7 +31,9 @@ import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 import Timeline from '@/customComponents/assist/timeline'
-import timelineConfig from '@/customComponents/assist/timeline/config'
+// import timelineConfig from '@/customComponents/assist/timeline/config'
+import NormalTable from '@/customComponents/table/normalTable'
+// import normalTableConfig from '@/customComponents/table/normalTable/config'
 
 // import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
@@ -787,7 +789,7 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component=timelineConfig
+              // component=normalTableConfig
 
               if (component) {
                 staticData = component.staticData
@@ -1106,7 +1108,15 @@ const CustomDraggable
                                                                     fields={getFields(component)}
                                                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                                   ></InstrumentPanel4> :
-                                                                  <ErrorCatch
+                                                                  layer.moduleName==='normalTable'?
+                                                                    <NormalTable
+                                                                      onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                                                      componentConfig={ component }
+                                                                      fields={ getFields(component) }
+                                                                      comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                    >
+                                                                    </NormalTable>:
+                                                                <ErrorCatch
                                                                     app={component.name}
                                                                     user=""
                                                                     token=""
@@ -1116,7 +1126,14 @@ const CustomDraggable
                                                                       console.log('组件报错信息：', errors, '组件id', layer.id);
                                                                     }}
                                                                   >
-                                                                    <RemoteBaseComponent
+                                                                    {/* <NormalTable
+                                                                  onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                                                  componentConfig={ component }
+                                                                  fields={ getFields(component) }
+                                                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                >
+                                                                </NormalTable> */}
+                                                                <RemoteBaseComponent
                                                                       themeConfig={bar.componentThemeConfig}
                                                                       onThemeChange={onThemeChange}
                                                                       key={layer.id}
