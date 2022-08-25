@@ -1112,7 +1112,6 @@ const CustomDraggable
                                                                     <NormalTable
                                                                       onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                                                       componentConfig={ component }
-                                                                      fields={ getFields(component) }
                                                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                                                     >
                                                                     </NormalTable>:
@@ -1126,14 +1125,7 @@ const CustomDraggable
                                                                       console.log('组件报错信息：', errors, '组件id', layer.id);
                                                                     }}
                                                                   >
-                                                                    {/* <NormalTable
-                                                                  onChange={(val:any)=>handleValueChange(val, component, layer.id)}
-                                                                  componentConfig={ component }
-                                                                  fields={ getFields(component) }
-                                                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                                                >
-                                                                </NormalTable> */}
-                                                                <RemoteBaseComponent
+                                                                    <RemoteBaseComponent
                                                                       themeConfig={bar.componentThemeConfig}
                                                                       onThemeChange={onThemeChange}
                                                                       key={layer.id}

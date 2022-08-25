@@ -203,7 +203,7 @@ const ComponentDefaultConfig = {
                   'type': 'input2',
                   'value': [{
                     'displayName': '字段名',
-                    'name': 'filedName',
+                    'name': 'fieldName',
                     'type': 'input',
                     'value': 'column1',
                   }, { 'displayName': '显示名', 'name': 'displayName', 'type': 'input', 'value': '销售地区' }],
@@ -397,7 +397,7 @@ const ComponentDefaultConfig = {
                 'type': 'input2',
                 'value': [{
                   'displayName': '字段名',
-                  'name': 'filedName',
+                  'name': 'fieldName',
                   'type': 'input',
                   'value': 'column1',
                 }, { 'displayName': '显示名', 'name': 'displayName', 'type': 'input', 'value': '销售地区' }],
@@ -519,7 +519,7 @@ const ComponentDefaultConfig = {
                 'type': 'input2',
                 'value': [{
                   'displayName': '字段名',
-                  'name': 'filedName',
+                  'name': 'fieldName',
                   'type': 'input',
                   'value': 'column2',
                 }, { 'displayName': '显示名', 'name': 'displayName', 'type': 'input', 'value': '完成率' }],
@@ -641,7 +641,7 @@ const ComponentDefaultConfig = {
                 'type': 'input2',
                 'value': [{
                   'displayName': '字段名',
-                  'name': 'filedName',
+                  'name': 'fieldName',
                   'type': 'input',
                   'value': 'column3',
                 }, { 'displayName': '显示名', 'name': 'displayName', 'type': 'input', 'value': '完成情况' }],

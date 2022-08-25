@@ -1,14 +1,30 @@
 import React from 'react'
 import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
-import {styleObjectToStr, styleTransformFunc} from '../../../utils'
+import {styleTransformFunc} from '../../../utils'
 import './index.less'
 import { Table,Button, Input, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 const { Column } = Table;
 
-const filterSearchApp=(dataIndex)=>{
+const getFields = (componentConfig = {}) => {
+  const dataType = componentConfig.dataType
+  let fields = null
+  if (dataType === 'static' || !dataType) {
+    fields = componentConfig.staticData?.fields || []
+  } else {
+    if (componentConfig.dataConfig[dataType] && componentConfig.dataConfig[dataType].fields) {
+      fields = componentConfig.dataConfig[dataType].fields
+    } else {
+      fields = componentConfig.staticData.fields
+    }
+  }
+  return fields
+}
+
+const FilterSearchApp=(props)=>{
+  const {dataIndex}=props
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -111,10 +127,106 @@ const filterSearchApp=(dataIndex)=>{
 const NormalTable=(props)=>{
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const comData = props.comData || [{}]
-  // const fields = getFields(componentConfig)
-  const {config, staticData} = componentConfig
-  const {data}=staticData
+  const field=getFields(componentConfig)
+  const {config} = componentConfig
   console.log(config);
+
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1890ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
 
   const dimiensionConfig=config.find(item=>item.name==='dimension')
   const customColumnConfig = config.find(item => item.name === 'customColumn')
@@ -122,7 +234,6 @@ const NormalTable=(props)=>{
   const expand=config.find(item=>item.name==='expand')
   const tableHeader=config.find(item=>item.name==="tableHeader")
   const tableRow=config.find(item=>item.name==='tableRow')
-  // const summary=config.find(item=>item.name==='summary')
 
   const getMapping = (customColumnConfig) => {
     return customColumnConfig.value.reduce((pre, cur) => {
@@ -298,7 +409,7 @@ const NormalTable=(props)=>{
   return (
     <Table
       className='normalTable'
-      dataSource={data}
+      dataSource={comData}
       rowKey='id'
       pagination={false}
       size={tableSize}
@@ -323,23 +434,25 @@ const NormalTable=(props)=>{
     >
       {
         mappingConfig.map(item=>{
+          const mapField=field.find(mitem=>mitem.name===item.fieldName).value
           const sortConfig={}
           let filterConfig=null
           if(item.isSortable){
             sortConfig.sortDirections=item.sortType
             sortConfig.defaultSortOrder=item.defaultSortType
-            sortConfig.sorter=(a,b)=>a[item.filedName]-b[item.filedName]
+            sortConfig.sorter=(a,b)=>a[item.fieldName]-b[item.fieldName]
           }
           if(item.isFilter){
-            filterConfig=filterSearchApp(item.filedName)
+            filterConfig=getColumnSearchProps(item.fieldName)
           }
           return (
             <Column
               title={(
                 <div className='tableHeader'>{item.displayName}</div>
               )}
-              dataIndex={item.filedName}
-              key={item.filedName} align={item.textAlign}
+              dataIndex={mapField}
+              key={mapField} 
+              align={item.textAlign}
               ellipsis={item.overflowType==="ellipsis"}
               width={getColumnWidth(item)}
               fixed={item.isFixed ? item.fixedAlign : false}
