@@ -107,6 +107,15 @@ const Header = props => {
         history.replace('/login')
       }
     }
+    dispatch({
+      type:'global/setWorkspaceList',
+      payload: []
+    })
+    dispatch({
+      type:'global/setUserInfo',
+      payload: null
+    })
+    // window.location.reload()
     localStorage.removeItem('curWorkspace')
 }
   const handleUserMenuClick=async ({key}) => {
