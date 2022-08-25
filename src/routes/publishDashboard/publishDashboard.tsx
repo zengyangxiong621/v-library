@@ -236,7 +236,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
           if(data?.code === 500){
             setIsLoaded(true)
             localStorage.removeItem(pageId)
-            message.error('密码错误，请重新输入');
             setInputPassword(true)
           }else{
             resolve(data)
