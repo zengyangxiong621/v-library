@@ -63,17 +63,19 @@ const RightContent = (props: any) => {
   }
   // 选择 新的分组
   const selectGroup = (val: any) => {
-    setNewGroupId(val)
+    var reg = RegExp(/Ohter/);
+    var id = reg.test(val) ? 0 : val
+    setNewGroupId(id)
   }
   // 确认移动分组
   const confirmMoveGroup = async () => {
-    let url = currentItem.moduleType === 'myTemp' ? '/visual/appTemplate/updateTemplateGroup' : '/visual/resource/changeGroup'
-    let obj = currentItem.moduleType === 'myTemp' ? {id: curAppId} : {resourceId: curAppId}
+    let url = ['myTemp', 'systemTemp'].indexOf(currentItem.moduleType) > -1  ? '/visual/appTemplate/updateTemplateGroup' : '/visual/resource/changeGroup'
+    let obj = ['myTemp', 'systemTemp'].indexOf(currentItem.moduleType) > -1 ? {id: curAppId} : {resourceId: curAppId}
     const data = await http({
       url,
       method: 'post',
       body: {
-        spaceId,
+        spaceId: currentItem.moduleType === 'systemTemp' ? null : spaceId ,
         newGroupId: newGroupId,
         ...obj
       }
