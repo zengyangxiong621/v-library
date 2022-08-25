@@ -260,6 +260,10 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   }
 
   const handleClick = () => {
+    if(!password){
+      message.error('请输入访问密码')
+      return false
+    }
     const dashboardId = window.location.pathname.split('/')[2]
     localStorage.setItem(dashboardId, password)
     setInputPassword(false)
