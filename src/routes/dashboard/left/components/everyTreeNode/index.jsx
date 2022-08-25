@@ -14,7 +14,8 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
       payload
     })
   }
-  const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover } = restProps
+  const { name, id, modules, getCurrentMenuLocation, isLock, singleShowLayer, showRenameInput, isShow, isExpand, hover, panelType } = restProps
+
   // 需要区分是单个图层还是文件夹
   const [isFolder] = useState(Array.isArray(modules) && modules.length > 0)
   // 文件夹是展开了还是关闭了
@@ -155,7 +156,12 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     hydrograph: 'gif',
   }
   const imgFormat = imgSuffixMap[moduleName] || 'png'
-  const photoPath = `${window.CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/thumb-${moduleName}.${imgFormat}`
+  let photoPath = ''
+  if (panelType === 0 || panelType === 1) {
+    photoPath = require("@/assets/images/面板.jpg")
+  } else {
+    photoPath = `${window.CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/thumb-${moduleName}.${imgFormat}`
+  }
   // 处理组下已经没有图层的情况 //TODO 没有图层是否需要删除
   const isEmptyGroup = id.startsWith('group') && (Array.isArray(modules) && !modules.length)
   return (
@@ -179,6 +185,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
                     paddingLeft: '13px'
                   }} className='iconfont icon-wenjianjiashouqi set-margin set-icon-size' />
                   : <div className='frame set-margin'>
+                    {/*<img style={{ width: '100%', height: '100%' }} src={photoPath}></img>*/}
                     <img style={{ width: '100%', height: '100%' }} src={photoPath}></img>
                   </div>
               }

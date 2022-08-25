@@ -189,7 +189,8 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ]
-  const styleChange = debounce(async (key = "0", init = false) => {
+  const styleChange = debounce(async (key = "1", init = false) => {
+    console.log('key', key)
     if (key !== "0" && init) {
       setActiveKey(key)
       const referenceList = styleConfig.find(item => item.name === 'referenceList').value
@@ -244,6 +245,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     })
     const copyPanelConfig = deepClone(panelConfig)
     copyPanelConfig.states =  copyPanelConfig.states.filter(state => state.id)
+    console.log('copyPanelConfig', copyPanelConfig)
     const { config: { left, top, width, height } } = panelConfig
     dispatch({
       type: 'bar/save',
