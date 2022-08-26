@@ -32,8 +32,6 @@ import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 import Timeline from '@/customComponents/assist/timeline'
 // import timelineConfig from '@/customComponents/assist/timeline/config'
-import Media from '@/customComponents/media'
-import MediaConfig from '@/customComponents/media/config'
 
 // import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
@@ -765,7 +763,7 @@ const CustomDraggable
           } else {
             // 组件
             component = components.find(item => item.id === layer.id)
-            // component=timelineConfig
+            // component=MediaConfig
 
             if(component) {
               staticData = component.staticData

@@ -74,6 +74,12 @@ const componentDefaultConfig = {
       ]
     },
     {
+      'name': 'mediaFile',
+      'displayName': '视频上传',
+      'type': 'media',
+      'value': 'https://stream7.iqilu.com/10339/upload_transcode/202002/18/20200218093206z8V1JuPlpe.mp4', // 有背景图则返回背景图的url，没有背景图返回空或者null
+    },
+    {
       "name": "hideDefault",
       "displayName": "默认隐藏",
       "type": "checkBox",
@@ -96,6 +102,12 @@ const componentDefaultConfig = {
       "displayName": "循环播放",
       "type": "checkBox",
       "value": true
+    },
+    {
+      "name": "autoPlaying",
+      "displayName": "自动播放",
+      "type": "checkBox",
+      "value": false
     }
   ],
   themes: [{

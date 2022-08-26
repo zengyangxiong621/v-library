@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 import ComponentDefaultConfig from './config'
 
@@ -7,6 +7,7 @@ const Media=(props)=>{
   const { config,staticData } = componentConfig
   const componentData = props.comData || staticData.data  // 过滤后的数据
   const _fields = props.fields
+  const [MediaAutoPlaying,setMediaAutoPlaying]=useState(false)
   const getStyle=(config)=>{
     const style={}
     if(Array.isArray(config)){
@@ -25,16 +26,32 @@ const Media=(props)=>{
     return style
   }
   const style=getStyle(config)
-  const {dimension:{width,height},Loop,Muted,controls,hideDefault}=style
+  const {dimension:{width,height},Loop,Muted,controls,hideDefault,autoPlaying,mediaFile}=style
+  const getMediaUrl=()=>{
+    if(mediaFile){
+      return mediaFile
+    }
+    return componentData[0][_fields[0]]
+  }
+
+  useEffect(()=>{
+    autoPlaying && setMediaAutoPlaying(true)
+  },[])
+
   return hideDefault ? (<></>) : (
     <ReactPlayer
+      playing={MediaAutoPlaying?true:false}
       width={`${width}+px`}
       height={`${height}+px`}
       loop={Loop}
       muted={Muted}
       controls={controls}
-      url={componentData[0][_fields[0]]}
+      url={getMediaUrl()}
     />
   )
+}
+export {
+  ComponentDefaultConfig,
+  Media
 }
 export default Media
