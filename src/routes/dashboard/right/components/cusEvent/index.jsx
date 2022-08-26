@@ -48,7 +48,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   const [activeId, setActiveId] = useState(null)
   const [activeActionTab, setActiveActionTab] = useState(null)
   const [scaleProportion, setScaleProportion] = useState(1)
-
+  const [isUpdateConfig, setIsUpdateConfig] = useState(false)
   const eventTypes = [
     {
       name: '当请求完成或数据变化时',
@@ -97,6 +97,14 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       name: '旋转',
       value: 'rotate'
     },
+    {
+      name: "更新组件配置",
+      value: "updateConfig"
+    },
+    {
+      name: "切换组件状态",
+      value: "updateStatus"
+    }
   ]
 
   const animationType = [
@@ -402,6 +410,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   }
 
   const actionTypeChange = (val, action) => {
+    setIsUpdateConfig(val === 'updateConfig')
     action.action = val
     _data.events = tabpanes
     props.onChange()
@@ -632,11 +641,28 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                 style={{ marginBottom: 0 }}
                                 onChange={e => actionTypeChange(e, action)}
                               >
-                                {actionTypes.map((item) => {
-                                  return <Option value={item.value} key={item.value}>{item.name}</Option>
-                                })}
+                                {
+                                  actionTypes.filter(item => {
+                                    if (action.component.length === 1) {
+                                      return true
+                                    } else {
+                                      return !["updateConfig", "updateStatus"].includes(item.value)
+                                    }
+                                  }).map((item) => {
+                                    return <Option value={item.value} key={item.value}>{item.name}</Option>
+                                  })
+                                }
                               </Select>
                             </Form.Item>
+                            {
+                              isUpdateConfig ?
+                                <Form.Item label=''>
+                                  <Button style={{float: 'left', left: 20}}>
+                                    编辑组件配置
+                                  </Button>
+                              </Form.Item> : <></>
+                            }
+
                             {
                               action.action === 'translate' ?
                                 <Form.Item label='移动后位置'>
