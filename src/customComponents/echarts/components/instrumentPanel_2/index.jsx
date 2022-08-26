@@ -51,7 +51,7 @@ const InstrumentPanel = (props) => {
   }
   const hadFilterArr = config.filter((item) => item.name !== 'dimension')
   const { allSettings } = getTargetConfig(hadFilterArr)
-  console.log('allSettings',allSettings)
+  // console.log('allSettings',allSettings)
   const { innerRadius,outerRadius,radiusSize } = allSettings ? allSettings['表盘'] : {}
   const { 
     numberRange,
