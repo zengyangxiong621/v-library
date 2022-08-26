@@ -5,7 +5,9 @@ import {styleTransformFunc} from '../../../utils'
 import './index.less'
 import { Table,Button, Input, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined,MenuOutlined  } from '@ant-design/icons';
+import { arrayMoveImmutable } from 'array-move';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 const { Column } = Table;
 
 const getFields = (componentConfig = {}) => {
@@ -22,17 +24,49 @@ const getFields = (componentConfig = {}) => {
   }
   return fields
 }
+const SortableItem = SortableElement((props) => <tr {...props} />);
+const SortableBody = SortableContainer((props) => <tbody {...props} />);
+const DragHandle = SortableHandle(() => (
+  <MenuOutlined
+    style={{
+      cursor: 'grab',
+      color: '#999',
+    }}
+  />
+));
 
 const NormalTable=(props)=>{
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const comData = props.comData || [{}]
   const field=getFields(componentConfig)
   const {config} = componentConfig
-  console.log(config);
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+  const [dataSource, setDataSource] = useState(comData);
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    if (oldIndex !== newIndex) {
+      const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex).filter(
+        (el) => !!el,
+      );
+      console.log('Sorted items: ', newData);
+      setDataSource(newData);
+    }
+  };
+  const DraggableContainer = (props) => (
+    <SortableBody
+      useDragHandle
+      disableAutoscroll
+      helperClass="row-dragging"
+      onSortEnd={onSortEnd}
+      {...props}
+    />
+  );
+  const DraggableBodyRow = ({ className, style, ...restProps }) => {
+    const index = dataSource.findIndex((x) => x.index === restProps['data-row-key']);
+    return <SortableItem index={index} {...restProps} />;
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -261,6 +295,7 @@ const NormalTable=(props)=>{
   const expandConfig=getOtherConfig(expand.value)
   const headerConfig=getOtherConfig(tableHeader.value)
   const tableRowConfig=getOtherConfig(tableRow.value)
+
   // const summaryConfig=getOtherConfig(summary.value)
   const {tableSize,fontFamily}=globalConfig
   const {show,bgColor,textStyle}=headerConfig
@@ -302,6 +337,14 @@ const NormalTable=(props)=>{
       },
     }
   }:{}
+  const isDraggableSort=tableRowConfig.dragerSort ? {
+    components:{
+      body: {
+        wrapper: DraggableContainer,
+        row: DraggableBodyRow,
+      },
+    }
+  }:{}
 
   return (
     <Table
@@ -325,10 +368,22 @@ const NormalTable=(props)=>{
       }}
       scroll={{
         x:postionConfig.width,
-        y:postionConfig.height
+        y:postionConfig.height-35
       }}
       {...isExpand}
+      {...isDraggableSort}
     >
+      {
+        tableRowConfig.dragerSort?(
+          <Column
+            title='拖拽'
+            dataIndex='sort'
+            width={50}
+            className='drag-visible'
+            render={() => <DragHandle />}
+          ></Column>
+        ):''
+      }
       {
         mappingConfig.map(item=>{
           const {textStyle:columnTextStyle}=item
@@ -358,7 +413,7 @@ const NormalTable=(props)=>{
               {...filterConfig}
               render={(text)=>{
                 return (
-                  <div style={{...columnTextStyle}}>{text}</div>
+                  <span style={{...columnTextStyle}}>{text}</span>
                 )
               }}
             />

@@ -172,6 +172,11 @@ const ComponentDefaultConfig = {
           'displayName': '偶行背景色', 
           'value': '#2a2d3c', 
           'type': 'color' 
+        }, {
+          "name": "dragerSort",
+          "displayName": "拖拽排序",
+          "type": "switch",
+          "value": false
         }
       ],
     },{

@@ -19,6 +19,7 @@
     "ahooks": "^3.1.13",
     "ant-design": "^1.0.0",
     "antd": "^4.21.5",
+    "array-move": "^4.0.0",
     "axios": "^0.26.1",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
