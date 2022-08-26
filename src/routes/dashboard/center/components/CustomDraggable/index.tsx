@@ -38,8 +38,7 @@ import timelineConfig from '@/customComponents/assist/timeline/config'
 import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPanel_1'
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
-
-import InstrumentPanel from '@/customComponents/echarts/components/instrumentPanel_5'
+import Cascader from '@/customComponents/assist/cascader'
 
 
 import {
@@ -1049,6 +1048,13 @@ const CustomDraggable
                                                                 fields={ getFields(component) }
                                                                 comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                                               ></InstrumentPanel4>:
+                                                              layer.moduleName === 'cascader'?
+                                                                <Cascader
+                                                                  onChange={(val:any)=>handleValueChange(val,component,layer.id)}
+                                                                  componentConfig={ component }
+                                                                  fields={ getFields(component) }
+                                                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                ></Cascader>:
                                                               <ErrorCatch
                                                                 app={component.name}
                                                                 user=""
@@ -1059,14 +1065,13 @@ const CustomDraggable
                                                                   console.log('组件报错信息：', errors, '组件id', layer.id);
                                                                 }}
                                                               >
-                                                                <InstrumentPanel></InstrumentPanel>
-                                                                {/* <RemoteBaseComponent
+                                                                <RemoteBaseComponent
                                                                   key={layer.id}
                                                                   componentConfig={ component }
                                                                   fields={ getFields(component) }
                                                                   comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer) }
                                                                   onChange={(val:any)=>handleValueChange(val, component, layer.id)}
-                                                                ></RemoteBaseComponent> */}
+                                                                ></RemoteBaseComponent>
                                                               </ErrorCatch>
                             }
                           </div>
