@@ -1,15 +1,15 @@
 import React, { memo, useEffect } from 'react'
 
 import EveryComponent from '../everyComponent'
-import ReferencePanel from '@/customComponents/referencePanel'
-import DynamicPanel from '@/customComponents/dynamicPanel/index'
+import ReferencePanel from '@/customComponents/dashboardShow/referencePanel'
+import DynamicPanel from '@/customComponents/dashboardShow/dynamicPanel/index'
 import { getComDataWithFilters } from '@/utils/data'
 
 const MODULES = 'modules'
 const OPACITY = 'opacity'
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, bar, dispatch, scaleValue, panels } = props
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels } = props
   return (
     <div className='recursive-component-wrap'>
       {
@@ -45,6 +45,7 @@ const RecursiveComponent = (props: any) => {
                         <DynamicPanel
                           id={layer.id}
                           panels={panels}
+                          previewDashboard={previewDashboard}
                           isDashboard={false}
                         />
                       </div>:
@@ -54,6 +55,7 @@ const RecursiveComponent = (props: any) => {
                         <ReferencePanel
                           id={layer.id}
                           panels={panels}
+                          previewDashboard={previewDashboard}
                           isDashboard={false}
                         />
                       </div>
@@ -69,7 +71,7 @@ const RecursiveComponent = (props: any) => {
                         <RecursiveComponent
                           layersArr={layer[MODULES]}
                           componentLists={componentLists}
-                          bar={bar}
+                          previewDashboard={previewDashboard}
                           dispatch={dispatch}
                           scaleValue={scaleValue}
                           panels={panels}
@@ -82,7 +84,7 @@ const RecursiveComponent = (props: any) => {
                       {
                         <EveryComponent key={ind}
                           componentData={targetComponent}
-                          comData={getComDataWithFilters(bar.componentData, targetComponent, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
+                          comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer)}
                           scaleValue={scaleValue}
                           layerInfo={layer}
                         />

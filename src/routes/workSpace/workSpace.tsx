@@ -81,11 +81,12 @@ const workSpace = (props: any) => {
      */
     const getUserList = async() => {
       const data = await http({
-        url: `/visual/user/list`,
+        url: `/visual/user/queryUnjoinedUserList`,
         method: 'post',
         body: {
           pageNo: 1,
-          pageSize: 1000
+          pageSize: 1000,
+          spaceId: workSpace.curWorkSpace[0]
         }
       })
       setUserInfoList(data.content)
@@ -95,7 +96,7 @@ const workSpace = (props: any) => {
   useEffect(() => {
     getDataDispatch({ accountId: global.userInfo.id }, 'getWorkSpaceList')
     // 获取用户列表
-    getUserList()
+    // getUserList()
   }, []);
   // 设置项目配额
   useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota])
@@ -152,16 +153,12 @@ const workSpace = (props: any) => {
   // 添加成员
   const changeAddMemberModal = () => {
     setShowAddMemberModal(!showAddMemberModal);
+    getUserList()
   };
   // 表格中的删除事件
   const delClick = async (rowId: string) => {
     Modal.confirm({
       title: '删除成员',
-      // centered: true,
-      style: {
-        // 调整浮层位置
-        top: '30%'
-      },
       okButtonProps: {
         style: {
           backgroundColor: '#e9535d',
@@ -190,7 +187,6 @@ const workSpace = (props: any) => {
             userIdList: [rowId]
           }
         })
-        console.log(data,'data')
         if (data) {
           refreshMemberList(workSpace.curWorkSpace[0])
         } else {
@@ -254,7 +250,6 @@ const workSpace = (props: any) => {
             userIdList
           }
         })
-        console.log(data,'数据')
         refreshMemberList(workSpace.curWorkSpace[0])
         cancelAddMemberModal()
         setSubLoading(false)
@@ -262,7 +257,6 @@ const workSpace = (props: any) => {
         setSubLoading(false)
       }
     }
-    
    };
 
   const handleChangeRole = (data:any) => {
@@ -304,10 +298,20 @@ const workSpace = (props: any) => {
       render: (text: any) => <span>{text}</span>,
     },
     {
-      title: "ID",
-      key: "id",
+      title: "账户名",
+      dataIndex: "userName",
+      key: "userName",
+      // showSorterTooltip: false,
+      width: 250,
+      className: "customHeaderColor",
       ellipsis: true,
-      dataIndex: "id",
+      render: (text: any) => <span>{text}</span>,
+    },
+    {
+      title: "用户Id",
+      key: "userId",
+      ellipsis: true,
+      dataIndex: "userId",
       width: 250,
     },
     {

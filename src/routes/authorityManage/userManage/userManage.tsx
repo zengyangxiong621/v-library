@@ -374,6 +374,7 @@ const UserManage = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
+            scroll={{ y: 'calc(100vh - 350px)' }}
             rowClassName='customRowClass'
             rowSelection={rowSelection}
             loading={tableLoading}

@@ -25,7 +25,7 @@ let SupportLines = ({ bar, cRef }: SupportLineProperty) => {
     <div
       className="SupportLines"
       ref={lineRef}
-      style={ { position: 'absolute', ...style } }
+      style={ { position: 'absolute', zIndex: '1000000' ,...style } }
     >
       <div className="v-line" style={ { borderTop: `${ 1 / bar.canvasScaleValue }px dashed #b6b2b2` } }/>
       <div className="h-line" style={ { borderLeft: `${ 1 / bar.canvasScaleValue }px dashed #b6b2b2` } }/>

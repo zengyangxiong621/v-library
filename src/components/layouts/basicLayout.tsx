@@ -31,15 +31,17 @@ class BasicLayout extends Component<Props, State> {
   constructor(Props: any) {
     super(Props)
     this.state={
-      loading: false
+      loading: false,
+      isPublishScreen: window.location.href.indexOf('publishScreen') > -1
     }
   }
 
   handleGetAccountInfo=()=>{
     const {global,dispatch}=this.props
+    const { isPublishScreen }:any = this.state
     const {userInfo}=global
     const token=localStorage.getItem('token')
-    if(token && !userInfo){
+    if(token && !userInfo && !isPublishScreen){
       dispatch({
         type:'global/getCurUserInfo'
       })
@@ -61,16 +63,21 @@ class BasicLayout extends Component<Props, State> {
   componentDidMount(): void {
     const {dispatch}=this.props
     this.handleGetAccountInfo()
-    dispatch({
-      type:'global/getWorkspaceList'
-    })
+    const { isPublishScreen }:any = this.state
+    if(!isPublishScreen){
+      dispatch({
+        type:'global/getWorkspaceList'
+      })
+    }
   }
 
   render() {
     const { routerData, location, global, history } = this.props
+    const { isPublishScreen }:any = this.state
     const { childRoutes } = routerData
     const { pathname } = location
     const { menuData,userInfo, workspaceList } = global
+    const isWorkspace = window.location.href.indexOf('work-space') > -1
     let _menuData:any = []
     if(userInfo){
       const menusNameArr = (userInfo.menus || []).map((item:any)=>item.name)
@@ -84,15 +91,15 @@ class BasicLayout extends Component<Props, State> {
     return (
       <Fragment>
         {
-          !userInfo ? 
+          (!userInfo && !isPublishScreen) || (isPublishScreen && false) ? 
           <Spin size="large" className='full-spin' tip="Loading..."></Spin> :
           <Layout>
             {!needHeader && <CustomHeader {...this.props} menuData={_menuData} defaultPath={defaultPath}></CustomHeader>}
             {
-              workspaceList.length ?
+              workspaceList.length || isWorkspace || isPublishScreen  ?
               <Content>
                 {
-                  _menuData && _menuData.length ? 
+                  _menuData && _menuData.length || isPublishScreen ? 
                   isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch> :
                   <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
                 }

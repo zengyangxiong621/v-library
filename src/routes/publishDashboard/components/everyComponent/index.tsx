@@ -3,7 +3,7 @@ import './index.less'
 import { WEIZHICHICUN } from './type'
 
 import { getTargetStyle } from './type'
-import ComponentEventContainer from '@/components/componentEventContainer'
+import ComponentEventContainer from '@/routes/publishDashboard/components/componentEventContainer'
 
 // import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getFields } from '@/utils/data'

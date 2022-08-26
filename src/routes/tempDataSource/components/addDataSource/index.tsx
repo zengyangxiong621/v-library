@@ -16,7 +16,9 @@ const AddDataSource = (props: any) => {
   // TODO 暂无确定的取得spaceId的方案
 
   const [addForm] = Form.useForm()
-  const { visible, spaceId, changeShowState, refreshTable } = props
+  const { visible, changeShowState, refreshTable } = props
+  const curWorkspace:any = localStorage.getItem('curWorkspace') 
+  const spaceId = JSON.parse(curWorkspace)?.id;
   const [curDataType, setCurDataType] = useState('')
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([])
@@ -129,26 +131,30 @@ const AddDataSource = (props: any) => {
     const values: any = await addForm.validateFields(['url'])
     setGetIndexListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const data = await http({
-      url: '/visual/datasource/queryIndices',
-      method: 'post',
-      body: values
-    })
-    setGetIndexListLoading(false)
-    if (Array.isArray(data)) {
-      if (!data.length) {
-        message.error('没有可用的索引')
-        setIndexList([])
-      } else {
-        // data 只是个数组，处理成select需要的形式
-        const formatData: any = data.map((item: any) => ({
-          label: item,
-          value: item
-        }))
-        setIndexList(formatData)
+    try {
+      const data = await http({
+        url: '/visual/datasource/queryIndices',
+        method: 'post',
+        body: values
+      })
+      setGetIndexListLoading(false)
+      if (Array.isArray(data)) {
+        if (!data.length) {
+          message.error('没有可用的索引')
+          setIndexList([])
+        } else {
+          // data 只是个数组，处理成select需要的形式
+          const formatData: any = data.map((item: any) => ({
+            label: item,
+            value: item
+          }))
+          setIndexList(formatData)
+        }
       }
-    } else {
-      message.error('获取索引列表失败')
+    } finally {
+      setTimeout(() => {
+        setGetIndexListLoading(false)
+      }, 500);
     }
   }
   /**

@@ -221,5 +221,5 @@ const getCallbackParams = (componentCallbackArgs, currnetData) => {
 export {
   getComDataWithFilters,
   getFields,
-  getCallbackParams
+  getCallbackParams,
 }

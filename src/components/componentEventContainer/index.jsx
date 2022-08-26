@@ -1,18 +1,18 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
 import {useState, useRef} from "react";
-import TimeSelect from '@/customComponents/timeSelect'
-import ScrollTable from '@/customComponents/scrollTable'
+import TimeSelect from '@/customComponents/interactive/timeSelect'
+import ScrollTable from '@/customComponents/table/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import CusImage from '@/customComponents/assist/image/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar'
+import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
-import RankingBar from '@/customComponents/echarts/components/rankingBar'
-import Tab from '@/customComponents/tab'
-import ScrollSelect from '@/customComponents/scrollSelect/index'
+import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.0'
+import Tab from '@/customComponents/interactive/tab'
+import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import Counter from  '@/customComponents/assist/counter2'
 import {connect} from "dva"
 
@@ -402,7 +402,7 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         {...props}
       ></RemoteBaseComponent>     */}
       {
-        props.componentConfig.moduleName === 'counter' ? 
+        props.componentConfig.moduleName === 'counter' ?
         <Counter
           onChange={handleValueChange}
           {...props}
@@ -435,13 +435,13 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         >
         </BasicBar>
         :
-        props.componentConfig.moduleName === 'worldMap' ?
-        <WorldMap
-          onChange={handleValueChange}
-          {...props}
-        >
-        </WorldMap>
-        :
+        // props.componentConfig.moduleName === 'worldMap' ?
+        // <WorldMap
+        //   onChange={handleValueChange}
+        //   {...props}
+        // >
+        // </WorldMap>
+        // :
         // props.componentConfig.moduleName === 'chinaMap' ?
         // <ChinaMap
         //   onChange={handleValueChange}
