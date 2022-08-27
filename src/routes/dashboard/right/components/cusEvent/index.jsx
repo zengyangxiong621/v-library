@@ -3,7 +3,7 @@ import './index.less'
 import { connect } from 'dva'
 import { v4 as uuidv4 } from 'uuid';
 import debounce from 'lodash/debounce';
-
+import {deepClone} from '@/utils'
 import EventDrawer from '../eventDrawer'
 import OriginSelect from '../originSelect'
 
@@ -27,6 +27,8 @@ import {
   PlusCircleOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
+import UpdateContainerDrawer from '../../../components/dataContainer/components/updateContainerDrawer'
+import UpdateComponentConfigDrawer from '../updateComponentConfigDrawer'
 
 const CusEvent = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
@@ -44,6 +46,10 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   const [activeTab, setActiveTab] = useState(null)
   const [tabpanes, setTabpanes] = useState(_data?.events || [])
   const [drawerVisible, setDrawerVisible] = useState(false)
+  const [componentVisible, setComponentVisible] = useState(false)
+  const [componentConfig, setComponentConfig] = useState({})
+  const [copyComponentConfig, setCopyComponentConfig] = useState({})
+  const [currentAction, setCurrentAction] = useState({})
   const [activePane, setActivePane] = useState(null)
   const [activeId, setActiveId] = useState(null)
   const [activeActionTab, setActiveActionTab] = useState(null)
@@ -398,19 +404,31 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     setScaleProportion(activeAction.scale.x / activeAction.scale.y)
   }
 
-  const componentScopeChange = (val, action) => {
-    action.componentScope = val
+  const componentScopeChange = (e, action) => {
+    action.componentScope = e.target.value
     _data.events = tabpanes
     props.onChange()
   }
-  const selectComponentChange = (val, action) => {
+  const selectComponentChange = (val, option, action) => {
+    if (action.action === 'updateConfig') {
+      action.action = 'show'
+    }
+    action.componentConfig = []
     action.component = val
     _data.events = tabpanes
     props.onChange()
   }
+  const selectComponentSelect = (val, option, action) => {
+    if (action.component.length === 1) {
+
+    }
+    console.log('-----select-----')
+    console.log('val', val)
+    console.log('option', option)
+    console.log('action', )
+  }
 
   const actionTypeChange = (val, action) => {
-    setIsUpdateConfig(val === 'updateConfig')
     action.action = val
     _data.events = tabpanes
     props.onChange()
@@ -533,6 +551,42 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     setActiveActionsCollapseKey(e)
   }
 
+  const handleUpDateConfig = (e, action) => {
+    setCurrentAction(action)
+    let component = bar.components.find(item => item.id === action.component[0])
+    setCopyComponentConfig(deepClone(component))
+    let componentConfig = deepClone(component)
+    if ('componentConfig' in action && action.componentConfig.length > 0) {
+      componentConfig = { ...componentConfig, config: [...componentConfig.config.filter(item => ['dimension', "hideDefault"].includes(item.name)), ...action.componentConfig] }
+      component.config = deepClone(componentConfig.config)
+      dispatch({
+        type: 'bar/save'
+      })
+    }
+    setComponentVisible(true)
+    setComponentConfig(componentConfig)
+  }
+
+  const handleComponentStyleChange = (data) => {
+    currentAction.componentConfig = deepClone(data)
+    let component = bar.components.find(item => item.id === currentAction.component[0])
+    component.config = deepClone([...copyComponentConfig.config.filter(item => ['dimension', "hideDefault"].includes(item.name)), ...data])
+    dispatch({
+      type: 'bar/save'
+    })
+    _data.events = tabpanes
+    console.log('tabpanes', tabpanes)
+    props.onChange()
+  }
+
+  const handleComponentClose = () => {
+    let component = bar.components.find(item => item.id === currentAction.component[0])
+    component.config = copyComponentConfig.config
+    dispatch({
+      type: 'bar/save'
+    })
+    setComponentVisible(false)
+  }
 
   return (
     <Form
@@ -571,7 +625,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                   label='条件'
                 >
                   <div className="conditon-wraper"
-                    style={{ paddingLeft: (pane.conditions.length > 1) ? "36px" : "8px" }}
+                       style={{ paddingLeft: (pane.conditions.length > 1) ? "36px" : "8px" }}
                   >
                     {pane.conditions.length ?
                       <div
@@ -609,7 +663,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                             <Form.Item label='组件'>
                               <div className="action-component">
                                 <Radio.Group
-                                  defaultValue={action.componentScope}
+                                  value={action.componentScope}
                                   className="zoom-set"
                                   style={{ marginBottom: '8px' }}
                                   onChange={val => { componentScopeChange(val, action) }}>
@@ -621,9 +675,15 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                 <TreeSelect
                                   treeData={bar.treeData}
                                   fieldNames={
-                                    { key: 'id', children: 'modules', label: 'name', value: 'id' }
+                                    {
+                                      key: 'id',
+                                      children: 'modules',
+                                      label: 'name',
+                                      value: 'id',
+                                    }
                                   }
-                                  onChange={val => { selectComponentChange(val, action) }}
+                                  onChange={(val, option) => { selectComponentChange(val, option, action) }}
+                                  onSelect={(val, option) => { selectComponentSelect(val, option, action) }}
                                   treeCheckable={true}
                                   showCheckedStrategy={SHOW_PARENT}
                                   value={action.component}
@@ -637,13 +697,13 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               <Select
                                 className="custom-select"
                                 placeholder="请选择"
-                                defaultValue={action.action}
+                                value={action.action}
                                 style={{ marginBottom: 0 }}
                                 onChange={e => actionTypeChange(e, action)}
                               >
                                 {
                                   actionTypes.filter(item => {
-                                    if (action.component.length === 1) {
+                                    if (action.component.length <= 1) {
                                       return true
                                     } else {
                                       return !["updateConfig", "updateStatus"].includes(item.value)
@@ -655,41 +715,41 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               </Select>
                             </Form.Item>
                             {
-                              isUpdateConfig ?
+                              action.action === 'updateConfig' ?
                                 <Form.Item label=''>
-                                  <Button style={{float: 'left', left: 20}}>
+                                  <Button
+                                    style={{float: 'left', left: 80}}
+                                    onClick={(e) => handleUpDateConfig(e, action)}
+                                  >
                                     编辑组件配置
                                   </Button>
-                              </Form.Item> : <></>
-                            }
-
-                            {
-                              action.action === 'translate' ?
-                                <Form.Item label='移动后位置'>
-                                  <div className="translate-x" style={{ marginRight: '8px' }}>
-                                    <InputNumber
-                                      step="1"
-                                      max={10000}
-                                      className="size-input sc-input"
-                                      style={{ width: '100%' }}
-                                      defaultValue={action.translate.toX}
-                                      onChange={e => translateXchange(e, action)}
-                                    />
-                                    <div className="ant-input-group-addon input-num-suffix" >X</div>
-                                  </div>
-                                  <div className="translate-y">
-                                    <InputNumber
-                                      step="1"
-                                      max={10000}
-                                      className="size-input sc-input"
-                                      style={{ width: '100%' }}
-                                      defaultValue={action.translate.toY}
-                                      onChange={e => translateYchange(e, action)}
-                                    />
-                                    <div className="ant-input-group-addon input-num-suffix" >Y</div>
-                                  </div>
-                                </Form.Item>
-                                : action.action === 'scale' ?
+                                </Form.Item> :
+                                action.action === 'translate' ?
+                                  <Form.Item label='移动后位置'>
+                                    <div className="translate-x" style={{ marginRight: '8px' }}>
+                                      <InputNumber
+                                        step="1"
+                                        max={10000}
+                                        className="size-input sc-input"
+                                        style={{ width: '100%' }}
+                                        defaultValue={action.translate.toX}
+                                        onChange={e => translateXchange(e, action)}
+                                      />
+                                      <div className="ant-input-group-addon input-num-suffix" >X</div>
+                                    </div>
+                                    <div className="translate-y">
+                                      <InputNumber
+                                        step="1"
+                                        max={10000}
+                                        className="size-input sc-input"
+                                        style={{ width: '100%' }}
+                                        defaultValue={action.translate.toY}
+                                        onChange={e => translateYchange(e, action)}
+                                      />
+                                      <div className="ant-input-group-addon input-num-suffix" >Y</div>
+                                    </div>
+                                  </Form.Item>
+                                  : action.action === 'scale' ?
                                   <React.Fragment>
                                     <Form.Item label='缩放原点'>
                                       <OriginSelect psValue={action.scale.origin} onChange={e => sacleOriginChange(e, action)} />
@@ -832,8 +892,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                       </Form.Item>
                                       <Form.Item label="透视">
                                         <Checkbox style={{ float: 'left' }}
-                                          defaultChecked={action.rotate.perspective}
-                                          onChange={e => { perspectiveChange(e, action) }} />
+                                                  defaultChecked={action.rotate.perspective}
+                                                  onChange={e => { perspectiveChange(e, action) }} />
                                       </Form.Item>
                                     </React.Fragment>
                                     : <Form.Item label='动画类型'>
@@ -887,8 +947,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               ['show', 'hide', 'show/hide'].includes(action.action) ?
                                 <Form.Item label="隐藏卸载">
                                   <Checkbox style={{ float: 'left' }}
-                                    defaultChecked={action.unmount}
-                                    onChange={e => { unmountChange(e, action) }} />
+                                            defaultChecked={action.unmount}
+                                            onChange={e => { unmountChange(e, action) }} />
                                 </Form.Item> : null
                             }
                           </TabPane>
@@ -910,6 +970,12 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
         data={activePane}
         confirm={setCondition}
         setConditionType={setConditionType}
+      />
+      <UpdateComponentConfigDrawer
+        visible={componentVisible}
+        onClose={(value) => handleComponentClose(value)}
+        onStyleChange={(data) => handleComponentStyleChange(data)}
+        componentConfig={componentConfig}
       />
     </Form>
   )
