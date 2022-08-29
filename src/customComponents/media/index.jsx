@@ -40,7 +40,7 @@ const Media=(props)=>{
 
   return hideDefault ? (<></>) : (
     <ReactPlayer
-      playing={MediaAutoPlaying?true:false}
+      playing={MediaAutoPlaying}
       width={`${width}+px`}
       height={`${height}+px`}
       loop={Loop}
