@@ -8,10 +8,12 @@ import moment from 'moment';
 import type { Moment } from 'moment';
 
 import zhCN from 'antd/es/locale/zh_CN'
-import { ConfigProvider, DatePicker, Select, Button,  } from 'antd'
+import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip,  } from 'antd'
 import type { TimeRangePickerProps } from 'antd';
+import { FileDoneOutlined,UserOutlined  } from '@ant-design/icons';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+const { Search } = Input;
 
 
 type RangeValue = [Moment | null, Moment | null] | null;
@@ -26,6 +28,7 @@ const AlarmLog: React.FC = (props:any) => {
   const [pageSize, setPageSize] = useState(10) //当前每页数量
   const [keywords, setKeywords] = useState('') //当前关键词
   const [map, setMap] = useState({updatedTime:false}) //时间字段排序
+  const [unreadNum, setUnreadNum] = useState(0) //未读数量
 
   const [value, setValue] = useState<RangeValue>(null)
   const [hackValue, setHackValue] = useState<RangeValue>(null);
@@ -38,12 +41,13 @@ const AlarmLog: React.FC = (props:any) => {
   useEffect(() => {
     requestData()
   }, [])
-  // 请求网络
-  const requestData = async (obj?:object) => {
+  // 请求列表
+  const requestData = async (obj:object = {}) => {
     console.log('请求网络')
     const read = stateReadTransform(stateRead)
     const allParams = { startDate,endDate,pageNo,pageSize,keywords,read,map }
     console.log({...allParams,...obj});
+    requestUnreadNum() //请求未读数量
     try {
       const data = await http({
         url: '/visual/alarmInfo/list',
@@ -52,15 +56,15 @@ const AlarmLog: React.FC = (props:any) => {
       })
       console.log(data)
     } catch (error) {
-      console.log(error);
+      console.log(error); 
     }finally{
 
     }
   }
   // 改变时间
   const handerChangeTiem: TimeRangePickerProps['onChange'] = (val, dateStrings) => {
-    const startDate = dateStrings[0] + " 00:00:00"
-    const endDate = dateStrings[0] + " 23:59:59"
+    let startDate = dateStrings[0] && dateStrings[0] + " 00:00:00"
+    let endDate = dateStrings[1] && dateStrings[1] + " 23:59:59"
     setStartDate(startDate)
     setEndDate(endDate)
     setMomentDates(val)
@@ -91,7 +95,40 @@ const AlarmLog: React.FC = (props:any) => {
     setStateRead('')
     requestData({startDate,endDate,read})
    }
+  // 搜索回调
+  const handleSearch = (value: string) => {
+    setKeywords(value)
+    requestData({keywords:value})
+  }
+  // 全部告警更新已读状态请求
+  const requesAllRead = async (obj:object = {}) => {
+    try {
+      const data = await http({
+        url: '/visual/alarmInfo/all/read',
+        method: 'post',
+      })
+      message.success('全部标记为已读成功！');
+      requestData()
+    } catch (error) {
+      console.log(error); 
+    } finally{
 
+    }
+  } 
+  // 未读数量请求请求
+  const requestUnreadNum = async (obj:object = {}) => {
+    try {
+      const data = await http({
+        url: '/visual/alarmInfo/unreadNum',
+        method: 'post',
+      })
+      setUnreadNum(data)
+    } catch (error) {
+      console.log(error); 
+    } finally{
+
+    }
+  } 
   return (
     <ConfigProvider locale={zhCN}>
       <div className='alarmLog-warp'>
@@ -117,9 +154,28 @@ const AlarmLog: React.FC = (props:any) => {
            <Button onClick={handleReset} type="primary">重置</Button>
           </div>
         </div>
+        <div className='search-read'>
+          <div className='search'>
+            <Search 
+              placeholder="请输入异常对象或处置方案名称搜索" 
+              allowClear 
+              onSearch={handleSearch} 
+              style={{ width: 300 }} 
+            />
+          </div>
+          <div className='read' onClick={requesAllRead}>
+            <Tooltip title="一键已读">
+              <Badge count={unreadNum}>
+                <FileDoneOutlined style={{fontSize: '30px',color: "#177ddc"}} />
+              </Badge>
+            </Tooltip>
+          </div>
+        </div>
+        <div className='table-list'>
+          123
+        </div>
       </div>
     </ConfigProvider>
-
   )
 }
 
