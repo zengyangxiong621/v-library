@@ -31,7 +31,6 @@ import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 import Timeline from '@/customComponents/assist/timeline'
-// import timelineConfig from '@/customComponents/assist/timeline/config'
 import NormalTable from '@/customComponents/table/normalTable'
 // import normalTableConfig from '@/customComponents/table/normalTable/config'
 

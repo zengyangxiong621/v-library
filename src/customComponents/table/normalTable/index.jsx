@@ -297,17 +297,33 @@ const NormalTable=(props)=>{
   const tableRowConfig=getOtherConfig(tableRow.value)
 
   // const summaryConfig=getOtherConfig(summary.value)
-  const {tableSize,fontFamily}=globalConfig
-  const {show,bgColor,textStyle}=headerConfig
-  const {bold,color,fontFamily:headerFontFamily,fontSize,italic,letterSpacing,lineHeight}=textStyle
-  const {show:rowConfig,oddBgColor,evenBgColor}=tableRowConfig
+  const {tableSize,haveBorder}=globalConfig
+
   const getRowStyle=()=>{
+    const {show:rowConfig,oddBgColor,evenBgColor}=tableRowConfig
     if(!rowConfig){
       return
     }
     return {
       '--oddBgColor':oddBgColor,
       '--evenBgColor':evenBgColor
+    }
+  }
+  const getHeaderStyle=()=>{
+    const {show,bgColor,textStyle}=headerConfig
+    const {bold,color,fontFamily:headerFontFamily,fontSize,italic,letterSpacing,lineHeight}=textStyle
+    return {
+      show:show,
+      style:{
+        '--headerBgColor':bgColor,
+        '--headerFontColor':color,
+        '--headerFontBold':bold ? 'bold':'',
+        '--headerFontFamily':headerFontFamily,
+        '--headerFontSize':fontSize+'px',
+        '--headerFontStyle':italic ? 'italic':'',
+        '--headerLetterSpacing':letterSpacing+'px',
+        '--headerLineHeight':lineHeight+'px',
+      }
     }
   }
   const getColumnWidth=(columnConfig)=>{
@@ -353,17 +369,10 @@ const NormalTable=(props)=>{
       rowKey='id'
       pagination={false}
       size={tableSize}
-      showHeader={show}
+      bordered={haveBorder}
+      showHeader={getHeaderStyle().show}
       style={{
-        'font-family':fontFamily,
-        '--headerBgColor':bgColor,
-        '--headerFontColor':color,
-        '--headerFontBold':bold ? 'bold':'',
-        '--headerFontFamily':headerFontFamily,
-        '--headerFontSize':fontSize,
-        '--headerFontStyle':italic ? 'italic':'',
-        '--headerLetterSpacing':letterSpacing,
-        '--headerLineHeight':lineHeight,
+        ...getHeaderStyle().style,
         ...getRowStyle()
       }}
       scroll={{
