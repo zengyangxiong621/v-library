@@ -50,7 +50,7 @@ const RankingBar = (props) => {
   // config中位置尺寸这项不需要,提取出来
   const hadFilterArr = config.filter((item) => item.name !== 'dimension')
   const { allSettings } = getTargetConfig(hadFilterArr)
-  console.log('allSettings', allSettings)
+  // console.log('allSettings', allSettings)
   const { autoSort, sortOrder, maxBars, spacing, batteryStyle, animation } = allSettings['图表']
   const { classify, numerical } = allSettings['文本']
   const { barWidth, colorSetting, isRadius, highLight, symbolMargin } = allSettings['柱状']

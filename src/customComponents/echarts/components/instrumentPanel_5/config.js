@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "instrumentPanel_5", //组件标识
-  "moduleVersion": "1.3.1", //组件版本号
+  "moduleVersion": "1.3.2", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -129,6 +129,33 @@ const componentDefaultConfig = {
                   type: "color",
                   value: "#08389d",
                 }
+              ]
+            },
+            {
+              'name': 'progress',
+              'displayName': '进度条颜色',
+              'type': 'collapse',
+              hasSwitch:false, // 是否有切换按钮
+              defaultExpand:false,  // 是否默认展开
+              value:[
+                {	// 如果有后面的按钮，则该项必须放在第一个
+                  'name': 'showProgresstyles',
+                  'displayName': '',
+                  'value': true,
+                  'type': 'switch',
+                },
+                {
+                  displayName: "颜色一",
+                  name: "colorOne",
+                  type: "color",
+                  value: "#6648FF",
+                },
+                {
+                  displayName: "颜色二",
+                  name: "colorTwo",
+                  type: "color",
+                  value: "#18FFE5",
+                },
               ]
             },
           ]

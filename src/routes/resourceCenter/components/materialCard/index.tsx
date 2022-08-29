@@ -242,7 +242,7 @@ const AppCard = (props: any) => {
               <Tooltip placement="bottom" title="导出">
                 <span 
                   className="icon iconfont icon-zhuanfa"
-                  style={{ fontSize: "16px", marginRight: "10px" }}
+                  style={{ fontSize: "16px", marginRight: "10px",cursor: 'pointer' }}
                   onClick={exportDesign}
                 ></span>
                 {/* <IconFont

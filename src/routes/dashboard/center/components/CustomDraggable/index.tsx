@@ -40,8 +40,8 @@ import NormalTable from '@/customComponents/table/normalTable'
 import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPanel_1'
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
+import Cascader from '@/customComponents/assist/cascader'
 
-import InstrumentPanel from '@/customComponents/echarts/components/instrumentPanel_4'
 
 import {
   STYLE,
@@ -1115,7 +1115,14 @@ const CustomDraggable
                                                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                                                     >
                                                                     </NormalTable>:
-                                                                <ErrorCatch
+                                                                layer.moduleName === 'cascader'?
+                                                                <Cascader
+                                                                  onChange={(val:any)=>handleValueChange(val,component,layer.id)}
+                                                                  componentConfig={ component }
+                                                                  fields={ getFields(component) }
+                                                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                ></Cascader>:
+                                                              <ErrorCatch
                                                                     app={component.name}
                                                                     user=""
                                                                     token=""
