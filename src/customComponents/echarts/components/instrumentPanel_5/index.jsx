@@ -48,8 +48,8 @@ const InstrumentPanel = (props) => {
   }
   const hadFilterArr = config.filter((item) => item.name !== 'dimension')
   const { allSettings } = getTargetConfig(hadFilterArr)
-  console.log('allSettings',allSettings)
-  const { innerRadius,outerRadius,axisLine:{axisLineColor} } = allSettings ? allSettings['圆环'] : {}
+  // console.log('allSettings',allSettings)
+  const { innerRadius,outerRadius,axisLine:{axisLineColor},progress:{colorOne,colorTwo} } = allSettings ? allSettings['圆环'] : {}
   const { numberRange:{min,max},numberStyles:{textStylerNumbe,offset:numberOffset},
   unitStyles:{textStyleUnit,padding}, axisLabelStyles:{textStyleAxisLabel}
         } = allSettings ? allSettings['指标'] : {}
@@ -121,19 +121,12 @@ const InstrumentPanel = (props) => {
                 colorStops: [
                   {
                       offset: 0,
-                      color: '#6648FF' // 0% 处的颜色
+                      color: colorOne // 0% 处的颜色
                   },
-                  {
-                      offset: 0.17,
-                      color: '#6648FF' // 100% 处的颜色
-                  },
-                  {
-                      offset: 0.9,
-                      color: '#18FFE5' // 100% 处的颜色
-                  },
+
                   {
                       offset: 1,
-                      color: '#18FFE5' // 100% 处的颜色
+                      color: colorTwo // 100% 处的颜色
                   }
                   ],
                 global: false // 缺省为 false

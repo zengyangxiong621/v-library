@@ -117,8 +117,13 @@ const ComponentDev = (props: any) => {
   }
 
   /**********  删除、编辑 操作 *************/
-  const handleDelete = (moduleId: string,appName: Array<string>) => {
-    // 暂时更改
+  // const handleDelete = async (moduleId: string,appName: Array<string>) => {
+  const handleDelete = async (moduleId: string) => {
+    // 点击删除 先调查询接口
+    const appName = await http({
+      url: `/visual/module-manage/usedModuleAppList/${moduleId}`, 
+      method: 'get'
+    })
     if (appName.length > 0) {
       Modal.confirm({
         title: '删除组件',
@@ -262,20 +267,20 @@ const ComponentDev = (props: any) => {
       ellipsis: true,
       dataIndex: 'moduleVersion',
     },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      ellipsis: true,
-      render: (text:any) => {
-        return (
-          <>
-          <span className='statusCircle' style={{backgroundColor: text===0?'#a1ea2b':'#c0c0c0'}}></span>
-            {text === 0?'已上架':'未上架'}
-          </>
-        )
-      }
-    },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'status',
+    //   key: 'status',
+    //   ellipsis: true,
+    //   render: (text:any) => {
+    //     return (
+    //       <>
+    //       <span className='statusCircle' style={{backgroundColor: text===0?'#a1ea2b':'#c0c0c0'}}></span>
+    //         {text === 0?'已上架':'未上架'}
+    //       </>
+    //     )
+    //   }
+    // },
     {
       title: '开发者',
       dataIndex: 'updatedBy',
@@ -314,7 +319,8 @@ const ComponentDev = (props: any) => {
             <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
             <Button type='text'  
                     className='buttonBlue'  
-                    onClickCapture={() => handleDelete(record.id,record.appName)}
+                    // onClickCapture={() => handleDelete(record.id,record.appName)}
+                    onClickCapture={() => handleDelete(record.id)}
                     >删除</Button>      
             {/* <Button type='text' disabled={ record.appName?.length>0 } 
                 className={ record.appName?.length>0 ? 'buttonGray' : 'buttonBlue' }  
@@ -350,7 +356,7 @@ const ComponentDev = (props: any) => {
             </span>
           </div>
           <div className='search'>
-            <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部" onChange={selectChange}>
+            {/* <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
                   return (
@@ -358,7 +364,7 @@ const ComponentDev = (props: any) => {
                   )
                 })
               }
-            </Select>
+            </Select> */}
             <Input.Search placeholder="搜索"
               allowClear
               maxLength={40}

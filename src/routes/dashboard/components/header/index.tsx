@@ -124,12 +124,12 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
       case 'yulan':
         toPreviewOrPublish(icon)
         break;
-      // case 'dongtaimianban':
-      //   createPanel(0)
-      //   break;
-      // case 'yinyongmianban':
-      //   createPanel(1)
-      //   break;
+      case 'dongtaimianban':
+        createPanel(0)
+        break;
+      case 'yinyongmianban':
+        createPanel(1)
+        break;
     }
   }
 
@@ -719,7 +719,11 @@ const centerIconArr = [
   {
     icon: 'zujiangengxin',
     text: '组件更新'
-  }
+  },
+  {
+    icon: 'zhutifengge',
+    text: '主题风格'
+  },
 ]
 
 const rightIconArr = [

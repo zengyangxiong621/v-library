@@ -13,7 +13,7 @@ const importComponent = (props: any) => {
   const [fileList, setFileList] = useState([]);
   // 上传的文件在后端存储的地址
   const [fileUrl, setFileUrl] = useState('')
-  const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState(false)
   /**
    * description: 清除弹窗内部维护的所有状态
    */
@@ -25,6 +25,8 @@ const importComponent = (props: any) => {
    * description: 上传组件
    */
   const handleOk  = async () => {
+    setLoading(true)
+    
     // const values: any = await addForm.validateFields()
     if (fileList && fileList.length) { //检验是否有上传文件
       const formData = new FormData();
@@ -36,11 +38,13 @@ const importComponent = (props: any) => {
         body: formData
       })
       if (data) {
+        setLoading(false)
         changeShowState('add')
         addForm.resetFields()
         refreshTable()
       }
     } else {
+        setLoading(false)
         message.error('上传文件格式错误或未上传文件!');
         return
     }
@@ -134,11 +138,11 @@ const importComponent = (props: any) => {
         cancelText="取消"
         onCancel={handleCancel}
         getContainer={false}
-        confirmLoading={loading}
+        // confirmLoading={loading}
         footer={[
           <div key='footer'>
             <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel}>取消</Button>
-            <Button type='primary' className='modalBtn okBtn' onClick={handleOk}>确定</Button>
+            <Button type='primary' className='modalBtn okBtn' loading={loading} onClick={handleOk}>确定</Button>
           </div>
         ]}
       >

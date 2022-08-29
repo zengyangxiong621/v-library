@@ -45,6 +45,7 @@ export function GetQueryString(name:any){
 
 
 export const forwardLogin = () => {
+  logout()
   window.onbeforeunload = null
   localStore.logout()
   const o = location.origin

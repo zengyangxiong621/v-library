@@ -41,20 +41,30 @@ const init = () => {
 }
 
 const checkToken = async() => {
-  const ticket = GetQueryString('ticket')
-  // 入口文件中校验登录信息
-  const token = localStore.getToken()
-  const pn = location.origin + location.pathname;
-  if(!token){
-    try{
-      await authorize()
-    }catch(err){
-      if (!pn.endsWith('/login')) {
-        forwardLogin()
+  // 发布的大屏不走登录校验过程
+  const isPublishScreen = window.location.href.indexOf('publishScreen') > -1
+  if(isPublishScreen){
+    init()
+  }else{
+    const ticket = GetQueryString('ticket')
+    // 入口文件中校验登录信息
+    const token = localStore.getToken()
+    const pn = location.origin + location.pathname;
+    if(!token){
+      try{
+        await authorize()
+        init()
+      }catch(err){
+        if (!pn.endsWith('/login')) {
+          forwardLogin()
+        }else{
+          init()
+        }
       }
+    }else{
+      init()
     }
   }
-  init()
 }
 checkToken()
 

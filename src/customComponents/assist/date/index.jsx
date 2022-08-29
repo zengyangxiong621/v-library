@@ -6,7 +6,7 @@ class ShowDate extends Component {
     super(props)
     this.state = {
       finalDate: '',
-      curTime: ''
+      curTime: new Date().toLocaleTimeString()
     }
   }
   dayReflect = {

@@ -26,7 +26,7 @@ const DataSource = (props: any) => {
   const [editDataSourceInfo, setEditDataSourceInfo] = useState({})
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
-    pageSize: 30,
+    pageSize: 10,
   })
   const [tableMap, setTableMap] = useState({})
   const [totalElements, setTotalElements] = useState(0)
@@ -428,6 +428,18 @@ const selectOptions = [
   {
     name: 'ELASTIC_SEARCH',
     key: 'ELASTIC_SEARCH'
-  }
+  },
+  {
+    name: 'ORACLE',
+    key: 'ORACLE'
+  },
+  {
+    name: 'SQLSERVER',
+    key: 'SQLSERVER'
+  },
+  {
+    name: 'CLICKHOUSE',
+    key: 'CLICKHOUSE'
+  },
 ]
 export default memo(DataSource)

@@ -180,7 +180,7 @@ const EveryTreeNode = (props: any) => {
               {
                 customLevel === 1 ? <></> :
                 // 系统素材不允许添加，修改，删除分类
-                  customLevel === 2 && ['systemMaterial', 'systemTemplate'].indexOf(groupId) === -1
+                  customLevel === 2 && ['systemMaterial'].indexOf(groupId) === -1
                     ? <IconFont type='icon-xinjianfenzu' onClickCapture={() => addGroup(groupId, parentId)} />
                     :
                     (systemDefined)

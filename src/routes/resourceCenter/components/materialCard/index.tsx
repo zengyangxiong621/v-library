@@ -233,7 +233,6 @@ const AppCard = (props: any) => {
       history.push(`/dashboard/${data.id}`)
     }
   }
-
   return (
     <div className="AppCard-wrap">
       <header className="head">
@@ -243,7 +242,7 @@ const AppCard = (props: any) => {
               <Tooltip placement="bottom" title="导出">
                 <span 
                   className="icon iconfont icon-zhuanfa"
-                  style={{ fontSize: "16px", marginRight: "10px" }}
+                  style={{ fontSize: "16px", marginRight: "10px",cursor: 'pointer' }}
                   onClick={exportDesign}
                 ></span>
                 {/* <IconFont
@@ -255,7 +254,7 @@ const AppCard = (props: any) => {
               </Tooltip>
               {/* 系统素材不允许移动 */}
               {
-                ['myTemp', 'myresource'].indexOf(moduleType) > -1 &&
+                ['myTemp','systemTemp', 'myresource'].indexOf(moduleType) > -1 &&
                 <Tooltip placement="bottom" title="移动">
                   <IconFont
                     style={{ fontSize: "16px", marginRight: "10px" }}

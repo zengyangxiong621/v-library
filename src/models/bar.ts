@@ -62,13 +62,62 @@ import { defaultData, IBarState } from "./defaultData/bar";
 export default {
   namespace: "bar",
   state: {
-    ...defaultData,
+    ...JSON.parse(JSON.stringify(defaultData)),
   } as IBarState,
   subscriptions: {
-    setup({ dispatch, history }: { dispatch: any; history: any }) {
+    setup({ dispatch, history }: { dispatch: any; history: any; }) {
       // eslint-disable-line
       history.listen((location: any) => {
-        // console.log('location', location)
+        const pathName = window.location.pathname
+        console.log('pathName', pathName)
+        if (pathName.indexOf('dashboard/') !== -1) {
+          // 应用编辑页
+          const windowPathList = pathName.split('/')
+          const dashboardId = windowPathList[2]
+          let panelId = null, stateId = null
+          if (windowPathList[3]) {
+            panelId = windowPathList[3].split('-')[1]
+          }
+          if (windowPathList[4]) {
+            stateId = windowPathList[4].split('-')[1]
+          }
+          let isPanel = false
+          if (panelId) {
+            isPanel = true
+          }
+          dispatch({
+            type: 'save',
+            payload: {
+              treeData: [],
+              scaleDragData: {
+                position:{
+                  x: 0,
+                  y:0
+                },
+                style: {
+                  width: 0,
+                  height: 0,
+                  display: 'none'
+                }
+              }
+            }
+          })
+          dispatch({
+            type: 'initDashboard',
+            payload: {
+              dashboardId,
+              isPanel,
+              panelId,
+              stateId,
+            },
+            cb: () => { }
+          })
+        } else if (pathName.indexOf('dashboard-manage') !== -1) {
+          // 我的可视化
+          dispatch({
+            type: 'clearCurrentDashboardData',
+          })
+        }
       });
     },
     onResize({ dispatch, history }: any) {
@@ -93,81 +142,84 @@ export default {
       });
     },
     *initDashboard({ payload: {dashboardId, isPanel, stateId, panelId}, cb }: any, { call, put, select }: any): any {
-      const curWorkspace:any = localStorage.getItem('curWorkspace')
-      const spaceId =   JSON.parse(curWorkspace)?.id;
-      // 获取回调参数列表
-      const callbackParamsList = yield http({
-        url: "/visual/module/callParam/list",
-        method: "GET",
-        params: {
-          dashboardId,
-        },
-      });
-      // TODO 怎么造成的
-      // 获取所有的数据容器数据
-      const data = yield yield put({
-        type: "getDataContainerList",
-        payload: dashboardId,
-      });
-      const bar: any = yield select(({ bar }: any) => bar);
-      bar.dataContainerList.forEach(async (item: any) => {
-        let data: any = null;
-        item.enable = item.modules.length > 0;
-        if (item.dataType === "static") {
-          data = item.staticData.data;
-        } else {
-          data = await http({
-            method: "post",
-            url: "/visual/container/data/get",
-            body: {
-              id: item.id,
-              callBackParamValues: bar.callbackArgs,
+      let bar: any = yield select(({ bar }: any) => bar);
+        if (dashboardId !== bar.dashboardId) {
+          // 获取回调参数列表
+          const callbackParamsList = yield http({
+            url: "/visual/module/callParam/list",
+            method: "GET",
+            params: {
+              dashboardId,
             },
           });
+          // 获取所有的数据容器数据
+          const data = yield yield put({
+            type: "getDataContainerList",
+            payload: dashboardId,
+          });
+          let bar: any = yield select(({ bar }: any) => bar);
+          bar.dataContainerList.forEach(async (item: any) => {
+            let data: any = null;
+            item.enable = item.modules.length > 0;
+            if (item.dataType === "static") {
+              data = item.staticData.data;
+            } else {
+              data = await http({
+                method: "post",
+                url: "/visual/container/data/get",
+                body: {
+                  id: item.id,
+                  callBackParamValues: bar.callbackArgs,
+                },
+              });
+            }
+            bar.dataContainerDataList.push({ id: item.id, data });
+          });
+          // 获取当前画布所有的数据过滤器
+          const filters = yield http({
+            url: "/visual/module/filter/list",
+            method: "GET",
+            params: {
+              id: dashboardId,
+              type: "screen",
+            },
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+          yield put({
+            type: "getAllDashboardList",
+          })
+          yield put({
+            type: 'save',
+            payload: {
+              dataContainerDataList: bar.dataContainerDataList,
+              componentFilters: filters || [],
+              callbackParamsList,
+            }
+          })
         }
-        bar.dataContainerDataList.push({ id: item.id, data });
-      });
-      // 获取当前画布所有的数据过滤器
-      const filters = yield http({
-        url: "/visual/module/filter/list",
-        method: "GET",
-        params: {
-          id: dashboardId,
-          type: "screen",
-        },
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
-      yield put({
-        type: "save",
-        payload: {
-          dataContainerDataList: bar.dataContainerDataList,
-          componentFilters: filters || [],
-          callbackParamsList,
-          isPanel,
-          stateId,
-          dashboardId,
-          panelId
-        },
-      });
-      if (isPanel) {
         yield put({
-          type: 'getPanelDetails'
-        })
-      }
-      yield put({
-        type: "getDashboardDetails",
-        cb: async (data: any) => {
-          await cb(data);
-        },
-      });
-      yield put({
-        type: "getAllDashboardList",
-        payload: {
-          spaceId
+          type: "save",
+          payload: {
+            isPanel,
+            stateId,
+            dashboardId,
+            panelId
+          },
+        });
+        if (isPanel) {
+          yield put({
+            type: 'getPanelDetails'
+          })
         }
-      })
+        yield put({
+          type: "getDashboardDetails",
+          cb: async (data: any) => {
+            await cb(data);
+          },
+        });
+
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -176,6 +228,7 @@ export default {
         url: `/visual/panel/detail/${ panelId }`,
         method: 'get',
       })
+      // const { config, states: panelStatesList } = bar.panels.find((panel: IPanel) => panel.id === panelId)
       const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === 'recommend')
       recommendConfig.width = config.width
       recommendConfig.height = config.height
@@ -193,7 +246,7 @@ export default {
         body: {
           "pageNo": 1,
           "pageSize": 1000,
-          "spaceId": payload.spaceId,
+          "spaceId": 1,
           "map": {
             "updated_time": false
           },
@@ -786,7 +839,7 @@ export default {
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
       let data = yield http({
-        url: `/visual/resource/queryResourceTypeList?spaceId=${payload.spaceId}`,
+        url: `/visual/resource/queryResourceTypeList?spaceId=1`,
         method: "get",
       });
       data.myTypes.map((item: any) => {
@@ -829,6 +882,135 @@ export default {
         type: "calcDragScaleData",
       });
     },
+    *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const data = yield http({
+        url: '/visual/panel/state/create',
+        method: 'post',
+        body: {
+          dashboardId: bar.dashboardId,
+          panelId: bar.panelId
+        }
+      })
+      yield put({
+        type: 'save',
+        payload: {
+          panelStatesList: bar.panelStatesList.concat({
+            name: data.name,
+            id: data.id
+          })
+        }
+      })
+    },
+    *deletePanelState({ payload, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { panelId, dashboardId, panelStatesList } = bar
+      const { stateId } = payload
+      try {
+        const data = yield http({
+          url: '/visual/panel/state/delete',
+          method: 'post',
+          body: {
+            dashboardId,
+            panelId,
+            stateId
+          }
+        })
+        const index = panelStatesList.findIndex((state: {id: string, name: string}) => state.id === stateId)
+        const toStateId = panelStatesList[0].id
+        panelStatesList.splice(index, 1)
+        yield put({
+          type: 'save',
+          payload: {
+            panelStatesList,
+            stateId: toStateId
+          }
+        })
+        yield put({
+          type: 'getDashboardDetails'
+        })
+      } catch(err) {
+        console.log('err', err)
+      }
+    },
+    *copyPanelState({ payload, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { panelId, dashboardId, panelStatesList } = bar
+      const { stateId } = payload
+      try {
+        const data = yield http({
+          url: '/visual/panel/state/copy',
+          method: 'post',
+          body: {
+            dashboardId,
+            panelId,
+            stateId
+          }
+        })
+        panelStatesList.push(data)
+        const toStateId = data.id
+        yield put({
+          type: 'save',
+          payload: {
+            panelStatesList,
+            stateId: toStateId
+          }
+        })
+        yield put({
+          type: 'getDashboardDetails'
+        })
+      } catch(err) {
+        console.log('err', err)
+      }
+      // yield put({
+      //   type: 'save',
+      //   payload: {
+      //     panelStatesList: bar.panelStatesList.concat({
+      //       name: data.name,
+      //       id: data.id
+      //     })
+      //   }
+      // })
+    },
+    *selectPanelState({ payload: { stateId } }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      if (stateId !== bar.stateId) {
+        yield put({
+          type: 'save',
+          payload: {
+            stateId
+          }
+        })
+        yield put({
+          type: 'getDashboardDetails',
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            scaleDragData: {
+              position: {
+                x: 0,
+                y: 0
+              },
+              style: {
+                width: 0,
+                height: 0,
+                display: 'none',
+              }
+            },
+            selectedComponentOrGroup: [],
+            selectedComponentIds: [],
+            selectedComponentRefs: {},
+            selectedComponentDOMs: {},
+            selectedComponents: [],
+            key: [stateId]
+          }
+        })
+      }
+    },
+    *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {
+
+    }
   },
 
   reducers: {
@@ -1047,16 +1229,20 @@ export default {
         ...state,
       };
     },
-    updateSelectedComponents(state: IBarState, { payload }: any) {
+    updateSelectedComponents(state: IBarState, { payload, cb = function() {} }: any) {
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup
       );
       // todo 这里需要添加 panel 的（来自 develop 分支）
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
+      state.selectedComponents = [
+        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
+        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
+      ]
+      console.log('state.selectedComponents', state.selectedComponents)
+      cb(state.selectedComponents)
       return {
-        ...state
+        ...state,
+        selectedComponents: state.selectedComponents,
       }
     },
     calcDragScaleData(state: IBarState, { payload }: any) {
@@ -1185,9 +1371,10 @@ export default {
       state.selectedComponentIds = layerComponentsFlat(
         state.selectedComponentOrGroup
       );
-      state.selectedComponents = state.components.filter((component) =>
-        state.selectedComponentIds.includes(component.id)
-      );
+      state.selectedComponents = [
+        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
+        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
+      ]
       return { ...state };
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
@@ -1836,7 +2023,7 @@ export default {
     // },
     clearCurrentDashboardData(state: IBarState, { payload }: any) {
       return {
-        ...defaultData,
+        ...JSON.parse(JSON.stringify(defaultData)),
       };
     },
     // 获取系统素材分类数据

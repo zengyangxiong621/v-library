@@ -53,7 +53,8 @@ const globalStroe={
           return
         }
         const token=localStorage.getItem('token')
-        if(!token){
+        const isPublishScreen = window.location.href.indexOf('publishScreen') > -1
+        if(!token && !isPublishScreen){
           history.replace('/login')
         }
       });
@@ -97,18 +98,28 @@ const globalStroe={
           url: `/visual/workspace/list`,
           method: "get",
         })
+        // 设置工作空间
+        yield put({
+          type: "setWorkspaceList",
+          payload: data,
+        });
+        let curWorkspace:any=localStorage.getItem('curWorkspace')
         if(data.length){
-          // 设置工作空间
-          yield put({
-            type: "setWorkspaceList",
-            payload: data,
-          });
-          const curWorkspace=localStorage.getItem('curWorkspace')
+          if(curWorkspace){
+            curWorkspace = JSON.parse(curWorkspace)
+            const spaceItem = data?.find((item:any) => item.id === curWorkspace.id);
+            if(!spaceItem){
+              curWorkspace = null
+            }
+          }
           if(!curWorkspace){
             // 将当前空间存入到localStorage
             localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
           }
+        }else{
+          localStorage.removeItem('curWorkspace')
         }
+
       } catch (error) {
         console.log(error);
       }

@@ -40,11 +40,6 @@ const UploadMedia = props => {
       props.onChange()
     }
   }
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  }
   const handleBgRemove = () => {
     setVideoUrl('')
     _data.value = ''
@@ -87,7 +82,7 @@ const UploadMedia = props => {
             {!videoUrl ? '点击这里进行修改' : <div style={{ width: '100%' }} className="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card">
               <div className="ant-upload-list-item-info">
                 <span className="ant-upload-span">
-                  <i className='iconfont icon-zhuanfa'></i>
+                  <img src={require('../../../../../assets/images/video_upload.png')}></img>
                 </span>
               </div>
               <span className="ant-upload-list-item-actions">
