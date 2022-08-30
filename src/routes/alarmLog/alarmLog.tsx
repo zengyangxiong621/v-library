@@ -8,12 +8,14 @@ import moment from 'moment';
 import type { Moment } from 'moment';
 
 import zhCN from 'antd/es/locale/zh_CN'
-import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip,  } from 'antd'
+import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip, Spin, Space, Table, Tag  } from 'antd'
 import type { TimeRangePickerProps } from 'antd';
-import { FileDoneOutlined,UserOutlined  } from '@ant-design/icons';
+import type { TableProps } from 'antd/es/table';
+import { FileDoneOutlined } from '@ant-design/icons';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Search } = Input;
+const { Column, ColumnGroup } = Table;
 
 
 type RangeValue = [Moment | null, Moment | null] | null;
@@ -27,11 +29,15 @@ const AlarmLog: React.FC = (props:any) => {
   const [pageNo, setPageNo] = useState(1) //当前页码
   const [pageSize, setPageSize] = useState(10) //当前每页数量
   const [keywords, setKeywords] = useState('') //当前关键词
-  const [map, setMap] = useState({updatedTime:false}) //时间字段排序
+  const [map, setMap] = useState({updated_time:false}) //时间字段排序
   const [unreadNum, setUnreadNum] = useState(0) //未读数量
+  const [hackValue, setHackValue] = useState<RangeValue>(null); //选择为空的标志
+  const [loading, setLoading] = useState(false); //选择为空的标志
+  const [dataSource, setDataSource] = useState<any>({}); //请求的数据
+
+
 
   const [value, setValue] = useState<RangeValue>(null)
-  const [hackValue, setHackValue] = useState<RangeValue>(null);
 
   // 转换stateRead
   const stateReadTransform = (state:string | number) => {
@@ -43,22 +49,22 @@ const AlarmLog: React.FC = (props:any) => {
   }, [])
   // 请求列表
   const requestData = async (obj:object = {}) => {
-    console.log('请求网络')
     const read = stateReadTransform(stateRead)
     const allParams = { startDate,endDate,pageNo,pageSize,keywords,read,map }
-    console.log({...allParams,...obj});
+    // console.log({...allParams,...obj});
     requestUnreadNum() //请求未读数量
+    setLoading(true)
     try {
       const data = await http({
         url: '/visual/alarmInfo/list',
         method: 'post',
         body: {...allParams,...obj}
       })
-      console.log(data)
+      setDataSource(data)
     } catch (error) {
       console.log(error); 
     }finally{
-
+      setLoading(false)
     }
   }
   // 改变时间
@@ -128,7 +134,63 @@ const AlarmLog: React.FC = (props:any) => {
     } finally{
 
     }
-  } 
+  }
+  // 更新已读状态请求
+  const requestUpdateRead = async (id:string) => {
+    try {
+      const data = await http({
+        url: `/visual/alarmInfo/${id}/read`,
+        method: 'post',
+      })
+      message.success('标记为已读成功！');
+      requestData()
+    } catch (error) {
+      console.log(error); 
+    } finally{
+
+    }
+  }
+  // 改变表格排序
+  const tableOnChange:TableProps<DataType>['onChange'] = (pagination: any, filters: any, sorter: any, { action }: any) => {
+    if (action === 'sort') {
+      const { order } = sorter
+      if(order){
+        requestData({map: {updated_time: order === "ascend"}})
+      }
+    }
+  }
+  // 表格分页配置
+  const paginationProps = {
+    total: dataSource.totalElements,
+    current: pageNo,
+    pageSize: pageSize,
+    pageSizeOptions: [10, 20, 30],
+    showTotal: (val: number | string) => `共${val}条`,
+    defaultCurrent: 1,
+    showQuickJumper: true,
+    showSizeChanger: true,
+    // locale: {},
+    onChange(page: number, pageSize: number) {
+      setPageNo(page)
+      setPageSize(pageSize)
+      const finalParams: any = {
+        pageNo: page,
+        pageSize,
+      }
+      requestData(finalParams)
+    },
+  }
+
+  interface DataType {
+    object: string;
+    detail: string;
+    disposalSchemeName: number;
+    updatedTime: string;
+    read: boolean;
+    operate: string;
+    id: string
+  }
+
   return (
     <ConfigProvider locale={zhCN}>
       <div className='alarmLog-warp'>
@@ -172,7 +234,61 @@ const AlarmLog: React.FC = (props:any) => {
           </div>
         </div>
         <div className='table-list'>
-          123
+          <Table 
+            dataSource={dataSource?.content || []}
+            scroll={{ y: '53vh' }}
+            rowClassName='customRowClass'
+            loading={loading}
+            rowKey={(record:any) => record.id}
+            onChange={tableOnChange}
+            pagination={paginationProps}
+            showSorterTooltip={false}
+          >
+            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="250px"/>
+            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="450px"/>
+            <Column
+              title="处置方案名称"
+              dataIndex="id"
+              key="id"
+              ellipsis={true}
+              width="250px"
+              render={() => (
+                <>
+                  {'处置方案2'}
+                </>
+              )}
+            />
+            <Column title="更新时间" dataIndex="updatedTime" key="updatedTime" ellipsis={true} width="200px"
+              sorter={true} 
+            />
+            <Column title="状态" dataIndex="read" key="read" ellipsis={true} width="100px"
+              render={(_:any,{read}:any) =>
+              (
+                read 
+              ? 
+              <>
+                <span className='read'></span>
+                <span>已读</span>
+              </>
+              : 
+              <>
+                <span className='unread'></span>
+                <span>未读</span>
+              </>)}
+            />
+            <Column title="操作" dataIndex="id" key="id" ellipsis={true} width="150px"
+              render= {(_:any,{id,read}:any) => (
+                <Button 
+                  type="link" 
+                  className='buttonBlue'
+                  disabled={read}
+                  onClick={() => requestUpdateRead(id)}
+                  >
+                    标记已读
+                </Button>
+              )}
+            />
+          </Table>
         </div>
       </div>
     </ConfigProvider>
