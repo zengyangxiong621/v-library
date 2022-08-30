@@ -85,7 +85,7 @@ const NormalTable=(props)=>{
       >
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`搜索 ${dataIndex} 列`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -104,7 +104,7 @@ const NormalTable=(props)=>{
               width: 90,
             }}
           >
-            Search
+            搜索
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
@@ -113,7 +113,7 @@ const NormalTable=(props)=>{
               width: 90,
             }}
           >
-            Reset
+            重置
           </Button>
           <Button
             type="link"
@@ -126,7 +126,7 @@ const NormalTable=(props)=>{
               setSearchedColumn(dataIndex);
             }}
           >
-            Filter
+            过滤
           </Button>
         </Space>
       </div>
@@ -327,12 +327,12 @@ const NormalTable=(props)=>{
     }
   }
   const getColumnWidth=(columnConfig)=>{
-    const columnWidth=postionConfig.width / mappingConfig.length
+    // const columnWidth=postionConfig.width / mappingConfig.length
     const {width}=columnConfig
-    if(width==='auto'){
-      return columnWidth+'px'
+    if(width!=='auto'){
+      return width+'px'
     }
-    return width+'px'
+    // return columnWidth
   }
   const isExpand=expandConfig.show?{
     expandable:{
