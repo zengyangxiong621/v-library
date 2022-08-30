@@ -38,7 +38,11 @@ const globalStroe={
             path: '/authority-manage/role-manage'
           }
         ]
-      }
+      },
+      {
+        path: "/alarm-log",
+        title: "告警管理"
+      },
     ]
   },
   subscriptions:{
