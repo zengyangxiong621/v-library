@@ -180,8 +180,8 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ]
-  const styleChange = debounce(async (key = "0") => {
-    if (key !== "0") {
+  const styleChange = debounce(async (key = "0", init = false) => {
+    if (key !== "0" && init) {
       setActiveKey(key)
       const referenceList = styleConfig.find(item => item.name === 'referenceList').value
       if (referenceList.length === 0) return
@@ -205,8 +205,10 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     const referenceList = styleConfig.find(item => item.name === 'referenceList').value
     // 判断当前 active的选项值存不存在
     console.log('referenceList', referenceList)
+    console.log('activeKey', activeKey)
+    console.log('activeKey', key)
     if (referenceList.length > 0) {
-      const currentReference = referenceList.find(item => item.key === activeKey).value
+      const currentReference = referenceList.find(item => item.key === key).value
       const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
       if (currentReferenceId) {
         setIsEdit(true)
@@ -300,7 +302,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
   }
 
   useEffect(() => {
-    styleChange("1")
+    styleChange("1", true)
   }, [])
 
   return (

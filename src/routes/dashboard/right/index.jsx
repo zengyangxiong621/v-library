@@ -10,6 +10,7 @@ import AlignmentSetting from './components/alignmentSetting'
 import ReferenceSetting from './components/referenceSetting'
 import DynamicPageSetting from './components/dynamicPageSetting'
 import DynamicSetting from './components/dynamicSetting'
+import DrillDownPageSetting from './components/drillDownPageSetting'
 
 /**
  * 1. 组配置、单个图层配置、页面设置、多选时对齐设置
@@ -19,14 +20,6 @@ import DynamicSetting from './components/dynamicSetting'
 const Right = ({ dispatch, bar }) => {
   const [whichShow, setWhichShow] = useState('pageSetting')
   const [key, setKey] = useState(bar.key.join(''))
-  const reflect = {
-    'groupConfig': GroupConfig,
-    'singleLayer': SingleLayer,
-    'pageSetting': PageSetting,
-    'dynamicPageSetting': DynamicPageSetting,
-    'alignmentSetting': AlignmentSetting,
-    'referenceSetting': ReferenceSetting,
-  }
   useEffect(() => {
     console.log('bar.isPanel', bar.isPanel)
     console.log('bar.selectedComponentOrGroup.length', bar.selectedComponentOrGroup.length)
@@ -50,6 +43,9 @@ const Right = ({ dispatch, bar }) => {
           if (layer.panelType === 1) {
             setWhichShow('referenceSetting')
           }
+          if (layer.panelType === 2) {
+            setWhichShow('drillDownPageSetting')
+          }
         } else {
           setWhichShow('singleLayer')
         }
@@ -62,18 +58,31 @@ const Right = ({ dispatch, bar }) => {
     const key = bar.key
     setKey(key.join(''))
   }, [bar.key, bar.isPanel])
+
+  const targetCompReflect = {
+    groupConfig: <GroupConfig key={key} />,
+    singleLayer: <SingleLayer key={key} />,
+    pageSetting: <PageSetting key={key} />,
+    alignmentSetting: <AlignmentSetting key={key} />,
+    referenceSetting: <ReferenceSetting key={key} />,
+    dynamicSetting: <DynamicSetting key={key} />,
+    dynamicPageSetting: <DynamicPageSetting key={key} />,
+    drillDownPageSetting: <DrillDownPageSetting key={key} />,
+  }
+
   return (
     <div className="right-setting-wrap">
       {
         // reflect[whichShow].type()
-        whichShow === 'groupConfig' ? <GroupConfig key={ key }/>
-          : whichShow === 'singleLayer' ? <SingleLayer key={ key }/>
-          : whichShow === 'pageSetting' ? <PageSetting key={ key }/>
-            : whichShow === 'alignmentSetting' ? <AlignmentSetting key={ key }/>
-              : whichShow === 'referenceSetting' ? <ReferenceSetting key={ key }/>
-                : whichShow === 'dynamicSetting' ? <DynamicSetting key={ key }/>
-                  : whichShow === 'dynamicPageSetting' ? <DynamicPageSetting key={ key }/>
-                    : <></>
+        // whichShow === 'groupConfig' ? <GroupConfig key={ key }/>
+        //   : whichShow === 'singleLayer' ? <SingleLayer key={ key }/>
+        //   : whichShow === 'pageSetting' ? <PageSetting key={ key }/>
+        //     : whichShow === 'alignmentSetting' ? <AlignmentSetting key={ key }/>
+        //       : whichShow === 'referenceSetting' ? <ReferenceSetting key={ key }/>
+        //         : whichShow === 'dynamicSetting' ? <DynamicSetting key={ key }/>
+        //           : whichShow === 'dynamicPageSetting' ? <DynamicPageSetting key={ key }/>
+        //             : whichShow === 'drillDownPageSetting' ? <DrillDownPageSetting key={key} /> : <></>
+        targetCompReflect[whichShow]
       }
     </div>
   )

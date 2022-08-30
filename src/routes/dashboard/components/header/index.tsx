@@ -104,7 +104,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
     }, 4);
 
   }
-  const createPanel = (panelType: 0 | 1) => {
+  const createPanel = (panelType: 0 | 1 | 2) => {
     dispatch({
       type: 'bar/createPanel',
       payload: {
@@ -129,6 +129,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
         break;
       case 'yinyongmianban':
         createPanel(1)
+        break;
+      case 'xiazuanmianban':
+        createPanel(2)
         break;
     }
   }
@@ -701,6 +704,10 @@ const centerIconArr = [
     icon: 'yinyongmianban',
     text: '引用面板'
   },
+  // {
+  //   icon: 'xiazuanmianban',
+  //   text: '下钻面板'
+  // },
   {
     icon: 'line',
   },
@@ -727,10 +734,10 @@ const centerIconArr = [
 ]
 
 const rightIconArr = [
-  {
-    icon: 'huishouzhan',
-    text: '回收站'
-  },
+  // {
+  //   icon: 'huishouzhan',
+  //   text: '回收站'
+  // },
   {
     icon: 'yulan',
     text: '预览'

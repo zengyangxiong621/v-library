@@ -3,6 +3,8 @@ import { connect } from 'dva'
 import { Button } from 'antd'
 import { useSetState } from 'ahooks'
 import CustomDraggable from '@/routes/dashboard/center/components/CustomDraggable'
+import RecursiveComponent from '@/routes/previewDashboard/components/recursiveComponent'
+
 import { http } from '@/services/request'
 import * as React from 'react'
 import {
@@ -15,8 +17,8 @@ interface State {
 }
 import {treeDataReverse, layersPanelsFlat} from '@/utils/index.js'
 
-const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) => {
-  const componentData = bar.componentData
+const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
+  const componentData = previewDashboard.componentData
   const panel = panels.find((item: IPanel) => item.id === id)
   // console.log('panel', panel)
   const { states, config: recommendConfig, name, type } = panel
@@ -44,7 +46,7 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
         body: {
           moduleId: component.id,
           dataType: component.dataType,
-          callBackParamValues: bar.callbackArgs,
+          callBackParamValues: previewDashboard.callbackArgs,
         },
       });
 
@@ -93,7 +95,6 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
   ;(async function() {
       if (states.length === 0) return
       const data = await Promise.all(states.map((item: { name: string; id: string }) => getReferenceDetails(item)));
-      console.log('引用面板所有的data', data)
       setState({
         allData: data,
         isLoading: true
@@ -103,7 +104,7 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
 
   useEffect(() => {
     let timer: any = null
-    if (!isDashboard && state.isLoading && allowScroll) {
+    if (state.isLoading && allowScroll && state.allData.length > 1) {
       timer = setInterval(() => {
         let currentIndex = state.activeIndex + 1
         if (currentIndex === state.allData.length) {
@@ -151,11 +152,10 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
         clearInterval(timer)
       }
     }
-  }, [state.isLoading, state.activeIndex])
+  }, [state.isLoading, state.activeIndex, state.allData.length])
 
   useEffect(() => {
     (async function() {
-      console.log('panel.states[0].id', panel.states)
       if (panel?.states[0]?.id) {
         const data = await getReferenceDetails(panel.states[0]);
         setState({
@@ -172,10 +172,15 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
 
 
   return (
-    <div className={`reference-panel panel-${id}`} style={{pointerEvents: 'none', overflow: state.overflow, width: '100%', height: '100%'}}>
+    <div className={`reference-panel panel-${id}`} style={{ overflow: state.overflow, width: '100%', height: '100%'}}>
       {
-        (isDashboard && state.allData.length) >
-        0 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
+        state.allData.length === 1 ?
+          <RecursiveComponent
+            layersArr={state.allData[0].layers}
+            previewDashboard={previewDashboard}
+            dispatch={dispatch}
+            componentLists={state.allData[0].components}
+            panels={state.allData[0].panels}/>
           :
           state.allData.map((item: any, index: number) =>
             (
@@ -188,7 +193,12 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
                   display: state.activeIndex === index ? 'block' : 'none',
                   transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
                 }}>
-                <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels}/>
+                <RecursiveComponent
+                  layersArr={item.layers}
+                  previewDashboard={previewDashboard}
+                  dispatch={dispatch}
+                  componentLists={item.components}
+                  panels={item.panels}/>
               </div>
             )
           )
@@ -197,4 +207,4 @@ const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) 
   )
 }
 
-export default connect(({ bar }: any) => ({ bar }))(ReferencePanel)
+export default ReferencePanel
