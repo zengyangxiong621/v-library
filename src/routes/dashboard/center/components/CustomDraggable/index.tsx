@@ -789,7 +789,6 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component=normalTableConfig
 
               if (component) {
                 staticData = component.staticData
