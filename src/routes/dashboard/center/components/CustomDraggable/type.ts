@@ -72,14 +72,14 @@ export interface IMouse {
 }
 
 export interface ILayerPanel extends ILayerComponent{
-  panelType: 0 | 1
+  panelType: 0 | 1 | 2
 }
 
 export interface IPanel {
   dashboardId: string,
   name: string,
   id: string,
-  type: 0 | 1,
+  type: 0 | 1 | 2,
   config: {
     allowScroll: boolean;
     top: number,

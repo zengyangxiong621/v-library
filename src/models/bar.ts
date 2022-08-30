@@ -32,7 +32,6 @@ import {
   IComponent, ILayerPanel,
 } from "../routes/dashboard/center/components/CustomDraggable/type"
 
-
 import {
   cancelGroup,
   group,
@@ -526,25 +525,30 @@ export default {
     },
     // 删除图层、分组
     *delete({ payload }: any, { select, call, put }: any): any {
-      const layers = yield http({
-        url: "/visual/layer/delete",
-        method: "delete",
-        body: payload,
-      });
-      if(layers) {
-        const filterNullLayers = clearNullGroup(layers);
-        yield put({
-          type: "updateTree",
-          payload: filterNullLayers,
+      // const barState = yield select(({bar}: any) => bar)
+      // console.log('state', barState)
+      try {
+        const layers = yield http({
+          url: "/visual/layer/delete",
+          method: "delete",
+          body: payload,
         });
+        if(layers) {
+          const filterNullLayers = clearNullGroup(layers);
+          yield put({
+            type: "updateTree",
+            payload: filterNullLayers,
+          });
+        }
+        yield put({
+          type: "deleteComponentData",
+          payload: { id: payload.id },
+        });
+        yield put({
+          type: "updateContainersEnableAndModules",
+        });
+      } catch (error) {
       }
-      yield put({
-        type: "deleteComponentData",
-        payload: { id: payload.id },
-      });
-      yield put({
-        type: "updateContainersEnableAndModules",
-      });
     },
     // 复制图层
     *copy({ payload }: any, { select, call, put }: any): any {
@@ -691,8 +695,7 @@ export default {
           payload: { final: { ...itemData, id }, insertId },
         });
     },
-    *createPanel({ payload: { panelType } }: {payload: {panelType: 0 | 1}}, { call, put, select }: any): any {
-
+    *createPanel({ payload: { panelType } }: {payload: {panelType: 0 | 1 | 2}}, { call, put, select }: any): any {
       const bar: any = yield select((state: any) => state.bar);
       const { isPanel, stateId, dashboardId, key, treeData } = bar
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
