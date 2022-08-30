@@ -1,26 +1,26 @@
-import {DOMElement, useEffect, useRef, useState, RefObject} from 'react'
-import {connect} from 'dva'
-import {Button} from 'antd'
-import {useSetState} from 'ahooks'
+import { useEffect } from 'react'
+import { connect } from 'dva'
+import { Button } from 'antd'
+import { useSetState } from 'ahooks'
 import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
-import {http} from '@/services/request'
+import { http } from '@/services/request'
 import * as React from 'react'
 import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
-import {treeDataReverse, deepClone} from '@/utils/index.js'
+import { treeDataReverse, deepClone } from '@/utils/index.js'
+import { layersPanelsFlat } from '@/utils'
 interface State {
   states: string[];
 
   [key: string]: any;
 }
-import {layersPanelsFlat} from '@/utils'
-const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panels}: any) => {
-  const componentData = previewDashboard.componentData;
+const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) => {
+  const componentData = bar.componentData;
   const panel = panels.find((item: IPanel) => item.id === id)
   // 获取面板想起接口
-  const {states, config, name, type} = panel
-  const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = config
+  const { states, config, name, type } = panel
+  const { isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0 } = config
   const [state, setState] = useSetState<State>({
     allLayers: [],
     layers: [],
@@ -32,8 +32,8 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
     activeIndex: 0,
     isLoading: false,
   })
-  const getPanelDetails = async ({name, id}: { name: string; id: string }) => {
-    const {components, layers, dashboardConfig} = await http({
+  const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
+    const { components, layers, dashboardConfig } = await http({
       url: `/visual/application/dashboard/detail/${id}`,
       method: "get",
     });
@@ -53,11 +53,11 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
   const getStateDetails = async (layerPanel: any) => {
     try {
       const panelConfig = await http({
-        url: `/visual/panel/detail/${ layerPanel.id }`,
+        url: `/visual/panel/detail/${layerPanel.id}`,
         method: 'get',
       })
       return panelConfig
-    } catch(e) {
+    } catch (e) {
       return null
     }
   }
@@ -69,7 +69,7 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
         body: {
           moduleId: component.id,
           dataType: component.dataType,
-          callBackParamValues: previewDashboard.callbackArgs,
+          callBackParamValues: bar.callbackArgs,
         },
       });
 
@@ -84,6 +84,7 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
     }
     return componentData[component.id];
   };
+
   useEffect(() => {
     (async function () {
       if (states.length === 0) return
@@ -97,13 +98,10 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
   }, [])
 
   useEffect(() => {
-    setState({overflow: isScroll ? 'auto' : 'none'})
+    setState({ overflow: isScroll ? 'auto' : 'none' })
   }, [isScroll])
 
-  // 0
-  // length 2
-  // 0 1
-  //
+
   useEffect(() => {
     let timer: any = null
     if (!isDashboard && state.isLoading && allowScroll) {
@@ -113,7 +111,7 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
           currentIndex = 0
         }
         if (animationTime === 0) {
-          setState({activeIndex: currentIndex})
+          setState({ activeIndex: currentIndex })
         } else if (animationTime > 0) {
           let opacityTimer = setInterval(() => {
             const statusWrapDOMs: any = document.querySelectorAll(`.panel-${id} .status-wrap`)
@@ -122,7 +120,7 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
               statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
                 if (index === currentIndex) {
                   dom.style.opacity = '0'
-                } else{
+                } else {
                   dom.style.opacity = '1'
                 }
               })
@@ -134,12 +132,12 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
                   if (Number(dom.style.opacity) >= 1) {
                     dom.style.opacity = ''
                   }
-                } else{
+                } else {
                   dom.style.opacity = `${Number(dom.style.opacity) - 0.5}`
                   dom.style.display = 'block'
                   if (Number(dom.style.opacity) <= 0) {
                     dom.style.opacity = ''
-                    setState({activeIndex: currentIndex})
+                    setState({ activeIndex: currentIndex })
                     clearInterval(opacityTimer)
                   }
                 }
@@ -156,31 +154,32 @@ const DynamicPanel = ({previewDashboard, id, dispatch, isDashboard = true, panel
       }
     }
   }, [state.isLoading, state.activeIndex])
+  console.log('state.allData~~~~~', state.allData);
 
   return (
-    <div className={`dynamic-panel panel-${id}`} style={{ overflow: state.overflow, width: '100%', height: '100%'}}>
+    <div className={`drill-down-panel panel-${id}`} style={{ overflow: state.overflow, width: '100%', height: '100%' }}>
       {
-        (isDashboard && state.allData.length) >
-        0 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
+        (isDashboard && state.allData.length) ===
+          1 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels} />
           :
           state.allData.map((item: any, index: number) =>
-            (
-              <div
-                className="status-wrap"
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  display: state.activeIndex === index ? 'block' : 'none',
-                  transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
+          (
+            <div
+              className="status-wrap"
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                display: state.activeIndex === index ? 'block' : 'none',
+                transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
-                <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels}/>
-              </div>
-            )
+              <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels} />
+            </div>
+          )
           )
       }
     </div>
   )
 }
 
-export default DynamicPanel
+export default connect(({ bar }: any) => ({ bar }))(DrillDownPanel)

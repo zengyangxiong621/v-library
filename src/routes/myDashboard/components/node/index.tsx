@@ -98,6 +98,7 @@ const EveryTreeNode = (props: any) => {
       style: {
         top: '30%'
       },
+      getContainer: document.getElementById('root') as any,
       okButtonProps: {
         style: {
           backgroundColor: '#e9535d',

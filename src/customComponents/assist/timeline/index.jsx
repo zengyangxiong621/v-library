@@ -132,7 +132,7 @@ export default function TimelineRender(props) {
     const baseCss={
       ...timeStyle,
       left:offsetConfig.x+'px',
-      top:`${offsetConfig.y} - ${7}px`,
+      top:(offsetConfig.y - 7) + 'px',
     }
     return isLabelOutShadow ? {...baseCss,textShadow:getShadowVal(labelOutShadow)}:baseCss
   }
@@ -165,7 +165,7 @@ export default function TimelineRender(props) {
       {componentData?.map((item,index)=>{
         const timeLineTitleStyle=getTimeLineTitleStyle(outShadow.show)
         return (
-        <Timeline.Item dot={spotDom(spotType,index)} label={show && item[_fields[0]]}>
+        <Timeline.Item dot={spotDom(spotType,index)} label={show && item[_fields[0]]} key={item.time}>
           <div className='timeLineBox' style={{backgroundColor,borderColor:backgroundColor}}>
             <div className='timeLineArrow' style={getArrowStyle(backgroundColor)}></div>
             <div className='timeLineTitle' style={timeLineTitleStyle}>

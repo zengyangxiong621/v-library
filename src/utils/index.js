@@ -340,13 +340,14 @@ export const layerComponentsFlat = (arr) => {
  * @example layers = [{id: 1, panelType: 0}]
  */
 export const layersPanelsFlat = (arr) => {
-  return arr.reduce((pre, cur) => {
+  const res = arr.reduce((pre, cur) => {
     return pre.concat(
       cur.hasOwnProperty(COMPONENTS)
         ? layersPanelsFlat(cur[COMPONENTS])
         : (cur.hasOwnProperty('panelType') ? cur : []),
     )
   }, [])
+  return res
 }
 
 export function throttle (fn, delay) {
