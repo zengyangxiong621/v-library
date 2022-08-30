@@ -19,6 +19,7 @@ import {layersPanelsFlat} from '@/utils'
 const DynamicPanel = ({publishDashboard, id, dispatch, panels}: any) => {
   const componentData = publishDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id)
+  const pass = window.localStorage.getItem(panel.dashboard)
   // 获取面板想起接口
   const {states, config, name, type} = panel
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = config
@@ -35,8 +36,12 @@ const DynamicPanel = ({publishDashboard, id, dispatch, panels}: any) => {
   })
   const getPanelDetails = async ({name, id}: { name: string; id: string }) => {
     const {components, layers, dashboardConfig} = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
+      url: `/visual/application/dashboard/show/${id}`,
+      method: "post",
+      body: {
+        pass,
+        dashboardId: panel.dashboardId
+      }
     });
     const layerPanels: any = layersPanelsFlat(layers)
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));

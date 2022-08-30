@@ -20,11 +20,11 @@ import {treeDataReverse, layersPanelsFlat} from '@/utils/index.js'
 const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
   const componentData = publishDashboard.componentData
   const panel = panels.find((item: IPanel) => item.id === id)
+  const pass = window.localStorage.getItem(panel.dashboard)
   // console.log('panel', panel)
   const { states, config: recommendConfig, name, type } = panel
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig
   const defaultStateId = (states.length > 0 && states[0].id) || ''
-  console.log('defaultStateId', defaultStateId)
   const [ state, setState ] = useSetState<State>({
     states: [],
     defaultState: '',
@@ -74,8 +74,12 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
   }
   const getReferenceDetails = async ({name, id}: { name: string; id: string }) => {
     const {components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
+      url: `/visual/application/dashboard/show/${id}`,
+      method: "post",
+      body: {
+        pass,
+        dashboardId:panel.dashboardId
+      }
     });
     const layerPanels: any = layersPanelsFlat(layers)
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
