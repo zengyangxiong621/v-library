@@ -6,7 +6,7 @@ const ComponentDefaultConfig = {
   'dashboardId': '11',
   'moduleName': 'normalTable',
   'moduleType': 'normalTable',
-  'moduleVersion': '1.0.0',
+  'moduleVersion': '1.1.0',
   'thumb': '',
   'dataConfig': {},
   'dataType': 'static',
@@ -88,7 +88,12 @@ const ComponentDefaultConfig = {
           'value': 600,
         }
       ],
-    },{ 'name': 'hideDefault', 'displayName': '默认隐藏', 'type': 'checkBox', 'value': false }, {
+    },{
+      'name': 'hideDefault',
+      'displayName': '默认隐藏',
+      'type': 'checkBox',
+      'value': false
+    },{
       'name': 'allGlobal',
       'displayName': '全局',
       'type': 'collapse',
@@ -120,14 +125,10 @@ const ComponentDefaultConfig = {
           }
         ]
         }, {
-          'name': 'fontFamily',
-          'displayName': '字体',
-          'type': 'select',
-          'options': [{ 'name': '宋体', 'value': '宋体' }, { 'name': '微软雅黑', 'value': 'Microsoft Yahei' }, {
-            'name': '黑体',
-            'value': 'SimHei',
-          }],
-          'value': 'Microsoft Yahei',
+          "name": "haveBorder",
+          "displayName": "开启边框",
+          "type": "switch",
+          "value": false
         }
       ],
     },{
@@ -148,6 +149,24 @@ const ComponentDefaultConfig = {
           'displayName':'展开字段',
           'type':'input',
           'value':'column1',
+        },
+        {
+          'displayName': '文本样式',
+          'name': 'expandTextStyle',
+          'type': 'textFullStyleGroup',
+          'value': [{ 'displayName': '', 'name': 'fontFamily', 'value': 'Microsoft Yahei' }, {
+            'displayName': '',
+            'name': 'fontSize',
+            'value': 14,
+          }, { 'displayName': '', 'name': 'color', 'type': 'color', 'value': '#333' }, {
+            'displayName': '',
+            'name': 'bold',
+            'value': false,
+          }, { 'displayName': '', 'name': 'italic', 'value': false }, {
+            'displayName': '字距',
+            'name': 'letterSpacing',
+            'value': 0,
+          }, { 'displayName': '行距', 'name': 'lineHeight', 'value': '14' }],
         }
       ]
     },{
@@ -204,7 +223,7 @@ const ComponentDefaultConfig = {
             'displayName': '字距',
             'name': 'letterSpacing',
             'value': 0,
-          }, { 'displayName': '行距', 'name': 'lineHeight', 'config': { 'disabled': true }, 'value': 'unset' }],
+          }, { 'displayName': '行距', 'name': 'lineHeight', 'value': 'unset' }],
         }],
     },{
         'name': 'customColumn',
@@ -332,76 +351,8 @@ const ComponentDefaultConfig = {
                     'displayName': '字距',
                     'name': 'letterSpacing',
                     'value': 0,
-                  }, { 'displayName': '行距', 'name': 'lineHeight', 'config': { 'disabled': true }, 'value': 'unset' }],
-                },
-                {
-                  'name': 'customStyle',
-                  'displayName': '样式指定',
-                  'type': 'tabArray',
-                  'defaultActiveKey': '1',
-                  'config': {
-                    'template': [
-                      {
-                        'key': '1',
-                        'displayName': '1',
-                        'name': 'tab',
-                        'type': 'object',
-                        'value': [{
-                          'name': 'filedValue',
-                          'displayName': '字段值',
-                          'type': 'input',
-                          'value': '',
-                        }, {
-                          'displayName': '文本样式',
-                          'name': 'textStyle',
-                          'type': 'textFullStyleGroup',
-                          'value': [{ 'displayName': '', 'name': 'fontFamily', 'value': 'Microsoft Yahei' }, {
-                            'displayName': '',
-                            'name': 'fontSize',
-                            'value': 14,
-                          }, { 'displayName': '', 'name': 'color', 'type': 'color', 'value': '#fff' }, {
-                            'displayName': '',
-                            'name': 'bold',
-                            'value': false,
-                          }, { 'displayName': '', 'name': 'italic', 'value': false }, {
-                            'displayName': '字距',
-                            'name': 'letterSpacing',
-                            'value': 0,
-                          }, { 'displayName': '行距', 'name': 'lineHeight', 'value': 'unset' }],
-                        }],
-                      },
-                    ],
-                  },
-                  'value': [{
-                    'key': '1',
-                    'displayName': '1',
-                    'name': 'tab',
-                    'type': 'object',
-                    'value': [{
-                      'name': 'filedValue',
-                      'displayName': '字段值',
-                      'type': 'input',
-                      'value': '',
-                    }, {
-                      'displayName': '文本样式',
-                      'name': 'textStyle',
-                      'type': 'textFullStyleGroup',
-                      'value': [{ 'displayName': '', 'name': 'fontFamily', 'value': 'Microsoft Yahei' }, {
-                        'displayName': '',
-                        'name': 'fontSize',
-                        'value': 14,
-                      }, { 'displayName': '', 'name': 'color', 'type': 'color', 'value': '#fff' }, {
-                        'displayName': '',
-                        'name': 'bold',
-                        'value': false,
-                      }, { 'displayName': '', 'name': 'italic', 'value': false }, {
-                        'displayName': '字距',
-                        'name': 'letterSpacing',
-                        'value': 0,
-                      }, { 'displayName': '行距', 'name': 'lineHeight', 'config': { 'disabled': true }, 'value': 'unset' }],
-                    }],
-                  }],
-                },
+                  }, { 'displayName': '行距', 'name': 'lineHeight','config':{'disabled':true}, 'value': 'unset' }],
+                }
               ],
             },
           ],
@@ -770,7 +721,7 @@ const ComponentDefaultConfig = {
                   'displayName': '字距',
                   'name': 'letterSpacing',
                   'value': 0,
-                }, { 'displayName': '行距', 'name': 'lineHeight', 'config': { 'disabled': true }, 'value': 'unset' }],
+                }, { 'displayName': '行距', 'name': 'lineHeight', 'config': { 'disabled': true }, 'value': '14' }],
               }
             ],
           }

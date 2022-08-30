@@ -14,6 +14,8 @@ import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.0'
 import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import Counter from  '@/customComponents/assist/counter2'
+import Media from '@/customComponents/media'
+import NormalTable from '@/customComponents/table/normalTable'
 import {connect} from "dva"
 
 // import './index.css'
@@ -501,6 +503,15 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
             {...props}
           >
           </Timeline>
+                : props.componentConfig.moduleName === 'media'?
+          <Media
+            {...props}
+          >
+          </Media>
+                :props.componentConfig.moduleName==='normalTable'?
+          <NormalTable
+            {...props}
+          ></NormalTable>
           // : props.componentConfig.moduleName === 'CardFlipper_1' ?
           // <CardFlipper1
           //   scale={scale}

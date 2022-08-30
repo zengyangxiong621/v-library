@@ -22,6 +22,14 @@ const deepClone =  (obj) =>  {
   return result
 }
 
+function rgb() {
+  var r = Math.floor(Math.random() * 256);
+  var g = Math.floor(Math.random() * 256);
+  var b = Math.floor(Math.random() * 256);
+  var rgb = `rgb(${r},${g},${b})`;
+  return rgb;
+}
+
 
 const RingRatio = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
@@ -87,7 +95,7 @@ const RingRatio = (props) => {
       }
     }
     item.itemStyle = {
-      color: dataSeriesObj[item.name] || 'rgb(0,0,0)'
+      color: dataSeriesObj[item.name] || rgb()
     }
   })
 

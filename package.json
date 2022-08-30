@@ -75,6 +75,7 @@
     "react-fast-compare": "^3.2.0",
     "react-highlight-words": "^0.18.0",
     "react-monaco-editor": "^0.48.0",
+    "react-player": "^2.10.1",
     "react-refresh": "^0.11.0",
     "react-slick": "^0.28.1",
     "react-sortable-hoc": "^2.0.0",

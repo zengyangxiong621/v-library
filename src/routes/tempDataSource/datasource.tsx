@@ -428,6 +428,18 @@ const selectOptions = [
   {
     name: 'ELASTIC_SEARCH',
     key: 'ELASTIC_SEARCH'
-  }
+  },
+  {
+    name: 'ORACLE',
+    key: 'ORACLE'
+  },
+  {
+    name: 'SQLSERVER',
+    key: 'SQLSERVER'
+  },
+  {
+    name: 'CLICKHOUSE',
+    key: 'CLICKHOUSE'
+  },
 ]
 export default memo(DataSource)

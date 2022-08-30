@@ -1,7 +1,7 @@
 import React from 'react'
 import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
-import {styleTransformFunc} from '../../../utils'
+import {styleTransformFunc,transformStyleInObj} from '../../../utils'
 import './index.less'
 import { Table,Button, Input, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -85,7 +85,7 @@ const NormalTable=(props)=>{
       >
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`搜索 ${dataIndex} 列`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -104,7 +104,7 @@ const NormalTable=(props)=>{
               width: 90,
             }}
           >
-            Search
+            搜索
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
@@ -113,7 +113,7 @@ const NormalTable=(props)=>{
               width: 90,
             }}
           >
-            Reset
+            重置
           </Button>
           <Button
             type="link"
@@ -126,7 +126,7 @@ const NormalTable=(props)=>{
               setSearchedColumn(dataIndex);
             }}
           >
-            Filter
+            过滤
           </Button>
         </Space>
       </div>
@@ -288,7 +288,6 @@ const NormalTable=(props)=>{
     }
     return style
   }
-
   const mappingConfig=getMapping(customColumnConfig)
   const postionConfig=getOtherConfig(dimiensionConfig.value)
   const globalConfig=getOtherConfig(allGlobalConfig.value)
@@ -297,11 +296,10 @@ const NormalTable=(props)=>{
   const tableRowConfig=getOtherConfig(tableRow.value)
 
   // const summaryConfig=getOtherConfig(summary.value)
-  const {tableSize,fontFamily}=globalConfig
-  const {show,bgColor,textStyle}=headerConfig
-  const {bold,color,fontFamily:headerFontFamily,fontSize,italic,letterSpacing,lineHeight}=textStyle
-  const {show:rowConfig,oddBgColor,evenBgColor}=tableRowConfig
+  const {tableSize,haveBorder}=globalConfig
+
   const getRowStyle=()=>{
+    const {show:rowConfig,oddBgColor,evenBgColor}=tableRowConfig
     if(!rowConfig){
       return
     }
@@ -310,33 +308,60 @@ const NormalTable=(props)=>{
       '--evenBgColor':evenBgColor
     }
   }
-  const getColumnWidth=(columnConfig)=>{
-    const columnWidth=postionConfig.width / mappingConfig.length
-    const {width}=columnConfig
-    if(width==='auto'){
-      return columnWidth+'px'
+  const getHeaderStyle=()=>{
+    const {show,bgColor,textStyle}=headerConfig
+    const {bold,color,fontFamily:headerFontFamily,fontSize,italic,letterSpacing,lineHeight}=textStyle
+    return {
+      show:show,
+      style:{
+        '--headerBgColor':bgColor,
+        '--headerFontColor':color,
+        '--headerFontBold':bold ? 'bold':'',
+        '--headerFontFamily':headerFontFamily,
+        '--headerFontSize':fontSize+'px',
+        '--headerFontStyle':italic ? 'italic':'',
+        '--headerLetterSpacing':letterSpacing+'px',
+        '--headerLineHeight':lineHeight+'px',
+      }
     }
-    return width+'px'
   }
-  const isExpand=expandConfig.show?{
-    expandable:{
-      expandedRowRender: (record) => {
-        const {expandField}=expandConfig
-        if(expandField==='none'){
-          return
-        }
-        return (
-          <p
-            style={{
-              margin: 0,
-            }}
-          >
-            {record[expandField]}
-          </p>
-        )
-      },
+  const getColumnWidth=(columnConfig)=>{
+    // const columnWidth=postionConfig.width / mappingConfig.length
+    const {width}=columnConfig
+    if(width!=='auto'){
+      return width+'px'
     }
-  }:{}
+    // return columnWidth
+  }
+  const getExpandConfig=()=>{
+    const {expandTextStyle,show}=expandConfig
+    const textStyleEntries=Object.entries(expandTextStyle).map(item=>{
+      if(['fontSize','letterSpacing','lineHeight'].includes(item[0])){
+        item[1]=item[1]+'px'
+      }
+      return item
+    })
+    const realTextStyle=Object.fromEntries(textStyleEntries)
+    return show ? {
+      expandable:{
+        expandedRowRender: (record) => {
+          const {expandField}=expandConfig
+          if(expandField==='none'){
+            return
+          }
+          return (
+            <p
+              style={{
+                ...realTextStyle
+              }}
+            >
+              {record[expandField]}
+            </p>
+          )
+        },
+      }
+    }:{}
+  }
   const isDraggableSort=tableRowConfig.dragerSort ? {
     components:{
       body: {
@@ -353,24 +378,17 @@ const NormalTable=(props)=>{
       rowKey='id'
       pagination={false}
       size={tableSize}
-      showHeader={show}
+      bordered={haveBorder}
+      showHeader={getHeaderStyle().show}
       style={{
-        'font-family':fontFamily,
-        '--headerBgColor':bgColor,
-        '--headerFontColor':color,
-        '--headerFontBold':bold ? 'bold':'',
-        '--headerFontFamily':headerFontFamily,
-        '--headerFontSize':fontSize,
-        '--headerFontStyle':italic ? 'italic':'',
-        '--headerLetterSpacing':letterSpacing,
-        '--headerLineHeight':lineHeight,
+        ...getHeaderStyle().style,
         ...getRowStyle()
       }}
       scroll={{
         x:postionConfig.width,
         y:postionConfig.height-35
       }}
-      {...isExpand}
+      {...getExpandConfig()}
       {...isDraggableSort}
     >
       {
@@ -387,6 +405,7 @@ const NormalTable=(props)=>{
       {
         mappingConfig.map(item=>{
           const {textStyle:columnTextStyle}=item
+          const handledStyle=transformStyleInObj(columnTextStyle)
           const mapField=field.find(mitem=>mitem.name===item.fieldName).value
           const sortConfig={}
           let filterConfig=null
@@ -413,7 +432,7 @@ const NormalTable=(props)=>{
               {...filterConfig}
               render={(text)=>{
                 return (
-                  <span style={{...columnTextStyle}}>{text}</span>
+                  <span style={{...handledStyle}}>{text}</span>
                 )
               }}
             />
