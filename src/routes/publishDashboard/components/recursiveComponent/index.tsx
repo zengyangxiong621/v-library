@@ -1,8 +1,8 @@
 import React, { memo, useEffect } from 'react'
 
 import EveryComponent from '../everyComponent'
-import ReferencePanel from '@/customComponents/dashboardShow/referencePanel'
-import DynamicPanel from '@/customComponents/dashboardShow/dynamicPanel'
+import ReferencePanel from '@/customComponents/dashboardPublish/referencePanel'
+import DynamicPanel from '@/customComponents/dashboardPublish/dynamicPanel'
 import { getComDataWithFilters } from '@/utils/data'
 
 const MODULES = 'modules'
@@ -46,6 +46,8 @@ const RecursiveComponent = (props: any) => {
                           id={layer.id}
                           panels={panels}
                           isDashboard={false}
+                          publishDashboard={publishDashboard}
+                          dispatch={dispatch}
                         />
                       </div>:
                       <div
@@ -55,6 +57,8 @@ const RecursiveComponent = (props: any) => {
                           id={layer.id}
                           panels={panels}
                           isDashboard={false}
+                          publishDashboard={publishDashboard}
+                          dispatch={dispatch}
                         />
                       </div>
                   ) :
