@@ -1,7 +1,7 @@
 import React from 'react'
 import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
-import {styleTransformFunc} from '../../../utils'
+import {styleTransformFunc,transformStyleInObj} from '../../../utils'
 import './index.less'
 import { Table,Button, Input, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -396,6 +396,7 @@ const NormalTable=(props)=>{
       {
         mappingConfig.map(item=>{
           const {textStyle:columnTextStyle}=item
+          const handledStyle=transformStyleInObj(columnTextStyle)
           const mapField=field.find(mitem=>mitem.name===item.fieldName).value
           const sortConfig={}
           let filterConfig=null
@@ -422,7 +423,7 @@ const NormalTable=(props)=>{
               {...filterConfig}
               render={(text)=>{
                 return (
-                  <span style={{...columnTextStyle}}>{text}</span>
+                  <span style={{...handledStyle}}>{text}</span>
                 )
               }}
             />
