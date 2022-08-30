@@ -265,10 +265,12 @@ const RightContent = (props: any) => {
       } else {
         message.success({ content: '取消发布成功', duration: 2 })
         // 取消发布成功后，
-        // 刷新列表, 清空分享连接等信息
-        refreshList()
-        setIsShared(isCheck)
-        resetAllState()
+        // 刷新列表, 清空分享连接等信息, 后台响应不够及时导致切换时间发布状态更新有误差，所以加了定时器
+        setTimeout(() => {
+          refreshList()
+          setIsShared(isCheck)
+          resetAllState()
+        })
       }
     }
   }
