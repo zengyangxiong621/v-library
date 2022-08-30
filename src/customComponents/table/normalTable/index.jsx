@@ -288,7 +288,6 @@ const NormalTable=(props)=>{
     }
     return style
   }
-
   const mappingConfig=getMapping(customColumnConfig)
   const postionConfig=getOtherConfig(dimiensionConfig.value)
   const globalConfig=getOtherConfig(allGlobalConfig.value)
@@ -334,25 +333,35 @@ const NormalTable=(props)=>{
     }
     // return columnWidth
   }
-  const isExpand=expandConfig.show?{
-    expandable:{
-      expandedRowRender: (record) => {
-        const {expandField}=expandConfig
-        if(expandField==='none'){
-          return
-        }
-        return (
-          <p
-            style={{
-              margin: 0,
-            }}
-          >
-            {record[expandField]}
-          </p>
-        )
-      },
-    }
-  }:{}
+  const getExpandConfig=()=>{
+    const {expandTextStyle,show}=expandConfig
+    const textStyleEntries=Object.entries(expandTextStyle).map(item=>{
+      if(['fontSize','letterSpacing','lineHeight'].includes(item[0])){
+        item[1]=item[1]+'px'
+      }
+      return item
+    })
+    const realTextStyle=Object.fromEntries(textStyleEntries)
+    return show ? {
+      expandable:{
+        expandedRowRender: (record) => {
+          const {expandField}=expandConfig
+          if(expandField==='none'){
+            return
+          }
+          return (
+            <p
+              style={{
+                ...realTextStyle
+              }}
+            >
+              {record[expandField]}
+            </p>
+          )
+        },
+      }
+    }:{}
+  }
   const isDraggableSort=tableRowConfig.dragerSort ? {
     components:{
       body: {
@@ -379,7 +388,7 @@ const NormalTable=(props)=>{
         x:postionConfig.width,
         y:postionConfig.height-35
       }}
-      {...isExpand}
+      {...getExpandConfig()}
       {...isDraggableSort}
     >
       {

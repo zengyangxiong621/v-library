@@ -149,6 +149,24 @@ const ComponentDefaultConfig = {
           'displayName':'展开字段',
           'type':'input',
           'value':'column1',
+        },
+        {
+          'displayName': '文本样式',
+          'name': 'expandTextStyle',
+          'type': 'textFullStyleGroup',
+          'value': [{ 'displayName': '', 'name': 'fontFamily', 'value': 'Microsoft Yahei' }, {
+            'displayName': '',
+            'name': 'fontSize',
+            'value': 14,
+          }, { 'displayName': '', 'name': 'color', 'type': 'color', 'value': '#333' }, {
+            'displayName': '',
+            'name': 'bold',
+            'value': false,
+          }, { 'displayName': '', 'name': 'italic', 'value': false }, {
+            'displayName': '字距',
+            'name': 'letterSpacing',
+            'value': 0,
+          }, { 'displayName': '行距', 'name': 'lineHeight', 'value': '14' }],
         }
       ]
     },{
