@@ -14,6 +14,7 @@ import StateItem from './stateItem/stateItem'
 
 const DynamicPanel: React.FC = (props: any) => {
   const { bar, dispatch } = props
+  console.log('bar.curPanelType', bar.curPanelType);
   const stateId = bar.stateId
   const panelId = bar.panelId
   const panelStatesList = bar.panelStatesList
@@ -53,7 +54,6 @@ const DynamicPanel: React.FC = (props: any) => {
     e.preventDefault()
     setIsShowRMenu(true)
     const { clientX, clientY } = e
-    console.log('右键在那个item上触发的', item);
     // 保存当前右键选择的状态项
     setRightClickTargetItem(item)
     setRMenuLocation({

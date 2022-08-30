@@ -50,7 +50,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     setTabpanes(_data.callbackArgs || [])
     if (_data?.callbackArgs?.length) {
       setActiveTab(_data.callbackArgs[0].id)
-    } 
+    }
   }, [])
 
   const callbackExtra = () => (

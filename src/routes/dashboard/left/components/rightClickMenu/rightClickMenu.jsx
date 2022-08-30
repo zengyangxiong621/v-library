@@ -42,6 +42,10 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
       // key: bar.key,
       dashboardId: bar.dashboardId,
     }
+    // 如果是动态面板里,这时候的dashboardId应该改为状态id
+    if(bar.isPanel) {
+      customPayload.dashboardId = bar.stateId
+    }
     switch (operateName) {
       case 'lock':
         const finalBody = bar.key.map(item => ({

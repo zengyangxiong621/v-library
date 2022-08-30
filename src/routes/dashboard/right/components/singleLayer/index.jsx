@@ -9,6 +9,7 @@ import DataConfig from '../dataConfig'
 import CusEvent from '../cusEvent'
 import componentLib from '../index'
 import CallbackArgs from '../callbackArgs'
+import DrillDownSetting from '../drillDownSetting'
 
 import {
   Tabs,
@@ -23,6 +24,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
+  console.log('barbarbarbar', bar);
   componentConfig.interaction = componentConfig.interaction || {
     mountAnimation: bar.treeData.find(item => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events
@@ -210,14 +212,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       body: params
     })
     // 把组件定义的回调参数键值对写入callbackArgs中
-    if(componentConfig.callbackArgs.length) {
+    if (componentConfig.callbackArgs.length) {
       const currentActiveCompoentData = bar.currentActiveCompoentData
-      const callbackParams = getCallbackParams(componentConfig.callbackArgs,currentActiveCompoentData[componentConfig.id])
+      const callbackParams = getCallbackParams(componentConfig.callbackArgs, currentActiveCompoentData[componentConfig.id])
       const callbackArgs = bar.callbackArgs
       dispatch({
         type: 'bar/save',
         payload: {
-          callbackArgs:{
+          callbackArgs: {
             ...callbackArgs,
             ...callbackParams
           }
@@ -225,6 +227,10 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       })
     }
   }
+
+  // 通过全局变量 panelId 和 panels 来查找包含当前面板信息的对象，通过对象里的name来判断
+  const  curPanelType = bar.curPanelType
+  console.log('curPanelType', curPanelType);
 
   return (
     <div className="SingleLayer-wrap">
@@ -267,6 +273,12 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
               <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
+          {
+            bar.isPanel && curPanelType === 2 && <TabPane tab="下钻" key="4">
+              <DrillDownSetting></DrillDownSetting>
+            </TabPane>
+          }
+
         </Tabs>
       </div>
     </div>

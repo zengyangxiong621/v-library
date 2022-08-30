@@ -15,7 +15,7 @@ import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid'
 import ComponentCard from '../componentCard'
 import componentLib from '../index'
-import {IPanel} from "@/routes/dashboard/center/components/CustomDraggable/type";
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type";
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -64,54 +64,6 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       'name': 'hideDefault',
       'type': 'checkBox',
       'value': hideDefault,
-    },
-    {
-      "displayName": "启用滚轮",
-      "name": "isScroll",
-      "type": "checkBox",
-      "value": isScroll
-    },
-    {
-      "displayName": "自动轮播",
-      "name": "allowScroll",
-      "type": "checkBox",
-      "value": allowScroll
-    },
-    {
-      "displayName": "动画类型",
-      "name": "animationType",
-      "type": "select",
-      "value": animationType,
-      "options": [
-        {
-          "name": "渐隐渐现",
-          "value": "0",
-        }
-      ]
-    },
-    {
-      "displayName": "更新时间",
-      "name": "scrollTime",
-      "type": "number",
-      "value": scrollTime,
-      "config": {
-        "suffix": "ms",
-        "max": 100000000,
-        "min": 0,
-        "step": 1000
-      }
-    },
-    {
-      "displayName": "动画时长",
-      "name": "animationTime",
-      "type": "number",
-      "value": animationTime,
-      "config": {
-        "suffix": "ms",
-        "max": 24000,
-        "min": 0,
-        "step": 1000
-      }
     }
   ]
 
@@ -125,20 +77,10 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   const styleChange = debounce(async () => {
     const dimensionConfig = styleConfig.find(item => item.name === 'dimension').value
     const hideDefault = styleConfig.find(item => item.name === 'hideDefault').value
-    const isScroll = styleConfig.find(item => item.name === 'isScroll').value
-    const allowScroll = styleConfig.find(item => item.name === 'allowScroll').value
-    const animationType = styleConfig.find(item => item.name === 'animationType').value
-    const scrollTime = styleConfig.find(item => item.name === 'scrollTime').value
-    const animationTime = styleConfig.find(item => item.name === 'animationTime').value
     dimensionConfig.forEach(item => {
       panelConfig.config[item.name] = item.value
     })
     panelConfig.config.hideDefault = hideDefault
-    panelConfig.config.isScroll = isScroll
-    panelConfig.config.allowScroll = allowScroll
-    panelConfig.config.animationType = animationType
-    panelConfig.config.scrollTime = scrollTime
-    panelConfig.config.animationTime = animationTime
     const { config: { left, top, width, height } } = panelConfig
     dispatch({
       type: 'bar/save',
@@ -169,17 +111,6 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
     })
   }, 300)
 
-  // const saveStyleData = async (param) => {
-  //   const params = {
-  //     configs: [param],
-  //     dashboardId: dashboardId
-  //   }
-  //   await http({
-  //     url: '/visual/module/update',
-  //     method: 'post',
-  //     body: params
-  //   })
-  // }
   const handleEditDashboard = () => {
     const panel = bar.panels.find((panel) => panel.id === panelConfig.id)
     history.push(`/dashboard/${bar.dashboardId}/panel-${panel.id}/state-${panel.states[0].id}`)
@@ -203,29 +134,29 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   return (
     <div className="dynamic-wrap">
       <h3 className="dynamic-set-header">
-        动态面板设置
+        下钻面板设置
       </h3>
-      <div className="content" key={ key }>
+      <div className="content" key={key}>
         <Form
           className="custom-form"
-          form={ form }
-          { ...formItemLayout }
-          colon={ false }
+          form={form}
+          {...formItemLayout}
+          colon={false}
         >
-          <ComponentCard data={ panelConfig }
-                         allModulesConfig={ bar.moduleDefaultConfig }
-                         dispatch={ dispatch }>
-            { styleConfig.map((item, index) => {
+          <ComponentCard data={panelConfig}
+            allModulesConfig={bar.moduleDefaultConfig}
+            dispatch={dispatch}>
+            {styleConfig.map((item, index) => {
               if (!(item.type && componentLib[item.type])) {
                 return null
               }
               const TagName = componentLib[item.type]
               return (
-                <TagName data={ item } onChange={ styleChange } key={ index }/>
+                <TagName data={item} onChange={styleChange} key={index} />
               )
-            }) }
+            })}
           </ComponentCard>
-          <Button onClick={handleEditDashboard} className="g-my-2" type="primary" style={{width: "calc(100% - 24px)"}}>编辑动态面板</Button>
+          <Button onClick={handleEditDashboard} className="g-my-2" type="primary" style={{ width: "calc(100% - 24px)" }}>编辑下钻面板</Button>
         </Form>
       </div>
     </div>

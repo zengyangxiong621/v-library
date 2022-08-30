@@ -79,9 +79,11 @@ import Tab from '@/customComponents/interactive/tab/index'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import ReferencePanel from '@/customComponents/dashboardEdit/referencePanel'
 import DynamicPanel from '@/customComponents/dashboardEdit/dynamicPanel'
+import DrilldownPanel from '@/customComponents/dashboardEdit/drillDownPanel'
 import { cloneDeep } from "lodash"
 
 import { setComponentThemeConfigs } from '@/utils/syncJitStorage'
+import DrillDownPanel from '@/customComponents/dashboardEdit/drillDownPanel'
 
 // import Tab from "@/components/tab";
 
@@ -529,10 +531,9 @@ const CustomDraggable
               stateId: panel.states[0].id
             }
           })
-        } else {
+        } else if (layer.panelType === 1) {
           if (panel.states.length > 0) {
             history.push(`/dashboard/${panel.states[0].id}`)
-            console.log('到这里了吧啊')
             dispatch({
               type: 'bar/save',
               payload: {
@@ -559,8 +560,49 @@ const CustomDraggable
               type: 'bar/getDashboardDetails'
             })
           }
+        } if (layer.panelType === 2) {
+          // 下钻面板
+          dispatch({
+            type: 'bar/save',
+            payload: {
+              isPanel: true,
+              panelId: layer.id,
+              treeData: [],
+              selectedComponents: [],
+              selectedComponentOrGroup: [],
+              selectedComponentIds: [],
+              scaleDragData: {
+                position: {
+                  x: 0,
+                  y: 0
+                },
+                style: {
+                  width: 0,
+                  height: 0,
+                  display: 'none'
+                }
+              }
+            }
+          })
+          history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+
+          dispatch({
+            type: 'bar/getPanelDetails'
+          })
+          dispatch({
+            type: 'bar/selectPanelState',
+            payload: {
+              stateId: panel.states[0].id
+            }
+          })
         }
-        // window.open(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
+        // 只要点击了面板，就将面板的类型保存到全局状态中
+        dispatch({
+          type: 'bar/save',
+          payload: {
+            curPanelType: layer.panelType
+          }
+        })
       }
     }
     const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
@@ -753,9 +795,6 @@ const CustomDraggable
             let style_config, staticData, styleDimensionConfig, recommendConfig
             // 群组
             if ('panelType' in layer) {
-              console.log('layer', layer.id)
-              console.log('panels', panels)
-              console.log('----------------')
               const panel = panels.find((panel: IPanel) => panel.id === layer.id)
               if (panel) {
                 recommendConfig = panel.config
@@ -870,6 +909,14 @@ const CustomDraggable
                           <div
                             className="panel-container"
                           >
+                            {/* <DrillDownPanel
+                              history={history}
+                              id={layer.id}
+                              panels={panels}
+                            />
+                            <div className="hovered">
+                              双击编辑下钻面板
+                            </div> */}
                             <DynamicPanel
                               history={history}
                               id={layer.id}
@@ -878,20 +925,33 @@ const CustomDraggable
                             <div className="hovered">
                               双击编辑动态面板
                             </div>
-                          </div> :
-                          <div
-                            className="panel-container"
-                          >
-                            <ReferencePanel
-                              history={history}
-                              id={layer.id}
-                              panels={panels}
-                            />
-                            <div className="hovered">
-                              双击编辑引用面板
-                            </div>
                           </div>
-
+                          : layer.panelType === 1 ?
+                            <div
+                              className="panel-container"
+                            >
+                              <ReferencePanel
+                                history={history}
+                                id={layer.id}
+                                panels={panels}
+                              />
+                              <div className="hovered">
+                                双击编辑引用面板
+                              </div>
+                            </div>
+                            :
+                            <div
+                              className="panel-container"
+                            >
+                              <DrillDownPanel
+                                history={history}
+                                id={layer.id}
+                                panels={panels}
+                              />
+                              <div className="hovered">
+                                双击编辑下钻面板
+                              </div>
+                            </div>
                         ) :
                         isGroup ?
                           <div className="no-cancel" style={{
