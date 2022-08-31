@@ -239,13 +239,15 @@ export default {
       })
     },
     *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
+      const curWorkspace:any = localStorage.getItem('curWorkspace') 
+      const spaceId = JSON.parse(curWorkspace)?.id;
       const data = yield http({
         url: '/visual/application/queryAppList',
         method: 'post',
         body: {
           "pageNo": 1,
           "pageSize": 1000,
-          "spaceId": 1,
+          "spaceId": spaceId,
           "map": {
             "updated_time": false
           },
@@ -841,8 +843,10 @@ export default {
     },
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
+      const curWorkspace:any = localStorage.getItem('curWorkspace') 
+      const spaceId = JSON.parse(curWorkspace)?.id;
       let data = yield http({
-        url: `/visual/resource/queryResourceTypeList?spaceId=1`,
+        url: `/visual/resource/queryResourceTypeList?spaceId=${spaceId}`,
         method: "get",
       });
       data.myTypes.map((item: any) => {
