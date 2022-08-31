@@ -108,7 +108,7 @@ const DesignMaterial = (props: any) => {
               {
                 chartDataMap[active].map((item: any, index: number) => {
                   return (
-                    <EveryItem data={item} key={index}/>
+                    <EveryItem data={item} type={'design'} key={index}/>
                   )
                 })
               }
