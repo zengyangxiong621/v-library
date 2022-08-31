@@ -4,7 +4,6 @@ import ComponentDefaultConfig from './config'
 const Shape=(props)=>{
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
-  console.log(config);
   const getConfig=(config)=>{
     const style={}
     if(Array.isArray(config)){
@@ -18,17 +17,18 @@ const Shape=(props)=>{
     }
     return style
   }
-  const getRadius=(radiusArr)=>{
-    return radiusArr.map(item=>item+'px').join(' ')
-  }
-  const getShadowStyle=(shadowConfig)=>{
-    const {hShadow,vShadow,blur,color}=shadowConfig
-    return {
-      'boxShadow':`${hShadow}px ${vShadow}px ${blur}px ${color}`
-    }
-  }
+  const {dimension,bgColor,border,shadow,shapeType}=getConfig(config)
+
   const getShapeStyle=()=>{
-    const {dimension,bgColor,border,shadow}=getConfig(config)
+    const getRadius=(radiusArr)=>{
+      return radiusArr.map(item=>item+'px').join(' ')
+    }
+    const getShadowStyle=(shadowConfig)=>{
+      const {hShadow,vShadow,blur,color}=shadowConfig
+      return {
+        'boxShadow':`${hShadow}px ${vShadow}px ${blur}px ${color}`
+      }
+    }
     const {height,width}=dimension
     const {color,type,width:borderWidth,radius}=border
     const {show,shadowConfig}=shadow
@@ -41,7 +41,7 @@ const Shape=(props)=>{
       'borderWidth':borderWidth,
       'borderStyle':type,
       'borderColor':color,
-      'borderRadius':borderRadius,
+      'borderRadius':shapeType==='rectangle' ? borderRadius :'50%',
       ...shadowStyle
     }
   }

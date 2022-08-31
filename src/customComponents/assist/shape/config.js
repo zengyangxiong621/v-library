@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "shape", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleVersion": "1.1.1", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -60,9 +60,25 @@ const componentDefaultConfig = {
       ]
     },
     {
+      'name':"shapeType",
+      'displayName':'形状',
+      'type':'select',
+      'value':'rectangle',
+      'options':[
+        {
+          'name':'矩形',
+          'value':'rectangle'
+        },
+        {
+          'name':'圆形',
+          'value':'cycle'
+        }
+      ]
+    },
+    {
       'name': 'bgColor',
       'displayName': '背景',
-      'value': 'rgba(18,137,221,0.2)', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      'value': 'rgba(18,137,221,1)', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
       'type':'color'
     },
     {
