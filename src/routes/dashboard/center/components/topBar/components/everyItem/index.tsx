@@ -4,15 +4,14 @@ import axios from 'axios'
 import './index.less'
 
 const EveryItem = (props: any) => {
-  const { data, dispatch, bar } = props
+  const { data, dispatch, bar,type } = props
 
   const importComponent = (data: any) => {
     return axios.get(`${(window as any).CONFIG.COMP_URL}/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   }
 
   const componentCreate = async() => {
-    const { moduleType } = data
-    if(moduleType === "design"){
+    if(type === "design"){
       window.eval(`${await importComponent(data)}`)
       const { ComponentDefaultConfig } = (window as any).VComponents;
       dispatch({
