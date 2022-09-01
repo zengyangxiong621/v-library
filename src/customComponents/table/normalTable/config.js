@@ -6,7 +6,7 @@ const ComponentDefaultConfig = {
   'dashboardId': '11',
   'moduleName': 'normalTable',
   'moduleType': 'normalTable',
-  'moduleVersion': '1.1.0',
+  'moduleVersion': '1.1.6',
   'thumb': '',
   'dataConfig': {},
   'dataType': 'static',
@@ -306,13 +306,16 @@ const ComponentDefaultConfig = {
                       'name': 'sortType',
                       'displayName': '默认排序方式',
                       'type': 'select',
-                      'value': 'descend',
+                      'value': '',
                       'options':[{
                         'name':'升序',
                         'value':'ascend'
                       },{
                         'name':'降序',
                         'value':'descend'
+                      },{
+                        'name':'无',
+                        'value':'0'
                       }]
                     },
                     {
@@ -378,7 +381,7 @@ const ComponentDefaultConfig = {
                 'name':"width",
                 'displayName':'宽度',
                 'type':'input',
-                'value':'100',
+                'value':'150',
                 'config':{
                   'suffix':'px',  // 输入框后缀
                 }
@@ -432,13 +435,16 @@ const ComponentDefaultConfig = {
                     'name': 'defaultSortType',
                     'displayName': '默认排序',
                     'type': 'select',
-                    'value': 'descend',
+                    'value': '0',
                     'options':[{
                       'name':'升序',
                       'value':'ascend'
                     },{
                       'name':'降序',
                       'value':'descend'
+                    },{
+                      'name':'无',
+                      'value':'0'
                     }]
                   },
                   {
@@ -528,7 +534,7 @@ const ComponentDefaultConfig = {
                 'hasSwitch': true,
                 'defaultExpand': false,
                 'value':[
-                  { 'name': 'show', 'displayName': '', 'value': true, 'type': 'switch' },
+                  { 'name': 'show', 'displayName': '', 'value': false, 'type': 'switch' },
                   {
                     'name': 'align',
                     'displayName': '固定方式',
@@ -554,13 +560,16 @@ const ComponentDefaultConfig = {
                     'name': 'defaultSortType',
                     'displayName': '默认排序',
                     'type': 'select',
-                    'value': 'descend',
+                    'value': '0',
                     'options':[{
                       'name':'升序',
                       'value':'ascend'
                     },{
                       'name':'降序',
                       'value':'descend'
+                    },{
+                      'name':'无',
+                      'value':'0'
                     }]
                   },
                   {
@@ -622,7 +631,7 @@ const ComponentDefaultConfig = {
                 'name':"width",
                 'displayName':'宽度',
                 'type':'input',
-                'value':'100',
+                'value':'150',
                 'config':{
                   'suffix':'px',  // 输入框后缀
                 }
@@ -660,7 +669,7 @@ const ComponentDefaultConfig = {
                       'displayName': '水平对齐',
                       'type': 'align',
                       'range': ['left', 'right'],
-                      'value': 'left',
+                      'value': 'right',
                     }],
                   }
                 ]
@@ -676,13 +685,16 @@ const ComponentDefaultConfig = {
                     'name': 'defaultSortType',
                     'displayName': '默认排序',
                     'type': 'select',
-                    'value': 'descend',
+                    'value': '0',
                     'options':[{
                       'name':'升序',
                       'value':'ascend'
                     },{
                       'name':'降序',
                       'value':'descend'
+                    },{
+                      'name':'无',
+                      'value':'0'
                     }]
                   },
                   {

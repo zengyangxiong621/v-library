@@ -44,130 +44,18 @@ const NormalTable=(props)=>{
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const [dataSource, setDataSource] = useState(comData);
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    if (oldIndex !== newIndex) {
-      const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex).filter(
-        (el) => !!el,
-      );
-      console.log('Sorted items: ', newData);
-      setDataSource(newData);
+  const [dataSource, setDataSource] = useState([]);
+  useEffect(()=>{
+    if(!dataSource.length && Object.keys(comData[0]).length){
+      setDataSource(comData)
     }
-  };
-  const DraggableContainer = (props) => (
-    <SortableBody
-      useDragHandle
-      disableAutoscroll
-      helperClass="row-dragging"
-      onSortEnd={onSortEnd}
-      {...props}
-    />
-  );
-  const DraggableBodyRow = ({ className, style, ...restProps }) => {
-    const index = dataSource.findIndex((x) => x.index === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
-  };
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-  };
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`搜索 ${dataIndex} 列`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            搜索
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            重置
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            过滤
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1890ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: '#ffc069',
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
-
+  },[comData])
   const dimiensionConfig=config.find(item=>item.name==='dimension')
   const customColumnConfig = config.find(item => item.name === 'customColumn')
   const allGlobalConfig=config.find(item => item.name === 'allGlobal')
   const expand=config.find(item=>item.name==='expand')
   const tableHeader=config.find(item=>item.name==="tableHeader")
   const tableRow=config.find(item=>item.name==='tableRow')
-
   const getMapping = (customColumnConfig) => {
     return customColumnConfig.value.reduce((pre, cur) => {
       const obj = cur.value.reduce((total, config) => {
@@ -295,9 +183,123 @@ const NormalTable=(props)=>{
   const headerConfig=getOtherConfig(tableHeader.value)
   const tableRowConfig=getOtherConfig(tableRow.value)
 
-  // const summaryConfig=getOtherConfig(summary.value)
-  const {tableSize,haveBorder}=globalConfig
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    if (oldIndex !== newIndex) {
+      const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex).filter(
+        (el) => !!el,
+      );
+      console.log('Sorted items: ', newData);
+      setDataSource(newData);
+    }
+  };
+  const DraggableContainer = (props) => (
+    <SortableBody
+      useDragHandle
+      disableAutoscroll
+      helperClass="row-dragging"
+      onSortEnd={onSortEnd}
+      {...props}
+    />
+  );
+  const DraggableBodyRow = ({ className, style, ...restProps }) => {
+    const index = dataSource.findIndex((x) => x.id === restProps['data-row-key']);
+    return <SortableItem index={index} {...restProps} />;
+  };
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`搜索 ${dataIndex} 列`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            搜索
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            重置
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            过滤
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1890ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
 
+  const {tableSize,haveBorder}=globalConfig
   const getRowStyle=()=>{
     const {show:rowConfig,oddBgColor,evenBgColor}=tableRowConfig
     if(!rowConfig){
@@ -374,7 +376,7 @@ const NormalTable=(props)=>{
   return (
     <Table
       className='normalTable'
-      dataSource={comData}
+      dataSource={dataSource}
       rowKey='id'
       pagination={false}
       size={tableSize}
@@ -396,7 +398,7 @@ const NormalTable=(props)=>{
           <Column
             title='拖拽'
             dataIndex='sort'
-            width={50}
+            width={60}
             className='drag-visible'
             render={() => <DragHandle />}
           ></Column>
@@ -423,7 +425,7 @@ const NormalTable=(props)=>{
                 <div className='tableHeader'>{item.displayName}</div>
               )}
               dataIndex={mapField}
-              key={mapField} 
+              key={mapField}
               align={item.textAlign}
               ellipsis={item.overflowType==="ellipsis"}
               width={getColumnWidth(item)}
