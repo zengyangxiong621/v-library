@@ -12,6 +12,9 @@ import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilte
 const testData = {
   'name': '容器名称', // 容器名字
   'dataConfig': {}, // 数据源配置
+  'autoUpdate': {
+    'isAuto': false
+  },
   'dataType': 'static', // 数据类型
   'autoUpdate': {}, // 更新配置
   'staticData': {
@@ -186,10 +189,9 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       setResultData(data)
     }
   }
-  // 数据源变化
-  const handleDataSourceChange = async (dataConfig) => {
-    setCopyData({...copyData, dataConfig})
-    await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
+
+  // 数据接口刷新
+  const getData = async () => {
     try {
       const data = await http({
         method: 'post',
@@ -218,8 +220,21 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     } catch (err) {
       setResultData([])
     }
-
   }
+
+  // 自动更新数据变化
+  const handleAutoUpdateChange = async (autoUpdate) => {
+    setCopyData({...copyData, autoUpdate})
+    await updateDataContainer({...copyData, autoUpdate})
+    getData()
+  }
+  // 数据源变化
+  const handleDataSourceChange = async (dataConfig) => {
+    setCopyData({...copyData, dataConfig})
+    await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
+    getData()
+  }
+
   // 数据过滤器开关
   const filterBoxChange = async (e) => {
     setCopyData({...copyData, useFilter: e.target.checked})
@@ -399,6 +414,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           onDataTypeChange={handleDataTypeChange}
           onStaticDataChange={handleStaticDataChange}
           onDataSourceChange={handleDataSourceChange}
+          onAutoUpdateChange={handleAutoUpdateChange }
         />
         <DataFilter
           data={copyData}

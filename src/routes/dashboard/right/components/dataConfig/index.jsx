@@ -206,6 +206,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
             onDataTypeChange={onDataTypeChange}
             onStaticDataChange={props.onStaticDataChange}
             onDataSourceChange={props.onDataSourceChange}
+            onAutoUpdateChange={props.onAutoUpdateChange}
           />
       }
       <DataFilter data={_data} onFilterBoxChange={filterBoxChange} />

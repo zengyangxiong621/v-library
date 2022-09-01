@@ -32,6 +32,10 @@ const CusInputNumber = props => {
     props.onChange()
   }
 
+  const valueBlur = () => {
+    props.onBlur()
+  }
+
   return (
     <Form
       className="custom-form number-form"
@@ -50,6 +54,7 @@ const CusInputNumber = props => {
             className="size-input"
             value={value}
             onChange={valueChange}
+            onBlur = {valueBlur}
           />
           {_data?.config?.suffix ? <div className="ant-input-group-addon input-num-suffix" >{_data.config.suffix}</div> : null}
         </Form.Item>
