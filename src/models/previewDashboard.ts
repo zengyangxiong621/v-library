@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { defaultData } from "./defaultData/previewDashboard"
 import { http } from "../services/request"
 import { ILayerComponent, ILayerGroup, IPanel } from "../routes/dashboard/center/components/CustomDraggable/type"
@@ -18,11 +19,6 @@ import { IBarState } from "./defaultData/bar"
 export default {
   namespace: "previewDashboard",
   state: JSON.parse(JSON.stringify(defaultData)),
-  reducers: {
-    save(state: IBarState, { payload }: any) {
-      return { ...state, ...payload };
-    },
-  },
   effects: {
     * initDashboard({ payload: { dashboardId }, cb }: any, { call, put, select }: any): any {
       let previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard)
@@ -255,5 +251,9 @@ export default {
       };
     },
   },
-
+  reducers: {
+    save(state: IBarState, { payload }: any) {
+      return { ...state, ...payload };
+    },
+  },
 }

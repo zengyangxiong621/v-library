@@ -68,7 +68,6 @@ export default {
       // eslint-disable-line
       history.listen((location: any) => {
         const pathName = window.location.pathname
-        console.log('pathName', pathName)
         if (pathName.indexOf('dashboard/') !== -1) {
           // 应用编辑页
           const windowPathList = pathName.split('/')
@@ -223,7 +222,7 @@ export default {
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { panelId } = bar
-      const { config, states: panelStatesList } = yield http({
+      const { config, states: panelStatesList, type } = yield http({
         url: `/visual/panel/detail/${ panelId }`,
         method: 'get',
       })
@@ -235,6 +234,7 @@ export default {
         type: "save",
         payload: {
           panelStatesList,
+          curPanelType: type
         }
       })
     },

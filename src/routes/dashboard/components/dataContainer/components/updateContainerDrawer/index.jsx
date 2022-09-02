@@ -46,7 +46,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   const [loading, setLoading] = useLoading(false, document.querySelector('.loading-wrapper'))
   const visible = props.visible
   useEffect(async () => {
-    console.log('触发')
     if (Object.prototype.toString.call(props.data) === '[object Object]') {
       if (Object.keys(props.data).length === 0) {
         setCopyData(testData)

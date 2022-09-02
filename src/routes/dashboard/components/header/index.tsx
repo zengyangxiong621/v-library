@@ -704,10 +704,10 @@ const centerIconArr = [
     icon: 'yinyongmianban',
     text: '引用面板'
   },
-  // {
-  //   icon: 'xiazuanmianban',
-  //   text: '下钻面板'
-  // },
+  {
+    icon: 'xiazuanmianban',
+    text: '下钻面板'
+  },
   {
     icon: 'line',
   },

@@ -1,19 +1,19 @@
 import { memo, useEffect, useState, useRef, useLayoutEffect } from 'react'
 import './index.less'
 import { WEIZHICHICUN } from './type'
-
 import { getTargetStyle } from './type'
 import ComponentEventContainer from '@/routes/previewDashboard/components/componentEventContainer'
 
+import { connect } from 'dva'
 // import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getFields } from '@/utils/data'
+import { Breadcrumb } from 'antd'
 
 // 按屏幕比例适配", value: "0"}
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) => {
-
+const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, bar, previewDashboard, dispatch, addDrillDownLevel, ...props }: any) => {
   const { moduleName, events, id, config } = componentData
   const { mountAnimation } = layerInfo
   const { delay, direction, duration, opacityOpen, timingFunction, type } = mountAnimation || {}
@@ -28,12 +28,15 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
     position: 'absolute',
   })
 
+  const [activeItem, setActiveItem] = useState(0)
+
+
   // 交互-动画
   useEffect(() => {
     // 如果没有 设置“载入动画”, 那么后端不会返回mountAnimation字段
     if (mountAnimation) {
       const curCmpContainerEl: any = document.querySelector(`.animation-id-${id}`)
-      const {clientWidth, clientHeight} = curCmpContainerEl
+      const { clientWidth, clientHeight } = curCmpContainerEl
       //*****  移入模式
       let translateDirection = ''
       // 移入模式 1、移入 2、小移入 区别就是动画开始时起始的位置不同
@@ -165,12 +168,31 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+
+  const getDrillDownData = (chartData: any) => {
+    console.log('组件传出的数据', chartData);
+    addDrillDownLevel()
+    let hadFilterChartData = []
+    if (typeof chartData === 'object') {
+      hadFilterChartData.push(chartData.data)
+    } else {
+      hadFilterChartData = [chartData]
+    }
+    const outgoingData = {
+      id,
+      giveNextComponent: hadFilterChartData
+    }
+  }
+
   return (
     <div>
       <div className={`preview-component-wrap animation-id-${id}`}
-        style={{ ...componentStyle }}
+        style={{
+          ...componentStyle
+        }}
       >
-        <ComponentEventContainer
+        < ComponentEventContainer
+          {...props}
           key={id}
           id={id}
           events={events}
@@ -179,13 +201,17 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
           name={moduleName}
           componentConfig={componentData}
           fields={getFields(componentData)}
+          // comData={moduleData}
           comData={comData}
+          getDrillDownData={getDrillDownData}
         >
         </ComponentEventContainer>
       </div>
-    </div>
+    </div >
 
   )
 }
 
-export default memo(EveryComponent)
+export default memo(connect(
+  ({ bar, previewDashboard }: any) => ({ bar, previewDashboard })
+)(EveryComponent))

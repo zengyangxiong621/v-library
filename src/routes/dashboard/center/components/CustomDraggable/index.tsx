@@ -586,7 +586,6 @@ const CustomDraggable
             }
           })
           history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
-
           dispatch({
             type: 'bar/getPanelDetails'
           })

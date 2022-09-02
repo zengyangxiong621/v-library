@@ -48,7 +48,7 @@ const TopBar = (props: any) => {
       }
     })
   }
-  
+
   const menuSelect = (data:any) => {
     setCurrent(data)
   }
