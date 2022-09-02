@@ -183,13 +183,15 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
     }
     if(key === 'autoUpdate'){
       props.onAutoUpdateChange(autoUpdate)
-      if(autoUpdate.isAuto){
-        timeout = setInterval(() => {
-          queryComponentData()
-        }, autoUpdate.interval*1000)
-      }else{
-        clearInterval(timeout)
-      }
+      // 画布页面自动更新功能隐藏
+      // if(autoUpdate.isAuto){
+      //   timeout = setInterval(() => {
+      //     queryComponentData()
+      //   }, autoUpdate.interval*1000)
+      // }else{
+      //   clearInterval(timeout)
+      // }
+      queryComponentData()
     }else{
       props.onDataSourceChange(dataConfig)
       queryComponentData()
