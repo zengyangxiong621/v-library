@@ -5,6 +5,7 @@ import './index.less'
 import CusSelect from '../cusSelect'
 import CusInput from '../cusInput'
 import CodeEditor from '../codeEditor'
+import CusInputNumber from '../cusInputNumber'
 import SelectDataSource from './selectDataSource'
 
 import { http } from '../../../../../services/request'
@@ -73,12 +74,16 @@ const _pathDataConfig = {
   value: '',
 }
 
+
 const _paramDataConfig = {
   name: "xxx",
   displayName: '参数',
   type: 'input',
   value: '',
 }
+
+let timeout = null
+
 
 const APIDataSource = ({ bar, dispatch, ...props }) => {
   const _data = props.data
@@ -88,8 +93,13 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   const [requestHeaderData, setRequestHeaderData] = useState(_requestHeaderDataConfig)
   const [requestBodyData, setRequestBodyData] = useState(_requestBodyDataConfig)
   const [pathData, setPathData] = useState(_pathDataConfig)
+  const [autoTime, setAutoTime] = useState({
+    value: 10,
+    config: { min: 10, suffix: '' }
+  })
   const [paramData, setParamData] = useState(_paramDataConfig)
   const [reqFromBack, setReqFromBack] = useState(false)
+  const [automatic, setAutomatic] = useState(false)
   const [needCookie, setNeedCookie] = useState(false)
   const [isShowBody, setIsShowBody] = useState(false)
 
@@ -122,9 +132,24 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
     }
   }, [_data.dataConfig])
 
+
+  useEffect(() => {
+    if(_data?.autoUpdate){
+      setAutomatic(_data.autoUpdate?.isAuto || false)
+      setAutoTime({
+        value: _data.autoUpdate?.interval || 10,
+        config: { min: 10, suffix: '' }
+      })
+    }
+  },[_data.autoUpdate])
+
+
   const saveDataConfig = async (key, param) => {
     const dataConfig = cloneDeep(_data.dataConfig)
-    if (dataConfig.api) {
+    let autoUpdate = cloneDeep(_data.autoUpdate)
+    if(key === 'autoUpdate'){
+      autoUpdate = param
+    }else if (dataConfig.api) {
       dataConfig.api.data[key] = param.value
       if (key === 'data_id') {
         dataConfig.api.data.baseUrl = param.baseUrl
@@ -150,13 +175,27 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
         body: {
           id: _data.id,
           data: dataConfig.api.data,
+          autoUpdate,
           dataType: 'api',
           fields:dataConfig['api']?.fields || null
         }
       })
     }
-    props.onDataSourceChange(dataConfig)
-    queryComponentData()
+    if(key === 'autoUpdate'){
+      props.onAutoUpdateChange(autoUpdate)
+      // 画布页面自动更新功能隐藏
+      // if(autoUpdate.isAuto){
+      //   timeout = setInterval(() => {
+      //     queryComponentData()
+      //   }, autoUpdate.interval*1000)
+      // }else{
+      //   clearInterval(timeout)
+      // }
+      queryComponentData()
+    }else{
+      props.onDataSourceChange(dataConfig)
+      queryComponentData()
+    }
   }
 
   const queryComponentData = async () => {
@@ -236,6 +275,35 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
       value: !reqFromBack
     })
   }
+  
+  const automaticChange = () => {
+    setAutomatic(!automatic)
+    saveDataConfig('autoUpdate', {
+      isAuto: !automatic,
+      interval: !automatic ? 10 : null
+    })
+  }
+
+  const timeChange = () => {
+    if(autoTime.value){
+      saveDataConfig('autoUpdate', {
+        isAuto: automatic,
+        interval: autoTime.value
+      })
+    }
+  }
+  const timeBlur = () => {
+    if(!autoTime.value){
+      saveDataConfig('autoUpdate', {
+        isAuto: automatic,
+        interval: 10
+      })
+      setAutoTime({
+        config: { min: 10, suffix: '' },
+        value: 10
+      })
+    }
+  }
 
   const needCookieChange = () => {
     setNeedCookie(!needCookie)
@@ -271,6 +339,20 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
       }
       <div className="request-back">
         <Checkbox checked={reqFromBack} onChange={reqFromBackChange}>后端发起请求</Checkbox>
+      </div>
+      <div className="request-auto">
+        <Checkbox checked={automatic} onChange={automaticChange}>自动更新</Checkbox>
+        {
+          automatic && <div className='auto-time'>
+            每<CusInputNumber
+              data={autoTime}
+              onBlur={timeBlur}
+              onChange={timeChange}
+              formStyle={{ marginRight: '7px', float: 'left', marginBottom: '-16px' }}
+              style={{ width: '80px' }}
+            />秒请求一次
+          </div>
+        }
       </div>
       <div className="request-cookie">
         <Checkbox checked={needCookie} onChange={needCookieChange}>需要cookie</Checkbox>
