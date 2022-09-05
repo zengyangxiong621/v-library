@@ -14,18 +14,18 @@
       &::-webkit-scrollbar-thumb {
         border-radius: 8px;
         -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);      
-        background: #f3f3f3;
+        background: var(--scrollThumb);
         margin-bottom: 10px;
       }
       //滚动条的轨道（里面装有thumb）滚动槽
       &::-webkit-scrollbar-track {
         -webkit-box-shadow: 0;
         border-radius: 0;
-        background: #e2e2e2;//滚动槽背景色
+        background: var(--scrollTrack);
         border-radius: 10px;//滚动条边框半径设置
       }
     }
-    .ant-table-header .ant-table-thead tr th{
+    .ant-table-thead tr th{
       background-color: var(--headerBgColor);
       color: var(--headerFontColor);
       font-weight: var(--headerFontBold);
@@ -35,15 +35,23 @@
       letter-spacing: var(--letterSpacing);
       line-height: var(--headerLineHeight);
     }
-    .ant-table-body .ant-table-tbody tr{
-      td{
-        background-color: inherit;
+    .ant-table-tbody{
+      .ant-table-row{
+        td{
+          background-color: inherit;
+        }
+        &.evenRow{
+          background-color: var(--evenBgColor);
+        }
+        &.oddRow{
+          background-color: var(--oddBgColor);
+        }
       }
-      &:nth-child(odd){
-        background-color: var(--oddBgColor);
-      }
-      &:nth-child(even){
-        background-color: var(--evenBgColor);
+      .ant-table-expanded-row{
+        background-color: var(--expandBgColor);
+        td{
+          background-color: inherit;
+        }
       }
     }
   }
