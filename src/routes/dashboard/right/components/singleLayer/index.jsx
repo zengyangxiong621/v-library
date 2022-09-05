@@ -273,6 +273,13 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
               <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
+          <TabPane tab="跨屏" key="4">
+            <ComponentCard data={componentConfig}>
+              <LoadAnimation data={interactionConfig} onChange={interactionChange} />
+              <CallbackArgs data={componentConfig} onChange={callbackArgChange} />
+              <CusEvent data={interactionConfig} onChange={eventChange} />
+            </ComponentCard>
+          </TabPane>
           {
             bar.isPanel && curPanelType === 2 && <TabPane tab="下钻" key="4">
               <DrillDownSetting></DrillDownSetting>

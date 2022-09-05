@@ -12,7 +12,7 @@ import { getFields } from '@/utils/data'
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) => {
+const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, sendMessage }: any) => {
 
   const { moduleName, events, id, config } = componentData
   const { mountAnimation } = layerInfo
@@ -180,6 +180,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
           componentConfig={componentData}
           fields={getFields(componentData)}
           comData={comData}
+          sendMessage={sendMessage}
         >
         </ComponentEventContainer>
       </div>

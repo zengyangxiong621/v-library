@@ -1,6 +1,6 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import {getFields} from "@/utils/data";
-import {useState, useRef} from "react";
+import {useState, useRef, useEffect} from "react";
 import TimeSelect from '@/customComponents/interactive/timeSelect'
 import ScrollTable from '@/customComponents/table/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
@@ -29,8 +29,10 @@ import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPa
 import Timeline from '@/customComponents/assist/timeline'
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
+import useWebsocket from '@/utils/useWebsocket'
 
-const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 0, scale=1, ...props}) => {
+
+const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 0, scale=1,sendMessage, ...props}) => {
   const callbackArgs = previewDashboard.callbackArgs
   const callbackParamsList = previewDashboard.callbackParamsList
   const {componentConfig} = props
@@ -41,6 +43,28 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
   const [opacityStyle, setOpacityStyle] = useState({opacity: 1})
   const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
+
+  // 跨屏
+  const [sendData, setSendData] = useState('')
+  // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
+  //   url: `ws://10.201.83.166:31088/visual/webSocket/shareParam/eventName`
+  //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
+  //   // verify // 此参数控制是否有权限，请求该方法
+  // })
+
+  useEffect(() => {
+    // if (readyState.key === 1){
+      sendMessage(sendData)
+      console.log("#########websocket send");
+    // }
+    // 如果是已关闭且是当前页面自动重连
+    // if (readyState.key === 3) { // && isLocalPage
+    //   reconnect()
+    // }
+  }, [sendData]) // isLocalPage, verify
+  // }, [sendData, readyState]) // isLocalPage, verify
+
+
   // 点击
   const handleClick = debounce((e, data) => {
     const clickEvents = events.filter(item => item.trigger === 'click')
@@ -166,6 +190,11 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
   }
 
   const handleValueChange = debounce((data) => {
+    // 跨屏  建立websocket连接，发送数据
+    // if (readyState.key === 1){
+    //   console.log('setSendData');
+      setSendData(data);
+    // }
     console.log('-------------')
     console.log('数据变化data', data)
     const componentId = props.componentConfig.id

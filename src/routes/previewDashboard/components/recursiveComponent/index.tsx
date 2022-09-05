@@ -9,7 +9,7 @@ const MODULES = 'modules'
 const OPACITY = 'opacity'
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels } = props
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, crossCallback, sendMessage } = props
   return (
     <div className='recursive-component-wrap'>
       {
@@ -77,6 +77,8 @@ const RecursiveComponent = (props: any) => {
                           dispatch={dispatch}
                           scaleValue={scaleValue}
                           panels={panels}
+                          crossCallback={crossCallback}
+                          sendMessage={sendMessage}
                         />
                       </div>
                     }
@@ -86,7 +88,9 @@ const RecursiveComponent = (props: any) => {
                       {
                         <EveryComponent key={ind}
                           componentData={targetComponent}
-                          comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer)}
+                          comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer, crossCallback)}
+                          sendMessage={sendMessage}
+                          // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
                           scaleValue={scaleValue}
                           layerInfo={layer}
                         />
