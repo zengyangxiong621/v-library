@@ -54,7 +54,7 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
   if (filters.length) {
     try {
       const functions = filters.map(item => {
-        return (new Function('data', 'callbackArgs', item.content))
+        return (new Function('data', 'callbackArgs', 'crossCallback', item.content))
       })
       const resultArr = []
       functions.forEach((fn, index) => {
@@ -65,9 +65,9 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
           }
         }, {})
         if (index === 0) {
-          resultArr.push(fn(data, cbArgs))
+          resultArr.push(fn(data, cbArgs, crossCallback))
         } else {
-          resultArr.push(fn(resultArr[index - 1], cbArgs))
+          resultArr.push(fn(resultArr[index - 1], cbArgs, crossCallback))
         }
       })
       return resultArr[resultArr.length - 1]
@@ -94,7 +94,7 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
 
   try {
     const functions = filters.map(item => {
-      return (new Function('data', 'callbackArgs', 'crossCallback', item.content))
+      return (new Function('data', 'callbackArgs', item.content))
     })
     const resultArr = []
     functions.forEach((fn, index) => {
@@ -106,9 +106,9 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
       }, {})
 
       if (index === 0) {
-        resultArr.push(fn(data, cbArgs, crossCallback))
+        resultArr.push(fn(data, cbArgs))
       } else {
-        resultArr.push(fn(resultArr[index - 1], cbArgs, crossCallback))
+        resultArr.push(fn(resultArr[index - 1], cbArgs))
       }
     })
     return resultArr[resultArr.length - 1]
@@ -198,7 +198,7 @@ const filterEmptyCallParam = (callParam) => {
  * 获取组件回调参数定义的数据
  * @param {*} componentCallbackArgs 组件回调参数
  * @param {*} currnetData 当前状态下组件的数据
- * @returns 
+ * @returns
  */
 const getCallbackParams = (componentCallbackArgs, currnetData) => {
   if (!currnetData || Object.prototype.toString.call(currnetData) !== "[object Object]") {
