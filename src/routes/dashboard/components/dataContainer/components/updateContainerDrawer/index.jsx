@@ -8,6 +8,7 @@ import DataResult from '../../../../right/components/dataConfig/dataResult'
 import {CloseOutlined, LeftOutlined} from '@ant-design/icons'
 import useLoading from '@/components/useLoading'
 import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilter";
+import DataAutoUpdate from "@/routes/dashboard/right/components/dataConfig/dataAutoUpdate";
 
 const testData = {
   'name': '容器名称', // 容器名字
@@ -414,8 +415,8 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           onDataTypeChange={handleDataTypeChange}
           onStaticDataChange={handleStaticDataChange}
           onDataSourceChange={handleDataSourceChange}
-          onAutoUpdateChange={handleAutoUpdateChange }
         />
+        <DataAutoUpdate data={copyData} onAutoUpdateChange={handleAutoUpdateChange} />
         <DataFilter
           data={copyData}
           type="component"

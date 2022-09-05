@@ -12,6 +12,7 @@ import { SwapOutlined } from '@ant-design/icons';
 
 import { http } from '../../../../../services/request'
 import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilter";
+import DataAutoUpdate from "@/routes/dashboard/right/components/dataConfig/dataAutoUpdate";
 
 const DataConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
@@ -155,6 +156,20 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     }
   }
 
+  const autoUpdateChange = async (e) => {
+    await http({
+      url: '/visual/module/updateDatasource',
+      method: 'post',
+      body: {
+        id: _data.id,
+        useFilter: _data.checked,
+        dataType: _data.dataType,
+        autoUpdate: e
+      }
+    })
+    props.onAutoUpdateChange(e)
+  }
+
   const filterBoxChange = async (e) => {
     await http({
       url: '/visual/module/updateDatasource',
@@ -206,9 +221,10 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
             onDataTypeChange={onDataTypeChange}
             onStaticDataChange={props.onStaticDataChange}
             onDataSourceChange={props.onDataSourceChange}
-            onAutoUpdateChange={props.onAutoUpdateChange}
           />
       }
+      {/* 自动更新 */}
+      <DataAutoUpdate data={_data} onAutoUpdateChange={autoUpdateChange} />
       <DataFilter data={_data} onFilterBoxChange={filterBoxChange} />
       <DataResult data={_data} />
     </React.Fragment>
