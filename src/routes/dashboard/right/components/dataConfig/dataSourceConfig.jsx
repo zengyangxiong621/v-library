@@ -276,7 +276,6 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
                   type={componentType}
                   data={_data}
                   onDataSourceChange={props.onDataSourceChange}
-                  onAutoUpdateChange={props.onAutoUpdateChange}
                 />
                 : ['postgresql', 'mysql', 'elasticSearch'].includes(dataSourceTypes.value) ?
                   <React.Fragment key={dataSourceTypes.value}>

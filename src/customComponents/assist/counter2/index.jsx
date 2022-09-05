@@ -2,6 +2,8 @@ import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
 import './index.css'
 import CountUp from 'react-countup'
+import up from '@/assets/images/箭头上升.png'
+import down from '@/assets/images/箭头下降.png'
 
 class Counter extends Component {
   constructor(Props) {
@@ -90,6 +92,11 @@ class Counter extends Component {
     return arr 
   }
 
+  // formatCount = (num, splitCount, decimalCount) => {
+  //   const reg = /^[-,+]?[0-9]+\.?[0-9]*$/;
+  //   return num
+  // }
+
   
 
   render () {
@@ -122,6 +129,9 @@ class Counter extends Component {
     const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
     // 补充前缀功能
     const prefixConfig = this.formatConfig([this.getStyleData(config, "前缀")],[])
+    // 动画功能
+    // const animate = this.getStyleData(config, 'animate')?.value || 'open';
+
     return (
       <div className='counter' style={{
         ...displayStyle,
@@ -158,14 +168,18 @@ class Counter extends Component {
             lineHeight: 'normal',
             textShadow: dataRangConfig.show ? `${dataRangConfig.shadow.color} ${dataRangConfig.shadow.vShadow}px ${dataRangConfig.shadow.hShadow}px ${dataRangConfig.shadow.blur}px` : ''
           }}>
-            <CountUp 
-              start={0} 
-              separator={splitCount ? ',' : ''} 
-              end={Number(originData[fields[1]]) || null} 
-              decimals={decimalCount}
-              delay={0}
-              decimal="."
-              duration={duration}></CountUp>
+          {
+            // animate === 'open' ? 
+              <CountUp 
+                start={0} 
+                separator={splitCount ? ',' : ''} 
+                end={Number(originData[fields[1]]) || null} 
+                decimals={decimalCount}
+                delay={0}
+                decimal="."
+                duration={duration}></CountUp> 
+                // : <span>{this.formatCount(originData[fields[1]], splitCount, decimalCount)}</span>
+          }
           </div>
           {
             suffixConfig.support &&
