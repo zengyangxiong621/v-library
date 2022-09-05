@@ -443,6 +443,267 @@ const componentDefaultConfig = {
                         ]
                       },
                       {
+                        'name': 'symbolsConfig',
+                        'displayName': '自定义符号',
+                        'type': 'collapse',
+                        'hasSwitch':true, // 是否有切换按钮
+                        'defaultExpand':false,  // 是否默认展开
+                        'value':[
+                          {
+                            "name": "numShow",
+                            "displayName": "",
+                            "value": true,
+                            "type": "switch"
+                          },
+                          {
+                            name:"position",
+                            displayName:'位置',
+                            type:'radioGroup',
+                            direction:'horizontal,vertical', // 方向
+                            value:true,
+                            options:[
+                              {
+                                name:'数值前',
+                                value:true
+                              },
+                              {
+                                name:'数值后',
+                                value:false
+                              }
+                            ]
+                          },
+                          {
+                            name:'xxx',
+                            displayName:'xxx',
+                            type:'tabs',
+                            activeKey:'increase', // 默认选中第一项
+                            options:[
+                              {
+                                  key:'increase',
+                                  name:'增长',
+                                  value:[
+                                    {
+                                      'name': 'image',
+                                      'displayName': '图标',
+                                      'type':'image',
+                                      'value': ''
+                                    },
+                                    {
+                                      name:"sizeConfig",
+                                      displayName:'尺寸',
+                                      type:'inputNumber2',
+                                      showDetail:true, // 是否展示下面的文字说明
+                                      value:[
+                                        {
+                                            name:'width',
+                                            displayName:'宽度',
+                                            type:'number',
+                                            value:40,
+                                            config:{
+                                                min:10,
+                                                suffix:'px',  // 输入框后缀
+                                            }
+                                        },
+                                        {
+                                            name:'height',
+                                            displayName:'高度',
+                                            type:'number',
+                                            value:40,
+                                            config:{
+                                                min:10,
+                                                suffix:'px',  // 输入框后缀
+                                            }
+                                        },
+                                      ]
+                                    },
+                                    {
+                                      name:"imgOffsetConfig",
+                                      displayName:'偏移',
+                                      type:'inputNumber2',
+                                      showDetail:true, // 是否展示下面的文字说明
+                                      value:[
+                                          {
+                                              name:'x',
+                                              displayName:'X',
+                                              type:'number',
+                                              value:0,
+                                              config:{
+                                                  min:0,
+                                                  suffix:'px',  // 输入框后缀
+                                              }
+                                          },
+                                          {
+                                              name:'y',
+                                              displayName:'Y',
+                                              type:'number',
+                                              value:0,
+                                              config:{
+                                                  min:0,
+                                                  suffix:'px',  // 输入框后缀
+                                              }
+                                          },
+                                      ]
+                                    }
+                                  ]
+                              },
+                              {
+                                key:'even',
+                                name:'持平',
+                                value:[
+                                  {
+                                    'name': 'image',
+                                    'displayName': '图标',
+                                    'type':'image',
+                                    'value': ''
+                                  },
+                                  {
+                                    name:"sizeConfig",
+                                    displayName:'尺寸',
+                                    type:'inputNumber2',
+                                    showDetail:true, // 是否展示下面的文字说明
+                                    value:[
+                                      {
+                                          name:'width',
+                                          displayName:'宽度',
+                                          type:'number',
+                                          value:40,
+                                          config:{
+                                              min:10,
+                                              suffix:'px',  // 输入框后缀
+                                          }
+                                      },
+                                      {
+                                          name:'height',
+                                          displayName:'高度',
+                                          type:'number',
+                                          value:40,
+                                          config:{
+                                              min:10,
+                                              suffix:'px',  // 输入框后缀
+                                          }
+                                      },
+                                    ]
+                                  },
+                                  {
+                                    name:"imgOffsetConfig",
+                                    displayName:'偏移',
+                                    type:'inputNumber2',
+                                    showDetail:true, // 是否展示下面的文字说明
+                                    value:[
+                                        {
+                                            name:'x',
+                                            displayName:'X',
+                                            type:'number',
+                                            value:0,
+                                            config:{
+                                                min:0,
+                                                suffix:'px',  // 输入框后缀
+                                            }
+                                        },
+                                        {
+                                            name:'y',
+                                            displayName:'Y',
+                                            type:'number',
+                                            value:0,
+                                            config:{
+                                                min:0,
+                                                suffix:'px',  // 输入框后缀
+                                            }
+                                        },
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                key:'reduce',
+                                name:'减少',
+                                value:[
+                                  {
+                                    'name': 'image',
+                                    'displayName': '图标',
+                                    'type':'image',
+                                    'value': ''
+                                  },
+                                  {
+                                    name:"sizeConfig",
+                                    displayName:'尺寸',
+                                    type:'inputNumber2',
+                                    showDetail:true, // 是否展示下面的文字说明
+                                    value:[
+                                      {
+                                          name:'width',
+                                          displayName:'宽度',
+                                          type:'number',
+                                          value:40,
+                                          config:{
+                                              min:10,
+                                              suffix:'px',  // 输入框后缀
+                                          }
+                                      },
+                                      {
+                                          name:'height',
+                                          displayName:'高度',
+                                          type:'number',
+                                          value:40,
+                                          config:{
+                                              min:10,
+                                              suffix:'px',  // 输入框后缀
+                                          }
+                                      },
+                                    ]
+                                  },
+                                  {
+                                    name:"imgOffsetConfig",
+                                    displayName:'偏移',
+                                    type:'inputNumber2',
+                                    showDetail:true, // 是否展示下面的文字说明
+                                    value:[
+                                        {
+                                            name:'x',
+                                            displayName:'X',
+                                            type:'number',
+                                            value:0,
+                                            config:{
+                                                min:0,
+                                                suffix:'px',  // 输入框后缀
+                                            }
+                                        },
+                                        {
+                                            name:'y',
+                                            displayName:'Y',
+                                            type:'number',
+                                            value:0,
+                                            config:{
+                                                min:0,
+                                                suffix:'px',  // 输入框后缀
+                                            }
+                                        },
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        name:"animate",
+                        displayName:'动画开关',
+                        type:'radioGroup',
+                        direction:'horizontal', // 方向
+                        value:'close',
+                        options:[
+                          {
+                            name:'打开',
+                            value:'open'
+                          },
+                          {
+                            name:'关闭',
+                            value:'close'
+                          }
+                        ]
+                      },
+                      {
                         name:'duration',
                         displayName:'动画时间',
                         type:'number',
@@ -451,7 +712,7 @@ const componentDefaultConfig = {
                             min:1,
                             suffix:'s',  // 输入框后缀
                         }
-                      }
+                      },
                     ]
                   },
                   {
