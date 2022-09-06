@@ -5,6 +5,7 @@ import './index.less'
 import CusSelect from '../cusSelect'
 import CusInput from '../cusInput'
 import CodeEditor from '../codeEditor'
+import CusInputNumber from '../cusInputNumber'
 import SelectDataSource from './selectDataSource'
 
 import { http } from '../../../../../services/request'
@@ -73,12 +74,16 @@ const _pathDataConfig = {
   value: '',
 }
 
+
 const _paramDataConfig = {
   name: "xxx",
   displayName: '参数',
   type: 'input',
   value: '',
 }
+
+let timeout = null
+
 
 const APIDataSource = ({ bar, dispatch, ...props }) => {
   const _data = props.data
@@ -121,6 +126,8 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
       setNeedCookie(_data.dataConfig?.api?.data?.needCookie || false)
     }
   }, [_data.dataConfig])
+
+
 
   const saveDataConfig = async (key, param) => {
     const dataConfig = cloneDeep(_data.dataConfig)
@@ -236,6 +243,7 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
       value: !reqFromBack
     })
   }
+  
 
   const needCookieChange = () => {
     setNeedCookie(!needCookie)

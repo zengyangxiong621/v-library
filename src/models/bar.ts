@@ -239,13 +239,15 @@ export default {
       })
     },
     *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
+      const curWorkspace:any = localStorage.getItem('curWorkspace') 
+      const spaceId = JSON.parse(curWorkspace)?.id;
       const data = yield http({
         url: '/visual/application/queryAppList',
         method: 'post',
         body: {
           "pageNo": 1,
           "pageSize": 1000,
-          "spaceId": 1,
+          "spaceId": spaceId,
           "map": {
             "updated_time": false
           },
@@ -372,6 +374,15 @@ export default {
         return componentData[component.id];
       };
       yield Promise.all(components.map((item: any) => func(item)));
+      // 设置定时器
+      // components.map((item:any) => {
+      //   // 添加自动更新功能
+      //   if(item.autoUpdate?.isAuto){
+      //    setInterval(() => {
+      //       func(item)
+      //     }, item.autoUpdate.interval*1000)
+      //   }
+      // })
       // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
       yield put({
         type: "save",
@@ -841,8 +852,10 @@ export default {
     },
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
+      const curWorkspace:any = localStorage.getItem('curWorkspace') 
+      const spaceId = JSON.parse(curWorkspace)?.id;
       let data = yield http({
-        url: `/visual/resource/queryResourceTypeList?spaceId=1`,
+        url: `/visual/resource/queryResourceTypeList?spaceId=${spaceId}`,
         method: "get",
       });
       data.myTypes.map((item: any) => {

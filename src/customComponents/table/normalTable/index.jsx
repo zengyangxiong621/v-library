@@ -2,14 +2,19 @@ import React from 'react'
 import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
 import {styleTransformFunc,transformStyleInObj} from '../../../utils'
-import './index.less'
-import { Table,Button, Input, Space } from 'antd';
+import './index.css'
+import { Table,Button, Input, Space,ConfigProvider } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined,MenuOutlined  } from '@ant-design/icons';
 import { arrayMoveImmutable } from 'array-move';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import zhCN from 'antd/es/locale/zh_CN';
 const { Column } = Table;
 
+const setDraggerClass=(index)=>{
+  let rowColor = (index % 2 === 0) ? "evenRow" : "oddRow";//判断单双行，赋予不同样式
+  return rowColor
+}
 const getFields = (componentConfig = {}) => {
   const dataType = componentConfig.dataType
   let fields = null
@@ -56,6 +61,9 @@ const NormalTable=(props)=>{
   const expand=config.find(item=>item.name==='expand')
   const tableHeader=config.find(item=>item.name==="tableHeader")
   const tableRow=config.find(item=>item.name==='tableRow')
+  /**
+   * 配置config数据处理方法
+   */
   const getMapping = (customColumnConfig) => {
     return customColumnConfig.value.reduce((pre, cur) => {
       const obj = cur.value.reduce((total, config) => {
@@ -182,7 +190,10 @@ const NormalTable=(props)=>{
   const expandConfig=getOtherConfig(expand.value)
   const headerConfig=getOtherConfig(tableHeader.value)
   const tableRowConfig=getOtherConfig(tableRow.value)
-
+  /**
+   * 拖拽排序相关
+   * 
+   */
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
       const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex).filter(
@@ -203,8 +214,13 @@ const NormalTable=(props)=>{
   );
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
     const index = dataSource.findIndex((x) => x.id === restProps['data-row-key']);
-    return <SortableItem index={index} {...restProps} />;
+    return <SortableItem index={index} className={`ant-table-row ${setDraggerClass(index)}`} {...restProps} />;
   };
+
+  /**
+   * 筛选相关
+   * 
+   */
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -299,15 +315,25 @@ const NormalTable=(props)=>{
       ),
   });
 
-  const {tableSize,haveBorder}=globalConfig
+  /**
+   * 根据配置设置样式
+   */
+  const {tableSize,haveBorder,haveScroll}=globalConfig
+  const setRowClassName=(_, index)=>{
+    let rowColor = (index % 2 === 0) ? "evenRow" : "oddRow";//判断单双行，赋予不同样式
+    return rowColor
+  }
   const getRowStyle=()=>{
     const {show:rowConfig,oddBgColor,evenBgColor}=tableRowConfig
+    // 获取展开行的颜色
+    const {expandBgColor}=expandConfig
     if(!rowConfig){
       return
     }
     return {
       '--oddBgColor':oddBgColor,
-      '--evenBgColor':evenBgColor
+      '--evenBgColor':evenBgColor,
+      '--expandBgColor':expandBgColor
     }
   }
   const getHeaderStyle=()=>{
@@ -372,76 +398,90 @@ const NormalTable=(props)=>{
       },
     }
   }:{}
-
-  return (
-    <Table
-      className='normalTable'
-      dataSource={dataSource}
-      rowKey='id'
-      pagination={false}
-      size={tableSize}
-      bordered={haveBorder}
-      showHeader={getHeaderStyle().show}
-      style={{
-        ...getHeaderStyle().style,
-        ...getRowStyle()
-      }}
-      scroll={{
+  const getScrollComfig=()=>{
+    const {show,scrollThumb,scrollTrack}=haveScroll
+    return {
+      config:show?{
         x:postionConfig.width,
         y:postionConfig.height-35
-      }}
-      {...getExpandConfig()}
-      {...isDraggableSort}
-    >
-      {
-        tableRowConfig.dragerSort?(
-          <Column
-            title='拖拽'
-            dataIndex='sort'
-            width={60}
-            className='drag-visible'
-            render={() => <DragHandle />}
-          ></Column>
-        ):''
+      }:{},
+      style:{
+        '--scrollThumb':scrollThumb,
+        '--scrollTrack':scrollTrack
       }
-      {
-        mappingConfig.map(item=>{
-          const {textStyle:columnTextStyle}=item
-          const handledStyle=transformStyleInObj(columnTextStyle)
-          const mapField=field.find(mitem=>mitem.name===item.fieldName).value
-          const sortConfig={}
-          let filterConfig=null
-          if(item.isSortable){
-            sortConfig.sortDirections=item.sortType
-            sortConfig.defaultSortOrder=item.defaultSortType
-            sortConfig.sorter=(a,b)=>a[item.fieldName]-b[item.fieldName]
-          }
-          if(item.isFilter){
-            filterConfig=getColumnSearchProps(item.fieldName)
-          }
-          return (
+    }
+  }
+
+  return (
+    <ConfigProvider locale={zhCN}>
+      <Table
+        className='normalTable'
+        dataSource={dataSource}
+        rowKey='id'
+        pagination={false}
+        size={tableSize}
+        bordered={haveBorder}
+        rowClassName={setRowClassName}
+        showHeader={getHeaderStyle().show}
+        style={{
+          ...getHeaderStyle().style,
+          ...getRowStyle(),
+          ...getScrollComfig().style
+        }}
+        scroll={getScrollComfig().config}
+        {...getExpandConfig()}
+        {...isDraggableSort}
+      >
+        {
+          tableRowConfig.dragerSort?(
             <Column
-              title={(
-                <div className='tableHeader'>{item.displayName}</div>
-              )}
-              dataIndex={mapField}
-              key={mapField}
-              align={item.textAlign}
-              ellipsis={item.overflowType==="ellipsis"}
-              width={getColumnWidth(item)}
-              fixed={item.isFixed ? item.fixedAlign : false}
-              {...sortConfig}
-              {...filterConfig}
-              render={(text)=>{
-                return (
-                  <span style={{...handledStyle}}>{text}</span>
-                )
-              }}
-            />
-          )
-        })
-      }
-    </Table>
+              title='拖拽'
+              dataIndex='sort'
+              width={60}
+              className='drag-visible'
+              render={() => <DragHandle />}
+            ></Column>
+          ):''
+        }
+        {
+          mappingConfig.map(item=>{
+            const {textStyle:columnTextStyle}=item
+            const handledStyle=transformStyleInObj(columnTextStyle)
+            const mapField=field.find(mitem=>mitem.name===item.fieldName).value
+            const sortConfig={}
+            let filterConfig=null
+            if(item.isSortable && !tableRowConfig.dragerSort){
+              sortConfig.sortDirections=item.sortType
+              sortConfig.defaultSortOrder=item.defaultSortType
+              sortConfig.sorter=(a,b)=>a[item.fieldName]-b[item.fieldName]
+            }
+            if(item.isFilter){
+              filterConfig=getColumnSearchProps(item.fieldName)
+            }
+            return (
+              <Column
+                title={(
+                  <div className='tableHeader'>{item.displayName}</div>
+                )}
+                dataIndex={mapField}
+                key={mapField}
+                align={item.textAlign}
+                ellipsis={item.overflowType==="ellipsis"}
+                width={getColumnWidth(item)}
+                fixed={item.isFixed ? item.fixedAlign : false}
+                {...sortConfig}
+                {...filterConfig}
+                render={(text)=>{
+                  return (
+                    <span style={{...handledStyle}}>{text}</span>
+                  )
+                }}
+              />
+            )
+          })
+        }
+      </Table>
+    </ConfigProvider>
   )
 }
 export {

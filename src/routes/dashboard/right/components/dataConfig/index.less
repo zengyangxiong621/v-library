@@ -51,9 +51,15 @@
 .data-filter {
   height: 32px;
   line-height: 32px;
-  margin-top: 16px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
+
+  .auto-time{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   .ant-checkbox-wrapper {
     font-size: 14px;
@@ -150,6 +156,20 @@
     margin-bottom: 16px;
   }
 
+  .request-auto{
+    display: flex;
+    margin-bottom: 16px;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #afbac0;
+    align-items: center;
+    .auto-time{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
   .request-cookie {
     text-align: left;
   }
@@ -235,6 +255,4 @@
       color: @fontColor;
     }
   }
-
-
 }

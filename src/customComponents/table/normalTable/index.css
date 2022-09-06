@@ -12,16 +12,16 @@
 .normalTable .ant-table .ant-table-body::-webkit-scrollbar-thumb {
   border-radius: 8px;
   -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
-  background: #f3f3f3;
+  background: var(--scrollThumb);
   margin-bottom: 10px;
 }
 .normalTable .ant-table .ant-table-body::-webkit-scrollbar-track {
   -webkit-box-shadow: 0;
   border-radius: 0;
-  background: #e2e2e2;
+  background: var(--scrollTrack);
   border-radius: 10px;
 }
-.normalTable .ant-table .ant-table-header .ant-table-thead tr th {
+.normalTable .ant-table .ant-table-thead tr th {
   background-color: var(--headerBgColor);
   color: var(--headerFontColor);
   font-weight: var(--headerFontBold);
@@ -31,14 +31,20 @@
   letter-spacing: var(--letterSpacing);
   line-height: var(--headerLineHeight);
 }
-.normalTable .ant-table .ant-table-body .ant-table-tbody tr td {
+.normalTable .ant-table .ant-table-tbody .ant-table-row td {
   background-color: inherit;
 }
-.normalTable .ant-table .ant-table-body .ant-table-tbody tr:nth-child(odd) {
+.normalTable .ant-table .ant-table-tbody .ant-table-row.evenRow {
+  background-color: var(--evenBgColor);
+}
+.normalTable .ant-table .ant-table-tbody .ant-table-row.oddRow {
   background-color: var(--oddBgColor);
 }
-.normalTable .ant-table .ant-table-body .ant-table-tbody tr:nth-child(even) {
-  background-color: var(--evenBgColor);
+.normalTable .ant-table .ant-table-tbody .ant-table-expanded-row {
+  background-color: var(--expandBgColor);
+}
+.normalTable .ant-table .ant-table-tbody .ant-table-expanded-row td {
+  background-color: inherit;
 }
 .normalTable .row-dragging {
   background: #fafafa;

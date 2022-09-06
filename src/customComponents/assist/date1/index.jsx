@@ -45,7 +45,7 @@ class ShowDate extends Component {
   // 刷新时间
   refreshCurtime = () => {
     let date = new Date()
-    const timeString = date.toLocaleTimeString()
+    const timeString = date.toLocaleTimeString('chinese',{ hour12: false })
     return timeString
   }
   // 获取样式
