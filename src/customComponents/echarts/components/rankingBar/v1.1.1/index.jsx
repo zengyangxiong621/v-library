@@ -517,9 +517,10 @@ const RankingBar = (props) => {
     return res
   }
 
-  const onChartClick = (param, echarts) => { 
+  const onChartClick = (param, echarts) => {
+    const target = componentData.find(item=>item[fieldKey[0]]=== param.name)
+    props.onChange(target)
     if(hyperlinks.show && !isEmpty(hyperlinks.baseUrl) && !isEmpty(hyperlinks.field)){
-      const target = resultData.find(item=>item.classify === param.name)
       window.open(`${hyperlinks.baseUrl}?param=${target[hyperlinks.field]}`,'_blank')
     }
   }
