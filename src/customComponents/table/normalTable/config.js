@@ -6,7 +6,7 @@ const ComponentDefaultConfig = {
   'dashboardId': '11',
   'moduleName': 'normalTable',
   'moduleType': 'normalTable',
-  'moduleVersion': '1.1.6',
+  'moduleVersion': '1.0.1',
   'thumb': '',
   'dataConfig': {},
   'dataType': 'static',
