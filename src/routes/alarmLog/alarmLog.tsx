@@ -8,20 +8,20 @@ import moment from 'moment';
 import type { Moment } from 'moment';
 
 import zhCN from 'antd/es/locale/zh_CN'
-import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip, Spin, Space, Table, Tag  } from 'antd'
+import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip, Popconfirm, Table, Drawer,  } from 'antd'
 import type { TimeRangePickerProps } from 'antd';
 import type { TableProps } from 'antd/es/table';
 import { FileDoneOutlined } from '@ant-design/icons';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Search } = Input;
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 
 
 type RangeValue = [Moment | null, Moment | null] | null;
 
 
-const AlarmLog: React.FC = (props:any) => {
+const AlarmLog: React.FC = () => {
   const [momentDates, setMomentDates] = useState<RangeValue>([moment().add(-1, 'M'),moment()]) //当前Moment时间
   const [startDate, setStartDate] = useState(moment().add(-1, 'M').format("YYYY-MM-DD") + " 00:00:00") //开始日期
   const [endDate, setEndDate] = useState(moment().format("YYYY-MM-DD") + " 23:59:59") //结束日期
@@ -34,10 +34,9 @@ const AlarmLog: React.FC = (props:any) => {
   const [hackValue, setHackValue] = useState<RangeValue>(null); //选择为空的标志
   const [loading, setLoading] = useState(false); //选择为空的标志
   const [dataSource, setDataSource] = useState<any>({}); //请求的数据
+  const [visible, setVisible] = useState(false); //处置方案内容的抽屉
 
 
-
-  const [value, setValue] = useState<RangeValue>(null)
 
   // 转换stateRead
   const stateReadTransform = (state:string | number) => {
@@ -109,7 +108,7 @@ const AlarmLog: React.FC = (props:any) => {
   // 全部告警更新已读状态请求
   const requesAllRead = async (obj:object = {}) => {
     try {
-      const data = await http({
+      await http({
         url: '/visual/alarmInfo/all/read',
         method: 'post',
       })
@@ -155,6 +154,7 @@ const AlarmLog: React.FC = (props:any) => {
     if (action === 'sort') {
       const { order } = sorter
       if(order){
+        setMap({updated_time: order === "ascend"})
         requestData({map: {updated_time: order === "ascend"}})
       }
     }
@@ -180,6 +180,16 @@ const AlarmLog: React.FC = (props:any) => {
       requestData(finalParams)
     },
   }
+  // 一键已读确认回调
+  const confirmAllRead = () => {
+    requesAllRead()
+    // console.log("yes");
+  }
+  // 点击处置方案
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
 
   interface DataType {
     object: string;
@@ -225,12 +235,19 @@ const AlarmLog: React.FC = (props:any) => {
               style={{ width: 300 }} 
             />
           </div>
-          <div className='read' onClick={requesAllRead}>
-            <Tooltip title="一键已读">
-              <Badge count={unreadNum}>
-                <FileDoneOutlined style={{fontSize: '30px',color: "#177ddc"}} />
-              </Badge>
-            </Tooltip>
+          <div className='read'>
+            <Popconfirm
+              title="你确定要全部标记为已读吗？"
+              onConfirm={confirmAllRead}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Tooltip title="一键已读">
+                <Badge count={unreadNum}>
+                  <FileDoneOutlined style={{fontSize: '30px',color: "#177ddc"}} />
+                </Badge>
+              </Tooltip>
+            </Popconfirm>
           </div>
         </div>
         <div className='table-list'>
@@ -244,9 +261,9 @@ const AlarmLog: React.FC = (props:any) => {
             pagination={paginationProps}
             showSorterTooltip={false}
           >
-            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="250px"/>
-            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="450px"/>
-            <Column
+            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="150px"/>
+            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="500px"/>
+            {/* <Column
               title="处置方案名称"
               dataIndex="id"
               key="id"
@@ -254,10 +271,10 @@ const AlarmLog: React.FC = (props:any) => {
               width="250px"
               render={() => (
                 <>
-                  {'处置方案2'}
+                  <Button className='none-border' onClick={showDrawer}>处置方案2</Button>
                 </>
               )}
-            />
+            /> */}
             <Column title="更新时间" dataIndex="updatedTime" key="updatedTime" ellipsis={true} width="200px"
               sorter={true} 
             />
@@ -291,6 +308,16 @@ const AlarmLog: React.FC = (props:any) => {
           </Table>
         </div>
       </div>
+      <Drawer 
+        title="处置方案内容" 
+        placement="right" 
+        onClose={()=>setVisible(false)} 
+        visible={visible}
+        width={600}
+      >
+        <p>处置方案名称：处置方案2</p>
+        <p>处置方案内容：测试导入</p>
+      </Drawer>
     </ConfigProvider>
   )
 }
