@@ -219,7 +219,7 @@ class Counter extends Component {
             textShadow: dataRangConfig.show ? `${dataRangConfig.shadow.color} ${dataRangConfig.shadow.vShadow}px ${dataRangConfig.shadow.hShadow}px ${dataRangConfig.shadow.blur}px` : ''
           }}>
             {
-              symbolsConfig?.show ? <img style={{
+              symbolsConfig?.show && currentType?.image ? <img style={{
                 width: currentType?.width,
                 height: currentType?.height,
                 marginLeft: `${currentType?.x}px`,
