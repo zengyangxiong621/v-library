@@ -6,7 +6,7 @@ const ComponentDefaultConfig = {
   'dashboardId': '11',
   'moduleName': 'normalTable',
   'moduleType': 'normalTable',
-  'moduleVersion': '1.1.6',
+  'moduleVersion': '1.0.1',
   'thumb': '',
   'dataConfig': {},
   'dataType': 'static',
@@ -129,6 +129,32 @@ const ComponentDefaultConfig = {
           "displayName": "开启边框",
           "type": "switch",
           "value": false
+        },{
+          'name': 'haveScroll',
+          'displayName': '显示滚动条',
+          'type': 'collapse',
+          'hasSwitch': true,
+          'defaultExpand': true,
+          'value':[
+            {
+              'name': 'show',
+              'displayName': '',
+              'value': true,
+              'type': 'switch'
+            },
+            {
+              'name': 'scrollTrack',
+              'displayName': '轨道颜色',
+              'value': '#222430',
+              'type': 'color'
+            },
+            {
+              'name': 'scrollThumb',
+              'displayName': '滑块颜色',
+              'value': '#fff',
+              'type': 'color'
+            }
+          ]
         }
       ],
     },{
@@ -149,6 +175,12 @@ const ComponentDefaultConfig = {
           'displayName':'展开字段',
           'type':'input',
           'value':'column1',
+        },
+        {
+          'name': 'expandBgColor',
+          'displayName': '展开行背景色',
+          'value': '#222430',
+          'type': 'color'
         },
         {
           'displayName': '文本样式',

@@ -24,7 +24,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
   const componentConfig = deepClone(bar.componentConfig)
-  console.log('barbarbarbar', bar);
   componentConfig.interaction = componentConfig.interaction || {
     mountAnimation: bar.treeData.find(item => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events
@@ -113,6 +112,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   const dataSourceChange = dataSource => {
     componentConfig.dataConfig = dataSource
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+  }
+
+  const autoUpdateChange = autoUpdate => {
+    componentConfig.autoUpdate = autoUpdate
     dispatch({
       type: 'bar/setComponentConfig',
       payload: componentConfig
@@ -230,7 +237,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
 
   // 通过全局变量 panelId 和 panels 来查找包含当前面板信息的对象，通过对象里的name来判断
   const  curPanelType = bar.curPanelType
-  console.log('curPanelType', curPanelType);
 
   return (
     <div className="SingleLayer-wrap">
@@ -261,6 +267,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
                 onStaticDataChange={staticDataChange}
                 onDataTypeChange={dataTypeChange}
                 onDataSourceChange={dataSourceChange}
+                onAutoUpdateChange={autoUpdateChange}
                 onDataFromChange={dataFromChange}
                 onUseFilterChange={useFilterChange}
               />
