@@ -261,9 +261,9 @@ const AlarmLog: React.FC = () => {
             pagination={paginationProps}
             showSorterTooltip={false}
           >
-            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="250px"/>
-            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="450px"/>
-            <Column
+            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="150px"/>
+            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="500px"/>
+            {/* <Column
               title="处置方案名称"
               dataIndex="id"
               key="id"
@@ -274,7 +274,7 @@ const AlarmLog: React.FC = () => {
                   <Button className='none-border' onClick={showDrawer}>处置方案2</Button>
                 </>
               )}
-            />
+            /> */}
             <Column title="更新时间" dataIndex="updatedTime" key="updatedTime" ellipsis={true} width="200px"
               sorter={true} 
             />
