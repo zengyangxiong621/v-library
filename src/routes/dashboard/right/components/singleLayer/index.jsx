@@ -9,6 +9,7 @@ import DataConfig from '../dataConfig'
 import CusEvent from '../cusEvent'
 import componentLib from '../index'
 import CallbackArgs from '../callbackArgs'
+import CrossCallback from '../crossCallback'
 import DrillDownSetting from '../drillDownSetting'
 
 import {
@@ -273,19 +274,16 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
               <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
-          <TabPane tab="跨屏" key="4">
-            <ComponentCard data={componentConfig}>
-              <LoadAnimation data={interactionConfig} onChange={interactionChange} />
-              <CallbackArgs data={componentConfig} onChange={callbackArgChange} />
-              <CusEvent data={interactionConfig} onChange={eventChange} />
-            </ComponentCard>
-          </TabPane>
           {
             bar.isPanel && curPanelType === 2 && <TabPane tab="下钻" key="4">
               <DrillDownSetting></DrillDownSetting>
             </TabPane>
           }
-
+          {/* <TabPane tab="跨屏" key="5">
+            <ComponentCard data={componentConfig}>
+              <CrossCallback data={componentConfig} onChange={crossCallbackChange} />
+            </ComponentCard>
+          </TabPane> */}
         </Tabs>
       </div>
     </div>
