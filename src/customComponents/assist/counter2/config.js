@@ -450,9 +450,9 @@ const componentDefaultConfig = {
                         'defaultExpand':false,  // 是否默认展开
                         'value':[
                           {
-                            "name": "numShow",
+                            "name": "show",
                             "displayName": "",
-                            "value": true,
+                            "value": false,
                             "type": "switch"
                           },
                           {
@@ -460,21 +460,21 @@ const componentDefaultConfig = {
                             displayName:'位置',
                             type:'radioGroup',
                             direction:'horizontal,vertical', // 方向
-                            value:true,
+                            value:'before',
                             options:[
                               {
                                 name:'数值前',
-                                value:true
+                                value:'before'
                               },
                               {
                                 name:'数值后',
-                                value:false
+                                value:'after'
                               }
                             ]
                           },
                           {
-                            name:'xxx',
-                            displayName:'xxx',
+                            name:'iconType',
+                            displayName:'类型',
                             type:'tabs',
                             activeKey:'increase', // 默认选中第一项
                             options:[
@@ -486,7 +486,7 @@ const componentDefaultConfig = {
                                       'name': 'image',
                                       'displayName': '图标',
                                       'type':'image',
-                                      'value': ''
+                                      'value': `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAoCAYAAAACJPERAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAHaADAAQAAAABAAAAKAAAAAC3uiGnAAADyklEQVRYCbVXSWwUVxCt+t32LGyXBBAkwIGbZ0yMhQCBmLEtNgXlBMohCSCEkkicOESCA5uQkBAHbggSLpxBiQLCIcE4I+FIkYhZMpZCgsSB9WBfDHH3MMsvqgfPuJf/u3ts05f59V69el2arpppgGlcOTvzVc7KPOkpdWydhhywVVFfKbO5KuE6ELWx+jWabZsK7ffvt1KnJdO+N5nOapVus8H8pgnCiwTgut/SI0+bWMRBRPBNutdatbRW4w7dhg5LsKRM0L+d1k7dSFOlPsQy/Yw2zKtRrZ+IPlKVIaCMbf//49fU3abi/VikaZ7y5rg1foVb6vSL3TER9P1nlX5wY7pzpClZYxfYcIuugBsngD25iY4Tbkx1DjXtsbNH2XCfShiCHc3b2b0hvH5keuyO3VLCpTCxlkOsmAI+vZUcuanKUY5Mr93ZWyN5oz6LKlU87FWbKTYOJIpFf3rANP+mMwNVOcRP5AJ/cqsxIj4TYKwbTD947tZ6vtPNE11LqCb7Z8PQMXFGTFLtujNySlMejbkVKDvr7WN3wkzP3MAqZ+Sc0WvUqndaB6zRy/zIf9IgZveTtrwbvXdV66ZojZ5jw22za+SvRvtydvaIgyL/TB0GSaf8Ke8rRiG+FCDh4PsyUNYl2m8aBqwnMlYoExgkkl38FJ7R8X4cEYZ4Dg8hmBU/58SplHwUmFNVYt7KVNnYUHF+DEF8W5hT5H2tvzxzqkrbRbuMuIaOXiAFNpC/bqTpOPyb9Iu0MUJZpj64q+UniUhThDmJqCINHgHvFLBQasS6z0jTSqnkWWG6QnWcoBDKT5KRpkByUZxCTg53+lOc3OY+1CXzQ7RYx3lwxMe/p4vDHkwTRHYqBcXqFIEuazwCcGSnvCJXBFQ+gH83a6bA732wNozslDtYrVVPEVcGksXHU2H4KdKUALvDSwCYpnE6KsfNh5r22l3Left+6BYEzojXBtof3AvgIUCoKUHlixCtQ73izXEgIidAa02dnSuJvgkoXIAA8V0rL04NqdZ0zHq4g1+OljUSA58Ig4Ppv2O9Rvi1SlPusl0CnfQnN2LePCOYSn7Oo8L/clq/lKaj1j/O60RWVY6NHranRV8Bh8dUfBws8CPeM5HtJqQ/ef0FFwfCo2QqmfsVh1/GKa7L8XSaL61eyYY/Kw0BfkmkjI0zNXRupNmpYwiyXGDDpd47xFGOjxXSxfPT/Q699SZN87RmMdj2Xx5DxKcC8eK85PyzV/GP137hTOL692aU7YVVgjQg3hFAQyjwxqbEzoHjeFzOpLhO+xZrCD4FYkKvaAAAAABJRU5ErkJggg==`
                                     },
                                     {
                                       name:"sizeConfig",
@@ -498,7 +498,7 @@ const componentDefaultConfig = {
                                             name:'width',
                                             displayName:'宽度',
                                             type:'number',
-                                            value:40,
+                                            value:30,
                                             config:{
                                                 min:10,
                                                 suffix:'px',  // 输入框后缀
@@ -508,7 +508,7 @@ const componentDefaultConfig = {
                                             name:'height',
                                             displayName:'高度',
                                             type:'number',
-                                            value:40,
+                                            value:30,
                                             config:{
                                                 min:10,
                                                 suffix:'px',  // 输入框后缀
@@ -566,7 +566,7 @@ const componentDefaultConfig = {
                                           name:'width',
                                           displayName:'宽度',
                                           type:'number',
-                                          value:40,
+                                          value:30,
                                           config:{
                                               min:10,
                                               suffix:'px',  // 输入框后缀
@@ -576,7 +576,7 @@ const componentDefaultConfig = {
                                           name:'height',
                                           displayName:'高度',
                                           type:'number',
-                                          value:40,
+                                          value:30,
                                           config:{
                                               min:10,
                                               suffix:'px',  // 输入框后缀
@@ -622,7 +622,7 @@ const componentDefaultConfig = {
                                     'name': 'image',
                                     'displayName': '图标',
                                     'type':'image',
-                                    'value': ''
+                                    'value': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAoCAYAAAACJPERAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAHaADAAQAAAABAAAAKAAAAAC3uiGnAAADfUlEQVRYCa1Y20uUQRSfs7uuyyoFUhFZuK6lgRakCD4ISS89+FTZW2EPpdA/EAiZFRE9+RQE3SjqIXwNuioL9dBDN0wRL6vhdrWnErF095t+863ud5v5LusODHvmnPM7v+/Md2a+mSWGxmtr9zPOU4xoBsNX6M9Yd/dLGhjQhL3UjURA3ti4nS0tvYVYXSAgyuBBbrHy8kGanFws6Esg6KQiDq+r281yuRREg1gYiH6hX2Dp9A0i4kK10VYgFYGUxHmWJywcPkXp9EJJSdeIW5imvcHURhzBiaZZLHaQJia+O2wBFCG7LzJ5B901u14fc76HLS+PYEa2Se0+lQ5SHRePX8J7/KSIsRczMczr67co7J5qKSmNj69ges8r0Zw3sZWVR5xzS00o/W0GKanu09r6GNnO2/zNw0MsmTxjVviVXZ8Um0YfMr6iDEb0h4VCTaiDjNJHYlBnmnd+KMEYKs434f1eNxT+JNdMRQhku4Bst7qGi0SaaWbmg6uPyeiVKVi5WELuLZc75+5gtXqTEr23QiQjzruwhJISi1TlTcrYZynSqgyzbLbHqlKP/JD+VMNNFk07bhq5in5If7hGMIxJbI8txlAt+SH1l6ng0LQjairD4k0ajwf5gHcYodWSN2ks9lcNd1haeUdHzKG1KbxJk8l/Nox6yHmUZTLNaoe8xZOUhoZycBXdX8vl9nk5RvRFnc3WKh05P4BdKay02w1EJ1DFYyiqVbtJH1dWTpOvvVWKLlqZCuGbOVg0vBgg0e0Qzc5eBfHNYvCBMUT9NDf3IF9INTVnEeBp4CDBAHdAeFlAdFJKpbKsokLsnR+DxfHpTfScJRK9696WjzhvaNiBA5c48+5ad9jwL9Eoi0bbzVcTC6kgQLk3odxfg3hzCQi/sLKyNpqa+mqO5dgccMgaw2HrKIpLvs7MaDdZHNoY67QTCoiDVChBPIKf00IuquUfuAuFMyrDS0mFIwD3kW2/DOSpI+oF/oXKT0kqAGslflcFlupDoYtY+64YV1I9aCLRg4yVT20hJroHwgGLTjLwJNXXcDR6DMTS91OISTTMqqp8XTMcS6YQxCbga1TNVlfFGt5pM+E90Bh6O7L87bBJFL5JBVb/Q0T8ESKuE0b7hht6W5D7jOf0GrH1whJT3IWs8muYaBGLvzMIoTleIBkZn0Sf54nE4UDANef/CCYBuDd1l8MAAAAASUVORK5CYII='
                                   },
                                   {
                                     name:"sizeConfig",
@@ -634,7 +634,7 @@ const componentDefaultConfig = {
                                           name:'width',
                                           displayName:'宽度',
                                           type:'number',
-                                          value:40,
+                                          value:30,
                                           config:{
                                               min:10,
                                               suffix:'px',  // 输入框后缀
@@ -644,7 +644,7 @@ const componentDefaultConfig = {
                                           name:'height',
                                           displayName:'高度',
                                           type:'number',
-                                          value:40,
+                                          value:30,
                                           config:{
                                               min:10,
                                               suffix:'px',  // 输入框后缀
@@ -691,7 +691,7 @@ const componentDefaultConfig = {
                         displayName:'动画开关',
                         type:'radioGroup',
                         direction:'horizontal', // 方向
-                        value:'close',
+                        value:'open',
                         options:[
                           {
                             name:'打开',
