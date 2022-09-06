@@ -32,7 +32,7 @@ import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 import useWebsocket from '@/utils/useWebsocket'
 
 
-const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 0, scale=1,sendMessage, ...props}) => {
+const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 0, scale=1, ...props}) => {
   const callbackArgs = previewDashboard.callbackArgs
   const callbackParamsList = previewDashboard.callbackParamsList
   const {componentConfig} = props
@@ -46,23 +46,23 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
 
   // 跨屏
   const [sendData, setSendData] = useState('')
-  // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
-  //   url: `ws://10.201.83.166:31088/visual/webSocket/shareParam/eventName`
+  const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
+    url: `ws://10.201.83.166:31088/visual/webSocket/shareParam/eventName`
   //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
   //   // verify // 此参数控制是否有权限，请求该方法
-  // })
+  })
 
   useEffect(() => {
-    // if (readyState.key === 1){
+    if (readyState.key === 1){
       sendMessage(sendData)
       console.log("#########websocket send");
-    // }
+    }
     // 如果是已关闭且是当前页面自动重连
     // if (readyState.key === 3) { // && isLocalPage
     //   reconnect()
     // }
-  }, [sendData]) // isLocalPage, verify
-  // }, [sendData, readyState]) // isLocalPage, verify
+  // }, [sendData]) // isLocalPage, verify
+  }, [sendData, readyState]) // isLocalPage, verify
 
 
   // 点击
@@ -191,10 +191,10 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
 
   const handleValueChange = debounce((data) => {
     // 跨屏  建立websocket连接，发送数据
-    // if (readyState.key === 1){
-    //   console.log('setSendData');
+    if (readyState.key === 1){
+      console.log('setSendData');
       setSendData(data);
-    // }
+    }
     console.log('-------------')
     console.log('数据变化data', data)
     const componentId = props.componentConfig.id

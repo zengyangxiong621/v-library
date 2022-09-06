@@ -180,7 +180,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, sendMes
           componentConfig={componentData}
           fields={getFields(componentData)}
           comData={comData}
-          sendMessage={sendMessage}
+          // sendMessage={sendMessage}
         >
         </ComponentEventContainer>
       </div>

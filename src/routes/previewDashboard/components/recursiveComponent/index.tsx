@@ -78,7 +78,7 @@ const RecursiveComponent = (props: any) => {
                           scaleValue={scaleValue}
                           panels={panels}
                           crossCallback={crossCallback}
-                          sendMessage={sendMessage}
+                          // sendMessage={sendMessage}
                         />
                       </div>
                     }
@@ -89,7 +89,7 @@ const RecursiveComponent = (props: any) => {
                         <EveryComponent key={ind}
                           componentData={targetComponent}
                           comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer, crossCallback)}
-                          sendMessage={sendMessage}
+                          // sendMessage={sendMessage}
                           // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
                           scaleValue={scaleValue}
                           layerInfo={layer}

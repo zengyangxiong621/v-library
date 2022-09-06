@@ -288,7 +288,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
                     scaleValue={scaleValue}
                     scaleMode={scaleMode}
                     crossCallback={dealedData}
-                    sendMessage={sendMessage}
+                    // sendMessage={sendMessage}
                   />
                 }
               </div>
