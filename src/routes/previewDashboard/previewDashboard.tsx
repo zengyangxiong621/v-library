@@ -13,11 +13,13 @@ import useWebsocket from '@/utils/useWebsocket'
 
 
 const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
+
+  
   // 跨屏 接收跨屏回调
   // 建立socket连接，receiveData 接收数据，先打印出来，添加在回调参数后
   const [ dealedData,setDealedData ] = useState({})
   // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
-  //   url: `ws://10.201.83.166:31088/visual/webSocket/shareParam/eventName2`
+  //   url: `/visual/webSocket/shareParam/eventName1`
   //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
   //   // verify // 此参数控制是否有权限，请求该方法
   // } as any)
@@ -240,11 +242,11 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
 
   // 跨屏 获取订阅消息
   // useEffect(() => {
-  //   if (readyState.key === 1 && receiveData !== ''){
+    // if (readyState.key === 1 && receiveData !== ''){
   //     console.log(receiveData,'#########websocket  get');
   //     // 订阅消息处理 receiveData：组件id、data
   //     // JSON.parse(receiveData)
-  //     setDealedData(receiveData);
+      // setDealedData(receiveData);
 
   //     // 组件id 重新发布更新组件
   //     // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
@@ -257,7 +259,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   //   // 如果是已关闭且是当前页面自动重连
   //   // if (readyState.key === 3) { // && isLocalPage
   //   //   reconnect()
-  //   // }
+  //   }
   // }, [receiveData, readyState])
 
   return (

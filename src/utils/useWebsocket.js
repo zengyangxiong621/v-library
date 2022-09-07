@@ -15,7 +15,7 @@ const useWebsocket = ({ url, moduleId, type, dashboardId, verify }) => {
         ]
         try {
             const token = localStore.getToken();
-            ws.current = new WebSocket(url+"?webSocket-token=" + token)
+            ws.current = new WebSocket("ws://10.201.83.166:31088"+url+"?webSocket-token=" + token)
 
             ws.current.onopen = () => {
                 setReadyState(stateArr[ws.current?.readyState ?? 0])          
