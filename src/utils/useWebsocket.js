@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import {localStore} from "@/services/LocalStoreService"
+import { localStore } from "@/services/LocalStoreService"
 
-const useWebsocket = ({ url, verify }) => {
+const useWebsocket = ({ url, moduleId, type, dashboardId, verify }) => {
     const ws = useRef(null);
     const [receiveData, setReceiveData] = useState('')
     const [readyState, setReadyState] = useState({ key: 0, value: '正在链接中' })
@@ -15,7 +15,6 @@ const useWebsocket = ({ url, verify }) => {
         ]
         try {
             const token = localStore.getToken();
-            console.log(localStore.getToken(),'token');
             ws.current = new WebSocket(url+"?webSocket-token=" + token)
 
             ws.current.onopen = () => {

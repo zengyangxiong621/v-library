@@ -32,11 +32,16 @@ import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 import useWebsocket from '@/utils/useWebsocket'
 
+import { http } from '@/services/request'
+
 
 const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 0, scale=1, ...props}) => {
   const callbackArgs = previewDashboard.callbackArgs
   const callbackParamsList = previewDashboard.callbackParamsList
   const {componentConfig} = props
+  console.log(componentConfig,'-----------------config');
+  // TODO 这里能拿到 
+  const {dashboardId} = componentConfig
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
   })
@@ -48,13 +53,35 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
   // 跨屏
   const [sendData, setSendData] = useState('')
   const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
-    url: `ws://10.201.83.166:31088/visual/webSocket/shareParam/eventName`
-  //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
-  //   // verify // 此参数控制是否有权限，请求该方法
+    url: `ws://10.201.83.166:31088/visual/webSocket/shareParam/eventName2`
+    // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
+    // verify // 此参数控制是否有权限，请求该方法
   })
-
+  
+  // 添加websocket组件关联
+  const addWebsocket = async () => {         
+    if(componentConfig.moduleName === 'rankingBar'){
+      const data = await http({
+        method: 'post',
+        url: '/visual/websocket-module/add',
+        body: {
+          websocketUrl: '/visual/webSocket/shareParam/eventName2',
+          moduleId: componentConfig.id, // 组件ID
+          type: 0, // 0-发送方  1-接收方
+          dashboardId: dashboardId, // 大屏ID
+        }
+      })
+      console.log(data,'-----------data'); // 报错 data返回null
+      // if (data) {
+      //     webSocketInit();
+      // }
+    }   
+  }
   useEffect(() => {
-    if (readyState.key === 1){
+    addWebsocket();
+  },[])
+  useEffect(() => {        
+    if (readyState.key === 1 && sendData !== ''){
       sendMessage(sendData)
       console.log("#########websocket send");
     }
@@ -192,8 +219,9 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
 
   const handleValueChange = debounce((data) => {
     // 跨屏  建立websocket连接，发送数据
-    if (readyState.key === 1){
-      console.log('setSendData');
+    // TODO 点击组件发出什么就先直接传什么
+    if (readyState.key === 1 && props.componentConfig.moduleName === 'rankingBar'){
+      console.log('rankingBar');
       setSendData(data);
     }
     console.log('-------------')
