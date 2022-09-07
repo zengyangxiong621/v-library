@@ -47,6 +47,8 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     transition: 'transform 600ms ease 0s'
   })
   const componentRef = useRef(null)
+  const timesRef = useRef(0)
+  const [times, setTimes] = useState(0)
   const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 })
   const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
@@ -97,6 +99,18 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     // }
   // }, [readyState]) // isLocalPage, verify
 
+  useEffect(() => {
+    let timer = setInterval(() => {
+      setTimes(++timesRef.current)
+    }, 360000)
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
+
+  useEffect(() => {
+    componentRef.current.handleEvent(times)
+  }, [times])
 
   // 点击
   const handleClick = debounce((e, data) => {
@@ -474,7 +488,6 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   return (
     <div
       key={id}
-      ref={componentRef}
       className={`single-component event-id-${id}`}
       // onClick={handleClick}
       // onMouseEnter={handleMouseEnter}
@@ -558,6 +571,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
                               onClick={handleClick}
                               onMouseEnter={handleMouseEnter}
                               onMouseLeave={handleMouseLeave}
+                              cRef={componentRef}
                               {...props}
                             >
                             </Tab>

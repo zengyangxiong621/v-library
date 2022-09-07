@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useImperativeHandle } from 'react'
 import ComponentDefaultConfig from './config'
 import './index.css'
 import { styleTransformFunc, deepClone } from '../../../utils'
@@ -9,7 +9,7 @@ const textAlignEnum = {
   right: 'flex-end',
 }
 
-const Tab = (props) => {
+const Tab = ({cRef={}, ...props }) => {
   const [scrollState, setScrollState] = useState({
     isScroll: false,
     clickStayTime: 0,
@@ -43,6 +43,13 @@ const Tab = (props) => {
   const [rowNums, setRowNums] = useState(1)
   const [colNums, setColNums] = useState(4)
 
+  useImperativeHandle(cRef, () => ({
+    handleEvent: (index) => {
+      // console.log('tabList', )
+      handleItemClick(tabList[index], index)
+      console.log('嘿嘿')
+    },
+  }))
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
@@ -317,6 +324,7 @@ const Tab = (props) => {
   }, [dataSeriesConfig, tabList, rowNums, colNums])
 
   const handleChange = (data, index) => {
+    console.log('index', index)
     setActiveKey(index)
     props.onChange && props.onChange(data)
   }
@@ -331,6 +339,7 @@ const Tab = (props) => {
     props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey])
   }
   const handleItemClick = (item, index) => {
+    console.log('index', index)
     if (scrollState.clickStayTime > 0) {
       setScrollState({...scrollState, isStay: true})
     }
