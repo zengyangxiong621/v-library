@@ -40,16 +40,17 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
   const callbackParamsList = previewDashboard.callbackParamsList
   const {componentConfig} = props
   console.log(componentConfig,'-----------------config');
-  // TODO 这里能拿到 
+  // TODO 这里能拿到
   const {dashboardId} = componentConfig
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
   })
   const componentRef = useRef(null)
+  const timesRef = useRef(0)
+  const [times, setTimes] = useState(0)
   const [opacityStyle, setOpacityStyle] = useState({opacity: 1})
   const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
-
   // 跨屏
   const [sendData, setSendData] = useState('')
   const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
@@ -57,9 +58,9 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
     // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
     // verify // 此参数控制是否有权限，请求该方法
   })
-  
+
   // 添加websocket组件关联
-  const addWebsocket = async () => {         
+  const addWebsocket = async () => {
     if(componentConfig.moduleName === 'rankingBar'){
       const data = await http({
         method: 'post',
@@ -75,12 +76,12 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
       // if (data) {
       //     webSocketInit();
       // }
-    }   
+    }
   }
   useEffect(() => {
     addWebsocket();
   },[])
-  useEffect(() => {        
+  useEffect(() => {
     if (readyState.key === 1 && sendData !== ''){
       sendMessage(sendData)
       console.log("#########websocket send");
@@ -92,6 +93,18 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
   // }, [sendData]) // isLocalPage, verify
   }, [sendData, readyState]) // isLocalPage, verify
 
+  useEffect(() => {
+    let timer = setInterval(() => {
+      setTimes(++timesRef.current)
+    }, 360000)
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
+
+  useEffect(() => {
+    componentRef.current.handleEvent(times)
+  }, [times])
 
   // 点击
   const handleClick = debounce((e, data) => {
@@ -451,7 +464,6 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
   return (
     <div
       key={id}
-      ref={componentRef}
       className={`single-component event-id-${id}`}
       // onClick={handleClick}
       // onMouseEnter={handleMouseEnter}
@@ -535,6 +547,7 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            cRef={componentRef}
             {...props}
           >
           </Tab>
