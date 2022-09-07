@@ -3,7 +3,7 @@ import './index.less'
 import { connect } from 'dva'
 
 import { v4 as uuidv4 } from 'uuid';
-
+import {http} from '@/services/request.ts'
 import {
   Form,
   Select,
@@ -28,16 +28,16 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
   };
 
   const _data = props.data || {}
-  const [activeTab, setActiveTab] = useState(null)
-  const [tabpanes, setTabpanes] = useState(_data?.callbackArgs || [])
+  const [activeKey, setActiveKey] = useState(null)
+  const [tabpanes, setTabpanes] = useState(_data.websocketConfig || [])
   const [activeCollapseKey,setActiveCollapseKey] = useState(null)
 
   useEffect(() => {
-    console.log(_data,'_data####');
     // 设置值
-    setTabpanes(_data.callbackArgs || [])
-    if (_data?.callbackArgs?.length) {
-      setActiveTab(_data.callbackArgs[0].id)
+    setTabpanes(_data.websocketConfig || [])
+    if (_data.websocketConfig?.length > 0) {
+      setActiveKey(_data.websocketConfig[0].id)
+      console.log('_data.websocketConfig[0].id', _data.websocketConfig[0].id)
     }
   }, [])
 
@@ -48,69 +48,83 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     </React.Fragment>
   );
 
-  const addCallback = (e) => {
+  const addCallback = async (e) => {
     e.stopPropagation();
     const callbackId = uuidv4()
-    const panes = [...tabpanes]
-    // 相关值
-    panes.push(
-      {
-        id: callbackId,
-        name: `回调${panes.length + 1}`,
-        origin: '',
-        target: '',
-        // action:'click'
+    const panes = tabpanes
+    const data = await http({
+      method: 'post',
+      url: '/visual/websocket-module/add',
+      body: {
+        websocketUrl: `ws://${callbackId}`,
+        moduleId: _data.id,
+        type: 0,
+        dashboardId: bar.dashboardId,
       }
-    )
-    setTabpanes(panes)
-    setActiveTab(callbackId)
-    _data.callbackArgs = panes
-    setActiveCollapseKey(["1"])
-    props.onChange()
+    })
+    // 相关值
+    if (data) {
+      panes.push(
+        {
+          id: data,
+          websocketUrl: `ws://${callbackId}`,
+          moduleId: _data.id,
+          type: 0,
+          dashboardId: bar.dashboardId,
+        }
+      )
+      setTabpanes(panes)
+      _data.websocketConfig = panes
+      props.onChange(_data.websocketConfig)
+    }
   }
 
-  const deleteCallback = (e) => {
+  const deleteCallback = async(e) => {
     e.stopPropagation();
-    const panes = tabpanes.filter(pan => {
-      return pan.id !== activeTab
+    const currentPane = tabpanes.find(item => item.id == activeKey)
+    const data = await http({
+      method: 'delete',
+      url: `/visual/websocket-module/delete/${currentPane.id}`,
     })
-    panes.forEach((item, index) => {
-      item.name = `回调${index + 1}`
-    })
-    setTabpanes(panes)
-    setActiveTab(panes.length ? panes[0].id : null)
-    _data.callbackArgs = panes
-    props.onChange()
+    if (data) {
+      const currentPaneIndex = tabpanes.findIndex(item => item.id === activeKey)
+      tabpanes.splice(currentPaneIndex, 1)
+      setTabpanes(tabpanes)
+      setActiveKey(tabpanes[tabpanes.length - 1].id)
+      _data.websocketConfig = tabpanes
+      props.onChange(_data.websocketConfig)
+    }
+
   }
 
   const tabsChange = key => {
-    setActiveTab(key)
+    console.log('key', key)
+    setActiveKey(key)
   }
 
-  // 匹配动作
-  const actionChange = (e, pane) => {
-    pane.action = e
-    _data.callbackArgs = tabpanes
-    props.onChange()
-  }
 
-  const originChange = (e, pane) => {
-    console.log(e,pane,'some thing');
-    pane.origin = e.target.value
-    _data.callbackArgs = tabpanes
-    props.onChange()
-  }
-
-  const targetChange = (e, pane) => {
-    pane.target = e.target.value
-    _data.callbackArgs = tabpanes
-    props.onChange()
-  }
 
   const collapseChange= (e) => {
     setActiveCollapseKey(e)
   }
 
+  const handleChangeType = async (config, pane) => {
+    pane = {...pane, ...config}
+    const data = await http({
+      method: 'post',
+      url: '/visual/websocket-module/update',
+      body: {
+        ...pane,
+        dashboardId: bar.dashboardId
+      }
+    })
+    if (data) {
+      _data.websocketConfig = tabpanes
+      setTabpanes(tabpanes)
+      props.onChange(_data.websocketConfig)
+    }
+  }
+  console.log('activeKey', activeKey)
   return (
     <Form
       className="custom-form crossCallback-form"
@@ -118,53 +132,40 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
       {...formItemLayout}
       colon={false}
     >
-      <Collapse activeKey={activeCollapseKey} onChange={collapseChange} className="custom-collapse">
-        <Panel header="发布消息" key="1" extra={callbackExtra()}>
+      <Collapse accordion defaultActiveKey={['1']} onChange={collapseChange} className="custom-collapse">
+        <Panel header="跨屏回调" key="1" extra={callbackExtra()}>
           {
             tabpanes.length ? <Tabs
               hideAdd
               onChange={tabsChange}
-              activeKey={activeTab}>
-              {tabpanes.map(pane => (
-                <TabPane tab={pane.name} key={pane.id}>
+              activeKey={activeKey}>
+              {tabpanes.map((pane, index) => (
+                <TabPane tab={`回调${index+1}`} key={pane.id}>
                   <Form.Item
-                    label='事件名'
+                    label='url地址'
                   >
-                    <Input className="cus-input" defaultValue={pane.origin} onBlur={e => originChange(e, pane)} />
+                    <Input className="cus-input" value={pane.websocketUrl} onBlur={e => handleChangeType({websocketUrl: e, pane})} onChange={e => pane.websocketUrl = e.target.value} />
                   </Form.Item>
                   <Form.Item
-                    label='变量名'
+                    label='类型'
                   >
-                    <Input className="cus-input" defaultValue={pane.target} onBlur={e => targetChange(e, pane)} />
-                  </Form.Item>
+                    <Select
+                      className="custom-select"
+                      placeholder="请选择"
+                      value={pane.type}
+                      style={{ marginBottom: 0 }}
+                      onChange={e => handleChangeType({ type: e }, pane)}
+                    >
+                      {[{label: '发起方', value: 0 }, {label: '接收方', value: 1 }].map((item) => {
+                        return <Option value={item.value} key={item.value}>{item.label}</Option>
+                      })}
+                    </Select>                  </Form.Item>
                 </TabPane>
               ))}
             </Tabs> : '列表为空'
           }
         </Panel>
-        <Panel header="订阅消息" key="2" extra={callbackExtra()}>
-          {
-            tabpanes.length ? <Tabs
-              hideAdd
-              onChange={tabsChange}
-              activeKey={activeTab}>
-              {tabpanes.map(pane => (
-                <TabPane tab={pane.name} key={pane.id}>
-                  <Form.Item
-                    label='字段值'
-                  >
-                    <Input className="cus-input" defaultValue={pane.origin} onBlur={e => originChange(e, pane)} />
-                  </Form.Item>
-                  <Form.Item
-                    label='变量名'
-                  >
-                    <Input className="cus-input" defaultValue={pane.target} onBlur={e => targetChange(e, pane)} />
-                  </Form.Item>
-                </TabPane>
-              ))}
-            </Tabs> : '列表为空'
-          }
-        </Panel>
+
       </Collapse>
     </Form>
   )
