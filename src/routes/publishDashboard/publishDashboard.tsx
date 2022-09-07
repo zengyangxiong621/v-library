@@ -276,7 +276,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
 
 
   const updateDataContainerDataFunc = async (container:any) => {
-    console.log('哈哈哈哈哈哈哈哈哈或')
     let data = await http({
       method: "post",
       url: "/visual/container/screen/data/get",
@@ -291,21 +290,11 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     if(container.dataType === "static") {
       data = data.data
     }
-    console.log('data', data)
     if (index !== -1) {
-      console.log('ggg1')
       dataContainerDataListRef.current.splice(index, 1, { id: container.id, data })
     } else {
-      console.log('ggg2')
       dataContainerDataListRef.current.push({ id: container.id, data })
     }
-    console.log('publishDashboard', dataContainerDataListRef.current)
-    dispatch({
-      type: 'previewDashboard/save',
-      payload: {
-        dataContainerDataList: dataContainerDataListRef.current
-      }
-    })
   }
   const updateComponentDataFunc = async (component: any) => {
     try {
@@ -334,7 +323,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   };
   useEffect(() => {
     let timerList: NodeJS.Timer[] = []
-    console.log('publishDashboard.dataContainerList', publishDashboard.dataContainerList)
     publishDashboard.dataContainerList.forEach(async(item: any) => {
       // 添加自动过呢更新
       if(item.autoUpdate?.isAuto){
@@ -359,7 +347,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         timerList.push(setInterval( function () {
           updateComponentDataFunc(item)
           dispatch({
-            type: 'previewDashboard/save',
+            type: 'publishDashboard/save',
           })
         }, item.autoUpdate.interval*1000))
       }
