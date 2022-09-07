@@ -235,6 +235,20 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     }
     return [...map.values()];
   }
+  let message = websocketObj["1567464733820297200"]?.receiveData || ''
+  console.log('message', message)
+  useEffect(() => {
+    if (message) {
+      componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(message))
+    }
+    console.log('websocketConfig', websocketObj)
+
+    // websocketConfig.forEach(item => {
+    //   const message = JSON.parse(websocketObj[item.id].receiveData)
+    //   console.log('message', message)
+    console.log('麻了', websocketObj["1567464733820297200"]?.receiveData || '')
+    // })
+  }, [message])
 
   const handleValueChange = debounce((data) => {
     // 跨屏  建立websocket连接，发送数据
@@ -251,6 +265,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
         } else {
           // 拿到订阅消息的数据
           const message = JSON.parse(websocketObj[item.id].receiveData)
+          console.log('message', message)
           componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
           let activeId = componentConfig.id;
           const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
