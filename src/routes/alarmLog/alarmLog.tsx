@@ -229,7 +229,7 @@ const AlarmLog: React.FC = () => {
         <div className='search-read'>
           <div className='search'>
             <Search 
-              placeholder="请输入异常对象或处置方案名称搜索" 
+              placeholder="请输入异常对象名称搜索" 
               allowClear 
               onSearch={handleSearch} 
               style={{ width: 300 }} 
