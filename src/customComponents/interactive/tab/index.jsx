@@ -44,10 +44,9 @@ const Tab = ({cRef={}, ...props }) => {
   const [colNums, setColNums] = useState(4)
 
   useImperativeHandle(cRef, () => ({
-    handleEvent: (index) => {
-      // console.log('tabList', )
-      handleItemClick(tabList[index], index)
-      console.log('嘿嘿')
+    handleEvent: (message) => {
+      const index = tabList.findIndex(item => item[_fields[1]] === message.classify)
+      handleTestClick(index)
     },
   }))
   const componentConfig = props.componentConfig || ComponentDefaultConfig
@@ -78,7 +77,9 @@ const Tab = ({cRef={}, ...props }) => {
     })
     return targetStyle
   }
-
+  const handleTestClick = (index) => {
+    setActiveKey(index)
+  }
   const allGlobalLoadFunc = () => {
     const textAlign = allGlobalConfig.find(item => item.name === 'align').value.find(item => item.name === 'textAlign').value
     const gridLayoutConfig = allGlobalConfig.find(item => item.name === 'gridLayout').value

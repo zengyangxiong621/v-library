@@ -57,14 +57,14 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   // 跨屏
   console.log(websocketConfig, '--------websocketConfig');
   // 组件有关联过websocket，全部都发起连接
-  if (websocketConfig.length > 0) {    
-    websocketConfig.map(item => {      
-      websocketObj[item.id] = useWebsocket({ url: item.websocketUrl })            
+  if (websocketConfig.length > 0) {
+    websocketConfig.map(item => {
+      websocketObj[item.id] = useWebsocket({ url: item.websocketUrl })
     })
   }
 
-  // 添加websocket组件关联  
-  // const addWebsocket = async () => {         
+  // 添加websocket组件关联
+  // const addWebsocket = async () => {
   //   if(componentConfig.moduleName === 'tab'){
   //     const data = await http({
   //       method: 'post',
@@ -80,7 +80,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   //     // if (data) {
   //     //     webSocketInit();
   //     // }
-  //   }   
+  //   }
   // }
   // useEffect(() => {
   //   addWebsocket();
@@ -99,7 +99,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     // }
   // }, [readyState]) // isLocalPage, verify
 
-  useEffect(() => {
+/*  useEffect(() => {
     let timer = setInterval(() => {
       setTimes(++timesRef.current)
     }, 360000)
@@ -109,8 +109,8 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   }, [])
 
   useEffect(() => {
-    componentRef.current.handleEvent(times)
-  }, [times])
+    componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(times)
+  }, [times])*/
 
   // 点击
   const handleClick = debounce((e, data) => {
@@ -245,12 +245,13 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     // }
     // websocketConfig 组件内有消息且type为 0时发送
     if (websocketConfig.length > 0) {
-      websocketConfig.map(item => {        
+      websocketConfig.map(item => {
         if (item.type === 0) {
           websocketObj[item.id].sendMessage(data);
-        } else {          
+        } else {
           // 拿到订阅消息的数据
-          console.log(websocketObj[item.id].receiveData,'---------receiveData'); 
+          const message = JSON.parse(websocketObj[item.id].receiveData)
+          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
           let activeId = componentConfig.id;
           const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
             // 重新获取部分组件（绑定数据源的组件列表）的数据
