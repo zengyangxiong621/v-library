@@ -13,6 +13,7 @@ import {
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
 import { IconFont } from '../../../utils/useIcon'
+import {useKeyPress} from 'ahooks'
 
 /** 自定义组件 **/
 import EveryTreeNode from './components/everyTreeNode'
@@ -77,33 +78,29 @@ const Left = ({ dispatch, bar, operate }) => {
   }, [bar.key])
   // 监听键盘Ctrl键按下与松开
   useEffect(() => {
-    onkeydown = (e) => {
-      if (e.key === 'Control') {
-        dispatch({
-          type: 'bar/save',
-          payload: { isMultipleTree: true },
-        })
-        setIsCtrlKeyPressing(true)
-      }
-    }
-    onkeyup = (e) => {
-      if (e.key === 'Control') {
-        dispatch({
-          type: 'bar/save',
-          payload: { isMultipleTree: false },
-        })
-        setIsCtrlKeyPressing(false)
-      }
-    }
     document.addEventListener('click', clearStatus)
     return () => {
-      onkeydown = () => {
-      }
-      onkeyup = () => {
-      }
       document.removeEventListener('click', clearStatus)
     }
   }, [])
+
+  useKeyPress([ 'ctrl', 'shift' ], (event) => {
+    if(event.type === 'keydown' && bar.isMultipleTree) {
+
+    } else {
+      console.log('还疯狂？')
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          isMultipleTree: event.type === 'keydown',
+        },
+      })
+      setIsCtrlKeyPressing( event.type === 'keydown')
+    }
+  }, {
+    events: [ 'keydown', 'keyup' ],
+  })
+
 
   /**
    * 方法

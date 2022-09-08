@@ -30,6 +30,7 @@ import { useEventEmitter } from 'ahooks';
 const { Header } = Layout
 
 function App({ bar, dispatch, location, history }: any) {
+  console.log('疯狂触发？')
   const isPanel = bar.isPanel
   const [showTopBar, setShowTopBar] = useState(false)
   const [zujianORsucai, setZujianORsucai] = useState('zujian')
