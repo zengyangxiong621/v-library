@@ -6,7 +6,7 @@ const ComponentDefaultConfig = {
   'dashboardId': '11',
   'moduleName': 'normalTable',
   'moduleType': 'normalTable',
-  'moduleVersion': '1.0.1',
+  'moduleVersion': '1.0.3',
   'thumb': '',
   'dataConfig': {},
   'dataType': 'static',
@@ -178,7 +178,7 @@ const ComponentDefaultConfig = {
         },
         {
           'name': 'expandBgColor',
-          'displayName': '展开行背景色',
+          'displayName': '展开行背景',
           'value': '#222430',
           'type': 'color'
         },
