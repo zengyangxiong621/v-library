@@ -45,7 +45,7 @@ const Tab = ({cRef={}, ...props }) => {
 
   useImperativeHandle(cRef, () => ({
     handleEvent: (message) => {
-      const index = tabList.findIndex(item => item[_fields[1]] === message.classify)
+      const index = tabList.findIndex(item => item[_fields[1]] === message.content) //
       handleTestClick(index)
     },
   }))
@@ -78,7 +78,7 @@ const Tab = ({cRef={}, ...props }) => {
     return targetStyle
   }
   const handleTestClick = (index) => {
-    setActiveKey(index)
+    setActiveKey(index + 1)
   }
   const allGlobalLoadFunc = () => {
     const textAlign = allGlobalConfig.find(item => item.name === 'align').value.find(item => item.name === 'textAlign').value

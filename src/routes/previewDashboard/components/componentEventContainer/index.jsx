@@ -40,8 +40,8 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   const callbackParamsList = previewDashboard.callbackParamsList
   const { componentConfig } = props
   const { websocketConfig } = componentConfig
-  // TODO 拿到每个组件的websocketConfig，判断是否有，有则发起请求, 多条则批量
-  // 拿到type 0: 需sendMessage;  1: setDealedData
+  // 拿到每个组件的websocketConfig，判断有无，则批量发起请求
+  // 拿到type 0: 需sendMessage;  1: setSendData
   const { dashboardId } = componentConfig
   const [animationConfig, setAnimationConfig] = useState({
     transition: 'transform 600ms ease 0s'
@@ -71,9 +71,9 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   //       method: 'post',
   //       url: '/visual/websocket-module/add',
   //       body: {
-  //         websocketUrl: '/visual/webSocket/shareParam/eventName1',
+  //         websocketUrl: '/visual/webSocket/shareParam/eventName5',
   //         moduleId: componentConfig.id, // 组件ID
-  //         type: 1, // 0-发送方  1-接收方
+  //         type: 0, // 0-发送方  1-接收方
   //         dashboardId: dashboardId, // 大屏ID
   //       }
   //     })
@@ -88,30 +88,6 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   // },[])
 
 
-  // useEffect(() => {
-    // if (readyState.key === 1 && sendData !== ''){
-    //   sendMessage(sendData)
-    //   console.log("-------------send");
-    // }
-
-    // 如果是已关闭且是当前页面自动重连
-    // if (readyState.key === 3) { // && isLocalPage
-    //   reconnect()
-    // }
-  // }, [readyState]) // isLocalPage, verify
-
-/*  useEffect(() => {
-    let timer = setInterval(() => {
-      setTimes(++timesRef.current)
-    }, 360000)
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
-
-  useEffect(() => {
-    componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(times)
-  }, [times])*/
 
   // 点击
   const handleClick = debounce((e, data) => {
@@ -206,7 +182,6 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
       if (!isAllowAction) {
         return
       }
-      console.log('item', item)
       item.actions.forEach(action => {
         const animation = action.animation
         const delay = animation.delay
@@ -237,35 +212,38 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     return [...map.values()];
   }
 
-  websocketConfig.map(item => {
-    if (item.type === 1) {
-      
+  let message = Object.keys(websocketObj).reduce((pre, cur) => {
+    return {
+       ...pre,
+       [cur]: websocketObj[cur]?.receiveData || ''
     }
-  })
-  let message = websocketObj
-  useEffect(()=>{
-    console.log(sendData,websocketConfig.length ,'进####');
-    // 柱状图点击时，这一整个文件拿到的都是柱状图的内容
-    // if (websocketConfig.length > 0) {
-    //   websocketConfig.map(item => {
-    //     if(item.type === 1){
-    //       // 拿到订阅消息的数据
-    //       // const message = JSON.parse(websocketObj[item.id].receiveData)
-    //       const message = websocketObj[item.id].receiveData
-    //       console.log(websocketObj[item.id].receiveData,'=============');
-    //       componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
-    //       let activeId = componentConfig.id;
-    //       const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
-    //         // 重新获取部分组件（绑定数据源的组件列表）的数据
-    //         dispatch({
-    //           type: 'publishDashboard/getComponentsData',
-    //           payload: activeComponents
-    //         })
-    //     }
-    //   })
-    // }
-  },[sendData])
+  }, {})
+  
+  // 跨屏 订阅消息处理
+  for (const key in message) {
+    if (Object.hasOwnProperty.call(message, key)) {
+      const element = message[key];
+      useEffect(() => {
+        console.log(element,'element-----------');
+        if (element) {
+          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(element))
+        }
+      }, [element])
+    }
+  } 
 
+  // 拿到订阅消息的数据
+  // const message = JSON.parse(websocketObj[item.id].receiveData)
+  // console.log('message', message)
+  // componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
+  // 走过滤器则需添加
+  // let activeId = componentConfig.id;
+  // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+  //  // 重新获取部分组件（绑定数据源的组件列表）的数据
+  // dispatch({
+  //   type: 'publishDashboard/getComponentsData',
+  //   payload: activeComponents
+  // })      
 
   const handleValueChange = debounce((data) => {
     console.log(websocketConfig,'websocketConfig');
@@ -273,7 +251,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     // TODO 点击组件发出什么就先直接传什么
     // if (readyState.key === 1 && props.componentConfig.moduleName === 'rankingBar'){
     //   console.log('rankingBar');
-      setSendData(data);
+      // setSendData(data);
     // }
     // websocketConfig 组件内有消息且type为 0时发送
     if (websocketConfig.length > 0) {
@@ -281,20 +259,6 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
         if (item.type === 0) {
           websocketObj[item.id].sendMessage(data);
         } 
-        // if(item.type === 1){
-        //   // 拿到订阅消息的数据
-        //   const message = websocketObj[item.id].receiveData
-        //   // const message = JSON.parse(websocketObj[item.id].receiveData)
-        //   console.log(websocketObj[item.id].receiveData,'-------------###');
-        //   componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
-        //   let activeId = componentConfig.id;
-        //   const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
-        //     // 重新获取部分组件（绑定数据源的组件列表）的数据
-        //     dispatch({
-        //       type: 'publishDashboard/getComponentsData',
-        //       payload: activeComponents
-        //     })
-        // }
       })
     }
     console.log('-------------')
