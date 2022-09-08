@@ -235,19 +235,17 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     }
     return [...map.values()];
   }
-  let message = websocketObj["1567464733820297200"]?.receiveData || ''
-  console.log('message', message)
-  useEffect(() => {
-    if (message) {
-      componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(message))
+  // let message = websocketObj["1567464733820297200"]?.receiveData || ''
+  let message = Object.keys(websocketObj).reduce((pre, cur) => {
+    return {
+       ...pre,
+       [cur]: websocketObj[cur]?.receiveData || ''
     }
-    console.log('websocketConfig', websocketObj)
-
-    // websocketConfig.forEach(item => {
-    //   const message = JSON.parse(websocketObj[item.id].receiveData)
-    //   console.log('message', message)
-    console.log('麻了', websocketObj["1567464733820297200"]?.receiveData || '')
-    // })
+  }, {})
+  useEffect(() => {
+    if (message && message["1567464733820297200"]) {
+      componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(message["1567464733820297200"]))
+    }
   }, [message])
 
   const handleValueChange = debounce((data) => {
@@ -264,16 +262,16 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
           websocketObj[item.id].sendMessage(data);
         } else {
           // 拿到订阅消息的数据
-          const message = JSON.parse(websocketObj[item.id].receiveData)
-          console.log('message', message)
-          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
-          let activeId = componentConfig.id;
-          const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
-            // 重新获取部分组件（绑定数据源的组件列表）的数据
-            dispatch({
-              type: 'publishDashboard/getComponentsData',
-              payload: activeComponents
-            })
+          // const message = JSON.parse(websocketObj[item.id].receiveData)
+          // console.log('message', message)
+          // componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
+          // let activeId = componentConfig.id;
+          // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+          //  // 重新获取部分组件（绑定数据源的组件列表）的数据
+            // dispatch({
+            //   type: 'publishDashboard/getComponentsData',
+            //   payload: activeComponents
+            // })
         }
       })
     }
