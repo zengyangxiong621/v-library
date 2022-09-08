@@ -40,6 +40,28 @@ export default {
         payload: dashboardId,
       })
       publishDashboard = yield select(({ publishDashboard }: any) => publishDashboard)
+      const func = async (component:any) => {
+        let data = await http({
+          method: "post",
+          url: "/visual/container/screen/data/get",
+          body: {
+            id: component.id,
+            callBackParamValues: publishDashboard.callbackArgs,
+            dashboardId,
+            pass,
+          },
+        })
+        const index = publishDashboard.dataContainerDataList.findIndex((item: any) => item.id === component.id)
+        if(component.dataType === "static") {
+          data = data.data
+        }
+        if (index !== -1) {
+          publishDashboard.dataContainerDataList.splice(index, 1, { id: component.id, data })
+        } else {
+          publishDashboard.dataContainerDataList.push({ id: component.id, data })
+        }
+      }
+      console.log('publishDashboard.dataContainerList', publishDashboard.dataContainerList)
       publishDashboard.dataContainerList.forEach(async(item: any) => {
         let data: any = null
         item.enable = item.modules.length > 0
@@ -47,26 +69,7 @@ export default {
           data = item.staticData.data
           publishDashboard.dataContainerDataList.push({ id: item.id, data })
         } else {
-          const func = async (component:any) => {
-            data = await http({
-              method: "post",
-              url: "/visual/container/screen/data/get",
-              body: {
-                id: component.id,
-                callBackParamValues: dashboardId.callbackArgs,
-                dashboardId,
-                pass,
-              },
-            })
-            publishDashboard.dataContainerDataList.push({ id: component.id, data })
-          }
-          func(item)
-          // 添加自动过呢更新
-          if(item.autoUpdate?.isAuto){
-            setInterval(() => {
-              func(item)
-            }, item.autoUpdate.interval*1000)
-          }
+          await func(item)
         }
       })
       // 获取当前画布所有的数据过滤器
@@ -214,15 +217,6 @@ export default {
         return componentData[component.id];
       };
       yield Promise.all(components.map((item: any) => func(item)));
-      // 设置定时器
-      components.map((item:any) => {
-        // 添加自动更新功能
-        if(item.autoUpdate?.isAuto && item.dataFrom != 1){
-          setInterval(() => {
-            func(item)
-          }, item.autoUpdate.interval*1000)
-        }
-      })
       // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
       yield put({
         type: "save",

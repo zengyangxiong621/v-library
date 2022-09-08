@@ -9,6 +9,7 @@ import { Spin } from 'antd'
 
 import RecursiveComponent from './components/recursiveComponent'
 import { calcCanvasSize } from '../../utils'
+import { http } from "../../services/request"
 
 const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
   // 加载出整个大屏前，需要一个动画
@@ -225,6 +226,91 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     })
     return map
   }
+
+  const updateDataContainerDataFunc = async (container:any) => {
+    let data = await http({
+      method: "post",
+      url: "/visual/container/data/get",
+      body: {
+        id: container.id,
+        callBackParamValues: previewDashboard.callbackArgs,
+      },
+    })
+    const index = previewDashboard.dataContainerDataList.findIndex((item: any) => item.id === container.id)
+    if(container.dataType === "static") {
+      data = data.data
+    }
+    if (index !== -1) {
+      previewDashboard.dataContainerDataList.splice(index, 1, { id: container.id, data })
+    } else {
+      previewDashboard.dataContainerDataList.push({ id: container.id, data })
+    }
+  }
+  const updateComponentDataFunc = async (component: any) => {
+    try {
+      const data = await http({
+        url: "/visual/module/getData",
+        method: "post",
+        body: {
+          moduleId: component.id,
+          dataType: component.dataType,
+          callBackParamValues: previewDashboard.callbackArgs,
+        },
+      });
+
+      if (data) {
+        previewDashboard.componentData[component.id] =
+          component.dataType !== "static" ? data : data.data;
+      } else {
+        throw new Error("请求不到数据");
+      }
+    } catch (err) {
+      previewDashboard.componentData[component.id] = null;
+    }
+    return previewDashboard.componentData[component.id];
+  };
+  useEffect(() => {
+    let timerList: NodeJS.Timer[] = []
+    previewDashboard.dataContainerList.forEach(async(item: any) => {
+      // 添加自动过呢更新
+      if(item.autoUpdate?.isAuto){
+        console.log('')
+        timerList.push(setInterval(async () => {
+          await updateDataContainerDataFunc(item)
+          dispatch({
+            type: 'previewDashboard/save'
+          })
+        }, item.autoUpdate.interval*1000))
+      }
+    })
+    return () => {
+      timerList.forEach(item => {
+        clearInterval(item)
+      })
+      timerList = []
+    }
+  }, [previewDashboard.dataContainerList])
+
+  useEffect(() => {
+    let timerList: NodeJS.Timer[] = []
+    previewDashboard.components.forEach(async (item:any) => {
+      // 添加自动更新功能
+      if(item.autoUpdate?.isAuto){
+        timerList.push(setInterval( async function () {
+          await updateComponentDataFunc(item)
+          dispatch({
+            type: 'previewDashboard/save',
+          })
+        }, item.autoUpdate.interval*1000))
+      }
+    })
+    return () => {
+      timerList.forEach(item => {
+        clearInterval(item)
+      })
+      timerList = []
+    }
+  }, [previewDashboard.components])
   return (
     <div id="gs-v-library-app">
       {

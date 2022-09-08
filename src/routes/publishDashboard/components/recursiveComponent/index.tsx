@@ -103,4 +103,4 @@ const RecursiveComponent = (props: any) => {
   )
 }
 
-export default memo(RecursiveComponent)
+export default RecursiveComponent

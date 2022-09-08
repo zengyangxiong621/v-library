@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useState, useRef } from 'react'
 import './index.less'
 import { withRouter } from 'dva/router'
 import { connect } from 'dva'
@@ -9,18 +9,21 @@ import { Spin, Input, Button,message } from 'antd'
 
 import RecursiveComponent from './components/recursiveComponent'
 import { calcCanvasSize } from '../../utils'
+import { http } from "../../services/request"
 
 
 function GetQueryString(name:any) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");  
-  var r = window.location.search.substr(1).match(reg);  
-  if (r != null) {   
-      return unescape(r[2]);  
-  }  
-  return null;  
-} 
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) {
+      return unescape(r[2]);
+  }
+  return null;
+}
 
 const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
+  console.log('publishDashboard.dashboardId1', publishDashboard.dashboardId)
+
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(true)
   // 接口中返回的 当前屏幕设置信息
@@ -43,13 +46,14 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
  const encrypt = GetQueryString('encrypt')
  const [inputPassword, setInputPassword] = useState(false)
  const [password, setPassword] = useState('')
-
+  const dataContainerDataListRef = useRef<Array<any>>([])
  const pageId = window.location.pathname.split('/')[2]
- 
+  dataContainerDataListRef.current = publishDashboard.dataContainerDataList
   /**
    * description: 根据缩放模式来配置页面
    */
   const previewByScaleMode = async ({ dashboardConfig, dashboardName }: any) => {
+
     document.title = dashboardName
     // 获取屏幕大小、背景等参数
     const configInfo: any = getScreenInfo(dashboardConfig)
@@ -269,6 +273,96 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     setInputPassword(false)
     init()
   }
+
+
+  const updateDataContainerDataFunc = async (container:any) => {
+    let data = await http({
+      method: "post",
+      url: "/visual/container/screen/data/get",
+      body: {
+        id: container.id,
+        callBackParamValues: publishDashboard.callbackArgs,
+        dashboardId: publishDashboard.dashboardId,
+        pass: publishDashboard.pass
+      },
+    })
+    const index = dataContainerDataListRef.current.findIndex((item: any) => item.id === container.id)
+    if(container.dataType === "static") {
+      data = data.data
+    }
+    if (index !== -1) {
+      dataContainerDataListRef.current.splice(index, 1, { id: container.id, data })
+    } else {
+      dataContainerDataListRef.current.push({ id: container.id, data })
+    }
+  }
+  const updateComponentDataFunc = async (component: any) => {
+    try {
+      const data = await http({
+        url: "/visual/module/getShowData",
+        method: "post",
+        body: {
+          moduleId: component.id,
+          dataType: component.dataType,
+          callBackParamValues:publishDashboard.callbackArgs,
+          dashboardId: publishDashboard.dashboardId,
+          pass: publishDashboard.pass
+        },
+      });
+
+      if (data) {
+        publishDashboard.componentData[component.id] =
+          component.dataType !== "static" ? data : data.data;
+      } else {
+        throw new Error("请求不到数据");
+      }
+    } catch (err) {
+      publishDashboard.componentData[component.id] = null;
+    }
+    return publishDashboard.componentData[component.id];
+  };
+  useEffect(() => {
+    let timerList: NodeJS.Timer[] = []
+    publishDashboard.dataContainerList.forEach(async(item: any) => {
+      // 添加自动过呢更新
+      if(item.autoUpdate?.isAuto){
+        console.log('')
+        timerList.push(setInterval(async () => {
+          await updateDataContainerDataFunc(item)
+          dispatch({
+            type: 'publishDashboard/save',
+          })
+        }, item.autoUpdate.interval*1000))
+      }
+    })
+    return () => {
+      timerList.forEach(item => {
+        clearInterval(item)
+      })
+      timerList = []
+    }
+  }, [publishDashboard.dataContainerList, publishDashboard.dashboardId, publishDashboard.pass])
+  useEffect(() => {
+    let timerList: NodeJS.Timer[] = []
+    publishDashboard.components.forEach(async (item:any) => {
+      // 添加自动更新功能
+      if(item.autoUpdate?.isAuto){
+        timerList.push(setInterval( async function () {
+          await updateComponentDataFunc(item)
+          dispatch({
+            type: 'publishDashboard/save',
+          })
+        }, item.autoUpdate.interval*1000))
+      }
+    })
+    return () => {
+      timerList.forEach(item => {
+        clearInterval(item)
+      })
+      timerList = []
+
+    }
+  }, [publishDashboard.components, publishDashboard.dashboardId, publishDashboard.pass])
 
   return (
     <div id="gs-v-library-app">
