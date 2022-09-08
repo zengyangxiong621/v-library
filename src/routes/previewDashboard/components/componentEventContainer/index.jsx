@@ -49,10 +49,11 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   const componentRef = useRef(null)
   const timesRef = useRef(0)
   const [times, setTimes] = useState(0)
+  const [sendData, setSendData] = useState('')
   const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 })
   const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
-  const [websocketObj, setWebsocketArr] = useState({});
+  const [websocketObj, setwebsocketObj] = useState({});
 
   // 跨屏
   console.log(websocketConfig, '--------websocketConfig');
@@ -236,30 +237,64 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     return [...map.values()];
   }
 
+  websocketConfig.map(item => {
+    if (item.type === 1) {
+      
+    }
+  })
+  let message = websocketObj
+  useEffect(()=>{
+    console.log(sendData,websocketConfig.length ,'进####');
+    // 柱状图点击时，这一整个文件拿到的都是柱状图的内容
+    // if (websocketConfig.length > 0) {
+    //   websocketConfig.map(item => {
+    //     if(item.type === 1){
+    //       // 拿到订阅消息的数据
+    //       // const message = JSON.parse(websocketObj[item.id].receiveData)
+    //       const message = websocketObj[item.id].receiveData
+    //       console.log(websocketObj[item.id].receiveData,'=============');
+    //       componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
+    //       let activeId = componentConfig.id;
+    //       const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+    //         // 重新获取部分组件（绑定数据源的组件列表）的数据
+    //         dispatch({
+    //           type: 'publishDashboard/getComponentsData',
+    //           payload: activeComponents
+    //         })
+    //     }
+    //   })
+    // }
+  },[sendData])
+
+
   const handleValueChange = debounce((data) => {
+    console.log(websocketConfig,'websocketConfig');
     // 跨屏  建立websocket连接，发送数据
     // TODO 点击组件发出什么就先直接传什么
     // if (readyState.key === 1 && props.componentConfig.moduleName === 'rankingBar'){
     //   console.log('rankingBar');
-    //   setSendData(data);
+      setSendData(data);
     // }
     // websocketConfig 组件内有消息且type为 0时发送
     if (websocketConfig.length > 0) {
       websocketConfig.map(item => {
         if (item.type === 0) {
           websocketObj[item.id].sendMessage(data);
-        } else {
-          // 拿到订阅消息的数据
-          const message = JSON.parse(websocketObj[item.id].receiveData)
-          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
-          let activeId = componentConfig.id;
-          const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
-            // 重新获取部分组件（绑定数据源的组件列表）的数据
-            dispatch({
-              type: 'publishDashboard/getComponentsData',
-              payload: activeComponents
-            })
-        }
+        } 
+        // if(item.type === 1){
+        //   // 拿到订阅消息的数据
+        //   const message = websocketObj[item.id].receiveData
+        //   // const message = JSON.parse(websocketObj[item.id].receiveData)
+        //   console.log(websocketObj[item.id].receiveData,'-------------###');
+        //   componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
+        //   let activeId = componentConfig.id;
+        //   const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+        //     // 重新获取部分组件（绑定数据源的组件列表）的数据
+        //     dispatch({
+        //       type: 'publishDashboard/getComponentsData',
+        //       payload: activeComponents
+        //     })
+        // }
       })
     }
     console.log('-------------')
