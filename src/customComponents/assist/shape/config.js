@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "shape", //组件标识
-  "moduleVersion": "1.1.2", //组件版本号
+  "moduleVersion": "1.1.3", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -79,6 +79,28 @@ const componentDefaultConfig = {
       'name': 'bgColor',
       'displayName': '背景',
       'value': 'rgba(18,137,221,1)', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      'type':'color'
+    },
+    {
+      "name": "gradientOrigin",
+      "displayName": "缩放原点",
+      "type": "origin",
+      "config": { // config默认没有，当 config.type === "direction" 时为方向组件
+        "type": "direction"
+      },
+      "value": "right" // 支持的有 "0% 0%"、"50% 0%"、"100% 0%"、"0% 50%"、"50% 50%"、"100% 50%"、"0% 100%"、"50% 100%"、"100% 100%"
+      // 当 config.type === "direction" 时, "value"支持的有: "left top" | "left" | "left bottom" | "top" | "center" | "bottom" | "right top" | "right" | "right bottom"
+    },
+    {
+      'name': 'gradientStart',
+      'displayName': '渐变色开始',
+      'value': 'rgba(18,137,221,0.03)', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      'type':'color'
+    },
+    {
+      'name': 'gradientEnd',
+      'displayName': '渐变色结束',
+      'value': '#001362', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
       'type':'color'
     },
     {

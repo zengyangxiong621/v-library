@@ -230,7 +230,7 @@ const NormalTable=(props)=>{
     clearFilters();
     setSearchText('');
   };
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex,displayName) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div
         style={{
@@ -239,7 +239,7 @@ const NormalTable=(props)=>{
       >
         <Input
           ref={searchInput}
-          placeholder={`搜索 ${dataIndex} 列`}
+          placeholder={`搜索 ${displayName}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -268,19 +268,6 @@ const NormalTable=(props)=>{
             }}
           >
             重置
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            过滤
           </Button>
         </Space>
       </div>
@@ -456,7 +443,7 @@ const NormalTable=(props)=>{
               sortConfig.sorter=(a,b)=>a[item.fieldName]-b[item.fieldName]
             }
             if(item.isFilter){
-              filterConfig=getColumnSearchProps(item.fieldName)
+              filterConfig=getColumnSearchProps(item.fieldName,item.displayName)
             }
             return (
               <Column
