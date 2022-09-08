@@ -329,6 +329,9 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         console.log('')
         timerList.push(setInterval(async () => {
           await updateDataContainerDataFunc(item)
+          dispatch({
+            type: 'publishDashboard/save',
+          })
         }, item.autoUpdate.interval*1000))
       }
     })
@@ -344,8 +347,8 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     publishDashboard.components.forEach(async (item:any) => {
       // 添加自动更新功能
       if(item.autoUpdate?.isAuto){
-        timerList.push(setInterval( function () {
-          updateComponentDataFunc(item)
+        timerList.push(setInterval( async function () {
+          await updateComponentDataFunc(item)
           dispatch({
             type: 'publishDashboard/save',
           })

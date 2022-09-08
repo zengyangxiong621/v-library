@@ -246,7 +246,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
       previewDashboard.dataContainerDataList.push({ id: container.id, data })
     }
   }
-  const func = async (component: any) => {
+  const updateComponentDataFunc = async (component: any) => {
     try {
       const data = await http({
         url: "/visual/module/getData",
@@ -296,8 +296,8 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     previewDashboard.components.forEach(async (item:any) => {
       // 添加自动更新功能
       if(item.autoUpdate?.isAuto){
-        timerList.push(setInterval( function () {
-          func(item)
+        timerList.push(setInterval( async function () {
+          await updateComponentDataFunc(item)
           dispatch({
             type: 'previewDashboard/save',
           })
