@@ -79,6 +79,10 @@
   letter-spacing: var(--selectTextLetterSpacing);
   line-height: var(--selectTextLineHeight) !important;
 }
+.comp-pagination .ant-pagination-options .ant-select-dropdown {
+  left: 0 !important;
+  top: 32px !important;
+}
 .comp-pagination .ant-pagination-total-text {
   font-weight: var(--infoTextBold);
   color: var(--infoTextColor);

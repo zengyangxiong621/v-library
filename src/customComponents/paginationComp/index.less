@@ -86,6 +86,11 @@
       letter-spacing: var(--selectTextLetterSpacing);
       line-height: var(--selectTextLineHeight) !important;
     }
+    // 临时解决分页选择器下拉框错位问题
+    .ant-select-dropdown{
+      left: 0 !important;
+      top: 32px !important;
+    }
   }
   // 最左侧页数信息文字样式
   .ant-pagination-total-text{
