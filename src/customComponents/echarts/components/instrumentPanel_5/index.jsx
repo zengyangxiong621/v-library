@@ -17,8 +17,8 @@ const InstrumentPanel = (props) => {
   const originData = props.comData || data
   // originData中有多项数据，只取第一项
   const firstData = originData[0]
-  const titleText = firstData[finalFieldsArr[0]]
-  const numberValue = firstData[finalFieldsArr[1]]
+  const titleText = firstData === undefined ? '' : firstData[finalFieldsArr[0]]
+  const numberValue = firstData === undefined ? 0 : firstData[finalFieldsArr[1]]
   const chartData = [{
     value: numberValue,
     // name: "Percent"
