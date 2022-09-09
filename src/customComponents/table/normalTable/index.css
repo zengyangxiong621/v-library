@@ -1,5 +1,6 @@
 .normalTable .ant-table {
   font-size: 12px;
+  background-color: rgba(255, 255, 255, 0);
 }
 .normalTable .ant-table .ant-table-body {
   border-right: #2F2F2F;
@@ -30,9 +31,11 @@
   font-style: var(--headerFontStyle);
   letter-spacing: var(--letterSpacing);
   line-height: var(--headerLineHeight);
+  border: none;
 }
 .normalTable .ant-table .ant-table-tbody .ant-table-row td {
   background-color: inherit;
+  border: none;
 }
 .normalTable .ant-table .ant-table-tbody .ant-table-row.evenRow {
   background-color: var(--evenBgColor);
