@@ -20,7 +20,6 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
     } else {
       currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs)
     }
-    console.log('currentData', currentData)
 
     if (currentData) {
       // 如果使用数据过滤器，则需要过滤数据
@@ -200,7 +199,7 @@ const filterEmptyCallParam = (callParam) => {
  * 获取组件回调参数定义的数据
  * @param {*} componentCallbackArgs 组件回调参数
  * @param {*} currnetData 当前状态下组件的数据
- * @returns 
+ * @returns
  */
 const getCallbackParams = (componentCallbackArgs, currnetData) => {
   if (!currnetData || Object.prototype.toString.call(currnetData) !== "[object Object]") {
