@@ -17,11 +17,22 @@ const Shape=(props)=>{
     }
     return style
   }
-  const {dimension,bgColor,border,shadow,shapeType}=getConfig(config)
+  const {dimension,bgColor,border,shadow,shapeType,gradientOrigin,gradientStart,gradientEnd}=getConfig(config)
 
   const getShapeStyle=()=>{
     const getRadius=(radiusArr)=>{
       return radiusArr.map(item=>item+'px').join(' ')
+    }
+    const getRadientStyle=()=>{
+      let backgroundImage=""
+      if (gradientOrigin === 'center') {
+        backgroundImage = `linear-gradient(to right, ${gradientStart}, ${gradientEnd}, ${gradientStart})`
+      } else {
+        backgroundImage = `linear-gradient(to ${gradientOrigin}, ${gradientStart}, ${gradientEnd})`
+      }
+      return {
+        "background-image": backgroundImage
+      }
     }
     const getShadowStyle=(shadowConfig)=>{
       const {hShadow,vShadow,blur,color}=shadowConfig
@@ -42,7 +53,8 @@ const Shape=(props)=>{
       'borderStyle':type,
       'borderColor':color,
       'borderRadius':shapeType==='rectangle' ? borderRadius :'50%',
-      ...shadowStyle
+      ...shadowStyle,
+      ...getRadientStyle()
     }
   }
   return (
