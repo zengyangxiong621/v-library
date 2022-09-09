@@ -32,6 +32,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   // 返回首页
   const toBack = () => {
     history.back()
+    // 暂时在这里清空localStorage
+    localStorage.removeItem('allDrillDownPathReflect')
+    localStorage.removeItem('allHasParentReflect')
     // dispatch({
     //   type: 'bar/save',
     //   payload: {
@@ -415,14 +418,14 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
   }
 
   // 上传图片
-  const uploadImgProps:UploadProps = {
+  const uploadImgProps: UploadProps = {
     name: 'file',
     multiple: false,
     maxCount: 1,
     accept: 'image/png, image/jpeg',
     action: `${BASEURL}/visual/file/upload`,
-    headers:{
-      authorization:localStorage.getItem('token') || ''
+    headers: {
+      authorization: localStorage.getItem('token') || ''
     },
     beforeUpload(file: any) {
       const { name }: { name: string } = file

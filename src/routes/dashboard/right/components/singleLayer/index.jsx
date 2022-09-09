@@ -285,8 +285,8 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
           </TabPane>
           <TabPane tab="下钻" key="4">
             <DrillDownSetting
-            componentConfig={componentConfig}
-            selectedNextLevelComponent={selectedNextLevelComponent}
+              componentConfig={componentConfig}
+              selectedNextLevelComponent={selectedNextLevelComponent}
             ></DrillDownSetting>
           </TabPane>
           {/* {

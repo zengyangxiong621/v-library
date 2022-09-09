@@ -35,6 +35,14 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     activeIndex: 0,
     isLoading: false,
   })
+
+  const changeReflect = (reflectObj: any) => {
+    console.log('reflectObj', reflectObj);
+    setState({
+
+    })
+  }
+
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
     const { components, layers, dashboardConfig } = await http({
       url: `/visual/application/dashboard/detail/${id}`,
@@ -119,7 +127,8 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     if (!isInit) {
       newIndex += 1
       if (newIndex >= states.length || newIndex < 0) {
-        newIndex = 0
+        // newIndex = 0
+        return
       }
     }
     setIsInit(false)
@@ -173,6 +182,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
                 componentLists={item.components}
                 panels={item.panels}
                 addDrillDownLevel={addDrillDownLevel}
+                changeReflect={changeReflect}
               />
             </div>
           )

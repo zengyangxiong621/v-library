@@ -13,11 +13,15 @@ import { Breadcrumb } from 'antd'
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, bar, previewDashboard, dispatch, addDrillDownLevel, ...props }: any) => {
+const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeReflect, bar, previewDashboard, dispatch, addDrillDownLevel, drillDownGlobalState, ...props }: any) => {
   const { moduleName, events, id, config } = componentData
+  const fields = getFields(componentData)
+
+  console.log('componentsData', componentData);
+
+
   const { mountAnimation } = layerInfo
   const { delay, direction, duration, opacityOpen, timingFunction, type } = mountAnimation || {}
-
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map()
   config.forEach(({ displayName, value }: any) => {
@@ -170,18 +174,36 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, bar, pr
 
 
   const getDrillDownData = (chartData: any) => {
-    console.log('组件传出的数据', chartData);
     addDrillDownLevel()
+    const { seriesType, data } = chartData
+
     let hadFilterChartData = []
     if (typeof chartData === 'object') {
-      hadFilterChartData.push(chartData.data)
+      switch (seriesType) {
+        case 'pie':
+          const final = {
+            s: data.name,
+            y: data.value
+          }
+          hadFilterChartData.push(final)
+          break;
+        default:
+          hadFilterChartData.push(chartData.data)
+          break;
+      }
     } else {
       hadFilterChartData = [chartData]
     }
-    const outgoingData = {
-      id,
-      giveNextComponent: hadFilterChartData
-    }
+    const { drillDownArr } = componentData;
+    const childCompIdArr = drillDownArr.map((x: any) => x.id);
+    dispatch({
+      type: 'previewDashboard/updateChildCompData',
+      payload: {
+        childCompIdArr,
+        componentData: hadFilterChartData
+      }
+    })
+    // console.log('previewDashboard.componentData', previewDashboard.componentData);
   }
 
   return (
@@ -213,5 +235,5 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, bar, pr
 }
 
 export default memo(connect(
-  ({ bar, previewDashboard }: any) => ({ bar, previewDashboard })
+  ({ bar, previewDashboard, drillDownGlobalState }: any) => ({ bar, previewDashboard, drillDownGlobalState })
 )(EveryComponent))
