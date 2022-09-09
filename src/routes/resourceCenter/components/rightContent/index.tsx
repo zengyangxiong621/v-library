@@ -152,7 +152,7 @@ const RightContent = (props: any) => {
       footer={[
         <div className='custom-btn-wrap'>
           <Button className='my-btn cancel-btn' onClickCapture={cancelMoveGroup}>取消</Button>
-          <Button className='my-btn confirm-btn' onClickCapture={confirmMoveGroup}>确定</Button>
+          <Button className='my-btn confirm-btn' type="primary" onClickCapture={confirmMoveGroup}>确定</Button>
         </div>
       ]}
       style={{

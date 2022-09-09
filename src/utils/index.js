@@ -671,7 +671,18 @@ export const styleObjectToStr = (style) => {
   s = s.join(';')
   return  s
 }
-
+// 样式对象key值转驼峰
+export const transformStyleInObj=(style)=>{
+  return Object.entries(style).reduce((res,cur)=>{
+    let obj={}
+    const realKey=cur[0].replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ""));
+    obj[realKey]=cur[1]
+    return {
+      ...obj,
+      ...res
+    }
+  },{})
+}
 export const getRandowString=(len)=>{
   const _Len=len || 32
   var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678' /** **默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/

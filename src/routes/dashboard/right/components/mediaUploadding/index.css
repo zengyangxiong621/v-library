@@ -1,0 +1,14 @@
+.custom-upload-form .bg-img {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background-size: cover;
+}
+.custom-upload-form .bg-uploader .ant-upload-list-picture-card-container {
+  display: none;
+}
+.custom-upload-form .ant-upload-span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

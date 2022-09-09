@@ -31,8 +31,8 @@ import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
 import Timeline from '@/customComponents/assist/timeline'
-// import timelineConfig from '@/customComponents/assist/timeline/config'
 import NormalTable from '@/customComponents/table/normalTable'
+import Media from '@/customComponents/media'
 // import normalTableConfig from '@/customComponents/table/normalTable/config'
 
 // import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
@@ -1115,33 +1115,40 @@ const CustomDraggable
                                                                       comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                                                     >
                                                                     </NormalTable>:
-                                                                layer.moduleName === 'cascader'?
-                                                                <Cascader
-                                                                  onChange={(val:any)=>handleValueChange(val,component,layer.id)}
-                                                                  componentConfig={ component }
-                                                                  fields={ getFields(component) }
-                                                                  comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                                                ></Cascader>:
-                                                              <ErrorCatch
-                                                                    app={component.name}
-                                                                    user=""
-                                                                    token=""
-                                                                    max={1}
-                                                                    errorRender={<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
-                                                                    onCatch={(errors) => {
-                                                                      console.log('组件报错信息：', errors, '组件id', layer.id);
-                                                                    }}
-                                                                  >
-                                                                    <RemoteBaseComponent
-                                                                      themeConfig={bar.componentThemeConfig}
-                                                                      onThemeChange={onThemeChange}
-                                                                      key={layer.id}
-                                                                      componentConfig={component}
-                                                                      fields={getFields(component)}
-                                                                      comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
-                                                                      onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                                                    ></RemoteBaseComponent>
-                                                                  </ErrorCatch>
+                                                                    layer.moduleName === 'cascader'?
+                                                                      <Cascader
+                                                                        onChange={(val:any)=>handleValueChange(val,component,layer.id)}
+                                                                        componentConfig={ component }
+                                                                        fields={ getFields(component) }
+                                                                        comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                      ></Cascader>:
+                                                                      layer.moduleName === 'media'?
+                                                                        <Media
+                                                                          onChange={(val:any)=>handleValueChange(val,component,layer.id)}
+                                                                          componentConfig={ component }
+                                                                          fields={ getFields(component) }
+                                                                          comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                        ></Media>:
+                                                                        <ErrorCatch
+                                                                          app={component.name}
+                                                                          user=""
+                                                                          token=""
+                                                                          max={1}
+                                                                          errorRender={<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
+                                                                          onCatch={(errors) => {
+                                                                            console.log('组件报错信息：', errors, '组件id', layer.id);
+                                                                          }}
+                                                                        >
+                                                                          <RemoteBaseComponent
+                                                                            themeConfig={bar.componentThemeConfig}
+                                                                            onThemeChange={onThemeChange}
+                                                                            key={layer.id}
+                                                                            componentConfig={component}
+                                                                            fields={getFields(component)}
+                                                                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
+                                                                            onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                                          ></RemoteBaseComponent>
+                                                                        </ErrorCatch>
                               }
                             </div>
                           </>
