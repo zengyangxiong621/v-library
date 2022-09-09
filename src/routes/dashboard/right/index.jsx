@@ -21,8 +21,6 @@ const Right = ({ dispatch, bar }) => {
   const [whichShow, setWhichShow] = useState('pageSetting')
   const [key, setKey] = useState(bar.key.join(''))
   useEffect(() => {
-    console.log('bar.isPanel', bar.isPanel)
-    console.log('bar.selectedComponentOrGroup.length', bar.selectedComponentOrGroup.length)
     if (bar.isPanel && !bar.selectedComponentOrGroup.length) {
       setWhichShow('dynamicPageSetting')
     } else if (!bar.selectedComponentOrGroup.length) {

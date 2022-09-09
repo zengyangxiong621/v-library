@@ -586,7 +586,6 @@ const CustomDraggable
             }
           })
           history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`)
-
           dispatch({
             type: 'bar/getPanelDetails'
           })
@@ -829,7 +828,6 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-
               if (component) {
                 staticData = component.staticData
                 style_config = component.config
@@ -1168,7 +1166,7 @@ const CustomDraggable
                                                                     fields={getFields(component)}
                                                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                                   ></InstrumentPanel4> :
-                                                                  layer.moduleName==='normalTable'?
+                                                                  layer.moduleName === 'normalTable' ?
                                                                     <NormalTable
                                                                       onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                                                       componentConfig={ component }

@@ -10,14 +10,14 @@ const RemoteBaseComponent = (props: any) => {
   const [Comp, setComponent] = useState<React.FC | null>(null);
 
   const importComponent = useCallback(() => {
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/${ moduleType }/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
+    return axios.get(`${(window as any).CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
   }, [moduleType])
 
 
   const loadComp = useCallback(async () => {
-      window.eval(`${await importComponent()}`)
-      const { default: component } = (window as any).VComponents;
-      setComponent(() => component);
+    window.eval(`${await importComponent()}`)
+    const { default: component } = (window as any).VComponents;
+    setComponent(() => component);
 
   }, [importComponent, setComponent])
 

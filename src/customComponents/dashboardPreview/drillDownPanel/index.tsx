@@ -1,24 +1,27 @@
-import { useEffect } from 'react'
-import { connect } from 'dva'
-import { Button } from 'antd'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, memo, useState } from 'react'
+import './index.less'
 import { useSetState } from 'ahooks'
-import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
+// import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
+import RecursiveComponent from '@/routes/previewDashboard/components/recursiveComponent'
 import { http } from '@/services/request'
-import * as React from 'react'
+import { connect } from 'dva'
 import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
 import { treeDataReverse, deepClone } from '@/utils/index.js'
 import { layersPanelsFlat } from '@/utils'
+
+import { Breadcrumb } from 'antd'
+
 interface State {
   states: string[];
-
   [key: string]: any;
 }
-const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) => {
-  const componentData = bar.componentData;
+const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPanel }: any) => {
+  const componentData = previewDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id)
-  // 获取面板想起接口
+  // 获取面板详情接口
   const { states, config, name, type } = panel
   const { isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0 } = config
   const [state, setState] = useSetState<State>({
@@ -32,6 +35,14 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) 
     activeIndex: 0,
     isLoading: false,
   })
+
+  const changeReflect = (reflectObj: any) => {
+    console.log('reflectObj', reflectObj);
+    setState({
+
+    })
+  }
+
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
     const { components, layers, dashboardConfig } = await http({
       url: `/visual/application/dashboard/detail/${id}`,
@@ -69,7 +80,7 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) 
         body: {
           moduleId: component.id,
           dataType: component.dataType,
-          callBackParamValues: bar.callbackArgs,
+          callBackParamValues: previewDashboard.callbackArgs,
         },
       });
 
@@ -84,7 +95,6 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) 
     }
     return componentData[component.id];
   };
-
   useEffect(() => {
     (async function () {
       if (states.length === 0) return
@@ -96,69 +106,62 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) 
     })()
   }, [])
 
-  useEffect(() => {
-    setState({ overflow: isScroll ? 'auto' : 'none' })
-  }, [isScroll])
 
-  useEffect(() => {
-    let timer: any = null
-    if (!isDashboard && state.isLoading && allowScroll) {
-      timer = setInterval(() => {
-        let currentIndex = state.activeIndex + 1
-        if (currentIndex === state.allData.length) {
-          currentIndex = 0
-        }
-        if (animationTime === 0) {
-          setState({ activeIndex: currentIndex })
-        } else if (animationTime > 0) {
-          let opacityTimer = setInterval(() => {
-            const statusWrapDOMs: any = document.querySelectorAll(`.panel-${id} .status-wrap`)
-            if (statusWrapDOMs.length === 0) return
-            if (!statusWrapDOMs[0].style.opacity) {
-              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
-                if (index === currentIndex) {
-                  dom.style.opacity = '0'
-                } else {
-                  dom.style.opacity = '1'
-                }
-              })
-            } else {
-              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
-                if (index === currentIndex) {
-                  dom.style.opacity = `${Number(dom.style.opacity) + 0.5}`
-                  dom.style.display = 'block'
-                  if (Number(dom.style.opacity) >= 1) {
-                    dom.style.opacity = ''
-                  }
-                } else {
-                  dom.style.opacity = `${Number(dom.style.opacity) - 0.5}`
-                  dom.style.display = 'block'
-                  if (Number(dom.style.opacity) <= 0) {
-                    dom.style.opacity = ''
-                    setState({ activeIndex: currentIndex })
-                    clearInterval(opacityTimer)
-                  }
-                }
-              })
-            }
-          }, 500)
-        }
+  // useEffect(() => {
+  //   let activeIndex = previewDashboard.drillDownLevel - 1
+  //   if (activeIndex > states.length - 1 || activeIndex < 0) {
+  //     activeIndex = 0
+  //   }
+  //   setState({ activeIndex })
+  // }, [previewDashboard.drillDownLevel])
 
-      }, scrollTime)
-    }
-    return () => {
-      if (timer) {
-        clearInterval(timer)
+
+  const breadcrumbClick = (itemData: any, stateIndex: number) => {
+    setState({
+      activeIndex: stateIndex,
+    })
+  }
+  const [isInit, setIsInit] = useState<any>(true)
+  const addDrillDownLevel = () => {
+    let newIndex = state.activeIndex
+    if (!isInit) {
+      newIndex += 1
+      if (newIndex >= states.length || newIndex < 0) {
+        // newIndex = 0
+        return
       }
     }
-  }, [state.isLoading, state.activeIndex])
-  console.log('state.allData~~~~~', state.allData);
-
+    setIsInit(false)
+    setState({ activeIndex: newIndex })
+    console.log('state.allData', state.allData)
+    // setState({ activeIndex: state.activeIndex + 1 })
+  }
   return (
     <div className={`drill-down-panel panel-${id}`} style={{ overflow: state.overflow, width: '100%', height: '100%' }}>
+      <div style={{ marginBottom: '20px', minWidth: '500px' }}>
+        <Breadcrumb
+        >
+          {
+            states.map((x: any, i: number) => {
+              return (<Breadcrumb.Item
+                className={'custom-breadcrumb'}
+                onClick={() => breadcrumbClick(x, i)}
+              >
+                {x.name}
+              </Breadcrumb.Item>)
+            })
+          }
+        </Breadcrumb>
+      </div>
       {
-        (isDashboard && state.allData.length) ===
-          1 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels} />
+        state.allData.length === 1 ? <RecursiveComponent
+          isDrillDownPanel={isDrillDownPanel}
+          layersArr={state.allData[0].layers}
+          previewDashboard={previewDashboard}
+          dispatch={dispatch}
+          componentLists={state.allData[0].components}
+          panels={state.allData[0].panels}
+        />
           :
           state.allData.map((item: any, index: number) =>
           (
@@ -171,7 +174,16 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) 
                 display: state.activeIndex === index ? 'block' : 'none',
                 transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
-              <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels} />
+              <RecursiveComponent
+                isDrillDownPanel={isDrillDownPanel}
+                layersArr={item.layers}
+                previewDashboard={previewDashboard}
+                dispatch={dispatch}
+                componentLists={item.components}
+                panels={item.panels}
+                addDrillDownLevel={addDrillDownLevel}
+                changeReflect={changeReflect}
+              />
             </div>
           )
           )
@@ -180,4 +192,4 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) 
   )
 }
 
-export default connect(({ bar }: any) => ({ bar }))(DrillDownPanel)
+export default memo(DrillDownPanel)

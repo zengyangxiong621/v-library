@@ -1,15 +1,21 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo, useState } from 'react'
 
 import EveryComponent from '../everyComponent'
 import ReferencePanel from '@/customComponents/dashboardPreview/referencePanel'
 import DynamicPanel from '@/customComponents/dashboardPreview/dynamicPanel'
+import DrillDownPanel from '@/customComponents/dashboardPreview/drillDownPanel'
 import { getComDataWithFilters } from '@/utils/data'
+
+import { Breadcrumb } from 'antd'
 
 const MODULES = 'modules'
 const OPACITY = 'opacity'
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels } = props
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeReflect } = props
+
+  // console.log('layersArr', layersArr);
+
   return (
     <div className='recursive-component-wrap'>
       {
@@ -23,6 +29,8 @@ const RecursiveComponent = (props: any) => {
           if (isPanel) {
             targetPanel = panels.find((item: any) => item.id === layer.id)
           }
+          // console.log('hhhhhhhhh', previewDashboard.componentData, targetComponent, layer);
+
           return (
             <div
               data-id={isGroup ? layer.id : 'component-' + layer.id}
@@ -34,22 +42,23 @@ const RecursiveComponent = (props: any) => {
               {
                 isPanel ?
                   (layer.panelType === 0 ?
-                      <div
-                        className="panel-container"
-                        style={{
-                          position: 'absolute',
-                          left: targetPanel.config.left + 'px',
-                          top: targetPanel.config.top + 'px'
-                        }}
-                      >
-                        <DynamicPanel
-                          id={layer.id}
-                          panels={panels}
-                          previewDashboard={previewDashboard}
-                          dispatch={dispatch}
-                          isDashboard={false}
-                        />
-                      </div>:
+                    <div
+                      className="panel-container"
+                      style={{
+                        position: 'absolute',
+                        left: targetPanel.config.left + 'px',
+                        top: targetPanel.config.top + 'px'
+                      }}
+                    >
+                      <DynamicPanel
+                        id={layer.id}
+                        panels={panels}
+                        previewDashboard={previewDashboard}
+                        dispatch={dispatch}
+                        isDashboard={false}
+                      />
+                    </div>
+                    : layer.panelType === 1 ?
                       <div
                         className="panel-container"
                       >
@@ -61,38 +70,58 @@ const RecursiveComponent = (props: any) => {
                           isDashboard={false}
                         />
                       </div>
-                  ) :
-                isGroup ?
-                  <div className="no-cancel"
-                    style={{
-                      opacity: (layer[OPACITY] || 100) / 100
-                    }}
-                  >
-                    {(layer as any)[MODULES]?.length > 0 &&
-                      <div>
-                        <RecursiveComponent
-                          layersArr={layer[MODULES]}
-                          componentLists={componentLists}
+                      : <div
+                        className="panel-container"
+                        style={{
+                          position: 'absolute',
+                          left: targetPanel.config.left + 'px',
+                          top: targetPanel.config.top + 'px'
+                        }}
+                      >
+                        <DrillDownPanel
+                          id={layer.id}
+                          panels={panels}
+                          isDrillDownPanel={true}
                           previewDashboard={previewDashboard}
                           dispatch={dispatch}
-                          scaleValue={scaleValue}
-                          panels={panels}
+                          isDashboard={false}
+                          addDrillDownLevel={addDrillDownLevel}
                         />
                       </div>
-                    }
-                  </div>
-                  : <>
-                    <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
-                      {
-                        <EveryComponent key={ind}
+                  ) :
+                  isGroup ?
+                    <div className="no-cancel"
+                      style={{
+                        opacity: (layer[OPACITY] || 100) / 100
+                      }}
+                    >
+                      {(layer as any)[MODULES]?.length > 0 &&
+                        <div>
+                          <RecursiveComponent
+                            layersArr={layer[MODULES]}
+                            componentLists={componentLists}
+                            previewDashboard={previewDashboard}
+                            dispatch={dispatch}
+                            scaleValue={scaleValue}
+                            panels={panels}
+                          />
+                        </div>
+                      }
+                    </div>
+                    : <>
+                      <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                        <EveryComponent
+                          key={ind}
                           componentData={targetComponent}
                           comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer)}
                           scaleValue={scaleValue}
                           layerInfo={layer}
+                          addDrillDownLevel={addDrillDownLevel}
+                          changeReflect={changeReflect}
+                          {...props}
                         />
-                      }
-                    </div>
-                  </>
+                      </div>
+                    </>
               }
             </div>
           )
