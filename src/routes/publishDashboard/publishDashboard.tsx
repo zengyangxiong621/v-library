@@ -4,7 +4,7 @@ import { withRouter } from 'dva/router'
 import { connect } from 'dva'
 import { deepClone, treeDataReverse } from '@/utils'
 
-import { Spin, Input, Button,message } from 'antd'
+import { Spin, Input, Button, message } from 'antd'
 
 
 import RecursiveComponent from './components/recursiveComponent'
@@ -12,17 +12,16 @@ import { calcCanvasSize } from '../../utils'
 import { http } from "../../services/request"
 
 
-function GetQueryString(name:any) {
+function GetQueryString(name: any) {
   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
   var r = window.location.search.substr(1).match(reg);
   if (r != null) {
-      return unescape(r[2]);
+    return unescape(r[2]);
   }
   return null;
 }
 
 const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
-  console.log('publishDashboard.dashboardId1', publishDashboard.dashboardId)
 
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(true)
@@ -37,17 +36,17 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   // 如果是等比例溢出的缩放模式下，给overflowStyle赋值
   const [overflowStyle, setOverflowStyle] = useState({})
   const [scaleValue, setScaleValue] = useState(1)
-/**
-  * description: 获取屏幕大小、缩放设置等参数
-  */
- const [layers, setLayers] = useState([])
- const [panels, setPanels] = useState([])
- const [components, setComponents] = useState([])
- const encrypt = GetQueryString('encrypt')
- const [inputPassword, setInputPassword] = useState(false)
- const [password, setPassword] = useState('')
+  /**
+    * description: 获取屏幕大小、缩放设置等参数
+    */
+  const [layers, setLayers] = useState([])
+  const [panels, setPanels] = useState([])
+  const [components, setComponents] = useState([])
+  const encrypt = GetQueryString('encrypt')
+  const [inputPassword, setInputPassword] = useState(false)
+  const [password, setPassword] = useState('')
   const dataContainerDataListRef = useRef<Array<any>>([])
- const pageId = window.location.pathname.split('/')[2]
+  const pageId = window.location.pathname.split('/')[2]
   dataContainerDataListRef.current = publishDashboard.dataContainerDataList
   /**
    * description: 根据缩放模式来配置页面
@@ -118,16 +117,16 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
           width: 0,
           height: 0,
         }
-        if(hRatio2 > wRatio2) {
+        if (hRatio2 > wRatio2) {
           finalOverflowStyle.width = '100vw'
           finalOverflowStyle.height = `${winH}px`
           finalOverflowStyle.overflowX = 'auto'
-          setScaleStyle({transform: `scale(${hRatio2})`})
+          setScaleStyle({ transform: `scale(${hRatio2})` })
         } else {
           finalOverflowStyle.height = '100vh'
           finalOverflowStyle.width = `${winW}px}`
           finalOverflowStyle.overflowY = 'auto'
-          setScaleStyle({transform: `scale(${wRatio2})`})
+          setScaleStyle({ transform: `scale(${wRatio2})` })
         }
         setOverflowStyle(finalOverflowStyle)
         break;
@@ -160,9 +159,9 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   // 初入页面 - 获取数据
   useEffect(() => {
     const pwd = localStorage.getItem(pageId)
-    if(encrypt === 'true' && !pwd){
+    if (encrypt === 'true' && !pwd) {
       setInputPassword(true)
-    }else{
+    } else {
       init()
     }
     return () => {
@@ -218,10 +217,10 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     setComponents(publishDashboard.components)
     setPanels(publishDashboard.panels)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishDashboard.treeData])
 
-  const setChange = (value:any) => {
+  const setChange = (value: any) => {
     setPassword(value)
   }
 
@@ -237,11 +236,11 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
           pass: pwd
         },
         cb: (data: any) => {
-          if(data?.code === 500){
+          if (data?.code === 500) {
             setIsLoaded(true)
             localStorage.removeItem(pageId)
             setInputPassword(true)
-          }else{
+          } else {
             resolve(data)
           }
         }
@@ -264,7 +263,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   }
 
   const handleClick = () => {
-    if(!password){
+    if (!password) {
       message.error('请输入访问密码')
       return false
     }
@@ -275,7 +274,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   }
 
 
-  const updateDataContainerDataFunc = async (container:any) => {
+  const updateDataContainerDataFunc = async (container: any) => {
     let data = await http({
       method: "post",
       url: "/visual/container/screen/data/get",
@@ -287,7 +286,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
       },
     })
     const index = dataContainerDataListRef.current.findIndex((item: any) => item.id === container.id)
-    if(container.dataType === "static") {
+    if (container.dataType === "static") {
       data = data.data
     }
     if (index !== -1) {
@@ -304,7 +303,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         body: {
           moduleId: component.id,
           dataType: component.dataType,
-          callBackParamValues:publishDashboard.callbackArgs,
+          callBackParamValues: publishDashboard.callbackArgs,
           dashboardId: publishDashboard.dashboardId,
           pass: publishDashboard.pass
         },
@@ -323,16 +322,16 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   };
   useEffect(() => {
     let timerList: NodeJS.Timer[] = []
-    publishDashboard.dataContainerList.forEach(async(item: any) => {
+    publishDashboard.dataContainerList.forEach(async (item: any) => {
       // 添加自动过呢更新
-      if(item.autoUpdate?.isAuto){
+      if (item.autoUpdate?.isAuto) {
         console.log('')
         timerList.push(setInterval(async () => {
           await updateDataContainerDataFunc(item)
           dispatch({
             type: 'publishDashboard/save',
           })
-        }, item.autoUpdate.interval*1000))
+        }, item.autoUpdate.interval * 1000))
       }
     })
     return () => {
@@ -344,15 +343,15 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   }, [publishDashboard.dataContainerList, publishDashboard.dashboardId, publishDashboard.pass])
   useEffect(() => {
     let timerList: NodeJS.Timer[] = []
-    publishDashboard.components.forEach(async (item:any) => {
+    publishDashboard.components.forEach(async (item: any) => {
       // 添加自动更新功能
-      if(item.autoUpdate?.isAuto){
-        timerList.push(setInterval( async function () {
+      if (item.autoUpdate?.isAuto) {
+        timerList.push(setInterval(async function () {
           await updateComponentDataFunc(item)
           dispatch({
             type: 'publishDashboard/save',
           })
-        }, item.autoUpdate.interval*1000))
+        }, item.autoUpdate.interval * 1000))
       }
     })
     return () => {
@@ -404,17 +403,17 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
                     dispatch={dispatch}
                     scaleValue={scaleValue}
                     scaleMode={scaleMode}
-                />
+                  />
                 }
               </div>
             </div>
           </div>
           :
-          <Spin
-            tip='正在生成中…'
-            style={{ maxHeight: '100%' }}>
-            <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
-          </Spin>
+          <div style={{
+            width: '100vw', height: '100vh',
+          }}
+            className="publish-loading-wrap"
+          ></div>
       }
     </div>
   )

@@ -189,7 +189,8 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
                 size='small'
                 ref={inputRef}
                 style={{
-                  display: showRenameInput ? 'block' : 'none'
+                  display: showRenameInput ? 'block' : 'none',
+                  background: '#232630'
                 }}
                 onChange={(e) => oInputContent(e)}
                 onPressEnter={(e) => oPressEnter(e)}
@@ -197,6 +198,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
               />
               <span className='left-tree-title-text' style={{
                 display: showRenameInput ? 'none' : 'block'
+                // display: false ? 'block' : 'none'
               }}>{name}</span>
             </div>
             <div className='icons-wrap'>
