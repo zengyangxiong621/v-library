@@ -43,7 +43,6 @@ export default {
       const data = yield yield put({
         type: "getDataContainerList",
         payload: dashboardId,
-<<<<<<< HEAD
       })
       const func = async (component:any) => {
         let data = await http({
@@ -84,29 +83,6 @@ export default {
         //   }, item.autoUpdate.interval*1000)
         // }
       })
-=======
-      });
-      previewDashboard = yield select(
-        ({ previewDashboard }: any) => previewDashboard
-      );
-      previewDashboard.dataContainerList.forEach(async (item: any) => {
-        let data: any = null;
-        item.enable = item.modules.length > 0;
-        if (item.dataType === "static") {
-          data = item.staticData.data;
-        } else {
-          data = await http({
-            method: "post",
-            url: "/visual/container/data/get",
-            body: {
-              id: item.id,
-              callBackParamValues: dashboardId.callbackArgs,
-            },
-          });
-        }
-        previewDashboard.dataContainerDataList.push({ id: item.id, data });
-      });
->>>>>>> 1df6994b (feat：下钻完成)
       // 获取当前画布所有的数据过滤器
       const filters = yield http({
         url: "/visual/module/filter/list",
