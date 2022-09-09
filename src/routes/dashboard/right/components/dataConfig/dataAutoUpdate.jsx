@@ -26,6 +26,7 @@ const DataAutoUpdate = (props) => {
   }, [_data.autoUpdate])
 
   const timeBlur = () => {
+    if(!autoTime.value){
       props.onAutoUpdateChange({
         isAuto: automatic,
         interval: 10
@@ -35,6 +36,7 @@ const DataAutoUpdate = (props) => {
         value: 10
       })
     }
+  }
 
   const automaticChange = () => {
     setAutomatic(!automatic)
