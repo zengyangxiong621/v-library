@@ -716,16 +716,22 @@ const CustomDraggable
             // 回调列表中的当前数据如果有目标组件再进行下一步
             // 循环组件设置的回调参数，获取变量名和字段的对应关系
             if (item.destinationModules.length > 0) {
-              compCallbackArgs.forEach(callback => {
+              compCallbackArgs.forEach((callback,index) => {
                 // 判断是否为同一个源
                 if (item.callbackParam === callback.target) {
+                  // 翻页组件不需要配置origin
+                  if(component.moduleName === 'paginationComp'){
+                    temp = true
+                    callbackArgs[callback.target] = data[callback.target]
+                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
                   // 值是否改变
                   // data的值存在并且
-                  if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                  } else if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
                     temp = true
                     callbackArgs[callback.target] = data[callback.origin]
                     activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
                   }
+                  
                   dispatch({
                     type: 'bar/save',
                     payload: {
