@@ -158,7 +158,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   const imgFormat = imgSuffixMap[moduleName] || 'png'
   let photoPath = ''
   if (panelType === 0 || panelType === 1) {
-    photoPath = require("@/assets/images/面板.jpg")
+    photoPath = require("@/assets/images/panel.jpg")
   } else {
     photoPath = `${window.CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/thumb-${moduleName}.${imgFormat}`
   }
