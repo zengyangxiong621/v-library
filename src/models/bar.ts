@@ -322,22 +322,59 @@ export default {
             return null;
           }
         };
+        // 获取状态详情
         const getPanelStatusDetails = async (panelStatus: {name: string; id: string}) => {
           try {
-            const { layers, components, dashboardConfig, dashboardName }  = await http(
+            const data = await http(
               {
-              url: `/visual/application/dashboard/detail/${ isPanel ? stateId : dashboardId}`,
-              method: "get",
-            });
+                url: `/visual/application/dashboard/detail/${ panelStatus.id }`,
+                method: "get",
+              })
+            return { ...data, id: panelStatus.id }
           } catch(e) {
-            return null;
+            return null
           }
-        };
+        }
         const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
         // const allPanelStatusDetails: Array<any> = yield Promise.all(panels.map((item: IPanel)=> {
         //
         // }))
+        console.log('panels', panels)
+        const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<any> => {
+          return await panels.reduce(async(total: any, item)=> {
+            const res = await total
+            const data = await Promise.all(item.states.map((status: any) => getPanelStatusDetails(status)))
+            console.log('data', data)
+            res.push({
+              id: item.id,
+              states: data,
+              panelType: 0,
+              name: item.name
+            })
+            return res
+          }, [])
+        }
+        const allPanelStatusDetails: Array<{ id: string, states: any, panelType: 0, name: string }> = yield allPanelStatusDetailsFunc(panels)
+        console.log('allPanelStatusDetails', allPanelStatusDetails)
+        const allPanelLayers = allPanelStatusDetails.map(({ id, states, panelType, name }) => (
+          {
+            id,
+            panelType,
+            name,
+            modules: states.map(({ id, layers, dashboardName }: any) => ({
+              id,
+              modules: layers,
+              name: dashboardName
+            }))
+          }
+        ))
 
+        const fullAmountLayers = deepForEach(deepClone(layers), (layer: ILayerPanel | (Pick<ILayerPanel, "name" | "id" | "panelType"> & {modules: any})  | ILayerGroup | ILayerComponent, index: number) => {
+          if ('panelType' in layer && layer.panelType === 0) {
+            (layer as any).modules = allPanelLayers.find(item => item.id === layer.id)?.modules || []
+          }
+        })
+        console.log('fullAmountLayers', fullAmountLayers)
         yield (layers = deepForEach(
           layers,
           (layer: ILayerGroup | ILayerComponent) => {
