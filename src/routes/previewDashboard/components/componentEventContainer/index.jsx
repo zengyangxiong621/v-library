@@ -187,9 +187,14 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
             compCallbackArgs.forEach(callback => {
               // 判断是否为同一个源
               if (item.callbackParam === callback.target) {
+                // 翻页组件不需要配置origin
+                if(component.moduleName === 'paginationComp'){
+                  temp = true
+                  callbackArgs[callback.target] = data[callback.target]
+                  activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
                 // 值是否改变
                 // data的值存在并且
-                if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                } else if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
                   temp = true
                   callbackArgs[callback.target] = data[callback.origin]
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
