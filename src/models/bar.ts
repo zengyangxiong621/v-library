@@ -249,7 +249,7 @@ export default {
       });
     },
     *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
-      const curWorkspace:any = localStorage.getItem('curWorkspace') 
+      const curWorkspace:any = localStorage.getItem('curWorkspace')
       const spaceId = JSON.parse(curWorkspace)?.id;
       const data = yield http({
         url: "/visual/application/queryAppList",
@@ -267,10 +267,7 @@ export default {
       yield put({
         type: "save",
         payload: {
-          allDashboardList: data.content.map((item: any) => ({
-            name: item.name,
-            value: item.id,
-          })),
+          allDashboardList: data.content,
         },
       });
     },
@@ -913,7 +910,7 @@ export default {
     },
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
-      const curWorkspace:any = localStorage.getItem('curWorkspace') 
+      const curWorkspace:any = localStorage.getItem('curWorkspace')
       const spaceId = JSON.parse(curWorkspace)?.id;
       let data = yield http({
         url: `/visual/resource/queryResourceTypeList?spaceId=${spaceId}`,

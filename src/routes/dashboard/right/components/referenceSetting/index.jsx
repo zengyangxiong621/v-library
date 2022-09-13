@@ -47,6 +47,15 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     return states.length
   }, [states])
 
+  // 未发布且除去自身的应用集合
+  const publishedAndExcludeSelfDashboardList = useMemo(() => {
+    return bar.allDashboardList.map(item => ({
+      name: item.name,
+      value: item.id,
+      status: item.status
+    })).filter(item => item.value !== bar.dashboardId && item.status === 1)
+  }, [bar.dashboardId, bar.dashboardId])
+
   const styleConfig = [
     {
       'displayName': '位置尺寸',
@@ -140,7 +149,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
                 'name': 'dashboardSelect',
                 'type': 'select',
                 'value': '',
-                'options': bar.allDashboardList.filter(item => item.value !== bar.dashboardId),
+                'options': publishedAndExcludeSelfDashboardList,
               },
             ],
           },
@@ -159,7 +168,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
               'type': 'select',
               'value': item.id,
               'label': item.name,
-              'options': bar.allDashboardList.filter(item => item.value !== bar.dashboardId),
+              'options': publishedAndExcludeSelfDashboardList,
             },
           ],
         }

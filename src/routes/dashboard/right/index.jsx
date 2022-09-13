@@ -71,15 +71,6 @@ const Right = ({ dispatch, bar }) => {
   return (
     <div className="right-setting-wrap">
       {
-        // reflect[whichShow].type()
-        // whichShow === 'groupConfig' ? <GroupConfig key={ key }/>
-        //   : whichShow === 'singleLayer' ? <SingleLayer key={ key }/>
-        //   : whichShow === 'pageSetting' ? <PageSetting key={ key }/>
-        //     : whichShow === 'alignmentSetting' ? <AlignmentSetting key={ key }/>
-        //       : whichShow === 'referenceSetting' ? <ReferenceSetting key={ key }/>
-        //         : whichShow === 'dynamicSetting' ? <DynamicSetting key={ key }/>
-        //           : whichShow === 'dynamicPageSetting' ? <DynamicPageSetting key={ key }/>
-        //             : whichShow === 'drillDownPageSetting' ? <DrillDownPageSetting key={key} /> : <></>
         targetCompReflect[whichShow]
       }
     </div>
