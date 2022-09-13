@@ -1,39 +1,39 @@
-import React, { memo, useState, useEffect, useRef } from 'react'
-import { connect } from 'dva'
-import './index.less'
-import { Form, Drawer, Select, Button, Input, Modal, message, Spin } from 'antd'
+import React, { memo, useState, useEffect, useRef } from "react";
+import { connect } from "dva";
+import "./index.less";
+import { Form, Drawer, Select, Button, Input, Modal, message, Spin } from "antd";
 import {
   CloseOutlined, LeftOutlined, AudioOutlined, SearchOutlined,
-} from '@ant-design/icons'
-import ComponentCard from '../componentCard'
-import componentLib from '../index'
-import { deepClone } from '../../../../../utils'
-import debounce from 'lodash/debounce'
+} from "@ant-design/icons";
+import ComponentCard from "../componentCard";
+import componentLib from "../index";
+import { deepClone } from "../../../../../utils";
+import debounce from "lodash/debounce";
 
 
 const UpdateComponentConfigDrawer = ({ bar, dispatch, componentConfig, ...props }) => {
   // 过滤出位置尺寸、默认隐藏
-  componentConfig.config = (componentConfig?.config || []).filter(item => !['dimension', "hideDefault"].includes(item.name))
-  console.log('componentConfig', componentConfig)
+  componentConfig.config = (componentConfig?.config || []).filter(item => !["dimension", "hideDefault"].includes(item.name));
+  console.log("componentConfig", componentConfig);
   componentConfig.interaction = componentConfig?.interaction || {
     mountAnimation: bar.treeData.find(item => item.id === componentConfig?.id)?.mountAnimation,
     events: componentConfig?.events,
-  } || {}
-  const styleConfig = componentConfig?.config || []
-  const drawerRef = useRef(null)
+  } || {};
+  const styleConfig = componentConfig?.config || [];
+  const drawerRef = useRef(null);
   const onClose = () => {
-    props.onClose(false)
-  }
+    props.onClose(false);
+  };
 
   const styleChange = debounce(() => {
-    console.log('componentConfig', componentConfig.config)
-    props.onStyleChange(componentConfig.config)
+    console.log("componentConfig", componentConfig.config);
+    props.onStyleChange(componentConfig.config);
     // dispatch({
     //   type: 'bar/setComponentConfigAndCalcDragScaleData',
     //   payload: componentConfig
     // })
 
-  }, 300)
+  }, 300);
   return (
     <div className="update-component-wrap">
       <Drawer
@@ -51,9 +51,9 @@ const UpdateComponentConfigDrawer = ({ bar, dispatch, componentConfig, ...props 
         ref={ drawerRef }
         className="update-component-wrapper"
         getContainer={ false }
-        style={ { position: 'absolute' } }
+        style={ { position: "absolute" } }
         width={ 333 }
-        maskStyle={ { animation: 'unset' } }
+        maskStyle={ { animation: "unset" } }
       >
         <div className="update-component-body-wrapper">
           <ComponentCard
@@ -64,21 +64,21 @@ const UpdateComponentConfigDrawer = ({ bar, dispatch, componentConfig, ...props 
           >
             { styleConfig.map((item, index) => {
               if (!(item.type && componentLib[item.type])) {
-                return null
+                return null;
               }
-              const TagName = componentLib[item.type]
+              const TagName = componentLib[item.type];
               return (
                 <TagName data={ item } onChange={ styleChange } key={ index }/>
-              )
+              );
             }) }
           </ComponentCard>
         </div>
       </Drawer>
     </div>
-  )
-}
+  );
+};
 
 export default connect(({ bar }) => ({
   bar,
-}))(UpdateComponentConfigDrawer)
+}))(UpdateComponentConfigDrawer);
 

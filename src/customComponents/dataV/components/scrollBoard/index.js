@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useRef, useMemo, forwardRef } from 'react'
+import React, { useEffect, useState, useRef, useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
-import { co, styleObjectToStr } from '../../util'
+import useAutoResize from "../../use/autoResize";
+import { co, styleObjectToStr } from "../../util";
 
 
-import './style.less'
+import "./style.less";
 
 const defaultConfig = {
   /**
@@ -46,37 +46,37 @@ const defaultConfig = {
    * @type {String}
    * @default headerBGC = '#00BAFF'
    */
-  headerBGC: '#00BAFF',
+  headerBGC: "#00BAFF",
   /**
    * @description Header background color
    * @type {String}
    * @default headerBGC = '#00BAFF'
    */
-  headerBGI: 'unset',
+  headerBGI: "unset",
   /**
    * @description Odd row background Image
    * @type {String}
    * @default oddRowBGC = 'unset'
    */
-  oddRowBGC: '#003B51',
+  oddRowBGC: "#003B51",
   /**
    * @description Even row background color
    * @type {String}
    * @default evenRowBGC = '#003B51'
    */
-  evenRowBGC: '#0A2732',
+  evenRowBGC: "#0A2732",
   /**
    * @description selected row background color
    * @type {String}
    * @default selectedRowBGC = '#003B51'
    */
-  selectedRowBGC: '#003B51',
+  selectedRowBGC: "#003B51",
   /**
    * @description selected row background image
    * @type {String}
    * @default selectedRowIMG = ''
    */
-  selectedRowIMG: '',
+  selectedRowIMG: "",
   /**
    * @description how many time to scroll
    * @type {Number}
@@ -113,7 +113,7 @@ const defaultConfig = {
    * @type {String}
    * @default indexHeader = '#'
    */
-  indexHeader: '#',
+  indexHeader: "#",
   /**
    * @description indexBg configs
    * @type {Array<{width: string, height: string, "background-image": string, "background-color": string}>}
@@ -126,14 +126,14 @@ const defaultConfig = {
    * @default carousel = 'single'
    * @example carousel = 'single' | 'page'
    */
-  indexAlign: 'left',
+  indexAlign: "left",
   /**
    * @description Carousel type
    * @type {String}
    * @default carousel = 'type'
    * @example carousel = 'left' | 'center' | 'right'
    */
-  carousel: 'single',
+  carousel: "single",
   /**
    * @description Pause scroll when mouse hovered
    * @type {Boolean}
@@ -148,64 +148,64 @@ const defaultConfig = {
    * @default scrollDirection = 'up'
    * @example scrollDirection = 'up' | 'down'
    */
-  scrollDirection: 'up',
-}
+  scrollDirection: "up",
+};
 
 function calcHeaderData({ header, index, indexHeader }) {
   if (!header.length) {
-    return []
+    return [];
   }
 
-  header = [...header]
+  header = [...header];
 
-  if (index) header.unshift(indexHeader)
+  if (index) header.unshift(indexHeader);
 
-  return header
+  return header;
 }
 
 function calcRows({ data, index, headerBGC, headerBGI, rowNum, indexBgConfigs }) {
   if (index) {
     data = data.map((row, i) => {
-      row = [...row]
+      row = [...row];
 
       // const indexTag = `<span class="index" style="background-color: ${headerBGC};background-image: ${headerBGI}">${i +
       // 1}</span>`
       if (indexBgConfigs[i]) {
-        const styleStr = styleObjectToStr(indexBgConfigs[i])
-        const indexTag = `<div class="index" style="display: flex; justify-content: center; align-items: center; ${styleStr}">${i + 1}</div>`
-        row.unshift(indexTag)
+        const styleStr = styleObjectToStr(indexBgConfigs[i]);
+        const indexTag = `<div class="index" style="display: flex; justify-content: center; align-items: center; ${styleStr}">${i + 1}</div>`;
+        row.unshift(indexTag);
       } else {
-        const indexTag = `<div class="index">${i + 1}</div>`
-        row.unshift(indexTag)
+        const indexTag = `<div class="index">${i + 1}</div>`;
+        row.unshift(indexTag);
       }
-      return row
-    })
+      return row;
+    });
   }
 
-  data = data.map((ceils, i) => ({ ceils, rowIndex: i }))
+  data = data.map((ceils, i) => ({ ceils, rowIndex: i }));
 
-  const rowLength = data.length
+  const rowLength = data.length;
 
   if (rowLength > rowNum && rowLength < 2 * rowNum) {
-    data = [...data, ...data]
+    data = [...data, ...data];
   }
 
-  return data.map((d, i) => ({ ...d, scroll: i }))
+  return data.map((d, i) => ({ ...d, scroll: i }));
 }
 
 function calcAligns(mergedConfig, header) {
-  const columnNum = header.length
+  const columnNum = header.length;
 
-  let aligns = new Array(columnNum).fill('left')
+  let aligns = new Array(columnNum).fill("left");
 
-  const { align } = mergedConfig
+  const { align } = mergedConfig;
 
-  return deepMerge(aligns, align)
+  return deepMerge(aligns, align);
 }
 
 const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMouseOver }, ref) => {
-  const { domRef } = useAutoResize(ref)
-  const { height, width } = config
+  const { domRef } = useAutoResize(ref);
+  const { height, width } = config;
   const [state, setState] = useState({
     mergedConfig: {
       isScroll: true
@@ -222,30 +222,30 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
     aligns: [],
 
     activeRowIndex: -1
-  })
+  });
 
-  const { mergedConfig, header, rows, widths, heights, aligns, activeRowIndex } = state
+  const { mergedConfig, header, rows, widths, heights, aligns, activeRowIndex } = state;
 
   const stateRef = useRef({
     ...state,
     rowsData: [],
     avgHeight: 0,
     animationIndex: 0
-  })
+  });
 
-  Object.assign(stateRef.current, state)
+  Object.assign(stateRef.current, state);
 
   function onResize() {
-    if (!mergedConfig || !header.length) return
+    if (!mergedConfig || !header.length) return;
 
-    const widths = calcWidths(mergedConfig, stateRef.current.rowsData)
+    const widths = calcWidths(mergedConfig, stateRef.current.rowsData);
 
-    const heights = calcHeights(mergedConfig, header)
+    const heights = calcHeights(mergedConfig, header);
 
-    const data = { widths, heights }
+    const data = { widths, heights };
 
-    Object.assign(stateRef.current, data)
-    setState(state => ({ ...state, ...data }))
+    Object.assign(stateRef.current, data);
+    setState(state => ({ ...state, ...data }));
   }
 
   function onScroll (e) {
@@ -254,60 +254,60 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
       animationIndex,
       mergedConfig: { waitTime, carousel, rowNum, scrollDirection },
       rowsData
-    } = stateRef.current
+    } = stateRef.current;
 
-    const rowLength = rowsData.length
+    const rowLength = rowsData.length;
 
-    const scrollType = e.deltaY < 0
+    const scrollType = e.deltaY < 0;
 
-    const animationNum = carousel === 'single' ? 1 : rowNum
+    const animationNum = carousel === "single" ? 1 : rowNum;
 
     if(scrollType) {
 
-      animationIndex += animationNum
+      animationIndex += animationNum;
 
-      scrollDirection = 'up'
+      scrollDirection = "up";
 
     } else {
 
-      animationIndex -= animationNum
+      animationIndex -= animationNum;
 
-      scrollDirection = 'down'
+      scrollDirection = "down";
 
     }
 
 
-    let rows = rowsData.slice(animationIndex)
+    let rows = rowsData.slice(animationIndex);
 
-    rows.push(...rowsData.slice(0, animationIndex))
+    rows.push(...rowsData.slice(0, animationIndex));
 
-    rows = rows.slice(0, carousel === 'page' ? rowNum * 2 : rowNum + 1)
+    rows = rows.slice(0, carousel === "page" ? rowNum * 2 : rowNum + 1);
 
-    const heights = new Array(rowLength).fill(avgHeight)
+    const heights = new Array(rowLength).fill(avgHeight);
 
-    setState(state => ({ ...state, rows, heights }))
+    setState(state => ({ ...state, rows, heights }));
 
-    const back = animationIndex - rowLength
+    const back = animationIndex - rowLength;
 
-    if (back >= 0) animationIndex = back
+    if (back >= 0) animationIndex = back;
 
-    if (back <= -2 * rowLength) animationIndex = 0
+    if (back <= -2 * rowLength) animationIndex = 0;
 
-    const newHeights = [...heights]
+    const newHeights = [...heights];
     // if (scrollDirection === 'up') {
     //   newHeights.splice(0, animationNum, ...new Array(animationNum).fill(0))
     // } else {
     //   newHeights[5] = 0
     //   // newHeights[0] = newHeights[1]
     // }
-    const newMergedConfig = {...stateRef.current.mergedConfig, scrollDirection}
+    const newMergedConfig = {...stateRef.current.mergedConfig, scrollDirection};
 
     setTimeout(() => {
 
-      Object.assign(stateRef.current, { animationIndex, mergedConfig: newMergedConfig })
+      Object.assign(stateRef.current, { animationIndex, mergedConfig: newMergedConfig });
 
-      setState(state => ({ ...state, heights: newHeights, mergedConfig: newMergedConfig }))
-    }, 300)
+      setState(state => ({ ...state, heights: newHeights, mergedConfig: newMergedConfig }));
+    }, 300);
 
   }
 
@@ -315,17 +315,17 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
     const mergedConfig = deepMerge(
       deepClone(defaultConfig, true),
       config || {}
-    )
+    );
 
-    const header = calcHeaderData(mergedConfig)
+    const header = calcHeaderData(mergedConfig);
 
-    const rows = calcRows(mergedConfig)
+    const rows = calcRows(mergedConfig);
 
-    const widths = calcWidths(mergedConfig, stateRef.current.rowsData)
+    const widths = calcWidths(mergedConfig, stateRef.current.rowsData);
 
-    const heights = calcHeights(mergedConfig, header)
+    const heights = calcHeights(mergedConfig, header);
 
-    const aligns = calcAligns(mergedConfig, header)
+    const aligns = calcAligns(mergedConfig, header);
 
     const data = {
       mergedConfig,
@@ -334,44 +334,44 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
       widths,
       aligns,
       heights
-    }
+    };
 
     Object.assign(stateRef.current, data, {
       rowsData: rows,
       animationIndex: 0
-    })
+    });
 
-    setState(state => ({ ...state, ...data }))
+    setState(state => ({ ...state, ...data }));
   }
 
   function calcWidths({ columnWidth, header }, rowsData) {
-    const usedWidth = columnWidth.reduce((all, w) => all + w, 0)
+    const usedWidth = columnWidth.reduce((all, w) => all + w, 0);
 
-    let columnNum = 0
+    let columnNum = 0;
     if (rowsData[0]) {
-      columnNum = rowsData[0].ceils.length
+      columnNum = rowsData[0].ceils.length;
     } else if (header.length) {
-      columnNum = header.length
+      columnNum = header.length;
     }
 
-    const avgWidth = (width - usedWidth) / (columnNum - columnWidth.length)
+    const avgWidth = (width - usedWidth) / (columnNum - columnWidth.length);
 
-    const widths = new Array(columnNum).fill(avgWidth)
+    const widths = new Array(columnNum).fill(avgWidth);
 
-    return deepMerge(widths, columnWidth)
+    return deepMerge(widths, columnWidth);
   }
 
   function calcHeights({ rowNum, data }, header) {
-    let allHeight = height
+    let allHeight = height;
 
     // 如果头部存在的话
-    if (header.length) rowNum += 1
+    if (header.length) rowNum += 1;
 
-    const avgHeight = allHeight / rowNum
+    const avgHeight = allHeight / rowNum;
 
-    Object.assign(stateRef.current, { avgHeight })
+    Object.assign(stateRef.current, { avgHeight });
 
-    return new Array(data.length).fill(avgHeight)
+    return new Array(data.length).fill(avgHeight);
   }
 
   function * animation(start = false) {
@@ -380,106 +380,106 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
       animationIndex,
       mergedConfig: { waitTime, carousel, rowNum },
       rowsData
-    } = stateRef.current
+    } = stateRef.current;
 
-    const rowLength = rowsData.length
+    const rowLength = rowsData.length;
 
-    if (start) yield new Promise(resolve => setTimeout(resolve, waitTime))
+    if (start) yield new Promise(resolve => setTimeout(resolve, waitTime));
 
-    const animationNum = carousel === 'single' ? 1 : rowNum
+    const animationNum = carousel === "single" ? 1 : rowNum;
 
-    let rows = rowsData.slice(animationIndex)
+    let rows = rowsData.slice(animationIndex);
 
-    rows.push(...rowsData.slice(0, animationIndex))
+    rows.push(...rowsData.slice(0, animationIndex));
 
-    rows = rows.slice(0, carousel === 'page' ? rowNum * 2 : rowNum + 1)
+    rows = rows.slice(0, carousel === "page" ? rowNum * 2 : rowNum + 1);
 
-    const heights = new Array(rowLength).fill(avgHeight)
+    const heights = new Array(rowLength).fill(avgHeight);
 
-    setState(state => ({ ...state, rows, heights }))
+    setState(state => ({ ...state, rows, heights }));
 
-    yield new Promise(resolve => setTimeout(resolve, 300))
+    yield new Promise(resolve => setTimeout(resolve, 300));
 
-    animationIndex += animationNum
+    animationIndex += animationNum;
 
-    const back = animationIndex - rowLength
+    const back = animationIndex - rowLength;
 
-    if (back >= 0) animationIndex = back
+    if (back >= 0) animationIndex = back;
 
-    const newHeights = [...heights]
+    const newHeights = [...heights];
 
-    newHeights.splice(0, animationNum, ...new Array(animationNum).fill(0))
+    newHeights.splice(0, animationNum, ...new Array(animationNum).fill(0));
 
-    Object.assign(stateRef.current, { animationIndex })
+    Object.assign(stateRef.current, { animationIndex });
 
-    setState(state => ({ ...state, heights: newHeights }))
+    setState(state => ({ ...state, heights: newHeights }));
   }
 
   function emitEvent(handle, ri, ci, row, ceil) {
-    const { ceils, rowIndex } = row
+    const { ceils, rowIndex } = row;
 
-    handle && handle({ row: ceils, ceil, rowIndex, columnIndex: ci })
+    handle && handle({ row: ceils, ceil, rowIndex, columnIndex: ci });
   }
 
   function handleHover(enter, ri, ci, row, ceil) {
     // if (enter) emitEvent(onMouseOver, ri, ci, row, ceil)
 
-    if (!mergedConfig.hoverPause) return
-    const { pause, resume } = task.current
-    enter && pause && resume ? pause() : resume()
+    if (!mergedConfig.hoverPause) return;
+    const { pause, resume } = task.current;
+    enter && pause && resume ? pause() : resume();
   }
 
   const getBackgroundColor = rowIndex => {
-    return mergedConfig[rowIndex % 2 === 0 ? 'evenRowBGC' : 'oddRowBGC']
-  }
+    return mergedConfig[rowIndex % 2 === 0 ? "evenRowBGC" : "oddRowBGC"];
+  };
 
-  const task = useRef({})
+  const task = useRef({});
 
   useEffect(() => {
-    calcData()
+    calcData();
 
-    let start = true
+    let start = true;
 
     function * loop() {
       while (true) {
-        yield * animation(start)
+        yield * animation(start);
 
-        start = false
+        start = false;
 
-        const { waitTime } = stateRef.current.mergedConfig
+        const { waitTime } = stateRef.current.mergedConfig;
 
-        yield new Promise(resolve => setTimeout(resolve, waitTime - 300))
+        yield new Promise(resolve => setTimeout(resolve, waitTime - 300));
       }
     }
 
     const {
       mergedConfig: { rowNum },
       rows: rowsData
-    } = stateRef.current
+    } = stateRef.current;
 
-    const rowLength = rowsData.length
+    const rowLength = rowsData.length;
 
-    if (rowNum >= rowLength || mergedConfig.isScroll === false) return
+    if (rowNum >= rowLength || mergedConfig.isScroll === false) return;
 
-    task.current = co(loop)
+    task.current = co(loop);
 
-    return task.current.end
-  }, [config, domRef.current, mergedConfig.isScroll])
+    return task.current.end;
+  }, [config, domRef.current, mergedConfig.isScroll]);
 
-  useEffect(onResize, [width, height, domRef.current, header])
+  useEffect(onResize, [width, height, domRef.current, header]);
   useEffect(() => {
     if (domRef.current) {
-      domRef.current.addEventListener('wheel', onScroll)
+      domRef.current.addEventListener("wheel", onScroll);
     }
     return () => {
       if (domRef.current) {
-        domRef.current.removeEventListener('wheel', onScroll)
+        domRef.current.removeEventListener("wheel", onScroll);
       }
-    }
-  }, [domRef.current, stateRef.current])
-  const classNames = useMemo(() => classnames('dv-scroll-board', className), [
+    };
+  }, [domRef.current, stateRef.current]);
+  const classNames = useMemo(() => classnames("dv-scroll-board", className), [
     className
-  ])
+  ]);
   return (
     <div
       onMouseEnter={() => handleHover(true)}
@@ -488,7 +488,7 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
       {!!header.length && !!mergedConfig && (
         <div
           className='header'
-          style={{ backgroundColor: `${mergedConfig.headerBGC}`, backgroundImage: `${mergedConfig.headerBGI}`, overflow: 'hidden' }}
+          style={{ backgroundColor: `${mergedConfig.headerBGC}`, backgroundImage: `${mergedConfig.headerBGI}`, overflow: "hidden" }}
         >
           {header.map((headerItem, i) => (
             <div
@@ -514,8 +514,8 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
           style={{
             height: `${height -
             (header.length ? heights[1] : 0)}px`,
-            display: 'flex',
-            flexDirection: 'column',
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           {rows.map((row, ri) => (
@@ -527,16 +527,16 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
                 height: `${heights[ri]}px`,
                 maxHeight: `${heights[ri]}px`,
                 minHeight: `${heights[ri]}px`,
-                alignItems: 'center',
+                alignItems: "center",
                 // lineHeight: `${heights[ri]}px`, // maybe reset
                 backgroundColor: `${activeRowIndex === row.rowIndex ? mergedConfig.selectedRowBGC: getBackgroundColor(row.rowIndex)}`,
                 // backgroundImage: `url('${ : ''}') no-repeat center/cover`,
-                backgroundImage: activeRowIndex === row.rowIndex ? `url('${mergedConfig.selectedRowIMG}')` : '',
-                backgroundPosition: 'center center',
-                backgroundRepeat: 'no-repeat',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                overflow: heights[ri] === 0 ? 'hidden' : 'unset',
+                backgroundImage: activeRowIndex === row.rowIndex ? `url('${mergedConfig.selectedRowIMG}')` : "",
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed",
+                backgroundSize: "cover",
+                overflow: heights[ri] === 0 ? "hidden" : "unset",
               }}
             >
               {row.ceils.map((ceil, ci) => (
@@ -558,8 +558,8 @@ const ScrollBoard = forwardRef(({ onClick, config = {}, className, style, onMous
         </div>
       )}
     </div>
-  )
-})
+  );
+});
 
 ScrollBoard.propTypes = {
   config: PropTypes.object,
@@ -567,6 +567,6 @@ ScrollBoard.propTypes = {
   onMouseOver: PropTypes.func,
   className: PropTypes.string,
   style: PropTypes.object
-}
+};
 
-export default ScrollBoard
+export default ScrollBoard;

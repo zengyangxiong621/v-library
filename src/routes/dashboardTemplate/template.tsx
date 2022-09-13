@@ -1,47 +1,47 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { memo, useEffect, useState } from 'react'
-import './index.less'
+import { memo, useEffect, useState } from "react";
+import "./index.less";
 
-import { IconFont } from '../../utils/useIcon'
-import { SearchOutlined } from '@ant-design/icons'
-import { Input, Row, Col, Modal, Form, Select, Button } from 'antd'
+import { IconFont } from "../../utils/useIcon";
+import { SearchOutlined } from "@ant-design/icons";
+import { Input, Row, Col, Modal, Form, Select, Button } from "antd";
 
-import TemplateCard from './templateCard/index'
-import Preview from './preview/index'
-import DarkModal from '../myDashboard/components/darkThemeModal/index'
-import { http } from '@/services/request'
+import TemplateCard from "./templateCard/index";
+import Preview from "./preview/index";
+import DarkModal from "../myDashboard/components/darkThemeModal/index";
+import { http } from "@/services/request";
 
-const { Option } = Select
+const { Option } = Select;
 
 const DashboardTemplate = (props: any) => {
-  const { history } = props
-  const [createForm] = Form.useForm()
-  const [listData, setListData] = useState([])
-  const [urlArr, setUrlArr] = useState([])
+  const { history } = props;
+  const [createForm] = Form.useForm();
+  const [listData, setListData] = useState([]);
+  const [urlArr, setUrlArr] = useState([]);
   // 放入预览模板中的图片链接数组
   // const urlArr = listData.map((item: any) => item.imgUrl)
 
-  const [curImgIndex, setCurImgIndex] = useState(-1)
-  const [inputValue, setInputValue] = useState('')
-  const [showCreateAppModal, setShowCreateAppModal] = useState(false)
-  const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  const spaceId = JSON.parse(curWorkspace)?.id
+  const [curImgIndex, setCurImgIndex] = useState(-1);
+  const [inputValue, setInputValue] = useState("");
+  const [showCreateAppModal, setShowCreateAppModal] = useState(false);
+  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const spaceId = JSON.parse(curWorkspace)?.id;
 
-  const [groupOptions, setGroupOptions] = useState([])
+  const [groupOptions, setGroupOptions] = useState([]);
   // 不选择分组的时候，默认选择未分组,未分组的groupId是 0 <string>
-  const [selectedGroup, setSelectedGroup] = useState('0')
-  const [appName, setAppName] = useState('')
+  const [selectedGroup, setSelectedGroup] = useState("0");
+  const [appName, setAppName] = useState("");
   // 点击 推荐/我的 模板时传过来的模板id
-  const [templateId, setTemplateId] = useState<string>('')
+  const [templateId, setTemplateId] = useState<string>("");
 
   useEffect(() => {
-    getHotTemplate()
-  },[])
+    getHotTemplate();
+  },[]);
   
   const getHotTemplate = async(value?:any) => {
     const data = await http({
-      url: '/visual/appTemplate/list',
-      method: 'post',
+      url: "/visual/appTemplate/list",
+      method: "post",
       body: {
         map: {created_time:false},
         pageNo: 1,
@@ -50,86 +50,86 @@ const DashboardTemplate = (props: any) => {
         spaceId: null,
         name: value
       }
-    })
+    });
     if(data){
-      setListData(data.content)
-      let urlArr = data.content.map((item: any) => item.photoUrl)
-      setUrlArr(urlArr)
+      setListData(data.content);
+      const urlArr = data.content.map((item: any) => item.photoUrl);
+      setUrlArr(urlArr);
     }
-  }
+  };
 
   const GetGroups = async () => {
     const data = await http({
       url: `/visual/application/queryGroupList?spaceId=${spaceId}`,
-      method: 'get'
-    })
-    const pickNameArr = data.slice(1).map((item: any) => ({ label: item.name, value: item.groupId }))
-    setGroupOptions(pickNameArr)
-  }
+      method: "get"
+    });
+    const pickNameArr = data.slice(1).map((item: any) => ({ label: item.name, value: item.groupId }));
+    setGroupOptions(pickNameArr);
+  };
   // 搜索
   const search = (value: any) => {
-    getHotTemplate(value)
-  }
+    getHotTemplate(value);
+  };
   const backClick = () => {
-    history.back()
-  }
+    history.back();
+  };
 
   // 新建应用弹窗 1.点击空白模板
   // 2.通过已有模板创建(带模板id的)
   const addTemplate = (mobanId?: string) => {
-    setShowCreateAppModal(true)
+    setShowCreateAppModal(true);
     // 弹窗出现，发送请求
     // 有的话再设置
-    mobanId && setTemplateId(mobanId)
-    GetGroups()
-  }
+    mobanId && setTemplateId(mobanId);
+    GetGroups();
+  };
   // 确认新建
   const createApp = async () => {
     // 先校验
-    const values: any = await createForm.validateFields()
+    const values: any = await createForm.validateFields();
     //TODO 发送请求
     const finalBody = {
       spaceId,
       ...values,
       groupId: selectedGroup
-    }
+    };
     // templateId && (finalBody.templateId = templateId)
     const data = await http({
-      url: '/visual/application/createBlankApp',
-      method: 'post',
+      url: "/visual/application/createBlankApp",
+      method: "post",
       body: finalBody
-    })
+    });
     // 请求成功
     // 关闭弹窗 - 清除弹窗缓存 - 跳转至应用所属的画布
     if (data) {
-      setShowCreateAppModal(false)
-      createForm.resetFields()
-      history.push(`/dashboard/${data.screenId}`)
+      setShowCreateAppModal(false);
+      createForm.resetFields();
+      history.push(`/dashboard/${data.screenId}`);
     }
-  }
+  };
   //关闭弹窗
   const cancelCreateApp = () => {
-    setShowCreateAppModal(false)
-    createForm.resetFields()
-  }
+    setShowCreateAppModal(false);
+    createForm.resetFields();
+  };
 
   const appNameChange = (val: any) => {
-    setAppName(val)
-  }
+    setAppName(val);
+  };
   // 手动选择分组
   const groupSelectSelect = (val: any) => {
-    setSelectedGroup(val)
-  }
+    setSelectedGroup(val);
+  };
 
   // 获取当前需要预览的模板 的index
   const getCurImgIndex = (i: number) => {
-    setCurImgIndex(i)
-  }
+    setCurImgIndex(i);
+  };
 
   // 关闭预览弹窗
   const modalCancel = () => {
-    setCurImgIndex(-1)
-  }
+    setCurImgIndex(-1);
+  };
 
   return (
     <div key={props.location.pathname}>
@@ -184,10 +184,10 @@ const DashboardTemplate = (props: any) => {
           keyboard={true}
           closeIcon={() => <></>} // 除去关闭按钮
           style={{
-            top: '8vh'
+            top: "8vh"
           }}
           bodyStyle={{
-            padding: '0'
+            padding: "0"
           }}
           onCancel={() => modalCancel()}
         >
@@ -209,7 +209,7 @@ const DashboardTemplate = (props: any) => {
           </div>
         ]}
         style={{
-          top: '25%',
+          top: "25%",
         }}
       >
         <Form
@@ -223,7 +223,7 @@ const DashboardTemplate = (props: any) => {
             label="应用名称"
             name="name"
             colon={false}
-            rules={[{ required: true, message: '请输入应用名称' }]}
+            rules={[{ required: true, message: "请输入应用名称" }]}
           >
             <Input placeholder='请输入应用名称'
               autoComplete='off'
@@ -251,7 +251,7 @@ const DashboardTemplate = (props: any) => {
         </Form>
       </DarkModal>
     </div>
-  )
-}
+  );
+};
 
-export default memo(DashboardTemplate)
+export default memo(DashboardTemplate);

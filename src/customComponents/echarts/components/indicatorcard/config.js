@@ -103,7 +103,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": '48px'
+          "value": "48px"
         }
       ]
     },
@@ -128,30 +128,30 @@ const componentDefaultConfig = {
         "min": 0,
         "max": 100,
         "step": 1,
-        suffix: '',  // 输入框后缀
+        suffix: "",  // 输入框后缀
       }
     },
     {
       "displayName": "威胁等级",
       "name": "dangerLevel",
-      type: 'select',
-      value: '低危',
+      type: "select",
+      value: "低危",
       options: [
         {
-          name: '严重',
-          value: '严重'
+          name: "严重",
+          value: "严重"
         },
         {
-          name: '高危',
-          value: '高危'
+          name: "高危",
+          value: "高危"
         },
         {
-          name: '中危',
-          value: '中危'
+          name: "中危",
+          value: "中危"
         },
         {
-          name: '低危',
-          value: '低危'
+          name: "低危",
+          value: "低危"
         },
       ]
     }
@@ -170,6 +170,6 @@ const componentDefaultConfig = {
       "name": "政务蓝"
     }
   ]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

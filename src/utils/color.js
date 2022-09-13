@@ -1,14 +1,14 @@
 const isHex = (str) => {
-  return str.startsWith('#')
-}
+  return str.startsWith("#");
+};
 const rgbToHex = (rgba) => {
-  let { r, g, b } = rgba
-  r=parseInt(r)
-  g=parseInt(g)
-  b=parseInt(b)
+  let { r, g, b } = rgba;
+  r=parseInt(r);
+  g=parseInt(g);
+  b=parseInt(b);
   let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   return hex;
-}
+};
 const hexToRgb = (hexValue) => {
   const rgx = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   const hex = hexValue.replace(rgx, (m, r, g, b) => r + r + g + g + b + b);
@@ -24,20 +24,20 @@ const hexToRgb = (hexValue) => {
     g,
     b
   };
-}
+};
 const getRgbaNum = (rgba) => {
-  let value = rgba.match(/(\d(\.\d+)?)+/g)
+  let value = rgba.match(/(\d(\.\d+)?)+/g);
   return {
     r: value[0],
     g: value[1],
     b: value[2],
     a: value[3]
-  }
-}
+  };
+};
 
 export {
   isHex,
   rgbToHex,
   hexToRgb,
   getRgbaNum
-}
+};

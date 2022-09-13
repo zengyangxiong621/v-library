@@ -1,12 +1,12 @@
-import Item from './item';
-import Icon from '../icon';
+import Item from "./item";
+import Icon from "../icon";
 
 export default class ToggleItem extends Item {
   element() {
     const { tag } = this;
     return super.element()
       .child(new Icon(tag))
-      .on('click', () => this.click());
+      .on("click", () => this.click());
   }
 
   click() {
@@ -22,6 +22,6 @@ export default class ToggleItem extends Item {
   }
 
   active() {
-    return this.el.hasClass('active');
+    return this.el.hasClass("active");
   }
 }

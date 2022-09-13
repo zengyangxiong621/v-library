@@ -19,27 +19,27 @@ const componentDefaultConfig = {
     "data": [
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": '车辆管理系统',
+        "column2": "车辆管理系统",
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": '车辆管理系统',
+        "column2": "车辆管理系统",
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": '车辆管理系统',
+        "column2": "车辆管理系统",
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": '车辆管理系统',
+        "column2": "车辆管理系统",
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": '车辆管理系统',
+        "column2": "车辆管理系统",
         "column3": "受攻击:21",
       },
     ],
@@ -84,12 +84,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": '800px'
+          "value": "800px"
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": '400px'
+          "value": "400px"
         }
       ]
     },
@@ -132,7 +132,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": '48'
+          "value": "48"
         }
       ]
     },
@@ -143,10 +143,10 @@ const componentDefaultConfig = {
       "value": false
     },
     {
-      'name': 'backgroundColor',
-      'displayName': '背景色',
-      'value': '#000000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-      type: 'color'
+      "name": "backgroundColor",
+      "displayName": "背景色",
+      "value": "#000000", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      type: "color"
     },
     {
       "name": "isShowProgress",
@@ -169,6 +169,6 @@ const componentDefaultConfig = {
       "name": "政务蓝"
     }
   ]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

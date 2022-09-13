@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
   "name": "定制指标卡2-背景图", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -27,39 +27,39 @@ const componentDefaultConfig = {
   events: [],
   "config": [
     {
-      displayName: '位置尺寸',
-      name: 'dimension',
-      type: 'dimensionGroup',
+      displayName: "位置尺寸",
+      name: "dimension",
+      type: "dimensionGroup",
       config: {
         lock: false,
       },
       value: [
         {
-          displayName: 'X轴坐标',
-          name: 'left',
+          displayName: "X轴坐标",
+          name: "left",
           value: 267,
         },
         {
-          displayName: 'Y轴坐标',
-          name: 'top',
+          displayName: "Y轴坐标",
+          name: "top",
           value: 73,
         },
         {
-          displayName: '宽度',
-          name: 'width',
+          displayName: "宽度",
+          name: "width",
           value: 350,
         },
         {
-          displayName: '高度',
-          name: 'height',
+          displayName: "高度",
+          name: "height",
           value: 400,
         },
       ],
     },
     {
-      displayName: '默认隐藏',
-      name: 'hideDefault',
-      type: 'checkBox',
+      displayName: "默认隐藏",
+      name: "hideDefault",
+      type: "checkBox",
       value: false,
     },
   ],

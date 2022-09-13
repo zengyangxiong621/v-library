@@ -43,7 +43,7 @@ export default {
       const data = yield yield put({
         type: "getDataContainerList",
         payload: dashboardId,
-      })
+      });
       const func = async (component:any) => {
         let data = await http({
           method: "post",
@@ -52,26 +52,26 @@ export default {
             id: component.id,
             callBackParamValues: previewDashboard.callbackArgs,
           },
-        })
-        const index = previewDashboard.dataContainerDataList.findIndex((item: any) => item.id === component.id)
+        });
+        const index = previewDashboard.dataContainerDataList.findIndex((item: any) => item.id === component.id);
         if(component.dataType === "static") {
-          data = data.data
+          data = data.data;
         }
         if (index !== -1) {
-          previewDashboard.dataContainerDataList.splice(index, 1, { id: component.id, data })
+          previewDashboard.dataContainerDataList.splice(index, 1, { id: component.id, data });
         } else {
-          previewDashboard.dataContainerDataList.push({ id: component.id, data })
+          previewDashboard.dataContainerDataList.push({ id: component.id, data });
         }
-      }
-      previewDashboard = yield select(({ previewDashboard }: any) => previewDashboard)
+      };
+      previewDashboard = yield select(({ previewDashboard }: any) => previewDashboard);
       previewDashboard.dataContainerList.forEach(async(item: any) => {
-        let data: any = null
-        item.enable = item.modules.length > 0
+        let data: any = null;
+        item.enable = item.modules.length > 0;
         if(item.dataType === "static") {
-          data = item.staticData.data
-          previewDashboard.dataContainerDataList.push({ id: item.id, data })
+          data = item.staticData.data;
+          previewDashboard.dataContainerDataList.push({ id: item.id, data });
         } else {
-          await func(item)
+          await func(item);
         }
         // // 添加自动过呢更新
         // if(item.autoUpdate?.isAuto){
@@ -82,7 +82,7 @@ export default {
         //     })
         //   }, item.autoUpdate.interval*1000)
         // }
-      })
+      });
       // 获取当前画布所有的数据过滤器
       const filters = yield http({
         url: "/visual/module/filter/list",
@@ -135,7 +135,7 @@ export default {
       const previewDashboard: any = yield select(
         ({ previewDashboard }: any) => previewDashboard
       );
-      let { dashboardId } = previewDashboard;
+      const { dashboardId } = previewDashboard;
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http(
           {

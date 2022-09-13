@@ -1,28 +1,28 @@
-import { stringAt } from '../core/alphabet';
-import { getFontSizePxByPt } from '../core/font';
-import _cell from '../core/cell';
-import { formulam } from '../core/formula';
-import { formatm } from '../core/format';
+import { stringAt } from "../core/alphabet";
+import { getFontSizePxByPt } from "../core/font";
+import _cell from "../core/cell";
+import { formulam } from "../core/formula";
+import { formatm } from "../core/format";
 
 import {
   Draw, DrawBox, thinLineWidth, npx,
-} from '../canvas/draw';
+} from "../canvas/draw";
 // gobal var
 const cellPaddingWidth = 5;
-const tableFixedHeaderCleanStyle = { fillStyle: '#2b2d37' };
+const tableFixedHeaderCleanStyle = { fillStyle: "#2b2d37" };
 const tableGridStyle = {
-  fillStyle: '#fff',
+  fillStyle: "#fff",
   lineWidth: thinLineWidth,
-  strokeStyle: '#393b4a',
+  strokeStyle: "#393b4a",
 };
 function tableFixedHeaderStyle() {
   return {
-    textAlign: 'center',
-    textBaseline: 'middle',
+    textAlign: "center",
+    textBaseline: "middle",
     font: `500 ${npx(12)}px Source Sans Pro`,
-    fillStyle: '#fff',
+    fillStyle: "#fff",
     lineWidth: thinLineWidth(),
-    strokeStyle: '#393b4a',
+    strokeStyle: "#393b4a",
   };
 }
 
@@ -60,7 +60,7 @@ export function renderCell(draw, data, rindex, cindex, yoffset = 0) {
   const cell = data.getCell(nrindex, cindex);
   if (cell === null) return;
   let frozen = false;
-  if ('editable' in cell && cell.editable === false) {
+  if ("editable" in cell && cell.editable === false) {
     frozen = true;
   }
 
@@ -74,11 +74,11 @@ export function renderCell(draw, data, rindex, cindex, yoffset = 0) {
   }
   draw.rect(dbox, () => {
     // render text
-    let cellText = '';
+    let cellText = "";
     if (!data.settings.evalPaused) {
-      cellText = _cell.render(cell.text || '', formulam, (y, x) => (data.getCellTextOrDefault(x, y)));
+      cellText = _cell.render(cell.text || "", formulam, (y, x) => (data.getCellTextOrDefault(x, y)));
     } else {
-      cellText = cell.text || '';
+      cellText = cell.text || "";
     }
     if (style.format) {
       // console.log(data.formatm, '>>', cell.format);
@@ -173,7 +173,7 @@ function renderContent(viewRange, fw, fh, tx, ty) {
 function renderSelectedHeaderCell(x, y, w, h) {
   const { draw } = this;
   draw.save();
-  draw.attr({ fillStyle: 'rgba(75, 137, 255, 0.08)' })
+  draw.attr({ fillStyle: "rgba(75, 137, 255, 0.08)" })
     .fillRect(x, y, w, h);
   draw.restore();
 }
@@ -194,8 +194,8 @@ function renderFixedHeaders(type, viewRange, w, h, tx, ty) {
   draw.save();
   // draw rect background
   draw.attr(tableFixedHeaderCleanStyle);
-  if (type === 'all' || type === 'left') draw.fillRect(0, nty, w, sumHeight);
-  if (type === 'all' || type === 'top') draw.fillRect(ntx, 0, sumWidth, h);
+  if (type === "all" || type === "left") draw.fillRect(0, nty, w, sumHeight);
+  if (type === "all" || type === "top") draw.fillRect(ntx, 0, sumWidth, h);
 
   const {
     sri, sci, eri, eci,
@@ -205,7 +205,7 @@ function renderFixedHeaders(type, viewRange, w, h, tx, ty) {
   // text font, align...
   draw.attr(tableFixedHeaderStyle());
   // y-header-text
-  if (type === 'all' || type === 'left') {
+  if (type === "all" || type === "left") {
     data.rowEach(viewRange.sri, viewRange.eri, (i, y1, rowHeight) => {
       const y = nty + y1;
       const ii = i;
@@ -216,7 +216,7 @@ function renderFixedHeaders(type, viewRange, w, h, tx, ty) {
       draw.fillText(ii + 1, w / 2, y + (rowHeight / 2));
       if (i > 0 && data.rows.isHide(i - 1)) {
         draw.save();
-        draw.attr({ strokeStyle: '#c6c6c6' });
+        draw.attr({ strokeStyle: "#c6c6c6" });
         draw.line([5, y + 5], [w - 5, y + 5]);
         draw.restore();
       }
@@ -225,7 +225,7 @@ function renderFixedHeaders(type, viewRange, w, h, tx, ty) {
     draw.line([w, nty], [w, sumHeight + nty]);
   }
   // x-header-text
-  if (type === 'all' || type === 'top') {
+  if (type === "all" || type === "top") {
     data.colEach(viewRange.sci, viewRange.eci, (i, x1, colWidth) => {
       const x = ntx + x1;
       const ii = i;
@@ -236,7 +236,7 @@ function renderFixedHeaders(type, viewRange, w, h, tx, ty) {
       draw.fillText(stringAt(ii), x + (colWidth / 2), h / 2);
       if (i > 0 && data.cols.isHide(i - 1)) {
         draw.save();
-        draw.attr({ strokeStyle: '#c6c6c6' });
+        draw.attr({ strokeStyle: "#c6c6c6" });
         draw.line([x + 5, 5], [x + 5, h - 5]);
         draw.restore();
       }
@@ -251,7 +251,7 @@ function renderFixedLeftTopCell(fw, fh) {
   const { draw } = this;
   draw.save();
   // left-top-cell
-  draw.attr({ fillStyle: '#2b2d37' })
+  draw.attr({ fillStyle: "#2b2d37" })
     .fillRect(0, 0, fw, fh);
   draw.restore();
 }
@@ -292,7 +292,7 @@ function renderFreezeHighlightLine(fw, fh, ftw, fth) {
   const theight = data.viewHeight() - fh;
   draw.save()
     .translate(fw, fh)
-    .attr({ strokeStyle: 'rgba(75, 137, 255, .6)' });
+    .attr({ strokeStyle: "rgba(75, 137, 255, .6)" });
   draw.line([0, fth], [twidth, fth]);
   draw.line([ftw, 0], [ftw, theight]);
   draw.restore();
@@ -331,7 +331,7 @@ class Table {
     // 1
     renderContentGrid.call(this, viewRange, fw, fh, tx, ty);
     renderContent.call(this, viewRange, fw, fh, -x, -y);
-    renderFixedHeaders.call(this, 'all', viewRange, fw, fh, tx, ty);
+    renderFixedHeaders.call(this, "all", viewRange, fw, fh, tx, ty);
     renderFixedLeftTopCell.call(this, fw, fh);
     const [fri, fci] = data.freeze;
     if (fri > 0 || fci > 0) {
@@ -343,7 +343,7 @@ class Table {
         vr.h = ty;
         renderContentGrid.call(this, vr, fw, fh, tx, 0);
         renderContent.call(this, vr, fw, fh, -x, 0);
-        renderFixedHeaders.call(this, 'top', vr, fw, fh, tx, 0);
+        renderFixedHeaders.call(this, "top", vr, fw, fh, tx, 0);
       }
       // 3
       if (fci > 0) {
@@ -352,13 +352,13 @@ class Table {
         vr.eci = fci - 1;
         vr.w = tx;
         renderContentGrid.call(this, vr, fw, fh, 0, ty);
-        renderFixedHeaders.call(this, 'left', vr, fw, fh, 0, ty);
+        renderFixedHeaders.call(this, "left", vr, fw, fh, 0, ty);
         renderContent.call(this, vr, fw, fh, 0, -y);
       }
       // 4
       const freezeViewRange = data.freezeViewRange();
       renderContentGrid.call(this, freezeViewRange, fw, fh, 0, 0);
-      renderFixedHeaders.call(this, 'all', freezeViewRange, fw, fh, 0, 0);
+      renderFixedHeaders.call(this, "all", freezeViewRange, fw, fh, 0, 0);
       renderContent.call(this, freezeViewRange, fw, fh, 0, 0);
       // 5
       renderFreezeHighlightLine.call(this, fw, fh, tx, ty);

@@ -1,8 +1,8 @@
 /* global window */
-import en from './en';
+import en from "./en";
 
 // Defines the fallback language as English
-let $languages = ['en'];
+let $languages = ["en"];
 const $messages = {
   en,
 };
@@ -42,7 +42,7 @@ function t(key) {
   if (!v && window && window.x_spreadsheet && window.x_spreadsheet.$messages) {
     v = translate(key, window.x_spreadsheet.$messages);
   }
-  return v || '';
+  return v || "";
 }
 
 function tf(key) {

@@ -1,14 +1,14 @@
-import React, { Component, Fragment } from 'react';
-import { Layout, Menu } from 'antd';
-import { Route, Switch, Redirect } from 'dva/router';
-import dynamic from 'dva/dynamic';
-import { connect } from '../../utils/connect';
+import React, { Component, Fragment } from "react";
+import { Layout, Menu } from "antd";
+import { Route, Switch, Redirect } from "dva/router";
+import dynamic from "dva/dynamic";
+import { connect } from "../../utils/connect";
 
-import { newDynamic } from '../../utils/core';
-import CustomHeader from '../header/index'
-import DashboardManage from '../../routes/myDashboard/myDashboard';
-import { Spin,Empty } from 'antd'
-import './index.less'
+import { newDynamic } from "../../utils/core";
+import CustomHeader from "../header/index";
+import DashboardManage from "../../routes/myDashboard/myDashboard";
+import { Spin,Empty } from "antd";
+import "./index.less";
 
 const { Content } = Layout;
 interface Props {
@@ -24,70 +24,70 @@ interface Props {
 interface State { }
 
 const mapStateToProps = (state: any) => {
-  return state
-}
+  return state;
+};
 class BasicLayout extends Component<Props, State> {
 
   constructor(Props: any) {
-    super(Props)
+    super(Props);
     this.state={
       loading: false,
-      isPublishScreen: window.location.href.indexOf('publishScreen') > -1
-    }
+      isPublishScreen: window.location.href.indexOf("publishScreen") > -1
+    };
   }
 
   handleGetAccountInfo=()=>{
-    const {global,dispatch}=this.props
-    const { isPublishScreen }:any = this.state
-    const {userInfo}=global
-    const token=localStorage.getItem('token')
+    const {global,dispatch}=this.props;
+    const { isPublishScreen }:any = this.state;
+    const {userInfo}=global;
+    const token=localStorage.getItem("token");
     if(token && !userInfo && !isPublishScreen){
       dispatch({
-        type:'global/getCurUserInfo'
-      })
+        type:"global/getCurUserInfo"
+      });
     }
-  }
+  };
   filterMenu=(menuData:any,menusNameArr:any)=>{
     return menuData.filter((item:any)=>{
       if(menusNameArr.includes(item.title)){
         if(Array.isArray(item.children)){
-          item.children=this.filterMenu(item.children,menusNameArr)
+          item.children=this.filterMenu(item.children,menusNameArr);
         }
-        return true
+        return true;
       }else{
-        return false
+        return false;
       }
-    })
-  }
+    });
+  };
 
   componentDidMount(): void {
-    const {dispatch}=this.props
-    this.handleGetAccountInfo()
-    const { isPublishScreen }:any = this.state
+    const {dispatch}=this.props;
+    this.handleGetAccountInfo();
+    const { isPublishScreen }:any = this.state;
     if(!isPublishScreen){
       dispatch({
-        type:'global/getWorkspaceList'
-      })
+        type:"global/getWorkspaceList"
+      });
     }
   }
 
   render() {
-    const { routerData, location, global, history } = this.props
-    const { isPublishScreen }:any = this.state
-    const { childRoutes } = routerData
-    const { pathname } = location
-    const { menuData,userInfo, workspaceList } = global
-    const isWorkspace = window.location.href.indexOf('work-space') > -1
-    let _menuData:any = []
+    const { routerData, location, global, history } = this.props;
+    const { isPublishScreen }:any = this.state;
+    const { childRoutes } = routerData;
+    const { pathname } = location;
+    const { menuData,userInfo, workspaceList } = global;
+    const isWorkspace = window.location.href.indexOf("work-space") > -1;
+    let _menuData:any = [];
     if(userInfo){
-      const menusNameArr = (userInfo.menus || []).map((item:any)=>item.name)
-       _menuData=this.filterMenu(menuData,menusNameArr) || []
+      const menusNameArr = (userInfo.menus || []).map((item:any)=>item.name);
+       _menuData=this.filterMenu(menuData,menusNameArr) || [];
     }
 
-    const needHeader = pathname.indexOf('/dashboard/') !== -1 || pathname === '/template' || pathname.startsWith('/bigscreen') || pathname.startsWith('/publishScreen')
-    const isPathRoot = pathname === '/'
+    const needHeader = pathname.indexOf("/dashboard/") !== -1 || pathname === "/template" || pathname.startsWith("/bigscreen") || pathname.startsWith("/publishScreen");
+    const isPathRoot = pathname === "/";
     // const defaultPath =  '/dashboard-manage'
-    const defaultPath = _menuData.length ? _menuData[0].children ? _menuData[0].children[0].path : _menuData[0].path : '/'
+    const defaultPath = _menuData.length ? _menuData[0].children ? _menuData[0].children[0].path : _menuData[0].path : "/";
     return (
       <Fragment>
         {
@@ -108,7 +108,7 @@ class BasicLayout extends Component<Props, State> {
           </Layout>
         }
       </Fragment>
-    )
+    );
   }
 }
 

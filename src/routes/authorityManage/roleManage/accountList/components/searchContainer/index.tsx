@@ -1,31 +1,31 @@
-import { Input, Row, Col, Modal, Form, Select, Button,message,Space } from 'antd'
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { Input, Row, Col, Modal, Form, Select, Button,message,Space } from "antd";
+import * as React from "react";
+import { useState, useEffect } from "react";
 // import { STATUSLIST } from '@/constant/dvaModels/userManage'
 
 const  STATUSLIST = [
-  { label: '无', value: null },
-  { label: '启用', value: 0 },
-  { label: '停用', value: 1 },
-  { label: '锁定', value: 2 },
-]
+  { label: "无", value: null },
+  { label: "启用", value: 0 },
+  { label: "停用", value: 1 },
+  { label: "锁定", value: 2 },
+];
 
 
 const SearchContainer=(props:any)=>{
-  const {searchByType} = props
-  const [searchForm] = Form.useForm()
+  const {searchByType} = props;
+  const [searchForm] = Form.useForm();
   // const [name,setName] = useState('')
   // const [status, setStatus] = useState('')
 
   const searchClick = async() => {
-    const value = await searchForm.validateFields()
-    searchByType(value)
-  }
+    const value = await searchForm.validateFields();
+    searchByType(value);
+  };
 
   const resetClick = () => {
     searchForm.resetFields();
-    searchClick()
-  }
+    searchClick();
+  };
 
   // const changeInputValue = (value:any) => {
   //   setName(value)
@@ -50,7 +50,7 @@ const SearchContainer=(props:any)=>{
           STATUSLIST.map((item:any) => {
             return (
               <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
-            )
+            );
           })
         }
       </Select>
@@ -62,6 +62,6 @@ const SearchContainer=(props:any)=>{
       </Space>
     </Form.Item>
     </Form>
-  )
-}
-export default SearchContainer
+  );
+};
+export default SearchContainer;

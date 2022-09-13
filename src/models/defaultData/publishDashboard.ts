@@ -86,5 +86,5 @@ export const defaultData = {
   componentFilters: [],
   callbackArgs: {},
   callbackParamsList: [],
-  pass: '',
-}
+  pass: "",
+};

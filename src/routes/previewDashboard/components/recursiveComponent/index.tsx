@@ -1,18 +1,18 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState } from "react";
 
-import EveryComponent from '../everyComponent'
-import ReferencePanel from '@/customComponents/dashboardPreview/referencePanel'
-import DynamicPanel from '@/customComponents/dashboardPreview/dynamicPanel'
-import DrillDownPanel from '@/customComponents/dashboardPreview/drillDownPanel'
-import { getComDataWithFilters } from '@/utils/data'
+import EveryComponent from "../everyComponent";
+import ReferencePanel from "@/customComponents/dashboardPreview/referencePanel";
+import DynamicPanel from "@/customComponents/dashboardPreview/dynamicPanel";
+import DrillDownPanel from "@/customComponents/dashboardPreview/drillDownPanel";
+import { getComDataWithFilters } from "@/utils/data";
 
-import { Breadcrumb } from 'antd'
+import { Breadcrumb } from "antd";
 
-const MODULES = 'modules'
-const OPACITY = 'opacity'
+const MODULES = "modules";
+const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeReflect } = props
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeReflect } = props;
 
   // console.log('layersArr', layersArr);
 
@@ -20,23 +20,23 @@ const RecursiveComponent = (props: any) => {
     <div className='recursive-component-wrap'>
       {
         layersArr?.map((layer: any, ind: any) => {
-          let isGroup: boolean = MODULES in layer
-          let isPanel: boolean = ('panelType' in layer)
-          let targetComponent, targetPanel
+          const isGroup: boolean = MODULES in layer;
+          const isPanel: boolean = ("panelType" in layer);
+          let targetComponent, targetPanel;
           if (!isGroup) {
-            targetComponent = componentLists.find((item: any) => item.id === layer.id)
+            targetComponent = componentLists.find((item: any) => item.id === layer.id);
           }
           if (isPanel) {
-            targetPanel = panels.find((item: any) => item.id === layer.id)
+            targetPanel = panels.find((item: any) => item.id === layer.id);
           }
           // console.log('hhhhhhhhh', previewDashboard.componentData, targetComponent, layer);
 
           return (
             <div
-              data-id={isGroup ? layer.id : 'component-' + layer.id}
+              data-id={isGroup ? layer.id : "component-" + layer.id}
               key={layer.id}
               style={{
-                visibility: !layer.isShow ? 'hidden' : 'unset',
+                visibility: !layer.isShow ? "hidden" : "unset",
               }}
             >
               {
@@ -45,9 +45,9 @@ const RecursiveComponent = (props: any) => {
                     <div
                       className="panel-container"
                       style={{
-                        position: 'absolute',
-                        left: targetPanel.config.left + 'px',
-                        top: targetPanel.config.top + 'px'
+                        position: "absolute",
+                        left: targetPanel.config.left + "px",
+                        top: targetPanel.config.top + "px"
                       }}
                     >
                       <DynamicPanel
@@ -73,9 +73,9 @@ const RecursiveComponent = (props: any) => {
                       : <div
                         className="panel-container"
                         style={{
-                          position: 'absolute',
-                          left: targetPanel.config.left + 'px',
-                          top: targetPanel.config.top + 'px'
+                          position: "absolute",
+                          left: targetPanel.config.left + "px",
+                          top: targetPanel.config.top + "px"
                         }}
                       >
                         <DrillDownPanel
@@ -109,7 +109,7 @@ const RecursiveComponent = (props: any) => {
                       }
                     </div>
                     : <>
-                      <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                      <div data-id={layer.id} style={{ width: "100%", height: "100%" }}>
                         <EveryComponent
                           key={ind}
                           componentData={targetComponent}
@@ -124,12 +124,12 @@ const RecursiveComponent = (props: any) => {
                     </>
               }
             </div>
-          )
+          );
         })
       }
 
     </div>
-  )
-}
+  );
+};
 
-export default RecursiveComponent
+export default RecursiveComponent;

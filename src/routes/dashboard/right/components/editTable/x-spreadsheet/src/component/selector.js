@@ -1,6 +1,6 @@
-import { h } from './element';
-import { cssPrefix } from '../config';
-import { CellRange } from '../core/cell_range';
+import { h } from "./element";
+import { cssPrefix } from "../config";
+import { CellRange } from "../core/cell_range";
 
 const selectorHeightBorderWidth = 2 * 2 - 1;
 let startZIndex = 10;
@@ -9,22 +9,22 @@ class SelectorElement {
   constructor(useHideInput = false) {
     this.useHideInput = useHideInput;
     this.inputChange = () => {};
-    this.cornerEl = h('div', `${cssPrefix}-selector-corner`);
-    this.areaEl = h('div', `${cssPrefix}-selector-area`)
+    this.cornerEl = h("div", `${cssPrefix}-selector-corner`);
+    this.areaEl = h("div", `${cssPrefix}-selector-area`)
       .child(this.cornerEl).hide();
-    this.clipboardEl = h('div', `${cssPrefix}-selector-clipboard`).hide();
-    this.autofillEl = h('div', `${cssPrefix}-selector-autofill`).hide();
-    this.el = h('div', `${cssPrefix}-selector`)
-      .css('z-index', `${startZIndex}`)
+    this.clipboardEl = h("div", `${cssPrefix}-selector-clipboard`).hide();
+    this.autofillEl = h("div", `${cssPrefix}-selector-autofill`).hide();
+    this.el = h("div", `${cssPrefix}-selector`)
+      .css("z-index", `${startZIndex}`)
       .children(this.areaEl, this.clipboardEl, this.autofillEl)
       .hide();
     if (useHideInput) {
-      this.hideInput = h('input', '')
-        .on('compositionend', (evt) => {
+      this.hideInput = h("input", "")
+        .on("compositionend", (evt) => {
           this.inputChange(evt.target.value);
         });
-      this.el.child(this.hideInputDiv = h('div', 'hide-input').child(this.hideInput));
-      this.el.child(this.hideInputDiv = h('div', 'hide-input').child(this.hideInput));
+      this.el.child(this.hideInputDiv = h("div", "hide-input").child(this.hideInput));
+      this.el.child(this.hideInputDiv = h("div", "hide-input").child(this.hideInput));
     }
     startZIndex += 1;
   }
@@ -52,7 +52,7 @@ class SelectorElement {
     this.areaEl.offset(of).show();
     if (this.useHideInput) {
       this.hideInputDiv.offset(of);
-      this.hideInput.val('').focus();
+      this.hideInput.val("").focus();
     }
   }
 
@@ -210,7 +210,7 @@ export default class Selector {
     this.indexes = null;
     this.range = null;
     this.arange = null;
-    this.el = h('div', `${cssPrefix}-selectors`)
+    this.el = h("div", `${cssPrefix}-selectors`)
       .children(
         this.tl.el,
         this.t.el,
@@ -386,7 +386,7 @@ export default class Selector {
   }
 
   hideAutofill() {
-    ['br', 'l', 't', 'tl'].forEach((property) => {
+    ["br", "l", "t", "tl"].forEach((property) => {
       this[property].hideAutofill();
     });
   }
@@ -394,13 +394,13 @@ export default class Selector {
   showClipboard() {
     const coffset = this.data.getClipboardRect();
     setAllClipboardOffset.call(this, coffset);
-    ['br', 'l', 't', 'tl'].forEach((property) => {
+    ["br", "l", "t", "tl"].forEach((property) => {
       this[property].showClipboard();
     });
   }
 
   hideClipboard() {
-    ['br', 'l', 't', 'tl'].forEach((property) => {
+    ["br", "l", "t", "tl"].forEach((property) => {
       this[property].hideClipboard();
     });
   }

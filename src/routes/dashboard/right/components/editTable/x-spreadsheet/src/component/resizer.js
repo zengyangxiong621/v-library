@@ -1,19 +1,19 @@
 /* global window */
-import { h } from './element';
-import { mouseMoveUp } from './event';
-import { cssPrefix } from '../config';
+import { h } from "./element";
+import { mouseMoveUp } from "./event";
+import { cssPrefix } from "../config";
 
 export default class Resizer {
   constructor(vertical = false, minDistance) {
     this.moving = false;
     this.vertical = vertical;
-    this.el = h('div', `${cssPrefix}-resizer ${vertical ? 'vertical' : 'horizontal'}`).children(
-      this.unhideHoverEl = h('div', `${cssPrefix}-resizer-hover`)
-        .on('dblclick.stop', evt => this.mousedblclickHandler(evt))
-        .css('position', 'absolute').hide(),
-      this.hoverEl = h('div', `${cssPrefix}-resizer-hover`)
-        .on('mousedown.stop', evt => this.mousedownHandler(evt)),
-      this.lineEl = h('div', `${cssPrefix}-resizer-line`).hide(),
+    this.el = h("div", `${cssPrefix}-resizer ${vertical ? "vertical" : "horizontal"}`).children(
+      this.unhideHoverEl = h("div", `${cssPrefix}-resizer-hover`)
+        .on("dblclick.stop", evt => this.mousedblclickHandler(evt))
+        .css("position", "absolute").hide(),
+      this.hoverEl = h("div", `${cssPrefix}-resizer-hover`)
+        .on("mousedown.stop", evt => this.mousedownHandler(evt)),
+      this.lineEl = h("div", `${cssPrefix}-resizer-line`).hide(),
     ).hide();
     // cell rect
     this.cRect = null;
@@ -90,12 +90,12 @@ export default class Resizer {
         if (vertical) {
           distance += e.movementX;
           if (distance > minDistance) {
-            el.css('left', `${cRect.left + distance}px`);
+            el.css("left", `${cRect.left + distance}px`);
           }
         } else {
           distance += e.movementY;
           if (distance > minDistance) {
-            el.css('top', `${cRect.top + distance}px`);
+            el.css("top", `${cRect.top + distance}px`);
           }
         }
         startEvt = e;

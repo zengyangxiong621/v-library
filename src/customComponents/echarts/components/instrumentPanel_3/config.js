@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
   "name": "定制指标卡3", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -51,93 +51,93 @@ const componentDefaultConfig = {
   events: [],
   "config": [
     {
-      displayName: '位置尺寸',
-      name: 'dimension',
-      type: 'dimensionGroup',
+      displayName: "位置尺寸",
+      name: "dimension",
+      type: "dimensionGroup",
       config: {
         lock: false,
       },
       value: [
         {
-          displayName: 'X轴坐标',
-          name: 'left',
+          displayName: "X轴坐标",
+          name: "left",
           value: 267,
         },
         {
-          displayName: 'Y轴坐标',
-          name: 'top',
+          displayName: "Y轴坐标",
+          name: "top",
           value: 73,
         },
         {
-          displayName: '宽度',
-          name: 'width',
+          displayName: "宽度",
+          name: "width",
           value: 500,
         },
         {
-          displayName: '高度',
-          name: 'height',
+          displayName: "高度",
+          name: "height",
           value: 500,
         },
       ],
     },
     {
-      displayName: '默认隐藏',
-      name: 'hideDefault',
-      type: 'checkBox',
+      displayName: "默认隐藏",
+      name: "hideDefault",
+      type: "checkBox",
       value: false,
     },
     {
-      name:'allSettings',
-      displayName:'全部设置',
-      type:'tabs',
-      activeKey:'1', // 默认选中第一项
+      name:"allSettings",
+      displayName:"全部设置",
+      type:"tabs",
+      activeKey:"1", // 默认选中第一项
       options:[
         {
-          key:'biaopan',
-          name:'表盘',
+          key:"biaopan",
+          name:"表盘",
           value:[
             {
-              'name': 'outerSpeed',
-              'displayName': '外圆速率',
-              'value': 0.2,
-              type:'range',
+              "name": "outerSpeed",
+              "displayName": "外圆速率",
+              "value": 0.2,
+              type:"range",
               "config": {
                   "min": 0,
                   "max": 1,
                   "step": 0.01,
-                   suffix:'',  // 输入框后缀
+                   suffix:"",  // 输入框后缀
               }
             },
             {
-              'name': 'innerSpeed',
-              'displayName': '内圆速率',
-              'value': 0.2,
-              type:'range',
+              "name": "innerSpeed",
+              "displayName": "内圆速率",
+              "value": 0.2,
+              type:"range",
               "config": {
                   "min": 0,
                   "max": 1,
                   "step": 0.01,
-                   suffix:'',  // 输入框后缀
+                   suffix:"",  // 输入框后缀
               }
             },
           ]
         },
         {
-          key:'zhibiao',
-          name:'指标',
+          key:"zhibiao",
+          name:"指标",
           value:[
             {
-              'name': 'numberStyles',
-              'displayName': '数值',
-              'type': 'collapse',
+              "name": "numberStyles",
+              "displayName": "数值",
+              "type": "collapse",
               hasSwitch:false, // 是否有切换按钮
               defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                  'name': 'showNumberStyles',
-                  'displayName': '',
-                  'value': true,
-                  'type': 'switch',
+                  "name": "showNumberStyles",
+                  "displayName": "",
+                  "value": true,
+                  "type": "switch",
                 },
                 {
                   "name": "textStylerNumber",
@@ -158,7 +158,7 @@ const componentDefaultConfig = {
                       "name": "color",
                       "displayName": "",
                       "type": "color",
-                      "value": '#eeff00'
+                      "value": "#eeff00"
                     },
                     {
                       "name": "bold",
@@ -184,26 +184,26 @@ const componentDefaultConfig = {
                 },
                 {
                   name:"offsetNumber",
-                  displayName:'偏移',
-                  type:'inputNumber2',
+                  displayName:"偏移",
+                  type:"inputNumber2",
                   showDetail:true, // 是否展示下面的文字说明
                   value:[
                     {
-                      name:'horizontal',
-                      displayName:'水平',
-                      type:'number',
+                      name:"horizontal",
+                      displayName:"水平",
+                      type:"number",
                       value:0,
                       config:{
-                        suffix:'px',  // 输入框后缀
+                        suffix:"px",  // 输入框后缀
                       }
                   },
                   {
-                      name:'vertical',
-                      displayName:'垂直',
-                      type:'number',
+                      name:"vertical",
+                      displayName:"垂直",
+                      type:"number",
                       value:0,
                       config:{
-                        suffix:'px',  // 输入框后缀
+                        suffix:"px",  // 输入框后缀
                       }
                     },
                   ]
@@ -211,17 +211,17 @@ const componentDefaultConfig = {
               ]
             },
             {
-              'name': 'unitStyles',
-              'displayName': '数值描述',
-              'type': 'collapse',
+              "name": "unitStyles",
+              "displayName": "数值描述",
+              "type": "collapse",
               hasSwitch:false, // 是否有切换按钮
               defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                    'name': 'showUnitStyles',
-                    'displayName': '',
-                    'value': true,
-                    'type': 'switch',
+                    "name": "showUnitStyles",
+                    "displayName": "",
+                    "value": true,
+                    "type": "switch",
                 },
                 {
                   "name": "textStylerUnit",
@@ -242,7 +242,7 @@ const componentDefaultConfig = {
                       "name": "color",
                       "displayName": "",
                       "type": "color",
-                      "value": '#ffffff'
+                      "value": "#ffffff"
                     },
                     {
                       "name": "bold",
@@ -268,26 +268,26 @@ const componentDefaultConfig = {
                 },
                 {
                   name:"offsetUnit",
-                  displayName:'偏移',
-                  type:'inputNumber2',
+                  displayName:"偏移",
+                  type:"inputNumber2",
                   showDetail:true, // 是否展示下面的文字说明
                   value:[
                     {
-                      name:'horizontal',
-                      displayName:'水平',
-                      type:'number',
+                      name:"horizontal",
+                      displayName:"水平",
+                      type:"number",
                       value:0,
                       config:{
-                        suffix:'px',  // 输入框后缀
+                        suffix:"px",  // 输入框后缀
                       }
                   },
                   {
-                      name:'vertical',
-                      displayName:'垂直',
-                      type:'number',
+                      name:"vertical",
+                      displayName:"垂直",
+                      type:"number",
                       value:0,
                       config:{
-                        suffix:'px',  // 输入框后缀
+                        suffix:"px",  // 输入框后缀
                       }
                     },
                   ]
@@ -297,8 +297,8 @@ const componentDefaultConfig = {
           ]
         },
         {
-          key:'biaoti',
-          name:'标题',
+          key:"biaoti",
+          name:"标题",
           value:[
             {
               "name": "textStyleTitle",
@@ -319,7 +319,7 @@ const componentDefaultConfig = {
                   "name": "color",
                   "displayName": "",
                   "type": "color",
-                  "value": '#ffffff'
+                  "value": "#ffffff"
                 },
                 {
                   "name": "bold",
@@ -345,37 +345,37 @@ const componentDefaultConfig = {
             },
             {
               name:"levelStyleTitle",
-              displayName:'等级样式',
-              type:'chartText',
+              displayName:"等级样式",
+              type:"chartText",
               value:{
-                fontFamily:'Microsoft Yahei',
+                fontFamily:"Microsoft Yahei",
                 fontSize:28,
-                color:'#40DF10',
-                fontWeight:'normal' // bold bolder lighter
+                color:"#40DF10",
+                fontWeight:"normal" // bold bolder lighter
               }
             },
             {
               name:"offsetTitle",
-              displayName:'偏移',
-              type:'inputNumber2',
+              displayName:"偏移",
+              type:"inputNumber2",
               showDetail:true, // 是否展示下面的文字说明
               value:[
                 {
-                  name:'horizontal',
-                  displayName:'水平',
-                  type:'number',
+                  name:"horizontal",
+                  displayName:"水平",
+                  type:"number",
                   value:0,
                   config:{
-                    suffix:'px',  // 输入框后缀
+                    suffix:"px",  // 输入框后缀
                   }
               },
               {
-                  name:'vertical',
-                  displayName:'垂直',
-                  type:'number',
+                  name:"vertical",
+                  displayName:"垂直",
+                  type:"number",
                   value:0,
                   config:{
-                    suffix:'px',  // 输入框后缀
+                    suffix:"px",  // 输入框后缀
                   }
                 },
               ]

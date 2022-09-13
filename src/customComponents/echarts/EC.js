@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import * as echarts from 'echarts';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import * as echarts from "echarts";
+import PropTypes from "prop-types";
 // import echarts from 'echarts/lib/echarts';
 // import resizeMe from '@/decorator/resizeMe';
-import isEqual from 'react-fast-compare';
+import isEqual from "react-fast-compare";
 
 /**
  * 基于ECharts 4的简单封装 fork自https://github.com/hustcc/echarts-for-react/blob/master/src/core.jsx
@@ -45,11 +45,11 @@ class ECharts extends Component {
 
     // 当这些属性保持不变的时候，不 setOption
     const pickKeys = [
-      'option',
-      'notMerge',
-      'lazyUpdate',
-      'showLoading',
-      'loadingOption'
+      "option",
+      "notMerge",
+      "lazyUpdate",
+      "showLoading",
+      "loadingOption"
     ];
     if (!pickKeys.some(item => !isEqual(prevProps[item], this.props[item]))) {
       return;
@@ -86,7 +86,7 @@ class ECharts extends Component {
     this.echartObj = this.renderEchartDom();
     this.bindEvents(this.echartObj, onEvents || {});
     // on chart ready
-    if (typeof onChartReady === 'function')
+    if (typeof onChartReady === "function")
       this.props.onChartReady(this.echartObj);
   };
 
@@ -94,7 +94,7 @@ class ECharts extends Component {
   bindEvents = (instance, events) => {
     const _bindEvent = (eventName, func) => {
       // ignore the event config which not satisfy
-      if (typeof eventName === 'string' && typeof func === 'function') {
+      if (typeof eventName === "string" && typeof func === "function") {
         // binding event
         // instance.off(eventName); // 已经 dispose 在重建，所以无需 off 操作
         instance.on(eventName, param => {
@@ -169,14 +169,14 @@ ECharts.propTypes = {
   onEvents: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   opts: PropTypes.shape({
     devicePixelRatio: PropTypes.number,
-    renderer: PropTypes.oneOf(['canvas', 'svg']),
+    renderer: PropTypes.oneOf(["canvas", "svg"]),
     width: PropTypes.oneOfType([
       PropTypes.number,
-      PropTypes.oneOf([null, undefined, 'auto'])
+      PropTypes.oneOf([null, undefined, "auto"])
     ]),
     height: PropTypes.oneOfType([
       PropTypes.number,
-      PropTypes.oneOf([null, undefined, 'auto'])
+      PropTypes.oneOf([null, undefined, "auto"])
     ]),
   }),
   shouldSetOption: PropTypes.func,
@@ -188,10 +188,10 @@ ECharts.defaultProps = {
   lazyUpdate: false,
   style: {},
   size: {
-    width: '100%',
-    height: '100%'
+    width: "100%",
+    height: "100%"
   },
-  className: '',
+  className: "",
   theme: null,
   onChartReady: () => {}, 
   showLoading: false,

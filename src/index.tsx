@@ -1,20 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import dva from 'dva';
-import { Router } from 'dva/router';
-import { createBrowserHistory } from 'history'
-import reportWebVitals from './reportWebVitals';
-import { authorize, forwardLogin,GetQueryString } from './services/loginApi'
-import {localStore} from "./services/LocalStoreService"
+import React from "react";
+import ReactDOM from "react-dom";
+import dva from "dva";
+import { Router } from "dva/router";
+import { createBrowserHistory } from "history";
+import reportWebVitals from "./reportWebVitals";
+import { authorize, forwardLogin,GetQueryString } from "./services/loginApi";
+import {localStore} from "./services/LocalStoreService";
 
-import './index.css';
+import "./index.css";
 import "antd/dist/antd.css";
-import '../src/assets/iconfont/iconfont.css';
-import './assets/fonts/iconfont.css'
-import { ConfigProvider, message, Button } from 'antd';
+import "../src/assets/iconfont/iconfont.css";
+import "./assets/fonts/iconfont.css";
+import { ConfigProvider, message, Button } from "antd";
 
-import { createRoutes } from './utils/core';
-import RoutesConfig from './routerConfig';
+import { createRoutes } from "./utils/core";
+import RoutesConfig from "./routerConfig";
 message.config({
   duration: 2,
   maxCount: 1,
@@ -24,10 +24,10 @@ message.config({
 // -> 初始化
 const app = dva({
   history: createBrowserHistory()
-})
+});
 
 // -> 注册全局模型
-app.model(require('./models/global').default);
+app.model(require("./models/global").default);
 
 const init = () => {
   // -> 初始化路由
@@ -37,36 +37,36 @@ const init = () => {
     </div>
   ));
   // -> Start
-  app.start('#root');
-}
+  app.start("#root");
+};
 
 const checkToken = async() => {
   // 发布的大屏不走登录校验过程
-  const isPublishScreen = window.location.href.indexOf('publishScreen') > -1
+  const isPublishScreen = window.location.href.indexOf("publishScreen") > -1;
   if(isPublishScreen){
-    init()
+    init();
   }else{
-    const ticket = GetQueryString('ticket')
+    const ticket = GetQueryString("ticket");
     // 入口文件中校验登录信息
-    const token = localStore.getToken()
+    const token = localStore.getToken();
     const pn = location.origin + location.pathname;
     if(!token){
       try{
-        await authorize()
-        init()
+        await authorize();
+        init();
       }catch(err){
-        if (!pn.endsWith('/login')) {
-          forwardLogin()
+        if (!pn.endsWith("/login")) {
+          forwardLogin();
         }else{
-          init()
+          init();
         }
       }
     }else{
-      init()
+      init();
     }
   }
-}
-checkToken()
+};
+checkToken();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

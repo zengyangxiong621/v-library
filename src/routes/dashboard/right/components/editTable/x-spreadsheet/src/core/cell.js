@@ -1,5 +1,5 @@
-import { expr2xy, xy2expr } from './alphabet';
-import { numberCalc } from './helper';
+import { expr2xy, xy2expr } from "./alphabet";
+import { numberCalc } from "./helper";
 
 // Converting infix expression to a suffix expression
 // src: AVERAGE(SUM(A1,A2), B1) + 50 + B20
@@ -9,32 +9,32 @@ const infixExprToSuffixExpr = (src) => {
   const stack = [];
   let subStrs = []; // SUM, A1, B2, 50 ...
   let fnArgType = 0; // 1 => , 2 => :
-  let fnArgOperator = '';
+  let fnArgOperator = "";
   let fnArgsLen = 1; // A1,A2,A3...
-  let oldc = '';
+  let oldc = "";
   for (let i = 0; i < src.length; i += 1) {
     const c = src.charAt(i);
-    if (c !== ' ') {
-      if (c >= 'a' && c <= 'z') {
+    if (c !== " ") {
+      if (c >= "a" && c <= "z") {
         subStrs.push(c.toUpperCase());
-      } else if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || c === '.') {
+      } else if ((c >= "0" && c <= "9") || (c >= "A" && c <= "Z") || c === ".") {
         subStrs.push(c);
-      } else if (c === '"') {
+      } else if (c === "\"") {
         i += 1;
-        while (src.charAt(i) !== '"') {
+        while (src.charAt(i) !== "\"") {
           subStrs.push(src.charAt(i));
           i += 1;
         }
-        stack.push(`"${subStrs.join('')}`);
+        stack.push(`"${subStrs.join("")}`);
         subStrs = [];
-      } else if (c === '-' && /[+\-*/,(]/.test(oldc)) {
+      } else if (c === "-" && /[+\-*/,(]/.test(oldc)) {
         subStrs.push(c);
       } else {
         // console.log('subStrs:', subStrs.join(''), stack);
-        if (c !== '(' && subStrs.length > 0) {
-          stack.push(subStrs.join(''));
+        if (c !== "(" && subStrs.length > 0) {
+          stack.push(subStrs.join(""));
         }
-        if (c === ')') {
+        if (c === ")") {
           let c1 = operatorStack.pop();
           if (fnArgType === 2) {
             // fn argument range => A1:B5
@@ -60,48 +60,48 @@ const infixExprToSuffixExpr = (src) => {
             fnArgsLen = 1;
           } else {
             // console.log('c1:', c1, fnArgType, stack, operatorStack);
-            while (c1 !== '(') {
+            while (c1 !== "(") {
               stack.push(c1);
               if (operatorStack.length <= 0) break;
               c1 = operatorStack.pop();
             }
           }
           fnArgType = 0;
-        } else if (c === '=' || c === '>' || c === '<') {
+        } else if (c === "=" || c === ">" || c === "<") {
           const nc = src.charAt(i + 1);
           fnArgOperator = c;
-          if (nc === '=' || nc === '-') {
+          if (nc === "=" || nc === "-") {
             fnArgOperator += nc;
             i += 1;
           }
           fnArgType = 3;
-        } else if (c === ':') {
+        } else if (c === ":") {
           fnArgType = 2;
-        } else if (c === ',') {
+        } else if (c === ",") {
           if (fnArgType === 3) {
             stack.push(fnArgOperator);
           }
           fnArgType = 1;
           fnArgsLen += 1;
-        } else if (c === '(' && subStrs.length > 0) {
+        } else if (c === "(" && subStrs.length > 0) {
           // function
-          operatorStack.push(subStrs.join(''));
+          operatorStack.push(subStrs.join(""));
         } else {
           // priority: */ > +-
           // console.log('xxxx:', operatorStack, c, stack);
-          if (operatorStack.length > 0 && (c === '+' || c === '-')) {
+          if (operatorStack.length > 0 && (c === "+" || c === "-")) {
             let top = operatorStack[operatorStack.length - 1];
-            if (top !== '(') stack.push(operatorStack.pop());
-            if (top === '*' || top === '/') {
+            if (top !== "(") stack.push(operatorStack.pop());
+            if (top === "*" || top === "/") {
               while (operatorStack.length > 0) {
                 top = operatorStack[operatorStack.length - 1];
-                if (top !== '(') stack.push(operatorStack.pop());
+                if (top !== "(") stack.push(operatorStack.pop());
                 else break;
               }
             }
           } else if (operatorStack.length > 0) {
             const top = operatorStack[operatorStack.length - 1];
-            if (top === '*' || top === '/') stack.push(operatorStack.pop());
+            if (top === "*" || top === "/") stack.push(operatorStack.pop());
           }
           operatorStack.push(c);
         }
@@ -111,7 +111,7 @@ const infixExprToSuffixExpr = (src) => {
     }
   }
   if (subStrs.length > 0) {
-    stack.push(subStrs.join(''));
+    stack.push(subStrs.join(""));
   }
   while (operatorStack.length > 0) {
     stack.push(operatorStack.pop());
@@ -122,15 +122,15 @@ const infixExprToSuffixExpr = (src) => {
 const evalSubExpr = (subExpr, cellRender) => {
   const [fl] = subExpr;
   let expr = subExpr;
-  if (fl === '"') {
+  if (fl === "\"") {
     return subExpr.substring(1);
   }
   let ret = 1;
-  if (fl === '-') {
+  if (fl === "-") {
     expr = subExpr.substring(1);
     ret = -1;
   }
-  if (expr[0] >= '0' && expr[0] <= '9') {
+  if (expr[0] >= "0" && expr[0] <= "9") {
     return ret * Number(expr);
   }
   const [x, y] = expr2xy(expr);
@@ -148,37 +148,37 @@ const evalSuffixExpr = (srcStack, formulaMap, cellRender, cellList) => {
     // console.log(':::>>>', srcStack[i]);
     const expr = srcStack[i];
     const fc = expr[0];
-    if (expr === '+') {
+    if (expr === "+") {
       const top = stack.pop();
-      stack.push(numberCalc('+', stack.pop(), top));
-    } else if (expr === '-') {
+      stack.push(numberCalc("+", stack.pop(), top));
+    } else if (expr === "-") {
       if (stack.length === 1) {
         const top = stack.pop();
-        stack.push(numberCalc('*', top, -1));
+        stack.push(numberCalc("*", top, -1));
       } else {
         const top = stack.pop();
-        stack.push(numberCalc('-', stack.pop(), top));
+        stack.push(numberCalc("-", stack.pop(), top));
       }
-    } else if (expr === '*') {
-      stack.push(numberCalc('*', stack.pop(), stack.pop()));
-    } else if (expr === '/') {
+    } else if (expr === "*") {
+      stack.push(numberCalc("*", stack.pop(), stack.pop()));
+    } else if (expr === "/") {
       const top = stack.pop();
-      stack.push(numberCalc('/', stack.pop(), top));
-    } else if (fc === '=' || fc === '>' || fc === '<') {
+      stack.push(numberCalc("/", stack.pop(), top));
+    } else if (fc === "=" || fc === ">" || fc === "<") {
       let top = stack.pop();
       if (!Number.isNaN(top)) top = Number(top);
       let left = stack.pop();
       if (!Number.isNaN(left)) left = Number(left);
       let ret = false;
-      if (fc === '=') {
+      if (fc === "=") {
         ret = (left === top);
-      } else if (expr === '>') {
+      } else if (expr === ">") {
         ret = (left > top);
-      } else if (expr === '>=') {
+      } else if (expr === ">=") {
         ret = (left >= top);
-      } else if (expr === '<') {
+      } else if (expr === "<") {
         ret = (left < top);
-      } else if (expr === '<=') {
+      } else if (expr === "<=") {
         ret = (left <= top);
       }
       stack.push(ret);
@@ -193,7 +193,7 @@ const evalSuffixExpr = (srcStack, formulaMap, cellRender, cellList) => {
       if (cellList.includes(expr)) {
         return 0;
       }
-      if ((fc >= 'a' && fc <= 'z') || (fc >= 'A' && fc <= 'Z')) {
+      if ((fc >= "a" && fc <= "z") || (fc >= "A" && fc <= "Z")) {
         cellList.push(expr);
       }
       stack.push(evalSubExpr(expr, cellRender));
@@ -205,7 +205,7 @@ const evalSuffixExpr = (srcStack, formulaMap, cellRender, cellList) => {
 };
 
 const cellRender = (src, formulaMap, getCellText, cellList = []) => {
-  if (src[0] === '=') {
+  if (src[0] === "=") {
     const stack = infixExprToSuffixExpr(src.substring(1));
     if (stack.length <= 0) return src;
     return evalSuffixExpr(

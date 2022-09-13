@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
   "name": "仪表盘", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -41,87 +41,87 @@ const componentDefaultConfig = {
   events: [],
   "config": [
     {
-      displayName: '位置尺寸',
-      name: 'dimension',
-      type: 'dimensionGroup',
+      displayName: "位置尺寸",
+      name: "dimension",
+      type: "dimensionGroup",
       config: {
         lock: false,
       },
       value: [
         {
-          displayName: 'X轴坐标',
-          name: 'left',
+          displayName: "X轴坐标",
+          name: "left",
           value: 267,
         },
         {
-          displayName: 'Y轴坐标',
-          name: 'top',
+          displayName: "Y轴坐标",
+          name: "top",
           value: 73,
         },
         {
-          displayName: '宽度',
-          name: 'width',
+          displayName: "宽度",
+          name: "width",
           value: 600,
         },
         {
-          displayName: '高度',
-          name: 'height',
+          displayName: "高度",
+          name: "height",
           value: 600,
         },
       ],
     },
     {
-      displayName: '默认隐藏',
-      name: 'hideDefault',
-      type: 'checkBox',
+      displayName: "默认隐藏",
+      name: "hideDefault",
+      type: "checkBox",
       value: false,
     },
     {
-      name:'allSettings',
-      displayName:'全部设置',
-      type:'tabs',
-      activeKey:'1', // 默认选中第一项
+      name:"allSettings",
+      displayName:"全部设置",
+      type:"tabs",
+      activeKey:"1", // 默认选中第一项
       options:[
         {
-          key:'biaopan',
-          name:'圆环',
+          key:"biaopan",
+          name:"圆环",
           value:[
             {
-              'name': 'outerRadius',
-              'displayName': '外环半径',
-              'value': 0.9,
-              type:'range',
+              "name": "outerRadius",
+              "displayName": "外环半径",
+              "value": 0.9,
+              type:"range",
               "config": {
                   "min": 0,
                   "max": 2,
                   "step": 0.01,
-                   suffix:'',  // 输入框后缀
+                   suffix:"",  // 输入框后缀
               }
             },
             {
-              'name': 'innerRadius',
-              'displayName': '内环半径',
-              'value': 0.5,
-              type:'range',
+              "name": "innerRadius",
+              "displayName": "内环半径",
+              "value": 0.5,
+              type:"range",
               "config": {
                   "min": 0,
                   "max": 1,
                   "step": 0.01,
-                   suffix:'',  // 输入框后缀
+                   suffix:"",  // 输入框后缀
               }
             },
             {
-              'name': 'axisLine',
-              'displayName': '仪表盘轴线',
-              'type': 'collapse',
+              "name": "axisLine",
+              "displayName": "仪表盘轴线",
+              "type": "collapse",
               hasSwitch:false, // 是否有切换按钮
               defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                  'name': 'showTitleStyles',
-                  'displayName': '',
-                  'value': true,
-                  'type': 'switch',
+                  "name": "showTitleStyles",
+                  "displayName": "",
+                  "value": true,
+                  "type": "switch",
                 },
                 {
                   displayName: "颜色",
@@ -132,17 +132,17 @@ const componentDefaultConfig = {
               ]
             },
             {
-              'name': 'progress',
-              'displayName': '进度条颜色',
-              'type': 'collapse',
+              "name": "progress",
+              "displayName": "进度条颜色",
+              "type": "collapse",
               hasSwitch:false, // 是否有切换按钮
               defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                  'name': 'showProgresstyles',
-                  'displayName': '',
-                  'value': true,
-                  'type': 'switch',
+                  "name": "showProgresstyles",
+                  "displayName": "",
+                  "value": true,
+                  "type": "switch",
                 },
                 {
                   displayName: "颜色一",
@@ -161,47 +161,47 @@ const componentDefaultConfig = {
           ]
         },
         {
-          key:'zhibiao',
-          name:'指标',
+          key:"zhibiao",
+          name:"指标",
           value:[
             {
               name:"numberRange",
-              displayName:'数值范围',
-              type:'inputNumber2',
+              displayName:"数值范围",
+              type:"inputNumber2",
               showDetail:true, // 是否展示下面的文字说明
               value:[
                 {
-                  name:'min',
-                  displayName:'最小值',
-                  type:'number',
+                  name:"min",
+                  displayName:"最小值",
+                  type:"number",
                   value:0,
                   config:{
-                    suffix:'',  // 输入框后缀
+                    suffix:"",  // 输入框后缀
                   }
               },
               {
-                  name:'max',
-                  displayName:'最大值',
-                  type:'number',
+                  name:"max",
+                  displayName:"最大值",
+                  type:"number",
                   value:100,
                   config:{
-                    suffix:'',  // 输入框后缀
+                    suffix:"",  // 输入框后缀
                   }
                 },
               ]
             },
             {
-              'name': 'numberStyles',
-              'displayName': '数值',
-              'type': 'collapse',
+              "name": "numberStyles",
+              "displayName": "数值",
+              "type": "collapse",
               hasSwitch:false, // 是否有切换按钮
               defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                    'name': 'showNumberStyles',
-                    'displayName': '',
-                    'value': true,
-                    'type': 'switch',
+                    "name": "showNumberStyles",
+                    "displayName": "",
+                    "value": true,
+                    "type": "switch",
                 },
                 {
                   "name": "textStylerNumbe",
@@ -222,7 +222,7 @@ const componentDefaultConfig = {
                       "name": "color",
                       "displayName": "",
                       "type": "color",
-                      "value": '#ffffff'
+                      "value": "#ffffff"
                     },
                     {
                       "name": "bold",
@@ -248,26 +248,26 @@ const componentDefaultConfig = {
                 },
                 {
                   name:"offset",
-                  displayName:'偏移',
-                  type:'inputNumber2',
+                  displayName:"偏移",
+                  type:"inputNumber2",
                   showDetail:true, // 是否展示下面的文字说明
                   value:[
                     {
-                      name:'horizontal',
-                      displayName:'水平',
-                      type:'number',
+                      name:"horizontal",
+                      displayName:"水平",
+                      type:"number",
                       value:0,
                       config:{
-                        suffix:'px',  // 输入框后缀
+                        suffix:"px",  // 输入框后缀
                       }
                   },
                   {
-                      name:'vertical',
-                      displayName:'垂直',
-                      type:'number',
+                      name:"vertical",
+                      displayName:"垂直",
+                      type:"number",
                       value:-20,
                       config:{
-                        suffix:'px',  // 输入框后缀
+                        suffix:"px",  // 输入框后缀
                       }
                     },
                   ]
@@ -275,17 +275,17 @@ const componentDefaultConfig = {
               ]
             },
             {
-              'name': 'unitStyles',
-              'displayName': '单位',
-              'type': 'collapse',
+              "name": "unitStyles",
+              "displayName": "单位",
+              "type": "collapse",
               hasSwitch:false, // 是否有切换按钮
               defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                    'name': 'showUnitStyles',
-                    'displayName': '',
-                    'value': true,
-                    'type': 'switch',
+                    "name": "showUnitStyles",
+                    "displayName": "",
+                    "value": true,
+                    "type": "switch",
                 },
                 {
                   "name": "textStyleUnit",
@@ -306,7 +306,7 @@ const componentDefaultConfig = {
                       "name": "color",
                       "displayName": "",
                       "type": "color",
-                      "value": '#ffffff'
+                      "value": "#ffffff"
                     },
                     {
                       "name": "bold",
@@ -331,9 +331,9 @@ const componentDefaultConfig = {
                   ]
                 },
                 {
-                  name:'padding',
-                  displayName:'边距',
-                  type:'padding',
+                  name:"padding",
+                  displayName:"边距",
+                  type:"padding",
                   value:{
                       top:30,
                       right:0,
@@ -344,27 +344,27 @@ const componentDefaultConfig = {
               ]
             },
             {
-              'name': 'axisLabelStyles',
-              'displayName': '刻度标签',
-              'type': 'collapse',
+              "name": "axisLabelStyles",
+              "displayName": "刻度标签",
+              "type": "collapse",
               hasSwitch:false, // 是否有切换按钮
               defaultExpand:false,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                    'name': 'showUnitStyles',
-                    'displayName': '',
-                    'value': true,
-                    'type': 'switch',
+                    "name": "showUnitStyles",
+                    "displayName": "",
+                    "value": true,
+                    "type": "switch",
                 },
                 {
                   name:"textStyleAxisLabel",
-                  displayName:'文本样式',
-                  type:'chartText',
+                  displayName:"文本样式",
+                  type:"chartText",
                   value:{
-                      fontFamily:'Microsoft Yahei',
+                      fontFamily:"Microsoft Yahei",
                       fontSize:38,
-                      color:'#ffffff',
-                      fontWeight:'normal' // bold bolder lighter
+                      color:"#ffffff",
+                      fontWeight:"normal" // bold bolder lighter
                   }
                 },
               ]
@@ -372,8 +372,8 @@ const componentDefaultConfig = {
           ]
         },
         {
-          key:'biaoti',
-          name:'标题',
+          key:"biaoti",
+          name:"标题",
           value:[
             {
               "name": "textStyleTitle",
@@ -394,7 +394,7 @@ const componentDefaultConfig = {
                   "name": "color",
                   "displayName": "",
                   "type": "color",
-                  "value": '#ffffff'
+                  "value": "#ffffff"
                 },
                 {
                   "name": "bold",
@@ -420,26 +420,26 @@ const componentDefaultConfig = {
             },
             {
               name:"offset",
-              displayName:'偏移',
-              type:'inputNumber2',
+              displayName:"偏移",
+              type:"inputNumber2",
               showDetail:true, // 是否展示下面的文字说明
               value:[
                 {
-                  name:'horizontal',
-                  displayName:'水平',
-                  type:'number',
+                  name:"horizontal",
+                  displayName:"水平",
+                  type:"number",
                   value:0,
                   config:{
-                    suffix:'px',  // 输入框后缀
+                    suffix:"px",  // 输入框后缀
                   }
               },
               {
-                  name:'vertical',
-                  displayName:'垂直',
-                  type:'number',
+                  name:"vertical",
+                  displayName:"垂直",
+                  type:"number",
                   value:0,
                   config:{
-                    suffix:'px',  // 输入框后缀
+                    suffix:"px",  // 输入框后缀
                   }
                 },
               ]

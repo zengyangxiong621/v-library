@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
+  "id": "121", //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
   "name": "音视频组件", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -25,7 +25,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "url":'https://stream7.iqilu.com/10339/upload_transcode/202002/18/20200218093206z8V1JuPlpe.mp4'
+        "url":"https://stream7.iqilu.com/10339/upload_transcode/202002/18/20200218093206z8V1JuPlpe.mp4"
       }
     ],
     "fields": [
@@ -74,10 +74,10 @@ const componentDefaultConfig = {
       ]
     },
     {
-      'name': 'mediaFile',
-      'displayName': '视频上传',
-      'type': 'media',
-      'value': 'https://stream7.iqilu.com/10339/upload_transcode/202002/18/20200218093206z8V1JuPlpe.mp4', // 有背景图则返回背景图的url，没有背景图返回空或者null
+      "name": "mediaFile",
+      "displayName": "视频上传",
+      "type": "media",
+      "value": "https://stream7.iqilu.com/10339/upload_transcode/202002/18/20200218093206z8V1JuPlpe.mp4", // 有背景图则返回背景图的url，没有背景图返回空或者null
     },
     {
       "name": "hideDefault",
@@ -111,15 +111,15 @@ const componentDefaultConfig = {
     }
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

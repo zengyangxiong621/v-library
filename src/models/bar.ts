@@ -145,7 +145,7 @@ export default {
       { payload: { dashboardId, isPanel, stateId, panelId }, cb }: any,
       { call, put, select }: any
     ): any {
-      let bar: any = yield select(({ bar }: any) => bar);
+      const bar: any = yield select(({ bar }: any) => bar);
       if (dashboardId !== bar.dashboardId) {
         // 获取回调参数列表
         const callbackParamsList = yield http({
@@ -160,7 +160,7 @@ export default {
           type: "getDataContainerList",
           payload: dashboardId,
         });
-        let bar: any = yield select(({ bar }: any) => bar);
+        const bar: any = yield select(({ bar }: any) => bar);
         bar.dataContainerList.forEach(async (item: any) => {
           let data: any = null;
           item.enable = item.modules.length > 0;
@@ -249,7 +249,7 @@ export default {
       });
     },
     *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
-      const curWorkspace:any = localStorage.getItem('curWorkspace')
+      const curWorkspace:any = localStorage.getItem("curWorkspace");
       const spaceId = JSON.parse(curWorkspace)?.id;
       const data = yield http({
         url: "/visual/application/queryAppList",
@@ -311,20 +311,33 @@ export default {
           }
         );
         const layerPanels: any = layersPanelsFlat(layers);
-        const func = async (layerPanel: any) => {
+        const getPanelConfigFunc = async (layerPanel: any) => {
           try {
             const panelConfig = await http({
-              url: `/visual/panel/detail/${layerPanel.id}`,
+              url: `/visual/panel/detail/${ layerPanel.id }`,
               method: "get",
             });
             return panelConfig;
-          } catch (e) {
+          } catch(e) {
             return null;
           }
         };
-        const panels: Array<IPanel> = yield Promise.all(
-          layerPanels.map((item: any) => func(item))
-        );
+        const getPanelStatusDetails = async (panelStatus: {name: string; id: string}) => {
+          try {
+            const { layers, components, dashboardConfig, dashboardName }  = await http(
+              {
+              url: `/visual/application/dashboard/detail/${ isPanel ? stateId : dashboardId}`,
+              method: "get",
+            });
+          } catch(e) {
+            return null;
+          }
+        };
+        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
+        // const allPanelStatusDetails: Array<any> = yield Promise.all(panels.map((item: IPanel)=> {
+        //
+        // }))
+
         yield (layers = deepForEach(
           layers,
           (layer: ILayerGroup | ILayerComponent) => {
@@ -421,9 +434,9 @@ export default {
       const drillDownParentReflect: any = JSON.parse(
         (localStorage as any).getItem("allHasParentReflect")
       );
-      let updateDataForDrillDownComp = deepClone(componentData);
+      const updateDataForDrillDownComp = deepClone(componentData);
       try {
-        for (let idKey in updateDataForDrillDownComp) {
+        for (const idKey in updateDataForDrillDownComp) {
           if (drillDownParentReflect && drillDownParentReflect[idKey]) {
             updateDataForDrillDownComp[idKey] =
               drillDownParentReflect[idKey].parentData;
@@ -592,7 +605,7 @@ export default {
           method: "delete",
           body: payload,
         });
-        if (layers) {
+        if(layers) {
           const filterNullLayers = clearNullGroup(layers);
           yield put({
             type: "updateTree",
@@ -910,9 +923,9 @@ export default {
     },
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
-      const curWorkspace:any = localStorage.getItem('curWorkspace')
+      const curWorkspace:any = localStorage.getItem("curWorkspace");
       const spaceId = JSON.parse(curWorkspace)?.id;
-      let data = yield http({
+      const data = yield http({
         url: `/visual/resource/queryResourceTypeList?spaceId=${spaceId}`,
         method: "get",
       });
@@ -925,7 +938,7 @@ export default {
         item.origin = "design";
         if (!item.type) item.groupId = "sysMatAll";
       });
-      let result = {
+      const result = {
         design: data.systemTypes,
         myresource: data.myTypes,
       };
@@ -1199,7 +1212,7 @@ export default {
     },
     // 添加新的图层和组件
     addLayer(state: IBarState, { payload }: any) {
-      let insertId: String;
+      let insertId: string;
       const { treeData } = state;
       if (payload.insertId && treeData.length) {
         insertId = payload.insertId;
@@ -1668,12 +1681,8 @@ export default {
         }
       });
       state.selectedComponents = [
-        ...state.components.filter((component) =>
-          state.selectedComponentIds.includes(component.id)
-        ),
-        ...state.panels.filter((panel) =>
-          state.selectedComponentIds.includes(panel.id)
-        ),
+        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
+        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
       ];
       return {
         ...state,
@@ -1807,10 +1816,10 @@ export default {
           const layerDom: HTMLDivElement | any = document.querySelector(
             `.react-draggable[data-id=${layer.id}]`
           );
-          let layerX: number = 0,
-            layerY: number = 0,
-            layerWidth: number = 0,
-            layerHeight: number = 0;
+          let layerX = 0,
+            layerY = 0,
+            layerWidth = 0,
+            layerHeight = 0;
           if (layerDom) {
             const translateArr = layerDom.style.transform
               .replace("translate(", "")
@@ -1987,7 +1996,7 @@ export default {
           : `component-${xLastPreLayer.id}`
       );
 
-      let remainingSpaceWidth =
+      const remainingSpaceWidth =
         width - xLastPreLayerData.width - xFirstLayerData.width;
 
       // RemainingWidth 是除了前后两个 layer 宽度后的大小

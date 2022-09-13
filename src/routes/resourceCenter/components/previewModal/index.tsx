@@ -3,9 +3,9 @@ import "./index.less";
 import { Modal } from "antd";
 const PreviewModal = (props: any) => {
   const { isPreviewVisible, currentItem, changeVisible } = props;
-  let imgUrl = currentItem.preview || currentItem.photoUrl
+  let imgUrl = currentItem.preview || currentItem.photoUrl;
   if(imgUrl && !imgUrl.startsWith("http")){
-    imgUrl = `${(window as any).CONFIG.COMP_URL}${imgUrl}`
+    imgUrl = `${(window as any).CONFIG.COMP_URL}${imgUrl}`;
   }
   const handleCancelPreview = () => {
     changeVisible(false);

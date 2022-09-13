@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import './style.less'
+import "./style.less";
 
 const defaultConfig = {
   /**
@@ -25,27 +25,27 @@ const defaultConfig = {
    * @example color = ['#000', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 1)', 'red']
    */
   colors: [
-    '#37a2da',
-    '#32c5e9',
-    '#67e0e3',
-    '#9fe6b8',
-    '#ffdb5c',
-    '#ff9f7f',
-    '#fb7293'
+    "#37a2da",
+    "#32c5e9",
+    "#67e0e3",
+    "#9fe6b8",
+    "#ffdb5c",
+    "#ff9f7f",
+    "#fb7293"
   ],
   /**
    * @description Chart unit
    * @type {String}
    * @default unit = ''
    */
-  unit: '',
+  unit: "",
   /**
    * @description Show item value
    * @type {Boolean}
    * @default showValue = false
    */
   showValue: false
-}
+};
 
 const CapsuleChart = ({ config = {}, className, style }) => {
   const [{ mergedConfig, labelData, capsuleLength, capsuleValue }, setState] = useState({
@@ -53,32 +53,32 @@ const CapsuleChart = ({ config = {}, className, style }) => {
     labelData: [],
     capsuleLength: [],
     capsuleValue: []
-  })
+  });
 
   useEffect(() => {
-    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {})
+    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {});
 
-    const { data } = mergedConfig
+    const { data } = mergedConfig;
 
-    if (!data.length) return
+    if (!data.length) return;
 
-    const capsuleValue = data.map(({ value }) => value)
+    const capsuleValue = data.map(({ value }) => value);
 
-    const maxValue = Math.max(...capsuleValue)
+    const maxValue = Math.max(...capsuleValue);
 
-    const oneFifth = maxValue / 5
+    const oneFifth = maxValue / 5;
 
     setState({
       mergedConfig,
       capsuleValue,
       capsuleLength: capsuleValue.map(v => (maxValue ? v / maxValue : 0)),
       labelData: [...new Set(new Array(6).fill(0).map((v, i) => Math.ceil(i * oneFifth)))]
-    })
-  }, [config])
+    });
+  }, [config]);
 
-  const classNames = useMemo(() => classnames('dv-capsule-chart', className), [
+  const classNames = useMemo(() => classnames("dv-capsule-chart", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style}>
@@ -126,13 +126,13 @@ const CapsuleChart = ({ config = {}, className, style }) => {
         </React.Fragment>
       )}
     </div>
-  )
-}
+  );
+};
 
 CapsuleChart.propTypes = {
   config: PropTypes.object,
   className: PropTypes.string,
   style: PropTypes.object
-}
+};
 
-export default CapsuleChart
+export default CapsuleChart;

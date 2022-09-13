@@ -4,7 +4,7 @@ import "./index.less";
 
 import { withRouter } from "dva/router";
 import { useFetch } from "../../../../utils/useFetch";
-import { BASEURL,http,downLoad } from '@/services/request'
+import { BASEURL,http,downLoad } from "@/services/request";
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -31,7 +31,7 @@ const AppCard = (props: any) => {
   let picUrl =
     photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png");
   if(!picUrl.startsWith("http")&& !picUrl.startsWith("/static")){
-    picUrl = `${(window as any).CONFIG.COMP_URL}${picUrl}`
+    picUrl = `${(window as any).CONFIG.COMP_URL}${picUrl}`;
   }
 
   const [canEdit, setCanEdit] = useState(false);
@@ -92,7 +92,7 @@ const AppCard = (props: any) => {
     // let newTab = window.open('_blank');
     // newTab!.location.href = `/bigscreen/${id}`
     // newTab?.history.replaceState(null, '')
-    getCurrentItem(props,'preview');
+    getCurrentItem(props,"preview");
   };
   const editDashboard = () => {
     //TODO 通过id跳转到主画布
@@ -128,9 +128,9 @@ const AppCard = (props: any) => {
   // 删除应用
   const deleteApp = async () => {
     if(props.appName && props.appName.length) {
-      return false
+      return false;
     }
-    let delText = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? '模板' : '素材'
+    const delText = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? "模板" : "素材";
     Modal.confirm({
       title: `删除${delText}`,
       style: {
@@ -156,8 +156,8 @@ const AppCard = (props: any) => {
         background: "#232630"
       },
       async onOk() {
-        let url = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? '/visual/appTemplate/delete' : `/visual/resource/delete/${id}`
-        let params = ['systemTemp', 'myTemp'].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId}
+        const url = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? "/visual/appTemplate/delete" : `/visual/resource/delete/${id}`;
+        const params = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId};
         const [,data] = await useFetch(`${url}`, {
             method: "delete",
             body: JSON.stringify(params)
@@ -177,18 +177,18 @@ const AppCard = (props: any) => {
 
   // 导出应用
   const exportApp = async (appId: string,name:string) => {
-    downLoad(`${BASEURL}/visual/application/export/${appId}`,false,name)
+    downLoad(`${BASEURL}/visual/application/export/${appId}`,false,name);
   };
 
   // 移动分组
   const moveGroup = () => {
-    getCurrentItem(props,'move');
+    getCurrentItem(props,"move");
     openMoveGroupModal(id);
   };
   // 导出功能
   const exportDesign = async() => {
-    const downloadUrl=moduleType.includes('Temp') ? `${(window as any).CONFIG.BASE_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
-    downLoad(downloadUrl,true,name)
+    const downloadUrl=moduleType.includes("Temp") ? `${(window as any).CONFIG.BASE_URL}/visual/appTemplate/export/${id}` : props.downloadUrl;
+    downLoad(downloadUrl,true,name);
     // window.location.href = moduleType.includes('Temp') ? downLoad`${(window as any).CONFIG.COMP_URL}/visual/appTemplate/export/${id}` : props.downloadUrl
   };
   // 鼠标移入更多按钮时，显示下拉菜单
@@ -217,22 +217,22 @@ const AppCard = (props: any) => {
   };
 
   const handleCreated = async() => {
-    setCreateLoading(true)
+    setCreateLoading(true);
     const data = await http({
-      url: '/visual/appTemplate/createApp',
-      method: 'post',
+      url: "/visual/appTemplate/createApp",
+      method: "post",
       body: {
         id,
         type: 0,
         spaceId
       }
     }).finally(() => {
-      setCreateLoading(false)
-    })
+      setCreateLoading(false);
+    });
     if(data){
-      history.push(`/dashboard/${data.id}`)
+      history.push(`/dashboard/${data.id}`);
     }
-  }
+  };
   return (
     <div className="AppCard-wrap">
       <header className="head">
@@ -242,7 +242,7 @@ const AppCard = (props: any) => {
               <Tooltip placement="bottom" title="导出">
                 <span 
                   className="icon iconfont icon-zhuanfa"
-                  style={{ fontSize: "16px", marginRight: "10px",cursor: 'pointer' }}
+                  style={{ fontSize: "16px", marginRight: "10px",cursor: "pointer" }}
                   onClick={exportDesign}
                 ></span>
                 {/* <IconFont
@@ -254,7 +254,7 @@ const AppCard = (props: any) => {
               </Tooltip>
               {/* 系统素材不允许移动 */}
               {
-                ['myTemp','systemTemp', 'myresource'].indexOf(moduleType) > -1 &&
+                ["myTemp","systemTemp", "myresource"].indexOf(moduleType) > -1 &&
                 <Tooltip placement="bottom" title="移动">
                   <IconFont
                     style={{ fontSize: "16px", marginRight: "10px" }}
@@ -264,11 +264,11 @@ const AppCard = (props: any) => {
                   />
                 </Tooltip>
               }
-              <Tooltip placement="bottom" title={`${ ['myTemp', 'systemTemp'].indexOf(moduleType) === -1 && props?.appName.length ? '已被画布引用，不允许删除' : '删除'}`}>
+              <Tooltip placement="bottom" title={`${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length ? "已被画布引用，不允许删除" : "删除"}`}>
                 <IconFont
                   style={{ fontSize: "16px" }}
                   onClick={deleteApp}
-                  className={`icon-huishouzhan1 ${ ['myTemp', 'systemTemp'].indexOf(moduleType) === -1 && props?.appName.length && 'disabled'}`}
+                  className={`icon-huishouzhan1 ${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length && "disabled"}`}
                   type="icon-huishouzhan1"
                 />
               </Tooltip>
@@ -279,10 +279,10 @@ const AppCard = (props: any) => {
               className="div-to-btns scan-btn"
               onClickCapture={() => scanDashboard()}
             >
-              {moduleType.includes('Temp') ? '预览模板' : '预览'}
+              {moduleType.includes("Temp") ? "预览模板" : "预览"}
             </span>
             {
-              moduleType.includes('Temp') && 
+              moduleType.includes("Temp") && 
               <Button type='primary' loading={createLoading} onClick={handleCreated}>创建应用</Button>
             }
           </div>

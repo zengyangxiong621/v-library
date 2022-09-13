@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
+  "id": "121", //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
   "name": "时间轴组件", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -25,29 +25,29 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        'time':'12:03:01',
-        'title':'123.456.789',
-        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_'
+        "time":"12:03:01",
+        "title":"123.456.789",
+        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_"
       },
       {
-        'time':'12:03:02',
-        'title':'123.456.789',
-        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为'
+        "time":"12:03:02",
+        "title":"123.456.789",
+        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为"
       },
       {
-        'time':'12:03:03',
-        'title':'123.456.789',
-        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为'
+        "time":"12:03:03",
+        "title":"123.456.789",
+        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
       },
       {
-        'time':'12:03:04',
-        'title':'123.456.789',
-        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为'
+        "time":"12:03:04",
+        "title":"123.456.789",
+        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
       },
       {
-        'time':'12:03:05',
-        'title':'123.456.789',
-        'content':'TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为'
+        "time":"12:03:05",
+        "title":"123.456.789",
+        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
       }
     ],
     "fields": [
@@ -116,14 +116,14 @@ const componentDefaultConfig = {
     {
       "name": "textStyle",
       "type": "tabs",
-      'options':[
+      "options":[
         {
           "name": "时间轴样式",
-          "key":'labelStyle',
-          'value':[{
+          "key":"labelStyle",
+          "value":[{
             "name": "label",
             "displayName": "时间样式",
-            "type": 'collapse',
+            "type": "collapse",
             "hasSwitch": true,
             "defaultExpand": true,
             "isHide":true,
@@ -173,34 +173,34 @@ const componentDefaultConfig = {
                   {
                     "name": "lineHeight",
                     "displayName": "行距",
-                    "value": '24px'
+                    "value": "24px"
                   }
                 ]
               },
               {
                 name:"offsetConfig",
-                displayName:'偏移',
-                type:'inputNumber2',
+                displayName:"偏移",
+                type:"inputNumber2",
                 showDetail:true, // 是否展示下面的文字说明
                 value:[
                     {
-                        name:'x',
-                        displayName:'X',
-                        type:'number',
+                        name:"x",
+                        displayName:"X",
+                        type:"number",
                         value:-20,
                         config:{
                             min:-50,
-                            suffix:'px',  // 输入框后缀
+                            suffix:"px",  // 输入框后缀
                         }
                     },
                     {
-                        name:'y',
-                        displayName:'Y',
-                        type:'number',
+                        name:"y",
+                        displayName:"Y",
+                        type:"number",
                         value:0,
                         config:{
                             min:-50,
-                            suffix:'px',  // 输入框后缀
+                            suffix:"px",  // 输入框后缀
                         }
                     },
                 ]
@@ -208,7 +208,7 @@ const componentDefaultConfig = {
               {
                 "name": "labelOutShadow",
                 "displayName": "阴影",
-                "type": 'collapse',
+                "type": "collapse",
                 "hasSwitch": true,
                 "defaultExpand": true,
                 "value": [
@@ -236,12 +236,12 @@ const componentDefaultConfig = {
         },
         {
           "name": "内容样式",
-          "key":'fontStyle',
+          "key":"fontStyle",
           "value":[
             {
-              "name":'title',
+              "name":"title",
               "displayName": "标题",
-              "type": 'collapse',
+              "type": "collapse",
               "hasSwitch": false,
               "defaultExpand": true,
               "value":[
@@ -310,7 +310,7 @@ const componentDefaultConfig = {
                 {
                   "name": "outShadow",
                   "displayName": "阴影",
-                  "type": 'collapse',
+                  "type": "collapse",
                   "hasSwitch": true,
                   "defaultExpand": true,
                   "value": [
@@ -336,9 +336,9 @@ const componentDefaultConfig = {
               ]
             },
             {
-              "name":'content',
+              "name":"content",
               "displayName": "正文",
-              "type": 'collapse',
+              "type": "collapse",
               "hasSwitch": false,
               "defaultExpand": true,
               "value":[
@@ -401,7 +401,7 @@ const componentDefaultConfig = {
       "name": "backgroundColor",
       "displayName": "背景颜色",
       "type": "color",
-      "value": 'rgba(255,255,255,0.1)'
+      "value": "rgba(255,255,255,0.1)"
     },
     {
       "name": "spotType",
@@ -411,15 +411,15 @@ const componentDefaultConfig = {
     }
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

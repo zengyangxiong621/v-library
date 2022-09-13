@@ -5,6 +5,6 @@ const routesConfig=(app:any)=>({
   component: newDynamic(app, [], () =>
     import("./accountList")
   ),
-})
+});
 const Page = (app: any) => createRoute(app, routesConfig);
-export default Page
+export default Page;

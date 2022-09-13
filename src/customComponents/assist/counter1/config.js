@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
+  "id": "121", //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
   "name": "翻牌器", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -85,22 +85,22 @@ const componentDefaultConfig = {
       "value": false
     },
     {
-      name:'commonConfig',
-      displayName:'基础配置',
-      type:'tabs',
-      activeKey:'overall', // 默认选中第一项
+      name:"commonConfig",
+      displayName:"基础配置",
+      type:"tabs",
+      activeKey:"overall", // 默认选中第一项
       options:[
           {
-            key:'overall',
-            name:'全局配置',
+            key:"overall",
+            name:"全局配置",
             value:[
               {
                 name:"sortedBy",
-                displayName:'排列方式',
-                type:'select',
-                value:'up',
+                displayName:"排列方式",
+                type:"select",
+                value:"up",
                 options:[
-                    {name:'标题在上',value:'up'},
+                    {name:"标题在上",value:"up"},
                     {name: "标题在下", value: "down"},
                     {name: "标题在左", value: "left"},
                     {name: "标题在右", value: "right"}
@@ -122,7 +122,7 @@ const componentDefaultConfig = {
               {
                 "name": "title",
                 "displayName": "标题",
-                "type": 'collapse',
+                "type": "collapse",
                 "hasSwitch": true,
                 "defaultExpand": true,
                 "value": [
@@ -171,34 +171,34 @@ const componentDefaultConfig = {
                       {
                         "name": "lineHeight",
                         "displayName": "行距",
-                        "value": '48'
+                        "value": "48"
                       }
                     ]
                   },
                   {
                     name:"offsetConfig",
-                    displayName:'偏移',
-                    type:'inputNumber2',
+                    displayName:"偏移",
+                    type:"inputNumber2",
                     showDetail:true, // 是否展示下面的文字说明
                     value:[
                         {
-                            name:'x',
-                            displayName:'X',
-                            type:'number',
+                            name:"x",
+                            displayName:"X",
+                            type:"number",
                             value:0,
                             config:{
                                 min:0,
-                                suffix:'px',  // 输入框后缀
+                                suffix:"px",  // 输入框后缀
                             }
                         },
                         {
-                            name:'y',
-                            displayName:'Y',
-                            type:'number',
+                            name:"y",
+                            displayName:"Y",
+                            type:"number",
                             value:0,
                             config:{
                                 min:0,
-                                suffix:'px',  // 输入框后缀
+                                suffix:"px",  // 输入框后缀
                             }
                         },
                     ]
@@ -208,18 +208,18 @@ const componentDefaultConfig = {
             ]
           },
           {
-            key:'counter',
-            name:'翻牌器',
+            key:"counter",
+            name:"翻牌器",
             value:[
               {
-                name:'xxx',
-                displayName:'xxx',
-                type:'tabs',
-                activeKey:'prefixConfig', // 默认选中第一项
+                name:"xxx",
+                displayName:"xxx",
+                type:"tabs",
+                activeKey:"prefixConfig", // 默认选中第一项
                 options:[
                   {
-                    key:'prefixConfig',
-                    name:'前缀',
+                    key:"prefixConfig",
+                    name:"前缀",
                     value:[
                       {
                         "name": "support",
@@ -228,10 +228,10 @@ const componentDefaultConfig = {
                         "value": true
                       },
                       {
-                        'name':"content",
-                        'displayName':'内容',
-                        'type':'input',
-                        'value':'￥',
+                        "name":"content",
+                        "displayName":"内容",
+                        "type":"input",
+                        "value":"￥",
                       },
                       {
                         "name": "textStyle",
@@ -272,34 +272,34 @@ const componentDefaultConfig = {
                           {
                             "name": "lineHeight",
                             "displayName": "行距",
-                            "value": '48'
+                            "value": "48"
                           }
                         ]
                       },
                       {
                         name:"offsetConfig",
-                        displayName:'偏移',
-                        type:'inputNumber2',
+                        displayName:"偏移",
+                        type:"inputNumber2",
                         showDetail:true, // 是否展示下面的文字说明
                         value:[
                             {
-                                name:'x',
-                                displayName:'X',
-                                type:'number',
+                                name:"x",
+                                displayName:"X",
+                                type:"number",
                                 value:0,
                                 config:{
                                     min:0,
-                                    suffix:'px',  // 输入框后缀
+                                    suffix:"px",  // 输入框后缀
                                 }
                             },
                             {
-                                name:'y',
-                                displayName:'Y',
-                                type:'number',
+                                name:"y",
+                                displayName:"Y",
+                                type:"number",
                                 value:0,
                                 config:{
                                     min:0,
-                                    suffix:'px',  // 输入框后缀
+                                    suffix:"px",  // 输入框后缀
                                 }
                             },
                         ]
@@ -307,16 +307,16 @@ const componentDefaultConfig = {
                     ]
                   },
                   {
-                      key:'numberConfig',
-                      name:'数值',
+                      key:"numberConfig",
+                      name:"数值",
                       value:[
                       {
-                        'name': 'dataRangConfig',
-                        'displayName': '数值样式',
-                        'type': 'collapse',
-                        'hasSwitch':false, // 是否有切换按钮
-                        'defaultExpand':false,  // 是否默认展开
-                        'value':[
+                        "name": "dataRangConfig",
+                        "displayName": "数值样式",
+                        "type": "collapse",
+                        "hasSwitch":false, // 是否有切换按钮
+                        "defaultExpand":false,  // 是否默认展开
+                        "value":[
                           {
                             "name": "show",
                             "displayName": "",
@@ -325,24 +325,24 @@ const componentDefaultConfig = {
                           },
                           {
                             name:"textStyle",
-                            displayName:'文本样式',
-                            type:'chartText',
+                            displayName:"文本样式",
+                            type:"chartText",
                             value:{
-                                fontFamily:'Microsoft Yahei',
+                                fontFamily:"Microsoft Yahei",
                                 fontSize:32,
-                                color:'#fff',
-                                fontWeight:'normal' // bold bolder lighter
+                                color:"#fff",
+                                fontWeight:"normal" // bold bolder lighter
                             }
                           },
                         ]
                       },
                       {
-                        'name': 'layoutConfig',
-                        'displayName': '布局',
-                        'type': 'collapse',
-                        'hasSwitch':false, // 是否有切换按钮
-                        'defaultExpand':false,  // 是否默认展开
-                        'value':[
+                        "name": "layoutConfig",
+                        "displayName": "布局",
+                        "type": "collapse",
+                        "hasSwitch":false, // 是否有切换按钮
+                        "defaultExpand":false,  // 是否默认展开
+                        "value":[
                           {
                             "name": "show",
                             "displayName": "",
@@ -351,28 +351,28 @@ const componentDefaultConfig = {
                           },
                           {
                             name:"sizeConfig",
-                            displayName:'尺寸',
-                            type:'inputNumber2',
+                            displayName:"尺寸",
+                            type:"inputNumber2",
                             showDetail:true, // 是否展示下面的文字说明
                             value:[
                                 {
-                                    name:'width',
-                                    displayName:'宽度',
-                                    type:'number',
+                                    name:"width",
+                                    displayName:"宽度",
+                                    type:"number",
                                     value:100,
                                     config:{
                                         min:0,
-                                        suffix:'px',  // 输入框后缀
+                                        suffix:"px",  // 输入框后缀
                                     }
                                 },
                                 {
-                                    name:'height',
-                                    displayName:'高度',
-                                    type:'number',
+                                    name:"height",
+                                    displayName:"高度",
+                                    type:"number",
                                     value:48,
                                     config:{
                                         min:0,
-                                        suffix:'px',  // 输入框后缀
+                                        suffix:"px",  // 输入框后缀
                                     }
                                 },
                             ]
@@ -380,12 +380,12 @@ const componentDefaultConfig = {
                         ]
                       },
                       {
-                        'name': 'formateConfig',
-                        'displayName': '格式化',
-                        'type': 'collapse',
-                        'hasSwitch':false, // 是否有切换按钮
-                        'defaultExpand':false,  // 是否默认展开
-                        'value':[
+                        "name": "formateConfig",
+                        "displayName": "格式化",
+                        "type": "collapse",
+                        "hasSwitch":false, // 是否有切换按钮
+                        "defaultExpand":false,  // 是否默认展开
+                        "value":[
                           {
                             "name": "numShow",
                             "displayName": "",
@@ -403,12 +403,12 @@ const componentDefaultConfig = {
                           //   }
                           // },
                           {
-                            'name': 'decimalConfig',
-                            'displayName': '小数',
-                            'type': 'collapse',
-                            'hasSwitch':false, // 是否有切换按钮
-                            'defaultExpand':false,  // 是否默认展开
-                            'value':[
+                            "name": "decimalConfig",
+                            "displayName": "小数",
+                            "type": "collapse",
+                            "hasSwitch":false, // 是否有切换按钮
+                            "defaultExpand":false,  // 是否默认展开
+                            "value":[
                               {
                                 "name": "decimalShow",
                                 "displayName": "",
@@ -416,9 +416,9 @@ const componentDefaultConfig = {
                                 "type": "switch"
                               },
                               {
-                                name:'decimalCount',
-                                displayName:'位数',
-                                type:'number',
+                                name:"decimalCount",
+                                displayName:"位数",
+                                type:"number",
                                 value:0,
                                 config:{
                                     min:0,
@@ -428,12 +428,12 @@ const componentDefaultConfig = {
                             ]
                           },
                           {
-                            'name': 'splitConfig',
-                            'displayName': '分割',
-                            'type': 'collapse',
-                            'hasSwitch':true, // 是否有切换按钮
-                            'defaultExpand':false,  // 是否默认展开
-                            'value':[
+                            "name": "splitConfig",
+                            "displayName": "分割",
+                            "type": "collapse",
+                            "hasSwitch":true, // 是否有切换按钮
+                            "defaultExpand":false,  // 是否默认展开
+                            "value":[
                               {
                                 "name": "show",
                                 "displayName": "",
@@ -441,9 +441,9 @@ const componentDefaultConfig = {
                                 "type": "switch"
                               },
                               {
-                                name:'splitCount',
-                                displayName:'分割位数',
-                                type:'number',
+                                name:"splitCount",
+                                displayName:"分割位数",
+                                type:"number",
                                 value:3,
                                 config:{
                                     min:1,
@@ -457,8 +457,8 @@ const componentDefaultConfig = {
                       ]
                   },
                   {
-                    key:'suffixConfig',
-                    name:'后缀',
+                    key:"suffixConfig",
+                    name:"后缀",
                     value:[
                       {
                         "name": "support",
@@ -467,10 +467,10 @@ const componentDefaultConfig = {
                         "value": true
                       },
                       {
-                        'name':"content",
-                        'displayName':'内容',
-                        'type':'input',
-                        'value':'/单位',
+                        "name":"content",
+                        "displayName":"内容",
+                        "type":"input",
+                        "value":"/单位",
                       },
                       {
                         "name": "textStyle",
@@ -511,34 +511,34 @@ const componentDefaultConfig = {
                           {
                             "name": "lineHeight",
                             "displayName": "行距",
-                            "value": '48'
+                            "value": "48"
                           }
                         ]
                       },
                       {
                         name:"offsetConfig",
-                        displayName:'偏移',
-                        type:'inputNumber2',
+                        displayName:"偏移",
+                        type:"inputNumber2",
                         showDetail:true, // 是否展示下面的文字说明
                         value:[
                             {
-                                name:'x',
-                                displayName:'X',
-                                type:'number',
+                                name:"x",
+                                displayName:"X",
+                                type:"number",
                                 value:0,
                                 config:{
                                     min:0,
-                                    suffix:'px',  // 输入框后缀
+                                    suffix:"px",  // 输入框后缀
                                 }
                             },
                             {
-                                name:'y',
-                                displayName:'Y',
-                                type:'number',
+                                name:"y",
+                                displayName:"Y",
+                                type:"number",
                                 value:0,
                                 config:{
                                     min:0,
-                                    suffix:'px',  // 输入框后缀
+                                    suffix:"px",  // 输入框后缀
                                 }
                             },
                         ]
@@ -553,15 +553,15 @@ const componentDefaultConfig = {
     },
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

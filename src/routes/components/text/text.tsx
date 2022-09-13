@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
 // import { connect } from 'dva';
-import { connect } from '../../../utils/connect';
-import { Select, Input } from 'antd';
-import { Text } from '@/customComponents/text/text'; // TODO: @可用设置
-import RemoteBaseComponent from '../../../components/RemoteBaseComponent';
+import { connect } from "../../../utils/connect";
+import { Select, Input } from "antd";
+import { Text } from "@/customComponents/text/text"; // TODO: @可用设置
+import RemoteBaseComponent from "../../../components/RemoteBaseComponent";
 interface Props {
   dispatch?: any,
   components?: any,
@@ -16,39 +16,39 @@ interface State {
 }
 
 const mapStateToProps = (state: any) => {
-  return state
-}
+  return state;
+};
 
 // @connect(mapStateToProps)
 class Dashboard extends Component<Props, State> {
   constructor(props: any) {
-    super(props)
+    super(props);
     this.state = {
-      text: '新数据来源：对接代码编辑器或者SQL编辑器'
-    }
+      text: "新数据来源：对接代码编辑器或者SQL编辑器"
+    };
   }                                        
 
   handleChange = (value: any) => {
     console.log(`selected ${value}`);
-  }
+  };
 
   textChange = (event: any) => {
-    const value = event.target.value
+    const value = event.target.value;
     this.setState({
       text: value
-    })
+    });
 
-    const { dispatch } = this.props
+    const { dispatch } = this.props;
     dispatch({
-      type: 'components/change',
+      type: "components/change",
       payload: {
         data: [{
           text: value
         }]
       }
-    })
+    });
 
-  }
+  };
 
   render() {
     const { Option } = Select;
@@ -73,7 +73,7 @@ class Dashboard extends Component<Props, State> {
         ))}
         <Input value={this.state.text} onChange={this.textChange}></Input>
       </div>
-    )
+    );
   }
 }
 

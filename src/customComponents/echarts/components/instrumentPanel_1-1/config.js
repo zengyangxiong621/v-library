@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
   "name": "定制指标卡1-背景动图", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -59,9 +59,9 @@ const componentDefaultConfig = {
       ]
     },
     {
-      displayName: '默认隐藏',
-      name: 'hideDefault',
-      type: 'checkBox',
+      displayName: "默认隐藏",
+      name: "hideDefault",
+      type: "checkBox",
       value: false,
     },
   ],

@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
+  "id": "121", //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
   "name": "滚动文本", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -23,31 +23,31 @@ const componentDefaultConfig = {
     "data": [
       {
         "text": "https:/ /workspace .easyv.cloud/create/851601",
-        "url": 'https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_10029027259472790743%22%7D&n_type=-1&p_from=-1'
+        "url": "https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_10029027259472790743%22%7D&n_type=-1&p_from=-1"
       },
       {
-        'text': 'https:/ /workspace.easyv.cloud/create/851601勒索软件',
-        "url": 'https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_10029027259472790743%22%7D&n_type=-1&p_from=-1'
+        "text": "https:/ /workspace.easyv.cloud/create/851601勒索软件",
+        "url": "https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_10029027259472790743%22%7D&n_type=-1&p_from=-1"
       },
       {
-        'text': 'https:/ /workspace.easyv.cloud/create/ 851601挖矿',
-        "url": 'https:/ /workspace .easyv.cloud/create/851601'
+        "text": "https:/ /workspace.easyv.cloud/create/ 851601挖矿",
+        "url": "https:/ /workspace .easyv.cloud/create/851601"
       },
       {
-        'text': 'Ahttps:/ /workspace.easyv.cloud create/851601PT/勒索软件',
-        "url": 'https:/ /workspace .easyv.cloud/create/851601'
+        "text": "Ahttps:/ /workspace.easyv.cloud create/851601PT/勒索软件",
+        "url": "https:/ /workspace .easyv.cloud/create/851601"
       },
       {
-        'text': 'https://workspace easyv.cloud/ create/851601网页篡改',
-        "url": 'https:/ /workspace .easyv.cloud/create/851601'
+        "text": "https://workspace easyv.cloud/ create/851601网页篡改",
+        "url": "https:/ /workspace .easyv.cloud/create/851601"
       },
       {
-        'text': 'https:/ /workspace.easyv.cloud/ create/851601VPN',
-        "url": 'https:/ /workspace .easyv.cloud/create/851601'
+        "text": "https:/ /workspace.easyv.cloud/ create/851601VPN",
+        "url": "https:/ /workspace .easyv.cloud/create/851601"
       },
       {
-        'text': ' https://workspace easyv.cloud/create/851601',
-        "url": 'https:/ /workspace .easyv.cloud/create/851601'
+        "text": " https://workspace easyv.cloud/create/851601",
+        "url": "https:/ /workspace .easyv.cloud/create/851601"
       }
     ],
     "fields": [
@@ -147,49 +147,49 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": '48px'
+          "value": "48px"
         }
       ]
     },
     {
-      'name':"autoplay",
-      'displayName':'自动轮播',
-      'type':'radioGroup',
-      'direction':'horizontal', // 方向
-      'value':true,
-      'options':[
+      "name":"autoplay",
+      "displayName":"自动轮播",
+      "type":"radioGroup",
+      "direction":"horizontal", // 方向
+      "value":true,
+      "options":[
         {
-          'name':'是',
-          'value':true
+          "name":"是",
+          "value":true
         },
         {
-          'name':'否',
-          'value':false
+          "name":"否",
+          "value":false
         },
       ]
   },
   {
-    'name': 'delay',
-    'displayName': '轮播速度',
-    'value': 500,
-    'type':'number',
+    "name": "delay",
+    "displayName": "轮播速度",
+    "value": 500,
+    "type":"number",
     "config": {
         "min": 300,
         "max": 10000,
         "step": 100,
-        'suffix':'ms',  // 输入框后缀
+        "suffix":"ms",  // 输入框后缀
     }
   },
   {
-    'name': 'slidesNum',
-    'displayName': '展示行',
-    'value': 3,
-    'type':'number',
+    "name": "slidesNum",
+    "displayName": "展示行",
+    "value": 3,
+    "type":"number",
     "config": {
         "min": 3,
         "max": 100,
         "step": 1,
-        'suffix':'',  // 输入框后缀
+        "suffix":"",  // 输入框后缀
     }
   },
   //   {
@@ -210,21 +210,21 @@ const componentDefaultConfig = {
   //     ]
   // },
   {
-    'name': 'lineSpace',
-    'displayName': '行间距',
-    'value': 10,
-    'type':'number',
+    "name": "lineSpace",
+    "displayName": "行间距",
+    "value": 10,
+    "type":"number",
     "config": {
         "min": 0,
         "max": 100,
         "step": 1,
-        'suffix':'px',  // 输入框后缀
+        "suffix":"px",  // 输入框后缀
     }
   },
   {
     "name": "shadow",
     "displayName": "阴影",
-    "type": 'collapse',
+    "type": "collapse",
     "hasSwitch": true,
     "defaultExpand": true,
     "value": [
@@ -250,7 +250,7 @@ const componentDefaultConfig = {
   {
     "name": "hyperlinks",
     "displayName": "链接设置",
-    "type": 'collapse',
+    "type": "collapse",
     "hasSwitch": true,
     "defaultExpand": true,
     "value": [
@@ -270,15 +270,15 @@ const componentDefaultConfig = {
   }
 ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

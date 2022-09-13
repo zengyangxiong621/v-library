@@ -1,4 +1,4 @@
-import { CellRange } from './cell_range';
+import { CellRange } from "./cell_range";
 
 class Merges {
   constructor(d = []) {
@@ -60,7 +60,7 @@ class Merges {
         sri, sci, eri, eci,
       } = cellRange;
       const range = cellRange;
-      if (type === 'row') {
+      if (type === "row") {
         if (sri >= index) {
           range.sri += n;
           range.eri += n;
@@ -68,7 +68,7 @@ class Merges {
           range.eri += n;
           cbWithin(sri, sci, n, 0);
         }
-      } else if (type === 'column') {
+      } else if (type === "column") {
         if (sci >= index) {
           range.sci += n;
           range.eci += n;

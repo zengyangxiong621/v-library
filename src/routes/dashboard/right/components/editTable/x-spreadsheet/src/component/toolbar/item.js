@@ -1,7 +1,7 @@
-import { cssPrefix } from '../../config';
-import tooltip from '../tooltip';
-import { h } from '../element';
-import { t } from '../../locale/locale';
+import { cssPrefix } from "../../config";
+import tooltip from "../tooltip";
+import { h } from "../element";
+import { t } from "../../locale/locale";
 
 export default class Item {
   // tooltip
@@ -19,11 +19,11 @@ export default class Item {
 
   element() {
     const { tip } = this;
-    return h('div', `${cssPrefix}-toolbar-btn`)
-      .on('mouseenter', (evt) => {
+    return h("div", `${cssPrefix}-toolbar-btn`)
+      .on("mouseenter", (evt) => {
         tooltip(tip, evt.target);
       })
-      .attr('data-tooltip', tip);
+      .attr("data-tooltip", tip);
   }
 
   setState() {}

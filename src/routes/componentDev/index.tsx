@@ -1,9 +1,9 @@
-import { newDynamic, createRoute } from '../../utils/core';
+import { newDynamic, createRoute } from "../../utils/core";
 
 const routesConfig = (app: any) => ({
-    path: '/component-dev',
-    title: 'componentDev',
-    component: newDynamic(app, [], () => import('./componentDev'))
+    path: "/component-dev",
+    title: "componentDev",
+    component: newDynamic(app, [], () => import("./componentDev"))
 });
 
 export default (app: any) => createRoute(app, routesConfig);

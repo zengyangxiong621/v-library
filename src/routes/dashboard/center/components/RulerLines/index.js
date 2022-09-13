@@ -1,44 +1,44 @@
-import { useState, useEffect, useRef } from 'react'
-import { connect } from 'dva'
-import './index.less'
-import SingleLine from './components/index'
+import { useState, useEffect, useRef } from "react";
+import { connect } from "dva";
+import "./index.less";
+import SingleLine from "./components/index";
 
 const RulerLines = ({ bar, dispatch }) => {
-  const rulerLines = bar.rulerLines
+  const rulerLines = bar.rulerLines;
   useEffect(() => {
 
-  }, [])
+  }, []);
   const handleDragStop = (event, line, index) => {
-    if (line.direction === 'horizon') {
+    if (line.direction === "horizon") {
       // 竖
-      if (event.clientX < document.querySelector('.home-left-wrap').getBoundingClientRect().width + 22) {
-        bar.rulerLines.splice(index, 1)
+      if (event.clientX < document.querySelector(".home-left-wrap").getBoundingClientRect().width + 22) {
+        bar.rulerLines.splice(index, 1);
         dispatch({
-          type: 'bar/save',
-        })
+          type: "bar/save",
+        });
       }
     }
-    if (line.direction === 'vertical') {
+    if (line.direction === "vertical") {
       // 横
-      if (event.clientY < document.querySelector('.Header-wrap').getBoundingClientRect().height + 22) {
-        bar.rulerLines.splice(index, 1)
+      if (event.clientY < document.querySelector(".Header-wrap").getBoundingClientRect().height + 22) {
+        bar.rulerLines.splice(index, 1);
         dispatch({
-          type: 'bar/save',
-        })
+          type: "bar/save",
+        });
       }
     }
 
-  }
+  };
   return (
-    <div className="RulerLines" style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
+    <div className="RulerLines" style={ { position: "absolute", left: 0, top: 0, width: 0, height: 0 } }>
       {
         rulerLines.map((line, index) => {
-          return <SingleLine onStop={ handleDragStop } index={ index } scale={ bar.canvasScaleValue } line={ line }/>
+          return <SingleLine onStop={ handleDragStop } index={ index } scale={ bar.canvasScaleValue } line={ line }/>;
         })
       }
     </div>
-  )
-}
+  );
+};
 export default connect(({
                           bar,
                         }
@@ -50,4 +50,4 @@ export default connect(({
       }
     ),
 )
-(RulerLines)
+(RulerLines);

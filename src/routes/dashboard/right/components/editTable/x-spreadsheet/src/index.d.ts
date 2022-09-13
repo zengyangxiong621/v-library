@@ -1,6 +1,6 @@
-declare module 'x-data-spreadsheet' {
+declare module "x-data-spreadsheet" {
   export interface Options {
-    mode?: 'edit' | 'read';
+    mode?: "edit" | "read";
     showToolbar?: boolean;
     showGrid?: boolean;
     showContextmenu?: boolean;
@@ -21,14 +21,14 @@ declare module 'x-data-spreadsheet' {
     };
     style?: {
       bgcolor: string;
-      align: 'left' | 'center' | 'right';
-      valign: 'top' | 'middle' | 'bottom';
+      align: "left" | "center" | "right";
+      valign: "top" | "middle" | "bottom";
       textwrap: boolean;
       strike: boolean;
       underline: boolean;
       color: string;
       font: {
-        name: 'Helvetica';
+        name: "Helvetica";
         size: number;
         bold: boolean;
         italic: false;
@@ -36,9 +36,9 @@ declare module 'x-data-spreadsheet' {
     };
   }
 
-  export type CELL_SELECTED = 'cell-selected';
-  export type CELLS_SELECTED = 'cells-selected';
-  export type CELL_EDITED = 'cell-edited';
+  export type CELL_SELECTED = "cell-selected";
+  export type CELLS_SELECTED = "cells-selected";
+  export type CELL_EDITED = "cell-edited";
 
   export type CellMerge = [number, number];
 
@@ -106,8 +106,8 @@ declare module 'x-data-spreadsheet' {
   }
 
   export interface CellStyle {
-    align?: 'left' | 'center' | 'right';
-    valign?: 'top' | 'middle' | 'bottom';
+    align?: "left" | "center" | "right";
+    valign?: "top" | "middle" | "bottom";
     font?: {
       bold?: boolean;
     }

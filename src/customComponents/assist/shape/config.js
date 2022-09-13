@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
   "name": "形状组件", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -60,26 +60,26 @@ const componentDefaultConfig = {
       ]
     },
     {
-      'name':"shapeType",
-      'displayName':'形状',
-      'type':'select',
-      'value':'rectangle',
-      'options':[
+      "name":"shapeType",
+      "displayName":"形状",
+      "type":"select",
+      "value":"rectangle",
+      "options":[
         {
-          'name':'矩形',
-          'value':'rectangle'
+          "name":"矩形",
+          "value":"rectangle"
         },
         {
-          'name':'圆形',
-          'value':'cycle'
+          "name":"圆形",
+          "value":"cycle"
         }
       ]
     },
     {
-      'name': 'bgColor',
-      'displayName': '背景',
-      'value': 'rgba(18,137,221,1)', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-      'type':'color'
+      "name": "bgColor",
+      "displayName": "背景",
+      "value": "rgba(18,137,221,1)", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      "type":"color"
     },
     {
       "name": "gradientOrigin",
@@ -92,16 +92,16 @@ const componentDefaultConfig = {
       // 当 config.type === "direction" 时, "value"支持的有: "left top" | "left" | "left bottom" | "top" | "center" | "bottom" | "right top" | "right" | "right bottom"
     },
     {
-      'name': 'gradientStart',
-      'displayName': '渐变色开始',
-      'value': 'rgba(18,137,221,0.03)', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-      'type':'color'
+      "name": "gradientStart",
+      "displayName": "渐变色开始",
+      "value": "rgba(18,137,221,0.03)", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      "type":"color"
     },
     {
-      'name': 'gradientEnd',
-      'displayName': '渐变色结束',
-      'value': '#001362', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-      'type':'color'
+      "name": "gradientEnd",
+      "displayName": "渐变色结束",
+      "value": "#001362", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      "type":"color"
     },
     {
       "name": "border",
@@ -117,42 +117,42 @@ const componentDefaultConfig = {
       }
     },
     {
-      'name': 'shadow',
-      'displayName': '阴影',
-      'type': 'collapse',
-      'hasSwitch':true, // 是否有切换按钮
-      'defaultExpand':true,  // 是否默认展开
-      'value':[
+      "name": "shadow",
+      "displayName": "阴影",
+      "type": "collapse",
+      "hasSwitch":true, // 是否有切换按钮
+      "defaultExpand":true,  // 是否默认展开
+      "value":[
         {	// 如果有后面的按钮，则该项必须放在第一个
-          'name': 'show',
-          'displayName': '',
-          'value': false,
-          'type': 'switch',
+          "name": "show",
+          "displayName": "",
+          "value": false,
+          "type": "switch",
         },
         {
-          'name': 'shadowConfig',
-          'displayName': '外阴影',
-          'type': 'boxShadow',
-          'value': {
-            'color': '#0075FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-            'vShadow': 0, // 垂直阴影的位置
-            'hShadow': 0, // 水平阴影的位置
-            'blur': 8, // 模糊的距离
+          "name": "shadowConfig",
+          "displayName": "外阴影",
+          "type": "boxShadow",
+          "value": {
+            "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+            "vShadow": 0, // 垂直阴影的位置
+            "hShadow": 0, // 水平阴影的位置
+            "blur": 8, // 模糊的距离
           },
         }
       ]
     }
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

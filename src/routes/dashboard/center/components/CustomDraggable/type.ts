@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 export type DraggableEvent = React.MouseEvent<HTMLElement | SVGElement>
   | React.TouchEvent<HTMLElement | SVGElement>

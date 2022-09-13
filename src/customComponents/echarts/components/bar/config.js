@@ -1,5 +1,5 @@
 const ComponentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
   "name": "柱状图", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
@@ -21,19 +21,19 @@ const ComponentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "x": '1月',
+        "x": "1月",
         "y": 5,
       },
       {
-        "x": '2月',
+        "x": "2月",
         "y": 8,
       },
       {
-        "x": '3月',
+        "x": "3月",
         "y": 6,
       },
       {
-        "x": '4月',
+        "x": "4月",
         "y": 10,
       },
     ],
@@ -95,32 +95,32 @@ const ComponentDefaultConfig = {
     },
     {
       name: "direction",
-      displayName: '图表方向',
-      type: 'radioGroup',
-      direction: 'horizontal', // 方向
-      value: 'vertical',
+      displayName: "图表方向",
+      type: "radioGroup",
+      direction: "horizontal", // 方向
+      value: "vertical",
       options: [
         {
-          name: '纵向',
-          value: 'vertical'
+          name: "纵向",
+          value: "vertical"
         },
         {
-          name: '横向',
-          value: 'horizontal'
+          name: "横向",
+          value: "horizontal"
         },
       ]
     }
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default ComponentDefaultConfig
+export default ComponentDefaultConfig;

@@ -1,51 +1,51 @@
-import { memo, useState, useEffect, useCallback, useMemo } from 'react'
-import './index.less'
-import zhCN from 'antd/es/locale/zh_CN'
+import { memo, useState, useEffect, useCallback, useMemo } from "react";
+import "./index.less";
+import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from 'antd'
-import { PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons'
+import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from "antd";
+import { PlusOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
-import AddDataSource from './components/addDataSource'
-import EditDataSource from './components/editDataSource'
-import PreviewTable from '../../routes/dashboard/right/components/editTable/previewTable'
-import PreViewJson from '../../routes/dashboard/right/components/codeEditor/previewJson'
+import AddDataSource from "./components/addDataSource";
+import EditDataSource from "./components/editDataSource";
+import PreviewTable from "../../routes/dashboard/right/components/editTable/previewTable";
+import PreViewJson from "../../routes/dashboard/right/components/codeEditor/previewJson";
 
-import { http } from '@/services/request'
-import { TDataSourceParams } from './type'
+import { http } from "@/services/request";
+import { TDataSourceParams } from "./type";
 
-const { Option } = Select
+const { Option } = Select;
 
 
 const DataSource = (props: any) => {
-  const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  let spaceId = JSON.parse(curWorkspace)?.id
-  const [inputValue, setInputValue] = useState('')
-  const [dataSourceType, setDataSourceType] = useState<any>(null)
-  const [isShowAddModal, setIsShowAddModal] = useState(false)
-  const [isShowEditModal, setIsShowEditModal] = useState(false)
-  const [editDataSourceInfo, setEditDataSourceInfo] = useState({})
+  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const spaceId = JSON.parse(curWorkspace)?.id;
+  const [inputValue, setInputValue] = useState("");
+  const [dataSourceType, setDataSourceType] = useState<any>(null);
+  const [isShowAddModal, setIsShowAddModal] = useState(false);
+  const [isShowEditModal, setIsShowEditModal] = useState(false);
+  const [editDataSourceInfo, setEditDataSourceInfo] = useState({});
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
     pageSize: 10,
-  })
-  const [tableMap, setTableMap] = useState({})
-  const [totalElements, setTotalElements] = useState(0)
-  const [tableData, setTableData] = useState([])
-  const [isShowPreviewModal, setIsShowPreviewModal] = useState(false)
-  const [previewFileUrl, setPreviewFileUrl] = useState(null)
-  const [previewRecord, setPreviewRecord] = useState({ type: '', id: '' })
-  const [tableLoading, setTableLoading] = useState(false)
+  });
+  const [tableMap, setTableMap] = useState({});
+  const [totalElements, setTotalElements] = useState(0);
+  const [tableData, setTableData] = useState([]);
+  const [isShowPreviewModal, setIsShowPreviewModal] = useState(false);
+  const [previewFileUrl, setPreviewFileUrl] = useState(null);
+  const [previewRecord, setPreviewRecord] = useState({ type: "", id: "" });
+  const [tableLoading, setTableLoading] = useState(false);
 
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
   const resetTableInfo = (data: any) => {
-    setTableData(data.content)
+    setTableData(data.content);
     setPageInfo({
       pageNo: data.pageNo,
       pageSize: data.pageSize,
-    })
-    setTotalElements(data.totalElements)
-  }
+    });
+    setTotalElements(data.totalElements);
+  };
   /**
    * description: 根据不同的参数请求表格数据(首次加载、搜索、换页、调整每页显示的条数)
    * params: 发送请求所需要的参数
@@ -57,175 +57,175 @@ const DataSource = (props: any) => {
     name: null,
     ...pageInfo,
     map: tableMap,
-  }
+  };
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
-    setTableLoading(true)
+    setTableLoading(true);
     try {
       const data = await http({
-        url: '/visual/datasource/list',
-        method: 'post',
+        url: "/visual/datasource/list",
+        method: "post",
         body: differentParams
-      })
+      });
       if(data){
-        await resetTableInfo(data)
+        await resetTableInfo(data);
       }
     } catch (error) {
       console.log(error);
     }finally{
-      setTableLoading(false)
+      setTableLoading(false);
     }
-  }
+  };
   // 获取表格数据
   useEffect(() => {
-    getTableData()
+    getTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [spaceId])
+  }, [spaceId]);
 
   // 保证每次拿到最新的dataSourceType值
   useEffect(() => {
-    setDataSourceType(dataSourceType)
-  }, [dataSourceType])
+    setDataSourceType(dataSourceType);
+  }, [dataSourceType]);
 
   // 下拉框选择
   const selectChange = (value: any) => {
     // 全部类型 的  value为'', 传给后端需要转换一遍
-    if(value === '') value = null
-    setDataSourceType(value)
-  }
+    if(value === "") value = null;
+    setDataSourceType(value);
+  };
   // 按类型搜索
   const searchByType = async (e: any) => {
     // 整合搜索参数
     const finalParams: TDataSourceParams = {
       spaceId,
       type: dataSourceType,
-      name: inputValue === '' ? null : inputValue,
+      name: inputValue === "" ? null : inputValue,
       pageNo: 1,
       pageSize: pageInfo.pageSize,
       map: tableMap
-    }
-    getTableData(finalParams)
-  }
+    };
+    getTableData(finalParams);
+  };
 
   // 打开数据源弹窗
   const addDataSource = () => {
-    setIsShowAddModal(true)
-  }
+    setIsShowAddModal(true);
+  };
   // 关闭数据源弹窗
   const changeShowState = (modalType: string) => {
-    modalType === 'add'
+    modalType === "add"
       ?
       setIsShowAddModal(false)
       :
-      setIsShowEditModal(false)
-  }
+      setIsShowEditModal(false);
+  };
   // 刷新表格数据
   const refreshTable = () => {
-    getTableData()
-  }
+    getTableData();
+  };
 
   /**********  删除、编辑 操作 *************/
   const delClick = (dataSourceId: string) => {
     Modal.confirm({
-      title: '删除数据源',
+      title: "删除数据源",
       okButtonProps: {
         style: {
-          backgroundColor: '#e9535d',
-          border: 'none',
+          backgroundColor: "#e9535d",
+          border: "none",
           // marginLeft: '8px',
         }
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: '#3d404d'
+          backgroundColor: "#3d404d"
         }
       },
       icon: <ExclamationCircleFilled />,
-      content: '删除后不可恢复，确认删除此数据源吗?',
-      okText: '确定',
-      cancelText: '取消',
+      content: "删除后不可恢复，确认删除此数据源吗?",
+      okText: "确定",
+      cancelText: "取消",
       bodyStyle: {
-        background: '#232630',
+        background: "#232630",
       },
       async onOk(close) {
         //TODO 发送删除数据源的请求
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const data = await http({
           url: `/visual/datasource/delete?dataSourceId=${dataSourceId}`,
-          method: 'post'
-        })
+          method: "post"
+        });
         if (data) {
-          close()
-          refreshTable()
+          close();
+          refreshTable();
         } else {
-          message.error({ content: '删除失败', duration: 2 })
+          message.error({ content: "删除失败", duration: 2 });
         }
       },
       onCancel(close) {
-        close()
+        close();
       }
-    })
-  }
+    });
+  };
   const editClick = (text: any) => {
-    setIsShowEditModal(true)
-    setEditDataSourceInfo(text)
-  }
+    setIsShowEditModal(true);
+    setEditDataSourceInfo(text);
+  };
   const previewClick = (record: any) => {
-    setPreviewRecord(record)
-    const fileUrl = record.type === 'EXCEL' ?
-      record.excelSourceConfig.fileUrl : record.type === 'CSV' ?
-        record.csvSourceConfig.fileUrl : record.jsonSourceConfig.fileUrl
-    setIsShowPreviewModal(true)
-    setPreviewFileUrl(fileUrl)
-  }
+    setPreviewRecord(record);
+    const fileUrl = record.type === "EXCEL" ?
+      record.excelSourceConfig.fileUrl : record.type === "CSV" ?
+        record.csvSourceConfig.fileUrl : record.jsonSourceConfig.fileUrl;
+    setIsShowPreviewModal(true);
+    setPreviewFileUrl(fileUrl);
+  };
   const changePreviewShowState = (val: boolean) => {
-    setIsShowPreviewModal(val)
-    setPreviewFileUrl(null)
-  }
+    setIsShowPreviewModal(val);
+    setPreviewFileUrl(null);
+  };
   const changeRecordFileUrl = async (fileUrl: string) => {
-    const type = previewRecord.type.toLowerCase()
+    const type = previewRecord.type.toLowerCase();
     const finalParams = Object.assign({}, previewRecord, {
       [`${type}SourceConfig`]: {
         fileUrl
       }
-    })
+    });
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const data = await http({
-      url: '/visual/datasource/update',
-      method: 'post',
+      url: "/visual/datasource/update",
+      method: "post",
       body: finalParams
-    })
+    });
     if (data) {
-      refreshTable()
-      setPreviewFileUrl(null)
+      refreshTable();
+      setPreviewFileUrl(null);
     }
-  }
+  };
   // 表格排序
   const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
     // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
-    if (action === 'sort') {
-      const { field, order } = sorter
+    if (action === "sort") {
+      const { field, order } = sorter;
       // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
       // 但是后端只接受 true 或 false
-      if (order === undefined) return
+      if (order === undefined) return;
       //@mark 因为后端的某些原因，后端传过来的是updateTime,但是排序接受的是update_time    本表中只有一个排序字段，不需要做映射了
-      let sortKye: any = field === 'updatedTime' ? 'updated_time' : null
+      const sortKye: any = field === "updatedTime" ? "updated_time" : null;
       // 更新 tableMap, 在别处发请求时会带上当前排序条件
       setTableMap({
         [sortKye]: order
-      })
+      });
       // 发送请求
       const finalParams: TDataSourceParams = {
         spaceId,
         type: dataSourceType,
-        name: inputValue === '' ? null : inputValue,
+        name: inputValue === "" ? null : inputValue,
         ...pageInfo,
         map: {
           [sortKye]: order === "ascend"
         },
-      }
-      getTableData(finalParams)
+      };
+      getTableData(finalParams);
     }
-  }
+  };
   // 表格分页配置
   const paginationProps = {
     total: totalElements,
@@ -242,72 +242,72 @@ const DataSource = (props: any) => {
       const finalParams: TDataSourceParams = {
         spaceId,
         type: dataSourceType,
-        name: inputValue === '' ? null : inputValue,
+        name: inputValue === "" ? null : inputValue,
         pageNo: page,
         pageSize,
         map: tableMap
-      }
-      getTableData(finalParams)
+      };
+      getTableData(finalParams);
     },
-  }
+  };
   // Table columns
   const columns = [
     {
-      title: '名称',
-      dataIndex: 'name',
-      key: 'name',
+      title: "名称",
+      dataIndex: "name",
+      key: "name",
       width: 250,
-      className: 'customHeaderColor',
+      className: "customHeaderColor",
       ellipsis: true,
       render: (text: any) => <span>{text}</span>,
     },
     {
-      title: '数据类型',
-      key: 'type',
+      title: "数据类型",
+      key: "type",
       ellipsis: true,
-      dataIndex: 'type',
+      dataIndex: "type",
       width: 250,
     },
     {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
+      title: "描述",
+      dataIndex: "description",
+      key: "description",
       ellipsis: true,
     },
     {
-      title: '修改时间',
-      key: 'updatedTime',
+      title: "修改时间",
+      key: "updatedTime",
       sorter: true,
       width: 300,
       ellipsis: true,
       showSorterTooltip: false,
-      dataIndex: 'updatedTime',
+      dataIndex: "updatedTime",
       render: (time: any, data: any) => {
         // const a = new Date(time)
         return (
           <>
             {time}
           </>
-        )
+        );
       },
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       ellipsis: true,
       width: 200,
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
             {
-              ['EXCEL', 'CSV', 'JSON'].includes(record.type) ?
+              ["EXCEL", "CSV", "JSON"].includes(record.type) ?
                 <span className='textInOperationColumn' onClickCapture={() => previewClick(record)}>预览</span>
                 : null
             }
             <span className='textInOperationColumn' onClickCapture={() => editClick(text)}>编辑</span>
             <span className='textInOperationColumn' onClickCapture={() => delClick(record.id)}>删除</span>
           </Space>
-        )
+        );
       }
 
     },
@@ -318,19 +318,19 @@ const DataSource = (props: any) => {
       <div className='DataSource-wrap'>
         <div className='title'>我的数据</div>
         <header className='header' style={{
-          background: '#171a24'
+          background: "#171a24"
         }}>
           <div className='custom-btn' onClick={addDataSource}>
-            <PlusOutlined style={{ fontSize: '12px', marginRight: '2px' }} />
+            <PlusOutlined style={{ fontSize: "12px", marginRight: "2px" }} />
             <span>添加数据源</span>
           </div>
           <div className='search'>
-            <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部类型" onChange={selectChange}>
+            <Select style={{ minWidth: "140px" }} dropdownStyle={{ backgroundColor: "#232630" }} defaultValue="全部类型" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
                   return (
                     <Option key={item.key} value={item.key}>{item.name}</Option>
-                  )
+                  );
                 })
               }
             </Select>
@@ -345,8 +345,8 @@ const DataSource = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: '53vh' }}
-            sortDirections={['ascend', 'descend']}
+            scroll={{ y: "53vh" }}
+            sortDirections={["ascend", "descend"]}
             rowClassName='customRowClass'
             loading={tableLoading}
             columns={columns}
@@ -373,7 +373,7 @@ const DataSource = (props: any) => {
         />
         }
         {
-          ['EXCEL', 'CSV'].includes(previewRecord.type) ?
+          ["EXCEL", "CSV"].includes(previewRecord.type) ?
             // {/* 表格在线预览 */}
             <PreviewTable
               visible={isShowPreviewModal}
@@ -393,55 +393,55 @@ const DataSource = (props: any) => {
         }
       </div>
     </ConfigProvider>
-  )
-}
+  );
+};
 
 
 // SelectOptions
 const selectOptions = [
   {
-    name: '全部类型',
-    key: '',
+    name: "全部类型",
+    key: "",
   },
   {
-    name: 'API',
-    key: 'API',
+    name: "API",
+    key: "API",
   },
   {
-    name: 'JSON',
-    key: 'JSON',
+    name: "JSON",
+    key: "JSON",
   },
   {
-    name: 'CSV',
-    key: 'CSV'
+    name: "CSV",
+    key: "CSV"
   },
   {
-    name: 'EXCEL',
-    key: 'EXCEL',
+    name: "EXCEL",
+    key: "EXCEL",
   },
   {
-    name: 'MYSQL',
-    key: 'MYSQL',
+    name: "MYSQL",
+    key: "MYSQL",
   },
   {
-    name: 'POSTGRESQL',
-    key: 'POSTGRESQL',
+    name: "POSTGRESQL",
+    key: "POSTGRESQL",
   },
   {
-    name: 'ELASTIC_SEARCH',
-    key: 'ELASTIC_SEARCH'
+    name: "ELASTIC_SEARCH",
+    key: "ELASTIC_SEARCH"
   },
   {
-    name: 'ORACLE',
-    key: 'ORACLE'
+    name: "ORACLE",
+    key: "ORACLE"
   },
   {
-    name: 'SQLSERVER',
-    key: 'SQLSERVER'
+    name: "SQLSERVER",
+    key: "SQLSERVER"
   },
   {
-    name: 'CLICKHOUSE',
-    key: 'CLICKHOUSE'
+    name: "CLICKHOUSE",
+    key: "CLICKHOUSE"
   },
-]
-export default memo(DataSource)
+];
+export default memo(DataSource);

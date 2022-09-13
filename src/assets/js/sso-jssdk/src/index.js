@@ -1,6 +1,6 @@
-import axios from 'axios';
-import cookie from './cookie';
-import * as utils from './utils';
+import axios from "axios";
+import cookie from "./cookie";
+import * as utils from "./utils";
 
 function applyResolve(success, fail) {
   return (res) => {
@@ -19,10 +19,10 @@ function applyResolve(success, fail) {
 class SsoSdk {
   constructor(options) {
     const config = this.config = Object.assign({
-      sso: '',
-      key: '',
-      stKey: 'ticket',
-      tgtKey: 'tgt',
+      sso: "",
+      key: "",
+      stKey: "ticket",
+      tgtKey: "tgt",
       expires: 7
     }, options);
 
@@ -72,7 +72,7 @@ class SsoSdk {
     });
 
     ticket = ticket || utils.getTicket(key);
-    return this.ssoAxios.delete('/logout', { headers: { ticket } }).then(resolve);
+    return this.ssoAxios.delete("/logout", { headers: { ticket } }).then(resolve);
   }
 
   getUserinfo(ticket) {
@@ -88,7 +88,7 @@ class SsoSdk {
       utils.clearTicket(key);
     });
 
-    return this.ssoAxios.get('/userinfo', { headers: { ticket } }).then(resolve);
+    return this.ssoAxios.get("/userinfo", { headers: { ticket } }).then(resolve);
   }
 
   validate(params) {
@@ -97,7 +97,7 @@ class SsoSdk {
       expires
     } = this.config;
 
-    return this.ssoAxios.get('/validate', { headers: params }).then(res => {
+    return this.ssoAxios.get("/validate", { headers: params }).then(res => {
       const data = res.data || {};
 
       if (res.errorCode === 0 && data.IsValid) {
@@ -112,7 +112,7 @@ class SsoSdk {
   }
 
   validateST(ticket) {
-    return this.validate({ 's-ticket': ticket });
+    return this.validate({ "s-ticket": ticket });
   }
 
   validateTGT(ticket) {
@@ -123,7 +123,7 @@ class SsoSdk {
     const {
       sso
     } = this.config;
-    const ssoLogin = sso.replace('/api/v2', '/login');
+    const ssoLogin = sso.replace("/api/v2", "/login");
     window.location.href = `${loginUrl || ssoLogin}?service=${window.encodeURIComponent(callbackUrl || window.location.href)}`;
   }
 }

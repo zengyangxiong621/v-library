@@ -1,31 +1,31 @@
-import React, { useMemo, useRef, forwardRef } from 'react'
+import React, { useMemo, useRef, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
-import { fade } from '@jiaminghi/color'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
+import { fade } from "@jiaminghi/color";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import { uuid } from '../../util'
+import { uuid } from "../../util";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['#8aaafb', '#1f33a2']
+const defaultColor = ["#8aaafb", "#1f33a2"];
 
-const BorderBox = forwardRef(({ children, className, style, color = [], titleWidth = 250, title = '', backgroundColor = 'transparent' }, ref) => {
-  const filterId = useRef(`border-box-11-filterId-${uuid()}`).current
+const BorderBox = forwardRef(({ children, className, style, color = [], titleWidth = 250, title = "", backgroundColor = "transparent" }, ref) => {
+  const filterId = useRef(`border-box-11-filterId-${uuid()}`).current;
 
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
-  const classNames = useMemo(() => classnames('dv-border-box-11', className), [
+  const classNames = useMemo(() => classnames("dv-border-box-11", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -240,8 +240,8 @@ const BorderBox = forwardRef(({ children, className, style, color = [], titleWid
         {children}
       </div>
     </div>
-  )
-})
+  );
+});
 
 BorderBox.propTypes = {
   children: PropTypes.node,
@@ -251,6 +251,6 @@ BorderBox.propTypes = {
   titleWidth: PropTypes.number,
   title: PropTypes.string,
   backgroundColor: PropTypes.string
-}
+};
 
-export default BorderBox
+export default BorderBox;

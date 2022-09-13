@@ -1,5 +1,5 @@
 const ComponentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // =========
   "name": "3D地图", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
@@ -23,39 +23,39 @@ const ComponentDefaultConfig = {
   },
   "config": [
     {
-      displayName: '位置尺寸',
-      name: 'dimension',
-      type: 'dimensionGroup',
+      displayName: "位置尺寸",
+      name: "dimension",
+      type: "dimensionGroup",
       config: {
         lock: false,
       },
       value: [
         {
-          displayName: 'X轴坐标',
-          name: 'left',
+          displayName: "X轴坐标",
+          name: "left",
           value: 267,
         },
         {
-          displayName: 'Y轴坐标',
-          name: 'top',
+          displayName: "Y轴坐标",
+          name: "top",
           value: 73,
         },
         {
-          displayName: '宽度',
-          name: 'width',
+          displayName: "宽度",
+          name: "width",
           value: 800,
         },
         {
-          displayName: '高度',
-          name: 'height',
+          displayName: "高度",
+          name: "height",
           value: 600,
         },
       ],
     },
     {
-      displayName: '默认隐藏',
-      name: 'hideDefault',
-      type: 'checkBox',
+      displayName: "默认隐藏",
+      name: "hideDefault",
+      type: "checkBox",
       value: false,
     },
   ],
@@ -65,15 +65,15 @@ const ComponentDefaultConfig = {
   "events": [],
   "callbackArgs": [],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default ComponentDefaultConfig
+export default ComponentDefaultConfig;

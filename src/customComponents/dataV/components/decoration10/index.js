@@ -1,22 +1,22 @@
-import React, { useRef, useMemo, forwardRef } from 'react'
+import React, { useRef, useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import { uuid } from '../../util'
+import { uuid } from "../../util";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['#00c2ff', 'rgba(0, 194, 255, 0.3)']
+const defaultColor = ["#00c2ff", "rgba(0, 194, 255, 0.3)"];
 
 const Decoration = forwardRef(({ className, style, color = [] }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
   const {
     animationId1,
@@ -34,13 +34,13 @@ const Decoration = forwardRef(({ className, style, color = [] }, ref) => {
     animationId5: `d10ani5${uuid()}`,
     animationId6: `d10ani6${uuid()}`,
     animationId7: `d10ani7${uuid()}`
-  }).current
+  }).current;
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
-  const classNames = useMemo(() => classnames('dv-decoration-10', className), [
+  const classNames = useMemo(() => classnames("dv-decoration-10", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -189,13 +189,13 @@ const Decoration = forwardRef(({ className, style, color = [] }, ref) => {
         </circle>
       </svg>
     </div>
-  )
-})
+  );
+});
 
 Decoration.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   color: PropTypes.array
-}
+};
 
-export default Decoration
+export default Decoration;

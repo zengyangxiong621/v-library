@@ -1,31 +1,31 @@
-import React, { useMemo, forwardRef } from 'react'
+import React, { useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.20)']
+const defaultColor = ["rgba(255, 255, 255, 0.35)", "rgba(255, 255, 255, 0.20)"];
 
-const BorderBox = forwardRef(({ children, reverse = false, className, style, color = [], backgroundColor = 'transparent' }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+const BorderBox = forwardRef(({ children, reverse = false, className, style, color = [], backgroundColor = "transparent" }, ref) => {
+  const { width, height, domRef } = useAutoResize(ref);
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
-  const classNames = useMemo(() => classnames('dv-border-box-5', className), [
+  const classNames = useMemo(() => classnames("dv-border-box-5", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
       <svg
-        className={`dv-border-svg-container  ${reverse && 'dv-reverse'}`}
+        className={`dv-border-svg-container  ${reverse && "dv-reverse"}`}
         width={width}
         height={height}
       >
@@ -68,8 +68,8 @@ const BorderBox = forwardRef(({ children, reverse = false, className, style, col
 
       <div className='border-box-content'>{children}</div>
     </div>
-  )
-})
+  );
+});
 
 BorderBox.propTypes = {
   children: PropTypes.node,
@@ -78,12 +78,12 @@ BorderBox.propTypes = {
   style: PropTypes.object,
   color: PropTypes.array,
   backgroundColor: PropTypes.string
-}
+};
 
 // 指定 props 的默认值：
 BorderBox.defaultProps = {
   reverse: false,
-  backgroundColor: 'transparent'
-}
+  backgroundColor: "transparent"
+};
 
-export default BorderBox
+export default BorderBox;

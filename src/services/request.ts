@@ -8,7 +8,7 @@ const isPlainObject = (config: any) => {
 export const BASEURL = (window as any).CONFIG.BASE_URL;
 
 /* 核心方法 */
-export const http = (config: any, isDownload: boolean = false, isAllurl: boolean = false): any => {
+export const http = (config: any, isDownload = false, isAllurl = false): any => {
   // init config & validate
   if (!isPlainObject(config)) config = {};
   config = Object.assign(
@@ -51,7 +51,7 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
   }
 
   // 类似于Axios的请求拦截器，例如：把存储在客户端本地的token信息携带给服务器「根据当前后台要求处理」
-  let token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   if (token) headers["token"] = token;
 
   // 发送请求
@@ -105,18 +105,18 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
     })
     .catch((err) => {
       const { code, message: errMessage } = err;
-      message.error(errMessage || '请求数据失败');
+      message.error(errMessage || "请求数据失败");
       if (code === 401) {
-        if (token && token.endsWith('x-gridsumdissector')) {
-          forwardLogin()
+        if (token && token.endsWith("x-gridsumdissector")) {
+          forwardLogin();
         } else {
-          window.history.replaceState(null, '', '/login')
+          window.history.replaceState(null, "", "/login");
           window.location.reload();
           localStorage.removeItem("token");
         }
       }
       if(code===403){
-        window.history.replaceState(null,'','/404')
+        window.history.replaceState(null,"","/404");
       }
       return Promise.reject(err);
     });
@@ -145,17 +145,17 @@ export const http = (config: any, isDownload: boolean = false, isAllurl: boolean
   };
 });
 
-export const downLoad=async (url:string , isAllurl:boolean=false, fileName?:string) => {
+export const downLoad=async (url:string , isAllurl=false, fileName?:string) => {
   const config={
     url:url,
-    method:'GET',
-    responseType:'blob'
-  }
-  const res = await http(config, true, isAllurl)
-  let a = document.createElement('a');
-  let downloadUrl = window.URL.createObjectURL(res);
+    method:"GET",
+    responseType:"blob"
+  };
+  const res = await http(config, true, isAllurl);
+  const a = document.createElement("a");
+  const downloadUrl = window.URL.createObjectURL(res);
   a.href = downloadUrl;
-  a.download=(fileName || '') + '.zip';
+  a.download=(fileName || "") + ".zip";
   a.click();
   window.URL.revokeObjectURL(downloadUrl);
 };

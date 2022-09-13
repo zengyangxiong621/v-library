@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import CRender from '@jiaminghi/c-render'
+import CRender from "@jiaminghi/c-render";
 
-import '@jiaminghi/charts/lib/extend/index'
+import "@jiaminghi/charts/lib/extend/index";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import './style.less'
+import "./style.less";
 
 const defaultConfig = {
   /**
@@ -28,7 +28,7 @@ const defaultConfig = {
    * @default content = ''
    * @example content = '{nt}个'
    */
-  content: '',
+  content: "",
   /**
    * @description Number toFixed
    * @type {Number}
@@ -41,7 +41,7 @@ const defaultConfig = {
    * @default textAlign = 'center'
    * @example textAlign = 'center' | 'left' | 'right'
    */
-  textAlign: 'center',
+  textAlign: "center",
   /**
    * @description rowGap
    * @type {Number}
@@ -54,7 +54,7 @@ const defaultConfig = {
    */
   style: {
     fontSize: 30,
-    fill: '#3de7c9'
+    fill: "#3de7c9"
   },
   /**
    * @description Number formatter
@@ -66,92 +66,92 @@ const defaultConfig = {
    * @type {String}
    * @default animationCurve = 'easeOutCubic'
    */
-  animationCurve: 'easeOutCubic',
+  animationCurve: "easeOutCubic",
   /**
    * @description CRender animationFrame
    * @type {String}
    * @default animationFrame = 50
    */
   animationFrame: 50
-}
+};
 
 const DigitalFlop = ({ config = {}, className, style }) => {
-  const domRef = useRef(null)
-  const rendererRef = useRef(null)
-  const graphRef = useRef(null)
+  const domRef = useRef(null);
+  const rendererRef = useRef(null);
+  const graphRef = useRef(null);
 
   function getGraph(mergedConfig) {
-    const { animationCurve, animationFrame } = mergedConfig
+    const { animationCurve, animationFrame } = mergedConfig;
 
     return rendererRef.current.add({
-      name: 'numberText',
+      name: "numberText",
       animationCurve,
       animationFrame,
       shape: getShape(mergedConfig),
       style: getStyle(mergedConfig)
-    })
+    });
   }
 
   function getShape({ number, content, toFixed, textAlign, rowGap, formatter }) {
-    const [w, h] = rendererRef.current.area
+    const [w, h] = rendererRef.current.area;
 
-    const position = [w / 2, h / 2]
+    const position = [w / 2, h / 2];
 
-    if (textAlign === 'left') position[0] = 0
-    if (textAlign === 'right') position[0] = w
+    if (textAlign === "left") position[0] = 0;
+    if (textAlign === "right") position[0] = w;
 
-    return { number, content, toFixed, position, rowGap, formatter }
+    return { number, content, toFixed, position, rowGap, formatter };
   }
 
   function getStyle({ style, textAlign }) {
     return deepMerge(style, {
       textAlign,
-      textBaseline: 'middle'
-    })
+      textBaseline: "middle"
+    });
   }
 
   useEffect(() => {
-    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {})
+    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {});
 
     if (!rendererRef.current) {
-      rendererRef.current = new CRender(domRef.current)
+      rendererRef.current = new CRender(domRef.current);
 
-      graphRef.current = getGraph(mergedConfig)
+      graphRef.current = getGraph(mergedConfig);
     }
 
-    const graph = graphRef.current
-    graph.animationEnd()
+    const graph = graphRef.current;
+    graph.animationEnd();
 
-    const shape = getShape(mergedConfig)
+    const shape = getShape(mergedConfig);
 
-    const cacheNum = graph.shape.number.length
-    const shapeNum = shape.number.length
+    const cacheNum = graph.shape.number.length;
+    const shapeNum = shape.number.length;
 
-    cacheNum !== shapeNum && (graph.shape.number = shape.number)
+    cacheNum !== shapeNum && (graph.shape.number = shape.number);
 
-    const { animationCurve, animationFrame } = mergedConfig
+    const { animationCurve, animationFrame } = mergedConfig;
 
-    Object.assign(graph, { animationCurve, animationFrame })
+    Object.assign(graph, { animationCurve, animationFrame });
 
-    graph.animation('style', getStyle(mergedConfig), true)
-    graph.animation('shape', shape)
-  }, [config])
+    graph.animation("style", getStyle(mergedConfig), true);
+    graph.animation("shape", shape);
+  }, [config]);
 
-  const classNames = useMemo(() => classnames('dv-digital-flop', className), [
+  const classNames = useMemo(() => classnames("dv-digital-flop", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style}>
       <canvas ref={domRef} />
     </div>
-  )
-}
+  );
+};
 
 DigitalFlop.propTypes = {
   config: PropTypes.object,
   className: PropTypes.string,
   style: PropTypes.object
-}
+};
 
-export default DigitalFlop
+export default DigitalFlop;

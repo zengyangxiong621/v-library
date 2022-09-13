@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useRef, useCallback, useMemo, forwardRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import { randomExtend, getPointDistance, uuid } from '../../util'
+import { randomExtend, getPointDistance, uuid } from "../../util";
 
-import './style.less'
+import "./style.less";
 
 /**
 * @description Type Declaration
@@ -99,7 +99,7 @@ const defaultConfig = {
      * @type {String}
      * @default color = '#fb7293'
      */
-    color: '#fb7293',
+    color: "#fb7293",
     /**
      * @description Halo radius
      * @type {Number}
@@ -129,7 +129,7 @@ const defaultConfig = {
      * @type {String}
      * @default color = '#ffdb5c'
      */
-    color: '#ffdb5c',
+    color: "#ffdb5c",
     /**
      * @description Text font size
      * @type {Number}
@@ -153,7 +153,7 @@ const defaultConfig = {
      * @type {String}
      * @default src = ''
      */
-    src: '',
+    src: "",
     /**
      * @description Icon width
      * @type {Number}
@@ -183,13 +183,13 @@ const defaultConfig = {
      * @type {String}
      * @default color = '#ffde93'
      */
-    color: '#ffde93',
+    color: "#ffde93",
     /**
      * @description Orbit color
      * @type {String}
      * @default orbitColor = 'rgba(103, 224, 227, .2)'
      */
-    orbitColor: 'rgba(103, 224, 227, .2)',
+    orbitColor: "rgba(103, 224, 227, .2)",
     /**
      * @description Flyline animation duration
      * @type {[number, number]}
@@ -208,7 +208,7 @@ const defaultConfig = {
    * @type {String}
    * @default bgImgSrc = ''
    */
-  bgImgSrc: '',
+  bgImgSrc: "",
   /**
    * @description K value
    * @type {Number}
@@ -228,145 +228,145 @@ const defaultConfig = {
    * @default relative = true
    */
   relative: true
-}
+};
 
 function getKLinePointByx(k, [lx, ly], x) {
-  const y = ly - k * lx + k * x
+  const y = ly - k * lx + k * x;
 
-  return [x, y]
+  return [x, y];
 }
 
 const FlyLineChartEnhanced = forwardRef(({ config = {}, dev = false, className, style }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
   const { unique, flylineGradientId, haloGradientId } = useRef({
     unique: Math.random(),
     flylineGradientId: `flyline-gradient-id-${uuid()}`,
     haloGradientId: `halo-gradient-id-${uuid()}`
-  }).current
+  }).current;
 
   const { mergedConfig, flylinePoints, flylines } = useMemo(calcData, [
     config,
     width,
     height
-  ])
+  ]);
 
-  const [flylineLengths, setFlylineLengths] = useState([])
+  const [flylineLengths, setFlylineLengths] = useState([]);
 
-  const pathDomRef = useRef([])
+  const pathDomRef = useRef([]);
 
   function calcData() {
-    const mergedConfig = getMergedConfig()
+    const mergedConfig = getMergedConfig();
 
-    const flylinePoints = getFlylinePoints(mergedConfig)
+    const flylinePoints = getFlylinePoints(mergedConfig);
 
-    const flylines = getLinePaths(mergedConfig)
+    const flylines = getLinePaths(mergedConfig);
 
-    return { mergedConfig, flylinePoints, flylines }
+    return { mergedConfig, flylinePoints, flylines };
   }
 
   function getMergedConfig() {
-    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {})
-    const { points, lines, halo, text, icon, line } = mergedConfig
+    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {});
+    const { points, lines, halo, text, icon, line } = mergedConfig;
 
     mergedConfig.points = points.map(item => {
-      item.halo = deepMerge(deepClone(halo, true), item.halo || {})
-      item.text = deepMerge(deepClone(text, true), item.text || {})
-      item.icon = deepMerge(deepClone(icon, true), item.icon || {})
-      return item
-    })
+      item.halo = deepMerge(deepClone(halo, true), item.halo || {});
+      item.text = deepMerge(deepClone(text, true), item.text || {});
+      item.icon = deepMerge(deepClone(icon, true), item.icon || {});
+      return item;
+    });
 
-    mergedConfig.lines = lines.map(item => deepMerge(deepClone(line, true), item))
+    mergedConfig.lines = lines.map(item => deepMerge(deepClone(line, true), item));
 
-    return mergedConfig
+    return mergedConfig;
   }
 
   function getFlylinePoints(mergedConfig) {
-    const { relative, points } = mergedConfig
+    const { relative, points } = mergedConfig;
 
     return points.map((item, i) => {
-      const { coordinate: [x, y], halo, icon, text } = item
+      const { coordinate: [x, y], halo, icon, text } = item;
 
-      if (relative) item.coordinate = [x * width, y * height]
+      if (relative) item.coordinate = [x * width, y * height];
 
-      item.halo.time = randomExtend(...halo.duration) / 10
+      item.halo.time = randomExtend(...halo.duration) / 10;
 
-      const { width: iw, height: ih } = icon
-      item.icon.x = item.coordinate[0] - iw / 2
-      item.icon.y = item.coordinate[1] - ih / 2
+      const { width: iw, height: ih } = icon;
+      item.icon.x = item.coordinate[0] - iw / 2;
+      item.icon.y = item.coordinate[1] - ih / 2;
 
-      const [ox, oy] = text.offset
-      item.text.x = item.coordinate[0] + ox
-      item.text.y = item.coordinate[1] + oy
-      item.key = `${item.coordinate.toString()}${i}`
+      const [ox, oy] = text.offset;
+      item.text.x = item.coordinate[0] + ox;
+      item.text.y = item.coordinate[1] + oy;
+      item.key = `${item.coordinate.toString()}${i}`;
 
-      return item
-    })
+      return item;
+    });
   }
 
   function getLinePaths(mergedConfig) {
-    const { points, lines } = mergedConfig
+    const { points, lines } = mergedConfig;
 
     return lines.map(item => {
-      const { source, target, duration } = item
-      const sourcePoint = points.find(({ name }) => name === source).coordinate
-      const targetPoint = points.find(({ name }) => name === target).coordinate
-      const path = getPath(sourcePoint, targetPoint, mergedConfig).map(item => item.map(v => parseFloat(v.toFixed(10))))
-      const d = `M${path[0].toString()} Q${path[1].toString()} ${path[2].toString()}`
-      const key = `path${path.toString()}`
-      const time = randomExtend(...duration) / 10
+      const { source, target, duration } = item;
+      const sourcePoint = points.find(({ name }) => name === source).coordinate;
+      const targetPoint = points.find(({ name }) => name === target).coordinate;
+      const path = getPath(sourcePoint, targetPoint, mergedConfig).map(item => item.map(v => parseFloat(v.toFixed(10))));
+      const d = `M${path[0].toString()} Q${path[1].toString()} ${path[2].toString()}`;
+      const key = `path${path.toString()}`;
+      const time = randomExtend(...duration) / 10;
 
-      return { ...item, path, key, d, time }
-    })
+      return { ...item, path, key, d, time };
+    });
   }
 
   function getPath(start, end, mergedConfig) {
-    const controlPoint = getControlPoint(start, end, mergedConfig)
+    const controlPoint = getControlPoint(start, end, mergedConfig);
 
-    return [start, controlPoint, end]
+    return [start, controlPoint, end];
   }
 
   function getControlPoint([sx, sy], [ex, ey], { curvature, k }) {
-    const [mx, my] = [(sx + ex) / 2, (sy + ey) / 2]
-    const distance = getPointDistance([sx, sy], [ex, ey])
-    const targetLength = distance / curvature
-    const disDived = targetLength / 2
-    let [dx, dy] = [mx, my]
+    const [mx, my] = [(sx + ex) / 2, (sy + ey) / 2];
+    const distance = getPointDistance([sx, sy], [ex, ey]);
+    const targetLength = distance / curvature;
+    const disDived = targetLength / 2;
+    let [dx, dy] = [mx, my];
 
     do {
-      dx += disDived
-      dy = getKLinePointByx(k, [mx, my], dx)[1]
-    } while (getPointDistance([mx, my], [dx, dy]) < targetLength)
+      dx += disDived;
+      dy = getKLinePointByx(k, [mx, my], dx)[1];
+    } while (getPointDistance([mx, my], [dx, dy]) < targetLength);
 
-    return [dx, dy]
+    return [dx, dy];
   }
 
   const consoleClickPos = useCallback(({ offsetX, offsetY }) => {
-    if (!dev) return
+    if (!dev) return;
 
-    const relativeX = (offsetX / width).toFixed(2)
-    const relativeY = (offsetY / height).toFixed(2)
+    const relativeX = (offsetX / width).toFixed(2);
+    const relativeY = (offsetY / height).toFixed(2);
 
-    console.warn(`dv-flyline-chart-enhanced DEV: \n Click Position is [${offsetX}, ${offsetY}] \n Relative Position is [${relativeX}, ${relativeY}]`)
-  }, [width, height, dev])
+    console.warn(`dv-flyline-chart-enhanced DEV: \n Click Position is [${offsetX}, ${offsetY}] \n Relative Position is [${relativeX}, ${relativeY}]`);
+  }, [width, height, dev]);
 
   useEffect(() => {
     const lengths = flylines.map((foo, i) =>
       pathDomRef.current[i].getTotalLength()
-    )
+    );
 
-    setFlylineLengths(lengths)
-  }, [flylines])
+    setFlylineLengths(lengths);
+  }, [flylines]);
 
-  const classNames = useMemo(() => classnames('dv-flyline-chart-enhanced', className), [
+  const classNames = useMemo(() => classnames("dv-flyline-chart-enhanced", className), [
     className
-  ])
+  ]);
 
   return (
     <div
       className={classNames}
       ref={domRef}
-      style={{ backgroundImage: `url(${mergedConfig ? mergedConfig.bgImgSrc : ''})`, ...style }}
+      style={{ backgroundImage: `url(${mergedConfig ? mergedConfig.bgImgSrc : ""})`, ...style }}
       onClick={consoleClickPos}
     >
       {
@@ -532,19 +532,19 @@ const FlyLineChartEnhanced = forwardRef(({ config = {}, dev = false, className, 
         )
       }
     </div>
-  )
-})
+  );
+});
 
 FlyLineChartEnhanced.propTypes = {
   config: PropTypes.object,
   dev: PropTypes.bool,
   className: PropTypes.string,
   style: PropTypes.object
-}
+};
 
 // 指定 props 的默认值：
 FlyLineChartEnhanced.defaultProps = {
   dev: false
-}
+};
 
-export default FlyLineChartEnhanced
+export default FlyLineChartEnhanced;

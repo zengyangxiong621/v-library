@@ -1,32 +1,32 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
-import { connect } from 'dva'
-import { http, BASEURL } from '@/services/request'
-import MaterialCard from '../materialCard/index'
-import DarkModal from '../darkThemeModal/index'
-import PreviewModal from '../previewModal/index'
+import { connect } from "dva";
+import { http, BASEURL } from "@/services/request";
+import MaterialCard from "../materialCard/index";
+import DarkModal from "../darkThemeModal/index";
+import PreviewModal from "../previewModal/index";
 
 
 import {
   Row, Col, Button, Spin, message, Form,
   Switch, Input, Upload, Select, Typography, Tooltip,Empty 
-} from 'antd'
-import { IconFont } from '../../../../utils/useIcon'
+} from "antd";
+import { IconFont } from "../../../../utils/useIcon";
 
-const { Option } = Select
-const { Paragraph } = Typography
+const { Option } = Select;
+const { Paragraph } = Typography;
 
 
 const RightContent = (props: any) => {
-  const { listData, resourceCenter, dispatch,refreshList, spaceId } = props
-  const [showMoveGroupModal, setShowMoveGroupModal] = useState(false)
-  const [newGroupId, setNewGroupId] = useState('')
-  const [currentItem, setCurrentItem] = useState<any>({})
+  const { listData, resourceCenter, dispatch,refreshList, spaceId } = props;
+  const [showMoveGroupModal, setShowMoveGroupModal] = useState(false);
+  const [newGroupId, setNewGroupId] = useState("");
+  const [currentItem, setCurrentItem] = useState<any>({});
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
 
   // 发布应用时的参数
-  const [curAppId, setCurAppId] = useState('')
+  const [curAppId, setCurAppId] = useState("");
 
 
   // ************** 可复用方法 ************
@@ -54,67 +54,67 @@ const RightContent = (props: any) => {
 
   /**** 移动分组Modal相关代码*** */
   const openMoveGroupModal = (appId: string) => {
-    setShowMoveGroupModal(true)
-    setCurAppId(appId)
-  }
+    setShowMoveGroupModal(true);
+    setCurAppId(appId);
+  };
   // 关闭移动分组弹窗
   const cancelmoveGroupModal = () => {
-    setShowMoveGroupModal(false)
-  }
+    setShowMoveGroupModal(false);
+  };
   // 选择 新的分组
   const selectGroup = (val: any) => {
-    var reg = RegExp(/Ohter/);
-    var id = reg.test(val) ? 0 : val
-    setNewGroupId(id)
-  }
+    const reg = RegExp(/Ohter/);
+    const id = reg.test(val) ? 0 : val;
+    setNewGroupId(id);
+  };
   // 确认移动分组
   const confirmMoveGroup = async () => {
-    let url = ['myTemp', 'systemTemp'].indexOf(currentItem.moduleType) > -1  ? '/visual/appTemplate/updateTemplateGroup' : '/visual/resource/changeGroup'
-    let obj = ['myTemp', 'systemTemp'].indexOf(currentItem.moduleType) > -1 ? {id: curAppId} : {resourceId: curAppId}
+    const url = ["myTemp", "systemTemp"].indexOf(currentItem.moduleType) > -1  ? "/visual/appTemplate/updateTemplateGroup" : "/visual/resource/changeGroup";
+    const obj = ["myTemp", "systemTemp"].indexOf(currentItem.moduleType) > -1 ? {id: curAppId} : {resourceId: curAppId};
     const data = await http({
       url,
-      method: 'post',
+      method: "post",
       body: {
-        spaceId: currentItem.moduleType === 'systemTemp' ? null : spaceId ,
+        spaceId: currentItem.moduleType === "systemTemp" ? null : spaceId ,
         newGroupId: newGroupId,
         ...obj
       }
-    })
+    });
     if (data) {
-      message.success({ content: '移动分组成功', duration: 2 })
+      message.success({ content: "移动分组成功", duration: 2 });
       // 移入分组成功后，需要刷新当前分组下的模板以及刷新左侧分组树
-      refreshList(true)
-      cancelMoveGroup()
-      setNewGroupId('')
+      refreshList(true);
+      cancelMoveGroup();
+      setNewGroupId("");
     } else {
-      message.error({ content: '移动分组失败', duration: 2 })
+      message.error({ content: "移动分组失败", duration: 2 });
     }
-  }
+  };
   // 取消移动分组
   const cancelMoveGroup = () => {
-    setShowMoveGroupModal(false)
-  }
+    setShowMoveGroupModal(false);
+  };
 
   const getCurrentItem = (data: any,type:any) => {
-    setCurrentItem(data)
-    if(type === 'preview'){
-      setIsPreviewVisible(true)
+    setCurrentItem(data);
+    if(type === "preview"){
+      setIsPreviewVisible(true);
     }
-  }
+  };
 
   const changeVisible = (type:any) => {
-    setIsPreviewVisible(type)
-  }
-  let selectList = []
+    setIsPreviewVisible(type);
+  };
+  let selectList = [];
   if(showMoveGroupModal){
     switch(currentItem.moduleType){
-      case 'myTemp':
-      case 'systemTemp':
-        selectList = currentItem && currentItem.moduleType === 'myTemp' ? resourceCenter.groupList[0].children[0].children : resourceCenter.groupList[0].children[1].children
-        break
+      case "myTemp":
+      case "systemTemp":
+        selectList = currentItem && currentItem.moduleType === "myTemp" ? resourceCenter.groupList[0].children[0].children : resourceCenter.groupList[0].children[1].children;
+        break;
       default:
-        selectList = currentItem && currentItem.moduleType === 'myresource' ? resourceCenter.groupList[1].children[0].children : resourceCenter.groupList[1].children[1].children
-        break
+        selectList = currentItem && currentItem.moduleType === "myresource" ? resourceCenter.groupList[1].children[0].children : resourceCenter.groupList[1].children[1].children;
+        break;
     }
   }
   return <> 
@@ -156,7 +156,7 @@ const RightContent = (props: any) => {
         </div>
       ]}
       style={{
-        top: '25%'
+        top: "25%"
       }}
     >
       <Form
@@ -182,7 +182,7 @@ const RightContent = (props: any) => {
         </Form.Item>
       </Form>
     </DarkModal>
-  </>
+  </>;
 };
 
 export default memo(connect(

@@ -1,6 +1,6 @@
-import { h } from './element';
-import { bindClickoutside, unbindClickoutside } from './event';
-import { cssPrefix } from '../config';
+import { h } from "./element";
+import { bindClickoutside, unbindClickoutside } from "./event";
+import { cssPrefix } from "../config";
 
 function inputMovePrev(evt) {
   evt.preventDefault();
@@ -68,16 +68,16 @@ function inputKeydownHandler(evt) {
 }
 
 export default class Suggest {
-  constructor(items, itemClick, width = '200px') {
+  constructor(items, itemClick, width = "200px") {
     this.filterItems = [];
     this.items = items;
-    this.el = h('div', `${cssPrefix}-suggest`).css('width', width).hide();
+    this.el = h("div", `${cssPrefix}-suggest`).css("width", width).hide();
     this.itemClick = itemClick;
     this.itemIndex = -1;
   }
 
   setOffset(v) {
-    this.el.cssRemoveKeys('top', 'bottom')
+    this.el.cssRemoveKeys("top", "bottom")
       .offset(v);
   }
 
@@ -102,20 +102,20 @@ export default class Suggest {
     items = items.map((it) => {
       let { title } = it;
       if (title) {
-        if (typeof title === 'function') {
+        if (typeof title === "function") {
           title = title();
         }
       } else {
         title = it;
       }
-      const item = h('div', `${cssPrefix}-item`)
+      const item = h("div", `${cssPrefix}-item`)
         .child(title)
-        .on('click.stop', () => {
+        .on("click.stop", () => {
           this.itemClick(it);
           this.hide();
         });
       if (it.label) {
-        item.child(h('div', 'label').html(it.label));
+        item.child(h("div", "label").html(it.label));
       }
       return item;
     });
@@ -125,11 +125,11 @@ export default class Suggest {
     }
     const { el } = this;
     // items[0].toggle();
-    el.html('').children(...items).show();
+    el.html("").children(...items).show();
     bindClickoutside(el.parent(), () => { this.hide(); });
   }
 
   bindInputEvents(input) {
-    input.on('keydown', evt => inputKeydownHandler.call(this, evt));
+    input.on("keydown", evt => inputKeydownHandler.call(this, evt));
   }
 }

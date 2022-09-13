@@ -102,7 +102,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": '48px'
+          "value": "48px"
         }
       ]
     },
@@ -127,22 +127,22 @@ const componentDefaultConfig = {
         "min": 0,
         "max": 100,
         "step": 1,
-        suffix: '',  // 输入框后缀
+        suffix: "",  // 输入框后缀
       }
     },
     {
       "displayName": "水波方向",
       "name": "waveDirection",
-      type: 'select',
-      value: 'right',
+      type: "select",
+      value: "right",
       options: [
         {
-          name: '左',
-          value: 'left'
+          name: "左",
+          value: "left"
         },
         {
-          name: '右',
-          value: 'right'
+          name: "右",
+          value: "right"
         },
       ]
     }
@@ -161,6 +161,6 @@ const componentDefaultConfig = {
       "name": "政务蓝"
     }
   ]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

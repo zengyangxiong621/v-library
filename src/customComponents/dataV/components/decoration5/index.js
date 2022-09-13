@@ -1,21 +1,21 @@
-import React, { useMemo, forwardRef } from 'react'
+import React, { useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { getPolylineLength, deepMerge } from '@jiaminghi/charts/lib/util'
+import { getPolylineLength, deepMerge } from "@jiaminghi/charts/lib/util";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['#3f96a5', '#3f96a5']
+const defaultColor = ["#3f96a5", "#3f96a5"];
 
 const Decoration = forwardRef(({ className, dur = 1.2, style, color = [] }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
   function calcSVGData() {
     let line1Points = [
@@ -29,29 +29,29 @@ const Decoration = forwardRef(({ className, dur = 1.2, style, color = [] }, ref)
       [width * 0.8, height * 0.4],
       [width * 0.82, height * 0.2],
       [width, height * 0.2]
-    ]
+    ];
 
-    let line2Points = [[width * 0.3, height * 0.8], [width * 0.7, height * 0.8]]
+    let line2Points = [[width * 0.3, height * 0.8], [width * 0.7, height * 0.8]];
 
-    const line1Length = getPolylineLength(line1Points)
-    const line2Length = getPolylineLength(line2Points)
+    const line1Length = getPolylineLength(line1Points);
+    const line2Length = getPolylineLength(line2Points);
 
-    line1Points = line1Points.map(point => point.join(',')).join(' ')
-    line2Points = line2Points.map(point => point.join(',')).join(' ')
+    line1Points = line1Points.map(point => point.join(",")).join(" ");
+    line2Points = line2Points.map(point => point.join(",")).join(" ");
 
-    return { line1Points, line2Points, line1Length, line2Length }
+    return { line1Points, line2Points, line1Length, line2Length };
   }
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
   const { line1Points, line2Points, line1Length, line2Length } = useMemo(
     calcSVGData,
     [width, height]
-  )
+  );
 
-  const classNames = useMemo(() => classnames('dv-decoration-5', className), [
+  const classNames = useMemo(() => classnames("dv-decoration-5", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -96,14 +96,14 @@ const Decoration = forwardRef(({ className, dur = 1.2, style, color = [] }, ref)
         </polyline>
       </svg>
     </div>
-  )
-})
+  );
+});
 
 Decoration.propTypes = {
   dur: PropTypes.number,
   className: PropTypes.string,
   style: PropTypes.object,
   color: PropTypes.array
-}
+};
 
-export default Decoration
+export default Decoration;
