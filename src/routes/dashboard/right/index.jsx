@@ -10,7 +10,7 @@ import AlignmentSetting from './components/alignmentSetting'
 import ReferenceSetting from './components/referenceSetting'
 import DynamicPageSetting from './components/dynamicPageSetting'
 import DynamicSetting from './components/dynamicSetting'
-
+import DrillDownPageSetting from './components/drillDownPageSetting'
 /**
  * 1. 组配置、单个图层配置、页面设置、多选时对齐设置
  *
