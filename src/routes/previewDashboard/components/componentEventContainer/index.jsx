@@ -421,6 +421,12 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
               {...props}
             >
             </ScrollSelect>
+          : props.componentConfig.moduleName === 'counter' ?
+            <Counter
+              onChange={handleValueChange}
+              {...props}
+            >
+            </Counter>
             : props.componentConfig.moduleName === 'timeSelect' ?
               <TimeSelect
                 scale={scale}
