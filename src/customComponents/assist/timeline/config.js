@@ -150,7 +150,7 @@ const componentDefaultConfig = {
                     "value": 24
                   },
                   {
-                    "name": "color",
+                    "name": "themeColor",
                     "displayName": "",
                     "type": "color",
                     "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -364,7 +364,7 @@ const componentDefaultConfig = {
                       "value": 24
                     },
                     {
-                      "name": "color",
+                      "name": "themeColor",
                       "displayName": "",
                       "type": "color",
                       "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -398,7 +398,7 @@ const componentDefaultConfig = {
       ]
     },
     {
-      "name": "backgroundColor",
+      "name": "themeBackgroundColor",
       "displayName": "背景颜色",
       "type": "color",
       "value": 'rgba(255,255,255,0.1)'
