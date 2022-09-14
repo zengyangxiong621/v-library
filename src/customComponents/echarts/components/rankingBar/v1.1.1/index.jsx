@@ -509,9 +509,9 @@ const RankingBar = (props) => {
 
   const isEmpty = str =>{
     let res = false
-    if(!res){
+    if(!str){
       res = true
-    }else if(res && !res.trim()){
+    }else if(str && !str.trim()){
       res = true
     }
     return res

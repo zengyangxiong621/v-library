@@ -9,7 +9,7 @@ import CusImage from '@/customComponents/assist/image/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.0'
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.1'
 import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
@@ -189,9 +189,14 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
             compCallbackArgs.forEach(callback => {
               // 判断是否为同一个源
               if (item.callbackParam === callback.target) {
+                // 翻页组件不需要配置origin
+                if(component.moduleName === 'paginationComp'){
+                  temp = true
+                  callbackArgs[callback.target] = data[callback.target]
+                  activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
                 // 值是否改变
                 // data的值存在并且
-                if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                } else if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
                   temp = true
                   callbackArgs[callback.target] = data[callback.origin]
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))

@@ -197,7 +197,9 @@ ECharts.defaultProps = {
   showLoading: false,
   loadingOption: null,
   onEvents: {},
-  opts: {},
+  opts: {
+    renderer:'svg'
+  },
   shouldSetOption: () => true,
 };
 
