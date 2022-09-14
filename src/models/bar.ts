@@ -57,7 +57,7 @@ import {
 } from "./utils/addSomeAttrInLayers";
 import { http } from "../services/request";
 
-import { defaultData, IBarState } from "./defaultData/bar";
+import { defaultData, IBarState, IFullAmountDashboardDetail, IState } from "./defaultData/bar"
 
 export default {
   namespace: "bar",
@@ -146,7 +146,7 @@ export default {
       { call, put, select }: any
     ): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      if (dashboardId !== bar.dashboardId) {
+      if (dashboardId !== bar.dashboardId && !bar.isDashboardInit) {
         // 获取回调参数列表
         const callbackParamsList = yield http({
           url: "/visual/module/callParam/list",
@@ -216,12 +216,28 @@ export default {
           type: "getPanelDetails",
         });
       }
-      yield put({
+
+      yield yield put({
         type: "getDashboardDetails",
         cb: async (data: any) => {
+          console.log('1')
           await cb(data);
         },
       });
+      console.log('2')
+      if (!bar.isDashboardInit) {
+        yield put({
+          type: 'getFullAmountDashboardDetails',
+        })
+      }
+
+      yield put({
+        type: 'save',
+        payload: {
+          isDashboardInit: true
+        }
+      })
+
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -287,9 +303,96 @@ export default {
         },
       });
     },
+    *getFullAmountDashboardDetails({ payload }: any,{ call, put, select }: any): any {
+      let bar: any = yield select(({ bar }: any) => bar);
+      let panels: Array<IPanel> = []
+      const layers = bar.treeData
+      // @ts-ignore
+      const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]) // 0 动态面板；1 引用面板；2 下钻面板
+      // 获取面板详情
+      const getPanelConfigFunc = async (layerPanel: any) => {
+        try {
+          const panelConfig = await http({
+            url: `/visual/panel/detail/${ layerPanel.id }`,
+            method: 'get',
+          })
+          return panelConfig
+        } catch(e) {
+          return null
+        }
+      }
+      // 获取状态详情
+      const getPanelStatusDetails = async (panelStatus: {name: string; id: string}) => {
+        try {
+          const data = await http(
+            {
+              url: `/visual/application/dashboard/detail/${ panelStatus.id }`,
+              method: "get",
+            })
+          return { ...data, id: panelStatus.id }
+        } catch(e) {
+          return null
+        }
+      }
+      const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<any> => {
+        return await panels.reduce(async(total: any, item)=> {
+          const res = await total
+          const data = await Promise.all(item.states.map((status: any) => getPanelStatusDetails(status)))
+          data.forEach((detail) => {
+            res.push(detail)
+          })
+          return res
+        }, [])
+      }
+      // 获取面板+状态详情
+      const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>) => {
+        let panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
+        panels = panels.filter(item => item)
+        bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panels)
+        const panelsStatusDetail = await allPanelStatusDetailsFunc(panels)
+        bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panelsStatusDetail)
+        for(const detail of panelsStatusDetail) {
+          const layers = detail.layers
+          // @ts-ignore
+          const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2])
+          await getDeepPanelAndStatusDetails(layerPanels)
+        }
+      }
+      yield getDeepPanelAndStatusDetails(layerPanels)
+      let fullAmountDynamicAndDrillDownPanels: any = bar.fullAmountDashboardDetails.filter((item: IFullAmountDashboardDetail) => 'type' in item && [0, 2].includes(item.type))
+      fullAmountDynamicAndDrillDownPanels = fullAmountDynamicAndDrillDownPanels.map(({ id, type, name, states }: IFullAmountDashboardDetail) => (
+        {
+          id,
+          panelType: type,
+          name,
+          modules: (states as Array<IState>).map(({ id, name }) => ({
+            id,
+            modules: bar.fullAmountDashboardDetails.find((item: IFullAmountDashboardDetail) => item.id === id).layers,
+            name
+          }))
+        }
+      ))
+      const fullAmountLayers = deepForEach(deepClone(layers), (layer: ILayerPanel | (Pick<ILayerPanel, "name" | "id" | "panelType"> & {modules: any})  | ILayerGroup | ILayerComponent, index: number) => {
+        if ('panelType' in layer && layer.panelType === 0) {
+          (layer as any).modules = fullAmountDynamicAndDrillDownPanels.find((item: any) => item.id === layer.id)?.modules || []
+        }
+      })
+      const fullAmountComponents = bar.fullAmountDashboardDetails.reduce((pre: Array<any>, cur: any) => pre.concat(cur?.components || []), [])
+      const filterPanels = bar.fullAmountDashboardDetails.filter((item: any) => layerPanels.find((panel: any) => panel.id === item.id))
+      yield put({
+        type: 'save',
+        payload: {
+          fullAmountDashboardDetails: bar.fullAmountDashboardDetails,
+          fullAmountLayers,
+          // panels: filterPanels,
+          fullAmountComponents
+        }
+      })
+    },
     *getDashboardDetails({ cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       let { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
+      let fullAmountDashboardDetails = bar.fullAmountDashboardDetails
       if (isPanel) {
         // 默认路由跳转到当前面板的第一个状态
         if (!stateId) {
@@ -310,6 +413,12 @@ export default {
             method: "get",
           }
         );
+        let index = fullAmountDashboardDetails.find((item: any) => item.id === dashboardId)
+        if  (index !== -1) {
+          fullAmountDashboardDetails.splice(index, 1, { layers, components, dashboardConfig, dashboardName, dashboardId, id: dashboardId })
+        } else {
+          fullAmountDashboardDetails.push({ layers, components, dashboardConfig, dashboardName, dashboardId, id: dashboardId })
+        }
         const layerPanels: any = layersPanelsFlat(layers);
         const getPanelConfigFunc = async (layerPanel: any) => {
           try {
@@ -322,59 +431,9 @@ export default {
             return null;
           }
         };
-        // 获取状态详情
-        const getPanelStatusDetails = async (panelStatus: {name: string; id: string}) => {
-          try {
-            const data = await http(
-              {
-                url: `/visual/application/dashboard/detail/${ panelStatus.id }`,
-                method: "get",
-              })
-            return { ...data, id: panelStatus.id }
-          } catch(e) {
-            return null
-          }
-        }
-        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
-        // const allPanelStatusDetails: Array<any> = yield Promise.all(panels.map((item: IPanel)=> {
-        //
-        // }))
-        console.log('panels', panels)
-        const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<any> => {
-          return await panels.reduce(async(total: any, item)=> {
-            const res = await total
-            const data = await Promise.all(item.states.map((status: any) => getPanelStatusDetails(status)))
-            console.log('data', data)
-            res.push({
-              id: item.id,
-              states: data,
-              panelType: 0,
-              name: item.name
-            })
-            return res
-          }, [])
-        }
-        const allPanelStatusDetails: Array<{ id: string, states: any, panelType: 0, name: string }> = yield allPanelStatusDetailsFunc(panels)
-        console.log('allPanelStatusDetails', allPanelStatusDetails)
-        const allPanelLayers = allPanelStatusDetails.map(({ id, states, panelType, name }) => (
-          {
-            id,
-            panelType,
-            name,
-            modules: states.map(({ id, layers, dashboardName }: any) => ({
-              id,
-              modules: layers,
-              name: dashboardName
-            }))
-          }
-        ))
 
-        const fullAmountLayers = deepForEach(deepClone(layers), (layer: ILayerPanel | (Pick<ILayerPanel, "name" | "id" | "panelType"> & {modules: any})  | ILayerGroup | ILayerComponent, index: number) => {
-          if ('panelType' in layer && layer.panelType === 0) {
-            (layer as any).modules = allPanelLayers.find(item => item.id === layer.id)?.modules || []
-          }
-        })
-        console.log('fullAmountLayers', fullAmountLayers)
+        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
+        console.log('panelspanels', panels)
         yield (layers = deepForEach(
           layers,
           (layer: ILayerGroup | ILayerComponent) => {
@@ -423,6 +482,7 @@ export default {
             panelId,
             dashboardConfig: newDashboardConfig,
             dashboardName,
+            fullAmountDashboardDetails
           },
         });
         cb({ dashboardConfig: newDashboardConfig, dashboardName });

@@ -176,7 +176,7 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
 
 
   return (
-    <div className={`reference-panel panel-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%"}}>
+    <div className={`reference-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%"}}>
       {
         state.allData.length === 1 ?
           <RecursiveComponent
@@ -189,7 +189,7 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
           state.allData.map((item: any, index: number) =>
             (
               <div
-                className="status-wrap"
+                className={`status-wrap event-id-${id}`}
                 style={{
                   position: "absolute",
                   width: "100%",

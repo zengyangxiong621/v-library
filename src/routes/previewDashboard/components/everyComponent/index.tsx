@@ -174,36 +174,36 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
 
 
   const getDrillDownData = (chartData: any) => {
-    addDrillDownLevel();
-    const { seriesType, data } = chartData;
-
-    let hadFilterChartData = [];
-    if (typeof chartData === "object") {
-      switch (seriesType) {
-        case "pie":
-          const final = {
-            s: data.name,
-            y: data.value
-          };
-          hadFilterChartData.push(final);
-          break;
-        default:
-          hadFilterChartData.push(chartData.data);
-          break;
+    if (addDrillDownLevel) {
+      addDrillDownLevel();
+      const { seriesType, data } = chartData;
+      let hadFilterChartData = [];
+      if (typeof chartData === "object") {
+        switch (seriesType) {
+          case "pie":
+            const final = {
+              s: data.name,
+              y: data.value
+            };
+            hadFilterChartData.push(final);
+            break;
+          default:
+            hadFilterChartData.push(chartData.data);
+            break;
+        }
+      } else {
+        hadFilterChartData = [chartData];
       }
-    } else {
-      hadFilterChartData = [chartData];
+      const { drillDownArr } = componentData;
+      const childCompIdArr = drillDownArr.map((x: any) => x.id);
+      dispatch({
+        type: "previewDashboard/updateChildCompData",
+        payload: {
+          childCompIdArr,
+          componentData: hadFilterChartData
+        }
+      });
     }
-    const { drillDownArr } = componentData;
-    const childCompIdArr = drillDownArr.map((x: any) => x.id);
-    dispatch({
-      type: "previewDashboard/updateChildCompData",
-      payload: {
-        childCompIdArr,
-        componentData: hadFilterChartData
-      }
-    });
-    // console.log('previewDashboard.componentData', previewDashboard.componentData);
   };
 
   return (

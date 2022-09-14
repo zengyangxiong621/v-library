@@ -137,7 +137,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     // setState({ activeIndex: state.activeIndex + 1 })
   };
   return (
-    <div className={`drill-down-panel panel-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>
+    <div className={`drill-down-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>
       <div style={{ marginBottom: "20px", minWidth: "500px" }}>
         <Breadcrumb
         >
@@ -166,7 +166,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
           state.allData.map((item: any, index: number) =>
           (
             <div
-              className="status-wrap"
+              className={`status-wrap event-id-${id}`}
               style={{
                 position: "absolute",
                 width: "100%",

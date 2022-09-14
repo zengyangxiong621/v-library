@@ -3,7 +3,7 @@ import './index.less'
 import { connect } from 'dva'
 import { v4 as uuidv4 } from 'uuid'
 import debounce from 'lodash/debounce'
-import { deepClone } from '@/utils'
+import { deepClone, findLayerById } from '@/utils'
 import EventDrawer from '../eventDrawer'
 import OriginSelect from '../originSelect'
 
@@ -38,7 +38,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left',
   }
-  const { SHOW_PARENT } = TreeSelect
+  const { SHOW_PARENT, SHOW_ALL, SHOW_CHILD } = TreeSelect
 
   const _data = props.data || {}
   const [activeCollapseKey, setActiveCollapseKey] = useState(null)
@@ -55,6 +55,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   const [activeActionTab, setActiveActionTab] = useState(null)
   const [scaleProportion, setScaleProportion] = useState(1)
   const [isUpdateConfig, setIsUpdateConfig] = useState(false)
+  const [layerType, setLayerType] = useState('component')
   const eventTypes = [
     {
       name: '当请求完成或数据变化时',
@@ -233,7 +234,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     setTabpanes(panes)
     setActiveTab(eventId)
     const activePane = panes.find(item => {
-       return item.id === eventId
+      return item.id === eventId
     })
     setActivePane(activePane)
     setActiveActionTab(actionId)
@@ -414,32 +415,74 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     setScaleProportion(activeAction.scale.x / activeAction.scale.y)
   }
 
-  const componentScopeChange = (e, action) => {
-    action.componentScope = e.target.value
+  const componentScopeChange = (scopeType, action) => {
+    action.componentScope = scopeType
+    if (scopeType === 'current') {
+      action.component = []
+    }
     _data.events = tabpanes
     props.onChange()
   }
   const selectComponentChange = (val, option, action) => {
-    if (action.action === 'updateConfig') {
-      action.action = 'show'
-    }
+    val = val.map(item => item.value)
+    action.action = null
+    action.state = null
+    action.panelStates = []
     action.componentConfig = []
     action.component = val
     _data.events = tabpanes
+    if (action.action === 'updateConfig') {
+      action.action = 'show'
+    }
+    if (action.component.length === 1) {
+      const layerId = action.component[0]
+      console.log('layerId', layerId)
+      const layer = findLayerById(action.componentScope === 'global' ? bar.fullAmountLayers : bar.treeData, layerId)
+      if ('panelType' in layer) {
+        if (layer.panelType === 0) {
+          action.layerType = 'dynamicPanel'
+        }
+      } else if ('modules' in layer) {
+        action.layerType = 'group'
+      } else {
+        action.layerType = 'component'
+      }
+    } else {
+      action.layerType = 'group'
+    }
     props.onChange()
   }
   const selectComponentSelect = (val, option, action) => {
-    if (action.component.length === 1) {
-
-    }
-    console.log('-----select-----')
-    console.log('val', val)
-    console.log('option', option)
-    console.log('action')
+    // if (action.component.length === 1) {
+    //   if ('panelType' in option) {
+    //     if (option.panelType === 0) {
+    //       setLayerType('dynamicPanel')
+    //     }
+    //   } else if ('modules' in option) {
+    //     setLayerType('group')
+    //   } else {
+    //     setLayerType('component')
+    //   }
+    // } else {
+    //   setLayerType('group')
+    // }
   }
 
   const actionTypeChange = (val, action) => {
     action.action = val
+    if (action.action === 'updateStatus') {
+      const panel = findLayerById(bar.fullAmountLayers, action.component[0])
+      action.panelStates = panel.modules.map(item => ({ name: item.name, id: item.id }))
+      console.log('action', action)
+    } else {
+      action.panelStates = []
+    }
+    _data.events = tabpanes
+    props.onChange()
+  }
+
+  const panelStatusChange = (val, action) => {
+    action.state = val
     _data.events = tabpanes
     props.onChange()
   }
@@ -563,7 +606,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
 
   const handleUpDateConfig = (e, action) => {
     setCurrentAction(action)
-    let component = bar.components.find(item => item.id === action.component[0])
+    let component = bar.fullAmountComponents.find(item => item.id === action.component[0])
     setCopyComponentConfig(deepClone(component))
     let componentConfig = deepClone(component)
     if ('componentConfig' in action && action.componentConfig.length > 0) {
@@ -582,18 +625,17 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
 
   const handleComponentStyleChange = (data) => {
     currentAction.componentConfig = deepClone(data)
-    let component = bar.components.find(item => item.id === currentAction.component[0])
+    let component = bar.fullAmountComponents.find(item => item.id === currentAction.component[0])
     component.config = deepClone([...copyComponentConfig.config.filter(item => ['dimension', 'hideDefault'].includes(item.name)), ...data])
     dispatch({
       type: 'bar/save',
     })
     _data.events = tabpanes
-    console.log('tabpanes', tabpanes)
     props.onChange()
   }
 
   const handleComponentClose = () => {
-    let component = bar.components.find(item => item.id === currentAction.component[0])
+    let component = bar.fullAmountComponents.find(item => item.id === currentAction.component[0])
     component.config = copyComponentConfig.config
     dispatch({
       type: 'bar/save',
@@ -682,8 +724,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   value={ action.componentScope }
                                   className="zoom-set"
                                   style={ { marginBottom: '8px' } }
-                                  onChange={ val => {
-                                    componentScopeChange(val, action)
+                                  onChange={ e => {
+                                    componentScopeChange(e.target.value, action)
                                   } }>
                                   <Space direction="horizontal">
                                     <Radio value="current" key="current" style={ { float: 'left' } }>当前</Radio>
@@ -691,7 +733,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   </Space>
                                 </Radio.Group>
                                 <TreeSelect
-                                  treeData={ bar.treeData }
+                                  treeData={ action.componentScope === 'global' ? bar.fullAmountLayers : bar.treeData }
                                   fieldNames={
                                     {
                                       key: 'id',
@@ -703,10 +745,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   onChange={ (val, option) => {
                                     selectComponentChange(val, option, action)
                                   } }
-                                  onSelect={ (val, option) => {
-                                    selectComponentSelect(val, option, action)
-                                  } }
                                   treeCheckable={ true }
+                                  treeCheckStrictly={ true }
+                                  labelInValue={ false }
                                   showCheckedStrategy={ SHOW_PARENT }
                                   value={ action.component }
                                   placeholder=""
@@ -725,10 +766,17 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                               >
                                 {
                                   actionTypes.filter(item => {
-                                    if (action.component.length <= 1) {
+                                    if (action.component.length === 0) {
                                       return true
-                                    } else {
-                                      return !['updateConfig', 'updateStatus'].includes(item.value)
+                                    }
+                                    if (action.layerType === 'dynamicPanel') {
+                                      return !['updateConfig'].includes(item.value)
+                                    }
+                                    if (action.layerType === 'component') {
+                                      return !['updateStatus'].includes(item.value)
+                                    }
+                                    if (action.layerType === 'group') {
+                                      return !['updateStatus', 'updateConfig'].includes(item.value)
                                     }
                                   }).map((item) => {
                                     return <Option value={ item.value } key={ item.value }>{ item.name }</Option>
@@ -745,9 +793,25 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   >
                                     编辑组件配置
                                   </Button>
-                                </Form.Item> :
-                                action.action === 'translate' ?
-                                  <Form.Item label="移动后位置">
+                                </Form.Item>
+                                : action.action === 'updateStatus' ?
+                                <Form.Item label="状态">
+                                  <Select
+                                    className="custom-select"
+                                    placeholder="请选择"
+                                    value={ action.state }
+                                    style={ { marginBottom: 0 } }
+                                    onChange={ e => panelStatusChange(e, action) }
+                                  >
+                                    {
+                                      action.panelStates.map(state => (
+                                        <Option value={ state.id } key={ state.id }>{ state.name }</Option>
+                                      ))
+                                    }
+                                  </Select>
+                                </Form.Item>
+                                : action.action === 'translate' ?
+                                  <Form.Item label="移动">
                                     <div className="translate-x" style={ { marginRight: '8px' } }>
                                       <InputNumber
                                         step="1"
@@ -771,178 +835,181 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                       <div className="ant-input-group-addon input-num-suffix">Y</div>
                                     </div>
                                   </Form.Item>
+
                                   : action.action === 'scale' ?
-                                  <React.Fragment>
-                                    <Form.Item label="缩放原点">
-                                      <OriginSelect psValue={ action.scale.origin }
-                                                    onChange={ e => sacleOriginChange(e, action) }/>
-                                    </Form.Item>
-                                    <Form.Item label="缩放比例">
-                                      <div className="scale-x">
-                                        <Form.Item name={ action.id + 'scalex' } style={ { marginBottom: 0 } }>
-                                          <InputNumber
-                                            step="1"
-                                            min={ -1000 }
-                                            max={ 1000 }
-                                            className="size-input sc-input"
-                                            style={ { width: '100%' } }
-                                            defaultValue={ action.scale.x * 100 }
-                                            onChange={ e => scaleXchange(e, action) }
-                                          />
-                                        </Form.Item>
-                                        <div className="ant-input-group-addon input-num-suffix">%</div>
-                                      </div>
-                                      <span className="scale-lock" onClick={ (e) => scaleLockChange(e, action) }>
+                                    <React.Fragment>
+                                      <Form.Item label="缩放原点">
+                                        <OriginSelect psValue={ action.scale.origin }
+                                                      onChange={ e => sacleOriginChange(e, action) }/>
+                                      </Form.Item>
+                                      <Form.Item label="缩放比例">
+                                        <div className="scale-x">
+                                          <Form.Item name={ action.id + 'scalex' } style={ { marginBottom: 0 } }>
+                                            <InputNumber
+                                              step="1"
+                                              min={ -1000 }
+                                              max={ 1000 }
+                                              className="size-input sc-input"
+                                              style={ { width: '100%' } }
+                                              defaultValue={ action.scale.x * 100 }
+                                              onChange={ e => scaleXchange(e, action) }
+                                            />
+                                          </Form.Item>
+                                          <div className="ant-input-group-addon input-num-suffix">%</div>
+                                        </div>
+                                        <span className="scale-lock" onClick={ (e) => scaleLockChange(e, action) }>
                                         { action.scale.lock ? <i className="iconfont icon-lock"></i> :
                                           <i className="iconfont icon-unlock"></i> }
                                       </span>
-                                      <div className="scale-y">
-                                        <Form.Item name={ action.id + 'scaley' } style={ { marginBottom: 0 } }>
-                                          <InputNumber
-                                            step="1"
-                                            min={ -1000 }
-                                            max={ 1000 }
-                                            className="size-input sc-input"
-                                            style={ { width: '100%' } }
-                                            defaultValue={ action.scale.y * 100 }
-                                            onChange={ e => scaleYchange(e, action) }
-                                          />
-                                        </Form.Item>
-                                        <div className="ant-input-group-addon input-num-suffix">%</div>
-                                      </div>
-                                      <Row style={ { clear: 'both' } }>
-                                        <Col span={ 12 } className="detail-txt" style={ { textIndent: '0' } }>X</Col>
-                                        <Col span={ 12 } className="detail-txt" style={ { textIndent: '10px' } }>Y</Col>
-                                      </Row>
-                                    </Form.Item>
-                                  </React.Fragment>
-                                  : action.action === 'rotate' ?
-                                    <React.Fragment>
-                                      <Form.Item label="旋转">
-                                        <div className="rotate-item">
-                                          <div className="rotate-slider">
-                                            <Form.Item name={ action.id + 'rotateX-slider' }
-                                                       style={ { marginBottom: 0 } }>
-                                              <Slider
-                                                min={ -180 }
-                                                max={ 180 }
-                                                step={ 1 }
-                                                tooltipVisible={ false }
-                                                onAfterChange={ e => rotateChange(e, action, 'X', 'slider') }
-                                                defaultValue={ action.rotate.rotateX }
-                                              />
-                                            </Form.Item>
-                                          </div>
-                                          <div className="rotate-number">
-                                            <Form.Item name={ action.id + 'rotateX-input' }
-                                                       style={ { marginBottom: 0 } }>
-                                              <InputNumber
-                                                min={ -180 }
-                                                max={ 180 }
-                                                step={ 1 }
-                                                className="size-input"
-                                                style={ { width: '100%' } }
-                                                defaultValue={ action.rotate.rotateX }
-                                                onChange={ e => rotateChange(e, action, 'X', 'input') }
-                                              />
-                                            </Form.Item>
-                                            <div className="ant-input-group-addon input-num-suffix">°</div>
-                                          </div>
-                                          <Row style={ { clear: 'both' } }>
-                                            <Col span={ 24 } className="detail-txt"
-                                                 style={ { textIndent: '0' } }>绕X轴</Col>
-                                          </Row>
+                                        <div className="scale-y">
+                                          <Form.Item name={ action.id + 'scaley' } style={ { marginBottom: 0 } }>
+                                            <InputNumber
+                                              step="1"
+                                              min={ -1000 }
+                                              max={ 1000 }
+                                              className="size-input sc-input"
+                                              style={ { width: '100%' } }
+                                              defaultValue={ action.scale.y * 100 }
+                                              onChange={ e => scaleYchange(e, action) }
+                                            />
+                                          </Form.Item>
+                                          <div className="ant-input-group-addon input-num-suffix">%</div>
                                         </div>
-                                        <div className="rotate-item">
-                                          <div className="rotate-slider">
-                                            <Form.Item name={ action.id + 'rotateY-slider' }
-                                                       style={ { marginBottom: 0 } }>
-                                              <Slider
-                                                min={ -180 }
-                                                max={ 180 }
-                                                step={ 1 }
-                                                tooltipVisible={ false }
-                                                onAfterChange={ e => rotateChange(e, action, 'Y', 'slider') }
-                                                defaultValue={ action.rotate.rotateY }
-                                              />
-                                            </Form.Item>
-                                          </div>
-                                          <div className="rotate-number">
-                                            <Form.Item name={ action.id + 'rotateY-input' }
-                                                       style={ { marginBottom: 0 } }>
-                                              <InputNumber
-                                                min={ -180 }
-                                                max={ 180 }
-                                                step={ 1 }
-                                                className="size-input"
-                                                style={ { width: '100%' } }
-                                                defaultValue={ action.rotate.rotateY }
-                                                onChange={ e => rotateChange(e, action, 'Y', 'input') }
-                                              />
-                                            </Form.Item>
-                                            <div className="ant-input-group-addon input-num-suffix">°</div>
-                                          </div>
-                                          <Row style={ { clear: 'both' } }>
-                                            <Col span={ 24 } className="detail-txt"
-                                                 style={ { textIndent: '0' } }>绕Y轴</Col>
-                                          </Row>
-                                        </div>
-                                        <div className="rotate-item">
-                                          <div className="rotate-slider">
-                                            <Form.Item name={ action.id + 'rotateZ-slider' }
-                                                       style={ { marginBottom: 0 } }>
-                                              <Slider
-                                                min={ -180 }
-                                                max={ 180 }
-                                                step={ 1 }
-                                                tooltipVisible={ false }
-                                                onAfterChange={ e => rotateChange(e, action, 'Z', 'slider') }
-                                                defaultValue={ action.rotate.rotateZ }
-                                              />
-                                            </Form.Item>
-                                          </div>
-                                          <div className="rotate-number">
-                                            <Form.Item name={ action.id + 'rotateZ-input' }
-                                                       style={ { marginBottom: 0 } }>
-                                              <InputNumber
-                                                min={ -180 }
-                                                max={ 180 }
-                                                step={ 1 }
-                                                className="size-input"
-                                                style={ { width: '100%' } }
-                                                defaultValue={ action.rotate.rotateZ }
-                                                onChange={ e => rotateChange(e, action, 'Z', 'input') }
-                                              />
-                                            </Form.Item>
-                                            <div className="ant-input-group-addon input-num-suffix">°</div>
-                                          </div>
-                                          <Row style={ { clear: 'both' } }>
-                                            <Col span={ 24 } className="detail-txt"
-                                                 style={ { textIndent: '0' } }>绕Z轴</Col>
-                                          </Row>
-                                        </div>
-                                      </Form.Item>
-                                      <Form.Item label="透视">
-                                        <Checkbox style={ { float: 'left' } }
-                                                  defaultChecked={ action.rotate.perspective }
-                                                  onChange={ e => {
-                                                    perspectiveChange(e, action)
-                                                  } }/>
+                                        <Row style={ { clear: 'both' } }>
+                                          <Col span={ 12 } className="detail-txt" style={ { textIndent: '0' } }>X</Col>
+                                          <Col span={ 12 } className="detail-txt"
+                                               style={ { textIndent: '10px' } }>Y</Col>
+                                        </Row>
                                       </Form.Item>
                                     </React.Fragment>
-                                    : <Form.Item label="动画类型">
-                                      <Select
-                                        className="custom-select"
-                                        placeholder="请选择"
-                                        defaultValue={ action.animation.type }
-                                        style={ { marginBottom: 0 } }
-                                        onChange={ e => animationTypeChange(e, action) }
-                                      >
-                                        { animationType.map((item) => {
-                                          return <Option value={ item.value } key={ item.value }>{ item.name }</Option>
-                                        }) }
-                                      </Select>
-                                    </Form.Item>
+                                    : action.action === 'rotate' ?
+                                      <React.Fragment>
+                                        <Form.Item label="旋转">
+                                          <div className="rotate-item">
+                                            <div className="rotate-slider">
+                                              <Form.Item name={ action.id + 'rotateX-slider' }
+                                                         style={ { marginBottom: 0 } }>
+                                                <Slider
+                                                  min={ -180 }
+                                                  max={ 180 }
+                                                  step={ 1 }
+                                                  tooltipVisible={ false }
+                                                  onAfterChange={ e => rotateChange(e, action, 'X', 'slider') }
+                                                  defaultValue={ action.rotate.rotateX }
+                                                />
+                                              </Form.Item>
+                                            </div>
+                                            <div className="rotate-number">
+                                              <Form.Item name={ action.id + 'rotateX-input' }
+                                                         style={ { marginBottom: 0 } }>
+                                                <InputNumber
+                                                  min={ -180 }
+                                                  max={ 180 }
+                                                  step={ 1 }
+                                                  className="size-input"
+                                                  style={ { width: '100%' } }
+                                                  defaultValue={ action.rotate.rotateX }
+                                                  onChange={ e => rotateChange(e, action, 'X', 'input') }
+                                                />
+                                              </Form.Item>
+                                              <div className="ant-input-group-addon input-num-suffix">°</div>
+                                            </div>
+                                            <Row style={ { clear: 'both' } }>
+                                              <Col span={ 24 } className="detail-txt"
+                                                   style={ { textIndent: '0' } }>绕X轴</Col>
+                                            </Row>
+                                          </div>
+                                          <div className="rotate-item">
+                                            <div className="rotate-slider">
+                                              <Form.Item name={ action.id + 'rotateY-slider' }
+                                                         style={ { marginBottom: 0 } }>
+                                                <Slider
+                                                  min={ -180 }
+                                                  max={ 180 }
+                                                  step={ 1 }
+                                                  tooltipVisible={ false }
+                                                  onAfterChange={ e => rotateChange(e, action, 'Y', 'slider') }
+                                                  defaultValue={ action.rotate.rotateY }
+                                                />
+                                              </Form.Item>
+                                            </div>
+                                            <div className="rotate-number">
+                                              <Form.Item name={ action.id + 'rotateY-input' }
+                                                         style={ { marginBottom: 0 } }>
+                                                <InputNumber
+                                                  min={ -180 }
+                                                  max={ 180 }
+                                                  step={ 1 }
+                                                  className="size-input"
+                                                  style={ { width: '100%' } }
+                                                  defaultValue={ action.rotate.rotateY }
+                                                  onChange={ e => rotateChange(e, action, 'Y', 'input') }
+                                                />
+                                              </Form.Item>
+                                              <div className="ant-input-group-addon input-num-suffix">°</div>
+                                            </div>
+                                            <Row style={ { clear: 'both' } }>
+                                              <Col span={ 24 } className="detail-txt"
+                                                   style={ { textIndent: '0' } }>绕Y轴</Col>
+                                            </Row>
+                                          </div>
+                                          <div className="rotate-item">
+                                            <div className="rotate-slider">
+                                              <Form.Item name={ action.id + 'rotateZ-slider' }
+                                                         style={ { marginBottom: 0 } }>
+                                                <Slider
+                                                  min={ -180 }
+                                                  max={ 180 }
+                                                  step={ 1 }
+                                                  tooltipVisible={ false }
+                                                  onAfterChange={ e => rotateChange(e, action, 'Z', 'slider') }
+                                                  defaultValue={ action.rotate.rotateZ }
+                                                />
+                                              </Form.Item>
+                                            </div>
+                                            <div className="rotate-number">
+                                              <Form.Item name={ action.id + 'rotateZ-input' }
+                                                         style={ { marginBottom: 0 } }>
+                                                <InputNumber
+                                                  min={ -180 }
+                                                  max={ 180 }
+                                                  step={ 1 }
+                                                  className="size-input"
+                                                  style={ { width: '100%' } }
+                                                  defaultValue={ action.rotate.rotateZ }
+                                                  onChange={ e => rotateChange(e, action, 'Z', 'input') }
+                                                />
+                                              </Form.Item>
+                                              <div className="ant-input-group-addon input-num-suffix">°</div>
+                                            </div>
+                                            <Row style={ { clear: 'both' } }>
+                                              <Col span={ 24 } className="detail-txt"
+                                                   style={ { textIndent: '0' } }>绕Z轴</Col>
+                                            </Row>
+                                          </div>
+                                        </Form.Item>
+                                        <Form.Item label="透视">
+                                          <Checkbox style={ { float: 'left' } }
+                                                    defaultChecked={ action.rotate.perspective }
+                                                    onChange={ e => {
+                                                      perspectiveChange(e, action)
+                                                    } }/>
+                                        </Form.Item>
+                                      </React.Fragment>
+                                      : <Form.Item label="动画类型">
+                                        <Select
+                                          className="custom-select"
+                                          placeholder="请选择"
+                                          defaultValue={ action.animation.type }
+                                          style={ { marginBottom: 0 } }
+                                          onChange={ e => animationTypeChange(e, action) }
+                                        >
+                                          { animationType.map((item) => {
+                                            return <Option value={ item.value }
+                                                           key={ item.value }>{ item.name }</Option>
+                                          }) }
+                                        </Select>
+                                      </Form.Item>
                             }
                             <Form.Item label="速率">
                               <Select

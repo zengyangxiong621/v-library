@@ -1,21 +1,23 @@
 import { COMPONENTS, DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from "../constant/home";
 
-export function findLayerById (layer, id) {
-  let temp = null;
-  layer.forEach((item) => {
+export function findLayerById (layers, id) {
+  let temp = null
+  layers.forEach((item) => {
     if (item.id === id) {
-      temp = item;
-      return temp;
+      temp = item
+      return temp
     }
-    let t = null;
-    if (COMPONENTS in layer) {
-      t = findLayerById(layer[COMPONENTS], id);
+    let t = null
+    if (COMPONENTS in item) {
+      t = findLayerById(item[COMPONENTS], id)
+      if (t) {
+        temp = t
+        return temp
+      }
     }
-    if (t) {
-      temp = t;
-    }
-  });
-  return temp;
+
+  })
+  return temp
 }
 
 export function selectMultiple (arr, ids) {
@@ -339,16 +341,15 @@ export const layerComponentsFlat = (arr) => {
  * @default layers = []
  * @example layers = [{id: 1, panelType: 0}]
  */
-export const layersPanelsFlat = (arr) => {
-  const res = arr.reduce((pre, cur) => {
+export const layersPanelsFlat = (arr, panelTypeList = [0,1,2]) => {
+  return arr.reduce((pre, cur) => {
     return pre.concat(
       cur.hasOwnProperty(COMPONENTS)
-        ? layersPanelsFlat(cur[COMPONENTS])
-        : (cur.hasOwnProperty("panelType") ? cur : []),
-    );
-  }, []);
-  return res;
-};
+        ? layersPanelsFlat(cur[COMPONENTS], panelTypeList)
+        : (cur.hasOwnProperty('panelType') && panelTypeList.includes(cur.panelType) ? cur : []),
+    )
+  }, [])
+}
 
 export function throttle (fn, delay) {
   let timer;

@@ -80,7 +80,6 @@ import Tab from "@/customComponents/interactive/tab/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/index";
 import ReferencePanel from "@/customComponents/dashboardEdit/referencePanel";
 import DynamicPanel from "@/customComponents/dashboardEdit/dynamicPanel";
-import DrilldownPanel from "@/customComponents/dashboardEdit/drillDownPanel";
 import { cloneDeep } from "lodash";
 
 import { setComponentThemeConfigs } from "@/utils/syncJitStorage";
@@ -850,6 +849,8 @@ const CustomDraggable
                 events = component.events;
               }
             }
+            console.log('layerlayer', layer)
+            console.log('panels', panels)
             /*          if ('panelType' in layer) {
                         console.log('-----------------')
                         console.log('components', components)
@@ -914,14 +915,6 @@ const CustomDraggable
                           <div
                             className="panel-container"
                           >
-                            {/* <DrillDownPanel
-                              history={history}
-                              id={layer.id}
-                              panels={panels}
-                            />
-                            <div className="hovered">
-                              双击编辑下钻面板
-                            </div> */}
                             <DynamicPanel
                               history={history}
                               id={layer.id}

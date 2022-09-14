@@ -43,7 +43,7 @@ const RecursiveComponent = (props: any) => {
                 isPanel ?
                   (layer.panelType === 0 ?
                     <div
-                      className="panel-container"
+                      className={`panel-container panel-${layer.id} event-id-${layer.id}`}
                       style={{
                         position: "absolute",
                         left: targetPanel.config.left + "px",
@@ -55,28 +55,26 @@ const RecursiveComponent = (props: any) => {
                         panels={panels}
                         previewDashboard={previewDashboard}
                         dispatch={dispatch}
-                        isDashboard={false}
                       />
                     </div>
                     : layer.panelType === 1 ?
                       <div
-                        className="panel-container"
+                        className={`panel-container panel-${layer.id} event-id-${layer.id}`}
                       >
                         <ReferencePanel
                           id={layer.id}
                           panels={panels}
                           previewDashboard={previewDashboard}
                           dispatch={dispatch}
-                          isDashboard={false}
                         />
                       </div>
                       : <div
-                        className="panel-container"
-                        style={{
-                          position: "absolute",
-                          left: targetPanel.config.left + "px",
-                          top: targetPanel.config.top + "px"
-                        }}
+                          className={`panel-container panel-${layer.id} event-id-${layer.id}`}
+                          style={{
+                            position: "absolute",
+                            left: targetPanel.config.left + "px",
+                            top: targetPanel.config.top + "px"
+                          }}
                       >
                         <DrillDownPanel
                           id={layer.id}
@@ -84,13 +82,12 @@ const RecursiveComponent = (props: any) => {
                           isDrillDownPanel={true}
                           previewDashboard={previewDashboard}
                           dispatch={dispatch}
-                          isDashboard={false}
                           addDrillDownLevel={addDrillDownLevel}
                         />
                       </div>
                   ) :
                   isGroup ?
-                    <div className="no-cancel"
+                    <div className={`event-id-${layer.id}`}
                       style={{
                         opacity: (layer[OPACITY] || 100) / 100
                       }}

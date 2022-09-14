@@ -94,18 +94,18 @@ export const defaultData = {
             "name": "isScroll", "displayName": "是否轮播", "value": true, "type": "switch"
           },
           {
-          "name": "animationModel",
-          "displayName": "动画模式",
-          "type": "select",
-          "options": [ { "name": "逐条滚动", "value": "single" }, { "name": "整页滚动", "value": "page" } ],
-          "value": "single",
-        }, {
-          "name": "scrollInterval",
-          "displayName": "轮播间隔",
-          "type": "number",
-          "config": { "min": 0, "max": 24000, "step": 1000, "suffix": "ms" },
-          "value": 5000,
-        } ],
+            "name": "animationModel",
+            "displayName": "动画模式",
+            "type": "select",
+            "options": [ { "name": "逐条滚动", "value": "single" }, { "name": "整页滚动", "value": "page" } ],
+            "value": "single",
+          }, {
+            "name": "scrollInterval",
+            "displayName": "轮播间隔",
+            "type": "number",
+            "config": { "min": 0, "max": 24000, "step": 1000, "suffix": "ms" },
+            "value": 5000,
+          } ],
       }, {
         "name": "tableHeader",
         "displayName": "表头",
@@ -197,11 +197,11 @@ export const defaultData = {
         "defaultExpand": false,
         "value": [
           { "name": "show", "displayName": "", "value": true, "type": "switch" }, {
-          "name": "title",
-          "displayName": "标题",
-          "value": "#",
-          "type": "input",
-        },
+            "name": "title",
+            "displayName": "标题",
+            "value": "#",
+            "type": "input",
+          },
           {
             "displayName": "宽度",
             "name": "width",
@@ -626,7 +626,7 @@ export const defaultData = {
                   },
                 ],
               },
-              ],
+            ],
           },
         ],
       },
@@ -644,16 +644,16 @@ export const defaultData = {
                 "type": "object",
                 "value": [
                   {
-                  "displayName": "映射",
-                  "name": "mapping",
-                  "type": "input2",
-                  "value": [ {
-                    "displayName": "字段名",
-                    "name": "filedName",
-                    "type": "input",
-                    "value": "column1",
-                  }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "销售地区" } ],
-                },
+                    "displayName": "映射",
+                    "name": "mapping",
+                    "type": "input2",
+                    "value": [ {
+                      "displayName": "字段名",
+                      "name": "filedName",
+                      "type": "input",
+                      "value": "column1",
+                    }, { "displayName": "显示名", "name": "displayName", "type": "input", "value": "销售地区" } ],
+                  },
                   {
                     "displayName": "宽度",
                     "name": "width",
@@ -666,42 +666,42 @@ export const defaultData = {
                     }
                   },
                   {
-                  "name": "align",
-                  "displayName": "对齐方式",
-                  "type": "alignFull",
-                  "value": [ {
-                    "name": "textAlign",
-                    "displayName": "水平对齐",
-                    "type": "align",
-                    "range": [ "left", "center", "right" ],
-                    "value": "left",
-                  } ],
-                },
+                    "name": "align",
+                    "displayName": "对齐方式",
+                    "type": "alignFull",
+                    "value": [ {
+                      "name": "textAlign",
+                      "displayName": "水平对齐",
+                      "type": "align",
+                      "range": [ "left", "center", "right" ],
+                      "value": "left",
+                    } ],
+                  },
                   {
-                  "name": "overflowType",
-                  "displayName": "文字溢出",
-                  "type": "select",
-                  "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
-                  "value": "ellipsis",
-                },
+                    "name": "overflowType",
+                    "displayName": "文字溢出",
+                    "type": "select",
+                    "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
+                    "value": "ellipsis",
+                  },
                   {
-                  "displayName": "文本样式",
-                  "name": "textStyle",
-                  "type": "textFullStyleGroup",
-                  "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                    "displayName": "",
-                    "name": "fontSize",
-                    "value": 14,
-                  }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                    "displayName": "",
-                    "name": "bold",
-                    "value": false,
-                  }, { "displayName": "", "name": "italic", "value": false }, {
-                    "displayName": "字距",
-                    "name": "letterSpacing",
-                    "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
-                },
+                    "displayName": "文本样式",
+                    "name": "textStyle",
+                    "type": "textFullStyleGroup",
+                    "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                      "displayName": "",
+                      "name": "fontSize",
+                      "value": 14,
+                    }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                      "displayName": "",
+                      "name": "bold",
+                      "value": false,
+                    }, { "displayName": "", "name": "italic", "value": false }, {
+                      "displayName": "字距",
+                      "name": "letterSpacing",
+                      "value": 0,
+                    }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+                  },
                   {
                     "name": "customStyle",
                     "displayName": "样式指定",
@@ -802,107 +802,107 @@ export const defaultData = {
                 }
               },
               {
-              "name": "align",
-              "displayName": "对齐方式",
-              "type": "alignFull",
-              "value": [ {
-                "name": "textAlign",
-                "displayName": "水平对齐",
-                "type": "align",
-                "range": [ "left", "center", "right" ],
-                "value": "left",
-              } ],
-            }, {
-              "name": "overflowType",
-              "displayName": "文字溢出",
-              "type": "select",
-              "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
-              "value": "ellipsis",
-            }, {
-              "displayName": "文本样式",
-              "name": "textStyle",
-              "type": "textFullStyleGroup",
-              "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                "displayName": "",
-                "name": "fontSize",
-                "value": 14,
-              }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                "displayName": "",
-                "name": "bold",
-                "value": false,
-              }, { "displayName": "", "name": "italic", "value": false }, {
-                "displayName": "字距",
-                "name": "letterSpacing",
-                "value": 0,
-              }, { "displayName": "行距", "name": "lineHeight", "value": "unset" } ],
-            }, {
-              "name": "customStyle",
-              "displayName": "样式指定",
-              "type": "tabArray",
-              "defaultActiveKey": "1",
-              "config": {
-                "template": [
-                  {
-                    "key": "1",
-                    "displayName": "1",
-                    "name": "tab",
-                    "type": "object",
-                    "value": [ {
-                      "name": "filedValue",
-                      "displayName": "字段值",
-                      "type": "input",
-                      "value": "",
-                    }, {
-                      "displayName": "文本样式",
-                      "name": "textStyle",
-                      "type": "textFullStyleGroup",
-                      "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                        "displayName": "",
-                        "name": "fontSize",
-                        "value": 14,
-                      }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                        "displayName": "",
-                        "name": "bold",
-                        "value": false,
-                      }, { "displayName": "", "name": "italic", "value": false }, {
-                        "displayName": "字距",
-                        "name": "letterSpacing",
-                        "value": 0,
-                      }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
-                    } ],
-                  },
-                ],
-              },
-              "value": [ {
-                "key": "1",
-                "displayName": "1",
-                "name": "tab",
-                "type": "object",
+                "name": "align",
+                "displayName": "对齐方式",
+                "type": "alignFull",
                 "value": [ {
-                  "name": "filedValue",
-                  "displayName": "字段值",
-                  "type": "input",
-                  "value": "",
-                }, {
-                  "displayName": "文本样式",
-                  "name": "textStyle",
-                  "type": "textFullStyleGroup",
-                  "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                    "displayName": "",
-                    "name": "fontSize",
-                    "value": 14,
-                  }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                    "displayName": "",
-                    "name": "bold",
-                    "value": false,
-                  }, { "displayName": "", "name": "italic", "value": false }, {
-                    "displayName": "字距",
-                    "name": "letterSpacing",
-                    "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+                  "name": "textAlign",
+                  "displayName": "水平对齐",
+                  "type": "align",
+                  "range": [ "left", "center", "right" ],
+                  "value": "left",
+                } ],
+              }, {
+                "name": "overflowType",
+                "displayName": "文字溢出",
+                "type": "select",
+                "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
+                "value": "ellipsis",
+              }, {
+                "displayName": "文本样式",
+                "name": "textStyle",
+                "type": "textFullStyleGroup",
+                "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                  "displayName": "",
+                  "name": "fontSize",
+                  "value": 14,
+                }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                  "displayName": "",
+                  "name": "bold",
+                  "value": false,
+                }, { "displayName": "", "name": "italic", "value": false }, {
+                  "displayName": "字距",
+                  "name": "letterSpacing",
+                  "value": 0,
+                }, { "displayName": "行距", "name": "lineHeight", "value": "unset" } ],
+              }, {
+                "name": "customStyle",
+                "displayName": "样式指定",
+                "type": "tabArray",
+                "defaultActiveKey": "1",
+                "config": {
+                  "template": [
+                    {
+                      "key": "1",
+                      "displayName": "1",
+                      "name": "tab",
+                      "type": "object",
+                      "value": [ {
+                        "name": "filedValue",
+                        "displayName": "字段值",
+                        "type": "input",
+                        "value": "",
+                      }, {
+                        "displayName": "文本样式",
+                        "name": "textStyle",
+                        "type": "textFullStyleGroup",
+                        "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                          "displayName": "",
+                          "name": "fontSize",
+                          "value": 14,
+                        }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                          "displayName": "",
+                          "name": "bold",
+                          "value": false,
+                        }, { "displayName": "", "name": "italic", "value": false }, {
+                          "displayName": "字距",
+                          "name": "letterSpacing",
+                          "value": 0,
+                        }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+                      } ],
+                    },
+                  ],
+                },
+                "value": [ {
+                  "key": "1",
+                  "displayName": "1",
+                  "name": "tab",
+                  "type": "object",
+                  "value": [ {
+                    "name": "filedValue",
+                    "displayName": "字段值",
+                    "type": "input",
+                    "value": "",
+                  }, {
+                    "displayName": "文本样式",
+                    "name": "textStyle",
+                    "type": "textFullStyleGroup",
+                    "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                      "displayName": "",
+                      "name": "fontSize",
+                      "value": 14,
+                    }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                      "displayName": "",
+                      "name": "bold",
+                      "value": false,
+                    }, { "displayName": "", "name": "italic", "value": false }, {
+                      "displayName": "字距",
+                      "name": "letterSpacing",
+                      "value": 0,
+                    }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+                  } ],
                 } ],
               } ],
-            } ],
           }, {
             "key": "2",
             "displayName": "列2",
@@ -931,107 +931,107 @@ export const defaultData = {
                 }
               },
               {
-              "name": "align",
-              "displayName": "对齐方式",
-              "type": "alignFull",
-              "value": [ {
-                "name": "textAlign",
-                "displayName": "水平对齐",
-                "type": "align",
-                "range": [ "left", "center", "right" ],
-                "value": "left",
-              } ],
-            }, {
-              "name": "overflowType",
-              "displayName": "文字溢出",
-              "type": "select",
-              "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
-              "value": "ellipsis",
-            }, {
-              "displayName": "文本样式",
-              "name": "textStyle",
-              "type": "textFullStyleGroup",
-              "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                "displayName": "",
-                "name": "fontSize",
-                "value": 14,
-              }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                "displayName": "",
-                "name": "bold",
-                "value": false,
-              }, { "displayName": "", "name": "italic", "value": false }, {
-                "displayName": "字距",
-                "name": "letterSpacing",
-                "value": 0,
-              }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
-            }, {
-              "name": "customStyle",
-              "displayName": "样式指定",
-              "type": "tabArray",
-              "defaultActiveKey": "1",
-              "config": {
-                "template": [
-                  {
-                    "key": "1",
-                    "displayName": "1",
-                    "name": "tab",
-                    "type": "object",
-                    "value": [ {
-                      "name": "filedValue",
-                      "displayName": "字段值",
-                      "type": "input",
-                      "value": "",
-                    }, {
-                      "displayName": "文本样式",
-                      "name": "textStyle",
-                      "type": "textFullStyleGroup",
-                      "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                        "displayName": "",
-                        "name": "fontSize",
-                        "value": 14,
-                      }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                        "displayName": "",
-                        "name": "bold",
-                        "value": false,
-                      }, { "displayName": "", "name": "italic", "value": false }, {
-                        "displayName": "字距",
-                        "name": "letterSpacing",
-                        "value": 0,
-                      }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
-                    } ],
-                  },
-                ],
-              },
-              "value": [ {
-                "key": "1",
-                "displayName": "1",
-                "name": "tab",
-                "type": "object",
+                "name": "align",
+                "displayName": "对齐方式",
+                "type": "alignFull",
                 "value": [ {
-                  "name": "filedValue",
-                  "displayName": "字段值",
-                  "type": "input",
-                  "value": "",
-                }, {
-                  "displayName": "文本样式",
-                  "name": "textStyle",
-                  "type": "textFullStyleGroup",
-                  "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                    "displayName": "",
-                    "name": "fontSize",
-                    "value": 14,
-                  }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                    "displayName": "",
-                    "name": "bold",
-                    "value": false,
-                  }, { "displayName": "", "name": "italic", "value": false }, {
-                    "displayName": "字距",
-                    "name": "letterSpacing",
-                    "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight","config": {"disabled": true}, "value": "unset" } ],
+                  "name": "textAlign",
+                  "displayName": "水平对齐",
+                  "type": "align",
+                  "range": [ "left", "center", "right" ],
+                  "value": "left",
+                } ],
+              }, {
+                "name": "overflowType",
+                "displayName": "文字溢出",
+                "type": "select",
+                "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
+                "value": "ellipsis",
+              }, {
+                "displayName": "文本样式",
+                "name": "textStyle",
+                "type": "textFullStyleGroup",
+                "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                  "displayName": "",
+                  "name": "fontSize",
+                  "value": 14,
+                }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                  "displayName": "",
+                  "name": "bold",
+                  "value": false,
+                }, { "displayName": "", "name": "italic", "value": false }, {
+                  "displayName": "字距",
+                  "name": "letterSpacing",
+                  "value": 0,
+                }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+              }, {
+                "name": "customStyle",
+                "displayName": "样式指定",
+                "type": "tabArray",
+                "defaultActiveKey": "1",
+                "config": {
+                  "template": [
+                    {
+                      "key": "1",
+                      "displayName": "1",
+                      "name": "tab",
+                      "type": "object",
+                      "value": [ {
+                        "name": "filedValue",
+                        "displayName": "字段值",
+                        "type": "input",
+                        "value": "",
+                      }, {
+                        "displayName": "文本样式",
+                        "name": "textStyle",
+                        "type": "textFullStyleGroup",
+                        "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                          "displayName": "",
+                          "name": "fontSize",
+                          "value": 14,
+                        }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                          "displayName": "",
+                          "name": "bold",
+                          "value": false,
+                        }, { "displayName": "", "name": "italic", "value": false }, {
+                          "displayName": "字距",
+                          "name": "letterSpacing",
+                          "value": 0,
+                        }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+                      } ],
+                    },
+                  ],
+                },
+                "value": [ {
+                  "key": "1",
+                  "displayName": "1",
+                  "name": "tab",
+                  "type": "object",
+                  "value": [ {
+                    "name": "filedValue",
+                    "displayName": "字段值",
+                    "type": "input",
+                    "value": "",
+                  }, {
+                    "displayName": "文本样式",
+                    "name": "textStyle",
+                    "type": "textFullStyleGroup",
+                    "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                      "displayName": "",
+                      "name": "fontSize",
+                      "value": 14,
+                    }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                      "displayName": "",
+                      "name": "bold",
+                      "value": false,
+                    }, { "displayName": "", "name": "italic", "value": false }, {
+                      "displayName": "字距",
+                      "name": "letterSpacing",
+                      "value": 0,
+                    }, { "displayName": "行距", "name": "lineHeight","config": {"disabled": true}, "value": "unset" } ],
+                  } ],
                 } ],
               } ],
-            } ],
           }, {
             "key": "3",
             "displayName": "列3",
@@ -1059,107 +1059,107 @@ export const defaultData = {
                   "min": 0
                 }
               },{
-              "name": "align",
-              "displayName": "对齐方式",
-              "type": "alignFull",
-              "value": [ {
-                "name": "textAlign",
-                "displayName": "水平对齐",
-                "type": "align",
-                "range": [ "left", "center", "right" ],
-                "value": "left",
-              } ],
-            }, {
-              "name": "overflowType",
-              "displayName": "文字溢出",
-              "type": "select",
-              "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
-              "value": "ellipsis",
-            }, {
-              "displayName": "文本样式",
-              "name": "textStyle",
-              "type": "textFullStyleGroup",
-              "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                "displayName": "",
-                "name": "fontSize",
-                "value": 14,
-              }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                "displayName": "",
-                "name": "bold",
-                "value": false,
-              }, { "displayName": "", "name": "italic", "value": false }, {
-                "displayName": "字距",
-                "name": "letterSpacing",
-                "value": 0,
-              }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
-            }, {
-              "name": "customStyle",
-              "displayName": "样式指定",
-              "type": "tabArray",
-              "defaultActiveKey": "1",
-              "config": {
-                "template": [
-                  {
-                    "key": "1",
-                    "displayName": "1",
-                    "name": "tab",
-                    "type": "object",
-                    "value": [ {
-                      "name": "filedValue",
-                      "displayName": "字段值",
-                      "type": "input",
-                      "value": "",
-                    }, {
-                      "displayName": "文本样式",
-                      "name": "textStyle",
-                      "type": "textFullStyleGroup",
-                      "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                        "displayName": "",
-                        "name": "fontSize",
-                        "value": 14,
-                      }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                        "displayName": "",
-                        "name": "bold",
-                        "value": false,
-                      }, { "displayName": "", "name": "italic", "value": false }, {
-                        "displayName": "字距",
-                        "name": "letterSpacing",
-                        "value": 0,
-                      }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
-                    } ],
-                  },
-                ],
-              },
-              "value": [ {
-                "key": "1",
-                "displayName": "1",
-                "name": "tab",
-                "type": "object",
+                "name": "align",
+                "displayName": "对齐方式",
+                "type": "alignFull",
                 "value": [ {
-                  "name": "filedValue",
-                  "displayName": "字段值",
-                  "type": "input",
-                  "value": "",
-                }, {
-                  "displayName": "文本样式",
-                  "name": "textStyle",
-                  "type": "textFullStyleGroup",
-                  "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
-                    "displayName": "",
-                    "name": "fontSize",
-                    "value": 14,
-                  }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
-                    "displayName": "",
-                    "name": "bold",
-                    "value": false,
-                  }, { "displayName": "", "name": "italic", "value": false }, {
-                    "displayName": "字距",
-                    "name": "letterSpacing",
-                    "value": 0,
-                  }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true},  "value": "unset" } ],
+                  "name": "textAlign",
+                  "displayName": "水平对齐",
+                  "type": "align",
+                  "range": [ "left", "center", "right" ],
+                  "value": "left",
+                } ],
+              }, {
+                "name": "overflowType",
+                "displayName": "文字溢出",
+                "type": "select",
+                "options": [ { "name": "省略号", "value": "ellipsis" }, { "name": "换行", "value": "wrap" } ],
+                "value": "ellipsis",
+              }, {
+                "displayName": "文本样式",
+                "name": "textStyle",
+                "type": "textFullStyleGroup",
+                "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                  "displayName": "",
+                  "name": "fontSize",
+                  "value": 14,
+                }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                  "displayName": "",
+                  "name": "bold",
+                  "value": false,
+                }, { "displayName": "", "name": "italic", "value": false }, {
+                  "displayName": "字距",
+                  "name": "letterSpacing",
+                  "value": 0,
+                }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+              }, {
+                "name": "customStyle",
+                "displayName": "样式指定",
+                "type": "tabArray",
+                "defaultActiveKey": "1",
+                "config": {
+                  "template": [
+                    {
+                      "key": "1",
+                      "displayName": "1",
+                      "name": "tab",
+                      "type": "object",
+                      "value": [ {
+                        "name": "filedValue",
+                        "displayName": "字段值",
+                        "type": "input",
+                        "value": "",
+                      }, {
+                        "displayName": "文本样式",
+                        "name": "textStyle",
+                        "type": "textFullStyleGroup",
+                        "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                          "displayName": "",
+                          "name": "fontSize",
+                          "value": 14,
+                        }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                          "displayName": "",
+                          "name": "bold",
+                          "value": false,
+                        }, { "displayName": "", "name": "italic", "value": false }, {
+                          "displayName": "字距",
+                          "name": "letterSpacing",
+                          "value": 0,
+                        }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true}, "value": "unset" } ],
+                      } ],
+                    },
+                  ],
+                },
+                "value": [ {
+                  "key": "1",
+                  "displayName": "1",
+                  "name": "tab",
+                  "type": "object",
+                  "value": [ {
+                    "name": "filedValue",
+                    "displayName": "字段值",
+                    "type": "input",
+                    "value": "",
+                  }, {
+                    "displayName": "文本样式",
+                    "name": "textStyle",
+                    "type": "textFullStyleGroup",
+                    "value": [ { "displayName": "", "name": "fontFamily", "value": "Microsoft Yahei" }, {
+                      "displayName": "",
+                      "name": "fontSize",
+                      "value": 14,
+                    }, { "displayName": "", "name": "color", "type": "color", "value": "#fff" }, {
+                      "displayName": "",
+                      "name": "bold",
+                      "value": false,
+                    }, { "displayName": "", "name": "italic", "value": false }, {
+                      "displayName": "字距",
+                      "name": "letterSpacing",
+                      "value": 0,
+                    }, { "displayName": "行距", "name": "lineHeight", "config": {"disabled": true},  "value": "unset" } ],
+                  } ],
                 } ],
               } ],
-            } ],
           } ],
         },
       ],

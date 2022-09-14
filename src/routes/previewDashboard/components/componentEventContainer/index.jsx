@@ -102,7 +102,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
           return new Function('data', code)(data)
         }
         if (condition.compare === '==') {
-          return data[field] === condition.expected;
+          return data[field] == condition.expected;
         }
         if (condition.compare === '!=') {
           return data[field] !== condition.expected;
@@ -146,7 +146,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
             Object.keys(action).filter(
               (key) => !['id', 'name', 'trigger', 'unmount', 'componentScope', 'component', 'action'].includes(key)
             ).forEach((key) => {
-              actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
+              actionConfigFuncList[key] && actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
             })
           })
         }, delay)
@@ -172,7 +172,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     // console.log('-------------')
     // console.log('数据变化data', data)
     const componentId = props.componentConfig.id
-    const component = previewDashboard.components.find(item => item.id === componentId)
+    const component = previewDashboard.fullAmountComponents.find(item => item.id === componentId)
     const compCallbackArgs = component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -217,7 +217,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      const activeComponents = activeIds.reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+      const activeComponents = activeIds.reduce((pre, id) => pre.concat(previewDashboard.fullAmountComponents.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
       // 绑定数据源的组件列表
@@ -244,6 +244,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     }
     // 自定义事件
     const dataChangeEvents = events.filter(item => item.trigger === 'dataChange' || item.trigger === 'statusChange')
+
     const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (dataChangeActions.length === 0) {
       return
@@ -390,11 +391,39 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     }
   }
 
+  const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
+    if (actionType === 'updateStatus') {
+      [...dom.children].forEach(item => {
+        console.log('item11', item)
+        if (item.dataset.id === stateId) {
+          item.style.display = 'block'
+        } else {
+          item.style.display = 'none'
+        }
+      })
+    }
+  }
+  const componentConfigFunc = (config, actionType, dom, actionId, action, componentId) => {
+    if (actionType === 'updateConfig') {
+      console.log('config', config)
+      const component = previewDashboard.fullAmountComponents.find(item => item.id === componentId)
+      if(component) {
+        component.config = [...component.config.filter(item => ['dimension', 'hideDefault'].includes(item.name)), ...config]
+        dispatch({
+          type: 'previewDashboard/save'
+        })
+        console.log('component', component)
+      }
+    }
+  }
+
   const actionConfigFuncList = {
     animation,
     rotate,
     scale: scaleFunc,
     translate,
+    state: stateFunc,
+    componentConfig: componentConfigFunc
   }
 
 
