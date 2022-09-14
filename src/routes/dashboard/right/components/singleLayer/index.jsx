@@ -239,7 +239,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     // console.log('hasDrillDownArrConfig', hasDrillDownArrConfig)
   }
   // 通过全局变量 panelId 和 panels 来查找包含当前面板信息的对象，通过对象里的name来判断
-  const  curPanelType = bar.curPanelType
+  const curPanelType = bar.curPanelType
 
   return (
     <div className="SingleLayer-wrap">
@@ -283,18 +283,14 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
               <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
-          <TabPane tab="下钻" key="4">
-            <DrillDownSetting
-              componentConfig={componentConfig}
-              selectedNextLevelComponent={selectedNextLevelComponent}
-            ></DrillDownSetting>
-          </TabPane>
-          {/* {
+          {
             bar.isPanel && curPanelType === 2 && <TabPane tab="下钻" key="4">
-              <DrillDownSetting></DrillDownSetting>
+              <DrillDownSetting
+                componentConfig={componentConfig}
+                selectedNextLevelComponent={selectedNextLevelComponent}
+              ></DrillDownSetting>
             </TabPane>
-          } */}
-
+          }
         </Tabs>
       </div>
     </div>

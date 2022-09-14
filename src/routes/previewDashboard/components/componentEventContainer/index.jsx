@@ -173,7 +173,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     // console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = previewDashboard.components.find(item => item.id === componentId)
-    const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
+    const compCallbackArgs = component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
     const sourceCallbackList = callbackParamsList.filter(item => item.sourceModules.find(jtem => jtem.id === componentId))

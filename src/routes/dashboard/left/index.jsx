@@ -275,23 +275,26 @@ const Left = ({ dispatch, bar, operate }) => {
       dragObj = item
     })
 
-    // if (!info.dropToGap) {
-    //   // Drop on the content
-    //   loop(data, dropKey, item => {
-    //     item.children = item.children || [];
-    //     // where to insert 示例添加到头部，可以是随意位置
-    //     item.children.unshift(dragObj);
-    //   });
-    // } else
+    const setLayerToTop = (data, key, callback) => {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === key) {
+          return callback(data, i)
+        }
+      }
+    }
 
-    if (
+    if (!info.dropToGap) {
+      loop(data, dropKey, (item) => {
+        item.modules = item.modules || []; // where to insert 示例添加到头部，可以是随意位置
+        item.modules.unshift(dragObj);
+      });
+    } else if (
       (info.node.modules || []).length > 0 &&
       info.node.props.expanded
       // && dropPosition === 1 // On the bottom gap
     ) {
-      loop(data, dropKey, item => {
-        item.modules = item.modules || []
-        item.modules.unshift(dragObj)
+      setLayerToTop(data, dropKey, (item, index) => {
+        item.splice(index, 0, dragObj)
       })
     } else {
       let ar

@@ -18,7 +18,7 @@ const resultCodeData = {
 
 const DataContainerConfig = ({ bar, dispatch, ...props }) => {
   const _data = props.data
-  const dataContainerIds = _data.dataContainers.map(item => item.id)
+  const dataContainerIds = _data.dataContainers?.map(item => item.id)
   const [itemData, setItemData] = useState(null)
   const [itemVisible, setItemVisible] = useState(false)
   const [tabValue, setTabValue] = useState(null)
