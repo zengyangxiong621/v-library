@@ -71,11 +71,11 @@ class SwipterText extends Component<Props, State> {
         observer: true,//修改swiper自己或子元素时，自动初始化swiper 
         observeParents: true,//修改swiper的父元素时，自动初始化swiper 
         // loop: configData.isLoop,
-        loop: false,
+        loop:  configData.hasOwnProperty('specialType')  ? !configData.specialType : false,
         autoHeight: true,
         noSwiping: false,   // 手动切换，false 允许，true，不允许
         autoplay: loopConfig,
-        centeredSlides: true
+        centeredSlides: configData.hasOwnProperty('specialType') ? configData.specialType : true,
     });
     swiper.el.onmouseover = function(){
       swiper.autoplay.stop();
@@ -118,6 +118,14 @@ class SwipterText extends Component<Props, State> {
     }
     const textStyle = findItem('textStyle')
     const textStyleData = this.formatConfig([textStyle], [])
+    // 对齐方式
+    const textAlign = findItem('textAlign') ? this.formatConfig([findItem('textAlign')], []) : {}
+    // 行图标
+    const rowIcon = findItem('rowIcon') ? this.formatConfig([findItem('rowIcon')], []) : {}
+    // 背景颜色
+    const backgroundConfig = findItem('backgroundConfig') ? this.formatConfig([findItem('backgroundConfig')], []) : {}
+    // 展示方式
+    const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true
     if(swiperDom && finalData.length){
       // 切换是否自动轮播
       if(style.autoplay && finalData.length > 1){
@@ -128,6 +136,9 @@ class SwipterText extends Component<Props, State> {
       swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
       swiperDom.params.slidesPerView = style.slidesNum
       swiperDom.params.spaceBetween = style.lineSpace // 更新文本间距
+      // swiperDom.params.centeredSlides = specialType, // 更新文本间距
+      // swiperDom.params.loop = !specialType, // 更新文本间距
+      console.log(swiperDom.params,' swiperDom.params')
       if(style.autoplay){
         swiperDom.el.onmouseout = function(){
           swiperDom.autoplay.start();
@@ -141,29 +152,66 @@ class SwipterText extends Component<Props, State> {
         style.openNew ?  window.open(item.url) : window.location.href= item.url
       }
     }
+
+    const id:any =document.getElementById(`swiper-container${swiperId}`);
+    if(id && specialType){
+      let slideNext:any=id?.getElementsByClassName("swiper-slide-next")[0];
+      let slidePrev:any=id?.getElementsByClassName("swiper-slide-prev")[0];
+      slideNext && (slideNext.style.opacity = 0.6)
+      slidePrev && (slidePrev.style.opacity = 0.6)
+    }
+    const swiperStyle = {
+      ...textStyleData,
+      lineHeight: `${textStyleData.lineHeight}px`,
+      fontWeight: style.bold ? 'bold' : '',
+      fontStyle: style.italic ? 'italic' : '',
+      filter: style.show ? `drop-shadow(${style.shadow.color} ${style.shadow.vShadow}px ${style.shadow.hShadow}px ${style.shadow.blur}px)` : ''
+    }
+
+    if(!specialType){
+      switch(textAlign.textAlign){
+        case 'left': 
+          swiperStyle.justifyContent = 'flex-start';
+          break;
+        case 'center': 
+          swiperStyle.justifyContent = 'center';
+          break;
+        case 'right':
+          swiperStyle.justifyContent = 'flex-end';
+          break;
+      }
+    }else{
+      delete swiperStyle.justifyContent
+    }
     
     return (
       <div 
       className={`swipwe-box swiper-no-swiping ${style.hideDefault && 'hide'}`} 
       style={{
           width: style.width,
-          height: style.height
+          height: style.height,
+          background: backgroundConfig.show ? backgroundConfig.backgroundColor : ''
       }}
       >
         {
             !style.hideDefault && (
-              <div 
+              <div
+                id={`swiper-container${swiperId}`}
                 className={`swiper-container swiper-container${swiperId}`}>
                   <div className="swiper-wrapper">
                   {
                     finalData.map((item:any,index:any) => {
                       return (
-                          <div className="swiper-slide" style={{
-                              ...textStyleData,
-                              fontWeight: style.bold ? 'bold' : '',
-                              fontStyle: style.italic ? 'italic' : '',
-                              filter: style.show ? `drop-shadow(${style.shadow.color} ${style.shadow.vShadow}px ${style.shadow.hShadow}px ${style.shadow.blur}px)` : ''
-                          }}  key={index}>
+                          <div className={`swiper-slide ${specialType ? 'swiper-type' : ''}`} style={swiperStyle}  key={index}>
+                            {
+                              rowIcon.show && 
+                              <img src={rowIcon.backgroundImg} style={{
+                                width:rowIcon.iconSize[0].value,
+                                height:rowIcon.iconSize[1].value,
+                                marginRight: rowIcon.offset[0].value,
+                                marginTop: rowIcon.offset[1].value
+                              }} alt=""/>
+                            }
                              <span onClickCapture={() => handleClickName(item)}>{item[fields[0]]}</span>
                           </div>
                       )
