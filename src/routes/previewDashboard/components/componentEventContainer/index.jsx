@@ -520,6 +520,7 @@ const ComponentEventContainer = ({previewDashboard, dispatch, events = [], id = 
           ></NormalTable>
                 :props.componentConfig.moduleName==='paginationComp'?
           <PaginationComp
+            onChange={handleValueChange}
             {...props}
           ></PaginationComp>
           // : props.componentConfig.moduleName === 'CardFlipper_1' ?
