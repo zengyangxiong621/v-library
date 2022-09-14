@@ -2,7 +2,33 @@ import {
   IPanel,
   IComponent,
 } from "@/routes/dashboard/center/components/CustomDraggable/type"
-
+import { ILayerPanel, ILayerComponent, ILayerGroup } from "../../routes/dashboard/center/components/CustomDraggable/type"
+type IFullAmountLayers = Array<ILayerPanel & {modules: IFullAmountLayers} | ILayerComponent | ILayerGroup | {name: string, id: string, modules: IFullAmountLayers}>
+type IFullAmountComponents = Array<IComponent>
+type IFullAmountPanels = Array<IPanel>
+export interface IState {
+  name: string;
+  id: string;
+}
+export interface IFullAmountDashboardDetail  {
+  name: string;
+  id: string;
+  components?: Array<IComponent>;
+  layers?: Array<ILayerComponent | ILayerGroup | ILayerPanel>;
+  dashboardConfig?: Array<{name: string; displayName: string; value: any; [key: string]: any}>;
+  dashboardName?: string;
+  states?: Array<{name: string; id: string}>;
+  type: 0 | 1 | 2;
+  config?: {
+    allowScroll: string;
+    height: number;
+    hideDefault: boolean;
+    left: number;
+    top: number;
+    width: number;
+  }
+}
+type IFullAmountDashboardDetails = Array<IFullAmountDashboardDetail>
 export const defaultData = {
   moduleDefaultConfig: [
     {
@@ -2794,6 +2820,9 @@ export const defaultData = {
   panelStatesList: [],
   allDashboardList: [],
   componentThemeConfig:null,  // 当前的组件主题配置
+  fullAmountLayers: [],
+  fullAmountDashboardDetails: [],
+  isDashboardInit: false
 }
 
 export interface IBarState {
@@ -2849,10 +2878,15 @@ export interface IBarState {
   systemMaterialList: any;
   isPanel: boolean;
   curPanelType: 0 | 1| 2;
-  panels: Array<IPanel>,
-  panelConfig: IPanel | {},
-  panelStatesList: Array<{ name: string, id: string }>,
-  stateId: string,
-  allDashboardList: Array<{ name: string, id: string, [key: string]: any }>
-  componentThemeConfig:any,
+  panels: Array<IPanel>;
+  panelConfig: IPanel | {};
+  panelStatesList: Array<{ name: string, id: string }>;
+  stateId: string;
+  allDashboardList: Array<{ name: string, id: string, [key: string]: any }>;
+  componentThemeConfig:any;
+  fullAmountDashboardDetails: Array<IFullAmountDashboardDetails>
+  fullAmountLayers: IFullAmountLayers;
+  fullAmountComponents: IFullAmountComponents;
+  fullAmountPanels: IFullAmountPanels;
+  isDashboardInit: boolean
 }
