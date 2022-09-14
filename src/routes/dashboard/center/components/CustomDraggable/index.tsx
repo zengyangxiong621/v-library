@@ -520,17 +520,21 @@ const CustomDraggable
               }
             }
           });
-          history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
+          if (panel.states[0]?.id) {
+            history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
+            dispatch({
+              type: "bar/getPanelDetails"
+            });
+            dispatch({
+              type: "bar/selectPanelState",
+              payload: {
+                stateId: panel.states[0].id
+              }
+            });
+          } else {
+            history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}`);
+          }
 
-          dispatch({
-            type: "bar/getPanelDetails"
-          });
-          dispatch({
-            type: "bar/selectPanelState",
-            payload: {
-              stateId: panel.states[0].id
-            }
-          });
         } else if (layer.panelType === 1) {
           if (panel.states.length > 0) {
             history.push(`/dashboard/${panel.states[0].id}`);
@@ -849,8 +853,6 @@ const CustomDraggable
                 events = component.events;
               }
             }
-            console.log('layerlayer', layer)
-            console.log('panels', panels)
             /*          if ('panelType' in layer) {
                         console.log('-----------------')
                         console.log('components', components)

@@ -1079,15 +1079,33 @@ export default {
           panelId: bar.panelId,
         },
       });
-      yield put({
-        type: "save",
-        payload: {
-          panelStatesList: bar.panelStatesList.concat({
-            name: data.name,
-            id: data.id,
-          }),
-        },
-      });
+      if (bar.panelStatesList.length === 0) {
+        yield put({
+          type: "save",
+          payload: {
+            panelStatesList: bar.panelStatesList.concat({
+              name: data.name,
+              id: data.id,
+            }),
+          },
+        });
+        yield put({
+          type: 'selectPanelState',
+          payload: {
+            stateId: data.id,
+          }
+        })
+      } else {
+        yield put({
+          type: "save",
+          payload: {
+            panelStatesList: bar.panelStatesList.concat({
+              name: data.name,
+              id: data.id,
+            }),
+          },
+        });
+      }
     },
     *deletePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1106,18 +1124,28 @@ export default {
         const index = panelStatesList.findIndex(
           (state: { id: string; name: string }) => state.id === stateId
         );
-        const toStateId = panelStatesList[0].id;
         panelStatesList.splice(index, 1);
-        yield put({
-          type: "save",
-          payload: {
-            panelStatesList,
-            stateId: toStateId,
-          },
-        });
-        yield put({
-          type: "getDashboardDetails",
-        });
+        if (panelStatesList.length > 0) {
+          const toStateId = panelStatesList[0].id;
+          yield put({
+            type: "save",
+            payload: {
+              panelStatesList,
+              stateId: toStateId,
+            },
+          });
+          yield put({
+            type: "getDashboardDetails",
+          });
+        } else {
+          yield put({
+            type: "save",
+            payload: {
+              treeData: [],
+              stateId: '',
+            },
+          });
+        }
       } catch (err) {
         console.log("err", err);
       }
