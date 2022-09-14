@@ -247,23 +247,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     copyPanelConfig.states =  copyPanelConfig.states.filter(state => state.id)
     console.log('copyPanelConfig', copyPanelConfig)
     const { config: { left, top, width, height } } = panelConfig
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        panelConfig,
-        scaleDragData: {
-          position: {
-            x: left,
-            y: top,
-          },
-          style: {
-            width,
-            height,
-            display: 'block',
-          },
-        },
-      },
-    })
+
     const data = await http({
       url: '/visual/panel/update',
       method: 'post',
@@ -274,8 +258,33 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
         ],
       },
     })
-    if (!data) {
+    if (data) {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          panelConfig,
+          scaleDragData: {
+            position: {
+              x: left,
+              y: top,
+            },
+            style: {
+              width,
+              height,
+              display: 'block',
+            },
+          },
+        },
+      })
+    } else {
       copyPanelConfig.states.pop()
+      panelConfig.states.pop()
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          panelConfig,
+        },
+      })
     }
   }, 300)
 
