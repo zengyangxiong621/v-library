@@ -254,7 +254,7 @@ const AlarmLog: React.FC = () => {
         <div className='table-list'>
           <Table 
             dataSource={dataSource?.content || []}
-            scroll={{ y: '53vh' }}
+            scroll={{ y: '42vh' }}
             rowClassName='customRowClass'
             loading={loading}
             rowKey={(record:any) => record.id}
