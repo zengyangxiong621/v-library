@@ -51,7 +51,7 @@ const NormalTable=(props)=>{
   const searchInput = useRef(null);
   const [dataSource, setDataSource] = useState([]);
   useEffect(()=>{
-    if(!dataSource.length && Object.keys(comData[0]).length){
+    if(!dataSource.length && comData.length){
       setDataSource(comData)
     }
   },[comData])
@@ -434,13 +434,15 @@ const NormalTable=(props)=>{
           mappingConfig.map(item=>{
             const {textStyle:columnTextStyle}=item
             const handledStyle=transformStyleInObj(columnTextStyle)
-            const mapField=field.find(mitem=>mitem.name===item.fieldName).value
+            const mapField=field.find(mitem=>mitem.name===item.fieldName)?.value || item.fieldName
             const sortConfig={}
             let filterConfig=null
             if(item.isSortable && !tableRowConfig.dragerSort){
               sortConfig.sortDirections=item.sortType
               sortConfig.defaultSortOrder=item.defaultSortType
-              sortConfig.sorter=(a,b)=>a[item.fieldName]-b[item.fieldName]
+              sortConfig.sorter=(a,b)=>{
+                return parseFloat(a[mapField]) - parseFloat(b[mapField])
+              }
             }
             if(item.isFilter){
               filterConfig=getColumnSearchProps(item.fieldName,item.displayName)
