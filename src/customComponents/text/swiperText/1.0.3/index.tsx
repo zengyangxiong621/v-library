@@ -31,20 +31,6 @@ class SwipterText extends Component<Props, State> {
     this.drawSwiper()
   }
 
-  componentDidUpdate(prevProps:any,prevState:any){
-    // const { swiperDom,swiperId } = this.state
-    // const componentConfig:any = prevState.componentConfig
-    // const newComponentConfig:any = prevProps.componentConfig
-    // const oldValue = componentConfig?.config?.find((item:any) => item.displayName === "特效样式");
-    // const newValue = newComponentConfig?.config?.find((item:any) => item.displayName === "特效样式");
-    // console.log(newValue.value, oldValue.value,'kkkkkkk')
-
-    // if(newValue.value != oldValue.value){
-    //   swiperDom.destroy()
-    //   this.drawSwiper()
-    // }
-  }
-
   // 处理所有配置项
   formatConfig = (config:any, exclude:any) => {
     return config.filter((item: any) => exclude.indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
@@ -85,7 +71,7 @@ class SwipterText extends Component<Props, State> {
         observer: true,//修改swiper自己或子元素时，自动初始化swiper 
         observeParents: true,//修改swiper的父元素时，自动初始化swiper 
         // loop:  configData.hasOwnProperty('specialType')  ? !configData.specialType : false,
-        loop: true,
+        loop: false,
         autoHeight: true,
         noSwiping: false,   // 手动切换，false 允许，true，不允许
         autoplay: loopConfig,
@@ -165,14 +151,6 @@ class SwipterText extends Component<Props, State> {
         style.openNew ?  window.open(item.url) : window.location.href= item.url
       }
     }
-
-    const id:any =document.getElementById(`swiper-container${swiperId}`);
-    if(id && specialType){
-      let slideNext:any=id?.getElementsByClassName("swiper-slide-next")[0];
-      let slidePrev:any=id?.getElementsByClassName("swiper-slide-prev")[0];
-      slideNext && (slideNext.style.opacity = 0.6)
-      slidePrev && (slidePrev.style.opacity = 0.6)
-    }
     const swiperStyle = {
       ...textStyleData,
       lineHeight: `${textStyleData.lineHeight}px`,
@@ -211,7 +189,7 @@ class SwipterText extends Component<Props, State> {
               <div
                 id={`swiper-container${swiperId}`}
                 className={`swiper-container swiper-container${swiperId}`}>
-                  <div className="swiper-wrapper">
+                  <div className={`swiper-wrapper ${specialType ? 'special-type' : ''} `}>
                   {
                     finalData.map((item:any,index:any) => {
                       return (
