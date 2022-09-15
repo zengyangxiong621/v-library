@@ -237,6 +237,7 @@ const AlarmLog: React.FC = () => {
           </div>
           <div className='read'>
             <Popconfirm
+              placement="topRight"
               title="你确定要全部标记为已读吗？"
               onConfirm={confirmAllRead}
               okText="确定"
@@ -253,7 +254,7 @@ const AlarmLog: React.FC = () => {
         <div className='table-list'>
           <Table 
             dataSource={dataSource?.content || []}
-            scroll={{ y: "53vh" }}
+            scroll={{ y: "44vh" }}
             rowClassName='customRowClass'
             loading={loading}
             rowKey={(record:any) => record.id}
