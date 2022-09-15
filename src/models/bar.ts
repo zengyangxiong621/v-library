@@ -220,11 +220,9 @@ export default {
       yield yield put({
         type: "getDashboardDetails",
         cb: async (data: any) => {
-          console.log('1')
           await cb(data);
         },
       });
-      console.log('2')
       if (!bar.isDashboardInit) {
         yield put({
           type: 'getFullAmountDashboardDetails',
@@ -432,7 +430,6 @@ export default {
         };
 
         const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
-        console.log('panelspanels', panels)
         yield (layers = deepForEach(
           layers,
           (layer: ILayerGroup | ILayerComponent) => {

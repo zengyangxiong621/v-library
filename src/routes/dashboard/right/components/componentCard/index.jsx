@@ -20,11 +20,11 @@ const ComponentCard = props => {
       item.moduleName === moduleName
     ) : {}
     if (targetObj) {
-      // TODO  这儿目前用if是为了兼容那些组件config.js文件中还没加上moduleType字段的组件。
+      // // TODO  这儿目前用if是为了兼容那些组件config.js文件中还没加上moduleType字段的组件。
       // 从原子组件信息中获取该组件目前最新的moduleType
-      if(targetObj.moduleType) {
-        moduleType = targetObj.moduleType
-      }
+      // if (targetObj.moduleType) {
+      //   moduleType = targetObj.moduleType
+      // }
       setTargetConfig(targetObj.config)
     } else {
       setTargetConfig({})
