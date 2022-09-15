@@ -589,7 +589,8 @@ class ChinaMap extends Component {
     };
 
     const dom = document.getElementById(componentConfig.id);
-    var mapChart = echarts.init(dom);
+    // var mapChart = echarts.init(dom);
+    var mapChart = echarts.init(dom, null, { devicePixelRatio: 2});
     echarts.registerMap("china", chinaJson);
     // echarts.registerMap("outline", outline);
     this.setState({ options });

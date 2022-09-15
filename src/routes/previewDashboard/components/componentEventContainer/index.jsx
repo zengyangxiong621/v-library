@@ -71,9 +71,9 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   //       method: 'post',
   //       url: '/visual/websocket-module/add',
   //       body: {
-  //         websocketUrl: '/visual/webSocket/shareParam/eventName5',
+  //         websocketUrl: '/visual/webSocket/shareParam/test1',
   //         moduleId: componentConfig.id, // 组件ID
-  //         type: 0, // 0-发送方  1-接收方
+  //         type: 1, // 0-发送方  1-接收方
   //         dashboardId: dashboardId, // 大屏ID
   //       }
   //     })
@@ -226,7 +226,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
       useEffect(() => {
         console.log(element,'element-----------');
         if (element) {
-          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(element))
+          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(element||''))
         }
       }, [element])
     }
