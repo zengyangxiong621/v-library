@@ -6,10 +6,11 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "timeline", //组件标识
-  "moduleVersion": "1.1.4", //组件版本号
+  "moduleVersion": "1.1.6", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
+  "moduleType":'assist',
 
   "autoUpdate": {"isAuto": false, "interval": 10}, // =========
   "thumb": "", // 缩略图 // =========
@@ -150,7 +151,7 @@ const componentDefaultConfig = {
                     "value": 24
                   },
                   {
-                    "name": "themeColor",
+                    "name": "color",
                     "displayName": "",
                     "type": "color",
                     "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -364,7 +365,7 @@ const componentDefaultConfig = {
                       "value": 24
                     },
                     {
-                      "name": "themeColor",
+                      "name": "color",
                       "displayName": "",
                       "type": "color",
                       "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -398,7 +399,7 @@ const componentDefaultConfig = {
       ]
     },
     {
-      "name": "themeBackgroundColor",
+      "name": "backgroundColor",
       "displayName": "背景颜色",
       "type": "color",
       "value": "rgba(255,255,255,0.1)"

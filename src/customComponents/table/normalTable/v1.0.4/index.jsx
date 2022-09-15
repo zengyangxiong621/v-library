@@ -1,7 +1,7 @@
 import React from 'react'
 import {useRef, useEffect, useState, memo} from 'react'
 import ComponentDefaultConfig from './config'
-import {styleTransformFunc,transformStyleInObj} from '../../../utils'
+import {styleTransformFunc,transformStyleInObj} from '@/utils'
 import './index.css'
 import { Table,Button, Input, Space,ConfigProvider } from 'antd';
 import Highlighter from 'react-highlight-words';

@@ -6,7 +6,8 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "media", //组件标识
-  "moduleVersion": "1.1.0", //组件版本号
+  "moduleVersion": "1.1.1", //组件版本号
+  "moduleType":"assist",
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========

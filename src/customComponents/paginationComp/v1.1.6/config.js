@@ -6,7 +6,8 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "paginationComp", //组件标识
-  "moduleVersion": "1.1.5", //组件版本号
+  "moduleVersion": "1.1.6", //组件版本号
+  "moduleType":"interactive",
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -267,7 +268,7 @@ const componentDefaultConfig = {
                       {
                           "name": "lineHeight",
                           "displayName": "行距",
-                          "value": 0,
+                          "value": 24,
                       },
                   ],
                 },{
