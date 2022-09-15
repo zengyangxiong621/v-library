@@ -71,11 +71,11 @@ import {
 } from "../../../../../constant/home";
 import ScrollTable from "@/customComponents/table/scrollTable/index";
 import TimeSelect from "@/customComponents/interactive/timeSelect/index";
-import SelectV2 from '@/customComponents/assist/select/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.0'
-import CusImage from '@/customComponents/assist/image/index'
-import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.1'
+import SelectV2 from '@/customComponents/assist/select/v1.0.2/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
+import CusImage from '@/customComponents/assist/image/v1.0.2/index'
+import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 
 import Tab from "@/customComponents/interactive/tab/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/index";

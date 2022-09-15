@@ -4,13 +4,13 @@ import { useState, useRef } from "react";
 import TimeSelect from '@/customComponents/interactive/timeSelect'
 import ScrollTable from '@/customComponents/table/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
-import SelectV2 from '@/customComponents/assist/select/index'
-import CusImage from '@/customComponents/assist/image/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
+import SelectV2 from '@/customComponents/assist/select/v1.0.2/index'
+import CusImage from '@/customComponents/assist/image/v1.0.2/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap/v1.6.3'
 import WorldMap from '@/customComponents/echarts/components/worldMap/v1.1.2'
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.0'
-import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.1'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
+import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import Counter from '@/customComponents/assist/counter2'
@@ -519,7 +519,7 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
                                         ></NormalTable>
                                         : props.componentConfig.moduleName === 'paginationComp' ?
                                           <PaginationComp
-                  onChange={handleValueChange}
+                                            onChange={handleValueChange}
                                             {...props}
                                           ></PaginationComp>
                                           : props.componentConfig.moduleName === 'instrumentPanel_1' ?

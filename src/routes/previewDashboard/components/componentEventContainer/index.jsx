@@ -4,13 +4,13 @@ import { useState, useRef } from "react";
 import TimeSelect from '@/customComponents/interactive/timeSelect'
 import ScrollTable from '@/customComponents/table/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
-import SelectV2 from '@/customComponents/assist/select/index'
-import CusImage from '@/customComponents/assist/image/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
+import SelectV2 from '@/customComponents/assist/select/v1.0.2/index'
+import CusImage from '@/customComponents/assist/image/v1.0.2/index'
+import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap/v1.6.3'
 import WorldMap from '@/customComponents/echarts/components/worldMap/v1.1.2'
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.0'
-import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.1'
+import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
+import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import Counter from '@/customComponents/assist/counter2'
@@ -498,149 +498,149 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
                             {...props}
                           >
                           </InstrumentPanel1>
-                        : props.componentConfig.moduleName === 'instrumentPanel_3' ?
-                          <InstrumentPanel3
-                            scale={scale}
-                            onChange={handleValueChange}
-                            {...props}
-                          >
-                          </InstrumentPanel3>
-                          : props.componentConfig.moduleName === 'instrumentPanel_4' ?
-                            <InstrumentPanel4
+                          : props.componentConfig.moduleName === 'instrumentPanel_3' ?
+                            <InstrumentPanel3
                               scale={scale}
                               onChange={handleValueChange}
                               {...props}
                             >
-                            </InstrumentPanel4>
-                          : props.componentConfig.moduleName === 'cascader' ?
-                            <Cascader
-                              scale={scale}
-                              onChange={handleValueChange}
-                              {...props}
-                            >
-                            </Cascader>
-                            :
-                            props.componentConfig.moduleName === 'image2' ?
-                              <CusImage
+                            </InstrumentPanel3>
+                            : props.componentConfig.moduleName === 'instrumentPanel_4' ?
+                              <InstrumentPanel4
+                                scale={scale}
                                 onChange={handleValueChange}
                                 {...props}
                               >
-                              </CusImage>
-                              :
-                              props.componentConfig.moduleName === 'zebraColumn' ?
-                                <ZebraColumn
+                              </InstrumentPanel4>
+                              : props.componentConfig.moduleName === 'cascader' ?
+                                <Cascader
+                                  scale={scale}
                                   onChange={handleValueChange}
                                   {...props}
                                 >
-                                </ZebraColumn>
+                                </Cascader>
                                 :
-                                props.componentConfig.moduleName === 'basicBar' ?
-                                  <BasicBar
+                                props.componentConfig.moduleName === 'image2' ?
+                                  <CusImage
                                     onChange={handleValueChange}
                                     {...props}
                                   >
-                                  </BasicBar>
+                                  </CusImage>
                                   :
-                                  // props.componentConfig.moduleName === 'chinaMap' ?
-                                  // <ChinaMap
-                                  //   onChange={handleValueChange}
-                                  //   {...props}
-                                  // >
-                                  // </ChinaMap>
-                                  // :
-                                  props.componentConfig.moduleName === 'select2' ?
-                                    <SelectV2
+                                  props.componentConfig.moduleName === 'zebraColumn' ?
+                                    <ZebraColumn
                                       onChange={handleValueChange}
                                       {...props}
                                     >
-                                    </SelectV2>
+                                    </ZebraColumn>
                                     :
-                                    props.componentConfig.moduleName === 'bar' ?
-                                      <Bar
+                                    props.componentConfig.moduleName === 'basicBar' ?
+                                      <BasicBar
                                         onChange={handleValueChange}
                                         {...props}
                                       >
-                                      </Bar>
+                                      </BasicBar>
                                       :
-                                      props.componentConfig.moduleName === 'scrollTable' ?
-                                        <ScrollTable
-                                          scale={scale}
+                                      // props.componentConfig.moduleName === 'chinaMap' ?
+                                      // <ChinaMap
+                                      //   onChange={handleValueChange}
+                                      //   {...props}
+                                      // >
+                                      // </ChinaMap>
+                                      // :
+                                      props.componentConfig.moduleName === 'select2' ?
+                                        <SelectV2
                                           onChange={handleValueChange}
                                           {...props}
                                         >
-                                        </ScrollTable>
-                                        : props.componentConfig.moduleName === 'tab' ?
-                                          <Tab
-                                            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-                                            onClick={handleClick}
-                                            onMouseEnter={handleMouseEnter}
-                                            onMouseLeave={handleMouseLeave}
+                                        </SelectV2>
+                                        :
+                                        props.componentConfig.moduleName === 'bar' ?
+                                          <Bar
+                                            onChange={handleValueChange}
                                             {...props}
                                           >
-                                          </Tab>
-                                          : props.componentConfig.moduleName === 'scrollSelect' ?
-                                            <ScrollSelect
+                                          </Bar>
+                                          :
+                                          props.componentConfig.moduleName === 'scrollTable' ?
+                                            <ScrollTable
+                                              scale={scale}
                                               onChange={handleValueChange}
                                               {...props}
                                             >
-                                            </ScrollSelect>
-                                            : props.componentConfig.moduleName === 'timeSelect' ?
-                                              <TimeSelect
-                                                scale={scale}
-                                                onChange={handleValueChange}
+                                            </ScrollTable>
+                                            : props.componentConfig.moduleName === 'tab' ?
+                                              <Tab
+                                                onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+                                                onClick={handleClick}
+                                                onMouseEnter={handleMouseEnter}
+                                                onMouseLeave={handleMouseLeave}
                                                 {...props}
                                               >
-                                              </TimeSelect>
-                                              : props.componentConfig.moduleName === 'timeline' ?
-                                                <Timeline
+                                              </Tab>
+                                              : props.componentConfig.moduleName === 'scrollSelect' ?
+                                                <ScrollSelect
+                                                  onChange={handleValueChange}
                                                   {...props}
                                                 >
-                                                </Timeline>
-                                                // : props.componentConfig.moduleName === 'CardFlipper_1' ?
-                                                // <CardFlipper1
-                                                //   scale={scale}
-                                                //   onChange={handleValueChange}
-                                                //   {...props}
-                                                // >
-                                                // </CardFlipper1>
-                                                // : props.componentConfig.moduleName === 'CardFlipper_2' ?
-                                                // <CardFlipper2
-                                                //   scale={scale}
-                                                //   onChange={handleValueChange}
-                                                //   {...props}
-                                                // >
-                                                // </CardFlipper2>
-                                                : props.componentConfig.moduleName === 'instrumentPanel_3' ?
-                                                  <InstrumentPanel3
+                                                </ScrollSelect>
+                                                : props.componentConfig.moduleName === 'timeSelect' ?
+                                                  <TimeSelect
                                                     scale={scale}
                                                     onChange={handleValueChange}
                                                     {...props}
                                                   >
-                                                  </InstrumentPanel3>
-                                                  : props.componentConfig.moduleName === 'instrumentPanel_4' ?
-                                                    <InstrumentPanel4
-                                                      scale={scale}
-                                                      onChange={handleValueChange}
+                                                  </TimeSelect>
+                                                  : props.componentConfig.moduleName === 'timeline' ?
+                                                    <Timeline
                                                       {...props}
                                                     >
-                                                    </InstrumentPanel4>
-                                                    :
-                                                    <ErrorCatch
-                                                      app={componentConfig.name}
-                                                      user=""
-                                                      token=""
-                                                      max={1}
-                                                      errorRender={<RemoteComponentErrorRender errorComponent={componentConfig.name}></RemoteComponentErrorRender>}
-                                                      onCatch={(errors) => {
-                                                        console.log('组件报错信息：', errors, '组件id', componentConfig.id);
-                                                      }}
-                                                    >
-                                                      <RemoteBaseComponent
-                                                        {...props}
+                                                    </Timeline>
+                                                    // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+                                                    // <CardFlipper1
+                                                    //   scale={scale}
+                                                    //   onChange={handleValueChange}
+                                                    //   {...props}
+                                                    // >
+                                                    // </CardFlipper1>
+                                                    // : props.componentConfig.moduleName === 'CardFlipper_2' ?
+                                                    // <CardFlipper2
+                                                    //   scale={scale}
+                                                    //   onChange={handleValueChange}
+                                                    //   {...props}
+                                                    // >
+                                                    // </CardFlipper2>
+                                                    : props.componentConfig.moduleName === 'instrumentPanel_3' ?
+                                                      <InstrumentPanel3
                                                         scale={scale}
                                                         onChange={handleValueChange}
-                                                      ></RemoteBaseComponent>
-                                                    </ErrorCatch>
+                                                        {...props}
+                                                      >
+                                                      </InstrumentPanel3>
+                                                      : props.componentConfig.moduleName === 'instrumentPanel_4' ?
+                                                        <InstrumentPanel4
+                                                          scale={scale}
+                                                          onChange={handleValueChange}
+                                                          {...props}
+                                                        >
+                                                        </InstrumentPanel4>
+                                                        :
+                                                        <ErrorCatch
+                                                          app={componentConfig.name}
+                                                          user=""
+                                                          token=""
+                                                          max={1}
+                                                          errorRender={<RemoteComponentErrorRender errorComponent={componentConfig.name}></RemoteComponentErrorRender>}
+                                                          onCatch={(errors) => {
+                                                            console.log('组件报错信息：', errors, '组件id', componentConfig.id);
+                                                          }}
+                                                        >
+                                                          <RemoteBaseComponent
+                                                            {...props}
+                                                            scale={scale}
+                                                            onChange={handleValueChange}
+                                                          ></RemoteBaseComponent>
+                                                        </ErrorCatch>
       }
     </div>
   )
