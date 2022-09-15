@@ -19,11 +19,10 @@ import {connect} from "dva"
 // import './index.css'
 import {cloneDeep} from 'lodash'
 import {debounce} from "@/utils/common";
-
-// import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
-// import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
-import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
-import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
+import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPanel_1/v1.3.2'
+import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3/v1.2.4'
+import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4/v1.2.1'
+import Cascader from '@/customComponents/assist/cascader/v1.0.7'
 import Timeline from '@/customComponents/assist/timeline'
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
@@ -506,20 +505,13 @@ const ComponentEventContainer = ({publishDashboard, dispatch, events = [], id = 
             {...props}
           >
           </Timeline>
-          // : props.componentConfig.moduleName === 'CardFlipper_1' ?
-          // <CardFlipper1
-          //   scale={scale}
-          //   onChange={handleValueChange}
-          //   {...props}
-          // >
-          // </CardFlipper1>
-          // : props.componentConfig.moduleName === 'CardFlipper_2' ?
-          // <CardFlipper2
-          //   scale={scale}
-          //   onChange={handleValueChange}
-          //   {...props}
-          // >
-          // </CardFlipper2>
+          : props.componentConfig.moduleName === 'instrumentPanel_1' ?
+          <InstrumentPanel1
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          >
+          </InstrumentPanel1>
           : props.componentConfig.moduleName === 'instrumentPanel_3' ?
           <InstrumentPanel3
             scale={scale}
@@ -534,6 +526,13 @@ const ComponentEventContainer = ({publishDashboard, dispatch, events = [], id = 
             {...props}
           >
           </InstrumentPanel4>
+          : props.componentConfig.moduleName === 'cascader' ?
+          <Cascader
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          >
+          </Cascader>
           :
           <ErrorCatch
             app={componentConfig.name}
