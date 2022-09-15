@@ -6,7 +6,6 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleType": "assist",
-
   "moduleName": "date1", //组件标识
   "moduleVersion": "1.1.7", //组件版本号
 

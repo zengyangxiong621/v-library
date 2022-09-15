@@ -5,10 +5,9 @@ const componentDefaultConfig = {
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
-  "dashboardId": "indicator", 
-
+  "moduleType": "indicator", 
   "moduleName": "CardFlipper_2", //组件标识
-  "moduleVersion": "1.1.3", //组件版本号
+  "moduleVersion": "1.1.4", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
