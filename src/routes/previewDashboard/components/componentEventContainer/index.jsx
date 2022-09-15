@@ -172,7 +172,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     // console.log('-------------')
     // console.log('数据变化data', data)
     const componentId = props.componentConfig.id
-    const component = previewDashboard.fullAmountComponents.find(item => item.id === componentId)
+    const component = previewDashboard.components.find(item => item.id === componentId)
     const compCallbackArgs = component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -217,7 +217,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      const activeComponents = activeIds.reduce((pre, id) => pre.concat(previewDashboard.fullAmountComponents.find(item => item.id === id)), [])
+      const activeComponents = activeIds.reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
       // 绑定数据源的组件列表
@@ -406,7 +406,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   const componentConfigFunc = (config, actionType, dom, actionId, action, componentId) => {
     if (actionType === 'updateConfig') {
       console.log('config', config)
-      const component = previewDashboard.fullAmountComponents.find(item => item.id === componentId)
+      const component = previewDashboard.components.find(item => item.id === componentId)
       if(component) {
         component.config = [...component.config.filter(item => ['dimension', 'hideDefault'].includes(item.name)), ...config]
         dispatch({
