@@ -97,14 +97,7 @@ const ControlCabin = props => {
       <div className="control-cabin-bg">
         <div className="slide-wraper">
           {
-            loading ?
-              <Spin tip="加载中..." />
-              : applist.length ?
-                <Carousel
-                  imageList={applist}
-                  onClick={(app) => appClick(app)}
-                />
-                : <Empty description="暂无数据" />
+            <Empty description="暂无数据" className="control-empty"/>
           }
         </div>
         {
