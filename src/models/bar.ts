@@ -305,7 +305,6 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any,{ call, put, select }: any): any {
       let bar: any = yield select(({ bar }: any) => bar);
-      let panels: Array<IPanel> = []
       const layers = bar.treeData
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]) // 0 动态面板；1 引用面板；2 下钻面板
@@ -378,13 +377,13 @@ export default {
         }
       })
       const fullAmountComponents = bar.fullAmountDashboardDetails.reduce((pre: Array<any>, cur: any) => pre.concat(cur?.components || []), [])
-      const filterPanels = bar.fullAmountDashboardDetails.filter((item: any) => layerPanels.find((panel: any) => panel.id === item.id))
+      const panels = bar.fullAmountDashboardDetails.filter((item: any) => layerPanels.find((panel: any) => panel.id === item.id))
       yield put({
         type: 'save',
         payload: {
           fullAmountDashboardDetails: bar.fullAmountDashboardDetails,
           fullAmountLayers,
-          // panels: filterPanels,
+          panels,
           fullAmountComponents
         }
       })
@@ -469,8 +468,6 @@ export default {
         } catch (error) {
           console.log("error", error);
         }
-        console.log("finalComponents", finalComponents);
-
         yield put({
           type: "save",
           payload: {
