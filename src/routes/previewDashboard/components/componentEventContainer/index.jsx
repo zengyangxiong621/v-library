@@ -7,8 +7,8 @@ import Bar from '@/customComponents/echarts/components/bar/index'
 import SelectV2 from '@/customComponents/assist/select/index'
 import CusImage from '@/customComponents/assist/image/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
-import ChinaMap from '@/customComponents/echarts/components/chinaMap'
-import WorldMap from '@/customComponents/echarts/components/worldMap'
+import ChinaMap from '@/customComponents/echarts/components/chinaMap/v1.6.3'
+import WorldMap from '@/customComponents/echarts/components/worldMap/v1.1.2'
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.0'
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.1'
 import Tab from '@/customComponents/interactive/tab'
@@ -190,12 +190,12 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
               // 判断是否为同一个源
               if (item.callbackParam === callback.target) {
                 // 翻页组件不需要配置origin
-                if(component.moduleName === 'paginationComp'){
+                if (component.moduleName === 'paginationComp') {
                   temp = true
                   callbackArgs[callback.target] = data[callback.target]
                   activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
-                // 值是否改变
-                // data的值存在并且
+                  // 值是否改变
+                  // data的值存在并且
                 } else if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
                   temp = true
                   callbackArgs[callback.target] = data[callback.origin]
@@ -407,7 +407,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     if (actionType === 'updateConfig') {
       console.log('config', config)
       const component = previewDashboard.components.find(item => item.id === componentId)
-      if(component) {
+      if (component) {
         component.config = [...component.config.filter(item => ['dimension', 'hideDefault'].includes(item.name)), ...config]
         dispatch({
           type: 'previewDashboard/save'
@@ -455,24 +455,24 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
               {...props}
             >
             </ScrollSelect>
-          : props.componentConfig.moduleName === 'counter' ?
-            <Counter
-              onChange={handleValueChange}
-              {...props}
-            >
-            </Counter>
-            : props.componentConfig.moduleName === 'timeSelect' ?
-              <TimeSelect
-                scale={scale}
+            : props.componentConfig.moduleName === 'counter' ?
+              <Counter
                 onChange={handleValueChange}
                 {...props}
               >
-              </TimeSelect>
-              // : props.componentConfig.moduleName === 'worldMap' ?
-              //   <WorldMap
-              //     {...props}
-              //   >
-              //   </WorldMap>
+              </Counter>
+              : props.componentConfig.moduleName === 'timeSelect' ?
+                <TimeSelect
+                  scale={scale}
+                  onChange={handleValueChange}
+                  {...props}
+                >
+                </TimeSelect>
+                // : props.componentConfig.moduleName === 'worldMap' ?
+                //   <WorldMap
+                //     {...props}
+                //   >
+                //   </WorldMap>
                 : props.componentConfig.moduleName === 'timeline' ?
                   <Timeline
                     {...props}

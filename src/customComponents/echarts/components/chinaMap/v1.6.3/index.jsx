@@ -75,20 +75,21 @@ class ChinaMap extends Component {
         coords: [
           ipCoordData[item.name] || [114.249193, 40.168238], // 校验：dataCenter.name被修改，则默认赋值 昌平
           [
-            (ipCoordData[item.name]|| [114.249193, 40.168238])[0],
-            (ipCoordData[item.name]|| [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
+            (ipCoordData[item.name] || [114.249193, 40.168238])[0],
+            (ipCoordData[item.name] || [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
           ],
         ],
       };
     });
   }
+
   // 柱状体的顶部
   scatterData = (dataCenter, ipCoordData) => {
     if (!dataCenter) { return }
     return dataCenter.map((item) => {
       return [
-        (ipCoordData[item.name]|| [114.249193, 40.168238])[0],
-        (ipCoordData[item.name]|| [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
+        (ipCoordData[item.name] || [114.249193, 40.168238])[0],
+        (ipCoordData[item.name] || [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
       ];
     });
   }
@@ -109,13 +110,13 @@ class ChinaMap extends Component {
     const { config, staticData } = componentConfig || ComponentDefaultConfig
     const mainData = this.formatConfig(config, [])
     // console.log(mainData, '#mainData');
-    const { bgColor, selectColor, borderColor, width ,height  } = mainData
+    const { bgColor, selectColor, borderColor, width, height } = mainData
     // 计算地图缩放比例，初始值 width:3325,height:1900,比例 7:4
     let SCALE = 1;
-    if (width/height < 1.75) {
-      SCALE = width/3325;
+    if (width / height < 1.75) {
+      SCALE = width / 3325;
     } else {
-      SCALE = height/1900;
+      SCALE = height / 1900;
     }
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值 
@@ -589,7 +590,8 @@ class ChinaMap extends Component {
     };
 
     const dom = document.getElementById(componentConfig.id);
-    var mapChart = echarts.init(dom);
+    // var mapChart = echarts.init(dom);
+    var mapChart = echarts.init(dom, null, { devicePixelRatio: 2 });
     echarts.registerMap("china", chinaJson);
     // echarts.registerMap("outline", outline);
     this.setState({ options });
@@ -652,16 +654,16 @@ class ChinaMap extends Component {
 
     let style = this.formatConfig(config, [])
 
-    const { bgColor, selectColor, borderColor, width ,height  } = style
+    const { bgColor, selectColor, borderColor, width, height } = style
 
     // 计算地图缩放比例，初始值 width:3325,height:1900,比例 7:4
     let SCALE = 1;
-    if (width/height < 1.75) {
-      SCALE = width/3325;
+    if (width / height < 1.75) {
+      SCALE = width / 3325;
     } else {
-      SCALE = height/1900;
-    }    
-    if (mapChart) { 
+      SCALE = height / 1900;
+    }
+    if (mapChart) {
       options.series[0].itemStyle.normal.areaColor = bgColor;
       options.series[0].itemStyle.normal.borderColor = borderColor;
       options.series[0].itemStyle.emphasis.areaColor = selectColor;
@@ -673,14 +675,14 @@ class ChinaMap extends Component {
       options.series[6].data = this.scatterData2(dataCenter, ipCoordData);
       options.series[7].data = this.convertIPData2(dataCenter2, ipCoordData);
       options.series[8].data = this.convertIPData2(dataCenter3, ipCoordData);
-      mapChart.clear();      
+      mapChart.clear();
       mapChart.setOption(options);
       mapChart.resize();
     }
 
 
     return (
-      <div className='ch-map' style={{transform:'scale('+SCALE+')',transformOrigin: 'center center'}}>
+      <div className='ch-map' style={{ transform: 'scale(' + SCALE + ')', transformOrigin: 'center center' }}>
         <div className='map-content'>
           <div
             className='map'

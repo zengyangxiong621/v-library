@@ -4,10 +4,9 @@ const componentDefaultConfig = {
   name: "世界地图", //图层名称
   parentId: "", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
-
   moduleType: "map",
   moduleName: "worldMap", //组件标识
-  moduleVersion: "1.0.0", //组件版本号
+  moduleVersion: "1.1.2", //组件版本号
 
   createdAt: "2022-04-02T07:22:31.290Z", // =========
   updatedAt: "2022-04-02T07:22:39.798Z", // =========

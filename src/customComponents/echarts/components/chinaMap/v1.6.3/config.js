@@ -7,7 +7,7 @@ const componentDefaultConfig = {
 
   moduleType: "map",
   moduleName: "chinaMap", //组件标识
-  moduleVersion: "1.0.0", //组件版本号
+  moduleVersion: "1.6.3", //组件版本号
 
   createdAt: "2022-04-02T07:22:31.290Z", // =========
   updatedAt: "2022-04-02T07:22:39.798Z", // =========
@@ -157,7 +157,6 @@ const componentDefaultConfig = {
           displayName: "Y轴坐标",
           value: 100,
         },
-        // 宽高比 7:4
         {
           name: "width",
           displayName: "宽度",

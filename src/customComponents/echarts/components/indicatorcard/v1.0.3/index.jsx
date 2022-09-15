@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ComponentDefaultConfig from './config'
-import EC from '../../EC'
+import EC from '../../../EC'
 
 const Indicatorcard = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
@@ -67,7 +67,7 @@ const Indicatorcard = (props) => {
           axisLine: {
             lineStyle: {
               width: circleWidth, // 环形宽度 
-              color: [[1,'#2e385f']] // 环图背景色
+              color: [[1, '#2e385f']] // 环图背景色
             }
           },
           splitLine: {

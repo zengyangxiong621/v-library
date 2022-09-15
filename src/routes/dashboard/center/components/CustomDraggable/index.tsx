@@ -14,15 +14,15 @@ import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import BasicPieChart from "@/customComponents/echarts/components/basicPie";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import WorldMap from "@/customComponents/echarts/components/worldMap";
-import ChinaMap from "@/customComponents/echarts/components/chinaMap";
-import IndicatorCard from "@/customComponents/echarts/components/indicatorcard";
+import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.2";
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3";
+import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.3";
 import IconText from "@/customComponents/text/iconText";
 // import textConfig from  '@/customComponents/text/iconText/config'
 import SwiperText from '@/customComponents/text/swiperText'
 import CustomText from '@/customComponents/text/customText'
 import CustomTextConfig from '@/customComponents/text/customText/config'
-import textConfig from '@/customComponents/echarts/components/worldMap/config'
+import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.2/config'
 // import textConfig from '@/customComponents/text/swiperText/config'
 import Counter from "@/customComponents/assist/counter2";
 // import radarChartConfig from  '@/customComponents/assist/counter2/config'
