@@ -38,7 +38,7 @@ export const defaultData = {
       "parentId": "0",
       "dashboardId": "11",
       "moduleName": "scrollTable",
-      "moduleType": "scrollTable",
+      "moduleType": "table",
       "moduleVersion": "1.0.1",
       "autoUpdate": { "isAuto": false, "interval": 10 },
       "thumb": "",
