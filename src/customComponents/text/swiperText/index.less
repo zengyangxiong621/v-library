@@ -6,7 +6,7 @@
   padding: 20px;
 }
 
-.swiper-container {
+.swipwe-box .swiper-container {
   width: 100%;
   height: 100%;
   /* 取消鼠标复制功能 */
@@ -24,15 +24,18 @@
   /* CSS3属性 */
 }
 
-.swiper-slide {
-  text-align: center;
+.swipwe-box .swiper-slide {
+  // text-align: center;
   font-size: 18px;
-
+  display: flex;
+  align-items: center;
   /* Center slide text vertically */
+}
+
+.swiper-type{
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
-  display: flex;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   -webkit-justify-content: center;
@@ -40,25 +43,25 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   -webkit-align-items: center;
-  align-items: center;
   transition: 300ms;
   /* 非高亮颜色 */
-  color: #959fb6;
   transform: scale(0.8);
   opacity: 0.4
 }
 
-.swiper-slide-active,
-.swiper-slide-duplicate-active {
+
+
+.swipwe-box .swiper-slide-active,
+.swipwe-box .swiper-slide-duplicate-active {
   /* 高亮颜色 */
   color: #fafbfc;
   transform: scale(1);
   opacity: 1 !important;
 }
 
-.swiper-slide-next, .swiper-slide-prev{
-  opacity: 0.6 !important;
-}
-.hide{
+// .swipwe-box .swiper-slide-next, .swipwe-box .swiper-slide-prev{
+//   opacity: 0.6 !important;
+// }
+.swipwe-box .hide{
   background: rgba(76, 255, 231, 0.15);
 }
