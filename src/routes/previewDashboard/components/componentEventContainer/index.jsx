@@ -491,20 +491,13 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
                           onChange={handleValueChange}
                           {...props}
                         ></PaginationComp>
-                        // : props.componentConfig.moduleName === 'CardFlipper_1' ?
-                        // <CardFlipper1
-                        //   scale={scale}
-                        //   onChange={handleValueChange}
-                        //   {...props}
-                        // >
-                        // </CardFlipper1>
-                        // : props.componentConfig.moduleName === 'CardFlipper_2' ?
-                        // <CardFlipper2
-                        //   scale={scale}
-                        //   onChange={handleValueChange}
-                        //   {...props}
-                        // >
-                        // </CardFlipper2>
+                        : props.componentConfig.moduleName === 'instrumentPanel_1' ?
+                          <InstrumentPanel1
+                            scale={scale}
+                            onChange={handleValueChange}
+                            {...props}
+                          >
+                          </InstrumentPanel1>
                         : props.componentConfig.moduleName === 'instrumentPanel_3' ?
                           <InstrumentPanel3
                             scale={scale}
@@ -519,6 +512,13 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
                               {...props}
                             >
                             </InstrumentPanel4>
+                          : props.componentConfig.moduleName === 'cascader' ?
+                            <Cascader
+                              scale={scale}
+                              onChange={handleValueChange}
+                              {...props}
+                            >
+                            </Cascader>
                             :
                             props.componentConfig.moduleName === 'image2' ?
                               <CusImage
