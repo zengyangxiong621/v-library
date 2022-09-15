@@ -31,6 +31,20 @@ class SwipterText extends Component<Props, State> {
     this.drawSwiper()
   }
 
+  componentDidUpdate(prevProps:any,prevState:any){
+    // const { swiperDom,swiperId } = this.state
+    // const componentConfig:any = prevState.componentConfig
+    // const newComponentConfig:any = prevProps.componentConfig
+    // const oldValue = componentConfig?.config?.find((item:any) => item.displayName === "特效样式");
+    // const newValue = newComponentConfig?.config?.find((item:any) => item.displayName === "特效样式");
+    // console.log(newValue.value, oldValue.value,'kkkkkkk')
+
+    // if(newValue.value != oldValue.value){
+    //   swiperDom.destroy()
+    //   this.drawSwiper()
+    // }
+  }
+
   // 处理所有配置项
   formatConfig = (config:any, exclude:any) => {
     return config.filter((item: any) => exclude.indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
@@ -70,12 +84,12 @@ class SwipterText extends Component<Props, State> {
         loopedSlides: slideData.length + 2,
         observer: true,//修改swiper自己或子元素时，自动初始化swiper 
         observeParents: true,//修改swiper的父元素时，自动初始化swiper 
-        // loop: configData.isLoop,
-        loop:  configData.hasOwnProperty('specialType')  ? !configData.specialType : false,
+        // loop:  configData.hasOwnProperty('specialType')  ? !configData.specialType : false,
+        loop: true,
         autoHeight: true,
         noSwiping: false,   // 手动切换，false 允许，true，不允许
         autoplay: loopConfig,
-        centeredSlides: configData.hasOwnProperty('specialType') ? configData.specialType : true,
+        centeredSlides:  true,
     });
     swiper.el.onmouseover = function(){
       swiper.autoplay.stop();
@@ -125,7 +139,7 @@ class SwipterText extends Component<Props, State> {
     // 背景颜色
     const backgroundConfig = findItem('backgroundConfig') ? this.formatConfig([findItem('backgroundConfig')], []) : {}
     // 展示方式
-    const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true
+    const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true;
     if(swiperDom && finalData.length){
       // 切换是否自动轮播
       if(style.autoplay && finalData.length > 1){
@@ -136,9 +150,8 @@ class SwipterText extends Component<Props, State> {
       swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
       swiperDom.params.slidesPerView = style.slidesNum
       swiperDom.params.spaceBetween = style.lineSpace // 更新文本间距
-      // swiperDom.params.centeredSlides = specialType, // 更新文本间距
+      swiperDom.params.centeredSlides = specialType 
       // swiperDom.params.loop = !specialType, // 更新文本间距
-      console.log(swiperDom.params,' swiperDom.params')
       if(style.autoplay){
         swiperDom.el.onmouseout = function(){
           swiperDom.autoplay.start();
