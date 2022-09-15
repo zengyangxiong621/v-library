@@ -14,9 +14,9 @@ import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.1'
 import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import Counter from '@/customComponents/assist/counter2'
-import Media from '@/customComponents/media'
-import NormalTable from '@/customComponents/table/normalTable'
-import PaginationComp from "@/customComponents/paginationComp";
+import Media from '@/customComponents/media/v1.1.1'
+import NormalTable from '@/customComponents/table/normalTable/v1.0.4'
+import PaginationComp from "@/customComponents/paginationComp/v1.1.6";
 import { connect } from "dva"
 
 // import './index.css'
@@ -26,7 +26,7 @@ import InstrumentPanel1 from '@/customComponents/echarts/components/instrumentPa
 import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3/v1.2.4'
 import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4/v1.2.1'
 import Cascader from '@/customComponents/assist/cascader/v1.0.7'
-import Timeline from '@/customComponents/assist/timeline'
+import Timeline from '@/customComponents/assist/timeline/v1.1.6'
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
 
@@ -488,6 +488,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
                       ></NormalTable>
                       : props.componentConfig.moduleName === 'paginationComp' ?
                         <PaginationComp
+                          onChange={handleValueChange}
                           {...props}
                         ></PaginationComp>
                         // : props.componentConfig.moduleName === 'CardFlipper_1' ?

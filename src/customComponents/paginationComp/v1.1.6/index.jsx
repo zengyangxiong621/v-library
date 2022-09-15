@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React,{useEffect} from 'react'
 import ComponentDefaultConfig from './config'
 import { Pagination,ConfigProvider,message } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
@@ -10,8 +10,8 @@ const PaginationComp=(props)=>{
   const componentData = props.comData || staticData.data  // 过滤后的数据
   const _fields = props.fields
   const pageConfig = config.find(item=>item.name==='paginationConfig')
-  let pageKey='page',pageSizeKey='pageSize'
 
+  let pageKey='page',pageSizeKey='pageSize'
   if(callbackArgs && callbackArgs.length>=2){
     pageKey=callbackArgs[0].target
     pageSizeKey=callbackArgs[1].target
@@ -142,10 +142,10 @@ const PaginationComp=(props)=>{
       [pageSizeKey]:pageSize
     })
   }
-
   useEffect(()=>{
     handleChange(1,10)
   },[])
+
   return (
     <ConfigProvider locale={zhCN}>
       <Pagination

@@ -55,7 +55,6 @@ export default function TimelineRender(props) {
   const { config,staticData } = componentConfig
   const componentData = props.comData || staticData.data  // 过滤后的数据
   const _fields = props.fields
-  const componentThemeConfig = props.themeConfig
   const getStyle=(config)=>{
     const style={}
     if(Array.isArray(config)){
@@ -67,17 +66,6 @@ export default function TimelineRender(props) {
             style[item.key]=getStyle(item.value)
           })
         }else{
-          if(componentThemeConfig){
-            switch(item.name){
-              case 'themeColor':
-                item.value=componentThemeConfig.textColor
-                break;
-              case 'themeBackgroundColor':
-                item.value=componentThemeConfig.backgroundColor
-              default:
-                break;
-            }
-          }
           style[item.name]=item.value
         }
       })
@@ -87,7 +75,7 @@ export default function TimelineRender(props) {
 
   const style=getStyle(config)
   console.log(style);
-  const {dimension,themeBackgroundColor,labelStyle,fontStyle,spotType}=style
+  const {dimension,backgroundColor,labelStyle,fontStyle,spotType}=style
 
   const positionStyle=dimension
 
@@ -102,8 +90,7 @@ export default function TimelineRender(props) {
       }
     })
   }
-  const _contentStyle={color:contentStyle.themeColor,...contentStyle}
-  formatPxStyle(_contentStyle)
+  formatPxStyle(contentStyle)
 
   const getShadowVal=(dom)=>{
     const {color,vShadow,hShadow,blur}=dom['shadow']
@@ -121,7 +108,7 @@ export default function TimelineRender(props) {
       borderLeft: '5px solid transparent'
     }
   }
-  // 内容标题左边的竖线样式
+
   const getTitleLineStyle=(textStyle)=>{
     return {
       position: 'absolute',
@@ -131,7 +118,6 @@ export default function TimelineRender(props) {
       boxShadow:textStyle.textShadow
     }
   }
-  // 内容标题阴影
   const getTimeLineTitleStyle=(isOutShadow)=>{
     formatPxStyle(titleStyle)
     const baseStyle={
@@ -145,7 +131,6 @@ export default function TimelineRender(props) {
     formatPxStyle(timeStyle)
     const baseCss={
       ...timeStyle,
-      color:timeStyle.themeColor,
       left:offsetConfig.x+'px',
       top:(offsetConfig.y - 7) + 'px',
     }
@@ -181,13 +166,13 @@ export default function TimelineRender(props) {
         const timeLineTitleStyle=getTimeLineTitleStyle(outShadow.show)
         return (
         <Timeline.Item dot={spotDom(spotType,index)} label={show && item[_fields[0]]} key={item.time}>
-          <div className='timeLineBox' style={{backgroundColor:themeBackgroundColor,borderColor:themeBackgroundColor}}>
-            <div className='timeLineArrow' style={getArrowStyle(themeBackgroundColor)}></div>
+          <div className='timeLineBox' style={{backgroundColor,borderColor:backgroundColor}}>
+            <div className='timeLineArrow' style={getArrowStyle(backgroundColor)}></div>
             <div className='timeLineTitle' style={timeLineTitleStyle}>
               <div className='titleLine' style={getTitleLineStyle(timeLineTitleStyle)}></div>
               <span className='titleVal'>{item[_fields[1]]}</span>
             </div>
-            <div className='timeLineContent' style={_contentStyle}>{item[_fields[2]]}</div>
+            <div className='timeLineContent' style={contentStyle}>{item[_fields[2]]}</div>
           </div>
         </Timeline.Item>
         )

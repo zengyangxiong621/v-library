@@ -32,11 +32,10 @@ import radarChartConfig from "@/customComponents/echarts/components/radarChart/c
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 
-import Timeline from "@/customComponents/assist/timeline";
-import NormalTable from "@/customComponents/table/normalTable";
-import Media from "@/customComponents/media";
-import PaginationComp from "@/customComponents/paginationComp";
-// import normalTableConfig from '@/customComponents/table/normalTable/config'
+import Timeline from "@/customComponents/assist/timeline/v1.1.6";
+import NormalTable from "@/customComponents/table/normalTable/v1.0.4";
+import Media from "@/customComponents/media/v1.1.1";
+import PaginationComp from "@/customComponents/paginationComp/v1.1.6";
 
 // import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
