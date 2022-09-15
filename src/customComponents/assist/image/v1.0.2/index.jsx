@@ -41,6 +41,8 @@ class ComImage extends Component {
       ...animationSettings
     }
 
+    console.log('style', style)
+
     let bgUrl = ''
     if (componentData && componentData.length) {
       bgUrl = componentData[0][fieldKey] ?
@@ -55,8 +57,7 @@ class ComImage extends Component {
       <div style={{
         ...finalStyle,
         width: '100%',
-        height: '100%',
-        "--rotate":finalStyle.transform
+        height: '100%'
       }}>
         {
           bgUrl ?

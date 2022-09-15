@@ -58,8 +58,8 @@ const ControlCabin = props => {
   }
 
   const appClick = (app) => {
-    for(let i=0; i<applist.length; i++){
-      if(applist[i].id === app.id){
+    for (let i = 0; i < applist.length; i++) {
+      if (applist[i].id === app.id) {
         currentFullScreenIndex = i
         break
       }
@@ -97,7 +97,14 @@ const ControlCabin = props => {
       <div className="control-cabin-bg">
         <div className="slide-wraper">
           {
-            <Empty description="暂无数据" className="control-empty"/>
+            loading ?
+              <Spin tip="加载中..." />
+              : applist.length ?
+                <Carousel
+                  imageList={applist}
+                  onClick={(app) => appClick(app)}
+                />
+                : <Empty description="暂无数据" />
           }
         </div>
         {

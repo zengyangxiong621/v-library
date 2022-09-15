@@ -1,12 +1,13 @@
 const componentDefaultConfig = {
   "id": '', //组件ID
   "uniqueTag": "", // =========
-  "name": "图片", //图层名称
+  "name": "图片2", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
-  "moduleName": "image", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleName": "image2", //组件标识
+  "moduleVersion": "1.0.2", //组件版本号
+  "moduleType": 'assist',
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
