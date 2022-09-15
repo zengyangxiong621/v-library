@@ -415,8 +415,6 @@ const ScrollTable = (props) => {
     setTableWH()
   }, [])
 
-  const customColumnLoadFunc = () => {
-  }
 
   useEffect(() => {
     console.log('轮播表格渲染')

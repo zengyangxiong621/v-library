@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ComponentDefaultConfig from './config'
 import { Pagination,ConfigProvider,message } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
@@ -6,10 +6,17 @@ import './index.css'
 
 const PaginationComp=(props)=>{
   const componentConfig = props.componentConfig || ComponentDefaultConfig
-  const { config,staticData } = componentConfig
+  const { config,staticData,callbackArgs } = componentConfig
   const componentData = props.comData || staticData.data  // 过滤后的数据
   const _fields = props.fields
   const pageConfig = config.find(item=>item.name==='paginationConfig')
+  let pageKey='page',pageSizeKey='pageSize'
+
+  if(callbackArgs && callbackArgs.length>=2){
+    pageKey=callbackArgs[0].target
+    pageSizeKey=callbackArgs[1].target
+  }
+
   const getConfigMap=(configArr)=>{
     const style={}
     if(Array.isArray(configArr)){
@@ -123,6 +130,22 @@ const PaginationComp=(props)=>{
       '--infoTextLineHeight':pageInfoTextStyle.lineHeight+'px'
     }
   }
+
+  /**
+   * 处理交互事件
+   * @param {*} page :当前页数
+   * @param {*} pageSize ：当前页大小
+   */
+  const handleChange=(page,pageSize)=>{
+    props.onChange({
+      [pageKey]:page,
+      [pageSizeKey]:pageSize
+    })
+  }
+
+  useEffect(()=>{
+    handleChange(1,10)
+  },[])
   return (
     <ConfigProvider locale={zhCN}>
       <Pagination
@@ -132,6 +155,7 @@ const PaginationComp=(props)=>{
         showSizeChanger={pageSizeSwitch}
         showQuickJumper={quickJump}
         size={size}
+        onChange={handleChange}
         pageSizeOptions={getPageSizeOptions()}
         style={{
           '--pageBorderRadius':borderRadius+'%',

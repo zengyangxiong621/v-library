@@ -1,0 +1,10 @@
+{
+	"name":"基本折线图",
+	"moduleName":"basicLine",
+	"moduleVersion":"1.2.1",
+	"type":"chart",
+	"subType":"line",
+	"photoPath":"/chart/basicLine/1.2.1/thumb-basicLine.png",
+	"configUrl":"\\config.js",
+	"author":"chendibo@gridsum.com"
+}

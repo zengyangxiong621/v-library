@@ -30,7 +30,6 @@ const formatEnum = [
 ]
 
 const TimeSelect = (props) => {
-  console.log('嘻嘻嘻嘻')
   const [dateValue, setDateValue] = useState(null)
   const dateRef = useRef(null)
   const componentConfig = props.componentConfig

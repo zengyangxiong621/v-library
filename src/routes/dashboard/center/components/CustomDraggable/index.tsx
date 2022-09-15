@@ -12,7 +12,7 @@ import { generateTreeData } from "../../../../../utils/sideBar";
 import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
-import BasicPieChart from "@/customComponents/echarts/components/basicPie";
+import BasicPieChart from "@/customComponents/echarts/components/basicPie/pie-1.1.4";
 import Bar from "@/customComponents/echarts/components/bar/index";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.2";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3";
@@ -40,10 +40,10 @@ import PaginationComp from "@/customComponents/paginationComp";
 
 // import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
-import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1";
-import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3";
-import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4";
-import Cascader from "@/customComponents/assist/cascader";
+import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.2";
+import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.4";
+import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.1";
+import Cascader from "@/customComponents/assist/cascader/v1.0.7";
 
 
 import {

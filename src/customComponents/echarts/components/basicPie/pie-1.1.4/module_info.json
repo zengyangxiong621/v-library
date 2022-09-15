@@ -1,0 +1,10 @@
+{
+  "name": "饼图",
+  "moduleName": "pie",
+  "moduleVersion": "1.1.4",
+  "type": "chart",
+  "subType": "pie",
+  "photoPath": "/chart/pie/1.1.4/thumb-pie.png",
+  "configUrl": "\\config.js",
+  "author": "chendibo@gridsum.com"
+}

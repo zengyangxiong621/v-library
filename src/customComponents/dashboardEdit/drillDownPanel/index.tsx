@@ -96,63 +96,6 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panels }: any) 
     })();
   }, []);
 
-  useEffect(() => {
-    setState({ overflow: isScroll ? "auto" : "none" });
-  }, [isScroll]);
-
-  useEffect(() => {
-    let timer: any = null;
-    if (!isDashboard && state.isLoading && allowScroll) {
-      timer = setInterval(() => {
-        let currentIndex = state.activeIndex + 1;
-        if (currentIndex === state.allData.length) {
-          currentIndex = 0;
-        }
-        if (animationTime === 0) {
-          setState({ activeIndex: currentIndex });
-        } else if (animationTime > 0) {
-          const opacityTimer = setInterval(() => {
-            const statusWrapDOMs: any = document.querySelectorAll(`.panel-${id} .status-wrap`);
-            if (statusWrapDOMs.length === 0) return;
-            if (!statusWrapDOMs[0].style.opacity) {
-              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
-                if (index === currentIndex) {
-                  dom.style.opacity = "0";
-                } else {
-                  dom.style.opacity = "1";
-                }
-              });
-            } else {
-              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
-                if (index === currentIndex) {
-                  dom.style.opacity = `${Number(dom.style.opacity) + 0.5}`;
-                  dom.style.display = "block";
-                  if (Number(dom.style.opacity) >= 1) {
-                    dom.style.opacity = "";
-                  }
-                } else {
-                  dom.style.opacity = `${Number(dom.style.opacity) - 0.5}`;
-                  dom.style.display = "block";
-                  if (Number(dom.style.opacity) <= 0) {
-                    dom.style.opacity = "";
-                    setState({ activeIndex: currentIndex });
-                    clearInterval(opacityTimer);
-                  }
-                }
-              });
-            }
-          }, 500);
-        }
-
-      }, scrollTime);
-    }
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    };
-  }, [state.isLoading, state.activeIndex]);
-  console.log("state.allData~~~~~", state.allData);
 
   return (
     <div className={`drill-down-panel panel-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>

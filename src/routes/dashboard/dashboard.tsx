@@ -30,7 +30,6 @@ import { useEventEmitter } from "ahooks";
 const { Header } = Layout;
 
 function App({ bar, dispatch, location, history }: any) {
-  console.log("疯狂触发？");
   const isPanel = bar.isPanel;
   const [showTopBar, setShowTopBar] = useState(false);
   const [zujianORsucai, setZujianORsucai] = useState("zujian");
@@ -126,7 +125,6 @@ function App({ bar, dispatch, location, history }: any) {
     document.oncontextmenu = documentRightClick;
 
     return () => {
-      console.log("这里触发不");
       document.removeEventListener("click", clearAllStatus);
       document.oncontextmenu = null;
       document.removeEventListener("contextMenu", documentRightClick);

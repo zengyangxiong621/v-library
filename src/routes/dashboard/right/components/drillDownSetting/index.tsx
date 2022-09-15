@@ -60,8 +60,26 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
 
   const showHadSelectComp = () => {
     // 之前已经选中了的组件
-    const hadSelectComp = Array.isArray(componentConfig.drillDownArr) ? componentConfig.drillDownArr.map((item: any) => item.id) : [];
+    let hadSelectComp: any = []
+    let temp: any = {}
+    if (Array.isArray(componentConfig.drillDownArr)) {
+      hadSelectComp = componentConfig.drillDownArr.map((item: any) => item.id)
+      componentConfig.drillDownArr.forEach((item: any) => {
+        const o = {
+          parentId: id,
+          parentData: item.parentData
+        }
+        temp[item.id] = o
+      })
+    }
     setEchoDrillDownComponents(hadSelectComp);
+    // 进入下钻面板后，需要根据已经选择的组件将相关组件信息存放至localStorage中
+    const originReflect = JSON.parse(localStorageCopy.getItem('allHasParentReflect'))
+    const finalReflect = {
+      ...originReflect,
+      ...temp
+    }
+    localStorageCopy.setItem('allHasParentReflect', JSON.stringify(finalReflect));
   };
 
   const showParentDataSample = () => {
@@ -81,7 +99,6 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
   };
 
 
-
   // 添加下钻组件
   const selectNextLevelComponent = (val: any, label: any, extra: any) => {
     setEchoDrillDownComponents(val);
@@ -89,7 +106,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
       return {
         id: item,
         name: label[index],
-        dataSample: curCompConfigStaticData[0],
+        parentData: curCompConfigStaticData,
         // parent:
       };
     });
@@ -107,14 +124,19 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
       localStorageCopy.setItem("allDrillDownPathReflect", JSON.stringify(temp));
     }
     // 当前被作为下钻组件的组件应当被放入“有父组件”的组件集合中
-    const final: any = {};
+    const curComps: any = {};
     val.forEach((valId: string) => {
-      final[valId] = {
+      curComps[valId] = {
         parentData: curCompConfigStaticData,
         parentId: id
       };
     });
-    localStorageCopy.setItem("allHasParentReflect", JSON.stringify(final));
+    const preAllHasParentReflect = JSON.parse(localStorageCopy.getItem('allHasParentReflect'))
+    const finalReflect = {
+      ...curComps,
+      ...preAllHasParentReflect
+    }
+    localStorageCopy.setItem("allHasParentReflect", JSON.stringify(finalReflect));
 
     // 将含有drillDownArr的新componentConfig传出去
     selectedNextLevelComponent(componentConfig);
@@ -146,7 +168,6 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
         state.parentDataSample &&
         <>
           <div className='tip-text'>父级数据示例：</div>
-          {/* <div>{`${JSON.stringify(state.parentDataSample)}`}</div> */}
           <div className="data-code-wraper">
             <CodeEditor data={resultData} onChange={() => { }} />
           </div>
