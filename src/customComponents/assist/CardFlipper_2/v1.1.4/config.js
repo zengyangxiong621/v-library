@@ -1,13 +1,12 @@
 const componentDefaultConfig = {
   "id": "", //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
-  "name": "定制翻牌器1", //图层名称
+  "name": "定制翻牌器2", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
-  "dashboardId": "indicator", 
-
-  "moduleName": "CardFlipper_1", //组件标识
+  "moduleType": "indicator", 
+  "moduleName": "CardFlipper_2", //组件标识
   "moduleVersion": "1.1.4", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
@@ -23,7 +22,7 @@ const componentDefaultConfig = {
   staticData: {
     data: [
       {
-        value: 123456,
+        value: 654321,
       },
     ],
     fields: [
@@ -58,12 +57,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 600
+          "value": 1100
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 600
+          "value": 200
         }
       ]
     },
@@ -158,75 +157,12 @@ const componentDefaultConfig = {
           name:"containerSize",
           displayName:"大小",
           type:"number",
-          value:77,
+          value:150,
           config:{
             min:0,
             suffix:"px",  // 输入框后缀
           }
         },
-        {
-          name:"containerMarginLeft",
-          displayName:"间距",
-          type:"number",
-          value:10,
-          config:{
-            min:0,
-            suffix:"px",  // 输入框后缀
-          }
-        },
-      ]
-    },
-    {
-      "name": "break",
-      "displayName": "分割",
-      "type": "collapse",
-      hasSwitch:true, // 是否有切换按钮
-      defaultExpand:false,  // 是否默认展开
-      value:[
-        {	// 如果有后面的按钮，则该项必须放在第一个
-          "name": "showBreak",
-          "displayName": "",
-          "value": true,
-          "type": "switch",
-        },
-        // {
-        //   name:'breakDigits',
-        //   displayName:'分割位数',
-        //   type:'number',
-        //   value:3,
-        //   config:{
-        //     min:1,
-        //     suffix:'个',  // 输入框后缀
-        //     }
-        // },
-        {
-          name:"breakPadding",
-          displayName:"分割符间距",
-          type:"inputNumber2",
-          showDetail:true, // 是否展示下面的文字说明
-          value:[
-            {
-              name:"left",
-              displayName:"左",
-              type:"number",
-              value:30,
-              config:{
-                min:0,
-                suffix:"px",  // 输入框后缀
-              }
-            },
-            {
-              name:"right",
-              displayName:"右",
-              type:"number",
-              value:10,
-              config:{
-                min:0,
-                suffix:"px",  // 输入框后缀
-              }
-            },
-          ]
-        }
       ]
     },
   ],

@@ -6,7 +6,6 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleType": "indicator",
-
   "moduleName": "instrumentPanel_1", //组件标识
   "moduleVersion": "1.3.2", //组件版本号
 

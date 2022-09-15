@@ -6,7 +6,6 @@ const ComponentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleType": "map",
-
   "moduleName": "3DEarth", //组件标识
   "moduleVersion": "1.0.1", //组件版本号
 

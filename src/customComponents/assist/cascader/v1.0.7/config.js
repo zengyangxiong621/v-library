@@ -6,7 +6,6 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleType": "interactive",
-
   "moduleName": "cascader", //组件标识
   "moduleVersion": "1.0.7", //组件版本号
 
