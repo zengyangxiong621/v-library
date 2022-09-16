@@ -1,12 +1,12 @@
 const componentDefaultConfig = {
   "id": '121', //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "超链接文本", //图层名称
+  "name": "标准标题", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
-
-  "moduleName": "hyperlinks", //组件标识
-  "moduleVersion": "1.0.0", //组件版本号
+  "moduleType": 'text',
+  "moduleName": "iconText", //组件标识
+  "moduleVersion": "1.1.2", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -22,8 +22,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "text": "超链接文本",
-        "url": 'http://10.201.83.191:31005/dashboard-manage'
+        "text": "文字组件",
       }
     ],
     "fields": [
@@ -31,12 +30,6 @@ const componentDefaultConfig = {
         "name": "text",
         "value": "text",
         "desc": "文本",
-        "status": true // 状态
-      },
-      {
-        "name": "url",
-        "value": "url",
-        "desc": "地址",
         "status": true // 状态
       }
     ]
@@ -123,7 +116,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": '48'
+          "value": '48px'
         }
       ]
     },
@@ -136,7 +129,7 @@ const componentDefaultConfig = {
           "name": "textAlign",
           "displayName": "水平对齐",
           "type": "align",
-          "value": "bothEnds" // left , center, right,bothEnds
+          "value": "left" // left , center, right,bothEnds
         },
         {
           "name": "textVertical",
@@ -163,6 +156,48 @@ const componentDefaultConfig = {
     //     }
     //   ]
     // },
+    {
+      'name': 'iconImg',
+      'displayName': '上传图标',
+      'type':'image',
+      'value': ''
+      // 'value': 'http://10.201.81.47:9000/soc-visualization-public/static/png/多边形-蓝色.png', // 有背景图则返回背景图的url，没有背景图返回空或者null
+    },
+    {
+      'name':"iconSize",
+      'displayName':'图标尺寸',
+      'type':'inputNumber2',
+      'showDetail':true, // 是否展示下面的文字说明
+      'value':[
+          {
+              'name':'width',
+              'displayName':'宽度',
+              'type':'number',
+              'value':20,
+              'config':{
+                  'min':0,
+                  'suffix':'px',  // 输入框后缀
+              }
+          },
+          {
+              'name':'height',
+              'displayName':'长度',
+              'type':'number',
+              'value':20,
+              'config':{
+                  'min':0,
+                  'suffix':'px',  // 输入框后缀
+              }
+          },
+      ]
+    },
+    {
+      'name': 'backgroundImg',
+      'displayName': '标题背景图',
+      'type':'image',
+      'value': ''
+      // 'value': 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F25%2F20200425173132_svsej.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1658998305&t=e66659d4f05a9e35629aeb89425ad381', // 有背景图则返回背景图的url，没有背景图返回空或者null
+    },
     {
       "name": "shadow",
       "displayName": "阴影",
