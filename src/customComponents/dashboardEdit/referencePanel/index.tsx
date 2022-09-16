@@ -21,7 +21,6 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;
   const defaultStateId = (states.length > 0 && states[0].id) || "";
-  console.log("defaultStateId", defaultStateId);
   const [ state, setState ] = useSetState<State>({
     states: [],
     defaultState: "",
