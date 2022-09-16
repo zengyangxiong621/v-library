@@ -19,7 +19,7 @@ import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.3";
 
 import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.2/config'
-import Counter from "@/customComponents/assist/counter2/1.0.5";
+import Counter from "@/customComponents/assist/counter2/v1.0.5";
 
 
 import ErrorCatch from "react-error-catch";
