@@ -5,7 +5,8 @@ const componentDefaultConfig = {
   "parentId": "",
   "dashboardId": "",
   "moduleName": "orderBarRankingList",
-  "moduleVersion": "1.0.0",
+  "moduleVersion": "1.0.1",
+  "moduleType": 'assist',
   "autoUpdate": {
     "isAuto": false,
     "interval": 10

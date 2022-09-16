@@ -6,7 +6,8 @@ const ComponentDefaultConfig = {
   "dashboardId": "", //画布id
 
   "moduleName": "buttonGroup2", //组件标识
-  "moduleVersion": "1.0.3", //组件版本号
+  "moduleVersion": "1.0.4", //组件版本号
+  "moduleType": 'interactive',
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
