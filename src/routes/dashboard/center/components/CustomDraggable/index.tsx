@@ -893,7 +893,7 @@ const CustomDraggable
                       allComponentDOMs[layer.id] = ref;
                     }
                   }}                // onClickCapture={(ev) => handleClick(ev, layer, config)}
-                  data-id={isPanel ? (layer.panelType === 0 ? `panel-${layer.id}` : `ref-${layer.id}`) : isGroup ? layer.id : `component-${layer.id}`}
+                  data-id={isPanel ? `panel-${layer.id}` : isGroup ? layer.id : `component-${layer.id}`}
                   key={layer.id}
                   onClick={(ev) => handleClick(ev, layer, config)}
                   onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
