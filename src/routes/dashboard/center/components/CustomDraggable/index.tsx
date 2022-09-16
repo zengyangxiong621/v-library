@@ -17,17 +17,10 @@ import Bar from "@/customComponents/echarts/components/bar/index";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.2";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.3";
-import IconText from "@/customComponents/text/iconText";
-// import textConfig from  '@/customComponents/text/iconText/config'
-import SwiperText from '@/customComponents/text/swiperText'
-import CustomText from '@/customComponents/text/customText'
-import CustomTextConfig from '@/customComponents/text/customText/config'
+
 import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.2/config'
-// import textConfig from '@/customComponents/text/swiperText/config'
-import Counter from "@/customComponents/assist/counter2";
-// import radarChartConfig from  '@/customComponents/assist/counter2/config'
-import RadarChart from "@/customComponents/echarts/components/radarChart";
-import radarChartConfig from "@/customComponents/echarts/components/radarChart/config";
+import Counter from "@/customComponents/assist/counter2/1.0.5";
+
 
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -838,7 +831,6 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component.config = CustomTextConfig.config
 
               if (component) {
                 staticData = component.staticData;
@@ -982,12 +974,6 @@ const CustomDraggable
 
                                 // <Da componentConfig={component}/>
                                 // <SwiperText  componentConfig={component}></SwiperText>
-                                // layer.moduleName === 'swiperText' ?
-                                // <CustomText  
-                                //   componentConfig={component}
-                                //   fields={getFields(component)}
-                                //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                // ></CustomText> : 
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}
