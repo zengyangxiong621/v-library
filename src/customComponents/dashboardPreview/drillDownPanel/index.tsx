@@ -117,6 +117,8 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
 
 
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
+    // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
+    if (state.activeIndex < stateIndex) return
     setState({
       activeIndex: stateIndex,
     });
@@ -144,7 +146,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
           {
             states.map((x: any, i: number) => {
               return (<Breadcrumb.Item
-                className={"custom-breadcrumb"}
+                className={`custom-breadcrumb ${state.activeIndex === i ? 'active-breadcrumb-item' : ''} `}
                 onClick={() => breadcrumbClick(x, i)}
               >
                 {x.name}
