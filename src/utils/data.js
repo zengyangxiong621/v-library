@@ -20,7 +20,6 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
     } else {
       currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs)
     }
-    console.log('currentData', currentData)
 
     if (currentData) {
       // 如果使用数据过滤器，则需要过滤数据

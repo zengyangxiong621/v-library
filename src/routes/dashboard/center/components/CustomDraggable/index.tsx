@@ -27,7 +27,9 @@ import textConfig from '@/customComponents/echarts/components/worldMap/config'
 import Counter from '@/customComponents/assist/counter2'
 // import radarChartConfig from  '@/customComponents/assist/counter2/config'
 import RadarChart from '@/customComponents/echarts/components/radarChart'
-import radarChartConfig from '@/customComponents/echarts/components/radarChart/config'
+
+import FlowChart from '@/customComponents/echarts/components/flowChart/1.0.0'
+import radarChartConfig from '@/customComponents/echarts/components/flowChart/1.0.0/config'
 
 import ErrorCatch from 'react-error-catch'
 import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
@@ -831,7 +833,6 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component.config = CustomTextConfig.config
 
               if (component) {
                 staticData = component.staticData
@@ -983,12 +984,6 @@ const CustomDraggable
 
                                 // <Da componentConfig={component}/>
                                 // <SwiperText  componentConfig={component}></SwiperText>
-                                layer.moduleName === 'swiperText' ?
-                                <SwiperText  
-                                  componentConfig={component}
-                                  fields={getFields(component)}
-                                  comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                ></SwiperText> : 
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}
