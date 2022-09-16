@@ -2197,5 +2197,25 @@ export default {
     setSystemMaterialList(state: any, { payload }: any) {
       return { ...state, systemMaterialList: payload };
     },
+    selectSingleComponent(state: any, { payload }: any) {
+      return {
+        ...state
+      }
+    },
+    selectSinglePanel(state: any, { payload }: any) {
+      return {
+        ...state
+      }
+    },
+    selectSingleGroup(state: any, { payload }: any) {
+      return {
+        ...state
+      }
+    },
+    selectMultipleLayers(state: any, { payload }: any) {
+      return {
+        ...state
+      }
+    },
   },
 };

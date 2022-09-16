@@ -15,9 +15,8 @@ interface State {
 }
 import {treeDataReverse, layersPanelsFlat} from "@/utils/index.js";
 
-const ReferencePanel = ({ bar, id, dispatch, panels, isDashboard = true }: any) => {
+const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) => {
   const componentData = bar.componentData;
-  const panel = panels.find((item: IPanel) => item.id === id);
   // console.log('panel', panel)
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;

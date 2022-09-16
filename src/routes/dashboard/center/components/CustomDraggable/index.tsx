@@ -242,7 +242,7 @@ const CustomDraggable
         }
       }
     };
-    const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
+    const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
       supportLinesRef.handleSetPosition(0, 0, "none");
       dispatch({
         type: "bar/selectComponentOrGroup",
@@ -255,10 +255,10 @@ const CustomDraggable
         type: "bar/setIsShowRightMenu",
         payload: false,
       });
-      if ("panelType" in layer) {
+      if ("panelType" in layer && panel) {
         // 说明是面板,且一定是单个
         // console.log('111111111111111111111111')
-        const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
+        // const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
         panel.config.left = Math.ceil(data.x);
         panel.config.top = Math.ceil(data.y);
         dispatch({
@@ -616,7 +616,7 @@ const CustomDraggable
       //   type: 'bar/save',
       // })
     };
-    const mouseRightClick = (e: any, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
+    const mouseRightClick = (e: any, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
       if (Object.keys(bar.selectedComponentRefs).length > 1 && layer.id in bar.selectedComponentRefs) {
         bar.isSupportMultiple = true;
       } else {
@@ -648,6 +648,14 @@ const CustomDraggable
         }
       });
       if (bar.selectedComponentOrGroup.length === 1) {
+        if (!component && panel && "panelType" in layer) {
+          dispatch({
+            type: "bar/save",
+            payload: {
+              panelConfig: panel
+            }
+          });
+        }
         if (component && "config" in component) {
           dispatch({
             type: "bar/save",
@@ -797,7 +805,7 @@ const CustomDraggable
             let style_config, staticData, styleDimensionConfig, recommendConfig;
             // 群组
             if ("panelType" in layer) {
-              const panel = panels.find((panel: IPanel) => panel.id === layer.id);
+              panel = panels.find((panel: IPanel) => panel.id === layer.id);
               if (panel) {
                 recommendConfig = panel.config;
                 const { left, top, width, height } = recommendConfig;
@@ -876,7 +884,7 @@ const CustomDraggable
                 position={config.position}
                 onStart={(ev: DraggableEvent, data: DraggableData) => handleStart(ev, data, layer, component, config)}
                 onDrag={(ev: DraggableEvent, data: DraggableData) => handleDrag(ev, data, layer, component, config)}
-                onStop={(ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config)}
+                onStop={(ev: DraggableEvent, data: DraggableData) => handleStop(ev, data, layer, component, config, panel)}
               >
                 <div
                   ref={(ref: any) => {
@@ -891,7 +899,7 @@ const CustomDraggable
                   onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
                   onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
                   onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
-                  onContextMenu={(ev) => mouseRightClick(ev, layer, component, config)}
+                  onContextMenu={(ev) => mouseRightClick(ev, layer, component, config, panel)}
                   className={["box", `${layer.selected ? "selected" : ""}`, `${layer.hover ? "hovered" : ""}`].filter(item => item).join(" ")}
                   style={{
                     ...config.style,
@@ -915,7 +923,7 @@ const CustomDraggable
                             <DynamicPanel
                               history={history}
                               id={layer.id}
-                              panels={panels}
+                              panel={panel}
                             />
                             <div className="hovered">
                               双击编辑动态面板
@@ -928,7 +936,7 @@ const CustomDraggable
                               <ReferencePanel
                                 history={history}
                                 id={layer.id}
-                                panels={panels}
+                                panel={panel}
                               />
                               <div className="hovered">
                                 双击编辑引用面板
@@ -941,7 +949,7 @@ const CustomDraggable
                               <DrillDownPanel
                                 history={history}
                                 id={layer.id}
-                                panels={panels}
+                                panel={panel}
                               />
                               <div className="hovered">
                                 双击编辑下钻面板
@@ -975,11 +983,11 @@ const CustomDraggable
                                 // <Da componentConfig={component}/>
                                 // <SwiperText  componentConfig={component}></SwiperText>
                                 // layer.moduleName === 'swiperText' ?
-                                // <CustomText  
+                                // <CustomText
                                 //   componentConfig={component}
                                 //   fields={getFields(component)}
                                 //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                // ></CustomText> : 
+                                // ></CustomText> :
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}
