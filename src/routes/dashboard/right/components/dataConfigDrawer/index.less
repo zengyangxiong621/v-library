@@ -27,7 +27,7 @@
         overflow-x: hidden;
         overflow-y: auto;
         height: 100%;
-    
+
         &::-webkit-scrollbar {
           display: none;
         }
@@ -60,7 +60,8 @@
   }
 
   .cus-filter-content-wraper {
-    padding:16px;
+    padding: 16px;
+
     .cus-header {
       background: @bgColor;
       display: flex;
@@ -81,7 +82,8 @@
         line-height: 24px;
         background-color: @bgColor;
         cursor: pointer;
-        .anticon{
+
+        .anticon {
           vertical-align: baseline;
         }
       }
@@ -109,12 +111,17 @@
   }
 
   .cus-fifter-sort-dot {
-    color: #fff;
-    cursor: move;
     position: absolute;
     z-index: 1;
     left: 8px;
-    top:6px;
+    top: 6px;
+    color: #fff;
+    cursor: pointer;
+
+    &.disable-span {
+      color: #bcbcbc;
+      cursor: not-allowed;
+    }
   }
 
   .ant-collapse-header {
@@ -127,7 +134,8 @@
         opacity: 1 !important;
       }
     }
-    .ant-collapse-header-text{
+
+    .ant-collapse-header-text {
       flex: 1;
     }
 
@@ -207,8 +215,8 @@
     }
   }
 
-  .collapse-add-filter{
-    .ant-collapse-header{
+  .collapse-add-filter {
+    .ant-collapse-header {
       padding: 2px 6px 2px 6px !important;
     }
   }

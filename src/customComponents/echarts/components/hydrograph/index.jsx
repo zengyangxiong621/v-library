@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { memo } from 'react';
 import ComponentDefaultConfig from './config'
 // import './index.css'
-import EC from '../../EC'
+import EC from '@/customComponents/echarts/EC'
+// import EC from '../../EC'
 import 'echarts-liquidfill' //在这里引入
 
 
@@ -9,78 +10,118 @@ const Hydrograph = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { data } = componentConfig.staticData
   const { config } = componentConfig
-  const fieldKey = props.fields || ['value', 'color']
+  const fieldKey = props.fields || ['value']
   const originData = props.comData || data
-
+  // 字段映射
   const finalData = Array.isArray(originData) ? originData.map(item => {
     return {
       value: item[fieldKey[0]],
       // color: item[fieldKey[1]]
     }
   }) : []
-  const { value, } = (finalData.length && finalData[0]) || {}
-  const percent = value || 0
+  const { value } = (finalData.length && finalData[0]) || {}
+
   // 获取 右侧需要 配置的项
-  const getConfig = (Arr) => {
-    const targetConfig = {};
-    Arr.filter(item => item.name !== 'dimension').forEach(({ name, value }) => {
-      if (Array.isArray(value)) {
-        value.forEach(({ name, value }) => {
+  const getTargetConfig = (Arr) => {
+    let targetConfig = {}
+    Arr.forEach((item) => {
+      let { name, value, options, flag, displayName } = item
+      if (item.hasOwnProperty('value')) {
+        // 对 系列一栏 做特殊处理
+        if (flag === 'specialItem') {
+          name = displayName
+        }
+        if (Array.isArray(value)) {
+          targetConfig[name] = getTargetConfig(value)
+        } else {
           targetConfig[name] = value
-        })
-      } else {
-        targetConfig[name] = value
+        }
+      } else if (Array.isArray(options) && options.length) {
+        targetConfig[name] = getTargetConfig(options)
       }
-    });
+    })
     return targetConfig
   }
-  const { waveColor, waveAmplitude, waveDirection, fontSize, italic, letterSpacing, bold, lineHeight, textColor } = getConfig(config)
+
+  const hadFilterArr = config.filter(item => item.name !== 'dimension')
+
+  const targetConfig = getTargetConfig(hadFilterArr)
+  const { allSettings } = targetConfig
+
+  console.log('targetConfig', targetConfig);
+
+
+  const {
+    textStyle: {
+      bold, fontFamily, fontSize, textColor, lineHeight, italic, letterSpacing
+    },
+    indicatorOffset: { offsetX, offsetY },
+    indicatorSuffix: { suffixText, suffixTextStyle },
+    keepDigits
+  } = allSettings['指标'] || {}
+  const { numericalType, capacity, chartSize,
+    waveSeries,
+    borderSettings: { borderColor, borderWidth, borderGap }
+  } = allSettings['图表'] || {}
+
+
+  // 处理各种形式的数据
+  const getTargetPercent = (str) => {
+    let finalStr = str
+    if (str.endsWith('%')) {
+      const tempStr = str.slice(0, -1)
+      if (tempStr.includes('.')) {
+        finalStr = (+tempStr).toFixed(keepDigits)
+      } else {
+        finalStr = tempStr
+      }
+      return finalStr / 100
+    }
+    return finalStr
+  }
+  let percent = value ? getTargetPercent(value) : 0
+  if (numericalType === 'actualValue') {
+    // 实际值虽然最后显示的是实际值,但是还是需要计算出 占比 来供图表显示波纹的占比
+    percent = +(percent / capacity).toFixed(4)
+    console.log('ppppp', percent);
+  }
+
+
+  // 动态生成每条水波的设置
+  const waveSeriesValue = Object.values(waveSeries)
+  const chartData = waveSeriesValue.map((item) => {
+    const { waveAmplitude, waveColor, waveDirection, waveHeightSet, wavePhase, waveSpeed } = item
+    return {
+      value: +(+percent + waveHeightSet).toFixed(3),
+      direction: waveDirection, // 波的移动方向
+      amplitude: waveAmplitude, // 振幅
+      period: +waveSpeed * 2000,
+      phase: wavePhase, // 波的相位弧度
+      itemStyle: {
+        color: waveColor,
+      }
+    }
+  })
+
   const getOption = () => (
     {
       series: [{
         type: 'liquidFill',
-        data: [
-          {
-            value: percent,
-            direction: 'left', //水波移动的方向
-            itemStyle: {
-              normal: { //正常样式
-                color: waveColor,
-                opacity: 0.6,
-              }
-            }
-          },
-          {
-            value: +percent - 0.05,
-            direction: waveDirection, //水波移动的方向
-            itemStyle: {
-              normal: { //正常样式
-                color: waveColor,
-                opacity: 1,
-                // period: 100,
-              }
-            }
-          }
-        ],
-        radius: '100%',
+        radius: `${chartSize}%`,
         waveAnimation: 'true',
-        color: [waveColor], //对应波的颜色
         waveLength: '100%',
         outline: {
           show: true,
-          borderDistance: 20, // 边框线与图表的距离 数字
+          borderDistance: borderGap, // 边框线与图表的距离 数字
           itemStyle: {
             opacity: 0.1, // 边框的透明度   默认为 1
-            borderWidth: 5, // 边框的宽度
+            borderWidth: borderWidth, // 边框的宽度
             shadowBlur: 10, // 边框的阴影范围 一旦设置了内外都有阴影
-            shadowColor: waveColor, // 边框的阴影颜色,
-            borderColor: waveColor // 边框颜色
+            shadowColor: borderColor, // 边框的阴影颜色,
+            borderColor: borderColor // 边框颜色
           }
         },
         // shape: 'diamond',
-        phase: 2, // 波的相位弧度
-        amplitude: waveAmplitude, // 波的振幅
-        // direction: 'right', // 波动移动方向
         backgroundStyle: {
           color: '#3EABFF', // 水球未到的背景颜色
           opacity: 0, // 水球未到背景部分的透明度
@@ -98,25 +139,54 @@ const Hydrograph = (props) => {
         // 图形样式
         itemStyle: {
           // color: 'red', // 波浪之背景色，若有值则覆盖上一级中的color
-          opacity: 0.7, // 波浪的透明度
+          // opacity: 0.1, // 波浪的透明度
           cursor: 'default',
           shadowBlur: 10 // 波浪的阴影范围
         },
         label: {
-          position: ['50%', '50%'],
+          position: [`${offsetX}%`, `${offsetY}%`],
           formatter: function () {
-            return `${percent * 100}%`
+            if (numericalType === 'percent') {
+              const filterZeroInTail = parseFloat((percent * 100).toFixed(keepDigits))
+              return `{a| ${filterZeroInTail}%}` + `{suffixText| ${suffixText}}`
+            }
+            if (numericalType === 'actualValue') {
+              let finalText = (+value).toFixed(keepDigits)
+              if(value.endsWith('%')) {
+                const temp = value.slice(0, -1)
+                console.log('temp', temp);
+                finalText = `${(+temp).toFixed(keepDigits)}%`
+                console.log('finalText', finalText);
+              }
+              return `{a| ${finalText}}` + `{suffixText| ${suffixText}}`
+            }
+            return ''
+          },
+          rich: {
+            a: {
+              letterSpacing: letterSpacing,
+            },
+            suffixText: {
+              fontFamily: suffixTextStyle.fontFamily,
+              fontSize: suffixTextStyle.fontSize,
+              color: suffixTextStyle.textColor,
+              fontStyle: suffixTextStyle.italic ? 'italic' : 'normal',
+              fontWeight: suffixTextStyle.bold ? 'bold' : 'normal',
+              lineHeight: 50,
+              // top: `${suffixOffset.suffixOffsetX}%`,
+              // left: suffixOffset.suffixOffsetY,
+            }
           },
           fontSize: fontSize,
           color: textColor,
           fontStyle: italic ? 'italic' : 'normal',
           fontWeight: bold ? 'bold' : 'normal',
-        }
+        },
+        data: chartData
       }]
     }
   )
   const onChartReady = echarts => {
-    // console.log('echart is ready', echarts);
   };
   const onChartClick = (param, echarts) => {
   }
@@ -138,4 +208,4 @@ export {
   ComponentDefaultConfig
 }
 
-export default Hydrograph
+export default memo(Hydrograph)

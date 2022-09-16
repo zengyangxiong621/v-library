@@ -6,7 +6,7 @@ import { IconFont } from "../../../../utils/useIcon";
 
 
 const NavigationIcon = (props: any) => {
-  const { data, getActiveIcon, activeIcon } = props;
+  const { data, getActiveIcon, activeIcon, isResetActiveIcon } = props;
   // @mark 后来添加的 “数据容器”，ui给的icon名不叫shujurongqi
   let icon = data.icon;
   if (data.icon === "shujurongqi") {
@@ -16,7 +16,7 @@ const NavigationIcon = (props: any) => {
     icon = "shujuxiangyingjieguo-shuaxin";
   }
   return (
-    <div className={`${activeIcon === data.icon && "activeIcon"} GenerateIcon-wrap`}
+    <div className={`${ !isResetActiveIcon && activeIcon === data.icon && "activeIcon"} GenerateIcon-wrap`}
       onClick={() => getActiveIcon(data.icon)}
     >
       <IconFont className='icon' type={`icon-${icon}`} />

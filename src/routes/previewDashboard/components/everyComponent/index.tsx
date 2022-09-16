@@ -15,10 +15,6 @@ import { Breadcrumb } from "antd";
 
 const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeReflect, bar, previewDashboard, dispatch, addDrillDownLevel, drillDownGlobalState, ...props }: any) => {
   const { moduleName, events, id, config } = componentData;
-  const fields = getFields(componentData);
-
-  console.log("componentsData", componentData);
-
 
   const { mountAnimation } = layerInfo;
   const { delay, direction, duration, opacityOpen, timingFunction, type } = mountAnimation || {};
