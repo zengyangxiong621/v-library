@@ -12,7 +12,6 @@ import { generateTreeData } from "../../../../../utils/sideBar";
 import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
-import BasicPieChart from "@/customComponents/echarts/components/basicPie/pie-1.1.4";
 import Bar from "@/customComponents/echarts/components/bar/index";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.2";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3";
