@@ -39,7 +39,9 @@ function App({ bar, dispatch, location, history }: any) {
   const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false);
   const [componentThemeVisible, setComponentThemeVisible] = useState(false);
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
-  const [loading, setLoading]: any = useLoading(false, document.querySelector(".p-home"));
+  // 关闭右侧抽屉后,头部导航栏上相应的activeIcon需要取消active的状态
+  const [isResetActiveIcon, setIsResetActiveIcon] = useState(false)
+
   // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
   const focus$ = useEventEmitter();
 
@@ -226,6 +228,7 @@ function App({ bar, dispatch, location, history }: any) {
    */
 
   const showWhichBar = (whichBar: string) => {
+    setIsResetActiveIcon(false)
     if (["zujian", "sucai"].includes(whichBar)) {
       setZujianORsucai(whichBar);
       setShowTopBar(true);
@@ -282,28 +285,34 @@ function App({ bar, dispatch, location, history }: any) {
       payload: false,
     });
   };
-  const handleDCVisibleChange = (value: boolean) => {
-    setDataContainerVisible(value);
-  };
-  const handleCbAvailableChange = (value: boolean) => {
-    setCallbackArgsVisible(value);
-  };
-  const handleMUAvailableChange = (value: boolean) => {
-    setModuleUpdateVisible(value);
-  };
-  const handleDataFilterAvailableChange = (value: boolean) => {
-    setDataFiltersVisible(value);
-  };
-  const handleComponentThemeAvailableChange = (value: boolean) => {
-    setComponentThemeVisible(value);
-  };
 
+  // 每次
+  const handleDCVisibleChange = (bool: boolean) => {
+    setDataContainerVisible(bool);
+    if (!bool) setIsResetActiveIcon(true)
+  };
+  const handleCbAvailableChange = (bool: boolean) => {
+    setCallbackArgsVisible(bool);
+    if (!bool) setIsResetActiveIcon(true)
+  };
+  const handleMUAvailableChange = (bool: boolean) => {
+    setModuleUpdateVisible(bool);
+    if (!bool) setIsResetActiveIcon(true)
+  };
+  const handleDataFilterAvailableChange = (bool: boolean) => {
+    setDataFiltersVisible(bool);
+    if (!bool) setIsResetActiveIcon(true)
+  };
+  const handleComponentThemeAvailableChange = (bool: boolean) => {
+    setComponentThemeVisible(bool);
+    if (!bool) setIsResetActiveIcon(true)
+  };
 
   return (
     <Layout>
       <ChooseArea />
       <Header className="home-header">
-        <CustomHeader showWhichBar={showWhichBar} />
+        <CustomHeader showWhichBar={showWhichBar} isResetActiveIcon={isResetActiveIcon} />
       </Header>
       <div className="p-home">
         <div className="home-left-wrap">

@@ -18,11 +18,11 @@ const { Option } = Select;
 const { Paragraph } = Typography;
 
 
-const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
+const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveIcon }: any) => {
 
   const [appName, setAppName] = useState(bar.dashboardName);
   const [isRename, setIsRename] = useState(false);
-  const [activeIcon, setActiveIcon] = useState(false);
+  const [activeIcon, setActiveIcon] = useState('');
 
   const appNameInputRef = useRef<any>();
   useEffect(() => {
@@ -500,7 +500,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
                   item.icon === "line" ? <div className='line'></div>
                     :
                     <NavigationItem getActiveIcon={getActiveIcon}
-                      data={item} activeIcon={activeIcon} />
+                      data={item} activeIcon={activeIcon} isResetActiveIcon={isResetActiveIcon} />
                 }
               </div>
             );
@@ -512,7 +512,6 @@ const Header = ({ bar, dispatch, history, location, showWhichBar }: any) => {
           rightIconArr.map((item, index) => (
             <NavigationItem
               key={index}
-              // activeIcon={activeIcon}
               getActiveIcon={getActiveIcon}
               data={item} />
           ))
