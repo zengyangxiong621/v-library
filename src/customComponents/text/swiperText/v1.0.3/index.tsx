@@ -51,31 +51,31 @@ class SwipterText extends Component<Props, State> {
   };
 
   drawSwiper = () => {
-    const { config, staticData } = this.props.componentConfig;
-    const { swiperId } = this.state;
-    const { comData } = this.props;
-    const configData = this.formatConfig(config, []);
-    let slideData = comData || staticData;
-    slideData = Array.isArray(slideData) ? slideData : [];
-    const loopConfig = configData.autoplay && slideData.length > 1 ? {
-      disableOnInteraction: false,
-      // pauseOnMouseEnter:true, // 版本7才能实现
-      delay: configData.delay
-    } : false;
-    const swiper: any = new Swiper(`.swiper-container${swiperId}`, {
-      slidesPerView: configData.slidesNum,
-      spaceBetween: configData.lineSpace,
-      direction: "vertical",
-
-      loopedSlides: slideData.length + 2,
-      observer: true,//修改swiper自己或子元素时，自动初始化swiper 
-      observeParents: true,//修改swiper的父元素时，自动初始化swiper 
-      // loop: configData.isLoop,
-      loop: configData.hasOwnProperty('specialType') ? !configData.specialType : false,
-      autoHeight: true,
-      noSwiping: false,   // 手动切换，false 允许，true，不允许
-      autoplay: loopConfig,
-      centeredSlides: configData.hasOwnProperty('specialType') ? configData.specialType : true,
+    const {config, staticData} = this.props.componentConfig
+    const { swiperId } = this.state
+    const { comData } = this.props
+    const configData = this.formatConfig(config, [])
+    let slideData = comData || staticData
+    slideData = Array.isArray(slideData) ? slideData : []
+    let loopConfig = configData.autoplay && slideData.length > 1 ? {
+        disableOnInteraction: false,
+        // pauseOnMouseEnter:true, // 版本7才能实现
+        delay: configData.delay
+    } : false
+    var swiper:any = new Swiper(`.swiper-container${swiperId}`, {
+        slidesPerView: configData.slidesNum,
+        spaceBetween: configData.lineSpace,
+        direction: "vertical",
+        
+        loopedSlides: slideData.length + 2,
+        observer: true,//修改swiper自己或子元素时，自动初始化swiper 
+        observeParents: true,//修改swiper的父元素时，自动初始化swiper 
+        // loop:  configData.hasOwnProperty('specialType')  ? !configData.specialType : false,
+        loop: false,
+        autoHeight: true,
+        noSwiping: false,   // 手动切换，false 允许，true，不允许
+        autoplay: loopConfig,
+        centeredSlides:  true,
     });
     swiper.el.onmouseover = function () {
       swiper.autoplay.stop();
@@ -125,8 +125,8 @@ class SwipterText extends Component<Props, State> {
     // 背景颜色
     const backgroundConfig = findItem('backgroundConfig') ? this.formatConfig([findItem('backgroundConfig')], []) : {}
     // 展示方式
-    const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true
-    if (swiperDom && finalData.length) {
+    const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true;
+    if(swiperDom && finalData.length){
       // 切换是否自动轮播
       if (style.autoplay && finalData.length > 1) {
         swiperDom.autoplay.start();
@@ -136,29 +136,15 @@ class SwipterText extends Component<Props, State> {
       swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
       swiperDom.params.slidesPerView = style.slidesNum
       swiperDom.params.spaceBetween = style.lineSpace // 更新文本间距
-      // swiperDom.params.centeredSlides = specialType, // 更新文本间距
+      swiperDom.params.centeredSlides = specialType 
       // swiperDom.params.loop = !specialType, // 更新文本间距
-      console.log(swiperDom.params, ' swiperDom.params')
-      if (style.autoplay) {
-        swiperDom.el.onmouseout = function () {
+      if(style.autoplay){
+        swiperDom.el.onmouseout = function(){
           swiperDom.autoplay.start();
         };
-      }
-      swiperDom.update();
-    }
-
     const handleClickName = (item: any) => {
       if (style.showLink) {
-        style.openNew ? window.open(item.url) : window.location.href = item.url;
       }
-    }
-
-    const id: any = document.getElementById(`swiper-container${swiperId}`);
-    if (id && specialType) {
-      let slideNext: any = id?.getElementsByClassName("swiper-slide-next")[0];
-      let slidePrev: any = id?.getElementsByClassName("swiper-slide-prev")[0];
-      slideNext && (slideNext.style.opacity = 0.6)
-      slidePrev && (slidePrev.style.opacity = 0.6)
     }
     const swiperStyle = {
       ...textStyleData,
@@ -198,7 +184,7 @@ class SwipterText extends Component<Props, State> {
             <div
               id={`swiper-container${swiperId}`}
               className={`swiper-container swiper-container${swiperId}`}>
-              <div className="swiper-wrapper">
+              <div className={`swiper-wrapper ${specialType ? 'special-type' : ''} `}>
                 {
                   finalData.map((item: any, index: any) => {
                     return (
@@ -223,7 +209,8 @@ class SwipterText extends Component<Props, State> {
         }
       </div>
     );
-
+  }
+  }
   }
 }
 
