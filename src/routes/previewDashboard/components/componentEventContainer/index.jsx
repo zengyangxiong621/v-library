@@ -492,6 +492,8 @@ const ComponentEventContainer = ({
           onClick={handleClick}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          dashboardId={previewDashboard.dashboardId}
+          isPreview={true}
           {...props}
         ></Tab>
       ) : props.componentConfig.moduleName === "scrollSelect" ? (
@@ -542,14 +544,6 @@ const ComponentEventContainer = ({
             <Bar onChange={handleValueChange} {...props}></Bar>
           ) : props.componentConfig.moduleName === "scrollTable" ? (
             <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-          ) : props.componentConfig.moduleName === "tab" ? (
-            <Tab
-              onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-              onClick={handleClick}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              {...props}
-            ></Tab>
           ) : props.componentConfig.moduleName === "scrollSelect" ? (
             <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
           ) : props.componentConfig.moduleName === "timeSelect" ? (

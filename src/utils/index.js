@@ -728,3 +728,17 @@ export const duplicateDashboardConfig = (preConfig, nowConfig) => {
   });
   return preConfig;
 };
+
+
+export const getQueryVariable = () => {
+  let href = window.location.href
+  let query = href.substring(href.indexOf('?')+1);
+  let vars = query.split("&");
+  let obj = {}
+  for (let i = 0; i < vars.length; i++) {
+    let pair = vars[i].split("=");
+    obj[pair[0]] = pair[1]
+  }
+  return obj;
+}
+

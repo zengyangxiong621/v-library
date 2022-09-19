@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
 import ComponentDefaultConfig from './config'
 import './index.css'
-import { styleTransformFunc, deepClone } from '../../../utils'
-
+import { styleTransformFunc, deepClone, getQueryVariable } from '../../../utils'
+import { withRouter } from 'dva/router'
 const textAlignEnum = {
   left: 'flex-start',
   center: 'center',
@@ -10,6 +10,9 @@ const textAlignEnum = {
 }
 
 const Tab = (props) => {
+  let { history, dashboardId, isPreview } = props
+  if (!dashboardId) dashboardId = ''
+  const locationParams = getQueryVariable()
   const [scrollState, setScrollState] = useState({
     isScroll: false,
     clickStayTime: 0,
@@ -42,6 +45,9 @@ const Tab = (props) => {
   // 行数
   const [rowNums, setRowNums] = useState(1)
   const [colNums, setColNums] = useState(4)
+
+  // is URL params
+  const [isUrlParams, setIsUrlParams] = useState(true)
 
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
@@ -273,10 +279,23 @@ const Tab = (props) => {
   }, [_fields, _data])
 
   useEffect(() => {
-    if (defaultActiveKey > 0) {
-      handleChange(tabList[defaultActiveKey - 1], defaultActiveKey)
+    const param = locationParams?.param || null
+    if (param) {
+      const currentKey = tabList.findIndex(item => item.name === decodeURI(param)) + 1
+      if (currentKey > 0) {
+        setDefaultActiveKey(currentKey)
+        setIsUrlParams(false)
+      }
+    } else {
+      console.log('defaultActiveKeyGGG', defaultActiveKey)
     }
-  }, [defaultActiveKey])
+  }, [tabList, defaultActiveKey])
+
+  useEffect(() => {
+    handleChange(tabList[defaultActiveKey - 1], defaultActiveKey)
+  }, [defaultActiveKey, isUrlParams])
+
+
 
   useEffect(() => {
     let timer = null
@@ -334,6 +353,9 @@ const Tab = (props) => {
     if (scrollState.clickStayTime > 0) {
       setScrollState({...scrollState, isStay: true})
     }
+    if (locationParams?.param) {
+      history.push(`/bigscreen/${dashboardId}?param=${item.name}`);
+    }
     handleChange(item, index)
   }
   return (
@@ -381,4 +403,4 @@ export {
   ComponentDefaultConfig,
 }
 
-export default Tab
+export default withRouter(Tab)
