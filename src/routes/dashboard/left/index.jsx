@@ -88,7 +88,6 @@ const Left = ({ dispatch, bar, operate }) => {
     if(event.type === 'keydown' && bar.isMultipleTree) {
 
     } else {
-      console.log('还疯狂？')
       dispatch({
         type: 'bar/save',
         payload: {

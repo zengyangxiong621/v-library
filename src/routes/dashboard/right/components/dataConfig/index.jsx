@@ -52,7 +52,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     const { dataFrom } = _data
     if (dataFrom === 0) {
       // await setDataSourceResult()
-  } else {
+    } else {
       await setDataContainerResult()
     }
   }
