@@ -61,17 +61,6 @@ export default {
           publishDashboard.dataContainerDataList.push({ id: component.id, data })
         }
       }
-      console.log('publishDashboard.dataContainerList', publishDashboard.dataContainerList)
-      publishDashboard.dataContainerList.forEach(async(item: any) => {
-        let data: any = null
-        item.enable = item.modules.length > 0
-        if(item.dataType === "static") {
-          data = item.staticData.data
-          publishDashboard.dataContainerDataList.push({ id: item.id, data })
-        } else {
-          await func(item)
-        }
-      })
       // 获取当前画布所有的数据过滤器
       const filters = yield http({
         url: "/visual/module/filter/list",
@@ -100,6 +89,17 @@ export default {
         },
         cb: async(data: any) => {
           await cb(data)
+          // 后端要求必须先请求完application/dashboard/show接口再请求func里面的接口
+          publishDashboard.dataContainerList.forEach(async(item: any) => {
+            let data: any = null
+            item.enable = item.modules.length > 0
+            if(item.dataType === "static") {
+              data = item.staticData.data
+              publishDashboard.dataContainerDataList.push({ id: item.id, data })
+            } else {
+              await func(item)
+            }
+          })
         },
       })
     },
@@ -126,6 +126,7 @@ export default {
       { call, put, select }: any
     ): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
+      console.log(publishDashboard,'publishDashboard')
       let { dashboardId } = publishDashboard
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http(
