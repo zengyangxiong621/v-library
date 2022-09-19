@@ -13,7 +13,10 @@ const CascaderComponent = (props) => {
   const { config } = componentConfig
   const { data } = componentConfig.staticData
   const finalFieldsArr = props.fields || ['value1','label1','children1']   // 最新字段
-  const originData = props.comData || data   // 组件静态或者传入组件的数据
+  let originData =  props.comData || data   // 组件静态或者传入组件的数据
+  if(!Array.isArray(props.comData)){
+    originData=[]
+  }
   const firstData = originData   // originData中有多项数据，只取第一项
   // const options = firstData[finalFieldsArr[0]]
   const fieldNames = {
@@ -21,8 +24,6 @@ const CascaderComponent = (props) => {
     label:finalFieldsArr[1],
     children:finalFieldsArr[2]
   }
-  console.log(originData)
-  console.log(fieldNames)
   /* 获取config中的配置 */
   const getTargetConfig = (Arr) => {
     let targetConfig = {}
