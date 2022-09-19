@@ -203,7 +203,7 @@ class SwipterText extends Component<Props, State> {
                                 marginTop: rowIcon.offset[1].value
                               }} alt=""/>
                             }
-                             <span onClickCapture={() => handleClickName(item)}>{item[fields[0]]}</span>
+                             <span title={item[fields[0]]} onClickCapture={() => handleClickName(item)}>{item[fields[0]]}</span>
                           </div>
                       )
                     })
