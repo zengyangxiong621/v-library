@@ -17,15 +17,16 @@ const AddDataSource = (props: any) => {
 
   const [addForm] = Form.useForm();
   const { visible, changeShowState, refreshTable } = props;
-  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
   const [curDataType, setCurDataType] = useState("");
   // 通过后台获取到的数据库列表
   const [dataBaseList, setDataBaseList] = useState([]);
   const [getDBListLoading, setGetDBListLoading] = useState(false);
   // 通过后台获取到的索引列表
-  const [indexList, setIndexList] = useState([]);
-  const [getIndexListLoading, setGetIndexListLoading] = useState(false);
+  const [indexList, setIndexList] = useState([])
+  const [getIndexListLoading, setGetIndexListLoading] = useState(false)
+  const [authMethodType, setAuthMethodType] = useState<string>('0')
   // 上传的文件在后端存储的地址
   const [fileUrl, setFileUrl] = useState("");
   // 数据库连接是否测试成功
@@ -51,8 +52,11 @@ const AddDataSource = (props: any) => {
 
   // 获取到最新的curDataType
   useEffect(() => {
-    setCurDataType(curDataType);
-  }, [curDataType]);
+    setCurDataType(curDataType)
+  }, [curDataType])
+
+
+
   /**
    * description: 测试数据库连接
    */
@@ -82,10 +86,8 @@ const AddDataSource = (props: any) => {
     } else {
       message.error({ content: "数据源连接失败", duration: 2 });
     }
-  };
-  /**
-   * description: 获取可选择的数据库名称列表
-   */
+  }
+  // 获取可选择的数据库名称列表
   const getDataBaseList = async () => {
     // 点击  获取数据库列表 按钮时 先校验是否已经填了相关字段
     const values = await addForm.validateFields(["port", "username", "password", "host", "serviceType"]);
@@ -121,23 +123,43 @@ const AddDataSource = (props: any) => {
       message.error("获取数据库列表失败");
       setGetDBListLoading(false);
     }
-  };
-  /**
-   * description: 获取可选择的索引列表
-   */
+  }
+  // description: 获取可选择的索引列表
   const getIndexList = async () => {
     setIndexList([]);
     // 通过表单校验获取es连接地址
-    const values: any = await addForm.validateFields(["url"]);
-    setGetIndexListLoading(true);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const values: any = await addForm.validateFields(['url', 'authMethod', 'keytab', 'krb5MechOid', 'krb5kdc', 'krb5realm', 'principal', 'spnegoOid', 'password', 'username'])
+    console.log('获取索引列表value', values);
+    const finalBody: any = {
+      url: values.url,
+      authMethod: values.authMethod,
+      username: '',
+      password: '',
+    }
+    switch (authMethodType) {
+      case '1':
+        finalBody.username = values.username
+        finalBody.password = values.password
+        break;
+      case '2':
+        finalBody.kerberos = {
+          keytab: fileUrl,
+          krb5MechOid: values.krb5MechOid,
+          krb5kdc: values.krb5kdc,
+          krb5realm: values.krb5realm,
+          principal: values.principal,
+          spnegoOid: values.spnegoOid
+        }
+        break;
+    }
+    setGetIndexListLoading(true)
     try {
       const data = await http({
-        url: "/visual/datasource/queryIndices",
-        method: "post",
-        body: values
-      });
-      setGetIndexListLoading(false);
+        url: '/visual/datasource/queryIndices',
+        method: 'post',
+        body: finalBody
+      })
+      setGetIndexListLoading(false)
       if (Array.isArray(data)) {
         if (!data.length) {
           message.error("没有可用的索引");
@@ -167,8 +189,9 @@ const AddDataSource = (props: any) => {
       return;
     }
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
-    const values: any = await addForm.validateFields();
-    const { name, type, description, ...rest } = values;
+    const values: any = await addForm.validateFields()
+    console.log('表单的所有数据', values)
+    const { name, type, description, krb5MechOid, krb5kdc, krb5realm, principal, spnegoOid, ...rest } = values
     // 判断当前是否是数据库
     const dataBaseOrNormal = dataTypeClassify.get(curDataType);
     const finalType = type;
@@ -196,6 +219,14 @@ const AddDataSource = (props: any) => {
     }
     if (dataBaseOrNormal === "es") {
       finalSourceConfig.index = indexName;
+      finalSourceConfig.kerberos = {
+        krb5MechOid,
+        krb5kdc,
+        krb5realm,
+        principal,
+        spnegoOid,
+        keytab: fileUrl
+      }
       // finalSourceConfig.username = username,
       // finalSourceConfig.password = password,
     }
@@ -234,8 +265,8 @@ const AddDataSource = (props: any) => {
   const selectedChange = (val: string) => {
     setCurDataType(val);
     // 清除剩余表单中已录入的信息
-    addForm.resetFields(["host", "port", "username", "password", "database","serviceType"]);
-  };
+    addForm.resetFields(['host', 'port', 'username', 'password', 'database', 'serviceType'])
+  }
   // 选择数据库名
   const selectDatabase = (val: string) => {
     addForm.setFieldsValue({ database: val });
@@ -243,12 +274,16 @@ const AddDataSource = (props: any) => {
     setBtnDisabled(false);
   };
 
-  /**
-  * description: 选择索引(es)
-  */
+  // ELASTIC_SEARCH 相关部分
+  // description: 选择索引(es)
   const selectIndex = (val: any) => {
     setIndexName(val);
   };
+
+  // description: 选择es的认证方式
+  const authMethodChange = (e: any) => {
+    setAuthMethodType(e.target.value)
+  }
 
   /**
    * description: 针对不同格式文件的上传 生成 相应的uploadProps
@@ -256,14 +291,15 @@ const AddDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix = "", customProps?: object) => {
+  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
+    const isKeytab = fileSuffix === '.keytab'
     // 上传框配置
     let uploadProps: UploadProps = {
       name: "file",
       multiple: false,
       maxCount: 1,
-      accept: fileSuffix || "",
-      action: `${BASEURL}/visual/file/upload`,
+      accept: fileSuffix || '',
+      action: isKeytab ? `${BASEURL}/visual/file/uploadKeytab` : `${BASEURL}/visual/file/upload`,
       headers: {
         authorization: localStorage.getItem("token") || ""
       },
@@ -289,11 +325,18 @@ const AddDataSource = (props: any) => {
       },
       onChange(info: any) {
         const { status, response } = info.file;
-        if (status === "done") {
-          message.success(`${info.file.name} 上传成功`);
-          setFileUrl(response.data);
-        } else if (status === "error") {
-          message.error(`${info.file.name} 上传失败`);
+        if (response) {
+          const isSuccess = isKeytab ? response.data.success : response.data
+          if (status === 'done' && isSuccess) {
+            message.success(`${info.file.name} 上传成功`);
+            const newFilePath = isKeytab ? response.data.url : response.data
+            setFileUrl(newFilePath)
+          } else if (status === 'error' || !isSuccess) {
+            const errStr = isKeytab
+              ? response.data.errorMsg ? `${response.data.errorMsg}` : ''
+              : `${info.file.name} 上传失败`
+            message.error(errStr);
+          }
         }
       },
       onDrop(e: any) {
@@ -321,7 +364,10 @@ const AddDataSource = (props: any) => {
   // .csv 文件
   const csvUploadProps = generateUploadProps(".csv");
   // .excel 文件
-  const excelUploadProps = generateUploadProps(".xlsx");
+  const excelUploadProps = generateUploadProps('.xlsx')
+  // .keytab 文件
+  const keytabUploadProps = generateUploadProps('.keytab')
+
   return (
     <div className='AddDataSource-wrap'>
       <Modal
@@ -461,8 +507,8 @@ const AddDataSource = (props: any) => {
                 </Form.Item>
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, "请输入用户名")}>
                   <Input
-                    autoComplete='off'
-                    // autoComplete='new-password'
+                    // autoComplete='off'
+                    autoComplete='new-password'
                     className="setBackColor"
                     placeholder='请输入'
                     maxLength={20}
@@ -470,32 +516,33 @@ const AddDataSource = (props: any) => {
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, "请输入密码")}>
                   <Input.Password
-                    autoComplete='off'
+                    // autoComplete='off'
+                    autoComplete='new-password'
                     className="setBackColor"
                     placeholder='请输入'
                     maxLength={20}
                   />
                 </Form.Item>
-                { curDataType === "ORACLE" && (
-                    <Form.Item
-                      label="服务类型"
-                      name="serviceType"
-                      rules={generateSingleRules(true, "请选择服务类型")}
-                      initialValue="SERVICE_NAME"
+                {curDataType === 'ORACLE' && (
+                  <Form.Item
+                    label="服务类型"
+                    name="serviceType"
+                    rules={generateSingleRules(true, '请选择服务类型')}
+                    initialValue="SERVICE_NAME"
+                  >
+                    <Select
+                      className='setBackColor' placeholder="请选择服务类型"
+                      dropdownStyle={{ backgroundColor: '#232630' }}
                     >
-                      <Select
-                        className='setBackColor' placeholder="请选择服务类型"
-                        dropdownStyle={{ backgroundColor: "#232630" }}
-                      >
-                        {
-                          dataServiceType.map((item: any) => (
-                            <Option key={item.value} value={item.value}>
-                              {item.label}
-                            </Option>
-                          ))
-                        }
-                      </Select>
-                    </Form.Item>
+                      {
+                        dataServiceType.map((item: any) => (
+                          <Option key={item.value} value={item.value}>
+                            {item.label}
+                          </Option>
+                        ))
+                      }
+                    </Select>
+                  </Form.Item>
                 )}
                 <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, "请选择数据库")}>
                   <div className='dataBaseName'>
@@ -578,23 +625,108 @@ const AddDataSource = (props: any) => {
                     maxLength={1000}
                   />
                 </Form.Item>
-                <Form.Item label="用户名" name="username">
-                  <Input
-                    autoComplete='off'
-                    className="setBackColor"
-                    maxLength={20}
-                    placeholder='请输入'
-                  />
+                <Form.Item
+                  label="认证方式"
+                  name="authMethod"
+                  initialValue={authMethodType}
+                  rules={generateSingleRules(true, '请选择认证方式')}
+                >
+                  <Radio.Group defaultValue={authMethodType}
+                    onChange={authMethodChange}
+                    options={authMethodOptions} />
                 </Form.Item>
-                <Form.Item label="密码" name="password">
-                  <Input.Password
-                    autoComplete='off'
-                    className="setBackColor"
-                    placeholder='请输入'
-                    maxLength={20}
-                  />
-                </Form.Item>
-                <Form.Item label="索引名称">
+                {
+                  authMethodType === '0' && <></>
+                }
+                {
+                  authMethodType === '1' && <>
+                    <Form.Item label="用户名" name="username">
+                      <Input
+                        autoComplete="new-password"
+                        className="setBackColor"
+                        maxLength={20}
+                        placeholder='请输入'
+                      />
+                    </Form.Item>
+                    <Form.Item label="密码" name="password">
+                      <Input.Password
+                        autoComplete="new-password"
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item></>
+                }
+                {
+                  authMethodType === '2' && <>
+                    <Form.Item label="principal" name="principal"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        maxLength={50}
+                        placeholder='请输入'
+                      />
+                    </Form.Item>
+                    <Form.Item label="krb5realm" name="krb5realm"
+                      rules={generateSingleRules(true, '请输入')}>
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item label="krb5kdc" name="krb5kdc"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item label="krb5MechOid" name="krb5MechOid"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item label="spnegoOid" name="spnegoOid"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label="keytab"
+                      style={{ marginBottom: '40px' }}
+                      // name='excelFileUrl'
+                      rules={generateSingleRules(true, '请输入keytab')}
+                    >
+                      <div className="setBackColor"
+                        style={{ height: '120px' }}>
+                        <Dragger {...keytabUploadProps}>
+                          <p className="ant-upload-hint">
+                            点击或拖拽.keytab格式的文件至此处进行上传，10M以内
+                          </p>
+                        </Dragger>
+                      </div>
+                    </Form.Item>
+                  </>
+                }
+
+                <Form.Item label="索引名称" rules={generateSingleRules(true, '请输入keytab')}>
                   <div className='dataBaseName'>
                     <Spin spinning={getIndexListLoading}>
                       <div className='getDataListBtn' onClick={() => getIndexList()}>获取索引列表</div>
@@ -723,5 +855,19 @@ const codeFormatOptions: TSelectOptionItems[] = [
   },
 ];
 
+const authMethodOptions: TSelectOptionItems[] = [
+  {
+    label: '无',
+    value: '0',
+  },
+  {
+    label: '用户名密码',
+    value: '1',
+  },
+  {
+    label: 'Kerberos认证',
+    value: '2',
+  },
+]
 
 
