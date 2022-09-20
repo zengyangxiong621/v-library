@@ -34,7 +34,7 @@ const Indicatorcard = (props) => {
     });
     return targetConfig
   }
-  const { circleColor, fontSize, italic, letterSpacing, bold, fontFamily, lineHeight, themeTextColor, circleWidth, dangerLevel } = getConfig(config)
+  const { circleColor, fontSize, italic, letterSpacing, bold, fontFamily, lineHeight, textColor, circleWidth, dangerLevel } = getConfig(config)
   const gaugeData = [
     {
       value: percent,

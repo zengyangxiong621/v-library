@@ -80,7 +80,7 @@ const componentDefaultConfig = {
           "value": 32
         },
         {
-          "name": "themeTextColor",
+          "name": "textColor",
           "displayName": "",
           "type": "color",
           "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
