@@ -434,7 +434,7 @@ const NormalTable=(props)=>{
           mappingConfig.map(item=>{
             const {textStyle:columnTextStyle}=item
             const handledStyle=transformStyleInObj(columnTextStyle)
-            const mapField=field.find(mitem=>mitem.name===item.fieldName)?.value || item.fieldName
+            const mapField=field.find(mitem=>mitem.name===item.fieldName)?.value || item.fieldName || 'column1'
             const sortConfig={}
             let filterConfig=null
             if(item.isSortable && !tableRowConfig.dragerSort){

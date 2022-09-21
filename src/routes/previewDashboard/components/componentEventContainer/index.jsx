@@ -224,6 +224,10 @@ const ComponentEventContainer = ({
                   activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                   // 值是否改变
                   // data的值存在并且
+                } else if (component.moduleName === "cascader"){
+                  temp = true
+                  callbackArgs[callback.target] = data[callback.origin]
+                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                 } else if (
                   data[callback.origin] &&
                   callbackArgs[callback.target] !== data[callback.origin]

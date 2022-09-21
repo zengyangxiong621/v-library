@@ -26,7 +26,8 @@ const EditDataSource = (props: any) => {
     esSourceConfig,
   } = props.editDataSourceInfo;
 
-  const { visible, spaceId, changeShowState, refreshTable } = props;
+
+  const { visible, spaceId, changeShowState, refreshTable } = props
 
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm();
@@ -69,13 +70,13 @@ const EditDataSource = (props: any) => {
   // 通过后台获取到的索引列表
   const [indexList, setIndexList] = useState([]);
   const [getIndexListLoading, setGetIndexListLoading] = useState(false);
+  const [authMethodType, setAuthMethodType] = useState<string>(esSourceConfig?.authMethod + '')
   // 上传的文件在后端存储的地址,
   // 数据库连接是否测试成功
   const [isConnect, setIsConnect] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [testConnectLoading, setTestConnectLoading] = useState(false);
-  const [indexName, setIndexName] = useState("");
 
   /**
    * description: 测试数据库连接
@@ -155,7 +156,7 @@ const EditDataSource = (props: any) => {
     }
 
   };
-
+  console.log('?????????', esSourceConfig)
   /**
   * description: 获取可选择的索引列表
   */
@@ -163,16 +164,33 @@ const EditDataSource = (props: any) => {
     // 每次重新发起请求前都应该先清除indexList
     setIndexList([]);
     // 通过表单校验获取es连接地址
-    const values: any = await editForm.validateFields(["url"]);
-    setGetIndexListLoading(true);
+    // 通过表单校验获取es连接地址
+    const values: any = await editForm.validateFields(['url', 'authMethod', 'keytab', 'krb5MechOid', 'krb5kdc', 'krb5realm', 'principal', 'spnegoOid', 'password', 'username'])
+    console.log('fil', fileUrl)
+    console.log('vvvvvvvvvvvvvvvv', values)
+    const finalBody = {
+      "authMethod": values.authMethod,
+      "kerberos": {
+        "keytab": values.keytab,
+        "krb5MechOid": values.krb5MechOid,
+        "krb5kdc": values.krb5kdc,
+        "krb5realm": values.krb5realm,
+        "principal": values.principal,
+        "spnegoOid": values.spnegoOid
+      },
+      "password": values.password,
+      "url": values.url,
+      "username": values.username,
+    }
+    setGetIndexListLoading(true)
     // eslint-disable-next-line react-hooks/rules-of-hooks
     try {
       const data = await http({
-        url: "/visual/datasource/queryIndices",
-        method: "post",
-        body: values
-      });
-      setGetIndexListLoading(false);
+        url: '/visual/datasource/queryIndices',
+        method: 'post',
+        body: finalBody
+      })
+      setGetIndexListLoading(false)
       if (Array.isArray(data)) {
         if (!data.length) {
           message.error("没有可用的索引");
@@ -201,12 +219,12 @@ const EditDataSource = (props: any) => {
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields();
     // es 数据源类型时，如果没有index名，直接return
-    // if (dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
-    //   message.warning({ content: '请先选择索引名称', duration: 2 })
-    //   return
-    // }
+    if (dataSourceType === 'ELASTIC_SEARCH' && !values.index) {
+      message.warning({ content: '请先选择索引名称', duration: 2 })
+      return
+    }
     //-----所以这里解构出来的type已经是API了
-    const { name, type, description, ...rest } = values;
+    const { name, type, description, krb5MechOid, krb5kdc, krb5realm, principal, spnegoOid, ...rest } = values;
     // 判断当前是否是数据库(这儿是为了凑 (rdbms/api/csv)SourceConfig这种格式的参数的  和上方的dataSourceType不同的)
     const dataBaseOrNormal = dataTypeClassify.get(type);
     // 最终数据源的类型, 如果是特殊的类型（RDBMS和API),需要在下面处理一下
@@ -239,7 +257,14 @@ const EditDataSource = (props: any) => {
     //   finalType = 'RESTFUL_API'
     // }
     if (dataBaseOrNormal === "es") {
-      // finalSourceConfig.index = indexName
+      finalSourceConfig.kerberos = {
+        krb5MechOid,
+        krb5kdc,
+        krb5realm,
+        principal,
+        spnegoOid,
+        keytab: fileUrl
+      }
     }
 
     const finalParams = {
@@ -276,10 +301,7 @@ const EditDataSource = (props: any) => {
     setDataBaseList([]);
     setIndexList([]);
     setIsConnect(false);
-    // setTimeout(() => {
     editForm.resetFields();
-    // }, 4);
-    // setIndexName('')
   };
   const handleCancel = () => {
     clearModalState();
@@ -297,7 +319,6 @@ const EditDataSource = (props: any) => {
  * description: 选择索引(es)
  */
   const selectIndex = (val: any) => {
-    // setIndexName(val)
     editForm.setFieldsValue({ index: val });
   };
 
@@ -308,14 +329,15 @@ const EditDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix = "", customProps?: object) => {
+  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
+    const isKeytab = fileSuffix === '.keytab'
     // 上传框配置
     let uploadProps: UploadProps = {
       name: "file",
       multiple: false,
       maxCount: 1,
-      accept: fileSuffix || "",
-      action: `${BASEURL}/visual/file/upload`,
+      accept: fileSuffix || '',
+      action: isKeytab ? `${BASEURL}/visual/file/uploadKeytab` : `${BASEURL}/visual/file/upload`,
       headers: {
         authorization: localStorage.getItem("token") || ""
       },
@@ -341,12 +363,18 @@ const EditDataSource = (props: any) => {
       },
       onChange(info: any) {
         const { status, response } = info.file;
-        if (status === "done") {
-          message.success(`${info.file.name} 上传成功`);
-          setFileUrl(response.data);
-        } else if (status === "error") {
-          message.error(`${info.file.name} 上传失败`);
-          return;
+        if (response) {
+          const isSuccess = isKeytab ? response.data.success : response.data
+          if (status === 'done' && isSuccess) {
+            message.success(`${info.file.name} 上传成功`);
+            const newFilePath = isKeytab ? response.data.url : response.data
+            setFileUrl(newFilePath)
+          } else if (status === 'error' || !isSuccess) {
+            const errStr = isKeytab
+              ? response.data.errorMsg ? `${response.data.errorMsg}` : ''
+              : `${info.file.name} 上传失败`
+            message.error(errStr);
+          }
         }
       },
       onDrop(e: any) {
@@ -374,7 +402,14 @@ const EditDataSource = (props: any) => {
   // .csv 文件
   const csvUploadProps = generateUploadProps(".csv");
   // .excel 文件
-  const excelUploadProps = generateUploadProps(".xlsx");
+  const excelUploadProps = generateUploadProps('.xlsx')
+  // .keytab 文件
+  const keytabUploadProps = generateUploadProps('.keytab')
+
+  // description: 选择es的认证方式
+  const authMethodChange = (e: any) => {
+    setAuthMethodType(e.target.value)
+  }
 
   const [initVal, setInitVal] = useState({
     description,
@@ -393,52 +428,18 @@ const EditDataSource = (props: any) => {
     csvFileUrl: csvSourceConfig?.fileUrl,
     excelFileUrl: excelSourceConfig?.fileUrl,
     url: esSourceConfig?.url,
-    index: esSourceConfig?.index
-  });
+    index: esSourceConfig?.index,
+    keytab: esSourceConfig?.kerberos?.keytab,
+    krb5realm: esSourceConfig?.kerberos?.krb5realm,
+    krb5MechOid: esSourceConfig?.kerberos?.krb5MechOid,
+    krb5kdc: esSourceConfig?.kerberos?.krb5kdc,
+    principal: esSourceConfig?.kerberos?.principal,
+    spnegoOid: esSourceConfig?.kerberos?.spnegoOid,
+    authMethod: esSourceConfig?.authMethod
+  })
   useEffect(() => {
-    setInitVal({ ...initVal, type });
-  }, [visible, type]);
-  /*** 编辑表单各项初始值 */
-  const editFormInitValues = {
-    description,
-    name,
-    type: dataSourceType,
-    baseUrl: apiSourceConfig?.baseUrl,
-    code: csvSourceConfig?.code,
-    database: rdbmsSourceConfig?.database,
-    port: rdbmsSourceConfig?.port,
-    host: rdbmsSourceConfig?.host,
-    // rdbms里和es里都有 username和password
-    password: rdbmsSourceConfig?.password || esSourceConfig?.password,
-    username: rdbmsSourceConfig?.username || esSourceConfig?.username,
-    jsonFileUrl: jsonSourceConfig?.fileUrl,
-    csvFileUrl: csvSourceConfig?.fileUrl,
-    excelFileUrl: excelSourceConfig?.fileUrl,
-    url: esSourceConfig?.url,
-    index: esSourceConfig?.index
-  };
-  // const [data, setData] = useState(editFormInitValues)
-  // useEffect(() => {
-  //   console.log('props.config改变了');
-  //   setData({
-  //     description,
-  //     name,
-  //     type: dataSourceType,
-  //     baseUrl: apiSourceConfig?.baseUrl,
-  //     code: csvSourceConfig?.code,
-  //     database: rdbmsSourceConfig?.database,
-  //     port: rdbmsSourceConfig?.port,
-  //     host: rdbmsSourceConfig?.host,
-  //     // rdbms里和es里都有 username和password
-  //     password: rdbmsSourceConfig?.password || esSourceConfig?.password,
-  //     username: rdbmsSourceConfig?.username || esSourceConfig?.username,
-  //     jsonFileUrl: jsonSourceConfig?.fileUrl,
-  //     csvFileUrl: csvSourceConfig?.fileUrl,
-  //     excelFileUrl: excelSourceConfig?.fileUrl,
-  //     url: esSourceConfig?.url,
-  //     index: esSourceConfig?.index
-  //   })
-  // }, [props.editDataSourceInfo.csvSourceConfig, props.editDataSourceInfo.rdbmsSourceConfig, props.editDataSourceInfo.apiSourceConfig, props.editDataSourceInfo.esSourceConfig])
+    setInitVal({ ...initVal, type })
+  }, [visible, type])
   return (
     <div className='EditDataSource-wrap'>
       <Modal
@@ -583,7 +584,8 @@ const EditDataSource = (props: any) => {
                 </Form.Item>
                 <Form.Item label="用户名" name="username" rules={generateSingleRules(true, "请输入用户名")}>
                   <Input
-                    autoComplete='off'
+                    // autoComplete='off'
+                    autoComplete="new-password"
                     maxLength={20}
                     // defaultValue={username}
                     className="setBackColor"
@@ -592,32 +594,32 @@ const EditDataSource = (props: any) => {
                 </Form.Item>
                 <Form.Item label="密码" name="password" rules={generateSingleRules(true, "请输入密码")}>
                   <Input.Password
-                    autoComplete='off'
+                    autoComplete="new-password"
                     className="setBackColor"
                     placeholder='请输入'
                     maxLength={20}
                   // defaultValue={password}
                   />
                 </Form.Item>
-                { dataSourceType === "ORACLE" && (
-                    <Form.Item
-                      label="服务类型"
-                      name="serviceType"
-                      rules={generateSingleRules(true, "请选择服务类型")}
+                {dataSourceType === 'ORACLE' && (
+                  <Form.Item
+                    label="服务类型"
+                    name="serviceType"
+                    rules={generateSingleRules(true, '请选择服务类型')}
+                  >
+                    <Select
+                      className='setBackColor' placeholder="请选择服务类型"
+                      dropdownStyle={{ backgroundColor: '#232630' }}
                     >
-                      <Select
-                        className='setBackColor' placeholder="请选择服务类型"
-                        dropdownStyle={{ backgroundColor: "#232630" }}
-                      >
-                        {
-                          dataServiceType.map((item: any) => (
-                            <Option key={item.value} value={item.value}>
-                              {item.label}
-                            </Option>
-                          ))
-                        }
-                      </Select>
-                    </Form.Item>
+                      {
+                        dataServiceType.map((item: any) => (
+                          <Option key={item.value} value={item.value}>
+                            {item.label}
+                          </Option>
+                        ))
+                      }
+                    </Select>
+                  </Form.Item>
                 )}
                 <Form.Item label="数据库名" name="database" rules={generateSingleRules(true, "请选择数据库")}>
                   <div className='dataBaseName'>
@@ -704,22 +706,105 @@ const EditDataSource = (props: any) => {
                     maxLength={1000}
                   />
                 </Form.Item>
-                <Form.Item label="用户名" name="username">
-                  <Input
-                    autoComplete='off'
-                    className="setBackColor"
-                    placeholder='请输入'
-                    maxLength={20}
-                  />
+                <Form.Item
+                  label="认证方式"
+                  name="authMethod"
+                  // initialValue={authMethodType}
+                  rules={generateSingleRules(true, '请选择认证方式')}
+                >
+                  <Radio.Group defaultValue={authMethodType}
+                    onChange={authMethodChange}
+                    options={authMethodOptions} />
+                  {/* 这个空的元素不能删除，否则Radio无法正确回显值 */}
+                  <></>
                 </Form.Item>
-                <Form.Item label="密码" name="password">
-                  <Input.Password
-                    autoComplete='off'
-                    className="setBackColor"
-                    placeholder='请输入'
-                    maxLength={20}
-                  />
-                </Form.Item>
+                {
+                  authMethodType == '1' && <>
+                    <Form.Item label="用户名" name="username">
+                      <Input
+                        autoComplete="new-password"
+                        className="setBackColor"
+                        maxLength={20}
+                        placeholder='请输入'
+                      />
+                    </Form.Item>
+                    <Form.Item label="密码" name="password">
+                      <Input.Password
+                        autoComplete="new-password"
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item></>
+                }
+                {
+                  authMethodType == '2' && <>
+                    <Form.Item label="principal" name="principal"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        maxLength={50}
+                        placeholder='请输入'
+                      />
+                    </Form.Item>
+                    <Form.Item label="krb5realm" name="krb5realm"
+                      rules={generateSingleRules(true, '请输入')}>
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item label="krb5kdc" name="krb5kdc"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item label="krb5MechOid" name="krb5MechOid"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item label="spnegoOid" name="spnegoOid"
+                      rules={generateSingleRules(true, '请输入')}
+                    >
+                      <Input
+                        autoComplete='off'
+                        className="setBackColor"
+                        placeholder='请输入'
+                        maxLength={20}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label="keytab"
+                      style={{ marginBottom: '40px' }}
+                      // name='excelFileUrl'
+                      rules={generateSingleRules(true, '请输入keytab')}
+                    >
+                      <div className="setBackColor"
+                        style={{ height: '120px' }}>
+                        <Dragger {...keytabUploadProps}>
+                          <p className="ant-upload-hint">
+                            点击或拖拽.keytab格式的文件至此处进行上传，10M以内
+                          </p>
+                        </Dragger>
+                      </div>
+                    </Form.Item>
+                  </>
+                }
                 <Form.Item label="索引名称" name='index'>
                   <div className='dataBaseName'>
                     <Spin spinning={getIndexListLoading}>
@@ -807,3 +892,18 @@ const codeFormatOptions: TSelectOptionItems[] = [
 ];
 
 
+
+const authMethodOptions: TSelectOptionItems[] = [
+  {
+    label: '无',
+    value: '0',
+  },
+  {
+    label: '用户名密码',
+    value: '1',
+  },
+  {
+    label: 'Kerberos认证',
+    value: '2',
+  },
+]

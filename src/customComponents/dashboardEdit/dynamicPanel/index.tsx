@@ -15,9 +15,8 @@ interface State {
   [key: string]: any;
 }
 import {layersPanelsFlat} from "@/utils";
-const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panels}: any) => {
+const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panel}: any) => {
   const componentData = bar.componentData;
-  const panel = panels.find((item: IPanel) => item.id === id);
   // 获取面板想起接口
   const {states, config, name, type} = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = config;

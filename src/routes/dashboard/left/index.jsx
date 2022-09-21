@@ -13,7 +13,7 @@ import {
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
 import { IconFont } from '../../../utils/useIcon'
-import {useKeyPress} from 'ahooks'
+import { useKeyPress } from 'ahooks'
 
 /** 自定义组件 **/
 import EveryTreeNode from './components/everyTreeNode'
@@ -84,8 +84,8 @@ const Left = ({ dispatch, bar, operate }) => {
     }
   }, [])
 
-  useKeyPress([ 'ctrl', 'shift' ], (event) => {
-    if(event.type === 'keydown' && bar.isMultipleTree) {
+  useKeyPress(['ctrl', 'shift'], (event) => {
+    if (event.type === 'keydown' && bar.isMultipleTree) {
 
     } else {
       dispatch({
@@ -94,10 +94,10 @@ const Left = ({ dispatch, bar, operate }) => {
           isMultipleTree: event.type === 'keydown',
         },
       })
-      setIsCtrlKeyPressing( event.type === 'keydown')
+      setIsCtrlKeyPressing(event.type === 'keydown')
     }
   }, {
-    events: [ 'keydown', 'keyup' ],
+    events: ['keydown', 'keyup'],
   })
 
 
@@ -248,7 +248,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const myOnExpand = (expandedKeys, { expanded, node }) => {
     setIsExpand(expandedKeys)
   }
-  //
+  // 图层拖拽逻辑
   const onDrop = info => {
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
@@ -265,6 +265,8 @@ const Left = ({ dispatch, bar, operate }) => {
         }
       }
     }
+
+
     const data = [...bar.treeData]
 
     // Find dragObject
