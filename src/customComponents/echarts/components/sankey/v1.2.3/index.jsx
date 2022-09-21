@@ -40,7 +40,6 @@ const RingRatio = (props) => {
   // 组件静态或者传入组件的数据
   const originData = props.comData || data
   const componentThemeConfig = props.themeConfig
-  console.log('------------------------',componentThemeConfig)
   // originData中有多项数据，只取第一项
   const firstData = originData[0]
   const nodes = deepClone(firstData[finalFieldsArr[0]])
