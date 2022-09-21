@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
   "moduleType": 'chart',
   "moduleName": "radarChart", //组件标识
-  "moduleVersion": "1.0.2", //组件版本号
+  "moduleVersion": "1.0.3", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -97,13 +97,13 @@ const componentDefaultConfig = {
       "name": "layoutColor",
       "displayName": "布局",
       "type": "collapse",
-      "hasSwitch": false,
+      "hasSwitch": true,
       "defaultExpand": false,
       "value": [
         {
           "name": "show",
           "displayName": "",
-          "value": true,
+          "value": false,
           "type": "switch"
         },
         {
@@ -140,7 +140,7 @@ const componentDefaultConfig = {
           "type": "switch"
         },
         {
-          'name': 'color',
+          'name': 'themeTextColor',
           'displayName': '颜色',
           'value': '#fff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
           'type':'color'
@@ -250,7 +250,7 @@ const componentDefaultConfig = {
           "type": "switch"
         },
         {
-          'name': 'axisColor',
+          'name': 'themeAssistColor',
           'displayName': '颜色',
           'value': '#1b3483', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
           'type':'color'
@@ -279,7 +279,7 @@ const componentDefaultConfig = {
               "type": "switch"
             },
             {
-              'name': 'axisLabelColor',
+              'name': 'themeTextColor',
               'displayName': '颜色',
               'value': '#fff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
               'type':'color'
@@ -328,13 +328,13 @@ const componentDefaultConfig = {
           ]
         },
         {
-          'name': 'fillColor',
+          'name': 'themeAssistColor',
           'displayName': '边颜色',
           'value': '#1b3483', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
           'type':'color'
         },
         {
-          'name': 'fillCircleColor',
+          'name': 'themeGridColor',
           'displayName': '填充颜色',
           'value': '#042075', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
           'type':'color'
@@ -396,6 +396,7 @@ const componentDefaultConfig = {
         {
           "key": "1",
           "displayName": "系列1",
+          "flag":"specialItem",
           "name": "tab",
           "type": "object",
           "value": [
@@ -406,7 +407,7 @@ const componentDefaultConfig = {
               'value':'系列一',
             },
             {
-              'name': 'areaColor',
+              'name': 'themePureColor',
               'displayName': '区域颜色',
               'value': '#1890FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
               type:'color'
@@ -441,7 +442,7 @@ const componentDefaultConfig = {
                   ]
                 },
                 {
-                  'name': 'color',
+                  'name': 'themePureColor',
                   'displayName': '颜色',
                   'value': '#1890FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   type:'color'
@@ -469,6 +470,7 @@ const componentDefaultConfig = {
         {
           "key": "2",
           "displayName": "系列2",
+          "flag":"specialItem",
           "name": "tab",
           "type": "object",
           "value": [
@@ -479,7 +481,7 @@ const componentDefaultConfig = {
               'value':'系列二',
             },
             {
-              'name': 'areaColor',
+              'name': 'themePureColor',
               'displayName': '区域颜色',
               'value': '#004483', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
               type:'color'
@@ -514,7 +516,7 @@ const componentDefaultConfig = {
                   ]
                 },
                 {
-                  'name': 'color',
+                  'name': 'themePureColor',
                   'displayName': '颜色',
                   'value': '#1890FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
                   type:'color'
