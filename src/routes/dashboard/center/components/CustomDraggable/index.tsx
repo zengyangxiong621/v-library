@@ -24,7 +24,7 @@ import Counter from "@/customComponents/assist/counter2/v1.0.5";
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 
-import Timeline from "@/customComponents/assist/timeline/v1.1.6";
+import Timeline from "@/customComponents/assist/timeline/v1.1.7";
 import NormalTable from "@/customComponents/table/normalTable/v1.0.4";
 import Media from "@/customComponents/media/v1.1.1";
 import PaginationComp from "@/customComponents/paginationComp/v1.1.6";
@@ -729,7 +729,7 @@ const CustomDraggable
                     activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
                     // 值是否改变
                     // data的值存在并且
-                  } else if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                  } else if ((component.moduleName === "cascader" || 'select2') || (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin])) {
                     temp = true
                     callbackArgs[callback.target] = data[callback.origin]
                     activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
