@@ -7,7 +7,7 @@ import Bar from "@/customComponents/echarts/components/bar/index"
 import SelectV2 from "@/customComponents/assist/select/v1.0.2/index"
 import CusImage from "@/customComponents/assist/image/v1.0.2/index"
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1"
-import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3"
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4"
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5"
 import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1"
 import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2"
@@ -526,7 +526,8 @@ const ComponentEventContainer = ({
         <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
       ) : props.componentConfig.moduleName === "basicBar" ? (
         <BasicBar onChange={handleValueChange} {...props}></BasicBar>
-      ) : // props.componentConfig.moduleName === 'chinaMap' ?
+      ) :
+        // props.componentConfig.moduleName === 'chinaMap' ?
         // <ChinaMap
         //   onChange={handleValueChange}
         //   {...props}

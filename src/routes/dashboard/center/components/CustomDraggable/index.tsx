@@ -14,7 +14,7 @@ import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5";
-import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3";
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.4";
 
 import textConfig from '@/customComponents/echarts/components/indicatorcard/v1.0.4/config'

@@ -176,23 +176,6 @@ const componentDefaultConfig = {
       value: false,
     },
     {
-      name: "displayMode",
-      displayName: "显示方式",
-      type: "radioGroup",
-      direction: "horizontal", 
-      value: 0,
-      options: [
-        {
-          name: "标注",
-          value: 0,
-        },
-        {
-          name: "飞线",
-          value: 1,
-        },
-      ],
-    },
-    {
       name: "mapStyle",
       displayName: "地图样式",
       type: "collapse",
