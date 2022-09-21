@@ -717,7 +717,7 @@ const EditDataSource = (props: any) => {
                   <></>
                 </Form.Item>
                 {
-                  esSourceConfig.authMethod == '1' && <>
+                  authMethodType == '1' && <>
                     <Form.Item label="用户名" name="username">
                       <Input
                         autoComplete="new-password"
@@ -736,7 +736,7 @@ const EditDataSource = (props: any) => {
                     </Form.Item></>
                 }
                 {
-                  esSourceConfig.authMethod == '2' && <>
+                  authMethodType == '2' && <>
                     <Form.Item label="principal" name="principal"
                       rules={generateSingleRules(true, '请输入')}
                     >
