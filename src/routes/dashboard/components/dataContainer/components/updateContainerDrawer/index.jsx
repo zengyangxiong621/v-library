@@ -17,7 +17,6 @@ const testData = {
     'isAuto': false
   },
   'dataType': 'static', // 数据类型
-  'autoUpdate': {}, // 更新配置
   'staticData': {
     'data': [
       {
@@ -81,9 +80,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         } else {
           setResultData(resultData)
         }
-
       }
-      console.log('里面触发了吗')
     }
   }, [props.data])
 
@@ -106,7 +103,6 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
 
   // 更新输入容器
   const updateDataContainer = async (body) => {
-    console.log()
     await http({
       url: '/visual/container/source',
       method: 'post',
@@ -150,6 +146,8 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         } else {
           setResultData(data)
         }
+      } else {
+        setResultData([])
       }
     } catch (err) {
       setResultData([])
@@ -191,7 +189,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
 
   // 数据接口刷新
-  const getData = async () => {
+  const getData = async (dataConfig={}) => {
     try {
       const data = await http({
         method: 'post',
@@ -216,6 +214,8 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         } else {
           setResultData(data)
         }
+      } else {
+        setResultData([])
       }
     } catch (err) {
       setResultData([])
@@ -226,13 +226,13 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   const handleAutoUpdateChange = async (autoUpdate) => {
     setCopyData({...copyData, autoUpdate})
     await updateDataContainer({...copyData, autoUpdate})
-    getData()
+    await getData()
   }
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
     setCopyData({...copyData, dataConfig})
     await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
-    getData()
+    await getData()
   }
 
   // 数据过滤器开关

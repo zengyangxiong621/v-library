@@ -26,9 +26,6 @@ const EditDataSource = (props: any) => {
     esSourceConfig,
   } = props.editDataSourceInfo;
 
-  console.log('esConfig', esSourceConfig);
-  // 应该用 esSourceConfig.kerbaos.authMethod
-  // esSourceConfig.authMethod = '2'
 
   const { visible, spaceId, changeShowState, refreshTable } = props
 
@@ -73,13 +70,13 @@ const EditDataSource = (props: any) => {
   // 通过后台获取到的索引列表
   const [indexList, setIndexList] = useState([]);
   const [getIndexListLoading, setGetIndexListLoading] = useState(false);
+  const [authMethodType, setAuthMethodType] = useState<string>(esSourceConfig?.authMethod + '')
   // 上传的文件在后端存储的地址,
   // 数据库连接是否测试成功
   const [isConnect, setIsConnect] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [testConnectLoading, setTestConnectLoading] = useState(false);
-  const [indexName, setIndexName] = useState("");
 
   /**
    * description: 测试数据库连接
@@ -159,7 +156,7 @@ const EditDataSource = (props: any) => {
     }
 
   };
-
+  console.log('?????????', esSourceConfig)
   /**
   * description: 获取可选择的索引列表
   */
@@ -169,11 +166,12 @@ const EditDataSource = (props: any) => {
     // 通过表单校验获取es连接地址
     // 通过表单校验获取es连接地址
     const values: any = await editForm.validateFields(['url', 'authMethod', 'keytab', 'krb5MechOid', 'krb5kdc', 'krb5realm', 'principal', 'spnegoOid', 'password', 'username'])
-    console.log('获取索引列表value', values);
+    console.log('fil', fileUrl)
+    console.log('vvvvvvvvvvvvvvvv', values)
     const finalBody = {
       "authMethod": values.authMethod,
       "kerberos": {
-        "keytab": fileUrl,
+        "keytab": values.keytab,
         "krb5MechOid": values.krb5MechOid,
         "krb5kdc": values.krb5kdc,
         "krb5realm": values.krb5realm,
@@ -221,12 +219,12 @@ const EditDataSource = (props: any) => {
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields();
     // es 数据源类型时，如果没有index名，直接return
-    if (dataSourceType === 'ELASTIC_SEARCH' && !indexName) {
+    if (dataSourceType === 'ELASTIC_SEARCH' && !values.index) {
       message.warning({ content: '请先选择索引名称', duration: 2 })
       return
     }
     //-----所以这里解构出来的type已经是API了
-    const { name, type, description, ...rest } = values;
+    const { name, type, description, krb5MechOid, krb5kdc, krb5realm, principal, spnegoOid, ...rest } = values;
     // 判断当前是否是数据库(这儿是为了凑 (rdbms/api/csv)SourceConfig这种格式的参数的  和上方的dataSourceType不同的)
     const dataBaseOrNormal = dataTypeClassify.get(type);
     // 最终数据源的类型, 如果是特殊的类型（RDBMS和API),需要在下面处理一下
@@ -259,7 +257,14 @@ const EditDataSource = (props: any) => {
     //   finalType = 'RESTFUL_API'
     // }
     if (dataBaseOrNormal === "es") {
-      // finalSourceConfig.index = indexName
+      finalSourceConfig.kerberos = {
+        krb5MechOid,
+        krb5kdc,
+        krb5realm,
+        principal,
+        spnegoOid,
+        keytab: fileUrl
+      }
     }
 
     const finalParams = {
@@ -296,10 +301,7 @@ const EditDataSource = (props: any) => {
     setDataBaseList([]);
     setIndexList([]);
     setIsConnect(false);
-    // setTimeout(() => {
     editForm.resetFields();
-    // }, 4);
-    // setIndexName('')
   };
   const handleCancel = () => {
     clearModalState();
@@ -317,7 +319,6 @@ const EditDataSource = (props: any) => {
  * description: 选择索引(es)
  */
   const selectIndex = (val: any) => {
-    // setIndexName(val)
     editForm.setFieldsValue({ index: val });
   };
 
@@ -367,7 +368,6 @@ const EditDataSource = (props: any) => {
           if (status === 'done' && isSuccess) {
             message.success(`${info.file.name} 上传成功`);
             const newFilePath = isKeytab ? response.data.url : response.data
-            console.log('newFilepath', newFilePath);
             setFileUrl(newFilePath)
           } else if (status === 'error' || !isSuccess) {
             const errStr = isKeytab
@@ -406,6 +406,11 @@ const EditDataSource = (props: any) => {
   // .keytab 文件
   const keytabUploadProps = generateUploadProps('.keytab')
 
+  // description: 选择es的认证方式
+  const authMethodChange = (e: any) => {
+    setAuthMethodType(e.target.value)
+  }
+
   const [initVal, setInitVal] = useState({
     description,
     name,
@@ -429,7 +434,8 @@ const EditDataSource = (props: any) => {
     krb5MechOid: esSourceConfig?.kerberos?.krb5MechOid,
     krb5kdc: esSourceConfig?.kerberos?.krb5kdc,
     principal: esSourceConfig?.kerberos?.principal,
-    spnegoOid: esSourceConfig?.kerberos?.spnegoOid
+    spnegoOid: esSourceConfig?.kerberos?.spnegoOid,
+    authMethod: esSourceConfig?.authMethod
   })
   useEffect(() => {
     setInitVal({ ...initVal, type })
@@ -700,8 +706,20 @@ const EditDataSource = (props: any) => {
                     maxLength={1000}
                   />
                 </Form.Item>
+                <Form.Item
+                  label="认证方式"
+                  name="authMethod"
+                  // initialValue={authMethodType}
+                  rules={generateSingleRules(true, '请选择认证方式')}
+                >
+                  <Radio.Group defaultValue={authMethodType}
+                    onChange={authMethodChange}
+                    options={authMethodOptions} />
+                  {/* 这个空的元素不能删除，否则Radio无法正确回显值 */}
+                  <></>
+                </Form.Item>
                 {
-                  esSourceConfig.authMethod === '1' && <>
+                  authMethodType == '1' && <>
                     <Form.Item label="用户名" name="username">
                       <Input
                         autoComplete="new-password"
@@ -720,7 +738,7 @@ const EditDataSource = (props: any) => {
                     </Form.Item></>
                 }
                 {
-                  esSourceConfig.authMethod === '2' && <>
+                  authMethodType == '2' && <>
                     <Form.Item label="principal" name="principal"
                       rules={generateSingleRules(true, '请输入')}
                     >
@@ -874,3 +892,18 @@ const codeFormatOptions: TSelectOptionItems[] = [
 ];
 
 
+
+const authMethodOptions: TSelectOptionItems[] = [
+  {
+    label: '无',
+    value: '0',
+  },
+  {
+    label: '用户名密码',
+    value: '1',
+  },
+  {
+    label: 'Kerberos认证',
+    value: '2',
+  },
+]
