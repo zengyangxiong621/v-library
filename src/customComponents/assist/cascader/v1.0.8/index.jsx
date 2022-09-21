@@ -5,9 +5,6 @@ import './index.css'
 
 const CascaderComponent = (props) => {
   const [defaultValue, setDefaultValue] = useState(null)
-  useEffect(() => {
-    setDefaultValue(defaultSelect.split(','))
-  }, []);
   /* 获取数据 */
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
@@ -56,10 +53,22 @@ const CascaderComponent = (props) => {
 
 
 
-  const onChange = (value) => {
+  const onChange = (value,selectedOptions) => {
     setDefaultValue(value)
+    const data=selectedOptions.length===1 ? {
+      parent:value[0]
+    }:{
+      parent:value[0],
+      ...selectedOptions[selectedOptions.length-1]
+    }
+    props.onChange&& props.onChange(data)
   };
-
+  useEffect(() => {
+    setDefaultValue(defaultSelect.split(','))
+    props.onChange({
+      parent:'all'
+    })
+  }, []);
   return (
     <Cascader style={{
       "--borderDefaultWidth": borderDefault.width + "px",
