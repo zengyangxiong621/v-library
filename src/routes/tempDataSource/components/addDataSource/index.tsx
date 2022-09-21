@@ -133,8 +133,8 @@ const AddDataSource = (props: any) => {
     const finalBody: any = {
       url: values.url,
       authMethod: values.authMethod,
-      username: '',
-      password: '',
+      // username: '',
+      // password: '',
     }
     switch (authMethodType) {
       case '1':
