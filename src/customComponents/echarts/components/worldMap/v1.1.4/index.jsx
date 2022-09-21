@@ -462,7 +462,7 @@ class WorldMap extends Component {
       ipOptions.geo.itemStyle.normal.color = bgColor;
       ipOptions.geo.itemStyle.normal.borderColor = borderColor;
       ipOptions.geo.itemStyle.emphasis.areaColor = selectColor;
-      console.log(displayMode, 'displayMode ###');
+      // console.log(displayMode, 'displayMode ###');
       if (displayMode === 0) {
         options.series = this.getSeries(centerPoint, style, flyLineArr, coordData, flyDirection)
         options.series[0].effect.color = iconColor;

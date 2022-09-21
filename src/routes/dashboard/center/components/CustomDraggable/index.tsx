@@ -13,11 +13,11 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.4";
+import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3";
-import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.3";
+import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.4";
 
-import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.4/config'
+import textConfig from '@/customComponents/echarts/components/indicatorcard/v1.0.4/config'
 import Counter from "@/customComponents/assist/counter2/v1.0.5";
 
 
@@ -830,7 +830,7 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component.config = CustomTextConfig.config            
+              // component.config = textConfig.config     // 本地测试     
 
               if (component) {
                 staticData = component.staticData;

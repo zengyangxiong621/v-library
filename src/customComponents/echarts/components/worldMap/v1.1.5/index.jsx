@@ -217,8 +217,8 @@ class WorldMap extends Component {
         show: false,
       },
       geo: {
-        map: 'world',
-        // map: 'china',
+        // map: 'world',
+        map: 'china',
         type: 'map',
         zoom: 1.2,
         label: {
@@ -355,8 +355,8 @@ class WorldMap extends Component {
         color: [flyColor],
       },
       geo: {
-        map: 'world',
-        // map: 'china',
+        // map: 'world',
+        map: 'china',
         type: 'map',
         zoom: 1.2,
         label: {
@@ -389,7 +389,7 @@ class WorldMap extends Component {
 
     const dom = document.getElementById(componentConfig.id);
     var mapChart = echarts.init(dom);
-    echarts.registerMap("world", mapMode === 0 ? worldJson : chinaJson);
+    echarts.registerMap("china", mapMode === 0 ? worldJson : chinaJson);
     // echarts.registerMap("world", worldJson);
     // console.log(mapMode, '###mapMode');
     // echarts.registerMap("china", chinaJson);
@@ -471,9 +471,20 @@ class WorldMap extends Component {
           item.data = this.convertIPData(ipData, ipCoordData);
         })
       }
-      echarts.registerMap("world", mapMode === 0 ? worldJson : chinaJson);
+      echarts.registerMap("china", mapMode === 0 ? worldJson : chinaJson);
       mapChart.setOption(displayMode === 0 ? options : ipOptions);
       mapChart.resize();
+      // 配置点击下钻
+      mapChart.on('click', (params) => {
+        if (Array.isArray(componentConfig.drillDownArr) && componentConfig.drillDownArr.length) {
+          // drillDownArray长度不为零, 需要下钻
+          if (typeof props.onChange === 'function') {
+            props.onChange(param, echarts)
+          }
+        } else {
+          // do something
+        }
+      });
     }
 
 
@@ -481,6 +492,7 @@ class WorldMap extends Component {
       width: '100%',
       height: '100%'
     };
+
 
     return (
       <div

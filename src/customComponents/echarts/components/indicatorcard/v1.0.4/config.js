@@ -115,7 +115,7 @@ const componentDefaultConfig = {
     },
     {
       "displayName": "环图颜色",
-      "name": "circleColor",
+      "name": "themePureColor",
       "type": "color",
       "value": "#5470c6"
     },
