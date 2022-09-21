@@ -56,7 +56,8 @@ const CascaderComponent = (props) => {
   const onChange = (value,selectedOptions) => {
     setDefaultValue(value)
     const data=selectedOptions.length===1 ? {
-      parent:value[0]
+      parent:value[0],
+      [fieldNames.value]:''
     }:{
       parent:value[0],
       ...selectedOptions[selectedOptions.length-1]
@@ -66,7 +67,8 @@ const CascaderComponent = (props) => {
   useEffect(() => {
     setDefaultValue(defaultSelect.split(','))
     props.onChange({
-      parent:'all'
+      parent:'all',
+      [fieldNames.value]:''
     })
   }, []);
   return (
