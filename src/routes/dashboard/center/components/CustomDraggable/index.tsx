@@ -34,7 +34,7 @@ import PaginationComp from "@/customComponents/paginationComp/v1.1.6";
 import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.2";
 import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.4";
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.1";
-import Cascader from "@/customComponents/assist/cascader/v1.0.8";
+import Cascader from "@/customComponents/assist/cascader/v1.1.0";
 
 
 import {
@@ -1175,6 +1175,8 @@ const CustomDraggable
                                                                     </NormalTable> :
                                                                     layer.moduleName === "cascader" ?
                                                                       <Cascader
+                                                                        themeConfig={bar.componentThemeConfig}
+                                                                        onThemeChange={onThemeChange}
                                                                         onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                         componentConfig={component}
                                                                         fields={getFields(component)}
