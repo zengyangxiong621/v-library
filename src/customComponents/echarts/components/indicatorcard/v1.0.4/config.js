@@ -80,7 +80,7 @@ const componentDefaultConfig = {
           "value": 32
         },
         {
-          "name": "textColor",
+          "name": "themeTextColor",
           "displayName": "",
           "type": "color",
           "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -115,7 +115,7 @@ const componentDefaultConfig = {
     },
     {
       "displayName": "环图颜色",
-      "name": "circleColor",
+      "name": "themePureColor",
       "type": "color",
       "value": "#5470c6"
     },

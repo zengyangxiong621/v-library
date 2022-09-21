@@ -7,6 +7,8 @@ const Indicatorcard = (props) => {
   const { config } = componentConfig
   const { data } = componentConfig.staticData
 
+  // 接收传入的主题配置信息
+  const componentThemeConfig = props.themeConfig
   const fieldKey = props.fields || ['value', 'color']
   // 组件静态或者传入组件的数据
   const originData = props.comData || data
@@ -29,12 +31,24 @@ const Indicatorcard = (props) => {
           targetConfig[name] = value
         })
       } else {
+        if (componentThemeConfig) {
+          switch (name) {
+            case 'themeTextColor':
+              value = componentThemeConfig.textColor
+              break;
+            case 'themePureColor':
+              // value = componentThemeConfig.pureColors[index % 7]
+              value = componentThemeConfig.pureColors[0]
+            default:
+              break;
+          }
+        }
         targetConfig[name] = value
       }
     });
     return targetConfig
   }
-  const { circleColor, fontSize, italic, letterSpacing, bold, fontFamily, lineHeight, textColor, circleWidth, dangerLevel } = getConfig(config)
+  const { themePureColor, fontSize, italic, letterSpacing, bold, fontFamily, lineHeight, themeTextColor, circleWidth, dangerLevel } = getConfig(config)
   const gaugeData = [
     {
       value: percent,
@@ -60,8 +74,8 @@ const Indicatorcard = (props) => {
             clip: false,
             itemStyle: {
               borderWidth: 1,
-              borderColor: circleColor,
-              color: circleColor,
+              borderColor: componentThemeConfig ? componentThemeConfig.pureColors[0] : themePureColor || '#5470c6',
+              color: componentThemeConfig ? componentThemeConfig.pureColors[0] : themePureColor || '#5470c6',
             }
           },
           axisLine: {
@@ -95,7 +109,7 @@ const Indicatorcard = (props) => {
           detail: { // 环内百分比样式
             width: 50,
             height: 18,
-            color: circleColor,
+            color: componentThemeConfig ? componentThemeConfig.pureColors[0] : themePureColor || '#5470c6',
             fontSize: fontSize,
             fontStyle: italic ? 'italic' : 'normal',
             fontWeight: bold ? 'bold' : 'normal',
