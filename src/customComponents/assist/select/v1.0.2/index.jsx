@@ -41,7 +41,6 @@ const ComSelect = (props) => {
   const style = getStyle(config)
   const { input, options } = style.selectStyle
 
-  console.log('styleinput', input)
 
   useEffect(() => {
     // 处理默认选中

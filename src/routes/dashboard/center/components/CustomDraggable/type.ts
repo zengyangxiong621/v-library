@@ -15,7 +15,14 @@ export type DraggableData = {
   node: any
 }
 
+export interface IPanelState {
+  name: string;
+  id: string;
+}
+
 export type IComponent = any
+
+export type ILayer = any
 
 export interface ILayerComponent {
   id: string,
@@ -72,7 +79,19 @@ export interface IMouse {
 }
 
 export interface ILayerPanel extends ILayerComponent{
-  panelType: 0 | 1 | 2
+  panelType: 0 | 1 | 2,
+}
+
+export interface IPanelStateGroup extends IPanelState {
+  modules: Array<any>
+}
+
+export interface ILayerPanelState extends Omit<IPanelStateGroup, 'isLock'>{
+  panelType: 0 | 1 | 2,
+}
+
+export interface ILayerPanelGroup extends ILayerPanel{
+  modules: Array<IPanelStateGroup>
 }
 
 export interface IPanel {
@@ -89,4 +108,13 @@ export interface IPanel {
     height: number
   },
   states: Array<string>
+}
+
+export interface IPanelStateDetails {
+  components: Array<IComponent>,
+  layers: Array<ILayer>
+  dashboardConfig: Array<{displayName: string, name: string, value: any, [key: string]: any}>,
+  dashboardName: string,
+  dashboardId: string, // 状态的 dashboardId 就是 id 本身
+  id: string
 }
