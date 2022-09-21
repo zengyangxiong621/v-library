@@ -17,7 +17,7 @@ import Bar from '@/customComponents/echarts/components/bar/index'
 import WorldMap from '@/customComponents/echarts/components/worldMap'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap'
 import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
-import SwiperText from '@/customComponents/text/swiperText/v1.0.3'
+import SwiperText from '@/customComponents/text/swiperText/v1.0.4'
 import textConfig from '@/customComponents/echarts/components/worldMap/config'
 import Counter from '@/customComponents/assist/counter2/v1.0.5'
 
@@ -977,6 +977,14 @@ const CustomDraggable
 
                                 // <Da componentConfig={component}/>
                                 // <SwiperText  componentConfig={component}></SwiperText>
+                                layer.moduleName === 'swiperText' ? 
+                                <SwiperText
+                                  themeConfig={bar.componentThemeConfig}
+                                  onThemeChange={onThemeChange}
+                                  componentConfig={component}
+                                  fields={getFields(component)}
+                                  comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                ></SwiperText> :
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}
