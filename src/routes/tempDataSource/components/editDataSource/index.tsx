@@ -156,7 +156,7 @@ const EditDataSource = (props: any) => {
     }
 
   };
-
+  console.log('?????????', esSourceConfig)
   /**
   * description: 获取可选择的索引列表
   */
@@ -166,6 +166,8 @@ const EditDataSource = (props: any) => {
     // 通过表单校验获取es连接地址
     // 通过表单校验获取es连接地址
     const values: any = await editForm.validateFields(['url', 'authMethod', 'keytab', 'krb5MechOid', 'krb5kdc', 'krb5realm', 'principal', 'spnegoOid', 'password', 'username'])
+    console.log('fil', fileUrl)
+    console.log('vvvvvvvvvvvvvvvv', values)
     const finalBody = {
       "authMethod": values.authMethod,
       "kerberos": {

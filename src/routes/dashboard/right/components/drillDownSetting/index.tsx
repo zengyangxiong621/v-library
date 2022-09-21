@@ -11,7 +11,7 @@ import CodeEditor from "../codeEditor";
 
 const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLevelComponent, componentConfig }: any) => {
   const { panelStatesList, stateId } = bar;
-  const { id, name } = componentConfig;
+  const { id, name, } = componentConfig;
   const [state, setState] = useSetState({
     layersInNextState: [],
     parentDataSample: null, // 父级组件的结构示例
@@ -56,7 +56,17 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
 
 
   const localStorageCopy: any = localStorage;
-  const curCompConfigStaticData = componentConfig.staticData.data;
+  let finalCompData = componentConfig.staticData.data;
+  if (componentConfig.dataFrom == 1) {
+    const dataContainerIds = componentConfig.dataContainers.map((x: any) => x.id)
+    const dataFromDataContainer = bar.dataContainerDataList.filter((item: any) => dataContainerIds.includes(item.id))
+    finalCompData = dataFromDataContainer.map((o: any) => {
+      return o.data
+    }).flat()
+  }
+  console.log('finalCompDatafinalCompData', finalCompData);
+  // console.log('barbar', bar);
+  // console.log('当前组件数据', componentConfig)
 
   const showHadSelectComp = () => {
     // 之前已经选中了的组件
@@ -106,7 +116,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
       return {
         id: item,
         name: label[index],
-        parentData: curCompConfigStaticData,
+        parentData: finalCompData,
         // parent:
       };
     });
@@ -127,7 +137,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
     const curComps: any = {};
     val.forEach((valId: string) => {
       curComps[valId] = {
-        parentData: curCompConfigStaticData,
+        parentData: finalCompData,
         parentId: id
       };
     });
