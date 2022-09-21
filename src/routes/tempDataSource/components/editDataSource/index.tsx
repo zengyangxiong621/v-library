@@ -70,7 +70,7 @@ const EditDataSource = (props: any) => {
   // 通过后台获取到的索引列表
   const [indexList, setIndexList] = useState([]);
   const [getIndexListLoading, setGetIndexListLoading] = useState(false);
-  const [authMethodType, setAuthMethodType] = useState<string>(esSourceConfig.authMethod + '')
+  const [authMethodType, setAuthMethodType] = useState<string>(esSourceConfig?.authMethod + '')
   // 上传的文件在后端存储的地址,
   // 数据库连接是否测试成功
   const [isConnect, setIsConnect] = useState(false);
