@@ -24,7 +24,58 @@ const RankingList2 = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
   const { fields, data } = componentConfig.staticData
-  // debugger
+  const componentThemeConfig = props.themeConfig
+
+  const replaceThemeColor = (arr, colorIndex = 0) => {
+    arr.forEach((item) => {
+      let index = colorIndex || 0
+      let { name, value, options, flag, type, key } = item
+      if (item.hasOwnProperty('value')) {
+        if (Array.isArray(value)) {
+          replaceThemeColor(value, index)
+        } else {
+          if (type === 'color') {
+            switch (name) {
+              case 'themePureColor':
+                item.value = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                item.value = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                item.value = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                item.value = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      } else if (Array.isArray(options) && options.length) {
+        replaceThemeColor(options, index)
+      }
+    })
+  }
+  if (componentThemeConfig) {
+    const configOfTheme = JSON.parse(JSON.stringify(config))
+    replaceThemeColor(configOfTheme)
+    props.onThemeChange({
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
+      config: configOfTheme
+    })
+  }
+
   // 最新字段
   const finalFields = props.fields || ['column1', 'column2', 'column3']
   // 组件静态或者传入组件的数据
@@ -49,10 +100,18 @@ const RankingList2 = (props) => {
     Arr.forEach(({ name, value }) => {
       if (Array.isArray(value)) {
         value.forEach(({ name, value }) => {
-          targetStyle[name] = value
+          if (name === 'themeTextColor') {
+            targetStyle['color'] = value
+          } else {
+            targetStyle[name] = value
+          }
         })
       } else {
-        targetStyle[name] = value
+        if (name === 'themeTextColor') {
+          targetStyle['color'] = value
+        } else {
+          targetStyle[name] = value
+        }
       }
     });
     return targetStyle
