@@ -4,7 +4,8 @@ import { useState, useRef } from "react"
 import TimeSelect from "@/customComponents/interactive/timeSelect"
 import ScrollTable from "@/customComponents/table/scrollTable"
 import Bar from "@/customComponents/echarts/components/bar/index"
-import SelectV2 from "@/customComponents/assist/select/v1.0.2/index"
+import SelectV2 from "@/customComponents/assist/select/v1.0.3/index"
+import ButtomGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
 import CusImage from "@/customComponents/assist/image/v1.0.2/index"
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1"
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3"
@@ -538,6 +539,8 @@ const ComponentEventContainer = ({
           // :
           props.componentConfig.moduleName === "select2" ? (
             <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
+          ) : props.componentConfig.moduleName === "buttonGroup2" ? (
+            <ButtomGroup onChange={handleValueChange} {...props}></ButtomGroup>
           ) : props.componentConfig.moduleName === "bar" ? (
             <Bar onChange={handleValueChange} {...props}></Bar>
           ) : props.componentConfig.moduleName === "scrollTable" ? (

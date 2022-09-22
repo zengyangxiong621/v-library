@@ -1,11 +1,11 @@
 const componentDefaultConfig = {
   "id": "",
   "uniqueTag": "",
-  "name": "柱状序号列表",
+  "name": "序号列表",
   "parentId": "",
   "dashboardId": "",
-  "moduleName": "orderBarRankingList",
-  "moduleVersion": "1.0.1",
+  "moduleName": "rankingList2",
+  "moduleVersion": "1.0.2",
   "moduleType": 'assist',
   "autoUpdate": {
     "isAuto": false,
@@ -20,27 +20,27 @@ const componentDefaultConfig = {
     "data": [
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": "车辆管理系统",
+        "column2": '车辆管理系统',
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": "车辆管理系统",
+        "column2": '车辆管理系统',
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": "车辆管理系统",
+        "column2": '车辆管理系统',
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": "车辆管理系统",
+        "column2": '车辆管理系统',
         "column3": "受攻击:21",
       },
       {
         "column1": "2022.03.15 12:30:00",
-        "column2": "车辆管理系统",
+        "column2": '车辆管理系统',
         "column3": "受攻击:21",
       },
     ],
@@ -85,12 +85,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": "800px"
+          "value": '800px'
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": "400px"
+          "value": '400px'
         }
       ]
     },
@@ -110,7 +110,7 @@ const componentDefaultConfig = {
           "value": 14
         },
         {
-          "name": "color",
+          "name": "themeTextColor",
           "displayName": "",
           "type": "color",
           "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -133,7 +133,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": "48"
+          "value": '48'
         }
       ]
     },
@@ -144,16 +144,10 @@ const componentDefaultConfig = {
       "value": false
     },
     {
-      "name": "backgroundColor",
-      "displayName": "背景色",
-      "value": "#000000", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-      type: "color"
-    },
-    {
-      "name": "isShowProgress",
-      "displayName": "显示柱状",
-      "type": "switch",
-      "value": true
+      'name': 'backgroundColor',
+      'displayName': '背景色',
+      'value': '#000000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      type: 'color'
     }
   ],
   "themes": [
@@ -170,6 +164,6 @@ const componentDefaultConfig = {
       "name": "政务蓝"
     }
   ]
-};
+}
 
-export default componentDefaultConfig;
+export default componentDefaultConfig
