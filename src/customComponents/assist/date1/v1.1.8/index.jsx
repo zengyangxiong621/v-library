@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ComponentDefaultConfig from './config'
 
+
+
 class ShowDate extends Component {
   constructor(props) {
     super(props)
@@ -45,7 +47,7 @@ class ShowDate extends Component {
   // 刷新时间
   refreshCurtime = () => {
     let date = new Date()
-    const timeString = date.toLocaleTimeString()
+    const timeString = date.toLocaleTimeString('chinese',{ hour12: false })
     return timeString
   }
   // 获取样式
@@ -74,7 +76,66 @@ class ShowDate extends Component {
 
     const targetStyle = this.getTargetStyle(config)
 
-    console.log(targetStyle)
+    //配置主题色
+    const componentThemeConfig = this.props.themeConfig
+    const replaceThemeColor = (arr, colorIndex = 0) => {
+      arr.forEach((item) => {
+        let index = colorIndex || 0
+        let { name, value, options, flag, type, key } = item
+        if (item.hasOwnProperty('value')) {
+          // 对 系列一栏 做特殊处理
+          if (flag === 'specialItem') {
+            try {
+              index = key ? parseInt(key) - 1 : 0
+            } catch (e) {
+              index = 0
+            }
+          }
+          if (Array.isArray(value)) {
+            replaceThemeColor(value, index)
+          } else {
+            if (type === 'color') {
+              switch (name) {
+                case 'pureColors':
+                  item.value = componentThemeConfig.pureColors[index % 7]
+                  break;
+                case 'themeGradientColorStart':
+                  item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                  break;
+                case 'themeGradientColorEnd':
+                  item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                  break;
+                case 'themeTextColor':
+                  item.value = componentThemeConfig.textColor
+                  break;
+                case 'themeAssistColor':
+                  item.value = componentThemeConfig.assistColor
+                  break;
+                case 'themeGridColor':
+                  item.value = componentThemeConfig.gridColor
+                  break;
+                default:
+                  break;
+              }
+            }
+          }
+        } else if (Array.isArray(options) && options.length) {
+          replaceThemeColor(options, index)
+        }
+      })
+    }
+    if (componentThemeConfig) {
+      const configOfTheme = JSON.parse(JSON.stringify(config))
+      replaceThemeColor(configOfTheme)
+      this.props.onThemeChange({
+        id: componentConfig.id,
+        name: componentConfig.name,
+        moduleName: componentConfig.moduleName,
+        moduleVersion: componentConfig.moduleVersion,
+        config: configOfTheme
+      })
+    }
+
 
     return <div style={{
       ...targetStyle,
@@ -88,10 +149,11 @@ class ShowDate extends Component {
       fontStyle:targetStyle.italic?"italic":"normal",
       letterSpacing:targetStyle.letterSpacing+"px",
       lineHeight:targetStyle.lineHeight+'px',
-      textShadow:targetStyle.show ? `${targetStyle.shadow.vShadow}px ${targetStyle.shadow.hShadow}px ${targetStyle.shadow.blur}px ${targetStyle.shadow.color}` : '0 0 black'
+      textShadow:targetStyle.show ? `${targetStyle.shadow.vShadow}px ${targetStyle.shadow.hShadow}px ${targetStyle.shadow.blur}px ${targetStyle.shadow.color}` : '0 0 black',
+      color: componentThemeConfig ? componentThemeConfig.textColor:  targetStyle.themeTextColor
     }}>
       <div style={{display:"flex",alignItems:"center",position:"relative",padding:"5px 0"}}>
-        <span style={{ marginRight: '20px' }}>{this.state.curTime}</span>
+        <span style={{ marginRight: targetStyle.spacing+'px' }}>{this.state.curTime}</span>
         <span>{this.state.finalDate}</span>
       </div>
     </div>

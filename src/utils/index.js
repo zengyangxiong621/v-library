@@ -325,11 +325,12 @@ export function insertMultipleComponents (arr, sourceIds, targetId) {
 }
 
 // 数组扁平化
-export const layerComponentsFlat = (arr) => {
+export const layerComponentsFlat = (arr, children=COMPONENTS) => {
+  console.log('arr', arr)
   return arr.reduce((pre, cur) => {
     return pre.concat(
-      cur.hasOwnProperty(COMPONENTS)
-        ? layerComponentsFlat(cur[COMPONENTS])
+      cur.hasOwnProperty(children)
+        ? layerComponentsFlat(cur[children])
         : cur.id,
     );
   }, []);
@@ -421,10 +422,10 @@ export const calcGroupPosition = (arr, components, panels) => {
 
 export const deepForEach = (layers, cb) => {
   layers.forEach((layer, index) => {
-    cb(layer, index);
-    if (COMPONENTS in layer) {
-      deepForEach(layer[COMPONENTS], cb);
+    if (layer && COMPONENTS in layer) {
+      deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb);
     }
+    cb(layer, index, layers);
   });
   return layers;
 };
@@ -658,6 +659,12 @@ export const styleTransformFunc = (textStyle, type=true) => {
     return pre;
   }, {});
   return Object.keys(textStyle).reduce((pre, cur) => {
+    if(cur==='themeColor'){
+      return {
+        ...pre,
+        ...styleTransformFuncList['color'](textStyle[cur])
+      }
+    }
     return {
       ...pre,
       ...styleTransformFuncList[cur](textStyle[cur])
@@ -728,3 +735,17 @@ export const duplicateDashboardConfig = (preConfig, nowConfig) => {
   });
   return preConfig;
 };
+
+
+export const getQueryVariable = () => {
+  let href = window.location.href
+  let query = href.substring(href.indexOf('?')+1);
+  let vars = query.split("&");
+  let obj = {}
+  for (let i = 0; i < vars.length; i++) {
+    let pair = vars[i].split("=");
+    obj[pair[0]] = pair[1]
+  }
+  return obj;
+}
+

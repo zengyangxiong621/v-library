@@ -1,12 +1,13 @@
 const componentDefaultConfig = {
-  "id": "", //组件ID
+  "id": '', //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
   "name": "时间器", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
 
+  "moduleType": "assist",
   "moduleName": "date1", //组件标识
-  "moduleVersion": "1.1.2", //组件版本号
+  "moduleVersion": "1.1.8", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -22,13 +23,14 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "date":"14:10:59 2022.05.24 星期二",
+        "date":'14:10:59 2022.05.24 星期二',
       }
     ],
     "fields": [
       {
-        "status": true // 状态
-      }
+        "name": "date",
+        "value": "date",
+      },
     ],
   },
 
@@ -89,7 +91,7 @@ const componentDefaultConfig = {
           "value": 32
         },
         {
-          "name": "color",
+          "name": "themeTextColor",
           "displayName": "",
           "type": "color",
           "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -117,6 +119,16 @@ const componentDefaultConfig = {
       ]
     },
     {
+      'name': 'spacing',
+      'displayName': '间距',
+      'value': 20,
+      type:'number',
+      "config": {
+          "step": 1,
+          suffix:'px',  // 输入框后缀
+      }
+    },
+    {
       "name": "align",
       "displayName": "对齐方式",
       "type": "alignFull",
@@ -125,7 +137,7 @@ const componentDefaultConfig = {
           "name": "textAlign",
           "displayName": "水平对齐",
           "type": "align",
-          "value": "right" // left , center, right,bothEnds
+          "value": "left" // left , center, right,bothEnds
         },
         {
           "name": "textVertical",
@@ -138,14 +150,14 @@ const componentDefaultConfig = {
     {
       "name": "shadow",
       "displayName": "阴影",
-      "type": "collapse",
+      "type": 'collapse',
       "hasSwitch": true,
       "defaultExpand": true,
       "value": [
         {
           "name": "show",
           "displayName": "",
-          "value": true,
+          "value": false,
           "type": "switch"
         },
         {
@@ -163,15 +175,15 @@ const componentDefaultConfig = {
     },
   ],
   themes: [{
-    id: "theme-default",
-    name: "系统默认"
+    id: 'theme-default',
+    name: '系统默认'
   }, {
-    id: "theme-light",
-    name: "浅色风格"
+    id: 'theme-light',
+    name: '浅色风格'
   }, {
-    id: "theme-gov-blue",
-    name: "政务蓝"
+    id: 'theme-gov-blue',
+    name: '政务蓝'
   }]
-};
+}
 
-export default componentDefaultConfig;
+export default componentDefaultConfig

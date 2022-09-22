@@ -4,13 +4,13 @@ import {
   calcGroupPosition,
   deepClone,
   deepForEach,
+  duplicateDashboardConfig,
   findLayerById,
   getLayerDimensionByDomId,
   layerComponentsFlat,
+  layersPanelsFlat,
   mergeComponentLayers,
   setComponentDimension,
-  layersPanelsFlat,
-  duplicateDashboardConfig,
 } from "../utils";
 
 import {
@@ -26,11 +26,12 @@ import {
 } from "../constant/home";
 
 import {
+  IComponent,
   ILayerComponent,
   ILayerGroup,
-  IPanel,
-  IComponent,
   ILayerPanel,
+  IPanel,
+  IPanelStateGroup,
 } from "../routes/dashboard/center/components/CustomDraggable/type";
 
 import {
@@ -42,7 +43,6 @@ import {
   moveUp,
   placeBottom,
   placeTop,
-  remove,
   reName,
   showInput,
   singleShowLayer,
@@ -51,13 +51,10 @@ import { DIMENSION } from "../routes/dashboard/center/constant";
 
 import { generateLayers } from "./utils/generateLayers";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
-import {
-  addSomeAttrInLayers,
-  clearNullGroup,
-} from "./utils/addSomeAttrInLayers";
+import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
 import { http } from "../services/request";
 
-import { defaultData, IBarState, IFullAmountDashboardDetail, IState } from "./defaultData/bar"
+import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
 
 export default {
   namespace: "bar",
@@ -225,17 +222,16 @@ export default {
       });
       if (!bar.isDashboardInit) {
         yield put({
-          type: 'getFullAmountDashboardDetails',
-        })
+          type: "getFullAmountDashboardDetails",
+        });
       }
 
       yield put({
-        type: 'save',
+        type: "save",
         payload: {
-          isDashboardInit: true
-        }
-      })
-
+          isDashboardInit: true,
+        },
+      });
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -249,9 +245,7 @@ export default {
         method: "get",
       });
       // const { config, states: panelStatesList } = bar.panels.find((panel: IPanel) => panel.id === panelId)
-      const recommendConfig = bar.dashboardConfig.find(
-        (item: any) => item.name === "recommend"
-      );
+      const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === "recommend");
       recommendConfig.width = config.width;
       recommendConfig.height = config.height;
       yield put({
@@ -263,17 +257,17 @@ export default {
       });
     },
     *getAllDashboardList({ payload }: any, { call, put, select }: any): any {
-      const curWorkspace:any = localStorage.getItem("curWorkspace");
+      const curWorkspace: any = localStorage.getItem("curWorkspace");
       const spaceId = JSON.parse(curWorkspace)?.id;
       const data = yield http({
         url: "/visual/application/queryAppList",
         method: "post",
         body: {
-          "pageNo": 1,
-          "pageSize": 1000,
-          "spaceId": spaceId,
-          "map": {
-            "updated_time": false
+          pageNo: 1,
+          pageSize: 1000,
+          spaceId: spaceId,
+          map: {
+            updated_time: false,
           },
           groupId: null,
         },
@@ -285,14 +279,9 @@ export default {
         },
       });
     },
-    *deleteContainerDataById(
-      { payload }: any,
-      { call, put, select }: any
-    ): any {
+    *deleteContainerDataById({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const index = bar.dataContainerDataList.findIndex(
-        (item: any) => item.id === payload
-      );
+      const index = bar.dataContainerDataList.findIndex((item: any) => item.id === payload);
       bar.dataContainerDataList.splice(index, 1);
       put({
         type: "save",
@@ -301,95 +290,124 @@ export default {
         },
       });
     },
-    *getFullAmountDashboardDetails({ payload }: any,{ call, put, select }: any): any {
-      let bar: any = yield select(({ bar }: any) => bar);
-      const layers = bar.treeData
+    *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const layers = bar.treeData;
       // @ts-ignore
-      const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]) // 0 动态面板；1 引用面板；2 下钻面板
+      const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
       const getPanelConfigFunc = async (layerPanel: any) => {
         try {
           const panelConfig = await http({
-            url: `/visual/panel/detail/${ layerPanel.id }`,
-            method: 'get',
-          })
-          return panelConfig
-        } catch(e) {
-          return null
+            url: `/visual/panel/detail/${layerPanel.id}`,
+            method: "get",
+          });
+          return panelConfig;
+        } catch (e) {
+          return null;
         }
-      }
+      };
       // 获取状态详情
-      const getPanelStatusDetails = async (panelStatus: {name: string; id: string}) => {
+      const getPanelStatusDetails = async (panelStatus: { name: string; id: string }) => {
         try {
-          const data = await http(
-            {
-              url: `/visual/application/dashboard/detail/${ panelStatus.id }`,
-              method: "get",
-            })
-          return { ...data, id: panelStatus.id }
-        } catch(e) {
-          return null
+          const data = await http({
+            url: `/visual/application/dashboard/detail/${panelStatus.id}`,
+            method: "get",
+          });
+          return { ...data, id: panelStatus.id };
+        } catch (e) {
+          return null;
         }
-      }
+      };
       const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<any> => {
-        return await panels.reduce(async(total: any, item)=> {
-          const res = await total
-          const data = await Promise.all(item.states.map((status: any) => getPanelStatusDetails(status)))
+        return await panels.reduce(async (total: any, item) => {
+          const res = await total;
+          const data = await Promise.all(
+            item.states.map((status: any) => getPanelStatusDetails(status))
+          );
           data.forEach((detail) => {
-            res.push(detail)
-          })
-          return res
-        }, [])
-      }
+            res.push(detail);
+          });
+          return res;
+        }, []);
+      };
       // 获取面板+状态详情
       const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>) => {
-        let panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
-        panels = panels.filter(item => item)
-        bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panels)
-        const panelsStatusDetail = await allPanelStatusDetailsFunc(panels)
-        bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panelsStatusDetail)
-        for(const detail of panelsStatusDetail) {
-          const layers = detail.layers
+        let panels: Array<IPanel> = await Promise.all(
+          layerPanels.map((item: any) => getPanelConfigFunc(item))
+        );
+        panels = panels.filter((item) => item);
+        bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panels);
+        const panelsStatusDetail = await allPanelStatusDetailsFunc(panels);
+        bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panelsStatusDetail);
+        for (const detail of panelsStatusDetail) {
+          const layers = detail.layers;
           // @ts-ignore
-          const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2])
-          await getDeepPanelAndStatusDetails(layerPanels)
+          const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]);
+          await getDeepPanelAndStatusDetails(layerPanels);
         }
-      }
-      yield getDeepPanelAndStatusDetails(layerPanels)
-      let fullAmountDynamicAndDrillDownPanels: any = bar.fullAmountDashboardDetails.filter((item: IFullAmountDashboardDetail) => 'type' in item && [0, 2].includes(item.type))
-      fullAmountDynamicAndDrillDownPanels = fullAmountDynamicAndDrillDownPanels.map(({ id, type, name, states }: IFullAmountDashboardDetail) => (
-        {
+      };
+      yield getDeepPanelAndStatusDetails(layerPanels);
+      let fullAmountDynamicAndDrillDownPanels: any = bar.fullAmountDashboardDetails.filter(
+        (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)
+      );
+      fullAmountDynamicAndDrillDownPanels = fullAmountDynamicAndDrillDownPanels.map(
+        ({ id, type, name, states }: IFullAmountDashboardDetail) => ({
           id,
           panelType: type,
           name,
-          modules: (states as Array<IState>).map(({ id, name }) => ({
+          modules: (states as Array<IPanelState>).map(({ id, name }) => ({
             id,
-            modules: bar.fullAmountDashboardDetails.find((item: IFullAmountDashboardDetail) => item.id === id).layers,
-            name
-          }))
+            modules: bar.fullAmountDashboardDetails.find(
+              (item: IFullAmountDashboardDetail) => item.id === id
+            ).layers,
+            name,
+          })),
+        })
+      );
+      console.log("------------------------g------------------------------");
+      console.log("fullAmountDynamicAndDrillDownPanels", fullAmountDynamicAndDrillDownPanels);
+      console.log("------------------------g------------------------------");
+      const fullAmountLayers = deepForEach(
+        deepClone(layers),
+        (
+          layer:
+            | ILayerPanel
+            | (Pick<ILayerPanel, "name" | "id" | "panelType"> & { modules: any })
+            | ILayerGroup
+            | ILayerComponent,
+          index: number
+        ) => {
+          if ("panelType" in layer && layer.panelType === 0) {
+            ;(layer as any).modules =
+              fullAmountDynamicAndDrillDownPanels.find((item: any) => item.id === layer.id)
+                ?.modules || [];
+          }
         }
-      ))
-      const fullAmountLayers = deepForEach(deepClone(layers), (layer: ILayerPanel | (Pick<ILayerPanel, "name" | "id" | "panelType"> & {modules: any})  | ILayerGroup | ILayerComponent, index: number) => {
-        if ('panelType' in layer && layer.panelType === 0) {
-          (layer as any).modules = fullAmountDynamicAndDrillDownPanels.find((item: any) => item.id === layer.id)?.modules || []
-        }
-      })
-      const fullAmountComponents = bar.fullAmountDashboardDetails.reduce((pre: Array<any>, cur: any) => pre.concat(cur?.components || []), [])
-      const panels = bar.fullAmountDashboardDetails.filter((item: any) => layerPanels.find((panel: any) => panel.id === item.id))
+      );
+      const fullAmountComponents = bar.fullAmountDashboardDetails.reduce(
+        (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
+        []
+      );
+      const panels = bar.fullAmountDashboardDetails.filter((item: any) =>
+        layerPanels.find((panel: any) => panel.id === item.id)
+      );
+      console.log("bar.fullAmountDashboardDetails", bar.fullAmountDashboardDetails);
       yield put({
-        type: 'save',
+        type: "save",
         payload: {
           fullAmountDashboardDetails: bar.fullAmountDashboardDetails,
           fullAmountLayers,
           panels,
-          fullAmountComponents
-        }
-      })
+          fullAmountComponents,
+          fullAmountDynamicAndDrillDownPanels,
+        },
+      });
     },
     *getDashboardDetails({ cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       let { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
-      let fullAmountDashboardDetails = bar.fullAmountDashboardDetails
+      const fullAmountDashboardDetails = bar.fullAmountDashboardDetails;
       if (isPanel) {
         // 默认路由跳转到当前面板的第一个状态
         if (!stateId) {
@@ -402,42 +420,51 @@ export default {
         );
       }
       try {
-        let { layers, components, dashboardConfig, dashboardName } = yield http(
-          {
-            url: `/visual/application/dashboard/detail/${
-              isPanel ? stateId : dashboardId
-            }`,
-            method: "get",
-          }
-        );
-        let index = fullAmountDashboardDetails.find((item: any) => item.id === dashboardId)
-        if  (index !== -1) {
-          fullAmountDashboardDetails.splice(index, 1, { layers, components, dashboardConfig, dashboardName, dashboardId, id: dashboardId })
+        let { layers, components, dashboardConfig, dashboardName } = yield http({
+          url: `/visual/application/dashboard/detail/${isPanel ? stateId : dashboardId}`,
+          method: "get",
+        });
+        const index = fullAmountDashboardDetails.find((item: any) => item.id === dashboardId);
+        if (index !== -1) {
+          fullAmountDashboardDetails.splice(index, 1, {
+            layers,
+            components,
+            dashboardConfig,
+            dashboardName,
+            dashboardId,
+            id: dashboardId,
+          });
         } else {
-          fullAmountDashboardDetails.push({ layers, components, dashboardConfig, dashboardName, dashboardId, id: dashboardId })
+          fullAmountDashboardDetails.push({
+            layers,
+            components,
+            dashboardConfig,
+            dashboardName,
+            dashboardId,
+            id: dashboardId,
+          });
         }
         const layerPanels: any = layersPanelsFlat(layers);
         const getPanelConfigFunc = async (layerPanel: any) => {
           try {
             const panelConfig = await http({
-              url: `/visual/panel/detail/${ layerPanel.id }`,
+              url: `/visual/panel/detail/${layerPanel.id}`,
               method: "get",
             });
             return panelConfig;
-          } catch(e) {
+          } catch (e) {
             return null;
           }
         };
 
-        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => getPanelConfigFunc(item)));
-        yield (layers = deepForEach(
-          layers,
-          (layer: ILayerGroup | ILayerComponent) => {
-            layer.singleShowLayer = false;
-            delete layer.selected;
-            delete layer.hover;
-          }
-        ));
+        const panels: Array<IPanel> = yield Promise.all(
+          layerPanels.map((item: any) => getPanelConfigFunc(item))
+        );
+        yield (layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+          layer.singleShowLayer = false;
+          delete layer.selected;
+          delete layer.hover;
+        }));
         yield yield put({
           type: "getComponentsData",
           payload: components,
@@ -450,9 +477,8 @@ export default {
           dashboardConfig
         );
 
-        const drillDownParentReflect: any = JSON.parse(
-          (localStorage as any).getItem("allHasParentReflect")
-        ) || {};
+        const drillDownParentReflect: any =
+          JSON.parse((localStorage as any).getItem("allHasParentReflect")) || {};
         let finalComponents = components;
         try {
           finalComponents = components.map((item: any) => {
@@ -476,7 +502,7 @@ export default {
             panelId,
             dashboardConfig: newDashboardConfig,
             dashboardName,
-            fullAmountDashboardDetails
+            fullAmountDashboardDetails,
           },
         });
         cb({ dashboardConfig: newDashboardConfig, dashboardName });
@@ -501,8 +527,7 @@ export default {
           });
 
           if (data) {
-            componentData[component.id] =
-              component.dataType !== "static" ? data : data.data;
+            componentData[component.id] = component.dataType !== "static" ? data : data.data;
           } else {
             throw new Error("请求不到数据");
           }
@@ -529,8 +554,7 @@ export default {
       try {
         for (const idKey in updateDataForDrillDownComp) {
           if (drillDownParentReflect && drillDownParentReflect[idKey]) {
-            updateDataForDrillDownComp[idKey] =
-              drillDownParentReflect[idKey].parentData;
+            updateDataForDrillDownComp[idKey] = drillDownParentReflect[idKey].parentData;
           }
         }
       } catch (error) {
@@ -547,9 +571,7 @@ export default {
       const dataContainerList = payload;
       const bar: any = yield select(({ bar }: any) => bar);
       dataContainerList.forEach(async (item: any) => {
-        const container = bar.dataContainerList.find(
-          (container: any) => container.id === item.id
-        );
+        const container = bar.dataContainerList.find((container: any) => container.id === item.id);
         let data: any = null;
         if (container.dataType === "static") {
           data = container.staticData.data;
@@ -563,9 +585,7 @@ export default {
             },
           });
         }
-        bar.dataContainerDataList.find(
-          (data: any) => data.id === item.id
-        ).data = data;
+        bar.dataContainerDataList.find((data: any) => data.id === item.id).data = data;
       });
       yield put({
         type: "save",
@@ -595,10 +615,7 @@ export default {
     },
     *group({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const { treeDataCopy, newLayerId }: any = yield group(
-        bar.treeData,
-        bar.key
-      );
+      const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key);
       yield put({
         type: "update",
         payload: treeDataCopy,
@@ -654,6 +671,7 @@ export default {
     *update({ payload }: any, { select, call, put }: any): any {
       const state: any = yield select((state: any) => state);
       const { stateId, isPanel, dashboardId } = state.bar;
+
       const layers = yield http({
         url: "/visual/layer/update",
         method: "post",
@@ -662,6 +680,7 @@ export default {
           layers: payload,
         },
       });
+
       yield put({
         type: "updateTree",
         payload: layers,
@@ -680,40 +699,54 @@ export default {
       });
     },
     // 添加组件到画布
-    *addComponent({ payload }: any, { call, put }: any) {
+    *addComponent({ payload, fullAmountPayload, isComponent }: any, { call, put }: any) {
       yield put({
         type: "addLayer",
-        payload: { final: payload.final, insertId: payload.insertId },
+        payload,
+        fullAmountPayload,
+        isComponent,
       });
+      /*      yield put({
+        type: 'updateFullAmountLayers'
+      })*/
     },
     // 删除图层、分组
     *delete({ payload }: any, { select, call, put }: any): any {
       // const barState = yield select(({bar}: any) => bar)
       // console.log('state', barState)
+      // todo 删除应用中的图层和 删除状态中的图层需要区别
       try {
         const layers = yield http({
           url: "/visual/layer/delete",
           method: "delete",
           body: payload,
         });
-        if(layers) {
+        if (layers) {
           const filterNullLayers = clearNullGroup(layers);
           yield put({
             type: "updateTree",
             payload: filterNullLayers,
           });
+          yield put({
+            type: "clearAllStatus",
+          });
+          yield put({
+            type: "deleteComponentData",
+            payload: { id: payload.id },
+          });
+          yield put({
+            type: "updateContainersEnableAndModules",
+          });
+          // yield put({
+          //   type: 'deleteSomeLayersFromFullAmountLayers',
+          //   payload: payload.layers
+          // })
         }
-        yield put({
-          type: "deleteComponentData",
-          payload: { id: payload.id },
-        });
-        yield put({
-          type: "updateContainersEnableAndModules",
-        });
       } catch (error) {}
     },
     // 复制图层
     *copy({ payload }: any, { select, call, put }: any): any {
+      console.log("复制时候的payload", payload);
       const { layers, components, panels } = yield http({
         url: "/visual/layer/copy",
         method: "post",
@@ -722,7 +755,11 @@ export default {
       if (components.length > 0) {
         yield put({
           type: "updateComponents",
-          payload: components,
+          payload: {
+            components,
+            layers,
+            selected: payload.selected,
+          },
         });
       }
       if (panels.length > 0) {
@@ -765,6 +802,38 @@ export default {
         payload,
       });
     },
+    *updateTree({ payload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { stateId, fullAmountDashboardDetails, dashboardId } = bar;
+      if (stateId) {
+        fullAmountDashboardDetails.find((item: any) => item.id === stateId).layers = payload;
+      } else {
+        fullAmountDashboardDetails.find((item: any) => item.id === dashboardId).layers = payload;
+      }
+      console.log("------");
+      console.log("stateId", stateId);
+      console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
+      console.log("------");
+      const extendedSomeAttrLayers = addSomeAttrInLayers(payload);
+      // TODO  涉及到后面的回收站逻辑
+      /** 图层部分接口(删除图层)返回的数据结构为 { layers: [], recycleItems: []},
+       部分其它接口返回的数据结构为layers数组, layers: [] */
+      const targetTreeData = Array.isArray(extendedSomeAttrLayers)
+        ? extendedSomeAttrLayers
+        : extendedSomeAttrLayers.layers;
+      const noEmptyGroupLayers = filterEmptyGroups(targetTreeData);
+      yield put({
+        type: "save",
+        payload: {
+          treeData: noEmptyGroupLayers,
+          fullAmountDashboardDetails,
+        },
+      });
+      yield put({
+        type: "updateFullAmountLayers",
+      });
+    },
+
     *fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
       yield put({ type: "selectedNode", payload });
@@ -790,9 +859,7 @@ export default {
       yield put({
         type: "save",
         payload: {
-          key: bar.selectedComponentOrGroup.map(
-            (item: ILayerComponent) => item.id
-          ),
+          key: bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id),
         },
       });
     },
@@ -857,6 +924,7 @@ export default {
       yield put({
         type: "addComponent",
         payload: { final: { ...itemData, id }, insertId },
+        fullAmountPayload: "brother",
       });
     },
     *createPanel(
@@ -867,11 +935,7 @@ export default {
       const { isPanel, stateId, dashboardId, key, treeData } = bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
-        key.length !== 0
-          ? key[key.length - 1]
-          : treeData.length !== 0
-          ? treeData[0].id
-          : "";
+        key.length !== 0 ? key[key.length - 1] : treeData.length !== 0 ? treeData[0].id : "";
       const data: IPanel = yield http({
         url: "/visual/panel/add",
         method: "post",
@@ -882,7 +946,13 @@ export default {
         },
       });
       if (data) {
-        const { id, name } = data;
+        const { id, name, states } = data;
+        const modules: Array<IPanelStateGroup> = states.map((item: any) => {
+          return {
+            ...item,
+            modules: [],
+          };
+        });
         const layerPanel: ILayerPanel = {
           id,
           name,
@@ -894,7 +964,9 @@ export default {
         bar.panels.push(data);
         yield put({
           type: "addComponent",
-          payload: { final: { ...layerPanel, id }, insertId },
+          payload: { final: { ...layerPanel, id, modules }, insertId },
+          fullAmountPayload: "brother",
+          isComponent: true,
         });
       }
     },
@@ -930,12 +1002,12 @@ export default {
             },
           });
         }
+        yield put({
+          type: "calcDragScaleData",
+        });
       }
     },
-    *getDataContainerList(
-      { payload, cb }: any,
-      { call, put, select }: any
-    ): any {
+    *getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const dashboardId = bar.dashboardId || payload;
       const data = yield http({
@@ -979,8 +1051,7 @@ export default {
           },
         });
         if (data) {
-          bar.componentData[component.id] =
-            component.dataType !== "static" ? data : data.data;
+          bar.componentData[component.id] = component.dataType !== "static" ? data : data.data;
         } else {
           throw new Error("请求不到数据");
         }
@@ -992,18 +1063,13 @@ export default {
         componentData: bar.componentData,
       });
     },
-    *componentsBindContainer(
-      { payload }: any,
-      { call, put, select }: any
-    ): any {
+    *componentsBindContainer({ payload }: any, { call, put, select }: any): any {
       const { componentConfig, dataContainerIds } = payload;
-      componentConfig.dataContainers = dataContainerIds.map(
-        (id: string, index: number) => ({
-          id,
-          enable: true,
-          rank: index,
-        })
-      );
+      componentConfig.dataContainers = dataContainerIds.map((id: string, index: number) => ({
+        id,
+        enable: true,
+        rank: index,
+      }));
       yield put({
         type: "setComponentConfig",
         payload: componentConfig,
@@ -1012,9 +1078,41 @@ export default {
         type: "updateContainersEnableAndModules",
       });
     },
+    *deleteSomeLayersFromFullAmountLayers({ payload }: any, { call, put, select }: any): any {
+      const deleteLayerIds = payload.reduce(
+        (pre: Array<string>, cur: { id: string; children: Array<any> }) => pre.concat(cur.id),
+        []
+      );
+      const bar: any = yield select(({ bar }: any) => bar);
+      deepForEach(bar.fullAmountLayers, (layer: any, index: number, parent: any) => {
+        if (layer?.modules?.length === 0) {
+          parent.splice(index, 1);
+        }
+        if (deleteLayerIds.includes(layer.id)) {
+          const realIndex = parent.findIndex((item: any) => item && item?.id === layer.id);
+          parent.splice(realIndex, 1);
+        }
+      });
+      // deepForEach(bar.fullAmountLayers, (layer: any, index: number, parent: any) => {
+      //   if (layer?.modules?.length === 0) {
+      //     parent.splice(index, 1)
+      //   }
+      //   parent.forEach((item: any, index: number) => {
+      //     if (!item) {
+      //       parent.splice(index, 1)
+      //     }
+      //   })
+      // })
+      // deepForEach(bar.fullAmountLayers, (layer: any, index: number, parent: any) => {
+      //   if (layer.modules.length === 0) {
+      //     parent.splice(index, 1)
+      //   }
+      // })
+      console.log("bar.fullAmountLayers", bar.fullAmountLayers);
+    },
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
-      const curWorkspace:any = localStorage.getItem("curWorkspace");
+      const curWorkspace: any = localStorage.getItem("curWorkspace");
       const spaceId = JSON.parse(curWorkspace)?.id;
       const data = yield http({
         url: `/visual/resource/queryResourceTypeList?spaceId=${spaceId}`,
@@ -1051,10 +1149,7 @@ export default {
       });
       cb(data.content);
     },
-    *setComponentConfigAndCalcDragScaleData(
-      { payload, cb }: any,
-      { call, put }: any
-    ): any {
+    *setComponentConfigAndCalcDragScaleData({ payload, cb }: any, { call, put }: any): any {
       yield put({
         type: "setComponentConfig",
         payload,
@@ -1075,37 +1170,38 @@ export default {
       });
       if (bar.panelStatesList.length === 0) {
         yield put({
-          type: "save",
-          payload: {
-            panelStatesList: bar.panelStatesList.concat({
-              name: data.name,
-              id: data.id,
-            }),
-          },
-        });
-        yield put({
-          type: 'selectPanelState',
+          type: "selectPanelState",
           payload: {
             stateId: data.id,
-          }
-        })
-      } else {
-        yield put({
-          type: "save",
-          payload: {
-            panelStatesList: bar.panelStatesList.concat({
-              name: data.name,
-              id: data.id,
-            }),
           },
         });
       }
+      yield put({
+        type: "save",
+        payload: {
+          panelStatesList: bar.panelStatesList.concat({
+            name: data.name,
+            id: data.id,
+          }),
+        },
+      });
+      // 将状态添加到全量图层树种 0 - fullAmountLayers，也就是当前面板 panelId 下的 modules中
+      // todo 需要给 fullAmountDashboardDetails 添加当前状态的 详情
+      const { id, name } = data;
+      console.log("insertId: bar.panelId ", bar.panelId);
+      yield put({
+        type: "addComponent",
+        payload: { final: { name, id, modules: [] }, insertId: bar.panelId },
+        fullAmountPayload: "children",
+        isComponent: false,
+      });
     },
     *deletePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { panelId, dashboardId, panelStatesList } = bar;
       const { stateId } = payload;
       try {
+        // todo 如果删除的是自身的话才需要默认选择第一个状态
         const data = yield http({
           url: "/visual/panel/state/delete",
           method: "post",
@@ -1121,22 +1217,31 @@ export default {
         panelStatesList.splice(index, 1);
         if (panelStatesList.length > 0) {
           const toStateId = panelStatesList[0].id;
-          yield put({
-            type: "save",
-            payload: {
-              panelStatesList,
-              stateId: toStateId,
-            },
-          });
-          yield put({
-            type: "getDashboardDetails",
-          });
+          if (toStateId === stateId) {
+            yield put({
+              type: "save",
+              payload: {
+                panelStatesList,
+              },
+            });
+          } else {
+            yield put({
+              type: "save",
+              payload: {
+                panelStatesList,
+                stateId: toStateId,
+              },
+            });
+            yield put({
+              type: "getDashboardDetails",
+            });
+          }
         } else {
           yield put({
             type: "save",
             payload: {
               treeData: [],
-              stateId: '',
+              stateId: "",
             },
           });
         }
@@ -1183,10 +1288,7 @@ export default {
       //   }
       // })
     },
-    *selectPanelState(
-      { payload: { stateId } }: any,
-      { call, put, select }: any
-    ): any {
+    *selectPanelState({ payload: { stateId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       if (stateId !== bar.stateId) {
         yield put({
@@ -1222,10 +1324,7 @@ export default {
         });
       }
     },
-    *createDynamicPanel(
-      { payload: { stateId } }: any,
-      { call, put, select }: any
-    ): any {},
+    *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {},
   },
 
   reducers: {
@@ -1248,21 +1347,15 @@ export default {
     },
     deleteDataContainer(state: IBarState, { payload }: any) {
       const { containerId, componentIds } = payload;
-      let index = state.dataContainerDataList.findIndex(
-        (item: any) => item.id === containerId
-      );
+      let index = state.dataContainerDataList.findIndex((item: any) => item.id === containerId);
       state.dataContainerDataList.splice(index, 1);
-      index = state.dataContainerList.findIndex(
-        (item: any) => item.id === containerId
-      );
+      index = state.dataContainerList.findIndex((item: any) => item.id === containerId);
       state.dataContainerList.splice(index, 1);
 
       // 组件解绑数据容器
       componentIds.forEach((id: string) => {
         const component = state.components.find((item) => item.id === id);
-        const index = component.dataContainers.findIndex(
-          (item: any) => item.id === containerId
-        );
+        const index = component.dataContainers.findIndex((item: any) => item.id === containerId);
         component.dataContainers.splice(index, 1);
       });
 
@@ -1281,9 +1374,7 @@ export default {
       const container = state.dataContainerDataList.find(
         (item: any) => item.id === containerData.id
       );
-      const index = state.dataContainerList.findIndex(
-        (item: any) => item.id === containerData.id
-      );
+      const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
       if (data) {
         if (container) {
           // container 存在，说明是修改
@@ -1317,33 +1408,72 @@ export default {
       });
       return { ...state, treeData: payload };
     },
-    // 更新树
-    updateTree(state: IBarState, { payload }: any) {
-      const extendedSomeAttrLayers = addSomeAttrInLayers(payload);
-      // TODO  涉及到后面的回收站逻辑
-      /** 图层部分接口(删除图层)返回的数据结构为 { layers: [], recycleItems: []},
-      部分其它接口返回的数据结构为layers数组, layers: [] */
-      const targetTreeData = Array.isArray(extendedSomeAttrLayers)
-        ? extendedSomeAttrLayers
-        : extendedSomeAttrLayers.layers;
-      const noEmptyGroupLayers = filterEmptyGroups(targetTreeData);
-      return { ...state, treeData: noEmptyGroupLayers };
-    },
+
     // 添加新的图层和组件
-    addLayer(state: IBarState, { payload }: any) {
-      let insertId: string;
+    addLayer(
+      state: IBarState,
+      { payload, fullAmountPayload = "brother", isComponent = true }: any
+    ) {
+      let insertId: string,
+        fullInsertId: string,
+        newLayers: Array<any> = [];
       const { treeData } = state;
       if (payload.insertId && treeData.length) {
         insertId = payload.insertId;
+        fullInsertId = payload.insertId;
       } else {
         insertId = treeData.length !== 0 ? treeData[0].id : "";
+        fullInsertId = treeData.length !== 0 ? treeData[0].id : state.stateId ? state.stateId : "";
       }
-      const newLayers = generateLayers(state.treeData, insertId, payload.final);
-      return { ...state, treeData: newLayers };
+      const { modules, ...finalConfig } = payload.final;
+      console.log("fullInsertId", fullInsertId);
+      console.log("payload", payload);
+      // JSON.stringify(fullAmountPayload) === '{}' 的话，那么就说明是新建面板，新建面板要考虑到状态下是没有组件的
+      // fullAmountPayload 就是 insertId对应的“组件” 和 被插入的 ”组件“ 的关系
+      const newFullAmountLayers = generateLayers(
+        state.fullAmountLayers,
+        fullInsertId,
+        payload.final,
+        fullAmountPayload === "children"
+      );
+      if (isComponent) {
+        newLayers = generateLayers(state.treeData, insertId, finalConfig);
+        return { ...state, treeData: newLayers, fullAmountLayers: newFullAmountLayers };
+      }
+      return { ...state, fullAmountLayers: newFullAmountLayers };
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: { payload: Array<any> }) {
-      state.components = state.components.concat(payload);
+      if (Array.isArray(payload)) {
+        state.components = state.components.concat(payload);
+      } else {
+        const { layers, components, selected }: any = payload;
+        state.components = state.components.concat(components);
+        // @Mark 复制完成后需要将源组件的组件数据赋值给新复制出来的组件，即在bar.componentData中存储 {key：新组件id, value：源组件Data}
+        // 复制出来的组件的id
+        const thisTimeCopyCompIds = components.map((item: any) => {
+          return item.id;
+        });
+        // 复制 组 的时候，只有group_Id, 需要根据group_Id 将对应的componentId加入到数组中
+        const allSelectedCompIds = selected
+          .map((id: string) => {
+            if (id.startsWith("group_")) {
+              // 去layers中找到这个组下包含的各个组件
+              let res: any = [];
+              const targetGroup = layers.find((item: any) => item.id === id);
+              targetGroup.modules.forEach((x: any) => {
+                res.push(x.id);
+              });
+              return res;
+            }
+            return id;
+          })
+          .flat();
+
+        thisTimeCopyCompIds.forEach((id: string, index: number) => {
+          state.componentData[id] = state.componentData[allSelectedCompIds[index]];
+        });
+      }
       return { ...state };
     },
     // 添加新的图层和面板
@@ -1365,26 +1495,19 @@ export default {
           pre.push(findLayerById(state.treeData, cur));
           return pre;
         }, [])
-        .filter(
-          (layer: ILayerGroup | ILayerComponent) =>
-            !layer?.isLock && layer?.isShow
-        ); // 显示且未被锁
+        .filter((layer: ILayerGroup | ILayerComponent) => !layer?.isLock && layer?.isShow); // 显示且未被锁
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
       });
       // 左侧树多选
       state.isMultipleTree = true;
       state.isAreaChoose = state.selectedComponentOrGroup.length > 0;
-      state.selectedComponentIds = layerComponentsFlat(
-        state.selectedComponentOrGroup
-      );
+      state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       state.selectedComponents = [
         ...state.components.filter((component) =>
           state.selectedComponentIds.includes(component.id)
         ),
-        ...state.panels.filter((panel) =>
-          state.selectedComponentIds.includes(panel.id)
-        ),
+        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       state.selectedComponentRefs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
@@ -1408,9 +1531,7 @@ export default {
           const hideDefaultConfig = state.groupConfig.find(
             (config: any) => config.name === HIDE_DEFAULT
           );
-          const opacityConfig = state.groupConfig.find(
-            (config: any) => config.name === OPACITY
-          );
+          const opacityConfig = state.groupConfig.find((config: any) => config.name === OPACITY);
           const interactionConfig = state.groupConfig.find(
             (config: any) => config.name === INTERACTION
           );
@@ -1438,13 +1559,9 @@ export default {
           });
         } else {
           if ("panelType" in layer) {
-            state.panelConfig = state.selectedComponents.find(
-              (item) => item.id === layer.id
-            );
+            state.panelConfig = state.selectedComponents.find((item) => item.id === layer.id);
           } else {
-            state.componentConfig = state.selectedComponents.find(
-              (item) => item.id === layer.id
-            );
+            state.componentConfig = state.selectedComponents.find((item) => item.id === layer.id);
           }
         }
       }
@@ -1452,21 +1569,14 @@ export default {
         ...state,
       };
     },
-    updateSelectedComponents(
-      state: IBarState,
-      { payload, cb = function () {} }: any
-    ) {
-      state.selectedComponentIds = layerComponentsFlat(
-        state.selectedComponentOrGroup
-      );
+    updateSelectedComponents(state: IBarState, { payload, cb = function () {} }: any) {
+      state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       // todo 这里需要添加 panel 的（来自 develop 分支）
       state.selectedComponents = [
         ...state.components.filter((component) =>
           state.selectedComponentIds.includes(component.id)
         ),
-        ...state.panels.filter((panel) =>
-          state.selectedComponentIds.includes(panel.id)
-        ),
+        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       console.log("state.selectedComponents", state.selectedComponents);
       cb(state.selectedComponents);
@@ -1494,9 +1604,7 @@ export default {
         } else {
           // 单个组件
           if ("panelType" in firstLayer) {
-            const panel = state.panels.find(
-              (panel: IPanel) => panel.id === firstLayer.id
-            );
+            const panel = state.panels.find((panel: IPanel) => panel.id === firstLayer.id);
             if (panel) {
               const {
                 config: { left, top, width, height },
@@ -1507,9 +1615,7 @@ export default {
               yPositionList.push(top, height);
             }
           } else {
-            const component = state.components.find(
-              (component) => component.id === firstLayer.id
-            );
+            const component = state.components.find((component) => component.id === firstLayer.id);
             const dimensionConfig: any = component.config.find(
               (item: any) => item.name === DIMENSION
             );
@@ -1534,9 +1640,7 @@ export default {
               height: yPositionList[1],
             },
           };
-          state.key = state.selectedComponentOrGroup.map(
-            (item: ILayerComponent) => item.id
-          );
+          state.key = state.selectedComponentOrGroup.map((item: ILayerComponent) => item.id);
           return { ...state };
         }
       } else if (state.selectedComponentOrGroup.length > 1) {
@@ -1553,10 +1657,8 @@ export default {
       }
       xPositionList.sort((a, b) => a - b);
       yPositionList.sort((a, b) => a - b);
-      const width =
-        xPositionList[xPositionList.length - 1] - xPositionList[0] || 0;
-      const height =
-        yPositionList[yPositionList.length - 1] - yPositionList[0] || 0;
+      const width = xPositionList[xPositionList.length - 1] - xPositionList[0] || 0;
+      const height = yPositionList[yPositionList.length - 1] - yPositionList[0] || 0;
       state.scaleDragData = {
         position: {
           x: xPositionList[0] || 0,
@@ -1602,16 +1704,12 @@ export default {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
       });
-      state.selectedComponentIds = layerComponentsFlat(
-        state.selectedComponentOrGroup
-      );
+      state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       state.selectedComponents = [
         ...state.components.filter((component) =>
           state.selectedComponentIds.includes(component.id)
         ),
-        ...state.panels.filter((panel) =>
-          state.selectedComponentIds.includes(panel.id)
-        ),
+        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       return { ...state };
     },
@@ -1647,10 +1745,7 @@ export default {
       // calculateGroupPosition(childrenComponents.reverse());
       return copyState;
     },
-    moveGroupPosition(
-      state: IBarState,
-      { payload: { id, xMoveLength, yMoveLength } }: any
-    ) {
+    moveGroupPosition(state: IBarState, { payload: { id, xMoveLength, yMoveLength } }: any) {
       // const node = findNode(state.draggableItems, id);
       // moveChildrenComponents(node.components, xMoveLength, yMoveLength);
       // console.log("node", node);
@@ -1717,11 +1812,7 @@ export default {
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
-      const newTree = singleShowLayer(
-        state.treeData,
-        payload.keys,
-        payload.singleShowLayer
-      );
+      const newTree = singleShowLayer(state.treeData, payload.keys, payload.singleShowLayer);
       return { ...state, treeData: newTree };
     },
     // 隐藏
@@ -1741,10 +1832,7 @@ export default {
       return { ...state, treeData: newTree };
     },
     mergeComponentLayers(state: IBarState, { payload }: any) {
-      state.componentLayers = mergeComponentLayers(
-        state.components,
-        state.treeData
-      );
+      state.componentLayers = mergeComponentLayers(state.components, state.treeData);
       return { ...state };
     },
     test(state: IBarState, { payload }: any) {
@@ -1761,20 +1849,15 @@ export default {
     save(state: IBarState, { payload }: any) {
       return { ...state, ...payload };
     },
-    selectComponentOrGroup(
-      state: IBarState,
-      { payload: { layer, config } }: any
-    ) {
+    selectComponentOrGroup(state: IBarState, { payload: { layer, config } }: any) {
       // 这里的 layer 代表的是 group / component
       // 是否支持多选
       if (state.isSupportMultiple) {
         // 多选
         layer.selected = true;
         // 如果 selectedComponentOrGroup 里不存在当前点击的组件/分组的话，就添加
-        if (
-          !state.selectedComponentOrGroup.find((item) => item.id === layer.id)
-        ) {
-          (state.selectedComponentOrGroup as any).push(layer);
+        if (!state.selectedComponentOrGroup.find((item) => item.id === layer.id)) {
+          ;(state.selectedComponentOrGroup as any).push(layer);
         }
       } else {
         // 单选
@@ -1789,9 +1872,7 @@ export default {
         state.selectedComponentOrGroup = [layer];
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
-      state.selectedComponentIds = layerComponentsFlat(
-        state.selectedComponentOrGroup
-      );
+      state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       state.selectedComponentRefs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
@@ -1800,8 +1881,10 @@ export default {
         }
       });
       state.selectedComponents = [
-        ...state.components.filter((component) => state.selectedComponentIds.includes(component.id)),
-        ...state.panels.filter((panel) =>state.selectedComponentIds.includes(panel.id))
+        ...state.components.filter((component) =>
+          state.selectedComponentIds.includes(component.id)
+        ),
+        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       return {
         ...state,
@@ -1893,12 +1976,8 @@ export default {
       const hideDefaultConfig = state.groupConfig.find(
         (config: any) => config.name === HIDE_DEFAULT
       );
-      const opacityConfig = state.groupConfig.find(
-        (config: any) => config.name === OPACITY
-      );
-      const interactionConfig = state.groupConfig.find(
-        (config: any) => config.name === INTERACTION
-      );
+      const opacityConfig = state.groupConfig.find((config: any) => config.name === OPACITY);
+      const interactionConfig = state.groupConfig.find((config: any) => config.name === INTERACTION);
       hideDefaultConfig.value = hideDefault || false;
       opacityConfig.value = opacity || 100;
       interactionConfig.value = {
@@ -1928,10 +2007,16 @@ export default {
         position: { x, y },
         style: { width, height },
       } = state.scaleDragData;
+      console.log("框选的组件/面板或者组", state.selectedComponentOrGroup);
+      console.log("x", x);
+      console.log("y", y);
+      console.log("width", width);
+      console.log("height", height);
       state.selectedComponentOrGroup.forEach((layer) => {
         if (COMPONENTS in layer) {
           // 组
           // 当前 layer 所包含的所有组件的 id 数组
+          // layerDom 当前组的dom
           const layerDom: HTMLDivElement | any = document.querySelector(
             `.react-draggable[data-id=${layer.id}]`
           );
@@ -1950,107 +2035,135 @@ export default {
             layerWidth = Number(layerDom.style.width.replace("px", ""));
             layerHeight = Number(layerDom.style.height.replace("px", ""));
           }
-          const componentIds = layerComponentsFlat(layer[COMPONENTS]);
+          const componentAndPanelIds = layerComponentsFlat(layer[COMPONENTS]);
           // 通过 id 筛选出当前组的组件
-          const components = state.selectedComponents.filter((component: any) =>
-            componentIds.includes(component.id)
+          const componentsAndPanels = state.selectedComponents.filter((item: any) =>
+            componentAndPanelIds.includes(item.id)
           );
-          components.forEach((component: any) => {
-            const dimensionConfig = component.config.find(
-              (item: any) => item.name === DIMENSION
-            ).value;
-            if (dimensionConfig) {
+          console.log("框选的组件", componentsAndPanels);
+          componentsAndPanels.forEach((item: any) => {
+            if ("type" in item) {
+              // 面板
               switch (payload) {
                 case "top":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y - layerY) as any },
-                    "add"
-                  );
+                  item.config.top = item.config.top + (y - layerY);
                   break;
                 case "bottom":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y + height - (layerY + layerHeight)) as any },
-                    "add"
-                  );
+                  item.config.top = item.config.top + (y + height - (layerY + layerHeight));
                   break;
                 case "left":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x - layerX) as any },
-                    "add"
-                  );
+                  item.config.left = item.config.left + (x - layerX);
                   break;
                 case "right":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x + width - (layerX + layerWidth)) as any },
-                    "add"
-                  );
+                  item.config.left = item.config.left + (x + width - (layerX + layerWidth));
                   break;
                 case "vertical":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y + height / 2 - (layerY + layerHeight / 2)) as any },
-                    "add"
-                  );
+                  item.config.top = item.config.top + (y + height / 2 - (layerY + layerHeight / 2));
                   break;
                 case "horizontal":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x + width / 2 - (layerX + layerWidth / 2)) as any },
-                    "add"
-                  );
+                  item.config.left = item.config.left + (x + width / 2 - (layerX + layerWidth / 2));
                   break;
+                default:
+                  break;
+              }
+            } else {
+              // 组件
+              const dimensionConfig = item.config.find((item: any) => item.name === DIMENSION).value;
+              if (dimensionConfig) {
+                switch (payload) {
+                  case "top":
+                    setComponentDimension(dimensionConfig, { y: (y - layerY) as any }, "add");
+                    break;
+                  case "bottom":
+                    setComponentDimension(
+                      dimensionConfig,
+                      { y: (y + height - (layerY + layerHeight)) as any },
+                      "add"
+                    );
+                    break;
+                  case "left":
+                    setComponentDimension(dimensionConfig, { x: (x - layerX) as any }, "add");
+                    break;
+                  case "right":
+                    setComponentDimension(
+                      dimensionConfig,
+                      { x: (x + width - (layerX + layerWidth)) as any },
+                      "add"
+                    );
+                    break;
+                  case "vertical":
+                    setComponentDimension(
+                      dimensionConfig,
+                      { y: (y + height / 2 - (layerY + layerHeight / 2)) as any },
+                      "add"
+                    );
+                    break;
+                  case "horizontal":
+                    setComponentDimension(
+                      dimensionConfig,
+                      { x: (x + width / 2 - (layerX + layerWidth / 2)) as any },
+                      "add"
+                    );
+                    break;
+                }
               }
             }
           });
         } else {
-          // 组件
-          const component = state.selectedComponents.find(
-            (component: any) => component.id === layer.id
-          );
-          if (component) {
-            const dimensionConfig = component.config.find(
-              (item: any) => item.name === DIMENSION
-            ).value;
-            if (dimensionConfig) {
-              switch (payload) {
-                case "top":
-                  setComponentDimension(dimensionConfig, { y }, "set");
-                  break;
-                case "bottom":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: y + height },
-                    "update"
-                  );
-                  break;
-                case "left":
-                  setComponentDimension(dimensionConfig, { x }, "set");
-                  break;
-                case "right":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: x + width },
-                    "update"
-                  );
-                  break;
-                case "vertical":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { y: (y + height / 2) as any },
-                    "center"
-                  );
-                  break;
-                case "horizontal":
-                  setComponentDimension(
-                    dimensionConfig,
-                    { x: (x + width / 2) as any },
-                    "center"
-                  );
-                  break;
+          if ("panelType" in layer) {
+            const panel = state.selectedComponents.find((item: any) => item.id === layer.id);
+            switch (payload) {
+              case "top":
+                panel.config.top = y;
+                break;
+              case "bottom":
+                panel.config.top = y + height - panel.config.height;
+                break;
+              case "left":
+                panel.config.left = x;
+                break;
+              case "right":
+                panel.config.left = x + width - panel.config.width;
+                break;
+              case "vertical":
+                panel.config.top = y + height / 2 - panel.config.height / 2;
+                break;
+              case "horizontal":
+                panel.config.left = x + width / 2 - panel.config.width / 2;
+                break;
+              default:
+                break;
+            }
+          } else {
+            // 组件
+            const component = state.selectedComponents.find(
+              (component: any) => component.id === layer.id
+            );
+            if (component) {
+              const dimensionConfig = component.config.find(
+                (item: any) => item.name === DIMENSION
+              ).value;
+              if (dimensionConfig) {
+                switch (payload) {
+                  case "top":
+                    setComponentDimension(dimensionConfig, { y }, "set");
+                    break;
+                  case "bottom":
+                    setComponentDimension(dimensionConfig, { y: y + height }, "update");
+                    break;
+                  case "left":
+                    setComponentDimension(dimensionConfig, { x }, "set");
+                    break;
+                  case "right":
+                    setComponentDimension(dimensionConfig, { x: x + width }, "update");
+                    break;
+                  case "vertical":
+                    setComponentDimension(dimensionConfig, { y: (y + height / 2) as any }, "center");
+                    break;
+                  case "horizontal":
+                    setComponentDimension(dimensionConfig, { x: (x + width / 2) as any }, "center");
+                    break;
+                }
               }
             }
           }
@@ -2070,31 +2183,29 @@ export default {
         position: { x, y },
         style: { width, height },
       } = state.scaleDragData;
-      const xSortLayers: any = state.selectedComponentOrGroup.sort(
-        (a: any, b: any) => {
-          const aIsGroup = COMPONENTS in a;
-          const bIsGroup = COMPONENTS in b;
-          const aDom: HTMLDivElement | any = document.querySelector(
-            `.react-draggable[data-id=${aIsGroup ? a.id : "component-" + a.id}]`
-          );
-          const bDom: HTMLDivElement | any = document.querySelector(
-            `.react-draggable[data-id=${bIsGroup ? b.id : "component-" + b.id}]`
-          );
-          const aTranslateArr = aDom.style.transform
-            .replace("translate(", "")
-            .replace(")", "")
-            .replaceAll("px", "")
-            .split(", ");
-          const aLayerX = Number(aTranslateArr[0]);
-          const bTranslateArr = bDom.style.transform
-            .replace("translate(", "")
-            .replace(")", "")
-            .replaceAll("px", "")
-            .split(", ");
-          const bLayerX = Number(bTranslateArr[0]);
-          return aLayerX - bLayerX;
-        }
-      );
+      const xSortLayers: any = state.selectedComponentOrGroup.sort((a: any, b: any) => {
+        const aIsGroup = COMPONENTS in a;
+        const bIsGroup = COMPONENTS in b;
+        const aDom: HTMLDivElement | any = document.querySelector(
+          `.react-draggable[data-id=${aIsGroup ? a.id : "component-" + a.id}]`
+        );
+        const bDom: HTMLDivElement | any = document.querySelector(
+          `.react-draggable[data-id=${bIsGroup ? b.id : "component-" + b.id}]`
+        );
+        const aTranslateArr = aDom.style.transform
+          .replace("translate(", "")
+          .replace(")", "")
+          .replaceAll("px", "")
+          .split(", ");
+        const aLayerX = Number(aTranslateArr[0]);
+        const bTranslateArr = bDom.style.transform
+          .replace("translate(", "")
+          .replace(")", "")
+          .replaceAll("px", "")
+          .split(", ");
+        const bLayerX = Number(bTranslateArr[0]);
+        return aLayerX - bLayerX;
+      });
       const xLength = xSortLayers.length;
       //
       const xFirstLayer = xSortLayers[0]; // 第一个
@@ -2105,35 +2216,26 @@ export default {
         COMPONENTS in xLastLayer ? xLastLayer.id : `component-${xLastLayer.id}`
       );
       const xFirstLayerData = getLayerDimensionByDomId(
-        COMPONENTS in xFirstLayer
-          ? xFirstLayer.id
-          : `component-${xFirstLayer.id}`
+        COMPONENTS in xFirstLayer ? xFirstLayer.id : `component-${xFirstLayer.id}`
       );
       const xLastPreLayerData = getLayerDimensionByDomId(
-        COMPONENTS in xLastPreLayer
-          ? xLastPreLayer.id
-          : `component-${xLastPreLayer.id}`
+        COMPONENTS in xLastPreLayer ? xLastPreLayer.id : `component-${xLastPreLayer.id}`
       );
 
-      const remainingSpaceWidth =
-        width - xLastPreLayerData.width - xFirstLayerData.width;
+      const remainingSpaceWidth = width - xLastPreLayerData.width - xFirstLayerData.width;
 
       // RemainingWidth 是除了前后两个 layer 宽度后的大小
 
-      const remainingTotalWidth = xSortLayers.reduce(
-        (width: number, layer: any, index: number) => {
-          if (index === 0 || index === xSortLayers.length - 1) {
-            return width;
-          }
-          const layerData = getLayerDimensionByDomId(
-            COMPONENTS in layer ? layer.id : `component-${layer.id}`
-          );
-          return width + layerData.width;
-        },
-        0
-      );
-      const xSpace =
-        (remainingSpaceWidth - remainingTotalWidth) / (xSortLayers.length - 1);
+      const remainingTotalWidth = xSortLayers.reduce((width: number, layer: any, index: number) => {
+        if (index === 0 || index === xSortLayers.length - 1) {
+          return width;
+        }
+        const layerData = getLayerDimensionByDomId(
+          COMPONENTS in layer ? layer.id : `component-${layer.id}`
+        );
+        return width + layerData.width;
+      }, 0);
+      const xSpace = (remainingSpaceWidth - remainingTotalWidth) / (xSortLayers.length - 1);
       // distance 是当前 scaleDragData 的 x 值，即整个选择的区域内距离画布左侧的值
       xSortLayers.reduce((distance: number, layer: any, index: any) => {
         if (index === 0) {
@@ -2154,8 +2256,8 @@ export default {
               const componentIds = layerComponentsFlat(layer[COMPONENTS]);
               // 通过 id 筛选出当前组的组件
               // 现在知道 distance + xSpace 是一个组/组件的位置, 所有 distance + xSpace - layerX， 让组里的每个组件的位置都增加这个值
-              const components = state.selectedComponents.filter(
-                (component: any) => componentIds.includes(component.id)
+              const components = state.selectedComponents.filter((component: any) =>
+                componentIds.includes(component.id)
               );
               components.forEach((component: any) => {
                 const dimensionConfig = component.config.find(
@@ -2177,17 +2279,12 @@ export default {
                 (item: any) => item.name === DIMENSION
               ).value;
               if (dimensionConfig) {
-                setComponentDimension(
-                  dimensionConfig,
-                  { x: null },
-                  "callback",
-                  (data: any) => {
-                    return {
-                      x: x + width - (data.width + data.left),
-                      type: "add",
-                    };
-                  }
-                );
+                setComponentDimension(dimensionConfig, { x: null }, "callback", (data: any) => {
+                  return {
+                    x: x + width - (data.width + data.left),
+                    type: "add",
+                  };
+                });
               }
             }
           }
@@ -2271,6 +2368,69 @@ export default {
     // 获取系统素材数据
     setSystemMaterialList(state: any, { payload }: any) {
       return { ...state, systemMaterialList: payload };
+    },
+    selectSingleComponent(state: any, { payload }: any) {
+      return {
+        ...state,
+      };
+    },
+    selectSinglePanel(state: any, { payload }: any) {
+      return {
+        ...state,
+      };
+    },
+    selectSingleGroup(state: any, { payload }: any) {
+      return {
+        ...state,
+      };
+    },
+    selectMultipleLayers(state: any, { payload }: any) {
+      return {
+        ...state,
+      };
+    },
+    updateFullAmountLayers(state: any, { payload }: any) {
+      const { treeData: layers, fullAmountDashboardDetails } = state;
+
+      let fullAmountDynamicAndDrillDownPanels: any = fullAmountDashboardDetails.filter(
+        (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)
+      );
+      fullAmountDynamicAndDrillDownPanels = fullAmountDynamicAndDrillDownPanels.map(
+        ({ id, type, name, states }: IFullAmountDashboardDetail) => ({
+          id,
+          panelType: type,
+          name,
+          modules: (states as Array<IPanelState>).map(({ id, name }) => ({
+            id,
+            modules: fullAmountDashboardDetails.find(
+              (item: IFullAmountDashboardDetail) => item.id === id
+            ).layers,
+            name,
+          })),
+        })
+      );
+      const fullAmountLayers = deepForEach(
+        deepClone(fullAmountDashboardDetails[0].layers),
+        (
+          layer:
+            | ILayerPanel
+            | (Pick<ILayerPanel, "name" | "id" | "panelType"> & { modules: any })
+            | ILayerGroup
+            | ILayerComponent,
+          index: number
+        ) => {
+          if ("panelType" in layer && layer.panelType === 0) {
+            ;(layer as any).modules =
+              fullAmountDynamicAndDrillDownPanels.find((item: any) => item.id === layer.id)
+                ?.modules || [];
+          }
+        }
+      );
+      return {
+        ...state,
+        fullAmountLayers,
+        fullAmountDynamicAndDrillDownPanels,
+      };
     },
   },
 };

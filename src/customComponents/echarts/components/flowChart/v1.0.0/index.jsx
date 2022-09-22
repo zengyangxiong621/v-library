@@ -16,6 +16,9 @@ const remToPx = (res) => {
 class FlowChart extends  React.PureComponent{
   constructor(props) {
     super(props);
+    this.state = {
+      myChart: null
+    }
   }
 
   componentDidMount() {
@@ -55,6 +58,7 @@ class FlowChart extends  React.PureComponent{
   }
   
   getgGraphOptions = (options, config) => {
+    const { fields } = this.props
     // 标签文字
     const labelFont = this.formatConfig([this.getStyleData(config, 'labelFont')],[]).labelFont
     const nodeFont = this.formatConfig([this.getStyleData(config, 'nodeFont')],[]).nodeFont
@@ -74,10 +78,10 @@ class FlowChart extends  React.PureComponent{
       const {
         x, y, nodeName, type, svgPath, symbolSize, startColor, endColor,
       } = nodes[j];
-      const match = options.find(item => item.name === nodeName && item.type === type);
+      const match = options.find(item => item[fields[0]] === nodeName && item[fields[1]] === type);
       // 是否告警
-      const sColor = match && match.alert ? warningConfig.nodeStartColor : startColor;
-      const eColor = match && match.alert ? warningConfig.nodeEndColor : endColor;
+      const sColor = match && match[fields[3]] ? warningConfig.nodeStartColor : startColor;
+      const eColor = match && match[fields[3]] ? warningConfig.nodeEndColor : endColor;
       var node = {
         nodeName,
         value: [x, y],
@@ -118,8 +122,8 @@ class FlowChart extends  React.PureComponent{
       } = labelNodes[i];
       customData.count_unit = '';
       customData.rate_unit = '';
-      const matchNode = options.find(item => item.name === name && item.type === type);
-      customData = matchNode ? JSON.parse(JSON.stringify(matchNode.data)) : customData;
+      const matchNode = options.find(item => item[fields[0]] === name && item[fields[1]] === type);
+      customData = matchNode && matchNode[fields[2]]  ? JSON.parse(JSON.stringify(matchNode[fields[2]])) : customData;
       var node = {
         nodeName: name,
         value: [x, y],
@@ -138,9 +142,9 @@ class FlowChart extends  React.PureComponent{
       const {
         type, coords,
       } = linesData[j];
-      const match = options.find(item => item.type === type);
+      const match = options.find(item => item[fields[1]] === type);
       // 是否告警
-      const lineColor = match && match.line_alert ? warningConfig.lineColor : linesData[j].lineColor;
+      const lineColor = match && match[fields[4]] ? warningConfig.lineColor : linesData[j].lineColor;
       const label = {
         coords,
         lineStyle: {
@@ -263,9 +267,12 @@ class FlowChart extends  React.PureComponent{
   };
 
   getOptions() {
+    const { comData,fields } = this.props
     const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const {config, staticData} = componentConfig
-    const options = this.getgGraphOptions(staticData.data, config);
+    // 组件静态或者传入组件的数据
+    let originData = comData || staticData.data
+    const options = this.getgGraphOptions(originData, config);
     return options;
   }
 
@@ -273,6 +280,9 @@ class FlowChart extends  React.PureComponent{
     const dom = document.getElementById(`${this.props.componentConfig.id}`)
     const myChart = echarts.init(dom)
     myChart.setOption(this.getOptions());
+    this.setState({
+      myChart
+    })
   }
 
   // 通过name获取config中对应的数据
@@ -310,10 +320,15 @@ class FlowChart extends  React.PureComponent{
   }
 
   render(){
+    const {myChart} = this.state
     const { comData,fields } = this.props
     const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const {config, staticData} = componentConfig
     const dimension = this.formatConfig([this.getStyleData(config, 'dimension')],[])
+    if(myChart){
+      myChart.resize();
+      myChart.setOption(this.getOptions());
+    }
 
     return (
       <div className="flow-chart" 

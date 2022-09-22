@@ -187,8 +187,7 @@ const DataSource = (props: any) => {
       [`${type}SourceConfig`]: {
         fileUrl
       }
-    });
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    })
     const data = await http({
       url: "/visual/datasource/update",
       method: "post",
