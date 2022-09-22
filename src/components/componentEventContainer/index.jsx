@@ -440,13 +440,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                   >
                   </BasicBar>
                   :
-                  // props.componentConfig.moduleName === 'worldMap' ?
-                  // <WorldMap
-                  //   onChange={handleValueChange}
-                  //   {...props}
-                  // >
-                  // </WorldMap>
-                  // :
                   // props.componentConfig.moduleName === 'chinaMap' ?
                   // <ChinaMap
                   //   onChange={handleValueChange}
