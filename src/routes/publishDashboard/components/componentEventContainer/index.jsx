@@ -9,6 +9,7 @@ import CusImage from '@/customComponents/assist/image/v1.0.2/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap/v1.6.4'
 import WorldMap from '@/customComponents/echarts/components/worldMap/v1.1.5'
+import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.4"
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 import Tab from '@/customComponents/interactive/tab'
@@ -448,61 +449,62 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
                     >
                     </WorldMap>
                     :
-                    // props.componentConfig.moduleName === 'chinaMap' ?
-                    // <ChinaMap
-                    //   onChange={handleValueChange}
-                    //   {...props}
-                    // >
-                    // </ChinaMap>
-                    // :
-                    props.componentConfig.moduleName === 'select2' ?
-                      <SelectV2
-                        onChange={handleValueChange}
+                    props.componentConfig.moduleName === 'indicatorcard' ?
+                      <IndicatorCard
                         {...props}
                       >
-                      </SelectV2>
+                      </IndicatorCard>
                       :
-                      props.componentConfig.moduleName === 'bar' ?
-                        <Bar
+                      // props.componentConfig.moduleName === 'chinaMap' ?
+                      // <ChinaMap
+                      //   onChange={handleValueChange}
+                      //   {...props}
+                      // >
+                      // </ChinaMap>
+                      // :
+                      props.componentConfig.moduleName === 'select2' ?
+                        <SelectV2
                           onChange={handleValueChange}
                           {...props}
                         >
-                        </Bar>
+                        </SelectV2>
                         :
-                        props.componentConfig.moduleName === 'scrollTable' ?
-                          <ScrollTable
-                            scale={scale}
+                        props.componentConfig.moduleName === 'bar' ?
+                          <Bar
                             onChange={handleValueChange}
                             {...props}
                           >
-                          </ScrollTable>
-                          : props.componentConfig.moduleName === 'tab' ?
-                            <Tab
-                              onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-                              onClick={handleClick}
-                              onMouseEnter={handleMouseEnter}
-                              onMouseLeave={handleMouseLeave}
+                          </Bar>
+                          :
+                          props.componentConfig.moduleName === 'scrollTable' ?
+                            <ScrollTable
+                              scale={scale}
+                              onChange={handleValueChange}
                               {...props}
                             >
-                            </Tab>
-                            : props.componentConfig.moduleName === 'scrollSelect' ?
-                              <ScrollSelect
-                                onChange={handleValueChange}
+                            </ScrollTable>
+                            : props.componentConfig.moduleName === 'tab' ?
+                              <Tab
+                                onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+                                onClick={handleClick}
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
                                 {...props}
                               >
-                              </ScrollSelect>
-                              : props.componentConfig.moduleName === 'timeSelect' ?
-                                <TimeSelect
-                                  scale={scale}
+                              </Tab>
+                              : props.componentConfig.moduleName === 'scrollSelect' ?
+                                <ScrollSelect
                                   onChange={handleValueChange}
                                   {...props}
                                 >
-                                </TimeSelect>
-                                : props.componentConfig.moduleName === 'worldMap' ?
-                                  <WorldMap
+                                </ScrollSelect>
+                                : props.componentConfig.moduleName === 'timeSelect' ?
+                                  <TimeSelect
+                                    scale={scale}
+                                    onChange={handleValueChange}
                                     {...props}
                                   >
-                                  </WorldMap>
+                                  </TimeSelect>
                                   : props.componentConfig.moduleName === 'timeline' ?
                                     <Timeline
                                       {...props}

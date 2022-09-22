@@ -499,6 +499,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
                               </TimeSelect>
                               : props.componentConfig.moduleName === 'worldMap' ?
                                 <WorldMap
+                                  onChange={handleValueChange}
                                   {...props}
                                 >
                                 </WorldMap>
