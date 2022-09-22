@@ -4,7 +4,8 @@ import { useState, useRef } from "react"
 import TimeSelect from "@/customComponents/interactive/timeSelect"
 import ScrollTable from "@/customComponents/table/scrollTable"
 import Bar from "@/customComponents/echarts/components/bar/index"
-import SelectV2 from "@/customComponents/assist/select/v1.0.2/index"
+import SelectV2 from "@/customComponents/assist/select/v1.0.3/index"
+import ButtomGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
 import CusImage from "@/customComponents/assist/image/v1.0.2/index"
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1"
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3"
@@ -224,7 +225,7 @@ const ComponentEventContainer = ({
                   activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                   // 值是否改变
                   // data的值存在并且
-                } else if (component.moduleName === "cascader" || 'select2'){
+                } else if (component.moduleName === "cascader" || 'select2') {
                   temp = true
                   callbackArgs[callback.target] = data[callback.origin]
                   activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
@@ -565,40 +566,70 @@ const ComponentEventContainer = ({
           //   onChange={handleValueChange}
           //   {...props}
           // >
-          // </CardFlipper1>
-          // : props.componentConfig.moduleName === 'CardFlipper_2' ?
-          // <CardFlipper2
-          //   scale={scale}
-          //   onChange={handleValueChange}
-          //   {...props}
-          // >
-          // </CardFlipper2>
-          props.componentConfig.moduleName === "instrumentPanel_3" ? (
-            <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-          ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-            <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-          ) : (
-            <ErrorCatch
-              app={componentConfig.name}
-              user=""
-              token=""
-              max={1}
-              errorRender={
-                <RemoteComponentErrorRender
-                  errorComponent={componentConfig.name}
-                ></RemoteComponentErrorRender>
-              }
-              onCatch={(errors) => {
-                console.log("组件报错信息：", errors, "组件id", componentConfig.id)
-              }}
-            >
-              <RemoteBaseComponent
-                {...props}
-                scale={scale}
-                onChange={handleValueChange}
-              ></RemoteBaseComponent>
-            </ErrorCatch>
-          )}
+          // </ChinaMap>
+          // :
+          props.componentConfig.moduleName === "select2" ? (
+            <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
+          ) : props.componentConfig.moduleName === "buttonGroup2" ? (
+            <ButtomGroup onChange={handleValueChange} {...props}></ButtomGroup>
+          ) : props.componentConfig.moduleName === "bar" ? (
+            <Bar onChange={handleValueChange} {...props}></Bar>
+          ) : props.componentConfig.moduleName === "scrollTable" ? (
+            <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
+          ) : props.componentConfig.moduleName === "tab" ? (
+            <Tab
+              onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+              onClick={handleClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              {...props}
+            ></Tab>
+          ) : props.componentConfig.moduleName === "scrollSelect" ? (
+            <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
+          ) : props.componentConfig.moduleName === "timeSelect" ? (
+            <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
+          ) : props.componentConfig.moduleName === "timeline" ? (
+            <Timeline {...props}></Timeline>
+          ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+            // <CardFlipper1
+            //   scale={scale}
+            //   onChange={handleValueChange}
+            //   {...props}
+            // >
+            // </CardFlipper1>
+            // : props.componentConfig.moduleName === 'CardFlipper_2' ?
+            // <CardFlipper2
+            //   scale={scale}
+            //   onChange={handleValueChange}
+            //   {...props}
+            // >
+            // </CardFlipper2>
+            props.componentConfig.moduleName === "instrumentPanel_3" ? (
+              <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
+            ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
+              <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
+            ) : (
+              <ErrorCatch
+                app={componentConfig.name}
+                user=""
+                token=""
+                max={1}
+                errorRender={
+                  <RemoteComponentErrorRender
+                    errorComponent={componentConfig.name}
+                  ></RemoteComponentErrorRender>
+                }
+                onCatch={(errors) => {
+                  console.log("组件报错信息：", errors, "组件id", componentConfig.id)
+                }}
+              >
+                <RemoteBaseComponent
+                  {...props}
+                  scale={scale}
+                  onChange={handleValueChange}
+                ></RemoteBaseComponent>
+              </ErrorCatch>
+            )}
     </div>
   )
 }
