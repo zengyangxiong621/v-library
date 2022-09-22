@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './chMap.css';
+import './chMap.less';
 import * as echarts from 'echarts';
 import chinaJson from "./china.json";
 import ComponentDefaultConfig from './config';

@@ -8,8 +8,9 @@ import SelectV2 from "@/customComponents/assist/select/v1.0.3/index"
 import ButtomGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
 import CusImage from "@/customComponents/assist/image/v1.0.2/index"
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1"
-import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3"
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4"
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5"
+import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.4"
 import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1"
 import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2"
 import Tab from "@/customComponents/interactive/tab"
@@ -504,6 +505,8 @@ const ComponentEventContainer = ({
         <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
       ) : props.componentConfig.moduleName === 'worldMap' ? (
         <WorldMap {...props}></WorldMap>
+      ) : props.componentConfig.moduleName === 'indicatorcard' ? (
+        <IndicatorCard {...props}></IndicatorCard>
       ) : props.componentConfig.moduleName === "timeline" ? (
         <Timeline {...props}></Timeline>
       ) : props.componentConfig.moduleName === "media" ? (
@@ -528,7 +531,8 @@ const ComponentEventContainer = ({
         <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
       ) : props.componentConfig.moduleName === "basicBar" ? (
         <BasicBar onChange={handleValueChange} {...props}></BasicBar>
-      ) : // props.componentConfig.moduleName === 'chinaMap' ?
+      ) :
+        // props.componentConfig.moduleName === 'chinaMap' ?
         // <ChinaMap
         //   onChange={handleValueChange}
         //   {...props}
