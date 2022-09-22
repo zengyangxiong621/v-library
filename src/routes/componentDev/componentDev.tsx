@@ -28,7 +28,7 @@ const ComponentDev = (props: any) => {
   const [isShowImportModal, setIsShowImportModal] = useState(false); 
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
-    pageSize: 30,
+    pageSize: 10,
   });
   const [tableMap, setTableMap] = useState({});
   const [totalElements, setTotalElements] = useState(0);
@@ -376,7 +376,7 @@ const ComponentDev = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: "53vh" }}
+            scroll={{ y: "70vh" }}
             sortDirections={["ascend", "descend"]}
             rowClassName='customRowClass'
             loading={tableLoading}
