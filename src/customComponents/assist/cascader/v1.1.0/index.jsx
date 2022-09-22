@@ -135,11 +135,24 @@ const CascaderComponent = (props) => {
 
 
 
-  const onChange = (value) => {
+  const onChange = (value,selectedOptions) => {
     setDefaultValue(value)
-    console.log(value,'-------------');
-    props.onChange && props.onChange(value)
+    const data=selectedOptions.length===1 ? {
+      parent:value[0],
+      [fieldNames.value]:''
+    }:{
+      parent:value[0],
+      ...selectedOptions[selectedOptions.length-1]
+    }
+    props.onChange&& props.onChange(data)
   };
+  useEffect(() => {
+    setDefaultValue(defaultSelect.split(','))
+    props.onChange({
+      parent:'all',
+      [fieldNames.value]:''
+    })
+  }, []);
 
   return (
     <Cascader style={{
