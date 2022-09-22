@@ -659,6 +659,12 @@ export const styleTransformFunc = (textStyle, type=true) => {
     return pre;
   }, {});
   return Object.keys(textStyle).reduce((pre, cur) => {
+    if(cur==='themeColor'){
+      return {
+        ...pre,
+        ...styleTransformFuncList['color'](textStyle[cur])
+      }
+    }
     return {
       ...pre,
       ...styleTransformFuncList[cur](textStyle[cur])
