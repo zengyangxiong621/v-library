@@ -16,7 +16,8 @@ interface Props {
 interface State {
   swiperDom?:any,
   componentConfig?:any,
-  swiperId?:any
+  swiperId?:any,
+  currentIndex?:any
 }
 
 class SwipterText extends Component<Props, State> {
@@ -25,7 +26,8 @@ class SwipterText extends Component<Props, State> {
     this.state = {
       swiperDom: null,
       componentConfig: Props.componentConfig || componentDefaultConfig,
-      swiperId: (new Date()).valueOf()
+      swiperId: (new Date()).valueOf(),
+      currentIndex: 0
     }
   }
 
@@ -35,7 +37,7 @@ class SwipterText extends Component<Props, State> {
 
   // 处理所有配置项
   formatConfig = (config:any, exclude:any) => {
-    return config.filter((item: any) => exclude.indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
+    return config.filter((item: any) => exclude.indexOf(item?.name) == -1).reduce((pre: any, cur: any) => {
         if(Array.isArray(cur.value)) {
           const obj = cur.value.reduce((p: any, c: any) => {
             p[c.name] = c.value
@@ -64,6 +66,7 @@ class SwipterText extends Component<Props, State> {
         // pauseOnMouseEnter:true, // 版本7才能实现
         delay: configData.delay
     } : false
+    let that = this
     var swiper:any = new Swiper(`.swiper-container${swiperId}`, {
         slidesPerView: configData.slidesNum,
         spaceBetween: configData.lineSpace,
@@ -77,7 +80,14 @@ class SwipterText extends Component<Props, State> {
         autoHeight: true,
         noSwiping: false,   // 手动切换，false 允许，true，不允许
         autoplay: loopConfig,
-        centeredSlides:  true
+        centeredSlides:  true,
+        on:{
+          slideChange: function(){
+            that.setState({
+              currentIndex: swiper.activeIndex
+            })
+          }
+        }
     });
     swiper.el.onmouseover = function(){
       swiper.autoplay.stop();
@@ -111,7 +121,10 @@ class SwipterText extends Component<Props, State> {
             switch(name){
               case 'color':
                 item.value = componentThemeConfig.textColor
-                break
+                break;
+              case 'highlight': 
+                item.value = componentThemeConfig.pureColors[0]
+                break;
               default:
                 break;
             }
@@ -124,7 +137,7 @@ class SwipterText extends Component<Props, State> {
   render () {
     const { fields, comData,componentConfig,themeConfig } = this.props
     const {config, staticData} = componentConfig
-    const { swiperDom,swiperId } = this.state
+    const { swiperDom,swiperId,currentIndex } = this.state
     // 组件静态或者传入组件的数据
     const originData = comData || staticData.data
     // 根据传入的fields来映射对应的值
@@ -153,13 +166,15 @@ class SwipterText extends Component<Props, State> {
         })
     }
     const textStyle = findItem('textStyle')
-    const textStyleData = this.formatConfig([textStyle], [])
+    const textStyleData = textStyle ? this.formatConfig([textStyle], []) : {}
     // 对齐方式
     const textAlign = findItem('textAlign') ? this.formatConfig([findItem('textAlign')], []) : {}
     // 行图标
     const rowIcon = findItem('rowIcon') ? this.formatConfig([findItem('rowIcon')], []) : {}
     // 背景颜色
     const backgroundConfig = findItem('backgroundConfig') ? this.formatConfig([findItem('backgroundConfig')], []) : {}
+    // 高亮设置
+    const highlight = findItem('highlight') ? this.formatConfig([findItem('highlight')], []).highlight : '#fff'
     // 展示方式
     const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true;
     if(swiperDom && finalData.length){
@@ -210,18 +225,6 @@ class SwipterText extends Component<Props, State> {
     }else{
       delete swiperStyle.justifyContent
     }
-
-    // 只有特效样式和有主题色的时候，选择的数据才为主题单色，其他都是文本色
-    if(specialType){
-      let dom:any = document.getElementById(`swiper-container${swiperId}`)
-      let domClass = dom?.getElementsByClassName('swiper-slide-active')[0];
-      if(domClass){
-        
-        // const span = domClass.getElementsByTagName('span')[0]
-        // // themeConfig.pureColors[0]
-        // domClass.style.color = 'red'
-      }
-    }
     
     return (
       <div 
@@ -241,7 +244,12 @@ class SwipterText extends Component<Props, State> {
                   {
                     finalData.map((item:any,index:any) => {
                       return (
-                          <div className={`swiper-slide ${specialType ? 'swiper-type' : ''}`} style={swiperStyle}  key={index}>
+                        <>
+                        {/*                                */}
+                          <div className={`swiper-slide ${specialType ? 'swiper-type' : ''}`} style={{
+                              ...swiperStyle,
+                              color: specialType && index === currentIndex ? highlight  : swiperStyle.color
+                            }}  key={index}>
                             {
                               rowIcon.show && 
                               <img src={rowIcon.backgroundImg} style={{
@@ -253,6 +261,8 @@ class SwipterText extends Component<Props, State> {
                             }
                              <span title={item[fields[0]]} onClickCapture={() => handleClickName(item)}>{item[fields[0]]}</span>
                           </div>
+                        
+                        </>
                       )
                     })
                   }

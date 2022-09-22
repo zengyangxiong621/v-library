@@ -152,6 +152,12 @@ const componentDefaultConfig = {
       ]
     },
     {
+      'name': 'highlight',
+      'displayName': '高亮颜色',
+      'value': '#fff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      type:'color'
+    },
+    {
       "name":"textAlign",
       "displayName":"对齐方式",
       "type":"alignFull",
