@@ -71,7 +71,7 @@ import CusImage from '@/customComponents/assist/image/v1.0.2/index'
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 
 import Tab from "@/customComponents/interactive/tab/index";
-import ScrollSelect from "@/customComponents/interactive/scrollSelect/index";
+import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 import ReferencePanel from "@/customComponents/dashboardEdit/referencePanel";
 import DynamicPanel from "@/customComponents/dashboardEdit/dynamicPanel";
 import { cloneDeep } from "lodash";
@@ -839,9 +839,10 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
+              // component.config = textConfig.config     // 本地测试
               // component=normalTableConfig
-              // component.config = textConfig.config     // 本地测试     
-              
+              // component.config = textConfig.config     // 本地测试
+
 
               if (component) {
                 staticData = component.staticData;
@@ -1195,6 +1196,8 @@ const CustomDraggable
                                                                     </NormalTable> :
                                                                     layer.moduleName === "cascader" ?
                                                                       <Cascader
+                                                                        themeConfig={bar.componentThemeConfig}
+                                                                        onThemeChange={onThemeChange}
                                                                         onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                         componentConfig={component}
                                                                         fields={getFields(component)}
