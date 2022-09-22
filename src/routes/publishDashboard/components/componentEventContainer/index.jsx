@@ -16,7 +16,7 @@ import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
 import Counter from '@/customComponents/assist/counter2/v1.0.5'
 import Media from '@/customComponents/media/v1.1.1'
-import NormalTable from '@/customComponents/table/normalTable/v1.0.4'
+import NormalTable from '@/customComponents/table/normalTable/v1.0.5'
 import PaginationComp from "@/customComponents/paginationComp/v1.1.6";
 import { connect } from "dva"
 
