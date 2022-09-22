@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "",
   "moduleType": "indicator",
   "moduleName": "indicatorcard",
-  "moduleVersion": "1.0.4",
+  "moduleVersion": "1.0.5",
   "autoUpdate": {
     "isAuto": false,
     "interval": 10
