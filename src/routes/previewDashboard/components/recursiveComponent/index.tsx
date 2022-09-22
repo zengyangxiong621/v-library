@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 
 import EveryComponent from "../everyComponent";
 import ReferencePanel from "@/customComponents/dashboardPreview/referencePanel";
@@ -13,8 +13,6 @@ const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
   const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeReflect } = props;
-
-  // console.log('layersArr', layersArr);
 
   return (
     <div className='recursive-component-wrap'>
@@ -69,12 +67,12 @@ const RecursiveComponent = (props: any) => {
                         />
                       </div>
                       : <div
-                          className={`panel-container panel-${layer.id} event-id-${layer.id}`}
-                          style={{
-                            position: "absolute",
-                            left: targetPanel.config.left + "px",
-                            top: targetPanel.config.top + "px"
-                          }}
+                        className={`panel-container panel-${layer.id} event-id-${layer.id}`}
+                        style={{
+                          position: "absolute",
+                          left: targetPanel.config.left + "px",
+                          top: targetPanel.config.top + "px"
+                        }}
                       >
                         <DrillDownPanel
                           id={layer.id}

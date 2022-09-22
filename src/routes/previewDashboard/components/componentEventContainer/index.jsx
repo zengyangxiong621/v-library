@@ -193,9 +193,6 @@ const ComponentEventContainer = ({
   const handleValueChange = debounce((data) => {
     // 下钻流程
     getDrillDownData(data)
-    // getDrillDownData
-    // console.log('-------------')
-    // console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = previewDashboard.components.find((item) => item.id === componentId)
     const compCallbackArgs =
@@ -248,8 +245,6 @@ const ComponentEventContainer = ({
         }
       })
     })
-    console.log("activeIds1", activeIds)
-    console.log("temp", temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce(

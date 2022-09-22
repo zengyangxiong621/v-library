@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, memo, useState } from "react";
+import React, { useEffect, memo, useState, useCallback } from "react";
 import "./index.less";
 import { useSetState } from "ahooks";
 // import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
@@ -22,8 +22,8 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
   const componentData = previewDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id);
   // 获取面板详情接口
-  const { states, config, name, type } = panel;
-  const { isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0 } = config;
+  const { states, config } = panel;
+  const { animationTime = 0 } = config;
   const [state, setState] = useSetState<State>({
     allLayers: [],
     layers: [],
@@ -32,16 +32,10 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     AllComponents: [],
     overflow: "hidden",
     allData: [],
-    activeIndex: 0,
     isLoading: false,
   });
 
-  const changeReflect = (reflectObj: any) => {
-    console.log("reflectObj", reflectObj);
-    setState({
-
-    });
-  };
+  const [activeIndex, setActiveIndex] = useState(-1)
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
     const { components, layers, dashboardConfig } = await http({
@@ -107,37 +101,19 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
   }, []);
 
 
-  // useEffect(() => {
-  //   let activeIndex = previewDashboard.drillDownLevel - 1
-  //   if (activeIndex > states.length - 1 || activeIndex < 0) {
-  //     activeIndex = 0
-  //   }
-  //   setState({ activeIndex })
-  // }, [previewDashboard.drillDownLevel])
-
-
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
-    if (state.activeIndex < stateIndex) return
-    setState({
-      activeIndex: stateIndex,
-    });
+    if (activeIndex < stateIndex) return
+    setActiveIndex(stateIndex)
   };
-  const [isInit, setIsInit] = useState<any>(true);
+
   const addDrillDownLevel = () => {
-    let newIndex = state.activeIndex;
-    if (!isInit) {
-      newIndex += 1;
-      if (newIndex >= states.length || newIndex < 0) {
-        // newIndex = 0
-        return;
-      }
+    let newIndex = activeIndex + 1;
+    if (newIndex >= states.length || newIndex < 0) {
+      return;
     }
-    setIsInit(false);
-    setState({ activeIndex: newIndex });
-    console.log("state.allData", state.allData);
-    // setState({ activeIndex: state.activeIndex + 1 })
-  };
+    setActiveIndex(newIndex);
+  }
   return (
     <div className={`drill-down-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>
       <div style={{ marginBottom: "20px", minWidth: "500px" }}>
@@ -146,7 +122,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
           {
             states.map((x: any, i: number) => {
               return (<Breadcrumb.Item
-                className={`custom-breadcrumb ${state.activeIndex === i ? 'active-breadcrumb-item' : ''} `}
+                className={`custom-breadcrumb ${activeIndex === i ? 'active-breadcrumb-item' : ''} `}
                 onClick={() => breadcrumbClick(x, i)}
               >
                 {x.name}
@@ -156,14 +132,15 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
         </Breadcrumb>
       </div>
       {
-        state.allData.length === 1 ? <RecursiveComponent
-          isDrillDownPanel={isDrillDownPanel}
-          layersArr={state.allData[0].layers}
-          previewDashboard={previewDashboard}
-          dispatch={dispatch}
-          componentLists={state.allData[0].components}
-          panels={state.allData[0].panels}
-        />
+        state.allData.length === 1 ? <>
+          <RecursiveComponent
+            isDrillDownPanel={isDrillDownPanel}
+            layersArr={state.allData[0].layers}
+            previewDashboard={previewDashboard}
+            dispatch={dispatch}
+            componentLists={state.allData[0].components}
+            panels={state.allData[0].panels}
+          /></>
           :
           state.allData.map((item: any, index: number) =>
           (
@@ -173,7 +150,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
                 position: "absolute",
                 width: "100%",
                 height: "100%",
-                display: state.activeIndex === index ? "block" : "none",
+                display: activeIndex == index ? "block" : "none",
                 transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
               <RecursiveComponent
@@ -184,7 +161,6 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
                 componentLists={item.components}
                 panels={item.panels}
                 addDrillDownLevel={addDrillDownLevel}
-                changeReflect={changeReflect}
               />
             </div>
           )

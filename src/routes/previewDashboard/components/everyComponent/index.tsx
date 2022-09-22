@@ -28,9 +28,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
     position: "absolute",
   });
 
-  const [activeItem, setActiveItem] = useState(0);
-
-
   // 交互-动画
   useEffect(() => {
     // 如果没有 设置“载入动画”, 那么后端不会返回mountAnimation字段
@@ -167,7 +164,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
