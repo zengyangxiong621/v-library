@@ -223,16 +223,14 @@ const ComponentEventContainer = ({
                   activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                   // 值是否改变
                   // data的值存在并且
-                } else if (component.moduleName === "cascader" || 'select2') {
-                  temp = true
-                  callbackArgs[callback.target] = data[callback.origin]
-                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                 } else if (
+                  (["cascader", 'select2'].includes(component.moduleName)) ||
+                  data &&
                   data[callback.origin] &&
                   callbackArgs[callback.target] !== data[callback.origin]
                 ) {
                   temp = true
-                  callbackArgs[callback.target] = data[callback.origin]
+                  callbackArgs[callback.target] = data ? data[callback.origin] : data
                   activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                 }
                 dispatch({
