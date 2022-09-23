@@ -39,7 +39,7 @@ export default function Login(props:any) {
     }
     return flag;
   };
-  const handleLogin=async ()=>{
+  const login=async ()=>{
     const formData=form.getFieldsValue(true);
     if(!handleLoginForm(formData)){
       return;
@@ -65,9 +65,22 @@ export default function Login(props:any) {
       setLoginLoading(false);
     }
   };
+  const handleLogin=(e:any)=>{
+    if(e.keyCode=== 13){
+      login()
+    }
+  };
   useEffect(()=>{
     getIdentifyingCode();
   },[]);
+  useEffect(()=>{
+    if(clientId){
+      window.addEventListener('keydown',handleLogin)
+      return ()=>{
+        window.removeEventListener('keydown',handleLogin)
+      }
+    }
+  },[clientId])
   return (
     <div className='login'>
       <div className='leftImage'>
@@ -104,7 +117,7 @@ export default function Login(props:any) {
               </div>
             </Form.Item>
             <Form.Item className='formButton' wrapperCol={{ span: 24 }}>
-              <Button type="primary" block loading={loginLoading} onClick={handleLogin}>登录</Button>
+              <Button type="primary" block loading={loginLoading} onClick={login} onKeyUp={handleLogin}>登录</Button>
             </Form.Item>
           </Form>
         </div>

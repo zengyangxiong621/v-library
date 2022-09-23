@@ -195,7 +195,7 @@ const ComponentEventContainer = ({
     // 下钻流程
     getDrillDownData(data)
     const componentId = props.componentConfig.id
-    const component = previewDashboard.components.find((item) => item.id === componentId)
+    const component = previewDashboard.fullAmountComponents.find((item) => item.id === componentId)
     const compCallbackArgs =
       component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
     // 回调参数列表
@@ -222,16 +222,14 @@ const ComponentEventContainer = ({
                   activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                   // 值是否改变
                   // data的值存在并且
-                } else if (component.moduleName === "cascader" || 'select2') {
-                  temp = true
-                  callbackArgs[callback.target] = data[callback.origin]
-                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                 } else if (
+                  (["cascader", 'select2'].includes(component.moduleName)) ||
+                  data &&
                   data[callback.origin] &&
                   callbackArgs[callback.target] !== data[callback.origin]
                 ) {
                   temp = true
-                  callbackArgs[callback.target] = data[callback.origin]
+                  callbackArgs[callback.target] = data ? data[callback.origin] : data
                   activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                 }
                 dispatch({
@@ -249,7 +247,7 @@ const ComponentEventContainer = ({
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce(
-        (pre, id) => pre.concat(previewDashboard.components.find((item) => item.id === id)),
+        (pre, id) => pre.concat(previewDashboard.fullAmountComponents.find((item) => item.id === id)),
         []
       )
       // 绑定数据容器的组件列表
@@ -450,7 +448,7 @@ const ComponentEventContainer = ({
   const componentConfigFunc = (config, actionType, dom, actionId, action, componentId) => {
     if (actionType === "updateConfig") {
       console.log("config", config)
-      const component = previewDashboard.components.find((item) => item.id === componentId)
+      const component = previewDashboard.fullAmountComponents.find((item) => item.id === componentId)
       if (component) {
         component.config = [
           ...component.config.filter((item) => ["dimension", "hideDefault"].includes(item.name)),

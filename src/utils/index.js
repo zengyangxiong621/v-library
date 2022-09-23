@@ -420,6 +420,16 @@ export const calcGroupPosition = (arr, components, panels) => {
   return [xPositionList, yPositionList];
 };
 
+export const deepForEachBeforeCallBack = (layers, cb) => {
+  layers.forEach((layer, index) => {
+    cb(layer, index, layers);
+    if (layer && COMPONENTS in layer) {
+      deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb);
+    }
+  });
+  return layers;
+};
+
 export const deepForEach = (layers, cb) => {
   layers.forEach((layer, index) => {
     if (layer && COMPONENTS in layer) {
