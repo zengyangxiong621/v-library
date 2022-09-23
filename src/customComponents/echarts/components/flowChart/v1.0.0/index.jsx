@@ -56,8 +56,9 @@ class FlowChart extends  React.PureComponent{
       }
     })
   }
-  
   getgGraphOptions = (options, config) => {
+    // 下钻-- 请求回来的数据可能时错误体(error对象),暂时这样兼容一哈
+    options = Array.isArray(options) ? options : []
     const { fields } = this.props
     // 标签文字
     const labelFont = this.formatConfig([this.getStyleData(config, 'labelFont')],[]).labelFont
@@ -78,7 +79,7 @@ class FlowChart extends  React.PureComponent{
       const {
         x, y, nodeName, type, svgPath, symbolSize, startColor, endColor,
       } = nodes[j];
-      const match = options.find(item => item[fields[0]] === nodeName && item[fields[1]] === type);
+      const match = Array.isArray(options) && options.find(item => item[fields[0]] === nodeName && item[fields[1]] === type);
       // 是否告警
       const sColor = match && match[fields[3]] ? warningConfig.nodeStartColor : startColor;
       const eColor = match && match[fields[3]] ? warningConfig.nodeEndColor : endColor;
