@@ -980,17 +980,6 @@ const CustomDraggable
                           </div> : <>
                             <div data-id={layer.id} style={{ width: "100%", height: "100%", pointerEvents: "none" }}>
                               {
-                                // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
-                                //   <CompImage componentConfig={component}/>
-
-                                // <Da componentConfig={component}/>
-                                // <SwiperText  componentConfig={component}></SwiperText>
-                                // layer.moduleName === 'swiperText' ?
-                                // <CustomText
-                                //   componentConfig={component}
-                                //   fields={getFields(component)}
-                                //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                // ></CustomText> : 
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}
