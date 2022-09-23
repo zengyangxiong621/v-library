@@ -5,12 +5,11 @@ import TimeSelect from "@/customComponents/interactive/timeSelect"
 import ScrollTable from "@/customComponents/table/scrollTable"
 import Bar from "@/customComponents/echarts/components/bar/index"
 import SelectV2 from "@/customComponents/assist/select/v1.0.3/index"
-import ButtomGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
+import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
 import CusImage from "@/customComponents/assist/image/v1.0.2/index"
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1"
-import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4"
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3"
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5"
-import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5"
 import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1"
 import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2"
 import Tab from "@/customComponents/interactive/tab"
@@ -195,9 +194,6 @@ const ComponentEventContainer = ({
   const handleValueChange = debounce((data) => {
     // 下钻流程
     getDrillDownData(data)
-    // getDrillDownData
-    // console.log('-------------')
-    // console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = previewDashboard.components.find((item) => item.id === componentId)
     const compCallbackArgs =
@@ -250,8 +246,6 @@ const ComponentEventContainer = ({
         }
       })
     })
-    console.log("activeIds1", activeIds)
-    console.log("temp", temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce(
@@ -509,9 +503,7 @@ const ComponentEventContainer = ({
       ) : props.componentConfig.moduleName === "timeSelect" ? (
         <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
       ) : props.componentConfig.moduleName === 'worldMap' ? (
-        <WorldMap {...props}></WorldMap>
-      ) : props.componentConfig.moduleName === 'indicatorcard' ? (
-        <IndicatorCard {...props}></IndicatorCard>
+        <WorldMap {...props} onChange={handleValueChange}></WorldMap>
       ) : props.componentConfig.moduleName === "timeline" ? (
         <Timeline {...props}></Timeline>
       ) : props.componentConfig.moduleName === "media" ? (
@@ -536,8 +528,7 @@ const ComponentEventContainer = ({
         <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
       ) : props.componentConfig.moduleName === "basicBar" ? (
         <BasicBar onChange={handleValueChange} {...props}></BasicBar>
-      ) :
-        // props.componentConfig.moduleName === 'chinaMap' ?
+      ) : // props.componentConfig.moduleName === 'chinaMap' ?
         // <ChinaMap
         //   onChange={handleValueChange}
         //   {...props}
@@ -575,7 +566,7 @@ const ComponentEventContainer = ({
           props.componentConfig.moduleName === "select2" ? (
             <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
           ) : props.componentConfig.moduleName === "buttonGroup2" ? (
-            <ButtomGroup onChange={handleValueChange} {...props}></ButtomGroup>
+            <ButtonGroup onChange={handleValueChange} {...props}></ButtonGroup>
           ) : props.componentConfig.moduleName === "bar" ? (
             <Bar onChange={handleValueChange} {...props}></Bar>
           ) : props.componentConfig.moduleName === "scrollTable" ? (

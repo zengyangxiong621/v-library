@@ -64,7 +64,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
       return o.data
     }).flat()
   }
-  console.log('finalCompDatafinalCompData', finalCompData);
+  // console.log('finalCompDatafinalCompData', finalCompData);
   // console.log('barbar', bar);
   // console.log('当前组件数据', componentConfig)
 

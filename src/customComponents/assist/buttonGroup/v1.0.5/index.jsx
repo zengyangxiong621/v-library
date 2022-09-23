@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ComponentDefaultConfig from './config'
-import './index.css'
+import './index.less'
 
 const ButtonGroup = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
@@ -145,7 +145,7 @@ const ButtonGroup = (props) => {
         return <button
           style={{ flex: (1 / componentData.length).toFixed(2) }}
           onClick={() => handleClick(index)}
-          className={["cus-component-br-btn", index + 1 === active ? "active" : null].join(' ')}
+          className={["cus-component-button-group-btn", index + 1 === active ? "active" : null].join(' ')}
         >{item[fieldKey]}</button>
       })
       }

@@ -28,9 +28,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
     position: "absolute",
   });
 
-  const [activeItem, setActiveItem] = useState(0);
-
-
   // 交互-动画
   useEffect(() => {
     // 如果没有 设置“载入动画”, 那么后端不会返回mountAnimation字段
@@ -168,37 +165,36 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
       addDrillDownLevel();
-      const { seriesType, data } = chartData;
-      let hadFilterChartData = [];
-      if (typeof chartData === "object") {
-        switch (seriesType) {
-          case "pie":
-            const final = {
-              s: data.name,
-              y: data.value
-            };
-            hadFilterChartData.push(final);
-            break;
-          default:
-            hadFilterChartData.push(chartData.data);
-            break;
-        }
-      } else {
-        hadFilterChartData = [chartData];
-      }
-      const { drillDownArr } = componentData;
-      const childCompIdArr = drillDownArr.map((x: any) => x.id);
-      dispatch({
-        type: "previewDashboard/updateChildCompData",
-        payload: {
-          childCompIdArr,
-          componentData: hadFilterChartData
-        }
-      });
+      // const { seriesType, data } = chartData;
+      // let hadFilterChartData = [];
+      // if (typeof chartData === "object") {
+      //   switch (seriesType) {
+      //     case "pie":
+      //       const final = {
+      //         s: data.name,
+      //         y: data.value
+      //       };
+      //       hadFilterChartData.push(final);
+      //       break;
+      //     default:
+      //       hadFilterChartData.push(chartData.data);
+      //       break;
+      //   }
+      // } else {
+      //   hadFilterChartData = [chartData];
+      // }
+      // const { drillDownArr } = componentData;
+      // const childCompIdArr = drillDownArr.map((x: any) => x.id);
+      // dispatch({
+      //   type: "previewDashboard/updateChildCompData",
+      //   payload: {
+      //     childCompIdArr,
+      //     componentData: hadFilterChartData
+      //   }
+      // });
     }
   };
 
