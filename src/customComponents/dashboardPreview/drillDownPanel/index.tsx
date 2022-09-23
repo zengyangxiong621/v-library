@@ -35,7 +35,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     isLoading: false,
   });
 
-  const [activeIndex, setActiveIndex] = useState(-1)
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
     const { components, layers, dashboardConfig } = await http({
@@ -99,7 +99,6 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
       });
     })();
   }, []);
-
 
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件

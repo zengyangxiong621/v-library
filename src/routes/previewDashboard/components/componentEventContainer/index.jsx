@@ -4,13 +4,11 @@ import { useState, useRef } from "react"
 import TimeSelect from "@/customComponents/interactive/timeSelect"
 import ScrollTable from "@/customComponents/table/scrollTable"
 import Bar from "@/customComponents/echarts/components/bar/index"
-import SelectV2 from "@/customComponents/assist/select/v1.0.3/index"
-import ButtomGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
+import SelectV2 from "@/customComponents/assist/select/v1.0.2/index"
 import CusImage from "@/customComponents/assist/image/v1.0.2/index"
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1"
-import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4"
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.3"
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5"
-import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5"
 import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1"
 import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2"
 import Tab from "@/customComponents/interactive/tab"
@@ -504,9 +502,7 @@ const ComponentEventContainer = ({
       ) : props.componentConfig.moduleName === "timeSelect" ? (
         <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
       ) : props.componentConfig.moduleName === 'worldMap' ? (
-        <WorldMap {...props}></WorldMap>
-      ) : props.componentConfig.moduleName === 'indicatorcard' ? (
-        <IndicatorCard {...props}></IndicatorCard>
+        <WorldMap {...props} onChange={handleValueChange}></WorldMap>
       ) : props.componentConfig.moduleName === "timeline" ? (
         <Timeline {...props}></Timeline>
       ) : props.componentConfig.moduleName === "media" ? (
@@ -531,8 +527,7 @@ const ComponentEventContainer = ({
         <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
       ) : props.componentConfig.moduleName === "basicBar" ? (
         <BasicBar onChange={handleValueChange} {...props}></BasicBar>
-      ) :
-        // props.componentConfig.moduleName === 'chinaMap' ?
+      ) : // props.componentConfig.moduleName === 'chinaMap' ?
         // <ChinaMap
         //   onChange={handleValueChange}
         //   {...props}
@@ -565,70 +560,40 @@ const ComponentEventContainer = ({
           //   onChange={handleValueChange}
           //   {...props}
           // >
-          // </ChinaMap>
-          // :
-          props.componentConfig.moduleName === "select2" ? (
-            <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
-          ) : props.componentConfig.moduleName === "buttonGroup2" ? (
-            <ButtomGroup onChange={handleValueChange} {...props}></ButtomGroup>
-          ) : props.componentConfig.moduleName === "bar" ? (
-            <Bar onChange={handleValueChange} {...props}></Bar>
-          ) : props.componentConfig.moduleName === "scrollTable" ? (
-            <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-          ) : props.componentConfig.moduleName === "tab" ? (
-            <Tab
-              onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-              onClick={handleClick}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              {...props}
-            ></Tab>
-          ) : props.componentConfig.moduleName === "scrollSelect" ? (
-            <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-          ) : props.componentConfig.moduleName === "timeSelect" ? (
-            <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-          ) : props.componentConfig.moduleName === "timeline" ? (
-            <Timeline {...props}></Timeline>
-          ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
-            // <CardFlipper1
-            //   scale={scale}
-            //   onChange={handleValueChange}
-            //   {...props}
-            // >
-            // </CardFlipper1>
-            // : props.componentConfig.moduleName === 'CardFlipper_2' ?
-            // <CardFlipper2
-            //   scale={scale}
-            //   onChange={handleValueChange}
-            //   {...props}
-            // >
-            // </CardFlipper2>
-            props.componentConfig.moduleName === "instrumentPanel_3" ? (
-              <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-            ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-              <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-            ) : (
-              <ErrorCatch
-                app={componentConfig.name}
-                user=""
-                token=""
-                max={1}
-                errorRender={
-                  <RemoteComponentErrorRender
-                    errorComponent={componentConfig.name}
-                  ></RemoteComponentErrorRender>
-                }
-                onCatch={(errors) => {
-                  console.log("组件报错信息：", errors, "组件id", componentConfig.id)
-                }}
-              >
-                <RemoteBaseComponent
-                  {...props}
-                  scale={scale}
-                  onChange={handleValueChange}
-                ></RemoteBaseComponent>
-              </ErrorCatch>
-            )}
+          // </CardFlipper1>
+          // : props.componentConfig.moduleName === 'CardFlipper_2' ?
+          // <CardFlipper2
+          //   scale={scale}
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </CardFlipper2>
+          props.componentConfig.moduleName === "instrumentPanel_3" ? (
+            <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
+          ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
+            <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
+          ) : (
+            <ErrorCatch
+              app={componentConfig.name}
+              user=""
+              token=""
+              max={1}
+              errorRender={
+                <RemoteComponentErrorRender
+                  errorComponent={componentConfig.name}
+                ></RemoteComponentErrorRender>
+              }
+              onCatch={(errors) => {
+                console.log("组件报错信息：", errors, "组件id", componentConfig.id)
+              }}
+            >
+              <RemoteBaseComponent
+                {...props}
+                scale={scale}
+                onChange={handleValueChange}
+              ></RemoteBaseComponent>
+            </ErrorCatch>
+          )}
     </div>
   )
 }
