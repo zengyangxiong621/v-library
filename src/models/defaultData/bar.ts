@@ -2824,7 +2824,7 @@ export const defaultData = {
   fullAmountLayers: [],
   fullAmountDashboardDetails: [],
   isDashboardInit: false,
-  fullAmountDynamicAndDrillDownPanels: []
+  fullAmountDynamicAndDrillDownPanels: [],
 }
 
 export interface IBarState {

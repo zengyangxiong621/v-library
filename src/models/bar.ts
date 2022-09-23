@@ -226,12 +226,7 @@ export default {
         });
       }
 
-      yield put({
-        type: "save",
-        payload: {
-          isDashboardInit: true,
-        },
-      });
+0
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);

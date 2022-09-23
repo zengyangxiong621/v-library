@@ -195,7 +195,7 @@ const ComponentEventContainer = ({
     // 下钻流程
     getDrillDownData(data)
     const componentId = props.componentConfig.id
-    const component = previewDashboard.components.find((item) => item.id === componentId)
+    const component = previewDashboard.fullAmountComponents.find((item) => item.id === componentId)
     const compCallbackArgs =
       component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
     // 回调参数列表
@@ -249,7 +249,7 @@ const ComponentEventContainer = ({
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce(
-        (pre, id) => pre.concat(previewDashboard.components.find((item) => item.id === id)),
+        (pre, id) => pre.concat(previewDashboard.fullAmountComponents.find((item) => item.id === id)),
         []
       )
       // 绑定数据容器的组件列表
@@ -450,7 +450,7 @@ const ComponentEventContainer = ({
   const componentConfigFunc = (config, actionType, dom, actionId, action, componentId) => {
     if (actionType === "updateConfig") {
       console.log("config", config)
-      const component = previewDashboard.components.find((item) => item.id === componentId)
+      const component = previewDashboard.fullAmountComponents.find((item) => item.id === componentId)
       if (component) {
         component.config = [
           ...component.config.filter((item) => ["dimension", "hideDefault"].includes(item.name)),
