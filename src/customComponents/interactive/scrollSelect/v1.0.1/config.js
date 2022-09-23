@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   'dashboardId': '',
   'moduleName': 'scrollSelect',
   'moduleType': 'interactive',
-  'moduleVersion': '1.0.1',
+  'moduleVersion': 'v1.0.1',
   'autoUpdate': { 'isAuto': false, 'interval': 10 },
   'thumb': '',
   'dataConfig': {},
