@@ -27,7 +27,7 @@ import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender"
 import Timeline from "@/customComponents/assist/timeline/v1.1.7";
 import NormalTable from "@/customComponents/table/normalTable/v1.0.5";
 import Media from "@/customComponents/media/v1.1.1";
-import PaginationComp from "@/customComponents/paginationComp/v1.1.6";
+import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
 
 // import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
@@ -1207,6 +1207,8 @@ const CustomDraggable
                                                                           ></Media> :
                                                                           layer.moduleName === "paginationComp" ?
                                                                             <PaginationComp
+                                                                              themeConfig={bar.componentThemeConfig}
+                                                                              onThemeChange={onThemeChange}
                                                                               onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                               componentConfig={component}
                                                                               fields={getFields(component)}
