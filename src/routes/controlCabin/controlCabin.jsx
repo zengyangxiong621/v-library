@@ -8,6 +8,7 @@ import { Spin, Empty } from 'antd';
 import { CloseCircleOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
 
 const picUrl = require('../../assets/images/模板默认背景图.png')
+const emtpyUrl = require('../../assets/images/controlCabin/cockpit-empty.png')
 let currentFullScreenIndex = 0;
 const ControlCabin = props => {
   const curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
@@ -104,7 +105,10 @@ const ControlCabin = props => {
                   imageList={applist}
                   onClick={(app) => appClick(app)}
                 />
-                : <Empty description="暂无数据" />
+                : <div className="cockpit-empty">
+                  <img src={emtpyUrl} alt="" />
+                  <p>暂无数据</p>
+                </div>
           }
         </div>
         {
