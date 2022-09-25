@@ -1,381 +1,304 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { memo, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.less";
-import { connect } from "dva";
-import zhCN from "antd/es/locale/zh_CN";
-import { useFetch } from "@/utils/useFetch";
+
 import { http } from "@/services/request";
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import { STATUSLIST, ACCOUNTLIST } from "@/constant/dvaModels/userManage";
-import type { TableRowSelection } from "antd/lib/table/interface";
+
+import "moment/locale/zh-cn";
+import moment from "moment";
+import type { Moment } from "moment";
+
+import zhCN from "antd/es/locale/zh_CN";
+import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip, Popconfirm, Table, Drawer,  } from "antd";
+import type { TimeRangePickerProps } from "antd";
+import type { TableProps } from "antd/es/table";
+import { FileDoneOutlined } from "@ant-design/icons";
+const { RangePicker } = DatePicker;
+const { Option } = Select;
+const { Search } = Input;
+const { Column } = Table;
 
 
-import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message, Form } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-
-const mapStateToProps = (state: any) => {
-  return state;
-};
-// 功能
-const UserManage = (props: any) => {
-  const [tableLoading, setTableLoading] = useState(false);
-  const [tableData, setTableData] = useState([]);
-  const [totalElements, setTotalElements] = useState(0);
-  const [pageInfo, setPageInfo] = useState({
-    pageNo: 1,
-    pageSize: 10,
-  });
-  const [searchParams,setSearchParams]=useState({});
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [showAddOrEdit, setShowAddOrEdit] = useState(false);
-  const [showUpdateMode, setShowUpdateMode] = useState(false);
-  const [formType, setformType] = useState("");
-  const [currentUser, setCurrentUser] = useState<any>({});
-
-  const [roleList, setRoleList] = useState([]);
-  const userInfo = props.global.userInfo || {};
+type RangeValue = [Moment | null, Moment | null] | null;
 
 
-  
-  // 查询用户列表
-  const getUserList = async(param?:any) => {
-    const obj = {
-      ...pageInfo,
-      ...searchParams,
-      ...param
-    };
-    setTableLoading(true);
-    const [,data] = await useFetch("/visual/user/list",{
-      body: JSON.stringify(obj)
-    }).finally(() => {
-      setTableLoading(false);
-    });
-    if(data){
-      setTotalElements(data.totalElements);
-      setTableData(data.content);
+const AlarmLog: React.FC = () => {
+  const [momentDates, setMomentDates] = useState<RangeValue>([moment().add(-1, "M"),moment()]); //当前Moment时间
+  const [startDate, setStartDate] = useState(moment().add(-1, "M").format("YYYY-MM-DD") + " 00:00:00"); //开始日期
+  const [endDate, setEndDate] = useState(moment().format("YYYY-MM-DD") + " 23:59:59"); //结束日期
+  const [stateRead, setStateRead] = useState<string | number>(""); //当前状态
+  const [pageNo, setPageNo] = useState(1); //当前页码
+  const [pageSize, setPageSize] = useState(10); //当前每页数量
+  const [keywords, setKeywords] = useState(""); //当前关键词
+  const [map, setMap] = useState({updated_time:false}); //时间字段排序
+  const [unreadNum, setUnreadNum] = useState(0); //未读数量
+  const [hackValue, setHackValue] = useState<RangeValue>(null); //选择为空的标志
+  const [loading, setLoading] = useState(false); //选择为空的标志
+  const [dataSource, setDataSource] = useState<any>({}); //请求的数据
+  const [visible, setVisible] = useState(false); //处置方案内容的抽屉
+
+
+
+  // 转换stateRead
+  const stateReadTransform = (state:string | number) => {
+    return state === "" ? "" : Boolean(state);
+  };
+  // 初始化和改变时间
+  useEffect(() => {
+    requestData();
+  }, []);
+  // 请求列表
+  const requestData = async (obj:object = {}) => {
+    const read = stateReadTransform(stateRead);
+    const allParams = { startDate,endDate,pageNo,pageSize,keywords,read,map };
+    // console.log({...allParams,...obj});
+    requestUnreadNum(); //请求未读数量
+    setLoading(true);
+    try {
+      const data = await http({
+        url: "/visual/alarmInfo/list",
+        method: "post",
+        body: {...allParams,...obj}
+      });
+      setDataSource(data);
+    } catch (error) {
+      console.log(error); 
+    }finally{
+      setLoading(false);
     }
   };
-  useEffect(() => {
-    getUserList();
-    geRoleList();
-  },[]);
+  // 改变时间
+  const handerChangeTiem: TimeRangePickerProps["onChange"] = (val, dateStrings) => {
+    const startDate = dateStrings[0] && dateStrings[0] + " 00:00:00";
+    const endDate = dateStrings[1] && dateStrings[1] + " 23:59:59";
+    setStartDate(startDate);
+    setEndDate(endDate);
+    setMomentDates(val);
+    requestData({startDate,endDate});
+  };
+  // 弹出日历和关闭日历的回调
+  const handerOpenChange = (open:boolean) => {
+    if(open){
+      setHackValue([null,null]);
+    }else{
+      setHackValue(null);
+    }
+  };
+  // 改变状态
+  const handleChangeState = (value: string | number) => {
+    setStateRead(value);
+    const read = stateReadTransform(value);
+    requestData({read});
+  };
+  // 重置
+  const handleReset = () => {
+    const startDate = moment().add(-1, "M").format("YYYY-MM-DD") + " 00:00:00";
+    const endDate = moment().format("YYYY-MM-DD") + " 23:59:59";
+    const read = "";
+    setStartDate(startDate);
+    setEndDate(endDate);
+    setMomentDates([moment().add(-1, "M"),moment()]);
+    setStateRead("");
+    requestData({startDate,endDate,read});
+   };
+  // 搜索回调
+  const handleSearch = (value: string) => {
+    setKeywords(value);
+    requestData({keywords:value});
+  };
+  // 全部告警更新已读状态请求
+  const requesAllRead = async (obj:object = {}) => {
+    try {
+      await http({
+        url: "/visual/alarmInfo/all/read",
+        method: "post",
+      });
+      message.success("全部标记为已读成功！");
+      requestData();
+    } catch (error) {
+      console.log(error); 
+    } finally{
 
-  const createUser = () => {
-    setformType("add");
-    setShowAddOrEdit(true);
-  };
-  const resetPageInfo=()=>{
-    const newPageInfo={
-      pageNo: 1,
-      pageSize: pageInfo.pageSize,
-    };
-    setPageInfo(newPageInfo);
-    return newPageInfo;
-  };
-  const searchByType = (value:any) => {
-    const newSearchParams={
-      ...searchParams,
-      ...value
-    };
-    setSearchParams(newSearchParams);
-    const newPageInfo=resetPageInfo();
-    getUserList({...newPageInfo,...newSearchParams});
-  };
+    }
+  }; 
+  // 未读数量请求请求
+  const requestUnreadNum = async (obj:object = {}) => {
+    try {
+      const data = await http({
+        url: "/visual/alarmInfo/unreadNum",
+        method: "post",
+      });
+      setUnreadNum(data);
+    } catch (error) {
+      console.log(error); 
+    } finally{
 
-  // 获取角色列表数据
-  const geRoleList = async() => {
-    const [,data] = await useFetch("/visual/role/allList",{});
-    setRoleList(data);
+    }
   };
+  // 更新已读状态请求
+  const requestUpdateRead = async (id:string) => {
+    try {
+      const data = await http({
+        url: `/visual/alarmInfo/${id}/read`,
+        method: "post",
+      });
+      message.success("标记为已读成功！");
+      requestData();
+    } catch (error) {
+      console.log(error); 
+    } finally{
 
+    }
+  };
+  // 改变表格排序
+  const tableOnChange:TableProps<DataType>["onChange"] = (pagination: any, filters: any, sorter: any, { action }: any) => {
+    if (action === "sort") {
+      const { order } = sorter;
+      if(order){
+        setMap({updated_time: order === "ascend"});
+        requestData({map: {updated_time: order === "ascend"}});
+      }
+    }
+  };
   // 表格分页配置
   const paginationProps = {
-    total: totalElements,
-    current: pageInfo.pageNo,
-    pageSize: pageInfo.pageSize,
+    total: dataSource.totalElements,
+    current: pageNo,
+    pageSize: pageSize,
     pageSizeOptions: [10, 20, 30],
     showTotal: (val: number | string) => `共${val}条`,
-
     defaultCurrent: 1,
     showQuickJumper: true,
     showSizeChanger: true,
     // locale: {},
     onChange(page: number, pageSize: number) {
-      setPageInfo({
+      setPageNo(page);
+      setPageSize(pageSize);
+      const finalParams: any = {
         pageNo: page,
-        pageSize
-      });
-      getUserList({
-        pageNo: page,
-        pageSize
-      });
-    },
-  };
-
-  const columns = [
-    {
-      title: "账号",
-      dataIndex: "userName",
-      key: "userName",
-      className: "customHeaderColor",
-      ellipsis: true,
-      render: (text: any) => <span>{text}</span>,
-    },
-    {
-      title: "姓名",
-      key: "name",
-      ellipsis: true,
-      dataIndex: "name",
-    },
-    {
-      title: "角色",
-      key: "roleName",
-      ellipsis: true,
-      dataIndex: "roleName",
-      width: 100,
-    },
-    {
-      title: "状态",
-      key: "status",
-      width: 100,
-      dataIndex: "status",
-      render: (status: any, data: any) => {
-        const itemData = STATUSLIST.filter((item:any) => item.value === status);
-        return itemData ? itemData[0].label : "";
-      }
-    },
-    {
-      title: "用户类型",
-      key: "type",
-      dataIndex: "type",
-      ellipsis: true,
-      render: (type: any, data: any) => {
-        const index = type.toString();
-        return ACCOUNTLIST[index];
-      }
-    },
-    {
-      title: "工号",
-      dataIndex: "code",
-      key: "code",
-      ellipsis: true,
-    },
-    {
-      title: "邮箱",
-      dataIndex: "email",
-      key: "email",
-      width: 150,
-      ellipsis: true,
-    },
-    {
-      title: "联系方式",
-      dataIndex: "tel",
-      key: "tel",
-      width: 150,
-      ellipsis: true,
-    },
-    {
-      title: "操作",
-      key: "action",
-      ellipsis: true,
-      width: 250,
-      render: (text: any, record: any) => {
-        return (
-          <>
-            <Button type="link" size='small' disabled={getDisabled(text,"edit")} onClickCapture={() => editClick(text)}>编辑</Button>
-            <Button type="link" size='small' disabled={getDisabled(text,"password")} onClickCapture={() => resetClick(text)}>重置密码</Button>
-            <Button type="link" size='small' disabled={getDisabled(text,"del")} onClickCapture={() => delClick([text.id])}>删除</Button>
-            <Button type="link" size='small' disabled={getDisabled(text,"status")} onClickCapture={() => changeStatusClick(text)}>{record.status === "1" ? "启用" : "停用"}</Button>
-          </>
-        );
-      }
-
-    },
-  ]; 
-
-  // 多选
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection:TableRowSelection<any> = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    getCheckboxProps: (row:any) => {
-      const isSupAdmin = row.sysDef; // true 系统自带的内部超级管理员，账号不能被删除、启动、停用
-      const isStatusOk = row.status !== "0" && row.status !== "2";  // 非启用状态和锁定状态，可操作
-      const isTypeOk = row.type === -2;
-      const curIsSupAdmin = userInfo.sysDef;
-      let disable = true;
-      if (isTypeOk && isStatusOk && !isSupAdmin) { // 超管账号不能删除
-        if (row.id === userInfo.id) { // 当前用户可修改密码
-          disable = false;
-        }
-        if (curIsSupAdmin) { // 当前用户是管理员可修改密码，不用是否停用
-          disable = false;
-        }
-      }
-      // 选用的antd版本不对，antd 2.0版本不需要props
-      return {
-        disabled: disable
+        pageSize,
       };
-    }
+      requestData(finalParams);
+    },
+  };
+  // 一键已读确认回调
+  const confirmAllRead = () => {
+    requesAllRead();
+    // console.log("yes");
+  };
+  // 点击处置方案
+  const showDrawer = () => {
+    setVisible(true);
   };
 
-  const editClick = (data:any) => {
-    setCurrentUser(data);
-    setformType("edit");
-    setShowAddOrEdit(true);
-  };
-  const resetClick = (data:any) => {
-    setCurrentUser(data);
-    setShowUpdateMode(true);
-  };
-  const delClick = (data:any) => {
-    Modal.confirm({
-      title: "提示",
-      okButtonProps: {
-        style: {
-          backgroundColor: "#e9535d",
-          border: "none",
-          // marginLeft: '8px',
-        }
-      },
-      cancelButtonProps: {
-        style: {
-          backgroundColor: "#3d404d"
-        }
-      },
-      icon: <ExclamationCircleFilled />,
-      content: "此操作将删除该内容，是否继续?",
-      okText: "确定",
-      cancelText: "取消",
-      bodyStyle: {
-        background: "#232630",
-      },
-      async onOk(close:any) {
-        const result = await http({
-          url: "/visual/user/remove",
-          method: "post",
-          body: {
-            ids: data
-          }
-        });
-        if (result) {
-          close();
-          getUserList();
-          message.success({ content: "删除成功", duration: 2 });
-        } else {
-          message.error({ content: "删除失败", duration: 2 });
-        }
-      },
-      onCancel(close:any) {
-        close();
-      }
-    });
-  };
-  // 批量删除处理
-  const deleteBatchUser = () => {
-    if(!selectedRowKeys.length) {
-      message.warning("请选择待删除的账号");
-    }else{
-      delClick(selectedRowKeys);
-    }
-  };
-  const changeStatusClick = async(data:any) => {
-    const result = await http({
-      url: "/visual/user/updateStatus",
-      method: "post",
-      body: {
-        status: data.status === "0" ? "1" : "0",
-        id: data.id
-      }
-    });
-    if(result){
-      message.success(`${data.status === "0" ? "停用" : "启用"}成功`);
-      getUserList();
-    }
-  };
-  const tableOnChange = () => {
 
-  };
-
-  const closeModal = () => {
-    setShowAddOrEdit(false);
-    setShowUpdateMode(false);
-  };
-
-  const getDisabled = (row:any, type:any) => {
-    const isSupAdmin = row.sysDef; // true 系统自带的内部超级管理员，账号不能被删除、启动、停用
-    const isStatusOk = row.status !== "0" && row.status !== "2";  // 非启用状态和锁定状态，可操作
-    const isTypeOk = row.type === -2;
-    const curIsSupAdmin = userInfo.sysDef;
-    // 单独处理suadmin账户 
-    if(isTypeOk && row.userName === "suadmin"){
-      return type !== "password";
-    }
-    if (type === "password" && isTypeOk) { // 修改系统用户的密码
-      if (row.id === userInfo.id) { // 当前用户可修改密码
-        return false;
-      }
-
-      if (curIsSupAdmin) { // 当前用户是管理员可修改密码，不用是否停用
-        return false;
-      }
-    }
-
-    if (type === "status") { // 停用、启用状态下可编辑，包括管理员工账号
-      if (row.id === userInfo.id) { // 当前用户可编辑
-        return false;
-      }
-
-      if (curIsSupAdmin) { // 当前用户是管理员可编辑
-        return false;
-      }
-
-      if(!isSupAdmin) { // 当前被编辑的是超管的话，普通人不能编辑
-        return false;
-      }
-    }
-
-    if (type === "del" && isTypeOk && isStatusOk && !isSupAdmin) { // 超管账号不能删除
-      if (row.id === userInfo.id) { // 当前用户可修改密码
-        return false;
-      }
-
-      if (curIsSupAdmin) { // 当前用户是管理员可修改密码，不用是否停用
-        return false;
-      }
-    }
-
-    if(type === "edit"){
-      return false;
-    }
-
-    return true;
-  };
+  interface DataType {
+    object: string;
+    detail: string;
+    disposalSchemeName: number;
+    updatedTime: string;
+    read: boolean;
+    operate: string;
+    id: string
+  }
 
   return (
     <ConfigProvider locale={zhCN}>
-
-          <Table
+      <div className='alarmLog-warp'>
+        <div className='title'>告警管理</div>
+        <div className='condition'>
+          <div className='time-range'>
+            <span>时间范围</span>
+            <RangePicker
+              value={hackValue || momentDates}
+              onChange={handerChangeTiem}
+              onOpenChange={handerOpenChange}
+            />
+          </div>
+          <div className='state'>
+            <span>状态</span>
+            <Select value={stateRead} defaultValue="" style={{ width: 170 }} onChange={handleChangeState}>
+              <Option value="">全部</Option>
+              <Option value={0}>未读</Option>
+              <Option value={1}>已读</Option>
+            </Select>
+          </div>
+          <div>
+           <Button onClick={handleReset} type="primary">重置</Button>
+          </div>
+        </div>
+        <div className='search-read'>
+          <div className='search'>
+            <Search 
+              placeholder="请输入异常对象搜索" 
+              allowClear 
+              onSearch={handleSearch} 
+              style={{ width: 300 }} 
+            />
+          </div>
+          <div className='read'>
+            <Popconfirm
+              placement="topRight"
+              title="你确定要全部标记为已读吗？"
+              onConfirm={confirmAllRead}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Tooltip title="一键已读">
+                <Badge count={unreadNum}>
+                  <FileDoneOutlined style={{fontSize: "30px",color: "#177ddc"}} />
+                </Badge>
+              </Tooltip>
+            </Popconfirm>
+          </div>
+        </div>
+        <div className='table-list'>
+          <Table 
             scroll={{ y: "calc(100vh - 350px)" }}
             rowClassName='customRowClass'
-            rowSelection={rowSelection}
-            loading={tableLoading}
-            columns={columns}
-            dataSource={tableData}
-            pagination={paginationProps}
+            dataSource={dataSource?.content || []}
+            loading={loading}
+            rowKey={(record:any) => record.id}
             onChange={tableOnChange}
-            rowKey={record=>record.id}
-          />
+            pagination={paginationProps}
+            showSorterTooltip={false}
+          >
+            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="150px"/>
+            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="500px"/>
+            <Column title="更新时间" dataIndex="updatedTime" key="updatedTime" ellipsis={true} width="200px"
+              sorter={true} 
+            />
+            <Column title="状态" dataIndex="read" key="read" ellipsis={true} width="100px"
+              render={(_:any,{read}:any) =>
+              (
+                read 
+              ? 
+              <>
+                <span className='read'></span>
+                <span>已读</span>
+              </>
+              : 
+              <>
+                <span className='unread'></span>
+                <span>未读</span>
+              </>)}
+            />
+            <Column title="操作" dataIndex="id" key="id" ellipsis={true} width="150px"
+              render= {(_:any,{id,read}:any) => (
+                <Button 
+                  type="link" 
+                  className='buttonBlue'
+                  disabled={read}
+                  onClick={() => requestUpdateRead(id)}
+                  >
+                    标记已读
+                </Button>
+              )}
+            />
+          </Table>
+        </div>
+      </div>
     </ConfigProvider>
   );
 };
 
-export default connect(mapStateToProps)(UserManage);
-
-// export default memo(
-//   UserManage
-// );
+export default AlarmLog;
