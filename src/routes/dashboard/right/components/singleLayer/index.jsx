@@ -235,9 +235,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     }
   }
 
-  const selectedNextLevelComponent = (hasDrillDownArrConfig) => {
-    // console.log('hasDrillDownArrConfig', hasDrillDownArrConfig)
-  }
   // 通过全局变量 panelId 和 panels 来查找包含当前面板信息的对象，通过对象里的name来判断
   const curPanelType = bar.curPanelType
 
@@ -287,7 +284,6 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
             bar.isPanel && curPanelType === 2 && <TabPane tab="下钻" key="4">
               <DrillDownSetting
                 componentConfig={componentConfig}
-                selectedNextLevelComponent={selectedNextLevelComponent}
               ></DrillDownSetting>
             </TabPane>
           }

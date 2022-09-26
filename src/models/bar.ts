@@ -472,20 +472,20 @@ export default {
           dashboardConfig
         );
 
-        const drillDownParentReflect: any =
-          JSON.parse((localStorage as any).getItem("allHasParentReflect")) || {};
+        // const drillDownParentReflect: any =
+        //   JSON.parse((localStorage as any).getItem("allHasParentReflect")) || {};
         let finalComponents = components;
-        try {
-          finalComponents = components.map((item: any) => {
-            const comParentInfo = drillDownParentReflect[item.id];
-            if (comParentInfo) {
-              item.staticData.data = comParentInfo.parentData;
-            }
-            return item;
-          });
-        } catch (error) {
-          console.log("error", error);
-        }
+        // try {
+        //   finalComponents = components.map((item: any) => {
+        //     const comParentInfo = drillDownParentReflect[item.id];
+        //     if (comParentInfo) {
+        //       item.staticData.data = comParentInfo.parentData;
+        //     }
+        //     return item;
+        //   });
+        // } catch (error) {
+        //   console.log("error", error);
+        // }
         yield put({
           type: "save",
           payload: {
@@ -542,25 +542,25 @@ export default {
       //   }
       // })
       // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
-      const drillDownParentReflect: any = JSON.parse(
-        (localStorage as any).getItem("allHasParentReflect")
-      );
-      const updateDataForDrillDownComp = deepClone(componentData);
-      try {
-        for (const idKey in updateDataForDrillDownComp) {
-          if (drillDownParentReflect && drillDownParentReflect[idKey]) {
-            updateDataForDrillDownComp[idKey] = drillDownParentReflect[idKey].parentData;
-          }
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-      yield put({
-        type: "save",
-        payload: {
-          componentData: updateDataForDrillDownComp,
-        },
-      });
+      // const drillDownParentReflect: any = JSON.parse(
+      //   (localStorage as any).getItem("allHasParentReflect")
+      // );
+      // const updateDataForDrillDownComp = deepClone(componentData);
+      // try {
+      //   for (const idKey in updateDataForDrillDownComp) {
+      //     if (drillDownParentReflect && drillDownParentReflect[idKey]) {
+      //       updateDataForDrillDownComp[idKey] = drillDownParentReflect[idKey].parentData;
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.log("error", error);
+      // }
+      // yield put({
+      //   type: "save",
+      //   payload: {
+      //     componentData: updateDataForDrillDownComp,
+      //   },
+      // });
     },
     *getContainersData({ payload }: any, { call, put, select }: any): any {
       const dataContainerList = payload;
@@ -1946,12 +1946,10 @@ export default {
     },
     setComponentConfig(state: IBarState, { payload }: any) {
       state.componentConfig = payload;
-      // console.log('componentConfig', componentConfig)
       const index = state.components.findIndex((item: any) => {
         return item.id === payload.id;
       });
       state.components.splice(index, 1, state.componentConfig);
-      // calcDragScaleData
       return { ...state };
     },
     setGroupConfig(state: IBarState, { payload }: any) {

@@ -213,6 +213,7 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
 
 
   const onClose = () => {
+    deleteAllComponentThemeConfigs()
     setActiveId(null)
     props.onChange(false)
     // 设置bar.componentThemeConfig = null
@@ -259,6 +260,7 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
 
     // 更新组件样式配置信息
     const componentsStyleLists = Object.values(getComponentThemeConfigs())
+
     const componentsStyleParams = {
       configs: componentsStyleLists,
       dashboardId: bar.dashboardId
