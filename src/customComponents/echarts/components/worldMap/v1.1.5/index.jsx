@@ -498,6 +498,9 @@ class WorldMap extends Component {
             "四川": "sc"
           }
           const outgoingData = {
+            // 省市名
+            originalName: name,
+            // 省市名 首字母缩写
             name: provincesReflect[name],
             value: ''
           }
