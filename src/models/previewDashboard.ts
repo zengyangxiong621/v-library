@@ -44,7 +44,7 @@ export default {
         type: "getDataContainerList",
         payload: dashboardId,
       });
-      const func = async (component:any) => {
+      const func = async (component: any) => {
         let data = await http({
           method: "post",
           url: "/visual/container/data/get",
@@ -54,7 +54,7 @@ export default {
           },
         });
         const index = previewDashboard.dataContainerDataList.findIndex((item: any) => item.id === component.id);
-        if(component.dataType === "static") {
+        if (component.dataType === "static") {
           data = data.data;
         }
         if (index !== -1) {
@@ -64,10 +64,10 @@ export default {
         }
       };
       previewDashboard = yield select(({ previewDashboard }: any) => previewDashboard);
-      previewDashboard.dataContainerList.forEach(async(item: any) => {
+      previewDashboard.dataContainerList.forEach(async (item: any) => {
         let data: any = null;
         item.enable = item.modules.length > 0;
-        if(item.dataType === "static") {
+        if (item.dataType === "static") {
           data = item.staticData.data;
           previewDashboard.dataContainerDataList.push({ id: item.id, data });
         } else {
@@ -234,10 +234,10 @@ export default {
         ) => {
           if ("panelType" in layer && (layer.panelType === 0 || layer.panelType === 2)) {
             console.log('layer', layer)
-            ;(layer as any).modules =
-              (findLayerById(fullAmountDynamicAndDrillDownPanels, layer.id) as any)?.modules || []
-/*              fullAmountDynamicAndDrillDownPanels.find((item: any) => item.id === layer.id)
-                ?.modules || [];*/
+              ; (layer as any).modules =
+                (findLayerById(fullAmountDynamicAndDrillDownPanels, layer.id) as any)?.modules || []
+            /*              fullAmountDynamicAndDrillDownPanels.find((item: any) => item.id === layer.id)
+                            ?.modules || [];*/
           }
         }
       );
@@ -341,42 +341,49 @@ export default {
       }
     },
     *getComponentsData({ payload }: any, { call, put, select }: any): any {
+      let getCompoentDataFlag = false;
       const components = payload;
       const previewDashboard: any = yield select(
         ({ previewDashboard }: any) => previewDashboard
       );
       const { dashboardId, componentData, callbackArgs } = previewDashboard;
-      const func = async (component: any) => {
-        try {
-          const data = await http({
-            url: "/visual/module/getData",
-            method: "post",
-            body: {
-              moduleId: component.id,
-              dataType: component.dataType,
-              callBackParamValues: callbackArgs,
-            },
-          });
 
-          if (data) {
-            componentData[component.id] =
-              component.dataType !== "static" ? data : data.data;
-          } else {
-            throw new Error("请求不到数据");
+      const func = async (component: any) => {
+        if (!component.dataFrom || component.dataFrom === 0) {
+          getCompoentDataFlag = true;
+          try {
+            const data = await http({
+              url: "/visual/module/getData",
+              method: "post",
+              body: {
+                moduleId: component.id,
+                dataType: component.dataType,
+                callBackParamValues: callbackArgs,
+              },
+            });
+
+            if (data) {
+              componentData[component.id] =
+                component.dataType !== "static" ? data : data.data;
+            } else {
+              throw new Error("请求不到数据");
+            }
+          } catch (err) {
+            componentData[component.id] = null;
           }
-        } catch (err) {
-          componentData[component.id] = null;
         }
         return componentData[component.id];
       };
       yield Promise.all(components.map((item: any) => func(item)));
       // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
-      yield put({
-        type: "save",
-        payload: {
-          componentData,
-        },
-      });
+      if (getCompoentDataFlag) {
+        yield put({
+          type: "save",
+          payload: {
+            componentData,
+          },
+        });
+      }
     },
     *getContainersData({ payload }: any, { call, put, select }: any): any {
       const dataContainerList = payload;
