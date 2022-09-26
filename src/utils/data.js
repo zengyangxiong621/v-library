@@ -73,7 +73,7 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
       });
       return resultArr[resultArr.length - 1];
     } catch (e) {
-      return {};
+      return []
     }
   } else {
     return data;

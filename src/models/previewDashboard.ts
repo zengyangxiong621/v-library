@@ -20,6 +20,7 @@ import {
   duplicateDashboardConfig, deepForEachBeforeCallBack,
 } from "../utils"
 import { IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
+import { log } from "util"
 export default {
   namespace: "previewDashboard",
   state: JSON.parse(JSON.stringify(defaultData)),
@@ -390,7 +391,10 @@ export default {
       const previewDashboard: any = yield select(
         ({ previewDashboard }: any) => previewDashboard
       );
-      dataContainerList.forEach(async (item: any) => {
+/*      dataContainerList.forEach(async (item: any) => {
+
+      });*/
+      const func = async (item: any) => {
         const container = previewDashboard.dataContainerList.find(
           (container: any) => container.id === item.id
         );
@@ -398,19 +402,26 @@ export default {
         if (container.dataType === "static") {
           data = container.staticData.data;
         } else {
-          data = await http({
-            method: "post",
-            url: "/visual/container/data/get",
-            body: {
-              id: container.id,
-              callBackParamValues: previewDashboard.callbackArgs,
-            },
-          });
+          try {
+            data = await http({
+              method: "post",
+              url: "/visual/container/data/get",
+              body: {
+                id: container.id,
+                callBackParamValues: previewDashboard.callbackArgs,
+              },
+            });
+          } catch(e) {
+            data = []
+          }
         }
         previewDashboard.dataContainerDataList.find(
           (data: any) => data.id === item.id
         ).data = data;
-      });
+        return data
+      }
+      yield Promise.all(dataContainerList.map((item: any) => func(item)));
+      console.log('gggg', previewDashboard.dataContainerDataList)
       yield put({
         type: "save",
         payload: {
