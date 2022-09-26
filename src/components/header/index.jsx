@@ -7,6 +7,7 @@ import logo from '@/assets/images/logo.svg';
 import { useFetch } from "@/utils/useFetch";
 import {localStore} from "@/services/LocalStoreService"
 import { logout, forwardLogin } from '@/services/loginApi'
+import { IconFont } from '@/utils/useIcon'
 
 const createMenu = ((menuData, props) => {  //创建菜单
   const { location, history } = props
@@ -194,85 +195,95 @@ const Header = props => {
       </Menu.Item>
     </Menu>
   )
+  const toBack = () => {
+    history.back()
+  }
   return (
-    <div className="header-wraper">
-      <div className="logo">
-        <img src={logo} alt="" />
-        <span>可视化搭建平台</span>
-      </div>
-      <Menu
-        className="menu-nav"
-        theme="dark"
-        mode="horizontal"
-        selectedKeys={[currentPathname]}
-      >
-        {
-          createMenu(menuData, props)
-        }
-      </Menu>
+    <>
+      {
+        currentPathname === '/work-space' ? <div className="header-wraper"> 
+        <IconFont type='icon-fanhui' className='go-back left-icon'
+          onClick={() => toBack()} /> 空间管理  </div> :
+        <div className="header-wraper">
+          <div className="logo">
+            <img src={logo} alt="" />
+            <span>可视化搭建平台</span>
+          </div>
+          <Menu
+            className="menu-nav"
+            theme="dark"
+            mode="horizontal"
+            selectedKeys={[currentPathname]}
+          >
+            {
+              createMenu(menuData, props)
+            }
+          </Menu>
 
-      <div className="user-wraper">
-        <div className="drop-down">
-        {
-          workspaceList.length || isFindSpace ? 
-          <Dropdown overlay={getWorkSpaceMenus()} trigger={['click']}>
-            <span className="span" onClick={e => e.preventDefault()}>
-              {curWorkspace?.spaceName} <DownOutlined />
-            </span>
-          </Dropdown> : <></>
-        }
-        </div>
-        <div className="user">
-          {/* <img src={require('@/assets/images/avatar.png')} alt="" /> */}
-          <Dropdown overlay={userMenu} trigger={['click']}>
-            <div className='curUser'>
-              <i className="iconfont icon-yonghu" style={{ color: '#2482FF', fontSize: '18px' }}></i>
-              {
-                userInfo && <span title={userInfo.username}>{userInfo.username}</span>
-              }
+          <div className="user-wraper">
+            <div className="drop-down">
+            {
+              workspaceList.length || isFindSpace ? 
+              <Dropdown overlay={getWorkSpaceMenus()} trigger={['click']}>
+                <span className="span" onClick={e => e.preventDefault()}>
+                  {curWorkspace?.spaceName} <DownOutlined />
+                </span>
+              </Dropdown> : <></>
+            }
             </div>
-          </Dropdown>
+            <div className="user">
+              {/* <img src={require('@/assets/images/avatar.png')} alt="" /> */}
+              <Dropdown overlay={userMenu} trigger={['click']}>
+                <div className='curUser'>
+                  <i className="iconfont icon-yonghu" style={{ color: '#2482FF', fontSize: '18px' }}></i>
+                  {
+                    userInfo && <span title={userInfo.username}>{userInfo.username}</span>
+                  }
+                </div>
+              </Dropdown>
+            </div>
+          </div>
+
+          <Modal title="修改密码" visible={isModalVisible} confirmLoading={modifyLoading} getContainer={false} onOk={handleConfirm} onCancel={handleCancel} okText='确认' cancelText='取消'>
+            <Form
+              form={modifyForm}
+              name="basic"
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 18 }}
+              autoComplete="off"
+              initialValues={{
+                oldpsd:'',
+                newpsd:'',
+                reNewpsd:''
+              }}
+            >
+              <Form.Item
+                label="旧密码"
+                name="oldpsd"
+                rules={[{ required: true, message: '请输入旧密码!' }]}
+              >
+                <Input placeholder='请输入旧密码' />
+              </Form.Item>
+
+              <Form.Item
+                label="新密码"
+                name="newpsd"
+                rules={[{ required: true, message: '请输入新密码!' }]}
+              >
+                <Input.Password placeholder='请输入新密码' />
+              </Form.Item>
+
+              <Form.Item
+                label="新密码"
+                name="reNewpsd"
+              >
+                <Input.Password placeholder='请再次输入新密码' />
+              </Form.Item>
+            </Form>
+          </Modal>
         </div>
-      </div>
-
-      <Modal title="修改密码" visible={isModalVisible} confirmLoading={modifyLoading} getContainer={false} onOk={handleConfirm} onCancel={handleCancel} okText='确认' cancelText='取消'>
-        <Form
-          form={modifyForm}
-          name="basic"
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 18 }}
-          autoComplete="off"
-          initialValues={{
-            oldpsd:'',
-            newpsd:'',
-            reNewpsd:''
-          }}
-        >
-          <Form.Item
-            label="旧密码"
-            name="oldpsd"
-            rules={[{ required: true, message: '请输入旧密码!' }]}
-          >
-            <Input placeholder='请输入旧密码' />
-          </Form.Item>
-
-          <Form.Item
-            label="新密码"
-            name="newpsd"
-            rules={[{ required: true, message: '请输入新密码!' }]}
-          >
-            <Input.Password placeholder='请输入新密码' />
-          </Form.Item>
-
-          <Form.Item
-            label="新密码"
-            name="reNewpsd"
-          >
-            <Input.Password placeholder='请再次输入新密码' />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
+      }
+    </>
   )
 }
 
