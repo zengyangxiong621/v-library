@@ -495,7 +495,8 @@ class WorldMap extends Component {
             "东直门石油大厦": "dzmdc",
             "吉林数据中心": "jldc",
             "青海": "qh",
-            "四川": "sc"
+            "四川": "sc",
+            "西南区域中心": "xndc",
           }
           const outgoingData = {
             // 省市名

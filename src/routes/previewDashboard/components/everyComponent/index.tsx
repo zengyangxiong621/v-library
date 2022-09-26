@@ -13,7 +13,7 @@ import { Breadcrumb } from "antd";
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeReflect, bar, previewDashboard, dispatch, addDrillDownLevel, drillDownGlobalState, ...props }: any) => {
+const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeReflect, bar, previewDashboard, dispatch, addDrillDownLevel, changeBreadcrumbData, drillDownGlobalState, ...props }: any) => {
   const { moduleName, events, id, config } = componentData;
 
   const { mountAnimation } = layerInfo;
@@ -168,6 +168,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
       addDrillDownLevel();
+      changeBreadcrumbData(chartData)
       // const { seriesType, data } = chartData;
       // let hadFilterChartData = [];
       // if (typeof chartData === "object") {
