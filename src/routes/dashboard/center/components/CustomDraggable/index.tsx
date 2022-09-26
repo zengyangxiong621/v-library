@@ -20,7 +20,7 @@ import IndicatorCard from '@/customComponents/echarts/components/indicatorcard'
 import SwiperText from '@/customComponents/text/swiperText/v1.0.4'
 import SwiperTextConfig from '@/customComponents/text/swiperText/v1.0.4/config'
 import textConfig from '@/customComponents/echarts/components/worldMap/config'
-import Counter from '@/customComponents/assist/counter2/v1.0.5'
+import Counter from '@/customComponents/assist/counter2/v1.0.6'
 
 import FlowChart from '@/customComponents/echarts/components/flowChart/v1.0.0'
 import radarChartConfig from '@/customComponents/echarts/components/flowChart/v1.0.0/config'

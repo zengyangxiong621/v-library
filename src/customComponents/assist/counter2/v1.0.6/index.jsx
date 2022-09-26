@@ -138,10 +138,37 @@ class Counter extends Component {
     }
   }
 
+  replaceThemeColor = (arr) => {
+    console.log(arr,'arr')
+    const componentThemeConfig = this.props.themeConfig
+    arr.map(item => {
+      let { name, value, type,options } = item
+      if(item.hasOwnProperty('value')){
+        if (Array.isArray(value)) {
+          this.replaceThemeColor(value)
+        }else{
+          if (type === 'color'){
+            switch(name){
+              case 'color':
+                item.value = componentThemeConfig.textColor
+                break;
+              case 'themePureColor':
+                item.value = componentThemeConfig.pureColors[0]
+              default:
+                break;
+            }
+          }
+        }
+      } else if (Array.isArray(options) && options.length) {
+        this.replaceThemeColor(options)
+      }
+    })
+  }
+
   
 
   render () {
-    const { comData,fields } = this.props
+    const { comData,fields,themeConfig } = this.props
     const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const {config, staticData} = componentConfig
     // 组件静态或者传入组件的数据
@@ -153,32 +180,45 @@ class Counter extends Component {
     })
     originData = this.formatData(originData, fields2ValueMap)
     originData = originData.length ? originData[0] : []
+    const configOfTheme = JSON.parse(JSON.stringify(config))
+    console.log(themeConfig,'themeConfig')
+    if(themeConfig){
+      this.replaceThemeColor(configOfTheme)
+      this.props.onThemeChange({
+        id: componentConfig.id,
+        name: componentConfig.name,
+        moduleName: componentConfig.moduleName,
+        moduleVersion: componentConfig.moduleVersion,
+        config: configOfTheme
+      })
+    }
+    let copyConfig = themeConfig ? configOfTheme : config
     // 设置文本的大小问题
-    const dimension = this.formatConfig([this.getStyleData(config, "dimension")],[])
+    const dimension = this.formatConfig([this.getStyleData(copyConfig, "dimension")],[])
     // 获取标题样式
-    const titleStyle = this.formatConfig([this.getStyleData(config, "title")],[])
-    const displayStyle = this.getAllStyle(config)
+    const titleStyle = this.formatConfig([this.getStyleData(copyConfig, "title")],[])
+    const displayStyle = this.getAllStyle(copyConfig)
     // 获取数值样式
-    const dataRangConfig =  this.formatConfig([this.getStyleData(config, "dataRangConfig")],[])
+    const dataRangConfig =  this.formatConfig([this.getStyleData(copyConfig, "dataRangConfig")],[])
     // 小数位数
-    const decimalCount = this.getStyleData(config, "decimalCount").value
+    const decimalCount = this.getStyleData(copyConfig, "decimalCount").value
     // 分割数
-    const splitCount = this.getStyleData(config, 'splitCount').value
+    const splitCount = this.getStyleData(copyConfig, 'splitCount').value
     // 动画时间
-    const duration = this.getStyleData(config, 'duration')?.value || 2 ;
+    const duration = this.getStyleData(copyConfig, 'duration')?.value || 2 ;
     // 后缀功能
-    const suffixConfig = this.formatConfig([this.getStyleData(config, "后缀")],[])
+    const suffixConfig = this.formatConfig([this.getStyleData(copyConfig, "后缀")],[])
     // 补充前缀功能
-    const prefixConfig = this.formatConfig([this.getStyleData(config, "前缀")],[])
+    const prefixConfig = this.formatConfig([this.getStyleData(copyConfig, "前缀")],[])
     // 动画功能
-    const animate = this.getStyleData(config, 'animate')?.value || 'open';
+    const animate = this.getStyleData(copyConfig, 'animate')?.value || 'open';
     // 自定义符号
-    const symbolsConfig = this.formatConfig([this.getStyleData(config, "symbolsConfig")],[])
+    const symbolsConfig = this.formatConfig([this.getStyleData(copyConfig, "symbolsConfig")],[])
     let finalValue = Number(originData[fields[1]]) || 0
     finalValue = symbolsConfig?.show ? Math.abs(finalValue) : finalValue;
-    const increase = this.formatConfig([this.getStyleData(config, "增长")],[])
-    const even = this.formatConfig([this.getStyleData(config, "持平")],[])
-    const reduce = this.formatConfig([this.getStyleData(config, "减少")],[])
+    const increase = this.formatConfig([this.getStyleData(copyConfig, "增长")],[])
+    const even = this.formatConfig([this.getStyleData(copyConfig, "持平")],[])
+    const reduce = this.formatConfig([this.getStyleData(copyConfig, "减少")],[])
     const currentType = Number(originData[fields[1]]) > 0 ? increase: Number(originData[fields[1]]) === 0 ? even : reduce
 
     return (
@@ -245,6 +285,7 @@ class Counter extends Component {
               ...suffixConfig,
               fontWeight: suffixConfig.bold ? 'bold' : '',
               fontStyle: suffixConfig.italic ? 'italic' : '',
+              color: suffixConfig?.themePureColor || '#0F92FF',
               transform: `translate(${suffixConfig.x}px, ${suffixConfig.y}px)`,
               lineHeight: `${suffixConfig.lineHeight}px`,
             }}>{suffixConfig.content}</span> 
