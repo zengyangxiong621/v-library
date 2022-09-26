@@ -2,7 +2,7 @@ import RemoteBaseComponent from "@/components/RemoteBaseComponent"
 import { getFields } from "@/utils/data"
 import { useState, useRef } from "react"
 import TimeSelect from "@/customComponents/interactive/timeSelect"
-import ScrollTable from "@/customComponents/table/scrollTable"
+import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2"
 import Bar from "@/customComponents/echarts/components/bar/index"
 import SelectV2 from "@/customComponents/assist/select/v1.0.3/index"
 import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'

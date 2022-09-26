@@ -61,7 +61,7 @@ import {
   SHOW,
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from "../../../../../constant/home";
-import ScrollTable from "@/customComponents/table/scrollTable/index";
+import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import TimeSelect from "@/customComponents/interactive/timeSelect/index";
 import SelectV2 from '@/customComponents/assist/select/v1.0.3/index'
 import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
@@ -839,7 +839,7 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component.config = textConfig.config     // 本地测试     
+              // component.config = textConfig.config     // 本地测试
 
 
               if (component) {
@@ -989,7 +989,7 @@ const CustomDraggable
                                 //   componentConfig={component}
                                 //   fields={getFields(component)}
                                 //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                // ></CustomText> : 
+                                // ></CustomText> :
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}
@@ -998,6 +998,14 @@ const CustomDraggable
                                     fields={getFields(component)}
                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                   ></Counter> :
+                                  layer.moduleName === 'scrollTable' ?
+                                  <ScrollTable
+                                    themeConfig={bar.componentThemeConfig}
+                                    onThemeChange={onThemeChange}
+                                    componentConfig={component}
+                                    fields={getFields(component)}
+                                    comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                  ></ScrollTable> :
                                   layer.moduleName === "rankingBar" ?
                                     <RankingBar
                                       themeConfig={bar.componentThemeConfig}
