@@ -349,11 +349,9 @@ const ComponentDev = (props: any) => {
         <header className='header' style={{ background: "#171a24" }}>
           <div className='left-box'>
             <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
-            <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button>
+            {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button> */}
             {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>             */}
-            <span className='mr-16'>
-              {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ""}
-            </span>
+            {/* <span className='mr-16'>{hasSelected ? `已选 ${selectedRowKeys.length} 项` : ""}</span> */}
           </div>
           <div className='search'>
             {/* <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部" onChange={selectChange}>
@@ -380,7 +378,7 @@ const ComponentDev = (props: any) => {
             sortDirections={["ascend", "descend"]}
             rowClassName='customRowClass'
             loading={tableLoading}
-            rowSelection={rowSelection}
+            // rowSelection={rowSelection}
             columns={columns}
             dataSource={tableData}
             pagination={paginationProps}
