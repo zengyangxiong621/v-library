@@ -1,12 +1,12 @@
 import React from "react";
-import XSpreadsheet from "./x-spreadsheet"
+import XSpreadsheet from "./x-spreadsheet";
 import "./x-spreadsheet/dist/xspreadsheet.css";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export default function Spreadsheet(props) {
   const sheetEl = React.useRef(null);
   const sheetRef = React.useRef(null);
-  const containerId = `a${uuidv4()}b`
+  const containerId = `a${uuidv4()}b`;
   const [state, setState] = React.useState(props.data);
   React.useEffect(() => {
     const element = sheetEl.current;
@@ -34,15 +34,15 @@ export default function Spreadsheet(props) {
         indexWidth: 60,
       },
       style: {
-        bgcolor: '#181a24',
-        align: 'left',
-        valign: 'middle',
+        bgcolor: "#181a24",
+        align: "left",
+        valign: "middle",
         textwrap: false,
         strike: false,
         underline: false,
-        color: '#fff',
+        color: "#fff",
         font: {
-          name: 'Helvetica',
+          name: "Helvetica",
           size: 10,
           bold: false,
           italic: false,
@@ -53,7 +53,7 @@ export default function Spreadsheet(props) {
       .loadData(state) // load data
       .change((data) => {
         setState(data);
-        props.onChange && props.onChange(sheet.getData())
+        props.onChange && props.onChange(sheet.getData());
       });
     // const getData = sheet.getData
     sheetRef.current = sheet;

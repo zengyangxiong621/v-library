@@ -1,4 +1,4 @@
-import { connect as connectComponent } from 'dva';
+import { connect as connectComponent } from "dva";
 
 export const connect = (mapStateToProps: any) => {
   return (target: any) => (

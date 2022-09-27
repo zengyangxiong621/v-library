@@ -16,12 +16,12 @@ const { Option } = Select;
 // 功能
 const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   // 空间id
-  const curWorkspace:any = localStorage.getItem('curWorkspace') 
-  let spaceId: any = JSON.parse(curWorkspace)?.id;
-  let pageParams: any = {
+  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const spaceId: any = JSON.parse(curWorkspace)?.id;
+  const pageParams: any = {
     pageNo: 1,
     pageSize: 1000,
-  }
+  };
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
@@ -29,30 +29,30 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   });
   const [inputValue, setInputValue] = useState("");
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [firstData, setFirstData] = useState({})
+  const [firstData, setFirstData] = useState({});
 
   // 获取模板列表数据的方法
   const getDataDispatch = (data?: any) => {
-    const currentClass = data.origin ? data : resourceCenter.curSelectedGroup
-    let groupId =
-      ['-1', 'sysMatAll','myTempAll','sysTempAll'].indexOf(currentClass.groupId) > -1
+    const currentClass = data.origin ? data : resourceCenter.curSelectedGroup;
+    const groupId =
+      ["-1", "sysMatAll","myTempAll","sysTempAll"].indexOf(currentClass.groupId) > -1
         ? null
-        : ['myTempOhter', 'sysTempOhter'].indexOf(currentClass.groupId) > -1 ? 0 : currentClass.groupId;
+        : ["myTempOhter", "sysTempOhter"].indexOf(currentClass.groupId) > -1 ? 0 : currentClass.groupId;
     let finalBody:any = {
-      spaceId:['myresource','myTemp'].indexOf(currentClass.origin) > -1 ? spaceId : null,
+      spaceId:["myresource","myTemp"].indexOf(currentClass.origin) > -1 ? spaceId : null,
       type: [currentClass.origin],
       ...pageParams,
       map: sortMap,
     };
-    if(['myresource','myTemp','systemTemp'].indexOf(currentClass.origin) > -1){
-      finalBody.groupId = groupId
+    if(["myresource","myTemp","systemTemp"].indexOf(currentClass.origin) > -1){
+      finalBody.groupId = groupId;
     }else{
-      finalBody.subType = groupId ? [groupId] : []
+      finalBody.subType = groupId ? [groupId] : [];
     }
-    finalBody = data.origin ? finalBody : {...finalBody,...data }
+    finalBody = data.origin ? finalBody : {...finalBody,...data };
     // 我的素材，全部选择的type传空数组
     if(finalBody.type[0] === "myresource"){
-      finalBody.type = []
+      finalBody.type = [];
     }
     dispatch({
       type: "resourceCenter/getRightLists",
@@ -71,7 +71,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
       },
       cb: (data:any) => {
         // 默认选中第一个数据
-        const first = data[0].children[0].children[0]
+        const first = data[0].children[0].children[0];
         if(!change){
           // 设置左侧第一个
           dispatch({
@@ -82,30 +82,30 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
             }
           });
         }
-        let finalBody = {}
+        let finalBody = {};
         if(!change){
           finalBody = {
             ...first,
-            spaceId: first.origin === 'myresource' ? spaceId : null,
-            groupId: first.groupId === '-1' ? null : first.groupId, // 系统素材下不传
+            spaceId: first.origin === "myresource" ? spaceId : null,
+            groupId: first.groupId === "-1" ? null : first.groupId, // 系统素材下不传
             type: [first.origin]
           };
         }else{
           finalBody = {
             ...resourceCenter.curSelectedGroup,
-            spaceId: resourceCenter.curSelectedGroup.origin === 'myresource' ? spaceId : null,
-            groupId: resourceCenter.curSelectedGroup.groupId === '-1' ? null : resourceCenter.curSelectedGroup.groupId, // 系统素材下不传
+            spaceId: resourceCenter.curSelectedGroup.origin === "myresource" ? spaceId : null,
+            groupId: resourceCenter.curSelectedGroup.groupId === "-1" ? null : resourceCenter.curSelectedGroup.groupId, // 系统素材下不传
             type: [resourceCenter.curSelectedGroup.origin]
           };
         }
-        getDataDispatch(finalBody)
+        getDataDispatch(finalBody);
       }
     });
   };
   // 页面初始化- 请求模板列表数据
   useEffect(() => {
     // 先获取左侧数据
-    refreshGroupLists()
+    refreshGroupLists();
   }, [spaceId]);
 
   // 搜索框的值改变
@@ -118,7 +118,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   };
   // 搜索应用
   const search = (value: string) => {
-    let finalBody:any = {
+    const finalBody:any = {
       name: value,
     };
     getDataDispatch(finalBody);
@@ -180,7 +180,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           <div className="add-search">
             <div className="custom-btn" onClick={handleUpload}>
               <PlusOutlined style={{ fontSize: "12px", marginRight: "2px" }} />
-              <span>{['myTemp', 'systemTemp'].indexOf(resourceCenter.curSelectedGroup?.origin) > -1 ? '上传模板' : '上传素材'}</span>
+              <span>{["myTemp", "systemTemp"].indexOf(resourceCenter.curSelectedGroup?.origin) > -1 ? "上传模板" : "上传素材"}</span>
             </div>
             <div className="search-wrap">
               <Input.Search
@@ -215,7 +215,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
           <UploadFile
             uploadVisible={uploadVisible}
             spaceId={spaceId}
-            groupList={ ['design','myresource'].indexOf(resourceCenter.curSelectedGroup.origin) > -1 ? resourceCenter.groupList[1] : resourceCenter.groupList[0]}
+            groupList={ ["design","myresource"].indexOf(resourceCenter.curSelectedGroup.origin) > -1 ? resourceCenter.groupList[1] : resourceCenter.groupList[0]}
             origin={resourceCenter.curSelectedGroup.origin}
             changeShowState={changeShowState}
             refreshList={refreshGroupLists}

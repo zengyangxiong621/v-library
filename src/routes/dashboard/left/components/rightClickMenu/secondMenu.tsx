@@ -1,13 +1,13 @@
-import React, { memo } from 'react'
-import * as Icons from '@ant-design/icons'
-import './secondMenu.less'
+import React, { memo } from "react";
+import * as Icons from "@ant-design/icons";
+import "./secondMenu.less";
 
-import { IconFont } from '../../../../../utils/useIcon'
+import { IconFont } from "../../../../../utils/useIcon";
 
-import { connect } from 'dva'
+import { connect } from "dva";
 
 const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
-  const { data } = otherProps
+  const { data } = otherProps;
 
   const secondMenuItemClick = (key: string) => {
     // TODO 目前的操作只用发送dispatch即可，不用动态添加payload
@@ -15,8 +15,8 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
     dispatch({
       type: `bar/${key}`,
       // payload: willBeDispatch
-    })
-  }
+    });
+  };
   return (
     <div className='SecondMenu-wrap'>
       {
@@ -24,10 +24,10 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
           return (
             <div
               key={index}
-              className={`second-menu-item ${item.children && 'li-hover'}`}
+              className={`second-menu-item ${item.children && "li-hover"}`}
               onClickCapture={() => secondMenuItemClick(item.key)}
             >
-              <IconFont style={{ fontSize: '12px' }} type={`icon-${item.icon}`} />
+              <IconFont style={{ fontSize: "12px" }} type={`icon-${item.icon}`} />
               <div className='second-menu-item-li'>
                 {
                   item.name
@@ -47,13 +47,13 @@ const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
                 }
               </div>
             </div>
-          )
+          );
         })
       }
     </div>
-  )
-}
+  );
+};
 
 export default memo(connect(
   ({ bar }: any) => ({ bar })
-)(SecondMenu))
+)(SecondMenu));

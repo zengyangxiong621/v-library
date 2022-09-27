@@ -1,25 +1,25 @@
-import { h } from './element';
-import { bindClickoutside, unbindClickoutside } from './event';
-import { cssPrefix } from '../config';
-import Icon from './icon';
-import FormInput from './form_input';
-import Dropdown from './dropdown';
+import { h } from "./element";
+import { bindClickoutside, unbindClickoutside } from "./event";
+import { cssPrefix } from "../config";
+import Icon from "./icon";
+import FormInput from "./form_input";
+import Dropdown from "./dropdown";
 // Record: temp not used
 // import { xtoast } from './message';
-import { tf } from '../locale/locale';
+import { tf } from "../locale/locale";
 
 class DropdownMore extends Dropdown {
   constructor(click) {
-    const icon = new Icon('ellipsis');
-    super(icon, 'auto', false, 'top-left');
+    const icon = new Icon("ellipsis");
+    super(icon, "auto", false, "top-left");
     this.contentClick = click;
   }
 
   reset(items) {
-    const eles = items.map((it, i) => h('div', `${cssPrefix}-item`)
-      .css('width', '150px')
-      .css('font-weight', 'normal')
-      .on('click', () => {
+    const eles = items.map((it, i) => h("div", `${cssPrefix}-item`)
+      .css("width", "150px")
+      .css("font-weight", "normal")
+      .on("click", () => {
         this.contentClick(i);
         this.hide();
       })
@@ -31,13 +31,13 @@ class DropdownMore extends Dropdown {
 }
 
 const menuItems = [
-  { key: 'delete', title: tf('contextmenu.deleteSheet') },
+  { key: "delete", title: tf("contextmenu.deleteSheet") },
 ];
 
 function buildMenuItem(item) {
-  return h('div', `${cssPrefix}-item`)
+  return h("div", `${cssPrefix}-item`)
     .child(item.title())
-    .on('click', () => {
+    .on("click", () => {
       this.itemClick(item.key);
       this.hide();
     });
@@ -49,8 +49,8 @@ function buildMenu() {
 
 class ContextMenu {
   constructor() {
-    this.el = h('div', `${cssPrefix}-contextmenu`)
-      .css('width', '160px')
+    this.el = h("div", `${cssPrefix}-contextmenu`)
+      .css("width", "160px")
       .children(...buildMenu.call(this))
       .hide();
     this.itemClick = () => {};
@@ -86,14 +86,14 @@ export default class Bottombar {
     });
     this.contextMenu = new ContextMenu();
     this.contextMenu.itemClick = deleteFunc;
-    this.el = h('div', `${cssPrefix}-bottombar`).children(
+    this.el = h("div", `${cssPrefix}-bottombar`).children(
       this.contextMenu.el,
-      this.menuEl = h('ul', `${cssPrefix}-menu`).child(
-        h('li', '').children(
-          new Icon('add').on('click', () => {
+      this.menuEl = h("ul", `${cssPrefix}-menu`).child(
+        h("li", "").children(
+          new Icon("add").on("click", () => {
             addFunc();
           }),
-          h('span', '').child(this.moreEl),
+          h("span", "").child(this.moreEl),
         ),
       ),
     );
@@ -101,18 +101,18 @@ export default class Bottombar {
 
   addItem(name, active) {
     this.dataNames.push(name);
-    const item = h('li', active ? 'active' : '').child(name);
-    item.on('click', () => {
+    const item = h("li", active ? "active" : "").child(name);
+    item.on("click", () => {
       this.clickSwap2(item);
-    }).on('contextmenu', (evt) => {
+    }).on("contextmenu", (evt) => {
       const { offsetLeft, offsetHeight } = evt.target;
       this.contextMenu.setOffset({ left: offsetLeft, bottom: offsetHeight + 1 });
       this.deleteEl = item;
-    }).on('dblclick', () => {
+    }).on("dblclick", () => {
       const v = item.html();
-      const input = new FormInput('auto', '');
+      const input = new FormInput("auto", "");
       input.val(v);
-      input.input.on('blur', ({ target }) => {
+      input.input.on("blur", ({ target }) => {
         const { value } = target;
         const nindex = this.dataNames.findIndex(it => it === v);
         this.renameItem(nindex, value);
@@ -123,7 +123,7 @@ export default class Bottombar {
         this.updateFunc(nindex, value);
         */
       });
-      item.html('').child(input.el);
+      item.html("").child(input.el);
       input.focus();
     });
     if (active) {
@@ -137,7 +137,7 @@ export default class Bottombar {
   renameItem(index, value) {
     this.dataNames.splice(index, 1, value);
     this.moreEl.reset(this.dataNames);
-    this.items[index].html('').child(value);
+    this.items[index].html("").child(value);
     this.updateFunc(index, value);
   }
 

@@ -1,30 +1,30 @@
-import React, {memo, useState, useEffect} from 'react';
-import {Modal, Button} from 'antd'
-import './modal.less'
+import React, {memo, useState, useEffect} from "react";
+import {Modal, Button} from "antd";
+import "./modal.less";
 import {
   ExclamationCircleFilled,
   CloseOutlined
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 
 export const CustomModal = ({onCancel, onOk,  onClose, content, cancelText, okText, title, desc , ...props}) => {
-  const [loading, setLoading] = useState(false)
-  const [visible, setVisible] = useState(true)
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(true);
   const handleCancel = async () => {
-    await onCancel()
-    setVisible(false)
-    handleClose()
-  }
+    await onCancel();
+    setVisible(false);
+    handleClose();
+  };
   const handleConfirm = async () => {
-    setLoading(true)
-    await onOk()
-    setVisible(false)
-    handleClose()
-  }
+    setLoading(true);
+    await onOk();
+    setVisible(false);
+    handleClose();
+  };
   const handleClose = () => {
     setTimeout(() => {
-      onClose()
-    }, 200)
-  }
+      onClose();
+    }, 200);
+  };
   return (
     <Modal
       visible={visible}
@@ -37,11 +37,11 @@ export const CustomModal = ({onCancel, onOk,  onClose, content, cancelText, okTe
     >
       <div className="modal-body g-flex g-pl-4 g-pt-2" style={{height: 80}}>
         <div>
-          <ExclamationCircleFilled style={{fontSize: 24, color: '#FFBF00'}}/>
+          <ExclamationCircleFilled style={{fontSize: 24, color: "#FFBF00"}}/>
         </div>
         <div className="modal-body-content g-pl-4 g-mt-px">
-          <div style={{color: '#fff', fontSize: '14px'}}>{content}</div>
-          <div style={{color: '#ccc', fontSize: '12px'}}>{desc}</div>
+          <div style={{color: "#fff", fontSize: "14px"}}>{content}</div>
+          <div style={{color: "#ccc", fontSize: "12px"}}>{desc}</div>
         </div>
       </div>
       <div className="modal-footer g-flex g-justify-end">
@@ -49,7 +49,7 @@ export const CustomModal = ({onCancel, onOk,  onClose, content, cancelText, okTe
         <Button onClick={handleConfirm} loading={loading} type="primary">{okText}</Button>
       </div>
     </Modal>
-  )
-}
+  );
+};
 
-export default memo(CustomModal)
+export default memo(CustomModal);

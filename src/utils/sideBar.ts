@@ -130,7 +130,7 @@ type threeParams2 = (a: any[], b: string[], c: string) => any[];
  * return: boolean[]
  */
 const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
-  let res: string[] = [];
+  const res: string[] = [];
   const recursiveFn = (data: any, ids: string[], field: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -234,7 +234,7 @@ const group: groupParams2 = (treeData, selectedNodes) => {
     singleShowLayer: false,
     modules: [],
   };
-  let needPickItem: any = [];
+  const needPickItem: any = [];
   const recursiveFn = (data: any, id: string, isDone: boolean) => {
     // 成组前先找到将来新组要插入的位置
     const insertIndex = data.findIndex((item: any) => {
@@ -356,14 +356,14 @@ const generateTreeData: () => any = () => {
 
     const modules: any = [];
     for (let i = 1; i < 4; i++) {
-      let key = `${preKey}-${i}`;
+      const key = `${preKey}-${i}`;
       let prefix = "";
       const parentId = +preKey === 0 ? "parent" : preKey;
       if (i < 2) {
         modules.push(key);
-        prefix = `group_`;
+        prefix = "group_";
       } else {
-        prefix = `components_`;
+        prefix = "components_";
       }
       tns.push({
         name: `${prefix}${key}`,

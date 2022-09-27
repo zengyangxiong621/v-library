@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '121', //组件ID
+  "id": "121", //组件ID
   "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
   "name": "多行文本", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -116,7 +116,7 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": '48'
+          "value": "48"
         }
       ]
     },
@@ -159,7 +159,7 @@ const componentDefaultConfig = {
     {
       "name": "shadow",
       "displayName": "阴影",
-      "type": 'collapse',
+      "type": "collapse",
       "hasSwitch": true,
       "defaultExpand": true,
       "value": [
@@ -184,15 +184,15 @@ const componentDefaultConfig = {
     }
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

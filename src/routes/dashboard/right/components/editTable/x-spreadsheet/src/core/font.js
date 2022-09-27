@@ -1,17 +1,17 @@
 // docs
-import './_.prototypes';
+import "./_.prototypes";
 
 /** default font list
  * @type {BaseFont[]}
  */
 const baseFonts = [
-  { key: 'Arial', title: 'Arial' },
-  { key: 'Helvetica', title: 'Helvetica' },
-  { key: 'Source Sans Pro', title: 'Source Sans Pro' },
-  { key: 'Comic Sans MS', title: 'Comic Sans MS' },
-  { key: 'Courier New', title: 'Courier New' },
-  { key: 'Verdana', title: 'Verdana' },
-  { key: 'Lato', title: 'Lato' },
+  { key: "Arial", title: "Arial" },
+  { key: "Helvetica", title: "Helvetica" },
+  { key: "Source Sans Pro", title: "Source Sans Pro" },
+  { key: "Comic Sans MS", title: "Comic Sans MS" },
+  { key: "Courier New", title: "Courier New" },
+  { key: "Verdana", title: "Verdana" },
+  { key: "Lato", title: "Lato" },
 ];
 
 /** default fontSize list

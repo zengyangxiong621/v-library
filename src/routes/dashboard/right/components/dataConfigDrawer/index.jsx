@@ -8,12 +8,6 @@ import ModalConfirm from '@/components/modalConfirm'
 import { http } from '../../../../../services/request'
 
 import {
-  sortableContainer,
-  sortableElement,
-  sortableHandle,
-} from 'react-sortable-hoc';
-
-import {
   Drawer,
   Button,
   Collapse,
@@ -30,9 +24,10 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
   PlusOutlined,
-  MenuOutlined
+  CaretUpOutlined
 } from '@ant-design/icons';
-import {findLayerById} from "@/utils";
+import { findLayerById } from "@/utils";
+import { IconFont } from '@/utils/useIcon'
 
 const cfilters = [
   {
@@ -307,7 +302,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
                 <li className="component-list">
                   <i className="dot"></i>
                   <span className="title" onClick={e => showComponentDetail(e, item)}>
-                    {bar.components.find(jtem => jtem.id === item).name + "_" + item}
+                    {bar.components.find(jtem => jtem.id === item)?.name + "_" + item}
                   </span>
                 </li>)
             })}
@@ -453,7 +448,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     } else {
       effectHandler()
       const activeCollapseKeysNew = [...activeCollapseKeys]
-      setActiveCollapseKeys(activeCollapseKeysNew.filter(item=>item !== filter.id))
+      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id))
     }
   }
 
@@ -564,7 +559,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         }
       })
       const activeCollapseKeysNew = [...activeCollapseKeys]
-      setActiveCollapseKeys(activeCollapseKeysNew.filter(item=>item !== filter.id))
+      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id))
       if (props.type === 'component') {
         props.onUpdateFilters(data)
       }
@@ -577,9 +572,11 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     return array;
   }
 
-  const onSortEnd = async ({ oldIndex, newIndex }) => {
+  const onSortEnd = async ( item, key ) => {
+    if(key === 0) return
     const all = [...filters]
-    const newFifters = arrayMove(all, oldIndex, newIndex)
+    const newFifters = arrayMove(all, key, key-1)
+    setFilters(newFifters)
     const comFilters = newFifters.map(item => {
       return {
         id: item.id,
@@ -603,21 +600,18 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     })
   };
 
-  const DragHandle = sortableHandle(() => <span className="cus-fifter-sort-dot"><MenuOutlined /></span>);
-
-  const SortableContainer = sortableContainer(({ children }) => {
-    return <ul className="cus-sort-wraper">{children}</ul>;
-  });
-
-  const SortableItem = sortableElement(({ item }) => (
-    FilterItem(item)
-  ));
-
-  const FilterItem = item => (
+  const FilterItem = (item,key) => (
     <li className="cus-fifter-sort-item" key={item.id}>
       {!item.isNewAdd ?
         <React.Fragment>
-          <DragHandle />
+          <span className={`${key===0 ? 'disable-span' : ''} cus-fifter-sort-dot`}  title="上移" onClick={() =>onSortEnd(item,key)}>
+            <IconFont
+              type='icon-shangyi'
+              style={{
+                fontSize: '12px' //图标大小
+              }}
+            />
+          </span>
           <Checkbox defaultChecked={item.enable} onChange={v => enableFifter(v, item)} className="sort-box" />
         </React.Fragment> : null
       }
@@ -659,7 +653,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             </div>
             <div className="body">
               <div className="code-editor">
-              <div className="cus-code">{`function filter(data,callbackArgs){`}</div>
+                <div className="cus-code">{`function filter(data,callbackArgs){`}</div>
                 <div className="code-wraper">
                   <CodeEditor value={item.content} language="javascript" onChange={(e) => codeChange(e, item)}></CodeEditor>
                 </div>
@@ -706,15 +700,15 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       </div>
       {
         (filters.length || filterOfAdd) ?
-          <SortableContainer onSortEnd={onSortEnd} useDragHandle>
+          <ul className="cus-sort-wraper">
             {filters.map((item, index) => (
-              <SortableItem key={item.id} index={index} item={item} />
+              FilterItem(item,index)
             ))}
             {
               filterOfAdd ?
-                FilterItem(filterOfAdd) : null
+                FilterItem(filterOfAdd,'isAdd') : null
             }
-          </SortableContainer> : null
+          </ul> : null
       }
       {
         props.type === 'component'

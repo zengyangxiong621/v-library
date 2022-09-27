@@ -1,4 +1,4 @@
-import { xy2expr, expr2xy } from './alphabet';
+import { xy2expr, expr2xy } from "./alphabet";
 
 class CellRange {
   constructor(sri, sci, eri, eci, w = 0, h = 0) {
@@ -207,7 +207,7 @@ class CellRange {
 
   static valueOf(ref) {
     // B1:B8, B1 => 1 x 1 cell range
-    const refs = ref.split(':');
+    const refs = ref.split(":");
     const [sci, sri] = expr2xy(refs[0]);
     let [eri, eci] = [sri, sci];
     if (refs.length > 1) {

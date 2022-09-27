@@ -1,6 +1,6 @@
-import './_.prototypes';
+import "./_.prototypes";
 
-const alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+const alphabets = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
 /** index number 2 letters
  * @example stringAt(26) ==> 'AA'
@@ -10,7 +10,7 @@ const alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', '
  * @returns {string}
  */
 export function stringAt(index) {
-  let str = '';
+  let str = "";
   let cindex = index;
   while (cindex >= alphabets.length) {
     cindex /= alphabets.length;
@@ -47,10 +47,10 @@ export function indexAt(str) {
  * @returns {tagXY}
  */
 export function expr2xy(src) {
-  let x = '';
-  let y = '';
+  let x = "";
+  let y = "";
   for (let i = 0; i < src.length; i += 1) {
-    if (src.charAt(i) >= '0' && src.charAt(i) <= '9') {
+    if (src.charAt(i) >= "0" && src.charAt(i) <= "9") {
       y += src.charAt(i);
     } else {
       x += src.charAt(i);

@@ -1,36 +1,36 @@
-import { memo, useCallback, useEffect } from 'react'
-import { connect } from 'dva'
-import axios from 'axios'
-import './index.less'
+import { memo, useCallback, useEffect } from "react";
+import { connect } from "dva";
+import axios from "axios";
+import "./index.less";
 
 const EveryItem = (props: any) => {
-  const { data, dispatch, bar,type } = props
+  const { data, dispatch, bar,type } = props;
 
   const importComponent = (data: any) => {
     return axios.get(`${(window as any).CONFIG.COMP_URL}/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
-  }
+  };
 
   const componentCreate = async() => {
     if(type === "design"){
-      window.eval(`${await importComponent(data)}`)
+      window.eval(`${await importComponent(data)}`);
       const { ComponentDefaultConfig } = (window as any).VComponents;
       dispatch({
-        type: 'bar/createComponent',
+        type: "bar/createComponent",
         payload: ComponentDefaultConfig,
         itemData: data
-      })
+      });
     }else{
-      const { moduleDefaultConfig } = bar
+      const { moduleDefaultConfig } = bar;
       const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
-        return item.moduleName === data.moduleName
-      })
+        return item.moduleName === data.moduleName;
+      });
       dispatch({
-        type: 'bar/createComponent',
+        type: "bar/createComponent",
         payload: currentDefaultConfig,
         itemData: data
-      })
+      });
     }
-  }
+  };
 
   
 
@@ -41,9 +41,9 @@ const EveryItem = (props: any) => {
       </div>
       <span className='db-text'>{data.name}</span>
     </div>
-  )
-}
+  );
+};
 
 export default connect(({ bar }: any) => (
   { bar }
-))(EveryItem)
+))(EveryItem);

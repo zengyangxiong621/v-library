@@ -1,15 +1,15 @@
-import { memo, useState, useEffect, useCallback, useMemo } from 'react'
-import './index.less'
-import zhCN from 'antd/es/locale/zh_CN'
+import { memo, useState, useEffect, useCallback, useMemo } from "react";
+import "./index.less";
+import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from 'antd'
-import { PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons'
+import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from "antd";
+import { PlusOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
-import ImportComponent from './components/importComponent'
+import ImportComponent from "./components/importComponent";
 
-import { http } from '@/services/request'
+import { http } from "@/services/request";
 
-const { Option } = Select
+const { Option } = Select;
 
 type TDataSourceParams = {
   status?: number | null;
@@ -23,29 +23,29 @@ type TDataSourceParams = {
 
 // 初始化数据
 const ComponentDev = (props: any) => {
-  const [inputValue, setInputValue] = useState('')
-  const [status, setStatus] = useState(null) 
-  const [isShowImportModal, setIsShowImportModal] = useState(false) 
+  const [inputValue, setInputValue] = useState("");
+  const [status, setStatus] = useState(null); 
+  const [isShowImportModal, setIsShowImportModal] = useState(false); 
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
-    pageSize: 30,
-  })
-  const [tableMap, setTableMap] = useState({})
-  const [totalElements, setTotalElements] = useState(0)
-  const [tableData, setTableData] = useState([])
-  const [tableLoading, setTableLoading] = useState(false)
+    pageSize: 10,
+  });
+  const [tableMap, setTableMap] = useState({});
+  const [totalElements, setTotalElements] = useState(0);
+  const [tableData, setTableData] = useState([]);
+  const [tableLoading, setTableLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
   const resetTableInfo = (data: any) => {
-    setTableData(data.content)
+    setTableData(data.content);
     setPageInfo({
       pageNo: data.pageNo,
       pageSize: data.pageSize,
-    })
-    setTotalElements(data.totalElements)
-  }
+    });
+    setTotalElements(data.totalElements);
+  };
   /**
    * description: 根据不同的参数请求表格数据(首次加载、搜索、换页、调整每页显示的条数)
    * params: 发送请求所需要的参数
@@ -56,65 +56,65 @@ const ComponentDev = (props: any) => {
     name: null,
     ...pageInfo,
     map: tableMap,
-  }
+  };
   // 获取列表数据
   const getTableData = async (differentParams: TDataSourceParams = defaultParams) => {
-    setTableLoading(true)
+    setTableLoading(true);
     try {
       const data = await http({
-        url: '/visual/module-manage/queryModuleList',
-        method: 'post',
+        url: "/visual/module-manage/queryModuleList",
+        method: "post",
         body: differentParams
-      })
-      data && await resetTableInfo(data)
+      });
+      data && await resetTableInfo(data);
     } catch (error) {
       console.log(error);
     }finally{
-      setTableLoading(false)
+      setTableLoading(false);
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     // 请求完成，冲着表格的数据和页码信息
-  }
+  };
   // 获取表格数据
   useEffect(() => {
-    getTableData()
+    getTableData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
   // 保证每次拿到最新的status值
   useEffect(() => {
-    setStatus(status)
-  }, [status])
+    setStatus(status);
+  }, [status]);
 
   // 下拉框选择
   const selectChange = (value: any) => {
-    setStatus(value)
-  }
+    setStatus(value);
+  };
   // 按类型搜索
   const searchByType = async (e: any) => {
     const finalParams: TDataSourceParams = {
       status: status, 
-      name: e === '' ? null : e,
+      name: e === "" ? null : e,
       pageNo: 1,
       pageSize: pageInfo.pageSize,
       map: tableMap
-    }
-    getTableData(finalParams)
-  }
+    };
+    getTableData(finalParams);
+  };
 
   // 导入
   const handldImport = () => {
-    setIsShowImportModal(true)
-  }
+    setIsShowImportModal(true);
+  };
   // 关闭数据源弹窗
   const changeShowState = (modalType: string) => {
-    modalType === 'add' 
+    modalType === "add" 
     ? setIsShowImportModal(false)
-    : '' // 无编辑
-  }
+    : ""; // 无编辑
+  };
   // 刷新表格数据
   const refreshTable = () => {
-    getTableData()
-  }
+    getTableData();
+  };
 
   /**********  删除、编辑 操作 *************/
   // const handleDelete = async (moduleId: string,appName: Array<string>) => {
@@ -122,110 +122,110 @@ const ComponentDev = (props: any) => {
     // 点击删除 先调查询接口
     const appName = await http({
       url: `/visual/module-manage/usedModuleAppList/${moduleId}`, 
-      method: 'get'
-    })
+      method: "get"
+    });
     if (appName.length > 0) {
       Modal.confirm({
-        title: '删除组件',
+        title: "删除组件",
         cancelButtonProps: {
           style: {
-            display: 'none'
+            display: "none"
           }
         },
         icon: <ExclamationCircleFilled />,
-        content: `当前组件被 ${appName.join('、')} 应用使用，不能进行删除操作。`,
-        okText: '确定',
+        content: `当前组件被 ${appName.join("、")} 应用使用，不能进行删除操作。`,
+        okText: "确定",
         // cancelText: '取消',
         bodyStyle: {
-          background: '#232630',
+          background: "#232630",
         },
-      })
+      });
     
     } else {
       Modal.confirm({
-        title: '删除组件',
+        title: "删除组件",
         okButtonProps: {
           style: {
-            backgroundColor: '#e9535d',
-            border: 'none',
+            backgroundColor: "#e9535d",
+            border: "none",
           }
         },
         cancelButtonProps: {
           style: {
-            backgroundColor: '#3d404d'
+            backgroundColor: "#3d404d"
           }
         },
         icon: <ExclamationCircleFilled />,
-        content: '删除后不可恢复，确认删除此组件吗?',
-        okText: '确定',
-        cancelText: '取消',
+        content: "删除后不可恢复，确认删除此组件吗?",
+        okText: "确定",
+        cancelText: "取消",
         bodyStyle: {
-          background: '#232630',
+          background: "#232630",
         },
         async onOk(close) {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           const data = await http({
             url: `/visual/module-manage/deleteModule/${moduleId}`, 
-            method: 'delete'
-          })
+            method: "delete"
+          });
           if (data) {
-            close()
-            refreshTable()
+            close();
+            refreshTable();
           } else {
-            message.error({ content: '删除失败', duration: 2 })
+            message.error({ content: "删除失败", duration: 2 });
           }
         },
         onCancel(close) {
-          close()
+          close();
         }
-      })
+      });
     }
-  }
+  };
   const handldExport = (text: any) => {
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = text.downloadUrl;
     a.download = text.name;
     a.click();
-  }
+  };
   const handleExportList = (text: any) => {
-    console.log('批量导出 暂无');
+    console.log("批量导出 暂无");
     
-  }
+  };
   const handleOn = (record: any) => {
-    console.log(record,'上架')
-  }
+    console.log(record,"上架");
+  };
   const handleOff = (record: any) => {
-    console.log(record,'下架')
-  }
+    console.log(record,"下架");
+  };
 
   // 表格排序
   const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
-    if (action === 'sort') {
-      const { field, order } = sorter
+    if (action === "sort") {
+      const { field, order } = sorter;
       // sorter: true-asc, false-desc, 不排序-undefined
-      if (order === undefined) return
+      if (order === undefined) return;
       let sortKey:any;
-      if (field === 'moduleVersion') {
-        sortKey = 'module_version'
-      } else if(field === 'updatedAt'){
-        sortKey = 'created_time'
+      if (field === "moduleVersion") {
+        sortKey = "module_version";
+      } else if(field === "updatedAt"){
+        sortKey = "created_time";
       } else {
-        sortKey = null
+        sortKey = null;
       }
       // 更新 tableMap, 在别处发请求时会带上当前排序条件
       setTableMap({
         [sortKey]: order === "ascend"
-      })
+      });
       // 发送请求
       const finalParams: TDataSourceParams = {
         status: status,
-        name: inputValue === '' ? null : inputValue,
+        name: inputValue === "" ? null : inputValue,
         ...pageInfo,
         map: tableMap,
-      }
-      getTableData(finalParams)
+      };
+      getTableData(finalParams);
     }
-  }
+  };
   // 表格分页配置
   const paginationProps = {
     total: totalElements,
@@ -241,31 +241,31 @@ const ComponentDev = (props: any) => {
     onChange(page: number, pageSize: number) {
       const finalParams: TDataSourceParams = {
         status: status,
-        name: inputValue === '' ? null : inputValue,
+        name: inputValue === "" ? null : inputValue,
         pageNo: page,
         pageSize,
         map: tableMap
-      }
-      getTableData(finalParams)
+      };
+      getTableData(finalParams);
     },
-  }
+  };
   // Table columns
   const columns = [
     {
-      title: '组件名称',
-      dataIndex: 'name',
-      key: 'name',
+      title: "组件名称",
+      dataIndex: "name",
+      key: "name",
       width: 250,
-      className: 'customHeaderColor',
+      className: "customHeaderColor",
       ellipsis: true,
       render: (text: any) => <span>{text}</span>,
     },
     {
-      title: '组件版本',
-      key: 'moduleVersion',
+      title: "组件版本",
+      key: "moduleVersion",
       sorter: true,
       ellipsis: true,
-      dataIndex: 'moduleVersion',
+      dataIndex: "moduleVersion",
     },
     // {
     //   title: '状态',
@@ -282,32 +282,32 @@ const ComponentDev = (props: any) => {
     //   }
     // },
     {
-      title: '开发者',
-      dataIndex: 'updatedBy',
-      key: 'updatedBy',
+      title: "开发者",
+      dataIndex: "updatedBy",
+      key: "updatedBy",
       ellipsis: true,
     },
     {
-      title: '导入时间',
-      key: 'updatedAt',
+      title: "导入时间",
+      key: "updatedAt",
       sorter: true,
       width: 300,
       ellipsis: true,
       showSorterTooltip: false,
-      dataIndex: 'updatedAt',
+      dataIndex: "updatedAt",
       render: (time: any, data: any) => {
         return (
           <>
             {time}
           </>
-        )
+        );
       },
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       ellipsis: true,
-      width: 200,
+      width: 120,
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
@@ -327,7 +327,7 @@ const ComponentDev = (props: any) => {
                 onClickCapture={() => handleDelete(record.id)}
                 >删除</Button> */}
           </Space>
-        )
+        );
       }
 
     },
@@ -346,14 +346,12 @@ const ComponentDev = (props: any) => {
     <ConfigProvider locale={zhCN}>
       <div className='ComponentDev-wrap'>
         <div className='title'>组件开发</div>
-        <header className='header' style={{ background: '#171a24' }}>
+        <header className='header' style={{ background: "#171a24" }}>
           <div className='left-box'>
             <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
-            <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button>
+            {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button> */}
             {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>             */}
-            <span className='mr-16'>
-              {hasSelected ? `已选 ${selectedRowKeys.length} 项` : ''}
-            </span>
+            {/* <span className='mr-16'>{hasSelected ? `已选 ${selectedRowKeys.length} 项` : ""}</span> */}
           </div>
           <div className='search'>
             {/* <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部" onChange={selectChange}>
@@ -376,11 +374,11 @@ const ComponentDev = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: '53vh' }}
-            sortDirections={['ascend', 'descend']}
+            scroll={{ y: "calc(100vh - 300px)" }}
+            sortDirections={["ascend", "descend"]}
             rowClassName='customRowClass'
             loading={tableLoading}
-            rowSelection={rowSelection}
+            // rowSelection={rowSelection}
             columns={columns}
             dataSource={tableData}
             pagination={paginationProps}
@@ -396,23 +394,23 @@ const ComponentDev = (props: any) => {
         />
       </div>
     </ConfigProvider>
-  )
-}
+  );
+};
 
 
 // SelectOptions
 const selectOptions = [
   {
-    name: '全部',
-    key: '',
+    name: "全部",
+    key: "",
   },
   {
-    name: '已上架',
+    name: "已上架",
     key: 0,
   },
   {
-    name: '未上架',
+    name: "未上架",
     key: 1,
   },
-]
-export default memo(ComponentDev)
+];
+export default memo(ComponentDev);

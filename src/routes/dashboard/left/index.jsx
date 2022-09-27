@@ -13,6 +13,7 @@ import {
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
 import { IconFont } from '../../../utils/useIcon'
+import { useKeyPress } from 'ahooks'
 
 /** 自定义组件 **/
 import EveryTreeNode from './components/everyTreeNode'
@@ -77,33 +78,28 @@ const Left = ({ dispatch, bar, operate }) => {
   }, [bar.key])
   // 监听键盘Ctrl键按下与松开
   useEffect(() => {
-    onkeydown = (e) => {
-      if (e.key === 'Control') {
-        dispatch({
-          type: 'bar/save',
-          payload: { isMultipleTree: true },
-        })
-        setIsCtrlKeyPressing(true)
-      }
-    }
-    onkeyup = (e) => {
-      if (e.key === 'Control') {
-        dispatch({
-          type: 'bar/save',
-          payload: { isMultipleTree: false },
-        })
-        setIsCtrlKeyPressing(false)
-      }
-    }
     document.addEventListener('click', clearStatus)
     return () => {
-      onkeydown = () => {
-      }
-      onkeyup = () => {
-      }
       document.removeEventListener('click', clearStatus)
     }
   }, [])
+
+  useKeyPress(['ctrl', 'shift'], (event) => {
+    if (event.type === 'keydown' && bar.isMultipleTree) {
+
+    } else {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          isMultipleTree: event.type === 'keydown',
+        },
+      })
+      setIsCtrlKeyPressing(event.type === 'keydown')
+    }
+  }, {
+    events: ['keydown', 'keyup'],
+  })
+
 
   /**
    * 方法
@@ -252,7 +248,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const myOnExpand = (expandedKeys, { expanded, node }) => {
     setIsExpand(expandedKeys)
   }
-  //
+  // 图层拖拽逻辑
   const onDrop = info => {
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
@@ -269,6 +265,8 @@ const Left = ({ dispatch, bar, operate }) => {
         }
       }
     }
+
+
     const data = [...bar.treeData]
 
     // Find dragObject
@@ -278,23 +276,26 @@ const Left = ({ dispatch, bar, operate }) => {
       dragObj = item
     })
 
-    // if (!info.dropToGap) {
-    //   // Drop on the content
-    //   loop(data, dropKey, item => {
-    //     item.children = item.children || [];
-    //     // where to insert 示例添加到头部，可以是随意位置
-    //     item.children.unshift(dragObj);
-    //   });
-    // } else
+    const setLayerToTop = (data, key, callback) => {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === key) {
+          return callback(data, i)
+        }
+      }
+    }
 
-    if (
+    if (!info.dropToGap) {
+      loop(data, dropKey, (item) => {
+        item.modules = item.modules || []; // where to insert 示例添加到头部，可以是随意位置
+        item.modules.unshift(dragObj);
+      });
+    } else if (
       (info.node.modules || []).length > 0 &&
       info.node.props.expanded
       // && dropPosition === 1 // On the bottom gap
     ) {
-      loop(data, dropKey, item => {
-        item.modules = item.modules || []
-        item.modules.unshift(dragObj)
+      setLayerToTop(data, dropKey, (item, index) => {
+        item.splice(index, 0, dragObj)
       })
     } else {
       let ar

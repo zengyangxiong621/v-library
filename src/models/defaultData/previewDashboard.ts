@@ -86,4 +86,9 @@ export const defaultData = {
   componentFilters: [],
   callbackArgs: {},
   callbackParamsList: [],
-}
+  allDashboardList: [],
+  fullAmountLayers: [],
+  fullAmountDashboardDetails: [],
+  isDashboardInit: false,
+  fullAmountDynamicAndDrillDownPanels: []
+};

@@ -27,4 +27,4 @@ export const mockdata = [
     "moduleVersion": "1.0.0",
     "moduleLastVersion": "2.1.0"
   }
-]
+];

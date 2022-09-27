@@ -1,61 +1,61 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { memo, useEffect, useState } from 'react'
-import './index.less'
-import EveryItem from '../everyItem/index'
+import { memo, useEffect, useState } from "react";
+import "./index.less";
+import EveryItem from "../everyItem/index";
 
-import { http } from '@/services/request'
-import { Spin } from 'antd'
+import { http } from "@/services/request";
+import { Spin } from "antd";
 
 
 const Charts = (props: any) => {
-  const [active, setActive] = useState('all')
-  const {current, index} = props
-  const [allModules, setAllModules] = useState<any>({})
-  const [dataLoading, setDataLoading] = useState(false)
+  const [active, setActive] = useState("all");
+  const {current, index} = props;
+  const [allModules, setAllModules] = useState<any>({});
+  const [dataLoading, setDataLoading] = useState(false);
   const liHover = (key: string) => {
-    setActive(key)
+    setActive(key);
     if(!allModules[key]){
-      getData([key])
+      getData([key]);
     }
-  }
+  };
 
   useEffect(() => {
     if(current.length && current[0] === index){
-      getData([])
+      getData([]);
     }
-  }, [])
+  }, []);
 
 
   // 获取组件数据
   const getData = async (subType: any) => {
-    setDataLoading(true)
+    setDataLoading(true);
     const data: any = await http({
-      url: '/visual/module-manage/queryModuleList',
-      method: 'post',
+      url: "/visual/module-manage/queryModuleList",
+      method: "post",
       body: {
-        type: ['chart'],
+        type: ["chart"],
         status: 0,
         pageNo: 0,
         pageSize: 100,
-        subType: subType[0] === 'all' ? [] : subType
+        subType: subType[0] === "all" ? [] : subType
       }
     }).catch(() => {
-      setDataLoading(false)
-    })
+      setDataLoading(false);
+    });
     data.content.forEach((item: any) => {
-      item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`
-    })
-    let classType = subType.length ? subType[0] : 'all'
+      item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`;
+    });
+    const classType = subType.length ? subType[0] : "all";
     // 如果不存在就添加
     if(!allModules[classType]){
-      let obj:any = {}
-      obj[classType] = data.content
-      let list = {...allModules, ...obj}
+      const obj:any = {};
+      obj[classType] = data.content;
+      const list = {...allModules, ...obj};
       setAllModules(list);
     }
-    setDataLoading(false)
-  }
+    setDataLoading(false);
+  };
 
   return (
     <div className='Charts-wrap'>
@@ -65,11 +65,11 @@ const Charts = (props: any) => {
             return (
               <li
                 key={item.key}
-                className={`${active === item.key && 'active-li'}`}
+                className={`${active === item.key && "active-li"}`}
                 onMouseEnter={() => liHover(item.key)}>
                 {item.text}
               </li>
-            )
+            );
           })
         }
       </ul>
@@ -82,15 +82,15 @@ const Charts = (props: any) => {
               allModules[active]?.map((item: any, index: number) => {
                 return (
                   <EveryItem data={item} key={index} />
-                )
+                );
               })
             }
           </div>: <div className="charts-list">暂无内容</div>
         )
       }
     </div>
-  )
-}
+  );
+};
 
 // const ChartDataMap: any = {
 //   all: [],
@@ -103,29 +103,29 @@ const Charts = (props: any) => {
 
 const chartType = [
   {
-    text: '全部',
-    key: 'all',
+    text: "全部",
+    key: "all",
   },
   {
-    text: '柱形图',
-    key: 'bar',
+    text: "柱形图",
+    key: "bar",
   },
   {
-    text: '折线图',
-    key: 'line',
+    text: "折线图",
+    key: "line",
   },
   {
-    text: '饼图',
-    key: 'pie',
+    text: "饼图",
+    key: "pie",
   },
   {
-    text: '散点图',
-    key: 'scatter',
+    text: "散点图",
+    key: "scatter",
   },
   {
-    text: '其他',
-    key: 'other',
+    text: "其他",
+    key: "other",
   },
-]
+];
 
-export default memo(Charts)
+export default memo(Charts);

@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import './index.less'
-import { Button, Form, Input, message } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import * as React from "react";
+import { useState, useEffect } from "react";
+import "./index.less";
+import { Button, Form, Input, message } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useFetch,BASE_URL } from "@/utils/useFetch";
-import {getRandowString} from '@/utils/'
+import {getRandowString} from "@/utils/";
 import { http } from "@/services/request";
-import {localStore} from "@/services/LocalStoreService"
-type LayoutType = Parameters<typeof Form>[0]['layout'];
+import {localStore} from "@/services/LocalStoreService";
+type LayoutType = Parameters<typeof Form>[0]["layout"];
 
 type formDataTyle={
   userName:string,
@@ -17,57 +17,70 @@ type formDataTyle={
 
 
 export default function Login(props:any) {
-  const {history}=props
+  const {history}=props;
   
   const [form] = Form.useForm();
-  const [clientId,setClientId]=useState('')
-  const [qrCode,setQrCode]=useState('')
-  const [loginLoading,setLoginLoading]=useState(false)
+  const [clientId,setClientId]=useState("");
+  const [qrCode,setQrCode]=useState("");
+  const [loginLoading,setLoginLoading]=useState(false);
   const getIdentifyingCode=()=>{
-    const randomCode=getRandowString(32)
-    const qrImg=`${BASE_URL}/visual/login/captcha.jpg?clientId=${randomCode}`
-    setClientId(randomCode)
-    setQrCode(qrImg)
-  }
+    const randomCode=getRandowString(32);
+    const qrImg=`${BASE_URL}/visual/login/captcha.jpg?clientId=${randomCode}`;
+    setClientId(randomCode);
+    setQrCode(qrImg);
+  };
   const handleLoginForm=(formData:formDataTyle)=>{
-    let flag=false
-    const {userName,password,captcha}=formData
+    let flag=false;
+    const {userName,password,captcha}=formData;
     if(userName && password && captcha){
-      flag=true
+      flag=true;
     }else{
-      message.warning('请填写完整');
+      message.warning("请填写完整");
     }
-    return flag
-  }
-  const handleLogin=async ()=>{
-    const formData=form.getFieldsValue(true)
+    return flag;
+  };
+  const login=async ()=>{
+    const formData=form.getFieldsValue(true);
     if(!handleLoginForm(formData)){
-      return
+      return;
     }
-    setLoginLoading(true)
+    setLoginLoading(true);
     try {
       const params={
         ...formData,
         clientId
-      }
-      const [,data]=await useFetch('/visual/login/login',{
+      };
+      const [,data]=await useFetch("/visual/login/login",{
         body:JSON.stringify(params)
-      })
+      });
       if(data){
-        localStorage.setItem('token',data)
-        history.replace('/')
+        localStorage.setItem("token",data);
+        history.replace("/");
       }else{
-        getIdentifyingCode()
+        getIdentifyingCode();
       }
     } catch (error) {
-      getIdentifyingCode()
+      getIdentifyingCode();
     } finally {
-      setLoginLoading(false)
+      setLoginLoading(false);
     }
-  }
+  };
+  const handleLogin=(e:any)=>{
+    if(e.keyCode=== 13){
+      login()
+    }
+  };
   useEffect(()=>{
-    getIdentifyingCode()
-  },[])
+    getIdentifyingCode();
+  },[]);
+  useEffect(()=>{
+    if(clientId){
+      window.addEventListener('keydown',handleLogin)
+      return ()=>{
+        window.removeEventListener('keydown',handleLogin)
+      }
+    }
+  },[clientId])
   return (
     <div className='login'>
       <div className='leftImage'>
@@ -76,7 +89,7 @@ export default function Login(props:any) {
           <div className='enText'>WELCOME TO VISUAL CONSTRUCTION PLATFORM</div>
           <div className='introductionText'>数据管理更方便，协作更高效</div>
         </div>
-        <img src={require('../../assets/images/主图.png')} alt=''></img>
+        <img src={require("../../assets/images/主图.png")} alt=''></img>
       </div>
       <div className='righFform'>
         <div className='formContainer'>
@@ -86,9 +99,9 @@ export default function Login(props:any) {
             form={form}
             size='large'
             initialValues={{
-              userName:'',
+              userName:"",
               password:"",
-              captcha:''
+              captcha:""
             }}
           >
             <Form.Item label="账号" name='userName'>
@@ -104,11 +117,11 @@ export default function Login(props:any) {
               </div>
             </Form.Item>
             <Form.Item className='formButton' wrapperCol={{ span: 24 }}>
-              <Button type="primary" block loading={loginLoading} onClick={handleLogin}>登录</Button>
+              <Button type="primary" block loading={loginLoading} onClick={login} onKeyUp={handleLogin}>登录</Button>
             </Form.Item>
           </Form>
         </div>
       </div>
     </div>
-  )
+  );
 }

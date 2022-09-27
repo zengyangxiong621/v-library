@@ -1,14 +1,14 @@
-import { h } from './element';
-import { cssPrefix } from '../config';
+import { h } from "./element";
+import { cssPrefix } from "../config";
 
 export default class Scrollbar {
   constructor(vertical) {
     this.vertical = vertical;
     this.moveFn = null;
-    this.el = h('div', `${cssPrefix}-scrollbar ${vertical ? 'vertical' : 'horizontal'}`)
-      .child(this.contentEl = h('div', ''))
-      .on('mousemove.stop', () => {})
-      .on('scroll.stop', (evt) => {
+    this.el = h("div", `${cssPrefix}-scrollbar ${vertical ? "vertical" : "horizontal"}`)
+      .child(this.contentEl = h("div", ""))
+      .on("mousemove.stop", () => {})
+      .on("scroll.stop", (evt) => {
         const { scrollTop, scrollLeft } = evt.target;
         // console.log('scrollTop:', scrollTop);
         if (this.moveFn) {
@@ -31,11 +31,11 @@ export default class Scrollbar {
     const d = distance - 1;
     // console.log('distance:', distance, ', contentDistance:', contentDistance);
     if (contentDistance > d) {
-      const cssKey = this.vertical ? 'height' : 'width';
+      const cssKey = this.vertical ? "height" : "width";
       // console.log('d:', d);
       this.el.css(cssKey, `${d - 15}px`).show();
       this.contentEl
-        .css(this.vertical ? 'width' : 'height', '1px')
+        .css(this.vertical ? "width" : "height", "1px")
         .css(cssKey, `${contentDistance}px`);
     } else {
       this.el.hide();

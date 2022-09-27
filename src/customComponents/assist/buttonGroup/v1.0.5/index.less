@@ -1,0 +1,41 @@
+.cus-component-button-group-btn {
+  cursor: pointer;
+  height: 100%;
+  border-radius: 3px;
+  margin-right: 8px;
+  text-align: center;
+  color: var(--defalutColor);
+  font-family: var(--defalutFontFamily);
+  font-size: var(--defalutFontSize);
+  font-weight: var(--defalutFontWeight);
+  background: var(--defalutBgc) !important;
+  border: var(--defaultBorder);
+  background-position: center center;
+  /* 背景图不平铺 */
+  background-repeat: no-repeat;
+  /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+  background-attachment: fixed;
+  /* 让背景图基于容器大小伸缩 */
+  background-size: cover;
+
+  &.active {
+    opacity: 1;
+    color: var(--selectedColor);
+    font-family: var(--selectedFontFamily);
+    font-size: var(--selectedFontSize);
+    font-weight: var(--selectedFontWeight);
+    background: var(--selectedBgc) !important;
+    border: var(--selectedBorder);
+    background-position: center center;
+    /* 背景图不平铺 */
+    background-repeat: no-repeat;
+    /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+    background-attachment: fixed;
+    /* 让背景图基于容器大小伸缩 */
+    background-size: cover;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}

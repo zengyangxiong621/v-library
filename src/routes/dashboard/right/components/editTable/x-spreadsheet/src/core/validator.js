@@ -1,5 +1,5 @@
-import { t } from '../locale/locale';
-import helper from './helper';
+import { t } from "../locale/locale";
+import helper from "./helper";
 
 const rules = {
   phone: /^[1-9]\d{10}$/,
@@ -7,7 +7,7 @@ const rules = {
 };
 
 function returnMessage(flag, key, ...arg) {
-  let message = '';
+  let message = "";
   if (!flag) {
     message = t(`validation.${key}`, ...arg);
   }
@@ -22,15 +22,15 @@ export default class Validator {
     this.value = value;
     this.type = type;
     this.operator = operator;
-    this.message = '';
+    this.message = "";
   }
 
   parseValue(v) {
     const { type } = this;
-    if (type === 'date') {
+    if (type === "date") {
       return new Date(v);
     }
-    if (type === 'number') {
+    if (type === "number") {
       return Number(v);
     }
     return v;
@@ -51,7 +51,7 @@ export default class Validator {
   }
 
   values() {
-    return this.value.split(',');
+    return this.value.split(",");
   }
 
   validate(v) {
@@ -59,74 +59,74 @@ export default class Validator {
       required, operator, value, type,
     } = this;
     if (required && /^\s*$/.test(v)) {
-      return returnMessage(false, 'required');
+      return returnMessage(false, "required");
     }
     if (/^\s*$/.test(v)) return [true];
     if (rules[type] && !rules[type].test(v)) {
-      return returnMessage(false, 'notMatch');
+      return returnMessage(false, "notMatch");
     }
-    if (type === 'list') {
-      return returnMessage(this.values().includes(v), 'notIn');
+    if (type === "list") {
+      return returnMessage(this.values().includes(v), "notIn");
     }
     if (operator) {
       const v1 = this.parseValue(v);
-      if (operator === 'be') {
+      if (operator === "be") {
         const [min, max] = value;
         return returnMessage(
           v1 >= this.parseValue(min) && v1 <= this.parseValue(max),
-          'between',
+          "between",
           min,
           max,
         );
       }
-      if (operator === 'nbe') {
+      if (operator === "nbe") {
         const [min, max] = value;
         return returnMessage(
           v1 < this.parseValue(min) || v1 > this.parseValue(max),
-          'notBetween',
+          "notBetween",
           min,
           max,
         );
       }
-      if (operator === 'eq') {
+      if (operator === "eq") {
         return returnMessage(
           v1 === this.parseValue(value),
-          'equal',
+          "equal",
           value,
         );
       }
-      if (operator === 'neq') {
+      if (operator === "neq") {
         return returnMessage(
           v1 !== this.parseValue(value),
-          'notEqual',
+          "notEqual",
           value,
         );
       }
-      if (operator === 'lt') {
+      if (operator === "lt") {
         return returnMessage(
           v1 < this.parseValue(value),
-          'lessThan',
+          "lessThan",
           value,
         );
       }
-      if (operator === 'lte') {
+      if (operator === "lte") {
         return returnMessage(
           v1 <= this.parseValue(value),
-          'lessThanEqual',
+          "lessThanEqual",
           value,
         );
       }
-      if (operator === 'gt') {
+      if (operator === "gt") {
         return returnMessage(
           v1 > this.parseValue(value),
-          'greaterThan',
+          "greaterThan",
           value,
         );
       }
-      if (operator === 'gte') {
+      if (operator === "gte") {
         return returnMessage(
           v1 >= this.parseValue(value),
-          'greaterThanEqual',
+          "greaterThanEqual",
           value,
         );
       }

@@ -1,24 +1,24 @@
 /* global window */
-import { h } from './element';
+import { h } from "./element";
 import {
   bind,
   mouseMoveUp,
   bindTouch,
   createEventEmitter,
-} from './event';
-import Resizer from './resizer';
-import Scrollbar from './scrollbar';
-import Selector from './selector';
-import Editor from './editor';
-import Print from './print';
-import ContextMenu from './contextmenu';
-import Table from './table';
-import Toolbar from './toolbar/index';
-import ModalValidation from './modal_validation';
-import SortFilter from './sort_filter';
-import { xtoast } from './message';
-import { cssPrefix } from '../config';
-import { formulas } from '../core/formula';
+} from "./event";
+import Resizer from "./resizer";
+import Scrollbar from "./scrollbar";
+import Selector from "./selector";
+import Editor from "./editor";
+import Print from "./print";
+import ContextMenu from "./contextmenu";
+import Table from "./table";
+import Toolbar from "./toolbar/index";
+import ModalValidation from "./modal_validation";
+import SortFilter from "./sort_filter";
+import { xtoast } from "./message";
+import { cssPrefix } from "../config";
+import { formulas } from "../core/formula";
 
 /**
  * @desc throttle fn
@@ -73,15 +73,15 @@ function selectorSet(multiple, ri, ci, indexesUpdated = true, moving = false) {
     table, selector, toolbar, data,
     contextMenu,
   } = this;
-  contextMenu.setMode((ri === -1 || ci === -1) ? 'row-col' : 'range');
+  contextMenu.setMode((ri === -1 || ci === -1) ? "row-col" : "range");
   const cell = data.getCell(ri, ci);
   if (multiple) {
     selector.setEnd(ri, ci, moving);
-    this.trigger('cells-selected', cell, selector.range);
+    this.trigger("cells-selected", cell, selector.range);
   } else {
     // trigger click event
     selector.set(ri, ci, indexesUpdated);
-    this.trigger('cell-selected', cell, ri, ci);
+    this.trigger("cell-selected", cell, ri, ci);
   }
   toolbar.reset();
   table.render();
@@ -100,23 +100,23 @@ function selectorMove(multiple, direction) {
     [ri, ci] = selector.moveIndexes;
   }
   // console.log('selector.move:', ri, ci);
-  if (direction === 'left') {
+  if (direction === "left") {
     if (ci > 0) ci -= 1;
-  } else if (direction === 'right') {
+  } else if (direction === "right") {
     if (eci !== ci) ci = eci;
     if (ci < cols.len - 1) ci += 1;
-  } else if (direction === 'up') {
+  } else if (direction === "up") {
     if (ri > 0) ri -= 1;
-  } else if (direction === 'down') {
+  } else if (direction === "down") {
     if (eri !== ri) ri = eri;
     if (ri < rows.len - 1) ri += 1;
-  } else if (direction === 'row-first') {
+  } else if (direction === "row-first") {
     ci = 0;
-  } else if (direction === 'row-last') {
+  } else if (direction === "row-last") {
     ci = cols.len - 1;
-  } else if (direction === 'col-first') {
+  } else if (direction === "col-first") {
     ri = 0;
-  } else if (direction === 'col-last') {
+  } else if (direction === "col-last") {
     ri = rows.len - 1;
   }
   if (multiple) {
@@ -248,9 +248,9 @@ function overlayerTouch(direction, distance) {
   const { top } = verticalScrollbar.scroll();
   const { left } = horizontalScrollbar.scroll();
 
-  if (direction === 'left' || direction === 'right') {
+  if (direction === "left" || direction === "right") {
     horizontalScrollbar.move({ left: left - distance });
-  } else if (direction === 'up' || direction === 'down') {
+  } else if (direction === "up" || direction === "down") {
     verticalScrollbar.move({ top: top - distance });
   }
 }
@@ -299,7 +299,7 @@ function sheetReset() {
   tableEl.attr(vRect);
   overlayerEl.offset(vRect);
   overlayerCEl.offset(tOffset);
-  el.css('width', `${vRect.width}px`);
+  el.css("width", `${vRect.width}px`);
   verticalScrollbarSet.call(this);
   horizontalScrollbarSet.call(this);
   sheetFreeze.call(this);
@@ -329,11 +329,11 @@ function cut() {
 
 function paste(what, evt) {
   const { data } = this;
-  if (data.settings.mode === 'read') return;
-  if (data.paste(what, msg => xtoast('Tip', msg))) {
+  if (data.settings.mode === "read") return;
+  if (data.paste(what, msg => xtoast("Tip", msg))) {
     sheetReset.call(this);
   } else if (evt) {
-    const cdata = evt.clipboardData.getData('text/plain');
+    const cdata = evt.clipboardData.getData("text/plain");
     this.data.pasteFromText(cdata);
     sheetReset.call(this);
   }
@@ -358,7 +358,7 @@ function autofilter() {
 function toolbarChangePaintformatPaste() {
   const { toolbar } = this;
   if (toolbar.paintformatActive()) {
-    paste.call(this, 'format');
+    paste.call(this, "format");
     clearClipboard.call(this);
     toolbar.paintformatToggle();
   }
@@ -408,8 +408,8 @@ function overlayerMousedown(evt) {
         selectorSet.call(this, true, ri, ci, true, true);
       }
     }, () => {
-      if (isAutofillEl && selector.arange && data.settings.mode !== 'read') {
-        if (data.autofill(selector.arange, 'all', msg => xtoast('Tip', msg))) {
+      if (isAutofillEl && selector.arange && data.settings.mode !== "read") {
+        if (data.autofill(selector.arange, "all", msg => xtoast("Tip", msg))) {
           table.render();
         }
       }
@@ -430,17 +430,17 @@ function editorSetOffset() {
   const { editor, data } = this;
   const sOffset = data.getSelectedRect();
   const tOffset = this.getTableOffset();
-  let sPosition = 'top';
+  let sPosition = "top";
   // console.log('sOffset:', sOffset, ':', tOffset);
   if (sOffset.top > tOffset.height / 2) {
-    sPosition = 'bottom';
+    sPosition = "bottom";
   }
   editor.setOffset(sOffset, sPosition);
 }
 
 function editorSet() {
   const { editor, data } = this;
-  if (data.settings.mode === 'read') return;
+  if (data.settings.mode === "read") return;
   editorSetOffset.call(this);
   editor.setCell(data.getSelectedCell(), data.getSelectedValidator());
   clearClipboard.call(this);
@@ -485,44 +485,44 @@ function colResizerFinished(cRect, distance) {
   editorSetOffset.call(this);
 }
 
-function dataSetCellText(text, state = 'finished') {
+function dataSetCellText(text, state = "finished") {
   const { data, table } = this;
   // const [ri, ci] = selector.indexes;
-  if (data.settings.mode === 'read') return;
+  if (data.settings.mode === "read") return;
   data.setSelectedCellText(text, state);
   const { ri, ci } = data.selector;
-  if (state === 'finished') {
+  if (state === "finished") {
     table.render();
   } else {
-    this.trigger('cell-edited', text, ri, ci);
+    this.trigger("cell-edited", text, ri, ci);
   }
 }
 
 function insertDeleteRowColumn(type) {
   const { data } = this;
-  if (data.settings.mode === 'read') return;
-  if (type === 'insert-row') {
-    data.insert('row');
-  } else if (type === 'delete-row') {
-    data.delete('row');
-  } else if (type === 'insert-column') {
-    data.insert('column');
-  } else if (type === 'delete-column') {
-    data.delete('column');
-  } else if (type === 'delete-cell') {
+  if (data.settings.mode === "read") return;
+  if (type === "insert-row") {
+    data.insert("row");
+  } else if (type === "delete-row") {
+    data.delete("row");
+  } else if (type === "insert-column") {
+    data.insert("column");
+  } else if (type === "delete-column") {
+    data.delete("column");
+  } else if (type === "delete-cell") {
     data.deleteCell();
-  } else if (type === 'delete-cell-format') {
-    data.deleteCell('format');
-  } else if (type === 'delete-cell-text') {
-    data.deleteCell('text');
-  } else if (type === 'cell-printable') {
-    data.setSelectedCellAttr('printable', true);
-  } else if (type === 'cell-non-printable') {
-    data.setSelectedCellAttr('printable', false);
-  } else if (type === 'cell-editable') {
-    data.setSelectedCellAttr('editable', true);
-  } else if (type === 'cell-non-editable') {
-    data.setSelectedCellAttr('editable', false);
+  } else if (type === "delete-cell-format") {
+    data.deleteCell("format");
+  } else if (type === "delete-cell-text") {
+    data.deleteCell("text");
+  } else if (type === "cell-printable") {
+    data.setSelectedCellAttr("printable", true);
+  } else if (type === "cell-non-printable") {
+    data.setSelectedCellAttr("printable", false);
+  } else if (type === "cell-editable") {
+    data.setSelectedCellAttr("editable", true);
+  } else if (type === "cell-non-editable") {
+    data.setSelectedCellAttr("editable", false);
   }
   clearClipboard.call(this);
   sheetReset.call(this);
@@ -530,25 +530,25 @@ function insertDeleteRowColumn(type) {
 
 function toolbarChange(type, value) {
   const { data } = this;
-  if (type === 'undo') {
+  if (type === "undo") {
     this.undo();
-  } else if (type === 'redo') {
+  } else if (type === "redo") {
     this.redo();
-  } else if (type === 'print') {
+  } else if (type === "print") {
     this.print.preview();
-  } else if (type === 'paintformat') {
+  } else if (type === "paintformat") {
     if (value === true) copy.call(this);
     else clearClipboard.call(this);
-  } else if (type === 'clearformat') {
-    insertDeleteRowColumn.call(this, 'delete-cell-format');
-  } else if (type === 'link') {
+  } else if (type === "clearformat") {
+    insertDeleteRowColumn.call(this, "delete-cell-format");
+  } else if (type === "link") {
     // link
-  } else if (type === 'chart') {
+  } else if (type === "chart") {
     // chart
-  } else if (type === 'autofilter') {
+  } else if (type === "autofilter") {
     // filter
     autofilter.call(this);
-  } else if (type === 'freeze') {
+  } else if (type === "freeze") {
     if (value) {
       const { ri, ci } = data.selector;
       this.freeze(ri, ci);
@@ -557,7 +557,7 @@ function toolbarChange(type, value) {
     }
   } else {
     data.setSelectedCellAttr(type, value);
-    if (type === 'formula' && !data.selector.multiple()) {
+    if (type === "formula" && !data.selector.multiple()) {
       editorSet.call(this);
     }
     sheetReset.call(this);
@@ -586,10 +586,10 @@ function sheetInitEvents() {
   } = this;
   // overlayer
   overlayerEl
-    .on('mousemove', (evt) => {
+    .on("mousemove", (evt) => {
       overlayerMousemove.call(this, evt);
     })
-    .on('mousedown', (evt) => {
+    .on("mousedown", (evt) => {
       editor.clear();
       contextMenu.hide();
       // the left mouse button: mousedown → mouseup → click
@@ -608,17 +608,17 @@ function sheetInitEvents() {
         overlayerMousedown.call(this, evt);
       }
     })
-    .on('mousewheel.stop', (evt) => {
+    .on("mousewheel.stop", (evt) => {
       overlayerMousescroll.call(this, evt);
     })
-    .on('mouseout', (evt) => {
+    .on("mouseout", (evt) => {
       const { offsetX, offsetY } = evt;
       if (offsetY <= 0) colResizer.hide();
       if (offsetX <= 0) rowResizer.hide();
     });
 
   selector.inputChange = (v) => {
-    dataSetCellText.call(this, v, 'input');
+    dataSetCellText.call(this, v, "input");
     editorSet.call(this);
   };
 
@@ -644,10 +644,10 @@ function sheetInitEvents() {
   };
   // resizer unhide callback
   rowResizer.unhideFn = (index) => {
-    unhideRowsOrCols.call(this, 'row', index);
+    unhideRowsOrCols.call(this, "row", index);
   };
   colResizer.unhideFn = (index) => {
-    unhideRowsOrCols.call(this, 'col', index);
+    unhideRowsOrCols.call(this, "col", index);
   };
   // scrollbar move callback
   verticalScrollbar.moveFn = (distance, evt) => {
@@ -662,7 +662,7 @@ function sheetInitEvents() {
   };
   // modal validation
   modalValidation.change = (action, ...args) => {
-    if (action === 'save') {
+    if (action === "save") {
       this.data.addValidation(...args);
     } else {
       this.data.removeValidation();
@@ -671,41 +671,41 @@ function sheetInitEvents() {
   // contextmenu
   contextMenu.itemClick = (type) => {
     // console.log('type:', type);
-    if (type === 'validation') {
+    if (type === "validation") {
       modalValidation.setValue(this.data.getSelectedValidation());
-    } else if (type === 'copy') {
+    } else if (type === "copy") {
       copy.call(this);
-    } else if (type === 'cut') {
+    } else if (type === "cut") {
       cut.call(this);
-    } else if (type === 'paste') {
-      paste.call(this, 'all');
-    } else if (type === 'paste-value') {
-      paste.call(this, 'text');
-    } else if (type === 'paste-format') {
-      paste.call(this, 'format');
-    } else if (type === 'hide') {
+    } else if (type === "paste") {
+      paste.call(this, "all");
+    } else if (type === "paste-value") {
+      paste.call(this, "text");
+    } else if (type === "paste-format") {
+      paste.call(this, "format");
+    } else if (type === "hide") {
       hideRowsOrCols.call(this);
     } else {
       insertDeleteRowColumn.call(this, type);
     }
   };
 
-  bind(window, 'resize', () => {
+  bind(window, "resize", () => {
     this.reload();
   });
 
-  bind(window, 'click', (evt) => {
+  bind(window, "click", (evt) => {
     this.focusing = overlayerEl.contains(evt.target);
   });
 
-  bind(window, 'paste', (evt) => {
+  bind(window, "paste", (evt) => {
     if (!this.focusing) return;
-    paste.call(this, 'all', evt);
+    paste.call(this, "all", evt);
     evt.preventDefault();
   });
 
   // for selector
-  bind(window, 'keydown', (evt) => {
+  bind(window, "keydown", (evt) => {
     if (!this.focusing) return;
     const keyCode = evt.keyCode || evt.which;
     const {
@@ -740,7 +740,7 @@ function sheetInitEvents() {
           break;
         case 85:
           // ctrl + u
-          toolbar.trigger('underline');
+          toolbar.trigger("underline");
           evt.preventDefault();
           break;
         case 86:
@@ -750,22 +750,22 @@ function sheetInitEvents() {
           break;
         case 37:
           // ctrl + left
-          selectorMove.call(this, shiftKey, 'row-first');
+          selectorMove.call(this, shiftKey, "row-first");
           evt.preventDefault();
           break;
         case 38:
           // ctrl + up
-          selectorMove.call(this, shiftKey, 'col-first');
+          selectorMove.call(this, shiftKey, "col-first");
           evt.preventDefault();
           break;
         case 39:
           // ctrl + right
-          selectorMove.call(this, shiftKey, 'row-last');
+          selectorMove.call(this, shiftKey, "row-last");
           evt.preventDefault();
           break;
         case 40:
           // ctrl + down
-          selectorMove.call(this, shiftKey, 'col-last');
+          selectorMove.call(this, shiftKey, "col-last");
           evt.preventDefault();
           break;
         case 32:
@@ -775,11 +775,11 @@ function sheetInitEvents() {
           break;
         case 66:
           // ctrl + B
-          toolbar.trigger('bold');
+          toolbar.trigger("bold");
           break;
         case 73:
           // ctrl + I
-          toolbar.trigger('italic');
+          toolbar.trigger("italic");
           break;
         default:
           break;
@@ -798,52 +798,52 @@ function sheetInitEvents() {
           clearClipboard.call(this);
           break;
         case 37: // left
-          selectorMove.call(this, shiftKey, 'left');
+          selectorMove.call(this, shiftKey, "left");
           evt.preventDefault();
           break;
         case 38: // up
-          selectorMove.call(this, shiftKey, 'up');
+          selectorMove.call(this, shiftKey, "up");
           evt.preventDefault();
           break;
         case 39: // right
-          selectorMove.call(this, shiftKey, 'right');
+          selectorMove.call(this, shiftKey, "right");
           evt.preventDefault();
           break;
         case 40: // down
-          selectorMove.call(this, shiftKey, 'down');
+          selectorMove.call(this, shiftKey, "down");
           evt.preventDefault();
           break;
         case 9: // tab
           editor.clear();
           // shift + tab => move left
           // tab => move right
-          selectorMove.call(this, false, shiftKey ? 'left' : 'right');
+          selectorMove.call(this, false, shiftKey ? "left" : "right");
           evt.preventDefault();
           break;
         case 13: // enter
           editor.clear();
           // shift + enter => move up
           // enter => move down
-          selectorMove.call(this, false, shiftKey ? 'up' : 'down');
+          selectorMove.call(this, false, shiftKey ? "up" : "down");
           evt.preventDefault();
           break;
         case 8: // backspace
-          insertDeleteRowColumn.call(this, 'delete-cell-text');
+          insertDeleteRowColumn.call(this, "delete-cell-text");
           evt.preventDefault();
           break;
         default:
           break;
       }
 
-      if (key === 'Delete') {
-        insertDeleteRowColumn.call(this, 'delete-cell-text');
+      if (key === "Delete") {
+        insertDeleteRowColumn.call(this, "delete-cell-text");
         evt.preventDefault();
       } else if ((keyCode >= 65 && keyCode <= 90)
         || (keyCode >= 48 && keyCode <= 57)
         || (keyCode >= 96 && keyCode <= 105)
-        || evt.key === '='
+        || evt.key === "="
       ) {
-        dataSetCellText.call(this, evt.key, 'input');
+        dataSetCellText.call(this, evt.key, "input");
         editorSet.call(this);
       } else if (keyCode === 113) {
         // F2
@@ -857,13 +857,13 @@ export default class Sheet {
   constructor(targetEl, data) {
     this.eventMap = createEventEmitter();
     const { view, showToolbar, showContextmenu } = data.settings;
-    this.el = h('div', `${cssPrefix}-sheet`);
+    this.el = h("div", `${cssPrefix}-sheet`);
     this.toolbar = new Toolbar(data, view.width, !showToolbar);
     this.print = new Print(data);
     targetEl.children(this.toolbar.el, this.el, this.print.el);
     this.data = data;
     // table
-    this.tableEl = h('canvas', `${cssPrefix}-table`);
+    this.tableEl = h("canvas", `${cssPrefix}-table`);
     // resizer
     this.rowResizer = new Resizer(false, data.rows.height);
     this.colResizer = new Resizer(true, data.cols.minWidth);
@@ -882,12 +882,12 @@ export default class Sheet {
     this.contextMenu = new ContextMenu(() => this.getRect(), !showContextmenu);
     // selector
     this.selector = new Selector(data);
-    this.overlayerCEl = h('div', `${cssPrefix}-overlayer-content`)
+    this.overlayerCEl = h("div", `${cssPrefix}-overlayer-content`)
       .children(
         this.editor.el,
         this.selector.el,
       );
-    this.overlayerEl = h('div', `${cssPrefix}-overlayer`)
+    this.overlayerEl = h("div", `${cssPrefix}-overlayer`)
       .child(this.overlayerCEl);
     // sortFilter
     this.sortFilter = new SortFilter();

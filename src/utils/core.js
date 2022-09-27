@@ -1,13 +1,13 @@
-import dynamic from 'dva/dynamic';
-import { Route, Switch } from 'dva/router';
-
+import dynamic from "dva/dynamic";
+import { Route, Switch } from "dva/router";
+import React from "react";
 export const newDynamic = (app, models, component) => {
   return dynamic({
     app,
     models: () => models,
     component
-  })
-}
+  });
+};
 
 /**
  * @param {app} app
@@ -23,9 +23,9 @@ export const createRoutes = (app, routesConfig) => {
       return p.concat(n);
     }
   }, []);
-  return (<Switch> { routes } </Switch>)
+  return (<Switch> { routes } </Switch>);
 
-}
+};
 
 // 路由映射表
 window.dva_router_pathMap = {};
@@ -38,9 +38,9 @@ export const createRoute = (app, routerConfig) => {
     indexRouter,
     component: Comp,
     ...otherProps
-  } = currentRoute
+  } = currentRoute;
 
-  if (path && path !== '/') {
+  if (path && path !== "/") {
     window.dva_router_pathMap[path] = { path, title, ...otherProps };
     // 为子路由增加parentPath
     if (otherProps.childRoutes && otherProps.childRoutes.length) {
@@ -53,9 +53,9 @@ export const createRoute = (app, routerConfig) => {
   }
 
   const routeProps = Object.assign({
-    key: path || '/404',
+    key: path || "/404",
     render: props => {
-      return <Comp routerData={otherProps} {...props} />
+      return <Comp routerData={otherProps} {...props} />;
     }
   },
   path && {
@@ -63,4 +63,4 @@ export const createRoute = (app, routerConfig) => {
   });
 
   return <Route {...routeProps} />;
-}
+};

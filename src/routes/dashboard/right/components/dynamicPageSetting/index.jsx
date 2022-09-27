@@ -31,26 +31,31 @@ const DynamicPageSetting = ({ bar, dispatch, ...props }) => {
     }
   }, [bar.dashboardConfig])
 
-  const settingsChange = debounce(() => {
+  const settingsChange = debounce(async () => {
+
     isSettingsChange = true
-    saveData()
+    await saveData()
+
   }, 300)
 
   const saveData = async () => {
+
     const data = await http({
       url: '/visual/application/update',
       method: 'post',
       body: {
-        config: bar.dashboardConfig.filter(item => ['backgroundImg', 'styleColor'].includes(item.name)),
+        config: pageConfig.filter(item => ['backgroundImg', 'styleColor'].includes(item.name)),
         dashboardId: bar.stateId
       }
     })
+
     dispatch({
       type: 'bar/save',
       payload: {
         dashboardConfig: pageConfig
       }
     })
+
   }
 
   return (
@@ -65,8 +70,8 @@ const DynamicPageSetting = ({ bar, dispatch, ...props }) => {
           {...formItemLayout}
           colon={false}
         >
-          <BackgroundColor data={styleColorConfig} onChange={settingsChange} />
-          <UploadImg data={backgroundImg} onChange={settingsChange} />
+          <BackgroundColor key={JSON.stringify(styleColorConfig)} data={styleColorConfig} onChange={settingsChange} />
+          <UploadImg key={JSON.stringify(backgroundImg)} data={backgroundImg} onChange={settingsChange} />
           {/* <EditTable></EditTable> */}
         </Form>
       </div>

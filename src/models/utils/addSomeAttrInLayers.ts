@@ -5,15 +5,15 @@ export const clearNullGroup = (tree: any) => {
   const dataCopy = JSON.parse(JSON.stringify(tree));
   const recursiveFn = (data: any, id?: any) => {
     for (let i = 0, len = data.length; i < len; i++) {
-      let item = data[i];
+      const item = data[i];
       if (item?.id.startsWith("group") && Array.isArray(item.modules) && !item.modules.length) {
-        data.splice(i, 1)
+        data.splice(i, 1);
         // if(data?.modules?.length === 0) {
         //   recursiveFn(data.modules)
         // }
       }
       if (item?.id.startsWith("group") && Array.isArray(item.modules) && item.modules.length) {
-        recursiveFn(item.modules)
+        recursiveFn(item.modules);
       }
     }
   };

@@ -118,7 +118,8 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       type: 'bar/save',
       payload: {
         isPanel: true,
-        panelId: panel.id
+        panelId: panel.id,
+        curPanelType: 2
       }
     })
     dispatch({

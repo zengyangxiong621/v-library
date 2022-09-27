@@ -9,18 +9,18 @@
 // export default (app: any) => createRoute(app, routesConfig);
 
 
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { connect } from '../utils/connect';
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { connect } from "../utils/connect";
 
 const mapStateToProps = (state) => {
-  return state
-}
+  return state;
+};
 
 // @connect(mapStateToProps)
 class Components extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
 
@@ -30,7 +30,7 @@ class Components extends Component {
       <div className="">
         0000000000000000
       </div>
-    )
+    );
   }
 }
 

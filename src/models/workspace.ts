@@ -43,7 +43,7 @@ export default {
     },
     *getWorkSpaceList({ payload }: any, { call, put, select }: any): any {
       const data = yield http({
-        url: `/visual/workspace/list`,
+        url: "/visual/workspace/list",
         method: "get",
       });
       yield put({
@@ -78,7 +78,7 @@ export default {
           return item.id === id;
         });
         if(filterItem){
-          const { remainQuota, projectQuota } = filterItem
+          const { remainQuota, projectQuota } = filterItem;
             finalPayload = {
               projectQuota,
               remainQuota,

@@ -1,7 +1,7 @@
 class Draw {
   constructor(el) {
     this.el = el;
-    this.ctx = el.getContext('2d');
+    this.ctx = el.getContext("2d");
   }
 
   clear() {

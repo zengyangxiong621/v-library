@@ -41,10 +41,12 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     labelAlign: 'left'
   };
 
+  console.log('bar.componentConfig', bar.componentConfig)
+
   const _data = props.data || {}
   const [activeTab, setActiveTab] = useState(null)
   const [tabpanes, setTabpanes] = useState(_data?.callbackArgs || [])
-  const [activeCollapseKey,setActiveCollapseKey] = useState(null)
+  const [activeCollapseKey, setActiveCollapseKey] = useState(null)
 
   useEffect(() => {
     setTabpanes(_data.callbackArgs || [])
@@ -117,7 +119,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     props.onChange()
   }
 
-  const collapseChange= (e) => {
+  const collapseChange = (e) => {
     setActiveCollapseKey(e)
   }
 
@@ -153,11 +155,15 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                       })}
                     </Select>
                   </Form.Item> */}
-                  <Form.Item
-                    label='字段值'
-                  >
-                    <Input className="cus-input" defaultValue={pane.origin} onBlur={e => originChange(e, pane)} />
-                  </Form.Item>
+                  {
+                    bar.componentConfig.moduleName !== 'paginationComp'
+                      ? <Form.Item
+                        label='字段值'
+                      >
+                        <Input className="cus-input" defaultValue={pane.origin} onBlur={e => originChange(e, pane)} />
+                      </Form.Item>
+                      : null
+                  }
                   <Form.Item
                     label='变量名'
                   >

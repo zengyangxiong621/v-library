@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { deepClone } from '@/utils/index'
+import { deepClone } from "@/utils/index";
 
 type TIndexSignature = {
   [k: string]: string | number;
@@ -51,7 +51,7 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
     oldConfig.forEach((x: TConfigItem) => {
       const { name, value, options } = x;
 
-      if(name !== 'customColumn') {
+      if(name !== "customColumn") {
         if (Array.isArray(value)) {
           //@Mark 开发者配置组件时，应该保证同一层级(value || options)下 每项配置名(name)的唯一性，如果不小心copy多了一份，在map中重复set相同的key也仅仅只是覆盖，所以此处不判断map中是否已经有key为 name 的项
           valueMap.set(name, value);
@@ -102,7 +102,7 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
   recursive(oldConfig, newConfig); // 也可直接用addDiffAndMergeSame自身进行递归调用
 
   // @Mark 此处必须返回一个 "新"对象, 否则,单个升级没问题,批量升级时会出问题
-  const independentConfig = deepClone(newConfig)
+  const independentConfig = deepClone(newConfig);
   return independentConfig;
 };
 

@@ -1,54 +1,54 @@
-import React, { Component, CSSProperties, useEffect } from 'react';
-import componentDefaultConfig from './config'
+import React, { Component, CSSProperties, useEffect } from "react";
+import componentDefaultConfig from "./config";
 // import Swiper from "swiper";
-import Swiper from './swiper.js'
+import Swiper from "./swiper.js";
 
-import './index.less'
+import "./index.less";
 
 interface Props {
   componentConfig?: any,
-  fields?:any,
-  comData?:any
+  fields?: any,
+  comData?: any
 }
 
 interface State {
-  swiperDom?:any,
-  componentConfig?:any,
-  swiperId?:any
+  swiperDom?: any,
+  componentConfig?: any,
+  swiperId?: any
 }
 
 class SwipterText extends Component<Props, State> {
   constructor(Props: any) {
-    super(Props)
+    super(Props);
     this.state = {
       swiperDom: null,
       componentConfig: Props.componentConfig || componentDefaultConfig,
       swiperId: (new Date()).valueOf()
-    }
+    };
   }
 
-  componentDidMount(){
-    this.drawSwiper()
+  componentDidMount() {
+    this.drawSwiper();
   }
 
   // 处理所有配置项
-  formatConfig = (config:any, exclude:any) => {
+  formatConfig = (config: any, exclude: any) => {
     return config.filter((item: any) => exclude.indexOf(item.name) == -1).reduce((pre: any, cur: any) => {
-        if(Array.isArray(cur.value)) {
-          const obj = cur.value.reduce((p: any, c: any) => {
-            p[c.name] = c.value
-            return p
-          }, {})
-          pre = {
-            ...pre,
-            ...obj,
-          }
-        } else {
-          pre[cur.name] = cur.value
-        }
-        return pre
-    }, {})
-  }
+      if (Array.isArray(cur.value)) {
+        const obj = cur.value.reduce((p: any, c: any) => {
+          p[c.name] = c.value;
+          return p;
+        }, {});
+        pre = {
+          ...pre,
+          ...obj,
+        };
+      } else {
+        pre[cur.name] = cur.value;
+      }
+      return pre;
+    }, {});
+  };
 
   drawSwiper = () => {
     const {config, staticData} = this.props.componentConfig
@@ -77,44 +77,44 @@ class SwipterText extends Component<Props, State> {
         autoplay: loopConfig,
         centeredSlides:  true,
     });
-    swiper.el.onmouseover = function(){
+    swiper.el.onmouseover = function () {
       swiper.autoplay.stop();
-    }
+    };
     this.setState({
-      swiperDom:swiper
-    })
-  }
+      swiperDom: swiper
+    });
+  };
 
   // 根据对应的自动来转换
-  formatData = (data:any, fields2ValueMap:any) => {
-    const arr = Array.isArray(data) ? data.map((item:any) => {
-      let res:any = {}
-      for (let k in item) {
-        res[k] = item[fields2ValueMap[k]]
+  formatData = (data: any, fields2ValueMap: any) => {
+    const arr = Array.isArray(data) ? data.map((item: any) => {
+      const res: any = {};
+      for (const k in item) {
+        res[k] = item[fields2ValueMap[k]];
       }
-      return res
-    }) : []
-    return arr 
-  }
+      return res;
+    }) : [];
+    return arr;
+  };
 
-  render () {
-    const { fields, comData,componentConfig } = this.props
-    const {config, staticData} = componentConfig
-    const { swiperDom,swiperId } = this.state
+  render() {
+    const { fields, comData, componentConfig } = this.props;
+    const { config, staticData } = componentConfig;
+    const { swiperDom, swiperId } = this.state;
     // 组件静态或者传入组件的数据
-    const originData = comData || staticData.data
+    const originData = comData || staticData.data;
     // 根据传入的fields来映射对应的值
-    const fields2ValueMap:any = {}
-    const initColumnsName = fields
-    fields.forEach((item:any, index:any) => {
-      fields2ValueMap[initColumnsName[index]] = item
-    })
-    const finalData = this.formatData(originData, fields2ValueMap)
-    let style = this.formatConfig(config, [])
+    const fields2ValueMap: any = {};
+    const initColumnsName = fields;
+    fields.forEach((item: any, index: any) => {
+      fields2ValueMap[initColumnsName[index]] = item;
+    });
+    const finalData = this.formatData(originData, fields2ValueMap);
+    const style = this.formatConfig(config, []);
     const findItem = (name: string) => {
-        return config.find((item: any) => {
-            return item.name === name
-        })
+      return config.find((item: any) => {
+        return item.name === name
+      })
     }
     const textStyle = findItem('textStyle')
     const textStyleData = this.formatConfig([textStyle], [])
@@ -128,10 +128,10 @@ class SwipterText extends Component<Props, State> {
     const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true;
     if(swiperDom && finalData.length){
       // 切换是否自动轮播
-      if(style.autoplay && finalData.length > 1){
-        swiperDom.autoplay.start()
-      }else{
-        swiperDom.autoplay.stop()
+      if (style.autoplay && finalData.length > 1) {
+        swiperDom.autoplay.start();
+      } else {
+        swiperDom.autoplay.stop();
       }
       swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
       swiperDom.params.slidesPerView = style.slidesNum
@@ -141,14 +141,9 @@ class SwipterText extends Component<Props, State> {
       if(style.autoplay){
         swiperDom.el.onmouseout = function(){
           swiperDom.autoplay.start();
-        }
-      }
-      swiperDom.update();
-    }
-
-    const handleClickName = (item:any) => {
-      if(style.showLink){
-        style.openNew ?  window.open(item.url) : window.location.href= item.url
+        };
+    const handleClickName = (item: any) => {
+      if (style.showLink) {
       }
     }
     const swiperStyle = {
@@ -159,64 +154,65 @@ class SwipterText extends Component<Props, State> {
       filter: style.show ? `drop-shadow(${style.shadow.color} ${style.shadow.vShadow}px ${style.shadow.hShadow}px ${style.shadow.blur}px)` : ''
     }
 
-    if(!specialType){
-      switch(textAlign.textAlign){
-        case 'left': 
+    if (!specialType) {
+      switch (textAlign.textAlign) {
+        case 'left':
           swiperStyle.justifyContent = 'flex-start';
           break;
-        case 'center': 
+        case 'center':
           swiperStyle.justifyContent = 'center';
           break;
         case 'right':
           swiperStyle.justifyContent = 'flex-end';
           break;
       }
-    }else{
+    } else {
       delete swiperStyle.justifyContent
     }
-    
+
     return (
-      <div 
-      className={`swipwe-box swiper-no-swiping ${style.hideDefault && 'hide'}`} 
-      style={{
+      <div
+        className={`swipwe-box swiper-no-swiping ${style.hideDefault && "hide"}`}
+        style={{
           width: style.width,
           height: style.height,
           background: backgroundConfig.show ? backgroundConfig.backgroundColor : ''
-      }}
+        }}
       >
         {
-            !style.hideDefault && (
-              <div
-                id={`swiper-container${swiperId}`}
-                className={`swiper-container swiper-container${swiperId}`}>
-                  <div className={`swiper-wrapper ${specialType ? 'special-type' : ''} `}>
-                  {
-                    finalData.map((item:any,index:any) => {
-                      return (
-                          <div className={`swiper-slide ${specialType ? 'swiper-type' : ''}`} style={swiperStyle}  key={index}>
-                            {
-                              rowIcon.show && 
-                              <img src={rowIcon.backgroundImg} style={{
-                                width:rowIcon.iconSize[0].value,
-                                height:rowIcon.iconSize[1].value,
-                                marginRight: rowIcon.offset[0].value,
-                                marginTop: rowIcon.offset[1].value
-                              }} alt=""/>
-                            }
-                             <span title={item[fields[0]]} onClickCapture={() => handleClickName(item)}>{item[fields[0]]}</span>
-                          </div>
-                      )
-                    })
-                  }
-                  </div>
+          !style.hideDefault && (
+            <div
+              id={`swiper-container${swiperId}`}
+              className={`swiper-container swiper-container${swiperId}`}>
+              <div className={`swiper-wrapper ${specialType ? 'special-type' : ''} `}>
+                {
+                  finalData.map((item: any, index: any) => {
+                    return (
+                      <div className={`swiper-slide ${specialType ? 'swiper-type' : ''}`} style={swiperStyle} key={index}>
+                        {
+                          rowIcon.show &&
+                          <img src={rowIcon.backgroundImg} style={{
+                            width: rowIcon.iconSize[0].value,
+                            height: rowIcon.iconSize[1].value,
+                            marginRight: rowIcon.offset[0].value,
+                            marginTop: rowIcon.offset[1].value
+                          }} alt="" />
+                        }
+                        <span title={item[fields[0]]} onClickCapture={() => handleClickName(item)}>{item[fields[0]]}</span>
+                      </div>
+                    );
+                  })
+                }
               </div>
-            ) 
+            </div>
+          )
         }
       </div>
-    )
-
+    );
+  }
+  }
   }
 }
 
-export { SwipterText }
-export default SwipterText
+export { SwipterText };
+export default SwipterText;
