@@ -181,7 +181,6 @@ class Counter extends Component {
     originData = this.formatData(originData, fields2ValueMap)
     originData = originData.length ? originData[0] : []
     const configOfTheme = JSON.parse(JSON.stringify(config))
-    console.log(themeConfig,'themeConfig')
     if(themeConfig){
       this.replaceThemeColor(configOfTheme)
       this.props.onThemeChange({
