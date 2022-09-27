@@ -83,8 +83,6 @@ import DrillDownPanel from "@/customComponents/dashboardEdit/drillDownPanel";
 
 // import Tab from "@/components/tab";
 
-import ComponentDefaultConfig from '@/customComponents/echarts/components/basicLine/basicLine-1.2.2/config.js'
-
 
 enum STYLE_ENUM {
   BOLD = "fontBold"
