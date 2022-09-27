@@ -577,7 +577,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
                         />
                         <Paragraph
                           copyable={{
-                            text: `${fxljInputValue}`,
+                            text: `${fxljInputValue}  ${titleInputValue}  ${descriptionInputValue}`,
                             onCopy: () => {
                               message.success({ content: "复制链接成功", duration: 1 });
                             },
