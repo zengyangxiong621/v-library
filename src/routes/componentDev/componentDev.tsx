@@ -307,7 +307,7 @@ const ComponentDev = (props: any) => {
       title: "操作",
       key: "action",
       ellipsis: true,
-      width: 200,
+      width: 120,
       render: (text: any, record: any) => {
         return (
           <Space size="middle" >
@@ -374,7 +374,7 @@ const ComponentDev = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: "70vh" }}
+            scroll={{ y: "calc(100vh - 300px)" }}
             sortDirections={["ascend", "descend"]}
             rowClassName='customRowClass'
             loading={tableLoading}
