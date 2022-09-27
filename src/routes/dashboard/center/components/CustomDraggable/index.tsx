@@ -98,6 +98,8 @@ const CustomDraggable
     components,
     panels
   }: { bar: any, dispatch: any, layers: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>, panels: Array<IPanel> }) => {
+  console.log('components', components)
+  console.log('layers', layers)
     const callbackParamsList = bar.callbackParamsList;
     const callbackArgs = bar.callbackArgs;
     const scaleDragData = bar.scaleDragData;
@@ -493,12 +495,11 @@ const CustomDraggable
       clearTimeout(clickTimer.current);
       if ("panelType" in layer) {
         const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
-        if (layer.panelType === 0) {
+        if (layer.panelType === 0) { // 动态面板
           dispatch({
             type: "bar/save",
             payload: {
               isPanel: true,
-              panelId: layer.id,
               layers: [],
               selectedComponents: [],
               selectedComponentOrGroup: [],
@@ -518,7 +519,7 @@ const CustomDraggable
           });
           if (panel.states[0]?.id) {
             history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
-            dispatch({
+/*            dispatch({
               type: "bar/getPanelDetails"
             });
             dispatch({
@@ -526,7 +527,7 @@ const CustomDraggable
               payload: {
                 stateId: panel.states[0].id
               }
-            });
+            });*/
           } else {
             history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}`);
           }
@@ -585,7 +586,7 @@ const CustomDraggable
             }
           });
           history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
-          dispatch({
+/*          dispatch({
             type: "bar/getPanelDetails"
           });
           dispatch({
@@ -593,7 +594,7 @@ const CustomDraggable
             payload: {
               stateId: panel.states[0].id
             }
-          });
+          });*/
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({
@@ -1032,7 +1033,7 @@ const CustomDraggable
                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                         >
                                         </BasicBar> :
-                                        layer.moduleName === "basicLine" ? 
+                                        layer.moduleName === "basicLine" ?
                                         <BasicLine
                                           themeConfig={bar.componentThemeConfig}
                                           onThemeChange={onThemeChange}

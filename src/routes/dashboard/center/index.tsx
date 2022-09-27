@@ -36,7 +36,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     const layers = deepClone(bar.layers)
     layersReverse(layers)
     setLayers(layers)
-    setComponents(bar.components)
+    setComponents(bar.fullAmountComponents)
     setPanels(bar.panels)
   }, [bar.layers])
 

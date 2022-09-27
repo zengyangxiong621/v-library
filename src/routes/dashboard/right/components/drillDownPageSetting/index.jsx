@@ -122,7 +122,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
         curPanelType: 2
       }
     })
-    dispatch({
+/*    dispatch({
       type: 'bar/getPanelDetails'
     })
     dispatch({
@@ -130,7 +130,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       payload: {
         stateId: panel.states[0].id
       }
-    })
+    })*/
   }
   return (
     <div className="dynamic-wrap">

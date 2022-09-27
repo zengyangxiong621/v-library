@@ -370,7 +370,7 @@ const Left = ({ dispatch, bar, operate }) => {
             onExpand={myOnExpand}
             onSelect={onSelect}
             onRightClick={onRightClick}
-            layers={bar.layers}
+            treeData={bar.layers}
             selectedKeys={bar.key}
             titleRender={(nodeData) => {
               // title 置为空，覆盖antTree 默认的title

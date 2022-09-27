@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
+import { routerRedux } from 'dva/router';
+
 import {
   calcGroupPosition,
   deepClone,
@@ -142,8 +144,9 @@ export default {
       { payload: { dashboardId, isPanel, stateId, panelId }, cb }: any,
       { call, put, select }: any
     ): any {
-      const bar: any = yield select(({ bar }: any) => bar);
+      let bar: any = yield select(({ bar }: any) => bar);
       // 未初始化
+      console.log('!bar.isDashboardInit', bar.isDashboardInit)
       if (!bar.isDashboardInit) {
         // 获取回调参数列表
         const callbackParamsList = yield http({
@@ -158,7 +161,7 @@ export default {
           type: "getDataContainerList",
           payload: dashboardId,
         });
-        const bar: any = yield select(({ bar }: any) => bar);
+        bar = yield select(({ bar }: any) => bar);
         bar.dataContainerList.forEach(async (item: any) => {
           let data: any = null;
           item.enable = item.modules.length > 0;
@@ -209,27 +212,74 @@ export default {
             isDashboardInit: true
           },
         });
-        if (isPanel) {
-          yield put({
-            type: "getPanelDetails",
-          });
-        }
-
+        let layers: any[] = []
         yield yield put({
           type: "getDashboardDetails",
           cb: async (data: any) => {
+            layers = data.layers
             await cb(data);
           },
         });
-        yield put({
+        yield yield put({
           type: "getFullAmountDashboardDetails",
+          payload: {
+            layers
+          }
         });
+        bar = yield select(({ bar }: any) => bar);
+        console.log('-------')
+        console.log('stateId', stateId)
+        console.log('panelId', panelId)
+        console.log('-------')
+        if (!stateId && panelId) {
+          const { states } = bar.fullAmountDashboardDetails.find((item: any) => item.id === panelId)
+          if (states.length > 0) {
+            const stateId = states[0].id
+            yield put(routerRedux.push(`/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`))
+          } else {
+            yield put({
+              type: "save",
+              payload: {
+                layers: [],
+                dashboardName: ''
+              }
+            })
+          }
+        } else if (stateId && panelId) {
+          console.log('到这不')
+          yield put({
+            type: 'selectPanelState',
+            payload: {
+              stateId,
+              panelId
+            }
+          })
+        }
+
       } else {
         // 已初始化后，就是判断是不是在同一个 stateId
 
+        // 如果当前面板没有一个状态的时候
+        if (panelId && !stateId) {
+          yield put({
+            type: "save",
+            payload: {
+              layers: [],
+              dashboardName: ''
+            }
+          })
+        }
+        // 状态不一样
+        if (bar.stateId !== stateId && stateId) {
+          yield put({
+            type: 'selectPanelState',
+            payload: {
+              stateId,
+              panelId
+            }
+          })
+        }
       }
-
-
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -290,7 +340,7 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const layers = bar.layers;
+      const layers = payload.layers;
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
@@ -394,6 +444,7 @@ export default {
       yield put({
         type: "save",
         payload: {
+          layers,
           fullAmountDashboardDetails: bar.fullAmountDashboardDetails,
           fullAmountLayers,
           panels,
@@ -405,21 +456,10 @@ export default {
     *getDashboardDetails({ cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       let { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
-      const fullAmountDashboardDetails = bar.fullAmountDashboardDetails;
-      if (isPanel) {
-        // 默认路由跳转到当前面板的第一个状态
-        if (!stateId) {
-          stateId = panelStatesList[0].id;
-        }
-        window.history.replaceState(
-          "",
-          "",
-          `/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`
-        );
-      }
+      const fullAmountDashboardDetails = bar.fullAmountDashboardDetails; // 这里是 空数组 []
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http({
-          url: `/visual/application/dashboard/detail/${isPanel ? stateId : dashboardId}`,
+          url: `/visual/application/dashboard/detail/${dashboardId}`,
           method: "get",
         });
         const index = fullAmountDashboardDetails.find((item: any) => item.id === dashboardId);
@@ -475,25 +515,9 @@ export default {
           dashboardConfig
         );
 
-        // const drillDownParentReflect: any =
-        //   JSON.parse((localStorage as any).getItem("allHasParentReflect")) || {};
-        let finalComponents = components;
-        // try {
-        //   finalComponents = components.map((item: any) => {
-        //     const comParentInfo = drillDownParentReflect[item.id];
-        //     if (comParentInfo) {
-        //       item.staticData.data = comParentInfo.parentData;
-        //     }
-        //     return item;
-        //   });
-        // } catch (error) {
-        //   console.log("error", error);
-        // }
         yield put({
           type: "save",
           payload: {
-            layers: noEmptyGroupLayers,
-            components: finalComponents,
             panels,
             dashboardId,
             stateId,
@@ -503,7 +527,7 @@ export default {
             fullAmountDashboardDetails,
           },
         });
-        cb({ dashboardConfig: newDashboardConfig, dashboardName });
+        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers, });
       } catch (e) {
         return e;
       }
@@ -1158,35 +1182,43 @@ export default {
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails, panelId, dashboardId } = bar
       const data = yield http({
         url: "/visual/panel/state/create",
         method: "post",
         body: {
-          dashboardId: bar.dashboardId,
-          panelId: bar.panelId,
+          dashboardId: dashboardId,
+          panelId: panelId,
         },
       });
-      if (bar.panelStatesList.length === 0) {
-        yield put({
-          type: "selectPanelState",
-          payload: {
-            stateId: data.id,
-          },
-        });
-      }
+      const { id, name } = data;
+
+      // 更新当前面板的状态列表
+      let newPanelStatesList = bar.panelStatesList.concat({
+          name: data.name,
+          id: data.id,
+        })
+      fullAmountDashboardDetails.find((item: any) => item.id === panelId).states = newPanelStatesList
+
+      // 需要给 fullAmountDashboardDetails 添加当前状态的 详情
+      const stateDetails = yield http({
+        url: `/visual/application/dashboard/detail/${data.id}`,
+        method: 'get',
+      })
+      fullAmountDashboardDetails.push({
+        ...stateDetails,
+        id,
+      })
+
       yield put({
         type: "save",
         payload: {
-          panelStatesList: bar.panelStatesList.concat({
-            name: data.name,
-            id: data.id,
-          }),
+          panelStatesList: newPanelStatesList,
+          fullAmountDashboardDetails
         },
       });
+
       // 将状态添加到全量图层树种 0 - fullAmountLayers，也就是当前面板 panelId 下的 modules中
-      // todo 需要给 fullAmountDashboardDetails 添加当前状态的 详情
-      const { id, name } = data;
-      console.log("insertId: bar.panelId ", bar.panelId);
       yield put({
         type: "addComponent",
         payload: { final: { name, id, modules: [] }, insertId: bar.panelId },
@@ -1286,41 +1318,33 @@ export default {
       //   }
       // })
     },
-    *selectPanelState({ payload: { stateId } }: any, { call, put, select }: any): any {
+    *selectPanelState({ payload: { stateId, panelId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      if (stateId !== bar.stateId) {
-        yield put({
-          type: "save",
-          payload: {
-            stateId,
-          },
-        });
-        yield put({
-          type: "getDashboardDetails",
-        });
-        yield put({
-          type: "save",
-          payload: {
-            scaleDragData: {
-              position: {
-                x: 0,
-                y: 0,
-              },
-              style: {
-                width: 0,
-                height: 0,
-                display: "none",
-              },
-            },
-            selectedComponentOrGroup: [],
-            selectedComponentIds: [],
-            selectedComponentRefs: {},
-            selectedComponentDOMs: {},
-            selectedComponents: [],
-            key: [stateId],
-          },
-        });
-      }
+      const { fullAmountDashboardDetails } = bar
+      console.log('--------------')
+      console.log('stateId', stateId)
+      console.log('fullAmountDashboardDetails', fullAmountDashboardDetails)
+      console.log('--------------')
+      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find((item: any) => item.id === stateId)
+      const { config, states } = fullAmountDashboardDetails.find((item: any) => item.id === panelId)
+      const newDashboardConfig = duplicateDashboardConfig(
+        deepClone(bar.dashboardConfig),
+        dashboardConfig
+      );
+      const recommendConfig = newDashboardConfig.find((item: any) => item.name === "recommend");
+      recommendConfig.width = config.width;
+      recommendConfig.height = config.height;
+      yield put({
+        type: "save",
+        payload: {
+          panelId,
+          stateId,
+          layers,
+          dashboardConfig: newDashboardConfig,
+          dashboardName,
+          panelStatesList: states
+        }
+      })
     },
     *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {},
   },
@@ -1435,6 +1459,7 @@ export default {
         fullAmountPayload === "children"
       );
       if (isComponent) {
+        console.log('到这里了不hhh', newLayers)
         newLayers = generateLayers(state.layers, insertId, finalConfig);
         return { ...state, layers: newLayers, fullAmountLayers: newFullAmountLayers };
       }
@@ -1443,10 +1468,10 @@ export default {
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: { payload: Array<any> }) {
       if (Array.isArray(payload)) {
-        state.components = state.components.concat(payload);
+        state.fullAmountComponents = state.fullAmountComponents.concat(payload);
       } else {
         const { layers, components, selected }: any = payload;
-        state.components = state.components.concat(components);
+        state.fullAmountComponents = state.fullAmountComponents.concat(components);
         // @Mark 复制完成后需要将源组件的组件数据赋值给新复制出来的组件，即在bar.componentData中存储 {key：新组件id, value：源组件Data}
         // 复制出来的组件的id
         const thisTimeCopyCompIds = components.map((item: any) => {
