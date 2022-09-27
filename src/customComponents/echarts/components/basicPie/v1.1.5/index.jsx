@@ -2,8 +2,7 @@
 
 import ComponentDefaultConfig from './config'
 import * as echarts from 'echarts';
-import EC from '@/customComponents/echarts/EC'
-// import EC from '../../EC'
+import EC from '../../../EC'
 import React, { memo } from 'react'
 
 const formatNumber = (num, precision = 2, splitDesc = ',') => {
@@ -21,6 +20,89 @@ const Pie = (props) => {
   const { data } = componentConfig.staticData
   const componentData = props.comData || data // 过滤后的数据
   const fieldKey = props.fields || ['s', 'y']
+  const componentThemeConfig = props.themeConfig
+
+  const replaceThemeColor = (arr, colorIndex = 0) => {
+    arr.forEach((item) => {
+      let index = colorIndex || 0
+      let { name, value, options, flag, type, key, themeColor } = item
+      if (item.hasOwnProperty('value')) {
+        // 对 系列一栏 做特殊处理
+        if (flag === 'specialItem') {
+          try {
+            index = key ? parseInt(key) - 1 : 0
+          } catch (e) {
+            index = 0
+          }
+        }
+        if (Array.isArray(value)) {
+          replaceThemeColor(value, index)
+        } else {
+          if (themeColor) {
+            switch (themeColor) {
+              case 'themePureColor':
+                value['color'] = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                value['color'] = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                value['color'] = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                value['color'] = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                value['color'] = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                value['color'] = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+          if (type === 'color') {
+            switch (name) {
+              case 'themePureColor':
+                item.value = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                item.value = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                item.value = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                item.value = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      } else if (Array.isArray(options) && options.length) {
+        replaceThemeColor(options, index)
+      }
+    })
+  }
+  if (componentThemeConfig) {
+    const configOfTheme = JSON.parse(JSON.stringify(config))
+    replaceThemeColor(configOfTheme)
+    props.onThemeChange({
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
+      config: configOfTheme
+    })
+  }
 
   const getTargetConfig = (Arr) => {
     let targetConfig = {}
@@ -162,11 +244,13 @@ const Pie = (props) => {
     seriesValue.forEach((item, index) => {
       const {
         mapping: { fieldName, displayName },
-        ringBlockColor,
+        themePureColor,
       } = item
       if (!filedName2series.has(fieldName)) {
         filedName2series.set(fieldName, 'exitFlag')
-        colorArr[index] = ringBlockColor
+        colorArr[index] = componentThemeConfig
+          ? componentThemeConfig.pureColors[index % 7]
+          : themePureColor || defaultColorArr[~~(Math.random() * 10)]
         // TODO 图例自定义文本
         // legendTextReflect[fieldName] = pieDataNames[index]
       } else {
@@ -179,7 +263,9 @@ const Pie = (props) => {
   // 为系列实现, “颜色平等”
   const finalColorArr = colorArr.map((color, i) => {
     if (color === 'noColor') {
-      color = defaultColorArr[~~(Math.random() * 10)]
+      color = componentThemeConfig
+        ? componentThemeConfig.pureColors[(~~(Math.random() * 10)) % 7]
+        : defaultColorArr[~~(Math.random() * 10)]
     }
     return color
   })
@@ -187,7 +273,9 @@ const Pie = (props) => {
   if (finalColorArr.length < originalPieData.length) {
     const lackValue = originalPieData.length - finalColorArr.length
     for (let i = 0; i < lackValue; i++) {
-      const randomColor = defaultColorArr[~~(Math.random() * 10)]
+      const randomColor = componentThemeConfig
+        ? componentThemeConfig.pureColors[(~~(Math.random() * 10)) % 7]
+        : defaultColorArr[~~(Math.random() * 10)]
       finalColorArr.push(randomColor)
     }
   }
@@ -225,7 +313,9 @@ const Pie = (props) => {
   const fw = legendTextStyle.fontWeight
   const legendTextColorRich = {
     text: {
-      color: legendTextStyle.color,
+      color: componentThemeConfig
+        ? componentThemeConfig.textColor
+        : legendTextStyle.color,
       fontSize: fs,
       fontWeight: fw,
     },
@@ -246,11 +336,14 @@ const Pie = (props) => {
   /** ++++++++++++++++++++++ ↓↓ 标签相关 ↓↓++++++++++++++++++++++ */
   /** =========================================================== */
   // 整合标签富文本样式
+  const themeTextColorObj = componentThemeConfig ? {
+    color: componentThemeConfig.textColor
+  } : {}
   const labelTextColorRich = {
-    a: { ...labelSeriesNameTextStyle },
-    b: { ...labelDataNameTextStyle },
-    c: { ...labelDataValueTextStyle },
-    d: { ...labelPercentageTextStyle },
+    a: { ...labelSeriesNameTextStyle, ...themeTextColorObj },
+    b: { ...labelDataNameTextStyle, ...themeTextColorObj },
+    c: { ...labelDataValueTextStyle, ...themeTextColorObj },
+    d: { ...labelPercentageTextStyle, ...themeTextColorObj },
   }
   // 将各个系列的颜色 加入到rich中
   finalColorArr.forEach((item, index) => {

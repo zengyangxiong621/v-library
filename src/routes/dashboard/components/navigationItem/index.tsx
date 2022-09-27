@@ -10,9 +10,6 @@ const NavigationIcon = (props: any) => {
   // @mark 后来添加的 “数据容器”，ui给的icon名不叫shujurongqi
   let icon = data.icon;
   switch (icon) {
-    case "shujurongqi":
-      icon = "moxing-zidingyishujurongqi";
-      break;
     case "zujiangengxin":
       icon = "shujuxiangyingjieguo-shuaxin";
       break;

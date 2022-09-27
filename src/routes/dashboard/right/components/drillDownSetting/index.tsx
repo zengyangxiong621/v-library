@@ -9,7 +9,7 @@ import { useSetState } from "ahooks";
 
 import CodeEditor from "../codeEditor";
 
-const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLevelComponent, componentConfig }: any) => {
+const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig }: any) => {
   const { panelStatesList, stateId } = bar;
   const { id, name, } = componentConfig;
   const [state, setState] = useSetState({
@@ -148,10 +148,8 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, selectedNextLev
     }
     localStorageCopy.setItem("allHasParentReflect", JSON.stringify(finalReflect));
 
-    // 将含有drillDownArr的新componentConfig传出去
-    selectedNextLevelComponent(componentConfig);
-
     // 需要改变 全局状态中的 componentConfig, 不然其它触发module/update接口时(比如移动一下组件),会覆盖这个带有drillDownArr的componentConfig
+    console.log('cccccccccccc', componentConfig)
     dispatch({
       type: "bar/setComponentConfig",
       payload: componentConfig

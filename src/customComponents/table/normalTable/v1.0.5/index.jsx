@@ -50,9 +50,9 @@ const NormalTable=(props)=>{
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const [dataSource, setDataSource] = useState([]);
+  const [dataSource, setDataSource] = useState(staticData.data);
   useEffect(()=>{
-    if(!dataSource.length && comData.length){
+    if(comData.length){
       setDataSource(comData)
     }
   },[comData])
@@ -483,7 +483,7 @@ const NormalTable=(props)=>{
               }
             }
             if(item.isFilter){
-              filterConfig=getColumnSearchProps(item.fieldName,item.displayName)
+              filterConfig=getColumnSearchProps(mapField,item.displayName)
             }
             return (
               <Column

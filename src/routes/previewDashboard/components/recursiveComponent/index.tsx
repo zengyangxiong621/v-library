@@ -12,7 +12,7 @@ const MODULES = "modules";
 const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeReflect } = props;
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeBreadcrumbData, changeReflect } = props;
 
   return (
     <div className='recursive-component-wrap'>
@@ -28,7 +28,6 @@ const RecursiveComponent = (props: any) => {
             targetPanel = panels.find((item: any) => item.id === layer.id);
           }
           // console.log('hhhhhhhhh', previewDashboard.componentData, targetComponent, layer);
-
           return (
             <div
               data-id={isGroup ? layer.id : "component-" + layer.id}
@@ -81,6 +80,7 @@ const RecursiveComponent = (props: any) => {
                           previewDashboard={previewDashboard}
                           dispatch={dispatch}
                           addDrillDownLevel={addDrillDownLevel}
+                          changeBreadcrumbData={changeBreadcrumbData}
                         />
                       </div>
                   ) :
@@ -112,6 +112,7 @@ const RecursiveComponent = (props: any) => {
                           scaleValue={scaleValue}
                           layerInfo={layer}
                           addDrillDownLevel={addDrillDownLevel}
+                          changeBreadcrumbData={changeBreadcrumbData}
                           changeReflect={changeReflect}
                           {...props}
                         />

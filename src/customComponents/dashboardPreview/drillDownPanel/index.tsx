@@ -33,6 +33,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     overflow: "hidden",
     allData: [],
     isLoading: false,
+    breadcrumbData: []
   });
 
   const [activeIndex, setActiveIndex] = useState(0)
@@ -99,6 +100,13 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
       });
     })();
   }, []);
+  // 将面板状态赋值给面包屑数据
+  useEffect(() => {
+    const breadcrumbData = states.map((item: any) => item.name)
+    setState({
+      breadcrumbData
+    })
+  }, [])
 
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
@@ -113,18 +121,32 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     }
     setActiveIndex(newIndex);
   }
+  // 更改面包屑标题数据
+  const changeBreadcrumbData = (newData: any) => {
+    const { originalName } = newData
+    if (originalName) {
+      // TODO 这儿暂时先用和addDrillDownLevel中的重复逻辑
+      let newIndex = activeIndex + 1;
+      if (newIndex >= states.length || newIndex < 0) {
+        return;
+      }
+      const newArr = state.breadcrumbData
+      newArr[newIndex] = originalName
+      setState({ breadcrumbData: newArr })
+    }
+  }
   return (
     <div className={`drill-down-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>
       <div style={{ marginBottom: "20px", minWidth: "500px" }}>
         <Breadcrumb
         >
           {
-            states.map((x: any, i: number) => {
+            state.breadcrumbData.map((x: any, i: number) => {
               return (<Breadcrumb.Item
                 className={`custom-breadcrumb ${activeIndex === i ? 'active-breadcrumb-item' : ''} `}
                 onClick={() => breadcrumbClick(x, i)}
               >
-                {x.name}
+                {x}
               </Breadcrumb.Item>);
             })
           }
@@ -160,6 +182,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
                 componentLists={item.components}
                 panels={item.panels}
                 addDrillDownLevel={addDrillDownLevel}
+                changeBreadcrumbData={changeBreadcrumbData}
               />
             </div>
           )

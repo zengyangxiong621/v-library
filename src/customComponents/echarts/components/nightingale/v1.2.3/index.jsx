@@ -1,7 +1,6 @@
 
-
 import ComponentDefaultConfig from './config'
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 import EC from '@/customComponents/echarts/EC'
 // import EC from '../../EC'
 import React, { memo } from 'react'
@@ -10,17 +9,101 @@ const formatNumber = (num, precision = 2, splitDesc = ',') => {
   if (typeof num === 'number') {
     precision = +precision // 这里为了处理precision传入null  +null=0
     const str = num.toFixed(precision)
-    const reg = str.indexOf('.') > -1 ? /(\d)(?=(\d{3})+\.)/g : /(\d)(?=(?:\d{3})+$)/g
+    const reg =
+      str.indexOf('.') > -1 ? /(\d)(?=(\d{3})+\.)/g : /(\d)(?=(?:\d{3})+$)/g
     return str.replace(reg, '$1' + splitDesc)
   }
 }
 
-const Pie = (props) => {
+const Nightingale = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
   const componentData = props.comData || data // 过滤后的数据
   const fieldKey = props.fields || ['s', 'y']
+  const componentThemeConfig = props.themeConfig
+
+  const replaceThemeColor = (arr, colorIndex = 0) => {
+    arr.forEach((item) => {
+      let index = colorIndex || 0
+      let { name, value, options, flag, type, key, themeColor } = item
+      if (item.hasOwnProperty('value')) {
+        // 对 系列一栏 做特殊处理
+        if (flag === 'specialItem') {
+          try {
+            index = key ? parseInt(key) - 1 : 0
+          } catch (e) {
+            index = 0
+          }
+        }
+        if (Array.isArray(value)) {
+          replaceThemeColor(value, index)
+        } else {
+          if (themeColor) {
+            switch (themeColor) {
+              case 'themePureColor':
+                value['color'] = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                value['color'] = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                value['color'] = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                value['color'] = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                value['color'] = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                value['color'] = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+          if (type === 'color') {
+            switch (name) {
+              case 'themePureColor':
+                item.value = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                item.value = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                item.value = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                item.value = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      } else if (Array.isArray(options) && options.length) {
+        replaceThemeColor(options, index)
+      }
+    })
+  }
+  if (componentThemeConfig) {
+    const configOfTheme = JSON.parse(JSON.stringify(config))
+    replaceThemeColor(configOfTheme)
+    props.onThemeChange({
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
+      config: configOfTheme
+    })
+  }
 
   const getTargetConfig = (Arr) => {
     let targetConfig = {}
@@ -47,50 +130,79 @@ const Pie = (props) => {
   const targetConfig = getTargetConfig(filterDimension)
   // 获取对应的属性
   const { hideDefault, pieSetting } = targetConfig
-  const { mainTextSetting, subTextSetting, } = pieSetting ? pieSetting['标题设置'] : {}
+  const { mainTextSetting, subTextSetting } = pieSetting
+    ? pieSetting['标题设置']
+    : {}
   // 主标题设置
-  const { showMainTextSetting, mainTextVertical, mainTextHorizontal, mainTextStyle } = mainTextSetting
+  const {
+    showMainTextSetting,
+    mainTextVertical,
+    mainTextHorizontal,
+    mainTextStyle,
+  } = mainTextSetting
   // 副标题设置
-  const { showSubTextSetting, subText, subTextHorizontal, subTextVertical, subTextStyle } = subTextSetting
+  const {
+    showSubTextSetting,
+    subText,
+    subTextHorizontal,
+    subTextVertical,
+    subTextStyle,
+  } = subTextSetting
   const {
     Radius: { outerRadius, innerRadius },
-    blockStyle: { showBlockStyle, blockRadius, blockStrokeColor, blockGap, blurRadius },
+    blockStyle: {
+      showBlockStyle,
+      blockRadius,
+      blockStrokeColor,
+      blockGap,
+      blurRadius,
+    },
     ringPosition: { ringPositionX, ringPositionY },
     ringSeries,
   } = pieSetting ? pieSetting['环形属性'] : {}
   const {
     legendStyle: {
-      legendItemGap, legendItemWidth, legendItemHeight,
-      legendOffset, legendOrient, showLegend
+      legendItemGap,
+      legendItemWidth,
+      legendItemHeight,
+      legendOffset,
+      legendOrient,
+      showLegend,
     },
     legendTextStyle,
     symbolShape,
     numberFormat,
   } = pieSetting ? pieSetting['图例设置'] : {}
   // 标签样式
-  const { labelSetting, labelShowFields } = pieSetting ? pieSetting['标签设置'] : {}
-  const { line1Length, line2Length, lineWidth, showLabel, } = labelSetting
+  const { labelSetting, labelShowFields } = pieSetting
+    ? pieSetting['标签设置']
+    : {}
+  const { line1Length, line2Length, lineWidth, showLabel } =
+    labelSetting
   // 标签显示字段
-  const { labelSeriesName, labelSeriesNameTextStyle, seriesNameUseSeriesColor, labelDataName, labelDataNameTextStyle, dataNameUseSeriesColor, labelDataValue, labelDataValueTextStyle, dataValueUseSeriesColor, labelPercentage, labelPercentageTextStyle, percentageUseSeriesColor, } = labelShowFields
-
-
+  const { labelSeriesName, labelSeriesNameTextStyle, seriesNameUseSeriesColor, labelDataName, labelDataNameTextStyle, dataNameUseSeriesColor, labelDataValue, labelDataValueTextStyle, dataValueUseSeriesColor, labelPercentage, labelPercentageTextStyle, percentageUseSeriesColor, } =
+    labelShowFields
   // 根据 映射字段处理后的 图表数据, 后续还需进一步加工数据
   let originalPieData = []
   if (componentData && componentData.length) {
-    originalPieData = componentData.map(item => {
+    originalPieData = componentData.map((item) => {
       return {
         name: item[fieldKey[0]],
-        value: item[fieldKey[1]]
+        value: item[fieldKey[1]],
       }
     })
   }
-  const total = componentData && componentData.length ? componentData.reduce((pre, item) => {
-    return pre + item[fieldKey[1]]
-  }, 0) : 0
+
+  const total =
+    componentData && componentData.length
+      ? componentData.reduce((pre, item) => {
+        return pre + item[fieldKey[1]]
+      }, 0)
+      : 0
   // 处理 主标题 显示的数字格式，也可以用toLocalString, 但是在某些情况下可能会出错
   const hadFormatTotal = formatNumber(total, 0)
 
-  /** +++++++++++++++++ ↓↓ 饼图自定义区块间距 ↓↓ ++++++++++++++++++ */
+  /** +++++++++++++++++ ↓↓ 玫瑰图自定义区块间距 ↓↓ ++++++++++++++++++ */
   /** =========================================================== */
   // 通过往originalPieData中添加对象来实现 <能够自定义饼图各块之间的间距> 的功能
   const canSetGapPieData = []
@@ -109,7 +221,7 @@ const Pie = (props) => {
       ...finalItemStyle,
     })
     // 开启了区块样式后，才能设置区块间距
-    if (showBlockStyle && len > 1) {
+    if (showBlockStyle) {
       //加了这个对象后，是能够添加上 区块间距, 但是点击“区块样式” 开关时会改变图例布局的朝向, 为了解决这个问题，目前采用的方法是：
       // @o_O Mark-1  把下方我们push进canSetGapPieData中的对象(没错，说的就是下面这个name为空字符串的{}) 从canSetGapPieData里过滤掉后得到一个数组, 把它作为 legend.data 的值, 具体见getOption方法中 @o_O for Mark-1处
       canSetGapPieData.push({
@@ -133,7 +245,6 @@ const Pie = (props) => {
       })
     }
   }
-
 
   /** +++++++++++++++++++ ↓↓ 系列颜色相关 ↓↓ ++++++++++++++++++++++ */
   /** =========================================================== */
@@ -162,11 +273,13 @@ const Pie = (props) => {
     seriesValue.forEach((item, index) => {
       const {
         mapping: { fieldName, displayName },
-        ringBlockColor,
+        themePureColor,
       } = item
       if (!filedName2series.has(fieldName)) {
-        filedName2series.set(fieldName, 'exitFlag')
-        colorArr[index] = ringBlockColor
+        filedName2series.set(fieldName, '存在的证明')
+        colorArr[index] = componentThemeConfig
+          ? componentThemeConfig.pureColors[index % 7]
+          : themePureColor || defaultColorArr[~~(Math.random() * 10)]
         // TODO 图例自定义文本
         // legendTextReflect[fieldName] = pieDataNames[index]
       } else {
@@ -174,12 +287,14 @@ const Pie = (props) => {
       }
     })
   } catch (error) {
-    throw new Error('饼图渡劫失败:  config-<环形系列>配置项格式不对')
+    throw new Error('玫瑰图渡劫失败:  config-<环形系列>配置项格式不对')
   }
   // 为系列实现, “颜色平等”
   const finalColorArr = colorArr.map((color, i) => {
     if (color === 'noColor') {
-      color = defaultColorArr[~~(Math.random() * 10)]
+      color = componentThemeConfig
+        ? componentThemeConfig.pureColors[(~~(Math.random() * 10)) % 7]
+        : defaultColorArr[~~(Math.random() * 10)]
     }
     return color
   })
@@ -187,12 +302,14 @@ const Pie = (props) => {
   if (finalColorArr.length < originalPieData.length) {
     const lackValue = originalPieData.length - finalColorArr.length
     for (let i = 0; i < lackValue; i++) {
-      const randomColor = defaultColorArr[~~(Math.random() * 10)]
+      const randomColor = componentThemeConfig
+        ? componentThemeConfig.pureColors[(~~(Math.random() * 10)) % 7]
+        : defaultColorArr[~~(Math.random() * 10)]
       finalColorArr.push(randomColor)
     }
   }
 
-  /** ++++++++++++++++++++++ ↓↓ 图例相关 ↓↓++++++++++++++++++++++ */
+  /** ++++++++++++++++++++++ ↓↓ 图例相关 ↓↓ ++++++++++++++++++++++ */
   /** =========================================================== */
   // 可以选择 图例后面是否显示 以及如果显示，显示的是该系列对应的具体数量还是百分比
   const seriesNumberReflect = {}
@@ -223,9 +340,11 @@ const Pie = (props) => {
   // 为了能够让 <图例部分> 百分比文本 对应上系列色, 自定义rich对象
   const fs = legendTextStyle.fontSize
   const fw = legendTextStyle.fontWeight
-  const legendTextColorRich = {
+  const textColorRich = {
     text: {
-      color: legendTextStyle.color,
+      color: componentThemeConfig
+        ? componentThemeConfig.textColor
+        : legendTextStyle.color,
       fontSize: fs,
       fontWeight: fw,
     },
@@ -234,7 +353,7 @@ const Pie = (props) => {
   // @o_O Mark-3 rich对象中用类似 “恶意拦截” 这样的字符串做key最后会不生效,所以这儿将 系列名 映射 成 0,1,2,3这样的数字，方便在legend.formatter中使用
   const seriesName2number = {}
   originalPieData.forEach(({ name }, index) => {
-    legendTextColorRich[index] = {
+    textColorRich[index] = {
       color: finalColorArr[index],
       fontSize: fs,
       fontWeight: fw,
@@ -246,11 +365,14 @@ const Pie = (props) => {
   /** ++++++++++++++++++++++ ↓↓ 标签相关 ↓↓++++++++++++++++++++++ */
   /** =========================================================== */
   // 整合标签富文本样式
+  const themeTextColorObj = componentThemeConfig ? {
+    color: componentThemeConfig.textColor
+  } : {}
   const labelTextColorRich = {
     a: { ...labelSeriesNameTextStyle },
     b: { ...labelDataNameTextStyle },
     c: { ...labelDataValueTextStyle },
-    d: { ...labelPercentageTextStyle },
+    d: { ...labelPercentageTextStyle }
   }
   // 将各个系列的颜色 加入到rich中
   finalColorArr.forEach((item, index) => {
@@ -298,14 +420,13 @@ const Pie = (props) => {
     return {
       color: finalColorArr,
       title: [
-        // 主标题 <显示汇总的辣一个标题>
         {
           show: showMainTextSetting,
           text: hadFormatTotal,
           top: `${mainTextVertical}%`,
           left: `${mainTextHorizontal}%`,
-          textAlign: "center",
-          textVerticalAlign: "center",
+          textAlign: 'center',
+          textVerticalAlign: 'center',
           [showMainTextSetting && 'textStyle']: {
             fontFamily: mainTextStyle.fontFamily,
             color: mainTextStyle.textColor,
@@ -315,14 +436,13 @@ const Pie = (props) => {
           },
           overflow: 'breakAll',
         },
-        // 副标题
         {
           show: showSubTextSetting,
           text: subText,
           top: `${subTextVertical}%`,
           left: `${subTextHorizontal}%`,
-          textAlign: "center",
-          textVerticalAlign: "center",
+          textAlign: 'center',
+          textVerticalAlign: 'center',
           [showSubTextSetting && 'textStyle']: {
             fontFamily: subTextStyle.fontFamily,
             color: subTextStyle.textColor,
@@ -334,10 +454,9 @@ const Pie = (props) => {
         },
       ],
       tooltip: {
-        show: false
+        show: false,
       },
       legend: {
-        show: showLegend,
         width: '100%',
         height: '100%',
         data: filterEmptyNameArr,
@@ -348,6 +467,7 @@ const Pie = (props) => {
           )
         },
         icon: symbolShape,
+        show: showLegend,
         itemGap: legendItemGap,
         itemWidth: legendItemWidth,
         itemHeight: legendItemHeight,
@@ -357,23 +477,22 @@ const Pie = (props) => {
         [showLegend && 'textStyle']: {
           fontFamily: legendTextStyle.fontFamily,
           color: finalColorArr,
-          rich: legendTextColorRich,
+          rich: textColorRich,
         },
       },
       series: [
         {
-          name: 'pieChart',
+          name: 'nightingaleChart',
           type: 'pie',
+          roseType: 'radius',
           radius: [`${innerRadius}%`, `${outerRadius}%`],
           center: [`${ringPositionX}%`, `${ringPositionY}%`],
-          roseType: false,
           avoidLabelOverlap: false,
           [showBlockStyle && 'itemStyle']: {
             borderRadius: blockRadius,
             borderColor: blockStrokeColor,
-            // borderWidth: blockGap
+            // borderWidth: blockGap,
           },
-          colorBy: 'data',
           label: {
             show: showLabel,
             formatter: (params) => {
@@ -411,51 +530,29 @@ const Pie = (props) => {
             length: line1Length,
             length2: line2Length,
             lineStyle: {
-              width: lineWidth
-            }
+              width: lineWidth,
+            },
           },
           emphasis: {
             label: {
               show: showLabel,
-            }
+            },
           },
-          data: canSetGapPieData
-        }
-      ]
+          data: canSetGapPieData,
+        },
+      ],
     }
   }
 
-  const onChartClick = (param, echarts) => {
-    console.log('饼图数据', param);
-    if (Array.isArray(componentConfig.drillDownArr) && componentConfig.drillDownArr.length) {
-      const data = {
-        name: param.name,
-        value: param.value
-      }
-      // drillDownArray长度不为零, 需要下钻
-      if (typeof props.onChange === 'function') {
-        props.onChange(data, echarts)
-      }
-    } else {
-      // do something
-    }
-  }
-  const onChartReady = echarts => {
-  }
+  const onChartClick = (param, echarts) => { }
+  const onChartReady = (echarts) => { }
   let onEvents = {
     click: onChartClick,
   }
   return (
-    <EC
-      option={getOption()}
-      onChartReady={onChartReady}
-      onEvents={onEvents}
-    />
-  );
-
-
-
+    <EC option={getOption()} onChartReady={onChartReady} onEvents={onEvents} />
+  )
 }
 
-export { Pie, ComponentDefaultConfig }
-export default memo(Pie)
+export { Nightingale, ComponentDefaultConfig }
+export default memo(Nightingale)

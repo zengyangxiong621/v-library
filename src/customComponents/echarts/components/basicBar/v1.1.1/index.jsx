@@ -9,7 +9,6 @@ const BasicBar = (props) => {
   const { data } = componentConfig.staticData
   const componentData = props.comData || data // 过滤后的数据
   const componentThemeConfig = props.themeConfig
-
   const replaceThemeColor = (arr, colorIndex = 0) => {
     arr.forEach((item) => {
       let index = colorIndex || 0
