@@ -62,7 +62,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     dispatch({
       type: 'bar/save',
       payload: {
-        treeData: data
+        layers: data
       }
     })
   }

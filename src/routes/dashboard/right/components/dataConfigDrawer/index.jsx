@@ -277,7 +277,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   }
 
   const showComponentDetail = (e, id) => {
-    const layer = findLayerById(bar.treeData, id)
+    const layer = findLayerById(bar.layers, id)
     dispatch({
       type: 'bar/selectLayers',
       payload: [layer]
@@ -302,7 +302,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
                 <li className="component-list">
                   <i className="dot"></i>
                   <span className="title" onClick={e => showComponentDetail(e, item)}>
-                    {bar.components.find(jtem => jtem.id === item)?.name + "_" + item}
+                    {bar.fullAmountComponents.find(jtem => jtem.id === item)?.name + "_" + item}
                   </span>
                 </li>)
             })}

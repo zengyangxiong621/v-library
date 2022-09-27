@@ -169,7 +169,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
     console.log('-------------')
     console.log('数据变化data', data)
     const componentId = props.componentConfig.id
-    const component = bar.components.find(item => item.id === componentId)
+    const component = bar.fullAmountComponents.find(item => item.id === componentId)
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
@@ -214,7 +214,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
     // console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])
+      const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.fullAmountComponents.find(item => item.id === id)), [])
       // 绑定数据容器的组件列表
       const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
       // 绑定数据源的组件列表

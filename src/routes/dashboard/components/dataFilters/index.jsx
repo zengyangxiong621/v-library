@@ -57,7 +57,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     if (props.visible) {
-      console.log('bar.components---------', bar.components)
+      console.log('bar.components---------', bar.fullAmountComponents)
       const dataFiltersTmp = cloneDeep(bar.componentFilters)
       dataFiltersTmp.forEach(item => {
         item.isEditName = false
@@ -231,7 +231,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
     }
     // 更新所有组件中使用到该过滤器的配置信息
     if (moduleIds.length) {
-      const components = [...bar.components]
+      const components = [...bar.fullAmountComponents]
       moduleIds.forEach(id => {
         components.forEach(component => {
           if (id === component.id) {
@@ -262,7 +262,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
                 <li className="component-list" key={item.id}>
                   <i className="dot"></i>
                   <span className="title" onClick={e => showComponentDetail(e, item)}>
-                    {bar.components.find(jtem => jtem.id === item)?.name + "_" + item}
+                    {bar.fullAmountComponents.find(jtem => jtem.id === item)?.name + "_" + item}
                   </span>
                 </li>)
             })}
@@ -273,7 +273,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
   );
 
   const showComponentDetail = (e, id) => {
-    const layer = findLayerById(bar.treeData, id)
+    const layer = findLayerById(bar.layers, id)
     dispatch({
       type: 'bar/selectLayers',
       payload: [layer]
@@ -341,7 +341,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
     }
     // 更新所有组件中使用到该过滤器的配置信息
     if (filter.moduleIds.length) {
-      const components = [...bar.components]
+      const components = [...bar.fullAmountComponents]
       filter.moduleIds.forEach(id => {
         components.forEach(component => {
           if (id === component.id) {

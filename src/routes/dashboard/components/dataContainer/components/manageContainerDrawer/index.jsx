@@ -29,7 +29,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
     handleSearch()
   }
   const handleChoose = (id) => {
-    const layer = findLayerById(bar.treeData, id)
+    const layer = findLayerById(bar.layers, id)
     dispatch({
       type: 'bar/selectLayers',
       payload: [layer]

@@ -243,8 +243,8 @@ export function componentsFilter (componentRefList, ids) {
 /**
  * description:  成组
  */
-export const group = (treeData, selectedNodes, lastRightClickKey) => {
-  const treeDataCopy = deepClone(treeData);
+export const group = (layers, selectedNodes, lastRightClickKey) => {
+  const layersCopy = deepClone(layers);
   const newGroup = {
     id: `${ lastRightClickKey }-temp`,
     parentId: "1-1-1",
@@ -288,9 +288,9 @@ export const group = (treeData, selectedNodes, lastRightClickKey) => {
     if (i === len - 1) {
       isDone = true;
     }
-    recursiveFn(treeDataCopy, selectedNodes[i], isDone);
+    recursiveFn(layersCopy, selectedNodes[i], isDone);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 export function deleteComponents (arr, ids) {
@@ -594,11 +594,11 @@ export const findCurrentIndex = (arr) => {
   return max;
 };
 
-export const treeDataReverse = (treeData) => {
-  treeData = treeData?.reverse();
-  treeData?.forEach((layer) => {
+export const layersReverse = (layers) => {
+  layers = layers?.reverse();
+  layers?.forEach((layer) => {
     if (COMPONENTS in layer) {
-      treeDataReverse(layer[COMPONENTS]);
+      layersReverse(layer[COMPONENTS]);
     }
   });
 };

@@ -437,7 +437,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     if (action.component.length === 1) {
       const layerId = action.component[0]
       console.log('layerId', layerId)
-      const layer = findLayerById(action.componentScope === 'global' ? bar.fullAmountLayers : bar.treeData, layerId)
+      const layer = findLayerById(action.componentScope === 'global' ? bar.fullAmountLayers : bar.layers, layerId)
       if ('panelType' in layer) {
         if (layer.panelType === 0) {
           action.layerType = 'dynamicPanel'
@@ -733,7 +733,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   </Space>
                                 </Radio.Group>
                                 <TreeSelect
-                                  treeData={ action.componentScope === 'global' ? bar.fullAmountLayers : bar.treeData }
+                                  treeData={ action.componentScope === 'global' ? bar.fullAmountLayers : bar.layers }
                                   fieldNames={
                                     {
                                       key: 'id',

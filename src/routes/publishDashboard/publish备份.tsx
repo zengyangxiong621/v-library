@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
-import { deepClone, treeDataReverse } from "@/utils";
+import { deepClone, layersReverse } from "@/utils";
 
 import { Spin } from "antd";
 
@@ -24,7 +24,7 @@ const PublishDashboard = ({ dispatch, bar, history, location }: any) => {
   /**
   * description: 获取屏幕大小、缩放设置等参数
   */
-  const [layers, setLayers] = useState(deepClone(bar.treeData));
+  const [layers, setLayers] = useState(deepClone(bar.layers));
 
   /**
    * description: 进入页面，先获取画布详情
@@ -170,10 +170,10 @@ const PublishDashboard = ({ dispatch, bar, history, location }: any) => {
     });
   };
   useEffect(() => {
-    const data = deepClone(bar.treeData);
-    treeDataReverse(data);
+    const data = deepClone(bar.layers);
+    layersReverse(data);
     setLayers(data);
-  }, [bar.treeData]);
+  }, [bar.layers]);
 
 
   const getScreenInfo = (config: any) => {
@@ -212,7 +212,7 @@ const PublishDashboard = ({ dispatch, bar, history, location }: any) => {
                 {
                   <RecursiveComponent
                     layersArr={layers}
-                    componentLists={bar.components}
+                    componentLists={bar.fullAmountComponents}
                     bar={bar}
                     dispatch={dispatch}
                     scaleValue={scaleValue}

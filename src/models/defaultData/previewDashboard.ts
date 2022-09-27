@@ -1,7 +1,7 @@
 export const defaultData = {
   dashboardId: "",
   dashboardName: "",
-  treeData: [],
+  layers: [],
   components: [],
   panels: [],
   canvasScaleValue: 0,

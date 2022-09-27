@@ -499,7 +499,7 @@ const CustomDraggable
             payload: {
               isPanel: true,
               panelId: layer.id,
-              treeData: [],
+              layers: [],
               selectedComponents: [],
               selectedComponentOrGroup: [],
               selectedComponentIds: [],
@@ -567,7 +567,7 @@ const CustomDraggable
             payload: {
               isPanel: true,
               panelId: layer.id,
-              treeData: [],
+              layers: [],
               selectedComponents: [],
               selectedComponentOrGroup: [],
               selectedComponentIds: [],

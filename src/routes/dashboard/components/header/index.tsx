@@ -44,7 +44,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     //     panels: [],
     //     panelStatesList: [],
     //     key: [bar.dashboardId],
-    //     treeData: [],
+    //     layers: [],
     //     scaleDragData: {
     //       position:{
     //         x: 0,

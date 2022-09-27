@@ -2,7 +2,7 @@ import { memo, useEffect, useState, useRef } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
-import { deepClone, treeDataReverse } from "@/utils";
+import { deepClone, layersReverse } from "@/utils";
 
 import { Spin, Input, Button, message } from "antd";
 
@@ -212,14 +212,14 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
   useEffect(() => {
-    const data = deepClone(publishDashboard.treeData);
-    treeDataReverse(data);
+    const data = deepClone(publishDashboard.layers);
+    layersReverse(data);
     setLayers(data);
     setComponents(publishDashboard.components);
     setPanels(publishDashboard.panels);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publishDashboard.treeData]);
+  }, [publishDashboard.layers]);
 
   const setChange = (value: any) => {
     setPassword(value);

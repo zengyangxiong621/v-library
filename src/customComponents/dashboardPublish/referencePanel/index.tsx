@@ -15,7 +15,7 @@ interface State {
 
   [key: string]: any;
 }
-import {treeDataReverse, layersPanelsFlat} from "@/utils/index.js";
+import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
 
 const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
   const componentData = publishDashboard.componentData;
@@ -84,7 +84,7 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    treeDataReverse(layers);
+    layersReverse(layers);
     return {
       components,
       layers,

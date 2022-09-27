@@ -71,8 +71,8 @@ const ComponentCard = props => {
       }
       window.eval(`${await importComponent(fetchComponentOptions)}`)
       const { ComponentDefaultConfig } = window.VComponents;
-      const index = bar.components.findIndex(item => item.id === id)
-      bar.components.splice(index, 1, { ...ComponentDefaultConfig, id })
+      const index = bar.fullAmountComponents.findIndex(item => item.id === id)
+      bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id })
       dispatch({
         type: 'bar/save'
       })

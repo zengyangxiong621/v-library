@@ -168,7 +168,7 @@ export default {
         yield put({
           type: "save",
           payload: {
-            treeData: noEmptyGroupLayers,
+            layers: noEmptyGroupLayers,
             components,
             panels,
             dashboardId,

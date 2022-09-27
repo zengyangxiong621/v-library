@@ -25,7 +25,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   };
   const componentConfig = deepClone(bar.componentConfig)
   componentConfig.interaction = componentConfig.interaction || {
-    mountAnimation: bar.treeData.find(item => item.id === componentConfig.id)?.mountAnimation,
+    mountAnimation: bar.layers.find(item => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events
   }
   const styleConfig = componentConfig.config

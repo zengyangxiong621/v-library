@@ -13,10 +13,10 @@ const CustomDraggable
   = ({
        bar,
        dispatch,
-       treeData,
+       layers,
        mouse,
-     }: { bar: any, dispatch: any, treeData: Array<ILayerGroup | ILayerComponent>, mouse: IMouse }) => {
-  const components: Array<IComponent> = bar.components;
+     }: { bar: any, dispatch: any, layers: Array<ILayerGroup | ILayerComponent>, mouse: IMouse }) => {
+  const components: Array<IComponent> = bar.fullAmountComponents;
   const scaleDragData = bar.scaleDragData;
   const isSupportMultiple: boolean = bar.isSupportMultiple;
   const selectedComponentOrGroup: Array<ILayerGroup | ILayerComponent> = bar.selectedComponentOrGroup;
@@ -289,12 +289,12 @@ const CustomDraggable
     //   type: 'bar/test',
     // })
   };
-  // let copyTreeData = deepClone(treeData).reverse()
+  // let copyTreeData = deepClone(layers).reverse()
 
   return (
     <div className="c-custom-draggable">
       {
-        treeData.map((layer: ILayerGroup | ILayerComponent) => {
+        layers.map((layer: ILayerGroup | ILayerComponent) => {
           let config: IConfig = {
             position: {
               x: 0,
@@ -369,7 +369,7 @@ const CustomDraggable
                           mouse={ mouse }
                           bar={ bar }
                           dispatch={ dispatch }
-                          treeData={ layer.components }
+                          layers={ layer.components }
                         />
                       </div>
                       : ""
