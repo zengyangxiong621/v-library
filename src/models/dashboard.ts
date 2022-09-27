@@ -1,11 +1,11 @@
 export default {
-  namespace: 'dashboard',
+  namespace: "dashboard",
   state: {
     modules: {}
   },
   reducers: {
     componentCreate(state: any, action: any) {
-      return state
+      return state;
     },
     componentUpdate() {},
     componentDelete() {},
@@ -13,9 +13,9 @@ export default {
   effects: {
     *create(action: any, { call, put, select}: any) {
       yield put({
-        type: 'componentCreate',
+        type: "componentCreate",
         payload: action.payload
-      })
+      });
     }
   }
 };

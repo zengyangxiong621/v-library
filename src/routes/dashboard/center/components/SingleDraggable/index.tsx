@@ -1,9 +1,9 @@
-import { useState, useEffect, useImperativeHandle, useRef } from 'react'
-import { connect } from 'dva'
-import Draggable from 'react-draggable'
-import { deepClone } from '../../../../../utils'
-import { Button } from 'antd'
-import * as React from 'react'
+import { useState, useEffect, useImperativeHandle, useRef } from "react";
+import { connect } from "dva";
+import Draggable from "react-draggable";
+import { deepClone } from "../../../../../utils";
+import { Button } from "antd";
+import * as React from "react";
 
 type DraggableEvent = React.MouseEvent<HTMLElement | SVGElement>
   | React.TouchEvent<HTMLElement | SVGElement>
@@ -20,33 +20,33 @@ type DraggableData = {
   node: any
 }
 const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig, isPanel, ...props }: any) => {
-  const draggableRef: any = useRef(null)
+  const draggableRef: any = useRef(null);
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (xMoveLength: number, yMoveLength: number) => {
-      const x = draggableRef.current.props.position.x + xMoveLength
-      const y = draggableRef.current.props.position.y + yMoveLength
-      draggableRef.current.props.position.x = x
-      draggableRef.current.props.position.y = y
+      const x = draggableRef.current.props.position.x + xMoveLength;
+      const y = draggableRef.current.props.position.y + yMoveLength;
+      draggableRef.current.props.position.x = x;
+      draggableRef.current.props.position.y = y;
       if (isPanel) {
-        dimensionConfig.left = x
-        dimensionConfig.top = y
+        dimensionConfig.left = x;
+        dimensionConfig.top = y;
       } else {
-        dimensionConfig.value.find((item: any) => item.name === 'left').value = x
-        dimensionConfig.value.find((item: any) => item.name === 'top').value = y
+        dimensionConfig.value.find((item: any) => item.name === "left").value = x;
+        dimensionConfig.value.find((item: any) => item.name === "top").value = y;
       }
     },
     position: props.position,
     nodeRef: nodeRef,
-  }))
+  }));
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
-    onStop(ev, data)
-  }
+    onStop(ev, data);
+  };
   return (
     <Draggable ref={ draggableRef } onStop={ handleStop } { ...props }>
     </Draggable>
-  )
-}
+  );
+};
 export default connect(({ bar }: any) => ({
   bar,
-}))(SingleDraggable)
+}))(SingleDraggable);

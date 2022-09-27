@@ -3,7 +3,7 @@
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
-import { ExclamationCircleFilled } from '@ant-design/icons'
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
@@ -12,30 +12,30 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
 import DarkModal from "../myDashboard/components/darkThemeModal";
-import { http } from '@/services/request'
-import { ACCOUNTLIST } from '@/constant/dvaModels/userManage'
+import { http } from "@/services/request";
+import { ACCOUNTLIST } from "@/constant/dvaModels/userManage";
 const mapStateToProps = (state: any) => {
-  return state
-}
+  return state;
+};
 // 功能
 const workSpace = (props: any) => {
-  const { workSpace, dispatch, history,global } = props
+  const { workSpace, dispatch, history,global } = props;
   // 空间id
-  const [addMemberForm]:any = Form.useForm()
+  const [addMemberForm]:any = Form.useForm();
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
     // updated_time: false,
   });
-  const [userIdList, setUserIdList] = useState([])
+  const [userIdList, setUserIdList] = useState([]);
   // 用户列表
-  const [ userInfoList, setUserInfoList ] = useState([])
-  const [ subLoading, setSubLoading ] = useState(false)
+  const [ userInfoList, setUserInfoList ] = useState([]);
+  const [ subLoading, setSubLoading ] = useState(false);
   // 剩余配额
   const [projectQuota, setProjectQuota] = useState<any>(0);
 
   // 表格 相关状态
-  const [memberList, setMemberList] = useState([])
+  const [memberList, setMemberList] = useState([]);
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
     pageSize: 10,
@@ -57,49 +57,49 @@ const workSpace = (props: any) => {
  * description: 更新表格数据
  */
   const getTableData = async (finalBody: any) => {
-    setTableLoading(true)
+    setTableLoading(true);
     const data = await http(
       {
         url: "/visual/workspace/userList",
-        method: 'post',
+        method: "post",
         body: finalBody
       },
-    )
-    setTableLoading(false)
+    );
+    setTableLoading(false);
     if (Array.isArray(data?.content)) {
-      setMemberList(data.content)
+      setMemberList(data.content);
       setPageInfo({
         pageNo: data.pageNo,
         pageSize: data.pageSize
-      })
-      setTotalElements(data.totalElements)
+      });
+      setTotalElements(data.totalElements);
     }
-  }
+  };
 
     /**
      * description: 获取用户列表名称
      */
     const getUserList = async() => {
       const data = await http({
-        url: `/visual/user/queryUnjoinedUserList`,
-        method: 'post',
+        url: "/visual/user/queryUnjoinedUserList",
+        method: "post",
         body: {
           pageNo: 1,
           pageSize: 1000,
           spaceId: workSpace.curWorkSpace[0]
         }
-      })
-      setUserInfoList(data.content)
-    }
+      });
+      setUserInfoList(data.content);
+    };
 
   // 页面初始化- 获取空间列表数据 & 获取表格数据
   useEffect(() => {
-    getDataDispatch({ accountId: global.userInfo.id }, 'getWorkSpaceList')
+    getDataDispatch({ accountId: global.userInfo.id }, "getWorkSpaceList");
     // 获取用户列表
     // getUserList()
   }, []);
   // 设置项目配额
-  useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota])
+  useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota]);
 
 
 
@@ -109,17 +109,17 @@ const workSpace = (props: any) => {
       accountId: global.userInfo.id,
       spaceId: workSpace.curWorkSpace[0],
       projectQuota: projectQuota
-    }
+    };
     const data = await http({
-      url: `/visual/workspace/update`,
-      method: 'post',
+      url: "/visual/workspace/update",
+      method: "post",
       body: finalBody
-    })
+    });
     if (data) {
       // 更改配额成功了, 刷新页面
-      getDataDispatch({ accountId: global.userInfo.id }, 'getWorkSpaceList')
+      getDataDispatch({ accountId: global.userInfo.id }, "getWorkSpaceList");
     }
-  }
+  };
   // 刷新右侧成员列表
   const refreshMemberList = async (workSpaceId: string) => {
     // 在点击了左侧空间后，右侧在重新刷新表格之前需要清除上一个表格的缓存信息，比如pageNo,pageSize……
@@ -129,8 +129,8 @@ const workSpace = (props: any) => {
       spaceId: workSpaceId,
       map: sortMap,
     };
-    getTableData(finalBody)
-  }
+    getTableData(finalBody);
+  };
 
   // 选择排序的标准
   const selectSortType = (value: any, b: any) => {
@@ -153,51 +153,51 @@ const workSpace = (props: any) => {
   // 添加成员
   const changeAddMemberModal = () => {
     setShowAddMemberModal(!showAddMemberModal);
-    getUserList()
+    getUserList();
   };
   // 表格中的删除事件
   const delClick = async (rowId: string) => {
     Modal.confirm({
-      title: '删除成员',
+      title: "删除成员",
       okButtonProps: {
         style: {
-          backgroundColor: '#e9535d',
-          border: 'none',
+          backgroundColor: "#e9535d",
+          border: "none",
           // marginLeft: '8px',
         }
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: '#3d404d'
+          backgroundColor: "#3d404d"
         }
       },
       icon: <ExclamationCircleFilled />,
-      content: '是否确认删除当前成员？',
-      okText: '确定',
-      cancelText: '取消',
+      content: "是否确认删除当前成员？",
+      okText: "确定",
+      cancelText: "取消",
       bodyStyle: {
-        background: '#232630',
+        background: "#232630",
       },
       async onOk(close) {
         const data = await http({
-          url: `/visual/workspace/deleteUser`,
-          method: 'DELETE',
+          url: "/visual/workspace/deleteUser",
+          method: "DELETE",
           body: {
             spaceId: workSpace.curWorkSpace[0],
             userIdList: [rowId]
           }
-        })
+        });
         if (data) {
-          refreshMemberList(workSpace.curWorkSpace[0])
+          refreshMemberList(workSpace.curWorkSpace[0]);
         } else {
-          message.error({ content: '删除失败', duration: 2 })
+          message.error({ content: "删除失败", duration: 2 });
         }
-        close()
+        close();
       },
       onCancel(close) {
-        close()
+        close();
       }
-    })
+    });
    };
 
   // 表格排序 (分页事件在paginationProps中已经定义)
@@ -233,35 +233,35 @@ const workSpace = (props: any) => {
 
   const cancelAddMemberModal = () => {
     setShowAddMemberModal(false);
-    setUserIdList([])
+    setUserIdList([]);
   };
 
   const confirmAddMember = async() => { 
     if(!userIdList.length){
-      message.warning('请选择用户名')
+      message.warning("请选择用户名");
     }else{
-      setSubLoading(true)
+      setSubLoading(true);
       try {
         const data = await http({
-          url: `/visual/workspace/addUser`,
-          method: 'post',
+          url: "/visual/workspace/addUser",
+          method: "post",
           body: {
             spaceId: workSpace.curWorkSpace[0],
             userIdList
           }
-        })
-        refreshMemberList(workSpace.curWorkSpace[0])
-        cancelAddMemberModal()
-        setSubLoading(false)
+        });
+        refreshMemberList(workSpace.curWorkSpace[0]);
+        cancelAddMemberModal();
+        setSubLoading(false);
       } catch (error) {
-        setSubLoading(false)
+        setSubLoading(false);
       }
     }
    };
 
   const handleChangeRole = (data:any) => {
-    setUserIdList(data)
-  }
+    setUserIdList(data);
+  };
 
   // 表格分页配置
   const paginationProps = {
@@ -282,7 +282,7 @@ const workSpace = (props: any) => {
         pageSize,
         map: tableMap,
       };
-      getTableData(finalParams)
+      getTableData(finalParams);
     },
   };
   // 列配置
@@ -321,7 +321,7 @@ const workSpace = (props: any) => {
       ellipsis: true,
       width: 250,
       render:(type:any) => {
-        return <>{ACCOUNTLIST[type]}</>
+        return <>{ACCOUNTLIST[type]}</>;
       }
     },
     {
@@ -451,7 +451,7 @@ const workSpace = (props: any) => {
                     userInfoList?.map((item:any) => {
                       return (
                         <Select.Option key={item.id} value={item.id}>{item.userName}-{item.name}</Select.Option>
-                      )
+                      );
                     })
                   }
                 </Select>

@@ -1,34 +1,34 @@
-import React, { useMemo, forwardRef } from 'react'
+import React, { useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util'
+import { deepMerge } from "@jiaminghi/charts/lib/util";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import { randomExtend } from '../../util'
+import { randomExtend } from "../../util";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['#7acaec', '#7acaec']
+const defaultColor = ["#7acaec", "#7acaec"];
 
-const svgWH = [300, 35]
+const svgWH = [300, 35];
 
-const rowNum = 1
-const rowPoints = 40
+const rowNum = 1;
+const rowPoints = 40;
 
-const rectWidth = 7
-const halfRectWidth = rectWidth / 2
+const rectWidth = 7;
+const halfRectWidth = rectWidth / 2;
 
 function getPoints() {
-  const [w, h] = svgWH
+  const [w, h] = svgWH;
 
-  const horizontalGap = w / (rowPoints + 1)
-  const verticalGap = h / (rowNum + 1)
+  const horizontalGap = w / (rowPoints + 1);
+  const verticalGap = h / (rowNum + 1);
 
   let points = new Array(rowNum)
     .fill(0)
@@ -36,13 +36,13 @@ function getPoints() {
       new Array(rowPoints)
         .fill(0)
         .map((foo, j) => [horizontalGap * (j + 1), verticalGap * (i + 1)])
-    )
+    );
 
-  return points.reduce((all, item) => [...all, ...item], [])
+  return points.reduce((all, item) => [...all, ...item], []);
 }
 
 function getData() {
-  const [, h] = svgWH
+  const [, h] = svgWH;
 
   const heights = new Array(rowNum * rowPoints)
     .fill(0)
@@ -50,40 +50,40 @@ function getData() {
       Math.random() > 0.8
         ? randomExtend(0.7 * h, h)
         : randomExtend(0.2 * h, 0.5 * h)
-    )
+    );
 
   const minHeights = new Array(rowNum * rowPoints)
     .fill(0)
-    .map((foo, i) => heights[i] * Math.random())
+    .map((foo, i) => heights[i] * Math.random());
 
   const randoms = new Array(rowNum * rowPoints)
     .fill(0)
-    .map(foo => Math.random() + 1.5)
+    .map(foo => Math.random() + 1.5);
 
-  return { heights, minHeights, randoms }
+  return { heights, minHeights, randoms };
 }
 
 const Decoration = forwardRef(({ className, style, color = [] }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
   function calcSVGData() {
     return {
       ...getData(),
       points: getPoints(),
       svgScale: [width / svgWH[0], height / svgWH[1]]
-    }
+    };
   }
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
   const { points, heights, minHeights, randoms, svgScale } = useMemo(
     calcSVGData,
     [width, height]
-  )
+  );
 
-  const classNames = useMemo(() => classnames('dv-decoration-6', className), [
+  const classNames = useMemo(() => classnames("dv-decoration-6", className), [
     [className]
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -126,13 +126,13 @@ const Decoration = forwardRef(({ className, style, color = [] }, ref) => {
         ))}
       </svg>
     </div>
-  )
-})
+  );
+});
 
 Decoration.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   color: PropTypes.array
-}
+};
 
-export default Decoration
+export default Decoration;

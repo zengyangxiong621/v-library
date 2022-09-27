@@ -1,20 +1,20 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react'
+import React, { useRef, useState, useEffect, useMemo } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import Charts from '@jiaminghi/charts'
+import Charts from "@jiaminghi/charts";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import DigitalFlop from '../digitalFlop'
+import DigitalFlop from "../digitalFlop";
 
-import { co } from '../../util'
+import { co } from "../../util";
 
-import './style.less'
+import "./style.less";
 
 const defaultConfig = {
   /**
@@ -23,20 +23,20 @@ const defaultConfig = {
    * @default radius = '50%'
    * @example radius = '50%' | 100
    */
-  radius: '50%',
+  radius: "50%",
   /**
    * @description Active ring radius
    * @type {String|Number}
    * @default activeRadius = '55%'
    * @example activeRadius = '55%' | 110
    */
-  activeRadius: '55%',
+  activeRadius: "55%",
   /**
    * @description Ring data
    * @type {Array<Object>}
    * @default data = [{ name: '', value: 0 }]
    */
-  data: [{ name: '', value: 0 }],
+  data: [{ name: "", value: 0 }],
   /**
    * @description Ring line width
    * @type {Number}
@@ -62,7 +62,7 @@ const defaultConfig = {
    */
   digitalFlopStyle: {
     fontSize: 25,
-    fill: '#fff'
+    fill: "#fff"
   },
   /**
    * @description Digital flop toFixed
@@ -73,13 +73,13 @@ const defaultConfig = {
    * @description Digital flop unit
    * @type {String}
    */
-  digitalFlopUnit: '',
+  digitalFlopUnit: "",
   /**
    * @description CRender animationCurve
    * @type {String}
    * @default animationCurve = 'easeOutCubic'
    */
-  animationCurve: 'easeOutCubic',
+  animationCurve: "easeOutCubic",
   /**
    * @description CRender animationFrame
    * @type {String}
@@ -92,47 +92,47 @@ const defaultConfig = {
    * @default showOriginValue = false
    */
   showOriginValue: false
-}
+};
 
 const ActiveRingChart = ({ config = {}, className, style }) => {
   const [{ activeIndex, mergedConfig }, setState] = useState({
     activeIndex: 0,
     mergedConfig: null
-  })
+  });
 
-  const domRef = useRef(null)
-  const chartRef = useRef(null)
+  const domRef = useRef(null);
+  const chartRef = useRef(null);
 
   const digitalFlop = useMemo(() => {
-    if (!mergedConfig) return {}
+    if (!mergedConfig) return {};
 
-    const { digitalFlopStyle, digitalFlopToFixed, data, showOriginValue, digitalFlopUnit } = mergedConfig
+    const { digitalFlopStyle, digitalFlopToFixed, data, showOriginValue, digitalFlopUnit } = mergedConfig;
 
-    const value = data.map(({ value }) => value)
+    const value = data.map(({ value }) => value);
 
-    let displayValue
+    let displayValue;
 
     if (showOriginValue) {
-      displayValue = value[activeIndex]
+      displayValue = value[activeIndex];
     } else {
-      const sum = value.reduce((all, v) => all + v, 0)
-      const percent = parseFloat((value[activeIndex] / sum) * 100) || 0
+      const sum = value.reduce((all, v) => all + v, 0);
+      const percent = parseFloat((value[activeIndex] / sum) * 100) || 0;
 
-      displayValue = percent
+      displayValue = percent;
     }
 
     return {
-      content: showOriginValue ? `{nt}${digitalFlopUnit}` : `{nt}${digitalFlopUnit || '%'}`,
+      content: showOriginValue ? `{nt}${digitalFlopUnit}` : `{nt}${digitalFlopUnit || "%"}`,
       number: [displayValue],
       style: digitalFlopStyle,
       toFixed: digitalFlopToFixed
-    }
-  }, [mergedConfig, activeIndex])
+    };
+  }, [mergedConfig, activeIndex]);
 
   const ringName = useMemo(
-    () => (!mergedConfig ? '' : mergedConfig.data[activeIndex].name),
+    () => (!mergedConfig ? "" : mergedConfig.data[activeIndex].name),
     [mergedConfig, activeIndex]
-  )
+  );
 
   const fontSize = useMemo(
     () =>
@@ -140,20 +140,20 @@ const ActiveRingChart = ({ config = {}, className, style }) => {
         ? {}
         : { fontSize: `${mergedConfig.digitalFlopStyle.fontSize}px` },
     [mergedConfig]
-  )
+  );
 
   function getRingOption(mergedConfig) {
-    const radius = getRealRadius(mergedConfig)
+    const radius = getRealRadius(mergedConfig);
 
     const newMergedConfig = {
       ...mergedConfig,
       data: mergedConfig.data.map(item => ({ ...item, radius }))
-    }
+    };
 
     return {
       series: [
         {
-          type: 'pie',
+          type: "pie",
           ...newMergedConfig,
           outsideLabel: {
             show: false
@@ -161,31 +161,31 @@ const ActiveRingChart = ({ config = {}, className, style }) => {
         }
       ],
       color: newMergedConfig.color
-    }
+    };
   }
 
   function getRealRadius({ radius, activeRadius, lineWidth }, active = false) {
-    const maxRadius = Math.min(...chartRef.current.render.area) / 2
+    const maxRadius = Math.min(...chartRef.current.render.area) / 2;
 
-    const halfLineWidth = lineWidth / 2
+    const halfLineWidth = lineWidth / 2;
 
-    let realRadius = active ? activeRadius : radius
+    let realRadius = active ? activeRadius : radius;
 
-    if (typeof realRadius !== 'number') {
-      realRadius = (parseInt(realRadius) / 100) * maxRadius
+    if (typeof realRadius !== "number") {
+      realRadius = (parseInt(realRadius) / 100) * maxRadius;
     }
 
-    const insideRadius = realRadius - halfLineWidth
-    const outSideRadius = realRadius + halfLineWidth
+    const insideRadius = realRadius - halfLineWidth;
+    const outSideRadius = realRadius + halfLineWidth;
 
-    return [insideRadius, outSideRadius]
+    return [insideRadius, outSideRadius];
   }
 
   function getOption(mergedConfig, activeIndex) {
-    const radius = getRealRadius(mergedConfig)
-    const active = getRealRadius(mergedConfig, true)
+    const radius = getRealRadius(mergedConfig);
+    const active = getRealRadius(mergedConfig, true);
 
-    let option = getRingOption(mergedConfig)
+    let option = getRingOption(mergedConfig);
 
     return {
       ...option,
@@ -205,46 +205,46 @@ const ActiveRingChart = ({ config = {}, className, style }) => {
             ],
         []
       )
-    }
+    };
   }
 
   useEffect(() => {
     // 第一次时初始化
-    chartRef.current || (chartRef.current = new Charts(domRef.current))
+    chartRef.current || (chartRef.current = new Charts(domRef.current));
 
-    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {})
+    const mergedConfig = deepMerge(deepClone(defaultConfig, true), config || {});
 
-    chartRef.current.setOption(getRingOption(mergedConfig), true)
+    chartRef.current.setOption(getRingOption(mergedConfig), true);
 
-    let activeIndex = 0
+    let activeIndex = 0;
 
     function * loop() {
       while (true) {
-        setState({ mergedConfig, activeIndex })
+        setState({ mergedConfig, activeIndex });
 
-        const option = getOption(mergedConfig, activeIndex)
+        const option = getOption(mergedConfig, activeIndex);
 
-        chartRef.current.setOption(option, true)
+        chartRef.current.setOption(option, true);
 
-        const { activeTimeGap, data } = option.series[0]
+        const { activeTimeGap, data } = option.series[0];
 
-        yield new Promise(resolve => setTimeout(resolve, activeTimeGap))
+        yield new Promise(resolve => setTimeout(resolve, activeTimeGap));
 
-        activeIndex += 1
+        activeIndex += 1;
 
         if (activeIndex >= data.length) {
-          activeIndex = 0
+          activeIndex = 0;
         }
       }
     }
 
-    return co(loop).end
-  }, [config])
+    return co(loop).end;
+  }, [config]);
 
   const classNames = useMemo(
-    () => classnames('dv-active-ring-chart', className),
+    () => classnames("dv-active-ring-chart", className),
     [className]
-  )
+  );
 
   return (
     <div className={classNames} style={style}>
@@ -256,13 +256,13 @@ const ActiveRingChart = ({ config = {}, className, style }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 ActiveRingChart.propTypes = {
   config: PropTypes.object,
   className: PropTypes.string,
   style: PropTypes.object
-}
+};
 
-export default ActiveRingChart
+export default ActiveRingChart;

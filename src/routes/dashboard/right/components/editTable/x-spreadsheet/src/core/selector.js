@@ -1,4 +1,4 @@
-import { CellRange } from './cell_range';
+import { CellRange } from "./cell_range";
 
 export default class Selector {
   constructor() {

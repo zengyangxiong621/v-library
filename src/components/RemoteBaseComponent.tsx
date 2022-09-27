@@ -1,25 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import axios from 'axios';
-import { connect } from 'dva'
+import React, { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import { connect } from "dva";
 
 const RemoteBaseComponent = (props: any) => {
   const { componentConfig } = props;
-  const { moduleType, moduleName, moduleVersion, } = componentConfig
-  const isExit = typeof moduleType === 'undefined'
+  const { moduleType, moduleName, moduleVersion, } = componentConfig;
+  const isExit = typeof moduleType === "undefined";
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
 
   const importComponent = useCallback(() => {
-    return axios.get(`${ (window as any).CONFIG.COMP_URL }/${ moduleType }/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
-  }, [moduleType])
+    return axios.get(`${(window as any).CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
+  }, [moduleType]);
 
 
   const loadComp = useCallback(async () => {
-      window.eval(`${await importComponent()}`)
-      const { default: component } = (window as any).VComponents;
-      setComponent(() => component);
+    window.eval(`${await importComponent()}`);
+    const { default: component } = (window as any).VComponents;
+    setComponent(() => component);
 
-  }, [importComponent, setComponent])
+  }, [importComponent, setComponent]);
 
   useEffect(() => {
     if (!isExit) {
@@ -28,12 +28,12 @@ const RemoteBaseComponent = (props: any) => {
   }, [loadComp]);
 
   if (Comp) {
-    return <Comp {...props} />
+    return <Comp {...props} />;
   }
 
   return null;
 
-}
+};
 
 // class RemoteBaseComponent extends React.Component<any, any> {
 //   constructor(props: any) {
@@ -68,5 +68,5 @@ const RemoteBaseComponent = (props: any) => {
 // export default RemoteBaseComponent;
 export default connect(({ bar }: any) => (
   { bar }
-))(RemoteBaseComponent)
+))(RemoteBaseComponent);
 

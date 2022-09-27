@@ -4,38 +4,39 @@ import { useState, useRef, useEffect } from "react";
 import TimeSelect from '@/customComponents/interactive/timeSelect'
 import ScrollTable from '@/customComponents/table/scrollTable'
 import Bar from '@/customComponents/echarts/components/bar/index'
-import SelectV2 from '@/customComponents/assist/select/index'
-import CusImage from '@/customComponents/assist/image/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.0'
-import ChinaMap from '@/customComponents/echarts/components/chinaMap'
-import WorldMap from '@/customComponents/echarts/components/worldMap'
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn'
-import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.1'
-import Tab from '@/customComponents/interactive/tab'
-import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
-import Counter from '@/customComponents/assist/counter2'
-import Media from '@/customComponents/media'
-import NormalTable from '@/customComponents/table/normalTable'
-import PaginationComp from "@/customComponents/paginationComp";
+import SelectV2 from "@/customComponents/assist/select/v1.0.3/index"
+import ButtomGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
+import CusImage from "@/customComponents/assist/image/v1.0.2/index"
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1"
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4"
+import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5"
+import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5"
+import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1"
+import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2"
+import Tab from "@/customComponents/interactive/tab"
+import ScrollSelect from "@/customComponents/interactive/scrollSelect/index"
+import Counter from "@/customComponents/assist/counter2/v1.0.5"
+import Media from "@/customComponents/media/v1.1.1"
+import NormalTable from "@/customComponents/table/normalTable/v1.0.5"
+import PaginationComp from "@/customComponents/paginationComp/v1.1.6"
 import { connect } from "dva"
 
 // import './index.css'
 import { cloneDeep } from 'lodash'
 import { debounce } from "@/utils/common";
-
-// import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
-// import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
-import InstrumentPanel3 from '@/customComponents/echarts/components/instrumentPanel_3'
-import InstrumentPanel4 from '@/customComponents/echarts/components/instrumentPanel_4'
-import Timeline from '@/customComponents/assist/timeline'
-import ErrorCatch from 'react-error-catch'
-import RemoteComponentErrorRender from '@/components/RemoteComponentErrorRender'
+import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.2"
+import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.4"
+import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.1"
+import Cascader from "@/customComponents/assist/cascader/v1.1.0"
+import Timeline from "@/customComponents/assist/timeline/v1.1.6"
+import ErrorCatch from "react-error-catch"
+import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender"
 import useWebsocket from '@/utils/useWebsocket'
 
 import { http } from '@/services/request'
 
 
-const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id = 0, scale = 1, ...props }) => {
+const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id = 0, scale = 1, getDrillDownData, ...props }) => {
   const callbackArgs = previewDashboard.callbackArgs
   const callbackParamsList = previewDashboard.callbackParamsList
   const { componentConfig } = props
@@ -44,7 +45,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   // 拿到type 0: 需sendMessage;  1: setSendData
   const { dashboardId } = componentConfig
   const [animationConfig, setAnimationConfig] = useState({
-    transition: 'transform 600ms ease 0s'
+    transition: "transform 600ms ease 0s",
   })
   const componentRef = useRef(null)
   const timesRef = useRef(0)
@@ -91,33 +92,33 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
 
   // 点击
   const handleClick = debounce((e, data) => {
-    const clickEvents = events.filter(item => item.trigger === 'click')
+    const clickEvents = events.filter((item) => item.trigger === "click")
     const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (clickActions.length === 0) {
       return
     }
     setClickTimes(1)
-    console.log('点击事件', data)
+    console.log("点击事件", data)
     customEventsFunction(clickEvents, data)
   }, 300)
   // 移入
   const handleMouseEnter = debounce((e, data) => {
-    const mouseEnterEvents = events.filter(item => item.trigger === 'mouseEnter')
+    const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter")
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (mouseEnterActions.length === 0) {
       return
     }
-    console.log('鼠标移入', data)
+    console.log("鼠标移入", data)
     customEventsFunction(mouseEnterEvents, data)
   })
   // 移出
   const handleMouseLeave = debounce((e, data) => {
-    const mouseOutEvents = events.filter(item => item.trigger === 'mouseLeave')
+    const mouseOutEvents = events.filter((item) => item.trigger === "mouseLeave")
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (mouseOutActions.length === 0) {
       return
     }
-    console.log('鼠标移出', data)
+    console.log("鼠标移出", data)
     customEventsFunction(mouseOutEvents, data)
   })
 
@@ -145,92 +146,111 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
         const field = condition.field
         const type = condition.type
         const code = condition.code
-        if (type === 'custom') {
-          return new Function('data', code)(data)
+        if (type === "custom") {
+          return new Function("data", code)(data)
         }
-        if (condition.compare === '==') {
-          return data[field] === condition.expected;
+        if (condition.compare === "==") {
+          return data[field] == condition.expected
         }
-        if (condition.compare === '!=') {
-          return data[field] !== condition.expected;
+        if (condition.compare === "!=") {
+          return data[field] !== condition.expected
         }
-        if (condition.compare === '<') {
-          return Number(data[field]) < Number(condition.expected);
+        if (condition.compare === "<") {
+          return Number(data[field]) < Number(condition.expected)
         }
-        if (condition.compare === '<=') {
-          return Number(data[field]) < Number(condition.expected) || data[field] === condition.expected
+        if (condition.compare === "<=") {
+          return (
+            Number(data[field]) < Number(condition.expected) || data[field] === condition.expected
+          )
         }
-        if (condition.compare === '>') {
-          return Number(data[field]) > Number(condition.expected);
+        if (condition.compare === ">") {
+          return Number(data[field]) > Number(condition.expected)
         }
-        if (condition.compare === '>=') {
-          return Number(data[field]) > Number(condition.expected) || data[field] === condition.expected
+        if (condition.compare === ">=") {
+          return (
+            Number(data[field]) > Number(condition.expected) || data[field] === condition.expected
+          )
         }
-        if (condition.compare === 'include') {
+        if (condition.compare === "include") {
           return data[field].indexOf(condition.expected) !== -1
         }
-        if (condition.compare === 'exclude') {
+        if (condition.compare === "exclude") {
           return data[field].indexOf(condition.expected) === -1
         }
         return false
       }
       let isAllowAction = true
       if (conditions.length > 0) {
-        isAllowAction = Array.prototype[conditionType === 'all' ? 'every' : 'some'].call(conditions, conditionJudgeFunc)
+        isAllowAction = Array.prototype[conditionType === "all" ? "every" : "some"].call(
+          conditions,
+          conditionJudgeFunc
+        )
       }
-      console.log('isAllowAction', isAllowAction)
+      console.log("isAllowAction", isAllowAction)
       if (!isAllowAction) {
         return
       }
+      console.log('item', item)
       item.actions.forEach(action => {
         const animation = action.animation
         const delay = animation.delay
         setTimeout(() => {
-          action.component.forEach(id => {
+          action.component.forEach((id) => {
             const dom = document.querySelector(`.event-id-${id}`)
             dom.style.transition = `transform ${animation.duration}ms ${animation.timingFunction} 0s`
-            Object.keys(action).filter(
-              (key) => !['id', 'name', 'trigger', 'unmount', 'componentScope', 'component', 'action'].includes(key)
-            ).forEach((key) => {
-              actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
-            })
+            Object.keys(action)
+              .filter(
+                (key) =>
+                  ![
+                    "id",
+                    "name",
+                    "trigger",
+                    "unmount",
+                    "componentScope",
+                    "component",
+                    "action",
+                  ].includes(key)
+              )
+              .forEach((key) => {
+                actionConfigFuncList[key] &&
+                  actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
+              })
           })
         }, delay)
       })
     })
   }
 
-
   // 数组去重，取最后一个
   const duplicateFn = (arr) => {
-    let map = new Map();
+    let map = new Map()
     for (let item of arr.reverse()) {
       if (!map.has(item.target)) {
-        map.set(item.target, item);
+        map.set(item.target, item)
       }
     }
-    return [...map.values()];
+    return [...map.values()]
   }
 
   let message = Object.keys(websocketObj).reduce((pre, cur) => {
     return {
-       ...pre,
-       [cur]: websocketObj[cur]?.receiveData || ''
+      ...pre,
+      [cur]: websocketObj[cur]?.receiveData || ''
     }
   }, {})
-  
+
   // 跨屏 订阅消息处理
   for (const key in message) {
     if (Object.hasOwnProperty.call(message, key)) {
       const element = message[key];
       useEffect(() => {
-        console.log(element,'element-----------');
+        console.log(element, 'element-----------');
         if (element) {
-          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(element||''))
+          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(element || ''))
         }
       }, [element])
     }
-  } 
+  }
 
   // 拿到订阅消息的数据
   // const message = JSON.parse(websocketObj[item.id].receiveData)
@@ -244,55 +264,72 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
   //   type: 'publishDashboard/getComponentsData',
   //   payload: activeComponents
   // })      
-
   const handleValueChange = debounce((data) => {
-    console.log(websocketConfig,'websocketConfig');
+    // 下钻流程
+    getDrillDownData(data)
+    // getDrillDownData
+    console.log(websocketConfig, 'websocketConfig');
     // 跨屏  建立websocket连接，发送数据
     // TODO 点击组件发出什么就先直接传什么
     // if (readyState.key === 1 && props.componentConfig.moduleName === 'rankingBar'){
     //   console.log('rankingBar');
-      // setSendData(data);
+    // setSendData(data);
     // }
     // websocketConfig 组件内有消息且type为 0时发送
     if (websocketConfig.length > 0) {
       websocketConfig.map(item => {
         if (item.type === 0) {
           websocketObj[item.id].sendMessage(data);
-        } 
+        }
       })
     }
-    console.log('-------------')
-    console.log('数据变化data', data)
+    // console.log('-------------')
+    // console.log('数据变化data', data)
     const componentId = props.componentConfig.id
-    const component = previewDashboard.components.find(item => item.id === componentId)
-    const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
+    const component = previewDashboard.components.find((item) => item.id === componentId)
+    const compCallbackArgs =
+      component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
     // 回调参数列表
     // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
-    const sourceCallbackList = callbackParamsList.filter(item => item.sourceModules.find(jtem => jtem.id === componentId))
+    const sourceCallbackList = callbackParamsList.filter((item) =>
+      item.sourceModules.find((jtem) => jtem.id === componentId)
+    )
     // 需要作用到哪些组件上
     let activeIds = []
     let temp = false
-    sourceCallbackList.forEach(item => {
-      item.sourceModules.forEach(sourceItem => {
+    sourceCallbackList.forEach((item) => {
+      item.sourceModules.forEach((sourceItem) => {
         if (sourceItem.id === componentId) {
           // 回调列表中的当前数据如果有目标组件再进行下一步
           // 循环组件设置的回调参数，获取变量名和字段的对应关系
           if (item.destinationModules.length > 0) {
-            compCallbackArgs.forEach(callback => {
+            compCallbackArgs.forEach((callback) => {
               // 判断是否为同一个源
               if (item.callbackParam === callback.target) {
-                // 值是否改变
-                // data的值存在并且
-                if (data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin]) {
+                // 翻页组件不需要配置origin
+                if (component.moduleName === "paginationComp") {
+                  temp = true
+                  callbackArgs[callback.target] = data[callback.target]
+                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
+                  // 值是否改变
+                  // data的值存在并且
+                } else if (component.moduleName === "cascader" || 'select2') {
                   temp = true
                   callbackArgs[callback.target] = data[callback.origin]
-                  activeIds = activeIds.concat(item.destinationModules.map(module => module.id))
+                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
+                } else if (
+                  data[callback.origin] &&
+                  callbackArgs[callback.target] !== data[callback.origin]
+                ) {
+                  temp = true
+                  callbackArgs[callback.target] = data[callback.origin]
+                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
                 }
                 dispatch({
-                  type: 'previewDashboard/save',
+                  type: "previewDashboard/save",
                   payload: {
-                    callbackArgs
-                  }
+                    callbackArgs,
+                  },
                 })
               }
             })
@@ -300,43 +337,52 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
         }
       })
     })
-    console.log('activeIds1', activeIds)
-    console.log('temp', temp)
+    console.log("activeIds1", activeIds)
+    console.log("temp", temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
-      const activeComponents = activeIds.reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+      const activeComponents = activeIds.reduce(
+        (pre, id) => pre.concat(previewDashboard.components.find((item) => item.id === id)),
+        []
+      )
       // 绑定数据容器的组件列表
-      const componentsByDataContainer = activeComponents.filter(component => component.dataFrom === 1)
+      const componentsByDataContainer = activeComponents.filter(
+        (component) => component.dataFrom === 1
+      )
       // 绑定数据源的组件列表
-      const componentsByDataSource = activeComponents.filter(component => component.dataFrom === 0)
+      const componentsByDataSource = activeComponents.filter(
+        (component) => component.dataFrom === 0
+      )
       // 重新获取部分组件（绑定数据源的组件列表）的数据
       dispatch({
-        type: 'previewDashboard/getComponentsData',
-        payload: activeComponents
+        type: "previewDashboard/getComponentsData",
+        payload: activeComponents,
       })
       // 重新获取部分数据容器的数据
       const filterComponentsByDataContainer = []
       // 去重
-      activeComponents.forEach(component => {
-        component.dataContainers.forEach(container => {
-          if (!filterComponentsByDataContainer.find(item => item.id === container.id)) {
+      activeComponents.forEach((component) => {
+        component.dataContainers.forEach((container) => {
+          if (!filterComponentsByDataContainer.find((item) => item.id === container.id)) {
             filterComponentsByDataContainer.push(container)
           }
         })
       })
       dispatch({
-        type: 'previewDashboard/getContainersData',
-        payload: filterComponentsByDataContainer
+        type: "previewDashboard/getContainersData",
+        payload: filterComponentsByDataContainer,
       })
     }
     // 自定义事件
-    const dataChangeEvents = events.filter(item => item.trigger === 'dataChange' || item.trigger === 'statusChange')
+    const dataChangeEvents = events.filter(
+      (item) => item.trigger === "dataChange" || item.trigger === "statusChange"
+    )
+
     const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
     if (dataChangeActions.length === 0) {
       return
     }
     customEventsFunction(dataChangeEvents, data)
-
   }, 300)
 
 
@@ -345,21 +391,21 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
       // transform = 'translateY(200px)'
       let translate = {
         x: 0,
-        y: 0
+        y: 0,
       }
       switch (type) {
-        case 'slideLeft':
+        case "slideLeft":
           translate.x = -200
           break
-        case 'slideRight':
+        case "slideRight":
           translate.x = 200
           break
-        case 'slideTop':
+        case "slideTop":
           translate.y = -200
           break
-        case 'slideBottom':
+        case "slideBottom":
           translate.y = 200
-          break;
+          break
         default:
           break
       }
@@ -368,7 +414,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
       if (translateX.test(dom.style.transform)) {
         let value = dom.style.transform.match(translateX)[0]
         // 取出数字包括 - 和 . 号
-        let xLength = Number(value.replace(/[^\d|^\.|^\-]/g, ''))
+        let xLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""))
         xLength = xLength + translate.x
         dom.style.transform = dom.style.transform.replace(translateX, `translateX(${xLength}px)`)
       } else {
@@ -376,7 +422,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
       }
       if (translateY.test(dom.style.transform)) {
         let value = dom.style.transform.match(translateY)[0]
-        let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ''))
+        let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""))
         yLength = yLength + translate.y
         dom.style.transform = dom.style.transform.replace(translateY, `translateY(${yLength}px)`)
       } else {
@@ -394,7 +440,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
       // }
       timer = setInterval(() => {
         // 在一个时间段内，只存在一种事件
-        if (actionType === 'show') {
+        if (actionType === "show") {
           if (dom.style.opacity >= 1) {
             dom.style.opacity = 1
             clearInterval(timer)
@@ -404,7 +450,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
             dom.style.opacity = Number(dom.style.opacity) + 0.01
           }
         }
-        if (actionType === 'hide') {
+        if (actionType === "hide") {
           if (dom.style.opacity <= 0) {
             dom.style.opacity = 0
             clearInterval(timer)
@@ -415,9 +461,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
           }
         }
       }, duration / 100)
-
     }
-
   }
 
   const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
@@ -462,7 +506,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
       } else {
         dom.style.transform += `scaleY(${y})`
       }
-      dom.style['transform-origin'] = origin
+      dom.style["transform-origin"] = origin
     }
   }
 
@@ -470,9 +514,41 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     if (action === 'translate') {
       const translateReg = /translate3d\((.+?)\)/g
       if (translateReg.test(dom.style.transform)) {
-        dom.style.transform = dom.style.transform.replace(translateReg, `translate3d(${toX}px, ${toY}px, 0px)`)
+        dom.style.transform = dom.style.transform.replace(
+          translateReg,
+          `translate3d(${toX}px, ${toY}px, 0px)`
+        )
       } else {
         dom.style.transform += `translate3d(${toX}px, ${toY}px, 0px)`
+      }
+    }
+  }
+
+  const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
+    if (actionType === "updateStatus") {
+      ;[...dom.children].forEach((item) => {
+        console.log("item11", item)
+        if (item.dataset.id === stateId) {
+          item.style.display = "block"
+        } else {
+          item.style.display = "none"
+        }
+      })
+    }
+  }
+  const componentConfigFunc = (config, actionType, dom, actionId, action, componentId) => {
+    if (actionType === "updateConfig") {
+      console.log("config", config)
+      const component = previewDashboard.components.find((item) => item.id === componentId)
+      if (component) {
+        component.config = [
+          ...component.config.filter((item) => ["dimension", "hideDefault"].includes(item.name)),
+          ...config,
+        ]
+        dispatch({
+          type: "previewDashboard/save",
+        })
+        console.log("component", component)
       }
     }
   }
@@ -482,8 +558,9 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
     rotate,
     scale: scaleFunc,
     translate,
+    state: stateFunc,
+    componentConfig: componentConfigFunc,
   }
-
 
   return (
     <div
@@ -571,7 +648,6 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
                               onClick={handleClick}
                               onMouseEnter={handleMouseEnter}
                               onMouseLeave={handleMouseLeave}
-                              cRef={componentRef}
                               {...props}
                             >
                             </Tab>

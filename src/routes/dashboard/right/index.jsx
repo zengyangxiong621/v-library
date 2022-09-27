@@ -11,7 +11,6 @@ import ReferenceSetting from './components/referenceSetting'
 import DynamicPageSetting from './components/dynamicPageSetting'
 import DynamicSetting from './components/dynamicSetting'
 import DrillDownPageSetting from './components/drillDownPageSetting'
-
 /**
  * 1. 组配置、单个图层配置、页面设置、多选时对齐设置
  *
@@ -21,8 +20,6 @@ const Right = ({ dispatch, bar }) => {
   const [whichShow, setWhichShow] = useState('pageSetting')
   const [key, setKey] = useState(bar.key.join(''))
   useEffect(() => {
-    console.log('bar.isPanel', bar.isPanel)
-    console.log('bar.selectedComponentOrGroup.length', bar.selectedComponentOrGroup.length)
     if (bar.isPanel && !bar.selectedComponentOrGroup.length) {
       setWhichShow('dynamicPageSetting')
     } else if (!bar.selectedComponentOrGroup.length) {
@@ -73,15 +70,6 @@ const Right = ({ dispatch, bar }) => {
   return (
     <div className="right-setting-wrap">
       {
-        // reflect[whichShow].type()
-        // whichShow === 'groupConfig' ? <GroupConfig key={ key }/>
-        //   : whichShow === 'singleLayer' ? <SingleLayer key={ key }/>
-        //   : whichShow === 'pageSetting' ? <PageSetting key={ key }/>
-        //     : whichShow === 'alignmentSetting' ? <AlignmentSetting key={ key }/>
-        //       : whichShow === 'referenceSetting' ? <ReferenceSetting key={ key }/>
-        //         : whichShow === 'dynamicSetting' ? <DynamicSetting key={ key }/>
-        //           : whichShow === 'dynamicPageSetting' ? <DynamicPageSetting key={ key }/>
-        //             : whichShow === 'drillDownPageSetting' ? <DrillDownPageSetting key={key} /> : <></>
         targetCompReflect[whichShow]
       }
     </div>

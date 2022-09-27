@@ -70,6 +70,7 @@ const TabArray = props => {
         tab.displayName = unit + (index + 1)
         tab.key = String(index + 1)
       })
+      console.log('_data.activeKey', _data.activeKey)
       props.onChange(_data.activeKey)
     }
 

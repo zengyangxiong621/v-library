@@ -1,7 +1,7 @@
-import { memo } from 'react'
-import './index.less'
+import { memo } from "react";
+import "./index.less";
 
-import { Modal } from 'antd'
+import { Modal } from "antd";
 
 
 const DarkThemeModal = (props: any) => {
@@ -12,7 +12,7 @@ const DarkThemeModal = (props: any) => {
         {...props}
       />
     </div>
-  )
-}
+  );
+};
 
-export default memo(DarkThemeModal)
+export default memo(DarkThemeModal);

@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef, useImperativeHandle } from 'react'
-import { connect } from 'dva'
-import Draggable from 'react-draggable'
-import ScaleContainer from '../ScaleContainer'
-import * as React from 'react'
-import { Button } from 'antd'
-import { IScaleDragData } from '../../type'
+import { useState, useEffect, useRef, useImperativeHandle } from "react";
+import { connect } from "dva";
+import Draggable from "react-draggable";
+import ScaleContainer from "../ScaleContainer";
+import * as React from "react";
+import { Button } from "antd";
+import { IScaleDragData } from "../../type";
 
 type DraggableEvent = React.MouseEvent<HTMLElement | SVGElement>
   | React.TouchEvent<HTMLElement | SVGElement>
@@ -21,19 +21,19 @@ type DraggableData = {
   node: any
 }
 const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
-  const nodeRef: any = useRef(null)
-  const scaleDragData = bar.scaleDragData
+  const nodeRef: any = useRef(null);
+  const scaleDragData = bar.scaleDragData;
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (x: number, y: number) => {
       // const translateArr = nodeRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
       // const translateX = Number(translateArr[0])
       // const translateY = Number(translateArr[1])
-      scaleDragRef.current.style.left = Number(scaleDragRef.current.style.left.replace('px', '')) + x + 'px'
-      scaleDragRef.current.style.top = Number(scaleDragRef.current.style.top.replace('px', '')) + y + 'px'
+      scaleDragRef.current.style.left = Number(scaleDragRef.current.style.left.replace("px", "")) + x + "px";
+      scaleDragRef.current.style.top = Number(scaleDragRef.current.style.top.replace("px", "")) + y + "px";
       // nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
     },
-  }))
+  }));
 
 
   /**
@@ -47,33 +47,33 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
 
   const handleStart = () => {
     dispatch({
-      type: 'bar/clearAllStatus',
-    })
-  }
+      type: "bar/clearAllStatus",
+    });
+  };
 
   const handleDrag = (event: DraggableEvent, data: DraggableData) => {
     // scaleDragData.position = {
     //   x: data.x,
     //   y: data.y,
     // }
-  }
+  };
   const handleStop = (event: DraggableEvent, data: DraggableData) => {
     dispatch({
-      type: 'bar/save',
+      type: "bar/save",
       payload: {
         scaleDragData,
       },
-    })
-  }
+    });
+  };
   const handleScaleEnd = (scaleDragData: IScaleDragData, lastScaleDragData: IScaleDragData) => {
-    onScaleEnd(scaleDragData, lastScaleDragData)
-  }
+    onScaleEnd(scaleDragData, lastScaleDragData);
+  };
   const handleScale = () => {
 
-  }
-  const scaleDragRef: any = useRef(null)
+  };
+  const scaleDragRef: any = useRef(null);
   return (
-    <div style={ { position: 'absolute', left: 0, top: 0, width: 0, height: 0 } }>
+    <div style={ { position: "absolute", left: 0, top: 0, width: 0, height: 0 } }>
       <div
         className="c-scale-drag"
         // scale={ bar.canvasScaleValue }
@@ -85,14 +85,14 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
         // position={ bar.scaleDragData.position }
         style={ {
           ...bar.scaleDragData.style,
-          position: 'absolute',
+          position: "absolute",
           left: bar.scaleDragData.position.x,
           top: bar.scaleDragData.position.y,
         } }
       >
         <ScaleContainer
           nodeRef={ nodeRef }
-          style={ { ...bar.scaleDragData.style, position: 'absolute' } }
+          style={ { ...bar.scaleDragData.style, position: "absolute" } }
           isActive={ true }
           onScaleEnd={ handleScaleEnd }
           onScale={ handleScale }
@@ -105,8 +105,8 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       </div>
     </div>
 
-  )
-}
+  );
+};
 export default connect(({ bar }: any) => ({
   bar,
-}))(ScaleDragCom)
+}))(ScaleDragCom);

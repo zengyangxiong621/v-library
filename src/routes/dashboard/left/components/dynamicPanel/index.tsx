@@ -1,102 +1,109 @@
-import React, { memo, useEffect, useState } from 'react'
-import './index.less'
-import { IconFont } from '@/utils/useIcon'
-import { connect } from 'dva'
+import React, { memo, useEffect, useState } from "react";
+import "./index.less";
+import { IconFont } from "@/utils/useIcon";
+import { connect } from "dva";
 
-import { Input } from 'antd'
+import { Input } from "antd";
 
-import { http } from '@/services/request'
-import { useClickAway, useSetState } from 'ahooks'
+import { http } from "@/services/request";
+import { useClickAway, useSetState } from "ahooks";
 
-import StateItem from './stateItem/stateItem'
+import StateItem from "./stateItem/stateItem";
 
 
 
 const DynamicPanel: React.FC = (props: any) => {
-  const { bar, dispatch } = props
-  console.log('bar.curPanelType', bar.curPanelType);
-  const stateId = bar.stateId
-  const panelId = bar.panelId
-  const panelStatesList = bar.panelStatesList
-  const [open, setOpen] = useState(true)
-  const [isShowRMenu, setIsShowRMenu] = useState(false)
-  const [RMenuLocation, setRMenuLocation] = useState({ x: 0, y: 0 })
+  const { bar, dispatch } = props;
+  const [open, setOpen] = useState(true);
+  const [isShowRMenu, setIsShowRMenu] = useState(false);
+  const [RMenuLocation, setRMenuLocation] = useState({ x: 0, y: 0 });
   // 右键选中的项不一定是当前的active项，所以单独作为一个状态保存下来
-  const [rightClickTargetItem, setRightClickTargetItem] = useState({})
+  const [rightClickTargetItem, setRightClickTargetItem] = useState({});
 
+  const stateId = bar.stateId;
+  const panelStatesList = bar.panelStatesList;
+  // 如果是下钻面板，这儿就前端自己将状态名更改为层级名
+
+  // if (bar.isPanel && bar.curPanelType === 2) {
+  //   panelStatesList = panelStatesList.map((item: any, index: number) => (
+  //     {
+  //       name: `层级${++index}`,
+  //       id: item.id
+  //     }
+  //   ))
+  // }
 
   useClickAway(() => {
     if (isShowRMenu) {
-      setIsShowRMenu(false)
+      setIsShowRMenu(false);
     }
-  }, [() => document.getElementById('db-right-menu')])
+  }, [() => document.getElementById("db-right-menu")]);
 
 
   // 展开/收起 状态面板
   const showCollapse = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
   /**
    * description: 点击每一项状态
    */
-  const selectItem = (state: {name: string, id: string}) => {
+  const selectItem = (state: { name: string, id: string }) => {
     dispatch({
-      type: 'bar/selectPanelState',
+      type: "bar/selectPanelState",
       payload: {
         stateId: state.id
       }
-    })
-  }
+    });
+  };
   /**
    * description: 右键点击每一项
    */
   const rightClick = (e: any, item: any) => {
-    e.preventDefault()
-    setIsShowRMenu(true)
-    const { clientX, clientY } = e
+    e.preventDefault();
+    setIsShowRMenu(true);
+    const { clientX, clientY } = e;
     // 保存当前右键选择的状态项
-    setRightClickTargetItem(item)
+    setRightClickTargetItem(item);
     setRMenuLocation({
       x: clientX,
       y: clientY
-    })
+    });
 
-  }
+  };
   /**
    * description: 在动态面板中添加一个状态
    */
   const addPanel = async () => {
     dispatch({
-      type: 'bar/addPanelState'
-    })
-  }
+      type: "bar/addPanelState"
+    });
+  };
 
   // 右键菜单中的复制、删除
   const copyClick = () => {
-    console.log('当前右键选择的项', rightClickTargetItem);
+    console.log("当前右键选择的项", rightClickTargetItem);
     dispatch({
-      type: 'bar/copyPanelState',
+      type: "bar/copyPanelState",
       payload: {
-        stateId: (rightClickTargetItem as {id:string,name: string}).id
+        stateId: (rightClickTargetItem as { id: string, name: string }).id
       }
-    })
-    setIsShowRMenu(false)
-  }
+    });
+    setIsShowRMenu(false);
+  };
   const delClick = () => {
-    console.log('当前右键选择的项', rightClickTargetItem);
     dispatch({
-      type: 'bar/deletePanelState',
+      type: "bar/deletePanelState",
       payload: {
-        stateId: (rightClickTargetItem as {id:string,name: string}).id
+        stateId: (rightClickTargetItem as { id: string, name: string }).id
       }
-    })
-    setIsShowRMenu(false)
-  }
+    });
+    setIsShowRMenu(false);
+  };
 
   return (
     <div className='dynamic-panel-wrap'>
       <div className='panel-top'>
-        <div style={{ color: '#ccc' }}>状态</div>
+        <div style={{ color: "#ccc" }}>{bar.curPanelType === 2 ? "下钻层级" : "状态"}</div>
         <div className='panel-icons'>
           <IconFont className="db-icon" type='icon-xinjianfenzu'
             onClick={() => addPanel()}
@@ -114,9 +121,9 @@ const DynamicPanel: React.FC = (props: any) => {
 
         </div>
       </div>
-      <div className='panel-body' style={{ display: open ? 'block' : 'none' }}>
+      <div className='panel-body' style={{ display: open ? "block" : "none" }}>
         {
-          panelStatesList.map((item: {id: string, name: string}, index: number) => {
+          panelStatesList.map((item: { id: string, name: string }, index: number) => {
             return (
               <StateItem
                 key={item.id}
@@ -125,7 +132,7 @@ const DynamicPanel: React.FC = (props: any) => {
                 rightClick={rightClick}
                 selectItem={selectItem}
               />
-            )
+            );
           })
         }
       </div>
@@ -137,21 +144,21 @@ const DynamicPanel: React.FC = (props: any) => {
         />
       }
     </div>
-  )
-}
+  );
+};
 
 
 
 
 // 右键菜单
 const RMenu = ({ menuLocation, copyClick, delClick }: any) => {
-  const { x, y } = menuLocation
+  const { x, y } = menuLocation;
 
   const finalStyle: any = {
-    position: 'fixed',
-    width: '110px',
+    position: "fixed",
+    width: "110px",
     zIndex: 999999,
-  }
+  };
 
   return (
     <div
@@ -163,22 +170,22 @@ const RMenu = ({ menuLocation, copyClick, delClick }: any) => {
       <div className='panel-menu-item'
         onClick={() => copyClick()}
       >
-        <IconFont style={{ marginRight: '8px' }} type='icon-fuzhi' />
+        <IconFont style={{ marginRight: "8px" }} type='icon-fuzhi' />
         <span>复制</span>
       </div>
       <div className='panel-menu-item'
         onClickCapture={() => delClick()}
       >
-        <IconFont style={{ marginRight: '8px' }} type='icon-shanchuzu' />
+        <IconFont style={{ marginRight: "8px" }} type='icon-shanchuzu' />
         <span>删除</span>
       </div>
     </div>
-  )
-}
+  );
+};
 
 
 
 
 export default memo(connect(
   ({ bar }: any) => ({ bar }),
-)(DynamicPanel))
+)(DynamicPanel));

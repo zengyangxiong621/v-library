@@ -1,41 +1,41 @@
-import React, { useRef, useMemo, forwardRef } from 'react'
+import React, { useRef, useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { fade } from '@jiaminghi/color'
+import { fade } from "@jiaminghi/color";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util'
+import { deepMerge } from "@jiaminghi/charts/lib/util";
 
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import { uuid } from '../../util'
+import { uuid } from "../../util";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['rgba(3, 166, 224, 0.8)', 'rgba(3, 166, 224, 0.5)']
+const defaultColor = ["rgba(3, 166, 224, 0.8)", "rgba(3, 166, 224, 0.5)"];
 
-const svgWH = [100, 100]
+const svgWH = [100, 100];
 
 const Decoration = forwardRef(({ children, className, style, color = [], dur = 3 }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
-  const polygonIdRef = useRef(`decoration-9-polygon-${uuid()}`)
+  const polygonIdRef = useRef(`decoration-9-polygon-${uuid()}`);
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
   const svgScale = useMemo(() => {
-    const [w, h] = svgWH
+    const [w, h] = svgWH;
 
-    return [width / w, height / h]
-  }, [width, height])
+    return [width / w, height / h];
+  }, [width, height]);
 
-  const classNames = useMemo(() => classnames('dv-decoration-9', className), [
+  const classNames = useMemo(() => classnames("dv-decoration-9", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -102,7 +102,7 @@ const Decoration = forwardRef(({ children, className, style, color = [], dur = 3
             href={`#${polygonIdRef.current}`}
             stroke={mergedColor[1]}
             fill={
-              Math.random() > 0.4 ? 'transparent' : mergedColor[0]
+              Math.random() > 0.4 ? "transparent" : mergedColor[0]
             }
           >
             <animateTransform
@@ -129,8 +129,8 @@ const Decoration = forwardRef(({ children, className, style, color = [], dur = 3
 
       {children}
     </div>
-  )
-})
+  );
+});
 
 Decoration.propTypes = {
   children: PropTypes.node,
@@ -138,6 +138,6 @@ Decoration.propTypes = {
   style: PropTypes.object,
   color: PropTypes.array,
   dur: PropTypes.number
-}
+};
 
-export default Decoration
+export default Decoration;

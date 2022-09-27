@@ -1,28 +1,28 @@
-import { h } from './element';
-import Button from './button';
-import { bindClickoutside, unbindClickoutside } from './event';
-import { cssPrefix } from '../config';
-import { t } from '../locale/locale';
+import { h } from "./element";
+import Button from "./button";
+import { bindClickoutside, unbindClickoutside } from "./event";
+import { cssPrefix } from "../config";
+import { t } from "../locale/locale";
 
 function buildMenu(clsName) {
-  return h('div', `${cssPrefix}-item ${clsName}`);
+  return h("div", `${cssPrefix}-item ${clsName}`);
 }
 
 function buildSortItem(it) {
-  return buildMenu('state').child(t(`sort.${it}`))
-    .on('click.stop', () => this.itemClick(it));
+  return buildMenu("state").child(t(`sort.${it}`))
+    .on("click.stop", () => this.itemClick(it));
 }
 
 function buildFilterBody(items) {
   const { filterbEl, filterValues } = this;
-  filterbEl.html('');
+  filterbEl.html("");
   const itemKeys = Object.keys(items);
   itemKeys.forEach((it, index) => {
     const cnt = items[it];
-    const active = filterValues.includes(it) ? 'checked' : '';
-    filterbEl.child(h('div', `${cssPrefix}-item state ${active}`)
-      .on('click.stop', () => this.filterClick(index, it))
-      .children(it === '' ? t('filter.empty') : it, h('div', 'label').html(`(${cnt})`)));
+    const active = filterValues.includes(it) ? "checked" : "";
+    filterbEl.child(h("div", `${cssPrefix}-item state ${active}`)
+      .on("click.stop", () => this.filterClick(index, it))
+      .children(it === "" ? t("filter.empty") : it, h("div", "label").html(`(${cnt})`)));
   });
 }
 
@@ -34,19 +34,19 @@ function resetFilterHeader() {
 
 export default class SortFilter {
   constructor() {
-    this.filterbEl = h('div', `${cssPrefix}-body`);
-    this.filterhEl = h('div', `${cssPrefix}-header state`).on('click.stop', () => this.filterClick(0, 'all'));
-    this.el = h('div', `${cssPrefix}-sort-filter`).children(
-      this.sortAscEl = buildSortItem.call(this, 'asc'),
-      this.sortDescEl = buildSortItem.call(this, 'desc'),
-      buildMenu('divider'),
-      h('div', `${cssPrefix}-filter`).children(
+    this.filterbEl = h("div", `${cssPrefix}-body`);
+    this.filterhEl = h("div", `${cssPrefix}-header state`).on("click.stop", () => this.filterClick(0, "all"));
+    this.el = h("div", `${cssPrefix}-sort-filter`).children(
+      this.sortAscEl = buildSortItem.call(this, "asc"),
+      this.sortDescEl = buildSortItem.call(this, "desc"),
+      buildMenu("divider"),
+      h("div", `${cssPrefix}-filter`).children(
         this.filterhEl,
         this.filterbEl,
       ),
-      h('div', `${cssPrefix}-buttons`).children(
-        new Button('cancel').on('click', () => this.btnClick('cancel')),
-        new Button('ok', 'primary').on('click', () => this.btnClick('ok')),
+      h("div", `${cssPrefix}-buttons`).children(
+        new Button("cancel").on("click", () => this.btnClick("cancel")),
+        new Button("ok", "primary").on("click", () => this.btnClick("ok")),
       ),
     ).hide();
     // this.setFilters(['test1', 'test2', 'text3']);
@@ -57,10 +57,10 @@ export default class SortFilter {
   }
 
   btnClick(it) {
-    if (it === 'ok') {
+    if (it === "ok") {
       const { ci, sort, filterValues } = this;
       if (this.ok) {
-        this.ok(ci, sort, 'in', filterValues);
+        this.ok(ci, sort, "in", filterValues);
       }
     }
     this.hide();
@@ -70,15 +70,15 @@ export default class SortFilter {
     // console.log('it:', it);
     this.sort = it;
     const { sortAscEl, sortDescEl } = this;
-    sortAscEl.checked(it === 'asc');
-    sortDescEl.checked(it === 'desc');
+    sortAscEl.checked(it === "asc");
+    sortDescEl.checked(it === "desc");
   }
 
   filterClick(index, it) {
     // console.log('index:', index, it);
     const { filterbEl, filterValues, values } = this;
     const children = filterbEl.children();
-    if (it === 'all') {
+    if (it === "all") {
       if (children.length === filterValues.length) {
         this.filterValues = [];
         children.forEach(i => h(i).checked(false));
@@ -87,7 +87,7 @@ export default class SortFilter {
         children.forEach(i => h(i).checked(true));
       }
     } else {
-      const checked = h(children[index]).toggle('checked');
+      const checked = h(children[index]).toggle("checked");
       if (checked) {
         filterValues.push(it);
       } else {

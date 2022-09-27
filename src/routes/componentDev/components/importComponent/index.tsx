@@ -1,59 +1,59 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { memo, useEffect, useState } from 'react'
-import './index.less'
-import { Modal, Form,  Upload, message, Button } from 'antd'
-import type { UploadProps } from 'antd';
-import { http, BASEURL } from '@/services/request'
+import { memo, useEffect, useState } from "react";
+import "./index.less";
+import { Modal, Form,  Upload, message, Button } from "antd";
+import type { UploadProps } from "antd";
+import { http, BASEURL } from "@/services/request";
 
-const { Dragger } = Upload
+const { Dragger } = Upload;
 
 const importComponent = (props: any) => {
-  const [addForm] = Form.useForm()
-  const { visible, changeShowState, refreshTable } = props
+  const [addForm] = Form.useForm();
+  const { visible, changeShowState, refreshTable } = props;
   const [fileList, setFileList] = useState([]);
   // 上传的文件在后端存储的地址
-  const [fileUrl, setFileUrl] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [fileUrl, setFileUrl] = useState("");
+  const [loading, setLoading] = useState(false);
   /**
    * description: 清除弹窗内部维护的所有状态
    */
   const clearModalState = () => {
-    setFileUrl('')
-    setFileList([])
-  }
+    setFileUrl("");
+    setFileList([]);
+  };
   /**
    * description: 上传组件
    */
   const handleOk  = async () => {
-    setLoading(true)
+    setLoading(true);
     
     // const values: any = await addForm.validateFields()
     if (fileList && fileList.length) { //检验是否有上传文件
       const formData = new FormData();
-      formData.append('file', fileList[0]['originFileObj']);
+      formData.append("file", fileList[0]["originFileObj"]);
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const data = await http({
-        method: 'post',
-        url: `/visual/file/uploadModule`,
+        method: "post",
+        url: "/visual/file/uploadModule",
         body: formData
-      })
+      });
       if (data) {
-        setLoading(false)
-        changeShowState('add')
-        addForm.resetFields()
-        refreshTable()
+        setLoading(false);
+        changeShowState("add");
+        addForm.resetFields();
+        refreshTable();
       }
     } else {
-        setLoading(false)
-        message.error('上传文件格式错误或未上传文件!');
-        return
+        setLoading(false);
+        message.error("上传文件格式错误或未上传文件!");
+        return;
     }
-  }
+  };
   const handleCancel = () => {
-    changeShowState('add')
-    addForm.resetFields()
-    clearModalState()
-  }
+    changeShowState("add");
+    addForm.resetFields();
+    clearModalState();
+  };
 
 
   /**
@@ -62,71 +62,71 @@ const importComponent = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
+  const generateUploadProps = (fileSuffix = "", customProps?: object) => {
     // 上传框配置
     let uploadProps:UploadProps = {
-      name: 'file',
+      name: "file",
       multiple: false,
       maxCount: 1,
-      accept: fileSuffix || '',
+      accept: fileSuffix || "",
       action: `${BASEURL}/visual/file/uploadModule`, 
       headers:{
-        authorization:localStorage.getItem('token') || ''
+        authorization:localStorage.getItem("token") || ""
       },
       beforeUpload(file: any) {
-        const { name, size }: { name: string, size: number } = file
+        const { name, size }: { name: string, size: number } = file;
         if (size > 1024 * 1024 * 20) {
-          message.warning('文件大小超过限制')
-          file.status = 'error'
-          return false
+          message.warning("文件大小超过限制");
+          file.status = "error";
+          return false;
         }
-        const fileSuffixArr = fileSuffix?.split(',')
+        const fileSuffixArr = fileSuffix?.split(",");
         // 考虑 date.1.0.1.zip 这个文件名;
-        const lastPointIndex = name.lastIndexOf('.')        
-        const nameSuffix = name.slice(lastPointIndex)
+        const lastPointIndex = name.lastIndexOf(".");        
+        const nameSuffix = name.slice(lastPointIndex);
         if (!fileSuffixArr?.includes(nameSuffix)) {
           message.error({
-            content: '请上传符合格式的文件',
+            content: "请上传符合格式的文件",
             duration: 2
-          })
-          file.status = 'error'
-          return false
+          });
+          file.status = "error";
+          return false;
         }     
-        return false // 上传时不调取接口        
+        return false; // 上传时不调取接口        
       },
       onChange(info: any) {
         setFileList(info.fileList);
         const { status, response } = info.file;
-        if (status === 'done') {
+        if (status === "done") {
           message.success(`${info.file.name} 上传成功`);
-          setFileUrl(response.data)
-        } else if (status === 'error') {
+          setFileUrl(response.data);
+        } else if (status === "error") {
           message.error(`${info.file.name} 上传失败`);
         }
       },
       onDrop(e: any) {
-        const { name } = e.dataTransfer.files[0]
-        const fileSuffixArr = fileSuffix?.split(',')
+        const { name } = e.dataTransfer.files[0];
+        const fileSuffixArr = fileSuffix?.split(",");
         // 考虑 date.1.0.1.zip 这个文件名
-        const lastPointIndex = name.lastIndexOf('.')
-        const nameSuffix = name.slice(lastPointIndex)
+        const lastPointIndex = name.lastIndexOf(".");
+        const nameSuffix = name.slice(lastPointIndex);
         if (!fileSuffixArr?.includes(nameSuffix)) {
           message.error({
-            content: '文件格式不符',
+            content: "文件格式不符",
             duration: 2
-          })
-          return
+          });
+          return;
         }
       },
     };
-    if (JSON.stringify(customProps) !== '{}') {
-      uploadProps = { ...uploadProps, ...customProps }
+    if (JSON.stringify(customProps) !== "{}") {
+      uploadProps = { ...uploadProps, ...customProps };
     }
 
-    return uploadProps
-  }
+    return uploadProps;
+  };
   // .zip 文件
-  const tarUploadProps = generateUploadProps('.zip')
+  const tarUploadProps = generateUploadProps(".zip");
   return (
     <div className='importComponent-wrap'>
       <Modal
@@ -158,11 +158,11 @@ const importComponent = (props: any) => {
               <>
                 <Form.Item
                   label="上传组件"
-                  style={{ marginBottom: '40px' }}
-                  rules={generateSingleRules(true, '请选择要上传的组件')}
+                  style={{ marginBottom: "40px" }}
+                  rules={generateSingleRules(true, "请选择要上传的组件")}
                 >
                   <div className="setBackColor"
-                    style={{ height: '120px' }}>
+                    style={{ height: "120px" }}>
                     <Dragger {...tarUploadProps}>
                       <p className="ant-upload-hint">
                         点击或拖放文件至此处进行上传<br/>
@@ -177,10 +177,10 @@ const importComponent = (props: any) => {
         </Form >
       </Modal >
     </div >
-  )
-}
+  );
+};
 
-export default memo(importComponent)
+export default memo(importComponent);
 
 // 生成单个校验规则
 const generateSingleRules = (required: boolean, message: string | number): any[] => {
@@ -189,7 +189,7 @@ const generateSingleRules = (required: boolean, message: string | number): any[]
       required,
       message
     }
-  ]
-}
+  ];
+};
 
 

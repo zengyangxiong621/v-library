@@ -51,36 +51,35 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const changeDataFromCallback = async () => {
     const { dataFrom } = _data
     if (dataFrom === 0) {
-      await setDataSourceResult()
+      // await setDataSourceResult()
     } else {
       await setDataContainerResult()
     }
   }
 
-  const setDataSourceResult = async () => {
-    // 数据源
-    const data = await http({
-      url: '/visual/module/getData',
-      method: 'post',
-      body: {
-        moduleId: _data.id,
-        dataType: _data.dataType,
-        callBackParamValues:bar.callbackArgs
-      }
-    }, true)
-    if (data.code === 10000 && data.data) {
-      dispatch({
-        type: 'bar/save',
-        payload: {
-          componentData: {
-            ...bar.componentData,
-            [_data.id]: _data.dataType !== 'static' ? data.data : data.data.data,
-          },
-        },
-      })
-    }
-
-  }
+  // const setDataSourceResult = async () => {
+  //   // 数据源
+  //   const data = await http({
+  //     url: '/visual/module/getData',
+  //     method: 'post',
+  //     body: {
+  //       moduleId: _data.id,
+  //       dataType: _data.dataType,
+  //       callBackParamValues: bar.callbackArgs
+  //     }
+  //   }, true)
+  //   if (data.code === 10000 && data.data) {
+  //     dispatch({
+  //       type: 'bar/save',
+  //       payload: {
+  //         componentData: {
+  //           ...bar.componentData,
+  //           [_data.id]: _data.dataType !== 'static' ? data.data : data.data.data,
+  //         },
+  //       },
+  //     })
+  //   }
+  // }
 
   const setDataContainerResult = () => {
     // 数据容器
@@ -183,7 +182,6 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
     props.onUseFilterChange(e.target.checked)
   }
   // 处理过滤器
-
 
   return (
     <React.Fragment>

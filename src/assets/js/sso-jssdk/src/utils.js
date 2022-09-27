@@ -1,10 +1,10 @@
-import cookie from './cookie';
-import './url-polyfill.min';
+import cookie from "./cookie";
+import "./url-polyfill.min";
 
 export function getParam(name, url = window.location.href) {
-  const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
-  let search = url.split('?')[1] || '';
-  search = search.split('#')[0];
+  const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, "i");
+  let search = url.split("?")[1] || "";
+  search = search.split("#")[0];
   const r = search.match(reg);
 
   if (r !== null) {
@@ -19,12 +19,12 @@ export function setTicket(key, ticket, expires) {
 }
 
 export function getTicket(key) {
-  return cookie.get(key) || window._sso_ticket || '';
+  return cookie.get(key) || window._sso_ticket || "";
 }
 
 export function clearTicket(key) {
   cookie.delete(key);
-  window._sso_ticket = '';
+  window._sso_ticket = "";
 }
 
 // export function clearTicketParam(stKey, tgtKey) {
@@ -52,7 +52,7 @@ export function clearTicketParam(stKey, tgtKey) {
     const url = new URL(window.location.href);
     url.searchParams.delete(stKey);
     url.searchParams.delete(tgtKey);
-    window.history.replaceState('sso', null, url.href);
+    window.history.replaceState("sso", null, url.href);
   } catch (error) {
     // console.log('clearTicketParam error', error)
   }

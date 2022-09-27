@@ -47,6 +47,15 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     return states.length
   }, [states])
 
+  // 未发布且除去自身的应用集合
+  const publishedAndExcludeSelfDashboardList = useMemo(() => {
+    return bar.allDashboardList.map(item => ({
+      name: item.name,
+      value: item.id,
+      status: item.status
+    })).filter(item => item.value !== bar.dashboardId && item.status === 1)
+  }, [bar.dashboardId, bar.dashboardId])
+
   const styleConfig = [
     {
       'displayName': '位置尺寸',
@@ -140,7 +149,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
                 'name': 'dashboardSelect',
                 'type': 'select',
                 'value': '',
-                'options': bar.allDashboardList.filter(item => item.value !== bar.dashboardId),
+                'options': publishedAndExcludeSelfDashboardList,
               },
             ],
           },
@@ -159,7 +168,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
               'type': 'select',
               'value': item.id,
               'label': item.name,
-              'options': bar.allDashboardList.filter(item => item.value !== bar.dashboardId),
+              'options': publishedAndExcludeSelfDashboardList,
             },
           ],
         }
@@ -180,7 +189,8 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ]
-  const styleChange = debounce(async (key = "0", init = false) => {
+  const styleChange = debounce(async (key = "1", init = false) => {
+    console.log('key', key)
     if (key !== "0" && init) {
       setActiveKey(key)
       const referenceList = styleConfig.find(item => item.name === 'referenceList').value
@@ -235,25 +245,10 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     })
     const copyPanelConfig = deepClone(panelConfig)
     copyPanelConfig.states =  copyPanelConfig.states.filter(state => state.id)
+    console.log('copyPanelConfig', copyPanelConfig)
     const { config: { left, top, width, height } } = panelConfig
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        panelConfig,
-        scaleDragData: {
-          position: {
-            x: left,
-            y: top,
-          },
-          style: {
-            width,
-            height,
-            display: 'block',
-          },
-        },
-      },
-    })
-    await http({
+
+    const data = await http({
       url: '/visual/panel/update',
       method: 'post',
       body: {
@@ -263,6 +258,34 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
         ],
       },
     })
+    if (data) {
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          panelConfig,
+          scaleDragData: {
+            position: {
+              x: left,
+              y: top,
+            },
+            style: {
+              width,
+              height,
+              display: 'block',
+            },
+          },
+        },
+      })
+    } else {
+      copyPanelConfig.states.pop()
+      panelConfig.states.pop()
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          panelConfig,
+        },
+      })
+    }
   }, 300)
 
 

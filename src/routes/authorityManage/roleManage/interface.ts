@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 export interface params{
   pageNo:number,
   pageSize:number
@@ -26,7 +26,7 @@ export interface authDataType{
   url: null|string
   version: null|string
   children?:Array<authDataType>
-  checkedList?:Array<String>
+  checkedList?:Array<string>
 }
 export interface formData{
   name:string,
@@ -37,8 +37,8 @@ export interface authStateType{
   authList:Array<authDataType>
 }
 export type authActionType = 
-{ type: 'updateState'; update: Partial<authStateType> } 
-| {type:'getAuthList'}
+{ type: "updateState"; update: Partial<authStateType> } 
+| {type:"getAuthList"}
 export type dispatcher=(action:authActionType)=>any
 
 export interface authContextType{

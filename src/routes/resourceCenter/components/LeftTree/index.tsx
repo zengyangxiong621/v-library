@@ -1,6 +1,6 @@
  import { memo, useEffect, useState } from "react";
 import "./index.less";
-import { SYSTEMMATERIAL, MYMATERIAL, MATERIALLIB } from "@/constant/dvaModels/resourceCenter"
+import { SYSTEMMATERIAL, MYMATERIAL, MATERIALLIB } from "@/constant/dvaModels/resourceCenter";
 
 import { connect } from "dva";
 
@@ -13,30 +13,30 @@ import { DownOutlined } from "@ant-design/icons";
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
 
 const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispatch,refreshGroupLists,spaceId }: any) => {
-  const [currentAdd, setCurrentAdd] = useState('')
+  const [currentAdd, setCurrentAdd] = useState("");
   // 添加分组
   // 创建一个占位数据
-  const addGroup = (groupId: string, parentId: string = '') => {
-    setCurrentAdd(groupId)
+  const addGroup = (groupId: string, parentId = "") => {
+    setCurrentAdd(groupId);
     const mockItem: any = {
       groupId: "aInput",
       name: "占位的input"
     };
     // 以素材库为例， ↓ === '素材库'
-    const parentObj = resourceCenter.groupList.find((item: any) => item.groupId === parentId)
+    const parentObj = resourceCenter.groupList.find((item: any) => item.groupId === parentId);
     // ↓ === '我的素材'
     const originArr = parentObj?.children.find((item: any) => item.groupId === groupId);
     // ↓ === 我的素材下的所有组
-    const targetGroups = originArr.children
+    const targetGroups = originArr.children;
     // 插入的输入框是在数组的倒数第二个位置(未分组上一个)
     if (targetGroups[targetGroups.length - 2].groupId === "aInput") {
-      originArr.children.splice(-2,1)
+      originArr.children.splice(-2,1);
       const temp = JSON.parse(JSON.stringify(resourceCenter.groupList));
       dispatch({
         type: "resourceCenter/setGroupList",
         payload: temp
       });
-      return
+      return;
     }
     // 增加一个占位数据
     targetGroups.splice(-1, 0, mockItem);
@@ -51,7 +51,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
     // 如果是取消选择直接中止
     if (!e.selected) return;
     const { node } = e;
-    const isCreateByOurself = node.customLevel === 1 || node.customLevel === 2
+    const isCreateByOurself = node.customLevel === 1 || node.customLevel === 2;
     if (
       node.key === "aInput" ||
       node.name === "占位的input" ||
@@ -75,7 +75,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
     getDataDispatch({
       origin: node.origin,
       groupId: key
-    })
+    });
 
   };
   return (

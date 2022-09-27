@@ -1,34 +1,34 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect } from "react";
 
-import EveryComponent from '../everyComponent'
-import ReferencePanel from '@/customComponents/dashboardPublish/referencePanel'
-import DynamicPanel from '@/customComponents/dashboardPublish/dynamicPanel'
-import { getComDataWithFilters } from '@/utils/data'
+import EveryComponent from "../everyComponent";
+import ReferencePanel from "@/customComponents/dashboardPublish/referencePanel";
+import DynamicPanel from "@/customComponents/dashboardPublish/dynamicPanel";
+import { getComDataWithFilters } from "@/utils/data";
 
-const MODULES = 'modules'
-const OPACITY = 'opacity'
+const MODULES = "modules";
+const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, publishDashboard, dispatch, scaleValue, panels } = props
+  const { layersArr, componentLists, publishDashboard, dispatch, scaleValue, panels } = props;
   return (
     <div className='recursive-component-wrap'>
       {
         layersArr?.map((layer: any, ind: any) => {
-          let isGroup: boolean = MODULES in layer
-          let isPanel: boolean = ('panelType' in layer)
-          let targetComponent, targetPanel
+          const isGroup: boolean = MODULES in layer;
+          const isPanel: boolean = ("panelType" in layer);
+          let targetComponent, targetPanel;
           if (!isGroup) {
-            targetComponent = componentLists.find((item: any) => item.id === layer.id)
+            targetComponent = componentLists.find((item: any) => item.id === layer.id);
           }
           if (isPanel) {
-            targetPanel = panels.find((item: any) => item.id === layer.id)
+            targetPanel = panels.find((item: any) => item.id === layer.id);
           }
           return (
             <div
-              data-id={isGroup ? layer.id : 'component-' + layer.id}
+              data-id={isGroup ? layer.id : "component-" + layer.id}
               key={layer.id}
               style={{
-                visibility: !layer.isShow ? 'hidden' : 'unset',
+                visibility: !layer.isShow ? "hidden" : "unset",
               }}
             >
               {
@@ -37,9 +37,9 @@ const RecursiveComponent = (props: any) => {
                       <div
                         className="panel-container"
                         style={{
-                          position: 'absolute',
-                          left: targetPanel.config.left + 'px',
-                          top: targetPanel.config.top + 'px'
+                          position: "absolute",
+                          left: targetPanel.config.left + "px",
+                          top: targetPanel.config.top + "px"
                         }}
                       >
                         <DynamicPanel
@@ -82,7 +82,7 @@ const RecursiveComponent = (props: any) => {
                     }
                   </div>
                   : <>
-                    <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                    <div data-id={layer.id} style={{ width: "100%", height: "100%" }}>
                       {
                         <EveryComponent key={ind}
                           componentData={targetComponent}
@@ -95,12 +95,12 @@ const RecursiveComponent = (props: any) => {
                   </>
               }
             </div>
-          )
+          );
         })
       }
 
     </div>
-  )
-}
+  );
+};
 
-export default memo(RecursiveComponent)
+export default RecursiveComponent;

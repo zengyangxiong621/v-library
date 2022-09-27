@@ -30,12 +30,12 @@ const globalStroe={
         title: "权限管理",
         children: [
           {
-            title: '用户管理',
-            path: '/authority-manage/user-manage'
+            title: "用户管理",
+            path: "/authority-manage/user-manage"
           },
           {
-            title: '角色管理',
-            path: '/authority-manage/role-manage'
+            title: "角色管理",
+            path: "/authority-manage/role-manage"
           }
         ]
       },
@@ -48,18 +48,18 @@ const globalStroe={
   subscriptions:{
     setup({ dispatch, history }: { dispatch: any; history: any }){
       history.listen((location: any) => {
-        const pathName=location.pathname || location.location.pathname
-        if(pathName==='/login'){
+        const pathName=location.pathname || location.location.pathname;
+        if(pathName==="/login"){
           dispatch({
-            type:'global/setUserInfo',
+            type:"global/setUserInfo",
             payload:null
-          })
-          return
+          });
+          return;
         }
-        const token=localStorage.getItem('token')
-        const isPublishScreen = window.location.href.indexOf('publishScreen') > -1
+        const token=localStorage.getItem("token");
+        const isPublishScreen = window.location.href.indexOf("publishScreen") > -1;
         if(!token && !isPublishScreen){
-          history.replace('/login')
+          history.replace("/login");
         }
       });
     }
@@ -69,22 +69,22 @@ const globalStroe={
       return {
         ...state,
         userInfo:payload
-      }
+      };
     },
     setWorkspaceList(state:any,{payload}:any){
       return {
         ...state,
         workspaceList:payload
-      }
+      };
     }
   },
   effects: {
     *getCurUserInfo({ payload }: any, { put }: any):any {
       try {
         const data=yield http({
-          url:'/visual/user/getAccountInfo',
-          method:'post'
-        })
+          url:"/visual/user/getAccountInfo",
+          method:"post"
+        });
         if(data){
           yield put({
             type: "setUserInfo",
@@ -99,29 +99,29 @@ const globalStroe={
     *getWorkspaceList({ payload }: any, { put }: any):any{
       try {
         const data=yield http({
-          url: `/visual/workspace/list`,
+          url: "/visual/workspace/list",
           method: "get",
-        })
+        });
         // 设置工作空间
         yield put({
           type: "setWorkspaceList",
           payload: data,
         });
-        let curWorkspace:any=localStorage.getItem('curWorkspace')
+        let curWorkspace:any=localStorage.getItem("curWorkspace");
         if(data.length){
           if(curWorkspace){
-            curWorkspace = JSON.parse(curWorkspace)
+            curWorkspace = JSON.parse(curWorkspace);
             const spaceItem = data?.find((item:any) => item.id === curWorkspace.id);
             if(!spaceItem){
-              curWorkspace = null
+              curWorkspace = null;
             }
           }
           if(!curWorkspace){
             // 将当前空间存入到localStorage
-            localStorage.setItem('curWorkspace',JSON.stringify(data[0]))
+            localStorage.setItem("curWorkspace",JSON.stringify(data[0]));
           }
         }else{
-          localStorage.removeItem('curWorkspace')
+          localStorage.removeItem("curWorkspace");
         }
 
       } catch (error) {
@@ -130,4 +130,4 @@ const globalStroe={
     }
   },
 };
-export default globalStroe
+export default globalStroe;

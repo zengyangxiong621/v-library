@@ -1,109 +1,109 @@
-import React, { useMemo, forwardRef, useRef } from 'react'
+import React, { useMemo, forwardRef, useRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
-import { deepClone, getCircleRadianPoint } from '@jiaminghi/c-render/lib/plugin/util'
-import { fade } from '@jiaminghi/color'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
+import { deepClone, getCircleRadianPoint } from "@jiaminghi/c-render/lib/plugin/util";
+import { fade } from "@jiaminghi/color";
 
-import useAutoResize from '../../use/autoResize'
-import { uuid } from '../../util'
+import useAutoResize from "../../use/autoResize";
+import { uuid } from "../../util";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['#2783ce', '#2cf7fe']
+const defaultColor = ["#2783ce", "#2cf7fe"];
 
-const segment = 30
+const segment = 30;
 
-const sectorAngle = Math.PI / 3
+const sectorAngle = Math.PI / 3;
 
-const ringNum = 3
+const ringNum = 3;
 
-const ringWidth = 1
+const ringWidth = 1;
 
-const showSplitLine = true
+const showSplitLine = true;
 
 const BorderBox = forwardRef(({ children, className, style, color = [], scanDur = 3, haloDur = 2 }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
-  const x = width / 2
+  const x = width / 2;
 
-  const y = height / 2
+  const y = height / 2;
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
   const pathD = useMemo(() => {
-    const startAngle = -Math.PI / 2
-    const angleGap = sectorAngle / segment
-    const r = width / 4
-    let lastEndPoints = getCircleRadianPoint(x, y, r, startAngle)
+    const startAngle = -Math.PI / 2;
+    const angleGap = sectorAngle / segment;
+    const r = width / 4;
+    let lastEndPoints = getCircleRadianPoint(x, y, r, startAngle);
 
     return new Array(segment)
-      .fill('')
+      .fill("")
       .map((_, i) => {
-        const endPoints = getCircleRadianPoint(x, y, r, startAngle - (i + 1) * angleGap).map(_ => _.toFixed(5))
-        const d = `M${lastEndPoints.join(',')} A${r}, ${r} 0 0 0 ${endPoints.join(',')}`
-        lastEndPoints = endPoints
-        return d
-      })
-  }, [x, y, width])
+        const endPoints = getCircleRadianPoint(x, y, r, startAngle - (i + 1) * angleGap).map(_ => _.toFixed(5));
+        const d = `M${lastEndPoints.join(",")} A${r}, ${r} 0 0 0 ${endPoints.join(",")}`;
+        lastEndPoints = endPoints;
+        return d;
+      });
+  }, [x, y, width]);
 
   const pathColor = useMemo(() => {
-    const color = mergedColor[0]
-    const colorGap = 100 / (segment - 1)
+    const color = mergedColor[0];
+    const colorGap = 100 / (segment - 1);
 
     return new Array(segment)
       .fill(color)
-      .map((_, i) => fade(color, 100 - i * colorGap))
-  }, [mergedColor])
+      .map((_, i) => fade(color, 100 - i * colorGap));
+  }, [mergedColor]);
 
   const circleR = useMemo(() => {
-    const radiusGap = (width / 2 - ringWidth / 2) / ringNum
+    const radiusGap = (width / 2 - ringWidth / 2) / ringNum;
 
     return new Array(ringNum)
       .fill(0)
-      .map((_, i) => radiusGap * (i + 1))
-  }, [width])
+      .map((_, i) => radiusGap * (i + 1));
+  }, [width]);
 
   const splitLinePoints = useMemo(() => {
-    const angleGap = Math.PI / 6
-    const r = width / 2
+    const angleGap = Math.PI / 6;
+    const r = width / 2;
     return new Array(6)
-      .fill('')
+      .fill("")
       .map((_, i) => {
-        const startAngle = angleGap * (i + 1)
-        const endAngle = startAngle + Math.PI
-        const startPoint = getCircleRadianPoint(x, y, r, startAngle)
-        const endPoint = getCircleRadianPoint(x, y, r, endAngle)
-        return `${startPoint.join(',')} ${endPoint.join(',')}`
-      })
-  }, [x, y, width])
+        const startAngle = angleGap * (i + 1);
+        const endAngle = startAngle + Math.PI;
+        const startPoint = getCircleRadianPoint(x, y, r, startAngle);
+        const endPoint = getCircleRadianPoint(x, y, r, endAngle);
+        return `${startPoint.join(",")} ${endPoint.join(",")}`;
+      });
+  }, [x, y, width]);
 
   const arcD = useMemo(() => {
-    const angleGap = Math.PI / 6
-    const r = width / 2 - 1
+    const angleGap = Math.PI / 6;
+    const r = width / 2 - 1;
 
     return new Array(4)
-      .fill('')
+      .fill("")
       .map((_, i) => {
-        const startAngle = angleGap * (3 * i + 1)
-        const endAngle = startAngle + angleGap
-        const startPoint = getCircleRadianPoint(x, y, r, startAngle)
-        const endPoint = getCircleRadianPoint(x, y, r, endAngle)
-        return `M${startPoint.join(',')} A${x}, ${y} 0 0 1 ${endPoint.join(',')}`
-      })
-  }, [x, y, width])
+        const startAngle = angleGap * (3 * i + 1);
+        const endAngle = startAngle + angleGap;
+        const startPoint = getCircleRadianPoint(x, y, r, startAngle);
+        const endPoint = getCircleRadianPoint(x, y, r, endAngle);
+        return `M${startPoint.join(",")} A${x}, ${y} 0 0 1 ${endPoint.join(",")}`;
+      });
+  }, [x, y, width]);
 
   const idRef = useRef({
     gId: `decoration-12-g-${uuid()}`,
     gradientId: `decoration-12-gradient-${uuid()}`
-  })
+  });
 
-  const classNames = useMemo(() => classnames('dv-decoration-12', className), [
+  const classNames = useMemo(() => classnames("dv-decoration-12", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -210,8 +210,8 @@ const BorderBox = forwardRef(({ children, className, style, color = [], scanDur 
         {children}
       </div>
     </div>
-  )
-})
+  );
+});
 
 BorderBox.propTypes = {
   children: PropTypes.node,
@@ -220,6 +220,6 @@ BorderBox.propTypes = {
   color: PropTypes.array,
   scanDur: PropTypes.number,
   haloDur: PropTypes.number
-}
+};
 
-export default BorderBox
+export default BorderBox;

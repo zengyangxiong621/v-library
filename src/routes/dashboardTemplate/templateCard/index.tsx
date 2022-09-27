@@ -1,31 +1,31 @@
-import { memo, useState, useRef } from 'react'
-import './index.less'
+import { memo, useState, useRef } from "react";
+import "./index.less";
 
-import { withRouter } from 'dva/router'
-import { http } from '@/services/request'
+import { withRouter } from "dva/router";
+import { http } from "@/services/request";
 const TemplateCard = (props: any) => {
   const { id, name, ratio, fenbianlv, photoUrl,
-    getCurImgIndex, addTemplate, curIndex, history,spaceId } = props
+    getCurImgIndex, addTemplate, curIndex, history,spaceId } = props;
   // 后端返回的photoUrl为空，则使用默认图片
-  const finalPicUrl = photoUrl ?? require('../../../assets/images/模板默认背景图.png')
+  const finalPicUrl = photoUrl ?? require("../../../assets/images/模板默认背景图.png");
   const scanDashboard = () => {
-    getCurImgIndex(curIndex)
-  }
+    getCurImgIndex(curIndex);
+  };
   const createProject = async() => {
     // addTemplate(id)
     const data = await http({
-      url: '/visual/appTemplate/createApp',
-      method: 'post',
+      url: "/visual/appTemplate/createApp",
+      method: "post",
       body: {
         id,
         type: 0,
         spaceId
       }
-    })
+    });
     if(data){
-      history.push(`/dashboard/${data.id}`)
+      history.push(`/dashboard/${data.id}`);
     }
-  }
+  };
   return (
     <div className='TemplateCard-wrap'>
       <header className='head'>
@@ -50,7 +50,7 @@ const TemplateCard = (props: any) => {
         </div> */}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default memo(withRouter(TemplateCard))
+export default memo(withRouter(TemplateCard));

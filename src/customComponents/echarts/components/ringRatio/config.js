@@ -86,7 +86,7 @@ const componentDefaultConfig = {
           "name": "color",
           "displayName": "",
           "type": "color",
-          "value": '#007acc'
+          "value": "#007acc"
         },
         {
           "name": "bold",
@@ -117,52 +117,52 @@ const componentDefaultConfig = {
       "value": false
     },
     {
-      'name': 'textSetting',
-      'displayName': '文本设置',
-      'type': 'collapse',
+      "name": "textSetting",
+      "displayName": "文本设置",
+      "type": "collapse",
       hasSwitch: false,
       defaultExpand: false,  // 是否默认展开
       value: [
         {	// 如果有后面的按钮，则该项必须放在第一个
-          'name': 'show',
-          'displayName': '',
-          'value': true,
-          'type': 'switch',
+          "name": "show",
+          "displayName": "",
+          "value": true,
+          "type": "switch",
         },
         {
-          'name': 'percentVertical',
-          'displayName': '百分号位置',
-          'value': 150,
-          type: 'number',
+          "name": "percentVertical",
+          "displayName": "百分号位置",
+          "value": 150,
+          type: "number",
           "config": {
             "min": 0,
             "max": 1000,
             "step": 1,
-            suffix: '%',  // 输入框后缀
+            suffix: "%",  // 输入框后缀
           }
         },
         {
-          'name': 'textHorizontal',
-          'displayName': '水平位置',
-          'value': 50,
-          type: 'number',
+          "name": "textHorizontal",
+          "displayName": "水平位置",
+          "value": 50,
+          type: "number",
           "config": {
             "min": 0,
             "max": 100,
             "step": 1,
-            suffix: '%',  // 输入框后缀
+            suffix: "%",  // 输入框后缀
           }
         },
         {
-          'name': 'textVertical',
-          'displayName': '垂直位置',
-          'value': 60,
-          type: 'number',
+          "name": "textVertical",
+          "displayName": "垂直位置",
+          "value": 60,
+          type: "number",
           "config": {
             "min": 0,
             "max": 100,
             "step": 1,
-            suffix: '%',  // 输入框后缀
+            suffix: "%",  // 输入框后缀
           }
         },
       ]

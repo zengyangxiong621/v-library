@@ -1,26 +1,26 @@
-import React, { useMemo, forwardRef } from 'react'
+import React, { useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['#2862b7', '#2862b7']
+const defaultColor = ["#2862b7", "#2862b7"];
 
-const BorderBox = forwardRef(({ children, className, style, color = [], backgroundColor = 'transparent' }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+const BorderBox = forwardRef(({ children, className, style, color = [], backgroundColor = "transparent" }, ref) => {
+  const { width, height, domRef } = useAutoResize(ref);
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
-  const classNames = useMemo(() => classnames('dv-border-box-3', className), [
+  const classNames = useMemo(() => classnames("dv-border-box-3", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -56,8 +56,8 @@ const BorderBox = forwardRef(({ children, className, style, color = [], backgrou
 
       <div className='border-box-content'>{children}</div>
     </div>
-  )
-})
+  );
+});
 
 BorderBox.propTypes = {
   children: PropTypes.node,
@@ -65,6 +65,6 @@ BorderBox.propTypes = {
   style: PropTypes.object,
   color: PropTypes.array,
   backgroundColor: PropTypes.string
-}
+};
 
-export default BorderBox
+export default BorderBox;

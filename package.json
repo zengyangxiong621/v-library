@@ -39,7 +39,6 @@
     "dva": "^2.4.1",
     "echarts": "5.2.2",
     "echarts-gl": "^2.0.9",
-    "eslint": "^8.3.0",
     "eslint-config-react-app": "^7.0.0",
     "eslint-webpack-plugin": "^3.1.1",
     "file-loader": "^6.2.0",
@@ -101,7 +100,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "lint": "eslint src",
+    "lint-fix": "eslint --fix src"
   },
   "eslintConfig": {
     "extends": [
@@ -184,8 +185,14 @@
   "devDependencies": {
     "@types/lodash": "^4.14.182",
     "@types/swiper": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
     "autoprefixer": "^10.4.7",
+    "eslint": "^8.23.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.8",
     "postcss": "^8.4.13",
+    "prettier": "^2.7.1",
     "query-string": "^7.1.1",
     "tailwindcss": "^3.0.24"
   }

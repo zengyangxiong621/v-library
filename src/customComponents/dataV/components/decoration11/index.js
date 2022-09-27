@@ -1,27 +1,27 @@
-import React, { useMemo, forwardRef } from 'react'
+import React, { useMemo, forwardRef } from "react";
 
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-import classnames from 'classnames'
+import classnames from "classnames";
 
-import { deepMerge } from '@jiaminghi/charts/lib/util/index'
-import { deepClone } from '@jiaminghi/c-render/lib/plugin/util'
-import { fade } from '@jiaminghi/color'
+import { deepMerge } from "@jiaminghi/charts/lib/util/index";
+import { deepClone } from "@jiaminghi/c-render/lib/plugin/util";
+import { fade } from "@jiaminghi/color";
 
-import useAutoResize from '../../use/autoResize'
+import useAutoResize from "../../use/autoResize";
 
-import './style.less'
+import "./style.less";
 
-const defaultColor = ['#1a98fc', '#2cf7fe']
+const defaultColor = ["#1a98fc", "#2cf7fe"];
 
 const BorderBox = forwardRef(({ children, className, style, color = [] }, ref) => {
-  const { width, height, domRef } = useAutoResize(ref)
+  const { width, height, domRef } = useAutoResize(ref);
 
-  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color])
+  const mergedColor = useMemo(() => deepMerge(deepClone(defaultColor, true), color || []), [color]);
 
-  const classNames = useMemo(() => classnames('dv-decoration-11', className), [
+  const classNames = useMemo(() => classnames("dv-decoration-11", className), [
     className
-  ])
+  ]);
 
   return (
     <div className={classNames} style={style} ref={domRef}>
@@ -29,7 +29,7 @@ const BorderBox = forwardRef(({ children, className, style, color = [] }, ref) =
         <polygon
           fill={fade(mergedColor[1] || defaultColor[1], 10)}
           stroke={mergedColor[1]}
-          points={`20 10, 25 4, 55 4 60 10`}
+          points={"20 10, 25 4, 55 4 60 10"}
         />
 
         <polygon
@@ -76,14 +76,14 @@ const BorderBox = forwardRef(({ children, className, style, color = [] }, ref) =
         {children}
       </div>
     </div>
-  )
-})
+  );
+});
 
 BorderBox.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   style: PropTypes.object,
   color: PropTypes.array
-}
+};
 
-export default BorderBox
+export default BorderBox;

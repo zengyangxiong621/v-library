@@ -1,5 +1,5 @@
 import { message } from "antd";
-import { forwardLogin } from '@/services/loginApi'
+import { forwardLogin } from "@/services/loginApi";
 
 /**
  * description: 执行请求、获取数据、捕获异常
@@ -23,7 +23,7 @@ const catchErr = <T, U = Error>(
     });
 };
 
-export const BASE_URL = (window as any).CONFIG.BASE_URL
+export const BASE_URL = (window as any).CONFIG.BASE_URL;
 // export const BASE_URL='http://10.141.0.74:9572'
 const DEFAULT_OPTIONS = {
   method: "POST",
@@ -58,9 +58,9 @@ export const useFetch = async (
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
 
-  const token=localStorage.getItem('token')
-  if(path!=='/visual/login/login'){
-    finalParams.headers['Token']=token
+  const token=localStorage.getItem("token");
+  if(path!=="/visual/login/login"){
+    finalParams.headers["Token"]=token;
   }
   
   // 格式由fetchOptions中的responseType来决定，默认是json
@@ -89,7 +89,7 @@ export const useFetch = async (
     // throw Error('终止程序')
   }
   // 后端的返回码
-  let code: string | number = data?.code ?? "errorCode";
+  const code: string | number = data?.code ?? "errorCode";
   // 请求成功发送出去，但是接口错误
   // TODO 外部传入 对应状态码的处理逻辑
   if (code === 500) {
@@ -98,16 +98,16 @@ export const useFetch = async (
     });
   }
   if(code===403){
-    message.error('暂无权限')
-    window.history.replaceState(null,'','/404')
+    message.error("暂无权限");
+    window.history.replaceState(null,"","/404");
   }
   if(code===401){
-    if (token && token.endsWith('x-gridsumdissector')) {
-      forwardLogin()
+    if (token && token.endsWith("x-gridsumdissector")) {
+      forwardLogin();
     }else{
-      window.history.replaceState(null,'','/login')
+      window.history.replaceState(null,"","/login");
       window.location.reload();
-      localStorage.removeItem('token')
+      localStorage.removeItem("token");
     }
 
     message.error({

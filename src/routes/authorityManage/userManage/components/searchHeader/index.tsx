@@ -1,29 +1,29 @@
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
-import { Input, Row, Col, Modal, Form, Select, Button,message,Space } from 'antd'
-import { STATUSLIST } from '@/constant/dvaModels/userManage'
+import { Input, Row, Col, Modal, Form, Select, Button,message,Space } from "antd";
+import { STATUSLIST } from "@/constant/dvaModels/userManage";
 
 const SearchHeader = (props: any) => {
-  const {roleList, searchByType} = props
-  const [searchForm] = Form.useForm()
-  const [name,setName] = useState('')
-  const [status, setStatus] = useState('')
-  const [roleId, setRoleId] = useState('')
+  const {roleList, searchByType} = props;
+  const [searchForm] = Form.useForm();
+  const [name,setName] = useState("");
+  const [status, setStatus] = useState("");
+  const [roleId, setRoleId] = useState("");
 
   const searchClick = async() => {
-    const value = await searchForm.validateFields()
-    searchByType(value)
-  }
+    const value = await searchForm.validateFields();
+    searchByType(value);
+  };
 
   const resetClick = () => {
     searchForm.resetFields();
-    searchClick()
-  }
+    searchClick();
+  };
 
   const changeInputValue = (value:any) => {
-    setName(value)
-  }
+    setName(value);
+  };
 
   return (
     <Form
@@ -46,7 +46,7 @@ const SearchHeader = (props: any) => {
           STATUSLIST.map((item:any) => {
             return (
               <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
-            )
+            );
           })
         }
       </Select>
@@ -61,7 +61,7 @@ const SearchHeader = (props: any) => {
           roleList?.map((item:any) => {
             return (
               <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
-            )
+            );
           })
         }
       </Select>
@@ -73,8 +73,8 @@ const SearchHeader = (props: any) => {
         </Space>
      </Form.Item>
   </Form>
-  )
-}
+  );
+};
 
 
 export default memo(

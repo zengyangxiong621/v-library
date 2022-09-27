@@ -33,7 +33,11 @@ const CusInputNumber = props => {
   }
 
   const valueBlur = () => {
-    props.onBlur()
+    if(!_data.value){
+      _data.value = _min || 0
+      props.onChange()
+    }
+    props.onBlur &&  props.onBlur()
   }
 
   return (
