@@ -197,9 +197,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     const isPublished = data.share;
     setFabuBody(filterShareUrl);
     if (isPublished) {
-      const host = window.location.host;
+      const origin = window.location.origin;
       const idInUrl = data.shareUrl.split("/").pop();
-      setFxljInputValue(`${host}/publishScreen/${idInUrl}`);
+      setFxljInputValue(`${origin}/publishScreen/${idInUrl}?encrypt=${data.needPassword}`);
       if (data.needPassword) {
         // setJmfxValue()
         setIsShowJmfxInput(true);
@@ -288,9 +288,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       message.success({ content: "发布成功", duration: 2 });
       // 发布成功，1. 刷新列表获得应用最新的发布状态
       // 2. 设置分享连接地址
-      const host = window.location.host;
+      const origin = window.location.origin;
       const idInUrl = result.shareUrl.split("/").pop();
-      setFxljInputValue(`${host}/publishScreen/${idInUrl}`);
+      setFxljInputValue(`${origin}/publishScreen/${idInUrl}?encrypt=${isShowJmfxInput}`);
       // 打开发布开关
       setFabuChecked(true);
       setIsShared(true);
@@ -329,6 +329,8 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       id: bar.dashboardId
     };
     setFabuBody(finalBody);
+    const curUrl = fxljInputValue.split("?")[0];
+    setFxljInputValue(`${curUrl}?encrypt=${isCheck}`);
     const result: any = await publishByDiffParams(finalBody);
     if (!result) {
       message.error({ content: "发布失败", duration: 2 });
