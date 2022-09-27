@@ -9,7 +9,7 @@ const textAlignEnum = {
   right: 'flex-end',
 }
 
-const Tab = (props) => {
+const Tab = ({ cRef = {}, ...props }) => {
   let { history, dashboardId, isPreview } = props
   if (!dashboardId) dashboardId = ''
   const locationParams = getQueryVariable()
@@ -45,6 +45,13 @@ const Tab = (props) => {
   // 行数
   const [rowNums, setRowNums] = useState(1)
   const [colNums, setColNums] = useState(4)
+
+  useImperativeHandle(cRef, () => ({
+    handleEvent: (message) => {
+      const index = tabList.findIndex(item => item[_fields[1]] === message.content) //
+      handleTestClick(index)
+    },
+  }))
 
   // is URL params
   const [isUrlParams, setIsUrlParams] = useState(true)
@@ -338,7 +345,6 @@ const Tab = (props) => {
   }, [dataSeriesConfig, tabList, rowNums, colNums])
 
   const handleChange = (data, index) => {
-    console.log('index', index)
     setActiveKey(index)
     props.onChange && props.onChange(data)
   }
@@ -353,7 +359,6 @@ const Tab = (props) => {
     props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey])
   }
   const handleItemClick = (item, index) => {
-    console.log('index', index)
     if (scrollState.clickStayTime > 0) {
       setScrollState({ ...scrollState, isStay: true })
     }

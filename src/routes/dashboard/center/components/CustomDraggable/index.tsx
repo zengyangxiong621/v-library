@@ -1089,8 +1089,8 @@ const CustomDraggable
                                                 </ScrollTable> :
                                                 layer.moduleName === "tab" ?
                                                   <Tab
-                                                    themeConfig={bar.componentThemeConfig}
-                                                    onThemeChange={onThemeChange}
+                                                    // themeConfig={bar.componentThemeConfig}
+                                                    // onThemeChange={onThemeChange}
                                                     onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                     componentConfig={component}
                                                     fields={getFields(component)}
