@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState, useImperativeHandle } from 'react'
 import ComponentDefaultConfig from './config'
 import './index.css'
-import { styleTransformFunc, deepClone, getQueryVariable } from '../../../utils'
-import { withRouter } from 'dva/router'
+import { styleTransformFunc, deepClone } from '../../../utils'
+
 const textAlignEnum = {
   left: 'flex-start',
   center: 'center',
@@ -10,9 +10,6 @@ const textAlignEnum = {
 }
 
 const Tab = ({ cRef = {}, ...props }) => {
-  let { history, dashboardId, isPreview } = props
-  if (!dashboardId) dashboardId = ''
-  const locationParams = getQueryVariable()
   const [scrollState, setScrollState] = useState({
     isScroll: false,
     clickStayTime: 0,
@@ -52,10 +49,6 @@ const Tab = ({ cRef = {}, ...props }) => {
       handleTestClick(index)
     },
   }))
-
-  // is URL params
-  const [isUrlParams, setIsUrlParams] = useState(true)
-
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
@@ -288,23 +281,10 @@ const Tab = ({ cRef = {}, ...props }) => {
   }, [_fields, _data])
 
   useEffect(() => {
-    const param = locationParams?.param || null
-    if (param) {
-      const currentKey = tabList.findIndex(item => item.name === decodeURI(param)) + 1
-      if (currentKey > 0) {
-        setDefaultActiveKey(currentKey)
-        setIsUrlParams(false)
-      }
-    } else {
-      console.log('defaultActiveKeyGGG', defaultActiveKey)
+    if (defaultActiveKey > 0) {
+      handleChange(tabList[defaultActiveKey - 1], defaultActiveKey)
     }
-  }, [tabList, defaultActiveKey])
-
-  useEffect(() => {
-    handleChange(tabList[defaultActiveKey - 1], defaultActiveKey)
-  }, [defaultActiveKey, isUrlParams])
-
-
+  }, [defaultActiveKey])
 
   useEffect(() => {
     let timer = null
@@ -345,6 +325,7 @@ const Tab = ({ cRef = {}, ...props }) => {
   }, [dataSeriesConfig, tabList, rowNums, colNums])
 
   const handleChange = (data, index) => {
+    console.log('index', index)
     setActiveKey(index)
     props.onChange && props.onChange(data)
   }
@@ -359,11 +340,9 @@ const Tab = ({ cRef = {}, ...props }) => {
     props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey])
   }
   const handleItemClick = (item, index) => {
+    console.log('index', index)
     if (scrollState.clickStayTime > 0) {
       setScrollState({ ...scrollState, isStay: true })
-    }
-    if (locationParams?.param) {
-      history.push(`/bigscreen/${dashboardId}?param=${item.name}`);
     }
     handleChange(item, index)
   }
@@ -412,4 +391,4 @@ export {
   ComponentDefaultConfig,
 }
 
-export default withRouter(Tab)
+export default Tab
