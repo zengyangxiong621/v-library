@@ -26,6 +26,68 @@ class ThreatWarning extends Component {
     const unitValue = firstData[finalFieldsArr[1]]
     const titleValue = firstData[finalFieldsArr[2]]
 
+    const componentThemeConfig = this.props.themeConfig
+    const replaceThemeColor = (arr, colorIndex = 0) => {
+      arr.forEach((item) => {
+        let index = colorIndex || 0
+        let { name, value, options, flag, type, key } = item
+        if (item.hasOwnProperty('value')) {
+          // 对 系列一栏 做特殊处理
+          if (flag === 'specialItem') {
+            try {
+              index = key ? parseInt(key) - 1 : 0
+            } catch (e) {
+              index = 0
+            }
+          }
+          if (Array.isArray(value)) {
+            replaceThemeColor(value, index)
+          } else {
+            if (type === 'color') {
+              switch (name) {
+                case 'themePureColors':
+                  item.value = componentThemeConfig.pureColors[0]
+                  break;
+                case 'themeGradientColorStart':
+                  item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                  break;
+                case 'themeGradientColorEnd':
+                  item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                  break;
+                case 'themeTextColor':
+                  item.value = componentThemeConfig.textColor
+                  break;
+                case 'themeAssistColor':
+                  item.value = componentThemeConfig.assistColor
+                  break;
+                case 'themeGridColor':
+                  item.value = componentThemeConfig.gridColor
+                  break;
+                default:
+                  break;
+              }
+            }
+            if(type === 'chartText' && name === 'labelTextStyle'){
+              item.value.color = componentThemeConfig.textColor
+            }
+          }
+        } else if (Array.isArray(options) && options.length) {
+          replaceThemeColor(options, index)
+        }
+      })
+    }
+    if (componentThemeConfig) {
+      const configOfTheme = JSON.parse(JSON.stringify(config))
+      replaceThemeColor(configOfTheme)
+      this.props.onThemeChange({
+        id: componentConfig.id,
+        name: componentConfig.name,
+        moduleName: componentConfig.moduleName,
+        moduleVersion: componentConfig.moduleVersion,
+        config: configOfTheme
+      })
+    }
+
     // 获取config中的配置
     const getTargetConfig = (Arr) => {
       let targetConfig = {}
@@ -58,7 +120,9 @@ class ThreatWarning extends Component {
         <div className='left'>
           <div className='l-num'>
             <div className='number' style={{
-              color: textNumberStyle.color,
+              color: componentThemeConfig
+              ? componentThemeConfig.pureColors[0]
+              : textNumberStyle.themePureColors,
               fontSize: textNumberStyle.fontSize,
               fontFamily: textNumberStyle.fontFamily,
               fontWeight: textNumberStyle.bold ? 'bold' : 'normal',
@@ -72,7 +136,9 @@ class ThreatWarning extends Component {
               <CountUp start={0} end={numberValue} separator={','} duration={1}></CountUp>
             </div>
             <div className='unit' style={{
-              color: textUnitStyle.color,
+              color: componentThemeConfig
+              ? componentThemeConfig.pureColors[0]
+              : textUnitStyle.themePureColors,
               fontSize: textUnitStyle.fontSize,
               fontFamily: textUnitStyle.fontFamily,
               fontWeight: textUnitStyle.bold ? 'bold' : 'normal',
@@ -83,7 +149,9 @@ class ThreatWarning extends Component {
               left: offsetUnit.horizontal + 'px',
             }}>{unitValue}</div>
             <div className='title' style={{
-              color: textTitleStyle.color,
+              color: componentThemeConfig
+              ? componentThemeConfig.textColor
+              : textTitleStyle.themeTextColor,
               fontSize: textTitleStyle.fontSize,
               fontFamily: textTitleStyle.fontFamily,
               fontWeight: textTitleStyle.bold ? 'bold' : 'normal',
