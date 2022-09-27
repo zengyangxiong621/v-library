@@ -483,7 +483,7 @@ const NormalTable=(props)=>{
               }
             }
             if(item.isFilter){
-              filterConfig=getColumnSearchProps(item.fieldName,item.displayName)
+              filterConfig=getColumnSearchProps(mapField,item.displayName)
             }
             return (
               <Column
