@@ -648,6 +648,7 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
                               onClick={handleClick}
                               onMouseEnter={handleMouseEnter}
                               onMouseLeave={handleMouseLeave}
+                              cRef={componentRef}
                               {...props}
                             >
                             </Tab>
