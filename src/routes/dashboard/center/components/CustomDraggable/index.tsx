@@ -31,9 +31,10 @@ import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
 
 // import CardFlipper1 from '@/customComponents/assist/CardFlipper_1'
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
-import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.2";
-import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.4";
-import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.1";
+import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
+import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
+import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
+
 import Cascader from "@/customComponents/assist/cascader/v1.1.0";
 
 
