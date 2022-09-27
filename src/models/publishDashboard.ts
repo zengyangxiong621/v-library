@@ -162,10 +162,7 @@ export default {
         ));
         yield yield put({
           type: "getComponentsData",
-          payload: {
-            components,
-            pass
-          },
+          payload: components,
         });
         const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
@@ -189,9 +186,10 @@ export default {
       }
     },
     *getComponentsData({ payload }: any, { call, put, select }: any): any {
-      const {components, pass} = payload;
+      const components = payload;
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
       const { dashboardId, componentData, callbackArgs } = publishDashboard
+      const pass = localStorage.getItem(dashboardId)
       const func = async (component: any) => {
         try {
           const data = await http({
@@ -217,7 +215,7 @@ export default {
         }
         return componentData[component.id];
       };
-      yield Promise.all(components.map((item: any) => func(item)));
+      yield Promise.all((components || []).map((item: any) => func(item)));
       // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
       yield put({
         type: "save",

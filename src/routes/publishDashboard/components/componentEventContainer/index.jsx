@@ -203,8 +203,8 @@ const ComponentEventContainer = ({publishDashboard, dispatch, events = [], id = 
         }
       })
     })
-    console.log('activeIds1', activeIds)
-    console.log('temp', temp)
+    // console.log('activeIds1', activeIds)
+    // console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(publishDashboard.components.find(item => item.id === id)), [])

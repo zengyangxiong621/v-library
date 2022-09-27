@@ -204,8 +204,8 @@ const ComponentEventContainer = ({bar, dispatch, events = [], id = 0, scale=1, .
         }
       })
     })
-    console.log('activeIds1', activeIds)
-    console.log('temp', temp)
+    // console.log('activeIds1', activeIds)
+    // console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce((pre, id) => pre.concat(bar.components.find(item => item.id === id)), [])

@@ -22,7 +22,7 @@ function GetQueryString(name:any) {
 }
 
 const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
-  console.log('publishDashboard.dashboardId1', publishDashboard.dashboardId)
+  // console.log('publishDashboard.dashboardId1', publishDashboard.dashboardId)
 
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(true)
