@@ -14,8 +14,8 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/index'
-import Counter from '@/customComponents/assist/counter2/v1.0.5'
-import { connect } from "dva"
+import Counter from  '@/customComponents/assist/counter2/v1.0.6'
+import {connect} from "dva"
 
 // import './index.css'
 import { cloneDeep } from 'lodash'
