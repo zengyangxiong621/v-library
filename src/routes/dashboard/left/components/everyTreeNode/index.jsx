@@ -151,7 +151,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   const isSelected = bar.key.includes(id)
 
   // 左侧图层前组件缩略图小图标
-  const { moduleType, moduleName, moduleVersion } = bar.components.find(item => item.id === id) || {}
+  const { moduleType, moduleName, moduleVersion } = bar.fullAmountComponents.find(item => item.id === id) || {}
   const imgSuffixMap = {
     hydrograph: 'gif',
   }

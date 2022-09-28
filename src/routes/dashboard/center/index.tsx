@@ -37,7 +37,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     layersReverse(layers)
     setLayers(layers)
     setComponents(bar.fullAmountComponents)
-    setPanels(bar.panels)
+    setPanels(bar.fullAmountPanels)
   }, [bar.layers])
 
   const supportLinesRef = bar.supportLinesRef

@@ -20,7 +20,7 @@ const RulerLines = ({ bar, dispatch }) => {
     }
     if (line.direction === "vertical") {
       // 横
-      if (event.clientY < document.querySelector(".Header-wrap").getBoundingClientRect().height + 22) {
+      if (event.clientY < document.querySelector(".header-wrap").getBoundingClientRect().height + 22) {
         bar.rulerLines.splice(index, 1);
         dispatch({
           type: "bar/save",

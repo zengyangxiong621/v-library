@@ -112,7 +112,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   }, 300)
 
   const handleEditDashboard = () => {
-    const panel = bar.panels.find((panel) => panel.id === panelConfig.id)
+    const panel = bar.fullAmountPanels.find((panel) => panel.id === panelConfig.id)
     history.push(`/dashboard/${bar.dashboardId}/panel-${panel.id}/state-${panel.states[0].id}`)
     dispatch({
       type: 'bar/save',

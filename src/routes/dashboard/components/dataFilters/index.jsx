@@ -57,7 +57,6 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     if (props.visible) {
-      console.log('bar.components---------', bar.fullAmountComponents)
       const dataFiltersTmp = cloneDeep(bar.componentFilters)
       dataFiltersTmp.forEach(item => {
         item.isEditName = false

@@ -98,8 +98,6 @@ const CustomDraggable
     components,
     panels
   }: { bar: any, dispatch: any, layers: Array<ILayerGroup | ILayerComponent>, mouse: IMouse | 0, history: any, components: Array<IComponent>, panels: Array<IPanel> }) => {
-  console.log('components', components)
-  console.log('layers', layers)
     const callbackParamsList = bar.callbackParamsList;
     const callbackArgs = bar.callbackArgs;
     const scaleDragData = bar.scaleDragData;
@@ -519,15 +517,6 @@ const CustomDraggable
           });
           if (panel.states[0]?.id) {
             history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
-/*            dispatch({
-              type: "bar/getPanelDetails"
-            });
-            dispatch({
-              type: "bar/selectPanelState",
-              payload: {
-                stateId: panel.states[0].id
-              }
-            });*/
           } else {
             history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}`);
           }
@@ -586,15 +575,6 @@ const CustomDraggable
             }
           });
           history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
-/*          dispatch({
-            type: "bar/getPanelDetails"
-          });
-          dispatch({
-            type: "bar/selectPanelState",
-            payload: {
-              stateId: panel.states[0].id
-            }
-          });*/
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({

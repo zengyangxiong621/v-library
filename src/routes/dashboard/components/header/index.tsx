@@ -31,36 +31,16 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   // 返回首页
   const toBack = () => {
-    history.back();
+    if (bar.panelId) {
+      // history.push(`/dashboard/${bar.dashboardId}`);
+      history.back()
+    }
+    if (!bar.panelId && bar.dashboardId) {
+      history.push(`/dashboard-manage`);
+    }
     // 暂时在这里清空localStorage
     localStorage.removeItem("allDrillDownPathReflect");
     localStorage.removeItem("allHasParentReflect");
-    // dispatch({
-    //   type: 'bar/save',
-    //   payload: {
-    //     isPanel: false,
-    //     stateId: null,
-    //     panelId: null,
-    //     panels: [],
-    //     panelStatesList: [],
-    //     key: [bar.dashboardId],
-    //     layers: [],
-    //     scaleDragData: {
-    //       position:{
-    //         x: 0,
-    //         y:0
-    //       },
-    //       style: {
-    //         width: 0,
-    //         height: 0,
-    //         display: 'none'
-    //       }
-    //     }
-    //   }
-    // })
-    // dispatch({
-    //   type: 'bar/getDashboardDetails'
-    // })
   };
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {
@@ -473,7 +453,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   };
 
   return (
-    <div className='Header-wrap'>
+    <div className='header-wrap'>
       <div className='left'>
         <IconFont type='icon-fanhui' className='left-icon'
           onClick={() => toBack()} />
@@ -499,7 +479,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
             return (
               <div key={index}>
                 {
-                  item.icon === "line" ? <div className='line'></div>
+                  item.icon === "line" ? <div className="line"/>
                     :
                     <NavigationItem getActiveIcon={getActiveIcon}
                       data={item} activeIcon={activeIcon} isResetActiveIcon={isResetActiveIcon} />
