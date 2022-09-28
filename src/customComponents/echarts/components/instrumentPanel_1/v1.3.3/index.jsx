@@ -25,6 +25,7 @@ const InstrumentPanel = (props) => {
     value: numberValue
   }]
 
+  // 主题颜色配置
   const componentThemeConfig = props.themeConfig
   const replaceThemeColor = (arr, colorIndex = 0) => {
     arr.forEach((item) => {
