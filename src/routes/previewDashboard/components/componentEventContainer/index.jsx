@@ -336,6 +336,8 @@ const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id =
         }
       })
     })
+    // console.log('activeIds1', activeIds)
+    // console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce(

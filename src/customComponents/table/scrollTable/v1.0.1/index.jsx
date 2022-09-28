@@ -25,6 +25,7 @@ const ScrollTable = (props) => {
   //   comData = props.comData || ComponentDefaultConfig.staticData.data
   // }
   const comData = props.comData || [{}]
+  // console.log('comData', comData)
   const scale = props.scale
   const [state, setState] = useState({
     mappingConfig: [],
