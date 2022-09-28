@@ -34,7 +34,7 @@ import {
   ILayerPanel,
   IPanel,
   IPanelStateGroup,
-} from "../routes/dashboard/center/components/CustomDraggable/type";
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
 
 import {
   cancelGroup,
