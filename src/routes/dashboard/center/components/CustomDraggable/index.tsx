@@ -1200,6 +1200,8 @@ const CustomDraggable
                                                                       ></InstrumentPanel4> :
                                                                       layer.moduleName === "normalTable" ?
                                                                         <NormalTable
+                                                                          themeConfig={bar.componentThemeConfig}
+                                                                          onThemeChange={onThemeChange}
                                                                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                           componentConfig={component}
                                                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
