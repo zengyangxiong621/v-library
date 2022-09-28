@@ -34,6 +34,10 @@
   border-radius: var(--borderHoverRadius) !important;
 }
 
+.component-select .ant-select-arrow {
+  color: var(--inputColor);
+}
+
 .component-select.ant-select-focused .ant-select-selector {
   border-color: var(--borderFocusColor) !important;
   box-shadow: unset;
