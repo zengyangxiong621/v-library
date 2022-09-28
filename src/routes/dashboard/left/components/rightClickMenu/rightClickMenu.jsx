@@ -80,7 +80,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
         break;
       case 'copy':
         customPayload = {
-          dashboardId: bar.dashboardId,
+          dashboardId: bar.stateId || bar.dashboardId,
           children: [],
           targetDashboardId: bar.dashboardId,
           insertId: bar.key[0],

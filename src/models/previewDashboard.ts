@@ -20,7 +20,6 @@ import {
   duplicateDashboardConfig, deepForEachBeforeCallBack,
 } from "../utils"
 import { IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
-import { log } from "util"
 export default {
   namespace: "previewDashboard",
   state: JSON.parse(JSON.stringify(defaultData)),
