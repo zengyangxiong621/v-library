@@ -572,10 +572,10 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     return array;
   }
 
-  const onSortEnd = async ( item, key ) => {
-    if(key === 0) return
+  const onSortEnd = async (item, key) => {
+    if (key === 0) return
     const all = [...filters]
-    const newFifters = arrayMove(all, key, key-1)
+    const newFifters = arrayMove(all, key, key - 1)
     setFilters(newFifters)
     const comFilters = newFifters.map(item => {
       return {
@@ -600,11 +600,11 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     })
   };
 
-  const FilterItem = (item,key) => (
+  const FilterItem = (item, key) => (
     <li className="cus-fifter-sort-item" key={item.id}>
       {!item.isNewAdd ?
         <React.Fragment>
-          <span className={`${key===0 ? 'disable-span' : ''} cus-fifter-sort-dot`}  title="上移" onClick={() =>onSortEnd(item,key)}>
+          <span className={`${key === 0 ? 'disable-span' : ''} cus-fifter-sort-dot`} title="上移" onClick={() => onSortEnd(item, key)}>
             <IconFont
               type='icon-shangyi'
               style={{
@@ -653,7 +653,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             </div>
             <div className="body">
               <div className="code-editor">
-                <div className="cus-code">{`function filter(data,callbackArgs){`}</div>
+                <div className="cus-code">{`function filter(data,callbackArgs,crossCallback){`}</div>
                 <div className="code-wraper">
                   <CodeEditor value={item.content} language="javascript" onChange={(e) => codeChange(e, item)}></CodeEditor>
                 </div>
@@ -702,11 +702,11 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         (filters.length || filterOfAdd) ?
           <ul className="cus-sort-wraper">
             {filters.map((item, index) => (
-              FilterItem(item,index)
+              FilterItem(item, index)
             ))}
             {
               filterOfAdd ?
-                FilterItem(filterOfAdd,'isAdd') : null
+                FilterItem(filterOfAdd, 'isAdd') : null
             }
           </ul> : null
       }

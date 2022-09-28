@@ -1,6 +1,6 @@
 import RemoteBaseComponent from "@/components/RemoteBaseComponent"
 import { getFields } from "@/utils/data"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react";
 import TimeSelect from "@/customComponents/interactive/timeSelect"
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2"
 import Bar from "@/customComponents/echarts/components/bar/index"
@@ -33,26 +33,65 @@ import Cascader from "@/customComponents/assist/cascader/v1.1.0"
 import Timeline from "@/customComponents/assist/timeline/v1.1.6"
 import ErrorCatch from "react-error-catch"
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender"
+import useWebsocket from '@/utils/useWebsocket'
 
-const ComponentEventContainer = ({
-  previewDashboard,
-  dispatch,
-  events = [],
-  id = 0,
-  scale = 1,
-  getDrillDownData,
-  ...props
-}) => {
+import { http } from '@/services/request'
+
+
+const ComponentEventContainer = ({ previewDashboard, dispatch, events = [], id = 0, scale = 1, getDrillDownData, ...props }) => {
   const callbackArgs = previewDashboard.callbackArgs
   const callbackParamsList = previewDashboard.callbackParamsList
   const { componentConfig } = props
+  const { websocketConfig } = componentConfig
+  // 拿到每个组件的websocketConfig，判断有无，则批量发起请求
+  // 拿到type 0: 需sendMessage;  1: setSendData
+  const { dashboardId } = componentConfig
   const [animationConfig, setAnimationConfig] = useState({
     transition: "transform 600ms ease 0s",
   })
   const componentRef = useRef(null)
+  const timesRef = useRef(0)
+  const [times, setTimes] = useState(0)
+  const [sendData, setSendData] = useState('')
   const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 })
   const opacityTimeIds = useRef([])
   const [clickTimes, setClickTimes] = useState(0)
+  const [websocketObj, setwebsocketObj] = useState({});
+
+  // 跨屏
+  console.log(websocketConfig, '--------websocketConfig');
+  // 组件有关联过websocket，全部都发起连接
+  if (websocketConfig.length > 0) {
+    websocketConfig.map(item => {
+      websocketObj[item.id] = useWebsocket({ url: item.websocketUrl })
+    })
+  }
+
+  // 添加websocket组件关联
+  // const addWebsocket = async () => {
+  //   if(componentConfig.moduleName === 'tab'){
+  //     const data = await http({
+  //       method: 'post',
+  //       url: '/visual/websocket-module/add',
+  //       body: {
+  //         websocketUrl: '/visual/webSocket/shareParam/test1',
+  //         moduleId: componentConfig.id, // 组件ID
+  //         type: 1, // 0-发送方  1-接收方
+  //         dashboardId: dashboardId, // 大屏ID
+  //       }
+  //     })
+  //     console.log(data,'-----------data'); // 报错 data返回null
+  //     // if (data) {
+  //     //     webSocketInit();
+  //     // }
+  //   }
+  // }
+  // useEffect(() => {
+  //   addWebsocket();
+  // },[])
+
+
+
   // 点击
   const handleClick = debounce((e, data) => {
     const clickEvents = events.filter((item) => item.trigger === "click")
@@ -153,8 +192,8 @@ const ComponentEventContainer = ({
       if (!isAllowAction) {
         return
       }
-      console.log("item", item)
-      item.actions.forEach((action) => {
+      console.log('item', item)
+      item.actions.forEach(action => {
         const animation = action.animation
         const delay = animation.delay
         setTimeout(() => {
@@ -194,9 +233,59 @@ const ComponentEventContainer = ({
     }
     return [...map.values()]
   }
+
+  let message = Object.keys(websocketObj).reduce((pre, cur) => {
+    return {
+      ...pre,
+      [cur]: websocketObj[cur]?.receiveData || ''
+    }
+  }, {})
+
+  // 跨屏 订阅消息处理
+  for (const key in message) {
+    if (Object.hasOwnProperty.call(message, key)) {
+      const element = message[key];
+      useEffect(() => {
+        console.log(element, 'element-----------');
+        if (element) {
+          componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(JSON.parse(element || ''))
+        }
+      }, [element])
+    }
+  }
+
+  // 拿到订阅消息的数据
+  // const message = JSON.parse(websocketObj[item.id].receiveData)
+  // console.log('message', message)
+  // componentRef?.current?.handleEvent && componentRef?.current?.handleEvent(message)
+  // 走过滤器则需添加
+  // let activeId = componentConfig.id;
+  // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+  //  // 重新获取部分组件（绑定数据源的组件列表）的数据
+  // dispatch({
+  //   type: 'publishDashboard/getComponentsData',
+  //   payload: activeComponents
+  // })      
   const handleValueChange = debounce((data) => {
     // 下钻流程
     getDrillDownData(data)
+
+    console.log(websocketConfig, 'websocketConfig');
+    // 跨屏  建立websocket连接，发送数据
+    // TODO 点击组件发出什么就先直接传什么
+    // if (readyState.key === 1 && props.componentConfig.moduleName === 'rankingBar'){
+    //   console.log('rankingBar');
+    // setSendData(data);
+    // }
+    // websocketConfig 组件内有消息且type为 0时发送
+    if (websocketConfig.length > 0) {
+      websocketConfig.map(item => {
+        if (item.type === 0) {
+          websocketObj[item.id].sendMessage(data);
+        }
+      })
+    }
+
     const componentId = props.componentConfig.id
     const component = previewDashboard.fullAmountComponents.find((item) => item.id === componentId)
     const compCallbackArgs =
@@ -293,15 +382,9 @@ const ComponentEventContainer = ({
     customEventsFunction(dataChangeEvents, data)
   }, 300)
 
-  const animation = (
-    { duration, timingFunction, type },
-    actionType,
-    dom,
-    actionId,
-    action,
-    componentId
-  ) => {
-    if (["show", "hide"].includes(actionType)) {
+
+  const animation = ({ duration, timingFunction, type }, actionType, dom, actionId, action, componentId) => {
+    if (['show', 'hide'].includes(actionType)) {
       // transform = 'translateY(200px)'
       let translate = {
         x: 0,
@@ -379,8 +462,8 @@ const ComponentEventContainer = ({
   }
 
   const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
-    if (action === "rotate") {
-      console.log("dom", dom)
+    if (action === 'rotate') {
+      console.log('dom', dom)
       const rotateRegX = /rotateX\((.+?)\)/g
       const rotateRegY = /rotateY\((.+?)\)/g
       const rotateRegZ = /rotateZ\((.+?)\)/g
@@ -402,10 +485,12 @@ const ComponentEventContainer = ({
     }
   }
 
-  const showOrHide = (value) => { }
+  const showOrHide = (value) => {
+
+  }
 
   const scaleFunc = ({ origin, x, y }, action, dom) => {
-    if (action === "scale") {
+    if (action === 'scale') {
       const scaleRegX = /scaleX\((.+?)\)/g
       const scaleRegY = /scaleY\((.+?)\)/g
       if (scaleRegX.test(dom.style.transform)) {
@@ -423,7 +508,7 @@ const ComponentEventContainer = ({
   }
 
   const translate = ({ toX, toY }, action, dom) => {
-    if (action === "translate") {
+    if (action === 'translate') {
       const translateReg = /translate3d\((.+?)\)/g
       if (translateReg.test(dom.style.transform)) {
         dom.style.transform = dom.style.transform.replace(
@@ -477,13 +562,11 @@ const ComponentEventContainer = ({
   return (
     <div
       key={id}
-      ref={componentRef}
       className={`single-component event-id-${id}`}
       // onClick={handleClick}
       // onMouseEnter={handleMouseEnter}
       // onMouseLeave={handleMouseLeave}
-      style={{ width: "100%", height: "100%", ...animationConfig, ...opacityStyle }}
-    >
+      style={{ width: '100%', height: '100%', ...animationConfig, ...opacityStyle }}>
       {/*      <RemoteBaseComponent
         {...props}
       ></RemoteBaseComponent>     */}
@@ -494,6 +577,7 @@ const ComponentEventContainer = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           dashboardId={previewDashboard.dashboardId}
+          cRef={componentRef}
           isPreview={true}
           {...props}
         ></Tab>
@@ -504,7 +588,9 @@ const ComponentEventContainer = ({
       ) : props.componentConfig.moduleName === "timeSelect" ? (
         <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
       ) : props.componentConfig.moduleName === 'worldMap' ? (
-        <WorldMap {...props} onChange={handleValueChange}></WorldMap>
+        <WorldMap {...props}></WorldMap>
+      ) : props.componentConfig.moduleName === 'indicatorcard' ? (
+        <IndicatorCard {...props}></IndicatorCard>
       ) : props.componentConfig.moduleName === "timeline" ? (
         <Timeline {...props}></Timeline>
       ) : props.componentConfig.moduleName === "media" ? (
@@ -513,27 +599,53 @@ const ComponentEventContainer = ({
         <NormalTable {...props}></NormalTable>
       ) : props.componentConfig.moduleName === "paginationComp" ? (
         <PaginationComp onChange={handleValueChange} {...props}></PaginationComp>
-      ) : props.componentConfig.moduleName === "flowChart" ? (<FlowChart {...props} onChange={handleValueChange}></FlowChart>
-      ) : props.componentConfig.moduleName === 'pie' ?
-        (<Pie {...props} onChange={handleValueChange}></Pie>)
-        : props.componentConfig.moduleName === "instrumentPanel_1" ? (
-          <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
-        ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
-          <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-        ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-          <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-        ) : props.componentConfig.moduleName === "cascader" ? (
-          <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
-        ) : props.componentConfig.moduleName === "image2" ? (
-          <CusImage onChange={handleValueChange} {...props}></CusImage>
-        ) : props.componentConfig.moduleName === "rankingBar" ? (
-          <RankingBar onChange={handleValueChange} {...props}></RankingBar>
-        ) : props.componentConfig.moduleName === "zebraColumn" ? (
-          <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
-        ) : props.componentConfig.moduleName === "basicBar" ? (
-          <BasicBar onChange={handleValueChange} {...props}></BasicBar>
-        ) : // props.componentConfig.moduleName === 'chinaMap' ?
-          // <ChinaMap
+      ) : props.componentConfig.moduleName === "instrumentPanel_1" ? (
+        <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
+      ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
+        <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
+      ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
+        <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
+      ) : props.componentConfig.moduleName === "cascader" ? (
+        <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
+      ) : props.componentConfig.moduleName === "image2" ? (
+        <CusImage onChange={handleValueChange} {...props}></CusImage>
+      ) : props.componentConfig.moduleName === "rankingBar" ? (
+        <RankingBar onChange={handleValueChange} {...props}></RankingBar>
+      ) : props.componentConfig.moduleName === "zebraColumn" ? (
+        <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
+      ) : props.componentConfig.moduleName === "basicBar" ? (
+        <BasicBar onChange={handleValueChange} {...props}></BasicBar>
+      ) :
+        // props.componentConfig.moduleName === 'chinaMap' ?
+        // <ChinaMap
+        //   onChange={handleValueChange}
+        //   {...props}
+        // >
+        // </ChinaMap>
+        // :
+        props.componentConfig.moduleName === "select2" ? (
+          <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
+        ) : props.componentConfig.moduleName === "bar" ? (
+          <Bar onChange={handleValueChange} {...props}></Bar>
+        ) : props.componentConfig.moduleName === "scrollTable" ? (
+          <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
+        ) : props.componentConfig.moduleName === "tab" ? (
+          <Tab
+            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+            onClick={handleClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            {...props}
+          ></Tab>
+        ) : props.componentConfig.moduleName === "scrollSelect" ? (
+          <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
+        ) : props.componentConfig.moduleName === "timeSelect" ? (
+          <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
+        ) : props.componentConfig.moduleName === "timeline" ? (
+          <Timeline {...props}></Timeline>
+        ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+          // <CardFlipper1
+          //   scale={scale}
           //   onChange={handleValueChange}
           //   {...props}
           // >
@@ -541,6 +653,8 @@ const ComponentEventContainer = ({
           // :
           props.componentConfig.moduleName === "select2" ? (
             <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
+          ) : props.componentConfig.moduleName === "buttonGroup2" ? (
+            <ButtomGroup onChange={handleValueChange} {...props}></ButtomGroup>
           ) : props.componentConfig.moduleName === "bar" ? (
             <Bar onChange={handleValueChange} {...props}></Bar>
           ) : props.componentConfig.moduleName === "scrollTable" ? (
@@ -565,70 +679,40 @@ const ComponentEventContainer = ({
             //   onChange={handleValueChange}
             //   {...props}
             // >
-            // </ChinaMap>
-            // :
-            props.componentConfig.moduleName === "select2" ? (
-              <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
-            ) : props.componentConfig.moduleName === "buttonGroup2" ? (
-              <ButtonGroup onChange={handleValueChange} {...props}></ButtonGroup>
-            ) : props.componentConfig.moduleName === "bar" ? (
-              <Bar onChange={handleValueChange} {...props}></Bar>
-            ) : props.componentConfig.moduleName === "scrollTable" ? (
-              <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-            ) : props.componentConfig.moduleName === "tab" ? (
-              <Tab
-                onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-                onClick={handleClick}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                {...props}
-              ></Tab>
-            ) : props.componentConfig.moduleName === "scrollSelect" ? (
-              <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-            ) : props.componentConfig.moduleName === "timeSelect" ? (
-              <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-            ) : props.componentConfig.moduleName === "timeline" ? (
-              <Timeline {...props}></Timeline>
-            ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
-              // <CardFlipper1
-              //   scale={scale}
-              //   onChange={handleValueChange}
-              //   {...props}
-              // >
-              // </CardFlipper1>
-              // : props.componentConfig.moduleName === 'CardFlipper_2' ?
-              // <CardFlipper2
-              //   scale={scale}
-              //   onChange={handleValueChange}
-              //   {...props}
-              // >
-              // </CardFlipper2>
-              props.componentConfig.moduleName === "instrumentPanel_3" ? (
-                <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-              ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-                <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-              ) : (
-                <ErrorCatch
-                  app={componentConfig.name}
-                  user=""
-                  token=""
-                  max={1}
-                  errorRender={
-                    <RemoteComponentErrorRender
-                      errorComponent={componentConfig.name}
-                    ></RemoteComponentErrorRender>
-                  }
-                  onCatch={(errors) => {
-                    console.log("组件报错信息：", errors, "组件id", componentConfig.id)
-                  }}
-                >
-                  <RemoteBaseComponent
-                    {...props}
-                    scale={scale}
-                    onChange={handleValueChange}
-                  ></RemoteBaseComponent>
-                </ErrorCatch>
-              )}
+            // </CardFlipper1>
+            // : props.componentConfig.moduleName === 'CardFlipper_2' ?
+            // <CardFlipper2
+            //   scale={scale}
+            //   onChange={handleValueChange}
+            //   {...props}
+            // >
+            // </CardFlipper2>
+            props.componentConfig.moduleName === "instrumentPanel_3" ? (
+              <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
+            ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
+              <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
+            ) : (
+              <ErrorCatch
+                app={componentConfig.name}
+                user=""
+                token=""
+                max={1}
+                errorRender={
+                  <RemoteComponentErrorRender
+                    errorComponent={componentConfig.name}
+                  ></RemoteComponentErrorRender>
+                }
+                onCatch={(errors) => {
+                  console.log("组件报错信息：", errors, "组件id", componentConfig.id)
+                }}
+              >
+                <RemoteBaseComponent
+                  {...props}
+                  scale={scale}
+                  onChange={handleValueChange}
+                ></RemoteBaseComponent>
+              </ErrorCatch>
+            )}
     </div>
   )
 }

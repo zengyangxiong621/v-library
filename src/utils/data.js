@@ -10,7 +10,7 @@ import cloneDeep from "lodash/cloneDeep";
  * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns
  */
-const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList, callbackArgs, layer = {}) => {
+const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList, callbackArgs, layer = {}, crossCallback = {}) => {
   try {
     const dataFrom = componentConfig.dataFrom || 0;
     let resData = null;
@@ -24,7 +24,7 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
     if (currentData) {
       // 如果使用数据过滤器，则需要过滤数据
       if (componentConfig.useFilter && componentConfig.filters) {
-        resData = dataFilterHandler(currentData, componentConfig, componentFilters, callbackArgs);
+        resData = dataFilterHandler(currentData, componentConfig, componentFilters, callbackArgs, crossCallback)
       } else {
         resData = currentData;
       }
@@ -44,7 +44,7 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
  * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns 过滤后的数据
  */
-const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs) => {
+const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs, crossCallback={}) => {
   const filters = componentConfig.filters.map(item => {
     const filterDetail = componentFilters.find(jtem => jtem.id === item.id);
     return {
@@ -55,9 +55,9 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
   if (filters.length) {
     try {
       const functions = filters.map(item => {
-        return (new Function("data", "callbackArgs", item.content));
-      });
-      const resultArr = [];
+        return (new Function('data', 'callbackArgs', 'crossCallback', item.content))
+      })
+      const resultArr = []
       functions.forEach((fn, index) => {
         const cbArgs = filters[index].callbackKeys.reduce((pre, item) => {
           return {
@@ -66,9 +66,9 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
           };
         }, {});
         if (index === 0) {
-          resultArr.push(fn(data, cbArgs));
+          resultArr.push(fn(data, cbArgs, crossCallback))
         } else {
-          resultArr.push(fn(resultArr[index - 1], cbArgs));
+          resultArr.push(fn(resultArr[index - 1], cbArgs, crossCallback))
         }
       });
       return resultArr[resultArr.length - 1];

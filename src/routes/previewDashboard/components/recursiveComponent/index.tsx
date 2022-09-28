@@ -12,7 +12,9 @@ const MODULES = "modules";
 const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeBreadcrumbData, changeReflect } = props;
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeBreadcrumbData, changeReflect, crossCallback, sendMessage } = props;
+
+  // console.log('layersArr', layersArr);
 
   return (
     <div className='recursive-component-wrap'>
@@ -84,31 +86,36 @@ const RecursiveComponent = (props: any) => {
                         />
                       </div>
                   ) :
-                  isGroup ?
-                    <div className={`event-id-${layer.id}`}
-                      style={{
-                        opacity: (layer[OPACITY] || 100) / 100
-                      }}
-                    >
-                      {(layer as any)[MODULES]?.length > 0 &&
-                        <div>
-                          <RecursiveComponent
-                            layersArr={layer[MODULES]}
-                            componentLists={componentLists}
-                            previewDashboard={previewDashboard}
-                            dispatch={dispatch}
-                            scaleValue={scaleValue}
-                            panels={panels}
-                          />
-                        </div>
-                      }
-                    </div>
-                    : <>
-                      <div data-id={layer.id} style={{ width: "100%", height: "100%" }}>
-                        <EveryComponent
+                isGroup ?
+                  <div className={`event-id-${layer.id}`}
+                    style={{
+                      opacity: (layer[OPACITY] || 100) / 100
+                    }}
+                  >
+                    {(layer as any)[MODULES]?.length > 0 &&
+                      <div>
+                        <RecursiveComponent
+                          layersArr={layer[MODULES]}
+                          componentLists={componentLists}
+                          previewDashboard={previewDashboard}
+                          dispatch={dispatch}
+                          scaleValue={scaleValue}
+                          panels={panels}
+                          crossCallback={crossCallback}
+                          // sendMessage={sendMessage}
+                        />
+                      </div>
+                    }
+                  </div>
+                  : <>
+                    <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
+                      {
+                        <EveryComponent 
                           key={ind}
                           componentData={targetComponent}
-                          comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer)}
+                          comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer, crossCallback)}
+                          // sendMessage={sendMessage}
+                          // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
                           scaleValue={scaleValue}
                           layerInfo={layer}
                           addDrillDownLevel={addDrillDownLevel}
@@ -116,6 +123,7 @@ const RecursiveComponent = (props: any) => {
                           changeReflect={changeReflect}
                           {...props}
                         />
+                      }
                       </div>
                     </>
               }
