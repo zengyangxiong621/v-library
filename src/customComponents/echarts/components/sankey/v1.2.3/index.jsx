@@ -1,7 +1,6 @@
 import React from 'react';
 import EC from '../../../EC'
 
-import * as echarts from 'echarts';
 import ComponentDefaultConfig from './config'
 
 // 深拷贝
@@ -22,6 +21,7 @@ const deepClone =  (obj) =>  {
   return result
 }
 
+// 随机生成rgb颜色
 function rgb() {
   var r = Math.floor(Math.random() * 256);
   var g = Math.floor(Math.random() * 256);
@@ -31,7 +31,7 @@ function rgb() {
 }
 
 
-const RingRatio = (props) => {
+const Sankey = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
@@ -39,12 +39,13 @@ const RingRatio = (props) => {
   const finalFieldsArr = props.fields || ['nodes','links']
   // 组件静态或者传入组件的数据
   const originData = props.comData || data
-  const componentThemeConfig = props.themeConfig
   // originData中有多项数据，只取第一项
   const firstData = originData[0]
   const nodes = deepClone(firstData[finalFieldsArr[0]])
   const links = deepClone(firstData[finalFieldsArr[1]])
 
+  // 主题颜色配置
+  const componentThemeConfig = props.themeConfig
   const replaceThemeColor = (arr, colorIndex = 0) => {
     arr.forEach((item) => {
       let index = colorIndex || 0
@@ -127,7 +128,7 @@ const RingRatio = (props) => {
     })
     return targetConfig
   }
-  // console.log(getTargetConfig(config));
+
   const {globalStyle,margin,label,linksLineStyle,tooltip,dataSeries} = getTargetConfig(config)
   const {nodeWidth,nodeGap,emphasis,draggable} = globalStyle
   const {left,top,right,bottom} = margin
@@ -141,7 +142,7 @@ const RingRatio = (props) => {
     dataSeriesObj[item.fieldName] = item.barColor
   })
 
-  links.forEach((item,index) => {
+  links.forEach((item) => {
     item.lineStyle = {
       color: !customColorShow ? color : styleColor, // target 或 自定义
       opacity: '0.1', // 0.1
@@ -225,8 +226,8 @@ const RingRatio = (props) => {
 }
 
 export {
-  RingRatio,
+  Sankey,
   ComponentDefaultConfig
 }
 
-export default RingRatio
+export default Sankey
