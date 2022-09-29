@@ -61,7 +61,7 @@ import {
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from "../../../../../constant/home";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
-import TimeSelect from "@/customComponents/interactive/timeSelect/index";
+import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import SelectV2 from '@/customComponents/assist/select/v1.0.3/index'
 import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
