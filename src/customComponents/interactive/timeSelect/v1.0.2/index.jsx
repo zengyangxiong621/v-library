@@ -4,6 +4,7 @@ import { DatePicker } from 'antd'
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 import { styleTransformFunc } from '@/utils'
+import { deepClone } from '../../../../utils'
 // import './index.less'
 const { RangePicker } = DatePicker
 const formatEnum = [
@@ -34,6 +35,10 @@ const TimeSelect = (props) => {
   const [dateValue, setDateValue] = useState(null)
   const [rangeValue, setRangeValue] = useState(null)
   const [isCalendarOpened, setIsCalendarOpened] = useState(false)
+  const [state, setState] = useState({
+    selectBgColor: '#fff',
+    selectBorderColor: '#fff',
+  })
   const dateRef = useRef(null)
   const componentConfig = props.componentConfig
   const { config } = componentConfig
@@ -43,6 +48,7 @@ const TimeSelect = (props) => {
   }]
 
   const _fields = props.fields
+  const themeConfig = props.themeConfig
   const dateData = componentData[0] || {
     'startTime': '',
     'endTime': '',
@@ -56,8 +62,7 @@ const TimeSelect = (props) => {
   const selectorConfig = config.find(item => item.name === 'selector').value
   const selectType = allGlobalConfig.find(item => item.name === 'selectType').value
   const pickerType = allGlobalConfig.find(item => item.name === 'pickerType').value
-  const selectBgColor = selectorConfig.find(item => item.name === 'selectBgColor').value
-  const selectBorderColor = selectorConfig.find(item => item.name === 'selectBorderColor').value
+
   // const calendarConfig = config.find(item => item.name === 'calendarBox').value
   // const calendarBgColor = calendarConfig.find(item => item.name === 'bgColor').value
   const dateFormat = formatEnum.find(item => item.value === allGlobalConfig.find(item => item.name === 'dateFormat').value).name
@@ -97,8 +102,27 @@ const TimeSelect = (props) => {
       setDateValue(startTime ? moment(startTime, dateFormat) : null)
     }
   }, [selectType, startTime, endTime])
+  const selectorLoadFunc = (selectorConfig) => {
+    const selectBgColor = selectorConfig.find(item => item.name === 'selectBgColor').value
+    const selectBorderColor = selectorConfig.find(item => item.name === 'selectBorderColor').value
+    setState({
+      ...state,
+      selectBgColor,
+      selectBorderColor
+    })
+  }
+  useEffect(() => {
+    selectorLoadFunc(selectorConfig)
+  }, [selectorConfig])
 
   useEffect(() => {
+    textStyleLoadFunc(textStyle)
+  }, [textStyle])
+
+  // useEffect(() => {
+  //   console.log('textIndent', textIndent)
+  // }, [textIndent])
+  const textStyleLoadFunc = (textStyle) => {
     const dom = ReactDOM.findDOMNode(dateRef.current)
     const inputDom = dom.querySelectorAll('input')
     const separatorDom = dom.querySelectorAll('.ant-picker-range-separator')
@@ -109,12 +133,7 @@ const TimeSelect = (props) => {
         item.style[key] = textStyle[key]
       })
     })
-  }, [textStyle])
-
-  // useEffect(() => {
-  //   console.log('textIndent', textIndent)
-  // }, [textIndent])
-
+  }
   const onOpenChange = (open) => {
     setTimeout(() => {
       const dom = ReactDOM.findDOMNode(dateRef.current)
@@ -186,6 +205,32 @@ const TimeSelect = (props) => {
     }
   }
 
+  useEffect(() => {
+    console.log('themeConfig', themeConfig)
+    if (themeConfig) {
+
+      const _componentConfig = deepClone(componentConfig)
+      const { config: _config } = _componentConfig
+      const _selectorConfig = _config.find(item => item.name === 'selector').value
+      _selectorConfig.find(item => item.name === 'selectBgColor').value = themeConfig.pureColors[0]
+      _selectorConfig.find(item => item.name === 'selectBorderColor').value = themeConfig.pureColors[1]
+      selectorLoadFunc(_selectorConfig)
+
+      const _textStyleConfig = _selectorConfig.filter((item) => ['textStyle'].includes(item.name))
+      _textStyleConfig.find(item => item.name === "textStyle").value.find(item => item.name === "color").value = themeConfig.pureColors[2]
+      const _textStyle = styleTransformFunc(_textStyleConfig)
+      textStyleLoadFunc(_textStyle)
+
+      props.onThemeChange(_componentConfig)
+
+    } else {
+
+      selectorLoadFunc(selectorConfig)
+      textStyleLoadFunc(textStyle)
+
+    }
+  }, [themeConfig])
+
   return (
     <div
       className="time-select-wrap"
@@ -200,8 +245,8 @@ const TimeSelect = (props) => {
           style={ {
             width: '100%',
             height: '100%',
-            background: selectBgColor,
-            border: `1px solid ${ selectBorderColor }`,
+            background: state.selectBgColor,
+            border: `1px solid ${ state.selectBorderColor }`,
           } }
           placeholder={['开始时间', '结束时间']}
           popupStyle={{transform: `scale(${scale})`, transformOrigin: 'left top'}}
@@ -222,8 +267,8 @@ const TimeSelect = (props) => {
           style={ {
             width: '100%',
             height: '100%',
-            background: selectBgColor,
-            border: `1px solid ${ selectBorderColor }`,
+            background: state.selectBgColor,
+            border: `1px solid ${ state.selectBorderColor }`,
           } }
           showTime={ dateFormat.indexOf('HH:mm:ss') !== -1 }
           // getPopupContainer={ triggerNode => triggerNode.parentNode }
