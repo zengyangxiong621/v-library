@@ -168,19 +168,11 @@ const CustomDraggable
       ev.stopPropagation();
       // console.log('dragging', layer)
       // 向上取整
-      const aroundX = Math.ceil(data.x);
-      const aroundY = Math.ceil(data.y);
+      let aroundX = Math.ceil(data.x);
+      let aroundY = Math.ceil(data.y);
       const xMoveLength = data.x - data.lastX;
       const yMoveLength = data.y - data.lastY;
       bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength);
-      if ((component && bar.dragStatus === "一组件") || bar.dragStatus === "一面板") {
-        // 单个组件/面板移动
-        supportLinesRef.handleSetPosition(aroundX, aroundY);
-      }
-      if (bar.dragStatus === "一分组") {
-        // 小组移动
-        supportLinesRef.handleSetPosition(aroundX, aroundY);
-      }
       if (bar.dragStatus === "多个") {
         const xPositionList: number[] = [];
         const yPositionList: number[] = [];
@@ -218,8 +210,8 @@ const CustomDraggable
         xPositionList.sort((a, b) => a - b);
         yPositionList.sort((a, b) => a - b);
         // console.log('应该处在的位置', { left: xPositionList[0], top: yPositionList[0] })
-        supportLinesRef.handleSetPosition(xPositionList[0], yPositionList[0]);
-
+        aroundX = xPositionList[0]
+        aroundY = yPositionList[0]
         Object.keys(bar.selectedComponentRefs).forEach(key => {
           if (key.indexOf("group") !== -1) {
             delete bar.selectedComponentRefs[key];
@@ -244,6 +236,8 @@ const CustomDraggable
           bar.isSupportMultiple = false;
         }
       }
+      supportLinesRef.handleSetPosition(aroundX, aroundY);
+
     };
     const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
       supportLinesRef.handleSetPosition(0, 0, "none");
