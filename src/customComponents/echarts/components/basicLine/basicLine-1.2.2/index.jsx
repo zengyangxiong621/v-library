@@ -272,11 +272,11 @@ const BasicLine = (props) => {
             {
               offset: 0.1,
               color: componentThemeConfig
-                ? componentThemeConfig.gradientColors[0][0].color : areaStartColor
+                ? componentThemeConfig.gradientColors[0][0].color : areaStartColor || 'rgba(51, 104, 206,0.6)'
             },
             {
               offset: 1,
-              color: areaEndColor
+              color: areaEndColor || 'rgba(180, 21, 177,0.1)'
             }
           ]
         }
