@@ -9,7 +9,7 @@ import { connect } from "dva";
 import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
-import { treeDataReverse, deepClone } from "@/utils/index.js";
+import { layersReverse, deepClone } from "@/utils/index.js";
 import { layersPanelsFlat } from "@/utils";
 
 import { Breadcrumb } from "antd";
@@ -46,7 +46,7 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    treeDataReverse(layers);
+    layersReverse(layers);
     return {
       components,
       layers,
@@ -172,6 +172,7 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
                 width: "100%",
                 height: "100%",
                 display: activeIndex == index ? "block" : "none",
+                // opacity: activeIndex == index ? 1 : 0,
                 transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
               <RecursiveComponent
