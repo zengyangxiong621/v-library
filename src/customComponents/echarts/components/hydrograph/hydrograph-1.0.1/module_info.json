@@ -1,0 +1,10 @@
+{
+	"name":"水位图",
+	"moduleName":"hydrograph",
+	"moduleVersion":"1.0.0",
+	"type": "chart",
+	"subType":"pie",
+	"photoPath":"/chart/hydrograph/1.0.0/thumb-hydrograph.gif",
+	"configUrl":"\\config.js",
+	"author":"chendibo@gridsum.com"
+}

@@ -3,13 +3,13 @@ import React, { useEffect, memo, useState, useCallback } from "react";
 import "./index.less";
 import { useSetState } from "ahooks";
 // import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
-import RecursiveComponent from "@/routes/previewDashboard/components/recursiveComponent";
+import RecursiveComponent from "@/routes/publishDashboard/components/recursiveComponent";
 import { http } from "@/services/request";
 import { connect } from "dva";
 import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
-import { layersReverse, deepClone } from "@/utils/index.js";
+import { treeDataReverse, deepClone } from "@/utils/index.js";
 import { layersPanelsFlat } from "@/utils";
 
 import { Breadcrumb } from "antd";
@@ -18,8 +18,8 @@ interface State {
   states: string[];
   [key: string]: any;
 }
-const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPanel }: any) => {
-  const componentData = previewDashboard.componentData;
+const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPanel }: any) => {
+  const componentData = publishDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id);
   // 获取面板详情接口
   const { states, config } = panel;
@@ -46,7 +46,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    layersReverse(layers);
+    treeDataReverse(layers);
     return {
       components,
       layers,
@@ -75,7 +75,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
         body: {
           moduleId: component.id,
           dataType: component.dataType,
-          callBackParamValues: previewDashboard.callbackArgs,
+          callBackParamValues: publishDashboard.callbackArgs,
         },
       });
 
@@ -157,7 +157,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
           <RecursiveComponent
             isDrillDownPanel={isDrillDownPanel}
             layersArr={state.allData[0].layers}
-            previewDashboard={previewDashboard}
+            publishDashboard={publishDashboard}
             dispatch={dispatch}
             componentLists={state.allData[0].components}
             panels={state.allData[0].panels}
@@ -172,13 +172,12 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
                 width: "100%",
                 height: "100%",
                 display: activeIndex == index ? "block" : "none",
-                // opacity: activeIndex == index ? 1 : 0,
                 transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
               <RecursiveComponent
                 isDrillDownPanel={isDrillDownPanel}
                 layersArr={item.layers}
-                previewDashboard={previewDashboard}
+                publishDashboard={publishDashboard}
                 dispatch={dispatch}
                 componentLists={item.components}
                 panels={item.panels}

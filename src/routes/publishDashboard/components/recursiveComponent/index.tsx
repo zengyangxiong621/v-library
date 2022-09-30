@@ -3,13 +3,14 @@ import React, { memo, useEffect } from "react";
 import EveryComponent from "../everyComponent";
 import ReferencePanel from "@/customComponents/dashboardPublish/referencePanel";
 import DynamicPanel from "@/customComponents/dashboardPublish/dynamicPanel";
+import DrillDownPanel from "@/customComponents/dashboardPublish/drillDownPanel";
 import { getComDataWithFilters } from "@/utils/data";
 
 const MODULES = "modules";
 const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, publishDashboard, dispatch, scaleValue, panels } = props;
+  const { layersArr, componentLists, publishDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeBreadcrumbData } = props;
   return (
     <div className='recursive-component-wrap'>
       {
@@ -33,35 +34,52 @@ const RecursiveComponent = (props: any) => {
             >
               {
                 isPanel ?
-                  (layer.panelType === 0 ?
-                      <div
-                        className="panel-container"
-                        style={{
-                          position: "absolute",
-                          left: targetPanel.config.left + "px",
-                          top: targetPanel.config.top + "px"
-                        }}
-                      >
-                        <DynamicPanel
-                          id={layer.id}
-                          panels={panels}
-                          isDashboard={false}
-                          publishDashboard={publishDashboard}
-                          dispatch={dispatch}
-                        />
-                      </div>:
-                      <div
-                        className="panel-container"
-                      >
-                        <ReferencePanel
-                          id={layer.id}
-                          panels={panels}
-                          isDashboard={false}
-                          publishDashboard={publishDashboard}
-                          dispatch={dispatch}
-                        />
-                      </div>
-                  ) :
+                (layer.panelType === 0 ?
+                  <div
+                    className={`panel-container panel-${layer.id} event-id-${layer.id}`}
+                    style={{
+                      position: "absolute",
+                      left: targetPanel.config.left + "px",
+                      top: targetPanel.config.top + "px"
+                    }}
+                  >
+                    <DynamicPanel
+                      id={layer.id}
+                      panels={panels}
+                      publishDashboard={publishDashboard}
+                      dispatch={dispatch}
+                    />
+                  </div>
+                  : layer.panelType === 1 ?
+                    <div
+                      className={`panel-container panel-${layer.id} event-id-${layer.id}`}
+                    >
+                      <ReferencePanel
+                        id={layer.id}
+                        panels={panels}
+                        publishDashboard={publishDashboard}
+                        dispatch={dispatch}
+                      />
+                    </div>
+                    : <div
+                      className={`panel-container panel-${layer.id} event-id-${layer.id}`}
+                      style={{
+                        position: "absolute",
+                        left: targetPanel.config.left + "px",
+                        top: targetPanel.config.top + "px"
+                      }}
+                    >
+                      <DrillDownPanel
+                        id={layer.id}
+                        panels={panels}
+                        isDrillDownPanel={true}
+                        publishDashboard={publishDashboard}
+                        dispatch={dispatch}
+                        addDrillDownLevel={addDrillDownLevel}
+                        changeBreadcrumbData={changeBreadcrumbData}
+                      />
+                    </div>
+                ):
                 isGroup ?
                   <div className="no-cancel"
                     style={{
@@ -89,6 +107,8 @@ const RecursiveComponent = (props: any) => {
                           comData={getComDataWithFilters(publishDashboard.componentData, targetComponent, publishDashboard.componentFilters, publishDashboard.dataContainerDataList, publishDashboard.dataContainerList, publishDashboard.callbackArgs, layer)}
                           scaleValue={scaleValue}
                           layerInfo={layer}
+                          addDrillDownLevel={addDrillDownLevel}
+                          changeBreadcrumbData={changeBreadcrumbData}
                         />
                       }
                     </div>

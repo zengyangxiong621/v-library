@@ -166,8 +166,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
   }
 
   const handleValueChange = debounce((data) => {
-    console.log('-------------')
-    console.log('数据变化data', data)
     const componentId = props.componentConfig.id
     const component = bar.fullAmountComponents.find(item => item.id === componentId)
     const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs))
