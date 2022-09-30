@@ -29,10 +29,6 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
         resData = currentData;
       }
     }
-    console.log('------------')
-    console.log('layer.name', layer.name)
-    console.log('resDataresDataresDataresData', resData)
-    console.log('------------')
     return resData;
   } catch (e) {
     console.log(`报错图层: ${layer.id}-${layer.name}, 报错原因：1、查无组件Config`, e);

@@ -192,7 +192,7 @@ class WorldMap extends Component {
     // console.log(mainData, '#mainData');
     const { mapMode, displayMode, bgColor, selectColor, pointColor, flyDirection, borderColor, flyColor, iconColor, rippleColor } = mainData
     const originData = comData || staticData.data
-    // 根据传入的fields来映射对应的值 
+    // 根据传入的fields来映射对应的值
     const fields2ValueMap = {}
     const initColumnsName = fields
     fields.forEach((item, index) => {
@@ -436,7 +436,7 @@ class WorldMap extends Component {
     let { mapChart, options, ipOptions } = this.state
     // 组件静态或者传入组件的数据
     const originData = comData || staticData.data
-    // 根据传入的fields来映射对应的值 
+    // 根据传入的fields来映射对应的值
     const fields2ValueMap = {}
     const initColumnsName = fields
     fields.forEach((item, index) => { // 优化
@@ -520,7 +520,19 @@ class WorldMap extends Component {
       width: '100%',
       height: '100%'
     };
-
+    // 从组件配置中获取当前地图的大小后赋值给mapSize
+    // toFix: 从下钻面板中被切换显示时 地图经过一段时间后才由100 *100变为正常大小
+    const { value: dimensionValue } = config.find((item) => item.name === "dimension")
+    if (dimensionValue) {
+      dimensionValue.forEach(({ name, value }) => {
+        if (name === 'width') {
+          mapSize.width = value
+        }
+        if (name === 'height') {
+          mapSize.height = value
+        }
+      })
+    }
 
     return (
       <div
