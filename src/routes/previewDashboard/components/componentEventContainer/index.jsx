@@ -34,6 +34,9 @@ import Timeline from "@/customComponents/assist/timeline/v1.1.7"
 import ErrorCatch from "react-error-catch"
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender"
 
+
+import SwiperText from '@/customComponents/text/swiperText/v1.0.4'
+
 const ComponentEventContainer = ({
   previewDashboard,
   dispatch,
@@ -486,10 +489,10 @@ const ComponentEventContainer = ({
       // onMouseLeave={handleMouseLeave}
       style={{ width: "100%", height: "100%", ...animationConfig, ...opacityStyle }}
     >
-      {/*      <RemoteBaseComponent
-        {...props}
-      ></RemoteBaseComponent>     */}
-      {props.componentConfig.moduleName === "tab" ? (
+      {
+      props.componentConfig.moduleName === 'swiperText' ?
+      <SwiperText {...props}></SwiperText> :
+      props.componentConfig.moduleName === "tab" ? (
         <Tab
           onChange={handleValueChange} // 状态变化，当请求完成/数据变化
           onClick={handleClick}

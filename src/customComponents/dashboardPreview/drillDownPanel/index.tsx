@@ -172,7 +172,6 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
                 width: "100%",
                 height: "100%",
                 display: activeIndex == index ? "block" : "none",
-                // opacity: activeIndex == index ? 1 : 0,
                 transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
               }}>
               <RecursiveComponent
