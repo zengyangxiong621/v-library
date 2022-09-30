@@ -30,7 +30,7 @@ import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPa
 import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5"
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2"
 import Cascader from "@/customComponents/assist/cascader/v1.1.0"
-import Timeline from "@/customComponents/assist/timeline/v1.1.6"
+import Timeline from "@/customComponents/assist/timeline/v1.1.7"
 import ErrorCatch from "react-error-catch"
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender"
 
