@@ -264,7 +264,7 @@ const AppCard = (props: any) => {
                   />
                 </Tooltip>
               }
-              <Tooltip placement="bottom" title={`${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length ? "已被画布引用，不允许删除" : "删除"}`}>
+              <Tooltip placement="bottom" title={`${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length ? `当前素材被 ${props.appName.join('、')} 应用使用，不能进行删除操作` : "删除"}`}>
                 <IconFont
                   style={{ fontSize: "16px" }}
                   onClick={deleteApp}
