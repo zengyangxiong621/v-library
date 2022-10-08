@@ -17,7 +17,7 @@ const { Option } = Select;
 
 
 const DataSource = (props: any) => {
-  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
   const [inputValue, setInputValue] = useState("");
   const [dataSourceType, setDataSourceType] = useState<any>(null);
@@ -36,6 +36,8 @@ const DataSource = (props: any) => {
   const [previewRecord, setPreviewRecord] = useState({ type: "", id: "" });
   const [tableLoading, setTableLoading] = useState(false);
 
+  // 根据屏幕大小来决定表格的高度
+  const [tableHeight, setTableHeight] = useState<any>(0)
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
   const resetTableInfo = (data: any) => {
@@ -66,12 +68,12 @@ const DataSource = (props: any) => {
         method: "post",
         body: differentParams
       });
-      if(data){
+      if (data) {
         await resetTableInfo(data);
       }
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setTableLoading(false);
     }
   };
@@ -86,10 +88,24 @@ const DataSource = (props: any) => {
     setDataSourceType(dataSourceType);
   }, [dataSourceType]);
 
+  // 根据屏幕大小来决定表格的高度
+  useEffect(() => {
+    const resizeFn = () => {
+      const bodyHeight = document.body.clientHeight;
+      // 280 是页面中除了表格滚动区域外 其它元素高度的总和
+      const restHeight = bodyHeight - 280
+      setTableHeight(restHeight);
+    }
+    // 进入页面先执行一次
+    resizeFn()
+    window.addEventListener('resize', resizeFn)
+    return () => window.removeEventListener('resize', resizeFn)
+  }, [])
+
   // 下拉框选择
   const selectChange = (value: any) => {
     // 全部类型 的  value为'', 传给后端需要转换一遍
-    if(value === "") value = null;
+    if (value === "") value = null;
     setDataSourceType(value);
   };
   // 按类型搜索
@@ -344,7 +360,8 @@ const DataSource = (props: any) => {
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: "53vh" }}
+            // scroll={{ y: "53vh" }}
+            scroll={{ y: tableHeight }}
             sortDirections={["ascend", "descend"]}
             rowClassName='customRowClass'
             loading={tableLoading}
@@ -364,12 +381,12 @@ const DataSource = (props: any) => {
         {/* 编辑数据源的弹窗 */}
         {
           isShowEditModal && <EditDataSource
-          editDataSourceInfo={editDataSourceInfo}
-          spaceId={spaceId}
-          visible={isShowEditModal}
-          changeShowState={changeShowState}
-          refreshTable={refreshTable}
-        />
+            editDataSourceInfo={editDataSourceInfo}
+            spaceId={spaceId}
+            visible={isShowEditModal}
+            changeShowState={changeShowState}
+            refreshTable={refreshTable}
+          />
         }
         {
           ["EXCEL", "CSV"].includes(previewRecord.type) ?
