@@ -584,6 +584,19 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
                               disabled={true}
                               maxLength={20}
                             />
+                            <Paragraph
+                              copyable={{
+                                text: `${jmfxValue}`,
+                                onCopy: () => {
+                                  message.success({ content: "复制密码成功", duration: 1 });
+                                },
+                                icon: [<Tooltip title="点此复制加密密码" placement="bottom">
+                                  <Button type="primary" style={{ width: "60px", marginLeft: "16px", height: "30px" }} >复制</Button>
+                                </Tooltip>],
+                                tooltips: false
+                              }}
+                              style={{ marginBottom: 0 }}
+                            ></Paragraph>
                           </div>
                         }
                       </div>
