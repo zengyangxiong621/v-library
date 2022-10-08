@@ -1605,9 +1605,17 @@
       // Find slides currently in view
       if (swiper.params.slidesPerView !== 'auto' && swiper.params.slidesPerView > 1) {
         if (swiper.params.centeredSlides) {
-          swiper.visibleSlides.each(function (index, slide) {
-            activeSlides.push(slide);
-          });
+          // 这里做了改动
+          // 改动前
+          // swiper.visibleSlides.each(function (index, slide) {
+          //   activeSlides.push(slide);
+          // });
+          // 改动后
+          if(swiper.visibleSlides) {
+            swiper.visibleSlides.each(function (index, slide) {
+              activeSlides.push(slide);
+            });
+          }
         } else {
           for (i = 0; i < Math.ceil(swiper.params.slidesPerView); i += 1) {
             var index = swiper.activeIndex + i;

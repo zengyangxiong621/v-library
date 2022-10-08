@@ -26,7 +26,7 @@ const ModuleUpdate = (props: any) => {
 
   useEffect(() => {
     if (visible) {
-      const componentsCopy = deepClone(bar.components);
+      const componentsCopy = deepClone(bar.fullAmountComponents);
       setComponentsCopy(componentsCopy);
     }
   }, [visible]);
@@ -64,7 +64,7 @@ const ModuleUpdate = (props: any) => {
   };
   // 升级所选中的组件
   const updateSelectedModules = async () => {
-    // 从bar.components的副本中拿到当前画布中所有组件的<原始config>并用其id组成映射
+    // 从bar.fullAmountComponents的副本中拿到当前画布中所有组件的<原始config>并用其id组成映射
     const id2configReflect: any = {};
     componentsCopy.forEach(({ id, config }: any) => {
       id2configReflect[id] = config;
@@ -106,8 +106,8 @@ const ModuleUpdate = (props: any) => {
         window.eval(`${await importComponent(item)}`);
         const { ComponentDefaultConfig } = (window as any).VComponents;
         // const currentDefaultConfig = ComponentDefaultConfig
-        const index = bar.components.findIndex((x: any) => x.id === item.id);
-        bar.components.splice(index, 1, { ...ComponentDefaultConfig, id: item.id });
+        const index = bar.fullAmountComponents.findIndex((x: any) => x.id === item.id);
+        bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id: item.id });
       }
       );
     }

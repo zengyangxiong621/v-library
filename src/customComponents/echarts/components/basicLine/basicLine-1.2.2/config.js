@@ -1641,4 +1641,4 @@ const ComponentDefaultConfig = {
   ],
 };
 
-export default ComponentDefaultConfig;
+export {ComponentDefaultConfig}

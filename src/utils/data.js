@@ -212,7 +212,6 @@ const getCallbackParams = (componentCallbackArgs, currnetData) => {
   let comCallbackArgs = JSON.parse(JSON.stringify(filteredParams));
   // 给comCallbackArgs拥有相同变量的去重
   comCallbackArgs = duplicateFn(comCallbackArgs); // 后面覆盖前面
-  console.log("componentCallbackArgs,currnetData", componentCallbackArgs, currnetData);
   componentCallbackArgs.forEach(item => {
     result[item.target] = currnetData[item.origin];
   });

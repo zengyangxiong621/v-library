@@ -1,0 +1,122 @@
+[{
+  "name": "Netflow",
+  "type": "send",
+  "data": {
+    "count": 1,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": false
+}, {
+  "name": "Log",
+  "type": "send",
+  "data": {
+    "count": 0,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": false
+}, {
+  "name": "全包",
+  "type": "send",
+  "data": {
+    "count": 0,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": false
+}, {
+  "name": "Flume",
+  "type": "access",
+  "data": {
+    "count": 1089.62,
+    "count_unit": "万",
+    "rate": 180,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": true
+}, {
+  "name": "Kafka",
+  "type": "access",
+  "data": {
+    "count": 1089.62,
+    "count_unit": "万",
+    "rate": 180,
+    "rate_unit": ""
+  },
+  "alert": true,
+  "line_alert": false
+}, {
+  "name": "Spark",
+  "type": "access",
+  "data": {
+    "count": 1089.62,
+    "count_unit": "万",
+    "rate": 180,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": false
+}, {
+  "name": "Kafka",
+  "type": "forward",
+  "data": {
+    "count": 0,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": true
+}, {
+  "name": "Spark",
+  "type": "forward",
+  "data": {
+    "count": 0,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": false
+}, {
+  "name": "HDFS",
+  "type": "process",
+  "data": {
+    "count": 0,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": true,
+  "line_alert": false
+}, {
+  "name": "Kafka",
+  "type": "process",
+  "data": {
+    "count": 0,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": false
+}, {
+  "name": "ES",
+  "type": "process",
+  "data": {
+    "count": 0,
+    "count_unit": "",
+    "rate": 0,
+    "rate_unit": ""
+  },
+  "alert": false,
+  "line_alert": false
+}]

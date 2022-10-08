@@ -25,29 +25,33 @@ const importComponent = (props: any) => {
    * description: 上传组件
    */
   const handleOk  = async () => {
-    setLoading(true);
-    
-    // const values: any = await addForm.validateFields()
-    if (fileList && fileList.length) { //检验是否有上传文件
-      const formData = new FormData();
-      formData.append("file", fileList[0]["originFileObj"]);
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const data = await http({
-        method: "post",
-        url: "/visual/file/uploadModule",
-        body: formData
-      });
-      if (data) {
-        setLoading(false);
-        changeShowState("add");
-        addForm.resetFields();
-        refreshTable();
+    try {
+      setLoading(true);    
+      // const values: any = await addForm.validateFields()
+      if (fileList && fileList.length) { //检验是否有上传文件
+        const formData = new FormData();
+        formData.append("file", fileList[0]["originFileObj"]);
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const data = await http({
+          method: "post",
+          url: "/visual/file/uploadModule",
+          body: formData
+        });
+        if (data) {
+          setLoading(false);
+          changeShowState("add");
+          addForm.resetFields();
+          refreshTable();
+        }
+      } else {
+          setLoading(false);
+          message.error("上传文件格式错误或未上传文件!");
+          return;
       }
-    } else {
-        setLoading(false);
-        message.error("上传文件格式错误或未上传文件!");
-        return;
+    } catch (error) {
+      setLoading(false);      
     }
+    
   };
   const handleCancel = () => {
     changeShowState("add");

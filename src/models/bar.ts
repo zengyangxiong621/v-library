@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
+import { routerRedux } from 'dva/router';
+
 import {
   calcGroupPosition,
   deepClone,
@@ -32,7 +34,7 @@ import {
   ILayerPanel,
   IPanel,
   IPanelStateGroup,
-} from "../routes/dashboard/center/components/CustomDraggable/type";
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
 
 import {
   cancelGroup,
@@ -53,8 +55,9 @@ import { generateLayers } from "./utils/generateLayers";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
 import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
 import { http } from "../services/request";
-
+import { getDeepPanelAndStatusDetails } from './utils/requestResolve'
 import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
+import dashboard from "./dashboard"
 
 export default {
   namespace: "bar",
@@ -85,7 +88,8 @@ export default {
           dispatch({
             type: "save",
             payload: {
-              treeData: [],
+              layers: [],
+              key: [],
               scaleDragData: {
                 position: {
                   x: 0,
@@ -142,8 +146,10 @@ export default {
       { payload: { dashboardId, isPanel, stateId, panelId }, cb }: any,
       { call, put, select }: any
     ): any {
-      const bar: any = yield select(({ bar }: any) => bar);
-      if (dashboardId !== bar.dashboardId && !bar.isDashboardInit) {
+      let bar: any = yield select(({ bar }: any) => bar);
+      // 未初始化
+      console.log('!bar.isDashboardInit', bar.isDashboardInit)
+      if (!bar.isDashboardInit) {
         // 获取回调参数列表
         const callbackParamsList = yield http({
           url: "/visual/module/callParam/list",
@@ -157,7 +163,7 @@ export default {
           type: "getDataContainerList",
           payload: dashboardId,
         });
-        const bar: any = yield select(({ bar }: any) => bar);
+        bar = yield select(({ bar }: any) => bar);
         bar.dataContainerList.forEach(async (item: any) => {
           let data: any = null;
           item.enable = item.modules.length > 0;
@@ -198,35 +204,89 @@ export default {
             callbackParamsList,
           },
         });
-      }
-      yield put({
-        type: "save",
-        payload: {
-          isPanel,
-          stateId,
-          dashboardId,
-          panelId,
-        },
-      });
-      if (isPanel) {
         yield put({
-          type: "getPanelDetails",
+          type: "save",
+          payload: {
+            isPanel,
+            stateId,
+            dashboardId,
+            panelId,
+            isDashboardInit: true
+          },
         });
-      }
-
-      yield yield put({
-        type: "getDashboardDetails",
-        cb: async (data: any) => {
-          await cb(data);
-        },
-      });
-      if (!bar.isDashboardInit) {
-        yield put({
+        let layers: any[] = []
+        yield yield put({
+          type: "getDashboardDetails",
+          cb: async (data: any) => {
+            layers = data.layers
+            await cb(data);
+          },
+        });
+        yield yield put({
           type: "getFullAmountDashboardDetails",
+          payload: {
+            layers
+          }
         });
-      }
+        bar = yield select(({ bar }: any) => bar);
+        if (!stateId && panelId) {
+          const { states } = bar.fullAmountDashboardDetails.find((item: any) => item.id === panelId)
+          if (states.length > 0) {
+            const stateId = states[0].id
+            yield put(routerRedux.push(`/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`))
+          } else {
+            yield put({
+              type: "save",
+              payload: {
+                layers: [],
+                dashboardName: ''
+              }
+            })
+          }
+        } else if (stateId && panelId) {
+          console.log('到这不')
+          yield put({
+            type: 'selectPanelState',
+            payload: {
+              stateId,
+              panelId
+            }
+          })
+        }
 
-0
+      } else {
+        // 已初始化后，就是判断是不是在同一个 stateId
+        // 1、如果当前面板没有一个状态的时候
+        if (panelId && !stateId) {
+          yield put({
+            type: "save",
+            payload: {
+              layers: [],
+              dashboardName: ''
+            }
+          })
+        }
+        // 2、有面板有状态、状态不一样
+        if (bar.stateId !== stateId && stateId) {
+          yield put({
+            type: 'selectPanelState',
+            payload: {
+              stateId,
+              panelId
+            }
+          })
+        }
+
+        if (dashboardId && !stateId && !panelId) {
+          yield put({
+            type: 'selectDashboard',
+            payload: {
+              dashboardId
+            }
+          })
+        }
+
+      }
     },
     *getPanelDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -239,7 +299,7 @@ export default {
         url: `/visual/panel/detail/${panelId}`,
         method: "get",
       });
-      // const { config, states: panelStatesList } = bar.panels.find((panel: IPanel) => panel.id === panelId)
+      // const { config, states: panelStatesList } = bar.fullAmountPanels.find((panel: IPanel) => panel.id === panelId)
       const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === "recommend");
       recommendConfig.width = config.width;
       recommendConfig.height = config.height;
@@ -287,7 +347,7 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const layers = bar.treeData;
+      const layers = payload.layers;
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
@@ -380,43 +440,43 @@ export default {
           }
         }
       );
+      // 全量组件
       const fullAmountComponents = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
+      yield yield put({
+        type: "getComponentsData",
+        payload: fullAmountComponents,
+      });
+      // 全量面板
+      const fullAmountPanels = bar.fullAmountDashboardDetails.reduce(
+        (pre: Array<any>, cur: any) => pre.concat('type' in cur ? cur : [])
+      , [])
       const panels = bar.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
-      console.log("bar.fullAmountDashboardDetails", bar.fullAmountDashboardDetails);
+
       yield put({
         type: "save",
         payload: {
+          layers,
           fullAmountDashboardDetails: bar.fullAmountDashboardDetails,
           fullAmountLayers,
           panels,
           fullAmountComponents,
           fullAmountDynamicAndDrillDownPanels,
+          fullAmountPanels
         },
       });
     },
     *getDashboardDetails({ cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       let { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
-      const fullAmountDashboardDetails = bar.fullAmountDashboardDetails;
-      if (isPanel) {
-        // 默认路由跳转到当前面板的第一个状态
-        if (!stateId) {
-          stateId = panelStatesList[0].id;
-        }
-        window.history.replaceState(
-          "",
-          "",
-          `/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`
-        );
-      }
+      const fullAmountDashboardDetails = bar.fullAmountDashboardDetails; // 这里是 空数组 []
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http({
-          url: `/visual/application/dashboard/detail/${isPanel ? stateId : dashboardId}`,
+          url: `/visual/application/dashboard/detail/${dashboardId}`,
           method: "get",
         });
         const index = fullAmountDashboardDetails.find((item: any) => item.id === dashboardId);
@@ -439,31 +499,12 @@ export default {
             id: dashboardId,
           });
         }
-        const layerPanels: any = layersPanelsFlat(layers);
-        const getPanelConfigFunc = async (layerPanel: any) => {
-          try {
-            const panelConfig = await http({
-              url: `/visual/panel/detail/${layerPanel.id}`,
-              method: "get",
-            });
-            return panelConfig;
-          } catch (e) {
-            return null;
-          }
-        };
-
-        const panels: Array<IPanel> = yield Promise.all(
-          layerPanels.map((item: any) => getPanelConfigFunc(item))
-        );
         yield (layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
           layer.singleShowLayer = false;
           delete layer.selected;
           delete layer.hover;
         }));
-        yield yield put({
-          type: "getComponentsData",
-          payload: components,
-        });
+
         const bar: any = yield select(({ bar }: any) => bar);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
@@ -472,26 +513,9 @@ export default {
           dashboardConfig
         );
 
-        // const drillDownParentReflect: any =
-        //   JSON.parse((localStorage as any).getItem("allHasParentReflect")) || {};
-        let finalComponents = components;
-        // try {
-        //   finalComponents = components.map((item: any) => {
-        //     const comParentInfo = drillDownParentReflect[item.id];
-        //     if (comParentInfo) {
-        //       item.staticData.data = comParentInfo.parentData;
-        //     }
-        //     return item;
-        //   });
-        // } catch (error) {
-        //   console.log("error", error);
-        // }
         yield put({
           type: "save",
           payload: {
-            treeData: noEmptyGroupLayers,
-            components: finalComponents,
-            panels,
             dashboardId,
             stateId,
             panelId,
@@ -500,7 +524,7 @@ export default {
             fullAmountDashboardDetails,
           },
         });
-        cb({ dashboardConfig: newDashboardConfig, dashboardName });
+        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers, });
       } catch (e) {
         return e;
       }
@@ -520,7 +544,6 @@ export default {
               callBackParamValues: bar.callbackArgs,
             },
           });
-
           if (data) {
             componentData[component.id] = component.dataType !== "static" ? data : data.data;
           } else {
@@ -532,15 +555,7 @@ export default {
         return componentData[component.id];
       };
       yield Promise.all(components.map((item: any) => func(item)));
-      // 设置定时器
-      // components.map((item:any) => {
-      //   // 添加自动更新功能
-      //   if(item.autoUpdate?.isAuto){
-      //    setInterval(() => {
-      //       func(item)
-      //     }, item.autoUpdate.interval*1000)
-      //   }
-      // })
+
       // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
       // const drillDownParentReflect: any = JSON.parse(
       //   (localStorage as any).getItem("allHasParentReflect")
@@ -593,7 +608,7 @@ export default {
     *changeName({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       // 需要改变当前画布中components中此次被重命名组件的name
-      const components = bar.components;
+      const components = bar.fullAmountComponents
       const state = bar.state;
       const { value, id } = payload.configs[0];
       const newComponents = components.map((item: any) => {
@@ -610,10 +625,10 @@ export default {
     },
     *group({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const { treeDataCopy, newLayerId }: any = yield group(bar.treeData, bar.key);
+      const { layersCopy, newLayerId }: any = yield group(bar.layers, bar.key);
       yield put({
         type: "update",
-        payload: treeDataCopy,
+        payload: layersCopy,
       });
       yield put({
         type: "save",
@@ -624,7 +639,7 @@ export default {
     },
     *cancelGroup({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar);
-      const newTree = cancelGroup(bar.treeData, bar.key);
+      const newTree = cancelGroup(bar.layers, bar.key);
       yield put({
         type: "update",
         payload: newTree,
@@ -632,7 +647,7 @@ export default {
     },
     *moveUp({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar);
-      const newTree = moveUp(bar.treeData, bar.key);
+      const newTree = moveUp(bar.layers, bar.key);
       yield put({
         type: "update",
         payload: newTree,
@@ -640,7 +655,7 @@ export default {
     },
     *moveDown({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar);
-      const newTree = moveDown(bar.treeData, bar.key);
+      const newTree = moveDown(bar.layers, bar.key);
       yield put({
         type: "update",
         payload: newTree,
@@ -648,7 +663,7 @@ export default {
     },
     *placedTop({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar);
-      const newTree = placeTop(bar.treeData, bar.key);
+      const newTree = placeTop(bar.layers, bar.key);
       yield put({
         type: "update",
         payload: newTree,
@@ -656,7 +671,7 @@ export default {
     },
     *placedBottom({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar);
-      const newTree = placeBottom(bar.treeData, bar.key);
+      const newTree = placeBottom(bar.layers, bar.key);
       yield put({
         type: "update",
         payload: newTree,
@@ -820,7 +835,7 @@ export default {
       yield put({
         type: "save",
         payload: {
-          treeData: noEmptyGroupLayers,
+          layers: noEmptyGroupLayers,
           fullAmountDashboardDetails,
         },
       });
@@ -884,8 +899,8 @@ export default {
       const insertId =
         state.bar.key.length !== 0
           ? state.bar.key[state.bar.key.length - 1]
-          : state.bar.treeData.length !== 0
-          ? state.bar.treeData[0].id
+          : state.bar.layers.length !== 0
+          ? state.bar.layers[0].id
           : "";
       // 新建的是组件
       const { id, children }: any = yield http({
@@ -916,10 +931,12 @@ export default {
           },
         ],
       });
+      console.log('参数', { ...itemData, id })
       yield put({
         type: "addComponent",
         payload: { final: { ...itemData, id }, insertId },
         fullAmountPayload: "brother",
+        isComponent: true
       });
     },
     *createPanel(
@@ -927,10 +944,10 @@ export default {
       { call, put, select }: any
     ): any {
       const bar: any = yield select((state: any) => state.bar);
-      const { isPanel, stateId, dashboardId, key, treeData } = bar;
+      const { isPanel, stateId, dashboardId, key, layers } = bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
-        key.length !== 0 ? key[key.length - 1] : treeData.length !== 0 ? treeData[0].id : "";
+        key.length !== 0 ? key[key.length - 1] : layers.length !== 0 ? layers[0].id : "";
       const data: IPanel = yield http({
         url: "/visual/panel/add",
         method: "post",
@@ -956,7 +973,15 @@ export default {
           disabled: false,
           panelType,
         };
-        bar.panels.push(data);
+        bar.fullAmountPanels.push(data);
+        // 新建面板后需要更新一下 fullAmountDashboardDetails
+        const fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails([layerPanel], bar.fullAmountDashboardDetails);
+        yield put({
+          type: 'save',
+          payload: {
+            fullAmountDashboardDetails
+          }
+        })
         yield put({
           type: "addComponent",
           payload: { final: { ...layerPanel, id, modules }, insertId },
@@ -1155,35 +1180,43 @@ export default {
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails, panelId, dashboardId } = bar
       const data = yield http({
         url: "/visual/panel/state/create",
         method: "post",
         body: {
-          dashboardId: bar.dashboardId,
-          panelId: bar.panelId,
+          dashboardId: dashboardId,
+          panelId: panelId,
         },
       });
-      if (bar.panelStatesList.length === 0) {
-        yield put({
-          type: "selectPanelState",
-          payload: {
-            stateId: data.id,
-          },
-        });
-      }
+      const { id, name } = data;
+
+      // 更新当前面板的状态列表
+      let newPanelStatesList = bar.panelStatesList.concat({
+          name: data.name,
+          id: data.id,
+        })
+      fullAmountDashboardDetails.find((item: any) => item.id === panelId).states = newPanelStatesList
+
+      // 需要给 fullAmountDashboardDetails 添加当前状态的 详情
+      const stateDetails = yield http({
+        url: `/visual/application/dashboard/detail/${data.id}`,
+        method: 'get',
+      })
+      fullAmountDashboardDetails.push({
+        ...stateDetails,
+        id,
+      })
+
       yield put({
         type: "save",
         payload: {
-          panelStatesList: bar.panelStatesList.concat({
-            name: data.name,
-            id: data.id,
-          }),
+          panelStatesList: newPanelStatesList,
+          fullAmountDashboardDetails
         },
       });
+
       // 将状态添加到全量图层树种 0 - fullAmountLayers，也就是当前面板 panelId 下的 modules中
-      // todo 需要给 fullAmountDashboardDetails 添加当前状态的 详情
-      const { id, name } = data;
-      console.log("insertId: bar.panelId ", bar.panelId);
       yield put({
         type: "addComponent",
         payload: { final: { name, id, modules: [] }, insertId: bar.panelId },
@@ -1206,39 +1239,39 @@ export default {
             stateId,
           },
         });
-        const index = panelStatesList.findIndex(
-          (state: { id: string; name: string }) => state.id === stateId
-        );
-        panelStatesList.splice(index, 1);
-        if (panelStatesList.length > 0) {
-          const toStateId = panelStatesList[0].id;
-          if (toStateId === stateId) {
-            yield put({
-              type: "save",
-              payload: {
-                panelStatesList,
-              },
-            });
+        if (data) {
+          const index = panelStatesList.findIndex(
+            (state: { id: string; name: string }) => state.id === stateId
+          );
+          panelStatesList.splice(index, 1);
+          bar.fullAmountDashboardDetails.find((item: any) => item.id === panelId).states = panelStatesList
+          if (panelStatesList.length > 0) {
+            const toStateId = panelStatesList[0].id;
+            if (toStateId === stateId) {
+              yield put({
+                type: "save",
+                payload: {
+                  panelStatesList,
+                },
+              });
+            } else {
+              yield put({
+                type: 'selectPanelState',
+                payload: {
+                  stateId: toStateId,
+                  panelId,
+                }
+              })
+            }
           } else {
             yield put({
               type: "save",
               payload: {
-                panelStatesList,
-                stateId: toStateId,
+                layers: [],
+                stateId: "",
               },
             });
-            yield put({
-              type: "getDashboardDetails",
-            });
           }
-        } else {
-          yield put({
-            type: "save",
-            payload: {
-              treeData: [],
-              stateId: "",
-            },
-          });
         }
       } catch (err) {
         console.log("err", err);
@@ -1283,41 +1316,52 @@ export default {
       //   }
       // })
     },
-    *selectPanelState({ payload: { stateId } }: any, { call, put, select }: any): any {
+    *selectPanelState({ payload: { stateId, panelId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      if (stateId !== bar.stateId) {
-        yield put({
-          type: "save",
-          payload: {
-            stateId,
-          },
-        });
-        yield put({
-          type: "getDashboardDetails",
-        });
-        yield put({
-          type: "save",
-          payload: {
-            scaleDragData: {
-              position: {
-                x: 0,
-                y: 0,
-              },
-              style: {
-                width: 0,
-                height: 0,
-                display: "none",
-              },
-            },
-            selectedComponentOrGroup: [],
-            selectedComponentIds: [],
-            selectedComponentRefs: {},
-            selectedComponentDOMs: {},
-            selectedComponents: [],
-            key: [stateId],
-          },
-        });
-      }
+      const { fullAmountDashboardDetails } = bar
+      console.log('fullAmountDashboardDetails', fullAmountDashboardDetails)
+      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find((item: any) => item.id === stateId)
+      const { config, states } = fullAmountDashboardDetails.find((item: any) => item.id === panelId)
+      const newDashboardConfig = duplicateDashboardConfig(
+        deepClone(bar.dashboardConfig),
+        dashboardConfig
+      );
+      const recommendConfig = newDashboardConfig.find((item: any) => item.name === "recommend");
+      recommendConfig.width = config.width;
+      recommendConfig.height = config.height;
+      yield put({
+        type: "save",
+        payload: {
+          panelId,
+          stateId,
+          layers,
+          dashboardConfig: newDashboardConfig,
+          dashboardName,
+          panelStatesList: states
+        }
+      })
+    },
+    *selectDashboard({ payload: { dashboardId } }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails } = bar
+      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find((item: any) => item.id === dashboardId)
+      const newDashboardConfig = duplicateDashboardConfig(
+        deepClone(bar.dashboardConfig),
+        dashboardConfig
+      );
+      yield put({
+        type: "save",
+        payload: {
+          layers,
+          dashboardConfig: newDashboardConfig,
+          dashboardName,
+          panelStatesList: [],
+          key: [],
+          isPanel: false,
+          stateId: '',
+          panelId: ''
+        }
+      })
     },
     *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {},
   },
@@ -1349,7 +1393,7 @@ export default {
 
       // 组件解绑数据容器
       componentIds.forEach((id: string) => {
-        const component = state.components.find((item) => item.id === id);
+        const component = state.fullAmountComponents.find((item) => item.id === id);
         const index = component.dataContainers.findIndex((item: any) => item.id === containerId);
         component.dataContainers.splice(index, 1);
       });
@@ -1357,7 +1401,7 @@ export default {
       return {
         ...state,
         dataContainerList: state.dataContainerList,
-        components: state.components,
+        fullAmountComponents: state.fullAmountComponents,
       };
     },
     copyDataContainer(state: IBarState, { payload }: any) {
@@ -1401,7 +1445,7 @@ export default {
         layer.cancel = false;
         // layer.disabled = false
       });
-      return { ...state, treeData: payload };
+      return { ...state, layers: payload };
     },
 
     // 添加新的图层和组件
@@ -1412,18 +1456,18 @@ export default {
       let insertId: string,
         fullInsertId: string,
         newLayers: Array<any> = [];
-      const { treeData } = state;
-      if (payload.insertId && treeData.length) {
+      const { layers } = state;
+      if (payload.insertId && layers.length) {
         insertId = payload.insertId;
         fullInsertId = payload.insertId;
       } else {
-        insertId = treeData.length !== 0 ? treeData[0].id : "";
-        fullInsertId = treeData.length !== 0 ? treeData[0].id : state.stateId ? state.stateId : "";
+        insertId = layers.length !== 0 ? layers[0].id : "";
+        fullInsertId = layers.length !== 0 ? layers[0].id : state.stateId ? state.stateId : "";
       }
       const { modules, ...finalConfig } = payload.final;
       console.log("fullInsertId", fullInsertId);
       console.log("payload", payload);
-      // JSON.stringify(fullAmountPayload) === '{}' 的话，那么就说明是新建面板，新建面板要考虑到状态下是没有组件的
+      // 新建面板要考虑到状态下是没有组件的
       // fullAmountPayload 就是 insertId对应的“组件” 和 被插入的 ”组件“ 的关系
       const newFullAmountLayers = generateLayers(
         state.fullAmountLayers,
@@ -1432,18 +1476,22 @@ export default {
         fullAmountPayload === "children"
       );
       if (isComponent) {
-        newLayers = generateLayers(state.treeData, insertId, finalConfig);
-        return { ...state, treeData: newLayers, fullAmountLayers: newFullAmountLayers };
+        newLayers = generateLayers(deepClone(state.layers), insertId, finalConfig);
+        const currentDetails: any = state.fullAmountDashboardDetails.find((item: any) => item.id === (state.stateId || state.dashboardId))
+        if (currentDetails) {
+          currentDetails.layers = newLayers;
+        }
+        return { ...state, layers: newLayers, fullAmountLayers: newFullAmountLayers };
       }
       return { ...state, fullAmountLayers: newFullAmountLayers };
     },
     // 添加新的图层和组件
     updateComponents(state: IBarState, { payload }: { payload: Array<any> }) {
       if (Array.isArray(payload)) {
-        state.components = state.components.concat(payload);
+        state.fullAmountComponents = state.fullAmountComponents.concat(payload);
       } else {
         const { layers, components, selected }: any = payload;
-        state.components = state.components.concat(components);
+        state.fullAmountComponents = state.fullAmountComponents.concat(components);
         // @Mark 复制完成后需要将源组件的组件数据赋值给新复制出来的组件，即在bar.componentData中存储 {key：新组件id, value：源组件Data}
         // 复制出来的组件的id
         const thisTimeCopyCompIds = components.map((item: any) => {
@@ -1473,7 +1521,7 @@ export default {
     },
     // 添加新的图层和面板
     updatePanels(state: IBarState, { payload }: { payload: Array<any> }) {
-      state.panels = state.panels.concat(payload);
+      state.fullAmountPanels = state.fullAmountPanels.concat(payload);
       return { ...state };
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {
@@ -1487,7 +1535,7 @@ export default {
     setSelectedKeys(state: IBarState, { payload }: any) {
       state.selectedComponentOrGroup = payload
         .reduce((pre: any, cur: string) => {
-          pre.push(findLayerById(state.treeData, cur));
+          pre.push(findLayerById(state.layers, cur));
           return pre;
         }, [])
         .filter((layer: ILayerGroup | ILayerComponent) => !layer?.isLock && layer?.isShow); // 显示且未被锁
@@ -1499,10 +1547,10 @@ export default {
       state.isAreaChoose = state.selectedComponentOrGroup.length > 0;
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       state.selectedComponents = [
-        ...state.components.filter((component) =>
+        ...state.fullAmountComponents.filter((component) =>
           state.selectedComponentIds.includes(component.id)
         ),
-        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
+        ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       state.selectedComponentRefs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
@@ -1568,10 +1616,10 @@ export default {
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       // todo 这里需要添加 panel 的（来自 develop 分支）
       state.selectedComponents = [
-        ...state.components.filter((component) =>
+        ...state.fullAmountComponents.filter((component) =>
           state.selectedComponentIds.includes(component.id)
         ),
-        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
+        ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       console.log("state.selectedComponents", state.selectedComponents);
       cb(state.selectedComponents);
@@ -1591,15 +1639,15 @@ export default {
           status = "分组";
           const positionArr = calcGroupPosition(
             firstLayer[COMPONENTS],
-            state.components,
-            state.panels
+            state.fullAmountComponents,
+            state.fullAmountPanels
           );
           xPositionList = positionArr[0];
           yPositionList = positionArr[1];
         } else {
           // 单个组件
           if ("panelType" in firstLayer) {
-            const panel = state.panels.find((panel: IPanel) => panel.id === firstLayer.id);
+            const panel = state.fullAmountPanels.find((panel: IPanel) => panel.id === firstLayer.id);
             if (panel) {
               const {
                 config: { left, top, width, height },
@@ -1610,7 +1658,7 @@ export default {
               yPositionList.push(top, height);
             }
           } else {
-            const component = state.components.find((component) => component.id === firstLayer.id);
+            const component = state.fullAmountComponents.find((component) => component.id === firstLayer.id);
             const dimensionConfig: any = component.config.find(
               (item: any) => item.name === DIMENSION
             );
@@ -1643,8 +1691,8 @@ export default {
         state.selectedComponentOrGroup.forEach((layer: any) => {
           const positionArr = calcGroupPosition(
             state.selectedComponentOrGroup,
-            state.components,
-            state.panels
+            state.fullAmountComponents,
+            state.fullAmountPanels
           );
           xPositionList = positionArr[0];
           yPositionList = positionArr[1];
@@ -1701,10 +1749,10 @@ export default {
       });
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       state.selectedComponents = [
-        ...state.components.filter((component) =>
+        ...state.fullAmountComponents.filter((component) =>
           state.selectedComponentIds.includes(component.id)
         ),
-        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
+        ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       return { ...state };
     },
@@ -1752,33 +1800,33 @@ export default {
     },
     // 置顶
     frontplacedTop(state: IBarState, { payload }: any) {
-      const newTreeData = placeTop(state.treeData, state.key);
-      return { ...state, treeData: newTreeData };
+      const newTreeData = placeTop(state.layers, state.key);
+      return { ...state, layers: newTreeData };
     },
     // 置底
     frontplaceBottom(state: IBarState, { payload }: any) {
-      const newTreeData = placeBottom(state.treeData, state.key);
-      return { ...state, treeData: newTreeData };
+      const newTreeData = placeBottom(state.layers, state.key);
+      return { ...state, layers: newTreeData };
     },
     // 上移
     frontmoveUp(state: IBarState, { payload }: any) {
-      const newTree = moveUp(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+      const newTree = moveUp(state.layers, state.key);
+      return { ...state, layers: newTree };
     },
     // 下移
     frontmoveDown(state: IBarState, { payload }: any) {
-      const newTree = moveDown(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+      const newTree = moveDown(state.layers, state.key);
+      return { ...state, layers: newTree };
     },
     // 成组
     frontgroup(state: IBarState, { payload }: any) {
-      const { treeDataCopy } = group(state.treeData, state.key);
-      return { ...state, treeData: treeDataCopy };
+      const { treeDataCopy } = group(state.layers, state.key);
+      return { ...state, layers: treeDataCopy };
     },
     // 取消成组
     cancelGroup(state: IBarState, { payload }: any) {
-      const newTree = cancelGroup(state.treeData, state.key);
-      return { ...state, treeData: newTree };
+      const newTree = cancelGroup(state.layers, state.key);
+      return { ...state, layers: newTree };
     },
     // TODO 粘贴
     // paste(state: IBarState, { payload }: any) {
@@ -1786,48 +1834,48 @@ export default {
     // },
     // 锁定
     lock(state: IBarState, { payload }: any) {
-      const newTree = lock(state.treeData, state.key, payload.value);
-      return { ...state, treeData: newTree };
+      const newTree = lock(state.layers, state.key, payload.value);
+      return { ...state, layers: newTree };
     },
     // 删除
     delete(state: IBarState, { payload }: any) {
-      // const newTree = remove(state.treeData, state.key);
+      // const newTree = remove(state.layers, state.key);
       // const hadFilterEmptyGroupTree = filterEmptyGroups(newTree);
-      // return { ...state, treeData: hadFilterEmptyGroupTree };
+      // return { ...state, layers: hadFilterEmptyGroupTree };
 
       // @Mark: 这儿要把state.key(存放当前被选中的图层的数组)重置为空。因为删除之前(比如用的右键选中该图层)会将选中的图层id存入key中，调用接口成功后，图层被删除了，但key中依旧会留存有这个已经被删除的图层的id,如果没有重置key,在“添加组件至画布”这一步中获取insertId处的逻辑会直接将这个已经被删除的图层id作为insertId,从而引发--删除组件后，立即添加组件会导致左侧图层被清空 的bug
-      // return { ...state, treeData: newTree, key: [] };
+      // return { ...state, layers: newTree, key: [] };
       return { ...state, key: [] };
     },
     // 复制
     copy(state: IBarState, { payload }: any) {
-      // const newTree = copy(state.treeData, state.key);
-      // return { ...state, treeData: newTree };
+      // const newTree = copy(state.layers, state.key);
+      // return { ...state, layers: newTree };
       return { ...state };
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
-      const newTree = singleShowLayer(state.treeData, payload.keys, payload.singleShowLayer);
-      return { ...state, treeData: newTree };
+      const newTree = singleShowLayer(state.layers, payload.keys, payload.singleShowLayer);
+      return { ...state, layers: newTree };
     },
     // 隐藏
     frontHidden(state: IBarState, { payload }: any) {
       // 此处只能用payload.key,因为eyes图标在没有任何节点被选中时也要能响应点击
-      const newTree = hidden(state.treeData, payload.key, payload.value);
-      return { ...state, treeData: newTree };
+      const newTree = hidden(state.layers, payload.key, payload.value);
+      return { ...state, layers: newTree };
     },
     // 改变重命名输入框的显示状态
     reName(state: IBarState, { payload }: any) {
-      const newTree = showInput(state.treeData, state.key, payload.value);
-      return { ...state, treeData: newTree };
+      const newTree = showInput(state.layers, state.key, payload.value);
+      return { ...state, layers: newTree };
     },
     // 真正改变名字的地方
     frontchangeName(state: IBarState, { payload }: any) {
-      const newTree = reName(state.treeData, state.key, payload.newName);
-      return { ...state, treeData: newTree };
+      const newTree = reName(state.layers, state.key, payload.newName);
+      return { ...state, layers: newTree };
     },
     mergeComponentLayers(state: IBarState, { payload }: any) {
-      state.componentLayers = mergeComponentLayers(state.components, state.treeData);
+      state.componentLayers = mergeComponentLayers(state.fullAmountComponents, state.layers);
       return { ...state };
     },
     test(state: IBarState, { payload }: any) {
@@ -1837,8 +1885,8 @@ export default {
       return { ...state };
     },
     testDelete(state: IBarState) {
-      state.components.pop();
-      state.treeData.pop();
+      state.fullAmountComponents.pop();
+      state.layers.pop();
       return { ...state };
     },
     save(state: IBarState, { payload }: any) {
@@ -1876,10 +1924,10 @@ export default {
         }
       });
       state.selectedComponents = [
-        ...state.components.filter((component) =>
+        ...state.fullAmountComponents.filter((component) =>
           state.selectedComponentIds.includes(component.id)
         ),
-        ...state.panels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
+        ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       return {
         ...state,
@@ -1896,7 +1944,7 @@ export default {
       // localStorage.removeItem("dblComponentTimes");
       // localStorage.removeItem("currentTimes");
       // state.currentDblTimes = 0;
-      deepForEach(state.treeData, (layer: ILayerGroup | ILayerComponent) => {
+      deepForEach(state.layers, (layer: ILayerGroup | ILayerComponent) => {
         layer.selected = false;
       });
       // 清空 selectedComponentOrGroup、selectedComponentIds、selectedComponents
@@ -1914,8 +1962,8 @@ export default {
     updateContainersEnableAndModules(state: IBarState, { payload }: any) {
       // 更新数据容器的状态、绑定的组件数组
       const enableContainerList: any = [];
-      state.components.forEach((component) => {
-        const layer = findLayerById(state.treeData, component.id);
+      state.fullAmountComponents.forEach((component) => {
+        const layer = findLayerById(state.layers, component.id);
         if (layer) {
           component.dataContainers.forEach((container: any) => {
             enableContainerList.push({
@@ -1946,10 +1994,10 @@ export default {
     },
     setComponentConfig(state: IBarState, { payload }: any) {
       state.componentConfig = payload;
-      const index = state.components.findIndex((item: any) => {
+      const index = state.fullAmountComponents.findIndex((item: any) => {
         return item.id === payload.id;
       });
-      state.components.splice(index, 1, state.componentConfig);
+      state.fullAmountComponents.splice(index, 1, state.componentConfig);
       return { ...state };
     },
     setGroupConfig(state: IBarState, { payload }: any) {
@@ -2383,7 +2431,7 @@ export default {
       };
     },
     updateFullAmountLayers(state: any, { payload }: any) {
-      const { treeData: layers, fullAmountDashboardDetails } = state;
+      const { layers, fullAmountDashboardDetails } = state;
 
       let fullAmountDynamicAndDrillDownPanels: any = fullAmountDashboardDetails.filter(
         (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)

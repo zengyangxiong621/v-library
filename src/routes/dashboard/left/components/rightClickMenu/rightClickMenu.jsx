@@ -16,21 +16,21 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   // 每次渲染右侧菜单，都需要确定此次是锁定还是解锁
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
-    const lockInfo = getFieldStates(bar.treeData, bar.key, 'isLock')
+    const lockInfo = getFieldStates(bar.layers, bar.key, 'isLock')
     const finalLockState = lockInfo.some(item => item === false)
     setIsLock(!finalLockState)
 
     // 判断所选中的各个节点是否是单独显示状态
-    const singleShowLayerInfo = getFieldStates(bar.treeData, bar.key, 'singleShowLayer')
+    const singleShowLayerInfo = getFieldStates(bar.layers, bar.key, 'singleShowLayer')
     const singleShowLayerState = singleShowLayerInfo.some(item => item === false)
     setIsSingleShow(!singleShowLayerState)
 
     // 判断所选中的各个节点是否是显示状态
     // 只要有一个隐藏了就显示
-    const showOrHiddenInfo = getFieldStates(bar.treeData, bar.key, 'isShow')
+    const showOrHiddenInfo = getFieldStates(bar.layers, bar.key, 'isShow')
     const showOrHiddenState = showOrHiddenInfo.some(item => item === false)
     setIsShowOrHidden(!showOrHiddenState)
-  }, [bar.treeData, bar.key])
+  }, [bar.layers, bar.key])
 
   // 后端返回的数据里应该有 show、lock 属性
   // 这里需要拿到 所选中 的treeNode中的lock或者show属性
@@ -80,11 +80,11 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
         break;
       case 'copy':
         customPayload = {
-          dashboardId: bar.dashboardId,
+          dashboardId: bar.stateId || bar.dashboardId,
           children: [],
           targetDashboardId: bar.dashboardId,
           insertId: bar.key[0],
-          originLayers: bar.treeData,
+          originLayers: bar.layers,
           //TODO 改为modules后删除掉这行
           components: [...bar.key],
           // components: [...bar.key],

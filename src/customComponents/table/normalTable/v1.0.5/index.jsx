@@ -50,7 +50,7 @@ const NormalTable=(props)=>{
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
-  const [dataSource, setDataSource] = useState(staticData.data);
+  const [dataSource, setDataSource] = useState([]);
   useEffect(()=>{
     if(comData.length){
       setDataSource(comData)

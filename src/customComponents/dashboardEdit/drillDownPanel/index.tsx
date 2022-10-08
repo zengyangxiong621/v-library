@@ -8,7 +8,7 @@ import * as React from "react";
 import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
-import { treeDataReverse, deepClone } from "@/utils/index.js";
+import { layersReverse, deepClone } from "@/utils/index.js";
 import { layersPanelsFlat } from "@/utils";
 interface State {
   states: string[];
@@ -32,14 +32,17 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
     isLoading: false,
   });
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
-    });
+    const { components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
-    await Promise.all(components.map((item: any) => getComponentData(item)));
-    treeDataReverse(layers);
+    // await Promise.all(components.map((item: any) => getComponentData(item)));
+    dispatch({
+      type: 'save',
+      payload: {
+        componentData
+      }
+    })
+    layersReverse(layers);
     return {
       components,
       layers,
@@ -49,12 +52,9 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
       panels
     };
   };
-  const getStateDetails = async (layerPanel: any) => {
+  const getStateDetails = async ({ id }: any) => {
     try {
-      const panelConfig = await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
-        method: "get",
-      });
+      const panelConfig = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
       return panelConfig;
     } catch (e) {
       return null;

@@ -1,12 +1,12 @@
 
-import ComponentDefaultConfig from './config'
+import { ComponentDefaultConfig } from './config'
 import * as echarts from 'echarts'
 import EC from '@/customComponents/echarts/EC'
 import React, { memo } from 'react'
 
 const BasicLine = (props) => {
-  // const componentConfig = props.componentConfig || ComponentDefaultConfig
-  const componentConfig = ComponentDefaultConfig
+  const componentConfig = props.componentConfig || ComponentDefaultConfig
+  // const componentConfig = ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
   const componentData = props.comData || data // 过滤后的数据
@@ -34,8 +34,66 @@ const BasicLine = (props) => {
     }
   })
 
-
+  /***********************主题切换************************/
   const componentThemeConfig = props.themeConfig
+  // 如果 选择的了 主题风格, 着手替换config中的颜色
+  const replaceThemeColor = (arr, colorIndex = 0) => {
+    arr.forEach((item) => {
+      let index = colorIndex || 0
+      let { name, value, options, flag, type, key } = item
+      if (item.hasOwnProperty('value')) {
+        // 对 系列一栏 做特殊处理
+        if (flag === 'specialItem') {
+          try {
+            index = key ? parseInt(key) - 1 : 0
+          } catch (e) {
+            index = 0
+          }
+        }
+        if (Array.isArray(value)) {
+          replaceThemeColor(value, index)
+        } else {
+          if (type === 'color') {
+            switch (name) {
+              case 'themePureColor':
+                item.value = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                item.value = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                item.value = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                item.value = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      } else if (Array.isArray(options) && options.length) {
+        replaceThemeColor(options, index)
+      }
+    })
+  }
+  if (componentThemeConfig) {
+    const configOfTheme = JSON.parse(JSON.stringify(config))
+    replaceThemeColor(configOfTheme)
+    props.onThemeChange({
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
+      config: configOfTheme
+    })
+  }
   /**
    ** description: 获取组件右侧可供用户操作的配置项
    */
@@ -51,35 +109,7 @@ const BasicLine = (props) => {
         if (Array.isArray(value)) {
           targetConfig[name] = getTargetConfig(value)
         } else {
-          if (type === 'color' && componentThemeConfig) {
-            switch (name) {
-              case 'themePureColor':
-                targetConfig[name] = componentThemeConfig.pureColors[0]
-                break;
-              case 'themeGradientColorStart':
-                targetConfig[name] = componentThemeConfig.gradientColors[0].find(item => item.offset === 0).color
-                break;
-              case 'themeGradientColorEnd':
-                targetConfig[name] = componentThemeConfig.gradientColors[1].find(item => item.offset === 100).color
-                break;
-              case 'themeTextColor':
-                targetConfig[name] = componentThemeConfig.textColor
-                break;
-              case 'themeAssistColor':
-                targetConfig[name] = componentThemeConfig.assistColor
-                break;
-              case 'themeGridColor':
-                targetConfig[name] = componentThemeConfig.gridColor
-                break;
-              default:
-                // 有些 配置项的 name 并不需要随着主题色切换而切换
-                targetConfig[name] = value
-                break;
-            }
-          } else {
-            targetConfig[name] = value
-          }
-          // targetConfig[name] = value
+          targetConfig[name] = value
         }
       } else if (Array.isArray(options) && options.length) {
         targetConfig[name] = getTargetConfig(options)
@@ -89,25 +119,7 @@ const BasicLine = (props) => {
   }
   // config中位置尺寸这项不需要,提取出来
   const hadFilterArr = config.filter((item) => item.name !== 'dimension')
-  const targetChartConfig = getTargetConfig(hadFilterArr)
-  const { allSettings } = targetChartConfig
-
-  /***********************主题切换************************/
-
-  // 如果 选择的了 主题风格, 着手替换config中的颜色
-  if (componentThemeConfig) {
-    // const configOfTheme = JSON.parse(JSON.stringify(targetChartConfig))
-    const configOfTheme = JSON.parse(JSON.stringify(config))
-    // getTargetConfig(configOfTheme)
-    props.onThemeChange({
-      // id: componentConfig.id,
-      id: '1574634177345413122',
-      name: componentConfig.name,
-      moduleName: componentConfig.moduleName,
-      moduleVersion: componentConfig.moduleVersion,
-      config: configOfTheme
-    })
-  }
+  const { allSettings } = getTargetConfig(hadFilterArr)
 
   // 四个 tab, 分别是 图表、坐标轴、系列、辅助
   const { legendSettings, outerMargin, spacing } = allSettings
@@ -259,11 +271,12 @@ const BasicLine = (props) => {
           colorStops: [
             {
               offset: 0.1,
-              color: areaStartColor
+              color: componentThemeConfig
+                ? componentThemeConfig.gradientColors[0][0].color : areaStartColor || 'rgba(51, 104, 206,0.6)'
             },
             {
               offset: 1,
-              color: areaEndColor
+              color: areaEndColor || 'rgba(180, 21, 177,0.1)'
             }
           ]
         }
@@ -379,7 +392,7 @@ const BasicLine = (props) => {
         itemWidth: iconSize.iconWidth,
         itemHeight: iconSize.iconHeight,
         textStyle: {
-          color: legendTextStyle && legendTextStyle.color,
+          color: legendTextStyle && legendTextStyle.themeTextColor,
           fontSize: legendTextStyle && legendTextStyle.fontSize,
           fontFamily: legendTextStyle && legendTextStyle.fontFamily,
           fontWeight:
@@ -402,7 +415,7 @@ const BasicLine = (props) => {
         },
         axisLabel: {
           show: true,
-          color: xAxisLabelTextStyle.color,
+          color: xAxisLabelTextStyle.themeTextColor,
           rotate: xAxisLabelRotate,
           fontSize: xAxisLabelTextStyle.fontSize,
           fontStyle: xAxisLabelTextStyle.italic ? 'italic' : 'normal',
@@ -424,7 +437,7 @@ const BasicLine = (props) => {
         [yAxisUnitShow && 'nameGap']: yAxisUnitOffset.yAxisUnitOffsetY,
         [yAxisUnitShow && 'nameTextStyle']: {
           padding: [0, 0, 0, yAxisUnitOffset.yAxisUnitOffsetX],
-          color: yAxisUnitTextStyle.color,
+          color: yAxisUnitTextStyle.themeTextColor,
           fontSize: yAxisUnitTextStyle.fontSize,
           fontStyle: yAxisUnitTextStyle.italic ? 'italic' : 'normal',
           fontWeight: yAxisUnitTextStyle.bold ? 'bold' : 'normal',
@@ -439,7 +452,7 @@ const BasicLine = (props) => {
         },
         axisLabel: {
           show: true,
-          color: yAxisLabelTextStyle.color,
+          color: yAxisLabelTextStyle.themeTextColor,
           rotate: yAxisLabelRotate,
           fontSize: yAxisLabelTextStyle.fontSize,
           fontStyle: yAxisLabelTextStyle.italic ? 'italic' : 'normal',

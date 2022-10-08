@@ -9,7 +9,7 @@ import { connect } from "dva";
 import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
-import { treeDataReverse, deepClone } from "@/utils/index.js";
+import { layersReverse, deepClone } from "@/utils/index.js";
 import { layersPanelsFlat } from "@/utils";
 
 import { Breadcrumb } from "antd";
@@ -46,7 +46,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    treeDataReverse(layers);
+    layersReverse(layers);
     return {
       components,
       layers,

@@ -2,7 +2,7 @@ const ComponentDefaultConfig = {
   "name": "时间选择器",
   "moduleName": "timeSelect",
   "moduleType": "assist",
-  "moduleVersion": "1.0.0",
+  "moduleVersion": "1.0.1",
   "config": [
     {
       "displayName": "位置尺寸",

@@ -14,7 +14,7 @@ import { IScaleDragData, IStyleConfig } from "./type";
 import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from "./constant";
 import RulerLines from "./components/RulerLines";
 import { DraggableData, DraggableEvent, IPanel, IComponent } from "./components/CustomDraggable/type";
-import { deepClone, deepForEach, treeDataReverse } from "../../../utils";
+import { deepClone, deepForEach, layersReverse } from "../../../utils";
 import RightClickMenu from "../left/components/rightClickMenu/rightClickMenu";
 import { menuOptions } from "../left/Data/menuOptions";
 
@@ -33,12 +33,12 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [components, setComponents] = useState([]);
   const [panels, setPanels] = useState([]);
   useEffect(() => {
-    const layers = deepClone(bar.treeData)
-    treeDataReverse(layers)
+    const layers = deepClone(bar.layers)
+    layersReverse(layers)
     setLayers(layers)
-    setComponents(bar.components)
-    setPanels(bar.panels)
-  }, [bar.treeData])
+    setComponents(bar.fullAmountComponents)
+    setPanels(bar.fullAmountPanels)
+  }, [bar.layers])
 
   const supportLinesRef = bar.supportLinesRef
 

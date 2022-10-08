@@ -61,7 +61,7 @@ import {
   COMPONENTS, INTERACTION, MOUNT_ANIMATION,
 } from "../../../../../constant/home";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
-import TimeSelect from "@/customComponents/interactive/timeSelect/index";
+import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import SelectV2 from '@/customComponents/assist/select/v1.0.3/index'
 import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
@@ -168,19 +168,11 @@ const CustomDraggable
       ev.stopPropagation();
       // console.log('dragging', layer)
       // 向上取整
-      const aroundX = Math.ceil(data.x);
-      const aroundY = Math.ceil(data.y);
+      let aroundX = Math.ceil(data.x);
+      let aroundY = Math.ceil(data.y);
       const xMoveLength = data.x - data.lastX;
       const yMoveLength = data.y - data.lastY;
       bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength);
-      if ((component && bar.dragStatus === "一组件") || bar.dragStatus === "一面板") {
-        // 单个组件/面板移动
-        supportLinesRef.handleSetPosition(aroundX, aroundY);
-      }
-      if (bar.dragStatus === "一分组") {
-        // 小组移动
-        supportLinesRef.handleSetPosition(aroundX, aroundY);
-      }
       if (bar.dragStatus === "多个") {
         const xPositionList: number[] = [];
         const yPositionList: number[] = [];
@@ -218,8 +210,8 @@ const CustomDraggable
         xPositionList.sort((a, b) => a - b);
         yPositionList.sort((a, b) => a - b);
         // console.log('应该处在的位置', { left: xPositionList[0], top: yPositionList[0] })
-        supportLinesRef.handleSetPosition(xPositionList[0], yPositionList[0]);
-
+        aroundX = xPositionList[0]
+        aroundY = yPositionList[0]
         Object.keys(bar.selectedComponentRefs).forEach(key => {
           if (key.indexOf("group") !== -1) {
             delete bar.selectedComponentRefs[key];
@@ -244,6 +236,8 @@ const CustomDraggable
           bar.isSupportMultiple = false;
         }
       }
+      supportLinesRef.handleSetPosition(aroundX, aroundY);
+
     };
     const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
       supportLinesRef.handleSetPosition(0, 0, "none");
@@ -493,13 +487,12 @@ const CustomDraggable
       clearTimeout(clickTimer.current);
       if ("panelType" in layer) {
         const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
-        if (layer.panelType === 0) {
+        if (layer.panelType === 0) { // 动态面板
           dispatch({
             type: "bar/save",
             payload: {
               isPanel: true,
-              panelId: layer.id,
-              treeData: [],
+              layers: [],
               selectedComponents: [],
               selectedComponentOrGroup: [],
               selectedComponentIds: [],
@@ -518,15 +511,6 @@ const CustomDraggable
           });
           if (panel.states[0]?.id) {
             history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
-            dispatch({
-              type: "bar/getPanelDetails"
-            });
-            dispatch({
-              type: "bar/selectPanelState",
-              payload: {
-                stateId: panel.states[0].id
-              }
-            });
           } else {
             history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}`);
           }
@@ -567,7 +551,7 @@ const CustomDraggable
             payload: {
               isPanel: true,
               panelId: layer.id,
-              treeData: [],
+              layers: [],
               selectedComponents: [],
               selectedComponentOrGroup: [],
               selectedComponentIds: [],
@@ -585,15 +569,6 @@ const CustomDraggable
             }
           });
           history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
-          dispatch({
-            type: "bar/getPanelDetails"
-          });
-          dispatch({
-            type: "bar/selectPanelState",
-            payload: {
-              stateId: panel.states[0].id
-            }
-          });
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({
@@ -1032,7 +1007,7 @@ const CustomDraggable
                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                         >
                                         </BasicBar> :
-                                        layer.moduleName === "basicLine" ? 
+                                        layer.moduleName === "basicLine" ?
                                         <BasicLine
                                           themeConfig={bar.componentThemeConfig}
                                           onThemeChange={onThemeChange}
@@ -1198,6 +1173,8 @@ const CustomDraggable
                                                                       ></InstrumentPanel4> :
                                                                       layer.moduleName === "normalTable" ?
                                                                         <NormalTable
+                                                                          themeConfig={bar.componentThemeConfig}
+                                                                          onThemeChange={onThemeChange}
                                                                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                           componentConfig={component}
                                                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}

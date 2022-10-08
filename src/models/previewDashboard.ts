@@ -20,7 +20,6 @@ import {
   duplicateDashboardConfig, deepForEachBeforeCallBack,
 } from "../utils"
 import { IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
-import { log } from "util"
 export default {
   namespace: "previewDashboard",
   state: JSON.parse(JSON.stringify(defaultData)),
@@ -148,7 +147,7 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
-      const layers = previewDashboard.treeData;
+      const layers = previewDashboard.layers;
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
@@ -327,7 +326,7 @@ export default {
         yield put({
           type: "save",
           payload: {
-            treeData: noEmptyGroupLayers,
+            layers: noEmptyGroupLayers,
             components,
             panels,
             dashboardId,
@@ -421,7 +420,6 @@ export default {
         return data
       }
       yield Promise.all(dataContainerList.map((item: any) => func(item)));
-      console.log('gggg', previewDashboard.dataContainerDataList)
       yield put({
         type: "save",
         payload: {

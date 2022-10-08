@@ -6,10 +6,10 @@ interface IOperateState {
   show?: boolean;
   operateValue: boolean;
   operateKey: string;
-  // treeData: any[];
+  // layers: any[];
 }
 // 最后发送请求的格式是 { id: '', key:'执行的操作', value: 'true or false 描述key'}
-// 发送完请求后，用最新的treeData重新渲染一遍
+// 发送完请求后，用最新的layers重新渲染一遍
 export default {
   namespace: "operate",
   state: {
@@ -18,7 +18,7 @@ export default {
     operateValue: false,
     // isLock: false,
     // show: false,
-    // treeData: [],
+    // layers: [],
   } as IOperateState,
 
   reducers: {
