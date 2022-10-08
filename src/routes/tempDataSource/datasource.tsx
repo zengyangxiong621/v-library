@@ -2,7 +2,7 @@ import { memo, useState, useEffect, useCallback, useMemo } from "react";
 import "./index.less";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from "antd";
+import { ConfigProvider, Table, Button, Select, Input, Spin, Space, Modal, message } from "antd";
 import { PlusOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
 import AddDataSource from "./components/addDataSource";
@@ -359,17 +359,25 @@ const DataSource = (props: any) => {
           </div>
         </header>
         <div className='table-wrap'>
-          <Table
-            // scroll={{ y: "53vh" }}
-            scroll={{ y: tableHeight }}
-            sortDirections={["ascend", "descend"]}
-            rowClassName='customRowClass'
-            loading={tableLoading}
-            columns={columns}
-            dataSource={tableData}
-            pagination={paginationProps}
-            onChange={tableOnChange}
-          />
+          {
+            tableData.length
+              ?
+              <Table
+                // scroll={{ y: "53vh" }}
+                scroll={{ y: tableHeight }}
+                sortDirections={["ascend", "descend"]}
+                rowClassName='customRowClass'
+                loading={tableLoading}
+                columns={columns}
+                dataSource={tableData}
+                pagination={paginationProps}
+                onChange={tableOnChange}
+              />
+              :
+              <div className="custom-table-loading">
+                <Spin tip="Loading…"></Spin>
+              </div>
+          }
         </div>
         {/* 添加数据源的弹窗 */}
         <AddDataSource
