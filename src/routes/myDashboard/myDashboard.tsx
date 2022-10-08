@@ -167,7 +167,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       }
     },
     onRemove(file: any) {
-      // setUploadFileUrl('')
     }
   };
   return (
