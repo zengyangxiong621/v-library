@@ -143,8 +143,8 @@ const RightContent = (props: any) => {
     }
     {/* 移入分组弹窗 */}
      <DarkModal
-      title='移动'
-      className="move-dark-modal"
+      title='移动分组'
+      className="move-right-modal"
       destroyOnClose={true}
       getContainer={false}
       visible={showMoveGroupModal}
@@ -165,6 +165,7 @@ const RightContent = (props: any) => {
         }}
         layout="horizontal"
         name='releaseForm'
+        className="move-from"
       >
         <Form.Item label='可选分类'
           name="group"
