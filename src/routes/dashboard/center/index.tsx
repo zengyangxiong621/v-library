@@ -13,7 +13,7 @@ import Ruler from "./components/Ruler";
 import { IScaleDragData, IStyleConfig } from "./type";
 import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from "./constant";
 import RulerLines from "./components/RulerLines";
-import { DraggableData, DraggableEvent, IPanel, IComponent } from "./components/CustomDraggable/type";
+import { DraggableData, DraggableEvent, IPanel, IComponent, IConfig } from "./components/CustomDraggable/type"
 import { deepClone, deepForEach, layersReverse } from "../../../utils";
 import RightClickMenu from "../left/components/rightClickMenu/rightClickMenu";
 import { menuOptions } from "../left/Data/menuOptions";
@@ -32,13 +32,25 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [layers, setLayers] = useState([]);
   const [components, setComponents] = useState([]);
   const [panels, setPanels] = useState([]);
+  const mouse = useMouse(canvasRef)
+
+/*
+  useEffect(() => {
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      console.log('e', e)
+    })
+  }, [])
+*/
+
   useEffect(() => {
     const layers = deepClone(bar.layers)
     layersReverse(layers)
-    setLayers(layers)
     setComponents(bar.fullAmountComponents)
     setPanels(bar.fullAmountPanels)
+    setLayers(layers)
+
   }, [bar.layers])
+
 
   const supportLinesRef = bar.supportLinesRef
 
@@ -47,7 +59,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       return item.name === name
     })
   }
-
 
   // const recommendConfig = findItem('recommend')
   // const styleColor = findItem('styleColor')
@@ -218,6 +229,65 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   //   events: [ 'keydown', 'keyup' ],
   // })
 
+  /*
+  leftarrow: 37,
+  uparrow: 38,
+  rightarrow: 39,
+  downarrow: 40,
+ */
+  // 组件被移动
+  const handleComponentDrag = (x: number, y: number) => {
+    for(const key in bar.selectedComponentDOMs) {
+      const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+      let translateX = Number(translateArr[0]) + x
+      let translateY = Number(translateArr[1]) + y
+      bar.selectedComponentDOMs[key].style.transform = `translate(${translateX}px,${translateY}px)`;
+    }
+  }
+  // 组件移动结束
+  const handleComponentDragStop = () => {
+    bar.selectedComponents = [
+      ...components.filter((component: IComponent) => bar.selectedComponentIds.includes(component.id)),
+      ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))
+    ];
+    bar.selectedComponents.forEach((item: IComponent | IPanel) => {
+      const translateArr = bar.selectedComponentDOMs[item.id].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+      const translateX = Number(translateArr[0]);
+      const translateY = Number(translateArr[1]);
+      if ("type" in item) {
+        item.config.left = translateX
+        item.config.top = translateY
+      } else {
+        const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION);
+        if (styleDimensionConfig) {
+          Object.values(styleDimensionConfig.value).forEach((obj: any) => {
+            if (obj.name === 'left') {
+              obj.value = translateX
+            } else if (obj.name === 'top') {
+              obj.value = translateY
+            }
+          });
+        }
+      }
+    });
+    dispatch({
+      type: "bar/updateComponent",
+      payload: bar.selectedComponents,
+    });
+  }
+
+  // 辅助线移动
+  const handleSupportLineDrag = () => {
+    const {x, y} = bar.scaleDragCompRef.getPosition()
+    supportLinesRef.handleSetPosition(x, y, 'block');
+
+  }
+  // 选中框移动
+  const handleScaleDragComDrag = (xMoveLength: number, yMoveLength: number) => {
+    bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength);
+  }
+
+
   useKeyPress(["space"], (event) => {
     if (event.type === "keydown" && isCanvasDraggable) {
       return;
@@ -227,8 +297,87 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     events: ["keydown", "keyup"],
   });
 
+  useKeyPress(["leftarrow"], (event) => {
+    if (event.type === "keydown") {
+      console.log('----向左-----')
+      handleComponentDrag(-1, 0)
+      handleScaleDragComDrag(-1, 0)
+      handleSupportLineDrag()
+      // 重新给 transform 赋值
+    } else {
+      console.log('触发1')
+      handleComponentDragStop()
+    }
+  }, {
+    events: ["keydown", "keyup"],
+  });
 
-  const mouse = useMouse(canvasRef)
+  useKeyPress(["uparrow"], (event) => {
+    if (event.type === "keydown") {
+      console.log('----向上-----')
+      handleComponentDrag(0, -1)
+      handleScaleDragComDrag(0, -1)
+      handleSupportLineDrag()
+
+
+    } else {
+      handleComponentDragStop()
+
+    }
+  }, {
+    events: ["keydown", "keyup"],
+  });
+
+  useKeyPress(["rightarrow"], (event) => {
+    if (event.type === "keydown") {
+      console.log('----向右-----')
+      handleComponentDrag(1, 0)
+      handleScaleDragComDrag(1, 0)
+      handleSupportLineDrag()
+
+
+    } else {
+      handleComponentDragStop()
+
+    }
+  }, {
+    events: ["keydown", "keyup"],
+  });
+
+  useKeyPress(["downarrow"], (event) => {
+    if (event.type === "keydown") {
+      console.log('----向下-----')
+      handleComponentDrag(0, 1)
+      handleScaleDragComDrag(0, 1)
+      handleSupportLineDrag()
+
+
+    } else {
+      handleComponentDragStop()
+
+    }
+  }, {
+    events: ["keydown", "keyup"],
+  });
+
+/*  useKeyPress(["c.ctrl"], (event) => {
+    if (event.type === "keydown") {
+      console.log('---右下-----')
+      for(const key in bar.selectedComponentDOMs) {
+        const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+        const translateX = Number(translateArr[0]);
+        const translateY = Number(translateArr[1]);
+        bar.selectedComponentDOMs[key].style.transform = `translate(${translateX + 1}px, ${translateY + 1}px)`;
+      }
+    } else {
+      handleComponentDragStop()
+
+    }
+  }, {
+    events: ["keydown", "keyup"],
+    exactMatch: true
+  });*/
+
   // const mouse = 0
 
 

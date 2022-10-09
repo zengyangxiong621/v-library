@@ -156,7 +156,6 @@ const ScrollTable = (props) => {
     }
     tableColumnWidth = mappingConfig.map(item => item.width)
 
-    console.log('[columnWidth[0] || 0 ,...tableColumnWidth]', )
     // if (columnWidth[0]) {
     //   setColumnWidth([columnWidth[0] ,...tableColumnWidth])
     // } else {
@@ -200,7 +199,6 @@ const ScrollTable = (props) => {
       ...textStyle,
     })
     const header = mappingConfig.map(item => `<div style="${textStyle}" title="${item.displayName}">${item.displayName ? item.displayName : '--'}<div>`)
-    console.log('header', header)
     setHeader(header)
     // setTimeout(() => {
     // const tableDom = ReactDOM.findDOMNode(tableContainerRef.current)
@@ -305,7 +303,6 @@ const ScrollTable = (props) => {
     }
     const animationModel = tableAnimationConfig.find(item => item.name === 'animationModel').value
     const waitTimeConfig = tableAnimationConfig.find(item => item.name === 'scrollInterval').value // number
-    console.log('isScroll', isScroll)
     setIsScroll(isScroll)
     setCarousel(animationModel)
     setWaitTime(waitTimeConfig)
@@ -348,7 +345,6 @@ const ScrollTable = (props) => {
       const _tableIndexConfig = _config.find(item => item.name === 'tableIndex').value
       _tableIndexConfig.find(item => item.name === 'textStyle').value.find(item => item.name === 'color').value = themeConfig.textColor
       const _indexColumnCustomStyle = _tableIndexConfig.find(item => item.name === 'indexColumnCustomStyle')
-      console.log('_indexColumnCustomStyle', _indexColumnCustomStyle)
       _indexColumnCustomStyle.config.template.forEach(item => {
         item.value.find(it => it.name === 'textStyle').value.find(it => it.name === 'color').value = themeConfig.textColor
       })
@@ -476,7 +472,6 @@ const ScrollTable = (props) => {
 
 
   useEffect(() => {
-    console.log('轮播表格渲染')
     const mappingConfig = getMapping(customColumnConfig)
     tableHeaderLoadFunc(mappingConfig, tableHeaderConfig)
     tableDataLoadFunc(mappingConfig)
