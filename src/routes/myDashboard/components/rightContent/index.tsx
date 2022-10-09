@@ -8,8 +8,8 @@ import DarkModal from "../darkThemeModal/index";
 
 
 import {
-  Row, Col, Button, Spin, message, Form,
-  Switch, Input, Upload, Select, Typography, Tooltip
+  Button, Spin, message, Form,
+  Switch, Input, Upload, Select, Typography, Tooltip, Empty
 } from "antd";
 import type { UploadProps } from "antd";
 import { IconFont } from "../../../../utils/useIcon";
@@ -19,7 +19,7 @@ const { Paragraph } = Typography;
 
 
 const RightContent = (props: any) => {
-  const { listData, dashboardManage, dispatch,spaceId } = props;
+  const { listData, dashboardManage, dispatch, spaceId } = props;
   // 发布弹窗、移动分组 modal状态
   const [showFabuModal, setShowFabuModal] = useState(false);
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false);
@@ -60,12 +60,6 @@ const RightContent = (props: any) => {
   });
   const [titleInputValue, setTitleInputValue] = useState<string>("");
   const [descriptionInputValue, setDescriptionInputValue] = useState<string>("");
-
-  useEffect(() => {
-    if (showMoveGroupModal) {
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showMoveGroupModal]);
 
   // ************** 可复用方法 ************
   /**  每个appCard 进行复制、删除等操作后都需要刷新内容列表 && 更新左侧分组树  */
@@ -372,14 +366,14 @@ const RightContent = (props: any) => {
   };
 
   // 上传图片
-  const uploadImgProps:UploadProps = {
+  const uploadImgProps: UploadProps = {
     name: "file",
     multiple: false,
     maxCount: 1,
     accept: "image/png, image/jpeg",
     action: `${BASEURL}/visual/file/upload`,
-    headers:{
-      authorization:localStorage.getItem("token") || ""
+    headers: {
+      authorization: localStorage.getItem("token") || ""
     },
     beforeUpload(file: any) {
       const { name }: { name: string } = file;
@@ -426,21 +420,26 @@ const RightContent = (props: any) => {
   return <div className="RightContent-wrap">
     {/* <Row style={{ width: '100%' }} gutter={[26, 26]}> */}
     {
-      listData.map((item: any, index: number) => (
-        // <Col span={6} key={index}>
-        <AppCard
-          {...item}
-          key={item.id}
-          spaceId={spaceId}
-          changeFabuModal={changeFabuModal}
-          openMoveGroupModal={openMoveGroupModal}
-          refreshList={refreshList}
-        />
-        // </Col>
-      )
-      )
+      listData.length ?
+        listData.map((item: any, index: number) => (
+          // <Col span={6} key={index}>
+          <AppCard
+            {...item}
+            key={item.id}
+            spaceId={spaceId}
+            changeFabuModal={changeFabuModal}
+            openMoveGroupModal={openMoveGroupModal}
+            refreshList={refreshList}
+          />
+          // </Col>
+        )
+        )
+        : <div className="right-empty-class"
+        ><Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="暂无应用"
+          ></Empty></div>
     }
-    {/* </Row> */}
     {/* 发布弹窗 */}
     <DarkModal
       className="fabu-dark-modal"
@@ -526,6 +525,19 @@ const RightContent = (props: any) => {
                             disabled={true}
                             maxLength={20}
                           />
+                          <Paragraph
+                            copyable={{
+                              text: `${jmfxValue}`,
+                              onCopy: () => {
+                                message.success({ content: "复制密码成功", duration: 1 });
+                              },
+                              icon: [<Tooltip title="点此复制加密密码" placement="bottom">
+                                <Button type="primary" style={{ width: "60px", marginLeft: "16px", height: "30px" }} >复制</Button>
+                              </Tooltip>],
+                              tooltips: false
+                            }}
+                            style={{ marginBottom: 0 }}
+                          ></Paragraph>
                         </div>
                       }
                     </div>

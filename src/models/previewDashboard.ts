@@ -420,7 +420,6 @@ export default {
         return data
       }
       yield Promise.all(dataContainerList.map((item: any) => func(item)));
-      console.log('gggg', previewDashboard.dataContainerDataList)
       yield put({
         type: "save",
         payload: {

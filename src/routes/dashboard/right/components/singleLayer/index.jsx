@@ -31,7 +31,29 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
   const styleConfig = componentConfig.config
   const interactionConfig = componentConfig.interaction
 
-  const styleChange = debounce(() => {
+  const styleChange = debounce((updateEffect = {}) => {
+    /**
+    * @feat: 单选框选择某项时在单选框下方添加某个组件
+    * updateEffect: 详见 ./example.js 文件中的内容
+    */
+    if (updateEffect.value) {
+      const { value, parentPath, updateType, curIndex, willAddObj } = updateEffect
+      const finalUpdateType = updateType[value]
+      const tempArr = parentPath.split('.')
+      let targetArr = styleConfig
+      while (tempArr.length) {
+        const curItem = tempArr.shift()
+        targetArr = targetArr[curItem]
+      }
+      switch (finalUpdateType) {
+        case 'delete':
+          targetArr.splice(curIndex + 1, 1)
+          break;
+        case 'add':
+          targetArr.splice(curIndex + 1, 0, willAddObj)
+          break;
+      }
+    }
     dispatch({
       type: 'bar/setComponentConfigAndCalcDragScaleData',
       payload: componentConfig

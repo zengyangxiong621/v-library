@@ -12,7 +12,7 @@ import { getFields } from "@/utils/data";
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) => {
+const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDrillDownLevel, changeBreadcrumbData }: any) => {
 
   const { moduleName, events, id, config } = componentData;
   const { mountAnimation } = layerInfo;
@@ -164,6 +164,13 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
+  const getDrillDownData = (chartData: any) => {
+    if (addDrillDownLevel) {
+      addDrillDownLevel();
+      changeBreadcrumbData(chartData)
+    }
+  };
   return (
     <div>
       <div className={`animation-id-${id}`}
@@ -179,6 +186,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo }: any) 
           componentConfig={componentData}
           fields={getFields(componentData)}
           comData={comData}
+          getDrillDownData={getDrillDownData}
         >
         </ComponentEventContainer>
       </div>

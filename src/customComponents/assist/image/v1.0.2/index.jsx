@@ -41,7 +41,6 @@ class ComImage extends Component {
       ...animationSettings
     }
 
-    console.log('style', style)
 
     let bgUrl = ''
     if (componentData && componentData.length) {

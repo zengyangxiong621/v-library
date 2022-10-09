@@ -19,7 +19,12 @@ const RadioGroup = props => {
   // 缩放设置更新
   const selectChange = (e) => {
     _data.value = e.target.value
-    props.onChange()
+    if(_data.updateEffect) {
+      _data.updateEffect.value = _data.value
+      props.onChange(_data.updateEffect)
+    } else {
+      props.onChange()
+    }
   }
 
   return (

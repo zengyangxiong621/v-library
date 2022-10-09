@@ -29,7 +29,6 @@ class ButtonGroup extends Component {
       return pre
     }, {})
 
-    console.log('style', style)
 
     const handleChange = value => {
       const data = componentData.filter(item => {
