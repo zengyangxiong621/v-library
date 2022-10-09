@@ -24,7 +24,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
 
   const canvasContainer = document.querySelector(".canvas-screen");
 
-  const headerWrap = document.querySelector(".Header-wrap");
+  const headerWrap = document.querySelector(".header-wrap");
 
 
   const painter = () => {

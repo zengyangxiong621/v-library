@@ -243,8 +243,8 @@ export function componentsFilter (componentRefList, ids) {
 /**
  * description:  成组
  */
-export const group = (treeData, selectedNodes, lastRightClickKey) => {
-  const treeDataCopy = deepClone(treeData);
+export const group = (layers, selectedNodes, lastRightClickKey) => {
+  const layersCopy = deepClone(layers);
   const newGroup = {
     id: `${ lastRightClickKey }-temp`,
     parentId: "1-1-1",
@@ -288,9 +288,9 @@ export const group = (treeData, selectedNodes, lastRightClickKey) => {
     if (i === len - 1) {
       isDone = true;
     }
-    recursiveFn(treeDataCopy, selectedNodes[i], isDone);
+    recursiveFn(layersCopy, selectedNodes[i], isDone);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 export function deleteComponents (arr, ids) {
@@ -325,11 +325,12 @@ export function insertMultipleComponents (arr, sourceIds, targetId) {
 }
 
 // 数组扁平化
-export const layerComponentsFlat = (arr) => {
+export const layerComponentsFlat = (arr, children=COMPONENTS) => {
+  console.log('arr', arr)
   return arr.reduce((pre, cur) => {
     return pre.concat(
-      cur.hasOwnProperty(COMPONENTS)
-        ? layerComponentsFlat(cur[COMPONENTS])
+      cur.hasOwnProperty(children)
+        ? layerComponentsFlat(cur[children])
         : cur.id,
     );
   }, []);
@@ -419,12 +420,22 @@ export const calcGroupPosition = (arr, components, panels) => {
   return [xPositionList, yPositionList];
 };
 
+export const deepForEachBeforeCallBack = (layers, cb) => {
+  layers.forEach((layer, index) => {
+    cb(layer, index, layers);
+    if (layer && COMPONENTS in layer) {
+      deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb);
+    }
+  });
+  return layers;
+};
+
 export const deepForEach = (layers, cb) => {
   layers.forEach((layer, index) => {
-    cb(layer, index);
-    if (COMPONENTS in layer) {
-      deepForEach(layer[COMPONENTS], cb);
+    if (layer && COMPONENTS in layer) {
+      deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb);
     }
+    cb(layer, index, layers);
   });
   return layers;
 };
@@ -583,11 +594,11 @@ export const findCurrentIndex = (arr) => {
   return max;
 };
 
-export const treeDataReverse = (treeData) => {
-  treeData = treeData?.reverse();
-  treeData?.forEach((layer) => {
+export const layersReverse = (layers) => {
+  layers = layers?.reverse();
+  layers?.forEach((layer) => {
     if (COMPONENTS in layer) {
-      treeDataReverse(layer[COMPONENTS]);
+      layersReverse(layer[COMPONENTS]);
     }
   });
 };
@@ -658,6 +669,12 @@ export const styleTransformFunc = (textStyle, type=true) => {
     return pre;
   }, {});
   return Object.keys(textStyle).reduce((pre, cur) => {
+    if(cur==='themeColor'){
+      return {
+        ...pre,
+        ...styleTransformFuncList['color'](textStyle[cur])
+      }
+    }
     return {
       ...pre,
       ...styleTransformFuncList[cur](textStyle[cur])
@@ -728,3 +745,17 @@ export const duplicateDashboardConfig = (preConfig, nowConfig) => {
   });
   return preConfig;
 };
+
+
+export const getQueryVariable = () => {
+  let href = window.location.href
+  let query = href.substring(href.indexOf('?')+1);
+  let vars = query.split("&");
+  let obj = {}
+  for (let i = 0; i < vars.length; i++) {
+    let pair = vars[i].split("=");
+    obj[pair[0]] = pair[1]
+  }
+  return obj;
+}
+

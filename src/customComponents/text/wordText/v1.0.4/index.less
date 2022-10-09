@@ -1,0 +1,32 @@
+.wordText{
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .text-name{
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 5px 0;
+  }
+  .icon-img{
+    width: 45px;
+    height: 45px;
+    margin-right: 8px;
+  }
+  .showText{
+    border-bottom: 1px solid #B8D1FF;
+    width: 100%;
+    display: flex;
+  }
+  .showText:before{
+    content: "";
+    position: absolute;
+    width: 70px;
+    bottom: 0;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+  }
+}
+.hide{
+  background: rgba(76, 255, 231, 0.15);
+}

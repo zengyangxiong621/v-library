@@ -15,7 +15,7 @@ interface State {
 
   [key: string]: any;
 }
-import {treeDataReverse, layersPanelsFlat} from "@/utils/index.js";
+import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
 
 const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
   const componentData = previewDashboard.componentData;
@@ -24,7 +24,6 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;
   const defaultStateId = (states.length > 0 && states[0].id) || "";
-  console.log("defaultStateId", defaultStateId);
   const [ state, setState ] = useSetState<State>({
     states: [],
     defaultState: "",
@@ -80,7 +79,7 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    treeDataReverse(layers);
+    layersReverse(layers);
     return {
       components,
       layers,

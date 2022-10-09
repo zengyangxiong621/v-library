@@ -475,11 +475,39 @@ class WorldMap extends Component {
       mapChart.setOption(displayMode === 0 ? options : ipOptions);
       mapChart.resize();
       // 配置点击下钻
-      mapChart.on('click', (params) => {
+      mapChart.on('click', (params, echarts) => {
         if (Array.isArray(componentConfig.drillDownArr) && componentConfig.drillDownArr.length) {
+          const { name } = params
+          const provincesReflect = {
+            "大连": "dl",
+            "辽河": "lh",
+            "大庆": "dq",
+            "勘探院数据中心": "ktydc",
+            "吉林": "jl",
+            "克拉玛依数据中心": "klmydc",
+            "华东": "hd",
+            "西安": "xa",
+            "兰州": "lz",
+            "昌平数据中心": "cpdc",
+            "新疆": "xj",
+            "华南": "hn",
+            "西南": "xn",
+            "东直门石油大厦": "dzmdc",
+            "吉林数据中心": "jldc",
+            "青海": "qh",
+            "四川": "sc",
+            "西南区域中心": "xndc",
+          }
+          const outgoingData = {
+            // 省市名
+            originalName: name,
+            // 省市名 首字母缩写
+            name: provincesReflect[name],
+            value: ''
+          }
           // drillDownArray长度不为零, 需要下钻
-          if (typeof props.onChange === 'function') {
-            props.onChange(param, echarts)
+          if (typeof this.props.onChange === 'function') {
+            this.props.onChange(outgoingData, echarts)
           }
         } else {
           // do something

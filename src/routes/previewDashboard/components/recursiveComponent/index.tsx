@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 
 import EveryComponent from "../everyComponent";
 import ReferencePanel from "@/customComponents/dashboardPreview/referencePanel";
@@ -12,9 +12,7 @@ const MODULES = "modules";
 const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeReflect } = props;
-
-  // console.log('layersArr', layersArr);
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeBreadcrumbData, changeReflect } = props;
 
   return (
     <div className='recursive-component-wrap'>
@@ -30,7 +28,6 @@ const RecursiveComponent = (props: any) => {
             targetPanel = panels.find((item: any) => item.id === layer.id);
           }
           // console.log('hhhhhhhhh', previewDashboard.componentData, targetComponent, layer);
-
           return (
             <div
               data-id={isGroup ? layer.id : "component-" + layer.id}
@@ -69,12 +66,12 @@ const RecursiveComponent = (props: any) => {
                         />
                       </div>
                       : <div
-                          className={`panel-container panel-${layer.id} event-id-${layer.id}`}
-                          style={{
-                            position: "absolute",
-                            left: targetPanel.config.left + "px",
-                            top: targetPanel.config.top + "px"
-                          }}
+                        className={`panel-container panel-${layer.id} event-id-${layer.id}`}
+                        style={{
+                          position: "absolute",
+                          left: targetPanel.config.left + "px",
+                          top: targetPanel.config.top + "px"
+                        }}
                       >
                         <DrillDownPanel
                           id={layer.id}
@@ -83,6 +80,7 @@ const RecursiveComponent = (props: any) => {
                           previewDashboard={previewDashboard}
                           dispatch={dispatch}
                           addDrillDownLevel={addDrillDownLevel}
+                          changeBreadcrumbData={changeBreadcrumbData}
                         />
                       </div>
                   ) :
@@ -114,6 +112,7 @@ const RecursiveComponent = (props: any) => {
                           scaleValue={scaleValue}
                           layerInfo={layer}
                           addDrillDownLevel={addDrillDownLevel}
+                          changeBreadcrumbData={changeBreadcrumbData}
                           changeReflect={changeReflect}
                           {...props}
                         />

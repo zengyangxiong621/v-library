@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
-import { deepClone, treeDataReverse } from "@/utils";
+import { deepClone, layersReverse } from "@/utils";
 
 import { Spin } from "antd";
 
@@ -195,14 +195,14 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
   useEffect(() => {
-    const data = deepClone(previewDashboard.treeData);
-    treeDataReverse(data);
+    const data = deepClone(previewDashboard.layers);
+    layersReverse(data);
     setLayers(data);
     setComponents(previewDashboard.components);
     setPanels(previewDashboard.panels);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [previewDashboard.treeData]);
+  }, [previewDashboard.layers]);
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
   const initDashboard = (cb = function () { }) => {

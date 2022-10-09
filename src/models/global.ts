@@ -49,14 +49,18 @@ const globalStroe={
     setup({ dispatch, history }: { dispatch: any; history: any }){
       history.listen((location: any) => {
         const pathName=location.pathname || location.location.pathname;
+        const token=localStorage.getItem("token");
         if(pathName==="/login"){
+          if(token){
+            history.replace("/");
+            return
+          }
           dispatch({
             type:"global/setUserInfo",
             payload:null
           });
           return;
         }
-        const token=localStorage.getItem("token");
         const isPublishScreen = window.location.href.indexOf("publishScreen") > -1;
         if(!token && !isPublishScreen){
           history.replace("/login");

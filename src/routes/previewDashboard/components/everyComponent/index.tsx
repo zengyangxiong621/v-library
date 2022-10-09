@@ -13,7 +13,7 @@ import { Breadcrumb } from "antd";
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeReflect, bar, previewDashboard, dispatch, addDrillDownLevel, drillDownGlobalState, ...props }: any) => {
+const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeReflect, bar, previewDashboard, dispatch, addDrillDownLevel, changeBreadcrumbData, drillDownGlobalState, ...props }: any) => {
   const { moduleName, events, id, config } = componentData;
 
   const { mountAnimation } = layerInfo;
@@ -27,9 +27,6 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
   const componentStyle = getTargetStyle(weizhichicunArr, {
     position: "absolute",
   });
-
-  const [activeItem, setActiveItem] = useState(0);
-
 
   // 交互-动画
   useEffect(() => {
@@ -168,37 +165,37 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
       addDrillDownLevel();
-      const { seriesType, data } = chartData;
-      let hadFilterChartData = [];
-      if (typeof chartData === "object") {
-        switch (seriesType) {
-          case "pie":
-            const final = {
-              s: data.name,
-              y: data.value
-            };
-            hadFilterChartData.push(final);
-            break;
-          default:
-            hadFilterChartData.push(chartData.data);
-            break;
-        }
-      } else {
-        hadFilterChartData = [chartData];
-      }
-      const { drillDownArr } = componentData;
-      const childCompIdArr = drillDownArr.map((x: any) => x.id);
-      dispatch({
-        type: "previewDashboard/updateChildCompData",
-        payload: {
-          childCompIdArr,
-          componentData: hadFilterChartData
-        }
-      });
+      changeBreadcrumbData(chartData)
+      // const { seriesType, data } = chartData;
+      // let hadFilterChartData = [];
+      // if (typeof chartData === "object") {
+      //   switch (seriesType) {
+      //     case "pie":
+      //       const final = {
+      //         s: data.name,
+      //         y: data.value
+      //       };
+      //       hadFilterChartData.push(final);
+      //       break;
+      //     default:
+      //       hadFilterChartData.push(chartData.data);
+      //       break;
+      //   }
+      // } else {
+      //   hadFilterChartData = [chartData];
+      // }
+      // const { drillDownArr } = componentData;
+      // const childCompIdArr = drillDownArr.map((x: any) => x.id);
+      // dispatch({
+      //   type: "previewDashboard/updateChildCompData",
+      //   payload: {
+      //     childCompIdArr,
+      //     componentData: hadFilterChartData
+      //   }
+      // });
     }
   };
 

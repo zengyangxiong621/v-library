@@ -158,7 +158,7 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
           id: _data.id,
           data: dataConfig.api.data,
           dataType: 'api',
-          fields:dataConfig['api']?.fields || null
+          fields: dataConfig['api']?.fields || null
         }
       })
     }
@@ -174,7 +174,7 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
         body: {
           moduleId: _data.id,
           dataType: 'api',
-          callBackParamValues:bar.callbackArgs
+          callBackParamValues: bar.callbackArgs
         }
       }, true)
       if (data.code === 10000 && data.data) {
@@ -208,7 +208,7 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   }
 
   const requestHeaderDataChange = () => {
-    if(requestHeaderData.value){
+    if (requestHeaderData.value) {
       try {
         JSON.parse(requestHeaderData.value)
       } catch (err) {
@@ -243,7 +243,7 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
       value: !reqFromBack
     })
   }
-  
+
 
   const needCookieChange = () => {
     setNeedCookie(!needCookie)
@@ -266,7 +266,7 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
           <CodeEditor data={requestHeaderData} onChange={requestHeaderDataChange} />
         </div>
       </div>
-      <CusInput data={pathData} onChange={pathDataChange} style={{ marginTop: '16px' }} />
+      <CusInput data={pathData} onChange={pathDataChange} />
       <CusInput data={paramData} onChange={paramDataChange} />
       {
         isShowBody ?

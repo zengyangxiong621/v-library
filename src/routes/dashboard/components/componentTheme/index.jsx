@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect, useRef } from 'react'
 import { connect } from 'dva'
 import './index.less'
-
 import {
   Drawer,
   Collapse,
@@ -213,6 +212,7 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
 
 
   const onClose = () => {
+    deleteAllComponentThemeConfigs()
     setActiveId(null)
     props.onChange(false)
     // 设置bar.componentThemeConfig = null
@@ -259,6 +259,7 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
 
     // 更新组件样式配置信息
     const componentsStyleLists = Object.values(getComponentThemeConfigs())
+
     const componentsStyleParams = {
       configs: componentsStyleLists,
       dashboardId: bar.dashboardId
@@ -270,10 +271,13 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
     })
     deleteAllComponentThemeConfigs()
 
-    // 刷新组件中的画布
-    await dispatch({
+    // 更新组件的配置
+/*    await dispatch({
       type: 'bar/getDashboardDetails',
       payload: bar.dashboardId
+    })*/
+    componentsStyleLists.forEach((component) => {
+      bar.fullAmountComponents.find(item => item.id === component.id).config = component.config
     })
     // 显示页面设置
     await dispatch({
@@ -282,6 +286,7 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
         key: [],
         isPanel: false,
         selectedComponentOrGroup: [],
+        fullAmountComponents: bar.fullAmountComponents
       }
     })
     onClose()

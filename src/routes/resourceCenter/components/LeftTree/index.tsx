@@ -66,7 +66,7 @@ const LeftTree = ({ resourceCenter, dispatch, clearSearchInputState,getDataDispa
     // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)
     const key = keys[0];
     // 每次切换分组，都要将搜索框内的值清除掉
-    clearSearchInputState(); 
+    clearSearchInputState();
     // 每次变更选中的分组时，将当前分组保存至models中
     dispatch({
       type: "resourceCenter/setCurSelectedGroup",

@@ -1,6 +1,6 @@
 import React, { Component, CSSProperties,Fragment } from 'react';
 import ComponentDefaultConfig from './config'
-import './index.css'
+import './index.less'
 import CountUp from 'react-countup'
 
 class Counter extends Component {

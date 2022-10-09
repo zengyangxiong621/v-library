@@ -6,10 +6,11 @@ import { ILayerPanel, ILayerComponent, ILayerGroup } from "../../routes/dashboar
 type IFullAmountLayers = Array<ILayerPanel & {modules: IFullAmountLayers} | ILayerComponent | ILayerGroup | {name: string, id: string, modules: IFullAmountLayers}>
 type IFullAmountComponents = Array<IComponent>
 type IFullAmountPanels = Array<IPanel>
-export interface IState {
+export interface IPanelState {
   name: string;
   id: string;
 }
+
 export interface IFullAmountDashboardDetail  {
   name: string;
   id: string;
@@ -2591,7 +2592,7 @@ export const defaultData = {
   lastRightClick: "",
   isMultipleTree: false,
   operate: "",
-  treeData: [],
+  layers: [],
   selectedComponentOrGroup: [],
   isSupportMultiple: false,
   selectedComponentIds: [],
@@ -2822,7 +2823,8 @@ export const defaultData = {
   componentThemeConfig:null,  // 当前的组件主题配置
   fullAmountLayers: [],
   fullAmountDashboardDetails: [],
-  isDashboardInit: false
+  isDashboardInit: false,
+  fullAmountDynamicAndDrillDownPanels: [],
 }
 
 export interface IBarState {
@@ -2834,7 +2836,7 @@ export interface IBarState {
   rightMenuInfo: any;
   operate: string;
   lastRightClick: string;
-  treeData: any[];
+  layers: any[];
   components: any[];
   isSupportMultiple: boolean;
   selectedComponentOrGroup: any[];
@@ -2880,7 +2882,7 @@ export interface IBarState {
   curPanelType: 0 | 1| 2;
   panels: Array<IPanel>;
   panelConfig: IPanel | {};
-  panelStatesList: Array<{ name: string, id: string }>;
+  panelStatesList: Array<IPanelState>;
   stateId: string;
   allDashboardList: Array<{ name: string, id: string, [key: string]: any }>;
   componentThemeConfig:any;
@@ -2888,5 +2890,6 @@ export interface IBarState {
   fullAmountLayers: IFullAmountLayers;
   fullAmountComponents: IFullAmountComponents;
   fullAmountPanels: IFullAmountPanels;
-  isDashboardInit: boolean
+  isDashboardInit: boolean;
+  fullAmountDynamicAndDrillDownPanels: any
 }

@@ -13,7 +13,7 @@ import {
   UpOutlined, QqOutlined, BugOutlined, PicCenterOutlined,
 } from '@ant-design/icons'
 import { IconFont } from '../../../utils/useIcon'
-import {useKeyPress} from 'ahooks'
+import { useKeyPress } from 'ahooks'
 
 /** 自定义组件 **/
 import EveryTreeNode from './components/everyTreeNode'
@@ -84,21 +84,20 @@ const Left = ({ dispatch, bar, operate }) => {
     }
   }, [])
 
-  useKeyPress([ 'ctrl', 'shift' ], (event) => {
-    if(event.type === 'keydown' && bar.isMultipleTree) {
+  useKeyPress(['ctrl', 'shift'], (event) => {
+    if (event.type === 'keydown' && bar.isMultipleTree) {
 
     } else {
-      console.log('还疯狂？')
       dispatch({
         type: 'bar/save',
         payload: {
           isMultipleTree: event.type === 'keydown',
         },
       })
-      setIsCtrlKeyPressing( event.type === 'keydown')
+      setIsCtrlKeyPressing(event.type === 'keydown')
     }
   }, {
-    events: [ 'keydown', 'keyup' ],
+    events: ['keydown', 'keyup'],
   })
 
 
@@ -125,7 +124,7 @@ const Left = ({ dispatch, bar, operate }) => {
     }
     switch (icon) {
       case 'lock':
-        const everyNodeLockState = getFieldStates(bar.treeData, bar.key, 'isLock')
+        const everyNodeLockState = getFieldStates(bar.layers, bar.key, 'isLock')
         const finalBody = bar.key.map((item, index) => ({
           id: item,
           key: 'isLock',
@@ -139,7 +138,7 @@ const Left = ({ dispatch, bar, operate }) => {
           children: [],
           targetDashboardId: bar.dashboardId,
           insertId: bar.key[0],
-          originLayers: bar.treeData,
+          originLayers: bar.layers,
           //TODO 改为modules后删除掉这行
           components: [...bar.key],
           // components: [...bar.key],
@@ -249,7 +248,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const myOnExpand = (expandedKeys, { expanded, node }) => {
     setIsExpand(expandedKeys)
   }
-  //
+  // 图层拖拽逻辑
   const onDrop = info => {
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
@@ -266,7 +265,9 @@ const Left = ({ dispatch, bar, operate }) => {
         }
       }
     }
-    const data = [...bar.treeData]
+
+
+    const data = [...bar.layers]
 
     // Find dragObject
     let dragObj
@@ -369,7 +370,7 @@ const Left = ({ dispatch, bar, operate }) => {
             onExpand={myOnExpand}
             onSelect={onSelect}
             onRightClick={onRightClick}
-            treeData={bar.treeData}
+            treeData={bar.layers}
             selectedKeys={bar.key}
             titleRender={(nodeData) => {
               // title 置为空，覆盖antTree 默认的title

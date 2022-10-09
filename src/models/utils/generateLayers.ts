@@ -1,4 +1,5 @@
-import { deepClone } from "@/utils/index";
+import { deepClone } from "@/utils/index"
+
 export const generateLayers = (
   layers: any,
   insertId: any,
@@ -6,7 +7,8 @@ export const generateLayers = (
     id: "",
     name: "默认一",
     moduleName: "mo-ren-1",
-  }
+  },
+  isForced = false
 ) => {
   // 将新的图层插入到原来的图层树中
   const extendLayer = {
@@ -18,17 +20,22 @@ export const generateLayers = (
     singleShowLayer: false,
     ...newLayer,
   };
-  const newLayers = insertLayerById(layers, insertId, extendLayer);
-  return newLayers;
+  return insertLayerById(layers, insertId, extendLayer, isForced);
 };
 
-const insertLayerById = (layers: any[], insertId: string, newLayer: any) => {
+const insertLayerById = (layers: any[], insertId: string, newLayer: any, isForced = false) => {
   if (insertId.length) {
     const recursiveFn = (data: any, id: string) => {
       for (let i = 0, len = data.length; i < len; i++) {
         const item = data[i];
         if (item.id === id) {
-          data.splice(i, 0, newLayer);
+          if (isForced) {
+            if(item?.modules) {
+              item.modules.push(newLayer)
+            }
+          } else {
+            data.splice(i, 0, newLayer);
+          }
           break;
         } else if (item.modules && item.modules.length) {
           recursiveFn(item.modules, id);

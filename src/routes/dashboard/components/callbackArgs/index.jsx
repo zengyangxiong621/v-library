@@ -86,7 +86,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
   const componentClick = id => {
     // todo 画布上高亮显示当前的组件
     // console.log('source', id);
-    // const layer = findLayerById(bar.treeData, id)
+    // const layer = findLayerById(bar.layers, id)
     // dispatch({
     //   type: 'bar/selectLayers',
     //   payload: [layer]

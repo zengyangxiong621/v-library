@@ -1,5 +1,5 @@
 import React from 'react';
-import EC from '../../EC'
+import EC from '../../../EC'
 
 import * as echarts from 'echarts';
 import ComponentDefaultConfig from './config'

@@ -4,8 +4,8 @@
 type getMoveGroupType<T, U> = (a: T, b: U) => T;
 type TPlaceGroup = getMoveGroupType<any[], string[]>;
 
-const placeTop: TPlaceGroup = (treeData, selectedNodes) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const placeTop: TPlaceGroup = (layers, selectedNodes) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -22,16 +22,16 @@ const placeTop: TPlaceGroup = (treeData, selectedNodes) => {
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 /**
  * description: 置底
  */
-const placeBottom: TPlaceGroup = (treeData, selectedNodes) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const placeBottom: TPlaceGroup = (layers, selectedNodes) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -48,17 +48,17 @@ const placeBottom: TPlaceGroup = (treeData, selectedNodes) => {
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 /**
  * description: 上移
  */
 type TMoveUpOrDown = getMoveGroupType<any[], string[]>;
-const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const moveUp: TMoveUpOrDown = (layers, selectedNodes) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, ids: string[]) => {
     for (let i = 0, len = data.length; i < len; i++) {
       if (ids.includes(data[i].id)) {
@@ -71,15 +71,15 @@ const moveUp: TMoveUpOrDown = (treeData, selectedNodes) => {
       }
     }
   };
-  recursiveFn(treeDataCopy, selectedNodes);
-  return treeDataCopy;
+  recursiveFn(layersCopy, selectedNodes);
+  return layersCopy;
 };
 
 /**
  * description: 下移
  */
-const moveDown: TMoveUpOrDown = (treeData, selectedNodes) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const moveDown: TMoveUpOrDown = (layers, selectedNodes) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, ids: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -94,16 +94,16 @@ const moveDown: TMoveUpOrDown = (treeData, selectedNodes) => {
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 /**
  * description: 删除
  */
-const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const remove: TMoveUpOrDown = (layers, selectedNodes) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -116,20 +116,20 @@ const remove: TMoveUpOrDown = (treeData, selectedNodes) => {
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 type threeParams = (a: any[], b: string[], c: boolean | string) => any[];
 type threeParams2 = (a: any[], b: string[], c: string) => any[];
 /**
  * description: 获取每一个被选中节点的 锁定/单独显示图层 状态
- * params: {treeData} 目标树  {selectedNodes} 当前选中的节点 {field} 要匹配的字段
+ * params: {layers} 目标树  {selectedNodes} 当前选中的节点 {field} 要匹配的字段
  *
  * return: boolean[]
  */
-const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
+const getFieldStates: threeParams2 = (layers, selectedNodes, field) => {
   const res: string[] = [];
   const recursiveFn = (data: any, ids: string[], field: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
@@ -141,14 +141,14 @@ const getFieldStates: threeParams2 = (treeData, selectedNodes, field) => {
       }
     }
   };
-  recursiveFn(treeData, selectedNodes, field);
+  recursiveFn(layers, selectedNodes, field);
   return res;
 };
 /**
  * description: 锁定 / 解锁
  */
-const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const lock: threeParams = (layers, selectedNodes, targetLockState) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -163,16 +163,16 @@ const lock: threeParams = (treeData, selectedNodes, targetLockState) => {
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 /**
  * description: 隐藏 / 显示
  */
-const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const hidden: threeParams = (layers, selectedNodes, targetShowState) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -185,20 +185,20 @@ const hidden: threeParams = (treeData, selectedNodes, targetShowState) => {
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 /**
  * description: 单独显示图层
  */
 const singleShowLayer: threeParams = (
-  treeData,
+  layers,
   selectedNodes,
   SingleShowLayerState
 ) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -213,18 +213,18 @@ const singleShowLayer: threeParams = (
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 /**
  * description:  成组
  */
 type groupParams2 = (a: any[], b: string[]) => any;
-const group: groupParams2 = (treeData, selectedNodes) => {
+const group: groupParams2 = (layers, selectedNodes) => {
   const insertId = selectedNodes[0];
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const newGroup: any = {
     name: "分组",
     title: "分组",
@@ -262,16 +262,16 @@ const group: groupParams2 = (treeData, selectedNodes) => {
     if (i === len - 1) {
       isDone = true;
     }
-    recursiveFn(treeDataCopy, selectedNodes[i], isDone);
+    recursiveFn(layersCopy, selectedNodes[i], isDone);
   }
-  return { treeDataCopy, newLayerId: newGroup.id };
+  return { layersCopy, newLayerId: newGroup.id };
 };
 
 /**
  * description: 取消成组
  */
-const cancelGroup: TMoveUpOrDown = (treeData, selectedNodes) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+const cancelGroup: TMoveUpOrDown = (layers, selectedNodes) => {
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -290,20 +290,20 @@ const cancelGroup: TMoveUpOrDown = (treeData, selectedNodes) => {
     }
   };
   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-    recursiveFn(treeDataCopy, selectedNodes[i]);
+    recursiveFn(layersCopy, selectedNodes[i]);
   }
-  return treeDataCopy;
+  return layersCopy;
 };
 
 /**
  * description: 显示/关闭 重命名输入框
  */
 const showInput: (a: any[], b: string[], c: boolean) => any[] = (
-  treeData,
+  layers,
   node,
   onOrOff
 ) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -319,18 +319,18 @@ const showInput: (a: any[], b: string[], c: boolean) => any[] = (
     }
   };
   // if(node.length>1) return
-  recursiveFn(treeDataCopy, node[0]);
-  return treeDataCopy;
+  recursiveFn(layersCopy, node[0]);
+  return layersCopy;
 };
 /**
  * description: 重命名
  */
 const reName: (a: any[], b: string[], c: string) => any[] = (
-  treeData,
+  layers,
   node,
   newName
 ) => {
-  const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+  const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
       const item = data[i];
@@ -342,8 +342,8 @@ const reName: (a: any[], b: string[], c: string) => any[] = (
       }
     }
   };
-  recursiveFn(treeDataCopy, node[0]);
-  return treeDataCopy;
+  recursiveFn(layersCopy, node[0]);
+  return layersCopy;
 };
 /**
  * description: mock TreeData
@@ -394,8 +394,8 @@ const generateTreeData: () => any = () => {
 /**
  * description: 复制
  */
-// const copy: TMoveUpOrDown = (treeData, selectedNodes) => {
-//   const treeDataCopy = JSON.parse(JSON.stringify(treeData));
+// const copy: TMoveUpOrDown = (layers, selectedNodes) => {
+//   const layersCopy = JSON.parse(JSON.stringify(layers));
 //   const recursiveFn = (data: any, id: string) => {
 //     for (let i = 0, len = data.length; i < len; i++) {
 //       const item = data[i];
@@ -408,7 +408,7 @@ const generateTreeData: () => any = () => {
 //     }
 //   };
 //   for (let i = 0, len = selectedNodes.length; i < len; i++) {
-//     recursiveFn(treeDataCopy, selectedNodes[i]);
+//     recursiveFn(layersCopy, selectedNodes[i]);
 //   }
 //   return treeDataCopy;
 // };

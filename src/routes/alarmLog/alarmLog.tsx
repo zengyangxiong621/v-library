@@ -253,9 +253,9 @@ const AlarmLog: React.FC = () => {
         </div>
         <div className='table-list'>
           <Table 
-            dataSource={dataSource?.content || []}
-            scroll={{ y: "44vh" }}
+            scroll={{ y: "calc(100vh - 350px)" }}
             rowClassName='customRowClass'
+            dataSource={dataSource?.content || []}
             loading={loading}
             rowKey={(record:any) => record.id}
             onChange={tableOnChange}
@@ -264,18 +264,6 @@ const AlarmLog: React.FC = () => {
           >
             <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="150px"/>
             <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="500px"/>
-            {/* <Column
-              title="处置方案名称"
-              dataIndex="id"
-              key="id"
-              ellipsis={true}
-              width="250px"
-              render={() => (
-                <>
-                  <Button className='none-border' onClick={showDrawer}>处置方案2</Button>
-                </>
-              )}
-            /> */}
             <Column title="更新时间" dataIndex="updatedTime" key="updatedTime" ellipsis={true} width="200px"
               sorter={true} 
             />
@@ -309,16 +297,6 @@ const AlarmLog: React.FC = () => {
           </Table>
         </div>
       </div>
-      <Drawer 
-        title="处置方案内容" 
-        placement="right" 
-        onClose={()=>setVisible(false)} 
-        visible={visible}
-        width={600}
-      >
-        <p>处置方案名称：处置方案2</p>
-        <p>处置方案内容：测试导入</p>
-      </Drawer>
     </ConfigProvider>
   );
 };

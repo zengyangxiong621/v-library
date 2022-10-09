@@ -31,36 +31,16 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   // 返回首页
   const toBack = () => {
-    history.back();
+    if (bar.panelId) {
+      // history.push(`/dashboard/${bar.dashboardId}`);
+      history.back()
+    }
+    if (!bar.panelId && bar.dashboardId) {
+      history.push(`/dashboard-manage`);
+    }
     // 暂时在这里清空localStorage
     localStorage.removeItem("allDrillDownPathReflect");
     localStorage.removeItem("allHasParentReflect");
-    // dispatch({
-    //   type: 'bar/save',
-    //   payload: {
-    //     isPanel: false,
-    //     stateId: null,
-    //     panelId: null,
-    //     panels: [],
-    //     panelStatesList: [],
-    //     key: [bar.dashboardId],
-    //     treeData: [],
-    //     scaleDragData: {
-    //       position:{
-    //         x: 0,
-    //         y:0
-    //       },
-    //       style: {
-    //         width: 0,
-    //         height: 0,
-    //         display: 'none'
-    //       }
-    //     }
-    //   }
-    // })
-    // dispatch({
-    //   type: 'bar/getDashboardDetails'
-    // })
   };
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {
@@ -197,9 +177,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     const isPublished = data.share;
     setFabuBody(filterShareUrl);
     if (isPublished) {
-      const host = window.location.host;
+      const origin = window.location.origin;
       const idInUrl = data.shareUrl.split("/").pop();
-      setFxljInputValue(`${host}/publishScreen/${idInUrl}`);
+      setFxljInputValue(`${origin}/publishScreen/${idInUrl}?encrypt=${data.needPassword}`);
       if (data.needPassword) {
         // setJmfxValue()
         setIsShowJmfxInput(true);
@@ -288,9 +268,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       message.success({ content: "发布成功", duration: 2 });
       // 发布成功，1. 刷新列表获得应用最新的发布状态
       // 2. 设置分享连接地址
-      const host = window.location.host;
+      const origin = window.location.origin;
       const idInUrl = result.shareUrl.split("/").pop();
-      setFxljInputValue(`${host}/publishScreen/${idInUrl}`);
+      setFxljInputValue(`${origin}/publishScreen/${idInUrl}?encrypt=${isShowJmfxInput}`);
       // 打开发布开关
       setFabuChecked(true);
       setIsShared(true);
@@ -329,6 +309,8 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       id: bar.dashboardId
     };
     setFabuBody(finalBody);
+    const curUrl = fxljInputValue.split("?")[0];
+    setFxljInputValue(`${curUrl}?encrypt=${isCheck}`);
     const result: any = await publishByDiffParams(finalBody);
     if (!result) {
       message.error({ content: "发布失败", duration: 2 });
@@ -471,7 +453,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   };
 
   return (
-    <div className='Header-wrap'>
+    <div className='header-wrap'>
       <div className='left'>
         <IconFont type='icon-fanhui' className='left-icon'
           onClick={() => toBack()} />
@@ -497,7 +479,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
             return (
               <div key={index}>
                 {
-                  item.icon === "line" ? <div className='line'></div>
+                  item.icon === "line" ? <div className="line"/>
                     :
                     <NavigationItem getActiveIcon={getActiveIcon}
                       data={item} activeIcon={activeIcon} isResetActiveIcon={isResetActiveIcon} />
@@ -575,7 +557,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
                         />
                         <Paragraph
                           copyable={{
-                            text: `${fxljInputValue}`,
+                            text: `${fxljInputValue}  ${titleInputValue}  ${descriptionInputValue}`,
                             onCopy: () => {
                               message.success({ content: "复制链接成功", duration: 1 });
                             },

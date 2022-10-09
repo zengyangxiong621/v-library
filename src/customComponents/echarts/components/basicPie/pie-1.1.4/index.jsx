@@ -426,10 +426,15 @@ const Pie = (props) => {
   }
 
   const onChartClick = (param, echarts) => {
+    console.log('饼图数据', param);
     if (Array.isArray(componentConfig.drillDownArr) && componentConfig.drillDownArr.length) {
+      const data = {
+        name: param.name,
+        value: param.value
+      }
       // drillDownArray长度不为零, 需要下钻
       if (typeof props.onChange === 'function') {
-        props.onChange(param, echarts)
+        props.onChange(data, echarts)
       }
     } else {
       // do something

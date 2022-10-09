@@ -9,7 +9,7 @@ import * as React from "react";
 import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
-import {treeDataReverse, deepClone} from "@/utils/index.js";
+import {layersReverse, deepClone} from "@/utils/index.js";
 interface State {
   states: string[];
 
@@ -46,7 +46,7 @@ const DynamicPanel = ({publishDashboard, id, dispatch, panels}: any) => {
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    treeDataReverse(layers);
+    layersReverse(layers);
     return {
       components,
       layers,

@@ -1,6 +1,6 @@
 import { memo, useState, useRef } from "react";
 import "./stateItem.less";
-import {connect} from "dva";
+import { connect } from "dva";
 import { IconFont } from "@/utils/useIcon";
 import { http } from "@/services/request";
 import { Input } from "antd";
@@ -56,6 +56,7 @@ const StateItem = (props: any) => {
           editState ?
             <div>
               <Input
+                style={{ background: '#232630' }}
                 value={inputValue}
                 ref={inputRef}
                 onChange={e => setInputValue(e.target.value)}
@@ -73,4 +74,4 @@ const StateItem = (props: any) => {
   );
 };
 
-export default memo(connect(({bar}: any) => ({bar}))(StateItem));
+export default memo(connect(({ bar }: any) => ({ bar }))(StateItem));

@@ -1,6 +1,10 @@
 import { defaultData } from "./defaultData/publishDashboard";
 import { http } from "../services/request";
-import { ILayerComponent, ILayerGroup, IPanel } from "../routes/dashboard/center/components/CustomDraggable/type";
+import {
+  ILayerComponent,
+  ILayerGroup,
+  IPanel,
+} from "../routes/dashboard/center/components/CustomDraggable/type";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
 import {
   calcGroupPosition,
@@ -12,7 +16,7 @@ import {
   mergeComponentLayers,
   setComponentDimension,
   layersPanelsFlat,
-  duplicateDashboardConfig
+  duplicateDashboardConfig,
 } from "../utils";
 import { IBarState } from "./defaultData/bar";
 export default {
@@ -24,7 +28,7 @@ export default {
     },
   },
   effects: {
-    * initDashboard({ payload: { dashboardId,pass }, cb }: any, { call, put, select }: any): any {
+    *initDashboard({ payload: { dashboardId, pass }, cb }: any, { call, put, select }: any): any {
       let publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
       // 获取回调参数列表
       const callbackParamsList = yield http({
@@ -40,7 +44,7 @@ export default {
         payload: dashboardId,
       });
       publishDashboard = yield select(({ publishDashboard }: any) => publishDashboard);
-      const func = async (component:any) => {
+      const func = async (component: any) => {
         let data = await http({
           method: "post",
           url: "/visual/container/screen/data/get",
@@ -51,8 +55,10 @@ export default {
             pass,
           },
         });
-        const index = publishDashboard.dataContainerDataList.findIndex((item: any) => item.id === component.id);
-        if(component.dataType === "static") {
+        const index = publishDashboard.dataContainerDataList.findIndex(
+          (item: any) => item.id === component.id
+        );
+        if (component.dataType === "static") {
           data = data.data;
         }
         if (index !== -1) {
@@ -61,17 +67,6 @@ export default {
           publishDashboard.dataContainerDataList.push({ id: component.id, data });
         }
       };
-      console.log("publishDashboard.dataContainerList", publishDashboard.dataContainerList);
-      publishDashboard.dataContainerList.forEach(async(item: any) => {
-        let data: any = null;
-        item.enable = item.modules.length > 0;
-        if(item.dataType === "static") {
-          data = item.staticData.data;
-          publishDashboard.dataContainerDataList.push({ id: item.id, data });
-        } else {
-          await func(item);
-        }
-      });
       // 获取当前画布所有的数据过滤器
       const filters = yield http({
         url: "/visual/module/filter/list",
@@ -95,23 +90,31 @@ export default {
       });
       yield put({
         type: "getDashboardDetails",
-        payload:{
-          pass
+        payload: {
+          pass,
         },
-        cb: async(data: any) => {
+        cb: async (data: any) => {
           await cb(data);
+          // 后端要求必须先请求完application/dashboard/show接口再请求func里面的接口
+          publishDashboard.dataContainerList.forEach(async (item: any) => {
+            let data: any = null;
+            item.enable = item.modules.length > 0;
+            if (item.dataType === "static") {
+              data = item.staticData.data;
+              publishDashboard.dataContainerDataList.push({ id: item.id, data });
+            } else {
+              await func(item);
+            }
+          });
         },
       });
     },
-    * getDataContainerList(
-      { payload, cb }: any,
-      { call, put, select }: any,
-    ): any {
+    *getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
       const dashboardId = publishDashboard.dashboardId || payload;
       const data = yield http({
         method: "get",
-        url: `/visual/container/list/${ dashboardId }`,
+        url: `/visual/container/list/${dashboardId}`,
       });
       yield put({
         type: "save",
@@ -121,59 +124,51 @@ export default {
       });
       return data;
     },
-    *getDashboardDetails(
-      { payload: {pass}, cb }: any,
-      { call, put, select }: any
-    ): any {
+    *getDashboardDetails({ payload: { pass }, cb }: any, { call, put, select }: any): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
       const { dashboardId } = publishDashboard;
       try {
-        let { layers, components, dashboardConfig, dashboardName } = yield http(
-          {
-            url: `/visual/application/dashboard/show/${dashboardId}`,
-            method: "post",
-            body: {
-              pass,
-              dashboardId,
-            }
-          }
-        );
+        let { layers, components, dashboardConfig, dashboardName } = yield http({
+          url: `/visual/application/dashboard/show/${dashboardId}`,
+          method: "post",
+          body: {
+            pass,
+            dashboardId,
+          },
+        });
         const layerPanels: any = layersPanelsFlat(layers);
         const func = async (layerPanel: any) => {
           try {
             const panelConfig = await http({
-              url: `/visual/panel/detail/${ layerPanel.id }`,
+              url: `/visual/panel/detail/${layerPanel.id}`,
               method: "get",
             });
             return panelConfig;
-          } catch(e) {
+          } catch (e) {
             return null;
           }
         };
         const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => func(item)));
-        yield (layers = deepForEach(
-          layers,
-          (layer: ILayerGroup | ILayerComponent) => {
-            layer.singleShowLayer = false;
-            delete layer.selected;
-            delete layer.hover;
-          }
-        ));
+        yield (layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+          layer.singleShowLayer = false;
+          delete layer.selected;
+          delete layer.hover;
+        }));
         yield yield put({
           type: "getComponentsData",
-          payload: {
-            components,
-            pass
-          },
+          payload: components,
         });
         const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
-        const newDashboardConfig = duplicateDashboardConfig(deepClone(publishDashboard.dashboardConfig), dashboardConfig);
+        const newDashboardConfig = duplicateDashboardConfig(
+          deepClone(publishDashboard.dashboardConfig),
+          dashboardConfig
+        );
         yield put({
           type: "save",
           payload: {
-            treeData: noEmptyGroupLayers,
+            layers: noEmptyGroupLayers,
             components,
             panels,
             dashboardId,
@@ -188,9 +183,10 @@ export default {
       }
     },
     *getComponentsData({ payload }: any, { call, put, select }: any): any {
-      const {components, pass} = payload;
+      const components = payload;
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
       const { dashboardId, componentData, callbackArgs } = publishDashboard;
+      const pass = localStorage.getItem(dashboardId);
       const func = async (component: any) => {
         try {
           const data = await http({
@@ -199,15 +195,14 @@ export default {
             body: {
               moduleId: component.id,
               dataType: component.dataType,
-              callBackParamValues:callbackArgs,
+              callBackParamValues: callbackArgs,
               dashboardId,
-              pass
+              pass,
             },
           });
 
           if (data) {
-            componentData[component.id] =
-              component.dataType !== "static" ? data : data.data;
+            componentData[component.id] = component.dataType !== "static" ? data : data.data;
           } else {
             throw new Error("请求不到数据");
           }
@@ -216,7 +211,7 @@ export default {
         }
         return componentData[component.id];
       };
-      yield Promise.all(components.map((item: any) => func(item)));
+      yield Promise.all((components || []).map((item: any) => func(item)));
       // 先获取数据，再生成画布中的组件树，这样避免组件渲染一次后又拿到数据再渲染一次
       yield put({
         type: "save",
@@ -228,7 +223,7 @@ export default {
     *getContainersData({ payload }: any, { call, put, select }: any): any {
       const dataContainerList = payload;
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      const {dashboardId, callbackArgs} = publishDashboard;
+      const { dashboardId, callbackArgs } = publishDashboard;
       const pass = localStorage.getItem(dashboardId);
       dataContainerList.forEach(async (item: any) => {
         const container = publishDashboard.dataContainerList.find(
@@ -245,13 +240,11 @@ export default {
               id: container.id,
               callBackParamValues: callbackArgs,
               dashboardId,
-              pass
+              pass,
             },
           });
         }
-        publishDashboard.dataContainerDataList.find(
-          (data: any) => data.id === item.id
-        ).data = data;
+        publishDashboard.dataContainerDataList.find((data: any) => data.id === item.id).data = data;
       });
       yield put({
         type: "save",
@@ -266,5 +259,4 @@ export default {
       };
     },
   },
-
 };

@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
+import { withRouter } from 'dva/router'
 import "./index.less";
 import { IconFont } from "@/utils/useIcon";
 import { connect } from "dva";
@@ -13,7 +14,7 @@ import StateItem from "./stateItem/stateItem";
 
 
 const DynamicPanel: React.FC = (props: any) => {
-  const { bar, dispatch } = props;
+  const { bar, dispatch, history } = props;
   const [open, setOpen] = useState(true);
   const [isShowRMenu, setIsShowRMenu] = useState(false);
   const [RMenuLocation, setRMenuLocation] = useState({ x: 0, y: 0 });
@@ -47,13 +48,8 @@ const DynamicPanel: React.FC = (props: any) => {
   /**
    * description: 点击每一项状态
    */
-  const selectItem = (state: { name: string, id: string }) => {
-    dispatch({
-      type: "bar/selectPanelState",
-      payload: {
-        stateId: state.id
-      }
-    });
+  const selectItem = ({ name, id }: { name: string, id: string }) => {
+    history.push(`/dashboard/${bar.dashboardId}/panel-${bar.panelId}/state-${id}`);
   };
   /**
    * description: 右键点击每一项
@@ -188,4 +184,4 @@ const RMenu = ({ menuLocation, copyClick, delClick }: any) => {
 
 export default memo(connect(
   ({ bar }: any) => ({ bar }),
-)(DynamicPanel));
+)(withRouter(DynamicPanel)));

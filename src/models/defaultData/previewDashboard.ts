@@ -1,7 +1,7 @@
 export const defaultData = {
   dashboardId: "",
   dashboardName: "",
-  treeData: [],
+  layers: [],
   components: [],
   panels: [],
   canvasScaleValue: 0,
@@ -86,4 +86,9 @@ export const defaultData = {
   componentFilters: [],
   callbackArgs: {},
   callbackParamsList: [],
+  allDashboardList: [],
+  fullAmountLayers: [],
+  fullAmountDashboardDetails: [],
+  isDashboardInit: false,
+  fullAmountDynamicAndDrillDownPanels: []
 };

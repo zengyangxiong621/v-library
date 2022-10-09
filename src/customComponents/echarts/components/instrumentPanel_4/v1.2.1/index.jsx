@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
-import './index.css'
+import './index.less'
 import ComponentDefaultConfig from './config'
 import CountUp from 'react-countup'
 

@@ -49,6 +49,9 @@
 .normalTable .ant-table .ant-table-tbody .ant-table-expanded-row td {
   background-color: inherit;
 }
+.normalTable .ant-table .ant-table-tbody .ant-table-placeholder .ant-empty {
+  color: var(--headerFontColor);
+}
 .normalTable .row-dragging {
   background: #fafafa;
   border: 1px solid #ccc;

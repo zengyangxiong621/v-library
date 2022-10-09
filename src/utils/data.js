@@ -29,6 +29,10 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
         resData = currentData;
       }
     }
+    console.log('------------')
+    console.log('layer.name', layer.name)
+    console.log('resDataresDataresDataresData', resData)
+    console.log('------------')
     return resData;
   } catch (e) {
     console.log(`报错图层: ${layer.id}-${layer.name}, 报错原因：1、查无组件Config`, e);
@@ -73,7 +77,7 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
       });
       return resultArr[resultArr.length - 1];
     } catch (e) {
-      return {};
+      return []
     }
   } else {
     return data;
@@ -212,7 +216,6 @@ const getCallbackParams = (componentCallbackArgs, currnetData) => {
   let comCallbackArgs = JSON.parse(JSON.stringify(filteredParams));
   // 给comCallbackArgs拥有相同变量的去重
   comCallbackArgs = duplicateFn(comCallbackArgs); // 后面覆盖前面
-  console.log("componentCallbackArgs,currnetData", componentCallbackArgs, currnetData);
   componentCallbackArgs.forEach(item => {
     result[item.target] = currnetData[item.origin];
   });

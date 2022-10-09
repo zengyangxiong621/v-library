@@ -9,14 +9,16 @@ const NavigationIcon = (props: any) => {
   const { data, getActiveIcon, activeIcon, isResetActiveIcon } = props;
   // @mark 后来添加的 “数据容器”，ui给的icon名不叫shujurongqi
   let icon = data.icon;
-  if (data.icon === "shujurongqi") {
-    icon = "moxing-zidingyishujurongqi";
-  }
-  if (data.icon === "zujiangengxin") {
-    icon = "shujuxiangyingjieguo-shuaxin";
+  switch (icon) {
+    case "zujiangengxin":
+      icon = "shujuxiangyingjieguo-shuaxin";
+      break;
+    case "xiazuanmianban":
+      icon = "xiazuanguanli";
+      break;
   }
   return (
-    <div className={`${ !isResetActiveIcon && activeIcon === data.icon && "activeIcon"} GenerateIcon-wrap`}
+    <div className={`${!isResetActiveIcon && activeIcon === data.icon && "activeIcon"} GenerateIcon-wrap`}
       onClick={() => getActiveIcon(data.icon)}
     >
       <IconFont className='icon' type={`icon-${icon}`} />
