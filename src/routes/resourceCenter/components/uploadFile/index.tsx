@@ -131,39 +131,44 @@ const UploadFile = (props: any) => {
   };
 
   return (
-    <Modal
-      title={`自定义上传${["myTemp","systemTemp"].indexOf(origin) > -1 ? "模板" : "素材"}`}
-      visible={uploadVisible}
-      maskClosable={false}
-      destroyOnClose
-      onOk={handleOk}
-      onCancel={handleCancel}
-      confirmLoading={confirmLoading}
-      getContainer={false}
-      okText="确定"
-      cancelText="取消"
-    >
-      <Form name="importComponent"  form={uploadForm}>
-        <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, "请选择要上传的组件")}>
-          <Dragger {...fileProps}>
-            <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
-            <p className="ant-upload-hint">大小不得超过100MB，且必须为.zip格式</p>
-          </Dragger>
-        </Form.Item>
-        {/* <Form.Item label="资源名称"></Form.Item> */}
-        <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, "请选择分组")}>
-        <Select placeholder="请选择"  onChange={selectChange}>
-          {
-            (selectList || []).map((item:any) => {
-              if(["-1","sysMatAll","myTempAll", "sysTempAll"].indexOf(item.groupId) === -1){
-                return (<Option value={item.groupId} key={item.groupId}>{item.name}</Option> );
-              }
-            })
-          }
-          </Select>
-        </Form.Item>
-      </Form>
-    </Modal>
+    <div className='upload-file'>
+      <Modal
+        title={`自定义上传${["myTemp","systemTemp"].indexOf(origin) > -1 ? "模板" : "素材"}`}
+        visible={uploadVisible}
+        maskClosable={false}
+        destroyOnClose
+        onOk={handleOk}
+        onCancel={handleCancel}
+        confirmLoading={confirmLoading}
+        getContainer={false}
+        style={{
+          top: "20%"
+        }}
+        okText="确定"
+        cancelText="取消"
+      >
+        <Form name="importComponent" colon={false} form={uploadForm}>
+          <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, "请选择要上传的组件")}>
+            <Dragger {...fileProps}>
+              <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
+              <p className="ant-upload-hint">大小不得超过100MB，且必须为.zip格式</p>
+            </Dragger>
+          </Form.Item>
+          {/* <Form.Item label="资源名称"></Form.Item> */}
+          <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, "请选择分组")}>
+          <Select placeholder="请选择"  onChange={selectChange}>
+            {
+              (selectList || []).map((item:any) => {
+                if(["-1","sysMatAll","myTempAll", "sysTempAll"].indexOf(item.groupId) === -1){
+                  return (<Option value={item.groupId} key={item.groupId}>{item.name}</Option> );
+                }
+              })
+            }
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
   );
 };
 export default memo(
