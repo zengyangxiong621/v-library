@@ -18,7 +18,7 @@ import Counter from "@/customComponents/assist/counter2/v1.0.6";
 import Media from "@/customComponents/media/v1.1.1";
 import NormalTable from "@/customComponents/table/normalTable/v1.0.5";
 import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
-import FlowChart from "@/customComponents/echarts/components/flowChart/v1.0.0";
+import FlowChart from "@/customComponents/echarts/components/flowChart/v1.0.1";
 import Pie from "@/customComponents/echarts/components/basicPie/v1.1.5";
 import { connect } from "dva";
 
