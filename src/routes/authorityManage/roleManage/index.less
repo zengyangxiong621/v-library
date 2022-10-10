@@ -5,7 +5,7 @@
   background-color: @backColor;
   width: 100%;
   height: calc(100vh - 80px);
-  padding: 16px 32px;
+  padding: 24px 32px;
   .title{
     width: 64px;
     height: 22px;
@@ -56,6 +56,10 @@
     // 分页器 ”共xx条” 显示在最左侧
     .ant-pagination-total-text {
       margin-right: auto;
+    }
+    .ant-pagination-item,.ant-pagination-prev,.ant-pagination-next{
+      border: none;
+      background-color: #2A2E3E;
     }
     // 分页器页码样式调整
     .ant-pagination-item-active {
