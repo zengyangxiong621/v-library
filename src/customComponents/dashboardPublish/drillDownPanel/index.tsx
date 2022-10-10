@@ -39,9 +39,14 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
   const [activeIndex, setActiveIndex] = useState(0)
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
+    const pass = window.localStorage.getItem(panel.dashboardId);
     const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
+      url: `/visual/application/dashboard/show/${id}`,
+      method: "post",
+      body: {
+        pass,
+        dashboardId: panel.dashboardId
+      }
     });
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
