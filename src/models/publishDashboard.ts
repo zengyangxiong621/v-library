@@ -17,6 +17,7 @@ import {
   setComponentDimension,
   layersPanelsFlat,
   duplicateDashboardConfig,
+  getQueryVariable,
 } from "../utils";
 import { IBarState } from "./defaultData/bar";
 export default {
@@ -45,16 +46,25 @@ export default {
       });
       publishDashboard = yield select(({ publishDashboard }: any) => publishDashboard);
       const func = async (component: any) => {
+        const params: any = getQueryVariable();
+        let callBackParamValues = {
+          ...publishDashboard.callbackArgs,
+        };
+        if (params?.Ticket) {
+          callBackParamValues.Ticket = params.Ticket;
+          callBackParamValues["X-Authenticated-Userid"] = params["X-Authenticated-Userid"];
+        }
         let data = await http({
           method: "post",
           url: "/visual/container/screen/data/get",
           body: {
             id: component.id,
-            callBackParamValues: publishDashboard.callbackArgs,
+            callBackParamValues: callBackParamValues,
             dashboardId,
             pass,
           },
         });
+        
         const index = publishDashboard.dataContainerDataList.findIndex(
           (item: any) => item.id === component.id
         );
@@ -189,13 +199,21 @@ export default {
       const pass = localStorage.getItem(dashboardId);
       const func = async (component: any) => {
         try {
+          const params: any = getQueryVariable();
+          let callBackParamValues = {
+            ...callbackArgs,
+          };
+          if (params?.Ticket) {
+            callBackParamValues.Ticket = params.Ticket;
+            callBackParamValues["X-Authenticated-Userid"] = params["X-Authenticated-Userid"];
+          }
           const data = await http({
             url: "/visual/module/getShowData",
             method: "post",
             body: {
               moduleId: component.id,
               dataType: component.dataType,
-              callBackParamValues: callbackArgs,
+              callBackParamValues: callBackParamValues,
               dashboardId,
               pass,
             },
@@ -233,12 +251,20 @@ export default {
         if (container.dataType === "static") {
           data = container.staticData.data;
         } else {
+          const params: any = getQueryVariable();
+          let callBackParamValues = {
+            ...callbackArgs,
+          };
+          if (params?.Ticket) {
+            callBackParamValues.Ticket = params.Ticket;
+            callBackParamValues["X-Authenticated-Userid"] = params["X-Authenticated-Userid"];
+          }
           data = await http({
             method: "post",
             url: "/visual/container/screen/data/get",
             body: {
               id: container.id,
-              callBackParamValues: callbackArgs,
+              callBackParamValues: callBackParamValues,
               dashboardId,
               pass,
             },
