@@ -64,7 +64,16 @@ export default {
         }
       };
       previewDashboard = yield select(({ previewDashboard }: any) => previewDashboard);
-
+      previewDashboard.dataContainerList.forEach(async (item: any) => {
+        let data: any = null;
+        item.enable = item.modules.length > 0;
+        if (item.dataType === "static") {
+          data = item.staticData.data;
+          previewDashboard.dataContainerDataList.push({ id: item.id, data });
+        } else {
+          await func(item);
+        }
+      });
       // 获取当前画布所有的数据过滤器
       const filters = yield http({
         url: "/visual/module/filter/list",
@@ -91,16 +100,6 @@ export default {
         type: "getDashboardDetails",
         cb: async (data: any) => {
           await cb(data);
-          previewDashboard.dataContainerList.forEach(async (item: any) => {
-            let data: any = null;
-            item.enable = item.modules.length > 0;
-            if (item.dataType === "static") {
-              data = item.staticData.data;
-              previewDashboard.dataContainerDataList.push({ id: item.id, data });
-            } else {
-              await func(item);
-            }
-          });
         },
       });
 
