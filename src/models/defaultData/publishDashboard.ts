@@ -87,4 +87,9 @@ export const defaultData = {
   callbackArgs: {},
   callbackParamsList: [],
   pass: "",
+  allDashboardList: [],
+  fullAmountLayers: [],
+  fullAmountDashboardDetails: [],
+  isDashboardInit: false,
+  fullAmountDynamicAndDrillDownPanels: []
 };

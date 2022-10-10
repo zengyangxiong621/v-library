@@ -64,25 +64,7 @@ export default {
         }
       };
       previewDashboard = yield select(({ previewDashboard }: any) => previewDashboard);
-      previewDashboard.dataContainerList.forEach(async (item: any) => {
-        let data: any = null;
-        item.enable = item.modules.length > 0;
-        if (item.dataType === "static") {
-          data = item.staticData.data;
-          previewDashboard.dataContainerDataList.push({ id: item.id, data });
-        } else {
-          await func(item);
-        }
-        // // 添加自动过呢更新
-        // if(item.autoUpdate?.isAuto){
-        //   setInterval(async () => {
-        //     await func(item)
-        //     await put({
-        //       type: 'save'
-        //     })
-        //   }, item.autoUpdate.interval*1000)
-        // }
-      });
+
       // 获取当前画布所有的数据过滤器
       const filters = yield http({
         url: "/visual/module/filter/list",
@@ -109,6 +91,16 @@ export default {
         type: "getDashboardDetails",
         cb: async (data: any) => {
           await cb(data);
+          previewDashboard.dataContainerList.forEach(async (item: any) => {
+            let data: any = null;
+            item.enable = item.modules.length > 0;
+            if (item.dataType === "static") {
+              data = item.staticData.data;
+              previewDashboard.dataContainerDataList.push({ id: item.id, data });
+            } else {
+              await func(item);
+            }
+          });
         },
       });
 
@@ -233,11 +225,8 @@ export default {
           index: number
         ) => {
           if ("panelType" in layer && (layer.panelType === 0 || layer.panelType === 2)) {
-            console.log('layer', layer)
               ; (layer as any).modules =
                 (findLayerById(fullAmountDynamicAndDrillDownPanels, layer.id) as any)?.modules || []
-            /*              fullAmountDynamicAndDrillDownPanels.find((item: any) => item.id === layer.id)
-                            ?.modules || [];*/
           }
         }
       );
@@ -248,13 +237,6 @@ export default {
       const panels = previewDashboard.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
-
-      console.log('--------------------')
-      console.log('fullAmountDynamicAndDrillDownPanels', fullAmountDynamicAndDrillDownPanels)
-      console.log("fullAmountDashboardDetails", previewDashboard.fullAmountDashboardDetails);
-      console.log("fullAmountLayers", fullAmountLayers);
-      console.log("fullAmountComponents", fullAmountComponents);
-      console.log('--------------------')
 
       yield put({
         type: "save",
@@ -299,9 +281,7 @@ export default {
             return null;
           }
         };
-        const panels: Array<IPanel> = yield Promise.all(
-          layerPanels.map((item: any) => func(item))
-        );
+        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => func(item)));
         yield (layers = deepForEach(
           layers,
           (layer: ILayerGroup | ILayerComponent) => {
@@ -390,9 +370,6 @@ export default {
       const previewDashboard: any = yield select(
         ({ previewDashboard }: any) => previewDashboard
       );
-/*      dataContainerList.forEach(async (item: any) => {
-
-      });*/
       const func = async (item: any) => {
         const container = previewDashboard.dataContainerList.find(
           (container: any) => container.id === item.id
