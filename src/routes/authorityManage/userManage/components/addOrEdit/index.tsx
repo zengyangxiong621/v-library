@@ -94,9 +94,8 @@ const AddOrEdit = (props: any) => {
     <Modal
       visible={showAddOrEdit}
       keyboard={true}
-      title={formType === "edit"? "编辑用户": "新增用户"}
+      title={formType === "edit"? "编辑用户": "新建用户"}
       getContainer={false}
-      closeIcon={() => <></>} // 除去关闭按钮
       style={{
         top: "8vh"
       }}
@@ -118,7 +117,6 @@ const AddOrEdit = (props: any) => {
         <Form.Item
           label='账号'
           name='userName'
-          style={{ marginTop: "20px" }}
           rules={[
             {required: true, message:""},
             () => ({
