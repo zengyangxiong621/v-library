@@ -75,12 +75,14 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
   const getComponentData = async (component: any) => {
     try {
       const data = await http({
-        url: "/visual/module/getData",
+        url: "/visual/module/getShowData",
         method: "post",
         body: {
           moduleId: component.id,
           dataType: component.dataType,
           callBackParamValues: publishDashboard.callbackArgs,
+          dashboardId: publishDashboard.dashboardId,
+          pass: publishDashboard.pass
         },
       });
 
