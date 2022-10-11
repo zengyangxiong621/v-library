@@ -145,7 +145,20 @@ const UserManage = (props: any) => {
       dataIndex: "status",
       render: (status: any, data: any) => {
         const itemData = STATUSLIST.filter((item:any) => item.value === status);
-        return itemData ? itemData[0].label : "";
+        const spotMap:{
+          [key:string]:string
+        }={
+          '0':'openning',
+          '1':'closing',
+          '-1':'none',
+          '2':'locking'
+        }
+        return itemData ? (
+          <div className="tableStatus">
+            <span className={`${spotMap[itemData[0].value]} statusMark`}></span>
+            <span>{itemData[0].label}</span>
+          </div>
+        ) : "";
       }
     },
     {

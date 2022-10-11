@@ -372,9 +372,6 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
     }
   }
 
-  const showOrHide = (value) => {
-
-  }
 
   const scaleFunc = ({ origin, x, y }, action, dom) => {
     if (action === 'scale') {
