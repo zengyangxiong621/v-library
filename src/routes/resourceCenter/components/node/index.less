@@ -6,7 +6,7 @@
   align-items: center;
   height: 40px;
   width: 100%;
-  color: #ccc;
+  // color: #ccc;
   padding-left: 2px;
   .title {
     flex: 1;
@@ -57,13 +57,21 @@
   align-items: center;
   height: 100%;
 }
+.ant-tree-node-content-wrapper-open .title{
+  color: #fff;
+}
+.ant-tree .ant-tree-node-content-wrapper{
+  color:#ccc;
+}
 // hover节点的时候，去除默认背景色
 .ant-tree .ant-tree-node-content-wrapper:hover {
   background-color: rgba(255, 255, 255, 0);
+  color: #fff;
 }
 // 选中节点的时候，去除默认背景色
 .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
   background-color: rgba(255, 255, 255, 0);
+  color: #fff;
 }
 
 .ant-tree .ant-tree-switcher {

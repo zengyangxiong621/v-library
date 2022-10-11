@@ -2,7 +2,7 @@ import { memo, useEffect, useState, useRef } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
-import { deepClone, layersReverse } from "@/utils";
+import { deepClone, layersReverse, getQueryVariable } from "@/utils";
 
 import { Spin, Input, Button, message } from "antd";
 
@@ -276,12 +276,20 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
 
 
   const updateDataContainerDataFunc = async (container: any) => {
+    const params: any = getQueryVariable();
+    let callBackParamValues = {
+      ...publishDashboard.callbackArgs,
+    };
+    if (params?.Ticket) {
+      callBackParamValues.Ticket = params.Ticket;
+      callBackParamValues["X-Authenticated-Userid"] = params["X-Authenticated-Userid"];
+    }
     let data = await http({
       method: "post",
       url: "/visual/container/screen/data/get",
       body: {
         id: container.id,
-        callBackParamValues: publishDashboard.callbackArgs,
+        callBackParamValues: callBackParamValues,
         dashboardId: publishDashboard.dashboardId,
         pass: publishDashboard.pass
       },
@@ -326,7 +334,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     publishDashboard.dataContainerList.forEach(async (item: any) => {
       // 添加自动过呢更新
       if (item.autoUpdate?.isAuto) {
-        console.log("");
         timerList.push(setInterval(async () => {
           await updateDataContainerDataFunc(item);
           dispatch({
