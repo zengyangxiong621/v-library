@@ -291,7 +291,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         id: container.id,
         callBackParamValues: callBackParamValues,
         dashboardId: publishDashboard.dashboardId,
-        pass: publishDashboard.pass
+        pass: localStorage.getItem(publishDashboard.dashboardId)
       },
     });
     const index = dataContainerDataListRef.current.findIndex((item: any) => item.id === container.id);
@@ -314,7 +314,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
           dataType: component.dataType,
           callBackParamValues: publishDashboard.callbackArgs,
           dashboardId: publishDashboard.dashboardId,
-          pass: publishDashboard.pass
+          pass: localStorage.getItem(publishDashboard.dashboardId)
         },
       });
 
@@ -348,7 +348,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
       });
       timerList = [];
     };
-  }, [publishDashboard.dataContainerList, publishDashboard.dashboardId, publishDashboard.pass]);
+  }, [publishDashboard.dataContainerList, publishDashboard.dashboardId]);
   useEffect(() => {
     let timerList: NodeJS.Timer[] = [];
     publishDashboard.components.forEach(async (item: any) => {
@@ -369,7 +369,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
       timerList = [];
 
     };
-  }, [publishDashboard.components, publishDashboard.dashboardId, publishDashboard.pass]);
+  }, [publishDashboard.components, publishDashboard.dashboardId]);
 
   return (
     <div id="gs-v-library-app">

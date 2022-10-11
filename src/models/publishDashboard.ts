@@ -148,7 +148,8 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      const { pass, dashboardId, layers } = publishDashboard
+      const { dashboardId, layers } = publishDashboard
+      const pass = localStorage.getItem(dashboardId);
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
