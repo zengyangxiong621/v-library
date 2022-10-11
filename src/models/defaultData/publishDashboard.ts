@@ -89,6 +89,7 @@ export const defaultData = {
   pass: "",
   allDashboardList: [],
   fullAmountLayers: [],
+  fullAmountComponents: [],
   fullAmountDashboardDetails: [],
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: []
