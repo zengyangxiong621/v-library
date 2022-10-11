@@ -667,7 +667,7 @@ const ComponentEventContainer = ({
       props.componentConfig.moduleName === "select2" ? (
         <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
       ) : props.componentConfig.moduleName === "buttonGroup2" ? (
-        <ButtomGroup onChange={handleValueChange} {...props}></ButtomGroup>
+        <ButtonGroup onChange={handleValueChange} {...props}></ButtonGroup>
       ) : props.componentConfig.moduleName === "bar" ? (
         <Bar onChange={handleValueChange} {...props}></Bar>
       ) : props.componentConfig.moduleName === "scrollTable" ? (
