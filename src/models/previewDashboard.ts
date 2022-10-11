@@ -96,9 +96,11 @@ export default {
         },
       });
 
+      let layers: any[] = []
       yield yield put({
         type: "getDashboardDetails",
         cb: async (data: any) => {
+          layers = data.layers
           await cb(data);
         },
       });
@@ -106,6 +108,9 @@ export default {
       if (!previewDashboard.isDashboardInit) {
         yield put({
           type: "getFullAmountDashboardDetails",
+          payload: {
+            layers
+          }
         });
       }
 
@@ -138,7 +143,7 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
-      const layers = previewDashboard.layers;
+      const layers = payload.layers;
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
@@ -240,6 +245,7 @@ export default {
       yield put({
         type: "save",
         payload: {
+          layers,
           fullAmountDashboardDetails: previewDashboard.fullAmountDashboardDetails,
           fullAmountLayers,
           panels,
@@ -305,16 +311,13 @@ export default {
         yield put({
           type: "save",
           payload: {
-            layers: noEmptyGroupLayers,
-            components,
-            panels,
             dashboardId,
             dashboardConfig: newDashboardConfig,
             dashboardName,
             fullAmountDashboardDetails
           },
         });
-        cb({ dashboardConfig: newDashboardConfig, dashboardName });
+        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers, });
       } catch (e) {
         return e;
       }

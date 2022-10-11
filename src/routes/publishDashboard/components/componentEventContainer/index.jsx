@@ -168,6 +168,7 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
   }
 
   const handleValueChange = debounce((data) => {
+    console.log('datadatadata', data)
     // 下钻流程
     getDrillDownData(data)
     const componentId = props.componentConfig.id
@@ -222,6 +223,8 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
     })
     // console.log('activeIds1', activeIds)
     // console.log('temp', temp)
+    console.log('activeIdsactiveIdsactiveIds', activeIds)
+    console.log('temp', temp)
     if (temp) {
       activeIds = [...new Set(activeIds)]
       const activeComponents = activeIds.reduce(
