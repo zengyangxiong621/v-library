@@ -170,102 +170,102 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
   const handleValueChange = debounce((data) => {
     // 下钻流程
     getDrillDownData(data)
-    // const componentId = props.componentConfig.id
-    // const component = publishDashboard.fullAmountComponents.find((item) => item.id === componentId)
-    // const compCallbackArgs =
-    //   component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
-    // // 回调参数列表
-    // // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
-    // const sourceCallbackList = callbackParamsList.filter((item) =>
-    //   item.sourceModules.find((jtem) => jtem.id === componentId)
-    // )
-    // // 需要作用到哪些组件上
-    // let activeIds = []
-    // let temp = false
-    // sourceCallbackList.forEach((item) => {
-    //   item.sourceModules.forEach((sourceItem) => {
-    //     if (sourceItem.id === componentId) {
-    //       // 回调列表中的当前数据如果有目标组件再进行下一步
-    //       // 循环组件设置的回调参数，获取变量名和字段的对应关系
-    //       if (item.destinationModules.length > 0) {
-    //         compCallbackArgs.forEach((callback) => {
-    //           // 判断是否为同一个源
-    //           if (item.callbackParam === callback.target) {
-    //             // 翻页组件不需要配置origin
-    //             if (component.moduleName === "paginationComp") {
-    //               temp = true
-    //               callbackArgs[callback.target] = data[callback.target]
-    //               activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
-    //               // 值是否改变
-    //               // data的值存在并且
-    //             } else if (
-    //               (["cascader", 'select2'].includes(component.moduleName)) ||
-    //               data &&
-    //               data[callback.origin] &&
-    //               callbackArgs[callback.target] !== data[callback.origin]
-    //             ) {
-    //               temp = true
-    //               callbackArgs[callback.target] = data ? data[callback.origin] : data
-    //               activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
-    //             }
-    //             dispatch({
-    //               type: "publishDashboard/save",
-    //               payload: {
-    //                 callbackArgs,
-    //               },
-    //             })
-    //           }
-    //         })
-    //       }
-    //     }
-    //   })
-    // })
-    // // console.log('activeIds1', activeIds)
-    // // console.log('temp', temp)
-    // if (temp) {
-    //   activeIds = [...new Set(activeIds)]
-    //   const activeComponents = activeIds.reduce(
-    //     (pre, id) => pre.concat(publishDashboard.fullAmountComponents.find((item) => item.id === id)),
-    //     []
-    //   )
-    //   // 绑定数据容器的组件列表
-    //   const componentsByDataContainer = activeComponents.filter(
-    //     (component) => component.dataFrom === 1
-    //   )
-    //   // 绑定数据源的组件列表
-    //   const componentsByDataSource = activeComponents.filter(
-    //     (component) => component.dataFrom === 0
-    //   )
-    //   // 重新获取部分组件（绑定数据源的组件列表）的数据
-    //   dispatch({
-    //     type: "publishDashboard/getComponentsData",
-    //     payload: activeComponents,
-    //   })
-    //   // 重新获取部分数据容器的数据
-    //   const filterComponentsByDataContainer = []
-    //   // 去重
-    //   activeComponents.forEach((component) => {
-    //     component.dataContainers.forEach((container) => {
-    //       if (!filterComponentsByDataContainer.find((item) => item.id === container.id)) {
-    //         filterComponentsByDataContainer.push(container)
-    //       }
-    //     })
-    //   })
-    //   dispatch({
-    //     type: "publishDashboard/getContainersData",
-    //     payload: filterComponentsByDataContainer,
-    //   })
-    // }
-    // // 自定义事件
-    // const dataChangeEvents = events.filter(
-    //   (item) => item.trigger === "dataChange" || item.trigger === "statusChange"
-    // )
+    const componentId = props.componentConfig.id
+    const component = publishDashboard.fullAmountComponents.find((item) => item.id === componentId)
+    const compCallbackArgs =
+      component && component.callbackArgs ? duplicateFn(cloneDeep(component.callbackArgs)) : []
+    // 回调参数列表
+    // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
+    const sourceCallbackList = callbackParamsList.filter((item) =>
+      item.sourceModules.find((jtem) => jtem.id === componentId)
+    )
+    // 需要作用到哪些组件上
+    let activeIds = []
+    let temp = false
+    sourceCallbackList.forEach((item) => {
+      item.sourceModules.forEach((sourceItem) => {
+        if (sourceItem.id === componentId) {
+          // 回调列表中的当前数据如果有目标组件再进行下一步
+          // 循环组件设置的回调参数，获取变量名和字段的对应关系
+          if (item.destinationModules.length > 0) {
+            compCallbackArgs.forEach((callback) => {
+              // 判断是否为同一个源
+              if (item.callbackParam === callback.target) {
+                // 翻页组件不需要配置origin
+                if (component.moduleName === "paginationComp") {
+                  temp = true
+                  callbackArgs[callback.target] = data[callback.target]
+                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
+                  // 值是否改变
+                  // data的值存在并且
+                } else if (
+                  (["cascader", 'select2'].includes(component.moduleName)) ||
+                  data &&
+                  data[callback.origin] &&
+                  callbackArgs[callback.target] !== data[callback.origin]
+                ) {
+                  temp = true
+                  callbackArgs[callback.target] = data ? data[callback.origin] : data
+                  activeIds = activeIds.concat(item.destinationModules.map((module) => module.id))
+                }
+                dispatch({
+                  type: "publishDashboard/save",
+                  payload: {
+                    callbackArgs,
+                  },
+                })
+              }
+            })
+          }
+        }
+      })
+    })
+    // console.log('activeIds1', activeIds)
+    // console.log('temp', temp)
+    if (temp) {
+      activeIds = [...new Set(activeIds)]
+      const activeComponents = activeIds.reduce(
+        (pre, id) => pre.concat(publishDashboard.fullAmountComponents.find((item) => item.id === id)),
+        []
+      )
+      // 绑定数据容器的组件列表
+      const componentsByDataContainer = activeComponents.filter(
+        (component) => component.dataFrom === 1
+      )
+      // 绑定数据源的组件列表
+      const componentsByDataSource = activeComponents.filter(
+        (component) => component.dataFrom === 0
+      )
+      // 重新获取部分组件（绑定数据源的组件列表）的数据
+      dispatch({
+        type: "publishDashboard/getComponentsData",
+        payload: activeComponents,
+      })
+      // 重新获取部分数据容器的数据
+      const filterComponentsByDataContainer = []
+      // 去重
+      activeComponents.forEach((component) => {
+        component.dataContainers.forEach((container) => {
+          if (!filterComponentsByDataContainer.find((item) => item.id === container.id)) {
+            filterComponentsByDataContainer.push(container)
+          }
+        })
+      })
+      dispatch({
+        type: "publishDashboard/getContainersData",
+        payload: filterComponentsByDataContainer,
+      })
+    }
+    // 自定义事件
+    const dataChangeEvents = events.filter(
+      (item) => item.trigger === "dataChange" || item.trigger === "statusChange"
+    )
 
-    // const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
-    // if (dataChangeActions.length === 0) {
-    //   return
-    // }
-    // customEventsFunction(dataChangeEvents, data)
+    const dataChangeActions = dataChangeEvents.reduce((pre, cur) => pre.concat(cur.actions), [])
+    if (dataChangeActions.length === 0) {
+      return
+    }
+    customEventsFunction(dataChangeEvents, data)
   }, 300)
 
   const animation = ({ duration, timingFunction, type }, actionType, dom, actionId, action, componentId) => {
