@@ -2828,6 +2828,8 @@ export const defaultData = {
   fullAmountDashboardDetails: [],
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: [],
+  copyComponentConfigs: [],
+  copyComponentKey: []
 }
 
 export interface IBarState {
@@ -2894,5 +2896,7 @@ export interface IBarState {
   fullAmountComponents: IFullAmountComponents;
   fullAmountPanels: IFullAmountPanels;
   isDashboardInit: boolean;
-  fullAmountDynamicAndDrillDownPanels: any
+  fullAmountDynamicAndDrillDownPanels: any;
+  copyComponentConfigs: any
+  copyComponentKey: any
 }

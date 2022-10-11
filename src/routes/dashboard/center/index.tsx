@@ -33,14 +33,10 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [components, setComponents] = useState([]);
   const [panels, setPanels] = useState([]);
   const mouse = useMouse(canvasRef)
-
-/*
-  useEffect(() => {
-    window.addEventListener('keydown', (e: KeyboardEvent) => {
-      console.log('e', e)
-    })
-  }, [])
-*/
+  const isKeyForDelete = useRef(false)
+  const isKeyForGroup = useRef(false)
+  const isKeyForCopy = useRef(false)
+  const isKeyForStick  = useRef(false)
 
   useEffect(() => {
     const layers = deepClone(bar.layers)
@@ -295,6 +291,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     setIsCanvasDraggable(event.type === "keydown")
   }, {
     events: ["keydown", "keyup"],
+    exactMatch: true,
+
   });
 
   useKeyPress(["leftarrow"], (event) => {
@@ -310,6 +308,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     }
   }, {
     events: ["keydown", "keyup"],
+    exactMatch: true,
+
   });
 
   useKeyPress(["uparrow"], (event) => {
@@ -326,6 +326,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     }
   }, {
     events: ["keydown", "keyup"],
+    exactMatch: true,
+
   });
 
   useKeyPress(["rightarrow"], (event) => {
@@ -342,6 +344,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     }
   }, {
     events: ["keydown", "keyup"],
+    exactMatch: true,
+
   });
 
   useKeyPress(["downarrow"], (event) => {
@@ -358,7 +362,135 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     }
   }, {
     events: ["keydown", "keyup"],
+    exactMatch: true,
+
   });
+
+  useKeyPress(["downarrow"], (event) => {
+    if (event.type === "keydown") {
+      console.log('----向下-----')
+      handleComponentDrag(0, 1)
+      handleScaleDragComDrag(0, 1)
+      handleSupportLineDrag()
+
+
+    } else {
+      handleComponentDragStop()
+
+    }
+  }, {
+    events: ["keydown", "keyup"],
+    exactMatch: true,
+
+  });
+  // 删除
+  useKeyPress(["Backspace"], (event) => {
+    if (bar.key.length < 0) return
+
+    if (event.type === "keydown") {
+      if (!isKeyForDelete.current) {
+        dispatch({
+          type: 'bar/delete',
+          payload: {
+            dashboardId: bar.stateId || bar.dashboardId,
+            layers: bar.key.map((item: string) => ({
+              id: item,
+              children: []
+            }))
+          }
+        })
+        isKeyForDelete.current = true
+      }
+    } else {
+      isKeyForDelete.current = false
+    }
+  }, {
+    events: ["keydown", "keyup"],
+    exactMatch: true,
+
+  });
+  // 复制
+  useKeyPress(["ctrl.c"], (event) => {
+    if (bar.key.length < 0) return
+
+    if (event.type === "keydown") {
+      console.log('没说法？')
+      if (!isKeyForCopy.current) {
+        console.log('复制')
+        dispatch({
+          type: "bar/save",
+          payload: {
+            copyComponentConfigs: bar.selectedComponentOrGroup,
+            copyComponentKey: bar.key
+          }
+        })
+        isKeyForCopy.current = true
+      }
+    } else {
+      isKeyForCopy.current = false
+    }
+  }, {
+    events: ["keydown", "keyup"],
+    exactMatch: true,
+
+  });
+  // 粘贴
+  useKeyPress(["ctrl.v"], (event) => {
+    if (event.type === "keydown") {
+      if (!isKeyForStick.current) {
+        console.log('粘贴')
+        dispatch({
+          type: 'bar/copy',
+          payload: {
+            dashboardId: bar.stateId || bar.dashboardId,
+            children: [],
+            targetDashboardId: bar.dashboardId,
+            insertId: bar.key[bar.key.length - 1],
+            originLayers: bar.layers,
+            //TODO 改为modules后删除掉这行
+            components: bar.copyComponentKey,
+            // components: [...bar.key],
+            panels: [],
+            selected: bar.copyComponentKey
+          }
+        })
+        isKeyForStick.current = true
+      }
+    } else {
+      isKeyForStick.current = false
+    }
+  }, {
+    events: ["keydown", "keyup"],
+    exactMatch: true,
+
+  });
+
+  // 成组
+  useKeyPress(["ctrl.g"], (event) => {
+    event.stopPropagation()
+    event.preventDefault()
+    if (bar.key.length < 0) return
+    if (event.type === "keydown") {
+      console.log('哈哈哈哈')
+      if (!isKeyForGroup.current) {
+        console.log('成组')
+        dispatch({
+          type: 'bar/group',
+        })
+        isKeyForGroup.current = true
+      }
+    } else {
+      console.log('松开了吗')
+      isKeyForGroup.current = false
+    }
+  }, {
+    events: ["keydown", "keyup"],
+    exactMatch: true,
+
+  });
+
+
+
 
 /*  useKeyPress(["c.ctrl"], (event) => {
     if (event.type === "keydown") {
