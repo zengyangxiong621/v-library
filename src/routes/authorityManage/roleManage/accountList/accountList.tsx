@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import zhCN from "antd/es/locale/zh_CN";
 import queryString from "query-string";
-import {ConfigProvider,Button,Table,Modal,message} from "antd";
+import {ConfigProvider,Button,Table,Modal,message,Breadcrumb } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import type { TableRowSelection,ColumnsType } from "antd/lib/table/interface";
 import "./index.less";
@@ -10,6 +10,7 @@ import { useFetch } from "@/utils/useFetch";
 import SearchContainer from "./components/searchContainer";
 import {params} from "../interface";
 import { STATUSLIST, ACCOUNTLIST } from "@/constant/dvaModels/userManage";
+import { Link } from "dva/router";
 const { confirm } = Modal;
 
 const paginationProps=(totalElements:number,pageInfo:params,setPageInfo:Function,getTableData:Function)=>{
@@ -62,7 +63,20 @@ const tableColumns=(handleDel:any):ColumnsType<any>=>{
     dataIndex: "status",
     render: (status: any, data: any) => {
       const itemData = STATUSLIST.filter((item:any) => item.value === status.toString());
-      return itemData ? itemData[0].label : "";
+      const spotMap:{
+        [key:string]:string
+      }={
+        '0':'openning',
+        '1':'closing',
+        '-1':'none',
+        '2':'locking'
+      }
+      return itemData ? (
+        <div className="tableStatus">
+          <span className={`${spotMap[itemData[0].value]} statusMark`}></span>
+          <span>{itemData[0].label}</span>
+        </div>
+      ) : "";
     }
   },
   {
@@ -200,7 +214,14 @@ export default function AccountList(props:any) {
   return (
     <ConfigProvider locale={zhCN}>
       <div className='roleUser'>
-        <div className="title">角色管理/账号列表</div>
+        <div className="title">
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to='/authority-manage/role-manage'>角色管理</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>账号列表</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <header className='header' style={{
           background: "#171a24"
         }}>

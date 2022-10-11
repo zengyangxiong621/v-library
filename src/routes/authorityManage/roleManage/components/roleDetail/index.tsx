@@ -5,6 +5,7 @@ import { useForm } from "antd/es/form/Form";
 import {AuthContext} from "../../roleManage";
 import {authDataType,formData} from "../../interface";
 import type { CheckboxValueType,CheckboxOptionType } from "antd/es/checkbox/Group";
+import './index.less'
 
 // 表格权限多选框
 const AuthCheckBox=memo((props:any)=>{
@@ -126,6 +127,7 @@ export default memo(function RoleDetail(props:any) {
           style={{ marginTop: "20px" }}
         >
           <Table
+            className="rolePermission"
             pagination={false}
             expandable={{
               showExpandColumn:false
