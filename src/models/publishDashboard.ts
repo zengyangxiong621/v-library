@@ -110,7 +110,7 @@ export default {
           dashboardId,
         },
       });
-      yield put({
+      yield yield put({
         type: "getDashboardDetails",
         payload: {
           pass,
@@ -148,8 +148,8 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      const { pass, dashboardId } = publishDashboard
-      const layers = publishDashboard.layers;
+      const { dashboardId, layers } = publishDashboard
+      const pass = localStorage.getItem(dashboardId);
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
@@ -248,6 +248,7 @@ export default {
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
+      console.log('fullAmountComponents', fullAmountComponents)
       const panels = publishDashboard.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
@@ -283,6 +284,7 @@ export default {
           dashboardId,
           id: dashboardId,
         });
+        console.log('fullAmountDashboardDetailsfullAmountDashboardDetails', fullAmountDashboardDetails)
         const layerPanels: any = layersPanelsFlat(layers);
         const func = async (layerPanel: any) => {
           try {

@@ -7,11 +7,24 @@ import { deepClone, layersReverse } from "@/utils";
 import { Spin } from "antd";
 
 
-import RecursiveComponent from "./components/recursiveComponent";
-import { calcCanvasSize } from "../../utils";
-import { http } from "../../services/request";
+import RecursiveComponent from './components/recursiveComponent'
+import { calcCanvasSize } from '../../utils'
+import useWebsocket from '@/utils/useWebsocket'
+
 
 const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
+
+  
+  // 跨屏 接收跨屏回调
+  // 建立socket连接，receiveData 接收数据，先打印出来，添加在回调参数后
+  const [ dealedData,setDealedData ] = useState({})
+  // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
+  //   url: `/visual/webSocket/shareParam/eventName1`
+  //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
+  //   // verify // 此参数控制是否有权限，请求该方法
+  // } as any)
+  
+  console.log('previewDashboard', previewDashboard)
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(true);
   // 接口中返回的 当前屏幕设置信息
@@ -227,94 +240,33 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
           target = { width, height };
           break;
       }
-      map[displayName] = target;
-    });
-    return map;
-  };
+      map[displayName] = target
+    })
+    return map
+  }
 
-  const updateDataContainerDataFunc = async (container: any) => {
-    let data = await http({
-      method: "post",
-      url: "/visual/container/data/get",
-      body: {
-        id: container.id,
-        callBackParamValues: previewDashboard.callbackArgs,
-      },
-    });
-    const index = previewDashboard.dataContainerDataList.findIndex((item: any) => item.id === container.id);
-    if (container.dataType === "static") {
-      data = data.data;
-    }
-    if (index !== -1) {
-      previewDashboard.dataContainerDataList.splice(index, 1, { id: container.id, data });
-    } else {
-      previewDashboard.dataContainerDataList.push({ id: container.id, data });
-    }
-  };
-  const updateComponentDataFunc = async (component: any) => {
-    try {
-      const data = await http({
-        url: "/visual/module/getData",
-        method: "post",
-        body: {
-          moduleId: component.id,
-          dataType: component.dataType,
-          callBackParamValues: previewDashboard.callbackArgs,
-        },
-      });
+  // 跨屏 获取订阅消息
+  // useEffect(() => {
+    // if (readyState.key === 1 && receiveData !== ''){
+  //     console.log(receiveData,'#########websocket  get');
+  //     // 订阅消息处理 receiveData：组件id、data
+  //     // JSON.parse(receiveData)
+      // setDealedData(receiveData);
 
-      if (data) {
-        previewDashboard.componentData[component.id] =
-          component.dataType !== "static" ? data : data.data;
-      } else {
-        throw new Error("请求不到数据");
-      }
-    } catch (err) {
-      previewDashboard.componentData[component.id] = null;
-    }
-    return previewDashboard.componentData[component.id];
-  };
-  useEffect(() => {
-    let timerList: NodeJS.Timer[] = [];
-    previewDashboard.dataContainerList.forEach(async (item: any) => {
-      // 添加自动过呢更新
-      if (item.autoUpdate?.isAuto) {
-        timerList.push(setInterval(async () => {
-          await updateDataContainerDataFunc(item);
-          dispatch({
-            type: "previewDashboard/save"
-          });
-        }, item.autoUpdate.interval * 1000));
-      }
-    });
-    return () => {
-      timerList.forEach(item => {
-        clearInterval(item);
-      });
-      timerList = [];
-    };
-  }, [previewDashboard.dataContainerList]);
+  //     // 组件id 重新发布更新组件
+  //     // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
+  //     //   // 重新获取部分组件（绑定数据源的组件列表）的数据
+  //     //   dispatch({
+  //     //     type: 'publishDashboard/getComponentsData',
+  //     //     payload: activeComponents
+  //     //   })
+  //   }
+  //   // 如果是已关闭且是当前页面自动重连
+  //   // if (readyState.key === 3) { // && isLocalPage
+  //   //   reconnect()
+  //   }
+  // }, [receiveData, readyState])
 
-  useEffect(() => {
-    let timerList: NodeJS.Timer[] = [];
-    previewDashboard.components.forEach(async (item: any) => {
-      // 添加自动更新功能
-      if (item.autoUpdate?.isAuto) {
-        timerList.push(setInterval(async function () {
-          await updateComponentDataFunc(item);
-          dispatch({
-            type: "previewDashboard/save",
-          });
-        }, item.autoUpdate.interval * 1000));
-      }
-    });
-    return () => {
-      timerList.forEach(item => {
-        clearInterval(item);
-      });
-      timerList = [];
-    };
-  }, [previewDashboard.components]);
   return (
     <div id="gs-v-library-app">
       {
@@ -334,6 +286,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
                 }}
               >
                 {
+                  // 跨屏 用于递归展示 layers 的组件，大屏回调参数应该会传递给这个组件
                   <RecursiveComponent
                     layersArr={layers}
                     componentLists={components}
@@ -342,6 +295,8 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
                     dispatch={dispatch}
                     scaleValue={scaleValue}
                     scaleMode={scaleMode}
+                    crossCallback={dealedData}
+                    // sendMessage={sendMessage}
                   />
                 }
               </div>

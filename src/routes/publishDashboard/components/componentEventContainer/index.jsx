@@ -147,7 +147,7 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
             Object.keys(action).filter(
               (key) => !['id', 'name', 'trigger', 'unmount', 'componentScope', 'component', 'action'].includes(key)
             ).forEach((key) => {
-              actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
+              actionConfigFuncList[key] && actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id)
             })
           })
         }, delay)
