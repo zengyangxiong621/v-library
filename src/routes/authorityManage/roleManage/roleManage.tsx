@@ -12,6 +12,7 @@ import type { ColumnsType } from "antd/lib/table/interface";
 import {params,dataType,authStateType,authActionType,authContextType, dispatcher} from "./interface";
 import AddOrEdit from "./components/addOrEdit";
 import RoleDetail from "./components/roleDetail";
+import TipModal from "@/components/tipModal"
 const { confirm } = Modal;
 
 /**
@@ -133,6 +134,11 @@ const RoleManage = (prop: any) => {
 
   const [showDetailModel,setShowDetailModel]=useState<boolean>(false);
   const [detailFormData,setDetailFormData]=useState(null);
+
+  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
+  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
+  const [batchFlag,setBatchFlag]=useState<boolean>(false);//是否批量删除标识
+
   // 获取表格数据
   const getTableData=useCallback(async(params?:object)=>{
     setTableLoading(true);
@@ -172,45 +178,76 @@ const RoleManage = (prop: any) => {
       message.warning("请先选择角色");
       return;
     }
-    confirm({
-      title: "此操作将删除该内容, 是否继续?",
-      icon: <ExclamationCircleOutlined />,
-      okText: "确认",
-      okType: "danger",
-      cancelText: "取消",
-      async onOk() {
-        const [,data]=await useFetch("/visual/role/remove",{
-          body:JSON.stringify(selectedRowKeys)
-        });
-        if(data){
-          message.success("删除成功");
-          getTableData();
-        }
-      }
-    });
+    setDelVisible(true)
+    setBatchFlag(true)
+    // confirm({
+    //   title: "此操作将删除该内容, 是否继续?",
+    //   icon: <ExclamationCircleOutlined />,
+    //   okText: "确认",
+    //   okType: "danger",
+    //   cancelText: "取消",
+    //   async onOk() {
+    //     const [,data]=await useFetch("/visual/role/remove",{
+    //       body:JSON.stringify(selectedRowKeys)
+    //     });
+    //     if(data){
+    //       message.success("删除成功");
+    //       getTableData();
+    //     }
+    //   }
+    // });
   };
   const deleteRole=(rowData:any)=>{
     return ()=>{
-      confirm({
-        title: "此操作将删除该内容, 是否继续?",
-        icon: <ExclamationCircleOutlined />,
-        okText: "确认",
-        okType: "danger",
-        cancelText: "取消",
-        async onOk() {
-          const {id}=rowData;
-          const parmas=[id];
-          const [,data]=await useFetch("/visual/role/remove",{
-            body:JSON.stringify(parmas)
-          });
-          if(data){
-            message.success("删除成功");
-            getTableData();
-          }
-        }
-      });
+      setDelVisible(true)
+      setRowData(rowData)
+      // confirm({
+      //   title: "此操作将删除该内容, 是否继续?",
+      //   icon: <ExclamationCircleOutlined />,
+      //   okText: "确认",
+      //   okType: "danger",
+      //   cancelText: "取消",
+      //   async onOk() {
+      //     const {id}=rowData;
+      //     const parmas=[id];
+      //     const [,data]=await useFetch("/visual/role/remove",{
+      //       body:JSON.stringify(parmas)
+      //     });
+      //     if(data){
+      //       message.success("删除成功");
+      //       getTableData();
+      //     }
+      //   }
+      // });
     };
   };
+  // 取消删除（关闭删除提示框）
+  const closeTipModal = ()=> {
+    setDelVisible(false)
+    setBatchFlag(false)
+  }
+  const handleDelOk = async () => {
+    if(!batchFlag){
+      const {id}=rowData;
+      const parmas=[id];
+      const [,data]=await useFetch("/visual/role/remove",{
+        body:JSON.stringify(parmas)
+      });
+      if(data){
+        message.success("删除成功");
+        getTableData();
+      }
+    }else{
+      const [,data]=await useFetch("/visual/role/remove",{
+        body:JSON.stringify(selectedRowKeys)
+      });
+      if(data){
+        message.success("删除成功");
+        getTableData();
+      }
+    }
+    closeTipModal()
+  }
   const createRole=()=>{
     setShowAddRoleModel(true);
     setModelTitle("新建角色");
@@ -300,6 +337,12 @@ const RoleManage = (prop: any) => {
           ></RoleDetail>
         </AuthContext.Provider>
       </div>
+      <TipModal 
+        visible={delVisible}
+        text="此操作将删除该内容，是否继续?"
+        onOk={handleDelOk} 
+        onCancel={closeTipModal}
+      />
     </ConfigProvider>
   );
 };
