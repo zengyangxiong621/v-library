@@ -1,4 +1,5 @@
 import { useState, useEffect, Props, forwardRef, useImperativeHandle, useRef } from "react";
+import ReactDOM from 'react-dom'
 import { connect } from "dva";
 import "./index.css";
 
@@ -11,7 +12,13 @@ const SupportLines = ({ bar, cRef }: SupportLineProperty) => {
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (left: number, top: number, display = "block") => {
+      console.log('这里没有说法吗')
+      console.log('left', left)
+      console.log('top', top)
       setStyle({ left, top, display });
+      lineRef.current.style.left = left + 'px'
+      lineRef.current.style.top = top + 'px'
+      lineRef.current.style.display = display
     }
   }));
 
