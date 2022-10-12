@@ -162,8 +162,9 @@ const importComponent = (props: any) => {
               <>
                 <Form.Item
                   label="上传组件"
-                  style={{ marginBottom: "40px" }}
+                  style={{ marginBottom: "24px" }}
                   rules={generateSingleRules(true, "请选择要上传的组件")}
+                  required
                 >
                   <div className="setBackColor"
                     style={{ height: "120px" }}>

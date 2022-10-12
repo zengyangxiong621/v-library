@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import zhCN from "antd/es/locale/zh_CN";
 import queryString from "query-string";
-import {ConfigProvider,Button,Table,Modal,message} from "antd";
+import {ConfigProvider,Button,Table,Modal,message,Breadcrumb } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import type { TableRowSelection,ColumnsType } from "antd/lib/table/interface";
 import "./index.less";
@@ -10,6 +10,8 @@ import { useFetch } from "@/utils/useFetch";
 import SearchContainer from "./components/searchContainer";
 import {params} from "../interface";
 import { STATUSLIST, ACCOUNTLIST } from "@/constant/dvaModels/userManage";
+import { Link } from "dva/router";
+import TipModal from "@/components/tipModal"
 const { confirm } = Modal;
 
 const paginationProps=(totalElements:number,pageInfo:params,setPageInfo:Function,getTableData:Function)=>{
@@ -53,7 +55,7 @@ const tableColumns=(handleDel:any):ColumnsType<any>=>{
     key: "roleName",
     ellipsis: true,
     dataIndex: "roleName",
-    width: 100,
+    width: 150,
   },
   {
     title: "状态",
@@ -62,7 +64,20 @@ const tableColumns=(handleDel:any):ColumnsType<any>=>{
     dataIndex: "status",
     render: (status: any, data: any) => {
       const itemData = STATUSLIST.filter((item:any) => item.value === status.toString());
-      return itemData ? itemData[0].label : "";
+      const spotMap:{
+        [key:string]:string
+      }={
+        '0':'openning',
+        '1':'closing',
+        '-1':'none',
+        '2':'locking'
+      }
+      return itemData ? (
+        <div className="tableStatus">
+          <span className={`${spotMap[itemData[0].value]} statusMark`}></span>
+          <span>{itemData[0].label}</span>
+        </div>
+      ) : "";
     }
   },
   {
@@ -70,6 +85,7 @@ const tableColumns=(handleDel:any):ColumnsType<any>=>{
     key: "type",
     dataIndex: "type",
     ellipsis: true,
+    width: 100,
     render: (type: any, data: any) => {
       const index = type.toString();
       return ACCOUNTLIST[index];
@@ -85,7 +101,7 @@ const tableColumns=(handleDel:any):ColumnsType<any>=>{
     title: "邮箱",
     dataIndex: "email",
     key: "email",
-    width: 150,
+    width: 170,
     ellipsis: true,
   },
   {
@@ -121,6 +137,9 @@ export default function AccountList(props:any) {
     pageSize: 30,
   });
   const [searchParams,setSearchParams]=useState<any>(null);
+  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
+  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
+
 
   // 多选
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -166,25 +185,51 @@ export default function AccountList(props:any) {
       setTableData(content);
     }
   };
+  // 点击删除
   const handleDel=(rowData:any)=>{
-    confirm({
-      title: "此操作将删除该内容, 是否继续?",
-      icon: <ExclamationCircleOutlined />,
-      okText: "确认",
-      okType: "danger",
-      cancelText: "取消",
-      async onOk() {
-        const {roleUserId}=rowData;
-        const [,data]=await useFetch("/visual/role/removeRoleUsers",{
-          body:JSON.stringify([roleUserId])
-        });
-        if(data){
-          message.success("删除成功");
-          getTableData();
-        }
-      }
-    });
+    setDelVisible(true)
+    setRowData(rowData)
+    // confirm({
+    //   title: "此操作将删除该内容, 是否继续?",
+    //   icon: <ExclamationCircleOutlined />,
+    //   okText: "确认",
+    //   okType: "danger",
+    //   cancelText: "取消",
+    //   async onOk() {
+    //     const {roleUserId}=rowData;
+    //     const [,data]=await useFetch("/visual/role/removeRoleUsers",{
+    //       body:JSON.stringify([roleUserId])
+    //     });
+    //     if(data){
+    //       message.success("删除成功");
+    //       getTableData();
+    //     }
+    //   }
+    // });
   };
+  // 取消删除（关闭删除提示框）
+  const closeTipModal = ()=> {
+    setDelVisible(false)
+  }
+
+  const handleDelOk = async () => {
+    const {roleUserId}=rowData;
+    const [,data]=await useFetch("/visual/role/removeRoleUsers",{
+      body:JSON.stringify([roleUserId])
+    });
+    if(data){
+      message.success("删除成功");
+      getTableData();
+    }
+    closeTipModal()
+  }
+
+
+
+  // 点击面包屑返回上一级
+  const goBack = () => {
+    props.history.push('/authority-manage/role-manage')
+  }
 
   useEffect(()=>{
     const query=queryString.parse(props.location.search);
@@ -200,17 +245,23 @@ export default function AccountList(props:any) {
   return (
     <ConfigProvider locale={zhCN}>
       <div className='roleUser'>
-        <div className="title">角色管理/账号列表</div>
+        <div className="title">
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to='/authority-manage/role-manage'>角色管理</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>账号列表</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <header className='header' style={{
-          background: "#171a24"
+          
         }}>
           <SearchContainer searchByType={handleSearch}></SearchContainer>
         </header>
         <div className='table-wrap'>
           <Table
-            scroll={{ y: "53vh" }}
+            scroll={{ y: "calc(100vh - 350px)" }}
             rowClassName='customRowClass'
-            rowSelection={rowSelection}
             loading={tableLoading}
             columns={tableColumns(handleDel)}
             dataSource={tableData}
@@ -219,6 +270,12 @@ export default function AccountList(props:any) {
           />
         </div>
       </div>
+      <TipModal 
+        visible={delVisible}
+        text="此操作将删除该内容, 是否继续?"
+        onOk={handleDelOk} 
+        onCancel={closeTipModal}
+      />
     </ConfigProvider>
   );
 }

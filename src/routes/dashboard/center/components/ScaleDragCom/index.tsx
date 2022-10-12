@@ -33,6 +33,12 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       scaleDragRef.current.style.top = Number(scaleDragRef.current.style.top.replace("px", "")) + y + "px";
       // nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
     },
+    getPosition() {
+      return {
+        x: scaleDragRef.current.style.left.replace('px', ''),
+        y: scaleDragRef.current.style.top.replace('px', '')
+      }
+    }
   }));
 
 

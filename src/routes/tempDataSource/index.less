@@ -1,6 +1,6 @@
 @import "~antd/dist/antd.dark.css";
 .DataSource-wrap {
-  padding: 16px 32px;
+  padding: 24px 32px;
   background-color: #171a24;
   width: 100vw;
   height: 100vh;
@@ -69,10 +69,10 @@
       display: none;
     }
     // 奇偶 行不同背景色
-    .customRowClass:nth-child(even) {
+    .customRowClass:nth-child(odd) {
       background-color: rgba(53, 59, 78, 0.5);
     }
-    .customRowClass:nth-child(odd) {
+    .customRowClass:nth-child(even) {
       background-color: #171a24;
     }
     // 分页器 ”共xx条” 显示在最左侧

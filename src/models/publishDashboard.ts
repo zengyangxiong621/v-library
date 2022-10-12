@@ -110,18 +110,24 @@ export default {
           dashboardId,
         },
       });
-      yield put({
+      let layers: any[] = []
+      yield yield put({
         type: "getDashboardDetails",
         payload: {
           pass,
         },
         cb: async (data: any) => {
+          layers = data.layers
           await cb(data);
         },
       });
+
       if (!publishDashboard.isDashboardInit) {
         yield put({
           type: "getFullAmountDashboardDetails",
+          payload: {
+            layers
+          }
         });
       }
       yield put({
@@ -148,8 +154,9 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      const { pass, dashboardId } = publishDashboard
-      const layers = publishDashboard.layers;
+      const { dashboardId } = publishDashboard
+      const layers = payload.layers
+      const pass = localStorage.getItem(dashboardId);
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
@@ -255,6 +262,7 @@ export default {
       yield put({
         type: "save",
         payload: {
+          layers,
           fullAmountDashboardDetails: publishDashboard.fullAmountDashboardDetails,
           fullAmountLayers,
           panels,
@@ -315,16 +323,13 @@ export default {
         yield put({
           type: "save",
           payload: {
-            layers: noEmptyGroupLayers,
-            components,
-            panels,
             dashboardId,
             dashboardConfig: newDashboardConfig,
             dashboardName,
             fullAmountDashboardDetails
           },
         });
-        cb({ dashboardConfig: newDashboardConfig, dashboardName });
+        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers, });
       } catch (e) {
         cb(e);
         return e;

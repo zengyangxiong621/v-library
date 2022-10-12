@@ -3,15 +3,12 @@
 @backColor: #171a24;
 
 
-.alarmLog-warp{
-  // padding: 16px 32px;
-  // background-color: #171a24;
-  // min-width: 1110px;
-  // height: 100vh;
+.alarmLog-warp {
   background-color: @backColor;
   width: 100%;
   height: 100vh;
   padding: 16px 32px;
+
   .title {
     width: 64px;
     height: 22px;
@@ -20,47 +17,64 @@
     color: #ffffff;
     font-weight: 600;
     margin-bottom: 16px;
+    margin-top: 10px;
   }
-  .condition{
+
+  .condition {
     display: flex;
     width: 100%;
-    padding: 20px 16px;
-    padding-bottom: 0;
-    padding-left: 0;
-    .time-range{
+    padding: 16px 16px;
+    background-color: #2a2f3d;
+    border-radius: 3px;
+    margin-bottom: 10px;
+
+    .time-range {
       margin-right: 24px;
-      span{
-        font-size: 12px;
+
+      span {
+        font-size: 14px;
         margin-right: 8px;
       }
     }
-    .state{
+
+    .state {
       margin-right: 24px;
-      span{
-        font-size: 12px;
+
+      span {
+        font-size: 14px;
         margin-right: 8px;
       }
     }
   }
-  .search-read{
+
+  .search-read {
     display: flex;
     justify-content: end;
     margin-bottom: 10px;
-    .search{
+    
+    .search {
       margin-right: 20px;
+
+      .ant-input-group-wrapper.ant-input-search{
+        background-color: #232630;
+      }
     }
-    .read{
+
+    .read {
       cursor: pointer;
     }
   }
-  .table-list{
+
+  .table-list {
     background-color: #171a24;
+
     // overflow: auto;
-    .none-border{
+    .none-border {
       border: none;
       margin: 0 -16px;
     }
-    .unread{
+
+    .unread {
       display: inline-block;
       width: 8px;
       height: 8px;
@@ -68,7 +82,8 @@
       background-color: #fb5050;
       margin-right: 8px;
     }
-    .read{
+
+    .read {
       display: inline-block;
       width: 8px;
       height: 8px;
@@ -76,21 +91,25 @@
       background-color: #1abe68;
       margin-right: 8px;
     }
+
     .buttonBlue {
       // color: #4d99ff;
       margin: 0 -16px;
       height: 24px;
     }
+
     .buttonGray {
       margin: 0 -16px;
     }
+
     .textInOperationColumn {
       cursor: pointer;
       color: #4d99ff;
       font-size: 14px;
       font-weight: 400px;
     }
-    .textInOperationColumnDisabled{
+
+    .textInOperationColumnDisabled {
       cursor: not-allowed;
       color: #c0c0c0;
       pointer-events: none;
@@ -100,28 +119,33 @@
     // th.customHeaderColor {
     //   background-color: red;
     // }
-    .ant-table-thead > tr > th {
+    .ant-table-thead>tr>th {
       background: #353b4e !important;
     }
+
     // 去除表头每列前的小竖线
-    .ant-table-thead > tr > th.ant-table-cell::before {
+    .ant-table-thead>tr>th.ant-table-cell::before {
       display: none;
     }
+
     // 奇偶 行不同背景色
-    .customRowClass:nth-child(even) {
+    .customRowClass:nth-child(odd) {
       background-color: rgba(53, 59, 78, 0.5);
     }
-    .customRowClass:nth-child(odd) {
+    .customRowClass:nth-child(even) {
       background-color: #171a24;
     }
+
     // 分页器 ”共xx条” 显示在最左侧
     .ant-pagination-total-text {
       margin-right: auto;
     }
+
     // 分页器页码样式调整
     .ant-pagination-item-active {
       background-color: #2482ff;
     }
+
     .ant-pagination-item-active a {
       color: #fff;
     }
@@ -130,14 +154,17 @@
     .ant-table-body::-webkit-scrollbar {
       display: none;
     }
+
     // 兼容ie和火狐
     .ant-table-body {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
   }
+
   .table-wrap {
     background-color: #171a24;
+
     // overflow: auto;
     .textInOperationColumn {
       cursor: pointer;
@@ -150,28 +177,34 @@
     // th.customHeaderColor {
     //   background-color: red;
     // }
-    .ant-table-thead > tr > th {
+    .ant-table-thead>tr>th {
       background: #353b4e !important;
     }
+
     // 去除表头每列前的小竖线
-    .ant-table-thead > tr > th.ant-table-cell::before {
+    .ant-table-thead>tr>th.ant-table-cell::before {
       display: none;
     }
+
     // 奇偶 行不同背景色
     .customRowClass:nth-child(even) {
       background-color: rgba(53, 59, 78, 0.5);
     }
+
     .customRowClass:nth-child(odd) {
       background-color: #171a24;
     }
+
     // 分页器 ”共xx条” 显示在最左侧
     .ant-pagination-total-text {
       margin-right: auto;
     }
+
     // 分页器页码样式调整
     .ant-pagination-item-active {
       background-color: #2482ff;
     }
+
     .ant-pagination-item-active a {
       color: #fff;
     }
@@ -180,6 +213,7 @@
     .ant-table-body::-webkit-scrollbar {
       display: none;
     }
+
     // 兼容ie和火狐
     .ant-table-body {
       -ms-overflow-style: none;

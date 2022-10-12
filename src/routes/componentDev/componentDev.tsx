@@ -9,6 +9,8 @@ import ImportComponent from "./components/importComponent";
 
 import { http } from "@/services/request";
 
+import TipModal from "@/components/tipModal"
+
 const { Option } = Select;
 
 type TDataSourceParams = {
@@ -35,6 +37,10 @@ const ComponentDev = (props: any) => {
   const [tableData, setTableData] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
+  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
+
 
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
@@ -142,45 +148,65 @@ const ComponentDev = (props: any) => {
       });
     
     } else {
-      Modal.confirm({
-        title: "删除组件",
-        okButtonProps: {
-          style: {
-            backgroundColor: "#e9535d",
-            border: "none",
-          }
-        },
-        cancelButtonProps: {
-          style: {
-            backgroundColor: "#3d404d"
-          }
-        },
-        icon: <ExclamationCircleFilled />,
-        content: "删除后不可恢复，确认删除此组件吗?",
-        okText: "确定",
-        cancelText: "取消",
-        bodyStyle: {
-          background: "#232630",
-        },
-        async onOk(close) {
-          // eslint-disable-next-line react-hooks/rules-of-hooks
-          const data = await http({
-            url: `/visual/module-manage/deleteModule/${moduleId}`, 
-            method: "delete"
-          });
-          if (data) {
-            close();
-            refreshTable();
-          } else {
-            message.error({ content: "删除失败", duration: 2 });
-          }
-        },
-        onCancel(close) {
-          close();
-        }
-      });
+      setDelVisible(true)
+      setRowData(moduleId)
+      // Modal.confirm({
+      //   title: "删除组件",
+      //   okButtonProps: {
+      //     style: {
+      //       backgroundColor: "#e9535d",
+      //       border: "none",
+      //     }
+      //   },
+      //   cancelButtonProps: {
+      //     style: {
+      //       backgroundColor: "#3d404d"
+      //     }
+      //   },
+      //   icon: <ExclamationCircleFilled />,
+      //   content: "删除后不可恢复，确认删除此组件吗?",
+      //   okText: "确定",
+      //   cancelText: "取消",
+      //   bodyStyle: {
+      //     background: "#232630",
+      //   },
+      //   async onOk(close) {
+      //     // eslint-disable-next-line react-hooks/rules-of-hooks
+      //     const data = await http({
+      //       url: `/visual/module-manage/deleteModule/${moduleId}`, 
+      //       method: "delete"
+      //     });
+      //     if (data) {
+      //       close();
+      //       refreshTable();
+      //     } else {
+      //       message.error({ content: "删除失败", duration: 2 });
+      //     }
+      //   },
+      //   onCancel(close) {
+      //     close();
+      //   }
+      // });
     }
   };
+  // 取消删除（关闭删除提示框）
+  const closeTipModal = ()=> {
+    setDelVisible(false)
+  }
+  const handleDelOk = async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const data = await http({
+      url: `/visual/module-manage/deleteModule/${rowData}`, 
+      method: "delete"
+    });
+    if (data) {
+      close();
+      refreshTable();
+    } else {
+      message.error({ content: "删除失败", duration: 2 });
+    }
+    closeTipModal()
+  }
   const handldExport = (text: any) => {
     const a = document.createElement("a");
     a.href = text.downloadUrl;
@@ -393,6 +419,12 @@ const ComponentDev = (props: any) => {
           refreshTable={refreshTable}
         />
       </div>
+      <TipModal 
+        visible={delVisible}
+        text="删除后不可恢复，确认删除此组件吗?"
+        onOk={handleDelOk} 
+        onCancel={closeTipModal}
+      />
     </ConfigProvider>
   );
 };

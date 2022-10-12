@@ -1,0 +1,9 @@
+{
+  "name": "orderBarRankingList",
+  "version": "1.0.2",
+  "private": true,
+  "dependencies": {
+    "react": "17.0.2"
+  },
+  "devDependencies": {}
+}
