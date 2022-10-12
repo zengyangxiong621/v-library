@@ -118,6 +118,31 @@ const CustomDraggable
       };
     }, []);
 
+    useEffect(() => {
+      // if (layer.id in allComponentDOMs) {
+      // } else {
+      //   allComponentDOMs[layer.id] = ref;
+      // }
+      // console.log(allComponentDOMs[layer.id],'=================')
+      // console.log(layers,'=================')
+      // layers.map(layer => {
+      //   console.log(allComponentDOMs[layer.id],'=================')
+      //   allComponentDOMs[layer.id].addEventListener('mouseenter',()=>{
+      //     allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
+      //   })
+      // })
+      return () => {
+        layers.map(layer => {
+          allComponentDOMs[layer.id].removeEventListener('mouseenter',() => {
+            allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
+          })
+          allComponentDOMs[layer.id].removeEventListener('mouseleave',() => {
+            allComponentDOMs[layer.id].style.border = '3px solid transparent'
+          })
+        })
+      }
+    }, [])
+
     /**
      * 鼠标事件顺序： dragStart, drag, dragEnd, click
      */
@@ -853,6 +878,13 @@ const CustomDraggable
                   if (layer.id in allComponentRefs) {
                   } else {
                     allComponentRefs[layer.id] = ref;
+                    allComponentDOMs[layer.id].style.border = '3px solid transparent'
+                    allComponentDOMs[layer.id].addEventListener('mouseenter',() => {
+                      allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
+                    })
+                    allComponentDOMs[layer.id].addEventListener('mouseleave',() => {
+                      allComponentDOMs[layer.id].style.border = '3px solid transparent'
+                    })
                   }
                 }}
                 disabled={layer.isLock}
@@ -952,7 +984,7 @@ const CustomDraggable
                               : ""
                             }
                           </div> : <>
-                            <div data-id={layer.id} style={{ width: "100%", height: "100%", pointerEvents: "none" }}>
+                            <div data-id={layer.id} style={{ width: "100%", height: "100%", pointerEvents: "none"}} className="custom-draggable-component">
                               {
                                 // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
                                 //   <CompImage componentConfig={component}/>
