@@ -23,7 +23,7 @@ import CallbackArgs from "./components/callbackArgs";
 import DataFilters from "./components/dataFilters";
 import ComponentTheme from "./components/componentTheme";
 import ModuleUpdate from "./components/moduleUpdate";
-import useLoading from "@/components/useLoading";
+import RecycleBin from "./components/recycleBin";
 import DynamicPanel from "@/routes/dashboard/left/components/dynamicPanel";
 import { useEventEmitter } from "ahooks";
 
@@ -38,6 +38,9 @@ function App({ bar, dispatch, location, history }: any) {
   const [dataFiltersVisible, setDataFiltersVisible] = useState(false);
   const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false);
   const [componentThemeVisible, setComponentThemeVisible] = useState(false);
+  const [recycleBinVisible, setRecycleBinVisible] = useState(false)
+
+
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
   // 关闭右侧抽屉后,头部导航栏上相应的activeIcon需要取消active的状态
   const [isResetActiveIcon, setIsResetActiveIcon] = useState(false)
@@ -226,8 +229,15 @@ function App({ bar, dispatch, location, history }: any) {
   /**
    * description:  是否显示中心画布上方的导航栏
    */
-
   const showWhichBar = (whichBar: string) => {
+    const visibleReflect = {
+      dataContainer: false,
+      callbackArgs: false,
+      moduleUpdate: false,
+      dataFilters: false,
+      componentTheme: false,
+      recycleBin: false,
+    }
     setIsResetActiveIcon(false)
     if (["zujian", "sucai"].includes(whichBar)) {
       setZujianORsucai(whichBar);
@@ -238,41 +248,29 @@ function App({ bar, dispatch, location, history }: any) {
     }
     switch (whichBar) {
       case "shujurongqi":
-        setDataContainerVisible(true);
-        setCallbackArgsVisible(false);
-        setModuleUpdateVisible(false);
-        setDataFiltersVisible(false);
-        setComponentThemeVisible(false);
+        visibleReflect.dataContainer = true;
         break;
       case "huitiaoguanli":
-        setCallbackArgsVisible(true);
-        setDataContainerVisible(false);
-        setModuleUpdateVisible(false);
-        setDataFiltersVisible(false);
-        setComponentThemeVisible(false);
+        visibleReflect.callbackArgs = true;
         break;
       case "zujiangengxin":
-        setModuleUpdateVisible(true);
-        setCallbackArgsVisible(false);
-        setDataContainerVisible(false);
-        setDataFiltersVisible(false);
-        setComponentThemeVisible(false);
+        visibleReflect.moduleUpdate = true;
         break;
       case "xiangmuguolvqi":
-        setDataFiltersVisible(true);
-        setCallbackArgsVisible(false);
-        setDataContainerVisible(false);
-        setModuleUpdateVisible(false);
-        setComponentThemeVisible(false);
+        visibleReflect.dataFilters = true;
         break;
       case "zhutifengge":
-        setComponentThemeVisible(true);
-        setDataFiltersVisible(false);
-        setCallbackArgsVisible(false);
-        setDataContainerVisible(false);
-        setModuleUpdateVisible(false);
+        visibleReflect.componentTheme = true;
         break;
+      case "huishouzhan":
+        visibleReflect.recycleBin = true;
     }
+    setDataContainerVisible(visibleReflect.dataContainer);
+    setCallbackArgsVisible(visibleReflect.callbackArgs);
+    setModuleUpdateVisible(visibleReflect.moduleUpdate);
+    setDataFiltersVisible(visibleReflect.dataFilters);
+    setComponentThemeVisible(visibleReflect.componentTheme);
+    setRecycleBinVisible(visibleReflect.recycleBin);
   };
 
   /**
@@ -307,6 +305,10 @@ function App({ bar, dispatch, location, history }: any) {
     setComponentThemeVisible(bool);
     if (!bool) setIsResetActiveIcon(true)
   };
+  const handleRBvailableChange = (bool: boolean) => {
+    setRecycleBinVisible(bool);
+    if(!bool) setIsResetActiveIcon(true)
+  }
 
   return (
     <Layout>
@@ -335,6 +337,7 @@ function App({ bar, dispatch, location, history }: any) {
           <ModuleUpdate visible={moduleUpdateVisible} onChange={handleMUAvailableChange} />
           <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange} />
           <ComponentTheme visible={componentThemeVisible} onChange={handleComponentThemeAvailableChange} />
+          <RecycleBin visible={recycleBinVisible} onChange={handleRBvailableChange} />
         </div>
         {
           bar.isShowRightMenu &&

@@ -731,10 +731,10 @@ const centerIconArr = [
 ];
 
 const rightIconArr = [
-  // {
-  //   icon: 'huishouzhan',
-  //   text: '回收站'
-  // },
+  {
+    icon: 'huishouzhan',
+    text: '回收站'
+  },
   {
     icon: "yulan",
     text: "预览"
