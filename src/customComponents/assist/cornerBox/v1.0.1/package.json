@@ -1,0 +1,9 @@
+{
+  "name": "cornerbox",
+  "version": "1.0.1",
+  "private": true,
+  "dependencies": {
+    "react": "17.0.2"
+  },
+  "devDependencies": {}
+}
