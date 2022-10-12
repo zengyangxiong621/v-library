@@ -35,7 +35,6 @@ import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPa
 
 import Cascader from "@/customComponents/assist/cascader/v1.1.0";
 
-
 import {
   STYLE,
   DIMENSION,
