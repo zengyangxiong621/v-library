@@ -35,6 +35,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const mouse = useMouse(canvasRef)
   const isKeyForDelete = useRef(false)
   const isKeyForGroup = useRef(false)
+  const isKeyForCancelGroup = useRef(false)
   const isKeyForCopy = useRef(false)
   const isKeyForStick  = useRef(false)
 
@@ -486,7 +487,25 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }, {
     events: ["keydown", "keyup"],
     exactMatch: true,
-
+  });
+  //
+  useKeyPress(["ctrl.d"], (event) => {
+    event.stopPropagation()
+    event.preventDefault()
+    if (bar.key.length < 0) return
+    if (event.type === "keydown") {
+      if (!isKeyForCancelGroup.current) {
+        dispatch({
+          type: 'bar/cancelGroup',
+        })
+        isKeyForCancelGroup.current = true
+      }
+    } else {
+      isKeyForCancelGroup.current = false
+    }
+  }, {
+    events: ["keydown", "keyup"],
+    exactMatch: true,
   });
 
 
