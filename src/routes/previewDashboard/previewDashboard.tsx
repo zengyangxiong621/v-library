@@ -211,7 +211,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     const data = deepClone(previewDashboard.layers);
     layersReverse(data);
     setLayers(data);
-    setComponents(previewDashboard.components);
+    setComponents(previewDashboard.fullAmountComponents);
     setPanels(previewDashboard.panels);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

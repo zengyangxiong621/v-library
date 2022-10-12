@@ -1,3 +1,4 @@
+@import "~antd/dist/antd.dark.css";
 .full-spin{
   width: 100%;
   min-height: 100vh;
@@ -23,4 +24,114 @@
   background: #171a24;
   width: 100%;
   min-height: calc(100vh - 64px);
+}
+
+
+/*
+*全局样式
+*/
+
+/* 自定义Input的背景色 */
+.ant-input {
+  color: #fff;
+  background-color: #24262e;
+}
+.ant-input-search{
+  background-color: #24262e;
+}
+.set-margin {
+  margin-right: 12px;
+  color: #585c76;
+}
+.set-icon-size {
+  font-size: 14px;
+}
+
+.each-icon {
+  margin: 0 2px;
+}
+
+/****** 修改ant Tree的样式 ***/
+.ant-tree-node-content-wrapper:hover .eyes-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.ant-tree-node-content-wrapper-open .title{
+  color: #fff;
+}
+.ant-tree .ant-tree-node-content-wrapper{
+  color:#ccc;
+}
+// hover节点的时候，去除默认背景色
+.ant-tree .ant-tree-node-content-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0);
+  color: #fff;
+}
+// 选中节点的时候，去除默认背景色
+.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+  background-color: rgba(255, 255, 255, 0);
+  color: #fff;
+}
+.ant-tree .ant-tree-switcher {
+  align-self: center;
+}
+// 固定左侧列表的宽度
+.ant-tree .ant-tree-treenode {
+  width: 240px;
+  padding-right: 16px;
+  padding-bottom: 0;
+}
+.ant-tree .ant-tree-treenode:hover {
+  background-image: linear-gradient(
+    90deg,
+    #4083ff 0%,
+    rgba(44, 78, 145, 0.62) 55%,
+    rgba(23, 26, 36, 0) 100%
+  );
+}
+.ant-tree .ant-tree-treenode:hover .show-icon {
+  display: flex;
+  align-items: center;
+}
+.ant-tree .ant-tree-treenode:hover .show-nums {
+  display: none;
+}
+// 需要去除padding
+.ant-tree .ant-tree-node-content-wrapper {
+  padding: 0;
+}
+
+// modal组件自带类名
+.ant-modal-header,
+.ant-modal-footer {
+  border: none;
+}
+.ant-modal-content {
+  width: 534px;
+  // height: 488px;
+  background: #2a2f3d;
+  box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+}
+.ant-modal-header {
+  background-color: #2a2f3d;
+}
+.ant-modal-footer {
+  padding: 0 24px 24px;
+}
+.ant-modal-body {
+  padding: 8px 40px 0 40px;
+}
+.ant-modal-close-x{
+  line-height: 47px;
+  color: #fff;
+}
+/** 统一设置表单下所有输入框的背景色*/
+.setBackColor {
+  background: #232630;
+  .ant-upload{
+    border: 1px dashed #4e526a;
+  }
 }

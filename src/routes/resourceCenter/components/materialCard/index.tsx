@@ -8,7 +8,9 @@ import { BASEURL,http,downLoad } from "@/services/request";
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Input, Tooltip, Dropdown, Menu, message, Modal, Button } from "antd";
+import { Input, Tooltip, Dropdown, Menu, message, Modal, Button,ConfigProvider } from "antd";
+import TipModal from "@/components/tipModal"
+import zhCN from "antd/es/locale/zh_CN";
 
 // import M from '@/components/modalConfirm/index'
 
@@ -39,6 +41,8 @@ const AppCard = (props: any) => {
   const [isShowUL, setIsShowUL] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
 
+  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
+  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
   const inputRef = useRef<any>();
 
   /** 输入框事件 */
@@ -131,49 +135,69 @@ const AppCard = (props: any) => {
       return false;
     }
     const delText = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? "模板" : "素材";
-    Modal.confirm({
-      title: `删除${delText}`,
-      style: {
-        top: "30%"
-      },
-      okButtonProps: {
-        style: {
-          backgroundColor: "#e9535d",
-          border: "none"
-          // marginLeft: '8px',
-        }
-      },
-      cancelButtonProps: {
-        style: {
-          backgroundColor: "#3d404d"
-        }
-      },
-      icon: <ExclamationCircleFilled />,
-      content: `确认删除此${delText}吗?`,
-      okText: "确定",
-      cancelText: "取消",
-      bodyStyle: {
-        background: "#232630"
-      },
-      async onOk() {
-        const url = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? "/visual/appTemplate/delete" : `/visual/resource/delete/${id}`;
-        const params = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId};
-        const [,data] = await useFetch(`${url}`, {
-            method: "delete",
-            body: JSON.stringify(params)
-          });
-        if (data) {
-          refreshList(true);
-          message.success({ content: "删除成功", duration: 2 });
-        } else {
-          message.error({ content: "删除失败", duration: 2 });
-        }
-      },
-      onCancel(close:any) {
-        close();
-      }
-    });
+    setDelVisible(true)
+    // Modal.confirm({
+    //   title: `删除${delText}`,
+    //   style: {
+    //     top: "30%"
+    //   },
+    //   okButtonProps: {
+    //     style: {
+    //       backgroundColor: "#e9535d",
+    //       border: "none"
+    //       // marginLeft: '8px',
+    //     }
+    //   },
+    //   cancelButtonProps: {
+    //     style: {
+    //       backgroundColor: "#3d404d"
+    //     }
+    //   },
+    //   icon: <ExclamationCircleFilled />,
+    //   content: `确认删除此${delText}吗?`,
+    //   okText: "确定",
+    //   cancelText: "取消",
+    //   bodyStyle: {
+    //     background: "#232630"
+    //   },
+    //   async onOk() {
+    //     const url = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? "/visual/appTemplate/delete" : `/visual/resource/delete/${id}`;
+    //     const params = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId};
+    //     const [,data] = await useFetch(`${url}`, {
+    //         method: "delete",
+    //         body: JSON.stringify(params)
+    //       });
+    //     if (data) {
+    //       refreshList(true);
+    //       message.success({ content: "删除成功", duration: 2 });
+    //     } else {
+    //       message.error({ content: "删除失败", duration: 2 });
+    //     }
+    //   },
+    //   onCancel(close:any) {
+    //     close();
+    //   }
+    // });
   };
+  // 取消删除（关闭删除提示框）
+  const closeTipModal = ()=> {
+    setDelVisible(false)
+  }
+  const handleDelOk = async () => {
+    const url = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? "/visual/appTemplate/delete" : `/visual/resource/delete/${id}`;
+    const params = ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? {appIdList: [id]} : {spaceId};
+    const [,data] = await useFetch(`${url}`, {
+        method: "delete",
+        body: JSON.stringify(params)
+      });
+    if (data) {
+      refreshList(true);
+      message.success({ content: "删除成功", duration: 2 });
+    } else {
+      message.error({ content: "删除失败", duration: 2 });
+    }
+    closeTipModal()
+  }
 
   // 导出应用
   const exportApp = async (appId: string,name:string) => {
@@ -234,95 +258,103 @@ const AppCard = (props: any) => {
     }
   };
   return (
-    <div className="AppCard-wrap">
-      <header className="head">
-        <div className="sourceHoverOnImg">
-          <div className="icons-wrap">
-            <div className="more-icon">
-              <Tooltip placement="bottom" title="导出">
-                <span 
-                  className="icon iconfont icon-zhuanfa"
-                  style={{ fontSize: "16px", marginRight: "10px",cursor: "pointer" }}
-                  onClick={exportDesign}
-                ></span>
-                {/* <IconFont
-                  style={{ fontSize: "16px", marginRight: "10px" }}
-                  onClick={exportDesign}
-                  className="icon-zhuanfa"
-                  type="icon-zhuanfa"
-                /> */}
-              </Tooltip>
-              {/* 系统素材不允许移动 */}
-              {
-                ["myTemp","systemTemp", "myresource"].indexOf(moduleType) > -1 &&
-                <Tooltip placement="bottom" title="移动">
-                  <IconFont
+    <ConfigProvider locale={zhCN}>
+      <div className="AppCard-wrap">
+        <header className="head">
+          <div className="sourceHoverOnImg">
+            <div className="icons-wrap">
+              <div className="more-icon">
+                <Tooltip placement="bottom" title="导出">
+                  <span 
+                    className="icon iconfont icon-zhuanfa"
+                    style={{ fontSize: "16px", marginRight: "10px",cursor: "pointer" }}
+                    onClick={exportDesign}
+                  ></span>
+                  {/* <IconFont
                     style={{ fontSize: "16px", marginRight: "10px" }}
-                    onClick={moveGroup}
-                    className="icon-yidong"
-                    type="icon-yidong"
+                    onClick={exportDesign}
+                    className="icon-zhuanfa"
+                    type="icon-zhuanfa"
+                  /> */}
+                </Tooltip>
+                {/* 系统素材不允许移动 */}
+                {
+                  ["myTemp","systemTemp", "myresource"].indexOf(moduleType) > -1 &&
+                  <Tooltip placement="bottom" title="移动">
+                    <IconFont
+                      style={{ fontSize: "16px", marginRight: "10px" }}
+                      onClick={moveGroup}
+                      className="icon-yidong"
+                      type="icon-yidong"
+                    />
+                  </Tooltip>
+                }
+                <Tooltip placement="bottom" title={`${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length ? `当前素材被 ${props.appName.join('、')} 应用使用，不能进行删除操作` : "删除"}`}>
+                  <IconFont
+                    style={{ fontSize: "16px" }}
+                    onClick={deleteApp}
+                    className={`icon-huishouzhan1 ${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length && "disabled"}`}
+                    type="icon-huishouzhan1"
                   />
                 </Tooltip>
+              </div>
+            </div>
+            <div className="btns-wrap">
+              <span
+                className="div-to-btns scan-btn"
+                onClickCapture={() => scanDashboard()}
+              >
+                {moduleType.includes("Temp") ? "预览模板" : "预览"}
+              </span>
+              {
+                moduleType.includes("Temp") && 
+                <Button type='primary' loading={createLoading} onClick={handleCreated}>创建应用</Button>
               }
-              <Tooltip placement="bottom" title={`${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length ? `当前素材被 ${props.appName.join('、')} 应用使用，不能进行删除操作` : "删除"}`}>
-                <IconFont
-                  style={{ fontSize: "16px" }}
-                  onClick={deleteApp}
-                  className={`icon-huishouzhan1 ${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName.length && "disabled"}`}
-                  type="icon-huishouzhan1"
-                />
-              </Tooltip>
             </div>
           </div>
-          <div className="btns-wrap">
-            <span
-              className="div-to-btns scan-btn"
-              onClickCapture={() => scanDashboard()}
-            >
-              {moduleType.includes("Temp") ? "预览模板" : "预览"}
-            </span>
-            {
-              moduleType.includes("Temp") && 
-              <Button type='primary' loading={createLoading} onClick={handleCreated}>创建应用</Button>
-            }
+          <div className="img-wrap">
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            <img className="img-limit" src={picUrl} />
           </div>
+        </header>
+        <div className="foot">
+          <div className="front">
+            {canEdit ? (
+              <Input
+                className="my-input"
+                ref={inputRef}
+                maxLength={20}
+                showCount={true}
+                value={appName}
+                onChange={nameInputChange}
+                onPressEnter={changAppName}
+                onBlur={changAppName}
+              />
+            ) : (
+              <div className="icon-and-text">
+                {/* <IconFont className='bianjiIcon'
+                    type="icon-bianji"
+                    onClickCapture={() => bianjiClick()}
+                  /> */}
+                <div className="card-name">{name}</div>
+              </div>
+            )}
+          </div>
+          {/* <div className="releaseState">
+            <div className='customCircle' style={{
+              backgroundColor: status ? '#00FF3D' : '#535353',
+            }}></div>
+            <span className='text'>{status ? '已' : '未'}发布</span>
+          </div> */}
         </div>
-        <div className="img-wrap">
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          <img className="img-limit" src={picUrl} />
-        </div>
-      </header>
-      <div className="foot">
-        <div className="front">
-          {canEdit ? (
-            <Input
-              className="my-input"
-              ref={inputRef}
-              maxLength={20}
-              showCount={true}
-              value={appName}
-              onChange={nameInputChange}
-              onPressEnter={changAppName}
-              onBlur={changAppName}
-            />
-          ) : (
-            <div className="icon-and-text">
-              {/* <IconFont className='bianjiIcon'
-                  type="icon-bianji"
-                  onClickCapture={() => bianjiClick()}
-                /> */}
-              <div className="card-name">{name}</div>
-            </div>
-          )}
-        </div>
-        {/* <div className="releaseState">
-          <div className='customCircle' style={{
-            backgroundColor: status ? '#00FF3D' : '#535353',
-          }}></div>
-          <span className='text'>{status ? '已' : '未'}发布</span>
-        </div> */}
+        <TipModal 
+          visible={delVisible}
+          text={`确认删除此${["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? "模板" : "素材"}吗?`}
+          onOk={handleDelOk} 
+          onCancel={closeTipModal}
+        />
       </div>
-    </div>
+    </ConfigProvider>
   );
 };
 
