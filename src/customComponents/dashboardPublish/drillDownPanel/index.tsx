@@ -39,9 +39,14 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
   const [activeIndex, setActiveIndex] = useState(0)
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
+    const pass = window.localStorage.getItem(panel.dashboardId);
     const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
+      url: `/visual/application/dashboard/show/${id}`,
+      method: "post",
+      body: {
+        pass,
+        dashboardId: panel.dashboardId
+      }
     });
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
@@ -70,12 +75,14 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
   const getComponentData = async (component: any) => {
     try {
       const data = await http({
-        url: "/visual/module/getData",
+        url: "/visual/module/getShowData",
         method: "post",
         body: {
           moduleId: component.id,
           dataType: component.dataType,
           callBackParamValues: publishDashboard.callbackArgs,
+          dashboardId: publishDashboard.dashboardId,
+          pass: publishDashboard.pass
         },
       });
 

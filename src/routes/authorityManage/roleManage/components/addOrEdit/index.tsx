@@ -6,6 +6,7 @@ import {authDataType,formData} from "../../interface";
 import type { CheckboxValueType,CheckboxOptionType } from "antd/es/checkbox/Group";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {AuthContext} from "../../roleManage";
+import './index.less'
 const {TextArea}=Input;
 
 // 表格权限多选框
@@ -257,6 +258,7 @@ const AddOrEdit=(props:any)=>{
           rules={[{ required: true,validator:permissionValidator }]}
         >
           <Table
+            className="rolePermission"
             pagination={false}
             expandable={{
               showExpandColumn:false
