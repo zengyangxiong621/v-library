@@ -11,8 +11,14 @@ import {
 import { layersReverse, deepClone } from "@/utils/index.js";
 import { layersPanelsFlat } from "@/utils";
 interface State {
-  states: string[];
-
+  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
+  allData: Array<{
+    layers: any[]
+    components: any[],
+    [key: string]: any;
+  }>; // 面板内所有状态的集合
+  activeIndex: number; // 当前展示的状态下标
+  isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
 const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) => {
@@ -21,11 +27,6 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
   const { states, config, name, type } = panel;
   const { isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0 } = config;
   const [state, setState] = useSetState<State>({
-    allLayers: [],
-    layers: [],
-    states: [],
-    defaultState: "",
-    AllComponents: [],
     overflow: "hidden",
     allData: [],
     activeIndex: 0,
