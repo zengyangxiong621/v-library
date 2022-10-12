@@ -13,6 +13,8 @@ import PreViewJson from "../../routes/dashboard/right/components/codeEditor/prev
 import { http } from "@/services/request";
 import { TDataSourceParams } from "./type";
 
+import TipModal from "@/components/tipModal"
+
 const { Option } = Select;
 
 
@@ -35,6 +37,10 @@ const DataSource = (props: any) => {
   const [previewFileUrl, setPreviewFileUrl] = useState(null);
   const [previewRecord, setPreviewRecord] = useState({ type: "", id: "" });
   const [tableLoading, setTableLoading] = useState(false);
+
+  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
+  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
+
 
   // 根据屏幕大小来决定表格的高度
   const [tableHeight, setTableHeight] = useState<any>(0)
@@ -141,46 +147,67 @@ const DataSource = (props: any) => {
 
   /**********  删除、编辑 操作 *************/
   const delClick = (dataSourceId: string) => {
-    Modal.confirm({
-      title: "删除数据源",
-      okButtonProps: {
-        style: {
-          backgroundColor: "#e9535d",
-          border: "none",
-          // marginLeft: '8px',
-        }
-      },
-      cancelButtonProps: {
-        style: {
-          backgroundColor: "#3d404d"
-        }
-      },
-      icon: <ExclamationCircleFilled />,
-      content: "删除后不可恢复，确认删除此数据源吗?",
-      okText: "确定",
-      cancelText: "取消",
-      bodyStyle: {
-        background: "#232630",
-      },
-      async onOk(close) {
-        //TODO 发送删除数据源的请求
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const data = await http({
-          url: `/visual/datasource/delete?dataSourceId=${dataSourceId}`,
-          method: "post"
-        });
-        if (data) {
-          close();
-          refreshTable();
-        } else {
-          message.error({ content: "删除失败", duration: 2 });
-        }
-      },
-      onCancel(close) {
-        close();
-      }
-    });
+    setDelVisible(true)
+    setRowData(dataSourceId)
+    // Modal.confirm({
+    //   title: "删除数据源",
+    //   okButtonProps: {
+    //     style: {
+    //       backgroundColor: "#e9535d",
+    //       border: "none",
+    //       // marginLeft: '8px',
+    //     }
+    //   },
+    //   cancelButtonProps: {
+    //     style: {
+    //       backgroundColor: "#3d404d"
+    //     }
+    //   },
+    //   icon: <ExclamationCircleFilled />,
+    //   content: "删除后不可恢复，确认删除此数据源吗?",
+    //   okText: "确定",
+    //   cancelText: "取消",
+    //   bodyStyle: {
+    //     background: "#232630",
+    //   },
+    //   async onOk(close) {
+    //     //TODO 发送删除数据源的请求
+    //     // eslint-disable-next-line react-hooks/rules-of-hooks
+    //     const data = await http({
+    //       url: `/visual/datasource/delete?dataSourceId=${dataSourceId}`,
+    //       method: "post"
+    //     });
+    //     if (data) {
+    //       close();
+    //       refreshTable();
+    //     } else {
+    //       message.error({ content: "删除失败", duration: 2 });
+    //     }
+    //   },
+    //   onCancel(close) {
+    //     close();
+    //   }
+    // });
   };
+  // 取消删除（关闭删除提示框）
+  const closeTipModal = ()=> {
+    setDelVisible(false)
+  }
+  const handleDelOk = async () => {
+    //TODO 发送删除数据源的请求
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const data = await http({
+      url: `/visual/datasource/delete?dataSourceId=${rowData}`,
+      method: "post"
+    });
+    if (data) {
+      close();
+      refreshTable();
+    } else {
+      message.error({ content: "删除失败", duration: 2 });
+    }
+    closeTipModal()
+  }
   const editClick = (text: any) => {
     setIsShowEditModal(true);
     setEditDataSourceInfo(text);
@@ -416,6 +443,12 @@ const DataSource = (props: any) => {
             />
         }
       </div>
+      <TipModal 
+        visible={delVisible}
+        text="删除后不可恢复，确认删除此数据源吗?"
+        onOk={handleDelOk} 
+        onCancel={closeTipModal}
+      />
     </ConfigProvider>
   );
 };
