@@ -14,7 +14,7 @@ export const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<
   }, []);
 };
 // 获取面板+状态详情
-export const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>, fullAmountDashboardDetails: any[]) => {
+export const getDeepPanelAndStatusDetails = async (layerPanels: Array<{id: string, [key: string]: any}>, fullAmountDashboardDetails: any[]) => {
   let panels: Array<IPanel> = await Promise.all(
     layerPanels.map((item: any) => getPanelConfigFunc(item))
   );
@@ -30,7 +30,7 @@ export const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPane
   }
   return fullAmountDashboardDetails
 };
-
+// 获取面板详情
 export const getPanelConfigFunc = async (layerPanel: any) => {
   try {
     const panelConfig = await http({

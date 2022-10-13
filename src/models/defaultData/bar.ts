@@ -2829,7 +2829,8 @@ export const defaultData = {
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: [],
   copyComponentConfigs: [],
-  copyComponentKey: []
+  copyComponentKey: [],
+  routeList: [], // 路由集合，只收集当前应用路由和面板路由
 }
 
 export interface IBarState {
@@ -2899,4 +2900,9 @@ export interface IBarState {
   fullAmountDynamicAndDrillDownPanels: any;
   copyComponentConfigs: any
   copyComponentKey: any
+  routeList: Array<{
+    type: 'state' | 'dashboard',
+    id: string,
+    url: string
+  }>
 }
