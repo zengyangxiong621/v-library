@@ -13,7 +13,7 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.5";
+import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.6";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 
@@ -728,7 +728,14 @@ const CustomDraggable
       // console.log('回调参数作用到的组件ID有：', activeIds)
       if (temp) {
         activeIds = [...(new Set(activeIds) as any)];
-        const activeComponents = activeIds.reduce((pre, id) => pre.concat(components.find((item: IComponent) => item.id === id)), []);
+        const activeComponents = activeIds.reduce((pre: any[], id: string) => {
+          const component = bar.fullAmountComponents.find((item: IComponent) => item.id === id)
+          if (component) {
+            pre.push(component)
+          }
+          return pre
+        }, []);
+
         // 绑定数据容器的组件列表
         const componentsByDataContainer = activeComponents.filter((component: IComponent) => component.dataFrom === 1);
         // 绑定数据源的组件列表
@@ -1203,7 +1210,7 @@ const CustomDraggable
                                                                                 fields={getFields(component)}
                                                                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                                               >
-                                                                              </PaginationComp> :
+                                                                              </PaginationComp>:
                                                                               <ErrorCatch
                                                                                 app={component.name}
                                                                                 user=""

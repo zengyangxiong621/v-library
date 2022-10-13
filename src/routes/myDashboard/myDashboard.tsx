@@ -167,7 +167,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       }
     },
     onRemove(file: any) {
-      // setUploadFileUrl('')
     }
   };
   return (
@@ -184,9 +183,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
               showUploadList={false}
             >
               <div className='custom-btn set-mr'>
-                {/* <input id="uploadFile" type="file" name="kjj" accept="application/zip" onChange={uploadFile}
-                style={{ position: 'absolute', width: '100%', height: '100%', left: 0, top: 0, opacity: 0, cursor: 'pointer' }}
-              /> */}
                 <span>导入应用</span>
               </div>
             </Upload>

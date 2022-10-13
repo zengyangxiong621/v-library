@@ -27,6 +27,7 @@ const SearchHeader = (props: any) => {
 
   return (
     <Form
+      className="userSearchHeader"
       name="basic"
       form={searchForm}
       layout="inline"

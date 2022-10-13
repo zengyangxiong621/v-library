@@ -11,11 +11,7 @@ const useLoading = (value: boolean, dom?: any) => {
   const [ loading, setLoading ] = useState(value);
   const loadingRef = useRef(null);
   const [copyDom, setCopyDom] = useState(dom);
-  useEffect(() => {
-    // if(loading) {
-    //   // dom.appendChild(Loading);
-    // }
-  }, []);
+
   useEffect(() => {
     if (loading) {
       ReactDOM.render(<Loading/>, dom);

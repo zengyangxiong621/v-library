@@ -5,7 +5,7 @@
   background-color: @backColor;
   width: 100%;
   height: calc(100vh - 80px);
-  padding: 16px 32px;
+  padding: 24px 32px;
   .title{
     width: 64px;
     height: 22px;
@@ -47,10 +47,10 @@
       display: none;
     }
     // 奇偶 行不同背景色
-    .customRowClass:nth-child(even) {
+    .customRowClass:nth-child(odd) {
       background-color: rgba(53, 59, 78, 0.5);
     }
-    .customRowClass:nth-child(odd) {
+    .customRowClass:nth-child(even) {
       background-color: #171a24;
     }
     // 分页器 ”共xx条” 显示在最左侧
@@ -73,15 +73,6 @@
     .ant-table-body {
       -ms-overflow-style: none;
       scrollbar-width: none;
-    }
-  }
-
-  .ant-modal-content {
-    background: #1f1f1f;
-    box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.5);
-    border-radius: 3px;
-    .ant-modal-header{
-      background: #1f1f1f;
     }
   }
 }

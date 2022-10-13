@@ -211,7 +211,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     const data = deepClone(previewDashboard.layers);
     layersReverse(data);
     setLayers(data);
-    setComponents(previewDashboard.components);
+    setComponents(previewDashboard.fullAmountComponents);
     setPanels(previewDashboard.panels);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -308,11 +308,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
           }}
             className="preview-loading-wrap"
           ></div>
-        // <Spin
-        //   tip='正在生成中…'
-        //   style={{ maxHeight: '100%' }}>
-        //   <div style={{ width: '100vw', height: '100vh', backgroundColor: '#181a24' }}></div>
-        // </Spin>
       }
     </div>
   );

@@ -42,9 +42,6 @@ export default {
           method: "post",
           body: payload,
         }
-        // {
-        //   errorInfo: "应用列表请求失败",
-        // }
       );
       yield put({
         type: "updateTemplateList",
@@ -57,9 +54,6 @@ export default {
           url: `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
           method: "get",
         }
-        // {
-        //   errorInfo: "应用分组列表请求失败",
-        // }
       );
       yield put({
         type: "setGroupList",

@@ -9,7 +9,7 @@ import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
 import CusImage from '@/customComponents/assist/image/v1.0.2/index'
 import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
 import ChinaMap from '@/customComponents/echarts/components/chinaMap/v1.6.4'
-import WorldMap from '@/customComponents/echarts/components/worldMap/v1.1.5'
+import WorldMap from '@/customComponents/echarts/components/worldMap/v1.1.6'
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5"
 import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
@@ -168,6 +168,7 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
   }
 
   const handleValueChange = debounce((data) => {
+    console.log('datadatadata', data)
     // 下钻流程
     getDrillDownData(data)
     const componentId = props.componentConfig.id
@@ -372,9 +373,6 @@ const ComponentEventContainer = ({ publishDashboard, dispatch, events = [], id =
     }
   }
 
-  const showOrHide = (value) => {
-
-  }
 
   const scaleFunc = ({ origin, x, y }, action, dom) => {
     if (action === 'scale') {

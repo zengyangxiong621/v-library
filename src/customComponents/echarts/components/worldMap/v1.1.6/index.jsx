@@ -192,7 +192,7 @@ class WorldMap extends Component {
     // console.log(mainData, '#mainData');
     const { mapMode, displayMode, bgColor, selectColor, pointColor, flyDirection, borderColor, flyColor, iconColor, rippleColor } = mainData
     const originData = comData || staticData.data
-    // 根据传入的fields来映射对应的值
+    // 根据传入的fields来映射对应的值 
     const fields2ValueMap = {}
     const initColumnsName = fields
     fields.forEach((item, index) => {
@@ -436,7 +436,7 @@ class WorldMap extends Component {
     let { mapChart, options, ipOptions } = this.state
     // 组件静态或者传入组件的数据
     const originData = comData || staticData.data
-    // 根据传入的fields来映射对应的值
+    // 根据传入的fields来映射对应的值 
     const fields2ValueMap = {}
     const initColumnsName = fields
     fields.forEach((item, index) => { // 优化
@@ -478,38 +478,32 @@ class WorldMap extends Component {
       mapChart.on('click', (params, echarts) => {
         if (Array.isArray(componentConfig.drillDownArr) && componentConfig.drillDownArr.length) {
           const { name } = params
-          const clickObj=flyLineArr.find(item=>item[0].name===name)
-          if(!clickObj){
-            return
+          const provincesReflect = {
+            "大连": "dl",
+            "辽河": "lh",
+            "大庆": "dq",
+            "勘探院数据中心": "ktydc",
+            "吉林": "jl",
+            "克拉玛依数据中心": "klmydc",
+            "华东": "hd",
+            "西安": "xa",
+            "兰州": "lz",
+            "昌平数据中心": "cpdc",
+            "新疆": "xj",
+            "华南": "hn",
+            "西南": "xn",
+            "东直门石油大厦": "dzmdc",
+            "吉林数据中心": "jldc",
+            "青海": "qh",
+            "四川": "sc",
+            "西南区域中心": "xndc",
           }
-          const enName=clickObj && clickObj.length ? clickObj[0].flag:''
-          const value=clickObj && clickObj.length ? clickObj[0].value:''
-          // const provincesReflect = {
-          //   "大连": "dl",
-          //   "辽河": "lh",
-          //   "大庆": "dq",
-          //   "勘探院数据中心": "ktydc",
-          //   "吉林": "jl",
-          //   "克拉玛依数据中心": "klmydc",
-          //   "华东": "hd",
-          //   "西安": "xa",
-          //   "兰州": "lz",
-          //   "昌平数据中心": "cpdc",
-          //   "新疆": "xj",
-          //   "华南": "hn",
-          //   "西南": "xn",
-          //   "东直门石油大厦": "dzmdc",
-          //   "吉林数据中心": "jldc",
-          //   "青海": "qh",
-          //   "四川": "sc",
-          //   "西南区域中心": "xndc",
-          // }
           const outgoingData = {
             // 省市名
             originalName: name,
             // 省市名 首字母缩写
-            name: enName,
-            value
+            name: provincesReflect[name],
+            value: ''
           }
           // drillDownArray长度不为零, 需要下钻
           if (typeof this.props.onChange === 'function') {
@@ -518,6 +512,7 @@ class WorldMap extends Component {
         } else {
           // do something
         }
+
       });
     }
 
@@ -539,6 +534,7 @@ class WorldMap extends Component {
         }
       })
     }
+
 
     return (
       <div

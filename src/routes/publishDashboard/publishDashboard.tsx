@@ -215,7 +215,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     const data = deepClone(publishDashboard.layers);
     layersReverse(data);
     setLayers(data);
-    setComponents(publishDashboard.components);
+    setComponents(publishDashboard.fullAmountComponents);
     setPanels(publishDashboard.panels);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -351,7 +351,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   }, [publishDashboard.dataContainerList, publishDashboard.dashboardId]);
   useEffect(() => {
     let timerList: NodeJS.Timer[] = [];
-    publishDashboard.components.forEach(async (item: any) => {
+    publishDashboard.fullAmountComponents.forEach(async (item: any) => {
       // 添加自动更新功能
       if (item.autoUpdate?.isAuto) {
         timerList.push(setInterval(async function () {
@@ -369,7 +369,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
       timerList = [];
 
     };
-  }, [publishDashboard.components, publishDashboard.dashboardId]);
+  }, [publishDashboard.fullAmountComponents, publishDashboard.dashboardId]);
 
   return (
     <div id="gs-v-library-app">
