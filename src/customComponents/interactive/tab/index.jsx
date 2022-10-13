@@ -1,18 +1,15 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useImperativeHandle } from 'react'
 import ComponentDefaultConfig from './config'
 import './index.css'
-import { styleTransformFunc, deepClone, getQueryVariable } from '../../../utils'
-import { withRouter } from 'dva/router'
+import { styleTransformFunc, deepClone } from '../../../utils'
+
 const textAlignEnum = {
   left: 'flex-start',
   center: 'center',
   right: 'flex-end',
 }
 
-const Tab = (props) => {
-  let { history, dashboardId, isPreview } = props
-  if (!dashboardId) dashboardId = ''
-  const locationParams = getQueryVariable()
+const Tab = ({ cRef = {}, ...props }) => {
   const [scrollState, setScrollState] = useState({
     isScroll: false,
     clickStayTime: 0,
@@ -46,9 +43,12 @@ const Tab = (props) => {
   const [rowNums, setRowNums] = useState(1)
   const [colNums, setColNums] = useState(4)
 
-  // is URL params
-  const [isUrlParams, setIsUrlParams] = useState(true)
-
+  useImperativeHandle(cRef, () => ({
+    handleEvent: (message) => {
+      const index = tabList.findIndex(item => item[_fields[1]] === message.content) //
+      handleTestClick(index)
+    },
+  }))
   const componentConfig = props.componentConfig || ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
@@ -77,7 +77,9 @@ const Tab = (props) => {
     })
     return targetStyle
   }
-
+  const handleTestClick = (index) => {
+    setActiveKey(index + 1)
+  }
   const allGlobalLoadFunc = () => {
     const textAlign = allGlobalConfig.find(item => item.name === 'align').value.find(item => item.name === 'textAlign').value
     const gridLayoutConfig = allGlobalConfig.find(item => item.name === 'gridLayout').value
@@ -101,14 +103,14 @@ const Tab = (props) => {
     })
     setAllGlobalContainerStyle({
       ...allGlobalContainerStyle,
-      gridTemplate: `repeat(${ rowNums }, 1fr) / ${ new Array(colNums).fill('1fr').join(' ') }`,
-      gap: `${ rowSpacing }px ${ colSpacing }px`,
+      gridTemplate: `repeat(${rowNums}, 1fr) / ${new Array(colNums).fill('1fr').join(' ')}`,
+      gap: `${rowSpacing}px ${colSpacing}px`,
     })
     const scrollConfig = allGlobalConfig.find(item => item.name === 'isScroll').value
     const isScroll = scrollConfig.find(item => item.name === 'show').value
     const intervalTime = scrollConfig.find(item => item.name === 'interval').value
     const clickStayTime = scrollConfig.find(item => item.name === 'clickStay').value
-    setScrollState(({...scrollState, isScroll, intervalTime, clickStayTime}))
+    setScrollState(({ ...scrollState, isScroll, intervalTime, clickStayTime }))
   }
 
   // 驼峰转中划线
@@ -117,7 +119,7 @@ const Tab = (props) => {
   }
 
   // 首字母大写
-  function titleCase (str) {
+  function titleCase(str) {
     return str.slice(0, 1).toUpperCase() + str.slice(1)
   }
 
@@ -128,10 +130,10 @@ const Tab = (props) => {
     const bgImg = config.find(item => item.name === 'bgImg').value
     const borderConfig = config.find(item => item.name === 'border')
     const borderRadiusStyle = borderConfig.range.reduce((pre, cur, index) => {
-      pre[`border${ titleCase(cur) }Radius`] = `${ borderConfig.value.radius[index] }px`
+      pre[`border${titleCase(cur)}Radius`] = `${borderConfig.value.radius[index]}px`
       return pre
     }, {})
-    const borderStyle = { border: `${ borderConfig.value.width }px ${ borderConfig.value.type } ${ borderConfig.value.color }` }
+    const borderStyle = { border: `${borderConfig.value.width}px ${borderConfig.value.type} ${borderConfig.value.color}` }
     textStyle = styleTransformFunc(textStyle)
     const finalStyle = {
       ...selectedTabStyle,
@@ -139,7 +141,7 @@ const Tab = (props) => {
       ...borderRadiusStyle,
       ...borderStyle,
       backgroundColor: bgColor ? bgColor : 'unset',
-      backgroundImage: bgImg ? `url('${ bgImg }')` : 'unset',
+      backgroundImage: bgImg ? `url('${bgImg}')` : 'unset',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       backgroundPosition: 'center center',
@@ -153,37 +155,37 @@ const Tab = (props) => {
 
 
   const styleFuncObj = {
-    totalOffset (value) {
+    totalOffset(value) {
       return {
-        transform: `translate(${ value.find(item => item.name === 'offsetX').value }px, ${ value.find(item => item.name === 'offsetY').value }px)`,
+        transform: `translate(${value.find(item => item.name === 'offsetX').value}px, ${value.find(item => item.name === 'offsetY').value}px)`,
       }
     },
-    textOffset (value) {
+    textOffset(value) {
       return {
-        transform: `translate(${ value.find(item => item.name === 'offsetX').value }px, ${ value.find(item => item.name === 'offsetY').value }px)`,
+        transform: `translate(${value.find(item => item.name === 'offsetX').value}px, ${value.find(item => item.name === 'offsetY').value}px)`,
       }
     },
-    widthProportion (value) {
+    widthProportion(value) {
       return {}
     },
-    bgColor (value) {
+    bgColor(value) {
       return {
         backgroundColor: value,
       }
     },
-    bgImg (value) {
+    bgImg(value) {
       return {
-        backgroundImage: `url(${ value })`,
+        backgroundImage: `url(${value})`,
       }
     },
-    selectedBgColor (value) {
+    selectedBgColor(value) {
       return {
         backgroundColor: value,
       }
     },
-    selectedBgImg (value) {
+    selectedBgImg(value) {
       return {
-        backgroundImage: `url(${ value })`,
+        backgroundImage: `url(${value})`,
       }
     },
   }
@@ -207,7 +209,7 @@ const Tab = (props) => {
       tabColumnProportionList[key] = widthProportionList[key]
     }
     setTabsProportionStyle({
-      gridTemplate: `repeat(${ rowNums }, 1fr) / ${ tabColumnProportionList.map(item => item + 'fr').join(' ') }`,
+      gridTemplate: `repeat(${rowNums}, 1fr) / ${tabColumnProportionList.map(item => item + 'fr').join(' ')}`,
     })
     const styleList = dataSeriesConfig.reduce((totalObj, series, index) => {
       const config = series.value
@@ -279,23 +281,10 @@ const Tab = (props) => {
   }, [_fields, _data])
 
   useEffect(() => {
-    const param = locationParams?.param || null
-    if (param) {
-      const currentKey = tabList.findIndex(item => item.name === decodeURI(param)) + 1
-      if (currentKey > 0) {
-        setDefaultActiveKey(currentKey)
-        setIsUrlParams(false)
-      }
-    } else {
-      console.log('defaultActiveKeyGGG', defaultActiveKey)
+    if (defaultActiveKey > 0) {
+      handleChange(tabList[defaultActiveKey - 1], defaultActiveKey)
     }
-  }, [tabList, defaultActiveKey])
-
-  useEffect(() => {
-    handleChange(tabList[defaultActiveKey - 1], defaultActiveKey)
-  }, [defaultActiveKey, isUrlParams])
-
-
+  }, [defaultActiveKey])
 
   useEffect(() => {
     let timer = null
@@ -305,13 +294,13 @@ const Tab = (props) => {
           activeKey = 0
         }
         handleChange(tabList[activeKey + 1 - 1], activeKey + 1)
-      },  scrollState.intervalTime)
+      }, scrollState.intervalTime)
     }
     // 如果处于停留的状态
     if (scrollState.isStay) {
       timer && clearInterval(timer)
       setTimeout(() => {
-        setScrollState({...scrollState, isStay: false})
+        setScrollState({ ...scrollState, isStay: false })
       }, scrollState.clickStayTime)
     }
     return () => {
@@ -336,6 +325,7 @@ const Tab = (props) => {
   }, [dataSeriesConfig, tabList, rowNums, colNums])
 
   const handleChange = (data, index) => {
+    console.log('index', index)
     setActiveKey(index)
     props.onChange && props.onChange(data)
   }
@@ -350,25 +340,23 @@ const Tab = (props) => {
     props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey])
   }
   const handleItemClick = (item, index) => {
+    console.log('index', index)
     if (scrollState.clickStayTime > 0) {
-      setScrollState({...scrollState, isStay: true})
-    }
-    if (locationParams?.param) {
-      history.push(`/bigscreen/${dashboardId}?param=${item.name}`);
+      setScrollState({ ...scrollState, isStay: true })
     }
     handleChange(item, index)
   }
   return (
     <div
       className="tab-wrap"
-      style={ {
+      style={{
         height: '100%',
         width: '100%',
         background: 'unset',
         display: 'grid',
         ...allGlobalContainerStyle,
         ...tabsProportionStyle,
-      } }
+      }}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -377,19 +365,19 @@ const Tab = (props) => {
         tabList.map((item, index) => {
           return (
             <div
-              style={ {
+              style={{
                 ...allGlobalTabStyle,
                 ...(activeKey === (index + 1)
                   ? { ...selectedTabStyle, ...(dataSeriesStyleList[item[_fields[0]]]?.container || {}), ...(dataSeriesStyleList[item[_fields[0]]]?.selected || {}) }
                   : { ...unselectedTabStyle, ...(dataSeriesStyleList[item[_fields[0]]]?.container || {}) }),
                 cursor: 'pointer',
-              } }
+              }}
               className="tab-item"
-              onClick={ () => handleItemClick(item, index + 1) }
-              key={ index }
+              onClick={() => handleItemClick(item, index + 1)}
+              key={index}
             >
-              <div style={ { ...(dataSeriesStyleList[item[_fields[0]]]?.text || {}) } }>
-                { item[_fields[1]] }
+              <div style={{ ...(dataSeriesStyleList[item[_fields[0]]]?.text || {}) }}>
+                {item[_fields[1]]}
               </div>
             </div>
           )
@@ -403,4 +391,4 @@ export {
   ComponentDefaultConfig,
 }
 
-export default withRouter(Tab)
+export default Tab

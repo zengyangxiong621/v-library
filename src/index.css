@@ -26,3 +26,7 @@ code {
 *, ::before, ::after {
   border-style: none;
 }
+
+.monaco-editor-background{
+  background-color: #191C26 !important;
+}

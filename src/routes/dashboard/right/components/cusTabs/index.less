@@ -2,15 +2,20 @@
 
 /* 标签页开始 */
 .cus-tabs {
-
   .ant-tabs-nav {
     height: 36px;
     background: @bgColor;
     margin: 0;
-    border-bottom: 1px solid #373A4D;
-    margin-left:-16px;
-    margin-right:-16px;
+    border-bottom: 1px solid #373a4d;
+    margin-left: -16px;
+    margin-right: -16px;
     margin-bottom: 16px;
+  }
+  .ant-tabs-content {
+    .ant-tabs-nav {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 
   .ant-tabs-nav::before {
@@ -26,18 +31,18 @@
     border: 0 !important;
     border-radius: 0 !important;
     margin-left: 0 !important;
-    background: @bgColor  !important;
+    background: @bgColor !important;
     color: #ccc;
   }
 
   .ant-tabs-tab-active {
-    background: @bgColor  !important;
-    color: @fontColor  !important;
+    background: @bgColor !important;
+    color: @fontColor !important;
     font-weight: 400;
   }
 
   .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: @fontColor  !important;
+    color: @fontColor !important;
     text-shadow: none;
   }
 }

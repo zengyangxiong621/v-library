@@ -1,12 +1,12 @@
 import { memo, useState } from "react";
 import "./index.less";
 import { Modal } from "antd";
+const picUrl = require("@/assets/images/模板默认背景图.png");
 const PreviewModal = (props: any) => {
   const { isPreviewVisible, currentItem, changeVisible } = props;
   let imgUrl = currentItem.preview || currentItem.photoUrl;
-  if(imgUrl && !imgUrl.startsWith("http")){
-    imgUrl = `${(window as any).CONFIG.COMP_URL}${imgUrl}`;
-  }
+  imgUrl =
+    imgUrl && !imgUrl.startsWith("http") ? `${(window as any).CONFIG.COMP_URL}${imgUrl}` : picUrl;
   const handleCancelPreview = () => {
     changeVisible(false);
   };
@@ -17,10 +17,10 @@ const PreviewModal = (props: any) => {
       style={{
         maxWidth: "100vw",
         top: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
       }}
       bodyStyle={{
-        height: "100vh"
+        height: "100vh",
       }}
       className="preview-modal"
       getContainer={false}

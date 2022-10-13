@@ -299,6 +299,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["leftarrow"], (event) => {
+    if (bar.key.length < 0) return
+
     if (event.type === "keydown") {
       console.log('----向左-----')
       handleComponentDrag(-1, 0)
@@ -316,6 +318,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["uparrow"], (event) => {
+    if (bar.key.length < 0) return
+
     if (event.type === "keydown") {
       console.log('----向上-----')
       handleComponentDrag(0, -1)
@@ -334,6 +338,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["rightarrow"], (event) => {
+    if (bar.key.length < 0) return
+
     if (event.type === "keydown") {
       console.log('----向右-----')
       handleComponentDrag(1, 0)
@@ -352,6 +358,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["downarrow"], (event) => {
+    if (bar.key.length < 0) return
+
     if (event.type === "keydown") {
       console.log('----向下-----')
       handleComponentDrag(0, 1)

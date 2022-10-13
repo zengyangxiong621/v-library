@@ -709,12 +709,13 @@ export default {
       });
     },
     // 添加组件到画布
-    *addComponent({ payload, fullAmountPayload, isComponent }: any, { call, put }: any) {
+    *addComponent({ payload, fullAmountPayload, isComponent, isState }: any, { call, put }: any) {
       yield put({
         type: "addLayer",
         payload,
         fullAmountPayload,
-        isComponent,
+        isComponent, // 是否为组件
+        isState // 是否为状态
       });
       /*      yield put({
         type: 'updateFullAmountLayers'
@@ -1266,13 +1267,13 @@ export default {
           fullAmountDashboardDetails
         },
       });
-
       // 将状态添加到全量图层树种 0 - fullAmountLayers，也就是当前面板 panelId 下的 modules中
       yield put({
         type: "addComponent",
-        payload: { final: { name, id, modules: [] }, insertId: bar.panelId },
+        payload: { final: { name, id, modules: [] }, insertId: bar.stateId },
         fullAmountPayload: "children",
         isComponent: false,
+        isState: true,
       });
     },
     *deletePanelState({ payload, cb }: any, { call, put, select }: any): any {
@@ -1391,6 +1392,8 @@ export default {
     *selectPanelState({ payload: { stateId, panelId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar
+      console.log('团结')
+      console.log("fullAmountDashboardDetails", fullAmountDashboardDetails)
       const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find((item: any) => item.id === stateId)
       const { config, states } = fullAmountDashboardDetails.find((item: any) => item.id === panelId)
       const newDashboardConfig = duplicateDashboardConfig(
@@ -1522,26 +1525,36 @@ export default {
     // 添加新的图层和组件
     addLayer(
       state: IBarState,
-      { payload, fullAmountPayload = "brother", isComponent = true }: any
+      { payload, fullAmountPayload = "brother", isComponent = true, isState = false }: any
     ) {
-      let insertId: string,
-        fullInsertId: string,
+      // fullInsertId 和 insertId 的区别就是:
+      // 新增、复制组件（面板）的话只需要更新当前的 layers
+      // 新增、复制组件（面板）。新增、复制状态的话需要更新整个 fullAmountLayers
+      let insertId: string = '',
+        fullInsertId: string = '',
         newLayers: Array<any> = [];
       const { layers } = state;
-      if (payload.insertId && layers.length) {
-        insertId = payload.insertId;
-        fullInsertId = payload.insertId;
-      } else {
-        insertId = layers.length !== 0 ? layers[0].id : "";
-        fullInsertId = layers.length !== 0 ? layers[0].id : state.stateId ? state.stateId : "";
+      // 新增组件
+      if (isComponent) {
+        if (payload.insertId && layers.length) {
+          insertId = payload.insertId;
+          fullInsertId = payload.insertId;
+        } else {
+          insertId = layers.length !== 0 ? layers[0].id : "";
+          fullInsertId = layers.length !== 0 ? layers[0].id : state.stateId ? state.stateId : "";
+        }
       }
+      // 新增状态
+      if (isState) {
+        fullInsertId = state.stateId
+      }
+
       const { modules, ...finalConfig } = payload.final;
-      console.log("fullInsertId", fullInsertId);
-      console.log("payload", payload);
       // 新建面板要考虑到状态下是没有组件的
       // fullAmountPayload 就是 insertId对应的“组件” 和 被插入的 ”组件“ 的关系
+      // 深拷贝是为了避免 layers 和 fullAmountLayers 相互影响
       const newFullAmountLayers = generateLayers(
-        state.fullAmountLayers,
+        deepClone(state.fullAmountLayers),
         fullInsertId,
         payload.final,
         fullAmountPayload === "children"
@@ -1687,7 +1700,6 @@ export default {
         ),
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
-      console.log("state.selectedComponents", state.selectedComponents);
       cb(state.selectedComponents);
       return {
         ...state,
@@ -1718,7 +1730,6 @@ export default {
               const {
                 config: { left, top, width, height },
               } = panel;
-              console.log("scaleDragData", { left, top, width, height });
               state.panelConfig = panel;
               xPositionList.push(left, width);
               yPositionList.push(top, height);

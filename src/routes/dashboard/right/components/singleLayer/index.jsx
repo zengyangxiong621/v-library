@@ -9,6 +9,7 @@ import DataConfig from '../dataConfig'
 import CusEvent from '../cusEvent'
 import componentLib from '../index'
 import CallbackArgs from '../callbackArgs'
+import CrossCallback from '../crossCallback'
 import DrillDownSetting from '../drillDownSetting'
 
 import {
@@ -257,6 +258,17 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
     }
   }
 
+  const crossCallbackChange = (data) => {
+    componentConfig.websocketConfig = data
+    dispatch({
+      type: 'bar/setComponentConfig',
+      payload: componentConfig
+    })
+  }
+  
+  const selectedNextLevelComponent = (hasDrillDownArrConfig) => {
+    // console.log('hasDrillDownArrConfig', hasDrillDownArrConfig)
+  }
   // 通过全局变量 panelId 和 panels 来查找包含当前面板信息的对象，通过对象里的name来判断
   const curPanelType = bar.curPanelType
 
@@ -309,6 +321,11 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
               ></DrillDownSetting>
             </TabPane>
           }
+          <TabPane tab="跨屏" key="5">
+            <ComponentCard data={componentConfig}>
+              <CrossCallback data={componentConfig} onChange={crossCallbackChange} />
+            </ComponentCard>
+          </TabPane>
         </Tabs>
       </div>
     </div>

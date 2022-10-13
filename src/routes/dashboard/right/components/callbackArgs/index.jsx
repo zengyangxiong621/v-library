@@ -13,7 +13,7 @@ import {
 } from 'antd';
 
 import {
-  PlusCircleOutlined,
+  PlusOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
 
@@ -57,7 +57,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
 
   const callbackExtra = () => (
     <React.Fragment>
-      <PlusCircleOutlined onClick={addCallback} style={{ marginRight: '8px' }} />
+      <PlusOutlined onClick={addCallback} style={{ marginRight: '8px' }} />
       <DeleteOutlined onClick={deleteCallback} />
     </React.Fragment>
   );
