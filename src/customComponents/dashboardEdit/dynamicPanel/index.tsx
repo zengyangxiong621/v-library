@@ -88,6 +88,10 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panel}: any) => {
     (async function () {
       if (states.length === 0) return;
       const data = await Promise.all(states.map((item: { name: string; id: string }) => getPanelDetails(item)));
+      console.log('===========')
+      console.log('data', data)
+      console.log('===========')
+
       setState({
         allData: data,
         isLoading: true

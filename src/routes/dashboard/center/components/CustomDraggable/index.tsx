@@ -848,8 +848,6 @@ const CustomDraggable
               // 组件
               component = components.find(item => item.id === layer.id)
               // component.config = textConfig.config     // 本地测试
-              console.log('component', component)
-
 
               if (component) {
                 staticData = component.staticData;
