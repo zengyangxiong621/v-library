@@ -45,7 +45,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     setComponents(bar.fullAmountComponents)
     setPanels(bar.fullAmountPanels)
     setLayers(layers)
-
+    console.log("fullAmountPanels", bar.fullAmountPanels)
   }, [bar.layers])
 
 
@@ -267,21 +267,23 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         }
       }
     });
+
     dispatch({
       type: "bar/updateComponent",
       payload: bar.selectedComponents,
     });
+    // 辅助线消失
+    supportLinesRef.handleSetPosition(0, 0, 'none');
   }
 
   // 辅助线移动
   const handleSupportLineDrag = () => {
     const {x, y} = bar.scaleDragCompRef.getPosition()
     supportLinesRef.handleSetPosition(x, y, 'block');
-
   }
   // 选中框移动
   const handleScaleDragComDrag = (xMoveLength: number, yMoveLength: number) => {
-    bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength);
+    bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
   }
 
 
@@ -367,23 +369,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   });
 
-  useKeyPress(["downarrow"], (event) => {
-    if (event.type === "keydown") {
-      console.log('----向下-----')
-      handleComponentDrag(0, 1)
-      handleScaleDragComDrag(0, 1)
-      handleSupportLineDrag()
-
-
-    } else {
-      handleComponentDragStop()
-
-    }
-  }, {
-    events: ["keydown", "keyup"],
-    exactMatch: true,
-
-  });
   // 删除
   useKeyPress(["Backspace"], (event) => {
     if (bar.key.length < 0) return

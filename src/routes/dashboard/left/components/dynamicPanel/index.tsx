@@ -49,7 +49,9 @@ const DynamicPanel: React.FC = (props: any) => {
    * description: 点击每一项状态
    */
   const selectItem = ({ name, id }: { name: string, id: string }) => {
-    history.push(`/dashboard/${bar.dashboardId}/panel-${bar.panelId}/state-${id}`);
+    if (id !== bar.stateId) {
+      history.push(`/dashboard/${bar.dashboardId}/panel-${bar.panelId}/state-${id}`);
+    }
   };
   /**
    * description: 右键点击每一项
