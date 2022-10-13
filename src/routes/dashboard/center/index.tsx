@@ -377,8 +377,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   });
 
-  // 删除
-  useKeyPress(["Backspace"], (event) => {
+  // 删除 todo 先注释了
+/*  useKeyPress(["Backspace"], (event) => {
     if (bar.key.length < 0) return
 
     if (event.type === "keydown") {
@@ -402,7 +402,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     events: ["keydown", "keyup"],
     exactMatch: true,
 
-  });
+  });*/
   // 复制
   useKeyPress(["ctrl.c"], (event) => {
     if (bar.key.length < 0) return
