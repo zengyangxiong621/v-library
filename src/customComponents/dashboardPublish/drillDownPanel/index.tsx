@@ -36,6 +36,7 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
     allData: [],
     activeIndex: 0,
     isLoading: false,
+    breadcrumbData: [],
   });
 
   const [activeIndex, setActiveIndex] = useState(0)

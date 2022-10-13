@@ -36,6 +36,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     allData: [],
     activeIndex: 0,
     isLoading: false,
+    breadcrumbData: []
   });
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -103,6 +104,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
   }, []);
   // 将面板状态赋值给面包屑数据
   useEffect(() => {
+    console.log('面包屑', states)
     const breadcrumbData = states.map((item: any) => item.name)
     setState({
       breadcrumbData

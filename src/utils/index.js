@@ -431,7 +431,6 @@ export const deepForEachBeforeCallBack = (layers, cb) => {
 };
 
 export const deepForEach = (layers, cb) => {
-  console.log("layers", layers)
   layers.forEach((layer, index) => {
     if (layer && COMPONENTS in layer) {
       deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb);
