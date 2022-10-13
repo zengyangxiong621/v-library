@@ -33,7 +33,22 @@ const BoxShadow = props => {
     extend: _data.value.extend || 0,
   });
 
-  const selectBgc = () => {
+  const [popStyle, setPopStyle] = useState({})
+  const selectBgc = (e) => {
+    let style
+    // 判断弹出的颜色选择器应该放在上面或者下面
+    if (e.view.innerHeight - e.clientY < 350) {
+      style = {
+        left: `${e.clientX - 80}px`,
+        bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
+      }
+    } else {
+      style = {
+        left: `${e.clientX - 80}px`,
+        top: `${e.clientY + 20}px`
+      }
+    }
+    setPopStyle(style)
     setDisplayColorPicker(!displayColorPicker)
   }
   const handleBgcChange = (e) => {
@@ -49,7 +64,7 @@ const BoxShadow = props => {
     }
     props.onChange()
   }
-  const shadowChange = (field,e) => {
+  const shadowChange = (field, e) => {
     const value = parseInt(e.target.value)
     setShadow({
       ...shadow,
@@ -72,24 +87,24 @@ const BoxShadow = props => {
         label={_data.displayName}
       >
         <Input.Group compact className="fontBi">
-          <div className="color-swatch" onClick={selectBgc} style={{ marginRight: '8px' }}>
+          <div className="color-swatch" onClick={e => selectBgc(e)} style={{ marginRight: '8px' }}>
             <div className="color-dis" style={{ background: `rgba(${shadow.rgb.r}, ${shadow.rgb.g}, ${shadow.rgb.b}, ${shadow.rgb.a})` }} />
           </div>
-          {displayColorPicker ? <div className="color-popover">
+          {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
             <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
             <SketchPicker color={shadow.rgb} onChange={(e) => { handleBgcChange(e) }} />
           </div> : null}
           <Form.Item name="hShadow" noStyle>
-            <InputNumber controls={false} defaultValue={shadow.hShadow} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('hShadow',e)} />
+            <InputNumber controls={false} defaultValue={shadow.hShadow} className="po-size-input shadow-input" onBlur={(e) => shadowChange('hShadow', e)} />
           </Form.Item>
           <Form.Item name="vShadow" noStyle>
-            <InputNumber controls={false} defaultValue={shadow.vShadow} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('vShadow',e)} />
+            <InputNumber controls={false} defaultValue={shadow.vShadow} className="po-size-input shadow-input" onBlur={(e) => shadowChange('vShadow', e)} />
           </Form.Item>
           <Form.Item name="blur" noStyle>
-            <InputNumber controls={false} defaultValue={shadow.blur} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('blur',e)} />
+            <InputNumber controls={false} defaultValue={shadow.blur} className="po-size-input shadow-input" onBlur={(e) => shadowChange('blur', e)} />
           </Form.Item>
           <Form.Item name="extend" noStyle>
-            <InputNumber disabled controls={false} defaultValue={shadow.extend} className="po-size-input shadow-input" onBlur={(e)=>shadowChange('extend',e)} />
+            <InputNumber disabled controls={false} defaultValue={shadow.extend} className="po-size-input shadow-input" onBlur={(e) => shadowChange('extend', e)} />
           </Form.Item>
         </Input.Group>
         <Row>

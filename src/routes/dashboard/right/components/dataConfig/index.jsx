@@ -21,6 +21,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   const [fieldsData, setFieldsData] = useState([])
   const [componentResultData, setComponentResultData] = useState({})
   const [componentType, setComponentType] = useState('')
+  const [configSuccess, setConfigSuccess] = useState(false)
 
   useEffect(() => {
     const currentData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)
@@ -46,6 +47,12 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       setDataContainerResult()
     }
   }, [_data.dataContainers])
+
+  useEffect(() => {
+    const keys = fieldsData.map(field => field.value)
+    const flag = keys.every(key => fieldkeys.includes(key))
+    setConfigSuccess(flag)
+  }, [fieldkeys, fieldsData])
 
   // 一切到数据 tab 栏时，渲染出的数据响应结果
   const changeDataFromCallback = async () => {
@@ -125,6 +132,9 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
         fields
       }
     })
+    const keys = fields.map(field => field.value)
+    const flag = keys.every(key => fieldkeys.includes(key))
+    setConfigSuccess(flag)
     props.onFiledsChange(fields, _data.dataType)
   }
 
@@ -188,7 +198,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
       <div className="data-config" style={{ marginTop: 0 }}>
         <div className="data-header">
           <label className="data-name">数据接口</label>
-          <span className="data-interface"><i></i>配置完成</span>
+          <span className="data-interface"><i className={`${configSuccess ? 'config-success' : ''}`}></i>配置完成</span>
         </div>
         <div className="data-content">
           <EditableTable
