@@ -71,6 +71,7 @@ const CodeEditor = props => {
         />
         : null}
       <Modal
+        className='code_edit'
         width="70%"
         title="修改数据"
         okText="确认"

@@ -639,7 +639,7 @@ const RightContent = (props: any) => {
           name="group"
           rules={[{ required: true }]}
         >
-          <Select onSelect={selectGroup}>
+          <Select className="setBackColor" onSelect={selectGroup}>
             {
               // 将全部应用这一分组剔除
               dashboardManage.groupList[0]?.children?.slice(1).map((item: any) =>

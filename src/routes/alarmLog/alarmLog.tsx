@@ -251,7 +251,7 @@ const AlarmLog: React.FC = () => {
             </Popconfirm>
           </div>
         </div>
-        <div className='table-list'>
+        <div className='table-list table-wrap'>
           <Table 
             scroll={{ y: "calc(100vh - 350px)" }}
             rowClassName='customRowClass'
