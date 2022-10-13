@@ -29,8 +29,23 @@ const Border = props => {
       ...getRgbaNum(_data.value.color)
     },
   });
+  const [popStyle, setPopStyle] = useState({})
 
-  const selectBgc = () => {
+  const selectBgc = (e) => {
+    let style
+    // 判断弹出的颜色选择器应该放在上面或者下面
+    if (e.view.innerHeight - e.clientY < 350) {
+      style = {
+        left: `${e.clientX - 80}px`,
+        bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
+      }
+    } else {
+      style = {
+        left: `${e.clientX - 80}px`,
+        top: `${e.clientY + 20}px`
+      }
+    }
+    setPopStyle(style)
     setDisplayColorPicker(!displayColorPicker)
   }
   const colorChange = (e) => {
@@ -92,7 +107,7 @@ const Border = props => {
         </Form.Item>
         <Form.Item name="color" noStyle>
           <div className="color-swatch"
-            onClick={selectBgc}
+            onClick={e => selectBgc(e)}
             style={{ marginRight: 0 }}
           >
             <div
@@ -100,7 +115,7 @@ const Border = props => {
               style={{ background: `rgba(${border.color.r}, ${border.color.g}, ${border.color.b}, ${border.color.a})` }}
             />
           </div>
-          {displayColorPicker ? <div className="color-popover">
+          {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
             <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
             <SketchPicker color={border.color} onChange={(e) => { colorChange(e) }} />
           </div> : null}

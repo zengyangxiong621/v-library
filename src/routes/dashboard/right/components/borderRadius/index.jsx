@@ -32,7 +32,7 @@ const BorderRadius = props => {
   if (_range[0] === 'all') {
     _radius = { value: _data.value.radius, config: { min: 0, suffix: 'px' } }
   } else {
-    _radius = _range.map((item,index) => ({ value: _data.value.radius[index], config: { min: 0, suffix: 'px' } }))
+    _radius = _range.map((item, index) => ({ value: _data.value.radius[index], config: { min: 0, suffix: 'px' } }))
   }
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [border, setBorder] = useState({
@@ -45,6 +45,7 @@ const BorderRadius = props => {
     },
     radius: _data.value.radius
   });
+  const [popStyle, setPopStyle] = useState({})
 
   const handleHexChange = (e) => {
     const hexTmp = e.target.value
@@ -68,7 +69,21 @@ const BorderRadius = props => {
     props.onChange()
   }
 
-  const selectColor = () => {
+  const selectColor = (e) => {
+    let style
+    // 判断弹出的颜色选择器应该放在上面或者下面
+    if (e.view.innerHeight - e.clientY < 350) {
+      style = {
+        left: `${e.clientX - 80}px`,
+        bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
+      }
+    } else {
+      style = {
+        left: `${e.clientX - 80}px`,
+        top: `${e.clientY + 20}px`
+      }
+    }
+    setPopStyle(style)
     setDisplayColorPicker(!displayColorPicker)
   }
   const colorChange = (e) => {
@@ -138,16 +153,16 @@ const BorderRadius = props => {
             <Option value="dotted">虚线</Option>
           </Select>
         </Form.Item>
-        <Row style={{ width: '100%',marginBottom:'8px' }}>
+        <Row style={{ width: '100%', marginBottom: '8px' }}>
           <Col span={12} className="detail-txt" style={{ textIndent: '4px' }}>粗细</Col>
           <Col span={10} className="detail-txt" style={{ textIndent: '4px' }}>线型</Col>
         </Row>
         <Form.Item>
           <Form.Item name="color" noStyle>
-            <div className="color-swatch" onClick={selectColor} style={{float: _range[0] !== 'all' ? 'left' : 'unset' }}>
+            <div className="color-swatch" onClick={e => selectColor(e)} style={{ float: _range[0] !== 'all' ? 'left' : 'unset' }}>
               <div className="color-dis" style={{ background: `rgba(${border.color.r}, ${border.color.g}, ${border.color.b}, ${border.color.a})` }} />
             </div>
-            {displayColorPicker ? <div className="color-popover">
+            {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
               <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
               <SketchPicker color={border.color} onChange={(e) => { colorChange(e) }} />
             </div> : null}
@@ -174,28 +189,28 @@ const BorderRadius = props => {
             }
           </Row>
           {
-            _range[0] !== 'all' ?<>
-              <Row style={{ width: '100%'}} gutter={4}>
-              {
-                _range.map((item, index) => (
-                  <Col span={ 24 / _range.length} className="range-item" style={{marginTop: 4}}>
-                    <CusInputNumber onChange={() => rangeRadiusChange(item, index)} data={_radius[index]} />
-                  </Col>
-                ))
-              }
-            </Row>
+            _range[0] !== 'all' ? <>
               <Row style={{ width: '100%' }} gutter={4}>
                 {
                   _range.map((item, index) => (
-                    <Col span={ 24 / _range.length } className="detail-txt" style={{textAlign: 'right'}}>
-                      { index === 0 ?  '圆角:' + rangDirectionEnum[item] : rangDirectionEnum[item] }
+                    <Col span={24 / _range.length} className="range-item" style={{ marginTop: 4 }}>
+                      <CusInputNumber onChange={() => rangeRadiusChange(item, index)} data={_radius[index]} />
                     </Col>
                   ))
                 }
-              < /Row>
-            </> : <></>
+              </Row>
+              <Row style={{ width: '100%' }} gutter={4}>
+                {
+                  _range.map((item, index) => (
+                    <Col span={24 / _range.length} className="detail-txt" style={{ textAlign: 'right' }}>
+                      {index === 0 ? '圆角:' + rangDirectionEnum[item] : rangDirectionEnum[item]}
+                    </Col>
+                  ))
+                }
+                < /Row>
+              </> : <></>
           }
-        </Form.Item>
+            </Form.Item>
       </Form.Item>
     </Form>
   )
