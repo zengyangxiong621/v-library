@@ -9,8 +9,13 @@ const BasicLine = (props) => {
   // const componentConfig = ComponentDefaultConfig
   const { config } = componentConfig
   const { data } = componentConfig.staticData
-  const componentData = props.comData || data // 过滤后的数据
+  let componentData = props.comData || data // 过滤后的数据
   const fieldKey = props.fields || ['x', 'y', 's']
+
+  // 配置es数据源的时候，在没有用过滤器将结果转成数组前，需要将componentData先赋值为[]以兼容这种情况
+  if(!Array.isArray(componentData)) {
+    componentData = []
+  }
   // <<<获取X轴数据>>>
   //传入的数据的每个对象中都有x, 当有多个系列时，x会重复
   // {x:'01/11', y:'2', s:'系列一'}、{x:'01/11', y:'20', s:'系列二'}
