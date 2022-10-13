@@ -106,52 +106,43 @@ const RecycleBin = (props: any) => {
   }
   //***** 恢复回收站中的组件
   const recoverModule = async () => {
-    const idArrs = selectedLists.map((x: any) => {
-      return x.id
-    })
-    const { layers, components, recycleItems } = await http({
-      url: `/visual/layer/recover`,
-      method: 'post',
-      body: {
-        dashboardId: bar.dashboardId,
-        recycleItems: idArrs
-      }
-    })
-    const hadFormatArr = getTargetData(recycleItems)
-    setRecycleLists(hadFormatArr)
-    setSelectedLists([])
-    // console.log('恢复组件接口调用成功返回的数据', data);
-    //TODO 更新画布中的 组件等等逻辑
-    console.log('bar',bar)
-    console.log('layerslayers--------', layers)
-    console.log('components~~~~~~~', components)
-    const barCom = bar.components.concat(components)
-    console.log('整合后的components', barCom)
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        components: barCom
-      }
-    })
-    // dispatch({
-    //   type: 'bar/addLayer',
-    //   payload: {
-    //     final: {}
-    //   }
-    // })
-    dispatch({
-      type: 'bar/updateComponents',
-      payload: {
-        layers,
-        components,
-        selected: []
-      }
-    })
-    // 刷新组件中的画布
-    dispatch({
-      type: "bar/getDashboardDetails",
-      payload: bar.dashboardId
-    });
+    try {
+      const idArrs = selectedLists.map((x: any) => {
+        return x.id
+      })
+      const { layers, components, recycleItems } = await http({
+        url: `/visual/layer/recover`,
+        method: 'post',
+        body: {
+          dashboardId: bar.dashboardId,
+          recycleItems: idArrs
+        }
+      })
+      const hadFormatArr = getTargetData(recycleItems)
+      setRecycleLists(hadFormatArr)
+      setSelectedLists([])
+      dispatch({
+        type: 'bar/updateTree',
+        payload: layers
+      })
+      dispatch({
+        type: 'bar/updateComponents',
+        payload: {
+          layers, components, selected: []
+        }
+      })
+      // 刷新组件中的画布
+      dispatch({
+        type: "bar/getDashboardDetails",
+        payload: bar.dashboardId
+      });
+      dispatch({
+        type: 'bar/save',
+        payload: {}
+      })
+    } catch (error) {
+      console.log('恢复回收组件出错', error)
+    }
   }
 
 
