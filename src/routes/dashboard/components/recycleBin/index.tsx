@@ -192,7 +192,7 @@ const RecycleBin = (props: any) => {
   };
 
   return (
-    <div className="module-update-wrap">
+    <div className="recycle-bin-wrap">
       <Drawer
         width={620}
         title={
