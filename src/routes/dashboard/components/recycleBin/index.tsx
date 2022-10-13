@@ -51,7 +51,7 @@ const RecycleBin = (props: any) => {
   }, [visible])
 
   // 在下方 deleteModule函数 中调用
-  const  deleteModuleLogic = async() => {
+  const deleteModuleLogic = async () => {
     const idArrs = selectedLists.map((x: any) => {
       return x.id
     })
@@ -109,7 +109,7 @@ const RecycleBin = (props: any) => {
     const idArrs = selectedLists.map((x: any) => {
       return x.id
     })
-    const data = await http({
+    const { layers, components, recycleItems } = await http({
       url: `/visual/layer/recover`,
       method: 'post',
       body: {
@@ -117,10 +117,42 @@ const RecycleBin = (props: any) => {
         recycleItems: idArrs
       }
     })
-    console.log('恢复组件接口调用成功返回的数据', data);
+    const hadFormatArr = getTargetData(recycleItems)
+    setRecycleLists(hadFormatArr)
+    setSelectedLists([])
+    // console.log('恢复组件接口调用成功返回的数据', data);
     //TODO 更新画布中的 组件等等逻辑
+    console.log('bar',bar)
+    console.log('layerslayers--------', layers)
+    console.log('components~~~~~~~', components)
+    const barCom = bar.components.concat(components)
+    console.log('整合后的components', barCom)
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        components: barCom
+      }
+    })
+    // dispatch({
+    //   type: 'bar/addLayer',
+    //   payload: {
+    //     final: {}
+    //   }
+    // })
+    dispatch({
+      type: 'bar/updateComponents',
+      payload: {
+        layers,
+        components,
+        selected: []
+      }
+    })
+    // 刷新组件中的画布
+    dispatch({
+      type: "bar/getDashboardDetails",
+      payload: bar.dashboardId
+    });
   }
-
 
 
   // 选择 逻辑

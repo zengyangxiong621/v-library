@@ -148,7 +148,6 @@ export default {
     ): any {
       let bar: any = yield select(({ bar }: any) => bar);
       // 未初始化
-      console.log('!bar.isDashboardInit', bar.isDashboardInit)
       if (!bar.isDashboardInit) {
         // 获取回调参数列表
         const callbackParamsList = yield http({
