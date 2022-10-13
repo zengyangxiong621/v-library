@@ -88,7 +88,7 @@ const ComponentCard = props => {
         <div>
           <h4 style={{ marginBottom: '0' }}>{`${name}_${id}`}</h4>
           {
-            moduleVersion ? <p style={{ margin: '12px 0 0 0' }}>{`V${moduleVersion}`}</p> : <></>
+            moduleVersion ? <p className="component-version" style={{ margin: '12px 0 0 0' }}>{`V${moduleVersion}`}</p> : <></>
           }
         </div>
         {

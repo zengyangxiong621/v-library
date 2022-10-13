@@ -33,6 +33,7 @@ const TextStroke = props => {
       a: 1
     }
   });
+  const [popStyle, setPopStyle] = useState({})
 
   const colorChange = (e) => {
     setStroke({
@@ -66,7 +67,21 @@ const TextStroke = props => {
     _data.value.color = hex
     props.onChange()
   }
-  const selectColor = () => {
+  const selectColor = (e) => {
+    let style
+    // 判断弹出的颜色选择器应该放在上面或者下面
+    if (e.view.innerHeight - e.clientY < 350) {
+      style = {
+        left: `${e.clientX - 80}px`,
+        bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
+      }
+    } else {
+      style = {
+        left: `${e.clientX - 80}px`,
+        top: `${e.clientY + 20}px`
+      }
+    }
+    setPopStyle(style)
     setDisplayColorPicker(!displayColorPicker)
   }
 
@@ -87,19 +102,19 @@ const TextStroke = props => {
           <CusInputNumber
             data={_width}
             onChange={widthChange}
-            formStyle={{ float: 'left',marginBottom: '-16px',marginRight: '8px'}}
+            formStyle={{ float: 'left', marginBottom: '-16px', marginRight: '8px' }}
             style={{ width: '78px' }}
           />
         </Form.Item>
-        <div className="color-swatch" onClick={selectColor}>
+        <div className="color-swatch" onClick={e => selectColor(e)}>
           <div className="color-dis" style={{ background: `rgba(${stroke.rgb.r}, ${stroke.rgb.g}, ${stroke.rgb.b}, ${stroke.rgb.a})` }} />
         </div>
-        {displayColorPicker ? <div className="color-popover">
+        {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
           <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
           <SketchPicker color={stroke.rgb} onChange={(e) => { colorChange(e) }} />
         </div> : null}
         <Form.Item noStyle name="hex">
-          <Input defaultValue={stroke.color} className="input-hex" style={{marginRight: 0}} onBlur={(e) => { handleHexChange(e) }} />
+          <Input defaultValue={stroke.color} className="input-hex" style={{ marginRight: 0 }} onBlur={(e) => { handleHexChange(e) }} />
         </Form.Item>
         <Row>
           <Col span={8} className="detail-txt">粗细</Col>
