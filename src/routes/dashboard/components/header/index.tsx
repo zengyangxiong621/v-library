@@ -32,11 +32,14 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   // 返回首页
   const toBack = () => {
     if (bar.panelId) {
+      const routeList = bar.routeList
       // history.push(`/dashboard/${bar.dashboardId}`);
-      history.back()
+      routeList.pop()
+      let currentUrl = routeList[routeList.length - 1].url
+      history.push(currentUrl)
     }
     if (!bar.panelId && bar.dashboardId) {
-      history.push(`/dashboard-manage`);
+      history.replace(`/dashboard-manage`);
     }
     // 暂时在这里清空localStorage
     localStorage.removeItem("allDrillDownPathReflect");

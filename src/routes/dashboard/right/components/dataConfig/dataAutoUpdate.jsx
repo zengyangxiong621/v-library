@@ -65,7 +65,7 @@ const DataAutoUpdate = (props) => {
             data={autoTime}
             onBlur={timeBlur}
             onChange={timeChange}
-            formStyle={{ marginRight: '7px', float: 'left', marginBottom: '-16px' }}
+            formStyle={{ marginRight: '7px', marginLeft:'8px', float: 'left', marginBottom: '-16px' }}
             style={{ width: '80px' }}
           />秒请求一次
         </div>

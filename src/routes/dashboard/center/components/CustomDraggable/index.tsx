@@ -155,6 +155,7 @@ const CustomDraggable
         y: data.y,
       });
       bar.selectedComponents = [];
+      bar.selectedComponentDOMs = {}
       bar.dragStatus = "一组件";
 
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
@@ -186,7 +187,14 @@ const CustomDraggable
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
         }
       }
+/*      Object.keys(bar.allComponentRefs).forEach((key) => {
+        if (bar.selectedComponentIds.includes(key)) {
+          bar.selectedComponentRefs[key] = bar.allComponentRefs[key];
+          bar.selectedComponentDOMs[key] = bar.allComponentDOMs[key];
+        }
+      });*/
       bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))];
+
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       ev.stopPropagation();
@@ -510,6 +518,7 @@ const CustomDraggable
     const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent | ILayerPanel, config: IConfig) => {
       clearTimeout(clickTimer.current);
       if ("panelType" in layer) {
+        let url = ''
         const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
         if (layer.panelType === 0) { // 动态面板
           dispatch({
@@ -534,40 +543,16 @@ const CustomDraggable
             }
           });
           if (panel.states[0]?.id) {
-            history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
+            console.log('panel', panel)
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
           } else {
-            history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}`);
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}`
           }
-
         } else if (layer.panelType === 1) {
           if (panel.states.length > 0) {
-            history.push(`/dashboard/${panel.states[0].id}`);
-            dispatch({
-              type: "bar/save",
-              payload: {
-                isPanel: false,
-                stateId: null,
-                panelId: null,
-                key: [],
-                selectedComponentOrGroup: [],
-                dashboardId: panel.states[0].id,
-                scaleDragData: {
-                  position: {
-                    x: 0,
-                    y: 0
-                  },
-                  style: {
-                    width: 0,
-                    height: 0,
-                    display: "none"
-                  }
-                }
-              }
-            });
-            dispatch({
-              type: "bar/getDashboardDetails"
-            });
+            url = `/dashboard/${panel.states[0].id}`
           }
+
         } if (layer.panelType === 2) {
           // 下钻面板
           dispatch({
@@ -592,7 +577,21 @@ const CustomDraggable
               }
             }
           });
-          history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
+          url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
+        }
+        if (url) {
+          console.log('url', url)
+          history.push(url);
+          dispatch({
+            type: "bar/save",
+            payload: {
+              routeList: bar.routeList.concat({
+                type: "panel",
+                id: layer.id,
+                url: url
+              })
+            }
+          })
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({

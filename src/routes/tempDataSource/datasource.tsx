@@ -367,7 +367,7 @@ const DataSource = (props: any) => {
             <span>添加数据源</span>
           </div>
           <div className='search'>
-            <Select style={{ minWidth: "140px" }} dropdownStyle={{ backgroundColor: "#232630" }} defaultValue="全部类型" onChange={selectChange}>
+            <Select style={{ minWidth: "140px" }} className='myant-search' dropdownStyle={{ backgroundColor: "#232630" }} defaultValue="全部类型" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
                   return (
@@ -377,6 +377,7 @@ const DataSource = (props: any) => {
               }
             </Select>
             <Input.Search placeholder="搜索"
+              className="myant-select"
               allowClear
               maxLength={40}
               value={inputValue}

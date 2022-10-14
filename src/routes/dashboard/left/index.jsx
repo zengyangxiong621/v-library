@@ -47,6 +47,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const clearStatus = (event) => {
     const dom = event.target || null
     if (!dom || !dom.className || ['ant-layout', 'draggable-wrapper', 'left-wrap'].includes(dom.className)) {
+      console.log('触发了？')
       setSelected([])
       // 将多选树改为单选树
       dispatch({
@@ -61,6 +62,7 @@ const Left = ({ dispatch, bar, operate }) => {
   useEffect(() => {
     //1
     setSelected(bar.key)
+    console.log('啊哈？')
     // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
     if (bar.key.length > 1) {
       const newArr = customMenuOptions.map((item) => {
@@ -78,9 +80,9 @@ const Left = ({ dispatch, bar, operate }) => {
   }, [bar.key])
   // 监听键盘Ctrl键按下与松开
   useEffect(() => {
-    document.addEventListener('click', clearStatus)
+    // document.addEventListener('click', clearStatus)
     return () => {
-      document.removeEventListener('click', clearStatus)
+      // document.removeEventListener('click', clearStatus)
     }
   }, [])
 
@@ -209,6 +211,9 @@ const Left = ({ dispatch, bar, operate }) => {
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
     event.stopPropagation()
+    event.preventDefault()
+    console.log('右键')
+    console.log('selected', selected)
     const { modules, key } = node
     // dispatch({
     //   type: 'bar/save',
@@ -241,7 +246,7 @@ const Left = ({ dispatch, bar, operate }) => {
     })
     dispatch({
       type: 'bar/save',
-      payload: { isMultipleTree: false },
+      payload: { isMultipleTree: event.nativeEvent.ctrlKey || event.nativeEvent.shiftKey },
     })
   }
   // 展开 / 收起 全部节点
@@ -338,6 +343,8 @@ const Left = ({ dispatch, bar, operate }) => {
       payload: false,
     })
   }
+  console.log('selected', selected)
+  console.log('bar.key', bar.key)
 
   return (
     <div className="left-menu">

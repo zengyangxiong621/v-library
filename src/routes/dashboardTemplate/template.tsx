@@ -225,7 +225,9 @@ const DashboardTemplate = (props: any) => {
             colon={false}
             rules={[{ required: true, message: "请输入应用名称" }]}
           >
-            <Input placeholder='请输入应用名称'
+            <Input 
+              placeholder='请输入应用名称'
+              className='setBackColor'
               autoComplete='off'
               value={appName}
               maxLength={20}
@@ -238,6 +240,7 @@ const DashboardTemplate = (props: any) => {
             colon={false}
           >
             <Select
+              className='setBackColor'
               defaultValue='未分组'
               onChange={(val) => groupSelectSelect(val)}
             >

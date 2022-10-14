@@ -75,8 +75,9 @@ const RightContent = (props: any) => {
       url,
       method: "post",
       body: {
-        spaceId: currentItem.moduleType === "systemTemp" ? null : spaceId ,
-        newGroupId: newGroupId,
+        spaceId: ["systemTemp",'design'].indexOf(currentItem.moduleType) > -1 ? null : spaceId ,
+        newGroupId:currentItem.moduleType === 'design' ? null : newGroupId,
+        type: currentItem.moduleType === 'design' ? newGroupId : null,
         ...obj
       }
     });

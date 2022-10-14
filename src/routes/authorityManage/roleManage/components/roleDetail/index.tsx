@@ -110,7 +110,6 @@ export default memo(function RoleDetail(props:any) {
         <Form.Item
           label="名称"
           name="name"
-          style={{ marginTop: "20px" }}
         >
           <span>{currentData?.name || "-"}</span>
         </Form.Item>

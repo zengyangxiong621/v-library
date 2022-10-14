@@ -237,11 +237,15 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
  */
   // 组件被移动
   const handleComponentDrag = (x: number, y: number) => {
+    console.log('bar.selectedComponentDOMs', bar.selectedComponentDOMs)
+    console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
     for(const key in bar.selectedComponentDOMs) {
       const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+      console.log('translateArr', translateArr)
       let translateX = Number(translateArr[0]) + x
       let translateY = Number(translateArr[1]) + y
       bar.selectedComponentDOMs[key].style.transform = `translate(${translateX}px,${translateY}px)`;
+      console.log('bar.selectedComponentDOMs[key].style.transform', bar.selectedComponentDOMs[key].style.transform)
     }
   }
   // 组件移动结束
