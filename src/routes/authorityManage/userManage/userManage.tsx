@@ -12,6 +12,7 @@ import { http } from "@/services/request";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { STATUSLIST, ACCOUNTLIST } from "@/constant/dvaModels/userManage";
 import type { TableRowSelection } from "antd/lib/table/interface";
+import TipModal from "@/components/tipModal"
 
 
 import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message, Form } from "antd";
@@ -38,6 +39,10 @@ const UserManage = (props: any) => {
 
   const [roleList, setRoleList] = useState([]);
   const userInfo = props.global.userInfo || {};
+
+  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
+  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
+  const [batchFlag,setBatchFlag]=useState<boolean>(false);//是否批量删除标识
 
 
   
@@ -249,56 +254,83 @@ const UserManage = (props: any) => {
     setShowUpdateMode(true);
   };
   const delClick = (data:any) => {
-    Modal.confirm({
-      title: "提示",
-      okButtonProps: {
-        style: {
-          backgroundColor: "#e9535d",
-          border: "none",
-          // marginLeft: '8px',
-        }
-      },
-      cancelButtonProps: {
-        style: {
-          backgroundColor: "#3d404d"
-        }
-      },
-      icon: <ExclamationCircleFilled />,
-      content: "此操作将删除该内容，是否继续?",
-      okText: "确定",
-      cancelText: "取消",
-      bodyStyle: {
-        background: "#232630",
-      },
-      async onOk(close:any) {
-        const result = await http({
-          url: "/visual/user/remove",
-          method: "post",
-          body: {
-            ids: data
-          }
-        });
-        if (result) {
-          close();
-          getUserList();
-          message.success({ content: "删除成功", duration: 2 });
-        } else {
-          message.error({ content: "删除失败", duration: 2 });
-        }
-      },
-      onCancel(close:any) {
-        close();
-      }
-    });
+    setDelVisible(true)
+    setRowData(data)
+    // Modal.confirm({
+    //   title: "提示",
+    //   okButtonProps: {
+    //     style: {
+    //       backgroundColor: "#e9535d",
+    //       border: "none",
+    //       // marginLeft: '8px',
+    //     }
+    //   },
+    //   cancelButtonProps: {
+    //     style: {
+    //       backgroundColor: "#3d404d"
+    //     }
+    //   },
+    //   icon: <ExclamationCircleFilled />,
+    //   content: "此操作将删除该内容，是否继续?",
+    //   okText: "确定",
+    //   cancelText: "取消",
+    //   bodyStyle: {
+    //     background: "#232630",
+    //   },
+    //   async onOk(close:any) {
+    //     const result = await http({
+    //       url: "/visual/user/remove",
+    //       method: "post",
+    //       body: {
+    //         ids: data
+    //       }
+    //     });
+    //     if (result) {
+    //       close();
+    //       getUserList();
+    //       message.success({ content: "删除成功", duration: 2 });
+    //     } else {
+    //       message.error({ content: "删除失败", duration: 2 });
+    //     }
+    //   },
+    //   onCancel(close:any) {
+    //     close();
+    //   }
+    // });
   };
   // 批量删除处理
   const deleteBatchUser = () => {
     if(!selectedRowKeys.length) {
       message.warning("请选择待删除的账号");
     }else{
-      delClick(selectedRowKeys);
+      // delClick(selectedRowKeys);
+      setDelVisible(true)
+      setBatchFlag(true)
+      setRowData(selectedRowKeys)
     }
   };
+  // 取消删除（关闭删除提示框）
+  const closeTipModal = ()=> {
+    setDelVisible(false)
+    setBatchFlag(false)
+  }
+  const handleDelOk = async () => {
+    const result = await http({
+      url: "/visual/user/remove",
+      method: "post",
+      body: {
+        ids: rowData
+      }
+    });
+    if (result) {
+      close();
+      getUserList();
+      message.success({ content: "删除成功", duration: 2 });
+    } else {
+      message.error({ content: "删除失败", duration: 2 });
+    }
+    closeTipModal()
+  }
   const changeStatusClick = async(data:any) => {
     const result = await http({
       url: "/visual/user/updateStatus",
@@ -414,6 +446,12 @@ const UserManage = (props: any) => {
           closeModal={closeModal} 
         ></UpdatePassword>
       </div>
+      <TipModal 
+        visible={delVisible}
+        text="此操作将删除该账号，是否继续?"
+        onOk={handleDelOk} 
+        onCancel={closeTipModal}
+      />
     </ConfigProvider>
   );
 };
