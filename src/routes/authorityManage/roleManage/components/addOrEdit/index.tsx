@@ -236,20 +236,19 @@ const AddOrEdit=(props:any)=>{
         <Form.Item
           label="名称"
           name="name"
-          style={{ marginTop: "20px" }}
           validateTrigger='onBlur'
           rules={[
             {required: true,validator:validRoleName(isEdit)}
           ]}
         >
-          <Input placeholder='请输入名称' disabled={isEdit} />
+          <Input className='setBackColor' placeholder='请输入名称' disabled={isEdit} />
         </Form.Item>
         <Form.Item
           label="描述"
           name="description"
           style={{ marginTop: "20px" }}
         >
-          <TextArea placeholder='请输入描述' />
+          <TextArea className='setBackColor' placeholder='请输入描述' />
         </Form.Item>
         <Form.Item
           label="权限管理"

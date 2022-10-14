@@ -515,7 +515,6 @@ const EditDataSource = (props: any) => {
                 </Form.Item>
                 <Form.Item
                   label="上传文件"
-                  style={{ marginBottom: "40px" }}
                   // name="csvFileUrl"
                   rules={generateSingleRules(true, "请重新上传文件")}
                 >
@@ -659,7 +658,6 @@ const EditDataSource = (props: any) => {
               <>
                 <Form.Item
                   label="上传文件"
-                  style={{ marginBottom: "40px" }}
                   // name="jsonFileUrl"
                   rules={generateSingleRules(true, "请选择要上传的文件")}
                 >

@@ -224,11 +224,13 @@ const UploadFile = (props: any) => {
             </Form.Item>
           }
           <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, "请选择要上传的文件")}>
-            <Dragger {...fileProps} fileList={fileList}>
-              <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
-              <p className="ant-upload-hint">{setUploadText()}</p>
+            <div className='setBackColor'>
+              <Dragger {...fileProps} fileList={fileList}>
+                <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
+                <p className="ant-upload-hint">{setUploadText()}</p>
               {/*  */}
-            </Dragger>
+              </Dragger>
+            </div>
           </Form.Item>
           {
             ["myTemp","systemTemp"].indexOf(origin) == -1  &&
@@ -237,7 +239,7 @@ const UploadFile = (props: any) => {
             </Form.Item>
           }
           <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, "请选择分组")}>
-          <Select placeholder="请选择"  onChange={selectChange}>
+          <Select className='setBackColor' placeholder="请选择"  onChange={selectChange}>
             {
               (selectList || []).map((item:any) => {
                 if(["-1","sysMatAll","myTempAll", "sysTempAll"].indexOf(item.groupId) === -1){
