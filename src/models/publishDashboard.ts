@@ -255,6 +255,7 @@ export default {
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
+      console.log('fullAmountComponents', fullAmountComponents)
       const panels = publishDashboard.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
@@ -291,6 +292,7 @@ export default {
           dashboardId,
           id: dashboardId,
         });
+        console.log('fullAmountDashboardDetailsfullAmountDashboardDetails', fullAmountDashboardDetails)
         const layerPanels: any = layersPanelsFlat(layers);
         const func = async (layerPanel: any) => {
           try {

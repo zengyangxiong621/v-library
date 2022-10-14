@@ -29,6 +29,7 @@ const Color = props => {
     // rgb: {r: 22, g: 22, b: 33, a: 1},
     opacity: isHex(_data.value) ? 100 : getRgbaNum(_data.value).a * 100
   });
+  const [popStyle, setPopStyle] = useState({})
 
   const handleBgcChange = (e) => {
     setColor({
@@ -97,7 +98,21 @@ const Color = props => {
     }
     props.onChange()
   }
-  const selectBgc = () => {
+  const selectBgc = (e) => {
+    let style
+    // 判断弹出的颜色选择器应该放在上面或者下面
+    if (e.view.innerHeight - e.clientY < 350) {
+      style = {
+        left: `${e.clientX - 80}px`,
+        bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
+      }
+    } else {
+      style = {
+        left: `${e.clientX - 80}px`,
+        top: `${e.clientY + 20}px`
+      }
+    }
+    setPopStyle(style)
     setDisplayColorPicker(!displayColorPicker)
   }
   // @Mark-- 因为之前在 handleBgcChange 中发送请求,返回数据后会强刷页面，导致操作一次或几次后选色板消失， 所以将发送请求的时机延后至主动隐藏选色板后
@@ -114,10 +129,10 @@ const Color = props => {
       style={props.style}
     >
       <Form.Item label={_data.displayName}>
-        <div className="color-swatch" onClick={selectBgc}>
+        <div className="color-swatch" onClick={e => selectBgc(e)}>
           <div className="color-dis" style={{ background: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})` }} />
         </div>
-        {displayColorPicker ? <div className="color-popover">
+        {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
           <div className="color-cover" onClick={() => clickOutSketchPicker()} />
           <SketchPicker color={color.rgb} onChange={(e) => { handleBgcChange(e) }} />
         </div> : null}

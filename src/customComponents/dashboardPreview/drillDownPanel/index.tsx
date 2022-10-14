@@ -15,7 +15,14 @@ import { layersPanelsFlat } from "@/utils";
 import { Breadcrumb } from "antd";
 
 interface State {
-  states: string[];
+  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
+  allData: Array<{
+    layers: any[]
+    components: any[],
+    [key: string]: any;
+  }>; // 面板内所有状态的集合
+  activeIndex: number; // 当前展示的状态下标
+  isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
 const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPanel }: any) => {
@@ -25,17 +32,12 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
   const { states, config } = panel;
   const { animationTime = 0 } = config;
   const [state, setState] = useSetState<State>({
-    allLayers: [],
-    layers: [],
-    states: [],
-    defaultState: "",
-    AllComponents: [],
     overflow: "hidden",
     allData: [],
+    activeIndex: 0,
     isLoading: false,
     breadcrumbData: []
   });
-
   const [activeIndex, setActiveIndex] = useState(0)
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
@@ -102,6 +104,7 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
   }, []);
   // 将面板状态赋值给面包屑数据
   useEffect(() => {
+    console.log('面包屑', states)
     const breadcrumbData = states.map((item: any) => item.name)
     setState({
       breadcrumbData

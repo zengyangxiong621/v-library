@@ -260,8 +260,18 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
     // 更新组件样式配置信息
     const componentsStyleLists = Object.values(getComponentThemeConfigs())
 
+    const { components } = await http({
+      url: `/visual/application/dashboard/detail/${bar.dashboardId}`,
+      method: "get",
+    });
+    // bug fix：主题切换还有携带被删除组件的参数这个情况出现
+    const finalCompoentsStyleLists = componentsStyleLists.filter(com => {
+      const ids = components.map(item => item.id)
+      return ids.includes(com.id)
+    })
+
     const componentsStyleParams = {
-      configs: componentsStyleLists,
+      configs: finalCompoentsStyleLists,
       dashboardId: bar.dashboardId
     }
     await http({
@@ -272,10 +282,10 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
     deleteAllComponentThemeConfigs()
 
     // 更新组件的配置
-/*    await dispatch({
-      type: 'bar/getDashboardDetails',
-      payload: bar.dashboardId
-    })*/
+    /*    await dispatch({
+          type: 'bar/getDashboardDetails',
+          payload: bar.dashboardId
+        })*/
     componentsStyleLists.forEach((component) => {
       bar.fullAmountComponents.find(item => item.id === component.id).config = component.config
     })

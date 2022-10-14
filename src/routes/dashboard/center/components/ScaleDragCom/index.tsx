@@ -29,8 +29,13 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       // const translateArr = nodeRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
       // const translateX = Number(translateArr[0])
       // const translateY = Number(translateArr[1])
-      scaleDragRef.current.style.left = Number(scaleDragRef.current.style.left.replace("px", "")) + x + "px";
-      scaleDragRef.current.style.top = Number(scaleDragRef.current.style.top.replace("px", "")) + y + "px";
+      const dom = scaleDragRef.current
+      const left = Number(dom.style.left.replace("px", ""))
+      const top = Number(dom.style.top.replace("px", ""))
+      dom.style.left = left + x + "px";
+      dom.style.top = top + y + "px";
+      bar.scaleDragData.position.x = left + x
+      bar.scaleDragData.position.y = top + y
       // nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
     },
     getPosition() {

@@ -4,17 +4,26 @@
   width: 145px !important;
   border-radius: 3px !important;
   margin-right: 8px !important;
-  color: @fontColor  !important;
+  color: @fontColor !important;
   text-align: left;
 }
 
 .font-select .ant-select-selector {
   border: 1px solid #30334b !important;
-  background-color: @componentBgColor  !important;
+  background-color: @componentBgColor !important;
+}
+
+.font-select.ant-select .ant-select-selector:hover {
+  border-color: #177ddc !important;
+}
+
+.font-select.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border-color: #40a9ff !important;
 }
 
 .font-select .ant-select-arrow {
-  color: #73768F;
+  color: #73768f;
 }
 
 .fontBi .ant-tag-checkable {
@@ -24,7 +33,7 @@
   background: @componentBgColor;
   border: 1px solid @borderColor;
   border-radius: 3px;
-  color: #A1A1A1;
+  color: #a1a1a1;
   font-size: 14px;
   font-weight: bold;
   margin-right: 8px !important;

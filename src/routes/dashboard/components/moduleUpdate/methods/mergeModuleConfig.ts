@@ -44,14 +44,15 @@ type TConfigArr = THasTargetKeyConfigItem[];
 type TMayChangeFlag = "value" | "options" | "other";
 
 const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
+  console.log('旧的config', oldConfig)
+  console.log('新的config~~~~~~~~', newConfig)
   const recursive = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
     const valueMap = new Map(); // value 为 (string、number) || {}
     const otherMap = new Map();
     const optionMap = new Map();
     oldConfig.forEach((x: TConfigItem) => {
       const { name, value, options } = x;
-
-      if(name !== "customColumn") {
+      // if(name !== "customColumn") {
         if (Array.isArray(value)) {
           //@Mark 开发者配置组件时，应该保证同一层级(value || options)下 每项配置名(name)的唯一性，如果不小心copy多了一份，在map中重复set相同的key也仅仅只是覆盖，所以此处不判断map中是否已经有key为 name 的项
           valueMap.set(name, value);
@@ -61,8 +62,7 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
         if (Array.isArray(options)) {
           optionMap.set(name, options);
         }
-      }
-
+      // }
     });
     newConfig.forEach((item: TConfigItem) => {
       const { name, value, options } = item;
@@ -103,6 +103,7 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
 
   // @Mark 此处必须返回一个 "新"对象, 否则,单个升级没问题,批量升级时会出问题
   const independentConfig = deepClone(newConfig);
+  console.log('independentConfig', independentConfig)
   return independentConfig;
 };
 

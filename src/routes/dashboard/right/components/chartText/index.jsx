@@ -32,8 +32,23 @@ const TextStyle = props => {
       ...getRgbaNum(_data.value.color)
     },
   })
+  const [popStyle, setPopStyle] = useState({})
 
-  const selectColor = () => {
+  const selectColor = (e) => {
+    let style
+    // 判断弹出的颜色选择器应该放在上面或者下面
+    if (e.view.innerHeight - e.clientY < 350) {
+      style = {
+        left: `${e.clientX - 80}px`,
+        bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
+      }
+    } else {
+      style = {
+        left: `${e.clientX - 80}px`,
+        top: `${e.clientY + 20}px`
+      }
+    }
+    setPopStyle(style)
     setDisplayColorPicker(!displayColorPicker)
   }
 
@@ -94,7 +109,7 @@ const TextStyle = props => {
             <Select
               className="custom-select"
               defaultValue={font.fontWeight}
-              style={{ width: '181px',marginBottom: 0 }}
+              style={{ width: '181px', marginBottom: 0 }}
               onChange={(e) => fontChange('fontWeight', e)}
             >
               <Option value="normal">normal</Option>
@@ -103,10 +118,10 @@ const TextStyle = props => {
               <Option value="lighter">lighter</Option>
             </Select>
           </Form.Item>
-          <div className="color-swatch" onClick={selectColor} style={{marginLeft:'8px',marginRight:0}}>
+          <div className="color-swatch" onClick={e => selectColor(e)} style={{ marginLeft: '8px', marginRight: 0 }}>
             <div className="color-dis" style={{ background: `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})` }} />
           </div>
-          {displayColorPicker ? <div className="color-popover">
+          {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
             <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
             <SketchPicker color={font.color} onChange={(e) => fontChange('color', e)} />
           </div> : null}

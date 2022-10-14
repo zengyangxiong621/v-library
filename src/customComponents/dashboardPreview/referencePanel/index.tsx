@@ -11,8 +11,14 @@ import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
 interface State {
-  states: string[];
-
+  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
+  allData: Array<{
+    layers: any[]
+    components: any[],
+    [key: string]: any;
+  }>; // 面板内所有状态的集合
+  activeIndex: number; // 当前展示的状态下标
+  isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
 import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
@@ -24,19 +30,12 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;
   const defaultStateId = (states.length > 0 && states[0].id) || "";
-  const [ state, setState ] = useSetState<State>({
-    states: [],
-    defaultState: "",
-    components: [],
-    layers: [],
-    allLayers: [],
-    AllComponents: [],
+  const [state, setState] = useSetState<State>({
     overflow: "hidden",
     allData: [],
     activeIndex: 0,
     isLoading: false,
   });
-
   const getComponentData = async (component: any) => {
     try {
       const data = await http({
