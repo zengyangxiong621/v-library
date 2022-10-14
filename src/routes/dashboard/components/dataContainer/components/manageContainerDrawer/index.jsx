@@ -123,17 +123,19 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
           onSearch={ (e) => handleSearch(e.target.value) }
           onPressEnter={ (e) => handleSearch(e.target.value) }
         />
-        <Table
-          bordered={ true }
-          className="g-mt-2"
-          columns={ columns }
-          dataSource={ filterDataList }
-          pagination={
-            {
-              hideOnSinglePage: true,
+        <div className='table-wrap'>
+          <Table
+            bordered={ true }
+            className="g-mt-2"
+            columns={ columns }
+            dataSource={ filterDataList }
+            pagination={
+              {
+                hideOnSinglePage: true,
+              }
             }
-          }
-        />
+          />
+        </div>
       </div>
     </Drawer>
   )
