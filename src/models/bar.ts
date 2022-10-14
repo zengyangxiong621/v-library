@@ -2007,7 +2007,9 @@ export default {
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
+      console.log('selectedComponentIds', state.selectedComponentIds)
       state.selectedComponentRefs = {};
+      state.selectedComponentDOMs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key];

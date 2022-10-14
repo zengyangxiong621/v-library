@@ -155,6 +155,7 @@ const CustomDraggable
         y: data.y,
       });
       bar.selectedComponents = [];
+      bar.selectedComponentDOMs = {}
       bar.dragStatus = "一组件";
 
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
@@ -186,7 +187,14 @@ const CustomDraggable
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
         }
       }
+/*      Object.keys(bar.allComponentRefs).forEach((key) => {
+        if (bar.selectedComponentIds.includes(key)) {
+          bar.selectedComponentRefs[key] = bar.allComponentRefs[key];
+          bar.selectedComponentDOMs[key] = bar.allComponentDOMs[key];
+        }
+      });*/
       bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))];
+
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       ev.stopPropagation();
