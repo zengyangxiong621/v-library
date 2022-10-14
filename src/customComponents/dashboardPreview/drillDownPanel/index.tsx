@@ -104,7 +104,6 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
   }, []);
   // 将面板状态赋值给面包屑数据
   useEffect(() => {
-    console.log('面包屑', states)
     const breadcrumbData = states.map((item: any) => item.name)
     setState({
       breadcrumbData

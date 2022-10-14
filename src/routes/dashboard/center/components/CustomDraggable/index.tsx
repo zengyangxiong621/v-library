@@ -19,7 +19,9 @@ import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v
 
 import textConfig from '@/customComponents/echarts/components/indicatorcard/v1.0.5/config'
 import Counter from "@/customComponents/assist/counter2/v1.0.6";
-
+import ChartLegend from '@/customComponents/assist/chartLegend/chartLegend-1.0.1'
+import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
+import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
 
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -993,7 +995,31 @@ const CustomDraggable
                                 //   componentConfig={component}
                                 //   fields={getFields(component)}
                                 //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                // ></CustomText> :
+                                // ></CustomText>
+                                layer.moduleName === 'stereoscopicBar' ?
+                                  <StereoscopicBar
+                                    themeConfig={bar.componentThemeConfig}
+                                    onThemeChange={onThemeChange}
+                                    componentConfig={component}
+                                    fields={getFields(component)}
+                                    comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                  ></StereoscopicBar> :
+                                layer.moduleName === 'hydrograph' ?
+                                  <Hydrograph
+                                    themeConfig={bar.componentThemeConfig}
+                                    onThemeChange={onThemeChange}
+                                    componentConfig={component}
+                                    fields={getFields(component)}
+                                    comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                  ></Hydrograph> :
+                                layer.moduleName === 'chartLegend' ?
+                                  <ChartLegend
+                                    themeConfig={bar.componentThemeConfig}
+                                    onThemeChange={onThemeChange}
+                                    componentConfig={component}
+                                    fields={getFields(component)}
+                                    comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                  ></ChartLegend> :
                                 layer.moduleName === 'counter' ?
                                   <Counter
                                     themeConfig={bar.componentThemeConfig}

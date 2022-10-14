@@ -4,9 +4,9 @@ const componentDefaultConfig = {
   name: "图例", //图层名称
   parentId: "0", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
-
+  moduleType: "assist",
   moduleName: "chartLegend", //组件标识
-  moduleVersion: "1.0.0", //组件版本号
+  moduleVersion: "1.0.2", //组件版本号
 
   createdAt: "2022-04-02T07:22:31.290Z", // =========
   updatedAt: "2022-04-02T07:22:39.798Z", // =========
@@ -30,22 +30,22 @@ const componentDefaultConfig = {
         {
           displayName: "X轴坐标",
           name: "left",
-          value: 412,
+          value: 400,
         },
         {
           displayName: "Y轴坐标",
           name: "top",
-          value: 266,
+          value: 400,
         },
         {
           displayName: "宽度",
           name: "width",
-          value: 400,
+          value: 350,
         },
         {
           displayName: "高度",
           name: "height",
-          value: 40,
+          value: 60,
         },
       ],
     },
@@ -65,6 +65,7 @@ const componentDefaultConfig = {
           value: 32,
         },
         {
+          // name: "color",
           name: "themeTextColor",
           displayName: "",
           type: "color",
@@ -88,7 +89,7 @@ const componentDefaultConfig = {
         {
           name: "lineHeight",
           displayName: "行距",
-          value: "unset",
+          value: 60,
         },
       ],
     },
@@ -115,7 +116,7 @@ const componentDefaultConfig = {
           displayName: "图例颜色",
           // name: "legendColor",
           name: "themePureColor",
-          value: "#177ddc", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          value: "#cc5011",
           type: "color",
         },
         {
@@ -148,11 +149,62 @@ const componentDefaultConfig = {
         },
       ],
     },
+    {
+      displayName: "间距设置",
+      name: "gapSettings",
+      type: "collapse",
+      hasSwitch: false,
+      defaultExpand: true,
+      value: [
+        {
+          name: "show",
+          displayName: "",
+          value: true,
+          type: "switch",
+        },
+        {
+          displayName: "图例边距",
+          name: "legendGap",
+          value: 5,
+          type: "number",
+          config: {
+            min: -1000,
+            max: 1000,
+            step: 1,
+            suffix: "px",
+          },
+        },
+        {
+          name: "textGap1",
+          displayName: "textGap1",
+          value: 20,
+          type: "number",
+          config: {
+            min: -1000,
+            max: 1000,
+            step: 1,
+            suffix: "px",
+          },
+        },
+        {
+          name: "textGap2",
+          displayName: "textGap2",
+          value: 20,
+          type: "number",
+          config: {
+            min: -1000,
+            max: 1000,
+            step: 1,
+            suffix: "px",
+          },
+        },
+      ],
+    },
   ],
   staticData: {
     data: [
       {
-        text: "一级",
+        text: "一级s",
         value: "1228",
       },
     ],
@@ -169,7 +221,6 @@ const componentDefaultConfig = {
       },
     ],
   },
-
   useFilter: false, // =========
   filters: [],
   events: [],

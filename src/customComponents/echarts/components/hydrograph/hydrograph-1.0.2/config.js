@@ -5,7 +5,7 @@ const componentDefaultConfig = {
   name: "水位图",
   parentId: "0",
   moduleName: "hydrograph",
-  moduleVersion: "1.0.1",
+  moduleVersion: "1.0.2",
   moduleType: 'chart',
   autoUpdate: {
     isAuto: false,
@@ -148,14 +148,15 @@ const componentDefaultConfig = {
                     value: [
                       {
                         displayName: "颜色",
-                        name: "waveColor",
+                        // name: "waveColor",
+                        name: "themePureColor",
                         type: "color",
-                        value: "#febb00",
+                        value: "#06699c",
                       },
                       {
                         name: "waveHeightSet",
                         displayName: "调整幅度",
-                        value: 0.2,
+                        value: 0.1,
                         type: "range",
                         config: {
                           min: -1,
@@ -167,7 +168,7 @@ const componentDefaultConfig = {
                       {
                         name: "waveSpeed",
                         displayName: "速度",
-                        value: 0.2,
+                        value: 0.7,
                         type: "range",
                         config: {
                           min: 0,
@@ -231,14 +232,15 @@ const componentDefaultConfig = {
                   value: [
                     {
                       displayName: "颜色",
-                      name: "waveColor",
+                      // name: "waveColor",
+                      name: "themePureColor",
                       type: "color",
-                      value: "#febb00",
+                      value: "#06699c",
                     },
                     {
                       name: "waveHeightSet",
                       displayName: "调整幅度",
-                      value: 0.2,
+                      value: 0.1,
                       type: "range",
                       config: {
                         min: -1,
@@ -250,7 +252,7 @@ const componentDefaultConfig = {
                     {
                       name: "waveSpeed",
                       displayName: "速度",
-                      value: 0.2,
+                      value: 0.7,
                       type: "range",
                       config: {
                         min: 0,
@@ -310,9 +312,10 @@ const componentDefaultConfig = {
                   value: [
                     {
                       displayName: "颜色",
-                      name: "waveColor",
+                      // name: "waveColor",
+                      name: "themePureColor",
                       type: "color",
-                      value: "#c91780",
+                      value: "#080d9c",
                     },
                     {
                       name: "waveHeightSet",
@@ -329,7 +332,7 @@ const componentDefaultConfig = {
                     {
                       name: "waveSpeed",
                       displayName: "速度",
-                      value: 0.2,
+                      value: 0.7,
                       type: "range",
                       config: {
                         min: 0,
@@ -399,7 +402,8 @@ const componentDefaultConfig = {
                 },
                 {
                   displayName: "颜色",
-                  name: "borderColor",
+                  // name: "borderColor",
+                  name: "assistColor",
                   type: "color",
                   value: "#febb00",
                 },
@@ -463,7 +467,8 @@ const componentDefaultConfig = {
                 },
                 {
                   displayName: "",
-                  name: "textColor",
+                  // name: "textColor",
+                  name: "themeTextColor",
                   type: "color",
                   value: "#fff",
                 },
@@ -555,7 +560,8 @@ const componentDefaultConfig = {
                     },
                     {
                       displayName: "",
-                      name: "textColor",
+                      // name: "textColor",
+                      name: "themeTextColor",
                       type: "color",
                       value: "#fff",
                     },

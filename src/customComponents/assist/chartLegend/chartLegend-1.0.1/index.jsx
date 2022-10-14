@@ -3,13 +3,10 @@ import ComponentDefaultConfig from './config'
 
 const ChartLegend = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
-  // const componentConfig = ComponentDefaultConfig
   const { data } = componentConfig.staticData
   const { config } = componentConfig
-
   const fieldKeys = props.fields || ['text', 'value']
   const originData = props.comData || data
-
   const fields2ValueMap = {}
   const initColumnsArr = ['text', 'value']
   fieldKeys.forEach((x, index) => {
@@ -21,6 +18,7 @@ const ChartLegend = (props) => {
       value: item[fields2ValueMap['value']]
     }
   }) : []
+
   const { value, text } = (finalData.length && finalData[0]) || {}
   // 获取 右侧需要 配置的项
   const getTargetConfig = (Arr) => {
@@ -36,8 +34,8 @@ const ChartLegend = (props) => {
     });
     return targetConfig
   }
-
   const { themeTextColor: textColor, bold, italic, fontFamily, fontSize, themePureColor: legendColor, legendShape, legendSize, letterSpacing, lineHeight, legendGap, textGap1, textGap2 } = getTargetConfig(config)
+
 
   /***********************主题切换************************/
   const componentThemeConfig = props.themeConfig
@@ -92,7 +90,6 @@ const ChartLegend = (props) => {
     })
   }
 
-
   // 图例样式
   const legendStyle = {
     display: 'inline-block',
@@ -112,16 +109,17 @@ const ChartLegend = (props) => {
   }
   const textGapStyle = {
     margin: `0 ${textGap1}px`,
-    letterSpacing: letterSpacing
+    letterSpacing: `${letterSpacing}px`
   }
   const valueGapStyle = {
     margin: `0 ${textGap2}px`,
-    letterSpacing: letterSpacing
+    letterSpacing: `${letterSpacing}px`
   }
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <div style={{ height: '100%', lineHeight: `${lineHeight}px`, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginLeft: '14px' }}>
-        <span style={legendStyle}></span>
+      <div style={{ height: lineHeight ? `${lineHeight}px` : '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginLeft: '14px' }}>
+        {/* 此处必须套一层div,不然设置字距的时候会影响图例的大小 */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={legendStyle}></span></div>
         <span style={{ ...commonTextStyle, ...textGapStyle }}>{text}</span>
         <span style={{ ...commonTextStyle, ...valueGapStyle }}>{value}</span>
       </div>

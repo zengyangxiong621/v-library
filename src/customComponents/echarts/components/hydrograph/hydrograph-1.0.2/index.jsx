@@ -1,13 +1,14 @@
 import React, { memo } from 'react';
 import ComponentDefaultConfig from './config'
 // import './index.css'
-// import EC from '@/customComponents/echarts/EC'
-import EC from '../../EC'
+import EC from '@/customComponents/echarts/EC'
+// import EC from '../../EC'
 import 'echarts-liquidfill' //在这里引入
 
 
 const Hydrograph = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
+  // const componentConfig = ComponentDefaultConfig
   const { data } = componentConfig.staticData
   const { config } = componentConfig
   const fieldKey = props.fields || ['value']
@@ -20,6 +21,68 @@ const Hydrograph = (props) => {
     }
   }) : []
   const { value } = (finalData.length && finalData[0]) || {}
+
+  /***********************主题切换************************/
+  const componentThemeConfig = props.themeConfig
+  // 如果 选择的了 主题风格, 着手替换config中的颜色
+  const replaceThemeColor = (arr, colorIndex = 0) => {
+    arr.forEach((item) => {
+      let index = colorIndex || 0
+      let { name, value, options, flag, type, key } = item
+      if (item.hasOwnProperty('value')) {
+        // 对 系列一栏 做特殊处理
+        if (flag === 'specialItem') {
+          try {
+            index = key ? parseInt(key) - 1 : 0
+          } catch (e) {
+            index = 0
+          }
+        }
+        if (Array.isArray(value)) {
+          replaceThemeColor(value, index)
+        } else {
+          if (type === 'color') {
+            switch (name) {
+              case 'themePureColor':
+                item.value = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                item.value = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                item.value = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                item.value = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      } else if (Array.isArray(options) && options.length) {
+        replaceThemeColor(options, index)
+      }
+    })
+  }
+  if (componentThemeConfig) {
+    const configOfTheme = JSON.parse(JSON.stringify(config))
+    replaceThemeColor(configOfTheme)
+    props.onThemeChange({
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
+      config: configOfTheme
+    })
+  }
+
 
   // 获取 右侧需要 配置的项
   const getTargetConfig = (Arr) => {
@@ -42,16 +105,12 @@ const Hydrograph = (props) => {
     })
     return targetConfig
   }
-
   const hadFilterArr = config.filter(item => item.name !== 'dimension')
-
   const targetConfig = getTargetConfig(hadFilterArr)
   const { allSettings } = targetConfig
-
-
   const {
     textStyle: {
-      bold, fontFamily, fontSize, textColor, lineHeight, italic, letterSpacing
+      bold, fontFamily, fontSize, themeTextColor: textColor, lineHeight, italic, letterSpacing
     },
     indicatorOffset: { offsetX, offsetY },
     indicatorSuffix: { suffixText, suffixTextStyle },
@@ -59,7 +118,7 @@ const Hydrograph = (props) => {
   } = allSettings['指标'] || {}
   const { numericalType, capacity, chartSize,
     waveSeries,
-    borderSettings: { borderColor, borderWidth, borderGap }
+    borderSettings: { assistColor: borderColor, borderWidth, borderGap }
   } = allSettings['图表'] || {}
 
 
@@ -86,8 +145,8 @@ const Hydrograph = (props) => {
 
   // 动态生成每条水波的设置
   const waveSeriesValue = Object.values(waveSeries)
-  const chartData = waveSeriesValue.map((item) => {
-    const { waveAmplitude, waveColor, waveDirection, waveHeightSet, wavePhase, waveSpeed } = item
+  const chartData = waveSeriesValue.map((item, index) => {
+    const { waveAmplitude, themePureColor: waveColor, waveDirection, waveHeightSet, wavePhase, waveSpeed } = item
     return {
       value: +(+percent + waveHeightSet).toFixed(3),
       direction: waveDirection, // 波的移动方向
@@ -95,7 +154,7 @@ const Hydrograph = (props) => {
       period: +waveSpeed * 2000,
       phase: wavePhase, // 波的相位弧度
       itemStyle: {
-        color: waveColor,
+        color: componentThemeConfig ? componentThemeConfig.pureColors[index % 7] : waveColor || '#87ceeb',
       }
     }
   })
@@ -114,8 +173,8 @@ const Hydrograph = (props) => {
             opacity: 0.1, // 边框的透明度   默认为 1
             borderWidth: borderWidth, // 边框的宽度
             shadowBlur: 10, // 边框的阴影范围 一旦设置了内外都有阴影
-            shadowColor: borderColor, // 边框的阴影颜色,
-            borderColor: borderColor // 边框颜色
+            shadowColor: componentThemeConfig ? componentThemeConfig.assistColor : borderColor || '#febb00', // 边框的阴影颜色,
+            borderColor: componentThemeConfig ? componentThemeConfig.assistColor : borderColor || '#febb00', // 边框颜色
           }
         },
         // shape: 'diamond',
@@ -164,7 +223,7 @@ const Hydrograph = (props) => {
             suffixText: {
               fontFamily: suffixTextStyle.fontFamily,
               fontSize: suffixTextStyle.fontSize,
-              color: suffixTextStyle.textColor,
+              color: componentThemeConfig ? componentThemeConfig.textColor : suffixTextStyle.themeTextColor || '#fff',
               fontStyle: suffixTextStyle.italic ? 'italic' : 'normal',
               fontWeight: suffixTextStyle.bold ? 'bold' : 'normal',
               lineHeight: 50,
@@ -173,7 +232,7 @@ const Hydrograph = (props) => {
             }
           },
           fontSize: fontSize,
-          color: textColor,
+          color: componentThemeConfig ? componentThemeConfig.assistColor : textColor || '#fff',
           fontStyle: italic ? 'italic' : 'normal',
           fontWeight: bold ? 'bold' : 'normal',
         },

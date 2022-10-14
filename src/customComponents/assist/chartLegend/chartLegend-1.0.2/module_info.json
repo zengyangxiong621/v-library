@@ -1,0 +1,10 @@
+{
+	"name":"图例",
+	"moduleName":"chartLegend",
+	"moduleVersion":"1.0.2",
+	"type": "assist",
+	"subType":"",
+	"photoPath":"/assist/chartLegend/1.0.2/thumb-chartLegend.png",
+	"configUrl":"\\config.js",
+	"author":"chendibo@gridsum.com"
+}

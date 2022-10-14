@@ -1,0 +1,10 @@
+{
+  "name": "立体柱状图",
+  "moduleName": "stereoscopicBar",
+  "moduleVersion": "1.0.0",
+  "type": "chart",
+  "subType": "bar",
+  "photoPath": "/chart/stereoscopicBar/1.0.0/thumb-stereoscopicBar.png", 
+  "configUrl": "\\config.js",
+  "author": "chendibo@gridsum.com"
+}
