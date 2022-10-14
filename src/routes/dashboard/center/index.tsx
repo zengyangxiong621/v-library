@@ -45,7 +45,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     setComponents(bar.fullAmountComponents)
     setPanels(bar.fullAmountPanels)
     setLayers(layers)
-    console.log("fullAmountPanels", bar.fullAmountPanels)
   }, [bar.layers])
 
 /*  useEffect(() => {

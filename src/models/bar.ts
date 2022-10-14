@@ -1724,6 +1724,7 @@ export default {
       let xPositionList: number[] = [];
       let yPositionList: number[] = [];
       let status: "分组" | "多组件" = "分组";
+      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup)
       if (state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in firstLayer) {

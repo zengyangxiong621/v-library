@@ -175,6 +175,7 @@ const Left = ({ dispatch, bar, operate }) => {
   const onSelect = (curKey, e) => {
     let temp = curKey
     const isSelected = e.selected
+    console.log('isSelected', isSelected)
     const { key } = e.node
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     dispatch({
@@ -184,16 +185,11 @@ const Left = ({ dispatch, bar, operate }) => {
     // 多选情况下，点击那个剩哪个
     if (isSelected) {
       dispatch({
-        type: 'bar/selectLayers',
-        payload: e.selectedNodes,
-      })
-      dispatch({
         type: 'bar/save',
         payload: {
           key: temp,
         },
       })
-      return
     } else {
       // 多选情况下，按住ctrl键时，应该是取消选中所点击的那项
       //           没有按住ctrl键时，应该只保留所点击的那项
@@ -206,6 +202,10 @@ const Left = ({ dispatch, bar, operate }) => {
         },
       })
     }
+    dispatch({
+      type: 'bar/selectLayers',
+      payload: e.selectedNodes,
+    })
     // setSelected(curKey)
   }
   // 响应右键点击
@@ -213,7 +213,6 @@ const Left = ({ dispatch, bar, operate }) => {
     event.stopPropagation()
     event.preventDefault()
     console.log('右键')
-    console.log('selected', selected)
     const { modules, key } = node
     // dispatch({
     //   type: 'bar/save',
@@ -343,8 +342,6 @@ const Left = ({ dispatch, bar, operate }) => {
       payload: false,
     })
   }
-  console.log('selected', selected)
-  console.log('bar.key', bar.key)
 
   return (
     <div className="left-menu">
