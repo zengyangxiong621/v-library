@@ -4,14 +4,21 @@ import { Modal } from "antd";
 const picUrl = require("@/assets/images/模板默认背景图.png");
 const PreviewModal = (props: any) => {
   const { isPreviewVisible, currentItem, changeVisible } = props;
-  let imgUrl = currentItem.preview || currentItem.photoUrl;
-  imgUrl =
-    imgUrl && !imgUrl.startsWith("http") ? `${(window as any).CONFIG.COMP_URL}${imgUrl}` : picUrl;
+  const isTemp = ["systemTemp", "myTemp"].indexOf(currentItem.moduleType) > -1;
+  let imgUrl = isTemp
+    ? currentItem.preview || currentItem.photoUrl
+    : currentItem.moduleName === "image2" && currentItem.downloadUrl
+    ? currentItem.downloadUrl
+    : currentItem.photoPath;
+  imgUrl = imgUrl
+    ? !imgUrl.startsWith("http")
+      ? `${(window as any).CONFIG.COMP_URL}${imgUrl}`
+      : imgUrl
+    : picUrl;
   const handleCancelPreview = () => {
     changeVisible(false);
   };
   return (
-    // title={currentItem.name}
     <Modal
       width="100vw"
       style={{

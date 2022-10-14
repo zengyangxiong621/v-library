@@ -4,6 +4,7 @@ import { Modal, Upload, Form, Select, message } from "antd";
 import { connect } from "dva";
 import { http, BASEURL } from "@/services/request";
 import type { UploadProps } from "antd";
+import { Radio, Input } from "antd";
 const UploadFile = (props: any) => {
   const { uploadVisible, changeShowState,groupList,refreshList,origin,spaceId} = props;
 
@@ -23,24 +24,44 @@ const UploadFile = (props: any) => {
   const [uploadForm] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [fileUrl, setFileUrl] = useState("");
+  const [materialType, setMaterialType] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const handleOk = async () => {
     const value = await uploadForm.validateFields();
-    let { file,groupId } = value;
+    const isTemp = ["myTemp","systemTemp"].indexOf(origin) > -1
+    let { file,groupId,materialName,materialType } = value;
     if(fileList && fileList.length) {
-      const formData = new FormData();
+      let formData = new FormData();
       groupId = ["myTempOhter", "sysTempOhter"].indexOf(groupId) > -1 ? 0 : groupId;
-      formData.append("file", file.file);
-      formData.append("groupId", groupId);
+      let formObj:any = {}
+      if(isTemp){
+        formData.append("groupId", groupId);
+        formData.append("file", file.file);
+      }else{
+        if(!fileUrl){
+          message.error(`请上传正确的文件格式`);
+          return false
+        }
+        formObj = {
+          name: materialName,
+          format: materialType,
+          fileUrl,
+        }
+      }
       if(["myresource", "myTemp"].indexOf(origin) > -1){
         formData.append("spaceId", spaceId);
+        formObj.spaceId = spaceId
+        formObj.groupId = groupId
       }
-      const url = ["myTemp","systemTemp"].indexOf(origin) > -1 ? "/visual/appTemplate/import" : "/visual/file/uploadResource";
+      if(origin === 'design'){
+        formObj.type = groupId
+      }
+      const url = isTemp ? "/visual/appTemplate/import" : "/visual/file/uploadResourceFile";
       setConfirmLoading(true);
       const data = await http({
         method: "post",
         url,
-        body: formData
+        body: isTemp ? formData : formObj
       }).catch(() => {
         setConfirmLoading(false);
       });
@@ -59,39 +80,53 @@ const UploadFile = (props: any) => {
   };
 
   const generateUploadProps = (
-    fileSuffix = "",
     customProps?: object
   ) => {
+    let isTemp = ["myTemp","systemTemp"].indexOf(origin) > -1 
+    let url = isTemp ? `${BASEURL}/visual/file/uploadResource` : `${BASEURL}/visual/file/upload`
+    let fileSuffix = isTemp ? ".zip" : materialType ? 'video/mp4,video/avi,video/wmv,video/rmvb,audio/ogg,audio/mp3,audio/wav,audio/m4a,audio/flac' : "image/png, image/jpeg"
     // 上传框配置
     let uploadProps:UploadProps = {
       name: "file",
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || "",
-      action: `${BASEURL}/visual/file/uploadResource`,
+      action: url,
       headers:{
         authorization:localStorage.getItem("token") || ""
       },
       beforeUpload(file: any) {
-        const { name, size }: { name: string, size: number } = file;
-        if (size > 1024 * 1024 * 100) {
+        const { name, size, type }: { name: string, size: number, type:any } = file;
+        let max = isTemp ? 100 : materialType ? 200 : 20
+        if (size > 1024 * 1024 * max) {
           message.warning("文件大小超过限制");
           file.status = "error";
           return false;
         }
         const fileSuffixArr = fileSuffix?.split(",");
-        // 考虑 date.1.0.1.zip 这个文件名;
-        const lastPointIndex = name.lastIndexOf(".");
-        const nameSuffix = name.slice(lastPointIndex);
-        if (!fileSuffixArr?.includes(nameSuffix)) {
-          message.error({
-            content: "请上传符合格式的文件",
-            duration: 2
-          });
-          file.status = "error";
-          return false;
+        if(isTemp){
+          // 考虑 date.1.0.1.zip 这个文件名;
+          const lastPointIndex = name.lastIndexOf(".");
+          const nameSuffix = name.slice(lastPointIndex);
+          if (!fileSuffixArr?.includes(nameSuffix)) {
+            message.error({
+              content: "请上传符合格式的文件",
+              duration: 2
+            });
+            file.status = "error";
+            return false;
+          }
+          return false; // 上传时不调取接口
+        }else{
+          if(!fileSuffixArr?.includes(type)){
+            message.error({
+              content: "请上传符合格式的文件",
+              duration: 2
+            });
+            file.status = "error";
+            return false;
+          }
         }
-        return false; // 上传时不调取接口
       },
       onChange(info: any) {
         setFileList(info.fileList);
@@ -101,20 +136,29 @@ const UploadFile = (props: any) => {
           setFileUrl(response.data);
         } else if (status === "error") {
           message.error(`${info.file.name} 上传失败`);
+        } else if (status === "removed"){
+          setFileUrl('');
+          setFileList([])
+          uploadForm.setFieldsValue({
+            file: []
+          })
+
         }
       },
       onDrop(e: any) {
         const { name } = e.dataTransfer.files[0];
-        const fileSuffixArr = fileSuffix?.split(",");
-        // 考虑 date.1.0.1.zip 这个文件名
-        const lastPointIndex = name.lastIndexOf(".");
-        const nameSuffix = name.slice(lastPointIndex);
-        if (!fileSuffixArr?.includes(nameSuffix)) {
-          message.error({
-            content: "文件格式不符",
-            duration: 2
-          });
-          return;
+        if(isTemp){
+          const fileSuffixArr = fileSuffix?.split(",");
+          // 考虑 date.1.0.1.zip 这个文件名
+          const lastPointIndex = name.lastIndexOf(".");
+          const nameSuffix = name.slice(lastPointIndex);
+          if (!fileSuffixArr?.includes(nameSuffix)) {
+            message.error({
+              content: "文件格式不符",
+              duration: 2
+            });
+            return;
+          }
         }
       },
     };
@@ -125,10 +169,27 @@ const UploadFile = (props: any) => {
     return uploadProps;
   };
 
-  const fileProps = generateUploadProps(".zip");
+  const fileProps = generateUploadProps();
 
   const selectChange = (value: any) => {
   };
+
+  const onChange = (e: any) => {
+    setMaterialType(e.target.value)
+    uploadForm.setFieldsValue({
+      file: []
+    })
+    setFileUrl('');
+    setFileList([])
+  }
+
+  const setUploadText =() => {
+    if(["myTemp","systemTemp"].indexOf(origin) > -1){
+      return '大小不得超过100MB，且必须为.zip格式'
+    }else{
+      return materialType ? '不得超过200M' : '不得超过20M'
+    }
+  }
 
   return (
     <div className='upload-file'>
@@ -147,16 +208,36 @@ const UploadFile = (props: any) => {
         okText="确定"
         cancelText="取消"
       >
-        <Form name="importComponent" colon={false} form={uploadForm}>
-          <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, "请选择要上传的组件")}>
+        <Form
+          name="importComponent"
+          colon={false}
+          form={uploadForm}
+          initialValues={{ materialType: 0 }}
+        >
+          {
+            ["myTemp","systemTemp"].indexOf(origin) == -1  &&
+            <Form.Item label="素材类型" name='materialType' rules={generateSingleRules(true, "请选择素材类型")}>
+              <Radio.Group onChange={onChange} value={materialType}>
+                <Radio value={0}>图片</Radio>
+                <Radio value={1}>音视频</Radio>
+              </Radio.Group>
+            </Form.Item>
+          }
+          <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, "请选择要上传的文件")}>
             <div className='setBackColor'>
-              <Dragger {...fileProps}>
+              <Dragger {...fileProps} fileList={fileList}>
                 <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
-                <p className="ant-upload-hint">大小不得超过100MB，且必须为.zip格式</p>
+                <p className="ant-upload-hint">{setUploadText()}</p>
+              {/*  */}
               </Dragger>
             </div>
           </Form.Item>
-          {/* <Form.Item label="资源名称"></Form.Item> */}
+          {
+            ["myTemp","systemTemp"].indexOf(origin) == -1  &&
+            <Form.Item label="资源名称" name='materialName' rules={generateSingleRules(true, "请输入资源名称")}>
+              <Input placeholder="请输入名称"/>
+            </Form.Item>
+          }
           <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, "请选择分组")}>
           <Select className='setBackColor' placeholder="请选择"  onChange={selectChange}>
             {
