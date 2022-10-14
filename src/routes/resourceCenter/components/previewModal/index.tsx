@@ -15,7 +15,6 @@ const PreviewModal = (props: any) => {
   const handleCancelPreview = () => {
     changeVisible(false);
   };
-  console.log(currentItem.moduleName, "moduleName");
   return (
     <Modal
       width="100vw"
@@ -34,7 +33,7 @@ const PreviewModal = (props: any) => {
       footer={null}
     >
       {currentItem.moduleName === "media" ? (
-        <ReactPlayer url={imgUrl}  playing={true}   muted={true}/>
+        <ReactPlayer url={imgUrl} controls playing={true} />
       ) : (
         <img className="preview-img" src={imgUrl} alt="" />
       )}
