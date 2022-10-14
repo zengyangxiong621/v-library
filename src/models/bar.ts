@@ -201,16 +201,16 @@ export default {
             dataContainerDataList: bar.dataContainerDataList,
             componentFilters: filters || [],
             callbackParamsList,
-          },
-        });
-        yield put({
-          type: "save",
-          payload: {
             isPanel,
             stateId,
             dashboardId,
             panelId,
-            isDashboardInit: true
+            isDashboardInit: true,
+            routeList: [{
+              type: "dashboard",
+              id: dashboardId,
+              url: `/dashboard/${dashboardId}`
+            }]
           },
         });
         let layers: any[] = []
