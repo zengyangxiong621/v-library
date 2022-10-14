@@ -55,7 +55,7 @@ const TopBar = (props: any) => {
 
   return (
   <div className='TopBar-wrap' style={{ display: showTopBar ? "block" : "none" }}>
-    <Menu className='TopBar-wrap' mode="horizontal" triggerSubMenuAction='click' onOpenChange={menuSelect}>
+    <Menu className='TopBar-wrap' mode="horizontal" onOpenChange={menuSelect}>
       {
         menuReflect[zujianORsucai].map((item: any) => {
           return (
