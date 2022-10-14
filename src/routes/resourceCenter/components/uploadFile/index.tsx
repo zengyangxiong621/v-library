@@ -84,7 +84,7 @@ const UploadFile = (props: any) => {
   ) => {
     let isTemp = ["myTemp","systemTemp"].indexOf(origin) > -1 
     let url = isTemp ? `${BASEURL}/visual/file/uploadResource` : `${BASEURL}/visual/file/upload`
-    let fileSuffix = isTemp ? ".zip" : materialType ? 'video/mp4,video/avi,video/wmv,video/rmvb,audio/ogg,audio/mp3,audio/wav,audio/m4a,audio/flac' : "image/png, image/jpeg"
+    let fileSuffix = isTemp ? ".zip" : materialType ? 'video/mp4,video/avi,video/x-ms-wmv,video/rmvb,audio/mpeg,audio/ogg,audio/mp3,audio/wav,audio/m4a,audio/flac' : "image/png,image/jpeg,image/jpg"
     // 上传框配置
     let uploadProps:UploadProps = {
       name: "file",
