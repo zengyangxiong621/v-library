@@ -52,6 +52,12 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
         x: scaleDragRef.current.style.left.replace('px', ''),
         y: scaleDragRef.current.style.top.replace('px', '')
       }
+    },
+    getSize() {
+      return {
+        width: scaleDragRef.current.style.width.replace('px', ''),
+        height: scaleDragRef.current.style.height.replace('px', '')
+      }
     }
   }));
 
