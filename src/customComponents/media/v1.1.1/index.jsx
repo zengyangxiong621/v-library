@@ -36,18 +36,21 @@ const Media=(props)=>{
 
   useEffect(()=>{
     autoPlaying && setMediaAutoPlaying(true)
-  },[])
+  },[autoPlaying])
 
   return hideDefault ? (<></>) : (
-    <ReactPlayer
-      playing={MediaAutoPlaying}
-      width={`${width}+px`}
-      height={`${height}+px`}
-      loop={Loop}
-      muted={Muted}
-      controls={controls}
-      url={getMediaUrl()}
-    />
+    <div className='videoContainer'>
+      <ReactPlayer
+        playing={MediaAutoPlaying}
+        width={`${width}px`}
+        height={`${height}px`}
+        loop={Loop}
+        muted={Muted}
+        light={!(autoPlaying || controls) && !MediaAutoPlaying}
+        controls={controls}
+        url={getMediaUrl()}
+      />
+    </div>
   )
 }
 export {
