@@ -18,7 +18,7 @@ import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 
 import textConfig from '@/customComponents/echarts/components/indicatorcard/v1.0.5/config'
-import Counter from "@/customComponents/assist/counter2/v1.0.6";
+import Counter from "@/customComponents/assist/counter2/v1.0.7";
 import ChartLegend from '@/customComponents/assist/chartLegend/chartLegend-1.0.1'
 import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
 import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
@@ -848,7 +848,6 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component.config = textConfig.config     // 本地测试
 
               if (component) {
                 staticData = component.staticData;
