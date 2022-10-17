@@ -5,7 +5,7 @@ const componentDefaultConfig = {
   name: "水位图",
   parentId: "0",
   moduleName: "hydrograph",
-  moduleVersion: "1.0.0",
+  moduleVersion: "1.0.1",
   moduleType: 'chart',
   autoUpdate: {
     isAuto: false,

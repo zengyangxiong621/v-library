@@ -390,6 +390,7 @@ const ComponentDev = (props: any) => {
               }
             </Select> */}
             <Input.Search placeholder="搜索"
+              className="myant-search"
               allowClear
               maxLength={40}
               value={inputValue}

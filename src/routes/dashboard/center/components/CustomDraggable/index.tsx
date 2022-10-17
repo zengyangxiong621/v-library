@@ -19,7 +19,9 @@ import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v
 
 import textConfig from '@/customComponents/echarts/components/indicatorcard/v1.0.5/config'
 import Counter from "@/customComponents/assist/counter2/v1.0.7";
-
+import ChartLegend from '@/customComponents/assist/chartLegend/chartLegend-1.0.1'
+import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
+import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
 
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -155,6 +157,7 @@ const CustomDraggable
         y: data.y,
       });
       bar.selectedComponents = [];
+      bar.selectedComponentDOMs = {}
       bar.dragStatus = "一组件";
 
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
@@ -186,7 +189,14 @@ const CustomDraggable
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
         }
       }
+      /*      Object.keys(bar.allComponentRefs).forEach((key) => {
+              if (bar.selectedComponentIds.includes(key)) {
+                bar.selectedComponentRefs[key] = bar.allComponentRefs[key];
+                bar.selectedComponentDOMs[key] = bar.allComponentDOMs[key];
+              }
+            });*/
       bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))];
+
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       ev.stopPropagation();
@@ -510,6 +520,7 @@ const CustomDraggable
     const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent | ILayerPanel, config: IConfig) => {
       clearTimeout(clickTimer.current);
       if ("panelType" in layer) {
+        let url = ''
         const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
         if (layer.panelType === 0) { // 动态面板
           dispatch({
@@ -534,40 +545,16 @@ const CustomDraggable
             }
           });
           if (panel.states[0]?.id) {
-            history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
+            console.log('panel', panel)
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
           } else {
-            history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}`);
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}`
           }
-
         } else if (layer.panelType === 1) {
           if (panel.states.length > 0) {
-            history.push(`/dashboard/${panel.states[0].id}`);
-            dispatch({
-              type: "bar/save",
-              payload: {
-                isPanel: false,
-                stateId: null,
-                panelId: null,
-                key: [],
-                selectedComponentOrGroup: [],
-                dashboardId: panel.states[0].id,
-                scaleDragData: {
-                  position: {
-                    x: 0,
-                    y: 0
-                  },
-                  style: {
-                    width: 0,
-                    height: 0,
-                    display: "none"
-                  }
-                }
-              }
-            });
-            dispatch({
-              type: "bar/getDashboardDetails"
-            });
+            url = `/dashboard/${panel.states[0].id}`
           }
+
         } if (layer.panelType === 2) {
           // 下钻面板
           dispatch({
@@ -592,7 +579,21 @@ const CustomDraggable
               }
             }
           });
-          history.push(`/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`);
+          url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
+        }
+        if (url) {
+          console.log('url', url)
+          history.push(url);
+          dispatch({
+            type: "bar/save",
+            payload: {
+              routeList: bar.routeList.concat({
+                type: "panel",
+                id: layer.id,
+                url: url
+              })
+            }
+          })
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({
@@ -847,7 +848,6 @@ const CustomDraggable
             } else {
               // 组件
               component = components.find(item => item.id === layer.id)
-              // component.config = textConfig.config     // 本地测试
               if (component) {
                 staticData = component.staticData;
                 style_config = component.config;
@@ -993,58 +993,49 @@ const CustomDraggable
                                 //   componentConfig={component}
                                 //   fields={getFields(component)}
                                 //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                // ></CustomText> :
-                                layer.moduleName === 'counter' ?
-                                  <Counter
+                                // ></CustomText>
+                                layer.moduleName === 'stereoscopicBar' ?
+                                  <StereoscopicBar
                                     themeConfig={bar.componentThemeConfig}
                                     onThemeChange={onThemeChange}
                                     componentConfig={component}
                                     fields={getFields(component)}
                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                  ></Counter> :
-                                  layer.moduleName === 'scrollTable' ?
-                                    <ScrollTable
+                                  ></StereoscopicBar> :
+                                  layer.moduleName === 'hydrograph' ?
+                                    <Hydrograph
                                       themeConfig={bar.componentThemeConfig}
                                       onThemeChange={onThemeChange}
                                       componentConfig={component}
                                       fields={getFields(component)}
                                       comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                    ></ScrollTable> :
-                                    layer.moduleName === "rankingBar" ?
-                                      <RankingBar
+                                    ></Hydrograph> :
+                                    layer.moduleName === 'chartLegend' ?
+                                      <ChartLegend
                                         themeConfig={bar.componentThemeConfig}
                                         onThemeChange={onThemeChange}
-                                        onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                        scale={bar.canvasScaleValue}
                                         componentConfig={component}
                                         fields={getFields(component)}
                                         comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                      >
-                                      </RankingBar> :
-                                      layer.moduleName === "zebraColumn" ?
-                                        <ZebraColumn
+                                      ></ChartLegend> :
+                                      layer.moduleName === 'counter' ?
+                                        <Counter
                                           themeConfig={bar.componentThemeConfig}
                                           onThemeChange={onThemeChange}
-                                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                          scale={bar.canvasScaleValue}
                                           componentConfig={component}
                                           fields={getFields(component)}
                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                        >
-                                        </ZebraColumn> :
-                                        layer.moduleName === "basicBar" ?
-                                          <BasicBar
+                                        ></Counter> :
+                                        layer.moduleName === 'scrollTable' ?
+                                          <ScrollTable
                                             themeConfig={bar.componentThemeConfig}
                                             onThemeChange={onThemeChange}
-                                            onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                            scale={bar.canvasScaleValue}
                                             componentConfig={component}
                                             fields={getFields(component)}
                                             comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                          >
-                                          </BasicBar> :
-                                          layer.moduleName === "basicLine" ?
-                                            <BasicLine
+                                          ></ScrollTable> :
+                                          layer.moduleName === "rankingBar" ?
+                                            <RankingBar
                                               themeConfig={bar.componentThemeConfig}
                                               onThemeChange={onThemeChange}
                                               onChange={(val: any) => handleValueChange(val, component, layer.id)}
@@ -1053,9 +1044,9 @@ const CustomDraggable
                                               fields={getFields(component)}
                                               comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                             >
-                                            </BasicLine> :
-                                            layer.moduleName === "image2" ?
-                                              <CusImage
+                                            </RankingBar> :
+                                            layer.moduleName === "zebraColumn" ?
+                                              <ZebraColumn
                                                 themeConfig={bar.componentThemeConfig}
                                                 onThemeChange={onThemeChange}
                                                 onChange={(val: any) => handleValueChange(val, component, layer.id)}
@@ -1064,9 +1055,9 @@ const CustomDraggable
                                                 fields={getFields(component)}
                                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                               >
-                                              </CusImage> :
-                                              layer.moduleName === "select2" ?
-                                                <SelectV2
+                                              </ZebraColumn> :
+                                              layer.moduleName === "basicBar" ?
+                                                <BasicBar
                                                   themeConfig={bar.componentThemeConfig}
                                                   onThemeChange={onThemeChange}
                                                   onChange={(val: any) => handleValueChange(val, component, layer.id)}
@@ -1075,9 +1066,9 @@ const CustomDraggable
                                                   fields={getFields(component)}
                                                   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                 >
-                                                </SelectV2> :
-                                                layer.moduleName === "buttonGroup2" ?
-                                                  <ButtonGroup
+                                                </BasicBar> :
+                                                layer.moduleName === "basicLine" ?
+                                                  <BasicLine
                                                     themeConfig={bar.componentThemeConfig}
                                                     onThemeChange={onThemeChange}
                                                     onChange={(val: any) => handleValueChange(val, component, layer.id)}
@@ -1086,9 +1077,9 @@ const CustomDraggable
                                                     fields={getFields(component)}
                                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                   >
-                                                  </ButtonGroup> :
-                                                  layer.moduleName === "bar" ?
-                                                    <Bar
+                                                  </BasicLine> :
+                                                  layer.moduleName === "image2" ?
+                                                    <CusImage
                                                       themeConfig={bar.componentThemeConfig}
                                                       onThemeChange={onThemeChange}
                                                       onChange={(val: any) => handleValueChange(val, component, layer.id)}
@@ -1097,169 +1088,202 @@ const CustomDraggable
                                                       fields={getFields(component)}
                                                       comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                     >
-                                                    </Bar> :
-                                                    layer.moduleName === "tab" ?
-                                                      <Tab
+                                                    </CusImage> :
+                                                    layer.moduleName === "select2" ?
+                                                      <SelectV2
                                                         themeConfig={bar.componentThemeConfig}
                                                         onThemeChange={onThemeChange}
                                                         onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                        scale={bar.canvasScaleValue}
                                                         componentConfig={component}
                                                         fields={getFields(component)}
                                                         comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                       >
-                                                      </Tab> :
-                                                      layer.moduleName === "scrollSelect" ?
-                                                        <ScrollSelect
+                                                      </SelectV2> :
+                                                      layer.moduleName === "buttonGroup2" ?
+                                                        <ButtonGroup
                                                           themeConfig={bar.componentThemeConfig}
                                                           onThemeChange={onThemeChange}
                                                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                          scale={bar.canvasScaleValue}
                                                           componentConfig={component}
                                                           fields={getFields(component)}
                                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                         >
-                                                        </ScrollSelect> :
-                                                        layer.moduleName === "timeSelect" ?
-                                                          <TimeSelect
+                                                        </ButtonGroup> :
+                                                        layer.moduleName === "bar" ?
+                                                          <Bar
                                                             themeConfig={bar.componentThemeConfig}
                                                             onThemeChange={onThemeChange}
                                                             onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                            scale={bar.canvasScaleValue}
                                                             componentConfig={component}
                                                             fields={getFields(component)}
                                                             comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                           >
-                                                          </TimeSelect> :
-                                                          layer.moduleName === "worldMap" ?
-                                                            <WorldMap
+                                                          </Bar> :
+                                                          layer.moduleName === "tab" ?
+                                                            <Tab
                                                               themeConfig={bar.componentThemeConfig}
                                                               onThemeChange={onThemeChange}
                                                               onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                               componentConfig={component}
                                                               fields={getFields(component)}
                                                               comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                            ></WorldMap> :
-                                                            layer.moduleName === "indicatorcard" ?
-                                                              <IndicatorCard
+                                                            >
+                                                            </Tab> :
+                                                            layer.moduleName === "scrollSelect" ?
+                                                              <ScrollSelect
                                                                 themeConfig={bar.componentThemeConfig}
                                                                 onThemeChange={onThemeChange}
                                                                 onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                 componentConfig={component}
                                                                 fields={getFields(component)}
                                                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                              ></IndicatorCard> :
-                                                              layer.moduleName === "chinaMap" ?
-                                                                <ChinaMap
+                                                              >
+                                                              </ScrollSelect> :
+                                                              layer.moduleName === "timeSelect" ?
+                                                                <TimeSelect
                                                                   themeConfig={bar.componentThemeConfig}
                                                                   onThemeChange={onThemeChange}
                                                                   onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                   componentConfig={component}
                                                                   fields={getFields(component)}
                                                                   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                ></ChinaMap> :
-                                                                layer.moduleName === "timeline" ?
-                                                                  <Timeline
+                                                                >
+                                                                </TimeSelect> :
+                                                                layer.moduleName === "worldMap" ?
+                                                                  <WorldMap
                                                                     themeConfig={bar.componentThemeConfig}
                                                                     onThemeChange={onThemeChange}
                                                                     onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                     componentConfig={component}
                                                                     fields={getFields(component)}
                                                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                  ></Timeline> :
-
-
-                                                                  // layer.moduleName === 'CardFlipper_1'?
-                                                                  //   <CardFlipper1
-                                                                  //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
-                                                                  //     componentConfig={ component }
-                                                                  //     fields={ getFields(component) }
-                                                                  //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                                                  //   ></CardFlipper1>:
-                                                                  // layer.moduleName === 'CardFlipper_2'?
-                                                                  //   <CardFlipper2
-                                                                  //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
-                                                                  //     componentConfig={ component }
-                                                                  //     fields={ getFields(component) }
-                                                                  //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
-                                                                  //   ></CardFlipper2>:
-
-                                                                  layer.moduleName === "instrumentPanel_3" ?
-                                                                    <InstrumentPanel3
+                                                                  ></WorldMap> :
+                                                                  layer.moduleName === "indicatorcard" ?
+                                                                    <IndicatorCard
                                                                       themeConfig={bar.componentThemeConfig}
                                                                       onThemeChange={onThemeChange}
                                                                       onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                       componentConfig={component}
                                                                       fields={getFields(component)}
                                                                       comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                    ></InstrumentPanel3> :
-                                                                    layer.moduleName === "instrumentPanel_1" ?
-                                                                      <InstrumentPanel1
+                                                                    ></IndicatorCard> :
+                                                                    layer.moduleName === "chinaMap" ?
+                                                                      <ChinaMap
                                                                         themeConfig={bar.componentThemeConfig}
                                                                         onThemeChange={onThemeChange}
                                                                         onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                         componentConfig={component}
+                                                                        fields={getFields(component)}
                                                                         comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                      ></InstrumentPanel1> :
-                                                                      layer.moduleName === "instrumentPanel_4" ?
-                                                                        <InstrumentPanel4
+                                                                      ></ChinaMap> :
+                                                                      layer.moduleName === "timeline" ?
+                                                                        <Timeline
                                                                           themeConfig={bar.componentThemeConfig}
                                                                           onThemeChange={onThemeChange}
                                                                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                           componentConfig={component}
                                                                           fields={getFields(component)}
                                                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                        ></InstrumentPanel4> :
-                                                                        layer.moduleName === "normalTable" ?
-                                                                          <NormalTable
+                                                                        ></Timeline> :
+
+
+                                                                        // layer.moduleName === 'CardFlipper_1'?
+                                                                        //   <CardFlipper1
+                                                                        //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                                                        //     componentConfig={ component }
+                                                                        //     fields={ getFields(component) }
+                                                                        //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                        //   ></CardFlipper1>:
+                                                                        // layer.moduleName === 'CardFlipper_2'?
+                                                                        //   <CardFlipper2
+                                                                        //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
+                                                                        //     componentConfig={ component }
+                                                                        //     fields={ getFields(component) }
+                                                                        //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
+                                                                        //   ></CardFlipper2>:
+
+                                                                        layer.moduleName === "instrumentPanel_3" ?
+                                                                          <InstrumentPanel3
                                                                             themeConfig={bar.componentThemeConfig}
                                                                             onThemeChange={onThemeChange}
                                                                             onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                             componentConfig={component}
+                                                                            fields={getFields(component)}
                                                                             comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                          >
-                                                                          </NormalTable> :
-                                                                          layer.moduleName === "cascader" ?
-                                                                            <Cascader
+                                                                          ></InstrumentPanel3> :
+                                                                          layer.moduleName === "instrumentPanel_1" ?
+                                                                            <InstrumentPanel1
+                                                                              themeConfig={bar.componentThemeConfig}
+                                                                              onThemeChange={onThemeChange}
                                                                               onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                               componentConfig={component}
-                                                                              fields={getFields(component)}
                                                                               comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                            ></Cascader> :
-                                                                            layer.moduleName === "media" ?
-                                                                              <Media
+                                                                            ></InstrumentPanel1> :
+                                                                            layer.moduleName === "instrumentPanel_4" ?
+                                                                              <InstrumentPanel4
+                                                                                themeConfig={bar.componentThemeConfig}
+                                                                                onThemeChange={onThemeChange}
                                                                                 onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                                 componentConfig={component}
                                                                                 fields={getFields(component)}
                                                                                 comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                              ></Media> :
-                                                                              layer.moduleName === "paginationComp" ?
-                                                                                <PaginationComp
+                                                                              ></InstrumentPanel4> :
+                                                                              layer.moduleName === "normalTable" ?
+                                                                                <NormalTable
                                                                                   themeConfig={bar.componentThemeConfig}
                                                                                   onThemeChange={onThemeChange}
                                                                                   onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                                   componentConfig={component}
-                                                                                  fields={getFields(component)}
                                                                                   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                                                 >
-                                                                                </PaginationComp> :
-                                                                                <ErrorCatch
-                                                                                  app={component.name}
-                                                                                  user=""
-                                                                                  token=""
-                                                                                  max={1}
-                                                                                  errorRender={<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
-                                                                                  onCatch={(errors) => {
-                                                                                    console.log("组件报错信息：", errors, "组件id", layer.id);
-                                                                                  }}
-                                                                                >
-                                                                                  <RemoteBaseComponent
-                                                                                    themeConfig={bar.componentThemeConfig}
-                                                                                    onThemeChange={onThemeChange}
-                                                                                    key={layer.id}
+                                                                                </NormalTable> :
+                                                                                layer.moduleName === "cascader" ?
+                                                                                  <Cascader
+                                                                                    onChange={(val: any) => handleValueChange(val, component, layer.id)}
                                                                                     componentConfig={component}
                                                                                     fields={getFields(component)}
-                                                                                    comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
-                                                                                    onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                                                                  ></RemoteBaseComponent>
-                                                                                </ErrorCatch>
+                                                                                    comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                                                                  ></Cascader> :
+                                                                                  layer.moduleName === "media" ?
+                                                                                    <Media
+                                                                                      onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                                                      componentConfig={component}
+                                                                                      fields={getFields(component)}
+                                                                                      comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                                                                    ></Media> :
+                                                                                    layer.moduleName === "paginationComp" ?
+                                                                                      <PaginationComp
+                                                                                        themeConfig={bar.componentThemeConfig}
+                                                                                        onThemeChange={onThemeChange}
+                                                                                        onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                                                        componentConfig={component}
+                                                                                        fields={getFields(component)}
+                                                                                        comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                                                                      >
+                                                                                      </PaginationComp> :
+                                                                                      <ErrorCatch
+                                                                                        app={component.name}
+                                                                                        user=""
+                                                                                        token=""
+                                                                                        max={1}
+                                                                                        errorRender={<RemoteComponentErrorRender errorComponent={component.name}></RemoteComponentErrorRender>}
+                                                                                        onCatch={(errors) => {
+                                                                                          console.log("组件报错信息：", errors, "组件id", layer.id);
+                                                                                        }}
+                                                                                      >
+                                                                                        <RemoteBaseComponent
+                                                                                          themeConfig={bar.componentThemeConfig}
+                                                                                          onThemeChange={onThemeChange}
+                                                                                          key={layer.id}
+                                                                                          componentConfig={component}
+                                                                                          fields={getFields(component)}
+                                                                                          comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs, layer)}
+                                                                                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                                                        ></RemoteBaseComponent>
+                                                                                      </ErrorCatch>
                               }
                             </div>
                           </>

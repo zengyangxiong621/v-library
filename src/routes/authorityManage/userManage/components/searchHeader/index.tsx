@@ -35,10 +35,11 @@ const SearchHeader = (props: any) => {
       autoComplete="off"
     >
      <Form.Item label='用户' name='name'>
-        <Input  style={{ width: 200 }}  onChange={(e) => changeInputValue(e.target.value)} placeholder='请输入用户名或账户' value={name} />
+        <Input style={{ width: 200 }} className='myant-search'  onChange={(e) => changeInputValue(e.target.value)} placeholder='请输入用户名或账户' value={name} />
      </Form.Item>
      <Form.Item label='状态' name='status'>
       <Select
+        className="myant-select"
         placeholder='请选择状态'
         value={status}
         style={{ width: 200 }}
@@ -54,6 +55,7 @@ const SearchHeader = (props: any) => {
      </Form.Item>
      <Form.Item label='角色' name='roleId'>
       <Select
+        className="myant-select"
         placeholder='请选择角色'
         value={roleId}
         style={{ width: 200 }}

@@ -26,9 +26,10 @@ const UploadMedia = props => {
   };
 
   const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'video/mp4'
+    const fileLimit=['video/mp4','video/x-ms-wmv','audio/x-m4a','audio/mpeg','audio/ogg','audio/mp3','audio/wav','audio/flac']
+    const isJpgOrPng = fileLimit.includes(file.type)
     if (!isJpgOrPng) {
-      message.error('只能选择格式为mp4的文件!');
+      message.error('请导入正确的文件格式!');
     }
     return isJpgOrPng;
   }

@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react'
 import ComponentDefaultConfig from './config'
 import './index.css'
 import { styleTransformFunc, deepClone } from '../../../../utils'
-import { Link } from 'dva/router'
 
 const textAlignEnum = {
   left: 'flex-start',

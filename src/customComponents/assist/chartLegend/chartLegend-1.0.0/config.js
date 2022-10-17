@@ -65,10 +65,10 @@ const componentDefaultConfig = {
           value: 32,
         },
         {
-          name: "color",
+          name: "themeTextColor",
           displayName: "",
           type: "color",
-          value: "#000", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          value: "#fff", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
         },
         {
           name: "bold",
@@ -113,8 +113,9 @@ const componentDefaultConfig = {
         },
         {
           displayName: "图例颜色",
-          name: "legendColor",
-          value: "#222430", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          // name: "legendColor",
+          name: "themePureColor",
+          value: "#177ddc", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
           type: "color",
         },
         {

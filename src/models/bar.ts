@@ -148,7 +148,6 @@ export default {
     ): any {
       let bar: any = yield select(({ bar }: any) => bar);
       // 未初始化
-      console.log('!bar.isDashboardInit', bar.isDashboardInit)
       if (!bar.isDashboardInit) {
         // 获取回调参数列表
         const callbackParamsList = yield http({
@@ -202,16 +201,16 @@ export default {
             dataContainerDataList: bar.dataContainerDataList,
             componentFilters: filters || [],
             callbackParamsList,
-          },
-        });
-        yield put({
-          type: "save",
-          payload: {
             isPanel,
             stateId,
             dashboardId,
             panelId,
-            isDashboardInit: true
+            isDashboardInit: true,
+            routeList: [{
+              type: "dashboard",
+              id: dashboardId,
+              url: `/dashboard/${dashboardId}`
+            }]
           },
         });
         let layers: any[] = []
@@ -278,6 +277,7 @@ export default {
         }
 
         if (dashboardId && !stateId && !panelId) {
+          console.log('能到这里不', dashboardId)
           yield put({
             type: 'selectDashboard',
             payload: {
@@ -982,6 +982,7 @@ export default {
             children,
           },
         ],
+        id: isPanel ? stateId : dashboardId
       });
       console.log('参数', { ...itemData, id })
       yield put({
@@ -1028,6 +1029,8 @@ export default {
         bar.fullAmountPanels.push(data);
         // 新建面板后需要更新一下 fullAmountDashboardDetails
         const fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails([layerPanel], bar.fullAmountDashboardDetails);
+        console.log('呵呵哈哈哈')
+        console.log('fullAmountDashboardDetails', fullAmountDashboardDetails)
         yield put({
           type: 'save',
           payload: {
@@ -1570,10 +1573,21 @@ export default {
       return { ...state, fullAmountLayers: newFullAmountLayers };
     },
     // 添加/复制新的图层和组件
-    updateComponents(state: IBarState, { payload }: { payload: Array<any> }) {
+    updateComponents(state: IBarState, { payload, id = null }: { payload: Array<any>, id: string | null }) {
       if (Array.isArray(payload)) {
+        if (id) {
+          const currentDetails: any = state.fullAmountDashboardDetails.find((item: any) => item.id === id)
+          if (currentDetails) {
+            currentDetails.components = currentDetails.components.concat(payload)
+          } else {
+            throw new Error('没有找到当前画布下的详情')
+          }
+        }
+        console.log('这里吗1', payload)
         state.fullAmountComponents = state.fullAmountComponents.concat(payload);
+
       } else {
+        console.log('这里吗2', payload)
         const { layers, components, selected }: any = payload;
         state.fullAmountComponents = state.fullAmountComponents.concat(components);
         // @Mark 复制完成后需要将源组件的组件数据赋值给新复制出来的组件，即在bar.componentData中存储 {key：新组件id, value：源组件Data}
@@ -1710,6 +1724,7 @@ export default {
       let xPositionList: number[] = [];
       let yPositionList: number[] = [];
       let status: "分组" | "多组件" = "分组";
+      console.log('state.selectedComponentOrGroup', state.selectedComponentOrGroup)
       if (state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in firstLayer) {
@@ -1993,7 +2008,9 @@ export default {
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
+      console.log('selectedComponentIds', state.selectedComponentIds)
       state.selectedComponentRefs = {};
+      state.selectedComponentDOMs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key];

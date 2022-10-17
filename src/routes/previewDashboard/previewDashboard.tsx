@@ -24,7 +24,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   //   // verify // 此参数控制是否有权限，请求该方法
   // } as any)
   
-  console.log('previewDashboard', previewDashboard)
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(true);
   // 接口中返回的 当前屏幕设置信息

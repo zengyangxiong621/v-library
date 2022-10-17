@@ -45,9 +45,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     setComponents(bar.fullAmountComponents)
     setPanels(bar.fullAmountPanels)
     setLayers(layers)
-    console.log("fullAmountPanels", bar.fullAmountPanels)
   }, [bar.layers])
 
+/*  useEffect(() => {
+    window.addEventListener("",)
+  }, [])*/
 
   const supportLinesRef = bar.supportLinesRef
 
@@ -234,11 +236,15 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
  */
   // 组件被移动
   const handleComponentDrag = (x: number, y: number) => {
+    console.log('bar.selectedComponentDOMs', bar.selectedComponentDOMs)
+    console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
     for(const key in bar.selectedComponentDOMs) {
       const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+      console.log('translateArr', translateArr)
       let translateX = Number(translateArr[0]) + x
       let translateY = Number(translateArr[1]) + y
       bar.selectedComponentDOMs[key].style.transform = `translate(${translateX}px,${translateY}px)`;
+      console.log('bar.selectedComponentDOMs[key].style.transform', bar.selectedComponentDOMs[key].style.transform)
     }
   }
   // 组件移动结束
@@ -283,7 +289,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }
   // 选中框移动
   const handleScaleDragComDrag = (xMoveLength: number, yMoveLength: number) => {
-    bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
+    bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength);
   }
 
 
@@ -299,7 +305,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["leftarrow"], (event) => {
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
 
     if (event.type === "keydown") {
       console.log('----向左-----')
@@ -318,7 +324,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["uparrow"], (event) => {
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
 
     if (event.type === "keydown") {
       console.log('----向上-----')
@@ -338,7 +344,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["rightarrow"], (event) => {
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
 
     if (event.type === "keydown") {
       console.log('----向右-----')
@@ -358,7 +364,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["downarrow"], (event) => {
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
 
     if (event.type === "keydown") {
       console.log('----向下-----')
@@ -379,24 +385,34 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 删除
   useKeyPress(["Backspace"], (event) => {
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
+    console.log('==============')
 
+    console.log('isKeyForDelete.current', isKeyForDelete.current)
+    console.log('event.type', event.type)
     if (event.type === "keydown") {
       if (!isKeyForDelete.current) {
-        dispatch({
-          type: 'bar/delete',
-          payload: {
-            dashboardId: bar.stateId || bar.dashboardId,
-            layers: bar.key.map((item: string) => ({
-              id: item,
-              children: []
-            }))
-          }
-        })
+        console.log('event.target ', event.target)
+        console.log('event.target ', event.target === document.body)
+        if (event.target === document.body) {
+          dispatch({
+            type: 'bar/delete',
+            payload: {
+              dashboardId: bar.stateId || bar.dashboardId,
+              layers: bar.key.map((item: string) => ({
+                id: item,
+                children: []
+              }))
+            }
+          })
+        }
         isKeyForDelete.current = true
       }
     } else {
+      console.log('这里不触发一下')
       isKeyForDelete.current = false
+      console.log('isKeyForDelete.current', isKeyForDelete.current)
+      console.log('==============')
     }
   }, {
     events: ["keydown", "keyup"],
@@ -405,7 +421,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
   // 复制
   useKeyPress(["ctrl.c"], (event) => {
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
 
     if (event.type === "keydown") {
       console.log('没说法？')
@@ -463,7 +479,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   useKeyPress(["ctrl.g"], (event) => {
     event.stopPropagation()
     event.preventDefault()
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
     if (event.type === "keydown") {
       console.log('哈哈哈哈')
       if (!isKeyForGroup.current) {
@@ -485,7 +501,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   useKeyPress(["ctrl.d"], (event) => {
     event.stopPropagation()
     event.preventDefault()
-    if (bar.key.length < 0) return
+    if (bar.key.length === 0) return
     if (event.type === "keydown") {
       if (!isKeyForCancelGroup.current) {
         dispatch({

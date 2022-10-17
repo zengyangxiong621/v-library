@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import ComponentDefaultConfig from './config'
 // import './index.css'
-import EC from '@/customComponents/echarts/EC'
-// import EC from '../../EC'
+// import EC from '@/customComponents/echarts/EC'
+import EC from '../../EC'
 import 'echarts-liquidfill' //在这里引入
 
 

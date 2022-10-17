@@ -8,8 +8,6 @@ update Time:  2022 09 29
 ####featContent
 
 - 更新了多项配置项
-- 颜色主题切换
-
 
 
 

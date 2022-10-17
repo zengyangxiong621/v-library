@@ -1,5 +1,4 @@
 import { memo, useEffect, useState } from "react";
-import "./index.less";
 import { connect } from "dva";
 import { Input, Row, Col, Modal, Form, Select, Button,message } from "antd";
 import { useFetch } from "@/utils/useFetch";
@@ -128,25 +127,26 @@ const AddOrEdit = (props: any) => {
               }
             })
           ]}
-        ><Input placeholder='请输入账号' disabled={handleDisabled("userName")} value={userName}  showCount maxLength={10} /></Form.Item>
+        ><Input className='setBackColor' placeholder='请输入账号' disabled={handleDisabled("userName")} value={userName}  showCount maxLength={10} /></Form.Item>
         {
           formType === "add" &&
           <Form.Item
             label='密码'
             name='password'
             rules={generateSingleRules(true, "请输入密码")}
-          ><Input.Password value={password}  placeholder='请输入密码' showCount maxLength={20} /></Form.Item>
+          ><Input.Password className='setBackColor' value={password}  placeholder='请输入密码' showCount maxLength={20} /></Form.Item>
         }
         <Form.Item
           label='姓名'
           name='name'
-        ><Input value={name} placeholder='请输入姓名'  disabled={handleDisabled("name")} showCount maxLength={10} /></Form.Item>
+        ><Input className='setBackColor' value={name} placeholder='请输入姓名'  disabled={handleDisabled("name")} showCount maxLength={10} /></Form.Item>
         <Form.Item
           label='角色'
           name='roleId'
           rules={generateSingleRules(true, "请选择角色")}
         >
           <Select
+            className='setBackColor'
             placeholder='请选择角色'
             value={roleId}
             disabled={handleDisabled("roleId")}
@@ -176,7 +176,7 @@ const AddOrEdit = (props: any) => {
               }
             })
           ]}
-        ><Input value={email} placeholder='请输入邮箱' disabled={handleDisabled("email")} showCount maxLength={50} /></Form.Item>
+        ><Input className='setBackColor' value={email} placeholder='请输入邮箱' disabled={handleDisabled("email")} showCount maxLength={50} /></Form.Item>
         <Form.Item
           label='联系方式'
           name='tel'
@@ -193,7 +193,7 @@ const AddOrEdit = (props: any) => {
               }
             })
           ]}
-        ><Input value={tel} placeholder='请输入联系方式' disabled={handleDisabled("tel")} showCount maxLength={20} /></Form.Item>
+        ><Input className='setBackColor' value={tel} placeholder='请输入联系方式' disabled={handleDisabled("tel")} showCount maxLength={20} /></Form.Item>
       </Form>
     </Modal>
   );

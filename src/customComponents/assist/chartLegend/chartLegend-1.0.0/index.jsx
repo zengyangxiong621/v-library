@@ -3,10 +3,11 @@ import ComponentDefaultConfig from './config'
 
 const ChartLegend = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig
+  // const componentConfig = ComponentDefaultConfig
   const { data } = componentConfig.staticData
   const { config } = componentConfig
 
-  const fieldKeys = props.fields || ['text','value']
+  const fieldKeys = props.fields || ['text', 'value']
   const originData = props.comData || data
 
   const fields2ValueMap = {}
@@ -35,14 +36,69 @@ const ChartLegend = (props) => {
     });
     return targetConfig
   }
-  const { color, bold, italic, fontFamily, fontSize, legendColor, legendShape, legendSize, letterSpacing, lineHeight, legendGap, textGap1, textGap2 } = getTargetConfig(config)
+
+  const { themeTextColor: textColor, bold, italic, fontFamily, fontSize, themePureColor: legendColor, legendShape, legendSize, letterSpacing, lineHeight, legendGap, textGap1, textGap2 } = getTargetConfig(config)
+
+  /***********************主题切换************************/
+  const componentThemeConfig = props.themeConfig
+  // 如果 选择的了 主题风格, 着手替换config中的颜色
+  const replaceThemeColor = (arr, colorIndex = 0) => {
+    arr.forEach((item) => {
+      let index = colorIndex || 0
+      let { name, value, options, type } = item
+      if (item.hasOwnProperty('value')) {
+        if (Array.isArray(value)) {
+          replaceThemeColor(value, index)
+        } else {
+          if (type === 'color') {
+            switch (name) {
+              case 'themePureColor':
+                item.value = componentThemeConfig.pureColors[index % 7]
+                break;
+              case 'themeGradientColorStart':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 0).color
+                break;
+              case 'themeGradientColorEnd':
+                item.value = componentThemeConfig.gradientColors[index % 7].find(item => item.offset === 100).color
+                break;
+              case 'themeTextColor':
+                item.value = componentThemeConfig.textColor
+                break;
+              case 'themeAssistColor':
+                item.value = componentThemeConfig.assistColor
+                break;
+              case 'themeGridColor':
+                item.value = componentThemeConfig.gridColor
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      } else if (Array.isArray(options) && options.length) {
+        replaceThemeColor(options, index)
+      }
+    })
+  }
+  if (componentThemeConfig) {
+    const configOfTheme = JSON.parse(JSON.stringify(config))
+    replaceThemeColor(configOfTheme)
+    props.onThemeChange({
+      id: componentConfig.id,
+      name: componentConfig.name,
+      moduleName: componentConfig.moduleName,
+      moduleVersion: componentConfig.moduleVersion,
+      config: configOfTheme
+    })
+  }
+
 
   // 图例样式
   const legendStyle = {
     display: 'inline-block',
     width: `${legendSize}px`,
     height: `${legendSize}px`,
-    background: legendColor,
+    background: componentThemeConfig ? componentThemeConfig.pureColors[0] : legendColor || '#87ceeb',
     borderRadius: legendShape === 'circle' ? '50%' : '0',
     margin: `0 ${legendGap}px`
   }
@@ -50,19 +106,21 @@ const ChartLegend = (props) => {
   const commonTextStyle = {
     fontFamily,
     fontSize,
-    color,
+    color: componentThemeConfig ? componentThemeConfig.textColor : textColor || '#fff',
     fontWeight: bold ? 'bold' : 'normal',
     fontStyle: italic ? 'italic' : 'normal',
   }
   const textGapStyle = {
-    margin: `0 ${textGap1}px`
+    margin: `0 ${textGap1}px`,
+    letterSpacing: letterSpacing
   }
   const valueGapStyle = {
-    margin: `0 ${textGap2}px`
+    margin: `0 ${textGap2}px`,
+    letterSpacing: letterSpacing
   }
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <div style={{ height: '100%', lineHeight: `${lineHeight}px`, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginLeft: '14px'}}>
+      <div style={{ height: '100%', lineHeight: `${lineHeight}px`, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginLeft: '14px' }}>
         <span style={legendStyle}></span>
         <span style={{ ...commonTextStyle, ...textGapStyle }}>{text}</span>
         <span style={{ ...commonTextStyle, ...valueGapStyle }}>{value}</span>
