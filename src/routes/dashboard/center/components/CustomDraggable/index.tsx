@@ -152,6 +152,7 @@ const CustomDraggable
      * @return void
      */
     const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
+      console.log('拖拽开始')
       setStartPosition({
         x: data.x,
         y: data.y,
@@ -159,10 +160,23 @@ const CustomDraggable
       bar.selectedComponents = [];
       bar.selectedComponentDOMs = {}
       bar.dragStatus = "一组件";
-
+      bar.scaleDragData.style.display = "none"
+      bar.scaleDragCompRef.handleSetDisplay("none")
+      dispatch({
+        type: "bar/save",
+        payload: {
+          scaleDragData: {
+            position: config.position,
+            style: {
+              display: "none",
+              ...config.style,
+            },
+          },
+        },
+      });
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
-        dispatch({
+/*        dispatch({
           type: "bar/save",
           payload: {
             scaleDragData: {
@@ -173,7 +187,7 @@ const CustomDraggable
               },
             },
           },
-        });
+        });*/
       }
       if ("panelType" in layer) {
         bar.dragStatus = "一面板";
@@ -199,14 +213,20 @@ const CustomDraggable
 
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
+      console.log('拖拽中')
       ev.stopPropagation();
+      bar.scaleDragData.style.display = "none"
+      bar.scaleDragCompRef.handleSetDisplay("none")
+
       // console.log('dragging', layer)
       // 向上取整
       let aroundX = Math.ceil(data.x);
       let aroundY = Math.ceil(data.y);
       const xMoveLength = data.x - data.lastX;
       const yMoveLength = data.y - data.lastY;
-      bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength);
+      // bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
+      // const {x: scaleDragX, y: scaleDragY } =  bar.scaleDragCompRef.getPosition()
+      // bar.scaleDragCompRef.handleSetPosition(scaleDragX + xMoveLength, scaleDragY + yMoveLength)
       if (bar.dragStatus === "多个") {
         const xPositionList: number[] = [];
         const yPositionList: number[] = [];
@@ -274,6 +294,7 @@ const CustomDraggable
 
     };
     const handleStop = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
+      console.log('拖拽结束')
       supportLinesRef.handleSetPosition(0, 0, "none");
       dispatch({
         type: "bar/selectComponentOrGroup",
@@ -509,6 +530,7 @@ const CustomDraggable
           key: bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id),
         },
       });
+
     };
     const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
       clearTimeout(clickTimer.current);
@@ -545,7 +567,6 @@ const CustomDraggable
             }
           });
           if (panel.states[0]?.id) {
-            console.log('panel', panel)
             url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
           } else {
             url = `/dashboard/${bar.dashboardId}/panel-${layer.id}`
@@ -582,7 +603,6 @@ const CustomDraggable
           url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
         }
         if (url) {
-          console.log('url', url)
           history.push(url);
           dispatch({
             type: "bar/save",

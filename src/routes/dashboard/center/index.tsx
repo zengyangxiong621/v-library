@@ -289,7 +289,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }
   // 选中框移动
   const handleScaleDragComDrag = (xMoveLength: number, yMoveLength: number) => {
-    bar.scaleDragCompRef.handleSetPosition(xMoveLength, yMoveLength);
+    bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
   }
 
 
