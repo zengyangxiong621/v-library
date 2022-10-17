@@ -2588,6 +2588,7 @@ export const defaultData = {
   isCanClearAllStatus: true,
   key: [],
   isShowRightMenu: false,
+  isCopyComponentToDashboard: false,
   rightMenuInfo: { x: 0, y: 0, id: null, isFolder: false },
   lastRightClick: "",
   isMultipleTree: false,
@@ -2839,6 +2840,7 @@ export interface IBarState {
   dashboardName: string;
   key: string[];
   isShowRightMenu: boolean;
+  isCopyComponentToDashboard: boolean;
   rightMenuInfo: any;
   operate: string;
   lastRightClick: string;

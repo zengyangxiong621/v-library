@@ -340,7 +340,7 @@ function App({ bar, dispatch, location, history }: any) {
           <RecycleBin visible={recycleBinVisible} onChange={handleRBvailableChange} />
         </div>
         {
-          bar.isShowRightMenu &&
+          (bar.isShowRightMenu || bar.isCopyComponentToDashboard) &&
           <CenterRightMenu menuOptions={customMenuOptions} hideMenu={hideMenu} />
         }
       </div>
