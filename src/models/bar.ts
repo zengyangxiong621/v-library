@@ -914,6 +914,7 @@ export default {
         type: "setSelectedKeys",
         payload,
       });
+      console.log('哈哈哈1')
       yield put({
         type: "calcDragScaleData",
       });
@@ -937,6 +938,7 @@ export default {
       yield put({
         type: "setLayerConfig",
       });
+      console.log('哈哈哈2')
       yield put({
         type: "calcDragScaleData",
       });
@@ -1045,7 +1047,7 @@ export default {
         });
       }
     },
-    *updateComponent({ payload }: any, { call, put, select }: any): any {
+    *updateComponent({ payload, isCalcDragScaleData = true }: any, { call, put, select }: any): any {
       if (payload.length > 0) {
         const components: Array<IComponent> = [];
         const panels: Array<IPanel> = [];
@@ -1077,9 +1079,12 @@ export default {
             },
           });
         }
-        yield put({
-          type: "calcDragScaleData",
-        });
+        console.log('哈哈哈3')
+        if (isCalcDragScaleData) {
+          yield put({
+            type: "calcDragScaleData",
+          });
+        }
       }
     },
     *getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
@@ -1229,6 +1234,7 @@ export default {
         type: "setComponentConfig",
         payload,
       });
+      console.log('哈哈哈4')
       yield put({
         type: "calcDragScaleData",
       });

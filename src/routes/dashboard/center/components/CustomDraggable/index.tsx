@@ -522,18 +522,17 @@ const CustomDraggable
                   },
                 })*/
       }
+      console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
+
       dispatch({
         type: "bar/updateComponent",
         payload: bar.selectedComponents,
+        isCalcDragScaleData: false
       });
       // 这里要等待将 componentConfig/groupConfig 设置完之后才能个 state.key 赋值，因为右侧是 根据 key 值变化而变化，但是 componentConfig/groupConfig 比 key 更早变化
       dispatch({
-        type: "bar/save",
-        payload: {
-          key: bar.selectedComponentOrGroup.map((item: ILayerComponent) => item.id),
-        },
+        type: "bar/calcDragScaleData",
       });
-
     };
     const handleClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent, config: IConfig) => {
       clearTimeout(clickTimer.current);

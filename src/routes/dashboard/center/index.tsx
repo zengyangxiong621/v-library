@@ -830,16 +830,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                       }}
                       onScaleEnd={handleScaleEnd}
                     />
-                    <SupportLines
-                      cRef={(ref: any) => {
-                        bar.supportLinesRef = ref;
-                      }}
-                    />
                     <RulerLines />
 
                     <div className={`draggable-container screen-${bar.dashboardId}`} ref={draggableContainerRef}>
                       <CustomDraggable mouse={0} layers={layers} components={components} panels={panels} />
                     </div>
+                    <SupportLines
+                      cRef={(ref: any) => {
+                        bar.supportLinesRef = ref;
+                      }}
+                    />
                   </div>
                 </div>
               </div>
