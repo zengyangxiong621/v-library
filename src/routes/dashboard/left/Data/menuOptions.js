@@ -64,6 +64,12 @@ export const menuOptions = [
     disabled: false,
   },
   {
+    name: "复制到大屏",
+    key: "corssCopy",
+    icon: "fuzhi",
+    disabled: false,
+  },
+  {
     key: "singleShowLayer",
     name:"单独显示图层",
     icon: "danduxianshi",
