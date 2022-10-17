@@ -1,0 +1,10 @@
+{
+  "name": "flowChart",
+  "version": "1.0.1",
+  "private": true,
+  "dependencies": {
+    "react": "17.0.2",
+    "echarts": "5.2.2"
+  },
+  "devDependencies": {}
+}

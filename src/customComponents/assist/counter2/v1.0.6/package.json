@@ -1,0 +1,10 @@
+{
+  "name": "counter",
+  "version": "1.0.6",
+  "private": true,
+  "dependencies": {
+    "react": "17.0.2",
+    "react-countup": "^6.3.0"
+  },
+  "devDependencies": {}
+}
