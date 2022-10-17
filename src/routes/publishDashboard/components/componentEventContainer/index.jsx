@@ -15,7 +15,7 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 import Tab from '@/customComponents/interactive/tab'
 import ScrollSelect from '@/customComponents/interactive/scrollSelect/v1.0.2/index'
-import Counter from '@/customComponents/assist/counter2/v1.0.6'
+import Counter from '@/customComponents/assist/counter2/v1.0.7'
 import Media from '@/customComponents/media/v1.1.1'
 import NormalTable from '@/customComponents/table/normalTable/v1.0.5'
 import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
