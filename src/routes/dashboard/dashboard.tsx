@@ -337,7 +337,7 @@ function App({ bar, dispatch, location, history }: any) {
           <ComponentTheme visible={componentThemeVisible} onChange={handleComponentThemeAvailableChange} />
         </div>
         {
-          bar.isShowRightMenu &&
+          (bar.isShowRightMenu || bar.isCopyComponentToDashboard) &&
           <CenterRightMenu menuOptions={customMenuOptions} hideMenu={hideMenu} />
         }
       </div>

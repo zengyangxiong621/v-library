@@ -2588,6 +2588,7 @@ export const defaultData = {
   isCanClearAllStatus: true,
   key: [],
   isShowRightMenu: false,
+  isCopyComponentToDashboard: false,
   rightMenuInfo: { x: 0, y: 0, id: null, isFolder: false },
   lastRightClick: "",
   isMultipleTree: false,
@@ -2829,7 +2830,8 @@ export const defaultData = {
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: [],
   copyComponentConfigs: [],
-  copyComponentKey: []
+  copyComponentKey: [],
+  routeList: [], // 路由集合，只收集当前应用路由和面板路由
 }
 
 export interface IBarState {
@@ -2838,6 +2840,7 @@ export interface IBarState {
   dashboardName: string;
   key: string[];
   isShowRightMenu: boolean;
+  isCopyComponentToDashboard: boolean;
   rightMenuInfo: any;
   operate: string;
   lastRightClick: string;
@@ -2899,4 +2902,9 @@ export interface IBarState {
   fullAmountDynamicAndDrillDownPanels: any;
   copyComponentConfigs: any
   copyComponentKey: any
+  routeList: Array<{
+    type: 'state' | 'dashboard',
+    id: string,
+    url: string
+  }>
 }

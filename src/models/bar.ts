@@ -709,12 +709,13 @@ export default {
       });
     },
     // 添加组件到画布
-    *addComponent({ payload, fullAmountPayload, isComponent }: any, { call, put }: any) {
+    *addComponent({ payload, fullAmountPayload, isComponent, isState }: any, { call, put }: any) {
       yield put({
         type: "addLayer",
         payload,
         fullAmountPayload,
-        isComponent,
+        isComponent, // 是否为组件
+        isState // 是否为状态
       });
       /*      yield put({
         type: 'updateFullAmountLayers'
@@ -735,7 +736,7 @@ export default {
           const filterNullLayers = clearNullGroup(layers);
           yield put({
             type: "updateTree",
-            payload: filterNullLayers,
+            payload: filterNullLayers.layers,
           });
           yield put({
             type: "clearAllStatus",
@@ -757,7 +758,7 @@ export default {
     // 复制图层
     *copy({ payload }: any, { select, call, put }: any): any {
       console.log("复制时候的payload", payload);
-      const { layers, components, panels } = yield http({
+      const { layers, components, panels, dashboardId } = yield http({
         url: "/visual/layer/copy",
         method: "post",
         body: payload,
@@ -773,11 +774,23 @@ export default {
         });
       }
       if (panels.length > 0) {
-        yield put({
+        yield yield put({
           type: "updatePanels",
-          payload: panels,
+          payload: {
+            panels
+          },
         });
       }
+      yield put({
+        type: "updateDetails",
+        payload: {
+          layers,
+          components,
+          dashboardId,
+          panels
+        }
+      })
+      // layers 永远是最后再保存的
       yield put({
         type: "updateTree",
         payload: layers,
@@ -812,6 +825,49 @@ export default {
         payload,
       });
     },
+    // 添加新的图层和面板
+    *updatePanels({ payload, beCopyPayload }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { panels } = payload
+      let { fullAmountDashboardDetails } = bar
+      if(panels) {
+        // 复制，新增过来的话，需要对复制和新增的面板进行请求
+        console.log('panels', panels)
+        // 获取面板+状态详情
+        fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(panels, fullAmountDashboardDetails)
+        // 重新获取全量面板
+        const fullAmountPanels = fullAmountDashboardDetails.reduce(
+          (pre: Array<any>, cur: any) => pre.concat('type' in cur ? cur : [])
+          , [])
+        // 重新获取全量组件
+        const fullAmountComponents = fullAmountDashboardDetails.reduce(
+          (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
+          []
+        );
+        console.log('fullAmountDashboardDetails可惜', fullAmountDashboardDetails)
+        yield put({
+          type: "save",
+          payload: {
+            fullAmountDashboardDetails,
+            fullAmountPanels,
+            fullAmountComponents
+          }
+        })
+      }
+    },
+    *updateDetails({ payload }: any, { call, put, select }: any): any {
+      const { dashboardId, layers, components, panels } = payload
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails } = bar
+      let currentDetails: any = fullAmountDashboardDetails.find((item: any) => item.id === bar.dashboardId ||  bar.stateId)
+      currentDetails = {
+        ...currentDetails,
+        layers,
+        components,
+        dashboardId
+      }
+
+    },
     *updateTree({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { stateId, fullAmountDashboardDetails, dashboardId } = bar;
@@ -820,10 +876,6 @@ export default {
       } else {
         fullAmountDashboardDetails.find((item: any) => item.id === dashboardId).layers = payload;
       }
-      console.log("------");
-      console.log("stateId", stateId);
-      console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
-      console.log("------");
       const extendedSomeAttrLayers = addSomeAttrInLayers(payload);
       // TODO  涉及到后面的回收站逻辑
       /** 图层部分接口(删除图层)返回的数据结构为 { layers: [], recycleItems: []},
@@ -1215,13 +1267,13 @@ export default {
           fullAmountDashboardDetails
         },
       });
-
       // 将状态添加到全量图层树种 0 - fullAmountLayers，也就是当前面板 panelId 下的 modules中
       yield put({
         type: "addComponent",
-        payload: { final: { name, id, modules: [] }, insertId: bar.panelId },
+        payload: { final: { name, id, modules: [] }, insertId: bar.stateId },
         fullAmountPayload: "children",
         isComponent: false,
+        isState: true,
       });
     },
     *deletePanelState({ payload, cb }: any, { call, put, select }: any): any {
@@ -1279,7 +1331,7 @@ export default {
     },
     *copyPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const { panelId, dashboardId, panelStatesList } = bar;
+      let { panelId, dashboardId, panelStatesList, fullAmountDashboardDetails, fullAmountComponents } = bar;
       const { stateId } = payload;
       try {
         const data = yield http({
@@ -1291,35 +1343,57 @@ export default {
             stateId,
           },
         });
+
         panelStatesList.push(data);
-        const toStateId = data.id;
+        fullAmountDashboardDetails.find((item: any) => item.id === panelId).states = panelStatesList
+
+        // 需要给 fullAmountDashboardDetails 添加当前状态的 详情
+        const stateDetails = yield http({
+          url: `/visual/application/dashboard/detail/${data.id}`,
+          method: 'get',
+        })
+
+        fullAmountDashboardDetails.push({
+          ...stateDetails,
+          id: data.id,
+        })
+
+        const { layers } = stateDetails
+
+        // 获取这个状态下的面板集合
+        const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers)
+        // 查询所有面板的详情
+        fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(layerPanels, fullAmountDashboardDetails)
+        // 重新获取全量面板
+        const fullAmountPanels = fullAmountDashboardDetails.reduce(
+          (pre: Array<any>, cur: any) => pre.concat('type' in cur ? cur : [])
+          , [])
+        // 重新获取全量组件
+        const fullAmountComponents = fullAmountDashboardDetails.reduce(
+          (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
+          []
+        );
+
         yield put({
           type: "save",
           payload: {
             panelStatesList,
-            stateId: toStateId,
+            stateId: data.id,
+            fullAmountDashboardDetails,
+            fullAmountComponents,
+            fullAmountPanels
           },
-        });
-        yield put({
-          type: "getDashboardDetails",
         });
       } catch (err) {
         console.log("err", err);
       }
-      // yield put({
-      //   type: 'save',
-      //   payload: {
-      //     panelStatesList: bar.panelStatesList.concat({
-      //       name: data.name,
-      //       id: data.id
-      //     })
-      //   }
-      // })
+
     },
     *selectPanelState({ payload: { stateId, panelId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar
-      console.log('fullAmountDashboardDetails', fullAmountDashboardDetails)
+      console.log('团结')
+      console.log("fullAmountDashboardDetails", fullAmountDashboardDetails)
       const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find((item: any) => item.id === stateId)
       const { config, states } = fullAmountDashboardDetails.find((item: any) => item.id === panelId)
       const newDashboardConfig = duplicateDashboardConfig(
@@ -1451,26 +1525,36 @@ export default {
     // 添加新的图层和组件
     addLayer(
       state: IBarState,
-      { payload, fullAmountPayload = "brother", isComponent = true }: any
+      { payload, fullAmountPayload = "brother", isComponent = true, isState = false }: any
     ) {
-      let insertId: string,
-        fullInsertId: string,
+      // fullInsertId 和 insertId 的区别就是:
+      // 新增、复制组件（面板）的话只需要更新当前的 layers
+      // 新增、复制组件（面板）。新增、复制状态的话需要更新整个 fullAmountLayers
+      let insertId: string = '',
+        fullInsertId: string = '',
         newLayers: Array<any> = [];
       const { layers } = state;
-      if (payload.insertId && layers.length) {
-        insertId = payload.insertId;
-        fullInsertId = payload.insertId;
-      } else {
-        insertId = layers.length !== 0 ? layers[0].id : "";
-        fullInsertId = layers.length !== 0 ? layers[0].id : state.stateId ? state.stateId : "";
+      // 新增组件
+      if (isComponent) {
+        if (payload.insertId && layers.length) {
+          insertId = payload.insertId;
+          fullInsertId = payload.insertId;
+        } else {
+          insertId = layers.length !== 0 ? layers[0].id : "";
+          fullInsertId = layers.length !== 0 ? layers[0].id : state.stateId ? state.stateId : "";
+        }
       }
+      // 新增状态
+      if (isState) {
+        fullInsertId = state.stateId
+      }
+
       const { modules, ...finalConfig } = payload.final;
-      console.log("fullInsertId", fullInsertId);
-      console.log("payload", payload);
       // 新建面板要考虑到状态下是没有组件的
       // fullAmountPayload 就是 insertId对应的“组件” 和 被插入的 ”组件“ 的关系
+      // 深拷贝是为了避免 layers 和 fullAmountLayers 相互影响
       const newFullAmountLayers = generateLayers(
-        state.fullAmountLayers,
+        deepClone(state.fullAmountLayers),
         fullInsertId,
         payload.final,
         fullAmountPayload === "children"
@@ -1485,7 +1569,7 @@ export default {
       }
       return { ...state, fullAmountLayers: newFullAmountLayers };
     },
-    // 添加新的图层和组件
+    // 添加/复制新的图层和组件
     updateComponents(state: IBarState, { payload }: { payload: Array<any> }) {
       if (Array.isArray(payload)) {
         state.fullAmountComponents = state.fullAmountComponents.concat(payload);
@@ -1517,11 +1601,6 @@ export default {
           state.componentData[id] = state.componentData[allSelectedCompIds[index]];
         });
       }
-      return { ...state };
-    },
-    // 添加新的图层和面板
-    updatePanels(state: IBarState, { payload }: { payload: Array<any> }) {
-      state.fullAmountPanels = state.fullAmountPanels.concat(payload);
       return { ...state };
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {
@@ -1621,7 +1700,6 @@ export default {
         ),
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
-      console.log("state.selectedComponents", state.selectedComponents);
       cb(state.selectedComponents);
       return {
         ...state,
@@ -1652,7 +1730,6 @@ export default {
               const {
                 config: { left, top, width, height },
               } = panel;
-              console.log("scaleDragData", { left, top, width, height });
               state.panelConfig = panel;
               xPositionList.push(left, width);
               yPositionList.push(top, height);
@@ -2450,6 +2527,7 @@ export default {
           })),
         })
       );
+      console.log("fullAmountDashboardDetails", fullAmountDashboardDetails)
       const fullAmountLayers = deepForEach(
         deepClone(fullAmountDashboardDetails[0].layers),
         (

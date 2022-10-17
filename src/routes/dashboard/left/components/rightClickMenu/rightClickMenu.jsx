@@ -6,13 +6,22 @@ import {
 } from "../../../../../utils/sideBar";
 import { IconFont } from '../../../../../utils/useIcon'
 import SecondMenu from './secondMenu'
+import { http } from "@/services/request";
+import { filterEmptyGroups } from "@/models/utils/filterEmptyGroups";
 
 import { connect } from 'dva'
+import { Button, message, Form, Select, Modal } from "antd";
 import * as Icons from '@ant-design/icons'
+
 const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
+  const { Option } = Select;
+
   const [isLock, setIsLock] = useState(false)
   const [isSingleShow, setIsSingleShow] = useState(false)
   const [isShowOrHidden, setIsShowOrHidden] = useState(true)
+  const [showCorssCopyModal, setShowCorssCopyModal] = useState(false);
+  const [copyDashboardId, setCopyDashboardId] = useState(null);
+  const [dashboardList, setDashboardList] = useState([]);
   // 每次渲染右侧菜单，都需要确定此次是锁定还是解锁
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
@@ -43,7 +52,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
       dashboardId: bar.dashboardId,
     }
     // 如果是动态面板里,这时候的dashboardId应该改为状态id
-    if(bar.isPanel) {
+    if (bar.isPanel) {
       customPayload.dashboardId = bar.stateId
     }
     switch (operateName) {
@@ -92,6 +101,16 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
           selected: [...bar.key]
         }
         break;
+      case 'corssCopy':
+        console.log('11111')
+        dispatch({
+          type: "bar/save",
+          payload: {
+            isCopyComponentToDashboard: true,
+          },
+        });
+        setShowCorssCopyModal(true)
+        break
       default:
         break;
     }
@@ -113,64 +132,166 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     // 因为右侧菜单第一次渲染，因为首次渲染的元素在Tree的最底部，所以有一个默认的offsetTop（这里打印出来是521）
     // so,这里需要将鼠标的y轴坐标作为offsetTop
     const visualHeight = document.body.clientHeight
-    const menuHeight = menuRef.current.clientHeight
+    const menuHeight = menuRef.current?.clientHeight || 0
     // 如果offsetTop + 元素本身高度 > 浏览器可视区域高度，将菜单上移
     const isOverflowAtUnder = menuHeight + recalculateY > visualHeight
     if (isOverflowAtUnder) {
       const a = menuHeight + recalculateY - visualHeight
       recalculateY = y - (menuHeight + recalculateY - visualHeight) - 20
     }
-    menuRef.current.style.position = 'fixed'
-    menuRef.current.style.top = `${recalculateY}px`
-    menuRef.current.style.left = `${recalculateX}px`
+    if (menuRef.current) {
+      menuRef.current.style.position = 'fixed'
+      menuRef.current.style.top = `${recalculateY}px`
+      menuRef.current.style.left = `${recalculateX}px`
+    }
   }, [x, y])
+
+  useEffect(() => {
+    getAllDashboards()
+  }, [])
+  // 获取当前空间下的所有大屏
+  const getAllDashboards = () => {
+    console.log('allDashboardList', bar.allDashboardList)
+    const allDashboardList = JSON.parse(JSON.stringify(bar.allDashboardList))
+    const dashboardListTmp = allDashboardList.filter(dashboard => dashboard.id !== bar.dashboardId)
+    setDashboardList(dashboardListTmp)
+  }
+  // 关闭复制到大屏弹窗
+  const cancelCorssCopyModal = () => {
+    setShowCorssCopyModal(false);
+    dispatch({
+      type: "bar/save",
+      payload: {
+        isCopyComponentToDashboard: false,
+      },
+    });
+  };
+  // 复制到大屏确认
+  const confirmCorssCopy = async () => {
+    if (!copyDashboardId) {
+      return message.warning({ content: "请选择大屏", duration: 2 });
+    }
+    // 获取目标大屏的组件layers
+    let { layers } = await http({
+      url: `/visual/application/dashboard/detail/${copyDashboardId}`,
+      method: "get",
+    });
+    const noEmptyGroupLayers = filterEmptyGroups(layers);
+    // 保存
+    const params = {
+      dashboardId: bar.stateId || bar.dashboardId,
+      children: [],
+      targetDashboardId: copyDashboardId,
+      originLayers: noEmptyGroupLayers,
+      //TODO 改为modules后删除掉这行
+      components: [...bar.key],
+      panels: [],
+      selected: [...bar.key]
+    }
+    await http({
+      url: "/visual/layer/copyToNew",
+      method: "post",
+      body: params,
+    });
+    message.success({ content: "复制成功", duration: 2 });
+    cancelCorssCopyModal()
+    setCopyDashboardId(null)
+  }
+
+  // 选择大屏
+  const selectDashboard = (id) => {
+    setCopyDashboardId(id);
+  };
   return (
-    <div className='RightClickMenu-wrap' ref={menuRef}>
+    <React.Fragment>
       {
-        menuOptions.map((item, index) => {
-          const hasLevel = item.children && item.children.length && Array.isArray(item.children)
-          return (
-            <div
-              key={index}
-              className={
-                `menu-item
+        !bar.isCopyComponentToDashboard ?
+          <div className='RightClickMenu-wrap' ref={menuRef}>
+            {
+              menuOptions.map((item, index) => {
+                const hasLevel = item.children && item.children.length && Array.isArray(item.children)
+                return (
+                  <div
+                    key={index}
+                    className={
+                      `menu-item
             ${item.disabled && 'disabled-menu-item'}
             ${hasLevel && 'li-hover'}`
-              }
-              onClick={(e) => menuItemClick(e, item.key)}
-            >
-              {
-                // TODO 目前是三种双重状态，如果后续双重状态的选项太多,再封装一个组件
-                (item.key === 'lock' && isLock) ||
-                  (item.key === 'singleShowLayer' && isSingleShow) ||
-                  (item.key === 'hidden' && !isShowOrHidden)
-                  ? <IconFont style={{ fontSize: '10px' }} type={`icon-${item.anotherIcon}`} />
-                  : <IconFont style={{ fontSize: '10px' }} type={`icon-${item.icon}`} />
-              }
-              <li className={`menu-item-li`}>
-                {
-                  (item.key === 'lock' && isLock) ||
-                    (item.key === 'singleShowLayer' && isSingleShow) ||
-                    (item.key === 'hidden' && !isShowOrHidden)
-                    ? item.anotherName
-                    : item.name
-                }
-                {
-                  hasLevel && <SecondMenu data={item.children} />
-                }
-              </li>
-              {/* 右三角图标 */}
-              {
-                hasLevel && <span className='right-icon'>
-                  {
-                    React.createElement(Icons.CaretRightOutlined)
-                  }</span>
-              }
-            </div>
-          )
-        })
+                    }
+                    onClick={(e) => menuItemClick(e, item.key)}
+                  >
+                    {
+                      // TODO 目前是三种双重状态，如果后续双重状态的选项太多,再封装一个组件
+                      (item.key === 'lock' && isLock) ||
+                        (item.key === 'singleShowLayer' && isSingleShow) ||
+                        (item.key === 'hidden' && !isShowOrHidden)
+                        ? <IconFont style={{ fontSize: '10px' }} type={`icon-${item.anotherIcon}`} />
+                        : <IconFont style={{ fontSize: '10px' }} type={`icon-${item.icon}`} />
+                    }
+                    <li className={`menu-item-li`}>
+                      {
+                        (item.key === 'lock' && isLock) ||
+                          (item.key === 'singleShowLayer' && isSingleShow) ||
+                          (item.key === 'hidden' && !isShowOrHidden)
+                          ? item.anotherName
+                          : item.name
+                      }
+                      {
+                        hasLevel && <SecondMenu data={item.children} />
+                      }
+                    </li>
+                    {/* 右三角图标 */}
+                    {
+                      hasLevel && <span className='right-icon'>
+                        {
+                          React.createElement(Icons.CaretRightOutlined)
+                        }</span>
+                    }
+                  </div>
+                )
+              })
+            }
+          </div>
+          : null
       }
-    </div>
+      <Modal
+        title='复制到大屏'
+        className="corss-copy-modal"
+        destroyOnClose={true}
+        visible={showCorssCopyModal}
+        onCancel={cancelCorssCopyModal}
+        footer={[
+          <div className='custom-btn-wrap'>
+            <Button className='my-btn cancel-btn' onClickCapture={cancelCorssCopyModal}>取消</Button>
+            <Button className='my-btn confirm-btn' type="primary" onClickCapture={confirmCorssCopy}>确定</Button>
+          </div>
+        ]}
+        style={{
+          top: "30%"
+        }}
+      >
+        <Form
+          labelCol={{
+            span: 5,
+          }}
+          layout="horizontal"
+          name='releaseForm'
+          className="move-from"
+        >
+          <Form.Item
+          >
+            <Select onSelect={selectDashboard} placeholder="请选择">
+              {
+                dashboardList.map((item) =>
+                (<Option key={item.id} value={item.id}>      {item.name}
+                </Option>)
+                )
+              }
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </React.Fragment>
   )
 }
 
