@@ -1,0 +1,10 @@
+{
+  "name": "swiperText",
+  "version": "1.0.2",
+  "private": true,
+  "dependencies": {
+    "react": "17.0.2",
+    "Swiper": "5.4.5"
+  },
+  "devDependencies": {}
+}
