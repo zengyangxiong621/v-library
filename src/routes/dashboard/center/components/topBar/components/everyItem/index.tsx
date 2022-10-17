@@ -30,6 +30,7 @@ const EveryItem = (props: any) => {
         ComponentDefaultConfig.staticData.data[0].url = dataCopy.downloadUrl;
         ComponentDefaultConfig.config[1].value = dataCopy.downloadUrl;
       }
+      ComponentDefaultConfig.name = dataCopy.name;
       dispatch({
         type: "bar/createComponent",
         payload: ComponentDefaultConfig,
