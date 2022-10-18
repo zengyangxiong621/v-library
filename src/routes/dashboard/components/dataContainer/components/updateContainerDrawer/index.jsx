@@ -1,14 +1,15 @@
-import React, {memo, useState, useEffect, useRef} from 'react'
+import React, { memo, useState, useEffect, useRef } from 'react'
 import './index.less'
-import {Drawer, Input, message} from 'antd'
-import {connect} from 'dva'
-import {http} from '../../../../../../services/request'
+import { Drawer, Input, message } from 'antd'
+import { connect } from 'dva'
+import { http } from '../../../../../../services/request'
 import DataSourceConfig from '../../../../right/components/dataConfig/dataSourceConfig'
 import DataResult from '../../../../right/components/dataConfig/dataResult'
-import {CloseOutlined, LeftOutlined} from '@ant-design/icons'
+import { CloseOutlined, LeftOutlined } from '@ant-design/icons'
 import useLoading from '@/components/useLoading'
 import DataFilter from "@/routes/dashboard/right/components/dataConfig/dataFilter";
 import DataAutoUpdate from "@/routes/dashboard/right/components/dataConfig/dataAutoUpdate";
+import cloneDeep from "lodash/cloneDeep";
 
 const testData = {
   'name': '容器名称', // 容器名字
@@ -38,7 +39,7 @@ const testData = {
   'useFilter': false, // 是否启用过滤器
   'filters': [],
 }
-const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
+const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   const inputRef = useRef(null)
   const [copyData, setCopyData] = useState(testData)
   const [resultData, setResultData] = useState([])
@@ -111,8 +112,8 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
   // 数据类型切换
   const handleDataTypeChange = async (value) => {
-    setCopyData({...copyData, dataType: value})
-    await updateDataContainer({...copyData, dataType: value})
+    setCopyData({ ...copyData, dataType: value })
+    await updateDataContainer({ ...copyData, dataType: value })
     if (value === 'static') {
       const data = copyData.staticData.data
       if (copyData.useFilter) {
@@ -137,7 +138,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         dispatch({
           type: 'bar/updateDataContainer',
           payload: {
-            containerData: {...copyData, dataType: value},
+            containerData: { ...copyData, dataType: value },
           }
         })
         if (copyData.useFilter) {
@@ -189,7 +190,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
   }
 
   // 数据接口刷新
-  const getData = async (dataConfig={}) => {
+  const getData = async (dataConfig = {}) => {
     try {
       const data = await http({
         method: 'post',
@@ -204,7 +205,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
         dispatch({
           type: 'bar/updateDataContainer',
           payload: {
-            containerData: {...copyData, dataConfig},
+            containerData: { ...copyData, dataConfig },
             data
           }
         })
@@ -224,25 +225,25 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
 
   // 自动更新数据变化
   const handleAutoUpdateChange = async (autoUpdate) => {
-    setCopyData({...copyData, autoUpdate})
-    await updateDataContainer({...copyData, autoUpdate})
+    setCopyData({ ...copyData, autoUpdate })
+    await updateDataContainer({ ...copyData, autoUpdate })
     await getData()
   }
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
-    setCopyData({...copyData, dataConfig})
-    await updateDataContainer({...copyData, data: dataConfig[copyData.dataType].data})
+    setCopyData({ ...copyData, dataConfig })
+    await updateDataContainer({ ...copyData, data: dataConfig[copyData.dataType].data })
     await getData()
   }
 
   // 数据过滤器开关
   const filterBoxChange = async (e) => {
-    setCopyData({...copyData, useFilter: e.target.checked})
-    await updateDataContainer({...copyData, useFilter: e.target.checked})
+    setCopyData({ ...copyData, useFilter: e.target.checked })
+    await updateDataContainer({ ...copyData, useFilter: e.target.checked })
     dispatch({
       type: 'bar/updateDataContainer',
       payload: {
-        containerData: {...copyData, useFilter: e.target.checked},
+        containerData: { ...copyData, useFilter: e.target.checked },
       }
     })
     let data = bar.dataContainerDataList.find(item => item.id === copyData.id).data
@@ -271,11 +272,11 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       }
     })
     let containerData = bar.dataContainerDataList.find(item => item.id === copyData.id).data
-    containerData = handleDataFilter(containerData, data.filters, componentFilters,bar.callbackArgs)
+    containerData = handleDataFilter(containerData, data.filters, componentFilters, bar.callbackArgs)
     setResultData(containerData)
   }
   // 数据过滤
-  const handleDataFilter = (data, allFilters, componentFilters = null,callbackArgs) => {
+  const handleDataFilter = (data, allFilters, componentFilters = null, callbackArgs) => {
     const filters = allFilters.map(item => {
       const filterDetail = (componentFilters || bar.componentFilters).find(jtem => jtem.id === item.id)
       return {
@@ -299,16 +300,15 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           }
         }, {})
         if (index === 0) {
-          resultArr.push(fn(data,cbArgs))
+          resultArr.push(fn(cloneDeep(data), cbArgs))
         } else {
-          resultArr.push(fn(resultArr[index - 1],cbArgs))
+          resultArr.push(fn(resultArr[index - 1], cbArgs))
         }
       })
       return resultArr[resultArr.length - 1]
     } catch (e) {
       return []
     }
-    return []
   }
   // 更新过滤器
   const updateFilters = (data) => {
@@ -316,7 +316,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     containerData = handleDataFilter(containerData, copyData.filters)
     setResultData(containerData)
   }
-  const deleteFilters = async ({id}) => {
+  const deleteFilters = async ({ id }) => {
     // 删除过滤器
     const data = await http({
       method: 'post',
@@ -341,7 +341,7 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     setResultData(containerData)
   }
   // bindFilters
-  const bindFilters = async ({id}, status) => {
+  const bindFilters = async ({ id }, status) => {
     // 绑定过滤器
     const data = await http({
       method: 'post',
@@ -377,9 +377,9 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
     <Drawer
       title={
         <div className="g-relative g-text-base g-px-2 g-flex g-justify-between g-items-center">
-          <LeftOutlined onClick={onClose} className="g-cursor-pointer" style={{fontSize: 12}}/>
+          <LeftOutlined onClick={onClose} className="g-cursor-pointer" style={{ fontSize: 12 }} />
           数据容器
-          <CloseOutlined onClick={onClose} className="g-cursor-pointer"/>
+          <CloseOutlined onClick={onClose} className="g-cursor-pointer" />
         </div>
       }
       closable={false}
@@ -389,16 +389,16 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
       visible={props.visible}
       className="update-data-container-drawer"
       getContainer={false}
-      style={{position: 'absolute'}}
+      style={{ position: 'absolute' }}
       // maskStyle={{opacity: 0, animation: 'unset'}}
-      maskStyle={{ animation: 'unset'}}
+      maskStyle={{ animation: 'unset' }}
     >
       <div className="loading-wrapper">
         <Input
           ref={inputRef}
           value={copyData.name}
           maxLength={30}
-          onChange={(e) => setCopyData({...copyData, name: e.target.value})}
+          onChange={(e) => setCopyData({ ...copyData, name: e.target.value })}
           onPressEnter={() => {
             updateDataContainerName(copyData)
           }}
@@ -426,11 +426,11 @@ const UpdateContainerDrawer = ({bar, dispatch, ...props}) => {
           onBindFilters={bindFilters}
           resultData={resultData}
         />
-        <DataResult data={copyData} resultData={resultData} type="component"/>
+        <DataResult data={copyData} resultData={resultData} type="component" />
 
       </div>
     </Drawer>
   )
 }
 
-export default connect(({bar}) => ({bar}))(UpdateContainerDrawer)
+export default connect(({ bar }) => ({ bar }))(UpdateContainerDrawer)

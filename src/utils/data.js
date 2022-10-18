@@ -66,7 +66,7 @@ const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs
           };
         }, {});
         if (index === 0) {
-          resultArr.push(fn(data, cbArgs, crossCallback))
+          resultArr.push(fn(cloneDeep(data), cbArgs, crossCallback))
         } else {
           resultArr.push(fn(resultArr[index - 1], cbArgs, crossCallback))
         }
@@ -107,7 +107,7 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
       }, {});
 
       if (index === 0) {
-        resultArr.push(fn(data, cbArgs));
+        resultArr.push(fn(cloneDeep(data), cbArgs));
       } else {
         resultArr.push(fn(resultArr[index - 1], cbArgs));
       }
