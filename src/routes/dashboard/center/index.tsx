@@ -306,17 +306,17 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   useKeyPress(["leftarrow"], (event) => {
     if (bar.key.length === 0) return
-
-    if (event.type === "keydown") {
-      console.log('----向左-----')
-      handleComponentDrag(-1, 0)
-      handleScaleDragComDrag(-1, 0)
-      handleSupportLineDrag()
-      // 重新给 transform 赋值
-    } else {
-      console.log('触发1')
-      handleComponentDragStop()
+    if (event.target === document.body) {
+      if (event.type === "keydown") {
+        handleComponentDrag(-1, 0)
+        handleScaleDragComDrag(-1, 0)
+        handleSupportLineDrag()
+        // 重新给 transform 赋值
+      } else {
+        handleComponentDragStop()
+      }
     }
+
   }, {
     events: ["keydown", "keyup"],
     exactMatch: true,
@@ -325,18 +325,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   useKeyPress(["uparrow"], (event) => {
     if (bar.key.length === 0) return
-
-    if (event.type === "keydown") {
-      console.log('----向上-----')
-      handleComponentDrag(0, -1)
-      handleScaleDragComDrag(0, -1)
-      handleSupportLineDrag()
-
-
-    } else {
-      handleComponentDragStop()
-
+    if (event.target === document.body) {
+      if (event.type === "keydown") {
+        handleComponentDrag(0, -1)
+        handleScaleDragComDrag(0, -1)
+        handleSupportLineDrag()
+      } else {
+        handleComponentDragStop()
+      }
     }
+
   }, {
     events: ["keydown", "keyup"],
     exactMatch: true,
@@ -345,18 +343,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   useKeyPress(["rightarrow"], (event) => {
     if (bar.key.length === 0) return
-
-    if (event.type === "keydown") {
-      console.log('----向右-----')
-      handleComponentDrag(1, 0)
-      handleScaleDragComDrag(1, 0)
-      handleSupportLineDrag()
-
-
-    } else {
-      handleComponentDragStop()
-
+    if (event.target === document.body) {
+      if (event.type === "keydown") {
+        handleComponentDrag(1, 0)
+        handleScaleDragComDrag(1, 0)
+        handleSupportLineDrag()
+      } else {
+        handleComponentDragStop()
+      }
     }
+
   }, {
     events: ["keydown", "keyup"],
     exactMatch: true,
@@ -365,35 +361,25 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   useKeyPress(["downarrow"], (event) => {
     if (bar.key.length === 0) return
-
-    if (event.type === "keydown") {
-      console.log('----向下-----')
-      handleComponentDrag(0, 1)
-      handleScaleDragComDrag(0, 1)
-      handleSupportLineDrag()
-
-
-    } else {
-      handleComponentDragStop()
-
+    if (event.target === document.body) {
+      if (event.type === "keydown") {
+        handleComponentDrag(0, 1)
+        handleScaleDragComDrag(0, 1)
+        handleSupportLineDrag()
+      } else {
+        handleComponentDragStop()
+      }
     }
   }, {
     events: ["keydown", "keyup"],
     exactMatch: true,
-
   });
 
   // 删除
   useKeyPress(["Backspace"], (event) => {
     if (bar.key.length === 0) return
-    console.log('==============')
-
-    console.log('isKeyForDelete.current', isKeyForDelete.current)
-    console.log('event.type', event.type)
     if (event.type === "keydown") {
       if (!isKeyForDelete.current) {
-        console.log('event.target ', event.target)
-        console.log('event.target ', event.target === document.body)
         if (event.target === document.body) {
           dispatch({
             type: 'bar/delete',
@@ -409,10 +395,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         isKeyForDelete.current = true
       }
     } else {
-      console.log('这里不触发一下')
       isKeyForDelete.current = false
-      console.log('isKeyForDelete.current', isKeyForDelete.current)
-      console.log('==============')
     }
   }, {
     events: ["keydown", "keyup"],
@@ -422,18 +405,17 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   // 复制
   useKeyPress(["ctrl.c"], (event) => {
     if (bar.key.length === 0) return
-
     if (event.type === "keydown") {
-      console.log('没说法？')
       if (!isKeyForCopy.current) {
-        console.log('复制')
-        dispatch({
-          type: "bar/save",
-          payload: {
-            copyComponentConfigs: bar.selectedComponentOrGroup,
-            copyComponentKey: bar.key
-          }
-        })
+        if (event.target === document.body) {
+          dispatch({
+            type: "bar/save",
+            payload: {
+              copyComponentConfigs: bar.selectedComponentOrGroup,
+              copyComponentKey: bar.key
+            }
+          })
+        }
         isKeyForCopy.current = true
       }
     } else {
@@ -448,22 +430,29 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   useKeyPress(["ctrl.v"], (event) => {
     if (event.type === "keydown") {
       if (!isKeyForStick.current) {
-        console.log('粘贴')
-        dispatch({
-          type: 'bar/copy',
-          payload: {
-            dashboardId: bar.stateId || bar.dashboardId,
-            children: [],
-            targetDashboardId: bar.dashboardId,
-            insertId: bar.key[bar.key.length - 1],
-            originLayers: bar.layers,
-            //TODO 改为modules后删除掉这行
-            components: bar.copyComponentKey,
-            // components: [...bar.key],
-            panels: [],
-            selected: bar.copyComponentKey
+        if (event.target === document.body) {
+/*          dispatch({
+            type: "bar/createComponent",
+            payload: bar.selectedComponentOrGroup
+          })*/
+          if (bar.key[bar.key.length - 1] || bar.layers[bar.layers.length - 1]?.id) {
+            dispatch({
+              type: 'bar/copy',
+              payload: {
+                dashboardId: bar.stateId || bar.dashboardId,
+                children: [],
+                targetDashboardId: bar.dashboardId,
+                insertId: bar.key[bar.key.length - 1] || bar.layers[bar.layers.length - 1]?.id || "",
+                originLayers: bar.layers,
+                //TODO 改为modules后删除掉这行
+                components: bar.copyComponentKey,
+                // components: [...bar.key],
+                panels: [],
+                selected: bar.copyComponentKey
+              }
+            })
           }
-        })
+        }
         isKeyForStick.current = true
       }
     } else {
@@ -472,7 +461,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }, {
     events: ["keydown", "keyup"],
     exactMatch: true,
-
   });
 
   // 成组
@@ -481,16 +469,15 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     event.preventDefault()
     if (bar.key.length === 0) return
     if (event.type === "keydown") {
-      console.log('哈哈哈哈')
       if (!isKeyForGroup.current) {
-        console.log('成组')
-        dispatch({
-          type: 'bar/group',
-        })
+        if (event.target === document.body) {
+          dispatch({
+            type: 'bar/group',
+          })
+        }
         isKeyForGroup.current = true
       }
     } else {
-      console.log('松开了吗')
       isKeyForGroup.current = false
     }
   }, {
@@ -504,9 +491,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     if (bar.key.length === 0) return
     if (event.type === "keydown") {
       if (!isKeyForCancelGroup.current) {
-        dispatch({
-          type: 'bar/cancelGroup',
-        })
+        if (event.target === document.body) {
+          dispatch({
+            type: 'bar/cancelGroup',
+          })
+        }
         isKeyForCancelGroup.current = true
       }
     } else {
