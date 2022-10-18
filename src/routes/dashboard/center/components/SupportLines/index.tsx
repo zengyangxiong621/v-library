@@ -31,6 +31,11 @@ const SupportLines = ({ bar, cRef }: SupportLineProperty) => {
       const top = Number(dom.style.top.replace("px", ""))
       dom.style.left = left + x + "px";
       dom.style.top = top + y + "px";
+      setStyle({
+        left: left + x,
+        top: top + y,
+        display: "block"
+      })
     },
   }))
 

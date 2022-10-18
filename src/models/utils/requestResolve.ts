@@ -19,14 +19,17 @@ export const getDeepPanelAndStatusDetails = async (layerPanels: Array<{id: strin
     layerPanels.map((item: any) => getPanelConfigFunc(item))
   );
   panels = panels.filter((item) => item);
+  console.log("panels", panels)
   fullAmountDashboardDetails = fullAmountDashboardDetails.concat(panels);
   const panelsStatusDetail = await allPanelStatusDetailsFunc(panels);
   fullAmountDashboardDetails = fullAmountDashboardDetails.concat(panelsStatusDetail);
+  console.log('这里看看')
+  console.log('panelsStatusDetail', panelsStatusDetail)
   for (const detail of panelsStatusDetail) {
     const layers = detail.layers;
     // @ts-ignore
     const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]);
-    await getDeepPanelAndStatusDetails(layerPanels, fullAmountDashboardDetails);
+    fullAmountDashboardDetails = await getDeepPanelAndStatusDetails(layerPanels, fullAmountDashboardDetails);
   }
   return fullAmountDashboardDetails
 };

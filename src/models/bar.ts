@@ -805,6 +805,8 @@ export default {
         },
       });
       // layers 永远是最后再保存的
+      console.log('冬天')
+      console.log('layers', layers)
       yield put({
         type: "updateTree",
         payload: layers,
@@ -848,15 +850,21 @@ export default {
         // 复制，新增过来的话，需要对复制和新增的面板进行请求
         console.log("panels", panels);
         // 获取面板+状态详情
+        console.log('------------')
+        console.log('fullAmountDashboardDetails1', fullAmountDashboardDetails)
         fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(
           panels,
           fullAmountDashboardDetails
         );
+        console.log('------------')
+        console.log('fullAmountDashboardDetails2', fullAmountDashboardDetails)
         // 重新获取全量面板
         const fullAmountPanels = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
           []
         );
+        console.log("春天")
+        console.log('fullAmountPanels', fullAmountPanels)
         // 重新获取全量组件
         const fullAmountComponents = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
@@ -945,7 +953,7 @@ export default {
         },
       });
     },
-    *selectLayers({ payload }: any, { call, put }: any): any {
+    *selectLayers({ payload }: any, { call, put, select }: any): any {
       yield put({
         type: "clearLayersSelectedStatus",
       });
@@ -996,7 +1004,7 @@ export default {
         method: "post",
         body: {
           dashboardId: isPanel ? stateId : dashboardId,
-          component: { ...payload, moduleType: itemData.moduleType },
+          component: { moduleType: itemData?.moduleType || "", ...payload },
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
@@ -1791,7 +1799,6 @@ export default {
       let xPositionList: number[] = [];
       let yPositionList: number[] = [];
       let status: "分组" | "多组件" = "分组";
-      console.log("state.selectedComponentOrGroup", state.selectedComponentOrGroup);
       if (state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in firstLayer) {
