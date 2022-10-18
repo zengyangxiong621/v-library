@@ -161,7 +161,7 @@ const CustomDraggable
       bar.selectedComponentDOMs = {}
       bar.selectedComponentRefs = {}
       bar.dragStatus = "一组件";
-      bar.supportLinesRef.handleSetPosition(bar.scaleDragData.position.x, bar.scaleDragData.position.y)
+      bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
 
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
@@ -180,6 +180,7 @@ const CustomDraggable
       }
       if ("panelType" in layer) {
         bar.dragStatus = "一面板";
+        bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
         dispatch({
           type: "bar/save",
           payload: {
@@ -192,17 +193,21 @@ const CustomDraggable
             },
           },
         });
+
       }
       if (bar.selectedComponentOrGroup.length > 1) {
         // 注意一下
         // 选中多个组件、或者多个分组时
         bar.dragStatus = "多个";
+        bar.supportLinesRef.handleSetPosition(bar.scaleDragData.position.x, bar.scaleDragData.position.y)
 
       } else {
         // 当选中了一个分组时，或者没有选中时
         if (COMPONENTS in layer) {
           bar.dragStatus = "一分组";
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
+          bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
+
           dispatch({
             type: "bar/save",
             payload: {

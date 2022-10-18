@@ -2826,6 +2826,8 @@ export const defaultData = {
   allDashboardList: [],
   componentThemeConfig: null,  // 当前的组件主题配置
   fullAmountLayers: [],
+  fullAmountPanels: [],
+  fullAmountComponents: [],
   fullAmountDashboardDetails: [],
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: [],

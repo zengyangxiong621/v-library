@@ -54,7 +54,14 @@ const StateItem = (props: any) => {
       <div>
         {
           editState ?
-            <div>
+            <div
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+
+              }}
+            >
               <Input
                 style={{ background: '#232630' }}
                 value={inputValue}
