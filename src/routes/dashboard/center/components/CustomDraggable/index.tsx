@@ -161,12 +161,9 @@ const CustomDraggable
       bar.selectedComponentDOMs = {}
       bar.selectedComponentRefs = {}
       bar.dragStatus = "一组件";
-      bar.scaleDragData.style.display = "none"
-      bar.scaleDragCompRef.handleSetDisplay("none")
-      bar.supportLinesRef.handleSetCompBorderStyle(bar.scaleDragCompRef.getSize())
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
-/*        dispatch({
+        dispatch({
           type: "bar/save",
           payload: {
             scaleDragData: {
@@ -177,20 +174,46 @@ const CustomDraggable
               },
             },
           },
-        });*/
+        });
       }
       if ("panelType" in layer) {
         bar.dragStatus = "一面板";
+        dispatch({
+          type: "bar/save",
+          payload: {
+            scaleDragData: {
+              position: config.position,
+              style: {
+                display: "block",
+                ...config.style,
+              },
+            },
+          },
+        });
       }
       if (bar.selectedComponentOrGroup.length > 1) {
         // 注意一下
         // 选中多个组件、或者多个分组时
         bar.dragStatus = "多个";
+        bar.supportLinesRef.handleSetCompBorderStyle(bar.scaleDragCompRef.getSize())
+
       } else {
         // 当选中了一个分组时，或者没有选中时
         if (COMPONENTS in layer) {
           bar.dragStatus = "一分组";
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
+          dispatch({
+            type: "bar/save",
+            payload: {
+              scaleDragData: {
+                position: config.position,
+                style: {
+                  display: "block",
+                  ...config.style,
+                },
+              },
+            },
+          });
         }
       }
       Object.keys(bar.allComponentRefs).forEach((key) => {
@@ -200,24 +223,12 @@ const CustomDraggable
         }
       });
       bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))];
-      dispatch({
-        type: "bar/save",
-        payload: {
-          scaleDragData: {
-            position: config.position,
-            style: {
-              display: "none",
-              ...config.style,
-            },
-          },
-        },
-      });
+
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       console.log('拖拽中')
       ev.stopPropagation();
-      bar.scaleDragData.style.display = "none"
-      bar.scaleDragCompRef.handleSetDisplay("none")
+      bar.scaleDragData.style.display = "block"
 
       // console.log('dragging', layer)
       // 向上取整
@@ -225,48 +236,11 @@ const CustomDraggable
       let aroundY = Math.ceil(data.y);
       const xMoveLength = data.x - data.lastX;
       const yMoveLength = data.y - data.lastY;
-      // bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
+      bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
       // const {x: scaleDragX, y: scaleDragY } =  bar.scaleDragCompRef.getPosition()
       // bar.scaleDragCompRef.handleSetPosition(scaleDragX + xMoveLength, scaleDragY + yMoveLength)
+      bar.supportLinesRef.handleMovePosition(xMoveLength, yMoveLength);
       if (bar.dragStatus === "多个") {
-        const xPositionList: number[] = [];
-        const yPositionList: number[] = [];
-        bar.selectedComponents.forEach((item: IComponent | IPanel) => {
-          if ("type" in item) {
-            const { config: { left, top, width, height } } = item;
-            xPositionList.push(left, left + width);
-            yPositionList.push(top, top + height);
-          } else {
-            const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION);
-            if (styleDimensionConfig) {
-              const config: IConfig = {
-                position: {
-                  x: 0,
-                  y: 0,
-                },
-                style: {
-                  width: 0,
-                  height: 0,
-                },
-              };
-              Object.values(styleDimensionConfig.value).forEach((obj: any) => {
-                if ([TOP, LEFT].includes(obj.name)) {
-                  config.position[obj.name === TOP ? "y" : "x"] = obj.value;
-                } else if ([WIDTH, HEIGHT].includes(obj.name)) {
-                  config.style[obj.name === WIDTH ? "width" : "height"] = obj.value;
-                }
-              });
-              xPositionList.push(config.position.x, config.position.x + config.style.width);
-              yPositionList.push(config.position.y, config.position.y + config.style.height);
-            }
-          }
-
-        });
-        xPositionList.sort((a, b) => a - b);
-        yPositionList.sort((a, b) => a - b);
-        // console.log('应该处在的位置', { left: xPositionList[0], top: yPositionList[0] })
-        aroundX = xPositionList[0]
-        aroundY = yPositionList[0]
         Object.keys(bar.selectedComponentRefs).forEach(key => {
           if (key.indexOf("group") !== -1) {
             delete bar.selectedComponentRefs[key];

@@ -43,10 +43,6 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       dom.style.left = x + "px";
       dom.style.top = y + "px";
     },
-    handleSetDisplay(display: "none" | "block") {
-      const dom = scaleDragRef.current
-      dom.style.display = display
-    },
     getPosition() {
       return {
         x: scaleDragRef.current.style.left.replace('px', ''),

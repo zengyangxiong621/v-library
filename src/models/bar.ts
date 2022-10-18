@@ -966,6 +966,21 @@ export default {
       { payload, itemData, createType = "component" }: any,
       { call, put, select }: any
     ): any {
+      // payload: componentConfig
+      // itemData: {
+      //     "id": "1572837580021534721",
+      //     "name": "常规表格",
+      //     "moduleName": "normalTable",
+      //     "moduleVersion": "1.0.5",
+      //     "photoPath": "http://10.201.83.166:35034/modules//table/normalTable/1.0.5/thumb-normalTable.png",
+      //     "configUrl": "\\config.js",
+      //     "moduleType": "table",
+      //     "subModuleType": null,
+      //     "downloadUrl": "http://10.201.81.47:9000/soc-visualization-public/modules/dist.zip",
+      //     "updatedAt": "2022-09-22 14:37:55",
+      //     "updatedBy": "admin",
+      //     "status": 0
+      // }
       const state: any = yield select((state: any) => state);
       const { isPanel, stateId, dashboardId } = state.bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
