@@ -2832,6 +2832,7 @@ export const defaultData = {
   copyComponentConfigs: [],
   copyComponentKey: [],
   routeList: [], // 路由集合，只收集当前应用路由和面板路由
+  drilldownStateLists: []
 }
 
 export interface IBarState {
@@ -2906,5 +2907,6 @@ export interface IBarState {
     type: 'state' | 'dashboard',
     id: string,
     url: string
-  }>
+  }>,
+  drilldownStateLists: any
 }
