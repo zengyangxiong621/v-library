@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 import ComponentDefaultConfig from './config'
+import {CaretRightOutlined} from '@ant-design/icons'
+import './index.less'
 
 const Media=(props)=>{
   const componentConfig = props.componentConfig || ComponentDefaultConfig
@@ -38,6 +40,16 @@ const Media=(props)=>{
     autoPlaying && setMediaAutoPlaying(true)
   },[autoPlaying])
 
+  const PlayBtn=()=>{
+    const handleToPlay=()=>{
+      setMediaAutoPlaying(true)
+    }
+    return (
+      <div className='playBtn' onClick={handleToPlay}>
+        <CaretRightOutlined />
+      </div>
+    )
+  }
   return hideDefault ? (<></>) : (
     <div className='videoContainer'>
       <ReactPlayer
@@ -46,10 +58,12 @@ const Media=(props)=>{
         height={`${height}px`}
         loop={Loop}
         muted={Muted}
-        light={!(autoPlaying || controls) && !MediaAutoPlaying}
         controls={controls}
         url={getMediaUrl()}
       />
+      {
+        !(autoPlaying || controls) && !MediaAutoPlaying ? (<PlayBtn></PlayBtn>):null
+      }
     </div>
   )
 }

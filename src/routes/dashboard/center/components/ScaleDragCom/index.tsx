@@ -25,7 +25,7 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
   const scaleDragData = bar.scaleDragData;
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
-    handleSetPosition: (x: number, y: number) => {
+    handleMovePosition: (x: number, y: number) => {
       // const translateArr = nodeRef.current.style.transform.replace('translate(', '').replace(')', '').replaceAll('px', '').split(', ')
       // const translateX = Number(translateArr[0])
       // const translateY = Number(translateArr[1])
@@ -34,14 +34,29 @@ const ScaleDragCom = ({ bar, dispatch, cRef, mouse, onScaleEnd }: any) => {
       const top = Number(dom.style.top.replace("px", ""))
       dom.style.left = left + x + "px";
       dom.style.top = top + y + "px";
-      bar.scaleDragData.position.x = left + x
-      bar.scaleDragData.position.y = top + y
+/*      bar.scaleDragData.position.x = left + x
+      bar.scaleDragData.position.y = top + y*/
       // nodeRef.current.style.transform = `translate(${ translateX + x }px, ${ translateY + y }px)`
+    },
+    handleSetPosition(x: number, y: number) {
+      const dom = scaleDragRef.current
+      dom.style.left = x + "px";
+      dom.style.top = y + "px";
+    },
+    handleSetDisplay(display: "none" | "block") {
+      const dom = scaleDragRef.current
+      dom.style.display = display
     },
     getPosition() {
       return {
         x: scaleDragRef.current.style.left.replace('px', ''),
         y: scaleDragRef.current.style.top.replace('px', '')
+      }
+    },
+    getSize() {
+      return {
+        width: scaleDragRef.current.style.width.replace('px', ''),
+        height: scaleDragRef.current.style.height.replace('px', '')
       }
     }
   }));
