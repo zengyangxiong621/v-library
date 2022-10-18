@@ -16,7 +16,8 @@ import {
   Modal,
   Checkbox,
   Tag,
-  Popover
+  Popover,
+  message
 } from 'antd';
 
 import {
@@ -488,6 +489,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           }
         })
         await props.onSelectedFiltersChange(data.id, componentFilters)
+        message.success('保存成功')
       } else {
         // 把过滤器添加到当前组件
         const res = await http({
@@ -519,6 +521,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           type: 'bar/setComponentConfig',
           payload: componentConfig
         })
+        message.success('保存成功')
       }
       // 更新过滤器信息
 
@@ -564,6 +567,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         props.onUpdateFilters(data)
       }
     }
+    message.success('保存成功')
   }
 
   const arrayMove = (array, from, to) => {

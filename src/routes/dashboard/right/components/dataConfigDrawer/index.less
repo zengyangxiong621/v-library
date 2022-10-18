@@ -46,7 +46,6 @@
     padding: 18px 16px;
     overflow: auto;
   }
-
 }
 
 .cus-fifter-sort-item {
@@ -108,8 +107,8 @@
   .cus-fifter-sort-dot {
     position: absolute;
     z-index: 1;
-    left: 8px;
-    top: 6px;
+    left: -4px;
+    top: 3px;
     color: #fff;
     cursor: pointer;
 
@@ -120,9 +119,10 @@
   }
 
   .ant-collapse-header {
-    background-color: @headerBgColor  !important;
+    background-color: @headerBgColor !important;
     padding: 2px 6px 2px 60px !important;
     line-height: 32px !important;
+    align-items: center !important;
 
     &:hover {
       .anticon-edit {
@@ -206,7 +206,6 @@
           color: #fff;
         }
       }
-
     }
   }
 
@@ -218,8 +217,8 @@
 
   .sort-box {
     position: absolute;
-    left: 30px;
-    top: 10px;
+    left: 18px;
+    top: 6px;
     z-index: 1;
   }
 
@@ -232,11 +231,11 @@
   width: 176px;
 
   .ant-popover-inner {
-    background: #13141D;
+    background: #13141d;
   }
 
   .ant-popover-arrow-content {
-    background: #13141D;
+    background: #13141d;
 
     &::before {
       background: none;

@@ -5,6 +5,7 @@ import { Select, Button, Tabs, Tooltip } from 'antd'
 import { http } from '../../../../../services/request'
 import UpdateContainerDrawer from '../../../components/dataContainer/components/updateContainerDrawer'
 import CodeEditor from '../codeEditor'
+import cloneDeep from "lodash/cloneDeep";
 
 const { Option } = Select
 const { TabPane } = Tabs
@@ -116,7 +117,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
           }
         }, {})
         if (index === 0) {
-          resultArr.push(fn(data, cbArgs))
+          resultArr.push(fn(cloneDeep(data), cbArgs))
         } else {
           resultArr.push(fn(resultArr[index - 1], cbArgs))
         }
