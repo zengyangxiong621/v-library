@@ -307,7 +307,7 @@ function App({ bar, dispatch, location, history }: any) {
   };
   const handleRBvailableChange = (bool: boolean) => {
     setRecycleBinVisible(bool);
-    if(!bool) setIsResetActiveIcon(true)
+    if (!bool) setIsResetActiveIcon(true)
   }
 
   return (
@@ -339,6 +339,8 @@ function App({ bar, dispatch, location, history }: any) {
           <ComponentTheme visible={componentThemeVisible} onChange={handleComponentThemeAvailableChange} />
           <RecycleBin visible={recycleBinVisible} onChange={handleRBvailableChange} />
         </div>
+      </div>
+      <div>
         {
           (bar.isShowRightMenu || bar.isCopyComponentToDashboard) &&
           <CenterRightMenu menuOptions={customMenuOptions} hideMenu={hideMenu} />
