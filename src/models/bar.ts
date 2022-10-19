@@ -752,15 +752,16 @@ export default {
             type: "updateTree",
             payload: filterNullLayers.layers,
           });
-          yield put({
-            type: "clearAllStatus",
-          });
+
           yield put({
             type: "deleteComponentData",
             payload: { id: payload.id },
           });
           yield put({
             type: "updateContainersEnableAndModules",
+          });
+          yield put({
+            type: "clearAllStatus",
           });
           // yield put({
           //   type: 'deleteSomeLayersFromFullAmountLayers',
