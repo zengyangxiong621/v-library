@@ -2086,7 +2086,6 @@ export default {
       }
       // 将选中的 layer 中的包含的所有 component 的 id 提取出来
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
-      console.log("selectedComponentIds", state.selectedComponentIds);
       state.selectedComponentRefs = {};
       state.selectedComponentDOMs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
@@ -2128,7 +2127,7 @@ export default {
       // todo 选区的时候会点击到这里
       state.scaleDragData.style.display = "none";
       state.key = [];
-      state.supportLinesRef.handleSetPosition(0, 0, "none");
+      state.supportLinesRef?.handleSetPosition(0, 0, "none");
       return { ...state };
     },
     updateContainersEnableAndModules(state: IBarState, { payload }: any) {
