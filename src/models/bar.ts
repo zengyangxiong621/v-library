@@ -965,7 +965,6 @@ export default {
       yield put({
         type: "setLayerConfig",
       });
-      console.log('哈哈哈2')
       yield put({
         type: "calcDragScaleData",
       });

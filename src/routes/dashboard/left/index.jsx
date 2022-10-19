@@ -325,21 +325,22 @@ const Left = ({ dispatch, bar, operate }) => {
   const [menuInfo, setMenuInfo] = useState({ x: 0, y: 0, id: null, isFolder: false })
   const getCurrentMenuLocation = useCallback((menuInfo) => {
     // setMenuInfo(menuInfo)
-    dispatch({
-      type: 'bar/setRightMenuInfo',
-      payload: menuInfo
-    })
     // 点击右键才渲染菜单
     dispatch({
-      type: 'bar/setIsShowRightMenu',
-      payload: true,
+      type: 'bar/save',
+      payload: {
+        rightMenuInfo: menuInfo,
+        isShowRightMenu: true
+      }
     })
   })
   // 点击右键菜单后，隐藏菜单
   const hideMenu = () => {
     dispatch({
-      type: 'bar/setIsShowRightMenu',
-      payload: false,
+      type: 'bar/save',
+      payload: {
+        isShowRightMenu: false
+      }
     })
   }
 
