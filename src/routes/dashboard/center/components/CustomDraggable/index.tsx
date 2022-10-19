@@ -619,6 +619,7 @@ const CustomDraggable
       // })
     };
     const mouseRightClick = (e: any, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
+      console.log('selectedComponentRefs', bar.selectedComponentRefs)
       if (Object.keys(bar.selectedComponentRefs).length > 1 && layer.id in bar.selectedComponentRefs) {
         bar.isSupportMultiple = true;
         bar.isMultipleTree = true
