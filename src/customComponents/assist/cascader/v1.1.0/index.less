@@ -17,18 +17,19 @@
   background-size: cover;
 }
 /* 选中样式 */
-.component-cascader.ant-select-focused .ant-select-selector{
+.component-cascader.ant-select-focused .ant-select-selector {
   border: var(--borderFocusWidth) var(--borderFocusType) var(--borderFocusColor) !important;
   border-radius: var(--borderFocusRadius) !important;
   /* box-shadow: unset; */
 }
 /* 悬停样式 */
-.component-cascader:hover .ant-select-selector{
+.component-cascader:hover .ant-select-selector {
   border: var(--borderHoverWidth) var(--borderHoverType) var(--borderHoverColor) !important;
   border-radius: var(--borderHoverRadius) !important;
 }
 /* 文本样式 */
-.component-cascader .ant-select-selector .ant-select-selection-search,.component-cascader .ant-select-selector .ant-select-selection-item{
+.component-cascader .ant-select-selector .ant-select-selection-search,
+.component-cascader .ant-select-selector .ant-select-selection-item {
   align-self: center;
   text-align: var(--contentStyleAlign);
   color: var(--contentStylebgColor);
@@ -38,7 +39,8 @@
   line-height: var(--contentStylebgFontSize);
 }
 /* 提示样式 */
-.component-cascader .ant-select-selector .ant-select-selection-placeholder,.component-cascader .ant-select-arrow {
+.component-cascader .ant-select-selector .ant-select-selection-placeholder,
+.component-cascader .ant-select-arrow {
   align-self: center;
   text-align: var(--contentStyleAlign);
   color: #bfbfbf;
@@ -48,7 +50,6 @@
   line-height: var(--contentStylebgFontSize);
 }
 
-
 /* .component-cascader-dropdown {
   min-width: 200px !important;
   width: 200px !important;
@@ -57,22 +58,22 @@
   top: var(--top) !important;
 } */
 
-.component-cascader-dropdown{
+.component-cascader-dropdown {
   /* background: aliceblue; */
 }
 
-.component-cascader-dropdown .ant-cascader-menu{
+.component-cascader-dropdown .ant-cascader-menu {
   height: auto;
   min-width: auto;
+  max-height: 300px;
 }
 
-.component-cascader-dropdown .ant-cascader-menu-empty .ant-cascader-menu-item-disabled{
+.component-cascader-dropdown .ant-cascader-menu-empty .ant-cascader-menu-item-disabled {
   width: 149px !important;
   height: 91px !important;
 }
 
-
-.component-cascader-dropdown .ant-cascader-menu-item{
+.component-cascader-dropdown .ant-cascader-menu-item {
   height: var(--selectHight) !important;
   width: var(--selectWidth) !important;
   /* min-width: var(--selectWidth) !important; */
@@ -83,7 +84,7 @@
   font-family: var(--defaultStyleFontFamily);
 }
 
-.component-cascader-dropdown .ant-cascader-menu-item:hover{
+.component-cascader-dropdown .ant-cascader-menu-item:hover {
   background: var(--hoverStyleBgColor);
   font-size: var(--hoverStyleFontSize);
   font-weight: var(--hoverStyleFontWeight);
@@ -91,11 +92,10 @@
   font-family: var(--hoverStyleFontFamily);
 }
 
-.component-cascader-dropdown .ant-cascader-menu-item-active{
+.component-cascader-dropdown .ant-cascader-menu-item-active {
   background: var(--selectedStyleBgColor);
   font-size: var(--selectedStyleFontSize);
   font-weight: var(--selectedStyleFontWeight);
   color: var(--selectedStyleColor);
   font-family: var(--selectedStyleFontFamily);
 }
-
