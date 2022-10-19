@@ -70,6 +70,18 @@ export const menuOptions = [
     disabled: false,
   },
   {
+    name: "复制组件样式",
+    key: "styleCopy",
+    icon: "fuzhi",
+    disabled: false,
+  },
+  {
+    name: "粘贴组件样式",
+    key: "stylePaste",
+    icon: "quxiaozuhe",
+    disabled: false,
+  },
+  {
     key: "singleShowLayer",
     name:"单独显示图层",
     icon: "danduxianshi",

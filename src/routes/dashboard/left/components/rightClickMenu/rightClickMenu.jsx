@@ -12,6 +12,8 @@ import { filterEmptyGroups } from "@/models/utils/filterEmptyGroups";
 import { connect } from 'dva'
 import { Button, message, Form, Select, Modal } from "antd";
 import * as Icons from '@ant-design/icons'
+import { cloneDeep } from 'lodash';
+import { setComponentCopyConfig, getComponentCopyConfig } from '@/utils/syncJitStorage'
 
 const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   const { Option } = Select;
@@ -102,7 +104,6 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
         }
         break;
       case 'corssCopy':
-        console.log('11111')
         dispatch({
           type: "bar/save",
           payload: {
@@ -110,7 +111,50 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
           },
         });
         setShowCorssCopyModal(true)
-        break
+        break;
+      case 'styleCopy':
+        const currentComponent = cloneDeep(bar.componentConfig)
+        if (!currentComponent.id) {
+          message.warning('请重新点选该组件进行样式复制')
+        } else {
+          setComponentCopyConfig({
+            moduleVersion: currentComponent.moduleVersion,
+            moduleName: currentComponent.moduleName,
+            config: currentComponent.config
+          })
+        }
+        break;
+      case 'stylePaste':
+        const targetComponent = cloneDeep(bar.componentConfig)
+        const sourceStyleConfig = cloneDeep(getComponentCopyConfig())
+        if (!sourceStyleConfig.moduleName) {
+          message.warning('您没有可用于粘贴的样式，请先复制样式')
+        } else {
+          if (!targetComponent.id) {
+            message.warning('请重新点选该组件进行样式粘贴')
+          } else {
+            if (targetComponent.moduleName !== sourceStyleConfig.moduleName) {
+              message.warning('该组件与复制源组件的类型不同，不能粘贴样式')
+            } else if (targetComponent.moduleVersion !== sourceStyleConfig.moduleVersion) {
+              message.warning('该组件与复制源组件的版本不同，不能粘贴样式')
+            } else {
+              saveStyleData({
+                id: targetComponent.id,
+                name: targetComponent.name,
+                moduleName: targetComponent.moduleName,
+                moduleVersion: targetComponent.moduleVersion,
+                config: sourceStyleConfig.config.map(conf => {
+                  if (conf.name === 'dimension') {
+                    return targetComponent.config.find(item => item.name === 'dimension');
+                  } else {
+                    return conf
+                  }
+                }),
+              }, targetComponent)
+            }
+          }
+        }
+        break;
       default:
         break;
     }
@@ -121,6 +165,27 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     // setIsLock(!isLock)
     // 点击后隐藏菜单
     hideMenu()
+  }
+
+  const saveStyleData = async (param, targetComponent) => {
+    const params = {
+      configs: [param],
+      dashboardId: bar.dashboardId
+    }
+    await http({
+      url: '/visual/module/update',
+      method: 'post',
+      body: params
+    })
+    message.success('样式粘贴成功')
+    // 更新bar中组件样式
+    bar.fullAmountComponents.find(item => item.id === param.id).config = param.config
+    const componentConfig = cloneDeep(targetComponent)
+    componentConfig.config = param.config
+    dispatch({
+      type: 'bar/setComponentConfigAndCalcDragScaleData',
+      payload: componentConfig
+    })
   }
   const { x, y } = bar.rightMenuInfo
   // console.log('x y id isFolders', x, y, id, isFolder);
@@ -151,7 +216,6 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   }, [])
   // 获取当前空间下的所有大屏
   const getAllDashboards = () => {
-    console.log('allDashboardList', bar.allDashboardList)
     const allDashboardList = JSON.parse(JSON.stringify(bar.allDashboardList))
     const dashboardListTmp = allDashboardList.filter(dashboard => dashboard.id !== bar.dashboardId)
     setDashboardList(dashboardListTmp)
