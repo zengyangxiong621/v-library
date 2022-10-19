@@ -432,9 +432,6 @@ export default {
           })),
         })
       );
-      console.log("------------------------g------------------------------");
-      console.log("fullAmountDynamicAndDrillDownPanels", fullAmountDynamicAndDrillDownPanels);
-      console.log("------------------------g------------------------------");
       const fullAmountLayers = deepForEach(
         deepClone(layers),
         (
@@ -469,7 +466,25 @@ export default {
       const panels = bar.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
+      enum panelTypeEnum{
+        "dynamicPanel",
+        "referencePanel",
+        "drillDownPanel"
+      }
 
+      const fullAmountRouteList= [
+        {
+          url: `/dashboard/${bar.dashboardId}`,
+          id: bar.dashboardId,
+          type: "dashboard"
+        },
+        ...fullAmountPanels.map((panel: any) => ({
+        url: `/dashboard/${bar.dashboardId}/panel-${panel.id}${panel.states[0].id ? "/" + panel.states[0].id : ""}`,
+        id: panel.id,
+        type: panelTypeEnum[panel.type]
+      }))]
+      console.log('fullAmountRouteList', fullAmountRouteList)
+      console.log('fullAmountLayers', fullAmountLayers)
       yield put({
         type: "save",
         payload: {
@@ -480,7 +495,8 @@ export default {
           fullAmountComponents,
           fullAmountDynamicAndDrillDownPanels,
           fullAmountPanels,
-          drilldownStateLists: curDrilldownStateLists
+          drilldownStateLists: curDrilldownStateLists,
+          fullAmountRouteList
         },
       });
     },
@@ -849,29 +865,21 @@ export default {
       let { fullAmountDashboardDetails } = bar;
       if (panels) {
         // 复制，新增过来的话，需要对复制和新增的面板进行请求
-        console.log("panels", panels);
         // 获取面板+状态详情
-        console.log('------------')
-        console.log('fullAmountDashboardDetails1', fullAmountDashboardDetails)
         fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(
           panels,
           fullAmountDashboardDetails
         );
-        console.log('------------')
-        console.log('fullAmountDashboardDetails2', fullAmountDashboardDetails)
         // 重新获取全量面板
         const fullAmountPanels = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
           []
         );
-        console.log("春天")
-        console.log('fullAmountPanels', fullAmountPanels)
         // 重新获取全量组件
         const fullAmountComponents = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
           []
         );
-        console.log("fullAmountDashboardDetails可惜", fullAmountDashboardDetails);
         yield put({
           type: "save",
           payload: {

@@ -2910,5 +2910,10 @@ export interface IBarState {
     id: string,
     url: string
   }>,
-  drilldownStateLists: any
+  drilldownStateLists: any,
+  fullAmountRouteList: Array<{
+    id: string,
+    url: string,
+    type: 'dynamicPanel' | 'referencePanel' | 'drillDownPanel' | 'dashboard'
+  }>
 }
