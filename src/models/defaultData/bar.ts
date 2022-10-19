@@ -2826,12 +2826,15 @@ export const defaultData = {
   allDashboardList: [],
   componentThemeConfig: null,  // 当前的组件主题配置
   fullAmountLayers: [],
+  fullAmountPanels: [],
+  fullAmountComponents: [],
   fullAmountDashboardDetails: [],
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: [],
   copyComponentConfigs: [],
   copyComponentKey: [],
   routeList: [], // 路由集合，只收集当前应用路由和面板路由
+  drilldownStateLists: []
 }
 
 export interface IBarState {
@@ -2906,5 +2909,6 @@ export interface IBarState {
     type: 'state' | 'dashboard',
     id: string,
     url: string
-  }>
+  }>,
+  drilldownStateLists: any
 }

@@ -114,9 +114,13 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
         break;
       case 'styleCopy':
         const currentComponent = cloneDeep(bar.componentConfig)
+        const surceIds = bar.key
         if (!currentComponent.id) {
           message.warning('请重新点选该组件进行样式复制')
         } else {
+          if (surceIds.length > 1) {
+            return message.warning('请选择单一组件进行样式复制')
+          }
           setComponentCopyConfig({
             moduleVersion: currentComponent.moduleVersion,
             moduleName: currentComponent.moduleName,
@@ -127,12 +131,16 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
       case 'stylePaste':
         const targetComponent = cloneDeep(bar.componentConfig)
         const sourceStyleConfig = cloneDeep(getComponentCopyConfig())
+        const targetIds = bar.key
         if (!sourceStyleConfig.moduleName) {
           message.warning('您没有可用于粘贴的样式，请先复制样式')
         } else {
           if (!targetComponent.id) {
             message.warning('请重新点选该组件进行样式粘贴')
           } else {
+            if (targetIds.length > 1) {
+              return message.warning('请选择单一组件进行样式粘贴')
+            }
             if (targetComponent.moduleName !== sourceStyleConfig.moduleName) {
               message.warning('该组件与复制源组件的类型不同，不能粘贴样式')
             } else if (targetComponent.moduleVersion !== sourceStyleConfig.moduleVersion) {
@@ -167,6 +175,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     hideMenu()
   }
 
+  // 粘贴样式保存
   const saveStyleData = async (param, targetComponent) => {
     const params = {
       configs: [param],
@@ -185,6 +194,19 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     dispatch({
       type: 'bar/setComponentConfigAndCalcDragScaleData',
       payload: componentConfig
+    })
+    // 重新渲染右侧设置面板
+    await dispatch({
+      type: 'bar/save',
+      payload: {
+        key: ['copyStyle']
+      }
+    })
+    dispatch({
+      type: 'bar/save',
+      payload: {
+        key: [param.id]
+      }
     })
   }
   const { x, y } = bar.rightMenuInfo

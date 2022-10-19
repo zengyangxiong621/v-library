@@ -50,7 +50,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     const keys = fieldsData.map(field => field.value)
-    const flag = keys.every(key => fieldkeys.includes(key))
+    const flag = keys.every(key => fieldkeys?.includes(key))
     setConfigSuccess(flag)
   }, [fieldkeys, fieldsData])
 
