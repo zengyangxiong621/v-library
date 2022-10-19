@@ -141,7 +141,6 @@ class Counter extends Component {
   };
 
   replaceThemeColor = (arr) => {
-    console.log(arr, "arr");
     const componentThemeConfig = this.props.themeConfig;
     arr.map((item) => {
       let { name, value, type, options } = item;
@@ -224,8 +223,6 @@ class Counter extends Component {
         : Number(originData[fields[1]]) === 0
         ? even
         : reduce;
-
-    console.log(comData, fields, "comData");
 
     return (
       <div
@@ -316,7 +313,7 @@ class Counter extends Component {
                 lineHeight: `${suffixConfig.lineHeight}px`,
               }}
             >
-              {comData&&comData[0]?.[fields[2]] || suffixConfig.content}
+              {(comData && comData[0]?.[fields[2]]) || suffixConfig.content}
             </span>
           )}
         </div>
