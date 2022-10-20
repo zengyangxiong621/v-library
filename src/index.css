@@ -30,3 +30,8 @@ code {
 .monaco-editor-background{
   background-color: #191C26 !important;
 }
+
+.ant-message-custom-content{
+  display: flex;
+  align-items: center;
+}
