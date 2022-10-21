@@ -30,7 +30,7 @@ const init = () => {
   // -> 初始化路由
   app.router(({ app }: any) => (
     <div>
-      <BrowserRouter>{createRoutes(app, RoutesConfig)}</BrowserRouter>
+      <BrowserRouter basename="/idv">{createRoutes(app, RoutesConfig)}</BrowserRouter>
     </div>
   ));
   // -> Start
