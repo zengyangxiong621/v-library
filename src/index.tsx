@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import dva from "dva";
 import { BrowserRouter } from "dva/router";
-import { createBrowserHistory, BrowserHistory } from 'history';
 import reportWebVitals from "./reportWebVitals";
 import { authorize, forwardLogin, GetQueryString } from "./services/loginApi";
 import { localStore } from "./services/LocalStoreService";
@@ -20,8 +19,6 @@ message.config({
   maxCount: 1,
 });
 
-const history = createBrowserHistory()
-
 // -> 初始化
 const app = dva({
   history: history
@@ -32,7 +29,7 @@ app.model(require("./models/global").default);
 
 const init = () => {
   // -> 初始化路由
-  app.router(({ history, app }: any) => (
+  app.router(({ app }: any) => (
     <div>
       <BrowserRouter basename="/idv">{createRoutes(app, RoutesConfig)}</BrowserRouter>
     </div>
