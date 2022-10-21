@@ -62,7 +62,6 @@ const Left = ({ dispatch, bar, operate }) => {
   useEffect(() => {
     //1
     setSelected(bar.key)
-    console.log('啊哈？')
     // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
     if (bar.key.length > 1) {
       const newArr = customMenuOptions.map((item) => {

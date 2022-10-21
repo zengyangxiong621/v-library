@@ -1145,7 +1145,6 @@ export default {
             },
           });
         }
-        console.log('哈哈哈3')
         if (isCalcDragScaleData) {
           yield put({
             type: "calcDragScaleData",
