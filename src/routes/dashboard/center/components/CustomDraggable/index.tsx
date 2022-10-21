@@ -583,16 +583,6 @@ const CustomDraggable
         }
         if (url) {
           history.push(url);
-/*          dispatch({
-            type: "bar/save",
-            payload: {
-              routeList: bar.routeList.concat({
-                type: "panel",
-                id: layer.id,
-                url: url
-              })
-            }
-          })*/
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({

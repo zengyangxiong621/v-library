@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import { routerRedux } from "dva/router";
+import { routerRedux } from "dva/router"
 
 import {
   calcGroupPosition,
@@ -13,7 +13,7 @@ import {
   layersPanelsFlat,
   mergeComponentLayers,
   setComponentDimension,
-} from "../utils";
+} from "../utils"
 
 import {
   COMPONENTS,
@@ -25,7 +25,7 @@ import {
   OPACITY,
   TOP,
   WIDTH,
-} from "../constant/home";
+} from "../constant/home"
 
 import {
   IComponent,
@@ -34,7 +34,7 @@ import {
   ILayerPanel,
   IPanel,
   IPanelStateGroup,
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
+} from "@/routes/dashboard/center/components/CustomDraggable/type"
 
 import {
   cancelGroup,
@@ -48,16 +48,16 @@ import {
   reName,
   showInput,
   singleShowLayer,
-} from "../utils/sideBar";
-import { DIMENSION } from "../routes/dashboard/center/constant";
+} from "../utils/sideBar"
+import { DIMENSION } from "../routes/dashboard/center/constant"
 
-import { generateLayers } from "./utils/generateLayers";
-import { filterEmptyGroups } from "./utils/filterEmptyGroups";
-import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
-import { http } from "../services/request";
-import { getDeepPanelAndStatusDetails } from "./utils/requestResolve";
-import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
-import dashboard from "./dashboard";
+import { generateLayers } from "./utils/generateLayers"
+import { filterEmptyGroups } from "./utils/filterEmptyGroups"
+import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers"
+import { http } from "../services/request"
+import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve"
+import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
+import dashboard from "./dashboard"
 
 export default {
   namespace: "bar",
@@ -206,13 +206,6 @@ export default {
             dashboardId,
             panelId,
             isDashboardInit: true,
-            routeList: [
-              {
-                type: "dashboard",
-                id: dashboardId,
-                url: `/dashboard/${dashboardId}`,
-              },
-            ],
           },
         });
         let layers: any[] = [];
@@ -485,18 +478,34 @@ export default {
         "drillDownPanel"
       }
 
+      console.log('------------------', fullAmountPanels)
+      const referencePanelStates: Array<{id: string, name: string, parentId: string}> = fullAmountPanels.reduce((pre: any, cur: any) => {
+        if (panelTypeEnum[cur.type] === "referencePanel") {
+          pre.push(...cur.states.map((item: {id: string, name: string}) => ({...item, parentId: cur.parentId})))
+        }
+        return pre
+      }, [])
+      console.log('----------', referencePanelStates)
       const fullAmountRouteList= [
         {
           url: `/dashboard/${bar.dashboardId}`,
           id: bar.dashboardId,
           type: "dashboard"
         },
-        ...fullAmountPanels.map((panel: any) => ({
-        url: `/dashboard/${bar.dashboardId}/panel-${panel.id}${panel?.states[0]?.id ? "/state-" + panel.states[0].id : ""}`,
-        id: panel.id,
-        parentId: panel.parentId,
-        type: panelTypeEnum[panel.type],
-      }))]
+        ...fullAmountPanels.filter((item: any) => panelTypeEnum[item.type] !== "referencePanel").map((panel: any) => ({
+          url: `/dashboard/${bar.dashboardId}/panel-${panel.id}${panel?.states[0]?.id ? "/state-" + panel.states[0].id : ""}`,
+          id: panel.id,
+          parentId: panel.parentId,
+          type: panelTypeEnum[panel.type],
+        })),
+        ...referencePanelStates.map(item => ({
+          url: `/dashboard/${item.id}`,
+          id: item.id,
+          parentId: item.parentId,
+          type: "referencePanel"
+        }))
+      ]
+      console.log('fullAmountRouteList', fullAmountRouteList)
       yield put({
         type: "save",
         payload: {
@@ -1062,7 +1071,7 @@ export default {
       { call, put, select }: any
     ): any {
       const bar: any = yield select((state: any) => state.bar);
-      const { isPanel, stateId, dashboardId, key, layers } = bar;
+      const { isPanel, stateId, panelId,  dashboardId, key, layers, fullAmountRouteList } = bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         key.length !== 0 ? key[key.length - 1] : layers.length !== 0 ? layers[0].id : "";
@@ -1075,8 +1084,15 @@ export default {
           insertId,
         },
       });
+      // todo 创建面板对 fullAmountRouteList 的影响
+      console.log("data", data)
       if (data) {
-        const { id, name, states } = data;
+        const { id, name, states, type }: {
+          id: string,
+          name: string,
+          type: 0 | 1 | 2,
+          states: any
+        } = data;
         const modules: Array<IPanelStateGroup> = states.map((item: any) => {
           return {
             ...item,
@@ -1097,8 +1113,27 @@ export default {
           [layerPanel],
           bar.fullAmountDashboardDetails
         );
-        console.log("呵呵哈哈哈");
-        console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
+        enum panelTypeEnum{
+          "dynamicPanel",
+          "referencePanel",
+          "drillDownPanel"
+        }
+
+        console.log('states'  )
+        if (panelType === 0 || panelType === 2) {
+          // 动态面板或者是下钻面板
+          fullAmountRouteList.push({
+            id,
+            parentId: isPanel ? panelId : dashboardId,
+            type: panelTypeEnum[type],
+            url: `/dashboard/${dashboardId}/panel-${id}${states[0]?.id ? "/state-" + states[0].id : ""}`,
+          })
+          console.log('fullAmountRouteList', fullAmountRouteList)
+        }
+        if (panelType === 1) {
+          // 引用面板
+          // 只有引用面板的状态能影响 fullAmountRouteList
+        }
         yield put({
           type: "save",
           payload: {
@@ -1306,10 +1341,40 @@ export default {
     },
     *referencePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountPanels } = bar
       const { panelConfig } = payload
-      const filterPanelStates = panelConfig.states.filter((state: any) => !bar.fullAmountPanels.find((item: any) => item.id === state.id))
+
+      const filterPanelStates = panelConfig.states.reduce((pre: any[], cur: any) => {
+        if (!pre.find(item => item.id === cur.id) && !!cur.id) {
+          pre.push(cur)
+        }
+        return pre
+      }, []).filter((state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id))
+      const panelParentId = fullAmountPanels.find((item: any) => item.id === panelConfig.id).parentId
+      console.log('panelParentId', panelParentId)
+
+      console.log('fullAmountRouteList', fullAmountRouteList)
       console.log('filterPanelStates', filterPanelStates)
-      console.log('panelConfig', panelConfig)
+      if (filterPanelStates.length > 0) {
+        const data = yield Promise.all(filterPanelStates.map((item: any) => getPanelStatusDetails(item)))
+        fullAmountDashboardDetails.push(...data)
+        fullAmountRouteList.push(...filterPanelStates.map((item: any) => ({
+          id: item.id,
+          parentId: panelParentId,
+          type: 'referencePanel',
+          url: `/dashboard/${item.id}`
+        })))
+      }
+
+      yield put({
+        type: 'save',
+        payload: {
+          panelConfig,
+          fullAmountDashboardDetails,
+          fullAmountRouteList
+        }
+      })
+
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1530,9 +1595,11 @@ export default {
           dashboardName,
           panelStatesList: [],
           key: [],
+          selectedComponentOrGroup: [],
           isPanel: false,
           stateId: "",
           panelId: "",
+          dashboardId
         },
       });
     },

@@ -36,11 +36,9 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       动态面板和引用面板的 url 上是有 panelId 和 stateId
       引用面板和应用的 url 只有 dashboardId
      */
-    const routeList = bar.routeList
     if (bar.panelId) {
       // 动态面板、下钻面板
       let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.panelId)
-      console.log('currentRoute', currentRoute)
       history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
     }
     if (!bar.panelId && bar.dashboardId) {
