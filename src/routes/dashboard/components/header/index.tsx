@@ -31,6 +31,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   // 返回首页
   const toBack = () => {
+    console.log("bar.fullAmountRouteList", bar.fullAmountRouteList)
     /*
       动态面板和引用面板的 url 上是有 panelId 和 stateId
       引用面板和应用的 url 只有 dashboardId
@@ -38,20 +39,18 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     const routeList = bar.routeList
     if (bar.panelId) {
       // 动态面板、下钻面板
-      routeList.pop()
-      let currentUrl = routeList[routeList.length - 1].url
-      history.push(currentUrl)
+      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.panelId)
+      console.log('currentRoute', currentRoute)
+      history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
     }
     if (!bar.panelId && bar.dashboardId) {
-      let currentRoute = routeList[routeList.length - 1]
+      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.dashboardId)
       if (currentRoute.type === 'dashboard') {
         // 应用
         history.replace(`/dashboard-manage`);
       } else {
         // 引用面板
-        routeList.pop()
-        currentRoute = routeList[routeList.length - 1]
-        history.push(currentRoute.url)
+        history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
       }
     }
     // 暂时在这里清空localStorage

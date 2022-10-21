@@ -583,7 +583,7 @@ const CustomDraggable
         }
         if (url) {
           history.push(url);
-          dispatch({
+/*          dispatch({
             type: "bar/save",
             payload: {
               routeList: bar.routeList.concat({
@@ -592,7 +592,7 @@ const CustomDraggable
                 url: url
               })
             }
-          })
+          })*/
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({
@@ -877,6 +877,7 @@ const CustomDraggable
                 cRef={(ref: any) => {
                   if (layer.id in allComponentRefs) {
                   } else {
+                    // todo
                     allComponentRefs[layer.id] = ref;
                     allComponentDOMs[layer.id].style.border = '3px solid transparent'
                     allComponentDOMs[layer.id].addEventListener('mouseenter',() => {

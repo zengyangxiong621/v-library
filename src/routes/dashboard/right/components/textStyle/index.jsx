@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react'
 import './index.less'
 import Color from '../color';
 import { find } from '../../../../../utils/common'
+import { fontCollection } from './fontCollection';
 
 import {
   Form,
@@ -87,16 +88,20 @@ const TextStyle = props => {
               style={{ width: 120 }}
               onChange={handleFontFamilyChange}
             >
-              <Option value="Microsoft Yahei">微软雅黑</Option>
-              <Option value="宋体">宋体</Option>
-              <Option value="SimHei">黑体</Option>
+              {
+                fontCollection.map(({name, value}) => {
+                  return <>
+                    <Option value={value}>{name}</Option>
+                  </>
+                })
+              }
             </Select>
           </Form.Item>
           <Form.Item name="fontSize" noStyle>
             <InputNumber defaultValue={fontSetting.fontSize} className="po-size-input" style={{ width: '68px' }} onBlur={fontSizeChange} />
           </Form.Item>
         </Input.Group>
-        <Color data={_colorConfig} onChange={props.onChange} style={{marginBottom:'-8px'}}/>
+        <Color data={_colorConfig} onChange={props.onChange} style={{ marginBottom: '-8px' }} />
         <Input.Group compact className="fontBi">
           <Form.Item name="blod" noStyle>
             <CheckableTag

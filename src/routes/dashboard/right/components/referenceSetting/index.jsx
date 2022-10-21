@@ -258,8 +258,17 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
         ],
       },
     })
+    console.log('bar.fullAmountPanels', bar.fullAmountPanels)
+    console.log('bar.fullAmountDashboardDetails', bar.fullAmountDashboardDetails)
+    console.log('bar.fullAmountComponents', bar.fullAmountComponents)
     if (data) {
       dispatch({
+        type: 'bar/referencePanelState',
+        payload: {
+          panelConfig
+        }
+      })
+/*      dispatch({
         type: 'bar/save',
         payload: {
           panelConfig,
@@ -275,7 +284,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
             },
           },
         },
-      })
+      })*/
     } else {
       copyPanelConfig.states.pop()
       panelConfig.states.pop()
