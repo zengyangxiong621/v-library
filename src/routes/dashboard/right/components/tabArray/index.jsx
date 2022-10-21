@@ -10,8 +10,10 @@ import {
 } from '@ant-design/icons';
 import {
   Collapse,
-  Tabs
+  Tabs,
+  Spin
 } from 'antd';
+
 import { tab } from '@testing-library/user-event/dist/tab'
 
 const { Panel } = Collapse;
@@ -22,12 +24,14 @@ const TabArray = props => {
   const _data = props.data;
   const _defaultActiveKey = _data.defaultActiveKey
   const _disabled = _data.disabled
+  const _loading = _data.loading
   let tabs = _data.value
 
   const _show = find(_data, 'switch', 'type')
   const _outsideShadow = find(_data, 'outsideShadow', 'type')
   const [activeKey, setActiveKey] = useState(_defaultActiveKey)
   const [unit, setUnit] = useState('列')
+  const [isLoading, setIsLoading] = useState(false)
   const extraNode = () => {
     const handleIconClick = (type, e) => {
       e.preventDefault()
@@ -40,7 +44,6 @@ const TabArray = props => {
         value: []
        */
       console.log('type', type)
-
       if (type === 'add') {
         if (tabs.length === 0) {
           tabs = tabs.concat(_data.config.template)
@@ -71,21 +74,40 @@ const TabArray = props => {
         tab.key = String(index + 1)
       })
       console.log('_data.activeKey', _data.activeKey)
-      props.onChange(_data.activeKey)
+      if (_loading) {
+        setIsLoading(true)
+        props.onChange(_data.activeKey, (isLoading) => {
+          setIsLoading(isLoading)
+        })
+      } else {
+        props.onChange(_data.activeKey)
+      }
     }
 
     return (
       <div className="g-flex g-items-center" style={{ display: _disabled ? 'none' : 'block' }}>
-        <DeleteOutlined style={{ fontSize: 16 }} className="g-px-4" onClick={(e) => handleIconClick('delete', e)} />
-        <PlusOutlined style={{ fontSize: 16 }} onClick={(e) => handleIconClick('add', e)} />
+        {
+          isLoading ? <>
+            <Spin/>
+            <span className="g-px-1"/>
+            <Spin/>
+          </> :
+          <>
+            <DeleteOutlined style={{ fontSize: 16 }} className="g-px-3" onClick={(e) => handleIconClick('delete', e)} />
+            <PlusOutlined style={{ fontSize: 16 }} onClick={(e) => handleIconClick('add', e)} />
+          </>
+        }
+
       </div>
     )
   }
 
   const handleTabClick = (key, e) => {
-    setActiveKey(key)
-    _data.activeKey = key
-    props.onChange(key)
+    if (key !== activeKey) {
+      setActiveKey(key)
+      _data.activeKey = key
+      // props.onChange(key)
+    }
   }
 
   return (

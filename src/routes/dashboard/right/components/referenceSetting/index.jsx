@@ -8,7 +8,7 @@ import UploadImg from '../uploadImg'
 import CusInputNumber from '../cusInputNumber'
 import RadioGroup from '../radioGroup'
 import { deepClone } from '../../../../../utils'
-import { Form, Button } from 'antd'
+import { Form, Button, Spin } from 'antd'
 import debounce from 'lodash/debounce'
 import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid'
@@ -136,6 +136,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       'defaultActiveKey': '1',
       'activeKey': '1',
       'defaultExpand': true,
+      'loading': true,
       'config': {
         'template': [
           {
@@ -189,7 +190,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ]
-  const styleChange = debounce(async (key = "1", init = false) => {
+  const styleChange = debounce(async (key = "1", init = false, cb=function () {}) => {
     console.log('key', key)
     if (key !== "0" && init) {
       setActiveKey(key)
@@ -262,6 +263,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     console.log('bar.fullAmountDashboardDetails', bar.fullAmountDashboardDetails)
     console.log('bar.fullAmountComponents', bar.fullAmountComponents)
     if (data) {
+      cb(false)
       dispatch({
         type: 'bar/referencePanelState',
         payload: {
@@ -358,7 +360,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
               }
               const TagName = componentLib[item.type]
               return (
-                <TagName data={ item } onChange={ styleChange } key={ index }/>
+                <TagName data={ item } onChange={ (key, cb) => styleChange(key, false, cb) } key={ index }/>
               )
             }) }
           </ComponentCard>
