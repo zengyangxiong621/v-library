@@ -634,7 +634,6 @@ class ChinaMap extends Component {
     // ----------- 更新数据 -----------
     const { fields, comData, componentConfig } = this.props
     const { config, staticData } = componentConfig || ComponentDefaultConfig
-    console.log(config, ' this.config');
     let { mapChart, options } = this.state
     // 组件静态或者传入组件的数据
     const originData = comData || staticData.data

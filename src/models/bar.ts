@@ -296,7 +296,6 @@ export default {
         url: `/visual/panel/detail/${panelId}`,
         method: "get",
       });
-      console.log("bar.ts里的", type);
       // const { config, states: panelStatesList } = bar.fullAmountPanels.find((panel: IPanel) => panel.id === panelId)
       const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === "recommend");
       recommendConfig.width = config.width;
@@ -348,7 +347,7 @@ export default {
       const layers = payload.layers;
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
-      const curDrilldownStateLists = bar.drilldownStateLists
+      const curDrilldownStateLists = bar.drilldownStateLists;
       // 获取面板详情
       const getPanelConfigFunc = async (layerPanel: any) => {
         try {
@@ -357,10 +356,10 @@ export default {
             method: "get",
           });
           // 只处理下钻面板
-          if(panelConfig && panelConfig.type == 2) {
+          if (panelConfig && panelConfig.type == 2) {
             const { states } = panelConfig;
             const drilldownStates = states.map((state: { id: string; name: string }) => state.id);
-            curDrilldownStateLists.push(...drilldownStates)
+            curDrilldownStateLists.push(...drilldownStates);
           }
           return panelConfig;
         } catch (e) {
@@ -472,10 +471,10 @@ export default {
       const panels = bar.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
-      enum panelTypeEnum{
+      enum panelTypeEnum {
         "dynamicPanel",
         "referencePanel",
-        "drillDownPanel"
+        "drillDownPanel",
       }
 
       console.log('------------------', fullAmountPanels)
@@ -490,7 +489,7 @@ export default {
         {
           url: `/dashboard/${bar.dashboardId}`,
           id: bar.dashboardId,
-          type: "dashboard"
+          type: "dashboard",
         },
         ...fullAmountPanels.filter((item: any) => panelTypeEnum[item.type] !== "referencePanel").map((panel: any) => ({
           url: `/dashboard/${bar.dashboardId}/panel-${panel.id}${panel?.states[0]?.id ? "/state-" + panel.states[0].id : ""}`,
@@ -517,7 +516,7 @@ export default {
           fullAmountDynamicAndDrillDownPanels,
           fullAmountPanels,
           drilldownStateLists: curDrilldownStateLists,
-          fullAmountRouteList
+          fullAmountRouteList,
         },
       });
     },
@@ -843,8 +842,6 @@ export default {
         },
       });
       // layers 永远是最后再保存的
-      console.log('冬天')
-      console.log('layers', layers)
       yield put({
         type: "updateTree",
         payload: layers,
@@ -971,7 +968,6 @@ export default {
         type: "setSelectedKeys",
         payload,
       });
-      console.log('哈哈哈1')
       yield put({
         type: "calcDragScaleData",
       });
@@ -1029,7 +1025,7 @@ export default {
           ? state.bar.layers[0].id
           : "";
       // 新建的是组件
-      const { id, children }: any = yield http({
+      const data: any = yield http({
         url: "/visual/module/add",
         method: "post",
         body: {
@@ -1038,33 +1034,36 @@ export default {
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
-      });
-      yield put({
-        type: "addComponentData",
-        payload: {
-          id,
-          dataType: "static",
-        },
-      });
-      yield put({
-        type: "updateComponents",
-        payload: [
-          {
-            ...deepClone(payload),
+      }).catch((err: Error) => console.log("添加组件至画布err,组件信息未加载完全", err));
+      if (data) {
+        const { id, children } = data;
+        yield put({
+          type: "addComponentData",
+          payload: {
             id,
-            moduleType: itemData.moduleType,
-            children,
+            dataType: "static",
           },
-        ],
-        id: isPanel ? stateId : dashboardId,
-      });
-      console.log("参数", { ...itemData, id });
-      yield put({
-        type: "addComponent",
-        payload: { final: { ...itemData, id }, insertId },
-        fullAmountPayload: "brother",
-        isComponent: true,
-      });
+        });
+        yield put({
+          type: "updateComponents",
+          payload: [
+            {
+              ...deepClone(payload),
+              id,
+              moduleType: itemData.moduleType,
+              children,
+            },
+          ],
+          id: isPanel ? stateId : dashboardId,
+        });
+        console.log("参数", { ...itemData, id });
+        yield put({
+          type: "addComponent",
+          payload: { final: { ...itemData, id }, insertId },
+          fullAmountPayload: "brother",
+          isComponent: true,
+        });
+      }
     },
     *createPanel(
       { payload: { panelType } }: { payload: { panelType: 0 | 1 | 2 } },
@@ -1148,7 +1147,10 @@ export default {
         });
       }
     },
-    *updateComponent({ payload, isCalcDragScaleData = true }: any, { call, put, select }: any): any {
+    *updateComponent(
+      { payload, isCalcDragScaleData = true }: any,
+      { call, put, select }: any
+    ): any {
       if (payload.length > 0) {
         const components: Array<IComponent> = [];
         const panels: Array<IPanel> = [];
@@ -1334,7 +1336,7 @@ export default {
         type: "setComponentConfig",
         payload,
       });
-      console.log('哈哈哈4')
+      console.log("哈哈哈4");
       yield put({
         type: "calcDragScaleData",
       });
@@ -1616,6 +1618,10 @@ export default {
         state.moduleDefaultConfig.push(payload);
       }
       return { ...state };
+    },
+    // 初始化画布时，把请求后的原子组件信息一次性设置完成
+    setModuleDefaultConfigByOnce(state: IBarState, {payload}: any) {
+      return { ...state, moduleDefaultConfig: payload };
     },
     deleteComponentData(state: IBarState, { payload }: any) {
       // const { id } = payload

@@ -18,6 +18,9 @@ import { deepClone, deepForEach, layersReverse } from "../../../utils";
 import RightClickMenu from "../left/components/rightClickMenu/rightClickMenu";
 import { menuOptions } from "../left/Data/menuOptions";
 
+import axios from "axios";
+import { http } from "@/services/request";
+
 const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   const draggableContainerRef = useRef(null);
@@ -37,7 +40,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const isKeyForGroup = useRef(false)
   const isKeyForCancelGroup = useRef(false)
   const isKeyForCopy = useRef(false)
-  const isKeyForStick  = useRef(false)
+  const isKeyForStick = useRef(false)
 
   useEffect(() => {
     const layers = deepClone(bar.layers)
@@ -47,9 +50,9 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     setLayers(layers)
   }, [bar.layers])
 
-/*  useEffect(() => {
-    window.addEventListener("",)
-  }, [])*/
+  /*  useEffect(() => {
+      window.addEventListener("",)
+    }, [])*/
 
   const supportLinesRef = bar.supportLinesRef
 
@@ -191,6 +194,49 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       // document.removeEventListener('contextmenu', handleContextMenu)
     }
   }, [bar.dashboardConfig])
+
+  // 中间画布上的组件渲染完毕后，异步加载所有的组件，并将这些组件的config放入bar.moduleDefaultConfig中
+  const importComponent = (data: any) => {
+    return axios.get(`${(window as any).CONFIG.COMP_URL}/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
+  };
+  const allModuleDefaultConfigArr: any = []
+  let count = 0
+  let contentLen = 0
+  const loadComp = async (data: any) => {
+    window.eval(`${await importComponent(data)}`);
+    const { ComponentDefaultConfig: currentDefaultConfig } = (window as any).VComponents;
+    allModuleDefaultConfigArr.push(currentDefaultConfig)
+    count++
+    if (count === contentLen) {
+      // 初始化时需要一次性设置到全局状态中
+      dispatch({
+        type: "bar/setModuleDefaultConfigByOnce",
+        payload: allModuleDefaultConfigArr,
+      });
+    }
+  };
+  //@Mark 因组件更新中需要获取各个原子组件的初始config,所以需要在画布初始化时进行处理
+  useEffect(() => {
+    const getAllModulesConfig = async () => {
+      const { content }: any = await http({
+        url: "/visual/module-manage/queryModuleList",
+        method: "post",
+        body: {
+          status: 0,
+          pageNo: 0,
+          pageSize: 100,
+        }
+      }).catch(() => { });
+      contentLen = content.length
+      content.forEach((item: any) => {
+        loadComp(item)
+      });
+    };
+    getAllModulesConfig();
+  }, []);
+
+
+
   useClickAway(() => {
     // 取消右键菜单
     setIsShowRightMenu(false);
@@ -238,7 +284,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const handleComponentDrag = (x: number, y: number) => {
     console.log('bar.selectedComponentDOMs', bar.selectedComponentDOMs)
     console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
-    for(const key in bar.selectedComponentDOMs) {
+    for (const key in bar.selectedComponentDOMs) {
       const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
       console.log('translateArr', translateArr)
       let translateX = Number(translateArr[0]) + x
@@ -284,7 +330,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 辅助线移动
   const handleSupportLineDrag = () => {
-    const {x, y} = bar.scaleDragCompRef.getPosition()
+    const { x, y } = bar.scaleDragCompRef.getPosition()
     supportLinesRef.handleSetPosition(x, y, 'block');
   }
   // 选中框移动
@@ -431,10 +477,10 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     if (event.type === "keydown") {
       if (!isKeyForStick.current) {
         if (event.target === document.body) {
-/*          dispatch({
-            type: "bar/createComponent",
-            payload: bar.selectedComponentOrGroup
-          })*/
+          /*          dispatch({
+                      type: "bar/createComponent",
+                      payload: bar.selectedComponentOrGroup
+                    })*/
           if (bar.key[bar.key.length - 1] || bar.layers[bar.layers.length - 1]?.id) {
             dispatch({
               type: 'bar/copy',
@@ -509,23 +555,23 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
 
 
-/*  useKeyPress(["c.ctrl"], (event) => {
-    if (event.type === "keydown") {
-      console.log('---右下-----')
-      for(const key in bar.selectedComponentDOMs) {
-        const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
-        const translateX = Number(translateArr[0]);
-        const translateY = Number(translateArr[1]);
-        bar.selectedComponentDOMs[key].style.transform = `translate(${translateX + 1}px, ${translateY + 1}px)`;
+  /*  useKeyPress(["c.ctrl"], (event) => {
+      if (event.type === "keydown") {
+        console.log('---右下-----')
+        for(const key in bar.selectedComponentDOMs) {
+          const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+          const translateX = Number(translateArr[0]);
+          const translateY = Number(translateArr[1]);
+          bar.selectedComponentDOMs[key].style.transform = `translate(${translateX + 1}px, ${translateY + 1}px)`;
+        }
+      } else {
+        handleComponentDragStop()
+  
       }
-    } else {
-      handleComponentDragStop()
-
-    }
-  }, {
-    events: ["keydown", "keyup"],
-    exactMatch: true
-  });*/
+    }, {
+      events: ["keydown", "keyup"],
+      exactMatch: true
+    });*/
 
   // const mouse = 0
 
