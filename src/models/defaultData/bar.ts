@@ -2810,10 +2810,7 @@ export const defaultData = {
   componentData: {}, // 组件数据，存放方式为{componentId: data}
   currentActiveCompoentData: {},  // 组件当前状态下的数据，用于编辑时画布中的回调参数，存放方式为{componentId: data}
   componentFilters: [],
-  callbackArgs: {
-    originalName: '新疆',
-    name: 'xj',
-  },
+  callbackArgs: {},
   callbackParamsList: [],
   systemMaterialClass: {}, // 获取系统素材分类数据
   systemMaterialList: [], // 获取系统素材数据
