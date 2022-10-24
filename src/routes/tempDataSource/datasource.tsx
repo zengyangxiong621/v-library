@@ -388,8 +388,8 @@ const DataSource = (props: any) => {
         </header>
         <div className='table-wrap'>
           {
-            tableData.length
-              ?
+            // tableData.length
+            //   ?
               <Table
                 // scroll={{ y: "53vh" }}
                 scroll={{ y: tableHeight }}
@@ -401,10 +401,10 @@ const DataSource = (props: any) => {
                 pagination={paginationProps}
                 onChange={tableOnChange}
               />
-              :
-              <div className="custom-table-loading">
-                <Spin tip="Loading…"></Spin>
-              </div>
+              // :
+              // <div className="custom-table-loading">
+              //   <Spin tip="Loading…"></Spin>
+              // </div>
           }
         </div>
         {/* 添加数据源的弹窗 */}
