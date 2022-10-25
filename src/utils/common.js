@@ -7,12 +7,12 @@
  */
 const find = (arr, val, field = "name") => {
   const temArr = Array.isArray(arr) ? arr : arr.value;
-  return temArr.find(item => {
+  return temArr.find((item) => {
     return item[field] === val;
   });
 };
 
-const truncValue = object => {
+const truncValue = (object) => {
   object.value = Math.trunc(object.value);
   return object;
 };
@@ -42,6 +42,7 @@ const debounce = (fn, delay = 200) => {
 const throttle = function (fn, delay) {
   var timer = null;
   return function () {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     var context = this;
     var args = arguments;
     if (!timer) {
@@ -52,9 +53,4 @@ const throttle = function (fn, delay) {
     }
   };
 };
-export {
-  find,
-  debounce,
-  throttle,
-  truncValue,
-};
+export { find, debounce, throttle, truncValue };

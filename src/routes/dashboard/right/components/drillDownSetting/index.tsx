@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 
@@ -11,7 +12,7 @@ import CodeEditor from "../codeEditor";
 
 const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig }: any) => {
   const { panelStatesList, stateId } = bar;
-  const { id, name, } = componentConfig;
+  const { id, name } = componentConfig;
   const [state, setState] = useSetState({
     layersInNextState: [],
     parentDataSample: null, // 父级组件的结构示例
@@ -28,7 +29,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
       if (nextStateIndex > panelStatesList.length - 1) {
         setState({
           layersInNextState: [],
-          isLastState: true
+          isLastState: true,
         });
       } else {
         const { id: nextStateId } = panelStatesList[nextStateIndex];
@@ -39,10 +40,10 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
           });
           const formatterLayers = layers.map((item: any) => ({
             id: item.id,
-            name: item.name
+            name: item.name,
           }));
           setState({
-            layersInNextState: formatterLayers
+            layersInNextState: formatterLayers,
           });
         };
         getLayersInPanelState();
@@ -54,15 +55,18 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     showParentDataSample();
   }, []);
 
-
   const localStorageCopy: any = localStorage;
   let finalCompData = componentConfig.staticData.data;
   if (componentConfig.dataFrom == 1) {
-    const dataContainerIds = componentConfig.dataContainers.map((x: any) => x.id)
-    const dataFromDataContainer = bar.dataContainerDataList.filter((item: any) => dataContainerIds.includes(item.id))
-    finalCompData = dataFromDataContainer.map((o: any) => {
-      return o.data
-    }).flat()
+    const dataContainerIds = componentConfig.dataContainers.map((x: any) => x.id);
+    const dataFromDataContainer = bar.dataContainerDataList.filter((item: any) =>
+      dataContainerIds.includes(item.id)
+    );
+    finalCompData = dataFromDataContainer
+      .map((o: any) => {
+        return o.data;
+      })
+      .flat();
   }
   // console.log('finalCompDatafinalCompData', finalCompData);
   // console.log('barbar', bar);
@@ -70,26 +74,26 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
 
   const showHadSelectComp = () => {
     // 之前已经选中了的组件
-    let hadSelectComp: any = []
-    let temp: any = {}
+    let hadSelectComp: any = [];
+    const temp: any = {};
     if (Array.isArray(componentConfig.drillDownArr)) {
-      hadSelectComp = componentConfig.drillDownArr.map((item: any) => item.id)
+      hadSelectComp = componentConfig.drillDownArr.map((item: any) => item.id);
       componentConfig.drillDownArr.forEach((item: any) => {
         const o = {
           parentId: id,
-          parentData: item.parentData
-        }
-        temp[item.id] = o
-      })
+          parentData: item.parentData,
+        };
+        temp[item.id] = o;
+      });
     }
     setEchoDrillDownComponents(hadSelectComp);
     // 进入下钻面板后，需要根据已经选择的组件将相关组件信息存放至localStorage中
-    const originReflect = JSON.parse(localStorageCopy.getItem('allHasParentReflect'))
+    const originReflect = JSON.parse(localStorageCopy.getItem("allHasParentReflect"));
     const finalReflect = {
       ...originReflect,
-      ...temp
-    }
-    localStorageCopy.setItem('allHasParentReflect', JSON.stringify(finalReflect));
+      ...temp,
+    };
+    localStorageCopy.setItem("allHasParentReflect", JSON.stringify(finalReflect));
   };
 
   const showParentDataSample = () => {
@@ -99,15 +103,13 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
         const targetParentComp = allParentComps[id];
         const parentDataSample = targetParentComp?.parentData[0];
         setState({
-          parentDataSample: parentDataSample
+          parentDataSample: parentDataSample,
         });
       }
     } catch (error) {
       console.log("err", error);
-
     }
   };
-
 
   // 添加下钻组件
   const selectNextLevelComponent = (val: any, label: any, extra: any) => {
@@ -129,7 +131,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     } else {
       const temp = {
         ...allDrillDownPathReflect,
-        [id]: extendVal
+        [id]: extendVal,
       };
       localStorageCopy.setItem("allDrillDownPathReflect", JSON.stringify(temp));
     }
@@ -138,21 +140,21 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     val.forEach((valId: string) => {
       curComps[valId] = {
         parentData: finalCompData,
-        parentId: id
+        parentId: id,
       };
     });
-    const preAllHasParentReflect = JSON.parse(localStorageCopy.getItem('allHasParentReflect'))
+    const preAllHasParentReflect = JSON.parse(localStorageCopy.getItem("allHasParentReflect"));
     const finalReflect = {
       ...curComps,
-      ...preAllHasParentReflect
-    }
+      ...preAllHasParentReflect,
+    };
     localStorageCopy.setItem("allHasParentReflect", JSON.stringify(finalReflect));
 
     // 需要改变 全局状态中的 componentConfig, 不然其它触发module/update接口时(比如移动一下组件),会覆盖这个带有drillDownArr的componentConfig
-    console.log('cccccccccccc', componentConfig)
+    console.log("cccccccccccc", componentConfig);
     dispatch({
       type: "bar/setComponentConfig",
-      payload: componentConfig
+      payload: componentConfig,
     });
     // 更改后端存储的 componentConfig
     http({
@@ -166,30 +168,35 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     });
   };
 
-  const resultData = Object.assign({}, {
-    value: JSON.stringify([state.parentDataSample], null, 2)
-  });
+  const resultData = Object.assign(
+    {},
+    {
+      value: JSON.stringify([state.parentDataSample], null, 2),
+    }
+  );
 
   return (
-    <div className='DrillDownSetting-wrap'>
-      {
-        state.parentDataSample &&
+    <div className="DrillDownSetting-wrap">
+      {state.parentDataSample && (
         <>
-          <div className='tip-text'>父级数据示例：</div>
+          <div className="tip-text">父级数据示例：</div>
           <div className="data-code-wraper">
-            <CodeEditor data={resultData} onChange={() => { }} />
+            <CodeEditor
+              data={resultData}
+              onChange={() => {
+                // todo
+              }}
+            />
           </div>
         </>
-      }
-      {
-        !state.isLastState && <div className="level">
+      )}
+      {!state.isLastState && (
+        <div className="level">
           <div className="level-title">下层组件：</div>
-          <div className='treeSelect-wrap'>
+          <div className="treeSelect-wrap">
             <TreeSelect
               treeData={state.layersInNextState}
-              fieldNames={
-                { label: "name", value: "id", children: "children" }
-              }
+              fieldNames={{ label: "name", value: "id", children: "children" }}
               onChange={selectNextLevelComponent}
               treeCheckable={true}
               showCheckedStrategy={TreeSelect.SHOW_PARENT}
@@ -200,10 +207,11 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
             />
           </div>
         </div>
-      }
-
+      )}
     </div>
   );
 };
 
-export default memo(connect(({ bar, drillDownGlobalState }: any) => ({ bar, drillDownGlobalState }))(DrillDownSetting));
+export default memo(
+  connect(({ bar, drillDownGlobalState }: any) => ({ bar, drillDownGlobalState }))(DrillDownSetting)
+);

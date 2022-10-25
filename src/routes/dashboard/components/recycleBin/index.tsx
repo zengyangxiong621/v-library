@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/react-in-jsx-scope */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 
@@ -11,8 +11,6 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 import ListItem from "./components/listItem";
 import { deepClone } from "@/utils/index";
 
-
-
 const RecycleBin = (props: any) => {
   const { bar, onChange, visible, dispatch } = props;
 
@@ -23,16 +21,16 @@ const RecycleBin = (props: any) => {
   // 后端返回的回收站组件列表如果想要展示需要 处理一下
   const getTargetData = (data: any) => {
     return data.map((x: any) => {
-      const { createdTime, dashboardId, detail, id, effectiveTime } = x
+      const { createdTime, dashboardId, detail, id, effectiveTime } = x;
       return {
         detail,
         createdTime,
         effectiveTime,
         dashboardId,
-        id
-      }
-    })
-  }
+        id,
+      };
+    });
+  };
 
   // 获取可回收的组件列表
   const getRecycleModuleLists = async () => {
@@ -40,54 +38,54 @@ const RecycleBin = (props: any) => {
       url: `/visual/layer/recycle/list/${bar.dashboardId}`,
       method: "get",
     });
-    const formatArr = getTargetData(data)
-    setRecycleLists(formatArr)
+    const formatArr = getTargetData(data);
+    setRecycleLists(formatArr);
     // setRecycleLists([])
   };
   useEffect(() => {
     if (visible) {
-      getRecycleModuleLists()
+      getRecycleModuleLists();
     }
-  }, [visible])
+  }, [visible]);
 
   // 在下方 deleteModule函数 中调用
   const deleteModuleLogic = async () => {
     const idArrs = selectedLists.map((x: any) => {
-      return x.id
-    })
+      return x.id;
+    });
     const data = await http({
-      url: `/visual/layer/recycle/delete`,
-      method: 'DELETE',
+      url: "/visual/layer/recycle/delete",
+      method: "DELETE",
       body: {
         dashboardId: bar.dashboardId,
-        recycleItems: idArrs
-      }
-    })
-    console.log('删除某些组件后，回收站中剩余的组件列表数据', data)
-    const { recycleItems } = data
-    const hadFormatArr = getTargetData(recycleItems)
-    setRecycleLists(hadFormatArr)
-    setSelectedLists([])
-  }
+        recycleItems: idArrs,
+      },
+    });
+    console.log("删除某些组件后，回收站中剩余的组件列表数据", data);
+    const { recycleItems } = data;
+    const hadFormatArr = getTargetData(recycleItems);
+    setRecycleLists(hadFormatArr);
+    setSelectedLists([]);
+  };
   // 删除回收站中的组件
   const deleteModule = () => {
     // 二次删除确认
     Modal.confirm({
       title: "删除组件",
       style: {
-        top: "40%"
+        top: "40%",
       },
       getContainer: document.getElementById("root") as any,
       okButtonProps: {
         style: {
           backgroundColor: "#e9535d",
           border: "none",
-        }
+        },
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: "#3d404d"
-        }
+          backgroundColor: "#3d404d",
+        },
       },
       icon: <ExclamationCircleFilled />,
       content: "此操作将彻底删除所选组件，不可恢复，是否继续？",
@@ -97,54 +95,55 @@ const RecycleBin = (props: any) => {
         background: "#232630",
       },
       async onOk(close) {
-        deleteModuleLogic()
+        deleteModuleLogic();
       },
       onCancel(close) {
         close();
-      }
+      },
     });
-  }
+  };
   //***** 恢复回收站中的组件
   const recoverModule = async () => {
     try {
       const idArrs = selectedLists.map((x: any) => {
-        return x.id
-      })
+        return x.id;
+      });
       const { layers, components, recycleItems } = await http({
-        url: `/visual/layer/recover`,
-        method: 'post',
+        url: "/visual/layer/recover",
+        method: "post",
         body: {
           dashboardId: bar.dashboardId,
-          recycleItems: idArrs
-        }
-      })
-      const hadFormatArr = getTargetData(recycleItems)
-      setRecycleLists(hadFormatArr)
-      setSelectedLists([])
+          recycleItems: idArrs,
+        },
+      });
+      const hadFormatArr = getTargetData(recycleItems);
+      setRecycleLists(hadFormatArr);
+      setSelectedLists([]);
       dispatch({
-        type: 'bar/updateTree',
-        payload: layers
-      })
+        type: "bar/updateTree",
+        payload: layers,
+      });
       dispatch({
-        type: 'bar/updateComponents',
+        type: "bar/updateComponents",
         payload: {
-          layers, components, selected: []
-        }
-      })
+          layers,
+          components,
+          selected: [],
+        },
+      });
       // 刷新组件中的画布
       dispatch({
         type: "bar/getDashboardDetails",
-        payload: bar.dashboardId
+        payload: bar.dashboardId,
       });
       dispatch({
-        type: 'bar/save',
-        payload: {}
-      })
+        type: "bar/save",
+        payload: {},
+      });
     } catch (error) {
-      console.log('恢复回收组件出错', error)
+      console.log("恢复回收组件出错", error);
     }
-  }
-
+  };
 
   // 选择 逻辑
   const onCheckAllChange = (e: any) => {
@@ -215,8 +214,7 @@ const RecycleBin = (props: any) => {
               <div className="card-title g-flex g-justify-between">
                 <Checkbox
                   indeterminate={
-                    selectedLists.length &&
-                    selectedLists.length !== recycleLists.length
+                    selectedLists.length && selectedLists.length !== recycleLists.length
                   }
                   onChange={onCheckAllChange}
                   checked={
@@ -225,8 +223,7 @@ const RecycleBin = (props: any) => {
                     selectedLists.length === recycleLists.length
                   }
                 >
-                  全选   ({selectedLists.length}/
-                  {recycleLists.length})
+                  全选 ({selectedLists.length}/{recycleLists.length})
                 </Checkbox>
                 <div>
                   <Button
@@ -262,9 +259,10 @@ const RecycleBin = (props: any) => {
           >
             <div className="card-body">
               {recycleLists.length ? (
-                recycleLists.map((item: any) => {
+                recycleLists.map((item: any, index: number) => {
                   return (
                     <ListItem
+                      key={index}
                       itemData={item}
                       clickCheckbox={clickSingleCheckbox}
                     ></ListItem>
@@ -272,10 +270,7 @@ const RecycleBin = (props: any) => {
                 })
               ) : (
                 <>
-                  <Empty
-                    description="暂无组件"
-                    imageStyle={{ marginTop: "15px" }}
-                  ></Empty>
+                  <Empty description="暂无组件" imageStyle={{ marginTop: "15px" }}></Empty>
                 </>
               )}
             </div>

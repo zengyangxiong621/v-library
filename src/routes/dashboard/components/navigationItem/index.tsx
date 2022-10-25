@@ -1,9 +1,9 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react/react-in-jsx-scope */
 import { memo, useState } from "react";
 import "./index.less";
 
 import { IconFont } from "../../../../utils/useIcon";
-
-
 
 const NavigationIcon = (props: any) => {
   const { data, getActiveIcon, activeIcon, isResetActiveIcon } = props;
@@ -18,14 +18,15 @@ const NavigationIcon = (props: any) => {
       break;
   }
   return (
-    <div className={`${!isResetActiveIcon && activeIcon === data.icon && "activeIcon"} GenerateIcon-wrap`}
+    <div
+      className={`${!isResetActiveIcon && activeIcon === data.icon && "activeIcon"
+        } GenerateIcon-wrap`}
       onClick={() => getActiveIcon(data.icon)}
     >
-      <IconFont className='icon' type={`icon-${icon}`} />
-      <div className='cdb-text'>{data.text}</div>
+      <IconFont className="icon" type={`icon-${icon}`} />
+      <div className="cdb-text">{data.text}</div>
     </div>
   );
 };
 
 export default memo(NavigationIcon);
-

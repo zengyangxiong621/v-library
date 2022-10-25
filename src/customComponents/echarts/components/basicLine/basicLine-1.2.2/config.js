@@ -1218,8 +1218,8 @@ const ComponentDefaultConfig = {
                         },
                         {
                           displayName: "起始颜色",
-                         // name: "areaStartColor",
-                         name: "themeGradientColorStart",
+                          // name: "areaStartColor",
+                          name: "themeGradientColorStart",
                           type: "color",
                           value: "rgba(51, 104, 206,0.6)",
                         },
@@ -1460,8 +1460,8 @@ const ComponentDefaultConfig = {
                         },
                         {
                           displayName: "起始颜色",
-                         // name: "areaStartColor",
-                         name: "themeGradientColorStart",
+                          // name: "areaStartColor",
+                          name: "themeGradientColorStart",
                           type: "color",
                           value: "rgba(36, 185, 101,0.6)",
                         },
@@ -1641,4 +1641,4 @@ const ComponentDefaultConfig = {
   ],
 };
 
-export {ComponentDefaultConfig}
+export { ComponentDefaultConfig };

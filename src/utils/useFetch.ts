@@ -51,18 +51,20 @@ export const useFetch = async (
   customOptions: any = {
     errorInfo: "请求发送失败",
     onlyNeedWrapData: false,
-    errHandleFn: () => {},
+    errHandleFn: () => {
+      // todo
+    },
   }
 ): Promise<[Error | null, any, any]> => {
   // 最终路径 & 最终配置、参数
   const finalPath = `${BASE_URL}${path}`;
   const finalParams = { ...DEFAULT_OPTIONS, ...fetchOptions };
 
-  const token=localStorage.getItem("token");
-  if(path!=="/visual/login/login"){
-    finalParams.headers["Token"]=token;
+  const token = localStorage.getItem("token");
+  if (path !== "/visual/login/login") {
+    finalParams.headers["Token"] = token;
   }
-  
+
   // 格式由fetchOptions中的responseType来决定，默认是json
   const finalFetch = fetch(finalPath, finalParams)
     .then((response: any) => {
@@ -73,14 +75,12 @@ export const useFetch = async (
       console.log("useFetch -- err", err);
     });
 
+  // eslint-disable-next-line prefer-const
   let [err, data]: any = await catchErr(finalFetch, customOptions);
   /**** 根据返回数据进行统一的处理 *****/
   // 捕获发送请求时的错误
   if (err) {
-    if (
-      !customOptions.errHandleFn &&
-      typeof customOptions.errHandleFn !== "function"
-    ) {
+    if (!customOptions.errHandleFn && typeof customOptions.errHandleFn !== "function") {
       message.error({ content: customOptions.errorInfo, duration: 2 });
     } else {
       customOptions.errHandleFn(err);
@@ -94,18 +94,18 @@ export const useFetch = async (
   // TODO 外部传入 对应状态码的处理逻辑
   if (code === 500) {
     message.error({
-      content: data?.message || "请求数据失败"
+      content: data?.message || "请求数据失败",
     });
   }
-  if(code===403){
+  if (code === 403) {
     message.error("暂无权限");
-    window.history.replaceState(null,"","/404");
+    window.history.replaceState(null, "", "/404");
   }
-  if(code===401){
+  if (code === 401) {
     if (token && token.endsWith("x-gridsumdissector")) {
       forwardLogin();
-    }else{
-      window.history.replaceState(null,"","/login");
+    } else {
+      window.history.replaceState(null, "", "/login");
       window.location.reload();
       localStorage.removeItem("token");
     }

@@ -1,28 +1,34 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useEffect, useRef, useState } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
 
 import { http, BASEURL } from "@/services/request";
-import { Input, message, Tooltip, Spin, Button, Form, Switch, Typography, Select, Upload } from "antd";
+import {
+  Input,
+  message,
+  Tooltip,
+  Spin,
+  Button,
+  Form,
+  Switch,
+  Typography,
+  Select,
+  Upload,
+} from "antd";
 import type { UploadProps } from "antd";
 import { IconFont } from "../../../../utils/useIcon";
 
 import NavigationItem from "../navigationItem/index";
 import DarkModal from "@/routes/myDashboard/components/darkThemeModal/index";
 
-
-
 const { Option } = Select;
 const { Paragraph } = Typography;
 
-
 const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveIcon }: any) => {
-
   const [appName, setAppName] = useState(bar.dashboardName);
   const [isRename, setIsRename] = useState(false);
-  const [activeIcon, setActiveIcon] = useState('');
+  const [activeIcon, setActiveIcon] = useState("");
 
   const appNameInputRef = useRef<any>();
   useEffect(() => {
@@ -31,24 +37,28 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   // 返回首页
   const toBack = () => {
-    console.log("bar.fullAmountRouteList", bar.fullAmountRouteList)
+    console.log("bar.fullAmountRouteList", bar.fullAmountRouteList);
     /*
       动态面板和引用面板的 url 上是有 panelId 和 stateId
       引用面板和应用的 url 只有 dashboardId
      */
     if (bar.panelId) {
       // 动态面板、下钻面板
-      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.panelId)
-      history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
+      const currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.panelId);
+      history.push(
+        bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url
+      );
     }
     if (!bar.panelId && bar.dashboardId) {
-      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.dashboardId)
-      if (currentRoute.type === 'dashboard') {
+      const currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.dashboardId);
+      if (currentRoute.type === "dashboard") {
         // 应用
-        history.replace(`/dashboard-manage`);
+        history.replace("/dashboard-manage");
       } else {
         // 引用面板
-        history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
+        history.push(
+          bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url
+        );
       }
     }
     // 暂时在这里清空localStorage
@@ -58,8 +68,8 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {
     const pageReflect: any = {
-      "yulan": `/bigscreen/${bar.dashboardId}`,
-      "fabu": `/publishScreen/${bar.dashboardId}`
+      yulan: `/bigscreen/${bar.dashboardId}`,
+      fabu: `/publishScreen/${bar.dashboardId}`,
     };
     const newTab = window.open("_blank");
     newTab!.location.href = pageReflect[targetPage];
@@ -79,12 +89,12 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     }
     const finalBody = {
       id: bar.dashboardId,
-      name: appName
+      name: appName,
     };
     const data: boolean = await http({
       url: "/visual/application/updateAppName",
       method: "POST",
-      body: finalBody
+      body: finalBody,
     });
     if (!data) {
       message.error({ content: "修改应用名失败", duration: 2 });
@@ -95,17 +105,16 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     setIsRename(true);
     setTimeout(() => {
       appNameInputRef.current!.focus({
-        cursor: "all"
+        cursor: "all",
       });
     }, 4);
-
   };
   const createPanel = (panelType: 0 | 1 | 2) => {
     dispatch({
       type: "bar/createPanel",
       payload: {
-        panelType
-      }
+        panelType,
+      },
     });
   };
 
@@ -167,7 +176,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     open: false,
     title: "",
     description: "",
-    thumb: ""
+    thumb: "",
   });
   const [titleInputValue, setTitleInputValue] = useState<string>("");
   const [descriptionInputValue, setDescriptionInputValue] = useState<string>("");
@@ -178,13 +187,14 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     resetAllState();
   };
   // TODO 点击发布的时候，怎么判断是否已经发布(easyv上有两个接口)
+  // eslint-disable-next-line no-irregular-whitespace
   // TODO　如果已经发布了，调用应用详情接口获取相关的发布详情
   // 打开发布Modal, 顺便获取当前应用的id 和 发布状态 0-未发布 1-已发布
   const openFabuModal = async (id: string) => {
     setShowFabuModal(true);
     const data = await http({
       url: `/visual/application/share/detail/${id}`,
-      method: "get"
+      method: "get",
     });
     const { shareUrl, ...filterShareUrl } = data;
     const isPublished = data.share;
@@ -223,7 +233,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       open: false,
       title: "",
       description: "",
-      thumb: ""
+      thumb: "",
     });
     setJmfxValue("");
     setFxljInputValue("");
@@ -246,7 +256,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     const data = await http({
       url: "/visual/application/share",
       method: "post",
-      body: body
+      body: body,
     });
     setFabuSpinning(false);
     return data;
@@ -254,22 +264,23 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   // 发布大屏
   const fabudaping = async () => {
     //发布成功，将弹窗内容替换成发布详情信息
-    const { thumb, needPassword, sharePassword, title, description, open, share, shareUrl } = fabuBody;
+    const { thumb, needPassword, sharePassword, title, description, open, share, shareUrl } =
+      fabuBody;
     // 这儿后端返回的全是null,需要将null 转为 ‘’ 或者 true/false
     const formatBody = {
-      "thumb": thumb || "",
-      "needPassword": needPassword || false,
-      "title": title || "",
-      "sharePassword": sharePassword || false,
-      "open": open || false,
+      thumb: thumb || "",
+      needPassword: needPassword || false,
+      title: title || "",
+      sharePassword: sharePassword || false,
+      open: open || false,
       description: description || "",
       share: share || false,
-      shareUrl: shareUrl || ""
+      shareUrl: shareUrl || "",
     };
     const finalBody = {
       ...formatBody,
       share: true,
-      id: bar.dashboardId
+      id: bar.dashboardId,
     };
     setFabuBody(finalBody);
     const result = await publishByDiffParams(finalBody);
@@ -298,7 +309,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       const finalBody = {
         ...fabuBody,
         share: false,
-        id: bar.dashboardId
+        id: bar.dashboardId,
       };
       setFabuBody(finalBody);
       const result = publishByDiffParams(finalBody);
@@ -319,7 +330,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     const finalBody = {
       ...fabuBody,
       needPassword: isCheck,
-      id: bar.dashboardId
+      id: bar.dashboardId,
     };
     setFabuBody(finalBody);
     const curUrl = fxljInputValue.split("?")[0];
@@ -343,7 +354,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     const finalBody = {
       ...fabuBody,
       open: isCheck,
-      id: bar.dashboardId
+      id: bar.dashboardId,
     };
     setFabuBody(finalBody);
     const result: any = await publishByDiffParams(finalBody);
@@ -372,7 +383,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     const finalBody = {
       ...fabuBody,
       id: bar.dashboardId,
-      [field]: newValue
+      [field]: newValue,
     };
     setFabuBody(finalBody);
     const result = await publishByDiffParams(finalBody);
@@ -420,7 +431,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
     accept: "image/png, image/jpeg",
     action: `${BASEURL}/visual/file/upload`,
     headers: {
-      authorization: localStorage.getItem("token") || ""
+      authorization: localStorage.getItem("token") || "",
     },
     beforeUpload(file: any) {
       const { name }: { name: string } = file;
@@ -430,7 +441,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       if (["png", "jpg", "gif", "jpeg", "webp", "svg"].includes(nameSuffix)) {
         message.error({
           content: "请上传符合格式的图片",
-          duration: 2
+          duration: 2,
         });
         file.status = "error";
         return false;
@@ -452,7 +463,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       const finalBody = {
         ...fabuBody,
         id: bar.dashboardId,
-        thumb: ""
+        thumb: "",
       };
       setFabuBody(finalBody);
       const result = await publishByDiffParams(finalBody);
@@ -462,226 +473,236 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       } else {
         message.error({ content: "发布失败", duration: 2 });
       }
-    }
+    },
   };
 
   return (
-    <div className='header-wrap'>
-      <div className='left'>
-        <IconFont type='icon-fanhui' className='left-icon'
-          onClick={() => toBack()} />
-        {
-          isRename ?
-            <Input className='left-input'
-              value={appName}
-              ref={appNameInputRef}
-              maxLength={20}
-              onBlur={(e) => reNameApp(e)}
-              onPressEnter={(e) => reNameApp(e)}
-              onChange={(e) => setAppName(e.target.value)}
-            />
-            :
-            <Tooltip title={appName} zIndex={9999999} color='#434343'>
-              <span className='appName' onDoubleClickCapture={showChangeNameInput}>{appName}</span>
-            </Tooltip>
-        }
+    <div className="header-wrap">
+      <div className="left">
+        <IconFont type="icon-fanhui" className="left-icon" onClick={() => toBack()} />
+        {isRename ? (
+          <Input
+            className="left-input"
+            value={appName}
+            ref={appNameInputRef}
+            maxLength={20}
+            onBlur={(e) => reNameApp(e)}
+            onPressEnter={(e) => reNameApp(e)}
+            onChange={(e) => setAppName(e.target.value)}
+          />
+        ) : (
+          <Tooltip title={appName} zIndex={9999999} color="#434343">
+            <span className="appName" onDoubleClickCapture={showChangeNameInput}>
+              {appName}
+            </span>
+          </Tooltip>
+        )}
       </div>
-      <div className='cdb-center'>
-        {
-          centerIconArr.map((item, index) => {
-            return (
-              <div key={index}>
-                {
-                  item.icon === "line" ? <div className="line"/>
-                    :
-                    <NavigationItem getActiveIcon={getActiveIcon}
-                      data={item} activeIcon={activeIcon} isResetActiveIcon={isResetActiveIcon} />
-                }
-              </div>
-            );
-          })
-        }
+      <div className="cdb-center">
+        {centerIconArr.map((item, index) => {
+          return (
+            <div key={index}>
+              {item.icon === "line" ? (
+                <div className="line" />
+              ) : (
+                <NavigationItem
+                  getActiveIcon={getActiveIcon}
+                  data={item}
+                  activeIcon={activeIcon}
+                  isResetActiveIcon={isResetActiveIcon}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
-      <div className='right'>
-        {
-          rightIconArr.map((item, index) => (
-            <NavigationItem
-              key={index}
-              getActiveIcon={getActiveIcon}
-              data={item} />
-          ))
-        }
+      <div className="right">
+        {rightIconArr.map((item, index) => (
+          <NavigationItem key={index} getActiveIcon={getActiveIcon} data={item} />
+        ))}
       </div>
       {/* 发布弹窗 */}
       <DarkModal
         className="fabu-dark-modal"
-        title='发布'
+        title="发布"
         destroyOnClose={true}
         getContainer={false}
         visible={showFabuModal}
         onCancel={cancelFabuModal}
         footer={null}
         style={{
-          top: "20%"
+          top: "20%",
         }}
       >
-        <Spin tip="发布中…"
+        <Spin
+          tip="发布中…"
           style={{ backgroundColor: "#2a2f3d", opacity: 0.8 }}
-          spinning={fabuSpinning} size="large">
-          <div className='fabu-modal-in-header'>
-            {
-              !isShared ?
-                <>
-                  <div className="img-wrap">
-                    <img src={require("../../../../assets/images/发布.png")} alt="图片正在赶来的路上…" />
-                  </div>
-                  <p className="text">发布后，获得大屏分享链接</p>
-                  <Button style={{ width: "106px" }} type="primary" onClickCapture={() => fabudaping()
-                  }>发布大屏</Button>
-                </>
-                :
-                <div>
-                  <Form
-                    labelCol={{
-                      span: 5,
-                    }}
-                    layout="horizontal"
-                    name='releaseForm'
-                  >
-                    <Form.Item
-                      colon={false}
-                      label="发布"
-                      style={{ marginRight: "auto" }}
-                    ><div className="set-flex">
-                        <Switch checked={fabuChecked} onChange={releaseChange} />
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      label="分享链接"
-                      colon={false}
-                      className="set-flex"
-                    >
-                      <div className="set-flex">
+          spinning={fabuSpinning}
+          size="large"
+        >
+          <div className="fabu-modal-in-header">
+            {!isShared ? (
+              <>
+                <div className="img-wrap">
+                  <img
+                    src={require("../../../../assets/images/发布.png")}
+                    alt="图片正在赶来的路上…"
+                  />
+                </div>
+                <p className="text">发布后，获得大屏分享链接</p>
+                <Button
+                  style={{ width: "106px" }}
+                  type="primary"
+                  onClickCapture={() => fabudaping()}
+                >
+                  发布大屏
+                </Button>
+              </>
+            ) : (
+              <div>
+                <Form
+                  labelCol={{
+                    span: 5,
+                  }}
+                  layout="horizontal"
+                  name="releaseForm"
+                >
+                  <Form.Item colon={false} label="发布" style={{ marginRight: "auto" }}>
+                    <div className="set-flex">
+                      <Switch checked={fabuChecked} onChange={releaseChange} />
+                    </div>
+                  </Form.Item>
+                  <Form.Item label="分享链接" colon={false} className="set-flex">
+                    <div className="set-flex">
+                      <Input
+                        value={fxljInputValue}
+                        disabled={true}
+                        onChange={(e) => setFxljInputValue(e.target.value)}
+                        style={{
+                          width: "310px",
+                          height: "32px",
+                          lineHeight: "32px",
+                          paddingRight: "8px",
+                        }}
+                      />
+                      <Paragraph
+                        copyable={{
+                          text: `${fxljInputValue}  ${titleInputValue}  ${descriptionInputValue}`,
+                          onCopy: () => {
+                            message.success({ content: "复制链接成功", duration: 1 });
+                          },
+                          icon: [
+                            <Tooltip title="点此复制分享链接" placement="bottom" key="copylink">
+                              <Button
+                                type="primary"
+                                style={{ width: "60px", marginLeft: "16px", height: "30px" }}
+                              >
+                                复制
+                              </Button>
+                            </Tooltip>,
+                          ],
+                          tooltips: false,
+                        }}
+                        style={{ marginBottom: 0 }}
+                      ></Paragraph>
+                    </div>
+                  </Form.Item>
+                  <Form.Item label="加密分享" colon={false}>
+                    <div className="jiamifenxiang set-flex ">
+                      <Switch onChange={jmfxChange} checked={jmfxSwitchValue} />
+                      {isShowJmfxInput && (
+                        <div className="set-flex">
+                          <div style={{ width: "28px", margin: "0 20px 0 23px" }}>密码 </div>
+                          <Input
+                            style={{ width: "159px" }}
+                            value={jmfxValue}
+                            disabled={true}
+                            maxLength={20}
+                          />
+                          <Paragraph
+                            copyable={{
+                              text: `${jmfxValue}`,
+                              onCopy: () => {
+                                message.success({ content: "复制密码成功", duration: 1 });
+                              },
+                              icon: [
+                                <Tooltip title="点此复制加密密码" placement="bottom" key="copypwd">
+                                  <Button
+                                    type="primary"
+                                    style={{ width: "60px", marginLeft: "16px", height: "30px" }}
+                                  >
+                                    复制
+                                  </Button>
+                                </Tooltip>,
+                              ],
+                              tooltips: false,
+                            }}
+                            style={{ marginBottom: 0 }}
+                          ></Paragraph>
+                        </div>
+                      )}
+                    </div>
+                  </Form.Item>
+                  <Form.Item label="应用到驾驶舱" colon={false}>
+                    <div className="set-flex">
+                      <Switch checked={toCockpitSwitchValue} onChange={toCockpit} />
+                    </div>
+                  </Form.Item>
+                  <Form.Item label="分享信息" colon={false}>
+                    <div onClickCapture={showRestInfo} className="icon-wrap set-flex">
+                      <IconFont type="icon-fanhui" rotate={showRestIconAngle} />
+                    </div>
+                  </Form.Item>
+                  {notShowRest && (
+                    <div>
+                      <Form.Item label="标题" colon={false}>
                         <Input
-                          value={fxljInputValue}
-                          disabled={true}
-                          onChange={(e) => setFxljInputValue(e.target.value)}
-                          style={{ width: "310px", height: "32px", lineHeight: "32px", paddingRight: "8px" }}
-                        />
-                        <Paragraph
-                          copyable={{
-                            text: `${fxljInputValue}  ${titleInputValue}  ${descriptionInputValue}`,
-                            onCopy: () => {
-                              message.success({ content: "复制链接成功", duration: 1 });
-                            },
-                            icon: [<Tooltip title="点此复制分享链接" placement="bottom">
-                              <Button type="primary" style={{ width: "60px", marginLeft: "16px", height: "30px" }} >复制</Button>
-                            </Tooltip>],
-                            tooltips: false
-                          }}
-                          style={{ marginBottom: 0 }}
-                        ></Paragraph>
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      label="加密分享"
-                      colon={false}
-                    ><div className="jiamifenxiang set-flex ">
-                        <Switch onChange={jmfxChange} checked={jmfxSwitchValue} />
-                        {
-                          isShowJmfxInput &&
-                          <div className="set-flex">
-                            <div style={{ width: "28px", margin: "0 20px 0 23px" }}>密码 </div>
-                            <Input style={{ width: "159px" }}
-                              value={jmfxValue}
-                              disabled={true}
-                              maxLength={20}
-                            />
-                            <Paragraph
-                              copyable={{
-                                text: `${jmfxValue}`,
-                                onCopy: () => {
-                                  message.success({ content: "复制密码成功", duration: 1 });
-                                },
-                                icon: [<Tooltip title="点此复制加密密码" placement="bottom">
-                                  <Button type="primary" style={{ width: "60px", marginLeft: "16px", height: "30px" }} >复制</Button>
-                                </Tooltip>],
-                                tooltips: false
-                              }}
-                              style={{ marginBottom: 0 }}
-                            ></Paragraph>
-                          </div>
-                        }
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      label="应用到驾驶舱"
-                      colon={false}
-                    ><div className="set-flex">
-                        <Switch checked={toCockpitSwitchValue} onChange={toCockpit} />
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      label="分享信息"
-                      colon={false}
-                    >
-                      <div onClickCapture={showRestInfo} className="icon-wrap set-flex">
-                        <IconFont type="icon-fanhui" rotate={showRestIconAngle} />
-                      </div>
-                    </Form.Item>
-                    {
-                      notShowRest &&
-                      <div>
-                        <Form.Item
-                          label="标题"
-                          colon={false}
-                        ><Input placeholder="请输入标题(不超过30字)"
+                          placeholder="请输入标题(不超过30字)"
                           value={titleInputValue}
                           maxLength={30}
                           onChange={(e) => setTitleInputValue(e.target.value)}
                           onBlur={titleInputOnBlur}
                           onFocus={getCurFocusInputValue}
-                          />
-                        </Form.Item>
-                        <Form.Item label="描述"
-                          colon={false}
-                        ><Input placeholder="请输入描述(不超过40字)"
+                        />
+                      </Form.Item>
+                      <Form.Item label="描述" colon={false}>
+                        <Input
+                          placeholder="请输入描述(不超过40字)"
                           value={descriptionInputValue}
                           maxLength={40}
                           onChange={(e) => setDescriptionInputValue(e.target.value)}
                           onBlur={desInputOnBlur}
                           onFocus={getCurFocusInputValue}
-                          />
-                        </Form.Item>
-                        <Form.Item label="图片地址"
-                          colon={false}
+                        />
+                      </Form.Item>
+                      <Form.Item label="图片地址" colon={false}>
+                        <Input
+                          placeholder="请输入图片地址"
+                          value={imgUrl}
+                          maxLength={1000}
+                          onChange={(e) => setImgUrl(e.target.value)}
+                          onBlur={imgUrlOnBlur}
+                          onFocus={getCurFocusInputValue}
+                          style={{ paddingRight: "8px" }}
+                        />
+                      </Form.Item>
+                      <Form.Item label="上传图片" colon={false}>
+                        <Upload
+                          {...uploadImgProps}
+                          className="set-flex"
+                          style={{ background: "red", maxWidth: "100%" }}
                         >
-                          <Input placeholder="请输入图片地址"
-                            value={imgUrl}
-                            maxLength={1000}
-                            onChange={(e) => setImgUrl(e.target.value)}
-                            onBlur={imgUrlOnBlur}
-                            onFocus={getCurFocusInputValue}
-                            style={{ paddingRight: "8px" }}
-                          />
-                        </Form.Item>
-                        <Form.Item label="上传图片"
-                          colon={false}
-                        >
-                          <Upload {...uploadImgProps} className="set-flex"
-                            style={{ background: "red", maxWidth: "100%" }}
-                          >
-                            <Button type="primary">点击上传</Button>
-                          </Upload>
-                        </Form.Item>
-                      </div>
-                    }
-                  </Form>
-                </div>
-            }
+                          <Button type="primary">点击上传</Button>
+                        </Upload>
+                      </Form.Item>
+                    </div>
+                  )}
+                </Form>
+              </div>
+            )}
           </div>
         </Spin>
-      </DarkModal >
+      </DarkModal>
     </div>
   );
 };
@@ -700,63 +721,61 @@ const centerIconArr = [
   },
   {
     icon: "zujian",
-    text: "组件"
+    text: "组件",
   },
   {
     icon: "sucai",
-    text: "素材"
+    text: "素材",
   },
   {
     icon: "dongtaimianban",
-    text: "动态面板"
+    text: "动态面板",
   },
   {
     icon: "yinyongmianban",
-    text: "引用面板"
+    text: "引用面板",
   },
   {
     icon: "xiazuanmianban",
-    text: "下钻面板"
+    text: "下钻面板",
   },
   {
     icon: "line",
   },
   {
     icon: "xiangmuguolvqi",
-    text: "项目过滤器"
+    text: "项目过滤器",
   },
   {
     icon: "huitiaoguanli",
-    text: "回调管理"
+    text: "回调管理",
   },
   {
     icon: "shujurongqi",
-    text: "数据容器"
+    text: "数据容器",
   },
   {
     icon: "zujiangengxin",
-    text: "组件更新"
+    text: "组件更新",
   },
   {
     icon: "zhutifengge",
-    text: "主题风格"
+    text: "主题风格",
   },
 ];
 
 const rightIconArr = [
   {
-    icon: 'huishouzhan',
-    text: '回收站'
+    icon: "huishouzhan",
+    text: "回收站",
   },
   {
     icon: "yulan",
-    text: "预览"
+    text: "预览",
   },
   {
     icon: "fabu",
-    text: "发布"
+    text: "发布",
   },
 ];
-export default memo(connect(
-  ({ bar }: any) => ({ bar })
-)(withRouter(Header)));
+export default memo(connect(({ bar }: any) => ({ bar }))(withRouter(Header)));

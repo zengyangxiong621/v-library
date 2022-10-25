@@ -1,18 +1,19 @@
-import React, { memo, useState, useEffect } from 'react'
-import './index.less'
+/* eslint-disable react/prop-types */
+import React, { memo, useState, useEffect } from "react";
+import "./index.less";
 
-const OriginSelect = props => {
-  const [value,setValue] = useState(props.psValue)
-  const _type = props.type
+const OriginSelect = (props) => {
+  const [value, setValue] = useState(props.psValue);
+  const _type = props.type;
 
   useEffect(() => {
-    setValue(props.psValue)
-  },[props.psValue])
+    setValue(props.psValue);
+  }, [props.psValue]);
 
   const valueChange = (value) => {
-    setValue(value)
-    props.onChange(value)
-  }
+    setValue(value);
+    props.onChange(value);
+  };
 
   const _enum = [
     "0% 0%",
@@ -23,8 +24,8 @@ const OriginSelect = props => {
     "100% 50%",
     "0% 100%",
     "50% 100%",
-    "100% 100%"
-  ]
+    "100% 100%",
+  ];
 
   const _directionEnum = [
     "left top",
@@ -35,23 +36,30 @@ const OriginSelect = props => {
     "right",
     "left bottom",
     "bottom",
-    "right bottom"
-  ]
-
+    "right bottom",
+  ];
 
   return (
     <div className="origin-select-container">
       <div className="origin-select-grid">
-        {
-          (_type === 'direction' ? _directionEnum : _enum).map(item => {
-            return (
-              <span onClick={()=>{valueChange(item)}} title={item} className={[ 'origin-select-item', value === item? 'origin-select-active': null ].join(' ')}></span>
-            )
-          })
-        }
+        {(_type === "direction" ? _directionEnum : _enum).map((item, index) => {
+          return (
+            <span
+              key={index}
+              onClick={() => {
+                valueChange(item);
+              }}
+              title={item}
+              className={[
+                "origin-select-item",
+                value === item ? "origin-select-active" : null,
+              ].join(" ")}
+            ></span>
+          );
+        })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default memo(OriginSelect)
+export default memo(OriginSelect);

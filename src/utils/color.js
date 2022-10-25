@@ -3,9 +3,9 @@ const isHex = (str) => {
 };
 const rgbToHex = (rgba) => {
   let { r, g, b } = rgba;
-  r=parseInt(r);
-  g=parseInt(g);
-  b=parseInt(b);
+  r = parseInt(r);
+  g = parseInt(g);
+  b = parseInt(b);
   let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   return hex;
 };
@@ -22,7 +22,7 @@ const hexToRgb = (hexValue) => {
   return {
     r,
     g,
-    b
+    b,
   };
 };
 const getRgbaNum = (rgba) => {
@@ -31,13 +31,8 @@ const getRgbaNum = (rgba) => {
     r: value[0],
     g: value[1],
     b: value[2],
-    a: value[3]
+    a: value[3],
   };
 };
 
-export {
-  isHex,
-  rgbToHex,
-  hexToRgb,
-  getRgbaNum
-};
+export { isHex, rgbToHex, hexToRgb, getRgbaNum };

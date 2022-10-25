@@ -1,158 +1,178 @@
-import React, { memo, useEffect, useState } from 'react'
-import './index.less'
+/* eslint-disable prettier/prettier */
+/* eslint-disable react/prop-types */
+import React, { memo, useEffect, useState } from "react";
+import "./index.less";
 
-import {
-  Form,
-  Input,
-  InputNumber,
-  Row,
-  Col
-} from 'antd';
-import { SketchPicker } from 'react-color'
-import { isHex, rgbToHex, hexToRgb, getRgbaNum } from '../../../../../utils/color'
+import { Form, Input, InputNumber, Row, Col } from "antd";
+import { SketchPicker } from "react-color";
+import { isHex, rgbToHex, hexToRgb, getRgbaNum } from "../../../../../utils/color";
 
-const Color = props => {
+const Color = (props) => {
   const [form] = Form.useForm();
   const formItemLayout = {
-    labelAlign: 'left'
+    labelAlign: "left",
   };
   const _data = props.data;
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [color, setColor] = useState({
     hex: isHex(_data.value) ? _data.value : rgbToHex(getRgbaNum(_data.value)),
-    rgb: isHex(_data.value) ? {
-      ...hexToRgb(_data.value),
-      a: 1
-    } : {
-      ...getRgbaNum(_data.value)
-    },
+    rgb: isHex(_data.value)
+      ? {
+        ...hexToRgb(_data.value),
+        a: 1,
+      }
+      : {
+        ...getRgbaNum(_data.value),
+      },
     // rgb: {r: 22, g: 22, b: 33, a: 1},
-    opacity: isHex(_data.value) ? 100 : getRgbaNum(_data.value).a * 100
+    opacity: isHex(_data.value) ? 100 : getRgbaNum(_data.value).a * 100,
   });
-  const [popStyle, setPopStyle] = useState({})
+  const [popStyle, setPopStyle] = useState({});
 
   const handleBgcChange = (e) => {
     setColor({
       hex: e.hex,
       rgb: e.rgb,
-      opacity: e.rgb.a * 100
-    })
+      opacity: e.rgb.a * 100,
+    });
     form.setFieldsValue({
       hex: e.hex,
-      opacity: e.rgb.a * 100
+      opacity: e.rgb.a * 100,
     });
     if (e.rgb.a === 1) {
-      _data.value = e.hex
+      _data.value = e.hex;
     } else {
-      _data.value = `rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`
+      _data.value = `rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`;
     }
-    props.onChange()
-  }
+    props.onChange();
+  };
   const handleHexChange = (e) => {
-    const hexTmp = e.target.value.trim()
-    const flag =
-      /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hexTmp)
-    const hex = flag ? hexTmp : '#000000';
-    const rgb = hexToRgb(hex)
+    const hexTmp = e.target.value.trim();
+    const flag = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hexTmp);
+    const hex = flag ? hexTmp : "#000000";
+    const rgb = hexToRgb(hex);
     setColor({
       hex,
       rgb: {
         r: rgb.r,
         g: rgb.g,
         b: rgb.b,
-        a: color.rgb.a
+        a: color.rgb.a,
       },
-      opacity: color.opacity
-    })
+      opacity: color.opacity,
+    });
     form.setFieldsValue({
       hex,
     });
     if (color.opacity === 100) {
-
-      _data.value = hex
+      _data.value = hex;
     } else {
-      _data.value = `rgba(${rgb.r},${rgb.g},${rgb.b},${color.rgb.a})`
+      _data.value = `rgba(${rgb.r},${rgb.g},${rgb.b},${color.rgb.a})`;
     }
-    props.onChange()
-  }
+    props.onChange();
+  };
   const handleOpacityChange = (e) => {
-    const opacity = e > 100 ? 100 : e < 0 ? 0 : e
+    const opacity = e > 100 ? 100 : e < 0 ? 0 : e;
     setColor({
       hex: color.hex,
       rgb: {
         r: color.rgb.r,
         g: color.rgb.g,
         b: color.rgb.b,
-        a: opacity / 100
+        a: opacity / 100,
       },
-      opacity
-    })
+      opacity,
+    });
     form.setFieldsValue({
-      opacity
+      opacity,
     });
     if (opacity === 100) {
-
-      _data.value = color.hex
+      _data.value = color.hex;
     } else {
-      _data.value = `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${opacity / 100})`
+      _data.value = `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${opacity / 100})`;
     }
-    props.onChange()
-  }
+    props.onChange();
+  };
   const selectBgc = (e) => {
-    let style
+    let style;
     // 判断弹出的颜色选择器应该放在上面或者下面
     if (e.view.innerHeight - e.clientY < 350) {
       style = {
         left: `${e.clientX - 80}px`,
-        bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
-      }
+        bottom: `${e.view.innerHeight - e.clientY + 20}px`,
+      };
     } else {
       style = {
         left: `${e.clientX - 80}px`,
-        top: `${e.clientY + 20}px`
-      }
+        top: `${e.clientY + 20}px`,
+      };
     }
-    setPopStyle(style)
-    setDisplayColorPicker(!displayColorPicker)
-  }
+    setPopStyle(style);
+    setDisplayColorPicker(!displayColorPicker);
+  };
   // @Mark-- 因为之前在 handleBgcChange 中发送请求,返回数据后会强刷页面，导致操作一次或几次后选色板消失， 所以将发送请求的时机延后至主动隐藏选色板后
   const clickOutSketchPicker = () => {
-    setDisplayColorPicker(false)
-    props.onChange()
-  }
+    setDisplayColorPicker(false);
+    props.onChange();
+  };
   return (
-    <Form
-      className="custom-form"
-      form={form}
-      {...formItemLayout}
-      colon={false}
-      style={props.style}
-    >
+    <Form className="custom-form" form={form} {...formItemLayout} colon={false} style={props.style}>
       <Form.Item label={_data.displayName}>
-        <div className="color-swatch" onClick={e => selectBgc(e)}>
-          <div className="color-dis" style={{ background: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})` }} />
+        <div className="color-swatch" onClick={(e) => selectBgc(e)}>
+          <div
+            className="color-dis"
+            style={{
+              background: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+            }}
+          />
         </div>
-        {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
-          <div className="color-cover" onClick={() => clickOutSketchPicker()} />
-          <SketchPicker color={color.rgb} onChange={(e) => { handleBgcChange(e) }} />
-        </div> : null}
+        {displayColorPicker ? (
+          <div className="color-popover" style={{ ...popStyle }}>
+            <div className="color-cover" onClick={() => clickOutSketchPicker()} />
+            <SketchPicker
+              color={color.rgb}
+              onChange={(e) => {
+                handleBgcChange(e);
+              }}
+            />
+          </div>
+        ) : null}
         <Form.Item noStyle name="hex">
-          <Input defaultValue={color.hex} className="input-hex" onBlur={(e) => { handleHexChange(e) }} />
+          <Input
+            defaultValue={color.hex}
+            className="input-hex"
+            onBlur={(e) => {
+              handleHexChange(e);
+            }}
+          />
         </Form.Item>
         <Form.Item noStyle name="opacity">
-          <InputNumber defaultValue={color.opacity} className="size-input input-opacity" onChange={(e) => { handleOpacityChange(e) }} min={0}
+          <InputNumber
+            defaultValue={color.opacity}
+            className="size-input input-opacity"
+            onChange={(e) => {
+              handleOpacityChange(e);
+            }}
+            min={0}
             max={100}
-            formatter={value => `${value}%`}
-            parser={value => value.replace('%', '')} />
+            formatter={(value) => `${value}%`}
+            parser={(value) => value.replace("%", "")}
+          />
         </Form.Item>
         <Row>
-          <Col span={4} className="detail-txt">颜色</Col>
-          <Col span={11} className="detail-txt" style={{ textIndent: '4px' }}>Hex</Col>
-          <Col span={8} className="detail-txt" style={{ textIndent: '6px' }}>不透明度</Col>
+          <Col span={4} className="detail-txt">
+            颜色
+          </Col>
+          <Col span={11} className="detail-txt" style={{ textIndent: "4px" }}>
+            Hex
+          </Col>
+          <Col span={8} className="detail-txt" style={{ textIndent: "6px" }}>
+            不透明度
+          </Col>
         </Row>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default memo(Color)
+export default memo(Color);

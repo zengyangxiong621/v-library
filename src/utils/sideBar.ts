@@ -193,11 +193,7 @@ const hidden: threeParams = (layers, selectedNodes, targetShowState) => {
 /**
  * description: 单独显示图层
  */
-const singleShowLayer: threeParams = (
-  layers,
-  selectedNodes,
-  SingleShowLayerState
-) => {
+const singleShowLayer: threeParams = (layers, selectedNodes, SingleShowLayerState) => {
   const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
@@ -298,11 +294,7 @@ const cancelGroup: TMoveUpOrDown = (layers, selectedNodes) => {
 /**
  * description: 显示/关闭 重命名输入框
  */
-const showInput: (a: any[], b: string[], c: boolean) => any[] = (
-  layers,
-  node,
-  onOrOff
-) => {
+const showInput: (a: any[], b: string[], c: boolean) => any[] = (layers, node, onOrOff) => {
   const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {
@@ -325,11 +317,7 @@ const showInput: (a: any[], b: string[], c: boolean) => any[] = (
 /**
  * description: 重命名
  */
-const reName: (a: any[], b: string[], c: string) => any[] = (
-  layers,
-  node,
-  newName
-) => {
+const reName: (a: any[], b: string[], c: string) => any[] = (layers, node, newName) => {
   const layersCopy = JSON.parse(JSON.stringify(layers));
   const recursiveFn = (data: any, id: string) => {
     for (let i = 0, len = data.length; i < len; i++) {

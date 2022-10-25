@@ -5,26 +5,26 @@ let componentThemeConfigs = {};
 const setComponentThemeConfigs = (key, value) => {
   componentThemeConfigs[key] = value;
 };
-const deleteAllComponentThemeConfigs =()=>{
+const deleteAllComponentThemeConfigs = () => {
   componentThemeConfigs = {};
 };
-const getComponentThemeConfigs = ()=>{
+const getComponentThemeConfigs = () => {
   return componentThemeConfigs;
 };
 
 // 复制组件样式{moduleName:'xxxx',moduleVersion:"xxxx",config:[...]}
-let componentCopyConfig= {} 
-const setComponentCopyConfig = param =>{
-  componentCopyConfig = param
-}
-const getComponentCopyConfig = ()=>{
-  return componentCopyConfig
-}
+let componentCopyConfig = {};
+const setComponentCopyConfig = (param) => {
+  componentCopyConfig = param;
+};
+const getComponentCopyConfig = () => {
+  return componentCopyConfig;
+};
 
 export {
   setComponentThemeConfigs,
   deleteAllComponentThemeConfigs,
   getComponentThemeConfigs,
   setComponentCopyConfig,
-  getComponentCopyConfig
+  getComponentCopyConfig,
 };

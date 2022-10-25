@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from "react";
 import * as echarts from "echarts";
 import PropTypes from "prop-types";
@@ -44,14 +45,8 @@ class ECharts extends Component {
     }
 
     // 当这些属性保持不变的时候，不 setOption
-    const pickKeys = [
-      "option",
-      "notMerge",
-      "lazyUpdate",
-      "showLoading",
-      "loadingOption"
-    ];
-    if (!pickKeys.some(item => !isEqual(prevProps[item], this.props[item]))) {
+    const pickKeys = ["option", "notMerge", "lazyUpdate", "showLoading", "loadingOption"];
+    if (!pickKeys.some((item) => !isEqual(prevProps[item], this.props[item]))) {
       return;
     }
 
@@ -69,7 +64,7 @@ class ECharts extends Component {
   }
 
   // return the echart object
-  getEchartsInstance = () =>    
+  getEchartsInstance = () =>
     echarts.getInstanceByDom(this.echartsElement) ||
     echarts.init(this.echartsElement, this.props.theme, this.props.opts);
 
@@ -86,8 +81,7 @@ class ECharts extends Component {
     this.echartObj = this.renderEchartDom();
     this.bindEvents(this.echartObj, onEvents || {});
     // on chart ready
-    if (typeof onChartReady === "function")
-      this.props.onChartReady(this.echartObj);
+    if (typeof onChartReady === "function") this.props.onChartReady(this.echartObj);
   };
 
   // bind the events
@@ -97,7 +91,7 @@ class ECharts extends Component {
       if (typeof eventName === "string" && typeof func === "function") {
         // binding event
         // instance.off(eventName); // 已经 dispose 在重建，所以无需 off 操作
-        instance.on(eventName, param => {
+        instance.on(eventName, (param) => {
           func(param, instance);
         });
       }
@@ -124,8 +118,7 @@ class ECharts extends Component {
     );
 
     // set loading mask
-    if (this.props.showLoading)
-      echartObj.showLoading(this.props.loadingOption || null);
+    if (this.props.showLoading) echartObj.showLoading(this.props.loadingOption || null);
     else echartObj.hideLoading();
 
     return echartObj;
@@ -135,16 +128,15 @@ class ECharts extends Component {
     const { size, style, id, className } = this.props;
     const { width, height } = size;
 
-
     const newStyle = {
       height,
       width,
-      ...style
+      ...style,
     };
 
     return (
       <div
-        ref={e => {
+        ref={(e) => {
           this.echartsElement = e;
         }}
         style={newStyle}
@@ -170,14 +162,8 @@ ECharts.propTypes = {
   opts: PropTypes.shape({
     devicePixelRatio: PropTypes.number,
     renderer: PropTypes.oneOf(["canvas", "svg"]),
-    width: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.oneOf([null, undefined, "auto"])
-    ]),
-    height: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.oneOf([null, undefined, "auto"])
-    ]),
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([null, undefined, "auto"])]),
+    height: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([null, undefined, "auto"])]),
   }),
   shouldSetOption: PropTypes.func,
 };
@@ -189,16 +175,18 @@ ECharts.defaultProps = {
   style: {},
   size: {
     width: "100%",
-    height: "100%"
+    height: "100%",
   },
   className: "",
   theme: null,
-  onChartReady: () => {}, 
+  onChartReady: () => {
+    // todo
+  },
   showLoading: false,
   loadingOption: null,
   onEvents: {},
   opts: {
-    renderer:'svg'
+    renderer: "svg",
   },
   shouldSetOption: () => true,
 };

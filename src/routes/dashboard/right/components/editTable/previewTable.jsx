@@ -1,44 +1,48 @@
-
-import React, { memo, useState, useEffect } from 'react'
-import './index.less'
+/* eslint-disable prettier/prettier */
+/* eslint-disable react/prop-types */
+import React, { memo, useState, useEffect } from "react";
+import "./index.less";
 import Spreadsheet from "./spreadsheet.js";
-import * as XLSX from 'xlsx'
-import { http } from '../../../../../services/request'
-import { BASEURL } from '@/services/request'
-import debounce from 'lodash/debounce';
+import * as XLSX from "xlsx";
+import { http } from "../../../../../services/request";
+import { BASEURL } from "@/services/request";
+import debounce from "lodash/debounce";
 
-import { Button, Modal, Spin } from 'antd';
+import { Button, Modal, Spin } from "antd";
 
-let currentSheetData = null
-let isTableChange = false
+let currentSheetData = null;
+let isTableChange = false;
 
-const PreviewTable = props => {
-  const { visible, fileUrl, changeShowState, changeRecordFileUrl } = props
-  const [modalContent, setModalContent] = useState(null)
-  const [isEdit, setIsEdit] = useState(false)
+const PreviewTable = (props) => {
+  const { visible, fileUrl, changeShowState, changeRecordFileUrl } = props;
+  const [modalContent, setModalContent] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     if (fileUrl) {
-      downloadExcel()
-      setModalContent(null)
+      downloadExcel();
+      setModalContent(null);
     }
-  }, [fileUrl])
+  }, [fileUrl]);
 
   const downloadExcel = async () => {
-    const data = await http({
-      url: "/visual/file/download",
-      method: 'post',
-      credentials: 'omit',
-      responseType: 'arraybuffer',
-      body: {
-        fileUrl
-      }
-    },true)
-    const dataNew = new Uint8Array(data)
-    const workbook = XLSX.read(dataNew, { type: 'array' });
-    const workbookNew = stox(workbook)
-    setModalContent(workbookNew)
-  }
+    const data = await http(
+      {
+        url: "/visual/file/download",
+        method: "post",
+        credentials: "omit",
+        responseType: "arraybuffer",
+        body: {
+          fileUrl,
+        },
+      },
+      true
+    );
+    const dataNew = new Uint8Array(data);
+    const workbook = XLSX.read(dataNew, { type: "array" });
+    const workbookNew = stox(workbook);
+    setModalContent(workbookNew);
+  };
 
   /** 将xlsx中的workbook中的数据格式转为x-data-spreadsheet所需的数据格式 */
   const stox = (wb) => {
@@ -50,62 +54,64 @@ const PreviewTable = props => {
       aoa.forEach((r, i) => {
         const cells = {};
         r.forEach((c, j) => {
-          cells[j] = ({ text: c });
+          cells[j] = { text: c };
         });
         o.rows[i] = { cells: cells };
-      })
+      });
       // 设置合并单元格
-      if (ws['!merges']) {
-        ws['!merges'].forEach(merge => {
+      if (ws["!merges"]) {
+        ws["!merges"].forEach((merge) => {
           /** merge = {
            *  s: {c: 0, r: 15}
            *  e: {c: 15, r: 15}
            * }
            */
           // 修改 cell 中 merge [合并行数,合并列数]
-          let cell = o.rows[merge.s.r].cells[merge.s.c]
+          let cell = o.rows[merge.s.r].cells[merge.s.c];
 
           //无内容单元格处理
           if (!cell) {
-            cell = { text: "" }
+            cell = { text: "" };
           }
-          cell.merge = [merge.e.r - merge.s.r, merge.e.c - merge.s.c]
-          o.rows[merge.s.r].cells[merge.s.c] = cell
+          cell.merge = [merge.e.r - merge.s.r, merge.e.c - merge.s.c];
+          o.rows[merge.s.r].cells[merge.s.c] = cell;
 
           // 修改 merges
-          o.merges.push(XLSX.utils.encode_range(merge))
-        })
+          o.merges.push(XLSX.utils.encode_range(merge));
+        });
       }
       out.push(o);
     });
     return out;
-  }
+  };
 
   /** 上传excel */
   const uploadExcel = () => {
-    const token=localStorage.getItem('token')
-    const fileName = fileUrl.split('/').pop()
+    const token = localStorage.getItem("token");
+    const fileName = fileUrl.split("/").pop();
     const new_wb = xtos(currentSheetData);
-    const wbout = XLSX.write(new_wb, { type: 'binary' })
+    const wbout = XLSX.write(new_wb, { type: "binary" });
     const file = new Blob([s2ab(wbout)]);
-    const forms = new FormData()
-    forms.append('file', file,`${fileName}`)
+    const forms = new FormData();
+    forms.append("file", file, `${fileName}`);
     fetch(`${BASEURL}/visual/file/upload`, {
-      method: 'POST',
+      method: "POST",
       body: forms,
-      credentials: 'include',
-      headers:{
-        'token':token
-      }
-    }).then(res => {
-      return res.json()
-    }).then(res => {
-      changeRecordFileUrl(res.data)
+      credentials: "include",
+      headers: {
+        token: token,
+      },
     })
-  }
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        changeRecordFileUrl(res.data);
+      });
+  };
 
   /** 将x-data-spreadsheet中的数据格式转为xlsx中的workbook */
-  const xtos = sdata => {
+  const xtos = (sdata) => {
     var out = XLSX.utils.book_new();
     sdata.forEach(function (xws) {
       var aoa = [[]];
@@ -129,44 +135,44 @@ const PreviewTable = props => {
           2: "O2:P2"
           3: "F2:G2"
        */
-      ws['!merges'] = []
-      xws.merges.forEach(merge => {
-        ws['!merges'].push(XLSX.utils.decode_range(merge))
-      })
+      ws["!merges"] = [];
+      xws.merges.forEach((merge) => {
+        ws["!merges"].push(XLSX.utils.decode_range(merge));
+      });
 
       XLSX.utils.book_append_sheet(out, ws, xws.name);
     });
     return out;
-  }
+  };
 
   const s2ab = (s) => {
     var buf = new ArrayBuffer(s.length);
     var view = new Uint8Array(buf);
-    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
     return buf;
-  }
+  };
 
-  const modalDataChange = debounce(data => {
-    isTableChange = true
-    currentSheetData = data
-  }, 300)
+  const modalDataChange = debounce((data) => {
+    isTableChange = true;
+    currentSheetData = data;
+  }, 300);
 
   const handleEdit = () => {
-    setIsEdit(true)
-  }
+    setIsEdit(true);
+  };
 
   const handleCancel = () => {
-    changeShowState(false)
-    setIsEdit(false)
-  }
+    changeShowState(false);
+    setIsEdit(false);
+  };
 
   const handleOk = () => {
-    changeShowState(false)
-    setIsEdit(false)
+    changeShowState(false);
+    setIsEdit(false);
     if (isTableChange) {
-      uploadExcel()
+      uploadExcel();
     }
-  }
+  };
 
   return (
     <Modal
@@ -177,30 +183,56 @@ const PreviewTable = props => {
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[
-        <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel} disabled={!modalContent}>取消</Button>,
-        <Button type="primary" className='modalBtn okBtn' onClick={handleEdit} disabled={!modalContent}>编辑</Button>,
-        <Button type="primary" className='modalBtn okBtn' onClick={handleOk} disabled={!modalContent}>确认</Button>
+        <Button
+          key="1"
+          type="primary"
+          className="modalBtn cancelBtn"
+          onClick={handleCancel}
+          disabled={!modalContent}
+        >
+          取消
+        </Button>,
+        <Button
+          key="2"
+          type="primary"
+          className="modalBtn okBtn"
+          onClick={handleEdit}
+          disabled={!modalContent}
+        >
+          编辑
+        </Button>,
+        <Button
+          key="3"
+          type="primary"
+          className="modalBtn okBtn"
+          onClick={handleOk}
+          disabled={!modalContent}
+        >
+          确认
+        </Button>,
       ]}
     >
-      {
-        modalContent ?
-          <Spreadsheet
-            key={fileUrl}
-            height="100%"
-            data={modalContent}
-            onChange={modalDataChange}
-            options={
-              isEdit ? {
-                mode: 'edit'
-              } : {
-                mode: 'read'
+      {modalContent ? (
+        <Spreadsheet
+          key={fileUrl}
+          height="100%"
+          data={modalContent}
+          onChange={modalDataChange}
+          options={
+            isEdit
+              ? {
+                mode: "edit",
               }
-            }
-          /> :
-          <Spin tip="加载中..." />
-      }
+              : {
+                mode: "read",
+              }
+          }
+        />
+      ) : (
+        <Spin tip="加载中..." />
+      )}
     </Modal>
-  )
-}
+  );
+};
 
-export default memo(PreviewTable)
+export default memo(PreviewTable);

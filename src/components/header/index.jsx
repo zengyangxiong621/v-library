@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { memo, useState, useEffect, useMemo } from "react";
 import { Link } from "dva/router";
 import "./index.less";

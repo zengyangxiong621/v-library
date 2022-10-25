@@ -1,60 +1,61 @@
-import React, { useEffect, useState } from 'react'
-import './index.less'
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from "react";
+import "./index.less";
 
-import { connect } from 'dva'
-import { COMPONENTS } from '../.././../constant/home/index'
-import GroupConfig from './components/groupConfig'
-import SingleLayer from './components/singleLayer'
-import PageSetting from './components/pageSetting'
-import AlignmentSetting from './components/alignmentSetting'
-import ReferenceSetting from './components/referenceSetting'
-import DynamicPageSetting from './components/dynamicPageSetting'
-import DynamicSetting from './components/dynamicSetting'
-import DrillDownPageSetting from './components/drillDownPageSetting'
+import { connect } from "dva";
+import { COMPONENTS } from "../.././../constant/home/index";
+import GroupConfig from "./components/groupConfig";
+import SingleLayer from "./components/singleLayer";
+import PageSetting from "./components/pageSetting";
+import AlignmentSetting from "./components/alignmentSetting";
+import ReferenceSetting from "./components/referenceSetting";
+import DynamicPageSetting from "./components/dynamicPageSetting";
+import DynamicSetting from "./components/dynamicSetting";
+import DrillDownPageSetting from "./components/drillDownPageSetting";
 /**
  * 1. 组配置、单个图层配置、页面设置、多选时对齐设置
  *
  */
 
 const Right = ({ dispatch, bar }) => {
-  const [whichShow, setWhichShow] = useState('pageSetting')
-  const [key, setKey] = useState(bar.key.join(''))
+  const [whichShow, setWhichShow] = useState("pageSetting");
+  const [key, setKey] = useState(bar.key.join(""));
   useEffect(() => {
     if (bar.isPanel && !bar.selectedComponentOrGroup.length) {
-      setWhichShow('dynamicPageSetting')
+      setWhichShow("dynamicPageSetting");
     } else if (!bar.selectedComponentOrGroup.length) {
-      setWhichShow('pageSetting')
+      setWhichShow("pageSetting");
     }
     // 组件设置/组设置
     if (bar.selectedComponentOrGroup.length === 1) {
-      const layer = bar.selectedComponentOrGroup[0]
+      const layer = bar.selectedComponentOrGroup[0];
       if (COMPONENTS in layer) {
         // 组设置
-        setWhichShow('groupConfig')
+        setWhichShow("groupConfig");
       } else {
         // 单个设置
-        if ('panelType' in layer) {
+        if ("panelType" in layer) {
           if (layer.panelType === 0) {
-            setWhichShow('dynamicSetting')
+            setWhichShow("dynamicSetting");
           }
           if (layer.panelType === 1) {
-            setWhichShow('referenceSetting')
+            setWhichShow("referenceSetting");
           }
           if (layer.panelType === 2) {
-            setWhichShow('drillDownPageSetting')
+            setWhichShow("drillDownPageSetting");
           }
         } else {
-          setWhichShow('singleLayer')
+          setWhichShow("singleLayer");
         }
       }
     }
     // 对齐设置
     if (bar.selectedComponentOrGroup.length > 1) {
-      setWhichShow('alignmentSetting')
+      setWhichShow("alignmentSetting");
     }
-    const key = bar.key
-    setKey(key.join(''))
-  }, [bar.key, bar.isPanel])
+    const key = bar.key;
+    setKey(key.join(""));
+  }, [bar.key, bar.isPanel]);
 
   const targetCompReflect = {
     groupConfig: <GroupConfig key={key} />,
@@ -65,23 +66,11 @@ const Right = ({ dispatch, bar }) => {
     dynamicSetting: <DynamicSetting key={key} />,
     dynamicPageSetting: <DynamicPageSetting key={key} />,
     drillDownPageSetting: <DrillDownPageSetting key={key} />,
-  }
+  };
 
-  return (
-    <div className="right-setting-wrap">
-      {
-        targetCompReflect[whichShow]
-      }
-    </div>
-  )
-}
+  return <div className="right-setting-wrap">{targetCompReflect[whichShow]}</div>;
+};
 
-export default connect((
-  {
-    bar,
-  },
-) => (
-  {
-    bar,
-  }
-))(Right)
+export default connect(({ bar }) => ({
+  bar,
+}))(Right);
