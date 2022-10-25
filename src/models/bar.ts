@@ -69,20 +69,18 @@ export default {
       // eslint-disable-line
       history.listen((pathname: any) => {
         const pathName = window.location.pathname;
-        console.log('pathName', pathName)
         if (pathName.indexOf("dashboard/") !== -1) {
           // 应用编辑页
-          const dashboardReg = /dashboard\/(.+?)\#\//g;
-          const panelReg = /panel-(.+?)\//g;
-          const stateReg = /state-(.+?)/g;
+
           // const dashboardId = pathName.split("dashboard/")[1] ;
-          let dashboardId = null, panelId = null, stateId = null
-          const idList = pathName.split('/').map(item => {
+          // afterDashboardUrl 是 截取路由/dashboard/到后面
+          let afterDashboardUrl = pathName.slice(pathName.indexOf('/dashboard/'))
+          const idList = afterDashboardUrl.split('/').map(item => {
             return item.replace(/[^0-9]/ig, "")
           }).filter(item => item)
-          dashboardId = idList[0]
-          panelId = idList[1]
-          stateId = idList[2]
+          let dashboardId = idList[0] || null
+          let panelId = idList[1] || null
+          let stateId = idList[2] || null
 /*          if(dashboardReg.test(pathName)) {
             dashboardId = (pathName.match(dashboardReg) as any)[0];
             dashboardId = dashboardId.replace(/[^\d|^\.|^\-]/g, "")
