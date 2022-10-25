@@ -69,18 +69,36 @@ export default {
       // eslint-disable-line
       history.listen((pathname: any) => {
         const pathName = window.location.pathname;
+        console.log('pathName', pathName)
         if (pathName.indexOf("dashboard/") !== -1) {
           // 应用编辑页
-          const windowPathList = pathName.split("/");
-          const dashboardId = windowPathList[2];
-          let panelId = null,
-            stateId = null;
-          if (windowPathList[3]) {
-            panelId = windowPathList[3].split("-")[1];
+          const dashboardReg = /dashboard\/(.+?)\#\//g;
+          const panelReg = /panel-(.+?)\//g;
+          const stateReg = /state-(.+?)/g;
+          // const dashboardId = pathName.split("dashboard/")[1] ;
+          let dashboardId = null, panelId = null, stateId = null
+          const idList = pathName.split('/').map(item => {
+            return item.replace(/[^0-9]/ig, "")
+          }).filter(item => item)
+          dashboardId = idList[0]
+          panelId = idList[1]
+          stateId = idList[2]
+/*          if(dashboardReg.test(pathName)) {
+            dashboardId = (pathName.match(dashboardReg) as any)[0];
+            dashboardId = dashboardId.replace(/[^\d|^\.|^\-]/g, "")
           }
-          if (windowPathList[4]) {
-            stateId = windowPathList[4].split("-")[1];
+          if (panelReg.test(pathName)) {
+            panelId = (pathName.match(panelReg) as any)[0];
+            panelId = panelId.replace(/[^\d|^\.|^\-]/g, "")
           }
+          if (stateReg.test(pathName)) {
+            stateId = (pathName.match(stateReg) as any)[0];
+            stateId = stateId.replace(/[^\d|^\.|^\-]/g, "")
+          }*/
+          console.log('stateId', stateId)
+          console.log('panelId', panelId)
+          console.log('dashboardId', dashboardId)
+
           let isPanel = false;
           if (panelId) {
             isPanel = true;
