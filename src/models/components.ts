@@ -1,4 +1,3 @@
-
 export default {
   namespace: "components",
   state: {
@@ -7,16 +6,20 @@ export default {
       id: "1",
       name: "文字组件",
       dataStatic: {
-        data: [{
-          text: "文字组件"
-        }],
-        fields: [{
-          label: "content",
-          value: "content",
-          desc: "状态值"
-        }]
+        data: [
+          {
+            text: "文字组件",
+          },
+        ],
+        fields: [
+          {
+            label: "content",
+            value: "content",
+            desc: "状态值",
+          },
+        ],
       },
-    }
+    },
   },
   reducers: {
     inputChange(state: any, action: any) {
@@ -26,24 +29,24 @@ export default {
 
       const newDataStatic = {
         fields,
-        ...action.payload
+        ...action.payload,
       };
 
       return {
         ...state,
         componentConfig: {
           ...componentConfig,
-          dataStatic: newDataStatic
-        }
+          dataStatic: newDataStatic,
+        },
       };
-    }
+    },
   },
   effects: {
-    *change(action: any, { call, put, select}: any) {
+    *change(action: any, { call, put, select }: any) {
       yield put({
         type: "inputChange",
-        payload: action.payload
+        payload: action.payload,
       });
-    }
-  }
+    },
+  },
 };

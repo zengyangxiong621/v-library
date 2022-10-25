@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable import/no-anonymous-default-export */
 import { http } from "@/services/request";
 
 export default {
@@ -36,25 +34,21 @@ export default {
   },
   effects: {
     *getTemplateList({ payload }: any, { call, put, select }: any): any {
-      const data = yield http(
-        {
-          url: "/visual/application/queryAppList",
-          method: "post",
-          body: payload,
-        }
-      );
+      const data = yield http({
+        url: "/visual/application/queryAppList",
+        method: "post",
+        body: payload,
+      });
       yield put({
         type: "updateTemplateList",
         payload: data?.content || [],
       });
     },
     *getGroupTree({ payload }: any, { call, put }: any): any {
-      const data  = yield http(
-        {
-          url: `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
-          method: "get",
-        }
-      );
+      const data = yield http({
+        url: `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
+        method: "get",
+      });
       yield put({
         type: "setGroupList",
         payload: [

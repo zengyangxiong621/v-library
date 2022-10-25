@@ -1,4 +1,4 @@
-import { deepClone } from "@/utils/index"
+import { deepClone } from "@/utils/index";
 
 export const generateLayers = (
   layers: any,
@@ -30,8 +30,8 @@ const insertLayerById = (layers: any[], insertId: string, newLayer: any, isForce
         const item = data[i];
         if (item.id === id) {
           if (isForced) {
-            if(item?.modules) {
-              item.modules.push(newLayer)
+            if (item?.modules) {
+              item.modules.push(newLayer);
             }
           } else {
             data.splice(i, 0, newLayer);

@@ -26,7 +26,7 @@ const MOUNT_ANIMATION = "mountAnimation";
 
 enum hh {
   name = "zyx",
-  value = "hh"
+  value = "hh",
 }
 
 enum constantList {
@@ -96,5 +96,5 @@ export {
   COMPONENTS,
   OPACITY,
   INTERACTION,
-  MOUNT_ANIMATION
+  MOUNT_ANIMATION,
 };

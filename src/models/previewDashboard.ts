@@ -1,11 +1,13 @@
-/* eslint-disable import/no-anonymous-default-export */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { defaultData } from "./defaultData/previewDashboard";
 import { http } from "../services/request";
 import {
   ILayerComponent,
-  ILayerGroup, ILayerPanel,
+  ILayerGroup,
+  ILayerPanel,
   IPanel,
-} from "../routes/dashboard/center/components/CustomDraggable/type"
+} from "../routes/dashboard/center/components/CustomDraggable/type";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
 import {
   calcGroupPosition,
@@ -17,20 +19,16 @@ import {
   mergeComponentLayers,
   setComponentDimension,
   layersPanelsFlat,
-  duplicateDashboardConfig, deepForEachBeforeCallBack,
-} from "../utils"
-import { IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
+  duplicateDashboardConfig,
+  deepForEachBeforeCallBack,
+} from "../utils";
+import { IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
 export default {
   namespace: "previewDashboard",
   state: JSON.parse(JSON.stringify(defaultData)),
   effects: {
-    *initDashboard(
-      { payload: { dashboardId }, cb }: any,
-      { call, put, select }: any
-    ): any {
-      let previewDashboard: any = yield select(
-        ({ previewDashboard }: any) => previewDashboard
-      );
+    *initDashboard({ payload: { dashboardId }, cb }: any, { call, put, select }: any): any {
+      let previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
       // 获取回调参数列表
       const callbackParamsList = yield http({
         url: "/visual/module/callParam/list",
@@ -53,7 +51,9 @@ export default {
             callBackParamValues: previewDashboard.callbackArgs,
           },
         });
-        const index = previewDashboard.dataContainerDataList.findIndex((item: any) => item.id === component.id);
+        const index = previewDashboard.dataContainerDataList.findIndex(
+          (item: any) => item.id === component.id
+        );
         if (component.dataType === "static") {
           data = data.data;
         }
@@ -96,11 +96,11 @@ export default {
         },
       });
 
-      let layers: any[] = []
+      let layers: any[] = [];
       yield yield put({
         type: "getDashboardDetails",
         cb: async (data: any) => {
-          layers = data.layers
+          layers = data.layers;
           await cb(data);
         },
       });
@@ -109,8 +109,8 @@ export default {
         yield put({
           type: "getFullAmountDashboardDetails",
           payload: {
-            layers
-          }
+            layers,
+          },
         });
       }
 
@@ -121,13 +121,8 @@ export default {
         },
       });
     },
-    *getDataContainerList(
-      { payload, cb }: any,
-      { call, put, select }: any
-    ): any {
-      const previewDashboard: any = yield select(
-        ({ previewDashboard }: any) => previewDashboard
-      );
+    *getDataContainerList({ payload, cb }: any, { call, put, select }: any): any {
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
       const dashboardId = previewDashboard.dashboardId || payload;
       const data = yield http({
         method: "get",
@@ -188,9 +183,11 @@ export default {
           layerPanels.map((item: any) => getPanelConfigFunc(item))
         );
         panels = panels.filter((item) => item);
-        previewDashboard.fullAmountDashboardDetails = previewDashboard.fullAmountDashboardDetails.concat(panels);
+        previewDashboard.fullAmountDashboardDetails =
+          previewDashboard.fullAmountDashboardDetails.concat(panels);
         const panelsStatusDetail = await allPanelStatusDetailsFunc(panels);
-        previewDashboard.fullAmountDashboardDetails = previewDashboard.fullAmountDashboardDetails.concat(panelsStatusDetail);
+        previewDashboard.fullAmountDashboardDetails =
+          previewDashboard.fullAmountDashboardDetails.concat(panelsStatusDetail);
         for (const detail of panelsStatusDetail) {
           const layers = detail.layers;
           // @ts-ignore
@@ -199,9 +196,10 @@ export default {
         }
       };
       yield getDeepPanelAndStatusDetails(layerPanels);
-      let fullAmountDynamicAndDrillDownPanels: any = previewDashboard.fullAmountDashboardDetails.filter(
-        (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)
-      );
+      let fullAmountDynamicAndDrillDownPanels: any =
+        previewDashboard.fullAmountDashboardDetails.filter(
+          (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)
+        );
       fullAmountDynamicAndDrillDownPanels = fullAmountDynamicAndDrillDownPanels.map(
         ({ id, type, name, states }: IFullAmountDashboardDetail) => ({
           id,
@@ -229,8 +227,8 @@ export default {
           index: number
         ) => {
           if ("panelType" in layer && (layer.panelType === 0 || layer.panelType === 2)) {
-              ; (layer as any).modules =
-                (findLayerById(fullAmountDynamicAndDrillDownPanels, layer.id) as any)?.modules || []
+            (layer as any).modules =
+              (findLayerById(fullAmountDynamicAndDrillDownPanels, layer.id) as any)?.modules || [];
           }
         }
       );
@@ -255,17 +253,13 @@ export default {
       });
     },
     *getDashboardDetails({ cb }: any, { call, put, select }: any): any {
-      const previewDashboard: any = yield select(
-        ({ previewDashboard }: any) => previewDashboard
-      );
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
       const { dashboardId, fullAmountDashboardDetails } = previewDashboard;
       try {
-        let { layers, components, dashboardConfig, dashboardName } = yield http(
-          {
-            url: `/visual/application/dashboard/detail/${dashboardId}`,
-            method: "get",
-          }
-        );
+        let { layers, components, dashboardConfig, dashboardName } = yield http({
+          url: `/visual/application/dashboard/detail/${dashboardId}`,
+          method: "get",
+        });
         fullAmountDashboardDetails.push({
           layers,
           components,
@@ -287,21 +281,16 @@ export default {
           }
         };
         const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => func(item)));
-        yield (layers = deepForEach(
-          layers,
-          (layer: ILayerGroup | ILayerComponent) => {
-            layer.singleShowLayer = false;
-            delete layer.selected;
-            delete layer.hover;
-          }
-        ));
+        yield (layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+          layer.singleShowLayer = false;
+          delete layer.selected;
+          delete layer.hover;
+        }));
         yield yield put({
           type: "getComponentsData",
           payload: components,
         });
-        const previewDashboard: any = yield select(
-          ({ previewDashboard }: any) => previewDashboard
-        );
+        const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
         // @Mark 后端没有做 删除图层后 清空被删除分组的所有空父级分组,前端这儿需要自己处理一下
         const noEmptyGroupLayers = filterEmptyGroups(layers);
         const newDashboardConfig = duplicateDashboardConfig(
@@ -314,10 +303,10 @@ export default {
             dashboardId,
             dashboardConfig: newDashboardConfig,
             dashboardName,
-            fullAmountDashboardDetails
+            fullAmountDashboardDetails,
           },
         });
-        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers, });
+        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers });
       } catch (e) {
         return e;
       }
@@ -325,9 +314,7 @@ export default {
     *getComponentsData({ payload }: any, { call, put, select }: any): any {
       let getCompoentDataFlag = false;
       const components = payload;
-      const previewDashboard: any = yield select(
-        ({ previewDashboard }: any) => previewDashboard
-      );
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
       const { dashboardId, componentData, callbackArgs } = previewDashboard;
 
       const func = async (component: any) => {
@@ -345,8 +332,7 @@ export default {
             });
 
             if (data) {
-              componentData[component.id] =
-                component.dataType !== "static" ? data : data.data;
+              componentData[component.id] = component.dataType !== "static" ? data : data.data;
             } else {
               throw new Error("请求不到数据");
             }
@@ -369,9 +355,7 @@ export default {
     },
     *getContainersData({ payload }: any, { call, put, select }: any): any {
       const dataContainerList = payload;
-      const previewDashboard: any = yield select(
-        ({ previewDashboard }: any) => previewDashboard
-      );
+      const previewDashboard: any = yield select(({ previewDashboard }: any) => previewDashboard);
       const func = async (item: any) => {
         const container = previewDashboard.dataContainerList.find(
           (container: any) => container.id === item.id
@@ -389,15 +373,13 @@ export default {
                 callBackParamValues: previewDashboard.callbackArgs,
               },
             });
-          } catch(e) {
-            data = []
+          } catch (e) {
+            data = [];
           }
         }
-        previewDashboard.dataContainerDataList.find(
-          (data: any) => data.id === item.id
-        ).data = data;
-        return data
-      }
+        previewDashboard.dataContainerDataList.find((data: any) => data.id === item.id).data = data;
+        return data;
+      };
       yield Promise.all(dataContainerList.map((item: any) => func(item)));
       yield put({
         type: "save",

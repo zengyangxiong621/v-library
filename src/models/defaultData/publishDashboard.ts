@@ -82,7 +82,7 @@ export const defaultData = {
     },
   ],
   componentData: {}, // 组件数据，存放方式为{componentId: data}
-  currentActiveCompoentData: {},  // 组件当前状态下的数据，用于编辑时画布中的回调参数，存放方式为{componentId: data}
+  currentActiveCompoentData: {}, // 组件当前状态下的数据，用于编辑时画布中的回调参数，存放方式为{componentId: data}
   componentFilters: [],
   callbackArgs: {},
   callbackParamsList: [],
@@ -92,5 +92,5 @@ export const defaultData = {
   fullAmountComponents: [],
   fullAmountDashboardDetails: [],
   isDashboardInit: false,
-  fullAmountDynamicAndDrillDownPanels: []
+  fullAmountDynamicAndDrillDownPanels: [],
 };

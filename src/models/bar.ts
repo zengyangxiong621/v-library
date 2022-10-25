@@ -1,6 +1,9 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable import/no-anonymous-default-export */
-import { routerRedux } from "dva/router"
+/* eslint-disable no-empty */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { routerRedux } from "dva/router";
 
 import {
   calcGroupPosition,
@@ -13,7 +16,7 @@ import {
   layersPanelsFlat,
   mergeComponentLayers,
   setComponentDimension,
-} from "../utils"
+} from "../utils";
 
 import {
   COMPONENTS,
@@ -25,7 +28,7 @@ import {
   OPACITY,
   TOP,
   WIDTH,
-} from "../constant/home"
+} from "../constant/home";
 
 import {
   IComponent,
@@ -34,7 +37,7 @@ import {
   ILayerPanel,
   IPanel,
   IPanelStateGroup,
-} from "@/routes/dashboard/center/components/CustomDraggable/type"
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
 
 import {
   cancelGroup,
@@ -48,16 +51,16 @@ import {
   reName,
   showInput,
   singleShowLayer,
-} from "../utils/sideBar"
-import { DIMENSION } from "../routes/dashboard/center/constant"
+} from "../utils/sideBar";
+import { DIMENSION } from "../routes/dashboard/center/constant";
 
-import { generateLayers } from "./utils/generateLayers"
-import { filterEmptyGroups } from "./utils/filterEmptyGroups"
-import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers"
-import { http } from "../services/request"
-import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve"
-import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
-import dashboard from "./dashboard"
+import { generateLayers } from "./utils/generateLayers";
+import { filterEmptyGroups } from "./utils/filterEmptyGroups";
+import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
+import { http } from "../services/request";
+import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve";
+import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
+import dashboard from "./dashboard";
 
 export default {
   namespace: "bar",
@@ -111,7 +114,7 @@ export default {
               panelId,
               stateId,
             },
-            cb: () => {},
+            cb: () => { },
           });
         } else if (pathName.indexOf("dashboard-manage") !== -1) {
           // 我的可视化
@@ -122,10 +125,10 @@ export default {
       });
     },
     onResize({ dispatch, history }: any) {
-      window.onresize = (e) => {};
+      window.onresize = (e) => { };
     },
     keyEvent({ dispatch, history }: any) {
-      document.onkeydown = (e) => {};
+      document.onkeydown = (e) => { };
     },
   },
 
@@ -379,7 +382,7 @@ export default {
         }
       };
       const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<any> => {
-        return panels.reduce(async(total: any, item) => {
+        return panels.reduce(async (total: any, item) => {
           const res = await total;
           const data = await Promise.all(
             item.states.map((status: any) => getPanelStatusDetails(status))
@@ -388,14 +391,17 @@ export default {
             res.push({ ...detail, parentId: item.id });
           });
           return res;
-        }, [])
+        }, []);
       };
       // 获取面板+状态详情
-      const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>, parentId='') => {
+      const getDeepPanelAndStatusDetails = async (
+        layerPanels: Array<ILayerPanel>,
+        parentId = ""
+      ) => {
         let panels: Array<IPanel> = await Promise.all(
           layerPanels.map((item: any) => getPanelConfigFunc(item))
         );
-        panels = panels.filter((item) => item).map(item => ({...item, parentId}));
+        panels = panels.filter((item) => item).map((item) => ({ ...item, parentId }));
         bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panels);
         const panelsStatusDetail = await allPanelStatusDetailsFunc(panels);
         bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panelsStatusDetail);
@@ -424,7 +430,7 @@ export default {
           })),
         })
       );
-      let fullAmountLayers = deepForEach(
+      const fullAmountLayers = deepForEach(
         deepClone(layers),
         (
           layer:
@@ -443,7 +449,7 @@ export default {
           }
         }
       );
-/*      fullAmountLayers = deepForEach(fullAmountLayers, (layer: any, index: number, layers: any, parent: any) => {
+      /*      fullAmountLayers = deepForEach(fullAmountLayers, (layer: any, index: number, layers: any, parent: any) => {
         if ("panelType" in layer && layer.panelType === 0) {
           console.log('parent', parent)
           if(JSON.stringify(parent) === '{}') {
@@ -462,7 +468,7 @@ export default {
         type: "getComponentsData",
         payload: fullAmountComponents,
       });
-      console.log('bar.fullAmountDashboardDetails', bar.fullAmountDashboardDetails)
+      console.log("bar.fullAmountDashboardDetails", bar.fullAmountDashboardDetails);
       // 全量面板
       const fullAmountPanels = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
@@ -477,34 +483,43 @@ export default {
         "drillDownPanel",
       }
 
-      console.log('------------------', fullAmountPanels)
-      const referencePanelStates: Array<{id: string, name: string, parentId: string}> = fullAmountPanels.reduce((pre: any, cur: any) => {
-        if (panelTypeEnum[cur.type] === "referencePanel") {
-          pre.push(...cur.states.map((item: {id: string, name: string}) => ({...item, parentId: cur.parentId})))
-        }
-        return pre
-      }, [])
-      console.log('----------', referencePanelStates)
-      const fullAmountRouteList= [
+      console.log("------------------", fullAmountPanels);
+      const referencePanelStates: Array<{ id: string; name: string; parentId: string }> =
+        fullAmountPanels.reduce((pre: any, cur: any) => {
+          if (panelTypeEnum[cur.type] === "referencePanel") {
+            pre.push(
+              ...cur.states.map((item: { id: string; name: string }) => ({
+                ...item,
+                parentId: cur.parentId,
+              }))
+            );
+          }
+          return pre;
+        }, []);
+      console.log("----------", referencePanelStates);
+      const fullAmountRouteList = [
         {
           url: `/dashboard/${bar.dashboardId}`,
           id: bar.dashboardId,
           type: "dashboard",
         },
-        ...fullAmountPanels.filter((item: any) => panelTypeEnum[item.type] !== "referencePanel").map((panel: any) => ({
-          url: `/dashboard/${bar.dashboardId}/panel-${panel.id}${panel?.states[0]?.id ? "/state-" + panel.states[0].id : ""}`,
-          id: panel.id,
-          parentId: panel.parentId,
-          type: panelTypeEnum[panel.type],
-        })),
-        ...referencePanelStates.map(item => ({
+        ...fullAmountPanels
+          .filter((item: any) => panelTypeEnum[item.type] !== "referencePanel")
+          .map((panel: any) => ({
+            url: `/dashboard/${bar.dashboardId}/panel-${panel.id}${panel?.states[0]?.id ? "/state-" + panel.states[0].id : ""
+              }`,
+            id: panel.id,
+            parentId: panel.parentId,
+            type: panelTypeEnum[panel.type],
+          })),
+        ...referencePanelStates.map((item) => ({
           url: `/dashboard/${item.id}`,
           id: item.id,
           parentId: item.parentId,
-          type: "referencePanel"
-        }))
-      ]
-      console.log('fullAmountRouteList', fullAmountRouteList)
+          type: "referencePanel",
+        })),
+      ];
+      console.log("fullAmountRouteList", fullAmountRouteList);
       yield put({
         type: "save",
         payload: {
@@ -522,7 +537,7 @@ export default {
     },
     *getDashboardDetails({ cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      let { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
+      const { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
       const fullAmountDashboardDetails = bar.fullAmountDashboardDetails; // 这里是 空数组 []
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http({
@@ -804,7 +819,7 @@ export default {
           //   payload: payload.layers
           // })
         }
-      } catch (error) {}
+      } catch (error) { }
     },
     // 复制图层
     *copy({ payload }: any, { select, call, put }: any): any {
@@ -1022,8 +1037,8 @@ export default {
         state.bar.key.length !== 0
           ? state.bar.key[state.bar.key.length - 1]
           : state.bar.layers.length !== 0
-          ? state.bar.layers[0].id
-          : "";
+            ? state.bar.layers[0].id
+            : "";
       // 新建的是组件
       const data: any = yield http({
         url: "/visual/module/add",
@@ -1070,7 +1085,7 @@ export default {
       { call, put, select }: any
     ): any {
       const bar: any = yield select((state: any) => state.bar);
-      const { isPanel, stateId, panelId,  dashboardId, key, layers, fullAmountRouteList } = bar;
+      const { isPanel, stateId, panelId, dashboardId, key, layers, fullAmountRouteList } = bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         key.length !== 0 ? key[key.length - 1] : layers.length !== 0 ? layers[0].id : "";
@@ -1084,13 +1099,18 @@ export default {
         },
       });
       // todo 创建面板对 fullAmountRouteList 的影响
-      console.log("data", data)
+      console.log("data", data);
       if (data) {
-        const { id, name, states, type }: {
-          id: string,
-          name: string,
-          type: 0 | 1 | 2,
-          states: any
+        const {
+          id,
+          name,
+          states,
+          type,
+        }: {
+          id: string;
+          name: string;
+          type: 0 | 1 | 2;
+          states: any;
         } = data;
         const modules: Array<IPanelStateGroup> = states.map((item: any) => {
           return {
@@ -1112,22 +1132,23 @@ export default {
           [layerPanel],
           bar.fullAmountDashboardDetails
         );
-        enum panelTypeEnum{
+        enum panelTypeEnum {
           "dynamicPanel",
           "referencePanel",
-          "drillDownPanel"
+          "drillDownPanel",
         }
 
-        console.log('states'  )
+        console.log("states");
         if (panelType === 0 || panelType === 2) {
           // 动态面板或者是下钻面板
           fullAmountRouteList.push({
             id,
             parentId: isPanel ? panelId : dashboardId,
             type: panelTypeEnum[type],
-            url: `/dashboard/${dashboardId}/panel-${id}${states[0]?.id ? "/state-" + states[0].id : ""}`,
-          })
-          console.log('fullAmountRouteList', fullAmountRouteList)
+            url: `/dashboard/${dashboardId}/panel-${id}${states[0]?.id ? "/state-" + states[0].id : ""
+              }`,
+          });
+          console.log("fullAmountRouteList", fullAmountRouteList);
         }
         if (panelType === 1) {
           // 引用面板
@@ -1343,40 +1364,49 @@ export default {
     },
     *referencePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountPanels } = bar
-      const { panelConfig } = payload
+      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountPanels } = bar;
+      const { panelConfig } = payload;
 
-      const filterPanelStates = panelConfig.states.reduce((pre: any[], cur: any) => {
-        if (!pre.find(item => item.id === cur.id) && !!cur.id) {
-          pre.push(cur)
-        }
-        return pre
-      }, []).filter((state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id))
-      const panelParentId = fullAmountPanels.find((item: any) => item.id === panelConfig.id).parentId
-      console.log('panelParentId', panelParentId)
+      const filterPanelStates = panelConfig.states
+        .reduce((pre: any[], cur: any) => {
+          if (!pre.find((item) => item.id === cur.id) && !!cur.id) {
+            pre.push(cur);
+          }
+          return pre;
+        }, [])
+        .filter(
+          (state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id)
+        );
+      const panelParentId = fullAmountPanels.find(
+        (item: any) => item.id === panelConfig.id
+      ).parentId;
+      console.log("panelParentId", panelParentId);
 
-      console.log('fullAmountRouteList', fullAmountRouteList)
-      console.log('filterPanelStates', filterPanelStates)
+      console.log("fullAmountRouteList", fullAmountRouteList);
+      console.log("filterPanelStates", filterPanelStates);
       if (filterPanelStates.length > 0) {
-        const data = yield Promise.all(filterPanelStates.map((item: any) => getPanelStatusDetails(item)))
-        fullAmountDashboardDetails.push(...data)
-        fullAmountRouteList.push(...filterPanelStates.map((item: any) => ({
-          id: item.id,
-          parentId: panelParentId,
-          type: 'referencePanel',
-          url: `/dashboard/${item.id}`
-        })))
+        const data = yield Promise.all(
+          filterPanelStates.map((item: any) => getPanelStatusDetails(item))
+        );
+        fullAmountDashboardDetails.push(...data);
+        fullAmountRouteList.push(
+          ...filterPanelStates.map((item: any) => ({
+            id: item.id,
+            parentId: panelParentId,
+            type: "referencePanel",
+            url: `/dashboard/${item.id}`,
+          }))
+        );
       }
 
       yield put({
-        type: 'save',
+        type: "save",
         payload: {
           panelConfig,
           fullAmountDashboardDetails,
-          fullAmountRouteList
-        }
-      })
-
+          fullAmountRouteList,
+        },
+      });
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1392,7 +1422,7 @@ export default {
       const { id, name } = data;
 
       // 更新当前面板的状态列表
-      let newPanelStatesList = bar.panelStatesList.concat({
+      const newPanelStatesList = bar.panelStatesList.concat({
         name: data.name,
         id: data.id,
       });
@@ -1601,11 +1631,11 @@ export default {
           isPanel: false,
           stateId: "",
           panelId: "",
-          dashboardId
+          dashboardId,
         },
       });
     },
-    *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {},
+    *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any { },
   },
 
   reducers: {
@@ -1620,7 +1650,7 @@ export default {
       return { ...state };
     },
     // 初始化画布时，把请求后的原子组件信息一次性设置完成
-    setModuleDefaultConfigByOnce(state: IBarState, {payload}: any) {
+    setModuleDefaultConfigByOnce(state: IBarState, { payload }: any) {
       return { ...state, moduleDefaultConfig: payload };
     },
     deleteComponentData(state: IBarState, { payload }: any) {
@@ -1702,8 +1732,8 @@ export default {
       // fullInsertId 和 insertId 的区别就是:
       // 新增、复制组件（面板）的话只需要更新当前的 layers
       // 新增、复制组件（面板）。新增、复制状态的话需要更新整个 fullAmountLayers
-      let insertId: string = "",
-        fullInsertId: string = "",
+      let insertId = "",
+        fullInsertId = "",
         newLayers: Array<any> = [];
       const { layers } = state;
       // 新增组件
@@ -1775,7 +1805,7 @@ export default {
           .map((id: string) => {
             if (id.startsWith("group_")) {
               // 去layers中找到这个组下包含的各个组件
-              let res: any = [];
+              const res: any = [];
               const targetGroup = layers.find((item: any) => item.id === id);
               targetGroup.modules.forEach((x: any) => {
                 res.push(x.id);
@@ -1880,7 +1910,7 @@ export default {
         ...state,
       };
     },
-    updateSelectedComponents(state: IBarState, { payload, cb = function () {} }: any) {
+    updateSelectedComponents(state: IBarState, { payload, cb = function () { } }: any) {
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       // todo 这里需要添加 panel 的（来自 develop 分支）
       state.selectedComponents = [
@@ -1986,7 +2016,7 @@ export default {
       if (status === "分组") {
         const layer = state.selectedComponentOrGroup[0];
         const { opacity, hideDefault } = layer;
-        state.groupConfig.forEach((bigConfig: any, i: any) => {});
+        state.groupConfig.forEach((bigConfig: any, i: any) => { });
         const dimensionConfig = state.groupConfig.find(
           (config: any) => config.name === DIMENSION
         ).value;
