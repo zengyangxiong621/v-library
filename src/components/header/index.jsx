@@ -178,7 +178,7 @@ const Header = (props) => {
     </Menu>
   );
   const toBack = () => {
-    history.back();
+    history.goBack();
   };
   return (
     <>
