@@ -22,9 +22,7 @@ message.config({
 
 // -> 初始化
 const app = dva({
-  history: createBrowserHistory({
-    basename: '/idv'
-  })
+  history: createBrowserHistory()
 });
 
 // -> 注册全局模型
