@@ -72,7 +72,7 @@ import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.
 import CusImage from '@/customComponents/assist/image/v1.0.2/index'
 import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
 
-import Tab from "@/customComponents/interactive/tab/index";
+import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 import ReferencePanel from "@/customComponents/dashboardEdit/referencePanel";
 import DynamicPanel from "@/customComponents/dashboardEdit/dynamicPanel";
