@@ -40,8 +40,8 @@ declare module "*.png" {
 }
 
 declare module "*.webp" {
-    const src: string;
-    export default src;
+  const src: string;
+  export default src;
 }
 
 declare module "*.svg" {
@@ -71,3 +71,4 @@ declare module "*.module.sass" {
 }
 
 declare module "@components/sso-jssdk"
+declare module "history"

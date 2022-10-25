@@ -71,7 +71,7 @@ const DashboardTemplate = (props: any) => {
     getHotTemplate(value);
   };
   const backClick = () => {
-    history.goBack();
+    history.back();
   };
 
   // 新建应用弹窗 1.点击空白模板
