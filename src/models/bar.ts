@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import { routerRedux } from "dva/router";
+import { routerRedux } from "dva/router"
 
 import {
   calcGroupPosition,
@@ -13,7 +13,7 @@ import {
   layersPanelsFlat,
   mergeComponentLayers,
   setComponentDimension,
-} from "../utils";
+} from "../utils"
 
 import {
   COMPONENTS,
@@ -25,7 +25,7 @@ import {
   OPACITY,
   TOP,
   WIDTH,
-} from "../constant/home";
+} from "../constant/home"
 
 import {
   IComponent,
@@ -34,7 +34,7 @@ import {
   ILayerPanel,
   IPanel,
   IPanelStateGroup,
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
+} from "@/routes/dashboard/center/components/CustomDraggable/type"
 
 import {
   cancelGroup,
@@ -48,16 +48,16 @@ import {
   reName,
   showInput,
   singleShowLayer,
-} from "../utils/sideBar";
-import { DIMENSION } from "../routes/dashboard/center/constant";
+} from "../utils/sideBar"
+import { DIMENSION } from "../routes/dashboard/center/constant"
 
-import { generateLayers } from "./utils/generateLayers";
-import { filterEmptyGroups } from "./utils/filterEmptyGroups";
-import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
-import { http } from "../services/request";
-import { getDeepPanelAndStatusDetails } from "./utils/requestResolve";
-import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
-import dashboard from "./dashboard";
+import { generateLayers } from "./utils/generateLayers"
+import { filterEmptyGroups } from "./utils/filterEmptyGroups"
+import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers"
+import { http } from "../services/request"
+import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve"
+import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
+import dashboard from "./dashboard"
 
 export default {
   namespace: "bar",
@@ -206,13 +206,6 @@ export default {
             dashboardId,
             panelId,
             isDashboardInit: true,
-            routeList: [
-              {
-                type: "dashboard",
-                id: dashboardId,
-                url: `/dashboard/${dashboardId}`,
-              },
-            ],
           },
         });
         let layers: any[] = [];
@@ -303,7 +296,6 @@ export default {
         url: `/visual/panel/detail/${panelId}`,
         method: "get",
       });
-      console.log("bar.ts里的", type);
       // const { config, states: panelStatesList } = bar.fullAmountPanels.find((panel: IPanel) => panel.id === panelId)
       const recommendConfig = bar.dashboardConfig.find((item: any) => item.name === "recommend");
       recommendConfig.width = config.width;
@@ -355,7 +347,7 @@ export default {
       const layers = payload.layers;
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
-      const curDrilldownStateLists = bar.drilldownStateLists
+      const curDrilldownStateLists = bar.drilldownStateLists;
       // 获取面板详情
       const getPanelConfigFunc = async (layerPanel: any) => {
         try {
@@ -364,10 +356,10 @@ export default {
             method: "get",
           });
           // 只处理下钻面板
-          if(panelConfig && panelConfig.type == 2) {
+          if (panelConfig && panelConfig.type == 2) {
             const { states } = panelConfig;
             const drilldownStates = states.map((state: { id: string; name: string }) => state.id);
-            curDrilldownStateLists.push(...drilldownStates)
+            curDrilldownStateLists.push(...drilldownStates);
           }
           return panelConfig;
         } catch (e) {
@@ -387,23 +379,23 @@ export default {
         }
       };
       const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<any> => {
-        return await panels.reduce(async (total: any, item) => {
+        return panels.reduce(async(total: any, item) => {
           const res = await total;
           const data = await Promise.all(
             item.states.map((status: any) => getPanelStatusDetails(status))
           );
           data.forEach((detail) => {
-            res.push(detail);
+            res.push({ ...detail, parentId: item.id });
           });
           return res;
-        }, []);
+        }, [])
       };
       // 获取面板+状态详情
-      const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>) => {
+      const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>, parentId='') => {
         let panels: Array<IPanel> = await Promise.all(
           layerPanels.map((item: any) => getPanelConfigFunc(item))
         );
-        panels = panels.filter((item) => item);
+        panels = panels.filter((item) => item).map(item => ({...item, parentId}));
         bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panels);
         const panelsStatusDetail = await allPanelStatusDetailsFunc(panels);
         bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panelsStatusDetail);
@@ -411,10 +403,10 @@ export default {
           const layers = detail.layers;
           // @ts-ignore
           const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]);
-          await getDeepPanelAndStatusDetails(layerPanels);
+          await getDeepPanelAndStatusDetails(layerPanels, detail.parentId);
         }
       };
-      yield getDeepPanelAndStatusDetails(layerPanels);
+      yield getDeepPanelAndStatusDetails(layerPanels, bar.dashboardId);
       let fullAmountDynamicAndDrillDownPanels: any = bar.fullAmountDashboardDetails.filter(
         (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)
       );
@@ -432,10 +424,7 @@ export default {
           })),
         })
       );
-      console.log("------------------------g------------------------------");
-      console.log("fullAmountDynamicAndDrillDownPanels", fullAmountDynamicAndDrillDownPanels);
-      console.log("------------------------g------------------------------");
-      const fullAmountLayers = deepForEach(
+      let fullAmountLayers = deepForEach(
         deepClone(layers),
         (
           layer:
@@ -443,7 +432,9 @@ export default {
             | (Pick<ILayerPanel, "name" | "id" | "panelType"> & { modules: any })
             | ILayerGroup
             | ILayerComponent,
-          index: number
+          index: number,
+          layers: any,
+          parent: any
         ) => {
           if ("panelType" in layer && layer.panelType === 0) {
             (layer as any).modules =
@@ -452,6 +443,16 @@ export default {
           }
         }
       );
+/*      fullAmountLayers = deepForEach(fullAmountLayers, (layer: any, index: number, layers: any, parent: any) => {
+        if ("panelType" in layer && layer.panelType === 0) {
+          console.log('parent', parent)
+          if(JSON.stringify(parent) === '{}') {
+            layer.parentId = bar.dashboardId
+          } else {
+            layer.parentId = parent.id
+          }
+        }
+      })*/
       // 全量组件
       const fullAmountComponents = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
@@ -461,6 +462,7 @@ export default {
         type: "getComponentsData",
         payload: fullAmountComponents,
       });
+      console.log('bar.fullAmountDashboardDetails', bar.fullAmountDashboardDetails)
       // 全量面板
       const fullAmountPanels = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
@@ -469,7 +471,40 @@ export default {
       const panels = bar.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
+      enum panelTypeEnum {
+        "dynamicPanel",
+        "referencePanel",
+        "drillDownPanel",
+      }
 
+      console.log('------------------', fullAmountPanels)
+      const referencePanelStates: Array<{id: string, name: string, parentId: string}> = fullAmountPanels.reduce((pre: any, cur: any) => {
+        if (panelTypeEnum[cur.type] === "referencePanel") {
+          pre.push(...cur.states.map((item: {id: string, name: string}) => ({...item, parentId: cur.parentId})))
+        }
+        return pre
+      }, [])
+      console.log('----------', referencePanelStates)
+      const fullAmountRouteList= [
+        {
+          url: `/dashboard/${bar.dashboardId}`,
+          id: bar.dashboardId,
+          type: "dashboard",
+        },
+        ...fullAmountPanels.filter((item: any) => panelTypeEnum[item.type] !== "referencePanel").map((panel: any) => ({
+          url: `/dashboard/${bar.dashboardId}/panel-${panel.id}${panel?.states[0]?.id ? "/state-" + panel.states[0].id : ""}`,
+          id: panel.id,
+          parentId: panel.parentId,
+          type: panelTypeEnum[panel.type],
+        })),
+        ...referencePanelStates.map(item => ({
+          url: `/dashboard/${item.id}`,
+          id: item.id,
+          parentId: item.parentId,
+          type: "referencePanel"
+        }))
+      ]
+      console.log('fullAmountRouteList', fullAmountRouteList)
       yield put({
         type: "save",
         payload: {
@@ -480,7 +515,8 @@ export default {
           fullAmountComponents,
           fullAmountDynamicAndDrillDownPanels,
           fullAmountPanels,
-          drilldownStateLists: curDrilldownStateLists
+          drilldownStateLists: curDrilldownStateLists,
+          fullAmountRouteList,
         },
       });
     },
@@ -752,15 +788,16 @@ export default {
             type: "updateTree",
             payload: filterNullLayers.layers,
           });
-          yield put({
-            type: "clearAllStatus",
-          });
+
           yield put({
             type: "deleteComponentData",
             payload: { id: payload.id },
           });
           yield put({
             type: "updateContainersEnableAndModules",
+          });
+          yield put({
+            type: "clearAllStatus",
           });
           // yield put({
           //   type: 'deleteSomeLayersFromFullAmountLayers',
@@ -805,8 +842,6 @@ export default {
         },
       });
       // layers 永远是最后再保存的
-      console.log('冬天')
-      console.log('layers', layers)
       yield put({
         type: "updateTree",
         payload: layers,
@@ -848,29 +883,21 @@ export default {
       let { fullAmountDashboardDetails } = bar;
       if (panels) {
         // 复制，新增过来的话，需要对复制和新增的面板进行请求
-        console.log("panels", panels);
         // 获取面板+状态详情
-        console.log('------------')
-        console.log('fullAmountDashboardDetails1', fullAmountDashboardDetails)
         fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(
           panels,
           fullAmountDashboardDetails
         );
-        console.log('------------')
-        console.log('fullAmountDashboardDetails2', fullAmountDashboardDetails)
         // 重新获取全量面板
         const fullAmountPanels = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
           []
         );
-        console.log("春天")
-        console.log('fullAmountPanels', fullAmountPanels)
         // 重新获取全量组件
         const fullAmountComponents = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
           []
         );
-        console.log("fullAmountDashboardDetails可惜", fullAmountDashboardDetails);
         yield put({
           type: "save",
           payload: {
@@ -941,7 +968,6 @@ export default {
         type: "setSelectedKeys",
         payload,
       });
-      console.log('哈哈哈1')
       yield put({
         type: "calcDragScaleData",
       });
@@ -957,6 +983,7 @@ export default {
       yield put({
         type: "clearLayersSelectedStatus",
       });
+
       yield put({
         type: "setLayers",
         payload,
@@ -998,7 +1025,7 @@ export default {
           ? state.bar.layers[0].id
           : "";
       // 新建的是组件
-      const { id, children }: any = yield http({
+      const data: any = yield http({
         url: "/visual/module/add",
         method: "post",
         body: {
@@ -1007,40 +1034,43 @@ export default {
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
-      });
-      yield put({
-        type: "addComponentData",
-        payload: {
-          id,
-          dataType: "static",
-        },
-      });
-      yield put({
-        type: "updateComponents",
-        payload: [
-          {
-            ...deepClone(payload),
+      }).catch((err: Error) => console.log("添加组件至画布err,组件信息未加载完全", err));
+      if (data) {
+        const { id, children } = data;
+        yield put({
+          type: "addComponentData",
+          payload: {
             id,
-            moduleType: itemData.moduleType,
-            children,
+            dataType: "static",
           },
-        ],
-        id: isPanel ? stateId : dashboardId,
-      });
-      console.log("参数", { ...itemData, id });
-      yield put({
-        type: "addComponent",
-        payload: { final: { ...itemData, id }, insertId },
-        fullAmountPayload: "brother",
-        isComponent: true,
-      });
+        });
+        yield put({
+          type: "updateComponents",
+          payload: [
+            {
+              ...deepClone(payload),
+              id,
+              moduleType: itemData.moduleType,
+              children,
+            },
+          ],
+          id: isPanel ? stateId : dashboardId,
+        });
+        console.log("参数", { ...itemData, id });
+        yield put({
+          type: "addComponent",
+          payload: { final: { ...itemData, id }, insertId },
+          fullAmountPayload: "brother",
+          isComponent: true,
+        });
+      }
     },
     *createPanel(
       { payload: { panelType } }: { payload: { panelType: 0 | 1 | 2 } },
       { call, put, select }: any
     ): any {
       const bar: any = yield select((state: any) => state.bar);
-      const { isPanel, stateId, dashboardId, key, layers } = bar;
+      const { isPanel, stateId, panelId,  dashboardId, key, layers, fullAmountRouteList } = bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         key.length !== 0 ? key[key.length - 1] : layers.length !== 0 ? layers[0].id : "";
@@ -1053,8 +1083,15 @@ export default {
           insertId,
         },
       });
+      // todo 创建面板对 fullAmountRouteList 的影响
+      console.log("data", data)
       if (data) {
-        const { id, name, states } = data;
+        const { id, name, states, type }: {
+          id: string,
+          name: string,
+          type: 0 | 1 | 2,
+          states: any
+        } = data;
         const modules: Array<IPanelStateGroup> = states.map((item: any) => {
           return {
             ...item,
@@ -1075,8 +1112,27 @@ export default {
           [layerPanel],
           bar.fullAmountDashboardDetails
         );
-        console.log("呵呵哈哈哈");
-        console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
+        enum panelTypeEnum{
+          "dynamicPanel",
+          "referencePanel",
+          "drillDownPanel"
+        }
+
+        console.log('states'  )
+        if (panelType === 0 || panelType === 2) {
+          // 动态面板或者是下钻面板
+          fullAmountRouteList.push({
+            id,
+            parentId: isPanel ? panelId : dashboardId,
+            type: panelTypeEnum[type],
+            url: `/dashboard/${dashboardId}/panel-${id}${states[0]?.id ? "/state-" + states[0].id : ""}`,
+          })
+          console.log('fullAmountRouteList', fullAmountRouteList)
+        }
+        if (panelType === 1) {
+          // 引用面板
+          // 只有引用面板的状态能影响 fullAmountRouteList
+        }
         yield put({
           type: "save",
           payload: {
@@ -1091,7 +1147,10 @@ export default {
         });
       }
     },
-    *updateComponent({ payload, isCalcDragScaleData = true }: any, { call, put, select }: any): any {
+    *updateComponent(
+      { payload, isCalcDragScaleData = true }: any,
+      { call, put, select }: any
+    ): any {
       if (payload.length > 0) {
         const components: Array<IComponent> = [];
         const panels: Array<IPanel> = [];
@@ -1277,10 +1336,47 @@ export default {
         type: "setComponentConfig",
         payload,
       });
-      console.log('哈哈哈4')
+      console.log("哈哈哈4");
       yield put({
         type: "calcDragScaleData",
       });
+    },
+    *referencePanelState({ payload, cb }: any, { call, put, select }: any): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountPanels } = bar
+      const { panelConfig } = payload
+
+      const filterPanelStates = panelConfig.states.reduce((pre: any[], cur: any) => {
+        if (!pre.find(item => item.id === cur.id) && !!cur.id) {
+          pre.push(cur)
+        }
+        return pre
+      }, []).filter((state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id))
+      const panelParentId = fullAmountPanels.find((item: any) => item.id === panelConfig.id).parentId
+      console.log('panelParentId', panelParentId)
+
+      console.log('fullAmountRouteList', fullAmountRouteList)
+      console.log('filterPanelStates', filterPanelStates)
+      if (filterPanelStates.length > 0) {
+        const data = yield Promise.all(filterPanelStates.map((item: any) => getPanelStatusDetails(item)))
+        fullAmountDashboardDetails.push(...data)
+        fullAmountRouteList.push(...filterPanelStates.map((item: any) => ({
+          id: item.id,
+          parentId: panelParentId,
+          type: 'referencePanel',
+          url: `/dashboard/${item.id}`
+        })))
+      }
+
+      yield put({
+        type: 'save',
+        payload: {
+          panelConfig,
+          fullAmountDashboardDetails,
+          fullAmountRouteList
+        }
+      })
+
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1501,9 +1597,11 @@ export default {
           dashboardName,
           panelStatesList: [],
           key: [],
+          selectedComponentOrGroup: [],
           isPanel: false,
           stateId: "",
           panelId: "",
+          dashboardId
         },
       });
     },
@@ -1520,6 +1618,10 @@ export default {
         state.moduleDefaultConfig.push(payload);
       }
       return { ...state };
+    },
+    // 初始化画布时，把请求后的原子组件信息一次性设置完成
+    setModuleDefaultConfigByOnce(state: IBarState, {payload}: any) {
+      return { ...state, moduleDefaultConfig: payload };
     },
     deleteComponentData(state: IBarState, { payload }: any) {
       // const { id } = payload

@@ -128,6 +128,7 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
  */
 const setDataContainerResult = (componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs) => {
   if (componentConfig.dataContainers) {
+    console.log('componentConfig.dataContainers', componentConfig.dataContainers)
     if (componentConfig.dataContainers.length === 1) {
       const id = componentConfig.dataContainers[0].id;
       const container = dataContainerList.find(item => item.id === id);
@@ -139,17 +140,29 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
     }
     if (componentConfig.dataContainers.length > 1) {
       const dataContainerIds = componentConfig.dataContainers.map(item => item.id);
-      return dataContainerDataList.reduce((pre, cur) => {
-        if (dataContainerIds.includes(cur.id)) {
-          const container = dataContainerList.find(item => item.id === cur.id);
-          let data = cur.data;
-          if (container.useFilter) {
-            data = handleDataFilter(cur.data, container.filters, componentFilters, callbackArgs);
-          }
-          pre.push(data);
+      console.log('dataContainerIds', dataContainerIds)
+      let data = dataContainerIds.reduce((pre, id) => {
+        const container = dataContainerList.find(item => item.id === id);
+        let containerData = dataContainerDataList.find(item => item.id === id).data;
+        if (container.useFilter) {
+          containerData = handleDataFilter(containerData, container.filters, componentFilters, callbackArgs);
         }
-        return pre;
-      }, []);
+        pre.push(containerData);
+        return pre
+      }, [])
+      // let data = dataContainerDataList.reduce((pre, cur) => {
+      //   if (dataContainerIds.includes(cur.id)) {
+      //     const container = dataContainerList.find(item => item.id === cur.id);
+      //     let data = cur.data;
+      //     if (container.useFilter) {
+      //       data = handleDataFilter(cur.data, container.filters, componentFilters, callbackArgs);
+      //     }
+      //     pre.push(data);
+      //   }
+      //   return pre;
+      // }, []);
+      console.log('data', data)
+      return data
     }
   }
   return [];

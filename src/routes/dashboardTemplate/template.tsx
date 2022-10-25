@@ -24,7 +24,7 @@ const DashboardTemplate = (props: any) => {
   const [curImgIndex, setCurImgIndex] = useState(-1);
   const [inputValue, setInputValue] = useState("");
   const [showCreateAppModal, setShowCreateAppModal] = useState(false);
-  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
 
   const [groupOptions, setGroupOptions] = useState([]);
@@ -36,14 +36,14 @@ const DashboardTemplate = (props: any) => {
 
   useEffect(() => {
     getHotTemplate();
-  },[]);
-  
-  const getHotTemplate = async(value?:any) => {
+  }, []);
+
+  const getHotTemplate = async (value?: any) => {
     const data = await http({
       url: "/visual/appTemplate/list",
       method: "post",
       body: {
-        map: {created_time:false},
+        map: { created_time: false },
         pageNo: 1,
         pageSize: 10,
         groupId: null,
@@ -51,7 +51,7 @@ const DashboardTemplate = (props: any) => {
         name: value
       }
     });
-    if(data){
+    if (data) {
       setListData(data.content);
       const urlArr = data.content.map((item: any) => item.photoUrl);
       setUrlArr(urlArr);
@@ -71,7 +71,7 @@ const DashboardTemplate = (props: any) => {
     getHotTemplate(value);
   };
   const backClick = () => {
-    history.back();
+    history.goBack();
   };
 
   // 新建应用弹窗 1.点击空白模板
@@ -225,7 +225,7 @@ const DashboardTemplate = (props: any) => {
             colon={false}
             rules={[{ required: true, message: "请输入应用名称" }]}
           >
-            <Input 
+            <Input
               placeholder='请输入应用名称'
               className='setBackColor'
               autoComplete='off'

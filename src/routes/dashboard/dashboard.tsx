@@ -139,38 +139,6 @@ function App({ bar, dispatch, location, history }: any) {
     };
   }, []);
 
-  // 进入画布时，直接加载所有的组件，并将这些组件的config放入bar.moduleDefaultConfig中
-  const importComponent = (data: any) => {
-    return axios.get(`${(window as any).CONFIG.COMP_URL}/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
-  };
-  const loadComp = async (data: any) => {
-    window.eval(`${await importComponent(data)}`);
-    const { ComponentDefaultConfig } = (window as any).VComponents;
-    const currentDefaultConfig = ComponentDefaultConfig;
-    dispatch({
-      type: "bar/setModuleDefaultConfig",
-      payload: currentDefaultConfig,
-      itemData: data
-    });
-  };
-  //@Mark 因组件更新中需要获取各个原子组件的初始config,所以需要在画布初始化时进行处理
-  useEffect(() => {
-    const getAllModulesConfig = async () => {
-      const { content }: any = await http({
-        url: "/visual/module-manage/queryModuleList",
-        method: "post",
-        body: {
-          status: 0,
-          pageNo: 0,
-          pageSize: 100,
-        }
-      }).catch(() => { });
-      content.forEach((item: any) => {
-        loadComp(item);
-      });
-    };
-    getAllModulesConfig();
-  }, []);
 
   // 阻止 window 缩放
   const handleStopWindowWheel = (event: any) => {
@@ -184,42 +152,6 @@ function App({ bar, dispatch, location, history }: any) {
   };
 
   useEffect(() => {
-    // const windowPathList = window.location.pathname.split('/')
-    // const dashboardId = windowPathList[2]
-    // let panelId = null, stateId = null
-    // if (windowPathList[3]) {
-    //   panelId = windowPathList[3].split('-')[1]
-    // }
-    // if (windowPathList[4]) {
-    //   stateId = windowPathList[4].split('-')[1]
-    // }
-    // let isPanel = false
-    // if (panelId) {
-    //   isPanel = true
-    // }
-    // dispatch({
-    //   type: 'bar/initDashboard',
-    //   payload: {
-    //     dashboardId,
-    //     isPanel,
-    //     panelId,
-    //     stateId,
-    //   },
-    //   cb: () => { }
-    // })
-
-    // dispatch({
-    //   type: 'bar/getDashboardDetails',
-    //   payload: dashboardId,
-    // })
-    // dispatch({
-    //   type: 'bar/getDataContainerList',
-    //   payload: dashboardId,
-    //   cb:async (dataContainerList: any) => {
-    //
-    //     console.log('dataContainerList', dataContainerList)
-    //   }
-    // })
     document.addEventListener("keydown", handleStopWindowWheel);
     return () => {
       document.removeEventListener("keydown", handleStopWindowWheel);

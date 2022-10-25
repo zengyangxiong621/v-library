@@ -31,15 +31,25 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   // 返回首页
   const toBack = () => {
+    console.log("bar.fullAmountRouteList", bar.fullAmountRouteList)
+    /*
+      动态面板和引用面板的 url 上是有 panelId 和 stateId
+      引用面板和应用的 url 只有 dashboardId
+     */
     if (bar.panelId) {
-      const routeList = bar.routeList
-      // history.push(`/dashboard/${bar.dashboardId}`);
-      routeList.pop()
-      let currentUrl = routeList[routeList.length - 1].url
-      history.push(currentUrl)
+      // 动态面板、下钻面板
+      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.panelId)
+      history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
     }
     if (!bar.panelId && bar.dashboardId) {
-      history.replace(`/dashboard-manage`);
+      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.dashboardId)
+      if (currentRoute.type === 'dashboard') {
+        // 应用
+        history.replace(`/dashboard-manage`);
+      } else {
+        // 引用面板
+        history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
+      }
     }
     // 暂时在这里清空localStorage
     localStorage.removeItem("allDrillDownPathReflect");

@@ -21,6 +21,7 @@ type DraggableData = {
 }
 const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig, isPanel, ...props }: any) => {
   const draggableRef: any = useRef(null);
+
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
     handleSetPosition: (xMoveLength: number, yMoveLength: number) => {
@@ -39,6 +40,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
     position: props.position,
     nodeRef: nodeRef,
   }));
+
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
     onStop(ev, data);
   };

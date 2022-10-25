@@ -1,6 +1,6 @@
 {
   "name": "v-library",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",
@@ -39,6 +39,8 @@
     "dva": "^2.4.1",
     "echarts": "5.2.2",
     "echarts-gl": "^2.0.9",
+    "echarts-liquidfill": "^3.1.0",
+    "env-cmd": "^10.1.0",
     "eslint-config-react-app": "^7.0.0",
     "eslint-webpack-plugin": "^3.1.1",
     "file-loader": "^6.2.0",
@@ -95,12 +97,12 @@
     "webpack-dev-server": "^4.6.0",
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.4.1",
-    "xlsx": "^0.18.5",
-    "echarts-liquidfill": "^3.1.0"
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "build:staging": "env-cmd -f .env.staging npm run build",
     "test": "node scripts/test.js",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src"

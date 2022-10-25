@@ -13,11 +13,11 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.6";
+import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.7";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 
-import textConfig from '@/customComponents/echarts/components/indicatorcard/v1.0.5/config'
+import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.7/config'
 import Counter from "@/customComponents/assist/counter2/v1.0.8";
 import ChartLegend from '@/customComponents/assist/chartLegend/chartLegend-1.0.1'
 import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
@@ -583,16 +583,6 @@ const CustomDraggable
         }
         if (url) {
           history.push(url);
-          dispatch({
-            type: "bar/save",
-            payload: {
-              routeList: bar.routeList.concat({
-                type: "panel",
-                id: layer.id,
-                url: url
-              })
-            }
-          })
         }
         // 只要点击了面板，就将面板的类型保存到全局状态中
         dispatch({
@@ -619,6 +609,7 @@ const CustomDraggable
       // })
     };
     const mouseRightClick = (e: any, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
+      console.log('selectedComponentRefs', bar.selectedComponentRefs)
       if (Object.keys(bar.selectedComponentRefs).length > 1 && layer.id in bar.selectedComponentRefs) {
         bar.isSupportMultiple = true;
         bar.isMultipleTree = true
@@ -875,6 +866,7 @@ const CustomDraggable
                 cRef={(ref: any) => {
                   if (layer.id in allComponentRefs) {
                   } else {
+                    // todo
                     allComponentRefs[layer.id] = ref;
                     allComponentDOMs[layer.id].style.border = '3px solid transparent'
                     allComponentDOMs[layer.id].addEventListener('mouseenter', () => {

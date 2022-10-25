@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import dva from "dva";
-import { Router } from "dva/router";
-import { createBrowserHistory } from "history";
+import { BrowserRouter } from "dva/router";
 import reportWebVitals from "./reportWebVitals";
-import { authorize, forwardLogin,GetQueryString } from "./services/loginApi";
-import {localStore} from "./services/LocalStoreService";
+import { authorize, forwardLogin, GetQueryString } from "./services/loginApi";
+import { localStore } from "./services/LocalStoreService";
+
 
 import "./index.css";
 import "antd/dist/antd.css";
@@ -20,48 +20,45 @@ message.config({
   maxCount: 1,
 });
 
-
 // -> 初始化
-const app = dva({
-  history: createBrowserHistory()
-});
+const app = dva();
 
 // -> 注册全局模型
 app.model(require("./models/global").default);
 
 const init = () => {
   // -> 初始化路由
-  app.router(({ history, app }: any) => (
+  app.router(({ app }: any) => (
     <div>
-      <Router history={history}>{createRoutes(app, RoutesConfig)}</Router>
+      <BrowserRouter>{createRoutes(app, RoutesConfig)}</BrowserRouter>
     </div>
   ));
   // -> Start
   app.start("#root");
 };
 
-const checkToken = async() => {
+const checkToken = async () => {
   // 发布的大屏不走登录校验过程
   const isPublishScreen = window.location.href.indexOf("publishScreen") > -1;
-  if(isPublishScreen){
+  if (isPublishScreen) {
     init();
-  }else{
+  } else {
     const ticket = GetQueryString("ticket");
     // 入口文件中校验登录信息
     const token = localStore.getToken();
     const pn = location.origin + location.pathname;
-    if(!token){
-      try{
+    if (!token) {
+      try {
         await authorize();
         init();
-      }catch(err){
+      } catch (err) {
         if (!pn.endsWith("/login")) {
           forwardLogin();
-        }else{
+        } else {
           init();
         }
       }
-    }else{
+    } else {
       init();
     }
   }
