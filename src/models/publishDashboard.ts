@@ -20,7 +20,7 @@ import {
   getQueryVariable,
   deepForEachBeforeCallBack
 } from "../utils";
-import {IBarState, IFullAmountDashboardDetail, IPanelState} from "./defaultData/bar";
+import { IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
 export default {
   namespace: "publishDashboard",
   state: JSON.parse(JSON.stringify(defaultData)),
@@ -65,7 +65,7 @@ export default {
             pass,
           },
         });
-        
+
         const index = publishDashboard.dataContainerDataList.findIndex(
           (item: any) => item.id === component.id
         );
