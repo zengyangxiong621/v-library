@@ -1,18 +1,18 @@
 const componentDefaultConfig = {
   id: "", //组件ID
-  uniqueTag: "", // =========
+  uniqueTag: "", 
   name: "世界地图", //图层名称
-  parentId: "", // 父组件 像是2D地图、3D地图 =================
+  parentId: "", // 父组件 像是2D地图、3D地图 
   dashboardId: "", //画布id
   moduleType: "map",
   moduleName: "worldMap", //组件标识
-  moduleVersion: "1.1.7", //组件版本号
+  moduleVersion: "1.1.9", //组件版本号
 
-  createdAt: "2022-04-02T07:22:31.290Z", // =========
-  updatedAt: "2022-04-02T07:22:39.798Z", // =========
+  createdAt: "2022-04-02T07:22:31.290Z", 
+  updatedAt: "2022-04-02T07:22:39.798Z", 
 
-  autoUpdate: { isAuto: false, interval: 10 }, // =========
-  thumb: "", // 缩略图 // =========
+  autoUpdate: { isAuto: false, interval: 10 }, 
+  thumb: "", // 缩略图 
 
   dataFrom: 0,
   dataConfig: {}, // 数据源配置
@@ -128,7 +128,7 @@ const componentDefaultConfig = {
     ],
   },
 
-  useFilter: false, // =========
+  useFilter: false, 
   filters: [],
 
   events: [],

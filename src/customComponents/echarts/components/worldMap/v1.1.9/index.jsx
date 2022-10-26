@@ -57,10 +57,15 @@ class WorldMap extends Component {
     }
     return res;
   };
-
   getSeries = (mainData, flyLineArr, coordData, flyDirection) => {
+    // 飞线两端hover后都能显示标签 
+    let arr = flyLineArr.map(item => {
+      return [
+        ...item, [item?.[0]?.[0], item?.[0]?.[0]]
+      ]
+    })
     let series = [];
-    flyLineArr.forEach((item, i) => {
+    arr.forEach((item, i) => {
       series.push(
         {
           type: 'lines',
@@ -132,54 +137,12 @@ class WorldMap extends Component {
           },
           data: item.map((dataItem) => {
             return {
-              //在这里定义你所要展示的数据
               name: dataItem[1]?.name,
               value: coordData[dataItem[1]?.name]?.concat([dataItem[1]?.value]),
-              // name: dataItem[0].name,
-              // value: coordData[dataItem[0].name]?.concat([dataItem[0].value]),
             }
+            // }
           }),
         },
-        //中心点
-        // {
-        //   type: 'effectScatter',
-        //   radius: '100%',
-        //   coordinateSystem: 'geo',
-        //   zlevel: 15,
-        //   rippleEffect: {
-        //     period: 4,
-        //     brushType: 'stroke',
-        //     scale: 4,
-        //     color: '#FFD246',
-        //   },
-        //   label: {
-        //     normal: {
-        //       show: false,
-        //       position: 'right',
-        //       //offset:[5, 0],
-        //       color: '#FFD246',
-        //       formatter: '{b}',
-        //       textStyle: {
-        //         color: '#FFD246',
-        //       },
-        //     },
-        //     emphasis: {
-        //       show: false,
-        //       color: '#FFD246',
-        //     },
-        //   },
-        //   symbol: 'circle',
-        //   symbolSize: 5,
-        //   itemStyle: {
-        //     color: '#FFD246',
-        //   },
-        //   data: [
-        //     {
-        //       name: item[0],
-        //       value: coordData[item[0]]?.concat([10]),
-        //     },
-        //   ],
-        // }
       )
     })
     return series
