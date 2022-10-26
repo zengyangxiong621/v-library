@@ -71,16 +71,32 @@ export default {
         const pathName = window.location.pathname;
         if (pathName.indexOf("dashboard/") !== -1) {
           // 应用编辑页
-          const windowPathList = pathName.split("/");
-          const dashboardId = windowPathList[2];
-          let panelId = null,
-            stateId = null;
-          if (windowPathList[3]) {
-            panelId = windowPathList[3].split("-")[1];
+
+          // const dashboardId = pathName.split("dashboard/")[1] ;
+          // afterDashboardUrl 是 截取路由/dashboard/到后面
+          let afterDashboardUrl = pathName.slice(pathName.indexOf('/dashboard/'))
+          const idList = afterDashboardUrl.split('/').map(item => {
+            return item.replace(/[^0-9]/ig, "")
+          }).filter(item => item)
+          let dashboardId = idList[0] || null
+          let panelId = idList[1] || null
+          let stateId = idList[2] || null
+/*          if(dashboardReg.test(pathName)) {
+            dashboardId = (pathName.match(dashboardReg) as any)[0];
+            dashboardId = dashboardId.replace(/[^\d|^\.|^\-]/g, "")
           }
-          if (windowPathList[4]) {
-            stateId = windowPathList[4].split("-")[1];
+          if (panelReg.test(pathName)) {
+            panelId = (pathName.match(panelReg) as any)[0];
+            panelId = panelId.replace(/[^\d|^\.|^\-]/g, "")
           }
+          if (stateReg.test(pathName)) {
+            stateId = (pathName.match(stateReg) as any)[0];
+            stateId = stateId.replace(/[^\d|^\.|^\-]/g, "")
+          }*/
+          console.log('stateId', stateId)
+          console.log('panelId', panelId)
+          console.log('dashboardId', dashboardId)
+
           let isPanel = false;
           if (panelId) {
             isPanel = true;
@@ -915,12 +931,36 @@ export default {
       let currentDetails: any = fullAmountDashboardDetails.find(
         (item: any) => item.id === bar.dashboardId || bar.stateId
       );
-      currentDetails = {
-        ...currentDetails,
-        layers,
-        components,
-        dashboardId,
-      };
+      if (currentDetails) {
+        currentDetails = {
+          ...currentDetails,
+          layers,
+          components,
+          dashboardId,
+        };
+        yield put({
+          type: 'save',
+          payload: {
+            fullAmountDashboardDetails
+          }
+        })
+      }
+    },
+    *updateDashboardOrStateConfig({ payload }: any, { call, put, select }: any): any {
+      const { config, id } = payload
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails } = bar;
+      const currentPanelDetails = fullAmountDashboardDetails.find((item: any) => item.id === id)
+      if (currentPanelDetails) {
+        currentPanelDetails.dashboardConfig = config
+        yield put({
+          type: 'save',
+          payload: {
+            fullAmountDashboardDetails,
+            dashboardConfig: config
+          }
+        })
+      }
     },
     *updateTree({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1554,12 +1594,13 @@ export default {
       const { fullAmountDashboardDetails } = bar;
       console.log("团结");
       console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
-      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
-        (item: any) => item.id === stateId
-      );
       const { config, states } = fullAmountDashboardDetails.find(
         (item: any) => item.id === panelId
       );
+      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
+        (item: any) => item.id === stateId
+      );
+
       const newDashboardConfig = duplicateDashboardConfig(
         deepClone(bar.dashboardConfig),
         dashboardConfig
