@@ -931,12 +931,36 @@ export default {
       let currentDetails: any = fullAmountDashboardDetails.find(
         (item: any) => item.id === bar.dashboardId || bar.stateId
       );
-      currentDetails = {
-        ...currentDetails,
-        layers,
-        components,
-        dashboardId,
-      };
+      if (currentDetails) {
+        currentDetails = {
+          ...currentDetails,
+          layers,
+          components,
+          dashboardId,
+        };
+        yield put({
+          type: 'save',
+          payload: {
+            fullAmountDashboardDetails
+          }
+        })
+      }
+    },
+    *updateDashboardOrStateConfig({ payload }: any, { call, put, select }: any): any {
+      const { config, id } = payload
+      const bar: any = yield select(({ bar }: any) => bar);
+      const { fullAmountDashboardDetails } = bar;
+      const currentPanelDetails = fullAmountDashboardDetails.find((item: any) => item.id === id)
+      if (currentPanelDetails) {
+        currentPanelDetails.dashboardConfig = config
+        yield put({
+          type: 'save',
+          payload: {
+            fullAmountDashboardDetails,
+            dashboardConfig: config
+          }
+        })
+      }
     },
     *updateTree({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1570,12 +1594,13 @@ export default {
       const { fullAmountDashboardDetails } = bar;
       console.log("团结");
       console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
-      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
-        (item: any) => item.id === stateId
-      );
       const { config, states } = fullAmountDashboardDetails.find(
         (item: any) => item.id === panelId
       );
+      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
+        (item: any) => item.id === stateId
+      );
+
       const newDashboardConfig = duplicateDashboardConfig(
         deepClone(bar.dashboardConfig),
         dashboardConfig

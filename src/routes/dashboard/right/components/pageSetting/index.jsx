@@ -50,17 +50,22 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
       thumb: thumbImg.value,
       dashboardId: bar.dashboardId
     }
-    const { config } = await http({
+    const data = await http({
       url: '/visual/application/update',
       method: 'post',
       body: params,
     })
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        dashboardConfig: config
-      }
-    })
+    if (data) {
+      const { config, id } = data
+      dispatch({
+        type: 'bar/updateDashboardOrStateConfig',
+        payload: {
+          id,
+          config,
+        }
+      })
+    }
+
   }
 
   return (

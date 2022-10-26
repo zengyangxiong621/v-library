@@ -48,14 +48,15 @@ const DynamicPageSetting = ({ bar, dispatch, ...props }) => {
         dashboardId: bar.stateId
       }
     })
-
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        dashboardConfig: pageConfig
-      }
-    })
-
+    if (data) {
+      dispatch({
+        type: 'bar/updateDashboardOrStateConfig',
+        payload: {
+          id: data.id,
+          config: pageConfig
+        }
+      })
+    }
   }
 
   return (
