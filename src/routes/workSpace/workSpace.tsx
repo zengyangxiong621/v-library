@@ -1,13 +1,11 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Input, Table, Space, Button, Form,Select, message, Modal} from "antd";
+import { ConfigProvider, Input, Table, Space, Button, Form,Select, message, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
@@ -22,15 +20,17 @@ const workSpace = (props: any) => {
   const { workSpace, dispatch, history,global } = props;
   // 空间id
   const [addMemberForm]:any = Form.useForm();
+
   // TODO 后端目前默认是倒排，后续可能需要更改
+
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
     // updated_time: false,
   });
   const [userIdList, setUserIdList] = useState([]);
   // 用户列表
-  const [ userInfoList, setUserInfoList ] = useState([]);
-  const [ subLoading, setSubLoading ] = useState(false);
+  const [userInfoList, setUserInfoList] = useState([]);
+  const [subLoading, setSubLoading] = useState(false);
   // 剩余配额
   const [projectQuota, setProjectQuota] = useState<any>(0);
 
@@ -53,7 +53,7 @@ const workSpace = (props: any) => {
     });
   };
 
-  /**
+/**
  * description: 更新表格数据
  */
   const getTableData = async (finalBody: any) => {

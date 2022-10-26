@@ -1,4 +1,4 @@
- import { memo, useEffect, useState } from "react";
+ import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { SYSTEMMATERIAL, MYMATERIAL, MATERIALLIB } from "@/constant/dvaModels/resourceCenter";
 

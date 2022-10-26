@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { memo, useEffect, useState, Fragment } from "react";
+import React, { memo, useEffect, useState, Fragment } from "react";
 import "./index.less";
 import { BASEURL } from "@/services/request";
 import { connect } from "dva";
