@@ -2,6 +2,7 @@
   "name": "v-library",
   "version": "2.0.0",
   "private": true,
+  "homepage": "/idv",
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@jiaminghi/data-view-react": "^1.2.5",
