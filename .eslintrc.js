@@ -9,8 +9,7 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended"
     ],
-    "overrides": [
-    ],
+    "overrides": [],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -25,5 +24,6 @@ module.exports = {
         "prettier/prettier": 2, // 这项配置 对于不符合prettier规范的写法，eslint会提示报错
         "semi": ["error", "always"],
         "quotes": ["error", "double"],
+        "@typescript-eslint/no-explicit-any": ["off"]
     }
 }

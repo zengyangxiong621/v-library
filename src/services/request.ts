@@ -25,18 +25,9 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
     config
   );
   if (!isPlainObject(config.headers)) config.headers = {};
-  if (config.params !== null && !isPlainObject(config.params))
-    config.params = null;
-  let {
-    url,
-    method,
-    credentials,
-    headers,
-    body,
-    params,
-    responseType,
-    signal,
-  } = config;
+  if (config.params !== null && !isPlainObject(config.params)) config.params = null;
+  let { url, method, body } = config;
+  const { credentials, headers, params, responseType, signal } = config;
 
   // 处理URL:params存在，我们需要把params中的每一项拼接到URL末尾
   if (params) url += `${url.includes("?") ? "&" : "?"}${qs.stringify(params)}`;
@@ -67,10 +58,10 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
   config.body = body;
   if (signal) config.signal = signal;
   return fetch(url, config)
-    .then((response) => {
+    .then((response: any) => {
       // 成功则返回响应主体信息
-      let { status, statusText } = response,
-        result;
+      const { status, statusText } = response;
+      let result: any = null;
       if (status !== 200) {
         return Promise.reject({ code: -1, status, statusText });
       }
@@ -94,7 +85,8 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
       if (isDownload) {
         return result;
       }
-      return result.then((response) => {
+
+      return result.then((response: any) => {
         const { code, data } = response;
         if (code === 10000) {
           return Promise.resolve(data);
@@ -115,28 +107,26 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
           localStorage.removeItem("token");
         }
       }
-      if(code===403){
-        window.history.replaceState(null,"","/404");
+      if (code === 403) {
+        window.history.replaceState(null, "", "/404");
       }
       return Promise.reject(err);
     });
 };
 
 /* 快捷方法 */
+
 ["GET", "HEAD", "DELETE", "OPTIONS"].forEach((item) => {
-  (http as any)[item.toLowerCase()] = function (url: string, config: any) {
+  (http as any)[item.toLowerCase()] = function(url: string, config: any) {
     if (!isPlainObject(config)) config = {};
     config["url"] = url;
     config["method"] = item;
     return http(config);
   };
 });
+
 ["POST", "PUT", "PATCH"].forEach((item: string) => {
-  (http as any)[item.toLowerCase()] = function (
-    url: string,
-    body: any,
-    config: any
-  ) {
+  (http as any)[item.toLowerCase()] = function(url: string, body: any, config: any) {
     if (!isPlainObject(config)) config = {};
     config["url"] = url;
     config["method"] = item;
@@ -145,17 +135,17 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
   };
 });
 
-export const downLoad=async (url:string , isAllurl=false, fileName?:string) => {
-  const config={
-    url:url,
-    method:"GET",
-    responseType:"blob"
+export const downLoad = async (url: string, isAllurl = false, fileName?: string) => {
+  const config = {
+    url: url,
+    method: "GET",
+    responseType: "blob",
   };
   const res = await http(config, true, isAllurl);
   const a = document.createElement("a");
   const downloadUrl = window.URL.createObjectURL(res);
   a.href = downloadUrl;
-  a.download=(fileName || "") + ".zip";
+  a.download = (fileName || "") + ".zip";
   a.click();
   window.URL.revokeObjectURL(downloadUrl);
 };

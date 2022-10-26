@@ -1,21 +1,18 @@
 import { http } from "./request";
 // import SsoSdk from '@components/sso-jssdk'
 import SsoSdk from "@/assets/js/sso-jssdk/src";
-import {localStore} from "./LocalStoreService";
+import { localStore } from "./LocalStoreService";
 
 const SSO_API = (window as any).CONFIG.SSO_API || process.env.SSO_API || "";
 const TICKET_KEY = (window as any).CONFIG.TICKET_KEY || process.env.TICKET_KEY || "";
 const SSO_URL = (window as any).CONFIG.SSO_URL || process.env.SSO_URL || "";
-
-
 const sdk = new SsoSdk({
   sso: SSO_API || `${SSO_URL}/api/v2`,
   key: TICKET_KEY,
   expires: 0,
 });
 
-
-export async function authorize () {
+export async function authorize() {
   const token = localStore.getToken();
   if (!token) {
     const res = await sdk.autoSSO();
@@ -24,7 +21,7 @@ export async function authorize () {
     await http({
       url: "/visual/login/ssoLogin",
       method: "post",
-      data:  {},
+      data: {},
     });
   }
 }
@@ -33,16 +30,16 @@ export async function logout() {
   return await sdk.logout();
 }
 
-export async function validateST(data:any){
+export async function validateST(data: any) {
   return await sdk.validateST(data);
 }
 
-export function GetQueryString(name:any){
-  const reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+export function GetQueryString(name: any) {
+  const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
   const r = window.location.search.substr(1).match(reg);
-  if(r!=null)return  unescape(r[2]); return null;
+  if (r != null) return unescape(r[2]);
+  return null;
 }
-
 
 export const forwardLogin = () => {
   logout();
