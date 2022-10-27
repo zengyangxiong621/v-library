@@ -26,6 +26,7 @@ module.exports = {
         "quotes": ["error", "double"],
         "@typescript-eslint/no-explicit-any": ["off"],
         'prettier/prettier': 'off',
-        '@typescript-eslint/no-var-requires': 'off'
+        '@typescript-eslint/no-var-requires': 'off',
+        "react/prop-types": 0,
     }
 }

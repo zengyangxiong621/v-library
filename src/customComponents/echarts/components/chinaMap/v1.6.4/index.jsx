@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import './chMap.less';
-import * as echarts from 'echarts';
+import React, { Component } from "react";
+import "./chMap.less";
+import * as echarts from "echarts";
 import chinaJson from "./china.json";
-import ComponentDefaultConfig from './config';
-import img from './assets/img';
-import chMap1 from './assets/chMap1.png';
-import chMap2 from './assets/chMap2.png';
+import ComponentDefaultConfig from "./config";
+import img from "./assets/img";
+import chMap1 from "./assets/chMap1.png";
+import chMap2 from "./assets/chMap2.png";
 
 class ChinaMap extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class ChinaMap extends Component {
 
   // IP显示-数据转换
   convertIPData = (data, gdGeoCoordMap) => {
-    if (!data) { return }
+    if (!data) { return; }
     let res = [];
     for (let i = 0; i < data.length; i++) {
       let geoCoord = gdGeoCoordMap[data[i].name];
@@ -41,8 +41,8 @@ class ChinaMap extends Component {
   // IP显示-数据转换
   convertIPData2 = (dataCenter, gdGeoCoordMap) => {
     // 标牌位置调整，做判断删去“昌平”
-    if (!dataCenter) { return }
-    if (dataCenter.length > 1) { dataCenter = dataCenter.slice(2) }
+    if (!dataCenter) { return; }
+    if (dataCenter.length > 1) { dataCenter = dataCenter.slice(2); }
     let res = [];
     for (let i = 0; i < dataCenter.length; i++) {
       let geoCoord = gdGeoCoordMap[dataCenter[i].name];
@@ -60,16 +60,16 @@ class ChinaMap extends Component {
 
   // 动态计算柱形图的高度（定一个max）
   lineMaxHeight = (dataCenter) => {
-    if (!dataCenter) { return }
+    if (!dataCenter) { return; }
     const maxValue = Math.max(
       ...dataCenter.map((item) => item.times)
     );
 
     return 5 / maxValue; // 调解max柱状长度
-  }
+  };
   // 柱状体的主干
   lineData = (dataCenter, ipCoordData) => {
-    if (!dataCenter) { return }
+    if (!dataCenter) { return; }
     return dataCenter.map((item) => {
       return {
         coords: [
@@ -81,36 +81,36 @@ class ChinaMap extends Component {
         ],
       };
     });
-  }
+  };
 
   // 柱状体的顶部
   scatterData = (dataCenter, ipCoordData) => {
-    if (!dataCenter) { return }
+    if (!dataCenter) { return; }
     return dataCenter.map((item) => {
       return [
         (ipCoordData[item.name] || [114.249193, 40.168238])[0],
         (ipCoordData[item.name] || [114.249193, 40.168238])[1] + item.times * this.lineMaxHeight(dataCenter),
       ];
     });
-  }
+  };
   // 柱状体的底部
   scatterData2 = (dataCenter, ipCoordData) => {
-    if (!dataCenter) { return }
+    if (!dataCenter) { return; }
     return dataCenter.map((item) => {
       return {
         name: item.name,
         value: ipCoordData[item.name],
       };
     });
-  }
+  };
 
 
   createMap = () => {
-    const { comData, componentConfig, fields } = this.props
-    const { config, staticData } = componentConfig || ComponentDefaultConfig
-    const mainData = this.formatConfig(config, [])
+    const { comData, componentConfig, fields } = this.props;
+    const { config, staticData } = componentConfig || ComponentDefaultConfig;
+    const mainData = this.formatConfig(config, []);
     // console.log(mainData, '#mainData');
-    const { bgColor, selectColor, borderColor, width, height } = mainData
+    const { bgColor, selectColor, borderColor, width, height } = mainData;
     // 计算地图缩放比例，初始值 width:3325,height:1900,比例 7:4
     let SCALE = 1;
     if (width / height < 1.75) {
@@ -118,14 +118,14 @@ class ChinaMap extends Component {
     } else {
       SCALE = height / 1900;
     }
-    const originData = comData || staticData.data
+    const originData = comData || staticData.data;
     // 根据传入的fields来映射对应的值 
-    const fields2ValueMap = {}
-    const initColumnsName = fields
+    const fields2ValueMap = {};
+    const initColumnsName = fields;
     fields.forEach((item, index) => {
-      fields2ValueMap[initColumnsName[index]] = item
-    })
-    const finalData = this.formatData(originData, fields2ValueMap)
+      fields2ValueMap[initColumnsName[index]] = item;
+    });
+    const finalData = this.formatData(originData, fields2ValueMap);
 
     // IP地址数据
     const ipData = finalData[0].ipData;
@@ -145,7 +145,7 @@ class ChinaMap extends Component {
       },
       geo: {
         silent: true,
-        radius: '100%',
+        radius: "100%",
         map: "china",
         zoom: 1.20,
         // zoom: 0.8,
@@ -168,17 +168,17 @@ class ChinaMap extends Component {
           normal: {
             areaColor: "rgba(0,255,255,.02)",
             borderColor: {
-              type: 'linear',
+              type: "linear",
               x: 0,
               y: 1,
               x2: .5,
               y2: 0,
               colorStops: [{
-                offset: 0, color: '#f7e914'
+                offset: 0, color: "#f7e914"
               }, {
-                offset: 0.5, color: '#fbaa0e'
+                offset: 0.5, color: "#fbaa0e"
               }, {
-                offset: 1, color: '#306a9f'
+                offset: 1, color: "#306a9f"
               }],
               global: false
             },
@@ -200,15 +200,15 @@ class ChinaMap extends Component {
       series: [
         // 地图
         {
-          map: 'china',
-          type: 'map',
-          radius: '100%',
+          map: "china",
+          type: "map",
+          radius: "100%",
           zoom: 1.20,
           label: {
             normal: {
               show: false,
               textStyle: {
-                color: '#FFFFFF',
+                color: "#FFFFFF",
               },
             },
             emphasis: {
@@ -222,7 +222,7 @@ class ChinaMap extends Component {
               areaColor: bgColor, //地图背景色
               borderColor: borderColor, //内边缘颜色
               borderWidth: 2,
-              textStyle: '#fff',
+              textStyle: "#fff",
             },
             emphasis: {
               areaColor: selectColor, //悬浮背景
@@ -294,15 +294,15 @@ class ChinaMap extends Component {
                 fline: {
                   padding: [0, 5], // 调整标牌文字位置
                   backgroundColor: {
-                    type: 'linear',
+                    type: "linear",
                     x: 0,
                     y: 0,
                     x2: 1,
                     y2: 0,
                     colorStops: [{
-                      offset: 0, color: '#f7c91c' // 0% 处的颜色
+                      offset: 0, color: "#f7c91c" // 0% 处的颜色
                     }, {
-                      offset: 1, color: '#ffffff00' // 100% 处的颜色
+                      offset: 1, color: "#ffffff00" // 100% 处的颜色
                     }],
                     globalCoord: false // 缺省为 false                
                   },
@@ -394,14 +394,14 @@ class ChinaMap extends Component {
             width: 60, // 尾迹线条宽度
             // color: "#f60", //柱状颜色
             color: {
-              type: 'linear', // 线性渐变
+              type: "linear", // 线性渐变
               x: 0,             // x:  从左向右 1 ——> 0
               y: 0,             // y:  从上向下 1 ——> 0
               x2: 0,            // x2: 从右向左 1 ——> 0
               y2: 1,            // y2: 从下向上 1 ——> 0
               colorStops: [
-                { offset: 0, color: '#ffd43c' },
-                { offset: 1, color: '#bf5b2d' }
+                { offset: 0, color: "#ffd43c" },
+                { offset: 1, color: "#bf5b2d" }
               ]
             },
             opacity: .8, // 尾迹线条透明度
@@ -424,7 +424,7 @@ class ChinaMap extends Component {
           label: {
             normal: {
               show: true,
-              formatter: () => { return ''; },
+              formatter: () => { return ""; },
               color: "#fff",
             },
             emphasis: {
@@ -459,7 +459,7 @@ class ChinaMap extends Component {
           symbol: "circle",
           symbolSize: [60, 30],
           itemStyle: {
-            color: '#f60',
+            color: "#f60",
             opacity: .6,
           },
           silent: true,
@@ -485,15 +485,15 @@ class ChinaMap extends Component {
                 fline: {
                   padding: [0, 25], // 调整标牌文字位置
                   backgroundColor: {
-                    type: 'linear',
+                    type: "linear",
                     x: 0,
                     y: 0,
                     x2: 1,
                     y2: 0,
                     colorStops: [{
-                      offset: 0, color: '#f7c91c' // 0% 处的颜色
+                      offset: 0, color: "#f7c91c" // 0% 处的颜色
                     }, {
-                      offset: 1, color: '#ffffff00' // 100% 处的颜色
+                      offset: 1, color: "#ffffff00" // 100% 处的颜色
                     }],
                     globalCoord: false // 缺省为 false                
                   },
@@ -546,15 +546,15 @@ class ChinaMap extends Component {
                 fline: {
                   padding: [0, 25], // 调整标牌文字位置
                   backgroundColor: {
-                    type: 'linear',
+                    type: "linear",
                     x: 0,
                     y: 0,
                     x2: 1,
                     y2: 0,
                     colorStops: [{
-                      offset: 0, color: '#f7c91c' // 0% 处的颜色
+                      offset: 0, color: "#f7c91c" // 0% 处的颜色
                     }, {
-                      offset: 1, color: '#ffffff00' // 100% 处的颜色
+                      offset: 1, color: "#ffffff00" // 100% 处的颜色
                     }],
                     globalCoord: false // 缺省为 false                
                   },
@@ -596,54 +596,54 @@ class ChinaMap extends Component {
     // echarts.registerMap("outline", outline);
     this.setState({ options });
     mapChart.setOption(options);
-    this.setState({ mapChart })
+    this.setState({ mapChart });
   };
 
   // 匹配数据
   formatData = (data, fields2ValueMap) => {
     const arr = Array.isArray(data) ? data.map((item) => {
-      let res = {}
+      let res = {};
       for (let k in item) {
-        res[k] = item[fields2ValueMap[k]]
+        res[k] = item[fields2ValueMap[k]];
       }
-      return res
-    }) : []
-    return arr
-  }
+      return res;
+    }) : [];
+    return arr;
+  };
 
   // 获取样式配置
   formatConfig = (config, exclude) => {
     return config.filter((item) => exclude.indexOf(item.name) == -1).reduce((pre, cur) => {
       if (Array.isArray(cur.value)) {
         const obj = cur.value.reduce((p, c) => {
-          p[c.name] = c.value
-          return p
-        }, {})
+          p[c.name] = c.value;
+          return p;
+        }, {});
         pre = {
           ...pre,
           ...obj,
-        }
+        };
       } else {
-        pre[cur.name] = cur.value
+        pre[cur.name] = cur.value;
       }
-      return pre
-    }, {})
-  }
+      return pre;
+    }, {});
+  };
 
   render() {
     // ----------- 更新数据 -----------
-    const { fields, comData, componentConfig } = this.props
-    const { config, staticData } = componentConfig || ComponentDefaultConfig
-    let { mapChart, options } = this.state
+    const { fields, comData, componentConfig } = this.props;
+    const { config, staticData } = componentConfig || ComponentDefaultConfig;
+    let { mapChart, options } = this.state;
     // 组件静态或者传入组件的数据
-    const originData = comData || staticData.data
+    const originData = comData || staticData.data;
     // 根据传入的fields来映射对应的值 
-    const fields2ValueMap = {}
-    const initColumnsName = fields
+    const fields2ValueMap = {};
+    const initColumnsName = fields;
     fields.forEach((item, index) => { // 优化
-      fields2ValueMap[initColumnsName[index]] = item
-    })
-    const finalData = this.formatData(originData, fields2ValueMap)
+      fields2ValueMap[initColumnsName[index]] = item;
+    });
+    const finalData = this.formatData(originData, fields2ValueMap);
     let ipData = finalData[0].ipData;
     let dataCenter = finalData[0].dataCenter;
     let dataCenter2 = finalData[0].dataCenter?.slice(0, 1);
@@ -651,9 +651,9 @@ class ChinaMap extends Component {
 
     let ipCoordData = finalData[0].ipCoordData;
 
-    let style = this.formatConfig(config, [])
+    let style = this.formatConfig(config, []);
 
-    const { bgColor, selectColor, borderColor, width, height } = style
+    const { bgColor, selectColor, borderColor, width, height } = style;
 
     // 计算地图缩放比例，初始值 width:3325,height:1900,比例 7:4
     let SCALE = 1;
@@ -681,11 +681,12 @@ class ChinaMap extends Component {
 
 
     return (
-      <div className='ch-map' style={{ transform: 'scale(' + SCALE + ')', transformOrigin: 'center center' }}>
+      <div className='ch-map' style={{ transform: "scale(" + SCALE + ")", transformOrigin: "center center" }}>
         <div className='map-content'>
           <div
             className='map'
             id={this.props.componentConfig.id}
+            // eslint-disable-next-line react/no-unknown-property
             option={options}
           />
           <img className='bg1' src={chMap1} alt='背景1' />
@@ -701,5 +702,5 @@ class ChinaMap extends Component {
 export {
   ChinaMap,
   ComponentDefaultConfig
-}
-export default ChinaMap
+};
+export default ChinaMap;

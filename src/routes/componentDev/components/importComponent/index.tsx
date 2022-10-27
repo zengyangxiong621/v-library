@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { Modal, Form,  Upload, message, Button } from "antd";
 import type { UploadProps } from "antd";
