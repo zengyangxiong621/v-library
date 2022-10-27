@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import * as echarts from 'echarts';
+import React, { Component } from "react";
+import * as echarts from "echarts";
 import worldJson from "./world.json";
 import chinaJson from "./china.json";
-import ComponentDefaultConfig from './config'
-import img from './img'
+import ComponentDefaultConfig from "./config";
+import img from "./img";
 
 class WorldMap extends Component {
   constructor(props) {
@@ -21,12 +21,12 @@ class WorldMap extends Component {
 
   // 转换飞线
   convertData = (data, coordData, flyDirection) => {
-    if (!data) { return }
-    let res = []
+    if (!data) { return; }
+    let res = [];
     for (let i = 0; i < data.length; i++) {
-      let dataItem = data[i]
-      let fromCoord = coordData[dataItem[0]?.name]
-      let toCoord = coordData[dataItem[1]?.name]
+      let dataItem = data[i];
+      let fromCoord = coordData[dataItem[0]?.name];
+      let toCoord = coordData[dataItem[1]?.name];
       if (fromCoord && toCoord) {
         let coordArr = [
           {
@@ -37,14 +37,14 @@ class WorldMap extends Component {
             // value: dataItem[1].value
           },
         ];
-        res.push(flyDirection === 1 ? coordArr : coordArr.reverse())
+        res.push(flyDirection === 1 ? coordArr : coordArr.reverse());
       }
     }
-    return res
-  }
+    return res;
+  };
   // IP显示-数据转换
   convertIPData = (data, gdGeoCoordMap) => {
-    if (!data) { return }
+    if (!data) { return; }
     let res = [];
     for (let i = 0; i < data.length; i++) {
       let geoCoord = gdGeoCoordMap[data[i]?.name];
@@ -63,14 +63,14 @@ class WorldMap extends Component {
     flyLineArr.forEach((item, i) => {
       series.push(
         {
-          type: 'lines',
-          coordinateSystem: 'geo',
+          type: "lines",
+          coordinateSystem: "geo",
           zlevel: 2,
           effect: {
             show: true,
             period: 5, //箭头指向速度，值越小速度越快
             trailLength: 0, //特效尾迹长度[0,1]值越大，尾迹越长重
-            symbol: 'arrow', //箭头图标
+            symbol: "arrow", //箭头图标
             symbolSize: 5, //图标大小
             color: mainData.iconColor, // 图标颜色
           },
@@ -86,23 +86,23 @@ class WorldMap extends Component {
           data: this.convertData(item, coordData, flyDirection),
         },
         {
-          type: 'effectScatter',
-          radius: '100%',
-          coordinateSystem: 'geo',
+          type: "effectScatter",
+          radius: "100%",
+          coordinateSystem: "geo",
           zlevel: 2,
           rippleEffect: { //涟漪特效
             period: 4, //动画时间，值越小速度越快
-            brushType: 'stroke', //波纹绘制方式 stroke, fill
+            brushType: "stroke", //波纹绘制方式 stroke, fill
             scale: 3, //波纹圆环最大限制，值越大波纹越大
             color: mainData.rippleColor,
           },
           label: {
             normal: {
               show: false,
-              position: 'right', //显示位置
+              position: "right", //显示位置
               offset: [5, 0], //偏移设置
               formatter: (params) => {
-                return params.data.name //圆环显示文字
+                return params.data.name; //圆环显示文字
               },
               fontSize: 13,
             },
@@ -110,9 +110,9 @@ class WorldMap extends Component {
               show: false,
             },
           },
-          symbol: 'circle',
+          symbol: "circle",
           symbolSize: (val) => {
-            return 5 //圆环大小
+            return 5; //圆环大小
           },
           itemStyle: {
             normal: {
@@ -134,67 +134,28 @@ class WorldMap extends Component {
               value: coordData[dataItem[1]?.name]?.concat([dataItem[1]?.value]),
               // name: dataItem[0].name,
               // value: coordData[dataItem[0].name]?.concat([dataItem[0].value]),
-            }
+            };
           }),
         },
-        //中心点
-        // {
-        //   type: 'effectScatter',
-        //   radius: '100%',
-        //   coordinateSystem: 'geo',
-        //   zlevel: 15,
-        //   rippleEffect: {
-        //     period: 4,
-        //     brushType: 'stroke',
-        //     scale: 4,
-        //     color: '#FFD246',
-        //   },
-        //   label: {
-        //     normal: {
-        //       show: false,
-        //       position: 'right',
-        //       //offset:[5, 0],
-        //       color: '#FFD246',
-        //       formatter: '{b}',
-        //       textStyle: {
-        //         color: '#FFD246',
-        //       },
-        //     },
-        //     emphasis: {
-        //       show: false,
-        //       color: '#FFD246',
-        //     },
-        //   },
-        //   symbol: 'circle',
-        //   symbolSize: 5,
-        //   itemStyle: {
-        //     color: '#FFD246',
-        //   },
-        //   data: [
-        //     {
-        //       name: item[0],
-        //       value: coordData[item[0]]?.concat([10]),
-        //     },
-        //   ],
-        // }
-      )
-    })
-    return series
+      );
+    });
+    return series;
   };
 
   createMap = () => {
-    const { comData, componentConfig, fields } = this.props
-    const { config, staticData } = componentConfig || ComponentDefaultConfig
-    const mainData = this.formatConfig(config, [])
-    const { mapMode, displayMode, bgColor, selectColor, pointColor, flyDirection, borderColor, flyColor, iconColor, rippleColor } = mainData
-    const originData = comData || staticData.data
+    const { comData, componentConfig, fields } = this.props;
+    const { config, staticData } = componentConfig || ComponentDefaultConfig;
+    const mainData = this.formatConfig(config, []);
+    const { mapMode, displayMode, bgColor, selectColor, pointColor, flyDirection, borderColor, flyColor, iconColor, rippleColor } = mainData;
+    const originData = comData || staticData.data;
     // 根据传入的fields来映射对应的值 
-    const fields2ValueMap = {}
-    const initColumnsName = fields
+    const fields2ValueMap = {};
+    const initColumnsName = fields;
+    // eslint-disable-next-line react/prop-types
     fields.forEach((item, index) => {
-      fields2ValueMap[initColumnsName[index]] = item
-    })
-    const finalData = this.formatData(originData, fields2ValueMap)
+      fields2ValueMap[initColumnsName[index]] = item;
+    });
+    const finalData = this.formatData(originData, fields2ValueMap);
 
     const coordData = finalData[0]?.coordData || {};
     const flyLineArr = finalData[0]?.flyLineArr || [];
@@ -212,14 +173,14 @@ class WorldMap extends Component {
       },
       geo: {
         // map: 'world',
-        map: 'china',
-        type: 'map',
+        map: "china",
+        type: "map",
         zoom: 1.2,
         label: {
           normal: {
             show: false,
             textStyle: {
-              color: '#FFFFFF',
+              color: "#FFFFFF",
             },
           },
           emphasis: {
@@ -232,7 +193,7 @@ class WorldMap extends Component {
             color: bgColor, //地图背景色
             borderColor: borderColor, //省市边界线00fcff 516a89
             borderWidth: 1,
-            textStyle: '#fff',
+            textStyle: "#fff",
           },
           emphasis: {
             areaColor: selectColor, //悬浮背景
@@ -328,21 +289,21 @@ class WorldMap extends Component {
     };
 
     const options = {
-      radius: '100%',
+      radius: "100%",
       tooltip: {
-        trigger: 'item',
+        trigger: "item",
       },
       legend: {
-        orient: 'horizontal', //图例的排列方向
+        orient: "horizontal", //图例的排列方向
         // textStyle: { color: '#1a1e45' },
-        x: 'left', //图例的位置
-        y: '-20000000000000',
+        x: "left", //图例的位置
+        y: "-20000000000000",
       },
       visualMap: {
         //颜色的设置  dataRange
         // textStyle: { color: '#1a1e45' },
-        x: 'left',
-        y: 'bottom',
+        x: "left",
+        y: "bottom",
         // splitList: [{ start: 0, end: 150000 }],
         show: false,
         // text:['高','低'],// 文本，默认为数值文本
@@ -350,14 +311,14 @@ class WorldMap extends Component {
       },
       geo: {
         // map: 'world',
-        map: 'china',
-        type: 'map',
+        map: "china",
+        type: "map",
         zoom: 1.2,
         label: {
           normal: {
             show: false,
             textStyle: {
-              color: '#FFFFFF',
+              color: "#FFFFFF",
             },
           },
           emphasis: {
@@ -370,7 +331,7 @@ class WorldMap extends Component {
             color: bgColor, //地图背景色
             borderColor: borderColor, //省市边界线00fcff 516a89
             borderWidth: 1,
-            textStyle: '#fff',
+            textStyle: "#fff",
           },
           emphasis: {
             areaColor: selectColor, //悬浮背景
@@ -379,7 +340,7 @@ class WorldMap extends Component {
         data: [],
       },
       series: this.getSeries(mainData, flyLineArr, coordData, flyDirection),
-    }
+    };
 
     const dom = document.getElementById(componentConfig.id);
     var mapChart = echarts.init(dom);
@@ -388,54 +349,54 @@ class WorldMap extends Component {
     // echarts.registerMap("china", chinaJson);
     this.setState({ options, ipOptions }); // 飞线、IP都存state
     mapChart.setOption(displayMode === 0 ? options : ipOptions);
-    this.setState({ mapChart })
+    this.setState({ mapChart });
   };
 
   // 匹配数据
   formatData = (data, fields2ValueMap) => {
     const arr = Array.isArray(data) ? data.map((item) => {
-      let res = {}
+      let res = {};
       for (let k in item) {
-        res[k] = item[fields2ValueMap[k]]
+        res[k] = item[fields2ValueMap[k]];
       }
-      return res
-    }) : []
-    return arr
-  }
+      return res;
+    }) : [];
+    return arr;
+  };
 
   // 获取样式配置
   formatConfig = (config, exclude) => {
     return config.filter((item) => exclude.indexOf(item.name) == -1).reduce((pre, cur) => {
       if (Array.isArray(cur.value)) {
         const obj = cur.value.reduce((p, c) => {
-          p[c.name] = c.value
-          return p
-        }, {})
+          p[c.name] = c.value;
+          return p;
+        }, {});
         pre = {
           ...pre,
           ...obj,
-        }
+        };
       } else {
-        pre[cur.name] = cur.value
+        pre[cur.name] = cur.value;
       }
-      return pre
-    }, {})
-  }
+      return pre;
+    }, {});
+  };
 
   render() {
     // ----------- 更新数据 -----------
-    const { fields, comData, componentConfig } = this.props
-    const { config, staticData } = componentConfig || ComponentDefaultConfig
-    let { mapChart, options, ipOptions } = this.state
+    const { fields, comData, componentConfig } = this.props;
+    const { config, staticData } = componentConfig || ComponentDefaultConfig;
+    let { mapChart, options, ipOptions } = this.state;
     // 组件静态或者传入组件的数据
-    const originData = comData || staticData.data
+    const originData = comData || staticData.data;
     // 根据传入的fields来映射对应的值 
-    const fields2ValueMap = {}
-    const initColumnsName = fields
+    const fields2ValueMap = {};
+    const initColumnsName = fields;
     fields.forEach((item, index) => { // 优化
-      fields2ValueMap[initColumnsName[index]] = item
-    })
-    const finalData = this.formatData(originData, fields2ValueMap)
+      fields2ValueMap[initColumnsName[index]] = item;
+    });
+    const finalData = this.formatData(originData, fields2ValueMap);
 
 
     // 配置飞线数据
@@ -443,9 +404,9 @@ class WorldMap extends Component {
     let flyLineArr = finalData[0]?.flyLineArr || [];
     let ipData = finalData[0]?.ipData || [];
     let ipCoordData = finalData[0]?.ipCoordData || {};
-    let style = this.formatConfig(config, [])
+    let style = this.formatConfig(config, []);
     // console.log(style, '#style render');
-    const { mapMode, displayMode, bgColor, selectColor, pointColor, borderColor, flyDirection, flyColor, iconColor, rippleColor } = style
+    const { mapMode, displayMode, bgColor, selectColor, pointColor, borderColor, flyDirection, flyColor, iconColor, rippleColor } = style;
     if (mapChart) {
       options.geo.itemStyle.normal.color = bgColor;
       options.geo.itemStyle.normal.borderColor = borderColor;
@@ -454,36 +415,36 @@ class WorldMap extends Component {
       ipOptions.geo.itemStyle.normal.borderColor = borderColor;
       ipOptions.geo.itemStyle.emphasis.areaColor = selectColor;
       if (displayMode === 0) {
-        options.series = this.getSeries(style, flyLineArr, coordData, flyDirection)
+        options.series = this.getSeries(style, flyLineArr, coordData, flyDirection);
         if (options.series.length > 0) { options.series[0].effect.color = iconColor; }
       } else {
         ipOptions.series.map(item => {
           item.data = this.convertIPData(ipData, ipCoordData);
-        })
+        });
       }
       echarts.registerMap("china", mapMode === 0 ? worldJson : chinaJson);
       mapChart.setOption(displayMode === 0 ? options : ipOptions);
       mapChart.resize();
       // 配置点击下钻
-      mapChart.on('click', (params, echarts) => {
+      mapChart.on("click", (params, echarts) => {
         if (Array.isArray(componentConfig.drillDownArr) && componentConfig.drillDownArr.length) {
-          const { name } = params
-          const clickObj = flyLineArr.find(item => item[0].name === name)
+          const { name } = params;
+          const clickObj = flyLineArr.find(item => item[0].name === name);
           if (!clickObj) {
-            return
+            return;
           }
-          const enName = clickObj && clickObj.length ? clickObj[0].flag : ''
-          const value = clickObj && clickObj.length ? clickObj[0].value : ''
+          const enName = clickObj && clickObj.length ? clickObj[0].flag : "";
+          const value = clickObj && clickObj.length ? clickObj[0].value : "";
           const outgoingData = {
             // 省市名
             originalName: name,
             // 省市名 首字母缩写
             name: enName,
             value
-          }
+          };
           // drillDownArray长度不为零, 需要下钻
-          if (typeof this.props.onChange === 'function') {
-            this.props.onChange(outgoingData, echarts)
+          if (typeof this.props.onChange === "function") {
+            this.props.onChange(outgoingData, echarts);
           }
         } else {
           // do something
@@ -493,21 +454,21 @@ class WorldMap extends Component {
 
 
     let mapSize = {
-      width: '100%',
-      height: '100%'
+      width: "100%",
+      height: "100%"
     };
     // 从组件配置中获取当前地图的大小后赋值给mapSize
     // toFix: 从下钻面板中被切换显示时 地图经过一段时间后才由100 *100变为正常大小
-    const { value: dimensionValue } = config.find((item) => item.name === "dimension")
+    const { value: dimensionValue } = config.find((item) => item.name === "dimension");
     if (dimensionValue) {
       dimensionValue.forEach(({ name, value }) => {
-        if (name === 'width') {
-          mapSize.width = value
+        if (name === "width") {
+          mapSize.width = value;
         }
-        if (name === 'height') {
-          mapSize.height = value
+        if (name === "height") {
+          mapSize.height = value;
         }
-      })
+      });
     }
 
 
@@ -515,6 +476,7 @@ class WorldMap extends Component {
       <div
         id={this.props.componentConfig.id}
         style={mapSize}
+        // eslint-disable-next-line react/no-unknown-property
         option={displayMode === 0 ? options : ipOptions}
       />
     );
@@ -524,5 +486,5 @@ class WorldMap extends Component {
 export {
   WorldMap,
   ComponentDefaultConfig
-}
-export default WorldMap
+};
+export default WorldMap;
