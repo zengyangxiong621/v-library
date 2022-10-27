@@ -200,7 +200,7 @@ class WordText extends Component<Props, State> {
                         ? `drop-shadow(${textStyle.shadow.color} ${textStyle.shadow.vShadow}px ${textStyle.shadow.hShadow}px ${textStyle.shadow.blur}px)`
                         : "",
                     }}
-                    dangerouslySetInnerHTML={{ __html: item[fields[0]] }}
+                    dangerouslySetInnerHTML={{ __html: item && item[fields[0]] || '' }}
                   ></p>
                 ))}
               </div>

@@ -40,7 +40,10 @@ const DataResult = ({ bar, dispatch, ...props }) => {
     if (!type && type !== 'component') {
       let resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)
       const newData = Object.assign({}, resultData, {
-        value: resData ? JSON.stringify(resData, null, 2) : ''
+        value: resData ? JSON.stringify(resData, null, 2) : '',
+        readOnly: true,
+        language: 'json',
+        showExpand: false
       })
       setResultData(newData)
     }
@@ -49,7 +52,10 @@ const DataResult = ({ bar, dispatch, ...props }) => {
   const initOfComponent = () => {
     if (type === 'component') {
       const newData = Object.assign({}, resultData, {
-        value: JSON.stringify(componentResultData, null, 2)
+        value: JSON.stringify(componentResultData, null, 2),
+        readOnly: true,
+        language: 'json',
+        showExpand: false
       })
       setResultData(newData)
     }

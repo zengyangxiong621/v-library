@@ -27,9 +27,9 @@ const CodeEditor = props => {
   }, 300)
 
   const onBlur = (e) => {
-    if(hasEditFlag){
+    if (hasEditFlag) {
       _data.value = content
-      props.onChange()
+      props.onChange(_data)
     }
   }
 
@@ -39,10 +39,12 @@ const CodeEditor = props => {
   }
 
   const handleOk = () => {
-    setContent(modalContent)
-    setFullScreen(false)
-    _data.value = modalContent
-    props.onChange()
+    setTimeout(() => {
+      setContent(modalContent)
+      setFullScreen(false)
+      _data.value = modalContent
+      props.onChange(_data)
+    }, 300)
   }
 
   const editorDidMountHandle = (editor, monaco) => {

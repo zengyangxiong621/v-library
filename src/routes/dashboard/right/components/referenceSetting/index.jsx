@@ -247,7 +247,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     const copyPanelConfig = deepClone(panelConfig)
     copyPanelConfig.states =  copyPanelConfig.states.filter(state => state.id)
     console.log('copyPanelConfig', copyPanelConfig)
-    const { config: { left, top, width, height } } = panelConfig
+    const { config: {  left, top, width, height } } = panelConfig
 
     const data = await http({
       url: '/visual/panel/update',
@@ -311,11 +311,8 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
           type: 'bar/save',
           payload: {
             isPanel: false,
-            stateId: null,
-            panelId: null,
             key: [currentReferenceId],
             selectedComponentOrGroup: [],
-            dashboardId: currentReferenceId,
             scaleDragData: {
               position:{
                 x: 0,
@@ -328,9 +325,6 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
               }
             }
           }
-        })
-        dispatch({
-          type: 'bar/getDashboardDetails'
         })
     }
   }
