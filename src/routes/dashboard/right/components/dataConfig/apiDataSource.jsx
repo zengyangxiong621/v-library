@@ -207,26 +207,28 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
     saveDataConfig('method', requestMethods)
   }
 
-  const requestHeaderDataChange = () => {
-    if (requestHeaderData.value) {
+  const requestHeaderDataChange = (data) => {
+    if (data.value) {
       try {
-        JSON.parse(requestHeaderData.value)
+        JSON.parse(data.value)
       } catch (err) {
         message.error('格式错误')
         return
       }
     }
-    saveDataConfig('headers', requestHeaderData)
+    setRequestHeaderData(data)
+    saveDataConfig('headers', data)
   }
 
-  const requestBodyDataChange = () => {
+  const requestBodyDataChange = (data) => {
     try {
-      JSON.parse(requestBodyData.value)
+      JSON.parse(data.value)
     } catch (err) {
       message.error('格式错误')
       return
     }
-    saveDataConfig('body', requestBodyData)
+    setRequestBodyData(data)
+    saveDataConfig('body', data)
   }
 
   const pathDataChange = () => {
