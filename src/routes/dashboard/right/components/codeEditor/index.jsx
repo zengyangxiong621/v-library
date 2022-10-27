@@ -39,10 +39,12 @@ const CodeEditor = props => {
   }
 
   const handleOk = () => {
-    setContent(modalContent)
-    setFullScreen(false)
-    _data.value = modalContent
-    props.onChange(_data)
+    setTimeout(() => {
+      setContent(modalContent)
+      setFullScreen(false)
+      _data.value = modalContent
+      props.onChange(_data)
+    }, 300)
   }
 
   const editorDidMountHandle = (editor, monaco) => {
