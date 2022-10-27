@@ -360,7 +360,6 @@ export default {
       const layers = payload.layers;
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
-      const curDrilldownStateLists = bar.drilldownStateLists;
       // 获取面板详情
       const getPanelConfigFunc = async (layerPanel: any) => {
         try {
@@ -368,12 +367,6 @@ export default {
             url: `/visual/panel/detail/${layerPanel.id}`,
             method: "get",
           });
-          // 只处理下钻面板
-          if (panelConfig && panelConfig.type == 2) {
-            const { states } = panelConfig;
-            const drilldownStates = states.map((state: { id: string; name: string }) => state.id);
-            curDrilldownStateLists.push(...drilldownStates);
-          }
           return panelConfig;
         } catch (e) {
           return null;
@@ -524,7 +517,6 @@ export default {
           fullAmountComponents,
           fullAmountDynamicAndDrillDownPanels,
           fullAmountPanels,
-          drilldownStateLists: curDrilldownStateLists,
           fullAmountRouteList,
         },
       });

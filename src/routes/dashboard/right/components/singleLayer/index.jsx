@@ -21,9 +21,6 @@ import { getCallbackParams } from '@/utils/data.js'
 
 const SingleLayer = ({ bar, dispatch, ...props }) => {
   const { TabPane } = Tabs;
-  const formItemLayout = {
-    labelAlign: 'left'
-  };
   const componentConfig = deepClone(bar.componentConfig)
   componentConfig.interaction = componentConfig.interaction || {
     mountAnimation: bar.layers.find(item => item.id === componentConfig.id)?.mountAnimation,
@@ -265,11 +262,11 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
       payload: componentConfig
     })
   }
-  // 通过全局变量 panelId 和 panels 来查找包含当前面板信息的对象，通过对象里的name来判断
-
-  const curStateId = bar.stateId
-  const isDrillDownPanel = bar.drilldownStateLists.includes(curStateId)
-  // const curPanelType = bar.curPanelType
+  // 是否显示 下钻  选项
+  const curPanelId = bar.panelId
+  const panelsList = bar.fullAmountPanels
+  const targetPanelInfo = panelsList.find(item => item.id === curPanelId)
+  const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false
 
   return (
     <div className="SingleLayer-wrap">
@@ -314,7 +311,7 @@ const SingleLayer = ({ bar, dispatch, ...props }) => {
             </ComponentCard>
           </TabPane>
           {
-            bar.isPanel && isDrillDownPanel && <TabPane tab="下钻" key="4">
+            isDrillDownPanel && <TabPane tab="下钻" key="4">
               <DrillDownSetting
                 componentConfig={componentConfig}
               ></DrillDownSetting>

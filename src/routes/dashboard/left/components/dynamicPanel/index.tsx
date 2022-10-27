@@ -98,10 +98,16 @@ const DynamicPanel: React.FC = (props: any) => {
     setIsShowRMenu(false);
   };
 
+  // 判断当前面板类型是否是下钻面板
+  const curPanelId = bar.panelId
+  const panelsList = bar.fullAmountPanels
+  const targetPanelInfo = panelsList.find(item => item.id === curPanelId)
+  const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false
+
   return (
     <div className='dynamic-panel-wrap'>
       <div className='panel-top'>
-        <div style={{ color: "#ccc" }}>{bar.curPanelType === 2 ? "下钻层级" : "状态"}</div>
+        <div style={{ color: "#ccc" }}>{isDrillDownPanel ? "下钻层级" : "状态"}</div>
         <div className='panel-icons'>
           <IconFont className="db-icon" type='icon-xinjianfenzu'
             onClick={() => addPanel()}
