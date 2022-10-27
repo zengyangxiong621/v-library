@@ -10,72 +10,73 @@ const componentDefaultConfig = {
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
-  "moduleType":'assist',
+  "moduleType": "assist",
 
-  "autoUpdate": {"isAuto": false, "interval": 10}, // =========
+  "autoUpdate": {
+    "isAuto": false,
+    "interval": 10
+  }, // =========
   "thumb": "", // 缩略图 // =========
 
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
-  "dataContainers": [{// =========
+  "dataContainers": [{ // =========
     "enable": true,
     "id": 2744,
     "rank": 0
   }],
   "staticData": {
     //静态数据
-    "data": [
-      {
-        "time":"12:03:01",
-        "title":"123.456.789",
-        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_"
+    "data": [{
+        "time": "12:03:01",
+        "title": "123.456.789",
+        "content": "TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_"
       },
       {
-        "time":"12:03:02",
-        "title":"123.456.789",
-        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为"
+        "time": "12:03:02",
+        "title": "123.456.789",
+        "content": "TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为_TCP_可疑行为"
       },
       {
-        "time":"12:03:03",
-        "title":"123.456.789",
-        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
+        "time": "12:03:03",
+        "title": "123.456.789",
+        "content": "TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
       },
       {
-        "time":"12:03:04",
-        "title":"123.456.789",
-        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
+        "time": "12:03:04",
+        "title": "123.456.789",
+        "content": "TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
       },
       {
-        "time":"12:03:05",
-        "title":"123.456.789",
-        "content":"TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
+        "time": "12:03:05",
+        "title": "123.456.789",
+        "content": "TCP_可疑行为_AphacTCP_可疑行为_TCP_可疑行为"
       }
     ],
-    "fields": [
-      {
+    "fields": [{
         "name": "time",
         "value": "time",
         "desc": "时间结点",
-        "status":true
+        "status": true
       },
       {
         "name": "title",
         "value": "title",
         "desc": "内容标题",
-        "status":true
+        "status": true
       },
       {
         "name": "content",
         "value": "content",
         "desc": "内容正文",
-        "status":true
+        "status": true
       }
     ]
   },
 
-  "useFilter": false,// =========
+  "useFilter": false, // =========
   "filters": [],
-  "events":[],
+  "events": [],
   "config": [
     // 样式配置
     {
@@ -85,8 +86,7 @@ const componentDefaultConfig = {
       "config": {
         "lock": false
       },
-      "value": [
-        {
+      "value": [{
           "name": "left",
           "displayName": "X轴坐标",
           "value": 100
@@ -117,19 +117,17 @@ const componentDefaultConfig = {
     {
       "name": "textStyle",
       "type": "tabs",
-      "options":[
-        {
+      "options": [{
           "name": "时间轴样式",
-          "key":"labelStyle",
-          "value":[{
+          "key": "labelStyle",
+          "value": [{
             "name": "label",
             "displayName": "时间样式",
             "type": "collapse",
             "hasSwitch": true,
             "defaultExpand": true,
-            "isHide":true,
-            "value":[
-              {
+            "isHide": true,
+            "value": [{
                 "name": "show",
                 "displayName": "",
                 "value": true,
@@ -139,8 +137,7 @@ const componentDefaultConfig = {
                 "name": "styleController",
                 "displayName": "时间样式",
                 "type": "textFullStyleGroup",
-                "value":[
-                  {
+                "value": [{
                     "name": "fontFamily",
                     "displayName": "",
                     "value": "Microsoft Yahei"
@@ -179,31 +176,30 @@ const componentDefaultConfig = {
                 ]
               },
               {
-                name:"offsetConfig",
-                displayName:"偏移",
-                type:"inputNumber2",
-                showDetail:true, // 是否展示下面的文字说明
-                value:[
-                    {
-                        name:"x",
-                        displayName:"X",
-                        type:"number",
-                        value:-20,
-                        config:{
-                            min:-50,
-                            suffix:"px",  // 输入框后缀
-                        }
-                    },
-                    {
-                        name:"y",
-                        displayName:"Y",
-                        type:"number",
-                        value:0,
-                        config:{
-                            min:-50,
-                            suffix:"px",  // 输入框后缀
-                        }
-                    },
+                name: "offsetConfig",
+                displayName: "偏移",
+                type: "inputNumber2",
+                showDetail: true, // 是否展示下面的文字说明
+                value: [{
+                    name: "x",
+                    displayName: "X",
+                    type: "number",
+                    value: -20,
+                    config: {
+                      min: -50,
+                      suffix: "px", // 输入框后缀
+                    }
+                  },
+                  {
+                    name: "y",
+                    displayName: "Y",
+                    type: "number",
+                    value: 0,
+                    config: {
+                      min: -50,
+                      suffix: "px", // 输入框后缀
+                    }
+                  },
                 ]
               },
               {
@@ -212,8 +208,7 @@ const componentDefaultConfig = {
                 "type": "collapse",
                 "hasSwitch": true,
                 "defaultExpand": true,
-                "value": [
-                  {
+                "value": [{
                     "name": "show",
                     "displayName": "",
                     "value": true,
@@ -237,16 +232,14 @@ const componentDefaultConfig = {
         },
         {
           "name": "内容样式",
-          "key":"fontStyle",
-          "value":[
-            {
-              "name":"title",
+          "key": "fontStyle",
+          "value": [{
+              "name": "title",
               "displayName": "标题",
               "type": "collapse",
               "hasSwitch": false,
               "defaultExpand": true,
-              "value":[
-                {
+              "value": [{
                   "name": "show",
                   "displayName": "",
                   "value": true,
@@ -256,8 +249,7 @@ const componentDefaultConfig = {
                   "name": "styleController",
                   "displayName": "标题样式",
                   "type": "textFullStyleGroup",
-                  "value":[
-                    {
+                  "value": [{
                       "name": "fontFamily",
                       "displayName": "",
                       "value": "Microsoft Yahei"
@@ -299,14 +291,12 @@ const componentDefaultConfig = {
                   "name": "align",
                   "displayName": "对齐方式",
                   "type": "alignFull",
-                  "value": [
-                    {
-                      "name": "textAlign",
-                      "displayName": "水平对齐",
-                      "type": "align",
-                      "value": "left" // left , center, right,bothEnds
-                    }
-                  ]
+                  "value": [{
+                    "name": "textAlign",
+                    "displayName": "水平对齐",
+                    "type": "align",
+                    "value": "left" // left , center, right,bothEnds
+                  }]
                 },
                 {
                   "name": "outShadow",
@@ -314,8 +304,7 @@ const componentDefaultConfig = {
                   "type": "collapse",
                   "hasSwitch": true,
                   "defaultExpand": true,
-                  "value": [
-                    {
+                  "value": [{
                       "name": "show",
                       "displayName": "",
                       "value": true,
@@ -337,13 +326,12 @@ const componentDefaultConfig = {
               ]
             },
             {
-              "name":"content",
+              "name": "content",
               "displayName": "正文",
               "type": "collapse",
               "hasSwitch": false,
               "defaultExpand": true,
-              "value":[
-                {
+              "value": [{
                   "name": "show",
                   "displayName": "",
                   "value": true,
@@ -353,8 +341,7 @@ const componentDefaultConfig = {
                   "name": "styleController",
                   "displayName": "内容样式",
                   "type": "textFullStyleGroup",
-                  "value":[
-                    {
+                  "value": [{
                       "name": "fontFamily",
                       "displayName": "",
                       "value": "Microsoft Yahei"
@@ -388,7 +375,7 @@ const componentDefaultConfig = {
                     {
                       "name": "lineHeight",
                       "displayName": "行距",
-                      "value":48
+                      "value": 48
                     }
                   ]
                 }

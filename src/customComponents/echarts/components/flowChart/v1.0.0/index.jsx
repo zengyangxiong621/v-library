@@ -1,9 +1,9 @@
-import React from 'react';
-import * as echarts from 'echarts';
-import ComponentDefaultConfig from './config'
+import React from "react";
+import * as echarts from "echarts";
+import ComponentDefaultConfig from "./config";
 import {
   nodes, labelNodes, linesData, dashedLinesData,
-} from './dataConfig.js';
+} from "./dataConfig.js";
 const remToPx = (res) => {
   const docEl = document.documentElement;
   const clientWidth = window.innerWidth
@@ -18,63 +18,63 @@ class FlowChart extends  React.PureComponent{
     super(props);
     this.state = {
       myChart: null
-    }
-  }
+    };
+  };
 
   componentDidMount() {
-    this.initChart()
-  }
+    this.initChart();
+  };
 
   // 格式化获取
   formatCustom = (config) => {
-    let obj = {}
+    let obj = {};
     config.value.map(item => {
-      obj[item.key] = {}
+      obj[item.key] = {};
       item.value.map(subItem => {
-        obj[item.key][subItem.name] = subItem.value
+        obj[item.key][subItem.name] = subItem.value;
       })
     })
-    return obj
-  }
+    return obj;
+  };
 
   // 修改默认数据颜色
   formatDefaultData(nodes, labelNodes, linesData, dashedLinesData,changeColor){
     nodes.map(item => {
       if(item.type){
-        item.startColor = changeColor[item.type].nodeStartColor
-        item.endColor = changeColor[item.type].nodeEndColor
+        item.startColor = changeColor[item.type].nodeStartColor;
+        item.endColor = changeColor[item.type].nodeEndColor;
       }
     })
     labelNodes.map(item => {
       if(item.type){
-        item.bgColor = changeColor[item.type].labelBgColor
+        item.bgColor = changeColor[item.type].labelBgColor;
       }
     })
     linesData.map(item => {
       if(item.type){
-        item.lineColor = changeColor[item.type].lineColor
+        item.lineColor = changeColor[item.type].lineColor;
       }
     })
   }
   getgGraphOptions = (options, config) => {
     // 下钻-- 请求回来的数据可能时错误体(error对象),暂时这样兼容一哈
-    options = Array.isArray(options) ? options : []
-    const { fields } = this.props
+    options = Array.isArray(options) ? options : [];
+    const { fields } = this.props;
     // 标签文字
-    const labelFont = this.formatConfig([this.getStyleData(config, 'labelFont')],[]).labelFont
-    const nodeFont = this.formatConfig([this.getStyleData(config, 'nodeFont')],[]).nodeFont
-    const warningConfig = this.formatConfig([this.getStyleData(config, 'warningConfig')],[])
-    const customColumnConfig = config.find(item => item.name === 'customColumn')
-    const customColumndata = this.formatCustom(customColumnConfig)
+    const labelFont = this.formatConfig([this.getStyleData(config, "labelFont")],[]).labelFont;
+    const nodeFont = this.formatConfig([this.getStyleData(config, "nodeFont")],[]).nodeFont;
+    const warningConfig = this.formatConfig([this.getStyleData(config, "warningConfig")],[]);
+    const customColumnConfig = config.find(item => item.name === "customColumn");
+    const customColumndata = this.formatCustom(customColumnConfig);
     // 修改node,labelNodes,linesData,dashedLinesData
-    this.formatDefaultData(nodes, labelNodes, linesData, dashedLinesData, customColumndata)
+    this.formatDefaultData(nodes, labelNodes, linesData, dashedLinesData, customColumndata);
     const charts = {
       nodes: [],
       labelNodes: [],
       linesData: [],
       dashedLinesData,
     };
-    const backgroundColor = this.formatConfig([this.getStyleData(config, 'backgroundColor')],[]).backgroundColor
+    const backgroundColor = this.formatConfig([this.getStyleData(config, "backgroundColor")],[]).backgroundColor;
     for (let j = 0; j < nodes.length; j++) {
       const {
         x, y, nodeName, type, svgPath, symbolSize, startColor, endColor,
@@ -87,10 +87,10 @@ class FlowChart extends  React.PureComponent{
         nodeName,
         value: [x, y],
         symbolSize: symbolSize || remToPx(1.34),
-        symbol: 'path://M737 122.289H287L62 512l225 389.711h450L962 512z',
+        symbol: "path://M737 122.289H287L62 512l225 389.711h450L962 512z",
         symbolKeepAspect: true,
         label: {
-          position: 'inside',
+          position: "inside",
           color: nodeFont.color,
           fontWeight: nodeFont.fontWeight,
           fontSize: nodeFont.fontSize,
@@ -99,15 +99,15 @@ class FlowChart extends  React.PureComponent{
         },
         itemStyle: {
           color: {
-            type: 'radial', // 径向渐变
+            type: "radial", // 径向渐变
             x: 0.5, // 圆心坐标（中心）
             y: 0.5,
             r: 1, // 半径长度
             colorStops: [
               {
-                offset: 0, color: sColor || '#3887de', // 0% 处的颜色
+                offset: 0, color: sColor || "#3887de", // 0% 处的颜色
               }, {
-                offset: 1, color: eColor || '#cae3fe', // 100% 处的颜色
+                offset: 1, color: eColor || "#cae3fe", // 100% 处的颜色
               },
             ],
           },
@@ -121,15 +121,15 @@ class FlowChart extends  React.PureComponent{
       let {
         x, y, name, bgColor, type, customData,
       } = labelNodes[i];
-      customData.count_unit = '';
-      customData.rate_unit = '';
+      customData.count_unit = "";
+      customData.rate_unit = "";
       const matchNode = options.find(item => item[fields[0]] === name && item[fields[1]] === type);
       customData = matchNode && matchNode[fields[2]]  ? JSON.parse(JSON.stringify(matchNode[fields[2]])) : customData;
       var node = {
         nodeName: name,
         value: [x, y],
         symbolSize: [remToPx(1.6), remToPx(0.7)],
-        symbol: 'rect',
+        symbol: "rect",
         itemStyle: {
           color: bgColor,  // 注释的背景颜色
           type,
@@ -149,11 +149,11 @@ class FlowChart extends  React.PureComponent{
       const label = {
         coords,
         lineStyle: {
-          type: linesData[j].lineType || 'solid',
+          type: linesData[j].lineType || "solid",
           width: 3,
-          color: lineColor || 'blue',
+          color: lineColor || "blue",
           curveness: 0.8,
-          join: 'round',
+          join: "round",
         },
       };
       charts.linesData.push(label);
@@ -162,40 +162,40 @@ class FlowChart extends  React.PureComponent{
     return {
       backgroundColor,
       grid: {
-        left: '5%',
-        right: '5%',
-        bottom: '5%',
-        top: '12%',
+        left: "5%",
+        right: "5%",
+        bottom: "5%",
+        top: "12%",
         containLabel: true,
       },
       xAxis: {
         min: 0,
         max: 1800,
         show: false,
-        type: 'value',
+        type: "value",
       },
       yAxis: {
         min: 0,
         max: 600,
         show: false,
-        type: 'value',
+        type: "value",
       },
       series: [
         {
-          type: 'lines',
+          type: "lines",
           polyline: true,
-          coordinateSystem: 'cartesian2d',
+          coordinateSystem: "cartesian2d",
           data: charts.linesData,
         },
         {
-          type: 'lines',
+          type: "lines",
           polyline: true,
-          coordinateSystem: 'cartesian2d',
+          coordinateSystem: "cartesian2d",
           animation: false,
           effect: {
             show: true,
             trailLength: 0.1,
-            symbol: 'circle',
+            symbol: "circle",
             symbolSize: 6,
             constantSpeed: 100,
           },
@@ -203,12 +203,12 @@ class FlowChart extends  React.PureComponent{
           data: charts.linesData,
         },
         {
-          type: 'graph',
-          coordinateSystem: 'cartesian2d',
+          type: "graph",
+          coordinateSystem: "cartesian2d",
           label: {
             show: true,
-            position: 'bottom',
-            color: 'yellow',
+            position: "bottom",
+            color: "yellow",
             formatter(item) {
               return item.data.nodeName;
             },
@@ -217,12 +217,12 @@ class FlowChart extends  React.PureComponent{
   
         },
         {
-          type: 'graph',
-          coordinateSystem: 'cartesian2d',
+          type: "graph",
+          coordinateSystem: "cartesian2d",
           zlevel: 2,
           label: {
             show: true,
-            position: 'inside',
+            position: "inside",
             color: labelFont.color,  // 标签字体颜色
             fontSize: labelFont.fontSize,
             fontFamily: labelFont.fontFamily,
@@ -232,16 +232,16 @@ class FlowChart extends  React.PureComponent{
               const {
                 count, rate, type, count_unit, rate_unit,
               } = item.data.itemStyle;
-              if (type === 'send') {
+              if (type === "send") {
                 return `发送量：${count}${count_unit}条\n发送速率：${rate}${rate_unit}条/秒`;
               }
-              if (type === 'access') {
+              if (type === "access") {
                 return `接入量：${count}${count_unit}条\n接入速率：${rate}${rate_unit}条/秒`;
               }
-              if (type === 'forward') {
+              if (type === "forward") {
                 return `转发量：${count}${count_unit}条\n转发速率：${rate}${rate_unit}条/秒`;
               }
-              if (type === 'process') {
+              if (type === "process") {
                 return `加工量：${count}${count_unit}条\n加工速率：${rate}${rate_unit}条/秒`;
               }
             },
@@ -249,17 +249,17 @@ class FlowChart extends  React.PureComponent{
           data: charts.labelNodes,
         },
         {
-          type: 'lines',
+          type: "lines",
           polyline: true,
-          coordinateSystem: 'cartesian2d',
+          coordinateSystem: "cartesian2d",
           data: charts.dashedLinesData.map(item => ({
             ...item,
             lineStyle: {
-              type: item.lineType || 'solid',
+              type: item.lineType || "solid",
               width: 3,
-              color: item.lineColor || 'blue',
+              color: item.lineColor || "blue",
               curveness: 0.8,
-              join: 'round',
+              join: "round",
             },
           })),
         },
@@ -268,39 +268,39 @@ class FlowChart extends  React.PureComponent{
   };
 
   getOptions() {
-    const { comData,fields } = this.props
-    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
-    const {config, staticData} = componentConfig
+    const { comData,fields } = this.props;
+    const componentConfig = this.props.componentConfig || ComponentDefaultConfig;
+    const {config, staticData} = componentConfig;
     // 组件静态或者传入组件的数据
-    let originData = comData || staticData.data
+    let originData = comData || staticData.data;
     const options = this.getgGraphOptions(originData, config);
     return options;
   }
 
   initChart(){
-    const dom = document.getElementById(`${this.props.componentConfig.id}`)
-    const myChart = echarts.init(dom)
+    const dom = document.getElementById(`${this.props.componentConfig.id}`);
+    const myChart = echarts.init(dom);
     myChart.setOption(this.getOptions());
     this.setState({
       myChart
-    })
+    });
   }
 
   // 通过name获取config中对应的数据
   getStyleData = (config, name, data=null) => {
     config.forEach(item => {
       if(item.name === name){
-        data = item
+        data = item;
       }else if(Array.isArray(item.options)){
-        let res = this.getStyleData(item.options, name) 
-        data = res ? res : data
+        let res = this.getStyleData(item.options, name);
+        data = res ? res : data;
       }else if(Array.isArray(item.value)){
-        let res1 = this.getStyleData(item.value, name)
-        data = res1 ? res1 : data
+        let res1 = this.getStyleData(item.value, name);
+        data = res1 ? res1 : data;
       }
     })
     if(data){
-      return data
+      return data;
     }
   }
 
@@ -308,24 +308,24 @@ class FlowChart extends  React.PureComponent{
   formatConfig = (config, exclude) => {
     return config.filter((item) => exclude.indexOf(item.name) == -1).reduce((pre, cur) => {
         if(Array.isArray(cur.value)) {
-          const obj = this.formatConfig(cur.value, [])
+          const obj = this.formatConfig(cur.value, []);
           pre = {
             ...pre,
             ...obj,
-          }
+          };
         } else {
-          pre[cur.name] = cur.value
+          pre[cur.name] = cur.value;
         }
-        return pre
-    }, {})
+        return pre;
+    }, {});
   }
 
   render(){
-    const {myChart} = this.state
-    const { comData,fields } = this.props
-    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
-    const {config, staticData} = componentConfig
-    const dimension = this.formatConfig([this.getStyleData(config, 'dimension')],[])
+    const {myChart} = this.state;
+    const { comData,fields } = this.props;
+    const componentConfig = this.props.componentConfig || ComponentDefaultConfig;
+    const {config, staticData} = componentConfig;
+    const dimension = this.formatConfig([this.getStyleData(config, "dimension")],[]);
     if(myChart){
       myChart.resize();
       myChart.setOption(this.getOptions());
@@ -346,5 +346,5 @@ class FlowChart extends  React.PureComponent{
 export {
   FlowChart,
   ComponentDefaultConfig
-}
-export default FlowChart
+};
+export default FlowChart;
