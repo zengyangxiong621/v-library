@@ -152,7 +152,6 @@ const CustomDraggable
      * @return void
      */
     const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
-      console.log('拖拽开始')
       setStartPosition({
         x: data.x,
         y: data.y,

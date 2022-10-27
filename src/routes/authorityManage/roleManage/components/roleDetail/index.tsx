@@ -82,7 +82,7 @@ export default memo(function RoleDetail(props:any) {
   const [formContainer]= Form.useForm();
   const {authList}=state;
 
-  let permissionIds=null;
+  let permissionIds=[];
   if(currentData){
     permissionIds=currentData.permissionIds;
   }

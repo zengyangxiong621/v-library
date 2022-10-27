@@ -142,7 +142,7 @@ const AddOrEdit=(props:any)=>{
   const [addForm] = Form.useForm();
   const [confirmLoading, SetConfirmLoading] = useState(false);
 
-  let permissionIds=null;
+  let permissionIds=[];
   const isEdit=formType==="edit";
   if(editFormData){
     permissionIds=editFormData.permissionIds;

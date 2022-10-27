@@ -326,7 +326,6 @@ export function insertMultipleComponents (arr, sourceIds, targetId) {
 
 // 数组扁平化
 export const layerComponentsFlat = (arr, children=COMPONENTS) => {
-  console.log('arr', arr)
   return arr.reduce((pre, cur) => {
     return pre.concat(
       cur.hasOwnProperty(children)

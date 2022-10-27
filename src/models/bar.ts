@@ -93,9 +93,6 @@ export default {
             stateId = (pathName.match(stateReg) as any)[0];
             stateId = stateId.replace(/[^\d|^\.|^\-]/g, "")
           }*/
-          console.log('stateId', stateId)
-          console.log('panelId', panelId)
-          console.log('dashboardId', dashboardId)
 
           let isPanel = false;
           if (panelId) {
@@ -478,7 +475,6 @@ export default {
         type: "getComponentsData",
         payload: fullAmountComponents,
       });
-      console.log('bar.fullAmountDashboardDetails', bar.fullAmountDashboardDetails)
       // 全量面板
       const fullAmountPanels = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
@@ -493,14 +489,12 @@ export default {
         "drillDownPanel",
       }
 
-      console.log('------------------', fullAmountPanels)
       const referencePanelStates: Array<{ id: string, name: string, parentId: string }> = fullAmountPanels.reduce((pre: any, cur: any) => {
         if (panelTypeEnum[cur.type] === "referencePanel") {
           pre.push(...cur.states.map((item: { id: string, name: string }) => ({ ...item, parentId: cur.parentId })))
         }
         return pre
       }, [])
-      console.log('----------', referencePanelStates)
       const fullAmountRouteList = [
         {
           url: `/dashboard/${bar.dashboardId}`,
@@ -520,7 +514,6 @@ export default {
           type: "referencePanel"
         }))
       ]
-      console.log('fullAmountRouteList', fullAmountRouteList)
       yield put({
         type: "save",
         payload: {

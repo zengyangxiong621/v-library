@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useState, useRef } from "react";
 import "./index.less";
 
@@ -12,8 +11,17 @@ import { Input, Tooltip, Dropdown, Menu, message, Modal } from "antd";
 // import M from '@/components/modalConfirm/index'
 
 const AppCard = (props: any) => {
-  const { id, name, status, photoUrl, spaceId,
-    openMoveGroupModal, changeFabuModal, refreshList, history } = props;
+  const {
+    id,
+    name,
+    status,
+    photoUrl,
+    spaceId,
+    openMoveGroupModal,
+    changeFabuModal,
+    refreshList,
+    history,
+  } = props;
 
   // 后端返回的photoUrl为空，则使用默认图片
   const picUrl = photoUrl || require("../../../../assets/images/模板默认背景图.png");
@@ -31,7 +39,7 @@ const AppCard = (props: any) => {
     setAppName(name);
     Promise.resolve().then(() => {
       inputRef.current.focus({
-        cursor: "all"
+        cursor: "all",
       });
     });
   };
@@ -50,8 +58,8 @@ const AppCard = (props: any) => {
       method: "POST",
       body: {
         id,
-        name: appName
-      }
+        name: appName,
+      },
     });
     if (data) {
       message.success({ content: "应用名修改成功", duration: 2 });
@@ -87,7 +95,7 @@ const AppCard = (props: any) => {
     const data = await http({
       url: "/visual/application/copy",
       method: "POST",
-      body: {appId}
+      body: { appId },
     });
     console.log("复制data", data);
     // 返回的数据有id, 视为复制成功
@@ -103,7 +111,7 @@ const AppCard = (props: any) => {
     Modal.confirm({
       title: "删除应用",
       style: {
-        top: "40%"
+        top: "40%",
       },
       getContainer: document.getElementById("root") as any,
       okButtonProps: {
@@ -111,12 +119,12 @@ const AppCard = (props: any) => {
           backgroundColor: "#e9535d",
           border: "none",
           // marginLeft: '8px',
-        }
+        },
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: "#3d404d"
-        }
+          backgroundColor: "#3d404d",
+        },
       },
       icon: <ExclamationCircleFilled />,
       content: "确认删除此应用吗?",
@@ -131,8 +139,8 @@ const AppCard = (props: any) => {
           method: "delete",
           body: {
             appIdList: appIds,
-            spaceId
-          }
+            spaceId,
+          },
         });
         if (data) {
           refreshList();
@@ -143,7 +151,7 @@ const AppCard = (props: any) => {
       },
       onCancel(close) {
         close();
-      }
+      },
     });
   };
 
@@ -153,16 +161,16 @@ const AppCard = (props: any) => {
   };
 
   // 设为模板
-  const setTemplate = async(appId: string, name: string) => {
+  const setTemplate = async (appId: string, name: string) => {
     const data = await http({
       url: "/visual/appTemplate/set",
       method: "post",
       body: {
         id: appId,
         type: 1,
-      }
+      },
     });
-    if(data){
+    if (data) {
       message.success("设置成功");
     }
   };
@@ -200,11 +208,10 @@ const AppCard = (props: any) => {
   };
 
   return (
-    <div className='AppCard-wrap'>
-      <header className='head'
-      >
-        <div className='hoverOnImg'>
-          <div className='icons-wrap'>
+    <div className="AppCard-wrap">
+      <header className="head">
+        <div className="hoverOnImg">
+          <div className="icons-wrap">
             {/* <Tooltip
               placement='bottom' title="拷贝给他人"
             // tooltip挂载到body下容易被影响样式
@@ -214,19 +221,30 @@ const AppCard = (props: any) => {
                 copyToOthers(e)
               }} type='icon-kaobei' />
             </Tooltip> */}
-            <Tooltip placement='bottom'
-              title="发布">
-              <IconFont className='each-icon' onClickCapture={(e) => {
-                fabu(e);
-              }} type='icon-fabu' />
+            <Tooltip placement="bottom" title="发布">
+              <IconFont
+                className="each-icon"
+                onClickCapture={(e) => {
+                  fabu(e);
+                }}
+                type="icon-fabu"
+              />
             </Tooltip>
-            <div className='more-icon'>
-              <IconFont style={{ fontSize: "20px" }} onMouseOver={moreIconMouseOver} className='each-icon' type='icon-gengduo' />
-              <div className="more"
-              >
-                <ul className='more-ul' style={{
-                  display: isShowUL ? "block" : "none"
-                }} onClick={(e) => ulClick(e)}>
+            <div className="more-icon">
+              <IconFont
+                style={{ fontSize: "20px" }}
+                onMouseOver={moreIconMouseOver}
+                className="each-icon"
+                type="icon-gengduo"
+              />
+              <div className="more">
+                <ul
+                  className="more-ul"
+                  style={{
+                    display: isShowUL ? "block" : "none",
+                  }}
+                  onClick={(e) => ulClick(e)}
+                >
                   <li key="move">移入分组</li>
                   <li>复制</li>
                   <li>删除</li>
@@ -236,49 +254,54 @@ const AppCard = (props: any) => {
               </div>
             </div>
           </div>
-          <div className='btns-wrap'>
-            <span className='div-to-btns scan-btn' onClickCapture={() => scanDashboard()}>预览</span>
-            <span className='div-to-btns edit-btn' onClickCapture={() => editDashboard()}>编辑</span>
+          <div className="btns-wrap">
+            <span className="div-to-btns scan-btn" onClickCapture={() => scanDashboard()}>
+              预览
+            </span>
+            <span className="div-to-btns edit-btn" onClickCapture={() => editDashboard()}>
+              编辑
+            </span>
           </div>
         </div>
         <div className="img-wrap">
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          <img className='img-limit' src={picUrl} />
+          <img className="img-limit" src={picUrl} />
         </div>
       </header>
       <div className="foot">
         <div className="front">
-          {
-            canEdit ?
-              <Input
-                className='my-input'
-                ref={inputRef}
-                maxLength={20}
-                showCount={true}
-                value={appName}
-                onChange={nameInputChange}
-                onPressEnter={changAppName}
-                onBlur={changAppName}
+          {canEdit ? (
+            <Input
+              className="my-input"
+              ref={inputRef}
+              maxLength={20}
+              showCount={true}
+              value={appName}
+              onChange={nameInputChange}
+              onPressEnter={changAppName}
+              onBlur={changAppName}
+            />
+          ) : (
+            <div className="icon-and-text">
+              <IconFont
+                className="bianjiIcon"
+                type="icon-bianji"
+                onClickCapture={() => bianjiClick()}
               />
-              : <div className='icon-and-text'>
-                <IconFont className='bianjiIcon'
-                  type="icon-bianji"
-                  onClickCapture={() => bianjiClick()}
-                />
-                <div className='card-name'
-                  title={name.length > 12 ? name : ""}>
-                  {name}
-                </div>
+              <div className="card-name" title={name.length > 12 ? name : ""}>
+                {name}
               </div>
-          }
+            </div>
+          )}
         </div>
         <div className="releaseState">
-          <div className='customCircle' style={{
-            backgroundColor: status ? "#00FF3D" : "#535353",
-          }}></div>
-          <span className='text'>{status ? "已" : "未"}发布</span>
+          <div
+            className="customCircle"
+            style={{
+              backgroundColor: status ? "#00FF3D" : "#535353",
+            }}
+          ></div>
+          <span className="text">{status ? "已" : "未"}发布</span>
         </div>
-
       </div>
     </div>
   );
