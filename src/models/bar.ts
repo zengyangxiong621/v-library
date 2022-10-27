@@ -1146,7 +1146,7 @@ export default {
           disabled: false,
           panelType,
         };
-        bar.fullAmountPanels.push(data);
+        bar.fullAmountPanels.push({ ...data, parentId: stateId || dashboardId });
         // 新建面板后需要更新一下 fullAmountDashboardDetails
         const fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(
           [layerPanel],
@@ -1172,6 +1172,7 @@ export default {
         if (panelType === 1) {
           // 引用面板
           // 只有引用面板的状态能影响 fullAmountRouteList
+          // 新建引用面板的的时候是没有状态的
         }
         yield put({
           type: "save",
