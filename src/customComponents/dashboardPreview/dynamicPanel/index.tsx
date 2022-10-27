@@ -160,7 +160,7 @@ const DynamicPanel = ({previewDashboard, id, dispatch, panels}: any) => {
   }, [state.isLoading, state.activeIndex, state.allData.length]);
 
   return (
-    <div className={`dynamic-panel`} style={{ overflow: state.overflow, width: '100%', height: '100%'}}>
+    <div className={`dynamic-panel panel-${id} event-id-${id}`} style={{ width: '100%', height: '100%'}}>
       {
         state.allData.length === 1 ? <RecursiveComponent
             layersArr={state.allData[0].layers}

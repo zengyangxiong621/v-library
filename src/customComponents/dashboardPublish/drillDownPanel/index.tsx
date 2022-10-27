@@ -146,7 +146,7 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
     }
   }
   return (
-    <div className={`drill-down-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>
+    <div className={`drill-down-panel panel-${id} event-id-${id}`} style={{ width: "100%", height: "100%" }}>
       <div style={{ marginBottom: "20px", minWidth: "500px" }}>
         <Breadcrumb
         >

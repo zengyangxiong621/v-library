@@ -178,7 +178,7 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
 
 
   return (
-    <div className={`reference-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%"}}>
+    <div className={`reference-panel panel-${id} event-id-${id}`} style={{ width: "100%", height: "100%"}}>
       {
         state.allData.length === 1 ?
           <RecursiveComponent
