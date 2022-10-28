@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useState, useRef } from "react";
 import "./index.less";
 
@@ -7,7 +6,7 @@ import { BASEURL, http, downLoad } from "@/services/request";
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Input, Tooltip, Dropdown, Menu, message, Modal } from "antd";
+import { Input, Tooltip, message, Modal } from "antd";
 
 // import M from '@/components/modalConfirm/index'
 
@@ -87,7 +86,7 @@ const AppCard = (props: any) => {
     const data = await http({
       url: "/visual/application/copy",
       method: "POST",
-      body: {appId}
+      body: { appId }
     });
     console.log("复制data", data);
     // 返回的数据有id, 视为复制成功
@@ -153,7 +152,7 @@ const AppCard = (props: any) => {
   };
 
   // 设为模板
-  const setTemplate = async(appId: string, name: string) => {
+  const setTemplate = async (appId: string, name: string) => {
     const data = await http({
       url: "/visual/appTemplate/set",
       method: "post",
@@ -162,7 +161,7 @@ const AppCard = (props: any) => {
         type: 1,
       }
     });
-    if(data){
+    if (data) {
       message.success("设置成功");
     }
   };
@@ -242,7 +241,6 @@ const AppCard = (props: any) => {
           </div>
         </div>
         <div className="img-wrap">
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <img className='img-limit' src={picUrl} />
         </div>
       </header>

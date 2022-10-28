@@ -1,12 +1,10 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { BASEURL } from "@/services/request";
 import { connect } from "dva";
 
 import { Input, Select, Upload, message } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 
 import LeftTree from "./components/LeftTree";
@@ -16,7 +14,7 @@ const { Option } = Select;
 // 功能
 const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   // 空间id
-  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
@@ -24,7 +22,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     updated_time: false
   });
   const [inputValue, setInputValue] = useState("");
-  const [uploadFileUrl, setUploadFileUrl] = useState("");
+  // const [uploadFileUrl, setUploadFileUrl] = useState("");
 
   // 获取模板列表数据的方法
   const getDataDispatch = (finalBody: any) => {
@@ -38,7 +36,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   useEffect(() => {
     // 第一次进入”我的可视化页面时“ curSelectedGroup是[],给他设置为['-1']
     let curSelectedGroup: string[] = dashboardManage.curSelectedGroup;
-    if(!curSelectedGroup.length) curSelectedGroup = ["-1"];
+    if (!curSelectedGroup.length) curSelectedGroup = ["-1"];
     dispatch({
       type: "dashboardManage/resetModel",
       payload: {
@@ -84,7 +82,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     getDataDispatch(finalBody);
   };
   // 选择排序的标准
-  const selectSortType = (value: any, b: any) => {
+  const selectSortType = (value: any) => {
     const newSortMap = {
       [value]: false
     };
@@ -166,8 +164,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
         message.error("应用上传失败");
       }
     },
-    onRemove(file: any) {
-    }
   };
   return (
     <div className='MyApplication-wrap' id='myApplicationPage'>

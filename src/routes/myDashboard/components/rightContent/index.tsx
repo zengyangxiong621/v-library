@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { memo, useEffect, useState } from "react";
+/* eslint-disable react/jsx-key */
+import React, { memo, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import { http, BASEURL } from "@/services/request";
@@ -147,7 +147,7 @@ const RightContent = (props: any) => {
 
 
   // TODO 点击发布的时候，怎么判断是否已经发布(easyv上有两个接口)
-  // TODO　如果已经发布了，调用应用详情接口获取相关的发布详情
+  // TODO 如果已经发布了，调用应用详情接口获取相关的发布详情
   // 打开发布Modal, 顺便获取当前应用的id 和 发布状态 0-未发布 1-已发布
   const changeFabuModal = async (bool: boolean, id: string, isPublish: number) => {
     if (isPublish) {
@@ -157,7 +157,7 @@ const RightContent = (props: any) => {
         url: `/visual/application/share/detail/${id}`,
         method: "get"
       });
-      const { shareUrl, ...filterShareUrl } = data;
+      const { ...filterShareUrl } = data;
       setFabuBody(filterShareUrl);
       if (data) {
         const origin = window.location.origin;
@@ -438,7 +438,7 @@ const RightContent = (props: any) => {
         ><Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description="暂无应用"
-          ></Empty></div>
+        ></Empty></div>
     }
     {/* 发布弹窗 */}
     <DarkModal

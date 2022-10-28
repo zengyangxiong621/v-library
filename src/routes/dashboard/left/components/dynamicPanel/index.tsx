@@ -1,13 +1,10 @@
-import React, { memo, useEffect, useState } from "react";
-import { withRouter } from 'dva/router'
+import React, { memo, useState } from "react";
+import { withRouter } from "dva/router";
 import "./index.less";
 import { IconFont } from "@/utils/useIcon";
 import { connect } from "dva";
 
-import { Input } from "antd";
-
-import { http } from "@/services/request";
-import { useClickAway, useSetState } from "ahooks";
+import { useClickAway } from "ahooks";
 
 import StateItem from "./stateItem/stateItem";
 

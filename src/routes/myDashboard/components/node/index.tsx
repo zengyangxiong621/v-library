@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useEffect, useRef, useState } from "react";
 import "./index.less";
 
@@ -9,7 +8,7 @@ import { Input, message, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 const EveryTreeNode = (props: any) => {
-  const { groupId, name, number, systemDefined,
+  const { groupId, name, number,
     addGroup, refreshGroupLists, refreshRight, spaceId } = props || {};
   const inputRef = useRef<any>();
   // 点击已有分组时 显现的输入框

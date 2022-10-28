@@ -1,9 +1,9 @@
-import React from 'react'
-import { Menu } from 'antd'
+import React from "react";
+import { Menu } from "antd";
 
-import { IconFont } from '../../../../../utils/useIcon'
+import { IconFont } from "../../../../../utils/useIcon";
 
-const { SubMenu, Item } = Menu
+const { SubMenu, Item } = Menu;
 
 const generateSubMenu = (arr) => {
   return arr.map((item) => {
@@ -20,9 +20,9 @@ const generateSubMenu = (arr) => {
         </SubMenu>
         :
         <Item icon={<IconFont type={`icon-${item.icon}`} />}>{item.name}</Item>
-    )
-  })
-}
+    );
+  });
+};
 
 export const getTargetMenu = (menuData) => {
   return (
@@ -31,5 +31,5 @@ export const getTargetMenu = (menuData) => {
         generateSubMenu(menuData)
       }
     </Menu>
-  )
-}
+  );
+};

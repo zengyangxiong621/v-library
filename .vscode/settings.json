@@ -12,6 +12,6 @@
   "eslint.format.enable": true,
   "eslint.alwaysShowStatus": true,
   "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

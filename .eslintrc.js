@@ -1,4 +1,10 @@
 module.exports = {
+    // 在 .eslintrc.js 中需要指定react版本号：
+    "settings": {
+	      "react": {
+		    "version": "17.0.2",
+	    }
+    },
     "env": {
         "browser": true,
         "es2021": true
