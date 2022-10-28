@@ -36,7 +36,7 @@ const UploadFile = (props: any) => {
       let formObj:any = {}
       if(isTemp){
         formData.append("groupId", groupId);
-        formData.append("file", file.file);
+        formData.append("file", fileList[0].originFileObj);
       }else{
         if(!fileUrl){
           message.error(`请上传正确的文件格式`);
