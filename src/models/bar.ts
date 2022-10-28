@@ -103,6 +103,7 @@ export default {
             payload: {
               layers: [],
               key: [],
+              selectedComponentOrGroup: [],
               scaleDragData: {
                 position: {
                   x: 0,
