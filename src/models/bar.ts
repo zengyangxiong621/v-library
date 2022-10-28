@@ -696,6 +696,24 @@ export default {
         type: "update",
         payload: newTree,
       });
+      yield put({
+        type: 'save',
+        payload: {
+          key: [],
+          selectedComponentOrGroup: [],
+          scaleDragData: {
+            style: {
+              display: "none",
+              width: 0,
+              height: 0
+            },
+            position: {
+              x: 0,
+              y: 0
+            }
+          }
+        }
+      })
     },
     *moveUp({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar);
