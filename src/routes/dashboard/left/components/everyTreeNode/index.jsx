@@ -1,8 +1,9 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+/* eslint-disable no-undef */
+import  React, { memo, useEffect, useRef, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 
-import { AutoComplete, Input } from "antd";
+import { Input } from "antd";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
 const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
@@ -87,7 +88,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     // 比如名字一样,不发请求
     if (inputValue === name) {
       return;
-    } else {
     }
     // 先对前端的树进行一次修改
     const saveId = JSON.parse(JSON.stringify(bar.key[0]));
@@ -147,7 +147,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   const lockIconClick = (e) => {
     e.stopPropagation();
     dispatch({
-      type: `bar/lock`,
+      type: "bar/lock",
       payload: {
         dashboardId: bar.dashboardId,
         configs: [
