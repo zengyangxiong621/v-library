@@ -22,7 +22,7 @@ const UploadFile = (props: any) => {
   const { Option } = Select;
   const Dragger = Upload.Dragger;
   const [uploadForm] = Form.useForm();
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList]:any = useState([]);
   const [fileUrl, setFileUrl] = useState("");
   const [materialType, setMaterialType] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -35,8 +35,9 @@ const UploadFile = (props: any) => {
       groupId = ["myTempOhter", "sysTempOhter"].indexOf(groupId) > -1 ? 0 : groupId;
       let formObj:any = {}
       if(isTemp){
+        const originFileObj = fileList[0] ? fileList[0].originFileObj : ''
         formData.append("groupId", groupId);
-        formData.append("file", fileList[0]?.originFileObj);
+        formData.append("file", originFileObj);
       }else{
         if(!fileUrl){
           message.error(`请上传正确的文件格式`);
