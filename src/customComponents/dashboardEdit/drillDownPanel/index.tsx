@@ -97,24 +97,27 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
   return (
     <div className={`drill-down-panel panel-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>
       {
-        (isDashboard && state.allData.length) ===
-          1 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels} />
-          :
-          state.allData.map((item: any, index: number) =>
+        state.allData.map((item: any, index: number) =>
           (
             <div
               className="status-wrap"
-              style={{
+              style={ {
                 position: "absolute",
                 width: "100%",
                 height: "100%",
                 display: state.activeIndex === index ? "block" : "none",
-                transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
-              }}>
-              <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels} />
+                transition: `transform 600ms ease 0s, opacity ${ animationTime }ms ease 0s`,
+                backgroundImage: item.backgroundImage ? `url('${ item.backgroundImage }')` : "unset",
+                backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+                backgroundPosition: "center center",
+              } }>
+              <CustomDraggable mouse={ 0 } layers={ item.layers } components={ item.components }
+                               panels={ item.panels }/>
             </div>
-          )
-          )
+          ),
+        )
       }
     </div>
   );
