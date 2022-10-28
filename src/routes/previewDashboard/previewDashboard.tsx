@@ -14,7 +14,7 @@ import useWebsocket from '@/utils/useWebsocket'
 
 const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
 
-  
+
   // 跨屏 接收跨屏回调
   // 建立socket连接，receiveData 接收数据，先打印出来，添加在回调参数后
   const [ dealedData,setDealedData ] = useState({})
@@ -23,7 +23,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
   //   // verify // 此参数控制是否有权限，请求该方法
   // } as any)
-  
+
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(true);
   // 接口中返回的 当前屏幕设置信息
@@ -267,7 +267,13 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   // }, [receiveData, readyState])
 
   return (
-    <div id="gs-v-library-app">
+    <div id="gs-v-library-app"
+         style={{
+           width: '100vw',
+           height: '100vh',
+           backgroundColor: pageStyle.background
+         }}
+    >
       {
         !isLoaded ?
           <div className='customScrollStyle' style={{ ...overflowStyle }}>

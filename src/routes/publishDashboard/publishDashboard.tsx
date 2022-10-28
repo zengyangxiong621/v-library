@@ -372,7 +372,13 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   }, [publishDashboard.fullAmountComponents, publishDashboard.dashboardId]);
 
   return (
-    <div id="gs-v-library-app">
+    <div id="gs-v-library-app"
+         style={{
+           width: '100vw',
+           height: '100vh',
+           backgroundColor: pageStyle.background
+         }}
+    >
       {
         inputPassword && <div className="input-password">
           <div className="center">
