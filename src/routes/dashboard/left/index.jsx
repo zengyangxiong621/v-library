@@ -37,7 +37,7 @@ const Left = ({ dispatch, bar }) => {
   const bottomBarRef = useRef(null);
   const headerRef = useRef(null);
   const [single, setSingle] = useState(true);
-
+  const [toggleValue, setToggleValue] = useState(false)
   useKeyPress(
     ["ctrl", "shift"],
     (event) => {
@@ -64,6 +64,7 @@ const Left = ({ dispatch, bar }) => {
   // 收起 / 展开 菜单栏
   const [w, setW] = useState(188);
   const toggle = () => {
+    setToggleValue(!toggleValue)
     const el = document.querySelector(".left-menu");
     w === 188 ? setW(250) : setW(188);
     el.style.width = `${w}px`;
@@ -327,7 +328,12 @@ const Left = ({ dispatch, bar }) => {
           <IconFont
             type="icon-tucengshouqi"
             onClickCapture={() => toggle()}
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              transition: "all 0.3s",
+              transformOrigin: '50% 50%',
+              transform: `rotate(${toggleValue ? 180 : 0}deg)`
+            }}
           />
         </div>
         <div className="left-wrap-toolbar" ref={topBarRef}>
