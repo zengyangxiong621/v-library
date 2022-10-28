@@ -47,10 +47,11 @@ const DynamicPanel = ({publishDashboard, id, dispatch, panels}: any) => {
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    layersReverse(layers);
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,

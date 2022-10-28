@@ -21,7 +21,7 @@ interface State {
   isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
-import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
+import {layersReverse, layersPanelsFlat, deepClone} from "@/utils/index.js";
 
 const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
   const componentData = previewDashboard.componentData;
@@ -78,10 +78,11 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    layersReverse(layers);
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,

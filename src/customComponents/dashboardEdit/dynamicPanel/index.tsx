@@ -1,14 +1,12 @@
-import {DOMElement, useEffect, useRef, useState, RefObject} from "react";
-import {connect} from "dva";
-import {Button} from "antd";
-import {useSetState} from "ahooks";
-import CustomDraggable from "../../../routes/dashboard/center/components/CustomDraggable";
-import {http} from "@/services/request";
-import * as React from "react";
-import {
-  IPanel
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
-import {layersReverse, deepClone} from "@/utils/index.js";
+import * as React from "react"
+import { useEffect } from "react"
+import { connect } from "dva"
+import { useSetState } from "ahooks"
+import CustomDraggable from "../../../routes/dashboard/center/components/CustomDraggable"
+import { http } from "@/services/request"
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type"
+import { layersReverse, deepClone, layersPanelsFlat } from "@/utils/index.js"
+
 interface State {
   overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
   allData: Array<{
@@ -20,7 +18,7 @@ interface State {
   isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
-import {layersPanelsFlat} from "@/utils";
+
 const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panel}: any) => {
   const componentData = bar.componentData;
   // 获取面板想起接口
@@ -43,10 +41,11 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panel}: any) => {
         componentData
       }
     })
-    layersReverse(layers);
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,
@@ -55,8 +54,7 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panel}: any) => {
   };
   const getStateDetails = async ({ id }: any) => {
     try {
-      const panelConfig = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
-      return panelConfig;
+      return bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch(e) {
       return null;
     }
@@ -88,10 +86,6 @@ const DynamicPanel = ({bar, id, dispatch, isDashboard = true, panel}: any) => {
     (async function () {
       if (states.length === 0) return;
       const data = await Promise.all(states.map((item: { name: string; id: string }) => getPanelDetails(item)));
-      console.log('===========')
-      console.log('data', data)
-      console.log('===========')
-
       setState({
         allData: data,
         isLoading: true

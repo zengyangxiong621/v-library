@@ -1,13 +1,12 @@
-import { DOMElement, useEffect, useRef, useState } from "react";
-import { connect } from "dva";
-import { Button } from "antd";
-import { useSetState } from "ahooks";
-import CustomDraggable from "@/routes/dashboard/center/components/CustomDraggable";
-import { http } from "@/services/request";
-import * as React from "react";
-import {
-  IPanel
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
+import * as React from "react"
+import { useEffect } from "react"
+import { connect } from "dva"
+import { useSetState } from "ahooks"
+import CustomDraggable from "@/routes/dashboard/center/components/CustomDraggable"
+import { http } from "@/services/request"
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type"
+import { layersPanelsFlat, layersReverse, deepClone } from "@/utils/index.js"
+
 interface State {
   overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
   allData: Array<{
@@ -19,7 +18,6 @@ interface State {
   isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
-import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
 
 const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) => {
   const componentData = bar.componentData;
@@ -58,8 +56,7 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
   };
   const getStateDetails = async ({id}: any) => {
     try {
-      const panelConfig = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
-      return panelConfig;
+      return bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch(e) {
       return null;
     }
@@ -75,10 +72,11 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
         componentData
       }
     })
-    layersReverse(layers);
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,

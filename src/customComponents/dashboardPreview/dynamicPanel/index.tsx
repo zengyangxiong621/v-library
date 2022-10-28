@@ -1,15 +1,11 @@
-import {DOMElement, useEffect, useRef, useState, RefObject} from "react";
-import {connect} from "dva";
-import {Button} from "antd";
-import {useSetState} from "ahooks";
-import CustomDraggable from "../../../routes/dashboard/center/components/CustomDraggable";
-import RecursiveComponent from "@/routes/previewDashboard/components/recursiveComponent";
-import {http} from "@/services/request";
-import * as React from "react";
-import {
-  IPanel
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
-import {layersReverse, deepClone} from "@/utils/index.js";
+import * as React from "react"
+import { useEffect } from "react"
+import { useSetState } from "ahooks"
+import RecursiveComponent from "@/routes/previewDashboard/components/recursiveComponent"
+import { http } from "@/services/request"
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type"
+import { layersReverse, deepClone, layersPanelsFlat } from "@/utils/index.js"
+
 interface State {
   overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
   allData: Array<{
@@ -21,7 +17,7 @@ interface State {
   isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
-import {layersPanelsFlat} from "@/utils";
+
 const DynamicPanel = ({previewDashboard, id, dispatch, panels}: any) => {
   const componentData = previewDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id);
@@ -42,10 +38,11 @@ const DynamicPanel = ({previewDashboard, id, dispatch, panels}: any) => {
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    layersReverse(layers);
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,
@@ -54,11 +51,10 @@ const DynamicPanel = ({previewDashboard, id, dispatch, panels}: any) => {
   };
   const getStateDetails = async (layerPanel: any) => {
     try {
-      const panelConfig = await http({
+      return await http({
         url: `/visual/panel/detail/${ layerPanel.id }`,
         method: "get",
       });
-      return panelConfig;
     } catch(e) {
       return null;
     }

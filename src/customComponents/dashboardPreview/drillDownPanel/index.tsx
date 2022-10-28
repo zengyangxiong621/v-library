@@ -1,18 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, memo, useState, useCallback } from "react";
-import "./index.less";
-import { useSetState } from "ahooks";
+import React, { memo, useEffect, useState } from "react"
+import "./index.less"
+import { useSetState } from "ahooks"
 // import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
-import RecursiveComponent from "@/routes/previewDashboard/components/recursiveComponent";
-import { http } from "@/services/request";
-import { connect } from "dva";
-import {
-  IPanel
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
-import { layersReverse, deepClone } from "@/utils/index.js";
-import { layersPanelsFlat } from "@/utils";
+import RecursiveComponent from "@/routes/previewDashboard/components/recursiveComponent"
+import { http } from "@/services/request"
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type"
+import { deepClone, layersReverse } from "@/utils/index.js"
+import { layersPanelsFlat } from "@/utils"
 
-import { Breadcrumb } from "antd";
+import { Breadcrumb } from "antd"
 
 interface State {
   overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
@@ -48,10 +45,11 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    layersReverse(layers);
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,
@@ -60,11 +58,10 @@ const DrillDownPanel = ({ previewDashboard, id, dispatch, panels, isDrillDownPan
   };
   const getStateDetails = async (layerPanel: any) => {
     try {
-      const panelConfig = await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
+      return await http({
+        url: `/visual/panel/detail/${ layerPanel.id }`,
         method: "get",
       });
-      return panelConfig;
     } catch (e) {
       return null;
     }

@@ -405,7 +405,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
                 style={{
                   ...pageStyle,
                   ...scaleStyle,
-                  overflow: "hidden"
                 }}
               >
                 {

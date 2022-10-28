@@ -287,7 +287,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
                 style={{
                   ...pageStyle,
                   ...scaleStyle,
-                  overflow: "hidden"
                 }}
               >
                 {

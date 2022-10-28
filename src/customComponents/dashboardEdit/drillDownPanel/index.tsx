@@ -1,15 +1,12 @@
-import { useEffect } from "react";
-import { connect } from "dva";
-import { Button } from "antd";
-import { useSetState } from "ahooks";
-import CustomDraggable from "../../../routes/dashboard/center/components/CustomDraggable";
-import { http } from "@/services/request";
-import * as React from "react";
-import {
-  IPanel
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
-import { layersReverse, deepClone } from "@/utils/index.js";
-import { layersPanelsFlat } from "@/utils";
+import * as React from "react"
+import { useEffect } from "react"
+import { connect } from "dva"
+import { useSetState } from "ahooks"
+import CustomDraggable from "../../../routes/dashboard/center/components/CustomDraggable"
+import { http } from "@/services/request"
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type"
+import { layersReverse, layersPanelsFlat, deepClone } from "@/utils/index.js"
+
 interface State {
   overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
   allData: Array<{
@@ -43,10 +40,11 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
         componentData
       }
     })
-    layersReverse(layers);
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,
@@ -55,8 +53,7 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
   };
   const getStateDetails = async ({ id }: any) => {
     try {
-      const panelConfig = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
-      return panelConfig;
+      return bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch (e) {
       return null;
     }
