@@ -18,7 +18,7 @@ const ZebraColumn = (props) => {
     arr.forEach((item) => {
       let index = colorIndex || 0;
       let { name, value, options, flag, type, key } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           replaceThemeColor(value, index);
         } else {
@@ -97,7 +97,7 @@ const ZebraColumn = (props) => {
     let targetConfig = {};
     Arr.forEach((item) => {
       let { name, value, options, flag, displayName } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         // 对 系列一栏 做特殊处理
         if (flag === "specialItem") {
           name = displayName;

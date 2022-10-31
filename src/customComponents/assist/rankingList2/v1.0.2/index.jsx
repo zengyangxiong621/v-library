@@ -33,7 +33,7 @@ const RankingList2 = (props) => {
     arr.forEach((item) => {
       let index = colorIndex || 0;
       let { name, value, options, flag, type, key } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           replaceThemeColor(value, index);
         } else {

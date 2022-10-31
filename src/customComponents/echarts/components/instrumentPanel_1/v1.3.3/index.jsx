@@ -370,7 +370,7 @@ const InstrumentPanel = (props) => {
         max: numberValue * 1.5,
         detail: {
           valueAnimation: true,
-          formatter: function(value) {
+          formatter: function (value) {
             const string = value + "";
             const number = string.replace(/(?=\B(\d{3})+$)/g, ",");
             return "{num|" + number + "}";
@@ -465,10 +465,10 @@ const InstrumentPanel = (props) => {
   });
 
   const onChartReady = (echarts) => {
-    console.log(echarts);
+    console.log();
   };
   const onChartClick = (param, echarts) => {
-    console.log(echarts);
+    console.log();
   };
   let onEvents = {
     click: onChartClick,

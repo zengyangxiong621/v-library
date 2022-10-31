@@ -41,7 +41,7 @@ const RankingBar = (props) => {
     arr.forEach((item) => {
       let index = colorIndex || 0;
       let { name, value, options, flag, type, key } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           replaceThemeColor(value, index);
         } else {
@@ -100,7 +100,7 @@ const RankingBar = (props) => {
     let targetConfig = {};
     Arr.forEach((item) => {
       let { name, value, options } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           targetConfig[name] = getTargetConfig(value);
         } else {
