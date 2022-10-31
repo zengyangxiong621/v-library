@@ -1,29 +1,28 @@
+/* eslint-disable no-case-declarations */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
 import { deepClone, layersReverse } from "@/utils";
 
-import { Spin } from "antd";
+
+import RecursiveComponent from "./components/recursiveComponent";
+import { calcCanvasSize } from "../../utils";
+// import useWebsocket from "@/utils/useWebsocket";
 
 
-import RecursiveComponent from './components/recursiveComponent'
-import { calcCanvasSize } from '../../utils'
-import useWebsocket from '@/utils/useWebsocket'
+const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
 
 
-const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
-
-  
   // 跨屏 接收跨屏回调
   // 建立socket连接，receiveData 接收数据，先打印出来，添加在回调参数后
-  const [ dealedData,setDealedData ] = useState({})
+  const [dealedData] = useState({});
   // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
   //   url: `/visual/webSocket/shareParam/eventName1`
   //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
   //   // verify // 此参数控制是否有权限，请求该方法
   // } as any)
-  
+
   // 加载出整个大屏前，需要一个动画
   const [isLoaded, setIsLoaded] = useState(true);
   // 接口中返回的 当前屏幕设置信息
@@ -165,7 +164,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
         type: "previewDashboard/clearCurrentDashboardData"
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (scaleMode === "0") {
@@ -176,7 +174,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
         window.addEventListener("resize", setCanvasSize);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardConfig]);
   const calcCanvasScale = (e: any) => {
     if (e.ctrlKey) {
@@ -202,7 +199,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     return () => {
       clearInterval(intervalId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
@@ -213,12 +209,11 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     setComponents(previewDashboard.fullAmountComponents);
     setPanels(previewDashboard.panels);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previewDashboard.layers]);
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
-  const initDashboard = (cb = function () { }) => {
-    return new Promise((resolve, reject) => {
+  const initDashboard = () => {
+    return new Promise((resolve) => {
       const dashboardId = window.location.pathname.split("/")[2];
       dispatch({
         type: "previewDashboard/initDashboard",
@@ -232,25 +227,25 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
 
   const getScreenInfo = (config: any) => {
     const map: any = {};
-    config.forEach(({ displayName, value, options, width, height }: any) => {
+    config.forEach(({ displayName, value, width, height }: any) => {
       let target = value;
       switch (displayName) {
         case "屏幕大小":
           target = { width, height };
           break;
       }
-      map[displayName] = target
-    })
-    return map
-  }
+      map[displayName] = target;
+    });
+    return map;
+  };
 
   // 跨屏 获取订阅消息
   // useEffect(() => {
-    // if (readyState.key === 1 && receiveData !== ''){
+  // if (readyState.key === 1 && receiveData !== ''){
   //     console.log(receiveData,'#########websocket  get');
   //     // 订阅消息处理 receiveData：组件id、data
   //     // JSON.parse(receiveData)
-      // setDealedData(receiveData);
+  // setDealedData(receiveData);
 
   //     // 组件id 重新发布更新组件
   //     // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
@@ -295,7 +290,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
                     scaleValue={scaleValue}
                     scaleMode={scaleMode}
                     crossCallback={dealedData}
-                    // sendMessage={sendMessage}
+                  // sendMessage={sendMessage}
                   />
                 }
               </div>

@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, useRef, useLayoutEffect } from "react";
+import { memo, useEffect } from "react";
 import "./index.less";
 import { WEIZHICHICUN } from "./type";
 import { getTargetStyle } from "./type";
@@ -7,13 +7,12 @@ import ComponentEventContainer from "@/routes/previewDashboard/components/compon
 import { connect } from "dva";
 // import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getFields } from "@/utils/data";
-import { Breadcrumb } from "antd";
 
 // 按屏幕比例适配", value: "0"}
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeReflect, bar, previewDashboard, dispatch, addDrillDownLevel, changeBreadcrumbData, drillDownGlobalState, ...props }: any) => {
+const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDrillDownLevel, changeBreadcrumbData, ...props }: any) => {
   const { moduleName, events, id, config } = componentData;
 
   const { mountAnimation } = layerInfo;
@@ -162,13 +161,12 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
         clearTimeout(timeoutId);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
       addDrillDownLevel();
-      changeBreadcrumbData(chartData)
+      changeBreadcrumbData(chartData);
       // const { seriesType, data } = chartData;
       // let hadFilterChartData = [];
       // if (typeof chartData === "object") {
@@ -228,5 +226,5 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, changeR
 };
 
 export default memo(connect(
-  ({ bar, previewDashboard, drillDownGlobalState }: any) => ({ bar, previewDashboard, drillDownGlobalState })
+  ({ bar, previewDashboard }: any) => ({ bar, previewDashboard })
 )(EveryComponent));

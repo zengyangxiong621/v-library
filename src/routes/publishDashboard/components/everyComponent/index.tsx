@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, useRef, useLayoutEffect } from "react";
+import { memo, useEffect } from "react";
 import "./index.less";
 import { WEIZHICHICUN } from "./type";
 
@@ -161,14 +161,13 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDril
         clearTimeout(timeoutId);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
       addDrillDownLevel();
-      changeBreadcrumbData(chartData)
+      changeBreadcrumbData(chartData);
     }
   };
   return (

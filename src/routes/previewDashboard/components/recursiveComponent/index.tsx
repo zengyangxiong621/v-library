@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React from "react";
 
 import EveryComponent from "../everyComponent";
 import ReferencePanel from "@/customComponents/dashboardPreview/referencePanel";
@@ -6,13 +6,11 @@ import DynamicPanel from "@/customComponents/dashboardPreview/dynamicPanel";
 import DrillDownPanel from "@/customComponents/dashboardPreview/drillDownPanel";
 import { getComDataWithFilters } from "@/utils/data";
 
-import { Breadcrumb } from "antd";
-
 const MODULES = "modules";
 const OPACITY = "opacity";
 
 const RecursiveComponent = (props: any) => {
-  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeBreadcrumbData, changeReflect, crossCallback, sendMessage } = props;
+  const { layersArr, componentLists, previewDashboard, dispatch, scaleValue, panels, addDrillDownLevel, changeBreadcrumbData, changeReflect, crossCallback } = props;
 
   // console.log('layersArr', layersArr);
 
@@ -85,44 +83,43 @@ const RecursiveComponent = (props: any) => {
                         />
                       </div>
                   ) :
-                isGroup ?
-                  <div className={`event-id-${layer.id}`}
-                    style={{
-                      opacity: (layer[OPACITY] || 100) / 100
-                    }}
-                  >
-                    {(layer as any)[MODULES]?.length > 0 &&
-                      <div>
-                        <RecursiveComponent
-                          layersArr={layer[MODULES]}
-                          componentLists={componentLists}
-                          previewDashboard={previewDashboard}
-                          dispatch={dispatch}
-                          scaleValue={scaleValue}
-                          panels={panels}
-                          crossCallback={crossCallback}
+                  isGroup ?
+                    <div className={`event-id-${layer.id}`}
+                      style={{
+                        opacity: (layer[OPACITY] || 100) / 100
+                      }}
+                    >
+                      {(layer as any)[MODULES]?.length > 0 &&
+                        <div>
+                          <RecursiveComponent
+                            layersArr={layer[MODULES]}
+                            componentLists={componentLists}
+                            previewDashboard={previewDashboard}
+                            dispatch={dispatch}
+                            scaleValue={scaleValue}
+                            panels={panels}
+                            crossCallback={crossCallback}
                           // sendMessage={sendMessage}
-                        />
-                      </div>
-                    }
-                  </div>
-                  : <>
-                    <div data-id={layer.id} style={{ width: '100%', height: '100%' }}>
-                      {
-                        <EveryComponent 
-                          key={ind}
-                          componentData={targetComponent}
-                          comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer, crossCallback)}
-                          // sendMessage={sendMessage}
-                          // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
-                          scaleValue={scaleValue}
-                          layerInfo={layer}
-                          addDrillDownLevel={addDrillDownLevel}
-                          changeBreadcrumbData={changeBreadcrumbData}
-                          changeReflect={changeReflect}
-                          {...props}
-                        />
+                          />
+                        </div>
                       }
+                    </div>
+                    : <>
+                      <div data-id={layer.id} style={{ width: "100%", height: "100%" }}>
+                        {
+                          <EveryComponent
+                            key={ind}
+                            componentData={targetComponent}
+                            comData={getComDataWithFilters(previewDashboard.componentData, targetComponent, previewDashboard.componentFilters, previewDashboard.dataContainerDataList, previewDashboard.dataContainerList, previewDashboard.callbackArgs, layer, crossCallback)}
+                            // sendMessage={sendMessage}
+                            // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
+                            scaleValue={scaleValue}
+                            layerInfo={layer}
+                            addDrillDownLevel={addDrillDownLevel}
+                            changeBreadcrumbData={changeBreadcrumbData}
+                            {...props}
+                          />
+                        }
                       </div>
                     </>
               }

@@ -1,26 +1,22 @@
 /* eslint-disable react/prop-types */
-import React, { memo, useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { connect } from "dva";
 import { withRouter } from "dva/router";
 import "./index.less";
-import { find } from "../../../../../utils/common";
-import BackgroundColor from "../color";
-import UploadImg from "../uploadImg";
-import CusInputNumber from "../cusInputNumber";
-import RadioGroup from "../radioGroup";
+// import BackgroundColor from "../color";
+// import UploadImg from "../uploadImg";
+// import CusInputNumber from "../cusInputNumber";
+// import RadioGroup from "../radioGroup";
 import { deepClone } from "../../../../../utils";
-import { Form, Button, Spin } from "antd";
+import { Form, Button } from "antd";
 import debounce from "lodash/debounce";
 import { http } from "../../../../../services/request";
 import { v4 as uuidv4 } from "uuid";
 import ComponentCard from "../componentCard";
 import componentLib from "../index";
 
-const dashboardId = window.location.pathname.split("/")[2];
-
-let isSettingsChange = false;
-const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
-  const [key, setKey] = useState(uuidv4());
+const ReferenceSetting = ({ bar, dispatch, history }) => {
+  const [key] = useState(uuidv4());
   const [form] = Form.useForm();
   const [activeKey, setActiveKey] = useState("1");
   const [isEdit, setIsEdit] = useState(true);
@@ -190,6 +186,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ];
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const styleChange = debounce(async (key = "1", init = false, cb = function () { }) => {
     console.log("key", key);
     if (key !== "0" && init) {
@@ -251,9 +248,9 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     const copyPanelConfig = deepClone(panelConfig);
     copyPanelConfig.states = copyPanelConfig.states.filter((state) => state.id);
     console.log("copyPanelConfig", copyPanelConfig);
-    const {
-      config: { left, top, width, height },
-    } = panelConfig;
+    // const {
+    //   config: { left, top, width, height },
+    // } = panelConfig;
 
     const data = await http({
       url: "/visual/panel/update",
