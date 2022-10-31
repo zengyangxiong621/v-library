@@ -27,7 +27,7 @@ import { getFieldStates } from "../../../utils/sideBar";
 const Left = ({ dispatch, bar }) => {
 
   const [isExpand, setIsExpand] = useState([]);
-  const [customExpandKeys, setCustomExpandKeys] = useState([]);
+  const [customExpandKeys] = useState([]);
   const [selected, setSelected] = useState([]);
   const activeIconRef = useRef();
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false);
@@ -38,25 +38,8 @@ const Left = ({ dispatch, bar }) => {
   const headerRef = useRef(null);
   // TODO  待删除
   const [single, setSingle] = useState(true);
-  const copyNode = useRef(null);
 
-  const clearStatus = (event) => {
-    const dom = event.target || null;
-    if (!dom || !dom.className || ["ant-layout", "draggable-wrapper", "left-wrap"].includes(dom.className)) {
-      console.log("触发了？");
-      setSelected([]);
-      // 将多选树改为单选树
-      dispatch({
-        type: "bar/save",
-        payload: { isMultipleTree: false },
-      });
-    }
-  };
-  // 1、其它组件更改了选中的节点时触发
-  // 2、多选时不能重命名
-  // 3、判断选择的节点是否是文件夹
   useEffect(() => {
-    //1
     setSelected(bar.key);
     // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
     if (bar.key.length > 1) {
@@ -73,13 +56,6 @@ const Left = ({ dispatch, bar }) => {
     }
 
   }, [bar.key]);
-  // 监听键盘Ctrl键按下与松开
-  useEffect(() => {
-    // document.addEventListener('click', clearStatus)
-    return () => {
-      // document.removeEventListener('click', clearStatus)
-    };
-  }, []);
 
   useKeyPress(["ctrl", "shift"], (event) => {
     if (event.type === "keydown" && bar.isMultipleTree) {
@@ -208,8 +184,7 @@ const Left = ({ dispatch, bar }) => {
   const onRightClick = ({ event, node }) => {
     event.stopPropagation();
     event.preventDefault();
-    console.log("右键");
-    const { modules, key } = node;
+    const { key } = node;
     // dispatch({
     //   type: 'bar/save',
     //   payload: { isMultipleTree: true },
@@ -318,7 +293,6 @@ const Left = ({ dispatch, bar }) => {
 
 
   // 获取子组件传过来的X，Y值
-  const [menuInfo, setMenuInfo] = useState({ x: 0, y: 0, id: null, isFolder: false });
   const getCurrentMenuLocation = useCallback((menuInfo) => {
     // setMenuInfo(menuInfo)
     // 点击右键才渲染菜单
@@ -330,15 +304,6 @@ const Left = ({ dispatch, bar }) => {
       }
     });
   });
-  // 点击右键菜单后，隐藏菜单
-  const hideMenu = () => {
-    dispatch({
-      type: "bar/save",
-      payload: {
-        isShowRightMenu: false
-      }
-    });
-  };
 
   return (
     <div className="left-menu">

@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 // ant
 import { connect } from "dva";
 import "./index.less";
-import axios from "axios";
-import { http } from "@/services/request";
+// import axios from "axios";
+// import { http } from "@/services/request";
 
 import { Layout } from "antd";
 import { withRouter } from "dva/router";
@@ -31,7 +31,7 @@ import { useEventEmitter } from "ahooks";
 
 const { Header } = Layout;
 
-function App({ bar, dispatch, location, history }: any) {
+function App({ bar, dispatch }: any) {
   const isPanel = bar.isPanel;
   const [showTopBar, setShowTopBar] = useState(false);
   const [zujianORsucai, setZujianORsucai] = useState("zujian");
@@ -42,33 +42,13 @@ function App({ bar, dispatch, location, history }: any) {
   const [componentThemeVisible, setComponentThemeVisible] = useState(false);
   const [recycleBinVisible, setRecycleBinVisible] = useState(false);
 
-  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
+  const [customMenuOptions] = useState(menuOptions);
   // 关闭右侧抽屉后,头部导航栏上相应的activeIcon需要取消active的状态
   const [isResetActiveIcon, setIsResetActiveIcon] = useState(false);
 
   // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
   const focus$ = useEventEmitter();
 
-  const detectZoom = () => {
-    let ratio = 0,
-      screen: any = window.screen,
-      ua = navigator.userAgent.toLowerCase();
-
-    if (window.devicePixelRatio !== undefined) {
-      ratio = window.devicePixelRatio;
-    } else if (~ua.indexOf("msie")) {
-      if (screen.deviceXDPI && screen.logicalXDPI) {
-        ratio = screen.deviceXDPI / screen.logicalXDPI;
-      }
-    } else if (window.outerWidth !== undefined && window.innerWidth !== undefined) {
-      ratio = window.outerWidth / window.innerWidth;
-    }
-
-    if (ratio) {
-      ratio = Math.round(ratio * 100);
-    }
-    return ratio;
-  };
   const keyCodeMap: any = {
     // 91: true, // command
     61: true,

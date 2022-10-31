@@ -2,7 +2,7 @@ import React, { memo, useState, useRef } from "react";
 import "./index.less";
 
 import { withRouter } from "dva/router";
-import { BASEURL, http, downLoad } from "@/services/request";
+import { http, downLoad } from "@/services/request";
 
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -37,7 +37,7 @@ const AppCard = (props: any) => {
   const nameInputChange = (e: any) => {
     setAppName(e.target.value);
   };
-  const changAppName = async (e: any) => {
+  const changAppName = async () => {
     // 校验： 如果两次修改的名称一样，那就不发请求了
     if (name === appName) {
       // message.warning({ content: '新旧名称不能相同', duration: 2 })
@@ -64,8 +64,8 @@ const AppCard = (props: any) => {
   /** Card 中图标 和 编辑、预览按钮 事件 */
   const scanDashboard = () => {
     // TODO 通过id跳转到预览界面
-    const newTab = window.open("_blank");
-    newTab!.location.href = `/bigscreen/${id}`;
+    const newTab: any = window.open("_blank");
+    newTab.location.href = `/bigscreen/${id}`;
     newTab?.history.replaceState(null, "");
   };
   const editDashboard = () => {
@@ -73,7 +73,7 @@ const AppCard = (props: any) => {
     history.push(`/dashboard/${id}`);
   };
 
-  const fabu = (e: any) => {
+  const fabu = () => {
     changeFabuModal(true, id, status);
   };
 
@@ -124,7 +124,7 @@ const AppCard = (props: any) => {
       bodyStyle: {
         background: "#232630",
       },
-      async onOk(close) {
+      async onOk() {
         const data = await http({
           url: "/visual/application/deleteApp",
           method: "delete",
@@ -152,7 +152,7 @@ const AppCard = (props: any) => {
   };
 
   // 设为模板
-  const setTemplate = async (appId: string, name: string) => {
+  const setTemplate = async (appId: string) => {
     const data = await http({
       url: "/visual/appTemplate/set",
       method: "post",
@@ -191,7 +191,7 @@ const AppCard = (props: any) => {
         exportApp(id, name);
         break;
       case "设为模板":
-        setTemplate(id, name);
+        setTemplate(id);
         break;
     }
     // 点击任意菜单子项后，需要隐藏ul
@@ -215,8 +215,8 @@ const AppCard = (props: any) => {
             </Tooltip> */}
             <Tooltip placement='bottom'
               title="发布">
-              <IconFont className='each-icon' onClickCapture={(e) => {
-                fabu(e);
+              <IconFont className='each-icon' onClickCapture={() => {
+                fabu();
               }} type='icon-fabu' />
             </Tooltip>
             <div className='more-icon'>

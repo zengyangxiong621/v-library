@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/react-in-jsx-scope */
-import { memo, useState } from "react";
+import { memo } from "react";
 import "./index.less";
 
 import { IconFont } from "../../../../utils/useIcon";

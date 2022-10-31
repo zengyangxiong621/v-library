@@ -1,4 +1,6 @@
-/* eslint-disable react/react-in-jsx-scope */
+// 下方注释 no-unused-vars 规则的代码 不能删除
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 
@@ -9,14 +11,14 @@ import { Drawer, Button, Card, Checkbox, Empty, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 import ListItem from "./components/listItem";
-import { deepClone } from "@/utils/index";
+// import { deepClone } from "@/utils/index";
 
 const RecycleBin = (props: any) => {
   const { bar, onChange, visible, dispatch } = props;
 
   const [recycleLists, setRecycleLists] = useState<any>([]);
   const [selectedLists, setSelectedLists] = useState<any>([]);
-  const [updateBtnLoading, setUpdateBtnLoading] = useState<boolean>(false);
+  const [updateBtnLoading] = useState<boolean>(false);
 
   // 后端返回的回收站组件列表如果想要展示需要 处理一下
   const getTargetData = (data: any) => {
@@ -94,7 +96,7 @@ const RecycleBin = (props: any) => {
       bodyStyle: {
         background: "#232630",
       },
-      async onOk(close) {
+      async onOk() {
         deleteModuleLogic();
       },
       onCancel(close) {

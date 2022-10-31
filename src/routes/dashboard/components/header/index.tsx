@@ -1,3 +1,5 @@
+// 下方注释勿删
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { memo, useEffect, useRef, useState } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
@@ -13,7 +15,6 @@ import {
   Form,
   Switch,
   Typography,
-  Select,
   Upload,
 } from "antd";
 import type { UploadProps } from "antd";
@@ -22,10 +23,9 @@ import { IconFont } from "../../../../utils/useIcon";
 import NavigationItem from "../navigationItem/index";
 import DarkModal from "@/routes/myDashboard/components/darkThemeModal/index";
 
-const { Option } = Select;
 const { Paragraph } = Typography;
 
-const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveIcon }: any) => {
+const Header = ({ bar, dispatch, history, showWhichBar, isResetActiveIcon }: any) => {
   const [appName, setAppName] = useState(bar.dashboardName);
   const [isRename, setIsRename] = useState(false);
   const [activeIcon, setActiveIcon] = useState("");
@@ -71,8 +71,8 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       yulan: `/bigscreen/${bar.dashboardId}`,
       fabu: `/publishScreen/${bar.dashboardId}`,
     };
-    const newTab = window.open("_blank");
-    newTab!.location.href = pageReflect[targetPage];
+    const newTab: any = window.open("_blank");
+    newTab.location.href = pageReflect[targetPage];
     newTab?.history.replaceState(null, "");
   };
   // 修改应用名称
@@ -104,7 +104,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   const showChangeNameInput = () => {
     setIsRename(true);
     setTimeout(() => {
-      appNameInputRef.current!.focus({
+      appNameInputRef.current?.focus({
         cursor: "all",
       });
     }, 4);
@@ -459,7 +459,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
         message.error("图片上传失败");
       }
     },
-    async onRemove(file: any) {
+    async onRemove() {
       const finalBody = {
         ...fabuBody,
         id: bar.dashboardId,

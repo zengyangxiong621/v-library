@@ -401,7 +401,7 @@ const RightContent = (props: any) => {
         message.error("图片上传失败");
       }
     },
-    async onRemove(file: any) {
+    async onRemove() {
       const finalBody = {
         ...fabuBody,
         id: curAppId,
@@ -421,7 +421,7 @@ const RightContent = (props: any) => {
     {/* <Row style={{ width: '100%' }} gutter={[26, 26]}> */}
     {
       listData.length ?
-        listData.map((item: any, index: number) => (
+        listData.map((item: any) => (
           // <Col span={6} key={index}>
           <AppCard
             {...item}

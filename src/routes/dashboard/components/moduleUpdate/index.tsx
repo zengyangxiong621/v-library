@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { mergeSameAndAddDiff } from "./methods/mergeModuleConfig";
@@ -43,7 +42,6 @@ const ModuleUpdate = (props: any) => {
       setModuleNameToConfigMap(toolMap);
       getUpdatableModules();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
   // 获取可更新的组件列表
   const getUpdatableModules = async () => {
@@ -95,7 +93,7 @@ const ModuleUpdate = (props: any) => {
         configs: hasNewConfigArr,
         dashboardId,
       },
-    }).catch(() => { });
+    }).catch((err: Error) => { console.log("组件更新接口错误", err); });
     if (data) {
       // 刷新可更新组件列表
       getUpdatableModules();
@@ -131,6 +129,8 @@ const ModuleUpdate = (props: any) => {
       });
       setUpdatableModuleLists(checkedToTrue);
       const noCheckedArr = updatableModuleLists.map((item: any) => {
+        // @Mark 要剔除掉前端添加的checked属性，所以只能注释一下@typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { checked, ...other } = item;
         return other;
       });
@@ -148,7 +148,8 @@ const ModuleUpdate = (props: any) => {
     const isCheck = itemObj.checked;
     // setIndeterminate()
     if (isCheck) {
-      // 往已选中组件 数组中添加该项 (添加时，去掉前端加上的check属性)
+      // @Mark 要剔除掉前端添加的checked属性，所以只能注释一下@typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { checked, ...noCheckObj } = itemObj;
       setSelectedLists([...selectedLists, noCheckObj]);
     } else {

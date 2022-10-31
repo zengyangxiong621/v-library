@@ -85,7 +85,7 @@ const EveryTreeNode = (props: any) => {
     setInputValue(e.target.value);
   };
   // 点击编辑图标
-  const editClick = (e: any, id: string | number) => {
+  const editClick = (e: any) => {
     e.stopPropagation();
     setShowRenameInput(true);
     setInputValue(name);
@@ -137,15 +137,12 @@ const EveryTreeNode = (props: any) => {
       }
     });
   };
-  const inputWrapClick = (e: any) => {
-    // e.stopPropagation()
-  };
   return (
     <div className={"dashboard-node-wrap"}>
       {
         groupId === "aInput"
           ?
-          <div onClick={(e) => inputWrapClick(e)}>
+          <div>
             <Input
               value={newGroupName}
               maxLength={20}
@@ -183,7 +180,7 @@ const EveryTreeNode = (props: any) => {
                     <>
                       <div className='show-icon'>
                         {
-                          <IconFont type='icon-bianji' style={{ marginRight: "16px" }} onClickCapture={(e) => editClick(e, groupId)} />
+                          <IconFont type='icon-bianji' style={{ marginRight: "16px" }} onClickCapture={(e) => editClick(e)} />
                         }
                         {
                           <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(groupId)} />
