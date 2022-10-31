@@ -190,7 +190,7 @@ class ProtectionRange extends Component {
           style={{
             width,
             height,
-            background: `linear-gradient(to right, #6648ff, #17c8b7)`,
+            background: "linear-gradient(to right, #6648ff, #17c8b7)",
           }}
         >
           {arr.map((item, index) =>
