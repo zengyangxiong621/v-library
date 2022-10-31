@@ -41,7 +41,7 @@ const RankingBar = (props) => {
     let targetConfig = {};
     Arr.forEach((item) => {
       let { name, value, options } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           targetConfig[name] = getTargetConfig(value);
         } else {

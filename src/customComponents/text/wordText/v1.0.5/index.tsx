@@ -25,7 +25,7 @@ class WordText extends Component<Props, State> {
     const componentThemeConfig = this.props.themeConfig;
     arr.map((item: any) => {
       let { name, value, type } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           this.replaceThemeColor(value);
         } else {

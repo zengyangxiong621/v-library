@@ -23,7 +23,7 @@ const ComSelect = (props) => {
     const result = {};
     if (Array.isArray(config)) {
       config.forEach((item) => {
-        if (item.hasOwnProperty("value")) {
+        if (Object.prototype.hasOwnProperty.call(item, "value")) {
           if (Array.isArray(item.value)) {
             result[isOptions ? item.key : item.name] = getStyle(item.value);
           } else {
