@@ -1,23 +1,23 @@
+/* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-import { getFields } from "@/utils/data";
-import { useState, useRef, useEffect } from "react";
-import TimeSelect from '@/customComponents/interactive/timeSelect/v1.0.2'
-import ScrollTable from '@/customComponents/table/scrollTable/v1.0.2'
-import Bar from '@/customComponents/echarts/components/bar/index'
-import SelectV2 from '@/customComponents/assist/select/v1.0.3/index'
-import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
-import CusImage from '@/customComponents/assist/image/v1.0.2/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
-import ChinaMap from '@/customComponents/echarts/components/chinaMap/v1.6.4'
-import WorldMap from '@/customComponents/echarts/components/worldMap/v1.1.7'
-import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5"
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
-import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
-import Tab from '@/customComponents/interactive/tab/v1.0.2/index'
-import ScrollSelect from '@/customComponents/interactive/scrollSelect/v1.0.2/index'
-import Counter from '@/customComponents/assist/counter2/v1.0.8'
-import Media from '@/customComponents/media/v1.1.1'
-import NormalTable from '@/customComponents/table/normalTable/v1.0.5'
+import { useState, useRef } from "react";
+import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
+import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
+// import Bar from "@/customComponents/echarts/components/bar/index";
+import SelectV2 from "@/customComponents/assist/select/v1.0.3/index";
+import ButtonGroup from "@/customComponents/assist/buttonGroup/v1.0.5/index";
+import CusImage from "@/customComponents/assist/image/v1.0.2/index";
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
+// import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
+import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.7";
+// import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
+import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1";
+import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
+import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
+import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
+import Counter from "@/customComponents/assist/counter2/v1.0.8";
+import Media from "@/customComponents/media/v1.1.1";
+import NormalTable from "@/customComponents/table/normalTable/v1.0.5";
 import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
 import { connect } from "dva";
 
@@ -28,7 +28,7 @@ import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPa
 import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
 import Cascader from "@/customComponents/assist/cascader/v1.1.0";
-import Timeline from "@/customComponents/assist/timeline/v1.1.7";
+// import Timeline from "@/customComponents/assist/timeline/v1.1.7";
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 
@@ -43,13 +43,13 @@ const ComponentEventContainer = ({
   const callbackArgs = publishDashboard.callbackArgs;
   const callbackParamsList = publishDashboard.callbackParamsList;
   const { componentConfig, getDrillDownData } = props;
-  const [animationConfig, setAnimationConfig] = useState({
+  const [animationConfig] = useState({
     transition: "transform 600ms ease 0s",
   });
   const componentRef = useRef(null);
-  const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 });
+  const [opacityStyle] = useState({ opacity: 1 });
   const opacityTimeIds = useRef([]);
-  const [clickTimes, setClickTimes] = useState(0);
+  // const [clickTimes, setClickTimes] = useState(0);
   // 点击
   const handleClick = debounce((e, data) => {
     const clickEvents = events.filter((item) => item.trigger === "click");
@@ -57,7 +57,7 @@ const ComponentEventContainer = ({
     if (clickActions.length === 0) {
       return;
     }
-    setClickTimes(1);
+    // setClickTimes(1);
     console.log("点击事件", data);
     customEventsFunction(clickEvents, data);
   }, 300);
@@ -256,13 +256,13 @@ const ComponentEventContainer = ({
         []
       );
       // 绑定数据容器的组件列表
-      const componentsByDataContainer = activeComponents.filter(
-        (component) => component.dataFrom === 1
-      );
+      // const componentsByDataContainer = activeComponents.filter(
+      //   (component) => component.dataFrom === 1
+      // );
       // 绑定数据源的组件列表
-      const componentsByDataSource = activeComponents.filter(
-        (component) => component.dataFrom === 0
-      );
+      // const componentsByDataSource = activeComponents.filter(
+      //   (component) => component.dataFrom === 0
+      // );
       // 重新获取部分组件（绑定数据源的组件列表）的数据
       dispatch({
         type: "publishDashboard/getComponentsData",
@@ -296,7 +296,7 @@ const ComponentEventContainer = ({
   }, 300);
 
   const animation = (
-    { duration, timingFunction, type },
+    { duration, type },
     actionType,
     dom,
     actionId,
@@ -345,7 +345,6 @@ const ComponentEventContainer = ({
         dom.style.transform += `translateY(${translate.y}px)`;
       }
       let timer = null;
-      const index = opacityTimeIds.current.indexOf(componentId);
       // if (index !== -1) {
       //   // 说明存在
       //   clearInterval(timer)

@@ -33,6 +33,8 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": ["off"],
         'prettier/prettier': 'off',
         '@typescript-eslint/no-var-requires': 'off',
-        "react/prop-types": 0
+        "react/prop-types": 0,
+        "react/react-in-jsx-scope": 'off',
+        "react/jsx-key": 'off'
     }
 }

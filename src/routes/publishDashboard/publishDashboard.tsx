@@ -1,10 +1,11 @@
+/* eslint-disable no-case-declarations */
 import { memo, useEffect, useState, useRef } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
 import { deepClone, layersReverse, getQueryVariable } from "@/utils";
 
-import { Spin, Input, Button, message } from "antd";
+import { Input, Button, message } from "antd";
 
 
 import RecursiveComponent from "./components/recursiveComponent";
@@ -21,7 +22,7 @@ function GetQueryString(name: any) {
   return null;
 }
 
-const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
+const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
   // console.log('publishDashboard.dashboardId1', publishDashboard.dashboardId)
 
   // 加载出整个大屏前，需要一个动画
@@ -170,7 +171,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         type: "publishDashboard/clearCurrentDashboardData"
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (scaleMode === "0") {
@@ -181,7 +181,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         window.addEventListener("resize", setCanvasSize);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardConfig]);
   const calcCanvasScale = (e: any) => {
     if (e.ctrlKey) {
@@ -207,7 +206,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     return () => {
       clearInterval(intervalId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
@@ -217,8 +215,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     setLayers(data);
     setComponents(publishDashboard.fullAmountComponents);
     setPanels(publishDashboard.panels);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishDashboard.layers]);
 
   const setChange = (value: any) => {
@@ -226,9 +222,9 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   };
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
-  const initDashboard = (cb = function () { }) => {
+  const initDashboard = () => {
     const pwd = localStorage.getItem(pageId);
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const dashboardId = window.location.pathname.split("/")[2];
       dispatch({
         type: "publishDashboard/initDashboard",
@@ -251,7 +247,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
 
   const getScreenInfo = (config: any) => {
     const map: any = {};
-    config.forEach(({ displayName, value, options, width, height }: any) => {
+    config.forEach(({ displayName, value, width, height }: any) => {
       let target = value;
       switch (displayName) {
         case "屏幕大小":
@@ -277,7 +273,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
 
   const updateDataContainerDataFunc = async (container: any) => {
     const params: any = getQueryVariable();
-    let callBackParamValues = {
+    const callBackParamValues = {
       ...publishDashboard.callbackArgs,
     };
     if (params?.Ticket) {

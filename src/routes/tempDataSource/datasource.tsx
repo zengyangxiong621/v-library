@@ -1,9 +1,9 @@
-import { memo, useState, useEffect, useCallback, useMemo } from "react";
+import { memo, useState, useEffect } from "react";
 import "./index.less";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Table, Button, Select, Input, Spin, Space, Modal, message } from "antd";
-import { PlusOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { ConfigProvider, Table, Select, Input, Space, message } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import AddDataSource from "./components/addDataSource";
 import EditDataSource from "./components/editDataSource";
@@ -13,7 +13,7 @@ import PreViewJson from "../../routes/dashboard/right/components/codeEditor/prev
 import { http } from "@/services/request";
 import { TDataSourceParams } from "./type";
 
-import TipModal from "@/components/tipModal"
+import TipModal from "@/components/tipModal";
 
 const { Option } = Select;
 
@@ -38,12 +38,12 @@ const DataSource = (props: any) => {
   const [previewRecord, setPreviewRecord] = useState({ type: "", id: "" });
   const [tableLoading, setTableLoading] = useState(false);
 
-  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
-  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
+  const [delVisible, setDelVisible] = useState<boolean>(false);//删除框的visible
+  const [rowData, setRowData] = useState<any>(null);//选中删除的rowData
 
 
   // 根据屏幕大小来决定表格的高度
-  const [tableHeight, setTableHeight] = useState<any>(0)
+  const [tableHeight, setTableHeight] = useState<any>(0);
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
   const resetTableInfo = (data: any) => {
@@ -86,7 +86,6 @@ const DataSource = (props: any) => {
   // 获取表格数据
   useEffect(() => {
     getTableData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spaceId]);
 
   // 保证每次拿到最新的dataSourceType值
@@ -99,14 +98,14 @@ const DataSource = (props: any) => {
     const resizeFn = () => {
       const bodyHeight = document.body.clientHeight;
       // 280 是页面中除了表格滚动区域外 其它元素高度的总和
-      const restHeight = bodyHeight - 280
+      const restHeight = bodyHeight - 280;
       setTableHeight(restHeight);
-    }
+    };
     // 进入页面先执行一次
-    resizeFn()
-    window.addEventListener('resize', resizeFn)
-    return () => window.removeEventListener('resize', resizeFn)
-  }, [])
+    resizeFn();
+    window.addEventListener("resize", resizeFn);
+    return () => window.removeEventListener("resize", resizeFn);
+  }, []);
 
   // 下拉框选择
   const selectChange = (value: any) => {
@@ -147,8 +146,8 @@ const DataSource = (props: any) => {
 
   /**********  删除、编辑 操作 *************/
   const delClick = (dataSourceId: string) => {
-    setDelVisible(true)
-    setRowData(dataSourceId)
+    setDelVisible(true);
+    setRowData(dataSourceId);
     // Modal.confirm({
     //   title: "删除数据源",
     //   okButtonProps: {
@@ -190,12 +189,11 @@ const DataSource = (props: any) => {
     // });
   };
   // 取消删除（关闭删除提示框）
-  const closeTipModal = ()=> {
-    setDelVisible(false)
-  }
+  const closeTipModal = () => {
+    setDelVisible(false);
+  };
   const handleDelOk = async () => {
     //TODO 发送删除数据源的请求
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const data = await http({
       url: `/visual/datasource/delete?dataSourceId=${rowData}`,
       method: "post"
@@ -206,8 +204,8 @@ const DataSource = (props: any) => {
     } else {
       message.error({ content: "删除失败", duration: 2 });
     }
-    closeTipModal()
-  }
+    closeTipModal();
+  };
   const editClick = (text: any) => {
     setIsShowEditModal(true);
     setEditDataSourceInfo(text);
@@ -230,7 +228,7 @@ const DataSource = (props: any) => {
       [`${type}SourceConfig`]: {
         fileUrl
       }
-    })
+    });
     const data = await http({
       url: "/visual/datasource/update",
       method: "post",
@@ -390,21 +388,21 @@ const DataSource = (props: any) => {
           {
             // tableData.length
             //   ?
-              <Table
-                // scroll={{ y: "53vh" }}
-                scroll={{ y: tableHeight }}
-                sortDirections={["ascend", "descend"]}
-                rowClassName='customRowClass'
-                loading={tableLoading}
-                columns={columns}
-                dataSource={tableData}
-                pagination={paginationProps}
-                onChange={tableOnChange}
-              />
-              // :
-              // <div className="custom-table-loading">
-              //   <Spin tip="Loading…"></Spin>
-              // </div>
+            <Table
+              // scroll={{ y: "53vh" }}
+              scroll={{ y: tableHeight }}
+              sortDirections={["ascend", "descend"]}
+              rowClassName='customRowClass'
+              loading={tableLoading}
+              columns={columns}
+              dataSource={tableData}
+              pagination={paginationProps}
+              onChange={tableOnChange}
+            />
+            // :
+            // <div className="custom-table-loading">
+            //   <Spin tip="Loading…"></Spin>
+            // </div>
           }
         </div>
         {/* 添加数据源的弹窗 */}
@@ -444,10 +442,10 @@ const DataSource = (props: any) => {
             />
         }
       </div>
-      <TipModal 
+      <TipModal
         visible={delVisible}
         text="删除后不可恢复，确认删除此数据源吗?"
-        onOk={handleDelOk} 
+        onOk={handleDelOk}
         onCancel={closeTipModal}
       />
     </ConfigProvider>

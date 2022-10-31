@@ -1,4 +1,3 @@
-import { number } from "echarts";
 
 export const WENBENYANGSHI = "文本样式";
 export const WEIZHICHICUN = "位置尺寸";
