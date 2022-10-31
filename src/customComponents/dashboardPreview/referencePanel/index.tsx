@@ -11,7 +11,7 @@ import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
 interface State {
-  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
+  overflow: "none" | "auto" | "hidden" // 面板隐藏的方式
   allData: Array<{
     layers: any[]
     components: any[],
@@ -26,7 +26,7 @@ import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
 const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
   const componentData = previewDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id);
-  // console.log('panel', panel)
+  // console.log("panel", panel)
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;
   const defaultStateId = (states.length > 0 && states[0].id) || "";
@@ -170,7 +170,7 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels }: any) => {
 
 
   return (
-    <div className={`reference-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: '100%', height: '100%'}}>
+    <div className={`reference-panel panel-${id} event-id-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%"}}>
       {
         state.allData.length === 1 ?
           <RecursiveComponent

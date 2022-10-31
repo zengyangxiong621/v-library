@@ -9,7 +9,7 @@ import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
 interface State {
-  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
+  overflow: "none" | "auto" | "hidden" // 面板隐藏的方式
   allData: Array<{
     layers: any[]
     components: any[],
@@ -23,7 +23,7 @@ import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
 
 const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) => {
   const componentData = bar.componentData;
-  // console.log('panel', panel)
+  // console.log("panel", panel)
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;
   const defaultStateId = (states.length > 0 && states[0].id) || "";
@@ -58,23 +58,23 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
   };
   const getStateDetails = async ({id}: any) => {
     try {
-      const panelConfig = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
+      const panelConfig = bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
       return panelConfig;
     } catch(e) {
       return null;
     }
   };
   const getReferenceDetails = async ({name, id}: { name: string; id: string }) => {
-    const {components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
+    const {components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     // await Promise.all(components.map((item: any) => getComponentData(item)));
     dispatch({
-      type: 'save',
+      type: "save",
       payload: {
         componentData
       }
-    })
+    });
     layersReverse(layers);
     return {
       components,

@@ -21,12 +21,11 @@ interface Props {
   history?: any
 }
 
-interface State { }
 
 const mapStateToProps = (state: any) => {
   return state;
 };
-class BasicLayout extends Component<Props, State> {
+class BasicLayout extends Component<Props> {
 
   constructor(Props: any) {
     super(Props);

@@ -33,7 +33,7 @@ const InstrumentPanel = (props) => {
     arr.forEach((item) => {
       let index = colorIndex || 0;
       let { name, value, options, flag, type, key } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         // 对 系列一栏 做特殊处理
         if (flag === "specialItem") {
           try {
@@ -99,7 +99,7 @@ const InstrumentPanel = (props) => {
     let targetConfig = {};
     Arr.forEach((item) => {
       let { name, value, options, flag, displayName } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         // 对 系列一栏 做特殊处理
         if (flag === "specialItem") {
           name = displayName;
@@ -464,8 +464,12 @@ const InstrumentPanel = (props) => {
     ],
   });
 
-  const onChartReady = (echarts) => {};
-  const onChartClick = (param, echarts) => {};
+  const onChartReady = (echarts) => {
+    console.log(echarts);
+  };
+  const onChartClick = (param, echarts) => {
+    console.log(echarts);
+  };
   let onEvents = {
     click: onChartClick,
   };

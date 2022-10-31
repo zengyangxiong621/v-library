@@ -11,7 +11,7 @@ import {
   IPanel
 } from "@/routes/dashboard/center/components/CustomDraggable/type";
 interface State {
-  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
+  overflow: "none" | "auto" | "hidden" // 面板隐藏的方式
   allData: Array<{
     layers: any[]
     components: any[],
@@ -27,7 +27,7 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels }: any) => {
   const componentData = publishDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id);
   const pass = window.localStorage.getItem(panel.dashboard);
-  // console.log('panel', panel)
+  // console.log("panel", panel)
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;
   const defaultStateId = (states.length > 0 && states[0].id) || "";
