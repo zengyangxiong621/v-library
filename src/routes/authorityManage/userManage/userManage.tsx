@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
@@ -12,7 +10,7 @@ import { http } from "@/services/request";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { STATUSLIST, ACCOUNTLIST } from "@/constant/dvaModels/userManage";
 import type { TableRowSelection } from "antd/lib/table/interface";
-import TipModal from "@/components/tipModal"
+import TipModal from "@/components/tipModal";
 
 
 import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message, Form } from "antd";
@@ -153,11 +151,11 @@ const UserManage = (props: any) => {
         const spotMap:{
           [key:string]:string
         }={
-          '0':'openning',
-          '1':'closing',
-          '-1':'none',
-          '2':'locking'
-        }
+          "0":"openning",
+          "1":"closing",
+          "-1":"none",
+          "2":"locking"
+        };
         return itemData ? (
           <div className="tableStatus">
             <span className={`${spotMap[itemData[0].value]} statusMark`}></span>
@@ -204,10 +202,10 @@ const UserManage = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <>
-            <Button type="link" size='small' disabled={getDisabled(text,"edit")} onClickCapture={() => editClick(text)}>编辑</Button>
-            <Button type="link" size='small' disabled={getDisabled(text,"password")} onClickCapture={() => resetClick(text)}>重置密码</Button>
-            <Button type="link" size='small' disabled={getDisabled(text,"del")} onClickCapture={() => delClick([text.id])}>删除</Button>
-            <Button type="link" size='small' disabled={getDisabled(text,"status")} onClickCapture={() => changeStatusClick(text)}>{record.status === "1" ? "启用" : "停用"}</Button>
+            <Button type="link" size="small" disabled={getDisabled(text,"edit")} onClickCapture={() => editClick(text)}>编辑</Button>
+            <Button type="link" size="small" disabled={getDisabled(text,"password")} onClickCapture={() => resetClick(text)}>重置密码</Button>
+            <Button type="link" size="small" disabled={getDisabled(text,"del")} onClickCapture={() => delClick([text.id])}>删除</Button>
+            <Button type="link" size="small" disabled={getDisabled(text,"status")} onClickCapture={() => changeStatusClick(text)}>{record.status === "1" ? "启用" : "停用"}</Button>
           </>
         );
       }
@@ -254,15 +252,15 @@ const UserManage = (props: any) => {
     setShowUpdateMode(true);
   };
   const delClick = (data:any) => {
-    setDelVisible(true)
-    setRowData(data)
+    setDelVisible(true);
+    setRowData(data);
     // Modal.confirm({
     //   title: "提示",
     //   okButtonProps: {
     //     style: {
     //       backgroundColor: "#e9535d",
     //       border: "none",
-    //       // marginLeft: '8px',
+    //       // marginLeft: "8px",
     //     }
     //   },
     //   cancelButtonProps: {
@@ -304,16 +302,16 @@ const UserManage = (props: any) => {
       message.warning("请选择待删除的账号");
     }else{
       // delClick(selectedRowKeys);
-      setDelVisible(true)
-      setBatchFlag(true)
-      setRowData(selectedRowKeys)
+      setDelVisible(true);
+      setBatchFlag(true);
+      setRowData(selectedRowKeys);
     }
   };
   // 取消删除（关闭删除提示框）
   const closeTipModal = ()=> {
-    setDelVisible(false)
-    setBatchFlag(false)
-  }
+    setDelVisible(false);
+    setBatchFlag(false);
+  };
   const handleDelOk = async () => {
     const result = await http({
       url: "/visual/user/remove",
@@ -329,8 +327,8 @@ const UserManage = (props: any) => {
     } else {
       message.error({ content: "删除失败", duration: 2 });
     }
-    closeTipModal()
-  }
+    closeTipModal();
+  };
   const changeStatusClick = async(data:any) => {
     const result = await http({
       url: "/visual/user/updateStatus",
@@ -346,7 +344,7 @@ const UserManage = (props: any) => {
     }
   };
   const tableOnChange = () => {
-
+    console.log();
   };
 
   const closeModal = () => {
@@ -408,7 +406,7 @@ const UserManage = (props: any) => {
     <ConfigProvider locale={zhCN}>
       <div className="userManage">
         <div className="title">用户管理</div>
-        <header className='header' style={{
+        <header className="header" style={{
           background: "#171a24"
         }}>
           <SearchHeader roleList={roleList} searchByType={searchByType}></SearchHeader>
@@ -417,10 +415,10 @@ const UserManage = (props: any) => {
             <Button onClick={deleteBatchUser}>批量删除</Button>
           </div>
         </header>
-        <div className='table-wrap'>
+        <div className="table-wrap">
           <Table
             scroll={{ y: "calc(100vh - 350px)" }}
-            rowClassName='customRowClass'
+            rowClassName="customRowClass"
             rowSelection={rowSelection}
             loading={tableLoading}
             columns={columns}

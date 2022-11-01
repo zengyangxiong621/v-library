@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 

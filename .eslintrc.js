@@ -36,6 +36,8 @@ module.exports = {
         "react/prop-types": 0,
         "react/react-in-jsx-scope": 'off',
         "react/jsx-key": 'off',
-        'react/display-name': 'off'
+        'react/display-name': 'off',
+        '@typescript-eslint/no-this-alias': 'off',
+        '@typescript-eslint/no-empty-function': 'off'
     }
 }

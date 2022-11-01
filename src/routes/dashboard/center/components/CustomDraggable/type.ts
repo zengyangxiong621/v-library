@@ -86,7 +86,7 @@ export interface IPanelStateGroup extends IPanelState {
   modules: Array<any>
 }
 
-export interface ILayerPanelState extends Omit<IPanelStateGroup, 'isLock'>{
+export interface ILayerPanelState extends Omit<IPanelStateGroup, "isLock">{
   panelType: 0 | 1 | 2,
 }
 

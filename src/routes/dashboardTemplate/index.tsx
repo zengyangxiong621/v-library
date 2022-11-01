@@ -6,5 +6,4 @@ const routesConfig = (app: any) => ({
   component: newDynamic(app, [], () => import("./template"))
 });
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default (app: any) => createRoute(app, routesConfig);

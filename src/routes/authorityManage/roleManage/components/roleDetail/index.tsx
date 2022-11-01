@@ -4,8 +4,8 @@ import { Modal,Form,Table,Checkbox } from "antd";
 import { useForm } from "antd/es/form/Form";
 import {AuthContext} from "../../roleManage";
 import {authDataType,formData} from "../../interface";
-import type { CheckboxValueType,CheckboxOptionType } from "antd/es/checkbox/Group";
-import './index.less'
+import type,{ CheckboxValueType,CheckboxOptionType } from "antd/es/checkbox/Group";
+import "./index.less";
 
 // 表格权限多选框
 const AuthCheckBox=memo((props:any)=>{
@@ -92,7 +92,7 @@ export default memo(function RoleDetail(props:any) {
   };
   return (
     <Modal
-      className='roleDetailModel'
+      className="roleDetailModel"
       title="查看详情"
       visible={isModalVisible}
       footer={null}
@@ -131,8 +131,8 @@ export default memo(function RoleDetail(props:any) {
             expandable={{
               showExpandColumn:false
             }}
-            size='small'
-            rowKey='id'
+            size="small"
+            rowKey="id"
             dataSource={authList}
             columns={tableColumns(permissionIds)}
           ></Table>

@@ -17,11 +17,10 @@ import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.7";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 
-import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.7/config'
 import Counter from "@/customComponents/assist/counter2/v1.0.8";
-import ChartLegend from '@/customComponents/assist/chartLegend/chartLegend-1.0.1'
-import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
-import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
+import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1";
+import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx";
+import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1";
 
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -63,14 +62,14 @@ import {
 } from "../../../../../constant/home";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
-import SelectV2 from '@/customComponents/assist/select/v1.0.3/index'
-import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
-import BasicLine from '@/customComponents/echarts/components/basicLine/basicLine-1.2.2'
+import SelectV2 from "@/customComponents/assist/select/v1.0.3/index";
+import ButtonGroup from "@/customComponents/assist/buttonGroup/v1.0.5/index";
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
+import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.2";
 
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
-import CusImage from '@/customComponents/assist/image/v1.0.2/index'
-import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
+import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1";
+import CusImage from "@/customComponents/assist/image/v1.0.2/index";
+import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
@@ -86,7 +85,7 @@ import DrillDownPanel from "@/customComponents/dashboardEdit/drillDownPanel";
 
 enum STYLE_ENUM {
   BOLD = "fontBold"
-}
+};
 
 
 const CustomDraggable
@@ -124,25 +123,25 @@ const CustomDraggable
       // } else {
       //   allComponentDOMs[layer.id] = ref;
       // }
-      // console.log(allComponentDOMs[layer.id],'=================')
-      // console.log(layers,'=================')
+      // console.log(allComponentDOMs[layer.id],"=================")
+      // console.log(layers,"=================")
       // layers.map(layer => {
-      //   console.log(allComponentDOMs[layer.id],'=================')
-      //   allComponentDOMs[layer.id].addEventListener('mouseenter',()=>{
-      //     allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
+      //   console.log(allComponentDOMs[layer.id],"=================")
+      //   allComponentDOMs[layer.id].addEventListener("mouseenter",()=>{
+      //     allComponentDOMs[layer.id].style.border = "3px solid #2482ff"
       //   })
       // })
       return () => {
         layers.map(layer => {
-          allComponentDOMs[layer.id].removeEventListener('mouseenter', () => {
-            allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
-          })
-          allComponentDOMs[layer.id].removeEventListener('mouseleave', () => {
-            allComponentDOMs[layer.id].style.border = '3px solid transparent'
-          })
-        })
-      }
-    }, [])
+          allComponentDOMs[layer.id].removeEventListener("mouseenter", () => {
+            allComponentDOMs[layer.id].style.border = "3px solid #2482ff";
+          });
+          allComponentDOMs[layer.id].removeEventListener("mouseleave", () => {
+            allComponentDOMs[layer.id].style.border = "3px solid transparent";
+          });
+        });
+      };
+    }, []);
 
     /**
      * 鼠标事件顺序： dragStart, drag, dragEnd, click
@@ -152,16 +151,15 @@ const CustomDraggable
      * @return void
      */
     const handleStart = (ev: DraggableEvent, data: DraggableData, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig) => {
-      console.log('拖拽开始')
       setStartPosition({
         x: data.x,
         y: data.y,
       });
       bar.selectedComponents = [];
-      bar.selectedComponentDOMs = {}
-      bar.selectedComponentRefs = {}
+      bar.selectedComponentDOMs = {};
+      bar.selectedComponentRefs = {};
       bar.dragStatus = "一组件";
-      bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
+      bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y);
 
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
@@ -180,7 +178,7 @@ const CustomDraggable
       }
       if ("panelType" in layer) {
         bar.dragStatus = "一面板";
-        bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
+        bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y);
         dispatch({
           type: "bar/save",
           payload: {
@@ -199,14 +197,14 @@ const CustomDraggable
         // 注意一下
         // 选中多个组件、或者多个分组时
         bar.dragStatus = "多个";
-        bar.supportLinesRef.handleSetPosition(bar.scaleDragData.position.x, bar.scaleDragData.position.y)
+        bar.supportLinesRef.handleSetPosition(bar.scaleDragData.position.x, bar.scaleDragData.position.y);
 
       } else {
         // 当选中了一个分组时，或者没有选中时
         if (COMPONENTS in layer) {
           bar.dragStatus = "一分组";
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
-          bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
+          bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y);
 
           dispatch({
             type: "bar/save",
@@ -232,14 +230,12 @@ const CustomDraggable
 
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-      console.log('拖拽中')
       ev.stopPropagation();
-      bar.scaleDragData.style.display = "block"
+      bar.scaleDragData.style.display = "block";
 
-      // console.log('dragging', layer)
       // 向上取整
-      let aroundX = Math.ceil(data.x);
-      let aroundY = Math.ceil(data.y);
+      const aroundX = Math.ceil(data.x);
+      const aroundY = Math.ceil(data.y);
       const xMoveLength = data.x - data.lastX;
       const yMoveLength = data.y - data.lastY;
       bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
@@ -252,7 +248,7 @@ const CustomDraggable
             delete bar.selectedComponentRefs[key];
           }
         });
-        // console.log('bar.selectedComponentRefs', bar.selectedComponentRefs)
+        // console.log("bar.selectedComponentRefs", bar.selectedComponentRefs)
         // scaleDragCom 组件实时移动
 
         if (layer.id in bar.selectedComponentRefs) {
@@ -289,7 +285,7 @@ const CustomDraggable
       });
       if ("panelType" in layer && panel) {
         // 说明是面板,且一定是单个
-        // console.log('111111111111111111111111')
+        // console.log("111111111111111111111111")
         // const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
         panel.config.left = Math.ceil(data.x);
         panel.config.top = Math.ceil(data.y);
@@ -312,7 +308,7 @@ const CustomDraggable
         });
       } else if (component && "config" in component && bar.selectedComponentOrGroup.length === 1) {
         // 单个组件移动
-        // console.log('2222222222222222222222222')
+        // console.log("2222222222222222222222222")
         const styleDimensionConfig: any = component.config.find((item: any) => item.name === DIMENSION);
         if (styleDimensionConfig) {
           styleDimensionConfig.value.forEach((item: any) => {
@@ -351,9 +347,6 @@ const CustomDraggable
         }
       } else if (COMPONENTS in layer && bar.selectedComponentOrGroup.length === 1) {
         // 单个组移动
-        // console.log('3333333333333333333333333333')
-        // console.log('单个组', layer)
-        // console.log('bar.selectedComponents', bar.selectedComponents)
         const xMoveLength = Math.ceil(data.x - startPosition.x);
         const yMoveLength = Math.ceil(data.y - startPosition.y);
         bar.selectedComponents.forEach((item: IComponent | IPanel) => {
@@ -406,9 +399,6 @@ const CustomDraggable
         });
       }
       if (bar.selectedComponentOrGroup.length > 1) {
-        // console.log('4444444444444444444444444')
-        // console.log('selectedComponentOrGroup', bar.selectedComponentOrGroup)
-        // console.log('bar.selectedComponentIds', bar.selectedComponentIds)
         const xPositionList: Array<number> = [];
         const yPositionList: Array<number> = [];
         bar.selectedComponents = [
@@ -460,9 +450,6 @@ const CustomDraggable
           const xMoveLength = data.x - data.lastX;
           const yMoveLength = data.y - data.lastY;
         }
-        // console.log('----------------------------')
-        // console.log('xPositionList', xPositionList)
-        // console.log('yPositionList', yPositionList)
         // 在dva里计算
         dispatch({
           type: "bar/save",
@@ -483,7 +470,7 @@ const CustomDraggable
         });
       } else {
         /*        dispatch({
-                  type: 'bar/save',
+                  type: "bar/save",
                   payload: {
                     scaleDragData: {
                       position: {
@@ -491,7 +478,7 @@ const CustomDraggable
                         y: data.y,
                       },
                       style: {
-                        display: 'block',
+                        display: "block",
                         width: 0,
                         height: 0,
                       },
@@ -499,7 +486,6 @@ const CustomDraggable
                   },
                 })*/
       }
-      console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
 
       dispatch({
         type: "bar/updateComponent",
@@ -521,7 +507,7 @@ const CustomDraggable
     const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent | ILayerPanel, config: IConfig) => {
       clearTimeout(clickTimer.current);
       if ("panelType" in layer) {
-        let url = ''
+        let url = "";
         const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
         if (layer.panelType === 0) { // 动态面板
           dispatch({
@@ -546,13 +532,13 @@ const CustomDraggable
             }
           });
           if (panel.states[0]?.id) {
-            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`;
           } else {
-            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}`
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}`;
           }
         } else if (layer.panelType === 1) {
           if (panel.states.length > 0) {
-            url = `/dashboard/${panel.states[0].id}`
+            url = `/dashboard/${panel.states[0].id}`;
           }
 
         } if (layer.panelType === 2) {
@@ -579,7 +565,7 @@ const CustomDraggable
               }
             }
           });
-          url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
+          url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`;
         }
         if (url) {
           history.push(url);
@@ -599,23 +585,22 @@ const CustomDraggable
       }
       component.hover = true;
       // dispatch({
-      //   type: 'bar/save',
+      //   type: "bar/save",
       // })
     };
     const handleMouseOut = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
       component.hover = false;
       // dispatch({
-      //   type: 'bar/save',
+      //   type: "bar/save",
       // })
     };
     const mouseRightClick = (e: any, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
-      console.log('selectedComponentRefs', bar.selectedComponentRefs)
       if (Object.keys(bar.selectedComponentRefs).length > 1 && layer.id in bar.selectedComponentRefs) {
         bar.isSupportMultiple = true;
-        bar.isMultipleTree = true
+        bar.isMultipleTree = true;
       } else {
         bar.isSupportMultiple = false;
-        bar.isMultipleTree = false
+        bar.isMultipleTree = false;
       }
       e.persist();
       e.preventDefault();
@@ -689,8 +674,6 @@ const CustomDraggable
     };
     // 组件初始化时发生 handleValue 传递的值
     const handleValueChange = (data: { [key: string]: any }, component: IComponent, componentId: string) => {
-      // console.log('handleValueChange')
-      // console.log('value', data)
       // 编辑时回调参数生效逻辑
       const currentActiveCompoentData = bar.currentActiveCompoentData;
       currentActiveCompoentData[componentId] = data;
@@ -718,16 +701,16 @@ const CustomDraggable
                 // 判断是否为同一个源
                 if (item.callbackParam === callback.target) {
                   // 翻页组件不需要配置origin
-                  if (component.moduleName === 'paginationComp') {
-                    temp = true
-                    callbackArgs[callback.target] = data[callback.target]
-                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
+                  if (component.moduleName === "paginationComp") {
+                    temp = true;
+                    callbackArgs[callback.target] = data[callback.target];
+                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id));
                     // 值是否改变
                     // data的值存在并且
-                  } else if ((["cascader", 'select2'].includes(component.moduleName)) || (data && data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin])) {
-                    temp = true
-                    callbackArgs[callback.target] = data ? data[callback.origin] : data
-                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
+                  } else if ((["cascader", "select2"].includes(component.moduleName)) || (data && data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin])) {
+                    temp = true;
+                    callbackArgs[callback.target] = data ? data[callback.origin] : data;
+                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id));
                   }
 
                   dispatch({
@@ -742,15 +725,14 @@ const CustomDraggable
           }
         });
       });
-      // console.log('回调参数作用到的组件ID有：', activeIds)
       if (temp) {
         activeIds = [...(new Set(activeIds) as any)];
         const activeComponents = activeIds.reduce((pre: any[], id: string) => {
-          const component = bar.fullAmountComponents.find((item: IComponent) => item.id === id)
+          const component = bar.fullAmountComponents.find((item: IComponent) => item.id === id);
           if (component) {
-            pre.push(component)
+            pre.push(component);
           }
-          return pre
+          return pre;
         }, []);
 
         // 绑定数据容器的组件列表
@@ -839,7 +821,7 @@ const CustomDraggable
               };
             } else {
               // 组件
-              component = components.find(item => item.id === layer.id)
+              component = components.find(item => item.id === layer.id);
               if (component) {
                 staticData = component.staticData;
                 style_config = component.config;
@@ -865,16 +847,17 @@ const CustomDraggable
                 id={layer.id}
                 cRef={(ref: any) => {
                   if (layer.id in allComponentRefs) {
+                    console.log();
                   } else {
                     // todo
                     allComponentRefs[layer.id] = ref;
-                    allComponentDOMs[layer.id].style.border = '3px solid transparent'
-                    allComponentDOMs[layer.id].addEventListener('mouseenter', () => {
-                      allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
-                    })
-                    allComponentDOMs[layer.id].addEventListener('mouseleave', () => {
-                      allComponentDOMs[layer.id].style.border = '3px solid transparent'
-                    })
+                    allComponentDOMs[layer.id].style.border = "3px solid transparent";
+                    allComponentDOMs[layer.id].addEventListener("mouseenter", () => {
+                      allComponentDOMs[layer.id].style.border = "3px solid #2482ff";
+                    });
+                    allComponentDOMs[layer.id].addEventListener("mouseleave", () => {
+                      allComponentDOMs[layer.id].style.border = "3px solid transparent";
+                    });
                   }
                 }}
                 disabled={layer.isLock}
@@ -888,6 +871,7 @@ const CustomDraggable
                 <div
                   ref={(ref: any) => {
                     if (layer.id in allComponentDOMs) {
+                      console.log();
                     } else {
                       allComponentDOMs[layer.id] = ref;
                     }
@@ -903,7 +887,7 @@ const CustomDraggable
                   style={{
                     ...config.style,
                     transition: "width, height 0.3s",
-                    // border: '1px solid gray',
+                    // border: "1px solid gray",
                     visibility: !layer.isShow ? "hidden" : "unset",
                     cursor: "move",
                   }}>
@@ -976,18 +960,18 @@ const CustomDraggable
                           </div> : <>
                             <div data-id={layer.id} style={{ width: "100%", height: "100%", pointerEvents: "none" }} className="custom-draggable-component">
                               {
-                                // layer.moduleName === 'text' ? <Text componentConfig={component}/> :
+                                // layer.moduleName === "text" ? <Text componentConfig={component}/> :
                                 //   <CompImage componentConfig={component}/>
 
                                 // <Da componentConfig={component}/>
                                 // <SwiperText  componentConfig={component}></SwiperText>
-                                // layer.moduleName === 'swiperText' ?
+                                // layer.moduleName === "swiperText" ?
                                 // <CustomText
                                 //   componentConfig={component}
                                 //   fields={getFields(component)}
                                 //   comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                 // ></CustomText>
-                                layer.moduleName === 'stereoscopicBar' ?
+                                layer.moduleName === "stereoscopicBar" ?
                                   <StereoscopicBar
                                     themeConfig={bar.componentThemeConfig}
                                     onThemeChange={onThemeChange}
@@ -995,7 +979,7 @@ const CustomDraggable
                                     fields={getFields(component)}
                                     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                   ></StereoscopicBar> :
-                                  layer.moduleName === 'hydrograph' ?
+                                  layer.moduleName === "hydrograph" ?
                                     <Hydrograph
                                       themeConfig={bar.componentThemeConfig}
                                       onThemeChange={onThemeChange}
@@ -1003,7 +987,7 @@ const CustomDraggable
                                       fields={getFields(component)}
                                       comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                     ></Hydrograph> :
-                                    layer.moduleName === 'chartLegend' ?
+                                    layer.moduleName === "chartLegend" ?
                                       <ChartLegend
                                         themeConfig={bar.componentThemeConfig}
                                         onThemeChange={onThemeChange}
@@ -1011,7 +995,7 @@ const CustomDraggable
                                         fields={getFields(component)}
                                         comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                       ></ChartLegend> :
-                                      layer.moduleName === 'counter' ?
+                                      layer.moduleName === "counter" ?
                                         <Counter
                                           themeConfig={bar.componentThemeConfig}
                                           onThemeChange={onThemeChange}
@@ -1019,7 +1003,7 @@ const CustomDraggable
                                           fields={getFields(component)}
                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                         ></Counter> :
-                                        layer.moduleName === 'scrollTable' ?
+                                        layer.moduleName === "scrollTable" ?
                                           <ScrollTable
                                             themeConfig={bar.componentThemeConfig}
                                             onThemeChange={onThemeChange}
@@ -1183,14 +1167,14 @@ const CustomDraggable
                                                                         ></Timeline> :
 
 
-                                                                        // layer.moduleName === 'CardFlipper_1'?
+                                                                        // layer.moduleName === "CardFlipper_1"?
                                                                         //   <CardFlipper1
                                                                         //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                                                         //     componentConfig={ component }
                                                                         //     fields={ getFields(component) }
                                                                         //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                                                         //   ></CardFlipper1>:
-                                                                        // layer.moduleName === 'CardFlipper_2'?
+                                                                        // layer.moduleName === "CardFlipper_2"?
                                                                         //   <CardFlipper2
                                                                         //     onChange={(val:any)=>handleValueChange(val, component, layer.id)}
                                                                         //     componentConfig={ component }
@@ -1281,7 +1265,7 @@ const CustomDraggable
                             </div>
                           </>
                   }
-                  {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
+                  {/* <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, right: 0 }} /> */}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
                   <div className="component-border">
                     <span
