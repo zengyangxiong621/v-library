@@ -11,15 +11,15 @@ const textAlignEnum = {
 };
 
 const findMidItem = (arr) => {
-  let length = arr.length
-  if (length === 0) return -1
+  let length = arr.length;
+  if (length === 0) return -1;
   if (length % 2 === 0) {
-    return arr[length / 2 - 1]
+    return arr[length / 2 - 1];
   }
   if (length % 2 === 1) {
-    return arr[(length - 1) / 2]
+    return arr[(length - 1) / 2];
   }
-  return -1
+  return -1;
 };
 
 // 将rgb颜色转成hex  输入(24,12,255)
@@ -83,7 +83,7 @@ gradientColor.prototype.colorRgb = function (sColor) {
       sColor = sColorNew;
     }
     //处理六位的颜色值
-    let sColorChange = []
+    let sColorChange = [];
     for (let i = 1; i < 7; i += 2) {
       sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
     }
@@ -132,11 +132,11 @@ const getTargetStyle = (Arr) => {
     if (Array.isArray(value)) {
       value.forEach(({ name, value }) => {
         targetStyle[name] = value;
-      })
+      });
     } else {
       targetStyle[name] = value;
     }
-  })
+  });
   return targetStyle;
 };
 
@@ -191,50 +191,50 @@ const ScrollSelect = (props) => {
   const selectedConfig = config.find(item => item.name === "style").value.find(item => item.name === "styleTabs").options.find(item => item.name === "选中").value;
 
   const allGlobalLoadFunc = () => {
-    const defaultSelectedKey = allGlobalConfig.find(item => item.name === "defaultSelectedKey").value
-    let optionsLength = allGlobalConfig.find(item => item.name === "displayNums").value
-    const spacing = allGlobalConfig.find(item => item.name === "spacing").value
-    const directionType = allGlobalConfig.find(item => item.name === "directionType").value
+    const defaultSelectedKey = allGlobalConfig.find(item => item.name === "defaultSelectedKey").value;
+    let optionsLength = allGlobalConfig.find(item => item.name === "displayNums").value;
+    const spacing = allGlobalConfig.find(item => item.name === "spacing").value;
+    const directionType = allGlobalConfig.find(item => item.name === "directionType").value;
     // 根据传入的fields来映射对应的值
-    const fields2ValueMap = {}
-    const initFields = ["s", "content"] // _fields 里第一个对应的是 s，第二个对应的是 content
-    fields2ValueMap[initFields[0]] = _fields[0]
-    fields2ValueMap[initFields[1]] = _fields[1]
+    const fields2ValueMap = {};
+    const initFields = ["s", "content"]; // _fields 里第一个对应的是 s，第二个对应的是 content
+    fields2ValueMap[initFields[0]] = _fields[0];
+    fields2ValueMap[initFields[1]] = _fields[1];
     const allOptions = _data.map(item => {
       return {
         ...item,
         [initFields[0]]: item[fields2ValueMap[initFields[0]]],
         [initFields[1]]: item[fields2ValueMap[initFields[1]]],
-      }
-    })
-    const { newArr, activeIndex } = filterActiveOptions(allOptions[defaultSelectedKey - 1], allOptions, optionsLength, _fields)
-    setOptionsLength(optionsLength)
-    setActiveKey(activeIndex)
-    setOptions(newArr)
-    setAllOptions(allOptions)
+      };
+    });
+    const { newArr, activeIndex } = filterActiveOptions(allOptions[defaultSelectedKey - 1], allOptions, optionsLength, _fields);
+    setOptionsLength(optionsLength);
+    setActiveKey(activeIndex);
+    setOptions(newArr);
+    setAllOptions(allOptions);
     setCommonTabStyle({
       ...commonTabStyle,
       flexBasis: `calc(${ (100 / optionsLength).toFixed(4) }% - ${ spacing }px)`,
-    })
-    setFlexDirection(directionType === "horizontal" ? "column" : "row")
-    const scrollConfig = allGlobalConfig.find(item => item.name === "isScroll").value
-    const isScroll = scrollConfig.find(item => item.name === "show").value
-    const intervalTime = scrollConfig.find(item => item.name === "interval").value
-    const clickStayTime = scrollConfig.find(item => item.name === "clickStay").value
-    setScrollState({...scrollState, isScroll, intervalTime, clickStayTime})
-  }
+    });
+    setFlexDirection(directionType === "horizontal" ? "column" : "row");
+    const scrollConfig = allGlobalConfig.find(item => item.name === "isScroll").value;
+    const isScroll = scrollConfig.find(item => item.name === "show").value;
+    const intervalTime = scrollConfig.find(item => item.name === "interval").value;
+    const clickStayTime = scrollConfig.find(item => item.name === "clickStay").value;
+    setScrollState({...scrollState, isScroll, intervalTime, clickStayTime});
+  };
 
   const isSelectedConfigLoadFunc = (config, isSelected) => {
     if (optionsLength === 0) {
-      return
+      return;
     }
     if (isSelected) {
       // 选中
-      let textStyle = deepClone(config.find(item => item.name === "textStyle").value)
-      let textShadow = config.find(item => item.name === "shadow")
-      let style = styleTransformFunc([...textStyle, { ...textShadow, name: "textShadow" }])
-      const bgColor = config.find(item => item.name === "bgColor").value
-      const bgImg = config.find(item => item.name === "bgImg").value
+      let textStyle = deepClone(config.find(item => item.name === "textStyle").value);
+      let textShadow = config.find(item => item.name === "shadow");
+      let style = styleTransformFunc([...textStyle, { ...textShadow, name: "textShadow" }]);
+      const bgColor = config.find(item => item.name === "bgColor").value;
+      const bgImg = config.find(item => item.name === "bgImg").value;
       setSelectedTabStyle({
         ...selectedTabStyle,
         ...style,
@@ -245,179 +245,179 @@ const ScrollSelect = (props) => {
         backgroundRepeat: "no-repeat",
         backgroundSize: "contain",
         backgroundPosition: "center center",
-      })
+      });
     } else {
-      let fontFamily = config.find(item => item.name === "fontFamily")
-      let textShadow = config.find(item => item.name === "shadow")
-      let style = styleTransformFunc([{ ...textShadow, name: "textShadow" }, fontFamily])
-      const fontSizeRange = config.find(item => item.name === "fontSizeRange").value.map(item => item.value)
-      const colorStep = config.find(item => item.name === "colorStep").value
-      let activeIndex = 0, beforeNums = 0, afterNums = 0
+      let fontFamily = config.find(item => item.name === "fontFamily");
+      let textShadow = config.find(item => item.name === "shadow");
+      let style = styleTransformFunc([{ ...textShadow, name: "textShadow" }, fontFamily]);
+      const fontSizeRange = config.find(item => item.name === "fontSizeRange").value.map(item => item.value);
+      const colorStep = config.find(item => item.name === "colorStep").value;
+      let activeIndex = 0, beforeNums = 0, afterNums = 0;
       if (optionsLength % 2 === 0) {
-        activeIndex = optionsLength / 2
-        afterNums = optionsLength - activeIndex
+        activeIndex = optionsLength / 2;
+        afterNums = optionsLength - activeIndex;
       } else {
-        activeIndex = (optionsLength + 1) / 2
-        afterNums = optionsLength - activeIndex
+        activeIndex = (optionsLength + 1) / 2;
+        afterNums = optionsLength - activeIndex;
       }
-      const gradient = new gradientColor(colorStep, "#fff", afterNums)
-      setColorStepGradient(gradient)
-      setFontSizeRange(fontSizeRange)
+      const gradient = new gradientColor(colorStep, "#fff", afterNums);
+      setColorStepGradient(gradient);
+      setFontSizeRange(fontSizeRange);
       setUnselectedTabStyle({
         ...unselectedTabStyle,
         ...style,
         lineHeight: "unset",
         width: "100%",
-      })
-    }
-  }
+      });
+    };
+  };
 
   useEffect(() => {
-    const defaultSelectedKey = allGlobalConfig.find(item => item.name === "defaultSelectedKey").value
-    let optionsLength = allGlobalConfig.find(item => item.name === "displayNums").value
+    const defaultSelectedKey = allGlobalConfig.find(item => item.name === "defaultSelectedKey").value;
+    let optionsLength = allGlobalConfig.find(item => item.name === "displayNums").value;
     // 根据传入的fields来映射对应的值
-    const fields2ValueMap = {}
-    const initFields = ["s", "content"] // _fields 里第一个对应的是 s，第二个对应的是 content
-    fields2ValueMap[initFields[0]] = _fields[0]
-    fields2ValueMap[initFields[1]] = _fields[1]
+    const fields2ValueMap = {};
+    const initFields = ["s", "content"]; // _fields 里第一个对应的是 s，第二个对应的是 content
+    fields2ValueMap[initFields[0]] = _fields[0];
+    fields2ValueMap[initFields[1]] = _fields[1];
     const allOptions = _data.map(item => {
       return {
         ...item,
         [initFields[0]]: item[fields2ValueMap[initFields[0]]],
         [initFields[1]]: item[fields2ValueMap[initFields[1]]],
-      }
-    })
-    handleChange(allOptions[defaultSelectedKey - 1])
-  }, [])
+      };
+    });
+    handleChange(allOptions[defaultSelectedKey - 1]);
+  }, []);
   useEffect(() => {
-    let timer = null
+    let timer = null;
     if (scrollState.isScroll && !scrollState.isStay) {
       timer = setInterval(() => {
-        handleChange(options[activeKey + 1])
-      },  scrollState.intervalTime)
+        handleChange(options[activeKey + 1]);
+      },  scrollState.intervalTime);
     }
     // 如果处于停留的状态
     if (scrollState.isStay) {
-      timer && clearInterval(timer)
+      timer && clearInterval(timer);
       setTimeout(() => {
-        setScrollState({...scrollState, isStay: false})
-      }, scrollState.clickStayTime)
+        setScrollState({...scrollState, isStay: false});
+      }, scrollState.clickStayTime);
     }
     return () => {
-      timer && clearInterval(timer)
-    }
-  }, [scrollState, allOptions, options])
+      timer && clearInterval(timer);
+    };
+  }, [scrollState, allOptions, options]);
   useEffect(() => {
-    allGlobalLoadFunc()
-  }, [allGlobalConfig])
+    allGlobalLoadFunc();
+  }, [allGlobalConfig]);
 
   useEffect(() => {
 
     if (themeConfig) {
 
-      const _componentConfig = deepClone(componentConfig)
+      const _componentConfig = deepClone(componentConfig);
       // 未选中 tab 样式
-      const _unselectedConfig = _componentConfig.config.find(item => item.name === "style").value.find(item => item.name === "styleTabs").options.find(item => item.name === "未选中").value
+      const _unselectedConfig = _componentConfig.config.find(item => item.name === "style").value.find(item => item.name === "styleTabs").options.find(item => item.name === "未选中").value;
       // 已选中 tab 样式
-      const _selectedConfig = _componentConfig.config.find(item => item.name === "style").value.find(item => item.name === "styleTabs").options.find(item => item.name === "选中").value// const _unselectedConfig = deepClone(unselectedConfig)
-      _unselectedConfig.find(item => item.name === "colorStep").value = themeConfig.textColor
-      _selectedConfig.find(item => item.name === "textStyle").value.find(item => item.name === "color").value = themeConfig.pureColors[0]
-      isSelectedConfigLoadFunc(_unselectedConfig, false)
-      isSelectedConfigLoadFunc(_selectedConfig, true)
-      props.onThemeChange(_componentConfig)
+      const _selectedConfig = _componentConfig.config.find(item => item.name === "style").value.find(item => item.name === "styleTabs").options.find(item => item.name === "选中").value;// const _unselectedConfig = deepClone(unselectedConfig)
+      _unselectedConfig.find(item => item.name === "colorStep").value = themeConfig.textColor;
+      _selectedConfig.find(item => item.name === "textStyle").value.find(item => item.name === "color").value = themeConfig.pureColors[0];
+      isSelectedConfigLoadFunc(_unselectedConfig, false);
+      isSelectedConfigLoadFunc(_selectedConfig, true);
+      props.onThemeChange(_componentConfig);
 
     } else {
 
-      isSelectedConfigLoadFunc(unselectedConfig, false)
-      isSelectedConfigLoadFunc(selectedConfig, true)
+      isSelectedConfigLoadFunc(unselectedConfig, false);
+      isSelectedConfigLoadFunc(selectedConfig, true);
 
     }
-  }, [themeConfig])
+  }, [themeConfig]);
 
   useEffect(() => {
-    isSelectedConfigLoadFunc(unselectedConfig, false)
-  }, [unselectedConfig, optionsLength])
+    isSelectedConfigLoadFunc(unselectedConfig, false);
+  }, [unselectedConfig, optionsLength]);
 
   useEffect(() => {
-    isSelectedConfigLoadFunc(selectedConfig, true)
-  }, [selectedConfig, optionsLength])
+    isSelectedConfigLoadFunc(selectedConfig, true);
+  }, [selectedConfig, optionsLength]);
 
   const handleChange = (data) => {
-    const { newArr } = filterActiveOptions(data, allOptions, optionsLength, _fields)
-    setOptions(newArr)
-    props.onChange && props.onChange(data)
-  }
+    const { newArr } = filterActiveOptions(data, allOptions, optionsLength, _fields);
+    setOptions(newArr);
+    props.onChange && props.onChange(data);
+  };
 
   const handleScroll = (e) => {
-    let data = {}
+    let data = {};
     if (e.deltaY > 0) {
       // 下滚
-      data = options[activeKey + 1]
+      data = options[activeKey + 1];
     }
     if (e.deltaY < 0) {
       // 上滚
-      data = options[activeKey - 1]
+      data = options[activeKey - 1];
     }
-    handleChange(data)
-  }
+    handleChange(data);
+  };
 
   const filterActiveOptions = (data, arr, optionsLength, _fields) => {
-    const index = arr.findIndex(item => item[_fields[0]] === data[_fields[0]])
-    let activeIndex = 0, beforeNums = 0, afterNums = 0
+    const index = arr.findIndex(item => item[_fields[0]] === data[_fields[0]]);
+    let activeIndex = 0, beforeNums = 0, afterNums = 0;
     if (optionsLength % 2 === 0) {
-      activeIndex = optionsLength / 2
-      beforeNums = optionsLength - activeIndex - 1
-      afterNums = optionsLength - activeIndex
+      activeIndex = optionsLength / 2;
+      beforeNums = optionsLength - activeIndex - 1;
+      afterNums = optionsLength - activeIndex;
     } else {
-      activeIndex = (optionsLength + 1) / 2
-      beforeNums = optionsLength - activeIndex
-      afterNums = optionsLength - activeIndex
+      activeIndex = (optionsLength + 1) / 2;
+      beforeNums = optionsLength - activeIndex;
+      afterNums = optionsLength - activeIndex;
     }
-    let frontArr = []
-    let backArr = []
-    let beforeIndex = index - beforeNums
-    let afterIndex = index + afterNums + 1
+    let frontArr = [];
+    let backArr = [];
+    let beforeIndex = index - beforeNums;
+    let afterIndex = index + afterNums + 1;
     if (afterIndex >= arr.length) {
-      frontArr = arr.slice(beforeIndex)
-      backArr = arr.slice(0, afterIndex - arr.length)
+      frontArr = arr.slice(beforeIndex);
+      backArr = arr.slice(0, afterIndex - arr.length);
     } else if (beforeIndex < 0) {
-      frontArr = arr.slice(beforeIndex)
-      backArr = arr.slice(0, afterIndex)
+      frontArr = arr.slice(beforeIndex);
+      backArr = arr.slice(0, afterIndex);
     } else {
-      frontArr = arr.slice(beforeIndex, index)
-      backArr = arr.slice(index, afterIndex)
+      frontArr = arr.slice(beforeIndex, index);
+      backArr = arr.slice(index, afterIndex);
     }
     return {
       activeIndex: activeIndex - 1,
       newArr: [...frontArr, ...backArr],
       beforeNums,
       afterNums,
-    }
-  }
+    };
+  };
 
   const fontSizeCalc = (index) => {
-    const gapValue = (fontSizeRange[1] - fontSizeRange[0]) / optionsLength
+    const gapValue = (fontSizeRange[1] - fontSizeRange[0]) / optionsLength;
     if (index < activeKey) {
-      return fontSizeRange[1] + gapValue * index
+      return fontSizeRange[1] + gapValue * index;
     } else {
-      return fontSizeRange[1] + gapValue * (optionsLength - (index + 1))
+      return fontSizeRange[1] + gapValue * (optionsLength - (index + 1));
     }
-  }
+  };
 
   const colorCalc = (index) => {
     if (index < activeKey) {
-      return colorStepGradient[index]
+      return colorStepGradient[index];
     } else {
-      return colorStepGradient[optionsLength - (index + 1)]
+      return colorStepGradient[optionsLength - (index + 1)];
     }
-  }
+  };
 
   const handleItemClick = (item) => {
     if (scrollState.clickStayTime > 0) {
-      setScrollState({...scrollState, isStay: true})
+      setScrollState({...scrollState, isStay: true});
     }
-    handleChange(item)
-  }
+    handleChange(item);
+  };
 
   return (
     <div
@@ -447,11 +447,11 @@ const ScrollSelect = (props) => {
         ))
       }
     </div>
-  )
-}
+  );
+};
 
 export {
   ComponentDefaultConfig,
-}
+};
 
-export default ScrollSelect
+export default ScrollSelect;
