@@ -239,7 +239,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
         <canvas
           onClick={ () => handleClick("vertical") }
           id="v-ruler-canvas"
-          // width={ MARGIN_LENGTH }
+          width={ MARGIN_LENGTH }
           height={ verticalRulerHeight }
           style={ {
             position: "absolute",

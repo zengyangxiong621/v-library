@@ -287,7 +287,6 @@ const Tab = (props) => {
         setIsUrlParams(false)
       }
     } else {
-      console.log('defaultActiveKeyGGG')
     }
   }, [tabList])
 

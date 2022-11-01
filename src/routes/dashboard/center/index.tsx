@@ -20,6 +20,7 @@ import { menuOptions } from "../left/Data/menuOptions";
 
 import axios from "axios";
 import { http } from "@/services/request";
+import ChooseArea from "./components/ChooseArea"
 
 const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
@@ -566,7 +567,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         }
       } else {
         handleComponentDragStop()
-  
+
       }
     }, {
       events: ["keydown", "keyup"],
@@ -802,6 +803,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           overflow: "hidden",
         }}
       >
+        <ChooseArea />
         <Draggable
           ref={draggableRef}
           disabled={!isCanvasDraggable}

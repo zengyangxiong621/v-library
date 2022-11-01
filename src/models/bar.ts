@@ -678,6 +678,7 @@ export default {
     *group({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { layersCopy, newLayerId }: any = yield group(bar.layers, bar.key);
+      const groupLayer = findLayerById(layersCopy, newLayerId)
       yield put({
         type: "update",
         payload: layersCopy,
@@ -686,6 +687,7 @@ export default {
         type: "save",
         payload: {
           key: [newLayerId],
+          selectedComponentOrGroup: [groupLayer]
         },
       });
     },
@@ -2252,6 +2254,7 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
+      console.log('isCanClearAllStatus', state.isCanClearAllStatus)
       if (!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true;
         return {
@@ -2270,6 +2273,7 @@ export default {
       state.selectedComponents.length = 0;
       state.selectedComponentRefs = {};
       state.isSupportMultiple = false;
+      state.isShowRightMenu = false
       // todo 选区的时候会点击到这里
       state.scaleDragData.style.display = "none";
       state.key = [];
