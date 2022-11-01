@@ -71,8 +71,7 @@ const PaginationComp=(props)=>{
   const _pageConfig=getConfigMap(pageConfig.options)
   const globalConfig=_pageConfig['全局']
   const styleConfig=_pageConfig['样式']
-  
-  console.log(styleConfig);
+
   const {pageSizeSwitch,quickJump,size,borderRadius}=globalConfig
   const getShowTotal=()=>{
     const {pageDesc}=globalConfig
@@ -93,7 +92,7 @@ const PaginationComp=(props)=>{
   }
 
   /**
-   * 
+   *
    * @returns 获取三个状态的样式
    */
   const getDefaultStyle=()=>{
