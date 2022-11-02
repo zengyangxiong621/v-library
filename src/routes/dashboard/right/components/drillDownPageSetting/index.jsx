@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from 'uuid'
 import ComponentCard from '../componentCard'
 import componentLib from '../index'
 import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type";
+import Checkbox from '../checkBox'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -24,8 +25,10 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   const formItemLayout = {
     labelAlign: 'left',
   }
+  const currentLayer = bar.selectedComponentOrGroup[0]
+  const hideDefault = currentLayer?.hideDefault || false
   const panelConfig = bar.panelConfig
-  const { left, top, width, height, hideDefault, isScroll, allowScroll, animationType, scrollTime, animationTime } = panelConfig.config
+  const { left, top, width, height, isScroll, allowScroll, animationType, scrollTime, animationTime } = panelConfig.config
   const [key, setKey] = useState(uuidv4())
   const [form] = Form.useForm()
   const styleConfig = [
@@ -110,7 +113,42 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       },
     })
   }, 300)
+  const hideDefaultChange = async (value) => {
+    await saveLayerData({
+      id: bar.key[0],
+      key: 'hideDefault',
+      value,
+    })
+  }
 
+  const saveLayerData = async (param) => {
+    const params = {
+      configs: [param],
+      dashboardId: bar.stateId || bar.dashboardId,
+    }
+    const layers = await http({
+      url: '/visual/layer/group/update',
+      method: 'post',
+      body: params,
+    })
+    if (layers) {
+      currentLayer.hideDefault = param.value
+      dispatch({
+        type: 'bar/updateDashboardOrStateConfig',
+        payload: {
+          id: bar.stateId || bar.dashboardId,
+          layers,
+        },
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          layers,
+        },
+      })
+    }
+  }
+  
   const handleEditDashboard = () => {
     const panel = bar.fullAmountPanels.find((panel) => panel.id === panelConfig.id)
     history.push(`/dashboard/${bar.dashboardId}/panel-${panel.id}/state-${panel.states[0].id}`)
@@ -148,6 +186,9 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
             allModulesConfig={bar.moduleDefaultConfig}
             dispatch={dispatch}>
             {styleConfig.map((item, index) => {
+              if (item.name === 'hideDefault') {
+                return <Checkbox data={ item } onChange={ hideDefaultChange }/>
+              }
               if (!(item.type && componentLib[item.type])) {
                 return null
               }

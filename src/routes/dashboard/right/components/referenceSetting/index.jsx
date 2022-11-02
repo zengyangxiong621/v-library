@@ -14,6 +14,7 @@ import { http } from '../../../../../services/request'
 import { v4 as uuidv4 } from 'uuid'
 import ComponentCard from '../componentCard'
 import componentLib from '../index'
+import Checkbox from '../checkBox'
 
 const dashboardId = window.location.pathname.split('/')[2]
 
@@ -21,11 +22,13 @@ let isSettingsChange = false
 const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
   const [key, setKey] = useState(uuidv4())
   const [form] = Form.useForm()
-  const [activeKey, setActiveKey] = useState("1")
+  const [activeKey, setActiveKey] = useState('1')
   const [isEdit, setIsEdit] = useState(true)
   const formItemLayout = {
     labelAlign: 'left',
   }
+  const currentLayer = bar.selectedComponentOrGroup[0]
+  const hideDefault = currentLayer?.hideDefault || false
   const panelConfig = bar.panelConfig
   const {
     config: {
@@ -33,7 +36,6 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       top,
       width,
       height,
-      hideDefault,
       allowScroll,
       isScroll = false,
       animationType,
@@ -52,7 +54,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     return bar.allDashboardList.map(item => ({
       name: item.name,
       value: item.id,
-      status: item.status
+      status: item.status,
     })).filter(item => item.value !== bar.dashboardId && item.status === 1)
   }, [bar.dashboardId, bar.dashboardId])
 
@@ -190,9 +192,10 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ]
-  const styleChange = debounce(async (key = "1", init = false, cb=function () {}) => {
+  const styleChange = debounce(async (key = '1', init = false, cb = function () {
+  }) => {
     console.log('key', key)
-    if (key !== "0" && init) {
+    if (key !== '0' && init) {
       setActiveKey(key)
       const referenceList = styleConfig.find(item => item.name === 'referenceList').value
       if (referenceList.length === 0) return
@@ -205,15 +208,36 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       }
       return
     }
+    let dimensionConfig, isScroll, allowScroll, animationType,
+      scrollTime, animationTime, referenceList
+    styleConfig.forEach(item => {
+      switch (item.name) {
+        case 'dimension':
+          dimensionConfig = item.value
+          break
+        case 'isScroll':
+          isScroll = item.value
+          break
+        case 'allowScroll':
+          allowScroll = item.value
+          break
+        case 'animationType':
+          animationType = item.value
+          break
+        case 'scrollTime':
+          scrollTime = item.value
+          break
+        case 'animationTime':
+          animationTime = item.value
+          break
+        case 'referenceList':
+          referenceList = item.value
+          break
+        default:
+          break
+      }
+    })
 
-    const dimensionConfig = styleConfig.find(item => item.name === 'dimension').value
-    const hideDefault = styleConfig.find(item => item.name === 'hideDefault').value
-    const isScroll = styleConfig.find(item => item.name === 'isScroll').value
-    const allowScroll = styleConfig.find(item => item.name === 'allowScroll').value
-    const animationType = styleConfig.find(item => item.name === 'animationType').value
-    const scrollTime = styleConfig.find(item => item.name === 'scrollTime').value
-    const animationTime = styleConfig.find(item => item.name === 'animationTime').value
-    const referenceList = styleConfig.find(item => item.name === 'referenceList').value
     // 判断当前 active的选项值存不存在
     console.log('referenceList', referenceList)
     console.log('activeKey', activeKey)
@@ -231,7 +255,6 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     dimensionConfig.forEach(item => {
       panelConfig.config[item.name] = item.value
     })
-    panelConfig.config.hideDefault = hideDefault
     panelConfig.config.isScroll = isScroll
     panelConfig.config.allowScroll = allowScroll
     panelConfig.config.animationType = animationType
@@ -245,15 +268,15 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       }
     })
     const copyPanelConfig = deepClone(panelConfig)
-    copyPanelConfig.states =  copyPanelConfig.states.filter(state => state.id)
+    copyPanelConfig.states = copyPanelConfig.states.filter(state => state.id)
     console.log('copyPanelConfig', copyPanelConfig)
-    const { config: {  left, top, width, height } } = panelConfig
+    const { config: { left, top, width, height } } = panelConfig
 
     const data = await http({
       url: '/visual/panel/update',
       method: 'post',
       body: {
-        dashboardId: bar.dashboardId,
+        dashboardId: bar.stateId || bar.dashboardId,
         configs: [
           copyPanelConfig,
         ],
@@ -267,26 +290,26 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       dispatch({
         type: 'bar/referencePanelState',
         payload: {
-          panelConfig
-        }
-      })
-/*      dispatch({
-        type: 'bar/save',
-        payload: {
           panelConfig,
-          scaleDragData: {
-            position: {
-              x: left,
-              y: top,
-            },
-            style: {
-              width,
-              height,
-              display: 'block',
-            },
-          },
         },
-      })*/
+      })
+      /*      dispatch({
+              type: 'bar/save',
+              payload: {
+                panelConfig,
+                scaleDragData: {
+                  position: {
+                    x: left,
+                    y: top,
+                  },
+                  style: {
+                    width,
+                    height,
+                    display: 'block',
+                  },
+                },
+              },
+            })*/
     } else {
       copyPanelConfig.states.pop()
       panelConfig.states.pop()
@@ -299,6 +322,41 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     }
   }, 300)
 
+  const hideDefaultChange = async (value) => {
+    await saveLayerData({
+      id: bar.key[0],
+      key: 'hideDefault',
+      value,
+    })
+  }
+
+  const saveLayerData = async (param) => {
+    const params = {
+      configs: [param],
+      dashboardId: bar.stateId || bar.dashboardId,
+    }
+    const layers = await http({
+      url: '/visual/layer/group/update',
+      method: 'post',
+      body: params,
+    })
+    if (layers) {
+      currentLayer.hideDefault = param.value
+      dispatch({
+        type: 'bar/updateDashboardOrStateConfig',
+        payload: {
+          id: bar.stateId || bar.dashboardId,
+          layers,
+        },
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          layers,
+        },
+      })
+    }
+  }
 
   const handleEditDashboard = () => {
     const referenceList = styleConfig.find(item => item.name === 'referenceList').value
@@ -306,31 +364,31 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     const currentReference = referenceList.find(item => item.key === activeKey).value
     const currentReferenceId = currentReference.find(item => item.name === 'dashboardSelect').value
     if (currentReferenceId) {
-        history.push(`/dashboard/${currentReferenceId}`)
-        dispatch({
-          type: 'bar/save',
-          payload: {
-            isPanel: false,
-            key: [currentReferenceId],
-            selectedComponentOrGroup: [],
-            scaleDragData: {
-              position:{
-                x: 0,
-                y:0
-              },
-              style: {
-                width: 0,
-                height: 0,
-                display: 'none'
-              }
-            }
-          }
-        })
+      history.push(`/dashboard/${ currentReferenceId }`)
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          isPanel: false,
+          key: [currentReferenceId],
+          selectedComponentOrGroup: [],
+          scaleDragData: {
+            position: {
+              x: 0,
+              y: 0,
+            },
+            style: {
+              width: 0,
+              height: 0,
+              display: 'none',
+            },
+          },
+        },
+      })
     }
   }
 
   useEffect(() => {
-    styleChange("1", true)
+    styleChange('1', true)
   }, [])
 
   return (
@@ -349,6 +407,9 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
                          allModulesConfig={ bar.moduleDefaultConfig }
                          dispatch={ dispatch }>
             { styleConfig.map((item, index) => {
+              if (item.name === 'hideDefault') {
+                return <Checkbox data={ item } onChange={ hideDefaultChange }/>
+              }
               if (!(item.type && componentLib[item.type])) {
                 return null
               }
@@ -363,7 +424,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
           </div>
           {
             statesLength > 0 ?
-              <Button disabled={!isEdit} onClick={ handleEditDashboard } className="g-my-2" type="primary"
+              <Button disabled={ !isEdit } onClick={ handleEditDashboard } className="g-my-2" type="primary"
                       style={ { width: 'calc(100% - 24px)' } }>编辑引用应用</Button>
               : <>  </>
           }

@@ -39,7 +39,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     dispatch({
       type: "bar/hidden",
       payload: {
-        dashboardId: bar.dashboardId,
+        dashboardId: bar.stateId || bar.dashboardId,
         configs: [
           {
             id,
@@ -92,7 +92,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     // 先对前端的树进行一次修改
     const saveId = JSON.parse(JSON.stringify(bar.key[0]));
     sendDispatch("changeName", {
-      dashboardId: bar.isPanel ? bar.stateId : bar.dashboardId,
+      dashboardId: bar.stateId || bar.dashboardId,
       configs: [
         {
           id: saveId,
@@ -149,7 +149,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     dispatch({
       type: `bar/lock`,
       payload: {
-        dashboardId: bar.dashboardId,
+        dashboardId: bar.stateId || bar.dashboardId,
         configs: [
           {
             id,

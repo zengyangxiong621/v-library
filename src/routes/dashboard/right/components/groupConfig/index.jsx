@@ -25,6 +25,7 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
   const [key, setKey] = useState(uuidv4())
   const groupConfig = deepClone(bar.groupConfig)
+  console.log('groupConfig', groupConfig)
   const dimensionConfig = find(groupConfig, 'dimension')
   const hideDefaultConfig = find(groupConfig, 'hideDefault')
   const opacityConfig = find(groupConfig, 'opacity')
@@ -52,19 +53,29 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   const saveData = async (param) => {
     const params = {
       configs: [param],
-      dashboardId: dashboardId
+      dashboardId: bar.stateId || bar.dashboardId
     }
-    const data = await http({
+    const layers = await http({
       url: '/visual/layer/group/update',
       method: 'post',
       body: params,
     })
-    dispatch({
-      type: 'bar/save',
-      payload: {
-        layers: data
-      }
-    })
+    if (layers) {
+      dispatch({
+        type: 'bar/updateDashboardOrStateConfig',
+        payload: {
+          id: bar.stateId || bar.dashboardId,
+          layers
+        }
+      })
+      dispatch({
+        type: 'bar/save',
+        payload: {
+          layers
+        }
+      })
+    }
+
   }
 
   const hideDefaultChange = debounce(() => {

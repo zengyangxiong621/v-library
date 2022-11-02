@@ -660,20 +660,15 @@ export default {
     *changeName({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       // 需要改变当前画布中components中此次被重命名组件的name
-      const components = bar.fullAmountComponents;
+      const { fullAmountComponents } = bar
       const state = bar.state;
       const { value, id } = payload.configs[0];
-      const newComponents = components.map((item: any) => {
-        if (item.id === id) {
-          item.name = value;
-        }
-        return item;
-      });
+      fullAmountComponents.find(item => item.id === id).name = value
       yield put({
         type: "bar/change",
         payload,
       });
-      return { ...state, components: newComponents };
+      return { ...state, fullAmountComponents };
     },
     *group({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -953,17 +948,20 @@ export default {
       }
     },
     *updateDashboardOrStateConfig({ payload }: any, { call, put, select }: any): any {
-      const { config, id } = payload
+      const { config, id, layers, components } = payload
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar;
       const currentPanelDetails = fullAmountDashboardDetails.find((item: any) => item.id === id)
       if (currentPanelDetails) {
-        currentPanelDetails.dashboardConfig = config
+        const saveConfig: { dashboardConfig?: any, layers?: any, components?: any } = {}
+        config && (currentPanelDetails.dashboardConfig = config, saveConfig.dashboardConfig = config)
+        layers && (currentPanelDetails.layers = layers, saveConfig.layers = layers)
+        components && (currentPanelDetails.components = components, saveConfig.components = components)
         yield put({
           type: 'save',
           payload: {
             fullAmountDashboardDetails,
-            dashboardConfig: config
+            ...saveConfig
           }
         })
       }

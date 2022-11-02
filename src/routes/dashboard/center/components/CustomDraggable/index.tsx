@@ -809,6 +809,7 @@ const CustomDraggable
             let component: IComponent | undefined;
             let panel: IPanel | undefined;
             let events: any;
+            let hideDefault: boolean = false
             let style_config, staticData, styleDimensionConfig, recommendConfig;
             // 群组
             if ("panelType" in layer) {
@@ -861,6 +862,9 @@ const CustomDraggable
                 events = component.events;
               }
             }
+            console.log('----------')
+            console.log('layer', layer)
+            console.log('----------')
             return (
               <SingleDraggable
                 dimensionConfig={isPanel ? recommendConfig : styleDimensionConfig}
