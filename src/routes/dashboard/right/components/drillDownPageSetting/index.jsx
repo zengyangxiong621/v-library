@@ -148,7 +148,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       })
     }
   }
-  
+
   const handleEditDashboard = () => {
     const panel = bar.fullAmountPanels.find((panel) => panel.id === panelConfig.id)
     history.push(`/dashboard/${bar.dashboardId}/panel-${panel.id}/state-${panel.states[0].id}`)

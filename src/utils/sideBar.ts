@@ -191,7 +191,7 @@ const hidden: threeParams = (layers, selectedNodes, targetShowState) => {
 };
 
 /**
- * description: 单独显示图层
+ * description: 单独显示图层,  如果是一个组里的组件设置
  */
 const singleShowLayer: threeParams = (
   layers,

@@ -862,9 +862,6 @@ const CustomDraggable
                 events = component.events;
               }
             }
-            console.log('----------')
-            console.log('layer', layer)
-            console.log('----------')
             return (
               <SingleDraggable
                 dimensionConfig={isPanel ? recommendConfig : styleDimensionConfig}

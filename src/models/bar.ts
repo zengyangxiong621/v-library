@@ -1311,13 +1311,13 @@ export default {
         []
       );
       const bar: any = yield select(({ bar }: any) => bar);
-      deepForEach(bar.fullAmountLayers, (layer: any, index: number, parent: any) => {
+      deepForEach(bar.fullAmountLayers, (layer: any, index: number, layers: any) => {
         if (layer?.modules?.length === 0) {
-          parent.splice(index, 1);
+          layers.splice(index, 1);
         }
         if (deleteLayerIds.includes(layer.id)) {
-          const realIndex = parent.findIndex((item: any) => item && item?.id === layer.id);
-          parent.splice(realIndex, 1);
+          const realIndex = layers.findIndex((item: any) => item && item?.id === layer.id);
+          layers.splice(realIndex, 1);
         }
       });
       // deepForEach(bar.fullAmountLayers, (layer: any, index: number, parent: any) => {
@@ -2171,8 +2171,19 @@ export default {
     },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
-      const newTree = singleShowLayer(state.layers, payload.keys, payload.singleShowLayer);
-      return { ...state, layers: newTree };
+      const { keys, singleShowLayer } = payload
+      console.log('singleShowLayer', singleShowLayer)
+      const showLayers = deepForEach(state.layers, (layer: any, index: number, layers: any, parent) => {
+        if (keys.includes(layer.id)) {
+          layer.singleShowLayer = true
+          parent.singleShowLayer = true
+        } else {
+          if ('modules' in layer && layer.singleShowLayer) {
+            parent.singleShowLayer = true
+          }
+        }
+      })
+      return { ...state, layers: showLayers };
     },
     // 隐藏
     frontHidden(state: IBarState, { payload }: any) {
