@@ -185,7 +185,7 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
                 transition: `transform 600ms ease 0s, opacity ${ animationTime }ms ease 0s`,
                 backgroundImage: item.backgroundImage ? `url('${ item.backgroundImage }')` : "unset",
                 backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
-                // backgroundRepeat: "no-repeat",
+                backgroundRepeat: "no-repeat",
                 // backgroundSize: "contain",
                 // backgroundPosition: "center center",
               } }>

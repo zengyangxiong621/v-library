@@ -182,6 +182,8 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
                 transition: `transform 600ms ease 0s, opacity ${ animationTime }ms ease 0s`,
                 backgroundImage: item.backgroundImage ? `url('${ item.backgroundImage }')` : "unset",
                 backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "100% 100%"
               } }>
               <RecursiveComponent
                 isDrillDownPanel={ isDrillDownPanel }

@@ -175,6 +175,8 @@ const DynamicPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) => 
                 transition: `transform 600ms ease 0s, opacity ${ animationTime }ms ease 0s`,
                 backgroundImage: item.backgroundImage ? `url('${ item.backgroundImage }')` : "unset",
                 backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "100% 100%"
               } }>
               <CustomDraggable mouse={ 0 } layers={ item.layers } components={ item.components }
                                panels={ item.panels }/>
