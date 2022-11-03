@@ -161,6 +161,7 @@ export function moveChildrenComponents(components, xMoveLength, yMoveLength) {
 }
 
 export function mergeComponentLayers(components, layers) {
+  console.log(components, layers);
   return [];
 }
 
@@ -292,6 +293,7 @@ export const group = (layers, selectedNodes, lastRightClickKey) => {
 };
 
 export function deleteComponents(arr, ids) {
+  console.log(arr, ids);
   // todo
 }
 
@@ -613,6 +615,7 @@ export const layersReverse = (layers) => {
 
 // 计算画布的大小
 export const calcCanvasSize = function (recommendConfig, cb) {
+  console.log(cb);
   let canvasScaleValue = 0;
   let absolutePosition = { left: 0, top: 0 };
   let getCurrentDocumentWidth = document.documentElement.clientWidth;

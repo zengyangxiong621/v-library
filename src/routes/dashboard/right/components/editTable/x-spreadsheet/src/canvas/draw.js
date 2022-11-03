@@ -1,4 +1,3 @@
-/* global window */
 function dpr() {
   return window.devicePixelRatio || 1;
 }

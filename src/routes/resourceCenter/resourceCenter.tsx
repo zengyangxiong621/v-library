@@ -1,10 +1,9 @@
 import React, { memo, useEffect, useState, Fragment } from "react";
 import "./index.less";
-import { BASEURL } from "@/services/request";
 import { connect } from "dva";
 
-import { Input, Select, Upload, Spin } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Input, Select, Spin } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
 import RightContent from "./components/rightContent";
@@ -12,7 +11,7 @@ import UploadFile from "./components/uploadFile";
 
 const { Option } = Select;
 // 功能
-const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
+const ResourceCenter = ({ resourceCenter, dispatch }: any) => {
   // 空间id
   const curWorkspace:any = localStorage.getItem("curWorkspace"); 
   const spaceId: any = JSON.parse(curWorkspace)?.id;
@@ -27,7 +26,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
   });
   const [inputValue, setInputValue] = useState("");
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [firstData, setFirstData] = useState({});
+  // const [firstData, setFirstData] = useState({});
 
   // 获取模板列表数据的方法
   const getDataDispatch = (data?: any) => {
@@ -122,7 +121,7 @@ const ResourceCenter = ({ resourceCenter, dispatch, history }: any) => {
     getDataDispatch(finalBody);
   };
   // 选择排序的标准
-  const selectSortType = (value: any, b: any) => {
+  const selectSortType = (value: any) => {
     const newSortMap = {
       [value]: false
     };

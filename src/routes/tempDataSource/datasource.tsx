@@ -19,6 +19,7 @@ const { Option } = Select;
 
 
 const DataSource = (props: any) => {
+  console.log(props);
   const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
   const [inputValue, setInputValue] = useState("");
@@ -114,7 +115,7 @@ const DataSource = (props: any) => {
     setDataSourceType(value);
   };
   // 按类型搜索
-  const searchByType = async (e: any) => {
+  const searchByType = async () => {
     // 整合搜索参数
     const finalParams: TDataSourceParams = {
       spaceId,
@@ -322,7 +323,7 @@ const DataSource = (props: any) => {
       ellipsis: true,
       showSorterTooltip: false,
       dataIndex: "updatedTime",
-      render: (time: any, data: any) => {
+      render: (time: any) => {
         // const a = new Date(time)
         return (
           <>

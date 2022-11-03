@@ -144,6 +144,7 @@ const EveryTreeNode = (props: any) => {
     });
   };
   const inputWrapClick = (e: any) => {
+    console.log(e);
     // e.stopPropagation()
   };
   return (

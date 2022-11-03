@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { localStore } from "@/services/LocalStoreService";
 
-const useWebsocket = ({ url, moduleId, type, dashboardId, verify }) => {
+const useWebsocket = ({ url }) => {
   const ws = useRef(null);
   const [receiveData, setReceiveData] = useState("");
   const [readyState, setReadyState] = useState({ key: 0, value: "正在链接中" });
@@ -20,13 +20,11 @@ const useWebsocket = ({ url, moduleId, type, dashboardId, verify }) => {
       ws.current.onopen = () => {
         setReadyState(stateArr[ws.current?.readyState ?? 0]);
       };
-      ws.current.onclose = (e) => {
+      ws.current.onclose = () => {
         setReadyState(stateArr[ws.current?.readyState ?? 0]);
-        console.log("Connection closed.");
       };
-      ws.current.onerror = (e) => setReadyState(stateArr[ws.current?.readyState ?? 0]);
+      ws.current.onerror = () => setReadyState(stateArr[ws.current?.readyState ?? 0]);
       ws.current.onmessage = (e) => {
-        console.log("Received Message");
         setReceiveData(e.data);
       };
     } catch (error) {

@@ -38,6 +38,9 @@ module.exports = {
         "react/jsx-key": 'off',
         'react/display-name': 'off',
         '@typescript-eslint/no-this-alias': 'off',
-        '@typescript-eslint/no-empty-function': 'off'
+        '@typescript-eslint/no-empty-function': 'off',
+        'no-undef': 0,
+        'no-redeclare': 'off',
+        'react/no-unknown-property': 'off'
     }
 }

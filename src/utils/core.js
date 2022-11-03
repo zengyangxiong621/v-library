@@ -32,7 +32,7 @@ window.dva_router_pathMap = {};
 export const createRoute = (app, routerConfig) => {
   const currentRoute = routerConfig(app);
   const { title, path, indexRouter, component: Comp, ...otherProps } = currentRoute;
-
+  console.log(indexRouter);
   if (path && path !== "/") {
     window.dva_router_pathMap[path] = { path, title, ...otherProps };
     // 为子路由增加parentPath
