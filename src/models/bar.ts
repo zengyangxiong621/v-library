@@ -6,6 +6,7 @@ import {
   calcGroupPosition,
   deepClone,
   deepForEach,
+  deepForEachBeforeCallBackAndBreakForeach,
   duplicateDashboardConfig,
   findLayerById,
   getLayerDimensionByDomId,
@@ -555,6 +556,7 @@ export default {
           layer.singleShowLayer = false;
           delete layer.selected;
           delete layer.hover;
+          delete (layer as any).notDeleted;
         }));
 
         const bar: any = yield select(({ bar }: any) => bar);
@@ -2172,19 +2174,55 @@ export default {
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
       const { keys, singleShowLayer } = payload
+      // singleShowLayer: boolean, 是否单独显示图层
+      // singleShowLayers: Array<ILayers>,
+      // 要注意 一个是 singleShowLayer 一个是 singleShowLayers
       console.log('singleShowLayer', singleShowLayer)
-      const showLayers = deepForEach(state.layers, (layer: any, index: number, layers: any, parent) => {
-        if (keys.includes(layer.id)) {
-          layer.singleShowLayer = singleShowLayer
-          parent.singleShowLayer = singleShowLayer
-        } else {
-          if ('modules' in layer && layer.singleShowLayer) {
-            parent.singleShowLayer = singleShowLayer
+      let singleShowLayers = []
+      if (singleShowLayer) {
+        const showLayers = deepForEach(state.layers, (layer: any, index: number, layers: any, parent) => {
+          if (keys.includes(layer.id)) {
+            layer.singleShowLayer = singleShowLayer
+            layer.notDeleted = singleShowLayer
+            parent.notDeleted = singleShowLayer
+          } else {
+            if ('modules' in layer && layer.singleShowLayer) {
+              parent.notDeleted = singleShowLayer
+            }
+            if (layer.notDeleted) {
+              parent.notDeleted = singleShowLayer
+            }
           }
+        })/*
+        + 组件显示
+        + 单一组显示：组内的都需要显示出来
+        singleShowLayer属性对应上 notDeleted
+        组件的 singleShowLayer值赋值给 notDeleted 属性
+        组的singleShowLayer 则跳过遍历组的 modules
+       */
+        if (singleShowLayer) {
+          singleShowLayers = deepForEachBeforeCallBackAndBreakForeach(deepClone(showLayers), (layer: any, index: number, layers: any, parent, cb) => {
+            if (!layer?.notDeleted) { // 非
+              // 单独显示的图层，则需要删除
+              const realIndex = layers.findIndex((item: any) => item && item?.id === layer?.id);
+              if (realIndex !== -1) {
+                layers.splice(realIndex, 1);
+                cb && cb(true, -1)
+              }
+            } else { // 单独显示的图层
+              if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
+                cb && cb(false, 0) // false 为跳过循环
+              }
+            }
+          })
         }
-      })
-      console.log('showLayers', showLayers)
-      return { ...state, layers: showLayers, isSingleShowOpen: singleShowLayer };
+      } else {
+        console.log('keys', keys)
+      }
+
+
+
+      return { ...state, singleShowLayers, isSingleShowOpen: singleShowLayer };
     },
     // 隐藏
     frontHidden(state: IBarState, { payload }: any) {

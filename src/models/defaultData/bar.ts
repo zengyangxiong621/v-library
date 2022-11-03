@@ -2594,6 +2594,7 @@ export const defaultData = {
   isMultipleTree: false,
   operate: "",
   layers: [],
+  singleShowLayers: [],
   selectedComponentOrGroup: [],
   isSupportMultiple: false,
   selectedComponentIds: [],
@@ -2845,6 +2846,7 @@ export interface IBarState {
   operate: string;
   lastRightClick: string;
   layers: any[];
+  singleShowLayers: any[],
   components: any[];
   isSupportMultiple: boolean;
   selectedComponentOrGroup: any[];

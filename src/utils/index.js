@@ -418,12 +418,26 @@ export const calcGroupPosition = (arr, components, panels) => {
   });
   return [xPositionList, yPositionList];
 };
+export const deepForEachBeforeCallBackAndBreakForeach = (layers, cb={}, parent={}) => {
+  for(let i = 0, len = layers.length; i < len; i++) {
+    let layer = layers[i]
+    let isForeach = true
+    cb(layer, i, layers, parent, (value = true, index = 0) => {
+      isForeach = value
+      i += index
+    });
+    if (isForeach && layer && COMPONENTS in layer) {
+      deepForEachBeforeCallBackAndBreakForeach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb, layer);
+    }
+  }
+  return layers;
+};
 
-export const deepForEachBeforeCallBack = (layers, cb) => {
+export const deepForEachBeforeCallBack = (layers, cb, parent) => {
   layers.forEach((layer, index) => {
-    cb(layer, index, layers);
+    cb(layer, index, layers, parent);
     if (layer && COMPONENTS in layer) {
-      deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb);
+      deepForEachBeforeCallBack(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb, layer);
     }
   });
   return layers;

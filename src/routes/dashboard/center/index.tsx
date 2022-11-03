@@ -44,12 +44,23 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const isKeyForStick = useRef(false)
 
   useEffect(() => {
-    const layers = deepClone(bar.layers)
-    layersReverse(layers)
-    setComponents(bar.fullAmountComponents)
-    setPanels(bar.fullAmountPanels)
-    setLayers(layers)
-  }, [bar.layers])
+    console.log('bar.isSingleShowOpen',  bar.isSingleShowOpen)
+    if (bar.isSingleShowOpen) {
+      const layers = deepClone(bar.singleShowLayers)
+      layersReverse(layers)
+      setLayers(layers)
+      setComponents(bar.fullAmountComponents)
+      setPanels(bar.fullAmountPanels)
+    } else {
+      const layers = deepClone(bar.layers)
+      console.log('layers', layers)
+      layersReverse(layers)
+      setLayers(layers)
+      setComponents(bar.fullAmountComponents)
+      setPanels(bar.fullAmountPanels)
+    }
+
+  }, [bar.layers, bar.isSingleShowOpen, bar.singleShowLayers])
 
   /*  useEffect(() => {
       window.addEventListener("",)
