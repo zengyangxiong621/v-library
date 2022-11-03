@@ -2788,6 +2788,7 @@ export const defaultData = {
     },
   },
   isAreaChoose: false,
+  isSingleShowOpen: false,
   rulerLines: [
     // {
     //   position: {
@@ -2861,6 +2862,7 @@ export interface IBarState {
   allComponentRefs: any;
   allComponentDOMs: any;
   isAreaChoose: boolean;
+  isSingleShowOpen: boolean;
   rulerLines: Array<{
     position: {
       x: number;

@@ -1,12 +1,14 @@
+@import "~@/assets/style/variable.less";
+
 .c-center-bottom-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 32px;
-  background-color: #222430 ;
+  background-color: #222430;
   border-top: 1px solid #000;
-  
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,5 +19,17 @@
 
   .right {
     margin-right: 22px;
+
+    .scale-icon {
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-left: 22px;
+      transition: all 0.3s;
+
+      &:hover {
+        color: @primary-color-hover
+      }
+    }
   }
 }

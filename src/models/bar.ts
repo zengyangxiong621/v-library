@@ -2175,15 +2175,16 @@ export default {
       console.log('singleShowLayer', singleShowLayer)
       const showLayers = deepForEach(state.layers, (layer: any, index: number, layers: any, parent) => {
         if (keys.includes(layer.id)) {
-          layer.singleShowLayer = true
-          parent.singleShowLayer = true
+          layer.singleShowLayer = singleShowLayer
+          parent.singleShowLayer = singleShowLayer
         } else {
           if ('modules' in layer && layer.singleShowLayer) {
-            parent.singleShowLayer = true
+            parent.singleShowLayer = singleShowLayer
           }
         }
       })
-      return { ...state, layers: showLayers };
+      console.log('showLayers', showLayers)
+      return { ...state, layers: showLayers, isSingleShowOpen: singleShowLayer };
     },
     // 隐藏
     frontHidden(state: IBarState, { payload }: any) {

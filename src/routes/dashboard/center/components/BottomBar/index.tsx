@@ -64,7 +64,7 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
 
   return (
     <div className="c-center-bottom-bar">
-      <section style={ {
+{/*      <section style={ {
         position: "absolute",
         bottom: "50px",
         right: "20px",
@@ -73,20 +73,24 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
       } }>
         按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
         { " " + Math.ceil(bar.canvasScaleValue * 100) + "%" }
-      </section>
+      </section>*/}
       <section className="left">
       </section>
-      <section className="right g-flex g-items-center">
+      <section className="right g-flex g-items-center g-h-full">
+        <div style={{ height: '100%', lineHeight: '32px' ,paddingRight: '22px', borderRight: "1px solid #000"}}>
+          按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
+          { " " + Math.ceil(bar.canvasScaleValue * 100) + "%" }
+        </div>
         <MinusCircleOutlined
-          style={ { color: "white", fontSize: "16px", cursor: "pointer", marginRight: "16px" } }
+          className="scale-icon"
           onClick={ () => handleScreen(false) }
         />
         <PlusCircleOutlined
-          style={ { color: "white", fontSize: "16px", cursor: "pointer", marginRight: "16px" } }
+          className="scale-icon"
           onClick={ () => handleScreen(true) }
         />
         <FullscreenOutlined
-          style={ { color: "white", fontSize: "16px", cursor: "pointer" } }
+          className="scale-icon"
           onClick={ handleFullScreen }
         />
       </section>

@@ -110,7 +110,7 @@ const CustomDraggable
 
     const nodeRef: any = useRef(null);
     const currentTimes: any = useRef(0);
-
+    const dragStatus = useRef<'一组件' | '一面板' | '一分组' | '多个'>('一组件')
     const clickTimer: any = useRef(null);
 
     useEffect(() => {
@@ -159,9 +159,8 @@ const CustomDraggable
       bar.selectedComponents = [];
       bar.selectedComponentDOMs = {}
       bar.selectedComponentRefs = {}
-      bar.dragStatus = "一组件";
+      dragStatus.current = "一组件";
       bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
-
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
         dispatch({
@@ -178,47 +177,19 @@ const CustomDraggable
         });
       }
       if ("panelType" in layer) {
-        bar.dragStatus = "一面板";
-        bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
-        dispatch({
-          type: "bar/save",
-          payload: {
-            scaleDragData: {
-              position: config.position,
-              style: {
-                display: "block",
-                ...config.style,
-              },
-            },
-          },
-        });
-
+        dragStatus.current = "一面板";
       }
       if (bar.selectedComponentOrGroup.length > 1) {
         // 注意一下
         // 选中多个组件、或者多个分组时
-        bar.dragStatus = "多个";
+        dragStatus.current = "多个";
         bar.supportLinesRef.handleSetPosition(bar.scaleDragData.position.x, bar.scaleDragData.position.y)
-
       } else {
         // 当选中了一个分组时，或者没有选中时
         if (COMPONENTS in layer) {
-          bar.dragStatus = "一分组";
+          dragStatus.current = "一分组";
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
           bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
-
-          dispatch({
-            type: "bar/save",
-            payload: {
-              scaleDragData: {
-                position: config.position,
-                style: {
-                  display: "block",
-                  ...config.style,
-                },
-              },
-            },
-          });
         }
       }
       Object.keys(bar.allComponentRefs).forEach((key) => {
@@ -228,7 +199,8 @@ const CustomDraggable
         }
       });
       bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))];
-
+      console.log('拖拽开始', bar.dragStatus)
+      console.log('拖拽开始', dragStatus.current)
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
       console.log('拖拽中')
@@ -242,16 +214,14 @@ const CustomDraggable
       const xMoveLength = data.x - data.lastX;
       const yMoveLength = data.y - data.lastY;
       bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
-      // const {x: scaleDragX, y: scaleDragY } =  bar.scaleDragCompRef.getPosition()
-      // bar.scaleDragCompRef.handleSetPosition(scaleDragX + xMoveLength, scaleDragY + yMoveLength)
       bar.supportLinesRef.handleMovePosition(xMoveLength, yMoveLength);
-      if (bar.dragStatus === "多个") {
+      if (dragStatus.current === "多个") {
+        console.log('多个')
         Object.keys(bar.selectedComponentRefs).forEach(key => {
           if (key.indexOf("group") !== -1) {
             delete bar.selectedComponentRefs[key];
           }
         });
-        // console.log('bar.selectedComponentRefs', bar.selectedComponentRefs)
         // scaleDragCom 组件实时移动
 
         if (layer.id in bar.selectedComponentRefs) {
@@ -911,6 +881,7 @@ const CustomDraggable
                     transition: "width, height 0.3s",
                     // border: '1px solid gray',
                     visibility: !layer.isShow ? "hidden" : "unset",
+                    // display: bar.isSingleShowOpen ? (layer.singleShowLayer ? "block" : "none") : "block",
                     cursor: "move",
                   }}>
                   {
@@ -1289,6 +1260,7 @@ const CustomDraggable
                   }
                   {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
+{/*
                   <div className="component-border">
                     <span
                       style={{
@@ -1327,6 +1299,7 @@ const CustomDraggable
                         transform: `translate(0px, 50%) scaleY(${1 / bar.canvasScaleValue})`,
                       }} />
                   </div>
+*/}
                 </div>
               </SingleDraggable>
             );
