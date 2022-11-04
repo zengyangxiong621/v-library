@@ -446,7 +446,7 @@ export const deepForEachBeforeCallBack = (layers, cb, parent) => {
 export const deepForEach = (layers, cb, parent={}) => {
   layers.forEach((layer, index) => {
     if (layer && COMPONENTS in layer) {
-      deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb, layer);
+      layer.modules = deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb, layer);
     }
     cb(layer, index, layers, parent);
   });

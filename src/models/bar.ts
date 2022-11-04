@@ -556,7 +556,8 @@ export default {
           layer.singleShowLayer = false;
           delete layer.selected;
           delete layer.hover;
-          delete (layer as any).notDeleted;
+
+          // delete (layer as any).notDeleted;
         }));
 
         const bar: any = yield select(({ bar }: any) => bar);
@@ -2178,51 +2179,57 @@ export default {
       // singleShowLayers: Array<ILayers>,
       // 要注意 一个是 singleShowLayer 一个是 singleShowLayers
       console.log('singleShowLayer', singleShowLayer)
+      const { fullAmountDashboardDetails, stateId, dashboardId } = state
+      const currentDetails: any = fullAmountDashboardDetails.find((item: any) => item.id === (stateId || dashboardId))
+      const currentLayers = currentDetails?.layers
       let singleShowLayers = []
-      if (singleShowLayer) {
-        const showLayers = deepForEach(state.layers, (layer: any, index: number, layers: any, parent) => {
-          if (keys.includes(layer.id)) {
+        const showLayers = deepForEach(currentLayers, (layer: any, index: number, layers: any, parent) => {
+          if (keys.includes(layer.id)) { // 被操作的组件
             layer.singleShowLayer = singleShowLayer
             layer.notDeleted = singleShowLayer
-            parent.notDeleted = singleShowLayer
+            if (singleShowLayer) {
+              parent.notDeleted = true
+            }
           } else {
             if ('modules' in layer && layer.singleShowLayer) {
-              parent.notDeleted = singleShowLayer
+              // 组是单独选中的，那么父组件也不能被删除
+              parent.notDeleted = true
             }
             if (layer.notDeleted) {
-              parent.notDeleted = singleShowLayer
+              // 组件是不能删除的，那么父组件也不能被删除
+              parent.notDeleted = true
+            }
+            if ('modules' in layer && !layer.singleShowLayer) {
+              // 组先要观察 modules 里的组件是不是都能被删除，但凡有一个不能删除，那么组也不能被删除
+              layer.notDeleted = !!layer.modules.find(item => item.notDeleted)
             }
           }
-        })/*
+        })
+        /*
         + 组件显示
         + 单一组显示：组内的都需要显示出来
         singleShowLayer属性对应上 notDeleted
         组件的 singleShowLayer值赋值给 notDeleted 属性
         组的singleShowLayer 则跳过遍历组的 modules
        */
-        if (singleShowLayer) {
-          singleShowLayers = deepForEachBeforeCallBackAndBreakForeach(deepClone(showLayers), (layer: any, index: number, layers: any, parent, cb) => {
-            if (!layer?.notDeleted) { // 非
-              // 单独显示的图层，则需要删除
-              const realIndex = layers.findIndex((item: any) => item && item?.id === layer?.id);
-              if (realIndex !== -1) {
-                layers.splice(realIndex, 1);
-                cb && cb(true, -1)
-              }
-            } else { // 单独显示的图层
-              if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
-                cb && cb(false, 0) // false 为跳过循环
-              }
-            }
-          })
+      let singleShowLayerNums = 0
+
+      singleShowLayers = deepForEachBeforeCallBackAndBreakForeach(deepClone(showLayers), (layer: any, index: number, layers: any, parent, cb) => {
+        if (!layer?.notDeleted) { // 非
+          // 单独显示的图层，则需要删除
+          const realIndex = layers.findIndex((item: any) => item && item?.id === layer?.id);
+          if (realIndex !== -1) {
+            layers.splice(realIndex, 1);
+            cb && cb(true, -1)
+          }
+        } else { // 单独显示的图层
+          singleShowLayerNums++
+          if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
+            cb && cb(false, 0) // false 为跳过循环
+          }
         }
-      } else {
-        console.log('keys', keys)
-      }
-
-
-
-      return { ...state, singleShowLayers, isSingleShowOpen: singleShowLayer };
+      })
+      return { ...state, singleShowLayers, isSingleShowOpen: singleShowLayerNums > 0 };
     },
     // 隐藏
     frontHidden(state: IBarState, { payload }: any) {

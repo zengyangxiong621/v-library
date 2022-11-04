@@ -25,7 +25,6 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   const { Panel } = Collapse;
   const [key, setKey] = useState(uuidv4())
   const groupConfig = deepClone(bar.groupConfig)
-  console.log('groupConfig', groupConfig)
   const dimensionConfig = find(groupConfig, 'dimension')
   const hideDefaultConfig = find(groupConfig, 'hideDefault')
   const opacityConfig = find(groupConfig, 'opacity')
