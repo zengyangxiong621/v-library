@@ -148,6 +148,7 @@ const BorderRadius = props => {
             defaultValue={border.type}
             style={{ width: '107px', float: 'left', marginBottom: 0 }}
             onChange={typeChange}
+            getPopupContainer={(triggerNode) => triggerNode.parentNode}
           >
             <Option value="solid">实线</Option>
             <Option value="dotted">虚线</Option>

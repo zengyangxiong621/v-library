@@ -16,16 +16,16 @@ const CusSelect = props => {
   const [form] = Form.useForm();
   const _data = props.data
   const [select, setSelect] = useState(_data.value)
-  const [key,setKey] = useState(uuidv4())
+  const [key, setKey] = useState(uuidv4())
 
   useEffect(() => {
     setKey(uuidv4())
-  },[_data.options])
+  }, [_data.options])
 
   useEffect(() => {
     setKey(uuidv4())
     setSelect(_data.value)
-  },[_data.value])
+  }, [_data.value])
 
   // 下拉框选择
   const selectChange = (e) => {
@@ -53,8 +53,9 @@ const CusSelect = props => {
           className="custom-select"
           placeholder="请选择"
           defaultValue={select}
-          style={{ marginBottom: 0,...props.style }}
+          style={{ marginBottom: 0, ...props.style }}
           onChange={selectChange}
+          getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           {_data.options.map((item) => {
             return <Option value={item.value} key={item.value}>{item.name}</Option>

@@ -149,6 +149,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                       defaultValue={pane.action}
                       style={{ marginBottom: 0 }}
                       onChange={e => actionChange(e, pane)}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
                     >
                       {actionTypes.map((item) => {
                         return <Option value={item.value} key={item.value}>{item.name}</Option>

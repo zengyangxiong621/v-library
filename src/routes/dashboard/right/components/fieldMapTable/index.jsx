@@ -70,7 +70,7 @@ const EditableCell = ({
           },
         ]}
       >
-        <Select ref={inputRef} onChange={save} style={{ width: '145px' }}>
+        <Select ref={inputRef} onChange={save} style={{ width: '145px' }} getPopupContainer={(triggerNode) => triggerNode.parentNode}>
           {/* <Option value="text">text</Option> */}
           {fieldsKeys.map((option) => {
             return (<Option key={option} value={option}>{option}</Option>)

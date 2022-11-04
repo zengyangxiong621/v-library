@@ -87,6 +87,7 @@ const TextStyle = props => {
               defaultValue={font.fontFamily}
               style={{ width: '145px' }}
               onChange={(e) => fontChange('fontFamily', e)}
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
             >
               <Option value="Microsoft Yahei">微软雅黑</Option>
               <Option value="宋体">宋体</Option>
@@ -111,6 +112,7 @@ const TextStyle = props => {
               defaultValue={font.fontWeight}
               style={{ width: '181px', marginBottom: 0 }}
               onChange={(e) => fontChange('fontWeight', e)}
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
             >
               <Option value="normal">normal</Option>
               <Option value="bold">bold</Option>

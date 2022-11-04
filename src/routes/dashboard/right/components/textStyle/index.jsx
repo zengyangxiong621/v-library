@@ -87,9 +87,10 @@ const TextStyle = props => {
               defaultValue={fontSetting.fontFamily}
               style={{ width: 120 }}
               onChange={handleFontFamilyChange}
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
             >
               {
-                fontCollection.map(({name, value}) => {
+                fontCollection.map(({ name, value }) => {
                   return <>
                     <Option value={value}>{name}</Option>
                   </>

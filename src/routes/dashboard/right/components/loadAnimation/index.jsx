@@ -77,19 +77,19 @@ const LoadAnimation = props => {
       <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
         <Panel header="载入动画" key="1">
           <Form.Item label="动画类型" name="animationType">
-            <Select className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={animationType} onChange={animationTypeChange}>
+            <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={animationType} onChange={animationTypeChange}>
               <Option value="none">无</Option>
               <Option value="slide">移入</Option>
               <Option value="slideSmall">移入(小)</Option>
               <Option value="wipe">划变</Option>
             </Select>
           </Form.Item>
-          {animationType !=='none' ? <React.Fragment>
+          {animationType !== 'none' ? <React.Fragment>
             <Form.Item name="opacityOpen" label="渐隐渐现">
               <Checkbox style={{ float: 'left' }} checked={opacityOpen} onChange={opacityOpenChange}></Checkbox>
             </Form.Item>
             <Form.Item label="速率" name="timingFunction">
-              <Select className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={timingFunction} onChange={timingFunctionChange}>
+              <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={timingFunction} onChange={timingFunctionChange}>
                 <Option value="linear">匀速</Option>
                 <Option value="ease">慢快慢</Option>
                 <Option value="ease-in">低速开始</Option>
@@ -98,7 +98,7 @@ const LoadAnimation = props => {
               </Select>
             </Form.Item>
             <Form.Item label="方向" name="direction">
-              <Select className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={direction} onChange={directionChange}>
+              <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={direction} onChange={directionChange}>
                 <Option value="left">从左至右</Option>
                 <Option value="right">从右至左</Option>
                 <Option value="down">从上至下</Option>

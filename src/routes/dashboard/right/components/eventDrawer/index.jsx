@@ -54,7 +54,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
   const [tableData, setTableData] = useState([])
   const [comData, setComData] = useState('')
   const [comDataType, setComDataType] = useState('--')
-  const [refreshKey,setRefreshKey] = useState(uuidv4())
+  const [refreshKey, setRefreshKey] = useState(uuidv4())
 
   // 监听组件的数据变化，设置popover的弹框table及数据
   useEffect(() => {
@@ -183,7 +183,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     } else {
       const id = uuidv4()
       conds.push({
-        name: `条件${conds.length+1}`,
+        name: `条件${conds.length + 1}`,
         type: "field",
         field: "",
         compare: "==",
@@ -237,8 +237,8 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     event.stopPropagation()
     const newConditions = conditions.filter(cond => cond.id !== id)
     setConditions(newConditions)
-    const emitConds = newConditions.map(item=>{
-      let {isAdd,titleEdit, ...rest} = item
+    const emitConds = newConditions.map(item => {
+      let { isAdd, titleEdit, ...rest } = item
       return rest
     })
     props.confirm(emitConds)
@@ -275,8 +275,8 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
 
   const resetCondition = (condition) => {
     const conds = [...conditions]
-    if(condition.isAdd){
-      const condsNew = conds.filter(item=>item.id !== condition.id)
+    if (condition.isAdd) {
+      const condsNew = conds.filter(item => item.id !== condition.id)
       setConditions(condsNew)
     }
     setRefreshKey(uuidv4())
@@ -287,8 +287,8 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     item.isAdd = false
     const conds = [...conditions]
     setConditions(conds)
-    const emitConds = conds.map(item=>{
-      let {isAdd,titleEdit, ...rest} = item
+    const emitConds = conds.map(item => {
+      let { isAdd, titleEdit, ...rest } = item
       return rest
     })
     props.confirm(emitConds)
@@ -371,6 +371,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
                       defaultValue={item.type}
                       onChange={(e) => typeChange(e, item)}
                       style={{ marginBottom: 0 }}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
                     >
                       <Option value='field' key='field'>字段</Option>
                       <Option value='custom' key='custom'>自定义条件</Option>
@@ -388,6 +389,7 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
                         placeholder="请选择"
                         defaultValue={item.compare}
                         onChange={(e) => compareChange(e, item)}
+                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
                         style={{ width: '88px', float: 'left', marginRight: '8px', marginBottom: 0 }}
                       >
                         <Option value='=='> = </Option>

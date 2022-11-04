@@ -669,6 +669,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                     defaultValue={pane.trigger}
                     style={{ marginBottom: 0 }}
                     onChange={e => eventTypeChange(e, pane)}
+                    getPopupContainer={(triggerNode) => triggerNode.parentNode}
                   >
                     {eventTypes.map((item) => {
                       return <Option value={item.value} key={item.value}>{item.name}</Option>
@@ -763,6 +764,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                 value={action.action}
                                 style={{ marginBottom: 0 }}
                                 onChange={e => actionTypeChange(e, action)}
+                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
                               >
                                 {
                                   actionTypes.filter(item => {
@@ -802,6 +804,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                       value={action.state}
                                       style={{ marginBottom: 0 }}
                                       onChange={e => panelStatusChange(e, action)}
+                                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
                                     >
                                       {
                                         action.panelStates.map(state => (
@@ -1003,6 +1006,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                             defaultValue={action.animation.type}
                                             style={{ marginBottom: 0 }}
                                             onChange={e => animationTypeChange(e, action)}
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}
                                           >
                                             {animationType.map((item) => {
                                               return <Option value={item.value}
@@ -1018,6 +1022,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                 defaultValue={action.animation.timingFunction}
                                 style={{ marginBottom: 0 }}
                                 onChange={e => timingFunctionChange(e, action)}
+                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
                               >
                                 {timingFunctionType.map((item) => {
                                   return <Option value={item.value} key={item.value}>{item.name}</Option>

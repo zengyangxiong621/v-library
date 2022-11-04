@@ -161,6 +161,7 @@ const DataContainerConfig = ({ bar, dispatch, ...props }) => {
           onDeselect={handleDeSelect}
           onSelect={handleSelect}
           style={{ flex: 1, minWidth: 150 }}
+          getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           {
             bar.dataContainerList.map(item => (

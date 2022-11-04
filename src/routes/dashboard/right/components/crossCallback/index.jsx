@@ -3,7 +3,7 @@ import './index.less'
 import { connect } from 'dva'
 
 import { v4 as uuidv4 } from 'uuid';
-import {http} from '@/services/request.ts'
+import { http } from '@/services/request.ts'
 import {
   Form,
   Select,
@@ -30,7 +30,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
   const _data = props.data || {}
   const [activeKey, setActiveKey] = useState(null)
   const [tabpanes, setTabpanes] = useState(_data.websocketConfig || [])
-  const [activeCollapseKey,setActiveCollapseKey] = useState(null)
+  const [activeCollapseKey, setActiveCollapseKey] = useState(null)
 
   useEffect(() => {
     // 设置值
@@ -79,7 +79,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     }
   }
 
-  const deleteCallback = async(e) => {
+  const deleteCallback = async (e) => {
     e.stopPropagation();
     const currentPane = tabpanes.find(item => item.id == activeKey)
     const data = await http({
@@ -104,12 +104,12 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
 
 
 
-  const collapseChange= (e) => {
+  const collapseChange = (e) => {
     setActiveCollapseKey(e)
   }
 
   const handleChangeType = async (config, pane) => {
-    pane = {...pane, ...config}
+    pane = { ...pane, ...config }
     const data = await http({
       method: 'post',
       url: '/visual/websocket-module/update',
@@ -140,11 +140,11 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
               onChange={tabsChange}
               activeKey={activeKey}>
               {tabpanes.map((pane, index) => (
-                <TabPane tab={`回调${index+1}`} key={pane.id}>
+                <TabPane tab={`回调${index + 1}`} key={pane.id}>
                   <Form.Item
                     label='url地址'
                   >
-                    <Input className="cus-input" value={pane.websocketUrl} onBlur={e => handleChangeType({websocketUrl: e, pane})} onChange={e => pane.websocketUrl = e.target.value} />
+                    <Input className="cus-input" value={pane.websocketUrl} onBlur={e => handleChangeType({ websocketUrl: e, pane })} onChange={e => pane.websocketUrl = e.target.value} />
                   </Form.Item>
                   <Form.Item
                     label='类型'
@@ -155,8 +155,9 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                       value={pane.type}
                       style={{ marginBottom: 0 }}
                       onChange={e => handleChangeType({ type: e }, pane)}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
                     >
-                      {[{label: '发起方', value: 0 }, {label: '接收方', value: 1 }].map((item) => {
+                      {[{ label: '发起方', value: 0 }, { label: '接收方', value: 1 }].map((item) => {
                         return <Option value={item.value} key={item.value}>{item.label}</Option>
                       })}
                     </Select>                  </Form.Item>

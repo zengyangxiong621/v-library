@@ -81,7 +81,7 @@ const PageSize = props => {
         name="recommend"
         label={_data.displayName}
       >
-        <Select className="custom-select" placeholder="请选择" value={recommend} onChange={recommendChange}>
+        <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} className="custom-select" placeholder="请选择" value={recommend} onChange={recommendChange}>
           {_data.options.map((item) => {
             return <Option value={item.value} key={item.value}>{item.name}</Option>
           })}
@@ -91,7 +91,7 @@ const PageSize = props => {
             <InputNumber max={15000} defaultValue={width} className="size-input" style={{ marginRight: '16px' }} onChange={(value) => sizeChange('width', value)} />
           </Form.Item>
           <Form.Item noStyle name="height">
-            <InputNumber max={10000} defaultValue={height} className="size-input" onChange={(value) => sizeChange('height', value)}/>
+            <InputNumber max={10000} defaultValue={height} className="size-input" onChange={(value) => sizeChange('height', value)} />
           </Form.Item>
         </Input.Group>
         <Row>

@@ -695,6 +695,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           placeholder="请选择过滤器"
           onChange={selectedFiltersChange}
           style={{ marginBottom: 0, width: '374px' }}
+          getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           {selectFilterOprions.map(item => {
             return (<Option value={item.id} key={item.id}>{item.name}</Option>)
