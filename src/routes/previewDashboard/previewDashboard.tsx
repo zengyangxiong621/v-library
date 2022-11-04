@@ -219,7 +219,11 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
   const initDashboard = (cb = function () { }) => {
     return new Promise((resolve, reject) => {
-      const dashboardId = window.location.pathname.split("/")[2];
+      let afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf('/bigscreen/'))
+      const idList = afterDashboardUrl.split('/').map(item => {
+        return item.replace(/[^0-9]/ig, "")
+      }).filter(item => item)
+      let dashboardId = idList[0] || null
       dispatch({
         type: "previewDashboard/initDashboard",
         payload: { dashboardId },
