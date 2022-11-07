@@ -16,7 +16,8 @@ const listItem = ({ itemData, clickCheckbox }: any) => {
   const mSecondsOfCurTime: any = new Date().getTime()
   // 后端返回的过期时间
   const mSecondsOfEffectiveTime: any = new Date(effectiveTime)
-  const restTime: any = ~~(((mSecondsOfEffectiveTime - mSecondsOfCurTime) / 3600000)+0.5)
+  const restTime: any = ~~((mSecondsOfEffectiveTime - mSecondsOfCurTime) / 3600000)+1
+
   return (
     <div className='recycle-list-item-wrap'>
       <div>
