@@ -21,15 +21,15 @@ message.config({
 });
 
 // -> 初始化
-/*const app = dva({
-  history: createBrowserHistory()
-});*/
-// -> 初始化
 const app = dva({
+  history: createBrowserHistory()
+});
+// -> 初始化
+/*const app = dva({
   history: createBrowserHistory({
     basename: '/idv'
   })
-});
+});*/
 
 // -> 注册全局模型
 app.model(require("./models/global").default);
