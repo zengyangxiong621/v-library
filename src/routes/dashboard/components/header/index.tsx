@@ -57,12 +57,13 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   };
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {
+    let beforeDashboardUrl = window.location.href.slice(0, window.location.href.indexOf('/dashboard/'))
     const pageReflect: any = {
       "yulan": `/bigscreen/${bar.dashboardId}`,
       "fabu": `/publishScreen/${bar.dashboardId}`
     };
     const newTab = window.open("_blank");
-    newTab!.location.href = pageReflect[targetPage];
+    newTab!.location.href = beforeDashboardUrl + pageReflect[targetPage];
     newTab?.history.replaceState(null, "");
   };
   // 修改应用名称
