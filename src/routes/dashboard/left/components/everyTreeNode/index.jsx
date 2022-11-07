@@ -189,7 +189,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
         //   :
         <div
           className={`EveryTreeNode-wrap
-        ${hover && "every-tree-node-hover"}
         ${isSelected && "set-back-color"}
       `}
           onContextMenu={(e) => {

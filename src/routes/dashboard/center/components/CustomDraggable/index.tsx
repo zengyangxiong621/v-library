@@ -119,30 +119,6 @@ const CustomDraggable
       };
     }, []);
 
-    useEffect(() => {
-      // if (layer.id in allComponentDOMs) {
-      // } else {
-      //   allComponentDOMs[layer.id] = ref;
-      // }
-      // console.log(allComponentDOMs[layer.id],'=================')
-      // console.log(layers,'=================')
-      // layers.map(layer => {
-      //   console.log(allComponentDOMs[layer.id],'=================')
-      //   allComponentDOMs[layer.id].addEventListener('mouseenter',()=>{
-      //     allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
-      //   })
-      // })
-      return () => {
-        layers.map(layer => {
-          allComponentDOMs[layer.id].removeEventListener('mouseenter', () => {
-            allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
-          })
-          allComponentDOMs[layer.id].removeEventListener('mouseleave', () => {
-            allComponentDOMs[layer.id].style.border = '3px solid transparent'
-          })
-        })
-      }
-    }, [])
 
     /**
      * 鼠标事件顺序： dragStart, drag, dragEnd, click
@@ -568,17 +544,17 @@ const CustomDraggable
         });
       }
     };
-    const handleMouseOver = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
-      if (component.hover) {
+    const handleMouseOver = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent) => {
+      const currentDom = allComponentDOMs[layer.id]
+      if (currentDom.classList.contains("hovered")) {
         return;
       }
-      component.hover = true;
-      // dispatch({
-      //   type: 'bar/save',
-      // })
+      currentDom.classList.add("hovered")
+
     };
-    const handleMouseOut = (e: DraggableEvent, component: ILayerGroup | ILayerComponent) => {
-      component.hover = false;
+    const handleMouseOut = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent) => {
+      const currentDom = allComponentDOMs[layer.id]
+      currentDom.classList.remove("hovered")
       // dispatch({
       //   type: 'bar/save',
       // })
@@ -844,13 +820,6 @@ const CustomDraggable
                   } else {
                     // todo
                     allComponentRefs[layer.id] = ref;
-                    allComponentDOMs[layer.id].style.border = '3px solid transparent'
-                    allComponentDOMs[layer.id].addEventListener('mouseenter', () => {
-                      allComponentDOMs[layer.id].style.border = '3px solid #2482ff'
-                    })
-                    allComponentDOMs[layer.id].addEventListener('mouseleave', () => {
-                      allComponentDOMs[layer.id].style.border = '3px solid transparent'
-                    })
                   }
                 }}
                 disabled={layer.isLock}
@@ -1260,7 +1229,7 @@ const CustomDraggable
                   }
                   {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
                   {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
-{/*
+
                   <div className="component-border">
                     <span
                       style={{
@@ -1299,7 +1268,7 @@ const CustomDraggable
                         transform: `translate(0px, 50%) scaleY(${1 / bar.canvasScaleValue})`,
                       }} />
                   </div>
-*/}
+
                 </div>
               </SingleDraggable>
             );

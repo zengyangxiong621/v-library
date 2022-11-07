@@ -293,6 +293,9 @@ const Left = ({ dispatch, bar }) => {
     setE([...preSelectedSet, ...bar.key]);
   }, [bar.key]);
 
+
+
+
   //******** 展开 / 收起 ********* */
   const onExpand = (keys, { expanded, node }) => {
     const { modules } = node;
@@ -320,6 +323,25 @@ const Left = ({ dispatch, bar }) => {
     setE(keys);
     setIsExpand(keys);
   };
+
+  const treeLayerHoverFunc = (item) => {
+    item.style.backgroundColor = 'red'
+
+  }
+/*  useEffect(() => {
+    console.log('expandedKeys', expandedKeys)
+    setTimeout(() => {
+      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
+        item.addEventListener('mouseover', (e) => treeLayerHoverFunc(item))
+      })
+    })
+    return () => {
+      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
+        item.removeEventListener('mouseover', (e) => treeLayerHoverFunc(item))
+      })
+    }
+  }, [bar.layers, expandedKeys])*/
+
   return (
     <div className="left-menu">
       <div className="left-wrap">
