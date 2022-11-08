@@ -38,6 +38,3 @@ code {
   align-items: center;
 }
 
-.ant-modal-wrap{
-  z-index: 100000 !important;
-}
