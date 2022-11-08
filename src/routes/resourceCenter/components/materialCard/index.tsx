@@ -34,7 +34,7 @@ const AppCard = (props: any) => {
   const isTemp = ["systemTemp", "myTemp"].indexOf(moduleType) > -1
   // 后端返回的photoUrl为空，则使用默认图片
   let picUrl = isTemp ? (photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png")) : moduleName === 'image2' && downloadUrl ? downloadUrl : photoPath ;
-  if (!picUrl.startsWith("http") && !picUrl.startsWith("/static")) {
+  if (!picUrl.startsWith("http") && picUrl.indexOf("/static") === -1 ) {
     picUrl = `${(window as any).CONFIG.COMP_URL}${picUrl}`;
   }
 
