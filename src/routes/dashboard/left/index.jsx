@@ -264,16 +264,19 @@ const Left = ({ dispatch, bar }) => {
   };
 
   // 获取子组件传过来的X，Y值
-  const getCurrentMenuLocation = useCallback((menuInfo) => {
-    // setMenuInfo(menuInfo)
-    // 点击右键才渲染菜单
+  const getCurrentMenuLocation = useCallback((menuInfo, layer) => {
     dispatch({
       type: "bar/save",
       payload: {
         rightMenuInfo: menuInfo,
         isShowRightMenu: true,
+        key: [menuInfo.id],
+        selectedComponentOrGroup: [layer],
       },
     });
+    dispatch({
+      type: "bar/calcDragScaleData"
+    })
   });
 
   /** 画布中选择组件，左侧展开  */

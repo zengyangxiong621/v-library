@@ -65,9 +65,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     getCurrentMenuLocation({
       x: e.clientX,
       y: e.clientY,
-      id: name,
+      id,
       isFolder,
-    });
+    }, restProps);
   };
   const inputRef = useRef();
   // 鼠标双击事件
