@@ -69,7 +69,7 @@ const ControlCabin = props => {
   }
 
   const scanDashboard = (id) => {
-    setAppSrc(`/bigscreen/${id}`)
+    setAppSrc(`/idv/bigscreen/${id}`)
     setIsShowModal(true)
   }
 
@@ -80,7 +80,7 @@ const ControlCabin = props => {
     } else {
       currentFullScreenIndex -= 1
     }
-    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`)
+    setAppSrc(`/idv/bigscreen/${applist[currentFullScreenIndex].id}`)
   }
 
   const showNextApp = () => {
@@ -90,7 +90,7 @@ const ControlCabin = props => {
     } else {
       currentFullScreenIndex += 1
     }
-    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`)
+    setAppSrc(`/idv/bigscreen/${applist[currentFullScreenIndex].id}`)
   }
 
   return (

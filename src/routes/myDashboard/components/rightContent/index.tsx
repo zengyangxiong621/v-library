@@ -162,7 +162,7 @@ const RightContent = (props: any) => {
       if (data) {
         const origin = window.location.origin;
         const idInUrl = data.shareUrl.split("/").pop();
-        setFxljInputValue(`${origin}/publishScreen/${idInUrl}?encrypt=${data.needPassword}`);
+        setFxljInputValue(`${origin}/idv/publishScreen/${idInUrl}?encrypt=${data.needPassword}`);
         if (data.needPassword) {
           // setJmfxValue()
           setIsShowJmfxInput(true);
@@ -216,7 +216,7 @@ const RightContent = (props: any) => {
       refreshList();
       const origin = window.location.origin;
       const idInUrl = result.shareUrl.split("/").pop();
-      setFxljInputValue(`${origin}/publishScreen/${idInUrl}?encrypt=${isShowJmfxInput}`);
+      setFxljInputValue(`${origin}/idv/publishScreen/${idInUrl}?encrypt=${isShowJmfxInput}`);
       // 打开发布开关
       setFabuChecked(true);
       setIsShared(true);
