@@ -105,6 +105,8 @@ export default {
               layers: [],
               key: [],
               selectedComponentOrGroup: [],
+              isSingleShowOpen: false,
+              singleShowLayers: [],
               scaleDragData: {
                 position: {
                   x: 0,
@@ -556,8 +558,7 @@ export default {
           layer.singleShowLayer = false;
           delete layer.selected;
           delete layer.hover;
-
-          // delete (layer as any).notDeleted;
+          delete (layer as any).notDeleted;
         }));
 
         const bar: any = yield select(({ bar }: any) => bar);
@@ -988,10 +989,16 @@ export default {
       yield put({
         type: "save",
         payload: {
-          layers: noEmptyGroupLayers,
+          // layers: noEmptyGroupLayers,
           fullAmountDashboardDetails,
         },
       });
+      yield put({
+        type: "middlewareToSingleShowLayer",
+        payload: {
+          layers: noEmptyGroupLayers
+        }
+      })
       yield put({
         type: "updateFullAmountLayers",
       });
@@ -1605,10 +1612,15 @@ export default {
       const { config, states } = fullAmountDashboardDetails.find(
         (item: any) => item.id === panelId
       );
-      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
+      let { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
         (item: any) => item.id === stateId
       );
-
+      layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+        layer.singleShowLayer = false;
+        delete layer.selected;
+        delete layer.hover;
+        delete (layer as any).notDeleted;
+      })
       const newDashboardConfig = duplicateDashboardConfig(
         deepClone(bar.dashboardConfig),
         dashboardConfig
@@ -1631,9 +1643,15 @@ export default {
     *selectDashboard({ payload: { dashboardId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar;
-      const { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
+      let { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
         (item: any) => item.id === dashboardId
       );
+      layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
+        layer.singleShowLayer = false;
+        delete layer.selected;
+        delete layer.hover;
+        delete (layer as any).notDeleted;
+      })
       const newDashboardConfig = duplicateDashboardConfig(
         deepClone(bar.dashboardConfig),
         dashboardConfig
@@ -2172,6 +2190,25 @@ export default {
       // return { ...state, layers: newTree };
       return { ...state };
     },
+    // 在每次操作图层后都需要去重新赋值 singleShowLayer
+    middlewareToSingleShowLayer(state: IBarState, { payload }: any) {
+      const { layers } = payload
+      const layersToLayerObj = {}
+      deepForEach(state.singleShowLayers, (layer) => {
+        if(layer.notDeleted) { // notDeleted 为 true, singleShowLayer 不一定为 true， 但是 singleShowLayer 为 true notDeleted 一定为 true
+          layersToLayerObj[layer.id] = layer
+        }
+      })
+      deepForEach(layers, (layer) => {
+        layer.notDeleted = layersToLayerObj.hasOwnProperty(layer.id)
+        layer.singleShowLayer = layersToLayerObj.hasOwnProperty(layer.id) && layersToLayerObj[layer.id].singleShowLayer
+      })
+      console.log('layers', layers)
+      return {
+        ...state,
+        layers
+      }
+    },
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
       const { keys, singleShowLayer } = payload
@@ -2179,9 +2216,9 @@ export default {
       // singleShowLayers: Array<ILayers>,
       // 要注意 一个是 singleShowLayer 一个是 singleShowLayers
       console.log('singleShowLayer', singleShowLayer)
-      const { fullAmountDashboardDetails, stateId, dashboardId } = state
-      const currentDetails: any = fullAmountDashboardDetails.find((item: any) => item.id === (stateId || dashboardId))
-      const currentLayers = currentDetails?.layers
+      // const { fullAmountDashboardDetails, stateId, dashboardId } = state
+      // const currentDetails: any = fullAmountDashboardDetails.find((item: any) => item.id === (stateId || dashboardId))
+      const currentLayers = state.layers
       let singleShowLayers = []
         const showLayers = deepForEach(currentLayers, (layer: any, index: number, layers: any, parent) => {
           if (keys.includes(layer.id)) { // 被操作的组件
@@ -2229,6 +2266,7 @@ export default {
           }
         }
       })
+      console.log('showLayers', showLayers)
       return { ...state, singleShowLayers, isSingleShowOpen: singleShowLayerNums > 0 };
     },
     // 隐藏

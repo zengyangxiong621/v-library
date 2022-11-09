@@ -652,7 +652,7 @@ const CustomDraggable
         },
       });
       // 页面刷新或者进入画布时回调参数生效逻辑
-      const compCallbackArgs = duplicateFn(cloneDeep(component.callbackArgs));
+      const compCallbackArgs = duplicateFn(cloneDeep(component?.callbackArgs || []));
       // 回调参数列表
       // 过滤出 callbackParamsList 中的存在 sourceId === component 的 每一项
       const sourceCallbackList = callbackParamsList.filter((item: any) => item.sourceModules.find((jtem: any) => jtem.id === componentId));
