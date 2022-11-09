@@ -383,6 +383,12 @@ export default {
             url: `/visual/application/dashboard/detail/${panelStatus.id}`,
             method: "get",
           });
+          data.layers = deepForEach(data.layers, (layer: ILayerGroup | ILayerComponent) => {
+            layer.singleShowLayer = false;
+            delete layer.selected;
+            delete layer.hover;
+            delete (layer as any).notDeleted;
+          })
           return { ...data, id: panelStatus.id };
         } catch (e) {
           return null;
