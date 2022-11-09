@@ -219,17 +219,24 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   let count = 0
   let contentLen = 0
   const loadComp = async (data: any) => {
-    window.eval(`${await importComponent(data)}`);
-    const { ComponentDefaultConfig: currentDefaultConfig } = (window as any).VComponents;
-    allModuleDefaultConfigArr.push(currentDefaultConfig)
     count++
-    if (count === contentLen) {
-      // 初始化时需要一次性设置到全局状态中
-      dispatch({
-        type: "bar/setModuleDefaultConfigByOnce",
-        payload: allModuleDefaultConfigArr,
-      });
+    window.eval(`${await importComponent(data)}`);
+    try {
+      const { ComponentDefaultConfig: currentDefaultConfig } = (window as any).VComponents;
+      allModuleDefaultConfigArr.push(currentDefaultConfig)
+    } catch(e: any) {
+      throw new Error(`${data.name}-${data.moduleName}-组件解析不出ComponentDefaultConfig`, e)
+    } finally {
+      if (count === contentLen) {
+        // 初始化时需要一次性设置到全局状态中
+        dispatch({
+          type: "bar/setModuleDefaultConfigByOnce",
+          payload: allModuleDefaultConfigArr,
+        });
+      }
     }
+
+
   };
   //@Mark 因组件更新中需要获取各个原子组件的初始config,所以需要在画布初始化时进行处理
   useEffect(() => {
