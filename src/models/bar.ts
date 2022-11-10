@@ -1051,7 +1051,7 @@ export default {
           if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
             cb && cb(false, 0) // false 为跳过循环
           } else if ('modules' in layer && !layer.singleShowLayer) {
-            // 组先要观察 modules 里的组件是不是都能被删除，但凡有一个不能删除，那么组也不能被删除
+            // 组先要观察 modules 里的组件是 不是都能被删除，但凡有一个不能删除，那么组也不能被删除
             layer.notDeleted = !!layer.modules.find(item => item.notDeleted)
           }
         }
@@ -1462,7 +1462,7 @@ export default {
     },
     *referencePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountPanels } = bar
+      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountComponents, fullAmountPanels } = bar
       const { panelConfig } = payload
 
       const filterPanelStates = panelConfig.states.reduce((pre: any[], cur: any) => {
@@ -1472,13 +1472,14 @@ export default {
         return pre
       }, []).filter((state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id))
       const panelParentId = fullAmountPanels.find((item: any) => item.id === panelConfig.id).parentId
-      console.log('panelParentId', panelParentId)
-
-      console.log('fullAmountRouteList', fullAmountRouteList)
-      console.log('filterPanelStates', filterPanelStates)
       if (filterPanelStates.length > 0) {
         const data = yield Promise.all(filterPanelStates.map((item: any) => getPanelStatusDetails(item)))
         fullAmountDashboardDetails.push(...data)
+        // 重新获取全量组件
+        fullAmountComponents.push(...data.reduce(
+          (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
+          []
+        ))
         fullAmountRouteList.push(...filterPanelStates.map((item: any) => ({
           id: item.id,
           parentId: panelParentId,
@@ -1492,7 +1493,8 @@ export default {
         payload: {
           panelConfig,
           fullAmountDashboardDetails,
-          fullAmountRouteList
+          fullAmountComponents,
+          fullAmountRouteList,
         }
       })
 
@@ -1671,8 +1673,6 @@ export default {
     *selectPanelState({ payload: { stateId, panelId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar;
-      console.log("团结");
-      console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
       const { config, states } = fullAmountDashboardDetails.find(
         (item: any) => item.id === panelId
       );
@@ -1890,10 +1890,8 @@ export default {
             throw new Error("没有找到当前画布下的详情");
           }
         }
-        console.log("这里吗1", payload);
         state.fullAmountComponents = state.fullAmountComponents.concat(payload);
       } else {
-        console.log("这里吗2", payload);
         const { layers, components, selected }: any = payload;
         state.fullAmountComponents = state.fullAmountComponents.concat(components);
         // @Mark 复制完成后需要将源组件的组件数据赋值给新复制出来的组件，即在bar.componentData中存储 {key：新组件id, value：源组件Data}
@@ -2261,7 +2259,6 @@ export default {
       // singleShowLayer: boolean, 是否单独显示图层
       // singleShowLayers: Array<ILayers>,
       // 要注意 一个是 singleShowLayer 一个是 singleShowLayers
-      console.log('singleShowLayer', singleShowLayer)
       // const { fullAmountDashboardDetails, stateId, dashboardId } = state
       // const currentDetails: any = fullAmountDashboardDetails.find((item: any) => item.id === (stateId || dashboardId))
       const currentLayers = state.layers
@@ -2312,7 +2309,6 @@ export default {
           }
         }
       })
-      console.log('showLayers', showLayers)
       return { ...state, singleShowLayers, isSingleShowOpen: singleShowLayerNums > 0 };
     },
     // 隐藏
@@ -2393,7 +2389,6 @@ export default {
     },
     // 清除所有状态
     clearAllStatus(state: IBarState, payload: any) {
-      console.log('isCanClearAllStatus', state.isCanClearAllStatus)
       if (!state.isCanClearAllStatus) {
         state.isCanClearAllStatus = true;
         return {
@@ -2510,11 +2505,6 @@ export default {
         position: { x, y },
         style: { width, height },
       } = state.scaleDragData;
-      console.log("框选的组件/面板或者组", state.selectedComponentOrGroup);
-      console.log("x", x);
-      console.log("y", y);
-      console.log("width", width);
-      console.log("height", height);
       state.selectedComponentOrGroup.forEach((layer) => {
         if (COMPONENTS in layer) {
           // 组
@@ -2543,7 +2533,6 @@ export default {
           const componentsAndPanels = state.selectedComponents.filter((item: any) =>
             componentAndPanelIds.includes(item.id)
           );
-          console.log("框选的组件", componentsAndPanels);
           componentsAndPanels.forEach((item: any) => {
             if ("type" in item) {
               // 面板
