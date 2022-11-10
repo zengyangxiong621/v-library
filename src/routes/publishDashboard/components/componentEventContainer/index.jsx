@@ -448,9 +448,9 @@ const ComponentEventContainer = ({
       key={id}
       ref={componentRef}
       className={`single-component event-id-${id}`}
-      // onClick={handleClick}
-      // onMouseEnter={handleMouseEnter}
-      // onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{ width: "100%", height: "100%", ...animationConfig, ...opacityStyle }}
     >
       {/*      <RemoteBaseComponent
@@ -484,9 +484,6 @@ const ComponentEventContainer = ({
         ) : props.componentConfig.moduleName === "tab" ? (
           <Tab
             onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-            onClick={handleClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
             {...props}
           ></Tab>
         ) : props.componentConfig.moduleName === "scrollSelect" ? (
