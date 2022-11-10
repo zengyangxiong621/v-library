@@ -999,17 +999,68 @@ export default {
           fullAmountDashboardDetails,
         },
       });
-      yield put({
-        type: "middlewareToSingleShowLayer",
-        payload: {
-          layers: noEmptyGroupLayers
-        }
-      })
+      if (bar.isSingleShowOpen) {
+        yield put({
+          type: "middlewareToSingleShowLayer",
+          payload: {
+            layers: noEmptyGroupLayers
+          }
+        })
+      } else {
+        yield put({
+          type: "save",
+          payload: {
+            layers: noEmptyGroupLayers,
+          },
+        });
+      }
+
       yield put({
         type: "updateFullAmountLayers",
       });
     },
+    // 在每次操作图层后都需要去重新赋值 singleShowLayer
+    *middlewareToSingleShowLayer({ payload }: any, { call, put, select }: any): any {
+      let { layers } = payload
+      const bar: any = yield select(({ bar }: any) => bar);
+      let { singleShowLayers } = bar
+      const layersToLayerObj = {}
+      singleShowLayers = deepForEach(singleShowLayers, (layer) => {
+        if(layer.notDeleted) { // notDeleted 为 true, singleShowLayer 不一定为 true， 但是 singleShowLayer 为 true notDeleted 一定为 true
+          layersToLayerObj[layer.id] = layer
+        }
+      })
+      layers = deepForEach(layers, (layer) => {
+        layer.notDeleted = layersToLayerObj.hasOwnProperty(layer.id)
+        layer.singleShowLayer = layersToLayerObj.hasOwnProperty(layer.id) && layersToLayerObj[layer.id].singleShowLayer
+      })
+      let singleShowLayerNums = 0
+      console.log('删除后的layers', layers)
+      singleShowLayers = deepForEachBeforeCallBackAndBreakForeach(deepClone(layers), (layer: any, index: number, layers: any, parent, cb) => {
+        if (!layer?.notDeleted) { // 非
+          // 单独显示的图层，则需要删除
+          const realIndex = layers.findIndex((item: any) => item && item?.id === layer?.id);
+          if (realIndex !== -1) {
+            layers.splice(realIndex, 1);
+            cb && cb(true, -1) // 这里的 -1 指的是在 for 循环时删除数组中其中一个值后，下标需要 -1
+          }
+        } else { // 单独显示的图层
+          singleShowLayerNums++
+          if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
+            cb && cb(false, 0) // false 为跳过循环
+          }
+        }
+      })
+      yield put({
+        type: 'save',
+        payload: {
+          layers,
+          singleShowLayers,
+          isSingleShowOpen: singleShowLayerNums > 0
+        }
+      })
 
+    },
     *fetch({ payload }: any, { call, put }: any): any {
       // eslint-disable-line
       yield put({ type: "selectedNode", payload });
@@ -2196,25 +2247,7 @@ export default {
       // return { ...state, layers: newTree };
       return { ...state };
     },
-    // 在每次操作图层后都需要去重新赋值 singleShowLayer
-    middlewareToSingleShowLayer(state: IBarState, { payload }: any) {
-      const { layers } = payload
-      const layersToLayerObj = {}
-      deepForEach(state.singleShowLayers, (layer) => {
-        if(layer.notDeleted) { // notDeleted 为 true, singleShowLayer 不一定为 true， 但是 singleShowLayer 为 true notDeleted 一定为 true
-          layersToLayerObj[layer.id] = layer
-        }
-      })
-      deepForEach(layers, (layer) => {
-        layer.notDeleted = layersToLayerObj.hasOwnProperty(layer.id)
-        layer.singleShowLayer = layersToLayerObj.hasOwnProperty(layer.id) && layersToLayerObj[layer.id].singleShowLayer
-      })
-      console.log('layers', layers)
-      return {
-        ...state,
-        layers
-      }
-    },
+
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
       const { keys, singleShowLayer } = payload
