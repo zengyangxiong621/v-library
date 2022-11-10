@@ -59,6 +59,7 @@ import { http } from "../services/request"
 import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve"
 import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
 import dashboard from "./dashboard"
+import { message } from "antd"
 
 export default {
   namespace: "bar",
@@ -1134,7 +1135,7 @@ export default {
       //     "status": 0
       // }
       const state: any = yield select((state: any) => state);
-      const { isPanel, stateId, dashboardId } = state.bar;
+      const { isPanel, stateId, dashboardId, panelId } = state.bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
       const insertId =
         state.bar.key.length !== 0
@@ -1142,6 +1143,10 @@ export default {
           : state.bar.layers.length !== 0
             ? state.bar.layers[0].id
             : "";
+      if (panelId && !stateId) {
+        message.error("当前面板并无状态，请新增状态");
+        return
+      }
       // 新建的是组件
       const data: any = yield http({
         url: "/visual/module/add",
@@ -1592,6 +1597,19 @@ export default {
               payload: {
                 layers: [],
                 stateId: "",
+                key: [],
+                selectedComponentOrGroup: [],
+                scaleDragData: {
+                  position: {
+                    x: 0,
+                    y: 0
+                  },
+                  style: {
+                    display: 'none',
+                    width: 0,
+                    height: 0
+                  }
+                }
               },
             });
           }
