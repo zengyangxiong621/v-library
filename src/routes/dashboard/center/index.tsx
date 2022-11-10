@@ -225,7 +225,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       const { ComponentDefaultConfig: currentDefaultConfig } = (window as any).VComponents;
       allModuleDefaultConfigArr.push(currentDefaultConfig)
     } catch(e: any) {
-      throw new Error(`${data.name}-${data.moduleName}-组件解析不出ComponentDefaultConfig`, e)
+      throw new Error(`${data.name}-${data.moduleName}-组件解析不出ComponentDefaultConfig` + JSON.stringify(e))
     } finally {
       if (count === contentLen) {
         // 初始化时需要一次性设置到全局状态中
