@@ -1045,12 +1045,19 @@ export default {
             cb && cb(true, -1) // 这里的 -1 指的是在 for 循环时删除数组中其中一个值后，下标需要 -1
           }
         } else { // 单独显示的图层
-          singleShowLayerNums++
+          if (layer.singleShowLayer) {
+            singleShowLayerNums++
+          }
           if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
             cb && cb(false, 0) // false 为跳过循环
+          } else if ('modules' in layer && !layer.singleShowLayer) {
+            // 组先要观察 modules 里的组件是不是都能被删除，但凡有一个不能删除，那么组也不能被删除
+            layer.notDeleted = !!layer.modules.find(item => item.notDeleted)
           }
         }
       })
+      console.log('singleShowLayerNums', singleShowLayerNums)
+      console.log('singleShowLayers', singleShowLayers)
       yield put({
         type: 'save',
         payload: {
