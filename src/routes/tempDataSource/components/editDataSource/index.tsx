@@ -596,7 +596,6 @@ const EditDataSource = (props: any) => {
                     autoComplete="new-password"
                     className="setBackColor"
                     placeholder='请输入'
-                    maxLength={20}
                   // defaultValue={password}
                   />
                 </Form.Item>
