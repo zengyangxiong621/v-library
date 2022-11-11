@@ -12,7 +12,7 @@ const remToPx = (res) => {
   if (!clientWidth) return;
   const fontSize = 100 * (clientWidth / 1920);
   return res * fontSize;
-}
+};
 class FlowChart extends  React.PureComponent{
   constructor(props) {
     super(props);
@@ -32,8 +32,8 @@ class FlowChart extends  React.PureComponent{
       obj[item.key] = {};
       item.value.map(subItem => {
         obj[item.key][subItem.name] = subItem.value;
-      })
-    })
+      });
+    });
     return obj;
   };
 
@@ -44,17 +44,17 @@ class FlowChart extends  React.PureComponent{
         item.startColor = changeColor[item.type].nodeStartColor;
         item.endColor = changeColor[item.type].nodeEndColor;
       }
-    })
+    });
     labelNodes.map(item => {
       if(item.type){
         item.bgColor = changeColor[item.type].labelBgColor;
       }
-    })
+    });
     linesData.map(item => {
       if(item.type){
         item.lineColor = changeColor[item.type].lineColor;
       }
-    })
+    });
   }
   getgGraphOptions = (options, config) => {
     // 下钻-- 请求回来的数据可能时错误体(error对象),暂时这样兼容一哈
@@ -298,11 +298,11 @@ class FlowChart extends  React.PureComponent{
         let res1 = this.getStyleData(item.value, name);
         data = res1 ? res1 : data;
       }
-    })
+    });
     if(data){
       return data;
     }
-  }
+  };
 
   // 将某个配置项的值转成键值对的形式
   formatConfig = (config, exclude) => {
@@ -318,7 +318,7 @@ class FlowChart extends  React.PureComponent{
         }
         return pre;
     }, {});
-  }
+  };
 
   render(){
     const {myChart} = this.state;
@@ -339,7 +339,7 @@ class FlowChart extends  React.PureComponent{
           height:dimension.height
         }}>
       </div>
-    )
+    );
   }
 }
 
