@@ -25,7 +25,7 @@ import { debounce } from "@/utils/common";
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3";
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4";
-import Timeline from "@/customComponents/assist/timeline/v1.1.8";
+// import Timeline from "@/customComponents/assist/timeline/v1.1.8";
 import Cascader from "@/customComponents/assist/cascader";
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -479,9 +479,11 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
         <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
       ) : props.componentConfig.moduleName === "timeSelect" ? (
         <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-      ) : props.componentConfig.moduleName === "timeline" ? (
-        <Timeline {...props}></Timeline>
-      ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+      ) : 
+      // props.componentConfig.moduleName === "timeline" ? (
+      //   <Timeline {...props}></Timeline>
+      // ) : 
+      // : props.componentConfig.moduleName === 'CardFlipper_1' ?
       // <CardFlipper1
       //   scale={scale}
       //   onChange={handleValueChange}

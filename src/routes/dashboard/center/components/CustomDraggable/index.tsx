@@ -26,7 +26,7 @@ import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 
-import Timeline from "@/customComponents/assist/timeline/v1.1.8";
+// import Timeline from "@/customComponents/assist/timeline/v1.1.8";
 import NormalTable from "@/customComponents/table/normalTable/v1.0.5";
 import Media from "@/customComponents/media/v1.1.1";
 import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
@@ -1118,15 +1118,15 @@ const CustomDraggable
                                                                         fields={getFields(component)}
                                                                         comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                                       ></ChinaMap> :
-                                                                      layer.moduleName === "timeline" ?
-                                                                        <Timeline
-                                                                          themeConfig={bar.componentThemeConfig}
-                                                                          onThemeChange={onThemeChange}
-                                                                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                                                          componentConfig={component}
-                                                                          fields={getFields(component)}
-                                                                          comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                        ></Timeline> :
+                                                                      // layer.moduleName === "timeline" ?
+                                                                      //   <Timeline
+                                                                      //     themeConfig={bar.componentThemeConfig}
+                                                                      //     onThemeChange={onThemeChange}
+                                                                      //     onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                                      //     componentConfig={component}
+                                                                      //     fields={getFields(component)}
+                                                                      //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                                                      //   ></Timeline> :
 
 
                                                                         // layer.moduleName === 'CardFlipper_1'?

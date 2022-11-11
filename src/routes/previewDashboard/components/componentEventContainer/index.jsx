@@ -30,7 +30,7 @@ import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPa
 import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
 import Cascader from "@/customComponents/assist/cascader/v1.1.0";
-import Timeline from "@/customComponents/assist/timeline/v1.1.8";
+// import Timeline from "@/customComponents/assist/timeline/v1.1.8";
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 import useWebsocket from "@/utils/useWebsocket";
@@ -608,9 +608,11 @@ const ComponentEventContainer = ({
         <WorldMap {...props}></WorldMap>
       ) : props.componentConfig.moduleName === "indicatorcard" ? (
         <IndicatorCard {...props}></IndicatorCard>
-      ) : props.componentConfig.moduleName === "timeline" ? (
-        <Timeline {...props}></Timeline>
-      ) : props.componentConfig.moduleName === "media" ? (
+      ) : 
+      // props.componentConfig.moduleName === "timeline" ? (
+      //   <Timeline {...props}></Timeline>
+      // ) : 
+      props.componentConfig.moduleName === "media" ? (
         <Media {...props}></Media>
       ) : props.componentConfig.moduleName === "normalTable" ? (
         <NormalTable {...props}></NormalTable>
@@ -649,9 +651,11 @@ const ComponentEventContainer = ({
           <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
         ) : props.componentConfig.moduleName === "timeSelect" ? (
           <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-        ) : props.componentConfig.moduleName === "timeline" ? (
-          <Timeline {...props}></Timeline>
-        ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+        ) : 
+        // props.componentConfig.moduleName === "timeline" ? (
+        //   <Timeline {...props}></Timeline>
+        // ) : 
+        // : props.componentConfig.moduleName === 'CardFlipper_1' ?
           // <CardFlipper1
           //   scale={scale}
           //   onChange={handleValueChange}
