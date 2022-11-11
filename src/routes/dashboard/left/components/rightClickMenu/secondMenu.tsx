@@ -6,7 +6,7 @@ import { IconFont } from "../../../../../utils/useIcon";
 
 import { connect } from "dva";
 
-const SecondMenu = ({ dispatch, bar, ...otherProps }: any) => {
+const SecondMenu = ({ dispatch, ...otherProps }: any) => {
   const { data } = otherProps;
 
   const secondMenuItemClick = (key: string) => {

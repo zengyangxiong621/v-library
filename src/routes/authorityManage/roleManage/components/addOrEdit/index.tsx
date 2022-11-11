@@ -6,7 +6,7 @@ import {authDataType,formData} from "../../interface";
 import type { CheckboxValueType,CheckboxOptionType } from "antd/es/checkbox/Group";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {AuthContext} from "../../roleManage";
-import './index.less'
+import "./index.less";
 const {TextArea}=Input;
 
 // 表格权限多选框
@@ -210,7 +210,7 @@ const AddOrEdit=(props:any)=>{
   },[editFormData]);
   return (
     <Modal
-      className='roleModal'
+      className="roleModal"
       title={modelTitle}
       visible={isModalVisible}
       width={1000}
@@ -236,19 +236,19 @@ const AddOrEdit=(props:any)=>{
         <Form.Item
           label="名称"
           name="name"
-          validateTrigger='onBlur'
+          validateTrigger="onBlur"
           rules={[
             {required: true,validator:validRoleName(isEdit)}
           ]}
         >
-          <Input className='setBackColor' placeholder='请输入名称' disabled={isEdit} />
+          <Input className="setBackColor" placeholder="请输入名称" disabled={isEdit} />
         </Form.Item>
         <Form.Item
           label="描述"
           name="description"
           style={{ marginTop: "20px" }}
         >
-          <TextArea className='setBackColor' placeholder='请输入描述' />
+          <TextArea className="setBackColor" placeholder="请输入描述" />
         </Form.Item>
         <Form.Item
           label="权限管理"
@@ -262,8 +262,8 @@ const AddOrEdit=(props:any)=>{
             expandable={{
               showExpandColumn:false
             }}
-            size='small'
-            rowKey='id'
+            size="small"
+            rowKey="id"
             dataSource={menuData}
             columns={tableColumns(permissionIds)}
           ></Table>

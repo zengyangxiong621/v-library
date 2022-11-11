@@ -4,7 +4,7 @@ const ComponentDefaultConfig = {
   name: "玫瑰图", //图层名称
   parentId: "", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
-  moduleType: 'chart',
+  moduleType: "chart",
 
   moduleName: "nightingale", //组件标识
   moduleVersion: "1.2.2", //组件版本号

@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
   "name": "时间器", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
@@ -23,7 +23,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "date":'14:10:59 2022.05.24 星期二',
+        "date":"14:10:59 2022.05.24 星期二",
       }
     ],
     "fields": [
@@ -119,13 +119,13 @@ const componentDefaultConfig = {
       ]
     },
     {
-      'name': 'spacing',
-      'displayName': '间距',
-      'value': 20,
-      type:'number',
+      "name": "spacing",
+      "displayName": "间距",
+      "value": 20,
+      type:"number",
       "config": {
           "step": 1,
-          suffix:'px',  // 输入框后缀
+          suffix:"px",  // 输入框后缀
       }
     },
     {
@@ -150,7 +150,7 @@ const componentDefaultConfig = {
     {
       "name": "shadow",
       "displayName": "阴影",
-      "type": 'collapse',
+      "type": "collapse",
       "hasSwitch": true,
       "defaultExpand": true,
       "value": [
@@ -175,15 +175,15 @@ const componentDefaultConfig = {
     },
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

@@ -53,7 +53,7 @@ class Counter extends Component {
         return "center";
       case "right":
         return sortedBy === "right" ? "flex-start" : "flex-end";
-      case "bothEnds":
+      default:
         return ["left", "right"].indexOf(sortedBy) > -1 ? "space-between" : "center";
     }
   };
@@ -75,11 +75,11 @@ class Counter extends Component {
         displayStyle.justifyContent = this.getPosition(align, sortedBy);
         displayStyle.alignItems = "center";
         break;
+      default:
+        break;
     }
     return displayStyle;
   };
-
-  componentDidMount() {}
 
   // 根据对应的自动来转换
   formatData = (data, fields2ValueMap) => {
@@ -144,7 +144,7 @@ class Counter extends Component {
     const componentThemeConfig = this.props.themeConfig;
     arr.map((item) => {
       let { name, value, type, options } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           this.replaceThemeColor(value);
         } else {
@@ -155,6 +155,7 @@ class Counter extends Component {
                 break;
               case "themePureColor":
                 item.value = componentThemeConfig.pureColors[0];
+                break;
               default:
                 break;
             }
@@ -236,7 +237,6 @@ class Counter extends Component {
         : Number(originData[fields[1]]) === 0
         ? even
         : reduce;
-    console.log();
     return (
       <div
         className="counter"

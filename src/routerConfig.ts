@@ -56,7 +56,7 @@ const routesConfig = (app: any) => [
       RoleManage(app),
       AlarmLog(app),
       AccountList(app),
-      NoFound(app)
+      NoFound()
     ]
   }
 ];

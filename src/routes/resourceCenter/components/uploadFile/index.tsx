@@ -1,9 +1,9 @@
-import { memo, useEffect,useState } from "react";
+import React, { memo, useEffect,useState } from "react";
 import "./index.less";
 import { Modal, Upload, Form, Select, message } from "antd";
 import { connect } from "dva";
 import { http, BASEURL } from "@/services/request";
-import type { UploadProps } from "antd";
+import type, { UploadProps } from "antd";
 import { Radio, Input } from "antd";
 const UploadFile = (props: any) => {
   const { uploadVisible, changeShowState,groupList,refreshList,origin,spaceId} = props;
@@ -28,34 +28,35 @@ const UploadFile = (props: any) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const handleOk = async () => {
     const value = await uploadForm.validateFields();
-    const isTemp = ["myTemp","systemTemp"].indexOf(origin) > -1
-    let { file,groupId,materialName,materialType } = value;
+    const isTemp = ["myTemp","systemTemp"].indexOf(origin) > -1;
+    let { groupId } = value;
+    const { file,materialName,materialType } = value;
     if(fileList && fileList.length) {
-      let formData = new FormData();
+      const formData = new FormData();
       groupId = ["myTempOhter", "sysTempOhter"].indexOf(groupId) > -1 ? 0 : groupId;
-      let formObj:any = {}
+      let formObj:any = {};
       if(isTemp){
-        const originFileObj = fileList[0] ? fileList[0].originFileObj : ''
+        const originFileObj = fileList[0] ? fileList[0].originFileObj : "";
         formData.append("groupId", groupId);
         formData.append("file", originFileObj);
       }else{
         if(!fileUrl){
-          message.error(`请上传正确的文件格式`);
-          return false
+          message.error("请上传正确的文件格式");
+          return false;
         }
         formObj = {
           name: materialName,
           format: materialType,
           fileUrl,
-        }
+        };
       }
       if(["myresource", "myTemp"].indexOf(origin) > -1){
         formData.append("spaceId", spaceId);
-        formObj.spaceId = spaceId
-        formObj.groupId = groupId
+        formObj.spaceId = spaceId;
+        formObj.groupId = groupId;
       }
-      if(origin === 'design'){
-        formObj.type = groupId
+      if(origin === "design"){
+        formObj.type = groupId;
       }
       const url = isTemp ? "/visual/appTemplate/import" : "/visual/file/uploadResourceFile";
       setConfirmLoading(true);
@@ -83,9 +84,9 @@ const UploadFile = (props: any) => {
   const generateUploadProps = (
     customProps?: object
   ) => {
-    let isTemp = ["myTemp","systemTemp"].indexOf(origin) > -1 
-    let url = isTemp ? `${BASEURL}/visual/file/uploadResource` : `${BASEURL}/visual/file/upload`
-    let fileSuffix = isTemp ? ".zip" : materialType ? 'video/mp4,video/x-ms-wmv,audio/x-m4a,audio/mpeg,audio/ogg,audio/mp3,audio/wav,audio/m4a,audio/flac' : "image/png,image/jpeg,image/jpg"
+    const isTemp = ["myTemp","systemTemp"].indexOf(origin) > -1 ;
+    const url = isTemp ? `${BASEURL}/visual/file/uploadResource` : `${BASEURL}/visual/file/upload`;
+    const fileSuffix = isTemp ? ".zip" : materialType ? "video/mp4,video/x-ms-wmv,audio/x-m4a,audio/mpeg,audio/ogg,audio/mp3,audio/wav,audio/m4a,audio/flac" : "image/png,image/jpeg,image/jpg";
     // 上传框配置
     let uploadProps:UploadProps = {
       name: "file",
@@ -98,7 +99,7 @@ const UploadFile = (props: any) => {
       },
       beforeUpload(file: any) {
         const { name, size, type }: { name: string, size: number, type:any } = file;
-        let max = isTemp ? 100 : materialType ? 200 : 20
+        const max = isTemp ? 100 : materialType ? 200 : 20;
         if (size > 1024 * 1024 * max) {
           message.warning("文件大小超过限制");
           file.status = "error";
@@ -119,7 +120,6 @@ const UploadFile = (props: any) => {
           }
           return false; // 上传时不调取接口
         }else{
-          console.log(file,'type')
           if(!fileSuffixArr?.includes(type)){
             message.error({
               content: "请上传符合格式的文件",
@@ -139,12 +139,11 @@ const UploadFile = (props: any) => {
         } else if (status === "error") {
           message.error(`${info.file.name} 上传失败`);
         } else if (status === "removed"){
-          setFileUrl('');
-          setFileList([])
+          setFileUrl("");
+          setFileList([]);
           uploadForm.setFieldsValue({
             file: []
-          })
-
+          });
         }
       },
       onDrop(e: any) {
@@ -174,27 +173,27 @@ const UploadFile = (props: any) => {
   const fileProps = generateUploadProps();
 
   const selectChange = (value: any) => {
+    console.log(value);
   };
-
   const onChange = (e: any) => {
-    setMaterialType(e.target.value)
+    setMaterialType(e.target.value);
     uploadForm.setFieldsValue({
       file: []
-    })
-    setFileUrl('');
-    setFileList([])
-  }
+    });
+    setFileUrl("");
+    setFileList([]);
+  };
 
   const setUploadText =() => {
     if(["myTemp","systemTemp"].indexOf(origin) > -1){
-      return '大小不得超过100MB，且必须为.zip格式'
+      return "大小不得超过100MB，且必须为.zip格式";
     }else{
-      return materialType ? '不得超过200M' : '不得超过20M'
+      return materialType ? "不得超过200M" : "不得超过20M";
     }
-  }
+  };
 
   return (
-    <div className='upload-file'>
+    <div className="upload-file">
       <Modal
         title={`自定义上传${["myTemp","systemTemp"].indexOf(origin) > -1 ? "模板" : "素材"}`}
         visible={uploadVisible}
@@ -218,15 +217,15 @@ const UploadFile = (props: any) => {
         >
           {
             ["myTemp","systemTemp"].indexOf(origin) == -1  &&
-            <Form.Item label="素材类型" name='materialType' rules={generateSingleRules(true, "请选择素材类型")}>
+            <Form.Item label="素材类型" name="materialType" rules={generateSingleRules(true, "请选择素材类型")}>
               <Radio.Group onChange={onChange} value={materialType}>
                 <Radio value={0}>图片</Radio>
                 <Radio value={1}>音视频</Radio>
               </Radio.Group>
             </Form.Item>
           }
-          <Form.Item label="上传文件" name='file'  rules={generateSingleRules(true, "请选择要上传的文件")}>
-            <div className='setBackColor'>
+          <Form.Item label="上传文件" name="file"  rules={generateSingleRules(true, "请选择要上传的文件")}>
+            <div className="setBackColor">
               <Dragger {...fileProps} fileList={fileList}>
                 <p className="ant-upload-text">点击或拖拽文件至此处进行上传</p>
                 <p className="ant-upload-hint">{setUploadText()}</p>
@@ -236,12 +235,12 @@ const UploadFile = (props: any) => {
           </Form.Item>
           {
             ["myTemp","systemTemp"].indexOf(origin) == -1  &&
-            <Form.Item label="资源名称" name='materialName' rules={generateSingleRules(true, "请输入资源名称")}>
+            <Form.Item label="资源名称" name="materialName" rules={generateSingleRules(true, "请输入资源名称")}>
               <Input placeholder="请输入名称"/>
             </Form.Item>
           }
-          <Form.Item label="选择分类" name='groupId' rules={generateSingleRules(true, "请选择分组")}>
-          <Select className='setBackColor' placeholder="请选择"  onChange={selectChange}>
+          <Form.Item label="选择分类" name="groupId" rules={generateSingleRules(true, "请选择分组")}>
+          <Select className="setBackColor" placeholder="请选择"  onChange={selectChange}>
             {
               (selectList || []).map((item:any) => {
                 if(["-1","sysMatAll","myTempAll", "sysTempAll"].indexOf(item.groupId) === -1){

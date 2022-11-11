@@ -1,41 +1,41 @@
-import React from 'react';
-import EC from '../../EC';
-import ComponentDefaultConfig from './config'
-import * as echarts from 'echarts';
+import React from "react";
+import EC from "../../EC";
+import ComponentDefaultConfig from "./config";
+import * as echarts from "echarts";
 
 const Bar = (props) => {
-  const componentConfig = props.componentConfig || ComponentDefaultConfig
-  const { config } = componentConfig
-  const componentData = props.comData  // 过滤后的数据
-  const fieldKey = props.fields
+  const componentConfig = props.componentConfig || ComponentDefaultConfig;
+  const { config } = componentConfig;
+  const componentData = props.comData; // 过滤后的数据
+  const fieldKey = props.fields;
 
-  const style = config.filter((item) => item.name !== 'dimension').reduce((pre, cur) => {
+  const style = config.filter((item) => item.name !== "dimension").reduce((pre, cur) => {
     if (Array.isArray(cur.value)) {
       const obj = cur.value.reduce((p, c) => {
-        p[c.name] = c.value
-        return p
-      }, {})
+        p[c.name] = c.value;
+        return p;
+      }, {});
       pre = {
         ...pre,
         ...obj,
-      }
+      };
     } else {
-      pre[cur.name] = cur.value
+      pre[cur.name] = cur.value;
     }
-    return pre
-  }, {})
-  let barXData = []
-  let barYData = []
-  let barYMaxData = []
+    return pre;
+  }, {});
+  let barXData = [];
+  let barYData = [];
+  let barYMaxData = [];
   if (componentData && componentData.length) {
     componentData.forEach(item => {
-      barXData.push(item[fieldKey[0]])
-      barYData.push(item[fieldKey[1]])
-      barYMaxData.push(0)
-    })
+      barXData.push(item[fieldKey[0]]);
+      barYData.push(item[fieldKey[1]]);
+      barYMaxData.push(0);
+    });
   }
-  const maxYdata = Math.max(...barYData) + 40
-  barYMaxData.fill(maxYdata, 0, barYData.length)
+  const maxYdata = Math.max(...barYData) + 40;
+  barYMaxData.fill(maxYdata, 0, barYData.length);
   let lineY = [];
   let lineT = [];
   for (var i = 0; i < barXData.length; i++) {
@@ -127,8 +127,8 @@ const Bar = (props) => {
           splitLine: {
             show: false,
             lineStyle: {
-              type: 'dashed',
-              color: '#666'
+              type: "dashed",
+              color: "#666"
             }
           },
           axisLine: {
@@ -213,7 +213,7 @@ const Bar = (props) => {
           zlevel: 9,
         },
       ],
-    }
+    };
     const _HorizontalOption = {
       title: {
         show: false,
@@ -315,9 +315,9 @@ const Bar = (props) => {
           },
         },
       ],
-    }
-    return style.direction === 'vertical' ? _VerTicalOption : _HorizontalOption
-  }
+    };
+    return style.direction === "vertical" ? _VerTicalOption : _HorizontalOption;
+  };
   const onChartClick = (param, echarts) => {
     console.log(param, echarts);
   };
@@ -327,23 +327,23 @@ const Bar = (props) => {
   };
 
   const onChartReady = echarts => {
-    console.log('echart is ready', echarts);
+    console.log("echart is ready", echarts);
   };
   let onEvents = {
     click: onChartClick,
     legendselectchanged: onChartLegendselectchanged
-  }
+  };
   return (
     <EC
       option={getOption()}
       onChartReady={onChartReady}
       onEvents={onEvents}
     />
-  )
-}
+  );
+};
 
 export {
   Bar,
   ComponentDefaultConfig
-}
-export default Bar
+};
+export default Bar;

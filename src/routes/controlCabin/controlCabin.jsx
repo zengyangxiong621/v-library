@@ -1,118 +1,118 @@
-import React, { memo, useState, useEffect } from 'react';
-import './index.less'
-import Carousel from './components/3DCarousel'
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
+import React, { memo, useState, useEffect } from "react";
+import "./index.less";
+import Carousel from "./components/3DCarousel";
 
-import { http } from '../../services/request';
+import { http } from "../../services/request";
 
-import { Spin, Empty } from 'antd';
-import { CloseCircleOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
+import { Spin, Empty } from "antd";
+import { CloseCircleOutlined, LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
 
-const picUrl = require('../../assets/images/模板默认背景图.png')
-const emtpyUrl = require('../../assets/images/controlCabin/cockpit-empty.png')
+const picUrl = require("../../assets/images/模板默认背景图.png");
+const emtpyUrl = require("../../assets/images/controlCabin/cockpit-empty.png");
 let currentFullScreenIndex = 0;
-const ControlCabin = props => {
-  const curWorkspace = JSON.parse(localStorage.getItem('curWorkspace'))
-  const spaceId = curWorkspace?.id
-  const [currnetIndex, setCurrentIndex] = useState(0)
-  const [applist, setAppList] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [isShowModal, setIsShowModal] = useState(false)
-  const [appSrc, setAppSrc] = useState(null)
+const ControlCabin = (props) => {
+  const curWorkspace = JSON.parse(localStorage.getItem("curWorkspace"));
+  const spaceId = curWorkspace?.id;
+  const [currnetIndex, setCurrentIndex] = useState(0);
+  const [applist, setAppList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isShowModal, setIsShowModal] = useState(false);
+  const [appSrc, setAppSrc] = useState(null);
 
   useEffect(() => {
-    getAppList()
-  }, [spaceId])
+    getAppList();
+  }, [spaceId]);
 
   const getAppList = async () => {
     const data = await http({
-      url: '/visual/application/cockpitAppList ',
-      method: 'post',
+      url: "/visual/application/cockpitAppList ",
+      method: "post",
       body: {
         spaceId,
-      }
-    })
-    setLoading(false)
-    data && data.forEach(item => {
-      item.url = item.photoUrl || picUrl
-      item.title = item.name
-    })
+      },
+    });
+    setLoading(false);
+    data &&
+      data.forEach((item) => {
+        item.url = item.photoUrl || picUrl;
+        item.title = item.name;
+      });
     if (!data || !data.length) {
-      setAppList([])
+      setAppList([]);
     } else if (data.length <= 2) {
-      const result = fillArrTo3(data)
-      setAppList(result)
+      const result = fillArrTo3(data);
+      setAppList(result);
     } else {
-      setAppList(data)
+      setAppList(data);
     }
-  }
+  };
 
   const fillArrTo3 = (data) => {
-    const result = data
-    let len = data.length
-    let i = 0
+    const result = data;
+    let len = data.length;
+    let i = 0;
     while (3 - len > 0) {
-      result.push(result[i])
-      len++
-      i++
+      result.push(result[i]);
+      len++;
+      i++;
     }
-    return result
-  }
+    return result;
+  };
 
   const appClick = (app) => {
     for (let i = 0; i < applist.length; i++) {
       if (applist[i].id === app.id) {
-        currentFullScreenIndex = i
-        break
+        currentFullScreenIndex = i;
+        break;
       }
     }
-    scanDashboard(app.id)
-  }
+    scanDashboard(app.id);
+  };
 
   const scanDashboard = (id) => {
-    setAppSrc(`/bigscreen/${id}`)
-    setIsShowModal(true)
-  }
+    setAppSrc(`/bigscreen/${id}`);
+    setIsShowModal(true);
+  };
 
   const showPreApp = () => {
-    const length = applist.length
+    const length = applist.length;
     if (currentFullScreenIndex === 0) {
-      currentFullScreenIndex = length - 1
+      currentFullScreenIndex = length - 1;
     } else {
-      currentFullScreenIndex -= 1
+      currentFullScreenIndex -= 1;
     }
-    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`)
-  }
+    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`);
+  };
 
   const showNextApp = () => {
-    const length = applist.length
+    const length = applist.length;
     if (currentFullScreenIndex === length - 1) {
-      currentFullScreenIndex = 0
+      currentFullScreenIndex = 0;
     } else {
-      currentFullScreenIndex += 1
+      currentFullScreenIndex += 1;
     }
-    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`)
-  }
+    setAppSrc(`/bigscreen/${applist[currentFullScreenIndex].id}`);
+  };
 
   return (
     <div className="control-cabin-wraper">
       <div className="control-cabin-bg">
         <div className="slide-wraper">
-          {
-            loading ?
-              <Spin tip="加载中..." />
-              : applist.length ?
-                <Carousel
-                  imageList={applist}
-                  onClick={(app) => appClick(app)}
-                />
-                : <div className="cockpit-empty">
-                  <img src={emtpyUrl} alt="" />
-                  <p>暂无数据</p>
-                </div>
-          }
+          {loading ? (
+            <Spin tip="加载中..." />
+          ) : applist.length ? (
+            <Carousel imageList={applist} onClick={(app) => appClick(app)} />
+          ) : (
+            <div className="cockpit-empty">
+              <img src={emtpyUrl} alt="" />
+              <p>暂无数据</p>
+            </div>
+          )}
         </div>
-        {
-          isShowModal ? <div className="con-cabin-fullscreen">
+        {isShowModal ? (
+          <div className="con-cabin-fullscreen">
             <iframe src={appSrc} frameBorder="0"></iframe>
             <div className="con-cabin-close-fullscreen" onClick={() => setIsShowModal(false)}>
               <CloseCircleOutlined />
@@ -120,14 +120,17 @@ const ControlCabin = props => {
             <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-pre" onClick={showPreApp}>
               <LeftCircleOutlined />
             </div>
-            <div className="con-cabin-fullscreen-btn con-cabin-fullscreen-next" onClick={showNextApp}>
+            <div
+              className="con-cabin-fullscreen-btn con-cabin-fullscreen-next"
+              onClick={showNextApp}
+            >
               <RightCircleOutlined />
             </div>
-          </div> : null
-        }
+          </div>
+        ) : null}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default memo(ControlCabin)
+export default memo(ControlCabin);

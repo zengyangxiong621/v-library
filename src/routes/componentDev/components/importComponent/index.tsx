@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { Modal, Form,  Upload, message, Button } from "antd";
-import type { UploadProps } from "antd";
+import type, { UploadProps } from "antd";
 import { http, BASEURL } from "@/services/request";
 
 const { Dragger } = Upload;
@@ -31,7 +30,6 @@ const importComponent = (props: any) => {
       if (fileList && fileList.length) { //检验是否有上传文件
         const formData = new FormData();
         formData.append("file", fileList[0]["originFileObj"]);
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         const data = await http({
           method: "post",
           url: "/visual/file/uploadModule",

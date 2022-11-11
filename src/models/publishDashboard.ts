@@ -1,8 +1,11 @@
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { defaultData } from "./defaultData/publishDashboard";
 import { http } from "../services/request";
 import {
   ILayerComponent,
-  ILayerGroup, ILayerPanel,
+  ILayerGroup,
+  ILayerPanel,
   IPanel,
 } from "../routes/dashboard/center/components/CustomDraggable/type";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
@@ -18,7 +21,7 @@ import {
   layersPanelsFlat,
   duplicateDashboardConfig,
   getQueryVariable,
-  deepForEachBeforeCallBack
+  deepForEachBeforeCallBack,
 } from "../utils";
 import { IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
 export default {
@@ -48,7 +51,7 @@ export default {
       publishDashboard = yield select(({ publishDashboard }: any) => publishDashboard);
       const func = async (component: any) => {
         const params: any = getQueryVariable();
-        let callBackParamValues = {
+        const callBackParamValues = {
           ...publishDashboard.callbackArgs,
         };
         if (params?.Ticket) {
@@ -110,14 +113,14 @@ export default {
           dashboardId,
         },
       });
-      let layers: any[] = []
+      let layers: any[] = [];
       yield yield put({
         type: "getDashboardDetails",
         payload: {
           pass,
         },
         cb: async (data: any) => {
-          layers = data.layers
+          layers = data.layers;
           await cb(data);
         },
       });
@@ -126,8 +129,8 @@ export default {
         yield put({
           type: "getFullAmountDashboardDetails",
           payload: {
-            layers
-          }
+            layers,
+          },
         });
       }
       yield put({
@@ -154,8 +157,8 @@ export default {
     },
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const publishDashboard: any = yield select(({ publishDashboard }: any) => publishDashboard);
-      const { dashboardId } = publishDashboard
-      const layers = payload.layers
+      const { dashboardId } = publishDashboard;
+      const layers = payload.layers;
       const pass = localStorage.getItem(dashboardId);
       // @ts-ignore
       const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
@@ -205,9 +208,11 @@ export default {
           layerPanels.map((item: any) => getPanelConfigFunc(item))
         );
         panels = panels.filter((item) => item);
-        publishDashboard.fullAmountDashboardDetails = publishDashboard.fullAmountDashboardDetails.concat(panels);
+        publishDashboard.fullAmountDashboardDetails =
+          publishDashboard.fullAmountDashboardDetails.concat(panels);
         const panelsStatusDetail = await allPanelStatusDetailsFunc(panels);
-        publishDashboard.fullAmountDashboardDetails = publishDashboard.fullAmountDashboardDetails.concat(panelsStatusDetail);
+        publishDashboard.fullAmountDashboardDetails =
+          publishDashboard.fullAmountDashboardDetails.concat(panelsStatusDetail);
         for (const detail of panelsStatusDetail) {
           const layers = detail.layers;
           // @ts-ignore
@@ -216,9 +221,10 @@ export default {
         }
       };
       yield getDeepPanelAndStatusDetails(layerPanels);
-      let fullAmountDynamicAndDrillDownPanels: any = publishDashboard.fullAmountDashboardDetails.filter(
-        (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)
-      );
+      let fullAmountDynamicAndDrillDownPanels: any =
+        publishDashboard.fullAmountDashboardDetails.filter(
+          (item: IFullAmountDashboardDetail) => "type" in item && [0, 2].includes(item.type)
+        );
       fullAmountDynamicAndDrillDownPanels = fullAmountDynamicAndDrillDownPanels.map(
         ({ id, type, name, states }: IFullAmountDashboardDetail) => ({
           id,
@@ -246,8 +252,8 @@ export default {
           index: number
         ) => {
           if ("panelType" in layer && (layer.panelType === 0 || layer.panelType === 2)) {
-            ; (layer as any).modules =
-              (findLayerById(fullAmountDynamicAndDrillDownPanels, layer.id) as any)?.modules || []
+            (layer as any).modules =
+              (findLayerById(fullAmountDynamicAndDrillDownPanels, layer.id) as any)?.modules || [];
           }
         }
       );
@@ -255,7 +261,7 @@ export default {
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
-      console.log('fullAmountComponents', fullAmountComponents)
+      console.log("fullAmountComponents", fullAmountComponents);
       const panels = publishDashboard.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
@@ -292,7 +298,10 @@ export default {
           dashboardId,
           id: dashboardId,
         });
-        console.log('fullAmountDashboardDetailsfullAmountDashboardDetails', fullAmountDashboardDetails)
+        console.log(
+          "fullAmountDashboardDetailsfullAmountDashboardDetails",
+          fullAmountDashboardDetails
+        );
         const layerPanels: any = layersPanelsFlat(layers);
         const func = async (layerPanel: any) => {
           try {
@@ -328,10 +337,10 @@ export default {
             dashboardId,
             dashboardConfig: newDashboardConfig,
             dashboardName,
-            fullAmountDashboardDetails
+            fullAmountDashboardDetails,
           },
         });
-        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers, });
+        cb({ dashboardConfig: newDashboardConfig, dashboardName, layers: noEmptyGroupLayers });
       } catch (e) {
         cb(e);
         return e;
@@ -345,7 +354,7 @@ export default {
       const func = async (component: any) => {
         try {
           const params: any = getQueryVariable();
-          let callBackParamValues = {
+          const callBackParamValues = {
             ...callbackArgs,
           };
           if (params?.Ticket) {
@@ -398,7 +407,7 @@ export default {
           data = container.staticData.data;
         } else {
           const params: any = getQueryVariable();
-          let callBackParamValues = {
+          const callBackParamValues = {
             ...callbackArgs,
           };
           if (params?.Ticket) {
@@ -417,7 +426,7 @@ export default {
           });
         }
         publishDashboard.dataContainerDataList.find((data: any) => data.id === item.id).data = data;
-      }
+      };
       yield Promise.all(dataContainerList.map((item: any) => func(item)));
 
       yield put({

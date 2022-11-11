@@ -38,12 +38,12 @@ function App({ bar, dispatch, location, history }: any) {
   const [dataFiltersVisible, setDataFiltersVisible] = useState(false);
   const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false);
   const [componentThemeVisible, setComponentThemeVisible] = useState(false);
-  const [recycleBinVisible, setRecycleBinVisible] = useState(false)
+  const [recycleBinVisible, setRecycleBinVisible] = useState(false);
 
 
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
   // 关闭右侧抽屉后,头部导航栏上相应的activeIcon需要取消active的状态
-  const [isResetActiveIcon, setIsResetActiveIcon] = useState(false)
+  const [isResetActiveIcon, setIsResetActiveIcon] = useState(false);
 
   // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
   const focus$ = useEventEmitter();
@@ -162,8 +162,8 @@ function App({ bar, dispatch, location, history }: any) {
       dataFilters: false,
       componentTheme: false,
       recycleBin: false,
-    }
-    setIsResetActiveIcon(false)
+    };
+    setIsResetActiveIcon(false);
     if (["zujian", "sucai"].includes(whichBar)) {
       setZujianORsucai(whichBar);
       setShowTopBar(true);
@@ -212,28 +212,28 @@ function App({ bar, dispatch, location, history }: any) {
   // 每次
   const handleDCVisibleChange = (bool: boolean) => {
     setDataContainerVisible(bool);
-    if (!bool) setIsResetActiveIcon(true)
+    if (!bool) setIsResetActiveIcon(true);
   };
   const handleCbAvailableChange = (bool: boolean) => {
     setCallbackArgsVisible(bool);
-    if (!bool) setIsResetActiveIcon(true)
+    if (!bool) setIsResetActiveIcon(true);
   };
   const handleMUAvailableChange = (bool: boolean) => {
     setModuleUpdateVisible(bool);
-    if (!bool) setIsResetActiveIcon(true)
+    if (!bool) setIsResetActiveIcon(true);
   };
   const handleDataFilterAvailableChange = (bool: boolean) => {
     setDataFiltersVisible(bool);
-    if (!bool) setIsResetActiveIcon(true)
+    if (!bool) setIsResetActiveIcon(true);
   };
   const handleComponentThemeAvailableChange = (bool: boolean) => {
     setComponentThemeVisible(bool);
-    if (!bool) setIsResetActiveIcon(true)
+    if (!bool) setIsResetActiveIcon(true);
   };
   const handleRBvailableChange = (bool: boolean) => {
     setRecycleBinVisible(bool);
-    if (!bool) setIsResetActiveIcon(true)
-  }
+    if (!bool) setIsResetActiveIcon(true);
+  };
 
   return (
     <Layout>

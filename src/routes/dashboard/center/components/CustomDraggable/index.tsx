@@ -19,7 +19,7 @@ import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v
 
 // import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.7/config'
 import Counter from "@/customComponents/assist/counter2/v1.0.8";
-import ChartLegend from '@/customComponents/assist/chartLegend/chartLegend-1.0.1'
+import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1";
 // import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
 // import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
 
@@ -63,14 +63,14 @@ import {
 } from "../../../../../constant/home";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
-import SelectV2 from '@/customComponents/assist/select/v1.0.3/index'
-import ButtonGroup from '@/customComponents/assist/buttonGroup/v1.0.5/index'
-import BasicBar from '@/customComponents/echarts/components/basicBar/v1.1.1'
-import BasicLine from '@/customComponents/echarts/components/basicLine/basicLine-1.2.2'
+import SelectV2 from "@/customComponents/assist/select/v1.0.3/index";
+import ButtonGroup from "@/customComponents/assist/buttonGroup/v1.0.5/index";
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
+import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.2";
 
-import ZebraColumn from '@/customComponents/echarts/components/zebraColumn/v1.1.1'
-import CusImage from '@/customComponents/assist/image/v1.0.2/index'
-import RankingBar from '@/customComponents/echarts/components/rankingBar/v1.1.2'
+import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1";
+import CusImage from "@/customComponents/assist/image/v1.0.2/index";
+import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
@@ -110,7 +110,7 @@ const CustomDraggable
 
     const nodeRef: any = useRef(null);
     const currentTimes: any = useRef(0);
-    const dragStatus = useRef<'一组件' | '一面板' | '一分组' | '多个'>('一组件')
+    const dragStatus = useRef<"一组件" | "一面板" | "一分组" | "多个">("一组件");
     const clickTimer: any = useRef(null);
 
     useEffect(() => {
@@ -133,10 +133,10 @@ const CustomDraggable
         y: data.y,
       });
       bar.selectedComponents = [];
-      bar.selectedComponentDOMs = {}
-      bar.selectedComponentRefs = {}
+      bar.selectedComponentDOMs = {};
+      bar.selectedComponentRefs = {};
       dragStatus.current = "一组件";
-      bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
+      bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y);
       // 如果当前拖拽的组件并没有选中，那么就重新计算 scaleDrag 组件的位置
       if (!bar.selectedComponentOrGroup.find((item: any) => item.id === layer.id)) {
         dispatch({
@@ -159,13 +159,13 @@ const CustomDraggable
         // 注意一下
         // 选中多个组件、或者多个分组时
         dragStatus.current = "多个";
-        bar.supportLinesRef.handleSetPosition(bar.scaleDragData.position.x, bar.scaleDragData.position.y)
+        bar.supportLinesRef.handleSetPosition(bar.scaleDragData.position.x, bar.scaleDragData.position.y);
       } else {
         // 当选中了一个分组时，或者没有选中时
         if (COMPONENTS in layer) {
           dragStatus.current = "一分组";
           bar.selectedComponentIds = layerComponentsFlat((layer as any)[COMPONENTS]);
-          bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y)
+          bar.supportLinesRef.handleSetPosition(config.position.x, config.position.y);
         }
       }
       Object.keys(bar.allComponentRefs).forEach((key) => {
@@ -175,24 +175,24 @@ const CustomDraggable
         }
       });
       bar.selectedComponents = [...components.filter(component => bar.selectedComponentIds.includes(component.id)), ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id))];
-      console.log('拖拽开始', bar.dragStatus)
-      console.log('拖拽开始', dragStatus.current)
+      console.log("拖拽开始", bar.dragStatus);
+      console.log("拖拽开始", dragStatus.current);
     };
     const handleDrag = (ev: DraggableEvent | any, data: DraggableData, layer: ILayerGroup | ILayerComponent, component: IComponent | undefined, config: IConfig) => {
-      console.log('拖拽中')
+      console.log("拖拽中");
       ev.stopPropagation();
-      bar.scaleDragData.style.display = "block"
+      bar.scaleDragData.style.display = "block";
 
       // console.log('dragging', layer)
       // 向上取整
-      let aroundX = Math.ceil(data.x);
-      let aroundY = Math.ceil(data.y);
+      const aroundX = Math.ceil(data.x);
+      const aroundY = Math.ceil(data.y);
       const xMoveLength = data.x - data.lastX;
       const yMoveLength = data.y - data.lastY;
       bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
       bar.supportLinesRef.handleMovePosition(xMoveLength, yMoveLength);
       if (dragStatus.current === "多个") {
-        console.log('多个')
+        console.log("多个");
         Object.keys(bar.selectedComponentRefs).forEach(key => {
           if (key.indexOf("group") !== -1) {
             delete bar.selectedComponentRefs[key];
@@ -444,7 +444,7 @@ const CustomDraggable
                   },
                 })*/
       }
-      console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
+      console.log("bar.selectedComponentOrGroup", bar.selectedComponentOrGroup);
 
       dispatch({
         type: "bar/updateComponent",
@@ -457,7 +457,7 @@ const CustomDraggable
         payload: {
           key: bar.selectedComponentOrGroup.map(item => item.id)
         }
-      })
+      });
       dispatch({
         type: "bar/calcDragScaleData",
       });
@@ -472,7 +472,7 @@ const CustomDraggable
     const handleDblClick = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent | ILayerPanel, config: IConfig) => {
       clearTimeout(clickTimer.current);
       if ("panelType" in layer) {
-        let url = ''
+        let url = "";
         const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
         if (layer.panelType === 0) { // 动态面板
           dispatch({
@@ -497,13 +497,13 @@ const CustomDraggable
             }
           });
           if (panel.states[0]?.id) {
-            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`;
           } else {
-            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}`
+            url = `/dashboard/${bar.dashboardId}/panel-${layer.id}`;
           }
         } else if (layer.panelType === 1) {
           if (panel.states.length > 0) {
-            url = `/dashboard/${panel.states[0].id}`
+            url = `/dashboard/${panel.states[0].id}`;
           }
 
         } if (layer.panelType === 2) {
@@ -530,7 +530,7 @@ const CustomDraggable
               }
             }
           });
-          url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`
+          url = `/dashboard/${bar.dashboardId}/panel-${layer.id}/state-${panel.states[0].id}`;
         }
         if (url) {
           history.push(url);
@@ -545,28 +545,28 @@ const CustomDraggable
       }
     };
     const handleMouseOver = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent) => {
-      const currentDom = allComponentDOMs[layer.id]
+      const currentDom = allComponentDOMs[layer.id];
       if (currentDom.classList.contains("hovered")) {
         return;
       }
-      currentDom.classList.add("hovered")
+      currentDom.classList.add("hovered");
 
     };
     const handleMouseOut = (e: DraggableEvent, layer: ILayerGroup | ILayerComponent) => {
-      const currentDom = allComponentDOMs[layer.id]
-      currentDom.classList.remove("hovered")
+      const currentDom = allComponentDOMs[layer.id];
+      currentDom.classList.remove("hovered");
       // dispatch({
       //   type: 'bar/save',
       // })
     };
     const mouseRightClick = (e: any, layer: ILayerGroup | ILayerComponent | ILayerPanel, component: IComponent | undefined, config: IConfig, panel: IPanel | undefined) => {
-      console.log('selectedComponentRefs', bar.selectedComponentRefs)
+      console.log("selectedComponentRefs", bar.selectedComponentRefs);
       if (Object.keys(bar.selectedComponentRefs).length > 1 && layer.id in bar.selectedComponentRefs) {
         bar.isSupportMultiple = true;
-        bar.isMultipleTree = true
+        bar.isMultipleTree = true;
       } else {
         bar.isSupportMultiple = false;
-        bar.isMultipleTree = false
+        bar.isMultipleTree = false;
       }
       e.persist();
       e.preventDefault();
@@ -669,16 +669,16 @@ const CustomDraggable
                 // 判断是否为同一个源
                 if (item.callbackParam === callback.target) {
                   // 翻页组件不需要配置origin
-                  if (component.moduleName === 'paginationComp') {
-                    temp = true
-                    callbackArgs[callback.target] = data[callback.target]
-                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
+                  if (component.moduleName === "paginationComp") {
+                    temp = true;
+                    callbackArgs[callback.target] = data[callback.target];
+                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id));
                     // 值是否改变
                     // data的值存在并且
-                  } else if ((["cascader", 'select2'].includes(component.moduleName)) || (data && data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin])) {
-                    temp = true
-                    callbackArgs[callback.target] = data ? data[callback.origin] : data
-                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id))
+                  } else if ((["cascader", "select2"].includes(component.moduleName)) || (data && data[callback.origin] && callbackArgs[callback.target] !== data[callback.origin])) {
+                    temp = true;
+                    callbackArgs[callback.target] = data ? data[callback.origin] : data;
+                    activeIds = activeIds.concat(item.destinationModules.map((module: any) => module.id));
                   }
 
                   dispatch({
@@ -697,11 +697,11 @@ const CustomDraggable
       if (temp) {
         activeIds = [...(new Set(activeIds) as any)];
         const activeComponents = activeIds.reduce((pre: any[], id: string) => {
-          const component = bar.fullAmountComponents.find((item: IComponent) => item.id === id)
+          const component = bar.fullAmountComponents.find((item: IComponent) => item.id === id);
           if (component) {
-            pre.push(component)
+            pre.push(component);
           }
-          return pre
+          return pre;
         }, []);
 
         // 绑定数据容器的组件列表
@@ -755,7 +755,7 @@ const CustomDraggable
             let component: IComponent | undefined;
             let panel: IPanel | undefined;
             let events: any;
-            let hideDefault: boolean = false
+            const hideDefault = false;
             let style_config, staticData, styleDimensionConfig, recommendConfig;
             // 群组
             if ("panelType" in layer) {
@@ -791,7 +791,7 @@ const CustomDraggable
               };
             } else {
               // 组件
-              component = components.find(item => item.id === layer.id)
+              component = components.find(item => item.id === layer.id);
               if (component) {
                 staticData = component.staticData;
                 style_config = component.config;
@@ -949,7 +949,7 @@ const CustomDraggable
                                   //     fields={getFields(component)}
                                   //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                   //   ></Hydrograph> :
-                                    layer.moduleName === 'chartLegend' ?
+                                    layer.moduleName === "chartLegend" ?
                                       <ChartLegend
                                         themeConfig={bar.componentThemeConfig}
                                         onThemeChange={onThemeChange}
@@ -957,7 +957,7 @@ const CustomDraggable
                                         fields={getFields(component)}
                                         comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                       ></ChartLegend> :
-                                      layer.moduleName === 'counter' ?
+                                      layer.moduleName === "counter" ?
                                         <Counter
                                           themeConfig={bar.componentThemeConfig}
                                           onThemeChange={onThemeChange}
@@ -965,7 +965,7 @@ const CustomDraggable
                                           fields={getFields(component)}
                                           comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                         ></Counter> :
-                                        layer.moduleName === 'scrollTable' ?
+                                        layer.moduleName === "scrollTable" ?
                                           <ScrollTable
                                             themeConfig={bar.componentThemeConfig}
                                             onThemeChange={onThemeChange}

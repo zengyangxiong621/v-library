@@ -79,18 +79,18 @@ class Counter extends Component {
     return displayStyle;
   };
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   // 根据对应的自动来转换
   formatData = (data, fields2ValueMap) => {
     const arr = Array.isArray(data)
       ? data.map((item) => {
-          let res = {};
-          for (let k in item) {
-            res[k] = item[fields2ValueMap[k]];
-          }
-          return res;
-        })
+        let res = {};
+        for (let k in item) {
+          res[k] = item[fields2ValueMap[k]];
+        }
+        return res;
+      })
       : [];
     return arr;
   };
@@ -144,7 +144,7 @@ class Counter extends Component {
     const componentThemeConfig = this.props.themeConfig;
     arr.map((item) => {
       let { name, value, type, options } = item;
-      if (item.hasOwnProperty("value")) {
+      if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           this.replaceThemeColor(value);
         } else {
@@ -221,8 +221,8 @@ class Counter extends Component {
       Number(originData[fields[1]]) > 0
         ? increase
         : Number(originData[fields[1]]) === 0
-        ? even
-        : reduce;
+          ? even
+          : reduce;
 
     return (
       <div

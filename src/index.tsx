@@ -5,7 +5,7 @@ import { BrowserRouter, HashRouter, Router } from "dva/router";
 import reportWebVitals from "./reportWebVitals";
 import { authorize, forwardLogin, GetQueryString } from "./services/loginApi";
 import { localStore } from "./services/LocalStoreService";
-import { createBrowserHistory } from 'history'
+import { createBrowserHistory } from "history";
 
 import "./index.css";
 import "antd/dist/antd.css";

@@ -7,9 +7,9 @@ import { deepClone, layersReverse } from "@/utils";
 import { Spin } from "antd";
 
 
-import RecursiveComponent from './components/recursiveComponent'
-import { calcCanvasSize } from '../../utils'
-import useWebsocket from '@/utils/useWebsocket'
+import RecursiveComponent from "./components/recursiveComponent";
+import { calcCanvasSize } from "../../utils";
+import useWebsocket from "@/utils/useWebsocket";
 
 
 const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
@@ -17,7 +17,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
 
   // 跨屏 接收跨屏回调
   // 建立socket连接，receiveData 接收数据，先打印出来，添加在回调参数后
-  const [ dealedData,setDealedData ] = useState({})
+  const [ dealedData,setDealedData ] = useState({});
   // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
   //   url: `/visual/webSocket/shareParam/eventName1`
   //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
@@ -219,11 +219,11 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
   const initDashboard = (cb = function () { }) => {
     return new Promise((resolve, reject) => {
-      let afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf('/bigscreen/'))
-      const idList = afterDashboardUrl.split('/').map(item => {
-        return item.replace(/[^0-9]/ig, "")
-      }).filter(item => item)
-      let dashboardId = idList[0] || null
+      const afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf("/bigscreen/"));
+      const idList = afterDashboardUrl.split("/").map(item => {
+        return item.replace(/[^0-9]/ig, "");
+      }).filter(item => item);
+      const dashboardId = idList[0] || null;
       dispatch({
         type: "previewDashboard/initDashboard",
         payload: { dashboardId },
@@ -243,10 +243,10 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
           target = { width, height };
           break;
       }
-      map[displayName] = target
-    })
-    return map
-  }
+      map[displayName] = target;
+    });
+    return map;
+  };
 
   // 跨屏 获取订阅消息
   // useEffect(() => {
@@ -273,8 +273,8 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   return (
     <div id="gs-v-library-app"
          style={{
-           width: '100vw',
-           height: '100vh',
+           width: "100vw",
+           height: "100vh",
            backgroundColor: pageStyle.background
          }}
     >

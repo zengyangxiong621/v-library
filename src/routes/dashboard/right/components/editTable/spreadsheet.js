@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import XSpreadsheet from "./x-spreadsheet";
 import "./x-spreadsheet/dist/xspreadsheet.css";
@@ -12,12 +13,8 @@ export default function Spreadsheet(props) {
     const element = sheetEl.current;
     const sheet = new XSpreadsheet(`#${containerId}`, {
       view: {
-        height: () =>
-          (element && element.clientHeight) ||
-          document.documentElement.clientHeight,
-        width: () =>
-          (element && element.clientWidth) ||
-          document.documentElement.clientWidth
+        height: () => (element && element.clientHeight) || document.documentElement.clientHeight,
+        width: () => (element && element.clientWidth) || document.documentElement.clientWidth,
       },
       mode: "edit", // edit  read
       showToolbar: false,
@@ -48,7 +45,7 @@ export default function Spreadsheet(props) {
           italic: false,
         },
       },
-      ...props.options
+      ...props.options,
     })
       .loadData(state) // load data
       .change((data) => {

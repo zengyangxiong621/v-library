@@ -1,23 +1,23 @@
 const ComponentDefaultConfig = {
-  "id": "", //组件ID
-  "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "排行条形图", //图层名称
-  "parentId": "", // 父组件 像是2D地图、3D地图 =================
-  "dashboardId": "", //画布id
+  id: "", //组件ID
+  uniqueTag: "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
+  name: "排行条形图", //图层名称
+  parentId: "", // 父组件 像是2D地图、3D地图 =================
+  dashboardId: "", //画布id
 
-  "moduleName": "rankingBar", //组件标识
-  "moduleVersion": "1.1.1", //组件版本号
+  moduleName: "rankingBar", //组件标识
+  moduleVersion: "1.1.1", //组件版本号
 
-  "createdAt": "2022-04-02T07:22:31.290Z", // =========
-  "updatedAt": "2022-04-02T07:22:39.798Z", // =========
+  createdAt: "2022-04-02T07:22:31.290Z", // =========
+  updatedAt: "2022-04-02T07:22:39.798Z", // =========
 
-  "autoUpdate": { "isAuto": false, "interval": 10 }, // =========
-  "thumb": "", // 缩略图 // =========
-  "dataFrom": 0,
-  "dataConfig": {}, //数据源配置
-  "dataType": "static", //数据类型：static;mysql;api;clickhouse
-  "dataContainers": [],
-  "staticData": {
+  autoUpdate: { isAuto: false, interval: 10 }, // =========
+  thumb: "", // 缩略图 // =========
+  dataFrom: 0,
+  dataConfig: {}, //数据源配置
+  dataType: "static", //数据类型：static;mysql;api;clickhouse
+  dataContainers: [],
+  staticData: {
     data: [
       {
         classify: "河北",
@@ -50,10 +50,10 @@ const ComponentDefaultConfig = {
         name: "numerical",
         value: "numerical",
         desc: "数值",
-      }
+      },
     ],
   },
-  "config": [
+  config: [
     {
       displayName: "位置尺寸",
       name: "dimension",
@@ -101,10 +101,10 @@ const ComponentDefaultConfig = {
           name: "图表",
           value: [
             {
-              "name": "batteryStyle",
-              "displayName": "电池风格",
-              "type": "switch",
-              "value": true
+              name: "batteryStyle",
+              displayName: "电池风格",
+              type: "switch",
+              value: true,
             },
             {
               name: "spacing",
@@ -118,10 +118,10 @@ const ComponentDefaultConfig = {
               },
             },
             {
-              "name": "autoSort",
-              "displayName": "自动排序",
-              "type": "checkBox",
-              "value": false,
+              name: "autoSort",
+              displayName: "自动排序",
+              type: "checkBox",
+              value: false,
             },
             {
               name: "sortOrder",
@@ -131,24 +131,24 @@ const ComponentDefaultConfig = {
               options: [
                 {
                   name: "降序",
-                  value: "DESC"
+                  value: "DESC",
                 },
                 {
                   name: "升序",
-                  value: "ASC"
+                  value: "ASC",
                 },
-              ]
+              ],
             },
             {
-              "name": "maxBars",
-              "displayName": "最大条数",
-              "value": 5,
+              name: "maxBars",
+              displayName: "最大条数",
+              value: 5,
               type: "number",
-              "config": {
-                "min": 1,
-                "step": 1,
-                suffix: "条",  // 输入框后缀
-              }
+              config: {
+                min: 1,
+                step: 1,
+                suffix: "条", // 输入框后缀
+              },
             },
             {
               name: "animation",
@@ -174,7 +174,7 @@ const ComponentDefaultConfig = {
                     suffix: "s",
                   },
                 },
-              ]
+              ],
             },
             {
               name: "hyperlinks",
@@ -201,8 +201,8 @@ const ComponentDefaultConfig = {
                   type: "input",
                   value: "",
                 },
-              ]
-            }
+              ],
+            },
           ],
         },
         {
@@ -392,17 +392,18 @@ const ComponentDefaultConfig = {
           name: "柱状",
           value: [
             {
-              "name": "barWidth",
-              "displayName": "柱状宽度",
-              "type": "collapse",
+              name: "barWidth",
+              displayName: "柱状宽度",
+              type: "collapse",
               hasSwitch: false, // 是否有切换按钮
-              defaultExpand: false,  // 是否默认展开
+              defaultExpand: false, // 是否默认展开
               value: [
-                {	// 如果有后面的按钮，则该项必须放在第一个
-                  "name": "show",
-                  "displayName": "",
-                  "value": true,
-                  "type": "switch",
+                {
+                  // 如果有后面的按钮，则该项必须放在第一个
+                  name: "show",
+                  displayName: "",
+                  value: true,
+                  type: "switch",
                 },
                 {
                   name: "unit",
@@ -413,39 +414,39 @@ const ComponentDefaultConfig = {
                   options: [
                     {
                       name: "px",
-                      value: "px"
+                      value: "px",
                     },
                     {
                       name: "百分比",
-                      value: "%"
+                      value: "%",
                     },
-                  ]
+                  ],
                 },
                 {
-                  "name": "width",
-                  "displayName": "宽度",
-                  "value": 30,
+                  name: "width",
+                  displayName: "宽度",
+                  value: 30,
                   type: "number",
-                  "config": {
-                    "min": 1,
-                    "max": 100,
-                    "step": 1,
-                    suffix: "",  // 输入框后缀
-                  }
-                }
-              ]
+                  config: {
+                    min: 1,
+                    max: 100,
+                    step: 1,
+                    suffix: "", // 输入框后缀
+                  },
+                },
+              ],
             },
             {
-              "name": "symbolMargin",
-              "displayName": "分割宽度",
-              "value": 2,
+              name: "symbolMargin",
+              displayName: "分割宽度",
+              value: 2,
               type: "number",
-              "config": {
-                "min": 1,
-                "max": 10000,
-                "step": 1,
-                suffix: "px",  // 输入框后缀
-              }
+              config: {
+                min: 1,
+                max: 10000,
+                step: 1,
+                suffix: "px", // 输入框后缀
+              },
             },
             {
               name: "colorSetting",
@@ -461,23 +462,24 @@ const ComponentDefaultConfig = {
                   type: "switch",
                 },
                 {
-                  "name": "bySystem",
-                  "displayName": "系统自定",
-                  "type": "switch",
-                  "value": true
+                  name: "bySystem",
+                  displayName: "系统自定",
+                  type: "switch",
+                  value: true,
                 },
                 {
-                  "name": "barColor",
-                  "displayName": "柱状颜色",
-                  "type": "collapse",
+                  name: "barColor",
+                  displayName: "柱状颜色",
+                  type: "collapse",
                   hasSwitch: false, // 是否有切换按钮
-                  defaultExpand: false,  // 是否默认展开
+                  defaultExpand: false, // 是否默认展开
                   value: [
-                    {	// 如果有后面的按钮，则该项必须放在第一个
-                      "name": "show",
-                      "displayName": "",
-                      "value": true,
-                      "type": "switch",
+                    {
+                      // 如果有后面的按钮，则该项必须放在第一个
+                      name: "show",
+                      displayName: "",
+                      value: true,
+                      type: "switch",
                     },
                     {
                       name: "type",
@@ -488,13 +490,13 @@ const ComponentDefaultConfig = {
                       options: [
                         {
                           name: "纯色",
-                          value: "pure"
+                          value: "pure",
                         },
                         {
                           name: "渐变色",
-                          value: "gradient"
+                          value: "gradient",
                         },
-                      ]
+                      ],
                     },
                     {
                       name: "themePureColor",
@@ -520,7 +522,7 @@ const ComponentDefaultConfig = {
                       value: "#102862",
                       type: "color",
                     },
-                  ]
+                  ],
                 },
                 {
                   name: "bgColor",
@@ -528,13 +530,13 @@ const ComponentDefaultConfig = {
                   value: "rgba(230,247,255,0.1)",
                   type: "color",
                 },
-              ]
+              ],
             },
             {
-              "name": "isRadius",
-              "displayName": "圆角柱状",
-              "type": "switch",
-              "value": false
+              name: "isRadius",
+              displayName: "圆角柱状",
+              type: "switch",
+              value: false,
             },
             {
               name: "highLight",
@@ -553,33 +555,34 @@ const ComponentDefaultConfig = {
                   name: "icon",
                   displayName: "图标",
                   type: "image",
-                  value: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAMAAADWZboaAAAAZlBMVEUAAABe3uVe3+Vf3uVf3+Zf3uVg3+Zg3+Zf3+Vi4OZh4OZg3+Z86/Bh3+Zi4Odj4Odi4OZ86/B76/B86/Bj4ed56+9x5+xn4umB7/N87PB36e+A7/N+7fF/7vJ/7vJ+7fGA7/OB7/PReX+lAAAAIXRSTlMABQkVDREmIhk3MR10LEFFPHh7cUprXE35h2XnqMLAp+mHAG9cAAAB5ElEQVRIx83WjU7CMBQFYIoiKMqU/XUboHv/l/Tce7t2XamDNSacETEmX86tlK2rx4py150o+MstMBLwWRfHKo6JCVxLnvmFGBjFQ58oF1//sUZhGy/ClSTWObgnL4O+bkeN4nY2okfNMbkRt9/vtxz8InoTsWplJSCzFxPmO8+GpSIByX3YQAuGDWtRKhKjCnxDXhF6Z4yxnZ20Wgko7BMRDmxtSGVaI4kdTIgb+zTYoJQlIMlDlmUFgrcDWWC201qSayqlTkiCddWWeV62VU0YlnpRi9VOKaSUsiyq/N0krwq2Ugt7lVpZl5BfHNiytjagMi+XYp0kCR45hMlivVQrE/uU5pXSrCB5bM6d1t2lOZItMqmliT3q5uVxqxzyW/ccfYLNKx7ZTeykMvNyac2yt2Fbc61MHLSC0rwoxbiNdlQ3GBm1NLHQsHUrtEXppR/ljNpW6DbSCoqlFiVoN6YdaFlgsSFVPs1BdT8OaB5QyQzVcaqWDows/zepxR8ObLglTrdtCRVuRNj4Rrxh+//0ke2f8KVL+Kon3GCSbmsJN9OUW3j6g0Ns+LgCij2u0h+Sghc8mlMPBMgdx5DFh59VmOVHrvmDnoNxCz3J7MFWsMuaLyR089xz/xhlfijvwutR8gv3zk6BLUUeCgAAAABJRU5ErkJggg==", // 有背景图则返回背景图的url，没有背景图返回空或者null
+                  value:
+                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAMAAADWZboaAAAAZlBMVEUAAABe3uVe3+Vf3uVf3+Zf3uVg3+Zg3+Zf3+Vi4OZh4OZg3+Z86/Bh3+Zi4Odj4Odi4OZ86/B76/B86/Bj4ed56+9x5+xn4umB7/N87PB36e+A7/N+7fF/7vJ/7vJ+7fGA7/OB7/PReX+lAAAAIXRSTlMABQkVDREmIhk3MR10LEFFPHh7cUprXE35h2XnqMLAp+mHAG9cAAAB5ElEQVRIx83WjU7CMBQFYIoiKMqU/XUboHv/l/Tce7t2XamDNSacETEmX86tlK2rx4py150o+MstMBLwWRfHKo6JCVxLnvmFGBjFQ58oF1//sUZhGy/ClSTWObgnL4O+bkeN4nY2okfNMbkRt9/vtxz8InoTsWplJSCzFxPmO8+GpSIByX3YQAuGDWtRKhKjCnxDXhF6Z4yxnZ20Wgko7BMRDmxtSGVaI4kdTIgb+zTYoJQlIMlDlmUFgrcDWWC201qSayqlTkiCddWWeV62VU0YlnpRi9VOKaSUsiyq/N0krwq2Ugt7lVpZl5BfHNiytjagMi+XYp0kCR45hMlivVQrE/uU5pXSrCB5bM6d1t2lOZItMqmliT3q5uVxqxzyW/ccfYLNKx7ZTeykMvNyac2yt2Fbc61MHLSC0rwoxbiNdlQ3GBm1NLHQsHUrtEXppR/ljNpW6DbSCoqlFiVoN6YdaFlgsSFVPs1BdT8OaB5QyQzVcaqWDows/zepxR8ObLglTrdtCRVuRNj4Rrxh+//0ke2f8KVL+Kon3GCSbmsJN9OUW3j6g0Ns+LgCij2u0h+Sghc8mlMPBMgdx5DFh59VmOVHrvmDnoNxCz3J7MFWsMuaLyR089xz/xhlfijvwutR8gv3zk6BLUUeCgAAAABJRU5ErkJggg==", // 有背景图则返回背景图的url，没有背景图返回空或者null
                 },
                 {
-                  "name": "radius",
-                  "displayName": "半径",
-                  "value": 60,
+                  name: "radius",
+                  displayName: "半径",
+                  value: 60,
                   type: "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    suffix: "px",  // 输入框后缀
-                  }
+                  config: {
+                    min: 0,
+                    max: 1000,
+                    step: 1,
+                    suffix: "px", // 输入框后缀
+                  },
                 },
                 {
-                  "name": "offset",
-                  "displayName": "偏移",
-                  "value": 20,
+                  name: "offset",
+                  displayName: "偏移",
+                  value: 20,
                   type: "number",
-                  "config": {
-                    "min": 0,
-                    "max": 1000,
-                    "step": 1,
-                    suffix: "px",  // 输入框后缀
-                  }
+                  config: {
+                    min: 0,
+                    max: 1000,
+                    step: 1,
+                    suffix: "px", // 输入框后缀
+                  },
                 },
-              ]
+              ],
             },
           ],
         },
@@ -587,20 +590,24 @@ const ComponentDefaultConfig = {
     },
   ],
 
-  "useFilter": false,
-  "filters": [],
-  "events": [],
-  "callbackArgs": [],
-  themes: [{
-    id: "theme-default",
-    name: "系统默认"
-  }, {
-    id: "theme-light",
-    name: "浅色风格"
-  }, {
-    id: "theme-gov-blue",
-    name: "政务蓝"
-  }]
+  useFilter: false,
+  filters: [],
+  events: [],
+  callbackArgs: [],
+  themes: [
+    {
+      id: "theme-default",
+      name: "系统默认",
+    },
+    {
+      id: "theme-light",
+      name: "浅色风格",
+    },
+    {
+      id: "theme-gov-blue",
+      name: "政务蓝",
+    },
+  ],
 };
 
 export default ComponentDefaultConfig;

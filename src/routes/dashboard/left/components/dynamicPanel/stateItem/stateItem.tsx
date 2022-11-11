@@ -1,4 +1,4 @@
-import { memo, useState, useRef } from "react";
+import React, { memo, useState, useRef } from "react";
 import "./stateItem.less";
 import { connect } from "dva";
 import { IconFont } from "@/utils/useIcon";
@@ -7,7 +7,6 @@ import { Input } from "antd";
 
 //
 const StateItem = (props: any) => {
-
   const { rightClick, item, selectItem, activeItem, dispatch } = props;
   const inputRef: any = useRef(null);
   const [inputValue, setInputValue] = useState(item.name);
@@ -56,14 +55,14 @@ const StateItem = (props: any) => {
           editState ?
             <div
               style={{
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis"
 
               }}
             >
               <Input
-                style={{ background: '#232630' }}
+                style={{ background: "#232630" }}
                 value={inputValue}
                 ref={inputRef}
                 onChange={e => setInputValue(e.target.value)}

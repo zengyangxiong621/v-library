@@ -7,7 +7,6 @@ const ComponentDefaultConfig = {
   "moduleName": "normalTable",
   "moduleType": "table",
   "moduleVersion": "1.0.5",
-  "moduleType":"table",
   "thumb": "",
   "dataConfig": {},
   "dataType": "static",

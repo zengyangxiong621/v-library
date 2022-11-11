@@ -4,7 +4,7 @@ const componentDefaultConfig = {
   "name": "多行文本", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
-  "moduleType": 'text',
+  "moduleType": "text",
   "moduleName": "wordText", //组件标识
   "moduleVersion": "1.0.3", //组件版本号
 

@@ -1,5 +1,4 @@
 // 工具栏上的icon、右键菜单触发的操作
-/* eslint-disable import/no-anonymous-default-export */
 interface IOperateState {
   ids: any[];
   isLock?: boolean;

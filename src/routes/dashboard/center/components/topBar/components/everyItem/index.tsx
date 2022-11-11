@@ -18,7 +18,7 @@ const EveryItem = (props: any) => {
 
   const componentCreate = async () => {
     if (type === "design") {
-      let dataCopy = JSON.parse(JSON.stringify(data));
+      const dataCopy = JSON.parse(JSON.stringify(data));
       dataCopy.moduleType = "assist";
       window.eval(`${await importComponent(dataCopy)}`);
       const { ComponentDefaultConfig } = (window as any).VComponents;

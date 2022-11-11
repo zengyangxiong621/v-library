@@ -1,16 +1,16 @@
-import React, { memo, useEffect } from 'react'
-import './index.less'
+import React, { memo } from "react";
+import "./index.less";
 
-import { Tooltip } from 'antd'
-import { IconFont } from '../../../../../utils/useIcon'
+import { Tooltip } from "antd";
+import { IconFont } from "../../../../../utils/useIcon";
 
-import { connect } from 'dva'
+import { connect } from "dva";
 
-const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, iconSize, needBottomBorder = true }) => {
-  const notBannedClick = bar.key.length > 0
+const ToolBar = ({  bar,  data, getActiveIcon, iconSize, needBottomBorder = true }) => {
+  const notBannedClick = bar.key.length > 0;
   return (
     <div className='ToolBar' style={{
-      borderBottom: needBottomBorder ? '1px solid black' : ''
+      borderBottom: needBottomBorder ? "1px solid black" : ""
     }}>
       {
         data.map(o => {
@@ -18,16 +18,16 @@ const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, iconSize, needBo
             <Tooltip key={o.key} title={o.text}
               placement='bottomRight'>
               {
-                <div style={{ cursor: notBannedClick ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center' }}>
+                <div style={{ cursor: notBannedClick ? "pointer" : "not-allowed", display: "flex", alignItems: "center" }}>
                   <IconFont
                     type={o.icon}
                     onClick={() => {
-                      getActiveIcon(o.key)
+                      getActiveIcon(o.key);
                     }}
                     style={{
                       fontSize: iconSize //图标大小
                     }}
-                    className={`${notBannedClick ? 'not-banned-click' : 'banned-click'} every-icon`}
+                    className={`${notBannedClick ? "not-banned-click" : "banned-click"} every-icon`}
                   />
                   {/* <span
                   onClick={() => {
@@ -42,14 +42,14 @@ const ToolBar = ({ dispatch, bar, operate, data, getActiveIcon, iconSize, needBo
                 </div>
               }
             </Tooltip>
-          )
+          );
         })
       }
     </div>
-  )
-}
+  );
+};
 
 
 export default memo(connect(
   ({ bar, operate }) => ({ bar, operate })
-)(ToolBar))
+)(ToolBar));

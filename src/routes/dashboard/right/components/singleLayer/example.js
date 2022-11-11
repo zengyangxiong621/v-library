@@ -1,4 +1,3 @@
-
 /************** 由此导致的bug 请找 chendibo ****************/
 /**
  * 以实现 选择单选框中的某一项后，在其下方添加一个新的组件为例,
@@ -6,7 +5,6 @@
  * 2、在radioGroup组件中进行相应的处理(将updateEffect对象处理后传出)
  * 3、在singleLayer组件的<<<styleChange>>>方法中 根据updateEffect的信息来重新生成styleConfig(即componentConfig.config)
  */
-
 
 // 见 config[2].options[0].value
 const config = [
@@ -17,8 +15,7 @@ const config = [
     config: {
       lock: false,
     },
-    value: [
-    ],
+    value: [],
   },
   {
     displayName: "默认隐藏",
@@ -59,8 +56,8 @@ const config = [
               // value 在这儿随便给单选框选项中的一个值就行,真正赋值的时候需要与当前选中的项保持一致
               // value: "percent",
               updateType: {
-                percent: 'delete',
-                actualValue: 'add',
+                percent: "delete",
+                actualValue: "add",
               },
               curIndex: 0,
               willAddObj: {
@@ -73,7 +70,7 @@ const config = [
                   max: 10000000000,
                   step: 1,
                 },
-              }
+              },
             },
           },
           {
@@ -86,4 +83,4 @@ const config = [
       },
     ],
   },
-]
+];

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useEffect, useRef, useState } from "react";
 import "./index.less";
 
@@ -145,6 +144,7 @@ const EveryTreeNode = (props: any) => {
     });
   };
   const inputWrapClick = (e: any) => {
+    console.log(e);
     // e.stopPropagation()
   };
   return (

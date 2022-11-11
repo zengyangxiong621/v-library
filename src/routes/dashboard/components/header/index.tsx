@@ -22,7 +22,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   const [appName, setAppName] = useState(bar.dashboardName);
   const [isRename, setIsRename] = useState(false);
-  const [activeIcon, setActiveIcon] = useState('');
+  const [activeIcon, setActiveIcon] = useState("");
 
   const appNameInputRef = useRef<any>();
   useEffect(() => {
@@ -31,24 +31,24 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   // 返回首页
   const toBack = () => {
-    console.log("bar.fullAmountRouteList", bar.fullAmountRouteList)
+    console.log("bar.fullAmountRouteList", bar.fullAmountRouteList);
     /*
       动态面板和引用面板的 url 上是有 panelId 和 stateId
       引用面板和应用的 url 只有 dashboardId
      */
     if (bar.panelId) {
       // 动态面板、下钻面板
-      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.panelId)
-      history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
+      const currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.panelId);
+      history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url);
     }
     if (!bar.panelId && bar.dashboardId) {
-      let currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.dashboardId)
-      if (currentRoute.type === 'dashboard') {
+      const currentRoute = bar.fullAmountRouteList.find((item: any) => item.id === bar.dashboardId);
+      if (currentRoute.type === "dashboard") {
         // 应用
-        history.replace(`/dashboard-manage`);
+        history.replace("/dashboard-manage");
       } else {
         // 引用面板
-        history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url)
+        history.push(bar.fullAmountRouteList.find((item: any) => item.id === currentRoute.parentId).url);
       }
     }
     // 暂时在这里清空localStorage
@@ -57,7 +57,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
   };
   // 跳转至发布预览页面
   const toPreviewOrPublish = (targetPage: string) => {
-    let beforeDashboardUrl = window.location.href.slice(0, window.location.href.indexOf('/dashboard/'))
+    const beforeDashboardUrl = window.location.href.slice(0, window.location.href.indexOf("/dashboard/"));
     const pageReflect: any = {
       "yulan": `/bigscreen/${bar.dashboardId}`,
       "fabu": `/publishScreen/${bar.dashboardId}`
@@ -746,8 +746,8 @@ const centerIconArr = [
 
 const rightIconArr = [
   {
-    icon: 'huishouzhan',
-    text: '回收站'
+    icon: "huishouzhan",
+    text: "回收站"
   },
   {
     icon: "yulan",

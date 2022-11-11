@@ -1,95 +1,95 @@
 import { http } from "@/services/request";
-const globalStroe={
+const globalStroe = {
   namespace: "global",
   state: {
-    userInfo:null,
+    userInfo: null,
     workspaceList: [],
     curWorkspace: {},
     menuData: [
       {
         path: "/dashboard-manage",
-        title: "我的可视化"
+        title: "我的可视化",
       },
       {
         path: "/datasource",
-        title: "我的数据"
+        title: "我的数据",
       },
       {
         path: "/component-dev",
-        title: "组件开发"
+        title: "组件开发",
       },
       {
         path: "/cockpit",
-        title: "驾驶舱"
+        title: "驾驶舱",
       },
       {
         path: "/resource-center",
-        title: "资源中心"
+        title: "资源中心",
       },
       {
         title: "权限管理",
         children: [
           {
             title: "用户管理",
-            path: "/authority-manage/user-manage"
+            path: "/authority-manage/user-manage",
           },
           {
             title: "角色管理",
-            path: "/authority-manage/role-manage"
-          }
-        ]
+            path: "/authority-manage/role-manage",
+          },
+        ],
       },
       {
         path: "/alarm-log",
-        title: "告警管理"
+        title: "告警管理",
       },
-    ]
+    ],
   },
-  subscriptions:{
-    setup({ dispatch, history }: { dispatch: any; history: any }){
+  subscriptions: {
+    setup({ dispatch, history }: { dispatch: any; history: any }) {
       history.listen((location: any) => {
-        const pathName=location.pathname || location.location.pathname;
-        const token=localStorage.getItem("token");
-        if(pathName==="/login"){
-          if(token){
+        const pathName = location.pathname || location.location.pathname;
+        const token = localStorage.getItem("token");
+        if (pathName === "/login") {
+          if (token) {
             history.replace("/");
-            return
+            return;
           }
           dispatch({
-            type:"global/setUserInfo",
-            payload:null
+            type: "global/setUserInfo",
+            payload: null,
           });
           return;
         }
         const isPublishScreen = window.location.href.indexOf("publishScreen") > -1;
-        if(!token && !isPublishScreen){
+        if (!token && !isPublishScreen) {
           history.replace("/login");
         }
       });
-    }
+    },
   },
   reducers: {
-    setUserInfo(state:any,{payload}:any){
+    setUserInfo(state: any, { payload }: any) {
       return {
         ...state,
-        userInfo:payload
+        userInfo: payload,
       };
     },
-    setWorkspaceList(state:any,{payload}:any){
+    setWorkspaceList(state: any, { payload }: any) {
       return {
         ...state,
-        workspaceList:payload
+        workspaceList: payload,
       };
-    }
+    },
   },
   effects: {
-    *getCurUserInfo({ payload }: any, { put }: any):any {
+    *getCurUserInfo({ payload }: any, { put }: any): any {
       try {
-        const data=yield http({
-          url:"/visual/user/getAccountInfo",
-          method:"post"
+        const data = yield http({
+          url: "/visual/user/getAccountInfo",
+          method: "post",
         });
-        if(data){
+        if (data) {
           yield put({
             type: "setUserInfo",
             payload: data,
@@ -100,9 +100,9 @@ const globalStroe={
       }
     },
     // 获取所有工作空间
-    *getWorkspaceList({ payload }: any, { put }: any):any{
+    *getWorkspaceList({ payload }: any, { put }: any): any {
       try {
-        const data=yield http({
+        const data = yield http({
           url: "/visual/workspace/list",
           method: "get",
         });
@@ -111,27 +111,26 @@ const globalStroe={
           type: "setWorkspaceList",
           payload: data,
         });
-        let curWorkspace:any=localStorage.getItem("curWorkspace");
-        if(data.length){
-          if(curWorkspace){
+        let curWorkspace: any = localStorage.getItem("curWorkspace");
+        if (data.length) {
+          if (curWorkspace) {
             curWorkspace = JSON.parse(curWorkspace);
-            const spaceItem = data?.find((item:any) => item.id === curWorkspace.id);
-            if(!spaceItem){
+            const spaceItem = data?.find((item: any) => item.id === curWorkspace.id);
+            if (!spaceItem) {
               curWorkspace = null;
             }
           }
-          if(!curWorkspace){
+          if (!curWorkspace) {
             // 将当前空间存入到localStorage
-            localStorage.setItem("curWorkspace",JSON.stringify(data[0]));
+            localStorage.setItem("curWorkspace", JSON.stringify(data[0]));
           }
-        }else{
+        } else {
           localStorage.removeItem("curWorkspace");
         }
-
       } catch (error) {
         console.log(error);
       }
-    }
+    },
   },
 };
 export default globalStroe;

@@ -1,11 +1,11 @@
-import flowData from './data.json'
+import flowData from "./data.json";
 const componentDefaultConfig = {
-  "id": '123', //组件ID
+  "id": "123", //组件ID
   "uniqueTag": "", // =========
   "name": "流程图", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
-  "moduleType": 'chart',
+  "moduleType": "chart",
   "moduleName": "flowChart", //组件标识
   "moduleVersion": "1.0.1", //组件版本号
 
@@ -100,117 +100,117 @@ const componentDefaultConfig = {
     //   "value": false
     // },
     {
-      'name': 'backgroundColor',
-      'displayName': '背景颜色',
-      'value': '#ffffff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-      'type': 'color'
+      "name": "backgroundColor",
+      "displayName": "背景颜色",
+      "value": "#ffffff", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+      "type": "color"
     },
     {
-      'name': 'warningConfig',
-      'displayName': '警告高亮',
-      'type': 'collapse',
-      'hasSwitch': false, // 是否有切换按钮
-      'defaultExpand': false, // 是否默认展开
-      'isHide': false, //该属性设为true表示switch切换带显隐功能，也可不填
-      'value': [{ // 如果有后面的按钮，则该项必须放在第一个
-          'name': 'show',
-          'displayName': '',
-          'value': true,
-          'type': 'switch',
+      "name": "warningConfig",
+      "displayName": "警告高亮",
+      "type": "collapse",
+      "hasSwitch": false, // 是否有切换按钮
+      "defaultExpand": false, // 是否默认展开
+      "isHide": false, //该属性设为true表示switch切换带显隐功能，也可不填
+      "value": [{ // 如果有后面的按钮，则该项必须放在第一个
+          "name": "show",
+          "displayName": "",
+          "value": true,
+          "type": "switch",
         },
         {
-          'name': 'nodeStartColor',
-          'displayName': '节点色-开始',
-          'value': '#ff0000', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type': 'color'
+          "name": "nodeStartColor",
+          "displayName": "节点色-开始",
+          "value": "#ff0000", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type": "color"
         },
         {
-          'name': 'nodeEndColor',
-          'displayName': '节点色-结束',
-          'value': '#ffffff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type': 'color'
+          "name": "nodeEndColor",
+          "displayName": "节点色-结束",
+          "value": "#ffffff", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type": "color"
         },
         {
-          'name': 'lineColor',
-          'displayName': '线条颜色',
-          'value': '#FD7979', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type': 'color'
+          "name": "lineColor",
+          "displayName": "线条颜色",
+          "value": "#FD7979", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type": "color"
         }
       ]
     },
     {
-      'name': 'fontConfig',
-      'displayName': '字体样式',
-      'type': 'collapse',
+      "name": "fontConfig",
+      "displayName": "字体样式",
+      "type": "collapse",
       hasSwitch: false, // 是否有切换按钮
       defaultExpand: false, // 是否默认展开
       isHide: false, //该属性设为true表示switch切换带显隐功能，也可不填
       value: [{ // 如果有后面的按钮，则该项必须放在第一个
-          'name': 'show',
-          'displayName': '',
-          'value': true,
-          'type': 'switch',
+          "name": "show",
+          "displayName": "",
+          "value": true,
+          "type": "switch",
         },
         {
           name: "nodeFont",
-          displayName: '节点文字',
-          type: 'chartText',
+          displayName: "节点文字",
+          type: "chartText",
           value: {
-            fontFamily: '微软雅黑',
+            fontFamily: "微软雅黑",
             fontSize: 22,
-            color: '#fff',
-            fontWeight: 'normal' // bold bolder lighter
+            color: "#fff",
+            fontWeight: "normal" // bold bolder lighter
           }
         },
         {
           name: "labelFont",
-          displayName: '标签文字',
-          type: 'chartText',
+          displayName: "标签文字",
+          type: "chartText",
           value: {
-            fontFamily: '微软雅黑',
+            fontFamily: "微软雅黑",
             fontSize: 12,
-            color: '#333',
-            fontWeight: 'normal' // bold bolder lighter
+            color: "#333",
+            fontWeight: "normal" // bold bolder lighter
           }
         }
       ]
     },
     {
-      'name': 'labelConfig',
-      'displayName': '标签设置',
-      'type': 'collapse',
+      "name": "labelConfig",
+      "displayName": "标签设置",
+      "type": "collapse",
       hasSwitch: false, // 是否有切换按钮
       defaultExpand: false, // 是否默认展开
       isHide: false, //该属性设为true表示switch切换带显隐功能，也可不填
       value: [{ // 如果有后面的按钮，则该项必须放在第一个
-          'name': 'show',
-          'displayName': '',
-          'value': true,
-          'type': 'switch',
+          "name": "show",
+          "displayName": "",
+          "value": true,
+          "type": "switch",
         },
         {
           name: "labelSize",
-          displayName: '标签大小',
-          type: 'inputNumber2',
+          displayName: "标签大小",
+          type: "inputNumber2",
           showDetail: true, // 是否展示下面的文字说明
           value: [{
-              name: 'labelWidth',
-              displayName: '宽',
-              type: 'number',
+              name: "labelWidth",
+              displayName: "宽",
+              type: "number",
               value: 150,
               config: {
                 min: 0,
-                suffix: 'px', // 输入框后缀
+                suffix: "px", // 输入框后缀
               }
             },
             {
-              name: 'labelHeight',
-              displayName: '高',
-              type: 'number',
+              name: "labelHeight",
+              displayName: "高",
+              type: "number",
               value: 70,
               config: {
                 min: 0,
-                suffix: 'px', // 输入框后缀
+                suffix: "px", // 输入框后缀
               }
             },
           ]
@@ -230,28 +230,28 @@ const componentDefaultConfig = {
           "name": "tab",
           "type": "object",
           "value": [{
-              'name': 'nodeStartColor',
-              'displayName': '节点色-开始',
-              'value': '#96C6FE', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeStartColor",
+              "displayName": "节点色-开始",
+              "value": "#96C6FE", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'nodeEndColor',
-              'displayName': '节点色-结束',
-              'value': '#588CDB', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeEndColor",
+              "displayName": "节点色-结束",
+              "value": "#588CDB", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'labelBgColor',
-              'displayName': '标签背景色',
-              'value': '#ebf3fc', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "labelBgColor",
+              "displayName": "标签背景色",
+              "value": "#ebf3fc", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'lineColor',
-              'displayName': '线条颜色',
-              'value': '#316bc4', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "lineColor",
+              "displayName": "线条颜色",
+              "value": "#316bc4", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             // {
             //   name: "labelOffset",
@@ -290,28 +290,28 @@ const componentDefaultConfig = {
           "name": "tab",
           "type": "object",
           "value": [{
-              'name': 'nodeStartColor',
-              'displayName': '节点色-开始',
-              'value': '#96C6FE', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeStartColor",
+              "displayName": "节点色-开始",
+              "value": "#96C6FE", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'nodeEndColor',
-              'displayName': '节点色-结束',
-              'value': '#588CDB', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeEndColor",
+              "displayName": "节点色-结束",
+              "value": "#588CDB", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'labelBgColor',
-              'displayName': '标签背景色',
-              'value': '#ebf3fc', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "labelBgColor",
+              "displayName": "标签背景色",
+              "value": "#ebf3fc", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'lineColor',
-              'displayName': '线条颜色',
-              'value': '#316bc4', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "lineColor",
+              "displayName": "线条颜色",
+              "value": "#316bc4", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             // {
             //   name: "labelOffset",
@@ -348,28 +348,28 @@ const componentDefaultConfig = {
           "name": "tab",
           "type": "object",
           "value": [{
-              'name': 'nodeStartColor',
-              'displayName': '节点色-开始',
-              'value': '#ADE8FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeStartColor",
+              "displayName": "节点色-开始",
+              "value": "#ADE8FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'nodeEndColor',
-              'displayName': '节点色-结束',
-              'value': '#67D4FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeEndColor",
+              "displayName": "节点色-结束",
+              "value": "#67D4FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'labelBgColor',
-              'displayName': '标签背景色',
-              'value': '#e4f6fe', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "labelBgColor",
+              "displayName": "标签背景色",
+              "value": "#e4f6fe", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'lineColor',
-              'displayName': '线条颜色',
-              'value': '#92defa', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "lineColor",
+              "displayName": "线条颜色",
+              "value": "#92defa", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             // {
             //   name: "labelOffset",
@@ -406,28 +406,28 @@ const componentDefaultConfig = {
           "name": "tab",
           "type": "object",
           "value": [{
-              'name': 'nodeStartColor',
-              'displayName': '节点色-开始',
-              'value': '#b4efd7', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeStartColor",
+              "displayName": "节点色-开始",
+              "value": "#b4efd7", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'nodeEndColor',
-              'displayName': '节点色-结束',
-              'value': '#61DDAB', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeEndColor",
+              "displayName": "节点色-结束",
+              "value": "#61DDAB", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'labelBgColor',
-              'displayName': '标签背景色',
-              'value': '#dff8ee', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "labelBgColor",
+              "displayName": "标签背景色",
+              "value": "#dff8ee", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'lineColor',
-              'displayName': '线条颜色',
-              'value': '#88dcb3', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "lineColor",
+              "displayName": "线条颜色",
+              "value": "#88dcb3", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             // {
             //   name: "labelOffset",
@@ -464,28 +464,28 @@ const componentDefaultConfig = {
           "name": "tab",
           "type": "object",
           "value": [{
-              'name': 'nodeStartColor',
-              'displayName': '节点色-开始',
-              'value': '#FFE8AB', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeStartColor",
+              "displayName": "节点色-开始",
+              "value": "#FFE8AB", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'nodeEndColor',
-              'displayName': '节点色-结束',
-              'value': '#F8C12F', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "nodeEndColor",
+              "displayName": "节点色-结束",
+              "value": "#F8C12F", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'labelBgColor',
-              'displayName': '标签背景色',
-              'value': '#fef3d6', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "labelBgColor",
+              "displayName": "标签背景色",
+              "value": "#fef3d6", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             {
-              'name': 'lineColor',
-              'displayName': '线条颜色',
-              'value': '#f9c541', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type': 'color'
+              "name": "lineColor",
+              "displayName": "线条颜色",
+              "value": "#f9c541", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type": "color"
             },
             // {
             //   name: "labelOffset",
@@ -520,15 +520,15 @@ const componentDefaultConfig = {
     }
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

@@ -4,7 +4,7 @@ const componentDefaultConfig = {
   "name": "标准标题", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "11", //画布id
-  "moduleType": 'text',
+  "moduleType": "text",
   "moduleName": "iconText", //组件标识
   "moduleVersion": "1.1.2", //组件版本号
 

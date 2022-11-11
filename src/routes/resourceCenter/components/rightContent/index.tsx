@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import { http, BASEURL } from "@/services/request";
@@ -32,20 +31,20 @@ const RightContent = (props: any) => {
   // ************** 可复用方法 ************
   /**  每个appCard 进行复制、删除等操作后都需要刷新内容列表 && 更新左侧分组树  */
   // const refreshList = () => {
-  //   const transformId = resourceCenter.curSelectedGroup[0] === '-1' ? null : resourceCenter.curSelectedGroup[0]
+  //   const transformId = resourceCenter.curSelectedGroup[0] === "-1" ? null : resourceCenter.curSelectedGroup[0]
   //   const finalBody = {
   //     pageNo: 1,
   //     pageSize: 1000,
   //     spaceId,
   //     subType: transformId ? [null] : [],
-  //     type: ['design']
+  //     type: ["design"]
   //   }
   //   dispatch({
-  //     type: 'resourceCenter/getRightLists',
+  //     type: "resourceCenter/getRightLists",
   //     payload: finalBody,
   //   })
   //   dispatch({
-  //     type: 'resourceCenter/getGroupTree',
+  //     type: "resourceCenter/getGroupTree",
   //     payload: {
   //       spaceId
   //     }
@@ -75,9 +74,9 @@ const RightContent = (props: any) => {
       url,
       method: "post",
       body: {
-        spaceId: ["systemTemp",'design'].indexOf(currentItem.moduleType) > -1 ? null : spaceId ,
-        newGroupId:currentItem.moduleType === 'design' ? null : newGroupId,
-        type: currentItem.moduleType === 'design' ? newGroupId : null,
+        spaceId: ["systemTemp","design"].indexOf(currentItem.moduleType) > -1 ? null : spaceId ,
+        newGroupId:currentItem.moduleType === "design" ? null : newGroupId,
+        type: currentItem.moduleType === "design" ? newGroupId : null,
         ...obj
       }
     });
@@ -144,16 +143,16 @@ const RightContent = (props: any) => {
     }
     {/* 移入分组弹窗 */}
      <DarkModal
-      title='移动分组'
+      title="移动分组"
       className="move-right-modal"
       destroyOnClose={true}
       getContainer={false}
       visible={showMoveGroupModal}
       onCancel={cancelmoveGroupModal}
       footer={[
-        <div className='custom-btn-wrap'>
-          <Button className='my-btn cancel-btn' onClickCapture={cancelMoveGroup}>取消</Button>
-          <Button className='my-btn confirm-btn' type="primary" onClickCapture={confirmMoveGroup}>确定</Button>
+        <div className="custom-btn-wrap">
+          <Button className="my-btn cancel-btn" onClickCapture={cancelMoveGroup}>取消</Button>
+          <Button className="my-btn confirm-btn" type="primary" onClickCapture={confirmMoveGroup}>确定</Button>
         </div>
       ]}
       style={{
@@ -165,10 +164,10 @@ const RightContent = (props: any) => {
           span: 5,
         }}
         layout="horizontal"
-        name='releaseForm'
+        name="releaseForm"
         className="move-from"
       >
-        <Form.Item label='可选分类'
+        <Form.Item label="可选分类"
           name="group"
           rules={[{ required: true }]}
         >

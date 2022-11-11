@@ -1,44 +1,43 @@
-import React, { memo, useState, useEffect } from 'react';
-import './index.less'
+/* eslint-disable react/prop-types */
+import React, { memo, useState, useEffect } from "react";
+import "./index.less";
 
-import {
-  Form,
-  InputNumber,
-} from 'antd';
+import { Form, InputNumber } from "antd";
 
-const CusInputNumber = props => {
+const CusInputNumber = (props) => {
   const formItemLayout = {
-    labelAlign: 'left'
+    labelAlign: "left",
   };
   const [form] = Form.useForm();
-  const _data = props.data
-  const _min = typeof (_data?.config?.min) !== 'undefined' ? _data.config.min : Number.MIN_SAFE_INTEGER
-  const _max = typeof (_data?.config?.max) !== 'undefined' ? _data?.config?.max : Number.MAX_SAFE_INTEGER
+  const _data = props.data;
+  const _min =
+    typeof _data?.config?.min !== "undefined" ? _data.config.min : Number.MIN_SAFE_INTEGER;
+  const _max =
+    typeof _data?.config?.max !== "undefined" ? _data?.config?.max : Number.MAX_SAFE_INTEGER;
 
-
-  const _step = typeof (_data?.config?.step) !== 'undefined' ? _data?.config?.step : 1
-  const [value, setValue] = useState(_data.value)
+  const _step = typeof _data?.config?.step !== "undefined" ? _data?.config?.step : 1;
+  const [value, setValue] = useState(_data.value);
 
   useEffect(() => {
     form.setFieldsValue({
-      input: props.data.value
-    })
-    setValue(props.data.value)
-  }, [props.data.value])
+      input: props.data.value,
+    });
+    setValue(props.data.value);
+  }, [props.data.value]);
 
   const valueChange = (e) => {
-    setValue(e)
-    _data.value = e
-    props.onChange()
-  }
+    setValue(e);
+    _data.value = e;
+    props.onChange();
+  };
 
   const valueBlur = () => {
-    if((_data.value??'')===''){
-      _data.value = _min || 0
-      props.onChange()
+    if ((_data.value ?? "") === "") {
+      _data.value = _min || 0;
+      props.onChange();
     }
-    props.onBlur &&  props.onBlur()
-  }
+    props.onBlur && props.onBlur();
+  };
 
   return (
     <Form
@@ -49,23 +48,24 @@ const CusInputNumber = props => {
       style={props.formStyle}
     >
       <Form.Item label={_data.displayName} name="input">
-        <Form.Item  noStyle>
+        <Form.Item noStyle>
           <InputNumber
             min={_min}
             max={_max}
             step={_step}
-            style={{ width:'100%',...props.style }}
+            style={{ width: "100%", ...props.style }}
             className="size-input"
             value={value}
             onChange={valueChange}
-            onBlur = {valueBlur}
+            onBlur={valueBlur}
           />
-          {_data?.config?.suffix ? <div className="ant-input-group-addon input-num-suffix" >{_data.config.suffix}</div> : null}
+          {_data?.config?.suffix ? (
+            <div className="ant-input-group-addon input-num-suffix">{_data.config.suffix}</div>
+          ) : null}
         </Form.Item>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default memo(CusInputNumber)
-
+export default memo(CusInputNumber);

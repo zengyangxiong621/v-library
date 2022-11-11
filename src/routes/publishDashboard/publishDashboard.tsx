@@ -229,11 +229,11 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   const initDashboard = (cb = function () { }) => {
     const pwd = localStorage.getItem(pageId);
     return new Promise((resolve, reject) => {
-      let afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf('/publishScreen/'))
-      const idList = afterDashboardUrl.split('/').map(item => {
-        return item.replace(/[^0-9]/ig, "")
-      }).filter(item => item)
-      let dashboardId = idList[0] || null
+      const afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf("/publishScreen/"));
+      const idList = afterDashboardUrl.split("/").map(item => {
+        return item.replace(/[^0-9]/ig, "");
+      }).filter(item => item);
+      const dashboardId = idList[0] || null;
       dispatch({
         type: "publishDashboard/initDashboard",
         payload: {
@@ -281,7 +281,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
 
   const updateDataContainerDataFunc = async (container: any) => {
     const params: any = getQueryVariable();
-    let callBackParamValues = {
+    const callBackParamValues = {
       ...publishDashboard.callbackArgs,
     };
     if (params?.Ticket) {
@@ -378,8 +378,8 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   return (
     <div id="gs-v-library-app"
          style={{
-           width: '100vw',
-           height: '100vh',
+           width: "100vw",
+           height: "100vh",
            backgroundColor: pageStyle.background
          }}
     >

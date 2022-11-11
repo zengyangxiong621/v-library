@@ -1,57 +1,56 @@
-import React, { memo, useState, useEffect } from 'react'
-import { connect } from 'dva'
-import './index.less'
-import CodeEditor from '../codeEditor'
-import {
-  message
-} from 'antd';
-import debounce from 'lodash/debounce';
+/* eslint-disable react/prop-types */
+import React, { memo, useState, useEffect } from "react";
+import { connect } from "dva";
+import "./index.less";
+import CodeEditor from "../codeEditor";
+import { message } from "antd";
+import debounce from "lodash/debounce";
 
 const sourceCodeData = {
   readOnly: false,
-  language: 'json',
-  value: ``,
-  showExpand: true
+  language: "json",
+  value: "",
+  showExpand: true,
 };
 
 const StaticData = ({ bar, dispatch, ...props }) => {
-  const _data = props.data
-  const [staticData, setStaticData] = useState(sourceCodeData)
+  const _data = props.data;
+  const [staticData, setStaticData] = useState(sourceCodeData);
 
   useEffect(() => {
-    const staticDataNew = {...staticData}
-    staticDataNew.value = JSON.stringify(_data.staticData.data, null, 2) || ''
-    setStaticData(staticDataNew)
-  }, [_data.staticData.data])
+    const staticDataNew = { ...staticData };
+    staticDataNew.value = JSON.stringify(_data.staticData.data, null, 2) || "";
+    setStaticData(staticDataNew);
+  }, [_data.staticData.data]);
 
   const staticDataChange = debounce(() => {
-    const staDa = { ...staticData }
-    setStaticData(staDa)
+    const staDa = { ...staticData };
+    setStaticData(staDa);
     try {
-      JSON.parse(staticData.value)
+      JSON.parse(staticData.value);
     } catch (e) {
-      message.error('格式错误')
-      return
+      message.error("格式错误");
+      return;
     }
-    props.onChange(staticData.value)
+    props.onChange(staticData.value);
     dispatch({
-      type: 'bar/save',
+      type: "bar/save",
       payload: {
         componentData: {
           ...bar.componentData,
-          [_data.id]: JSON.parse(staticData.value)
-        }
+          [_data.id]: JSON.parse(staticData.value),
+        },
       },
-    })
-  }, 300)
+    });
+  }, 300);
 
   return (
-    <div style={{ width: '300px', height: '198px', marginTop: '16px' }}>
+    <div style={{ width: "300px", height: "198px", marginTop: "16px" }}>
       <CodeEditor data={staticData} onChange={staticDataChange} />
     </div>
-  )
-}
+  );
+};
 
 export default connect(({ bar }) => ({
-  bar
-}))(StaticData)
+  bar,
+}))(StaticData);

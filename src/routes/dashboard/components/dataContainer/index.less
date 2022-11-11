@@ -10,11 +10,15 @@
     border-color: @btn-default-border;
     background-color: @btn-default-bg;
   }
-  .ant-btn:hover, .ant-btn:focus, .ant-btn-link:active {
+  .ant-btn:hover,
+  .ant-btn:focus,
+  .ant-btn-link:active {
     color: @primary-color-hover;
     border-color: @primary-color-hover;
   }
-  .ant-btn-link:hover, .ant-btn-link:focus, .ant-btn-link:active {
+  .ant-btn-link:hover,
+  .ant-btn-link:focus,
+  .ant-btn-link:active {
     border-color: transparent;
   }
 
@@ -28,7 +32,8 @@
   .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
     border-color: @primary-color-hover;
   }
-  .ant-input:focus, .ant-input-focused {
+  .ant-input:focus,
+  .ant-input-focused {
     border-color: @primary-color-hover;
   }
   .ant-input-affix-wrapper {
@@ -39,7 +44,8 @@
       display: flex;
     }
   }
-  .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused {
+  .ant-input-affix-wrapper:focus,
+  .ant-input-affix-wrapper-focused {
     border-color: @primary-color-hover;
   }
   .input-search-icon {
@@ -50,33 +56,45 @@
   .ant-drawer .ant-table thead > tr > th {
     background-color: @table-header-bg;
     border-color: @table-border-color;
-    color: @fontColor2
+    color: @fontColor2;
   }
   .ant-table-tbody > tr > td {
     border-bottom: 1px solid @table-border-color;
-    color: @fontColor2
+    color: @fontColor2;
   }
   .ant-table-tbody > tr:nth-child(even) {
-    background: @table-tr-even-bg
+    background: @table-tr-even-bg;
   }
   .ant-table-tbody > tr:nth-child(odd) {
-    background: @table-tr-odd-bg
+    background: @table-tr-odd-bg;
   }
-  .ant-table-tbody>tr>td.ant-table-cell-row-hover {
-    background: @table-row-hover-bg
+  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: @table-row-hover-bg;
   }
 
   .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table {
-    border-color: @table-border-color
+    border-color: @table-border-color;
   }
   .ant-table.ant-table-bordered > .ant-table-container {
-    border-color: @table-border-color
+    border-color: @table-border-color;
   }
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > th {
-    border-right:1px solid @table-border-color
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > thead
+    > tr
+    > th {
+    border-right: 1px solid @table-border-color;
   }
-  .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tbody > tr > td {
-    border-right:1px solid @table-border-color
+  .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tbody
+    > tr
+    > td {
+    border-right: 1px solid @table-border-color;
   }
 }
 .data-container-drawer {
@@ -87,7 +105,7 @@
       .ant-drawer-wrapper-body {
         .ant-drawer-header {
           @apply g-p-2 g-text-center;
-          background: #373A4D;
+          background: #373a4d;
           color: @fontColor;
           border-bottom: unset;
           .ant-drawer-close {
@@ -101,7 +119,7 @@
         .ant-drawer-body {
           @apply g-p-4;
           &::-webkit-scrollbar {
-            display:none
+            display: none;
           }
         }
       }
@@ -112,4 +130,3 @@
     display: flex;
   }
 }
-

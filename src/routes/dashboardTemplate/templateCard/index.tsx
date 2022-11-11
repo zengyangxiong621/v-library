@@ -36,7 +36,6 @@ const TemplateCard = (props: any) => {
           </div>
         </div>
         <div className="img-wrap">
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <img className='my-img' src={finalPicUrl} />
         </div>
       </header>

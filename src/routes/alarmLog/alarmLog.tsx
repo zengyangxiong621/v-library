@@ -8,7 +8,7 @@ import moment from "moment";
 import type { Moment } from "moment";
 
 import zhCN from "antd/es/locale/zh_CN";
-import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip, Popconfirm, Table, Drawer,  } from "antd";
+import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip, Popconfirm, Table } from "antd";
 import type { TimeRangePickerProps } from "antd";
 import type { TableProps } from "antd/es/table";
 import { FileDoneOutlined } from "@ant-design/icons";
@@ -22,14 +22,14 @@ type RangeValue = [Moment | null, Moment | null] | null;
 
 
 const AlarmLog: React.FC = () => {
-  const [momentDates, setMomentDates] = useState<RangeValue>([moment().add(-1, "M"),moment()]); //当前Moment时间
+  const [momentDates, setMomentDates] = useState<RangeValue>([moment().add(-1, "M"), moment()]); //当前Moment时间
   const [startDate, setStartDate] = useState(moment().add(-1, "M").format("YYYY-MM-DD") + " 00:00:00"); //开始日期
   const [endDate, setEndDate] = useState(moment().format("YYYY-MM-DD") + " 23:59:59"); //结束日期
   const [stateRead, setStateRead] = useState<string | number>(""); //当前状态
   const [pageNo, setPageNo] = useState(1); //当前页码
   const [pageSize, setPageSize] = useState(10); //当前每页数量
   const [keywords, setKeywords] = useState(""); //当前关键词
-  const [map, setMap] = useState({updated_time:false}); //时间字段排序
+  const [map, setMap] = useState({ updated_time: false }); //时间字段排序
   const [unreadNum, setUnreadNum] = useState(0); //未读数量
   const [hackValue, setHackValue] = useState<RangeValue>(null); //选择为空的标志
   const [loading, setLoading] = useState(false); //选择为空的标志
@@ -39,7 +39,7 @@ const AlarmLog: React.FC = () => {
 
 
   // 转换stateRead
-  const stateReadTransform = (state:string | number) => {
+  const stateReadTransform = (state: string | number) => {
     return state === "" ? "" : Boolean(state);
   };
   // 初始化和改变时间
@@ -47,9 +47,9 @@ const AlarmLog: React.FC = () => {
     requestData();
   }, []);
   // 请求列表
-  const requestData = async (obj:object = {}) => {
+  const requestData = async (obj: object = {}) => {
     const read = stateReadTransform(stateRead);
-    const allParams = { startDate,endDate,pageNo,pageSize,keywords,read,map };
+    const allParams = { startDate, endDate, pageNo, pageSize, keywords, read, map };
     // console.log({...allParams,...obj});
     requestUnreadNum(); //请求未读数量
     setLoading(true);
@@ -57,12 +57,12 @@ const AlarmLog: React.FC = () => {
       const data = await http({
         url: "/visual/alarmInfo/list",
         method: "post",
-        body: {...allParams,...obj}
+        body: { ...allParams, ...obj }
       });
       setDataSource(data);
     } catch (error) {
-      console.log(error); 
-    }finally{
+      console.log(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -73,13 +73,13 @@ const AlarmLog: React.FC = () => {
     setStartDate(startDate);
     setEndDate(endDate);
     setMomentDates(val);
-    requestData({startDate,endDate});
+    requestData({ startDate, endDate });
   };
   // 弹出日历和关闭日历的回调
-  const handerOpenChange = (open:boolean) => {
-    if(open){
-      setHackValue([null,null]);
-    }else{
+  const handerOpenChange = (open: boolean) => {
+    if (open) {
+      setHackValue([null, null]);
+    } else {
       setHackValue(null);
     }
   };
@@ -87,7 +87,7 @@ const AlarmLog: React.FC = () => {
   const handleChangeState = (value: string | number) => {
     setStateRead(value);
     const read = stateReadTransform(value);
-    requestData({read});
+    requestData({ read });
   };
   // 重置
   const handleReset = () => {
@@ -96,17 +96,17 @@ const AlarmLog: React.FC = () => {
     const read = "";
     setStartDate(startDate);
     setEndDate(endDate);
-    setMomentDates([moment().add(-1, "M"),moment()]);
+    setMomentDates([moment().add(-1, "M"), moment()]);
     setStateRead("");
-    requestData({startDate,endDate,read});
-   };
+    requestData({ startDate, endDate, read });
+  };
   // 搜索回调
   const handleSearch = (value: string) => {
     setKeywords(value);
-    requestData({keywords:value});
+    requestData({ keywords: value });
   };
   // 全部告警更新已读状态请求
-  const requesAllRead = async (obj:object = {}) => {
+  const requesAllRead = async () => {
     try {
       await http({
         url: "/visual/alarmInfo/all/read",
@@ -115,13 +115,11 @@ const AlarmLog: React.FC = () => {
       message.success("全部标记为已读成功！");
       requestData();
     } catch (error) {
-      console.log(error); 
-    } finally{
-
+      console.log(error);
     }
-  }; 
+  };
   // 未读数量请求请求
-  const requestUnreadNum = async (obj:object = {}) => {
+  const requestUnreadNum = async () => {
     try {
       const data = await http({
         url: "/visual/alarmInfo/unreadNum",
@@ -129,13 +127,11 @@ const AlarmLog: React.FC = () => {
       });
       setUnreadNum(data);
     } catch (error) {
-      console.log(error); 
-    } finally{
-
+      console.log(error);
     }
   };
   // 更新已读状态请求
-  const requestUpdateRead = async (id:string) => {
+  const requestUpdateRead = async (id: string) => {
     try {
       const data = await http({
         url: `/visual/alarmInfo/${id}/read`,
@@ -144,18 +140,16 @@ const AlarmLog: React.FC = () => {
       message.success("标记为已读成功！");
       requestData();
     } catch (error) {
-      console.log(error); 
-    } finally{
-
+      console.log(error);
     }
   };
   // 改变表格排序
-  const tableOnChange:TableProps<DataType>["onChange"] = (pagination: any, filters: any, sorter: any, { action }: any) => {
+  const tableOnChange: TableProps<DataType>["onChange"] = (pagination: any, filters: any, sorter: any, { action }: any) => {
     if (action === "sort") {
       const { order } = sorter;
-      if(order){
-        setMap({updated_time: order === "ascend"});
-        requestData({map: {updated_time: order === "ascend"}});
+      if (order) {
+        setMap({ updated_time: order === "ascend" });
+        requestData({ map: { updated_time: order === "ascend" } });
       }
     }
   };
@@ -223,16 +217,16 @@ const AlarmLog: React.FC = () => {
             </Select>
           </div>
           <div>
-           <Button onClick={handleReset} type="primary">重置</Button>
+            <Button onClick={handleReset} type="primary">重置</Button>
           </div>
         </div>
         <div className='search-read'>
           <div className='search'>
-            <Search 
-              placeholder="请输入异常对象搜索" 
-              allowClear 
-              onSearch={handleSearch} 
-              style={{ width: 300 }} 
+            <Search
+              placeholder="请输入异常对象搜索"
+              allowClear
+              onSearch={handleSearch}
+              style={{ width: 300 }}
             />
           </div>
           <div className='read'>
@@ -245,52 +239,52 @@ const AlarmLog: React.FC = () => {
             >
               <Tooltip title="一键已读">
                 <Badge count={unreadNum}>
-                  <FileDoneOutlined style={{fontSize: "30px",color: "#177ddc"}} />
+                  <FileDoneOutlined style={{ fontSize: "30px", color: "#177ddc" }} />
                 </Badge>
               </Tooltip>
             </Popconfirm>
           </div>
         </div>
         <div className='table-list table-wrap'>
-          <Table 
+          <Table
             scroll={{ y: "calc(100vh - 350px)" }}
             rowClassName='customRowClass'
             dataSource={dataSource?.content || []}
             loading={loading}
-            rowKey={(record:any) => record.id}
+            rowKey={(record: any) => record.id}
             onChange={tableOnChange}
             pagination={paginationProps}
             showSorterTooltip={false}
           >
-            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="150px"/>
-            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="500px"/>
+            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="150px" />
+            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="500px" />
             <Column title="更新时间" dataIndex="updatedTime" key="updatedTime" ellipsis={true} width="200px"
-              sorter={true} 
+              sorter={true}
             />
             <Column title="状态" dataIndex="read" key="read" ellipsis={true} width="100px"
-              render={(_:any,{read}:any) =>
+              render={(_: any, { read }: any) =>
               (
-                read 
-              ? 
-              <>
-                <span className='read'></span>
-                <span>已读</span>
-              </>
-              : 
-              <>
-                <span className='unread'></span>
-                <span>未读</span>
-              </>)}
+                read
+                  ?
+                  <>
+                    <span className='read'></span>
+                    <span>已读</span>
+                  </>
+                  :
+                  <>
+                    <span className='unread'></span>
+                    <span>未读</span>
+                  </>)}
             />
             <Column title="操作" dataIndex="id" key="id" ellipsis={true} width="150px"
-              render= {(_:any,{id,read}:any) => (
-                <Button 
-                  type="link" 
+              render={(_: any, { id, read }: any) => (
+                <Button
+                  type="link"
                   className='buttonBlue'
                   disabled={read}
                   onClick={() => requestUpdateRead(id)}
-                  >
-                    标记已读
+                >
+                  标记已读
                 </Button>
               )}
             />

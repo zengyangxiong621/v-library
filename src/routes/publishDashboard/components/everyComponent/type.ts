@@ -1,4 +1,3 @@
-import { number } from "echarts";
 
 export const WENBENYANGSHI = "文本样式";
 export const WEIZHICHICUN = "位置尺寸";
@@ -14,7 +13,7 @@ type TArr = {
  * @params: [ {"name": "left",  "value": 100 }, {}, ...]
  * @return: { left: 100 }
  */
-export const getTargetStyle = (Arr: TArr[], originalStyle?: {}): TArr => {
+export const getTargetStyle = (Arr: TArr[], originalStyle?: Record<string, string|number>): TArr => {
   const targetStyle: TArr = {};
   if (Array.isArray(Arr) && Arr.length) {
     Arr.forEach(({ name, value }) => {

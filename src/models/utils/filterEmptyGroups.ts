@@ -12,8 +12,8 @@ export const filterEmptyGroups = (tree: any) => {
     });
   };
   recursiveFn(tree, []);
-  const finalTree = tree.filter(
-    (item: any) =>  item.id.startsWith("group") ? Array.isArray(item.modules) && item.modules.length : true
+  const finalTree = tree.filter((item: any) =>
+    item.id.startsWith("group") ? Array.isArray(item.modules) && item.modules.length : true
   );
   return finalTree;
 };

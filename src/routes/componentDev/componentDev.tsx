@@ -1,15 +1,15 @@
-import { memo, useState, useEffect, useCallback, useMemo } from "react";
+import React, { memo, useState, useEffect } from "react";
 import "./index.less";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Table, Button, Select, Input, Tag, Space, Modal, message } from "antd";
-import { PlusOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { ConfigProvider, Table, Button, Select, Input, Space, Modal, message } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 
 import ImportComponent from "./components/importComponent";
 
 import { http } from "@/services/request";
 
-import TipModal from "@/components/tipModal"
+import TipModal from "@/components/tipModal";
 
 const { Option } = Select;
 
@@ -78,13 +78,11 @@ const ComponentDev = (props: any) => {
     }finally{
       setTableLoading(false);
     }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     // 请求完成，冲着表格的数据和页码信息
   };
   // 获取表格数据
   useEffect(() => {
     getTableData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // 保证每次拿到最新的status值
   useEffect(() => {
@@ -148,53 +146,15 @@ const ComponentDev = (props: any) => {
       });
     
     } else {
-      setDelVisible(true)
-      setRowData(moduleId)
-      // Modal.confirm({
-      //   title: "删除组件",
-      //   okButtonProps: {
-      //     style: {
-      //       backgroundColor: "#e9535d",
-      //       border: "none",
-      //     }
-      //   },
-      //   cancelButtonProps: {
-      //     style: {
-      //       backgroundColor: "#3d404d"
-      //     }
-      //   },
-      //   icon: <ExclamationCircleFilled />,
-      //   content: "删除后不可恢复，确认删除此组件吗?",
-      //   okText: "确定",
-      //   cancelText: "取消",
-      //   bodyStyle: {
-      //     background: "#232630",
-      //   },
-      //   async onOk(close) {
-      //     // eslint-disable-next-line react-hooks/rules-of-hooks
-      //     const data = await http({
-      //       url: `/visual/module-manage/deleteModule/${moduleId}`, 
-      //       method: "delete"
-      //     });
-      //     if (data) {
-      //       close();
-      //       refreshTable();
-      //     } else {
-      //       message.error({ content: "删除失败", duration: 2 });
-      //     }
-      //   },
-      //   onCancel(close) {
-      //     close();
-      //   }
-      // });
+      setDelVisible(true);
+      setRowData(moduleId);     
     }
   };
   // 取消删除（关闭删除提示框）
   const closeTipModal = ()=> {
-    setDelVisible(false)
-  }
+    setDelVisible(false);
+  };
   const handleDelOk = async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const data = await http({
       url: `/visual/module-manage/deleteModule/${rowData}`, 
       method: "delete"
@@ -205,23 +165,13 @@ const ComponentDev = (props: any) => {
     } else {
       message.error({ content: "删除失败", duration: 2 });
     }
-    closeTipModal()
-  }
+    closeTipModal();
+  };
   const handldExport = (text: any) => {
     const a = document.createElement("a");
     a.href = text.downloadUrl;
     a.download = text.name;
     a.click();
-  };
-  const handleExportList = (text: any) => {
-    console.log("批量导出 暂无");
-    
-  };
-  const handleOn = (record: any) => {
-    console.log(record,"上架");
-  };
-  const handleOff = (record: any) => {
-    console.log(record,"下架");
   };
 
   // 表格排序
@@ -321,7 +271,7 @@ const ComponentDev = (props: any) => {
       ellipsis: true,
       showSorterTooltip: false,
       dataIndex: "updatedAt",
-      render: (time: any, data: any) => {
+      render: (time: any) => {
         return (
           <>
             {time}

@@ -1,41 +1,33 @@
-import React, { memo, useState } from 'react'
-import './index.less'
-import { find } from '../../../../../utils/common'
-import { findCurrentIndex, deepClone } from '@/utils/index'
-import componentLib from '../index'
-import {
-  CopyOutlined,
-  DeleteOutlined,
-  PlusOutlined
-} from '@ant-design/icons';
-import {
-  Collapse,
-  Tabs,
-  Spin
-} from 'antd';
+/* eslint-disable react/prop-types */
+import React, { memo, useState } from "react";
+import "./index.less";
+import { find } from "../../../../../utils/common";
+import { findCurrentIndex, deepClone } from "@/utils/index";
+import componentLib from "../index";
+import { CopyOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { Collapse, Tabs, Spin } from "antd";
 
-import { tab } from '@testing-library/user-event/dist/tab'
+import { tab } from "@testing-library/user-event/dist/tab";
 
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
 
-
-const TabArray = props => {
+const TabArray = (props) => {
   const _data = props.data;
-  const _defaultActiveKey = _data.defaultActiveKey
-  const _disabled = _data.disabled
-  const _loading = _data.loading
-  let tabs = _data.value
+  const _defaultActiveKey = _data.defaultActiveKey;
+  const _disabled = _data.disabled;
+  const _loading = _data.loading;
+  let tabs = _data.value;
 
-  const _show = find(_data, 'switch', 'type')
-  const _outsideShadow = find(_data, 'outsideShadow', 'type')
-  const [activeKey, setActiveKey] = useState(_defaultActiveKey)
-  const [unit, setUnit] = useState('列')
-  const [isLoading, setIsLoading] = useState(false)
+  const _show = find(_data, "switch", "type");
+  const _outsideShadow = find(_data, "outsideShadow", "type");
+  const [activeKey, setActiveKey] = useState(_defaultActiveKey);
+  const [unit, setUnit] = useState("列");
+  const [isLoading, setIsLoading] = useState(false);
   const extraNode = () => {
     const handleIconClick = (type, e) => {
-      e.preventDefault()
-      e.stopPropagation()
+      e.preventDefault();
+      e.stopPropagation();
       /*
         displayName: "列",
         key: "2",
@@ -43,99 +35,97 @@ const TabArray = props => {
         type: "object",
         value: []
        */
-      console.log('type', type)
-      if (type === 'add') {
+      console.log("type", type);
+      if (type === "add") {
         if (tabs.length === 0) {
-          tabs = tabs.concat(_data.config.template)
-          _data.value = tabs
-          setActiveKey(tabs[0].key)
+          tabs = tabs.concat(_data.config.template);
+          _data.value = tabs;
+          setActiveKey(tabs[0].key);
         } else {
-          const tabValue = tabs.find(tab => tab.key === activeKey)
-          const copyValue = deepClone(tabValue)
-          const unit = copyValue.displayName.replace(/\d/, '')
-          copyValue.displayName = unit + (tabs.length + 1)
-          copyValue.key = String(tabs.length + 1)
-          setActiveKey(copyValue.key)
-          _data.activeKey = copyValue.key
-          tabs.push(copyValue)
+          const tabValue = tabs.find((tab) => tab.key === activeKey);
+          const copyValue = deepClone(tabValue);
+          const unit = copyValue.displayName.replace(/\d/, "");
+          copyValue.displayName = unit + (tabs.length + 1);
+          copyValue.key = String(tabs.length + 1);
+          setActiveKey(copyValue.key);
+          _data.activeKey = copyValue.key;
+          tabs.push(copyValue);
         }
       }
-      if (type === 'delete') {
-        const index = tabs.findIndex(tab => tab.key === activeKey)
-        tabs.splice(index, 1)
-        setActiveKey(String(index - 1 > 1 ? index - 1 : 1))
-        _data.activeKey = String(index - 1 > 1 ? index - 1 : 1)
-        console.log('_data.activeKey', _data.activeKey)
+      if (type === "delete") {
+        const index = tabs.findIndex((tab) => tab.key === activeKey);
+        tabs.splice(index, 1);
+        setActiveKey(String(index - 1 > 1 ? index - 1 : 1));
+        _data.activeKey = String(index - 1 > 1 ? index - 1 : 1);
+        console.log("_data.activeKey", _data.activeKey);
       }
       tabs.forEach((tab, index) => {
-        const unit = tab.displayName.replace(/\d/, '')
-        setUnit(unit)
-        tab.displayName = unit + (index + 1)
-        tab.key = String(index + 1)
-      })
-      console.log('_data.activeKey', _data.activeKey)
+        const unit = tab.displayName.replace(/\d/, "");
+        setUnit(unit);
+        tab.displayName = unit + (index + 1);
+        tab.key = String(index + 1);
+      });
+      console.log("_data.activeKey", _data.activeKey);
       if (_loading) {
-        setIsLoading(true)
+        setIsLoading(true);
         props.onChange(_data.activeKey, (isLoading) => {
-          setIsLoading(isLoading)
-        })
+          setIsLoading(isLoading);
+        });
       } else {
-        props.onChange(_data.activeKey)
+        props.onChange(_data.activeKey);
       }
-    }
+    };
 
     return (
-      <div className="g-flex g-items-center" style={{ display: _disabled ? 'none' : 'block' }}>
-        {
-          isLoading ? <>
-            <Spin/>
-            <span className="g-px-1"/>
-            <Spin/>
-          </> :
+      <div className="g-flex g-items-center" style={{ display: _disabled ? "none" : "block" }}>
+        {isLoading ? (
           <>
-            <DeleteOutlined style={{ fontSize: 16 }} className="g-px-3" onClick={(e) => handleIconClick('delete', e)} />
-            <PlusOutlined style={{ fontSize: 16 }} onClick={(e) => handleIconClick('add', e)} />
+            <Spin />
+            <span className="g-px-1" />
+            <Spin />
           </>
-        }
-
+        ) : (
+          <>
+            <DeleteOutlined
+              style={{ fontSize: 16 }}
+              className="g-px-3"
+              onClick={(e) => handleIconClick("delete", e)}
+            />
+            <PlusOutlined style={{ fontSize: 16 }} onClick={(e) => handleIconClick("add", e)} />
+          </>
+        )}
       </div>
-    )
-  }
+    );
+  };
 
   const handleTabClick = (key, e) => {
     if (key !== activeKey) {
-      setActiveKey(key)
-      _data.activeKey = key
+      setActiveKey(key);
+      _data.activeKey = key;
       // props.onChange(key)
     }
-  }
+  };
 
   return (
-    <Collapse accordion className="custom-collapse" defaultActiveKey={['1']}>
+    <Collapse accordion className="custom-collapse" defaultActiveKey={["1"]}>
       <Panel header={_data.displayName} key="1" extra={extraNode()}>
         <Tabs defaultActiveKey={activeKey} onTabClick={handleTabClick}>
-          {
-            tabs.map(tab => (
-              <TabPane tab={tab.displayName} key={tab.key} style={{ paddingTop: 16 }} >
-                {
-                  tab.value.map((item, index) => {
-                    if (!(item.type && componentLib[item.type])) {
-                      return null;
-                    }
-                    const TagName = componentLib[item.type];
-                    return (
-                      <TagName data={item} onChange={props.onChange} key={index} />
-                    )
-                  })
+          {tabs.map((tab) => (
+            <TabPane tab={tab.displayName} key={tab.key} style={{ paddingTop: 16 }}>
+              {tab.value.map((item, index) => {
+                if (!(item.type && componentLib[item.type])) {
+                  return null;
                 }
-              </TabPane>
-            ))
-          }
+                const TagName = componentLib[item.type];
+                return <TagName data={item} onChange={props.onChange} key={index} />;
+              })}
+            </TabPane>
+          ))}
         </Tabs>
       </Panel>
     </Collapse>
-  )
-}
+  );
+};
 /*
 {allTabs.map((item, index) => {
           if (!(item.type && componentLib[item.type])) {
@@ -148,4 +138,4 @@ const TabArray = props => {
         })}
  */
 
-export default memo(TabArray)
+export default memo(TabArray);

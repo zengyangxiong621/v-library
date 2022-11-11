@@ -1,13 +1,11 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Input, Table, Space, Button, Form,Select, message, Modal} from "antd";
+import { ConfigProvider, Input, Table, Space, Button, Form,Select, message, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
@@ -19,18 +17,20 @@ const mapStateToProps = (state: any) => {
 };
 // 功能
 const workSpace = (props: any) => {
-  const { workSpace, dispatch, history,global } = props;
+  const { workSpace, dispatch,global } = props;
   // 空间id
   const [addMemberForm]:any = Form.useForm();
+
   // TODO 后端目前默认是倒排，后续可能需要更改
-  // UI图上默认是按照修改时间排
-  const [sortMap, setSortMap] = useState<any>({
+
+  // UI图上默认是按照修改时间排 setSortMap
+  const [sortMap] = useState<any>({
     // updated_time: false,
   });
   const [userIdList, setUserIdList] = useState([]);
   // 用户列表
-  const [ userInfoList, setUserInfoList ] = useState([]);
-  const [ subLoading, setSubLoading ] = useState(false);
+  const [userInfoList, setUserInfoList] = useState([]);
+  const [subLoading, setSubLoading] = useState(false);
   // 剩余配额
   const [projectQuota, setProjectQuota] = useState<any>(0);
 
@@ -40,7 +40,7 @@ const workSpace = (props: any) => {
     pageNo: 1,
     pageSize: 10,
   });
-  const [tableMap, setTableMap] = useState({});
+  const [tableMap] = useState({}); // setTableMap
   const [totalElements, setTotalElements] = useState(0);
   const [tableLoading, setTableLoading] = useState(false);
   // Modal相关状态
@@ -53,7 +53,7 @@ const workSpace = (props: any) => {
     });
   };
 
-  /**
+/**
  * description: 更新表格数据
  */
   const getTableData = async (finalBody: any) => {
@@ -133,23 +133,23 @@ const workSpace = (props: any) => {
   };
 
   // 选择排序的标准
-  const selectSortType = (value: any, b: any) => {
-    const newSortMap = {
-      [value]: false,
-    };
-    setSortMap(newSortMap);
-    // 选择新标准后，需要发送一次请求
-    const finalBody = {
-      pageNo: 1,
-      pageSize: 10,
-      spaceId: workSpace.curWorkSpace[0],
-      map: newSortMap,
-    };
-    dispatch({
-      type: "dashboardManage/getTemplateList",
-      payload: finalBody,
-    });
-  };
+  // const selectSortType = (value: any, b: any) => {
+  //   const newSortMap = {
+  //     [value]: false,
+  //   };
+  //   setSortMap(newSortMap);
+  //   // 选择新标准后，需要发送一次请求
+  //   const finalBody = {
+  //     pageNo: 1,
+  //     pageSize: 10,
+  //     spaceId: workSpace.curWorkSpace[0],
+  //     map: newSortMap,
+  //   };
+  //   dispatch({
+  //     type: "dashboardManage/getTemplateList",
+  //     payload: finalBody,
+  //   });
+  // };
   // 添加成员
   const changeAddMemberModal = () => {
     setShowAddMemberModal(!showAddMemberModal);
@@ -163,7 +163,7 @@ const workSpace = (props: any) => {
         style: {
           backgroundColor: "#e9535d",
           border: "none",
-          // marginLeft: '8px',
+          // marginLeft: "8px",
         }
       },
       cancelButtonProps: {
@@ -209,7 +209,7 @@ const workSpace = (props: any) => {
   ) => {
     // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
     // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
-    const { field, order } = sorter;
+    // const { field, order } = sorter;
     if (action === "sort") {
       // setTableMap({
       //   [field]: order
@@ -218,7 +218,7 @@ const workSpace = (props: any) => {
       // const finalParams: TDataSourceParams = {
       //   spaceId: workSpace.curWorkSpace[0],
       //   type: dataSourceType,
-      //   name: inputValue === '' ? null : inputValue,
+      //   name: inputValue === "" ? null : inputValue,
       //   ...pageInfo,
       //   map: {
       //     [field]: order
@@ -250,6 +250,7 @@ const workSpace = (props: any) => {
             userIdList
           }
         });
+        console.log(data,"data");
         refreshMemberList(workSpace.curWorkSpace[0]);
         cancelAddMemberModal();
         setSubLoading(false);
@@ -333,6 +334,7 @@ const workSpace = (props: any) => {
       showSorterTooltip: false,
       dataIndex: "createdTime",
       render: (time: any, data: any) => {
+        console.log(data,"data");
         // const a = new Date(time)
         return <>{time}</>;
       },
@@ -432,7 +434,7 @@ const workSpace = (props: any) => {
               span: 4,
             }}
             layout="horizontal"
-            name='releaseForm'
+            name="releaseForm"
           >
             <Form.Item
               colon={false}
@@ -444,7 +446,7 @@ const workSpace = (props: any) => {
                   optionFilterProp="children"
                   mode="multiple"
                   value={userIdList}
-                  placeholder='请选择用户名'
+                  placeholder="请选择用户名"
                   onChange={handleChangeRole}
                 >
                   {

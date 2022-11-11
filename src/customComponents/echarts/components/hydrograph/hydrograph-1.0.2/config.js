@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   parentId: "0",
   moduleName: "hydrograph",
   moduleVersion: "1.0.2",
-  moduleType: 'chart',
+  moduleType: "chart",
   autoUpdate: {
     isAuto: false,
     interval: 10,

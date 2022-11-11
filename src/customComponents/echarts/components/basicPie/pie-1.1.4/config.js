@@ -7,7 +7,7 @@ const ComponentDefaultConfig = {
 
   moduleName: "pie", //组件标识
   moduleVersion: "1.1.4", //组件版本号
-  moduleType: 'chart',
+  moduleType: "chart",
 
   createdAt: "2022-04-02T07:22:31.290Z", // =========
   updatedAt: "2022-04-02T07:22:39.798Z", // =========

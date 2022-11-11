@@ -1,14 +1,14 @@
-import * as React from "react"
-import { useEffect } from "react"
-import { connect } from "dva"
-import { useSetState } from "ahooks"
-import CustomDraggable from "../../../routes/dashboard/center/components/CustomDraggable"
-import { http } from "@/services/request"
-import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type"
-import { layersReverse, layersPanelsFlat, deepClone } from "@/utils/index.js"
+import * as React from "react";
+import { useEffect } from "react";
+import { connect } from "dva";
+import { useSetState } from "ahooks";
+import CustomDraggable from "../../../routes/dashboard/center/components/CustomDraggable";
+import { http } from "@/services/request";
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type";
+import { layersReverse, layersPanelsFlat, deepClone } from "@/utils/index.js";
 
 interface State {
-  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
+  overflow: "none" | "auto" | "hidden" // 面板隐藏的方式
   allData: Array<{
     layers: any[]
     components: any[],
@@ -30,19 +30,19 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
     isLoading: false,
   });
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const { components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
+    const { components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     // await Promise.all(components.map((item: any) => getComponentData(item)));
     dispatch({
-      type: 'save',
+      type: "save",
       payload: {
         componentData
       }
-    })
-    const backgroundColor = dashboardConfig.find(item => item.name === "styleColor").value
-    const backgroundImage = dashboardConfig.find(item => item.name === "backgroundImg").value
-    const newLayers = deepClone(layers)
+    });
+    const backgroundColor = dashboardConfig.find(item => item.name === "styleColor").value;
+    const backgroundImage = dashboardConfig.find(item => item.name === "backgroundImg").value;
+    const newLayers = deepClone(layers);
     layersReverse(newLayers);
     return {
       components,

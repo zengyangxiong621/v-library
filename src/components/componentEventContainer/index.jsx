@@ -25,7 +25,7 @@ import { debounce } from "@/utils/common";
 // import CardFlipper2 from '@/customComponents/assist/CardFlipper_2'
 import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3";
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4";
-import Timeline from "@/customComponents/assist/timeline";
+import Timeline from "@/customComponents/assist/timeline/v1.1.7";
 import Cascader from "@/customComponents/assist/cascader";
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";

@@ -10,7 +10,16 @@ import cloneDeep from "lodash/cloneDeep";
  * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns
  */
-const getComDataWithFilters = (componentData, componentConfig, componentFilters, dataContainerDataList, dataContainerList, callbackArgs, layer = {}, crossCallback = {}) => {
+const getComDataWithFilters = (
+  componentData,
+  componentConfig,
+  componentFilters,
+  dataContainerDataList,
+  dataContainerList,
+  callbackArgs,
+  layer = {},
+  crossCallback = {}
+) => {
   try {
     const dataFrom = componentConfig.dataFrom || 0;
     let resData = null;
@@ -18,13 +27,25 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
     if (dataFrom === 0) {
       currentData = cloneDeep(componentData[componentConfig.id]);
     } else {
-      currentData = setDataContainerResult(componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs);
+      currentData = setDataContainerResult(
+        componentConfig,
+        dataContainerDataList,
+        dataContainerList,
+        componentFilters,
+        callbackArgs
+      );
     }
 
     if (currentData) {
       // 如果使用数据过滤器，则需要过滤数据
       if (componentConfig.useFilter && componentConfig.filters) {
-        resData = dataFilterHandler(currentData, componentConfig, componentFilters, callbackArgs, crossCallback)
+        resData = dataFilterHandler(
+          currentData,
+          componentConfig,
+          componentFilters,
+          callbackArgs,
+          crossCallback
+        );
       } else {
         resData = currentData;
       }
@@ -33,7 +54,6 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
   } catch (e) {
     console.log(`报错图层: ${layer.id}-${layer.name}, 报错原因：1、查无组件Config`, e);
   }
-
 };
 
 /**
@@ -44,65 +64,74 @@ const getComDataWithFilters = (componentData, componentConfig, componentFilters,
  * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns 过滤后的数据
  */
-const dataFilterHandler = (data, componentConfig, componentFilters, callbackArgs, crossCallback={}) => {
-  const filters = componentConfig.filters.map(item => {
-    const filterDetail = componentFilters.find(jtem => jtem.id === item.id);
-    return {
-      ...filterDetail,
-      enable: item.enable,
-    };
-  }).filter(item => item.enable);
+const dataFilterHandler = (
+  data,
+  componentConfig,
+  componentFilters,
+  callbackArgs,
+  crossCallback = {}
+) => {
+  const filters = componentConfig.filters
+    .map((item) => {
+      const filterDetail = componentFilters.find((jtem) => jtem.id === item.id);
+      return {
+        ...filterDetail,
+        enable: item.enable,
+      };
+    })
+    .filter((item) => item.enable);
   if (filters.length) {
     try {
-      const functions = filters.map(item => {
-        return (new Function('data', 'callbackArgs', 'crossCallback', item.content))
-      })
-      const resultArr = []
+      const functions = filters.map((item) => {
+        return new Function("data", "callbackArgs", "crossCallback", item.content);
+      });
+      const resultArr = [];
       functions.forEach((fn, index) => {
         const cbArgs = filters[index].callbackKeys.reduce((pre, item) => {
           return {
             ...pre,
-            [item]: callbackArgs[item]
+            [item]: callbackArgs[item],
           };
         }, {});
         if (index === 0) {
-          resultArr.push(fn(cloneDeep(data), cbArgs, crossCallback))
+          resultArr.push(fn(cloneDeep(data), cbArgs, crossCallback));
         } else {
-          resultArr.push(fn(resultArr[index - 1], cbArgs, crossCallback))
+          resultArr.push(fn(resultArr[index - 1], cbArgs, crossCallback));
         }
       });
       return resultArr[resultArr.length - 1];
     } catch (e) {
-      return []
+      return [];
     }
   } else {
     return data;
   }
-
 };
 // 数据容器数据过滤
 const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
-  const filters = allFilters.map(item => {
-    const filterDetail = componentFilters.find(jtem => jtem.id === item.id);
-    return {
-      ...filterDetail,
-      enable: item.enable,
-    };
-  }).filter(item => item.enable);
+  const filters = allFilters
+    .map((item) => {
+      const filterDetail = componentFilters.find((jtem) => jtem.id === item.id);
+      return {
+        ...filterDetail,
+        enable: item.enable,
+      };
+    })
+    .filter((item) => item.enable);
   if (filters.length === 0) {
     return data;
   }
 
   try {
-    const functions = filters.map(item => {
-      return (new Function("data", "callbackArgs", item.content));
+    const functions = filters.map((item) => {
+      return new Function("data", "callbackArgs", item.content);
     });
     const resultArr = [];
     functions.forEach((fn, index) => {
       const cbArgs = filters[index].callbackKeys.reduce((pre, item) => {
         return {
           ...pre,
-          [item]: callbackArgs[item]
+          [item]: callbackArgs[item],
         };
       }, {});
 
@@ -126,30 +155,41 @@ const handleDataFilter = (data, allFilters, componentFilters, callbackArgs) => {
  * @param {*} callbackArgs 当前画布所有回调参数对象
  * @returns
  */
-const setDataContainerResult = (componentConfig, dataContainerDataList, dataContainerList, componentFilters, callbackArgs) => {
+const setDataContainerResult = (
+  componentConfig,
+  dataContainerDataList,
+  dataContainerList,
+  componentFilters,
+  callbackArgs
+) => {
   if (componentConfig.dataContainers) {
-    console.log('componentConfig.dataContainers', componentConfig.dataContainers)
+    console.log("componentConfig.dataContainers", componentConfig.dataContainers);
     if (componentConfig.dataContainers.length === 1) {
       const id = componentConfig.dataContainers[0].id;
-      const container = dataContainerList.find(item => item.id === id);
-      let data = dataContainerDataList.find(item => item.id === id)?.data || [];
+      const container = dataContainerList.find((item) => item.id === id);
+      let data = dataContainerDataList.find((item) => item.id === id)?.data || [];
       if (container && container.useFilter) {
         data = handleDataFilter(data, container.filters, componentFilters, callbackArgs);
       }
       return data;
     }
     if (componentConfig.dataContainers.length > 1) {
-      const dataContainerIds = componentConfig.dataContainers.map(item => item.id);
-      console.log('dataContainerIds', dataContainerIds)
+      const dataContainerIds = componentConfig.dataContainers.map((item) => item.id);
+      console.log("dataContainerIds", dataContainerIds);
       let data = dataContainerIds.reduce((pre, id) => {
-        const container = dataContainerList.find(item => item.id === id);
-        let containerData = dataContainerDataList.find(item => item.id === id).data;
+        const container = dataContainerList.find((item) => item.id === id);
+        let containerData = dataContainerDataList.find((item) => item.id === id).data;
         if (container.useFilter) {
-          containerData = handleDataFilter(containerData, container.filters, componentFilters, callbackArgs);
+          containerData = handleDataFilter(
+            containerData,
+            container.filters,
+            componentFilters,
+            callbackArgs
+          );
         }
         pre.push(containerData);
-        return pre
-      }, [])
+        return pre;
+      }, []);
       // let data = dataContainerDataList.reduce((pre, cur) => {
       //   if (dataContainerIds.includes(cur.id)) {
       //     const container = dataContainerList.find(item => item.id === cur.id);
@@ -161,8 +201,8 @@ const setDataContainerResult = (componentConfig, dataContainerDataList, dataCont
       //   }
       //   return pre;
       // }, []);
-      console.log('data', data)
-      return data
+      console.log("data", data);
+      return data;
     }
   }
   return [];
@@ -185,8 +225,7 @@ const getFields = (componentConfig = {}) => {
       fields = componentConfig.staticData.fields;
     }
   }
-  return fields.map(item => item.value);
-
+  return fields.map((item) => item.value);
 };
 
 // 数组去重，取最后一个
@@ -204,7 +243,7 @@ const duplicateFn = (arr) => {
 
 const filterEmptyCallParam = (callParam) => {
   let arrTemp = JSON.parse(JSON.stringify(callParam));
-  arrTemp = arrTemp.filter(param => !(!param.origin || !param.target));
+  arrTemp = arrTemp.filter((param) => !(!param.origin || !param.target));
   return arrTemp;
 };
 
@@ -225,14 +264,11 @@ const getCallbackParams = (componentCallbackArgs, currnetData) => {
   let comCallbackArgs = JSON.parse(JSON.stringify(filteredParams));
   // 给comCallbackArgs拥有相同变量的去重
   comCallbackArgs = duplicateFn(comCallbackArgs); // 后面覆盖前面
-  componentCallbackArgs.forEach(item => {
+  console.log(comCallbackArgs);
+  componentCallbackArgs.forEach((item) => {
     result[item.target] = currnetData[item.origin];
   });
   return result;
 };
 
-export {
-  getComDataWithFilters,
-  getFields,
-  getCallbackParams,
-};
+export { getComDataWithFilters, getFields, getCallbackParams };

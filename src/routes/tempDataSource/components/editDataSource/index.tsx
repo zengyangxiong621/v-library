@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 
@@ -27,7 +26,7 @@ const EditDataSource = (props: any) => {
   } = props.editDataSourceInfo;
 
 
-  const { visible, spaceId, changeShowState, refreshTable } = props
+  const { visible, spaceId, changeShowState, refreshTable } = props;
 
   // 获取表单实例准备做校验
   const [editForm] = Form.useForm();
@@ -70,7 +69,7 @@ const EditDataSource = (props: any) => {
   // 通过后台获取到的索引列表
   const [indexList, setIndexList] = useState([]);
   const [getIndexListLoading, setGetIndexListLoading] = useState(false);
-  const [authMethodType, setAuthMethodType] = useState<string>(esSourceConfig?.authMethod + '')
+  const [authMethodType, setAuthMethodType] = useState<string>(esSourceConfig?.authMethod + "");
   // 上传的文件在后端存储的地址,
   // 数据库连接是否测试成功
   const [isConnect, setIsConnect] = useState(false);
@@ -94,7 +93,6 @@ const EditDataSource = (props: any) => {
       elasticsearchConfig: {}
     };
     setTestConnectLoading(true);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     try {
       const data = await http({
         url: "/visual/datasource/connectTest",
@@ -128,7 +126,6 @@ const EditDataSource = (props: any) => {
     };
     //！ 请求数据库列表
     setGetDBListLoading(true);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     try {
       const data = await http({
         url: "/visual/datasource/queryDataBaseList",
@@ -156,7 +153,7 @@ const EditDataSource = (props: any) => {
     }
 
   };
-  console.log('?????????', esSourceConfig)
+  console.log("?????????", esSourceConfig);
   /**
   * description: 获取可选择的索引列表
   */
@@ -165,9 +162,9 @@ const EditDataSource = (props: any) => {
     setIndexList([]);
     // 通过表单校验获取es连接地址
     // 通过表单校验获取es连接地址
-    const values: any = await editForm.validateFields(['url', 'authMethod', 'keytab', 'krb5MechOid', 'krb5kdc', 'krb5realm', 'principal', 'spnegoOid', 'password', 'username'])
-    console.log('fil', fileUrl)
-    console.log('vvvvvvvvvvvvvvvv', values)
+    const values: any = await editForm.validateFields(["url", "authMethod", "keytab", "krb5MechOid", "krb5kdc", "krb5realm", "principal", "spnegoOid", "password", "username"]);
+    console.log("fil", fileUrl);
+    console.log("vvvvvvvvvvvvvvvv", values);
     const finalBody = {
       "authMethod": values.authMethod,
       "kerberos": {
@@ -181,16 +178,15 @@ const EditDataSource = (props: any) => {
       "password": values.password,
       "url": values.url,
       "username": values.username,
-    }
-    setGetIndexListLoading(true)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    };
+    setGetIndexListLoading(true);
     try {
       const data = await http({
-        url: '/visual/datasource/queryIndices',
-        method: 'post',
+        url: "/visual/datasource/queryIndices",
+        method: "post",
         body: finalBody
-      })
-      setGetIndexListLoading(false)
+      });
+      setGetIndexListLoading(false);
       if (Array.isArray(data)) {
         if (!data.length) {
           message.error("没有可用的索引");
@@ -219,9 +215,9 @@ const EditDataSource = (props: any) => {
     /***** 点击确定btn时，应该先触发表单校验，再对数据库测试连接进行判断****/
     const values: any = await editForm.validateFields();
     // es 数据源类型时，如果没有index名，直接return
-    if (dataSourceType === 'ELASTIC_SEARCH' && !values.index) {
-      message.warning({ content: '请先选择索引名称', duration: 2 })
-      return
+    if (dataSourceType === "ELASTIC_SEARCH" && !values.index) {
+      message.warning({ content: "请先选择索引名称", duration: 2 });
+      return;
     }
     //-----所以这里解构出来的type已经是API了
     const { name, type, description, krb5MechOid, krb5kdc, krb5realm, principal, spnegoOid, ...rest } = values;
@@ -264,7 +260,7 @@ const EditDataSource = (props: any) => {
         principal,
         spnegoOid,
         keytab: fileUrl
-      }
+      };
     }
 
     const finalParams = {
@@ -277,7 +273,6 @@ const EditDataSource = (props: any) => {
     };
     // 发送请求
     setLoading(true);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     try {
       const data = await http({
         url: "/visual/datasource/update",
@@ -329,14 +324,14 @@ const EditDataSource = (props: any) => {
    *         @fileSuffix -- 支持的文件后缀
    * return:
    */
-  const generateUploadProps = (fileSuffix: string = '', customProps?: object) => {
-    const isKeytab = fileSuffix === '.keytab'
+  const generateUploadProps = (fileSuffix = "", customProps?: object) => {
+    const isKeytab = fileSuffix === ".keytab";
     // 上传框配置
     let uploadProps: UploadProps = {
       name: "file",
       multiple: false,
       maxCount: 1,
-      accept: fileSuffix || '',
+      accept: fileSuffix || "",
       action: isKeytab ? `${BASEURL}/visual/file/uploadKeytab` : `${BASEURL}/visual/file/upload`,
       headers: {
         authorization: localStorage.getItem("token") || ""
@@ -364,15 +359,15 @@ const EditDataSource = (props: any) => {
       onChange(info: any) {
         const { status, response } = info.file;
         if (response) {
-          const isSuccess = isKeytab ? response.data.success : response.data
-          if (status === 'done' && isSuccess) {
+          const isSuccess = isKeytab ? response.data.success : response.data;
+          if (status === "done" && isSuccess) {
             message.success(`${info.file.name} 上传成功`);
-            const newFilePath = isKeytab ? response.data.url : response.data
-            setFileUrl(newFilePath)
-          } else if (status === 'error' || !isSuccess) {
+            const newFilePath = isKeytab ? response.data.url : response.data;
+            setFileUrl(newFilePath);
+          } else if (status === "error" || !isSuccess) {
             const errStr = isKeytab
-              ? response.data.errorMsg ? `${response.data.errorMsg}` : ''
-              : `${info.file.name} 上传失败`
+              ? response.data.errorMsg ? `${response.data.errorMsg}` : ""
+              : `${info.file.name} 上传失败`;
             message.error(errStr);
           }
         }
@@ -402,14 +397,14 @@ const EditDataSource = (props: any) => {
   // .csv 文件
   const csvUploadProps = generateUploadProps(".csv");
   // .excel 文件
-  const excelUploadProps = generateUploadProps('.xlsx')
+  const excelUploadProps = generateUploadProps(".xlsx");
   // .keytab 文件
-  const keytabUploadProps = generateUploadProps('.keytab')
+  const keytabUploadProps = generateUploadProps(".keytab");
 
   // description: 选择es的认证方式
   const authMethodChange = (e: any) => {
-    setAuthMethodType(e.target.value)
-  }
+    setAuthMethodType(e.target.value);
+  };
 
   const [initVal, setInitVal] = useState({
     description,
@@ -436,10 +431,10 @@ const EditDataSource = (props: any) => {
     principal: esSourceConfig?.kerberos?.principal,
     spnegoOid: esSourceConfig?.kerberos?.spnegoOid,
     authMethod: esSourceConfig?.authMethod
-  })
+  });
   useEffect(() => {
-    setInitVal({ ...initVal, type })
-  }, [visible, type])
+    setInitVal({ ...initVal, type });
+  }, [visible, type]);
   return (
     <div className='EditDataSource-wrap'>
       <Modal
@@ -599,15 +594,15 @@ const EditDataSource = (props: any) => {
                   // defaultValue={password}
                   />
                 </Form.Item>
-                {dataSourceType === 'ORACLE' && (
+                {dataSourceType === "ORACLE" && (
                   <Form.Item
                     label="服务类型"
                     name="serviceType"
-                    rules={generateSingleRules(true, '请选择服务类型')}
+                    rules={generateSingleRules(true, "请选择服务类型")}
                   >
                     <Select
                       className='setBackColor' placeholder="请选择服务类型"
-                      dropdownStyle={{ backgroundColor: '#232630' }}
+                      dropdownStyle={{ backgroundColor: "#232630" }}
                     >
                       {
                         dataServiceType.map((item: any) => (
@@ -707,7 +702,7 @@ const EditDataSource = (props: any) => {
                   label="认证方式"
                   name="authMethod"
                   // initialValue={authMethodType}
-                  rules={generateSingleRules(true, '请选择认证方式')}
+                  rules={generateSingleRules(true, "请选择认证方式")}
                 >
                   <Radio.Group defaultValue={authMethodType}
                     onChange={authMethodChange}
@@ -716,7 +711,7 @@ const EditDataSource = (props: any) => {
                   <></>
                 </Form.Item>
                 {
-                  authMethodType == '1' && <>
+                  authMethodType == "1" && <>
                     <Form.Item label="用户名" name="username">
                       <Input
                         autoComplete="new-password"
@@ -735,9 +730,9 @@ const EditDataSource = (props: any) => {
                     </Form.Item></>
                 }
                 {
-                  authMethodType == '2' && <>
+                  authMethodType == "2" && <>
                     <Form.Item label="principal" name="principal"
-                      rules={generateSingleRules(true, '请输入')}
+                      rules={generateSingleRules(true, "请输入")}
                     >
                       <Input
                         autoComplete='off'
@@ -747,7 +742,7 @@ const EditDataSource = (props: any) => {
                       />
                     </Form.Item>
                     <Form.Item label="krb5realm" name="krb5realm"
-                      rules={generateSingleRules(true, '请输入')}>
+                      rules={generateSingleRules(true, "请输入")}>
                       <Input
                         autoComplete='off'
                         className="setBackColor"
@@ -756,7 +751,7 @@ const EditDataSource = (props: any) => {
                       />
                     </Form.Item>
                     <Form.Item label="krb5kdc" name="krb5kdc"
-                      rules={generateSingleRules(true, '请输入')}
+                      rules={generateSingleRules(true, "请输入")}
                     >
                       <Input
                         autoComplete='off'
@@ -766,7 +761,7 @@ const EditDataSource = (props: any) => {
                       />
                     </Form.Item>
                     <Form.Item label="krb5MechOid" name="krb5MechOid"
-                      rules={generateSingleRules(true, '请输入')}
+                      rules={generateSingleRules(true, "请输入")}
                     >
                       <Input
                         autoComplete='off'
@@ -776,7 +771,7 @@ const EditDataSource = (props: any) => {
                       />
                     </Form.Item>
                     <Form.Item label="spnegoOid" name="spnegoOid"
-                      rules={generateSingleRules(true, '请输入')}
+                      rules={generateSingleRules(true, "请输入")}
                     >
                       <Input
                         autoComplete='off'
@@ -787,12 +782,12 @@ const EditDataSource = (props: any) => {
                     </Form.Item>
                     <Form.Item
                       label="keytab"
-                      style={{ marginBottom: '40px' }}
+                      style={{ marginBottom: "40px" }}
                       // name='excelFileUrl'
-                      rules={generateSingleRules(true, '请输入keytab')}
+                      rules={generateSingleRules(true, "请输入keytab")}
                     >
                       <div className="setBackColor"
-                        style={{ height: '120px' }}>
+                        style={{ height: "120px" }}>
                         <Dragger {...keytabUploadProps}>
                           <p className="ant-upload-hint">
                             点击或拖拽.keytab格式的文件至此处进行上传，10M以内
@@ -892,15 +887,15 @@ const codeFormatOptions: TSelectOptionItems[] = [
 
 const authMethodOptions: TSelectOptionItems[] = [
   {
-    label: '无',
-    value: '0',
+    label: "无",
+    value: "0",
   },
   {
-    label: '用户名密码',
-    value: '1',
+    label: "用户名密码",
+    value: "1",
   },
   {
-    label: 'Kerberos认证',
-    value: '2',
+    label: "Kerberos认证",
+    value: "2",
   },
-]
+];

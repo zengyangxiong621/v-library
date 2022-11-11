@@ -1,13 +1,10 @@
-import React, { memo, useEffect, useState } from "react";
-import { withRouter } from 'dva/router'
+import React, { memo, useState } from "react";
+import { withRouter } from "dva/router";
 import "./index.less";
 import { IconFont } from "@/utils/useIcon";
 import { connect } from "dva";
 
-import { Input } from "antd";
-
-import { http } from "@/services/request";
-import { useClickAway, useSetState } from "ahooks";
+import { useClickAway } from "ahooks";
 
 import StateItem from "./stateItem/stateItem";
 
@@ -99,10 +96,10 @@ const DynamicPanel: React.FC = (props: any) => {
   };
 
   // 判断当前面板类型是否是下钻面板
-  const curPanelId = bar.panelId
-  const panelsList = bar.fullAmountPanels
-  const targetPanelInfo = panelsList.find(item => item.id === curPanelId)
-  const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false
+  const curPanelId = bar.panelId;
+  const panelsList = bar.fullAmountPanels;
+  const targetPanelInfo = panelsList.find(item => item.id === curPanelId);
+  const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false;
 
   return (
     <div className='dynamic-panel-wrap'>

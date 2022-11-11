@@ -1,8 +1,8 @@
-import { memo, useState } from "react";
+import React, { memo, useState } from "react";
 import "./index.less";
 import { Modal } from "antd";
 import ReactPlayer from "react-player";
-const picUrl = require("@/assets/images/模板默认背景图.png");
+import picUrl from "@/assets/images/模板默认背景图.png";
 const PreviewModal = (props: any) => {
   const { isPreviewVisible, currentItem, changeVisible } = props;
   const isTemp = ["systemTemp", "myTemp"].indexOf(currentItem.moduleType) > -1;
