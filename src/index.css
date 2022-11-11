@@ -16,6 +16,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-width: 1280px;
   overflow: hidden;
+  width: 100% !important;
+  user-select: none;
 }
 
 code {
@@ -35,3 +37,4 @@ code {
   display: flex;
   align-items: center;
 }
+

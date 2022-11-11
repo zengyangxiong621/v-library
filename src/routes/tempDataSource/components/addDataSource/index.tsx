@@ -517,7 +517,6 @@ const AddDataSource = (props: any) => {
                     autoComplete='new-password'
                     className="setBackColor"
                     placeholder='请输入'
-                    maxLength={20}
                   />
                 </Form.Item>
                 {curDataType === "ORACLE" && (

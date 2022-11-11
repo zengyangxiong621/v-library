@@ -40,7 +40,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     dispatch({
       type: "bar/hidden",
       payload: {
-        dashboardId: bar.dashboardId,
+        dashboardId: bar.stateId || bar.dashboardId,
         configs: [
           {
             id,
@@ -66,9 +66,9 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     getCurrentMenuLocation({
       x: e.clientX,
       y: e.clientY,
-      id: name,
+      id,
       isFolder,
-    });
+    }, restProps);
   };
   const inputRef = useRef();
   // 鼠标双击事件
@@ -92,7 +92,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     // 先对前端的树进行一次修改
     const saveId = JSON.parse(JSON.stringify(bar.key[0]));
     sendDispatch("changeName", {
-      dashboardId: bar.isPanel ? bar.stateId : bar.dashboardId,
+      dashboardId: bar.stateId || bar.dashboardId,
       configs: [
         {
           id: saveId,
@@ -149,7 +149,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     dispatch({
       type: "bar/lock",
       payload: {
-        dashboardId: bar.dashboardId,
+        dashboardId: bar.stateId || bar.dashboardId,
         configs: [
           {
             id,
@@ -189,7 +189,6 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
         //   :
         <div
           className={`EveryTreeNode-wrap
-        ${hover && "every-tree-node-hover"}
         ${isSelected && "set-back-color"}
       `}
           onContextMenu={(e) => {

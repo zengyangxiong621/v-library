@@ -1,105 +1,91 @@
-/* eslint-disable react/prop-types */
-import React, { memo, useState, useEffect } from "react";
-import "./index.less";
-import { connect } from "dva";
+import React, { memo, useState, useEffect } from 'react'
+import './index.less'
+import { connect } from 'dva'
 
-import CodeEditor from "../codeEditor";
-import { getComDataWithFilters } from "../../../../../utils/data";
+import CodeEditor from '../codeEditor'
+import { getComDataWithFilters } from '../../../../../utils/data'
 
-import { Button } from "antd";
-import { RedoOutlined } from "@ant-design/icons";
+import {
+  Button,
+} from 'antd';
+import {
+  RedoOutlined
+} from '@ant-design/icons';
 
 const resultCodeData = {
   readOnly: true,
-  language: "json",
-  value: "",
-  showExpand: false,
-};
+  language: 'json',
+  value: ``,
+  showExpand: false
+}
 
 const DataResult = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
-  const type = props.type;
-  const componentResultData = props.resultData || [];
+  const type = props.type
+  const componentResultData = props.resultData || []
   // const [resultData, setResultData] = useState({ ...resultCodeData, value: JSON.stringify(componentResultData, null, 2) })
-  const [resultData, setResultData] = useState({});
+  const [resultData, setResultData] = useState({})
 
   useEffect(() => {
-    init();
-  }, [
-    bar.componentData,
-    bar.componentConfig.filters,
-    bar.componentFilters,
-    bar.componentConfig.useFilter,
-    _data.dataFrom,
-    _data.dataContainers,
-  ]);
+    init()
+  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers])
 
   useEffect(() => {
-    if (type === "component") {
-      initOfComponent();
+    if (type === 'component') {
+      initOfComponent()
     }
-  }, [componentResultData]);
+  }, [componentResultData])
 
   const init = () => {
-    if (!type && type !== "component") {
-      let resData = getComDataWithFilters(
-        bar.componentData,
-        bar.componentConfig,
-        bar.componentFilters,
-        bar.dataContainerDataList,
-        bar.dataContainerList,
-        bar.callbackArgs
-      );
+    if (!type && type !== 'component') {
+      let resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)
       const newData = Object.assign({}, resultData, {
-        value: resData ? JSON.stringify(resData, null, 2) : "",
-      });
-      setResultData(newData);
+        value: resData ? JSON.stringify(resData, null, 2) : '',
+        readOnly: true,
+        language: 'json',
+        showExpand: false
+      })
+      setResultData(newData)
     }
-  };
+  }
 
   const initOfComponent = () => {
-    if (type === "component") {
+    if (type === 'component') {
       const newData = Object.assign({}, resultData, {
         value: JSON.stringify(componentResultData, null, 2),
-      });
-      setResultData(newData);
+        readOnly: true,
+        language: 'json',
+        showExpand: false
+      })
+      setResultData(newData)
     }
-  };
+  }
 
   const refresh = () => {
-    if (type === "component") {
-      initOfComponent();
+    if (type === 'component') {
+      initOfComponent()
     } else {
-      init();
+      init()
     }
-  };
+  }
 
   return (
     <React.Fragment>
       <div className="data-config">
         <div className="data-header">
           <label className="data-name">数据响应结果（只读）</label>
-          <Button
-            onClick={refresh}
-            icon={<RedoOutlined />}
-            style={{ border: 0, background: "transparent" }}
-          />
+          <Button onClick={refresh} icon={<RedoOutlined />} style={{ border: 0, background: 'transparent' }} />
         </div>
         <div className="data-content">
           <div className="data-code-wraper" style={props.style}>
-            <CodeEditor
-              data={resultData}
-              onChange={() => {
-                // todo
-              }}
-            />
+            <CodeEditor data={resultData} onChange={() => { }} />
           </div>
         </div>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
 export default connect(({ bar }) => ({
-  bar,
-}))(DataResult);
+  bar
+}))(DataResult)

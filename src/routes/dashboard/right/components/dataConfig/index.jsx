@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { memo, useState, useEffect } from "react";
 import { connect } from "dva";
 import "./index.less";
@@ -64,7 +63,7 @@ const DataConfig = ({ bar, dispatch, ...props }) => {
   }, [_data.dataContainers]);
 
   useEffect(() => {
-    const keys = fieldsData.map((field) => field.value);
+    const keys = fieldsData?.map((field) => field.value) || [];
     const flag = keys.every((key) => fieldkeys?.includes(key));
     setConfigSuccess(flag);
   }, [fieldkeys, fieldsData]);

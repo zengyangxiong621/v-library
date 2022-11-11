@@ -44,11 +44,11 @@ const componentDefaultConfig = {
         },
         flyLineArr: [
           [
+            [{ name: "北京区域中心", value: 0, }, { name: "北京区域中心", value: 0, }],
             [{ name: "北京区域中心", value: 0, }, { name: "昌平数据中心", value: 0, }],
             [{ name: "北京区域中心", value: 0, }, { name: "勘探院数据中心", value: 0, }],
             [{ name: "北京区域中心", value: 0, }, { name: "吉林数据中心", value: 0, }],
             [{ name: "北京区域中心", value: 0, }, { name: "克拉玛依数据中心", value: 0, }],
-            [{ name: "北京区域中心", value: 0, }, { name: "北京区域中心", value: 0, }],
             [{ name: "北京区域中心", value: 0, }, { name: "辽河区域中心", value: 0, }],
             [{ name: "北京区域中心", value: 0, }, { name: "吉林区域中心", value: 0, }],
             [{ name: "北京区域中心", value: 0, }, { name: "大庆区域中心", value: 0, }],
@@ -64,6 +64,7 @@ const componentDefaultConfig = {
             [{ name: "北京区域中心", value: 0, }, { name: "瑞士", value: 0, }]
           ],
           [
+            [{ name: "美国", value: 0, }, { name: "美国", value: 0, }],
             [{ name: "美国", value: 0, }, { name: "昌平数据中心", value: 0, }],
             [{ name: "美国", value: 0, }, { name: "勘探院数据中心", value: 0, }],
             [{ name: "美国", value: 0, }, { name: "兰州区域中心", value: 0, },],

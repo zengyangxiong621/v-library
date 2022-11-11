@@ -1,15 +1,14 @@
-import { DOMElement, useEffect, useRef, useState } from "react";
-import { connect } from "dva";
-import { Button } from "antd";
-import { useSetState } from "ahooks";
-import CustomDraggable from "@/routes/dashboard/center/components/CustomDraggable";
-import { http } from "@/services/request";
-import * as React from "react";
-import {
-  IPanel
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
+import * as React from "react"
+import { useEffect } from "react"
+import { connect } from "dva"
+import { useSetState } from "ahooks"
+import CustomDraggable from "@/routes/dashboard/center/components/CustomDraggable"
+import { http } from "@/services/request"
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type"
+import { layersPanelsFlat, layersReverse, deepClone } from "@/utils/index.js"
+
 interface State {
-  overflow: "none" | "auto" | "hidden" // 面板隐藏的方式
+  overflow: 'none' | 'auto' | 'hidden' // 面板隐藏的方式
   allData: Array<{
     layers: any[]
     components: any[],
@@ -19,11 +18,10 @@ interface State {
   isLoading: boolean; // 是否请求完成
   [key: string]: any;
 }
-import {layersReverse, layersPanelsFlat} from "@/utils/index.js";
 
 const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) => {
   const componentData = bar.componentData;
-  // console.log("panel", panel)
+  // console.log('panel', panel)
   const { states, config: recommendConfig, name, type } = panel;
   const {isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0} = recommendConfig;
   const defaultStateId = (states.length > 0 && states[0].id) || "";
@@ -58,31 +56,35 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
   };
   const getStateDetails = async ({id}: any) => {
     try {
-      const panelConfig = bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
-      return panelConfig;
+      return bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch(e) {
       return null;
     }
   };
   const getReferenceDetails = async ({name, id}: { name: string; id: string }) => {
-    const {components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
+    const {components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id)
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
     // await Promise.all(components.map((item: any) => getComponentData(item)));
     dispatch({
-      type: "save",
+      type: 'save',
       payload: {
         componentData
       }
-    });
-    layersReverse(layers);
+    })
+    const backgroundColor = dashboardConfig.find(item => item.name === "styleColor").value
+    const backgroundImage = dashboardConfig.find(item => item.name === "backgroundImg").value
+    const newLayers = deepClone(layers)
+    layersReverse(newLayers);
     return {
       components,
-      layers,
+      layers: newLayers,
       dashboardConfig,
       id,
       name,
-      panels
+      panels,
+      backgroundColor,
+      backgroundImage
     };
   };
 
@@ -171,24 +173,27 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
   return (
     <div className={`reference-panel panel-${id}`} style={{pointerEvents: "none", overflow: state.overflow, width: "100%", height: "100%"}}>
       {
-        (isDashboard && state.allData.length) >
-        0 ? <CustomDraggable mouse={0} layers={state.allData[0].layers} components={state.allData[0].components} panels={state.allData[0].panels}/>
-          :
-          state.allData.map((item: any, index: number) =>
-            (
-              <div
-                className="status-wrap"
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                  display: state.activeIndex === index ? "block" : "none",
-                  transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
-                }}>
-                <CustomDraggable mouse={0} layers={item.layers} components={item.components} panels={item.panels}/>
-              </div>
-            )
-          )
+        state.allData.map((item: any, index: number) =>
+          (
+            <div
+              className="status-wrap"
+              style={ {
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                display: state.activeIndex === index ? "block" : "none",
+                transition: `transform 600ms ease 0s, opacity ${ animationTime }ms ease 0s`,
+                backgroundImage: item.backgroundImage ? `url('${ item.backgroundImage }')` : "unset",
+                backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
+                backgroundRepeat: "no-repeat",
+                // backgroundSize: "contain",
+                // backgroundPosition: "center center",
+              } }>
+              <CustomDraggable mouse={ 0 } layers={ item.layers } components={ item.components }
+                               panels={ item.panels }/>
+            </div>
+          ),
+        )
       }
     </div>
   );

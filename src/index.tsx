@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import dva from "dva";
-import { BrowserRouter } from "dva/router";
+import { BrowserRouter, HashRouter, Router } from "dva/router";
 import reportWebVitals from "./reportWebVitals";
 import { authorize, forwardLogin, GetQueryString } from "./services/loginApi";
 import { localStore } from "./services/LocalStoreService";
-
+import { createBrowserHistory } from 'history'
 
 import "./index.css";
 import "antd/dist/antd.css";
@@ -21,16 +21,24 @@ message.config({
 });
 
 // -> 初始化
-const app = dva();
+const app = dva({
+  history: createBrowserHistory()
+});
+// -> 初始化
+/*const app = dva({
+  history: createBrowserHistory({
+    basename: '/idv'
+  })
+});*/
 
 // -> 注册全局模型
 app.model(require("./models/global").default);
 
 const init = () => {
   // -> 初始化路由
-  app.router(({ app }: any) => (
+  app.router(({ history, app }: any) => (
     <div>
-      <BrowserRouter>{createRoutes(app, RoutesConfig)}</BrowserRouter>
+      <Router history={history}>{createRoutes(app, RoutesConfig)}</Router>
     </div>
   ));
   // -> Start

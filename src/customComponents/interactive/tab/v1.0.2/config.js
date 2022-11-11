@@ -687,6 +687,6 @@ const componentDefaultConfig = {
       "name": "政务蓝",
     },
   ],
-};
+}
 
-export default componentDefaultConfig;
+export default componentDefaultConfig

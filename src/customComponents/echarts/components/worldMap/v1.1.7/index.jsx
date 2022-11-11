@@ -83,6 +83,9 @@ class WorldMap extends Component {
               color: mainData.flyColor, // 飞线颜色 - 细线
             },
           },
+          tooltip: {
+            show: false, // hover飞线不显示标签
+          },
           data: this.convertData(item, coordData, flyDirection),
         },
         {

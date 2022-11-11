@@ -1,6 +1,5 @@
-/* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-// import { getFields } from "@/utils/data";
+import { getFields } from "@/utils/data";
 import { useState, useRef, useEffect } from "react";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
@@ -9,8 +8,8 @@ import SelectV2 from "@/customComponents/assist/select/v1.0.3/index";
 import ButtonGroup from "@/customComponents/assist/buttonGroup/v1.0.5/index";
 import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
-// import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
-import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.7";
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
+import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1";
 import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
@@ -20,7 +19,8 @@ import Counter from "@/customComponents/assist/counter2/v1.0.8";
 import Media from "@/customComponents/media/v1.1.1";
 import NormalTable from "@/customComponents/table/normalTable/v1.0.5";
 import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
-// import Pie from "@/customComponents/echarts/components/basicPie/v1.1.5";
+import FlowChart from "@/customComponents/echarts/components/flowChart/v1.0.0";
+import Pie from "@/customComponents/echarts/components/basicPie/v1.1.5";
 import { connect } from "dva";
 
 // import './index.css'
@@ -52,16 +52,18 @@ const ComponentEventContainer = ({
   const { websocketConfig } = componentConfig;
   // 拿到每个组件的websocketConfig，判断有无，则批量发起请求
   // 拿到type 0: 需sendMessage;  1: setSendData
-  const [animationConfig] = useState({
+  const { dashboardId } = componentConfig;
+  const [animationConfig, setAnimationConfig] = useState({
     transition: "transform 600ms ease 0s",
   });
   const componentRef = useRef(null);
-  // const [times, setTimes] = useState(0);
-  // const [sendData, setSendData] = useState("");
-  const [opacityStyle] = useState({ opacity: 1 });
+  const timesRef = useRef(0);
+  const [times, setTimes] = useState(0);
+  const [sendData, setSendData] = useState("");
+  const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 });
   const opacityTimeIds = useRef([]);
-  // const [clickTimes, setClickTimes] = useState(0);
-  const [websocketObj] = useState({});
+  const [clickTimes, setClickTimes] = useState(0);
+  const [websocketObj, setwebsocketObj] = useState({});
 
   // 跨屏
   console.log(websocketConfig, "--------websocketConfig");
@@ -102,6 +104,8 @@ const ComponentEventContainer = ({
     if (clickActions.length === 0) {
       return;
     }
+    setClickTimes(1);
+    console.log("点击事件", data);
     customEventsFunction(clickEvents, data);
   }, 300);
   // 移入
@@ -348,13 +352,13 @@ const ComponentEventContainer = ({
         []
       );
       // 绑定数据容器的组件列表
-      // const componentsByDataContainer = activeComponents.filter(
-      //   (component) => component.dataFrom === 1
-      // );
+      const componentsByDataContainer = activeComponents.filter(
+        (component) => component.dataFrom === 1
+      );
       // 绑定数据源的组件列表
-      // const componentsByDataSource = activeComponents.filter(
-      //   (component) => component.dataFrom === 0
-      // );
+      const componentsByDataSource = activeComponents.filter(
+        (component) => component.dataFrom === 0
+      );
       // 重新获取部分组件（绑定数据源的组件列表）的数据
       dispatch({
         type: "previewDashboard/getComponentsData",
@@ -388,11 +392,11 @@ const ComponentEventContainer = ({
   }, 300);
 
   const animation = (
-    { duration, type },
+    { duration, timingFunction, type },
     actionType,
     dom,
-    // actionId,
-    // action,
+    actionId,
+    action,
     componentId
   ) => {
     if (["show", "hide"].includes(actionType)) {
@@ -437,6 +441,7 @@ const ComponentEventContainer = ({
         dom.style.transform += `translateY(${translate.y}px)`;
       }
       let timer = null;
+      const index = opacityTimeIds.current.indexOf(componentId);
       // if (index !== -1) {
       //   // 说明存在
       //   clearInterval(timer)
@@ -471,7 +476,7 @@ const ComponentEventContainer = ({
     }
   };
 
-  const rotate = ({ rotateX, rotateY, rotateZ }, action, dom) => {
+  const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
     if (action === "rotate") {
       console.log("dom", dom);
       const rotateRegX = /rotateX\((.+?)\)/g;
@@ -494,6 +499,8 @@ const ComponentEventContainer = ({
       }
     }
   };
+
+  const showOrHide = (value) => { };
 
   const scaleFunc = ({ origin, x, y }, action, dom) => {
     if (action === "scale") {
@@ -527,7 +534,7 @@ const ComponentEventContainer = ({
     }
   };
 
-  const stateFunc = (stateId, actionType, dom) => {
+  const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
     if (actionType === "updateStatus") {
       [...dom.children].forEach((item) => {
         console.log("item11", item);
@@ -539,7 +546,7 @@ const ComponentEventContainer = ({
       });
     }
   };
-  const componentConfigFunc = (config, actionType, componentId) => {
+  const componentConfigFunc = (config, actionType, dom, actionId, action, componentId) => {
     if (actionType === "updateConfig") {
       console.log("config", config);
       const component = previewDashboard.fullAmountComponents.find(
@@ -571,6 +578,9 @@ const ComponentEventContainer = ({
     <div
       key={id}
       className={`single-component event-id-${id}`}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       // onClick={handleClick}
       // onMouseEnter={handleMouseEnter}
       // onMouseLeave={handleMouseLeave}
@@ -581,9 +591,6 @@ const ComponentEventContainer = ({
       ) : props.componentConfig.moduleName === "tab" ? (
         <Tab
           onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-          onClick={handleClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
           dashboardId={previewDashboard.dashboardId}
           cRef={componentRef}
           isPreview={true}
@@ -636,14 +643,6 @@ const ComponentEventContainer = ({
           <Bar onChange={handleValueChange} {...props}></Bar>
         ) : props.componentConfig.moduleName === "scrollTable" ? (
           <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-        ) : props.componentConfig.moduleName === "tab" ? (
-          <Tab
-            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-            onClick={handleClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            {...props}
-          ></Tab>
         ) : props.componentConfig.moduleName === "scrollSelect" ? (
           <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
         ) : props.componentConfig.moduleName === "timeSelect" ? (

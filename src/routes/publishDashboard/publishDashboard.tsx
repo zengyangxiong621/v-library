@@ -1,11 +1,10 @@
-/* eslint-disable no-case-declarations */
 import { memo, useEffect, useState, useRef } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
 import { deepClone, layersReverse, getQueryVariable } from "@/utils";
 
-import { Input, Button, message } from "antd";
+import { Spin, Input, Button, message } from "antd";
 
 
 import RecursiveComponent from "./components/recursiveComponent";
@@ -22,7 +21,7 @@ function GetQueryString(name: any) {
   return null;
 }
 
-const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
+const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: any) => {
   // console.log('publishDashboard.dashboardId1', publishDashboard.dashboardId)
 
   // 加载出整个大屏前，需要一个动画
@@ -171,6 +170,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
         type: "publishDashboard/clearCurrentDashboardData"
       });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (scaleMode === "0") {
@@ -181,6 +181,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
         window.addEventListener("resize", setCanvasSize);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardConfig]);
   const calcCanvasScale = (e: any) => {
     if (e.ctrlKey) {
@@ -206,6 +207,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
     return () => {
       clearInterval(intervalId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
@@ -215,6 +217,8 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
     setLayers(data);
     setComponents(publishDashboard.fullAmountComponents);
     setPanels(publishDashboard.panels);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishDashboard.layers]);
 
   const setChange = (value: any) => {
@@ -222,10 +226,14 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
   };
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
-  const initDashboard = () => {
+  const initDashboard = (cb = function () { }) => {
     const pwd = localStorage.getItem(pageId);
-    return new Promise((resolve) => {
-      const dashboardId = window.location.pathname.split("/")[2];
+    return new Promise((resolve, reject) => {
+      let afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf('/publishScreen/'))
+      const idList = afterDashboardUrl.split('/').map(item => {
+        return item.replace(/[^0-9]/ig, "")
+      }).filter(item => item)
+      let dashboardId = idList[0] || null
       dispatch({
         type: "publishDashboard/initDashboard",
         payload: {
@@ -247,7 +255,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
 
   const getScreenInfo = (config: any) => {
     const map: any = {};
-    config.forEach(({ displayName, value, width, height }: any) => {
+    config.forEach(({ displayName, value, options, width, height }: any) => {
       let target = value;
       switch (displayName) {
         case "屏幕大小":
@@ -273,7 +281,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
 
   const updateDataContainerDataFunc = async (container: any) => {
     const params: any = getQueryVariable();
-    const callBackParamValues = {
+    let callBackParamValues = {
       ...publishDashboard.callbackArgs,
     };
     if (params?.Ticket) {
@@ -368,7 +376,13 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
   }, [publishDashboard.fullAmountComponents, publishDashboard.dashboardId]);
 
   return (
-    <div id="gs-v-library-app">
+    <div id="gs-v-library-app"
+         style={{
+           width: '100vw',
+           height: '100vh',
+           backgroundColor: pageStyle.background
+         }}
+    >
       {
         inputPassword && <div className="input-password">
           <div className="center">
@@ -395,7 +409,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard }: any) => {
                 style={{
                   ...pageStyle,
                   ...scaleStyle,
-                  overflow: "hidden"
                 }}
               >
                 {

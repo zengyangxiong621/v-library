@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -7,9 +8,7 @@ import { connect } from "dva";
 
 /** 组件库相关 **/
 import { Tree } from "antd";
-import {
-  DownOutlined,
-} from "@ant-design/icons";
+import { DownOutlined } from "@ant-design/icons";
 import { IconFont } from "../../../utils/useIcon";
 import { useKeyPress } from "ahooks";
 
@@ -25,54 +24,39 @@ import { getFieldStates } from "../../../utils/sideBar";
 // import { filterEmptyGroups } from "../../../models/utils/filterEmptyGroups";
 
 const Left = ({ dispatch, bar }) => {
+  //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
 
   const [isExpand, setIsExpand] = useState([]);
-  const [customExpandKeys] = useState([]);
+  const [customExpandKeys, setCustomExpandKeys] = useState([]);
   const [selected, setSelected] = useState([]);
   const activeIconRef = useRef();
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false);
-  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
+  // const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
   const treeRef = useRef(null);
   const topBarRef = useRef(null);
   const bottomBarRef = useRef(null);
   const headerRef = useRef(null);
-  // TODO  待删除
   const [single, setSingle] = useState(true);
-
-  useEffect(() => {
-    setSelected(bar.key);
-    // TODO 这儿使用了一次循环,(只遍历了最外层，如果以后二级甚至三级菜单里也有需要置灰的就只能逐层遍历)，需要找时间用别的办法替换逐层遍历的思路来优化一下
-    if (bar.key.length > 1) {
-      const newArr = customMenuOptions.map((item) => {
-        if (item.key === "reName") {
-          return {
-            ...item,
-            // disabled: true,
-          };
-        }
-        return item;
-      });
-      setCustomMenuOptions(newArr);
+  const [toggleValue, setToggleValue] = useState(false)
+  useKeyPress(
+    ["ctrl", "shift"],
+    (event) => {
+      // eslint-disable-next-line no-empty
+      if (event.type === "keydown" && bar.isMultipleTree) {
+      } else {
+        dispatch({
+          type: "bar/save",
+          payload: {
+            isMultipleTree: event.type === "keydown",
+          },
+        });
+        setIsCtrlKeyPressing(event.type === "keydown");
+      }
+    },
+    {
+      events: ["keydown", "keyup"],
     }
-
-  }, [bar.key]);
-
-  useKeyPress(["ctrl", "shift"], (event) => {
-    if (event.type === "keydown" && bar.isMultipleTree) {
-      //
-    } else {
-      dispatch({
-        type: "bar/save",
-        payload: {
-          isMultipleTree: event.type === "keydown",
-        },
-      });
-      setIsCtrlKeyPressing(event.type === "keydown");
-    }
-  }, {
-    events: ["keydown", "keyup"],
-  });
-
+  );
 
   /**
    * 方法
@@ -80,6 +64,7 @@ const Left = ({ dispatch, bar }) => {
   // 收起 / 展开 菜单栏
   const [w, setW] = useState(188);
   const toggle = () => {
+    setToggleValue(!toggleValue)
     const el = document.querySelector(".left-menu");
     w === 188 ? setW(250) : setW(188);
     el.style.width = `${w}px`;
@@ -128,7 +113,7 @@ const Left = ({ dispatch, bar }) => {
       //   finalPayload.singleShowLayer = 'negation'
       //   break
       case "delete":
-        const l = bar.key?.map(item => ({
+        const l = bar.key?.map((item) => ({
           id: item,
           children: [],
         }));
@@ -147,7 +132,6 @@ const Left = ({ dispatch, bar }) => {
   const onSelect = (curKey, e) => {
     let temp = curKey;
     const isSelected = e.selected;
-    console.log("isSelected", isSelected);
     const { key } = e.node;
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     dispatch({
@@ -178,7 +162,6 @@ const Left = ({ dispatch, bar }) => {
       type: "bar/selectLayers",
       payload: e.selectedNodes,
     });
-    // setSelected(curKey)
   };
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
@@ -194,15 +177,11 @@ const Left = ({ dispatch, bar }) => {
     let t = [];
     if (selected.length && selected.includes(key)) {
       t = selected;
-      // dispatch({
-      //   type: 'bar/save',
-      //   payload: { isMultipleTree: false },
       // })
     } else {
       t = [key];
     }
     setSelected(t);
-    // !用seletced在本次渲染中不能获取到
     dispatch({
       type: "bar/save",
       payload: {
@@ -219,12 +198,8 @@ const Left = ({ dispatch, bar }) => {
       payload: { isMultipleTree: event.nativeEvent.ctrlKey || event.nativeEvent.shiftKey },
     });
   };
-  // 展开 / 收起 全部节点
-  const myOnExpand = (expandedKeys, { expanded, node }) => {
-    setIsExpand(expandedKeys);
-  };
   // 图层拖拽逻辑
-  const onDrop = info => {
+  const onDrop = (info) => {
     const dropKey = info.node.key;
     const dragKey = info.dragNode.key;
     const dropPos = info.node.pos.split("-");
@@ -240,10 +215,7 @@ const Left = ({ dispatch, bar }) => {
         }
       }
     };
-
-
     const data = [...bar.layers];
-
     // Find dragObject
     let dragObj;
     loop(data, dragKey, (item, index, arr) => {
@@ -291,19 +263,87 @@ const Left = ({ dispatch, bar }) => {
     });
   };
 
-
   // 获取子组件传过来的X，Y值
-  const getCurrentMenuLocation = useCallback((menuInfo) => {
-    // setMenuInfo(menuInfo)
-    // 点击右键才渲染菜单
+  const getCurrentMenuLocation = useCallback((menuInfo, layer) => {
     dispatch({
       type: "bar/save",
       payload: {
         rightMenuInfo: menuInfo,
-        isShowRightMenu: true
-      }
+        isShowRightMenu: true,
+        key: [menuInfo.id],
+        selectedComponentOrGroup: [layer],
+      },
     });
+    dispatch({
+      type: "bar/calcDragScaleData"
+    })
   });
+
+  /** 画布中选择组件，左侧展开  */
+  const [preSelected, setPreSelected] = useState([]);
+  const [expandedKeys, setE] = useState([]);
+
+  useEffect(() => {
+    // 这个setSelected和 在画布中选中组件，左侧分组展开没有逻辑联系，单独的是
+    setSelected(bar.key);
+    preSelected.push(...bar.key);
+    // 把选中的 “组” 图层给过滤掉
+    const filterGroupsPreSelected = preSelected.filter((id) => !id.startsWith("group"));
+    // 将重复选中的图层过滤一遍
+    const preSelectedSet = new Set(filterGroupsPreSelected);
+    // 保存本次已经选中的图层
+    setPreSelected([...preSelectedSet]);
+    setE([...preSelectedSet, ...bar.key]);
+  }, [bar.key]);
+
+
+
+
+  //******** 展开 / 收起 ********* */
+  const onExpand = (keys, { expanded, node }) => {
+    const { modules } = node;
+    // 收起
+    if (!expanded) {
+      const allIds = [];
+      const getAllIdByPath = (arr) => {
+        for (let i = 0, len = arr.length; i < len; i++) {
+          const itemId = arr[i].id;
+          // 组id 就不添加了，防止最终allIds数组的长度过大导致下方循环耗时过长
+          if (!itemId.startsWith("group")) {
+            allIds.push(arr[i].id);
+          }
+          if (arr[i].modules) {
+            getAllIdByPath(arr[i].modules);
+          }
+        }
+      };
+      getAllIdByPath(modules);
+      const finalNeedExpandKeys = preSelected.filter((id) => !allIds.includes(id));
+      setPreSelected(finalNeedExpandKeys);
+      setE(finalNeedExpandKeys);
+      return;
+    }
+    setE(keys);
+    setIsExpand(keys);
+  };
+
+  const treeLayerHoverFunc = (item) => {
+    item.style.backgroundColor = 'red'
+
+  }
+/*  useEffect(() => {
+    console.log('expandedKeys', expandedKeys)
+    setTimeout(() => {
+      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
+        item.addEventListener('mouseover', (e) => treeLayerHoverFunc(item))
+      })
+    })
+    return () => {
+      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
+        item.removeEventListener('mouseover', (e) => treeLayerHoverFunc(item))
+      })
+    }
+  }, [bar.layers, expandedKeys])*/
 
   return (
     <div className="left-menu">
@@ -311,56 +351,59 @@ const Left = ({ dispatch, bar }) => {
         <div className="left-tree-header" ref={headerRef}>
           <header className="header-text">图层</header>
           <IconFont
-            type="icon-tucengshouqi" onClickCapture={() => toggle()}
-            style={{ cursor: "pointer" }} />
-        </div>
-        <div className="left-wrap-toolbar" ref={topBarRef}>
-          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}>
-          </ToolBar>
-        </div>
-        {/*右键菜单Dropdown */}
-
-        {/* <Dropdown overlay={finalMenu} trigger={['contextMenu']}> */}
-        <div className="left-wrap-tree" ref={treeRef}>
-          <Tree
-            className='layers-tree'
-            draggable
-            blockNode
-            fieldNames={
-              { key: "id", children: "modules" }
-            }
-            multiple={bar.isMultipleTree}
-            switcherIcon={<DownOutlined />}
-            defaultExpandedKeys={customExpandKeys}
-            onDrop={onDrop}
-            onExpand={myOnExpand}
-            onSelect={onSelect}
-            onRightClick={onRightClick}
-            treeData={bar.layers}
-            selectedKeys={bar.key}
-            titleRender={(nodeData) => {
-              // title 置为空，覆盖antTree 默认的title
-              return (<div title="">
-                <EveryTreeNode
-                  {...nodeData}
-                  isExpand={isExpand}
-                  getCurrentMenuLocation={getCurrentMenuLocation}
-                />
-              </div>);
-            }
-            }
+            type="icon-tucengshouqi"
+            onClickCapture={() => toggle()}
+            style={{
+              cursor: "pointer",
+              transition: "all 0.3s",
+              transformOrigin: '50% 50%',
+              transform: `rotate(${toggleValue ? 180 : 0}deg)`
+            }}
           />
         </div>
-        {/* </Dropdown> */}
-        {/* {bar.isShowRightMenu &&
-          <RightClickMenu menuInfo={menuInfo} menuOptions={customMenuOptions} hideMenu={hideMenu} />} */}
+        <div className="left-wrap-toolbar" ref={topBarRef}>
+          <ToolBar data={topBarIcons} iconSize="12px" getActiveIcon={getActiveIcon}></ToolBar>
+        </div>
+        <div className="left-wrap-tree" ref={treeRef}>
+          <Tree
+            className="layers-tree"
+            draggable
+            blockNode
+            fieldNames={{ key: "id", children: "modules" }}
+            multiple={bar.isMultipleTree}
+            switcherIcon={<DownOutlined />}
+            onDrop={onDrop}
+            onExpand={onExpand}
+            onSelect={onSelect}
+            onRightClick={onRightClick}
+            autoExpandParent={true}
+            treeData={bar.layers}
+            selectedKeys={bar.key}
+            expandedKeys={expandedKeys}
+            titleRender={(nodeData) => {
+              // title 置为空，覆盖antTree 默认的title
+              return (
+                <div title="">
+                  <EveryTreeNode
+                    {...nodeData}
+                    isExpand={isExpand}
+                    getCurrentMenuLocation={getCurrentMenuLocation}
+                  />
+                </div>
+              );
+            }}
+          />
+        </div>
       </div>
       <div className="footer" ref={bottomBarRef}>
-        <ToolBar needBottomBorder={false} iconSize="14px" data={bottomBarIcons} getActiveIcon={getActiveIcon}>
-        </ToolBar>
+        <ToolBar
+          needBottomBorder={false}
+          iconSize="14px"
+          data={bottomBarIcons}
+          getActiveIcon={getActiveIcon}
+        ></ToolBar>
       </div>
     </div>
-    // </Menu>
   );
 };
 /**
@@ -426,7 +469,4 @@ const bottomBarIcons = [
   },
 ];
 
-export default connect(
-  ({ bar, operate }) => ({ bar, operate }),
-)(Left);
-
+export default connect(({ bar, operate }) => ({ bar, operate }))(Left);

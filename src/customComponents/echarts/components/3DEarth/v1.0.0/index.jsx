@@ -8,7 +8,6 @@ import bathymetry from "./bathymetry.jpg";
 import starfield from "./starfield.jpg";
 
 const Earth = (props) => {
-
   const getOption = () => ({
     globe: {
       baseTexture: earth, // 地图图片
@@ -18,21 +17,26 @@ const Earth = (props) => {
       globeRadius: 100, // 地球的半径
       displacementScale: 0.03, //地球顶点位移的大小。默认为 0 地表高度细节
       viewControl: {
-        autoRotate: true
+        autoRotate: true,
       },
       atmosphere: {
-        show: true
+        show: true,
       },
     },
   });
 
-  const onChartClick = (param, echarts) => { console.log(); };
-  const onChartReady = (echarts) => { console.log(); };
+  const onChartClick = (param, echarts) => {};
+  const onChartReady = (echarts) => {};
   let onEvents = {
     click: onChartClick,
   };
   return (
-    <EC option={getOption()} onChartReady={onChartReady} onEvents={onEvents} />
+    <EC
+      option={getOption()}
+      onChartReady={onChartReady}
+      onEvents={onEvents}
+      opts={{ renderer: "canvas" }}
+    />
     // <div>123</div>
   );
 };

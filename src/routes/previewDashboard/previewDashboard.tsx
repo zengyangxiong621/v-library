@@ -1,22 +1,23 @@
-/* eslint-disable no-case-declarations */
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
 import { deepClone, layersReverse } from "@/utils";
 
-
-import RecursiveComponent from "./components/recursiveComponent";
-import { calcCanvasSize } from "../../utils";
-// import useWebsocket from "@/utils/useWebsocket";
+import { Spin } from "antd";
 
 
-const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
+import RecursiveComponent from './components/recursiveComponent'
+import { calcCanvasSize } from '../../utils'
+import useWebsocket from '@/utils/useWebsocket'
+
+
+const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
 
 
   // 跨屏 接收跨屏回调
   // 建立socket连接，receiveData 接收数据，先打印出来，添加在回调参数后
-  const [dealedData] = useState({});
+  const [ dealedData,setDealedData ] = useState({})
   // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
   //   url: `/visual/webSocket/shareParam/eventName1`
   //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
@@ -164,6 +165,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
         type: "previewDashboard/clearCurrentDashboardData"
       });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (scaleMode === "0") {
@@ -174,6 +176,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
         window.addEventListener("resize", setCanvasSize);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardConfig]);
   const calcCanvasScale = (e: any) => {
     if (e.ctrlKey) {
@@ -199,6 +202,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
     return () => {
       clearInterval(intervalId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
@@ -209,12 +213,17 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
     setComponents(previewDashboard.fullAmountComponents);
     setPanels(previewDashboard.panels);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previewDashboard.layers]);
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
-  const initDashboard = () => {
-    return new Promise((resolve) => {
-      const dashboardId = window.location.pathname.split("/")[2];
+  const initDashboard = (cb = function () { }) => {
+    return new Promise((resolve, reject) => {
+      let afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf('/bigscreen/'))
+      const idList = afterDashboardUrl.split('/').map(item => {
+        return item.replace(/[^0-9]/ig, "")
+      }).filter(item => item)
+      let dashboardId = idList[0] || null
       dispatch({
         type: "previewDashboard/initDashboard",
         payload: { dashboardId },
@@ -227,25 +236,25 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
 
   const getScreenInfo = (config: any) => {
     const map: any = {};
-    config.forEach(({ displayName, value, width, height }: any) => {
+    config.forEach(({ displayName, value, options, width, height }: any) => {
       let target = value;
       switch (displayName) {
         case "屏幕大小":
           target = { width, height };
           break;
       }
-      map[displayName] = target;
-    });
-    return map;
-  };
+      map[displayName] = target
+    })
+    return map
+  }
 
   // 跨屏 获取订阅消息
   // useEffect(() => {
-  // if (readyState.key === 1 && receiveData !== ''){
+    // if (readyState.key === 1 && receiveData !== ''){
   //     console.log(receiveData,'#########websocket  get');
   //     // 订阅消息处理 receiveData：组件id、data
   //     // JSON.parse(receiveData)
-  // setDealedData(receiveData);
+      // setDealedData(receiveData);
 
   //     // 组件id 重新发布更新组件
   //     // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
@@ -262,7 +271,13 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
   // }, [receiveData, readyState])
 
   return (
-    <div id="gs-v-library-app">
+    <div id="gs-v-library-app"
+         style={{
+           width: '100vw',
+           height: '100vh',
+           backgroundColor: pageStyle.background
+         }}
+    >
       {
         !isLoaded ?
           <div className='customScrollStyle' style={{ ...overflowStyle }}>
@@ -276,7 +291,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
                 style={{
                   ...pageStyle,
                   ...scaleStyle,
-                  overflow: "hidden"
                 }}
               >
                 {
@@ -290,7 +304,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard }: any) => {
                     scaleValue={scaleValue}
                     scaleMode={scaleMode}
                     crossCallback={dealedData}
-                  // sendMessage={sendMessage}
+                    // sendMessage={sendMessage}
                   />
                 }
               </div>

@@ -74,10 +74,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         const boxCurWidth = (pointCurX - pointPreX); // 当前盒子的大小
         const boxCurHeight = (pointCurY - pointPreY);
         if(boxCurWidth >= 0 && boxCurHeight >= 0) {
-          areaRef.current.style.left = pointPreX + "px";
-          areaRef.current.style.top = pointPreY + "px";
-          areaRef.current.style.width = boxCurWidth + "px";
-          areaRef.current.style.height = boxCurHeight + "px";
           areaPosition = {
             x: pointPreX,
             y: pointPreY,
@@ -85,10 +81,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
             height: boxCurHeight,
           };
         } else if(boxCurWidth < 0 && boxCurHeight > 0) {
-          areaRef.current.style.left = pointCurX + "px";
-          areaRef.current.style.top = pointPreY + "px";
-          areaRef.current.style.width = ~boxCurWidth + "px";
-          areaRef.current.style.height = boxCurHeight + "px";
           areaPosition = {
             x: pointCurX,
             y: pointPreY,
@@ -96,10 +88,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
             height: boxCurHeight,
           };
         } else if(boxCurWidth > 0 && boxCurHeight < 0) {
-          areaRef.current.style.left = pointPreX + "px";
-          areaRef.current.style.top = pointCurY + "px";
-          areaRef.current.style.width = boxCurWidth + "px";
-          areaRef.current.style.height = ~boxCurHeight + "px";
           areaPosition = {
             x: pointPreX,
             y: pointCurY,
@@ -107,10 +95,6 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
             height: ~boxCurHeight,
           };
         } else if(boxCurWidth < 0 && boxCurHeight < 0) {
-          areaRef.current.style.left = pointCurX + "px";
-          areaRef.current.style.top = pointCurY + "px";
-          areaRef.current.style.width = ~boxCurWidth + "px";
-          areaRef.current.style.height = ~boxCurHeight + "px";
           areaPosition = {
             x: pointCurX,
             y: pointCurY,
@@ -118,8 +102,11 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
             height: ~boxCurHeight,
           };
         }
-
-
+        const leftWrapWidth: any = (document.querySelector(".home-left-wrap") as any).getBoundingClientRect().width;
+        areaRef.current.style.left = areaPosition.x - leftWrapWidth - 22 + "px";
+        areaRef.current.style.top = areaPosition.y - 64 - 22 + "px";
+        areaRef.current.style.width = areaPosition.width + "px";
+        areaRef.current.style.height = areaPosition.height + "px";
       };
       document.onmouseup = (e) => {
         hide();

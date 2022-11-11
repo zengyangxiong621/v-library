@@ -1,12 +1,10 @@
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable prefer-const */
 import { useEffect, useState } from "react";
 // react-beautiful-dnd
 // ant
 import { connect } from "dva";
 import "./index.less";
-// import axios from "axios";
-// import { http } from "@/services/request";
+import axios from "axios";
+import { http } from "@/services/request";
 
 import { Layout } from "antd";
 import { withRouter } from "dva/router";
@@ -31,7 +29,7 @@ import { useEventEmitter } from "ahooks";
 
 const { Header } = Layout;
 
-function App({ bar, dispatch }: any) {
+function App({ bar, dispatch, location, history }: any) {
   const isPanel = bar.isPanel;
   const [showTopBar, setShowTopBar] = useState(false);
   const [zujianORsucai, setZujianORsucai] = useState("zujian");
@@ -40,15 +38,36 @@ function App({ bar, dispatch }: any) {
   const [dataFiltersVisible, setDataFiltersVisible] = useState(false);
   const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false);
   const [componentThemeVisible, setComponentThemeVisible] = useState(false);
-  const [recycleBinVisible, setRecycleBinVisible] = useState(false);
+  const [recycleBinVisible, setRecycleBinVisible] = useState(false)
 
-  const [customMenuOptions] = useState(menuOptions);
+
+  const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
   // 关闭右侧抽屉后,头部导航栏上相应的activeIcon需要取消active的状态
-  const [isResetActiveIcon, setIsResetActiveIcon] = useState(false);
+  const [isResetActiveIcon, setIsResetActiveIcon] = useState(false)
 
   // 在多个组件之间进行事件通知有时会让人非常头疼，借助 EventEmitter ，可以让这一过程变得更加简单。
   const focus$ = useEventEmitter();
 
+  const detectZoom = () => {
+    let ratio = 0,
+      screen: any = window.screen,
+      ua = navigator.userAgent.toLowerCase();
+
+    if (window.devicePixelRatio !== undefined) {
+      ratio = window.devicePixelRatio;
+    } else if (~ua.indexOf("msie")) {
+      if (screen.deviceXDPI && screen.logicalXDPI) {
+        ratio = screen.deviceXDPI / screen.logicalXDPI;
+      }
+    } else if (window.outerWidth !== undefined && window.innerWidth !== undefined) {
+      ratio = window.outerWidth / window.innerWidth;
+    }
+
+    if (ratio) {
+      ratio = Math.round(ratio * 100);
+    }
+    return ratio;
+  };
   const keyCodeMap: any = {
     // 91: true, // command
     61: true,
@@ -63,20 +82,9 @@ function App({ bar, dispatch }: any) {
     const dom: any = (event.target as any) || null;
     let temp = true;
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
-    const awayList = [
-      "ant-layout",
-      "draggable-wrapper",
-      "left-wrap",
-      "use-away",
-      "canvas-draggable",
-    ];
-    awayList.forEach((className) => {
-      if (
-        dom &&
-        dom.className &&
-        Object.prototype.toString.call(dom.className) === "[object String]" &&
-        dom.className.indexOf(className) !== -1
-      ) {
+    const awayList = ["ant-layout", "draggable-wrapper", "left-wrap", "use-away", "canvas-draggable"];
+    awayList.forEach(className => {
+      if (dom && dom.className && Object.prototype.toString.call(dom.className) === "[object String]" && dom.className.indexOf(className) !== -1) {
         temp = false;
       }
     });
@@ -89,20 +97,9 @@ function App({ bar, dispatch }: any) {
     const dom: any = (event.target as any) || null;
     let temp = true;
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
-    const awayList = [
-      "ant-layout",
-      "draggable-wrapper",
-      "left-wrap",
-      "use-away",
-      "canvas-draggable",
-    ];
-    awayList.forEach((className) => {
-      if (
-        dom &&
-        dom.className &&
-        Object.prototype.toString.call(dom.className) === "[object String]" &&
-        dom.className.indexOf(className) !== -1
-      ) {
+    const awayList = ["ant-layout", "draggable-wrapper", "left-wrap", "use-away", "canvas-draggable", "p-home"];
+    awayList.forEach(className => {
+      if (dom && dom.className && Object.prototype.toString.call(dom.className) === "[object String]" && dom.className.indexOf(className) !== -1) {
         temp = false;
       }
     });
@@ -115,13 +112,6 @@ function App({ bar, dispatch }: any) {
         type: "bar/reName",
         payload: {
           value: false,
-        },
-      });
-      // 取消右键菜单
-      dispatch({
-        type: "bar/save",
-        payload: {
-          isShowRightMenu: false,
         },
       });
     }
@@ -137,10 +127,11 @@ function App({ bar, dispatch }: any) {
       document.oncontextmenu = null;
       document.removeEventListener("contextMenu", documentRightClick);
       dispatch({
-        type: "bar/clearCurrentDashboardData",
+        type: "bar/clearCurrentDashboardData"
       });
     };
   }, []);
+
 
   // 阻止 window 缩放
   const handleStopWindowWheel = (event: any) => {
@@ -148,8 +139,7 @@ function App({ bar, dispatch }: any) {
     const ctrlKey = e.ctrlKey || e.metaKey;
     if (ctrlKey && keyCodeMap[e.keyCode]) {
       e.preventDefault();
-    } else if (e.detail) {
-      // Firefox
+    } else if (e.detail) { // Firefox
       event.returnValue = false;
     }
   };
@@ -172,8 +162,8 @@ function App({ bar, dispatch }: any) {
       dataFilters: false,
       componentTheme: false,
       recycleBin: false,
-    };
-    setIsResetActiveIcon(false);
+    }
+    setIsResetActiveIcon(false)
     if (["zujian", "sucai"].includes(whichBar)) {
       setZujianORsucai(whichBar);
       setShowTopBar(true);
@@ -222,42 +212,45 @@ function App({ bar, dispatch }: any) {
   // 每次
   const handleDCVisibleChange = (bool: boolean) => {
     setDataContainerVisible(bool);
-    if (!bool) setIsResetActiveIcon(true);
+    if (!bool) setIsResetActiveIcon(true)
   };
   const handleCbAvailableChange = (bool: boolean) => {
     setCallbackArgsVisible(bool);
-    if (!bool) setIsResetActiveIcon(true);
+    if (!bool) setIsResetActiveIcon(true)
   };
   const handleMUAvailableChange = (bool: boolean) => {
     setModuleUpdateVisible(bool);
-    if (!bool) setIsResetActiveIcon(true);
+    if (!bool) setIsResetActiveIcon(true)
   };
   const handleDataFilterAvailableChange = (bool: boolean) => {
     setDataFiltersVisible(bool);
-    if (!bool) setIsResetActiveIcon(true);
+    if (!bool) setIsResetActiveIcon(true)
   };
   const handleComponentThemeAvailableChange = (bool: boolean) => {
     setComponentThemeVisible(bool);
-    if (!bool) setIsResetActiveIcon(true);
+    if (!bool) setIsResetActiveIcon(true)
   };
   const handleRBvailableChange = (bool: boolean) => {
     setRecycleBinVisible(bool);
-    if (!bool) setIsResetActiveIcon(true);
-  };
+    if (!bool) setIsResetActiveIcon(true)
+  }
 
   return (
     <Layout>
-      <ChooseArea />
       <Header className="home-header">
         <CustomHeader showWhichBar={showWhichBar} isResetActiveIcon={isResetActiveIcon} />
       </Header>
       <div className="p-home">
         <div className="home-left-wrap">
-          {isPanel ? <DynamicPanel /> : <></>}
+          {
+            isPanel ? <DynamicPanel /> : <></>
+          }
           <Left />
         </div>
         <div className="center-wrap">
-          {showTopBar && <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />}
+          {
+            showTopBar && <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />
+          }
           <CenterCanvas focus$={focus$} />
           <CenterBottomBar focus$={focus$} />
         </div>
@@ -267,20 +260,20 @@ function App({ bar, dispatch }: any) {
           <CallbackArgs visible={callbackArgsVisible} onChange={handleCbAvailableChange} />
           <ModuleUpdate visible={moduleUpdateVisible} onChange={handleMUAvailableChange} />
           <DataFilters visible={dataFiltersVisible} onChange={handleDataFilterAvailableChange} />
-          <ComponentTheme
-            visible={componentThemeVisible}
-            onChange={handleComponentThemeAvailableChange}
-          />
+          <ComponentTheme visible={componentThemeVisible} onChange={handleComponentThemeAvailableChange} />
           <RecycleBin visible={recycleBinVisible} onChange={handleRBvailableChange} />
         </div>
       </div>
       <div>
-        {(bar.isShowRightMenu || bar.isCopyComponentToDashboard) && (
+        {
+          (bar.isShowRightMenu || bar.isCopyComponentToDashboard) &&
           <CenterRightMenu menuOptions={customMenuOptions} hideMenu={hideMenu} />
-        )}
+        }
       </div>
     </Layout>
   );
 }
 
-export default withRouter(connect(({ bar }: any) => ({ bar }))(withRouter(App)));
+export default withRouter(connect(({ bar }: any) => (
+  { bar }
+))(withRouter(App)));

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useState, useRef } from "react";
 import "./index.less";
 
@@ -30,10 +31,10 @@ const AppCard = (props: any) => {
     moduleName,
     downloadUrl,
   } = props;
-  const isTemp = ["systemTemp", "myTemp"].indexOf(moduleType) > -1;
+  const isTemp = ["systemTemp", "myTemp"].indexOf(moduleType) > -1
   // 后端返回的photoUrl为空，则使用默认图片
-  let picUrl = isTemp ? (photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png")) : moduleName === "image2" && downloadUrl ? downloadUrl : photoPath ;
-  if (!picUrl.startsWith("http") && !picUrl.startsWith("/static")) {
+  let picUrl = isTemp ? (photoPath || photoUrl || require("../../../../assets/images/模板默认背景图.png")) : moduleName === 'image2' && downloadUrl ? downloadUrl : photoPath ;
+  if (!picUrl.startsWith("http") && picUrl.indexOf("/static") === -1 ) {
     picUrl = `${(window as any).CONFIG.COMP_URL}${picUrl}`;
   }
 
@@ -188,7 +189,7 @@ const AppCard = (props: any) => {
     const url =
       ["systemTemp", "myTemp"].indexOf(moduleType) > -1
         ? "/visual/appTemplate/delete"
-        : "/visual/resource/delete";
+        : `/visual/resource/delete`;
     const params =
       ["systemTemp", "myTemp"].indexOf(moduleType) > -1 ? { appIdList: [id] } :  [id];
     const [, data] = await useFetch(`${url}`, {
@@ -285,7 +286,7 @@ const AppCard = (props: any) => {
                   /> */}
                 </Tooltip>
                 {/* 系统素材不允许移动 */}
-                {["myTemp", "systemTemp", "myresource","design"].indexOf(moduleType) > -1 && (
+                {["myTemp", "systemTemp", "myresource",'design'].indexOf(moduleType) > -1 && (
                   <Tooltip placement="bottom" title="移动">
                     <IconFont
                       style={{ fontSize: "16px", marginRight: "10px" }}
@@ -295,7 +296,7 @@ const AppCard = (props: any) => {
                     />
                   </Tooltip>
                 )}
-                <Tooltip placement="bottom" title={`${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName?.length ? `当前素材被 ${props.appName.join("、")} 应用使用，不能进行删除操作` : "删除"}`}>
+                <Tooltip placement="bottom" title={`${ ["myTemp", "systemTemp"].indexOf(moduleType) === -1 && props?.appName?.length ? `当前素材被 ${props.appName.join('、')} 应用使用，不能进行删除操作` : "删除"}`}>
                   <IconFont
                     style={{ fontSize: "16px" }}
                     onClick={deleteApp}
@@ -317,6 +318,7 @@ const AppCard = (props: any) => {
             </div>
           </div>
           <div className="img-wrap">
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <img className="img-limit" src={picUrl} />
           </div>
         </header>
