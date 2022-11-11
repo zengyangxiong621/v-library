@@ -52,14 +52,14 @@ import {
 } from "../utils/sideBar";
 import { DIMENSION } from "../routes/dashboard/center/constant";
 
-import { generateLayers } from "./utils/generateLayers"
-import { filterEmptyGroups } from "./utils/filterEmptyGroups"
-import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers"
-import { http } from "../services/request"
-import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve"
-import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
-import dashboard from "./dashboard"
-import { message } from "antd"
+import { generateLayers } from "./utils/generateLayers";
+import { filterEmptyGroups } from "./utils/filterEmptyGroups";
+import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
+import { http } from "../services/request";
+import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve";
+import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
+import dashboard from "./dashboard";
+import { message } from "antd";
 
 export default {
   namespace: "bar",
@@ -1145,7 +1145,7 @@ export default {
             : "";
       if (panelId && !stateId) {
         message.error("当前面板并无状态，请新增状态");
-        return
+        return;
       }
       // 新建的是组件
       const data: any = yield http({
@@ -1605,7 +1605,7 @@ export default {
                     y: 0
                   },
                   style: {
-                    display: 'none',
+                    display: "none",
                     width: 0,
                     height: 0
                   }
