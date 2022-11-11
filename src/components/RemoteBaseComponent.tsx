@@ -4,21 +4,20 @@ import { connect } from "dva";
 
 const RemoteBaseComponent = (props: any) => {
   const { componentConfig } = props;
-  const { moduleType, moduleName, moduleVersion, } = componentConfig;
+  const { moduleType, moduleName, moduleVersion } = componentConfig;
   const isExit = typeof moduleType === "undefined";
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
 
   const importComponent = useCallback(() => {
     return axios.get(`${(window as any).CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
-  }, [moduleType]);
+  }, [moduleType, moduleName, moduleVersion]);
 
 
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`);
     const { default: component } = (window as any).VComponents;
     setComponent(() => component);
-
   }, [importComponent, setComponent]);
 
   useEffect(() => {
@@ -35,7 +34,16 @@ const RemoteBaseComponent = (props: any) => {
 
 };
 
-// class RemoteBaseComponent extends React.Component<any, any> {
+// class写法
+// interface Props {
+//   componentConfig?: any
+// }
+
+// interface State {
+//   component?: any
+// }
+
+// class RemoteBaseComponent extends React.Component<Props, State> {
 //   constructor(props: any) {
 //     super(props);
 //     this.state = {
@@ -44,12 +52,12 @@ const RemoteBaseComponent = (props: any) => {
 //   }
 
 //   importComponent(): any {
-//     return axios.get(`http://127.0.0.1:8888/${this.props.type}.js`).then(res => res.data);
+//     return axios.get(`${(window as any).CONFIG.COMP_URL}/${this.props.componentConfig.moduleType}/${this.props.componentConfig.moduleName}/${this.props.componentConfig.moduleVersion}/${this.props.componentConfig.moduleName}.js`).then(res => res.data);
 //   }
 
 //   async componentDidMount() {
-//     const aaaa = new Function(`${await this.importComponent()}`)();
-//     const { default: component } = (window as any).MyComponent;
+//     window.eval(`${await this.importComponent()}`);
+//     const { default: component } = (window as any).VComponents;
 
 //     this.setState({
 //       component: component
@@ -65,7 +73,7 @@ const RemoteBaseComponent = (props: any) => {
 //   }
 // }
 
-// export default RemoteBaseComponent;
+
 export default connect(({ bar }: any) => (
   { bar }
 ))(RemoteBaseComponent);

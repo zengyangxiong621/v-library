@@ -204,6 +204,10 @@ module.exports = function (webpackEnv) {
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
     entry: paths.appIndexJs,
+    externals: {
+      'react': 'React',
+      'ReactDom': 'ReactDom',
+    },
     output: {
       // The build folder.
       path: paths.appBuild,
