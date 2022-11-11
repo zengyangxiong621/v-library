@@ -26,7 +26,7 @@ import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 
-import Timeline from "@/customComponents/assist/timeline/v1.1.7";
+import Timeline from "@/customComponents/assist/timeline/v1.1.8";
 import NormalTable from "@/customComponents/table/normalTable/v1.0.5";
 import Media from "@/customComponents/media/v1.1.1";
 import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
