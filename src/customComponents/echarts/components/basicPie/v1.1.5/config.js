@@ -7,7 +7,7 @@ const ComponentDefaultConfig = {
 
   moduleName: "pie", //组件标识
   moduleVersion: "1.1.5", //组件版本号
-  moduleType: 'chart',
+  moduleType: "chart",
 
   createdAt: "2022-04-02T07:22:31.290Z", // =========
   updatedAt: "2022-04-02T07:22:39.798Z", // =========
@@ -748,7 +748,7 @@ const ComponentDefaultConfig = {
                 {
                   displayName: "    ",
                   name: "labelSeriesNameTextStyle",
-                  themeColor:'themeTextColor',
+                  themeColor:"themeTextColor",
                   type: "chartText",
                   value: {
                     fontFamily: "微软雅黑",
@@ -773,7 +773,7 @@ const ComponentDefaultConfig = {
                   displayName: "    ",
                   name: "labelDataNameTextStyle",
                   type: "chartText",
-                  themeColor:'themeTextColor',
+                  themeColor:"themeTextColor",
                   value: {
                     fontFamily: "微软雅黑",
                     color: "#fff",
@@ -797,7 +797,7 @@ const ComponentDefaultConfig = {
                   displayName: "    ",
                   name: "labelDataValueTextStyle",
                   type: "chartText",
-                  themeColor:'themeTextColor',
+                  themeColor:"themeTextColor",
                   value: {
                     fontFamily: "微软雅黑",
                     color: "#fff",
@@ -821,7 +821,7 @@ const ComponentDefaultConfig = {
                   displayName: "    ",
                   name: "labelPercentageTextStyle",
                   type: "chartText",
-                  themeColor:'themeTextColor',
+                  themeColor:"themeTextColor",
                   value: {
                     fontFamily: "微软雅黑",
                     color: "#fff",

@@ -51,18 +51,18 @@ class SwipterText extends Component<Props, State> {
   };
 
   drawSwiper = () => {
-    const {config, staticData} = this.props.componentConfig
-    const { swiperId } = this.state
-    const { comData } = this.props
-    const configData = this.formatConfig(config, [])
-    let slideData = comData || staticData
-    slideData = Array.isArray(slideData) ? slideData : []
-    let loopConfig = configData.autoplay && slideData.length > 1 ? {
+    const {config, staticData} = this.props.componentConfig;
+    const { swiperId } = this.state;
+    const { comData } = this.props;
+    const configData = this.formatConfig(config, []);
+    let slideData = comData || staticData;
+    slideData = Array.isArray(slideData) ? slideData : [];
+    const loopConfig = configData.autoplay && slideData.length > 1 ? {
         disableOnInteraction: false,
         // pauseOnMouseEnter:true, // 版本7才能实现
         delay: configData.delay
-    } : false
-    var swiper:any = new Swiper(`.swiper-container${swiperId}`, {
+    } : false;
+    const swiper:any = new Swiper(`.swiper-container${swiperId}`, {
         slidesPerView: configData.slidesNum,
         spaceBetween: configData.lineSpace,
         direction: "vertical",
@@ -113,19 +113,19 @@ class SwipterText extends Component<Props, State> {
     const style = this.formatConfig(config, []);
     const findItem = (name: string) => {
       return config.find((item: any) => {
-        return item.name === name
-      })
-    }
-    const textStyle = findItem('textStyle')
-    const textStyleData = this.formatConfig([textStyle], [])
+        return item.name === name;
+      });
+    };
+    const textStyle = findItem("textStyle");
+    const textStyleData = this.formatConfig([textStyle], []);
     // 对齐方式
-    const textAlign = findItem('textAlign') ? this.formatConfig([findItem('textAlign')], []) : {}
+    const textAlign = findItem("textAlign") ? this.formatConfig([findItem("textAlign")], []) : {};
     // 行图标
-    const rowIcon = findItem('rowIcon') ? this.formatConfig([findItem('rowIcon')], []) : {}
+    const rowIcon = findItem("rowIcon") ? this.formatConfig([findItem("rowIcon")], []) : {};
     // 背景颜色
-    const backgroundConfig = findItem('backgroundConfig') ? this.formatConfig([findItem('backgroundConfig')], []) : {}
+    const backgroundConfig = findItem("backgroundConfig") ? this.formatConfig([findItem("backgroundConfig")], []) : {};
     // 展示方式
-    const specialType = findItem('specialType') ? this.formatConfig([findItem('specialType')], [])?.specialType : true;
+    const specialType = findItem("specialType") ? this.formatConfig([findItem("specialType")], [])?.specialType : true;
     if(swiperDom && finalData.length){
       // 切换是否自动轮播
       if (style.autoplay && finalData.length > 1) {
@@ -133,10 +133,10 @@ class SwipterText extends Component<Props, State> {
       } else {
         swiperDom.autoplay.stop();
       }
-      swiperDom.params.autoplay.delay = style.delay  // 更新轮播速度
-      swiperDom.params.slidesPerView = style.slidesNum
-      swiperDom.params.spaceBetween = style.lineSpace // 更新文本间距
-      swiperDom.params.centeredSlides = specialType 
+      swiperDom.params.autoplay.delay = style.delay;  // 更新轮播速度
+      swiperDom.params.slidesPerView = style.slidesNum;
+      swiperDom.params.spaceBetween = style.lineSpace; // 更新文本间距
+      swiperDom.params.centeredSlides = specialType; 
       // swiperDom.params.loop = !specialType, // 更新文本间距
       if(style.autoplay){
         swiperDom.el.onmouseout = function(){
@@ -145,29 +145,29 @@ class SwipterText extends Component<Props, State> {
     const handleClickName = (item: any) => {
       if (style.showLink) {
       }
-    }
+    };
     const swiperStyle = {
       ...textStyleData,
       lineHeight: `${textStyleData.lineHeight}px`,
-      fontWeight: style.bold ? 'bold' : '',
-      fontStyle: style.italic ? 'italic' : '',
-      filter: style.show ? `drop-shadow(${style.shadow.color} ${style.shadow.vShadow}px ${style.shadow.hShadow}px ${style.shadow.blur}px)` : ''
-    }
+      fontWeight: style.bold ? "bold" : "",
+      fontStyle: style.italic ? "italic" : "",
+      filter: style.show ? `drop-shadow(${style.shadow.color} ${style.shadow.vShadow}px ${style.shadow.hShadow}px ${style.shadow.blur}px)` : ""
+    };
 
     if (!specialType) {
       switch (textAlign.textAlign) {
-        case 'left':
-          swiperStyle.justifyContent = 'flex-start';
+        case "left":
+          swiperStyle.justifyContent = "flex-start";
           break;
-        case 'center':
-          swiperStyle.justifyContent = 'center';
+        case "center":
+          swiperStyle.justifyContent = "center";
           break;
-        case 'right':
-          swiperStyle.justifyContent = 'flex-end';
+        case "right":
+          swiperStyle.justifyContent = "flex-end";
           break;
       }
     } else {
-      delete swiperStyle.justifyContent
+      delete swiperStyle.justifyContent;
     }
 
     return (
@@ -176,7 +176,7 @@ class SwipterText extends Component<Props, State> {
         style={{
           width: style.width,
           height: style.height,
-          background: backgroundConfig.show ? backgroundConfig.backgroundColor : ''
+          background: backgroundConfig.show ? backgroundConfig.backgroundColor : ""
         }}
       >
         {
@@ -184,11 +184,11 @@ class SwipterText extends Component<Props, State> {
             <div
               id={`swiper-container${swiperId}`}
               className={`swiper-container swiper-container${swiperId}`}>
-              <div className={`swiper-wrapper ${specialType ? 'special-type' : ''} `}>
+              <div className={`swiper-wrapper ${specialType ? "special-type" : ""} `}>
                 {
                   finalData.map((item: any, index: any) => {
                     return (
-                      <div className={`swiper-slide ${specialType ? 'swiper-type' : ''}`} style={swiperStyle} key={index}>
+                      <div className={`swiper-slide ${specialType ? "swiper-type" : ""}`} style={swiperStyle} key={index}>
                         {
                           rowIcon.show &&
                           <img src={rowIcon.backgroundImg} style={{

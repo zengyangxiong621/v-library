@@ -36,7 +36,7 @@ const UploadFile = (props: any) => {
       groupId = ["myTempOhter", "sysTempOhter"].indexOf(groupId) > -1 ? 0 : groupId;
       let formObj:any = {};
       if(isTemp){
-        const originFileObj = fileList[0] ? fileList[0].originFileObj : ''
+        const originFileObj = fileList[0] ? fileList[0].originFileObj : "";
         formData.append("groupId", groupId);
         formData.append("file", originFileObj);
       }else{

@@ -73,7 +73,7 @@ const AppCard = (props: any) => {
   /** Card 中图标 和 编辑、预览按钮 事件 */
   const scanDashboard = () => {
     // TODO 通过id跳转到预览界面
-    let beforeDashboardUrl = window.location.href.slice(0, window.location.href.indexOf('/dashboard-manage'))
+    const beforeDashboardUrl = window.location.href.slice(0, window.location.href.indexOf("/dashboard-manage"));
     const newTab = window.open("_blank");
     newTab!.location.href = beforeDashboardUrl + `/bigscreen/${id}`;
     newTab?.history.replaceState(null, "");

@@ -1,10 +1,10 @@
 const componentDefaultConfig = {
-  "id": '', //组件ID
+  "id": "", //组件ID
   "uniqueTag": "", // =========
   "name": "雷达图", //图层名称
   "parentId": "", // 父组件 像是2D地图、3D地图 =================
   "dashboardId": "", //画布id
-  "moduleType": 'chart',
+  "moduleType": "chart",
   "moduleName": "radarChart", //组件标识
   "moduleVersion": "1.0.3", //组件版本号
 
@@ -23,15 +23,15 @@ const componentDefaultConfig = {
     "data": [
       {
         list: [
-          {name:'安全管理'},
-          {name:'网络安全'},
-          {name:'终端安全'},
-          {name:'应用安全'},
-          {name:'数据安全'}
+          {name:"安全管理"},
+          {name:"网络安全"},
+          {name:"终端安全"},
+          {name:"应用安全"},
+          {name:"数据安全"}
         ],
         seriesData: [
-          {name: '系列一',value: [1,2,4,5,7]},
-          {name: '系列二',value: [3,2,6,9,5]},
+          {name: "系列一",value: [1,2,4,5,7]},
+          {name: "系列二",value: [3,2,6,9,5]},
         ]
       }
     ],
@@ -107,16 +107,16 @@ const componentDefaultConfig = {
           "type": "switch"
         },
         {
-          'name': 'color',
-          'displayName': '颜色',
-          'value': '#0D2753', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type':'color'
+          "name": "color",
+          "displayName": "颜色",
+          "value": "#0D2753", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type":"color"
         },
         {
-          'name': 'radius',
-          'displayName': '半径',
-          'value': 50,
-          'type':'number',
+          "name": "radius",
+          "displayName": "半径",
+          "value": 50,
+          "type":"number",
           "config": {
             min: 0,
             max: 100,
@@ -140,16 +140,16 @@ const componentDefaultConfig = {
           "type": "switch"
         },
         {
-          'name': 'themeTextColor',
-          'displayName': '颜色',
-          'value': '#fff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type':'color'
+          "name": "themeTextColor",
+          "displayName": "颜色",
+          "value": "#fff", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type":"color"
         },
         {
-          'name': 'fontSize',
-          'displayName': '大小',
-          'value': 24,
-          'type':'number',
+          "name": "fontSize",
+          "displayName": "大小",
+          "value": 24,
+          "type":"number",
           "config": {
               "min": 12,
               "step": 1,
@@ -157,37 +157,37 @@ const componentDefaultConfig = {
         },
         {
           name:"fontFamily",
-          displayName:'字体',
-          type:'select',
-          value:'Microsoft Yahei',
+          displayName:"字体",
+          type:"select",
+          value:"Microsoft Yahei",
           options:[
             {
-              name:'微软雅黑',
-              value:'Microsoft Yahei'
+              name:"微软雅黑",
+              value:"Microsoft Yahei"
             },
             {
-              name:'宋体',
-              value:'宋体'
+              name:"宋体",
+              value:"宋体"
             },
             {
-              name:'黑体',
-              value:'SimHei'
+              name:"黑体",
+              value:"SimHei"
             },
           ]
         },
         {
           name:"fontWeight",
-          displayName:'字体粗细',
-          type:'select',
-          value:'normal',
+          displayName:"字体粗细",
+          type:"select",
+          value:"normal",
           options:[
             {
-              name:'正常',
-              value:'normal'
+              name:"正常",
+              value:"normal"
             },
             {
-              name:'加粗',
-              value:'bold'
+              name:"加粗",
+              value:"bold"
             },
           ]
         }
@@ -250,16 +250,16 @@ const componentDefaultConfig = {
           "type": "switch"
         },
         {
-          'name': 'themeAssistColor',
-          'displayName': '颜色',
-          'value': '#1b3483', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type':'color'
+          "name": "themeAssistColor",
+          "displayName": "颜色",
+          "value": "#1b3483", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type":"color"
         },
         {
-          'name': 'thick',
-          'displayName': '粗细',
-          'value': 1,
-          'type':'number',
+          "name": "thick",
+          "displayName": "粗细",
+          "value": 1,
+          "type":"number",
           "config": {
               "min": 0,
               "step": 1,
@@ -279,16 +279,16 @@ const componentDefaultConfig = {
               "type": "switch"
             },
             {
-              'name': 'themeTextColor',
-              'displayName': '颜色',
-              'value': '#fff', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              'type':'color'
+              "name": "themeTextColor",
+              "displayName": "颜色",
+              "value": "#fff", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              "type":"color"
             },
             {
-              'name': 'fontSize',
-              'displayName': '大小',
-              'value': 12,
-              'type':'number',
+              "name": "fontSize",
+              "displayName": "大小",
+              "value": 12,
+              "type":"number",
               "config": {
                   "min": 12,
                   "step": 1,
@@ -313,9 +313,9 @@ const componentDefaultConfig = {
         },
         {
           name:"shape",
-          displayName:'形状',
-          type:'select',
-          value:'polygon',
+          displayName:"形状",
+          type:"select",
+          value:"polygon",
           options:[
               {
                 name: "圆",
@@ -328,22 +328,22 @@ const componentDefaultConfig = {
           ]
         },
         {
-          'name': 'themeAssistColor',
-          'displayName': '边颜色',
-          'value': '#1b3483', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type':'color'
+          "name": "themeAssistColor",
+          "displayName": "边颜色",
+          "value": "#1b3483", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type":"color"
         },
         {
-          'name': 'themeGridColor',
-          'displayName': '填充颜色',
-          'value': '#042075', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-          'type':'color'
+          "name": "themeGridColor",
+          "displayName": "填充颜色",
+          "value": "#042075", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+          "type":"color"
         },
         {
-          'name': 'thickness',
-          'displayName': '边宽',
-          'value': 1,
-          'type':'number',
+          "name": "thickness",
+          "displayName": "边宽",
+          "value": 1,
+          "type":"number",
           "config": {
               "min": 0,
               "step": 1,
@@ -365,20 +365,20 @@ const componentDefaultConfig = {
           "type": "switch"
         },
         {
-          'name': 'min',
-          'displayName': '最小值',
-          'value': 0,
-          'type':'number',
+          "name": "min",
+          "displayName": "最小值",
+          "value": 0,
+          "type":"number",
           "config": {
               "min": 0,
               "step": 1,
           }
         },
         {
-          'name': 'max',
-          'displayName': '最大值',
-          'value': 10,
-          'type':'number',
+          "name": "max",
+          "displayName": "最大值",
+          "value": 10,
+          "type":"number",
           "config": {
               "min": 0,
               "step": 1,
@@ -401,35 +401,35 @@ const componentDefaultConfig = {
           "type": "object",
           "value": [
             {
-              'name':"name",
-              'displayName':'系列名',
-              'type':'input',
-              'value':'系列一',
+              "name":"name",
+              "displayName":"系列名",
+              "type":"input",
+              "value":"系列一",
             },
             {
-              'name': 'themePureColor',
-              'displayName': '区域颜色',
-              'value': '#1890FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              type:'color'
+              "name": "themePureColor",
+              "displayName": "区域颜色",
+              "value": "#1890FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              type:"color"
             },
             {
-              'name': 'line',
-              'displayName': '折线',
-              'type': 'collapse',
+              "name": "line",
+              "displayName": "折线",
+              "type": "collapse",
               hasSwitch:true, // 是否有切换按钮
               defaultExpand:true,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                  'name': 'show',
-                  'displayName': '',
-                  'value': true,
-                  'type': 'switch',
+                  "name": "show",
+                  "displayName": "",
+                  "value": true,
+                  "type": "switch",
                 },
                 {
                   name:"lineType",
-                  displayName:'样式',
-                  type:'select',
-                  value:'solid',
+                  displayName:"样式",
+                  type:"select",
+                  value:"solid",
                   options:[
                       {
                         name: "实线",
@@ -442,16 +442,16 @@ const componentDefaultConfig = {
                   ]
                 },
                 {
-                  'name': 'themePureColor',
-                  'displayName': '颜色',
-                  'value': '#1890FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                  type:'color'
+                  "name": "themePureColor",
+                  "displayName": "颜色",
+                  "value": "#1890FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                  type:"color"
                 },
                 {
-                  'name': 'lineWidth',
-                  'displayName': '粗细',
-                  'value': 2,
-                  type:'number',
+                  "name": "lineWidth",
+                  "displayName": "粗细",
+                  "value": 2,
+                  type:"number",
                   "config": {
                       "min": 0,
                       "step": 1
@@ -475,35 +475,35 @@ const componentDefaultConfig = {
           "type": "object",
           "value": [
             {
-              'name':"name",
-              'displayName':'系列名',
-              'type':'input',
-              'value':'系列二',
+              "name":"name",
+              "displayName":"系列名",
+              "type":"input",
+              "value":"系列二",
             },
             {
-              'name': 'themePureColor',
-              'displayName': '区域颜色',
-              'value': '#004483', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-              type:'color'
+              "name": "themePureColor",
+              "displayName": "区域颜色",
+              "value": "#004483", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+              type:"color"
             },
             {
-              'name': 'line',
-              'displayName': '折线',
-              'type': 'collapse',
+              "name": "line",
+              "displayName": "折线",
+              "type": "collapse",
               hasSwitch:true, // 是否有切换按钮
               defaultExpand:true,  // 是否默认展开
               value:[
                 {	// 如果有后面的按钮，则该项必须放在第一个
-                  'name': 'show',
-                  'displayName': '',
-                  'value': true,
-                  'type': 'switch',
+                  "name": "show",
+                  "displayName": "",
+                  "value": true,
+                  "type": "switch",
                 },
                 {
                   name:"lineType",
-                  displayName:'样式',
-                  type:'select',
-                  value:'solid',
+                  displayName:"样式",
+                  type:"select",
+                  value:"solid",
                   options:[
                       {
                         name: "实线",
@@ -516,16 +516,16 @@ const componentDefaultConfig = {
                   ]
                 },
                 {
-                  'name': 'themePureColor',
-                  'displayName': '颜色',
-                  'value': '#1890FF', // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
-                  type:'color'
+                  "name": "themePureColor",
+                  "displayName": "颜色",
+                  "value": "#1890FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
+                  type:"color"
                 },
                 {
-                  'name': 'lineWidth',
-                  'displayName': '粗细',
-                  'value': 2,
-                  type:'number',
+                  "name": "lineWidth",
+                  "displayName": "粗细",
+                  "value": 2,
+                  type:"number",
                   "config": {
                       "min": 0,
                       "step": 1
@@ -545,15 +545,15 @@ const componentDefaultConfig = {
     }
   ],
   themes: [{
-    id: 'theme-default',
-    name: '系统默认'
+    id: "theme-default",
+    name: "系统默认"
   }, {
-    id: 'theme-light',
-    name: '浅色风格'
+    id: "theme-light",
+    name: "浅色风格"
   }, {
-    id: 'theme-gov-blue',
-    name: '政务蓝'
+    id: "theme-gov-blue",
+    name: "政务蓝"
   }]
-}
+};
 
-export default componentDefaultConfig
+export default componentDefaultConfig;

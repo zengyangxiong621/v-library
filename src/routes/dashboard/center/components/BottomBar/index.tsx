@@ -77,7 +77,7 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
       <section className="left">
       </section>
       <section className="right g-flex g-items-center g-h-full">
-        <div style={{ height: '100%', lineHeight: '32px' ,paddingRight: '22px', borderRight: "1px solid #000"}}>
+        <div style={{ height: "100%", lineHeight: "32px" ,paddingRight: "22px", borderRight: "1px solid #000"}}>
           按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
           { " " + Math.ceil(bar.canvasScaleValue * 100) + "%" }
         </div>

@@ -24,7 +24,7 @@ const componentDefaultConfig = {
       {
         title: "已整改单位占比",
         value: 91,
-        unit:'%'
+        unit:"%"
       },
     ],
     fields: [
@@ -38,7 +38,7 @@ const componentDefaultConfig = {
       },
       {
         name:"unit",
-        value:'unit'
+        value:"unit"
       }
     ],
   },
@@ -198,15 +198,15 @@ const componentDefaultConfig = {
           name:"刻度",
           value:[
             {
-              'name': 'keduDistance',
-              'displayName': '与轴线距离',
-              'value': 10,
-              'type':'number',
+              "name": "keduDistance",
+              "displayName": "与轴线距离",
+              "value": 10,
+              "type":"number",
               "config": {
                   "min": 0,
                   "max": 100,
                   "step": 1,
-                  "suffix":'',  // 输入框后缀
+                  "suffix":"",  // 输入框后缀
               }
             },
             {
@@ -241,15 +241,15 @@ const componentDefaultConfig = {
                   }
                 },
                 {
-                  'name': 'axisTickLength',
-                  'displayName': '长度',
-                  'value': 6,
-                  'type':'number',
+                  "name": "axisTickLength",
+                  "displayName": "长度",
+                  "value": 6,
+                  "type":"number",
                   "config": {
                     "min": 0,
                     "max": 10,
                     "step": 1,
-                    "suffix":'',  // 输入框后缀
+                    "suffix":"",  // 输入框后缀
                   }
                 },
                 {
@@ -280,15 +280,15 @@ const componentDefaultConfig = {
                   "type": "switch",
                 },
                 {
-                  'name': 'splitLineLength',
-                  'displayName': '长度',
-                  'value': 15,
-                  'type':'number',
+                  "name": "splitLineLength",
+                  "displayName": "长度",
+                  "value": 15,
+                  "type":"number",
                   "config": {
                     "min": 0,
                     "max": 100,
                     "step": 1,
-                    "suffix":'',  // 输入框后缀
+                    "suffix":"",  // 输入框后缀
                   }
                 },
                 {
@@ -319,27 +319,27 @@ const componentDefaultConfig = {
                   "type": "switch",
                 },
                 {
-                  'name': 'distance',
-                  'displayName': '与轴线距离',
-                  'value': 40,
-                  'type':'number',
+                  "name": "distance",
+                  "displayName": "与轴线距离",
+                  "value": 40,
+                  "type":"number",
                   "config": {
                       "min": 0,
                       "max": 100,
                       "step": 1,
-                      "suffix":'',  // 输入框后缀
+                      "suffix":"",  // 输入框后缀
                   }
                 },
                 {
-                  'name':"axisLabelText",
-                  'displayName':'文本样式',
-                  'type':'chartText',
-                  'themeColor':'themeAssistColor', // 非必填项，可选值themePureColor themeGradientColorStart等主题配置变量
-                  'value':{
-                      'fontFamily':'sans-serif',
-                      'fontSize':24,
-                      'color':'#ffffff',
-                      'fontWeight':'normal' // bold bolder lighter
+                  "name":"axisLabelText",
+                  "displayName":"文本样式",
+                  "type":"chartText",
+                  "themeColor":"themeAssistColor", // 非必填项，可选值themePureColor themeGradientColorStart等主题配置变量
+                  "value":{
+                      "fontFamily":"sans-serif",
+                      "fontSize":24,
+                      "color":"#ffffff",
+                      "fontWeight":"normal" // bold bolder lighter
                   }
                 }
               ]
@@ -374,7 +374,7 @@ const componentDefaultConfig = {
         },
         {
           key:"zhizhen",
-          name:'指针',
+          name:"指针",
           value:[
             {
               "name": "anchorSize",
@@ -395,14 +395,14 @@ const componentDefaultConfig = {
               "value": "#ffffff",
             },
             {
-              'name': 'anchorBorder',
-              'displayName': '固定点描边',
-              'type':'border',
-              'themeColor':'themeAssistColor', // 非必填项，可选值themePureColor themeGradientColorStart等主题配置变量
-              'value':{
-                'type':'solid', // dotted 
-                'width':5,
-                'color':'#18FFE5' // rgba(0,0,0,0)
+              "name": "anchorBorder",
+              "displayName": "固定点描边",
+              "type":"border",
+              "themeColor":"themeAssistColor", // 非必填项，可选值themePureColor themeGradientColorStart等主题配置变量
+              "value":{
+                "type":"solid", // dotted 
+                "width":5,
+                "color":"#18FFE5" // rgba(0,0,0,0)
               }
             }
           ]

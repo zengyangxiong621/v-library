@@ -96,10 +96,10 @@ const DynamicPanel: React.FC = (props: any) => {
   };
 
   // 判断当前面板类型是否是下钻面板
-  const curPanelId = bar.panelId
-  const panelsList = bar.fullAmountPanels
-  const targetPanelInfo = panelsList.find(item => item.id === curPanelId)
-  const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false
+  const curPanelId = bar.panelId;
+  const panelsList = bar.fullAmountPanels;
+  const targetPanelInfo = panelsList.find(item => item.id === curPanelId);
+  const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false;
 
   return (
     <div className='dynamic-panel-wrap'>

@@ -13,14 +13,14 @@ import Ruler from "./components/Ruler";
 import { IScaleDragData, IStyleConfig } from "./type";
 import { DIMENSION, WIDTH, LEFT, TOP, HEIGHT, COMPONENTS } from "./constant";
 import RulerLines from "./components/RulerLines";
-import { DraggableData, DraggableEvent, IPanel, IComponent, IConfig } from "./components/CustomDraggable/type"
+import { DraggableData, DraggableEvent, IPanel, IComponent, IConfig } from "./components/CustomDraggable/type";
 import { deepClone, deepForEach, layersReverse } from "../../../utils";
 import RightClickMenu from "../left/components/rightClickMenu/rightClickMenu";
 import { menuOptions } from "../left/Data/menuOptions";
 
 import axios from "axios";
 import { http } from "@/services/request";
-import ChooseArea from "./components/ChooseArea"
+import ChooseArea from "./components/ChooseArea";
 
 const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
@@ -36,48 +36,48 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const [layers, setLayers] = useState([]);
   const [components, setComponents] = useState([]);
   const [panels, setPanels] = useState([]);
-  const mouse = useMouse(canvasRef)
-  const isKeyForDelete = useRef(false)
-  const isKeyForGroup = useRef(false)
-  const isKeyForCancelGroup = useRef(false)
-  const isKeyForCopy = useRef(false)
-  const isKeyForStick = useRef(false)
+  const mouse = useMouse(canvasRef);
+  const isKeyForDelete = useRef(false);
+  const isKeyForGroup = useRef(false);
+  const isKeyForCancelGroup = useRef(false);
+  const isKeyForCopy = useRef(false);
+  const isKeyForStick = useRef(false);
 
   useEffect(() => {
-    console.log('-----------')
-    console.log('bar.isSingleShowOpen', bar.isSingleShowOpen)
-    console.log('bar.singleShowLayer', bar.singleShowLayers)
-    console.log('-----------')
+    console.log("-----------");
+    console.log("bar.isSingleShowOpen", bar.isSingleShowOpen);
+    console.log("bar.singleShowLayer", bar.singleShowLayers);
+    console.log("-----------");
 
     if (bar.isSingleShowOpen && bar.singleShowLayers.length > 0) {
-      const layers = deepClone(bar.singleShowLayers)
-      console.log('layers Gigi思密达', layers)
-      layersReverse(layers)
-      setLayers(layers)
-      setComponents(bar.fullAmountComponents)
-      setPanels(bar.fullAmountPanels)
+      const layers = deepClone(bar.singleShowLayers);
+      console.log("layers Gigi思密达", layers);
+      layersReverse(layers);
+      setLayers(layers);
+      setComponents(bar.fullAmountComponents);
+      setPanels(bar.fullAmountPanels);
     } else {
-      const layers = deepClone(bar.layers)
-      console.log('哈哈哈', layers)
-      layersReverse(layers)
-      setLayers(layers)
-      setComponents(bar.fullAmountComponents)
-      setPanels(bar.fullAmountPanels)
+      const layers = deepClone(bar.layers);
+      console.log("哈哈哈", layers);
+      layersReverse(layers);
+      setLayers(layers);
+      setComponents(bar.fullAmountComponents);
+      setPanels(bar.fullAmountPanels);
     }
 
-  }, [bar.layers, bar.isSingleShowOpen, bar.singleShowLayers])
+  }, [bar.layers, bar.isSingleShowOpen, bar.singleShowLayers]);
 
   /*  useEffect(() => {
       window.addEventListener("",)
     }, [])*/
 
-  const supportLinesRef = bar.supportLinesRef
+  const supportLinesRef = bar.supportLinesRef;
 
   const findItem = (name: string) => {
     return bar.dashboardConfig.find((item: any) => {
-      return item.name === name
-    })
-  }
+      return item.name === name;
+    });
+  };
 
   // const recommendConfig = findItem('recommend')
   // const styleColor = findItem('styleColor')
@@ -92,16 +92,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 计算画布的大小
   const calcCanvasSize = () => {
-    let getCurrentDocumentWidth = document.documentElement.clientWidth
+    let getCurrentDocumentWidth = document.documentElement.clientWidth;
     // console.log('getCurrentDocumentWidth', getCurrentDocumentWidth)
-    const getCurrentDocumentHeight = document.documentElement.clientHeight
+    const getCurrentDocumentHeight = document.documentElement.clientHeight;
     // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
     if (getCurrentDocumentWidth < 1280) {
       getCurrentDocumentWidth = 1280;
     }
     // width、 height 是我们希望的当前 canvas 实际宽高
     // bar.leftMenuWidth 是左侧菜单的宽度, 333 是右侧菜单的高度， 66 是 3 个尺子的宽度
-    const width = getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 66
+    const width = getCurrentDocumentWidth - bar.leftMenuWidth - 333 - 66;
     // 64 是顶部菜单的高度,  32 是底部菜单的高度, 66 是 3 个尺子的高度
     const height = getCurrentDocumentHeight - 64 - 35 - 66;
     const canvasHeight = Number((width / recommendConfig.width).toFixed(3)) * recommendConfig.height;
@@ -113,9 +113,9 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     } else {
       // 如果中间区域刚好能装下画布
       // 那么尺子组件距离画布的横向距离就是 22
-      canvasScaleValue = Number((width / recommendConfig.width).toFixed(3))
-      const top = (getCurrentDocumentHeight - 64 - 22 - 32 - recommendConfig.height * canvasScaleValue) / 2
-      setRulerCanvasSpacing({ left: 22, top })
+      canvasScaleValue = Number((width / recommendConfig.width).toFixed(3));
+      const top = (getCurrentDocumentHeight - 64 - 22 - 32 - recommendConfig.height * canvasScaleValue) / 2;
+      setRulerCanvasSpacing({ left: 22, top });
     }
     dispatch({
       type: "bar/save",
@@ -123,11 +123,11 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         canvasScaleValue,
         canvasDraggablePosition: { x: 0, y: 0 },
       },
-    })
-  }
+    });
+  };
   focus$.useSubscription(() => {
-    calcCanvasSize()
-  })
+    calcCanvasSize();
+  });
   // 计算画布的放大缩小
   const calcCanvasScale = (e: any) => {
     if (e.ctrlKey) {
@@ -141,7 +141,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             payload: {
               canvasScaleValue: Number((bar.canvasScaleValue + 0.03).toFixed(3)),
             },
-          })
+          });
         }
       } else if (bar.canvasScaleValue >= 4) {
         if (!type) { // 可以缩小
@@ -150,7 +150,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             payload: {
               canvasScaleValue: Number((bar.canvasScaleValue - 0.03).toFixed(3)),
             },
-          })
+          });
         }
       } else {
         let canvasScaleValue = Number((bar.canvasScaleValue + (type ? 0.03 : -0.03)).toFixed(3));
@@ -158,18 +158,18 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           canvasScaleValue = 0.1;
         }
         if (canvasScaleValue >= 4) {
-          canvasScaleValue = 4
+          canvasScaleValue = 4;
         }
         dispatch({
           type: "bar/save",
           payload: {
             canvasScaleValue,
           },
-        })
+        });
       }
     }
 
-  }
+  };
 
 
   useEffect(() => {
@@ -182,7 +182,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }, [bar.canvasScaleValue]);
 
   useEffect(() => {
-    calcCanvasSize()
+    calcCanvasSize();
     dispatch({
       type: "bar/save",
       payload: {
@@ -201,32 +201,32 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   }, [bar.leftMenuWidth]);
 
   useEffect(() => {
-    calcCanvasSize()
+    calcCanvasSize();
     window.addEventListener("resize", calcCanvasSize);
-    (document.querySelector(".draggable-container") as HTMLElement).addEventListener("contextmenu", handleContextMenu)
+    (document.querySelector(".draggable-container") as HTMLElement).addEventListener("contextmenu", handleContextMenu);
     // document.addEventListener('contextmenu', handleContextMenu)
     return () => {
       window.removeEventListener("resize", calcCanvasSize);
-      (document.querySelector(".draggable-container") as HTMLElement)?.removeEventListener("contextmenu", handleContextMenu)
+      (document.querySelector(".draggable-container") as HTMLElement)?.removeEventListener("contextmenu", handleContextMenu);
       // document.removeEventListener('contextmenu', handleContextMenu)
-    }
-  }, [bar.dashboardConfig])
+    };
+  }, [bar.dashboardConfig]);
 
   // 中间画布上的组件渲染完毕后，异步加载所有的组件，并将这些组件的config放入bar.moduleDefaultConfig中
   const importComponent = (data: any) => {
     return axios.get(`${(window as any).CONFIG.COMP_URL}/${data.moduleType}/${data.moduleName}/${data.moduleVersion}/${data.moduleName}.js`).then(res => res.data);
   };
-  const allModuleDefaultConfigArr: any = []
-  let count = 0
-  let contentLen = 0
+  const allModuleDefaultConfigArr: any = [];
+  let count = 0;
+  let contentLen = 0;
   const loadComp = async (data: any) => {
-    count++
+    count++;
     window.eval(`${await importComponent(data)}`);
     try {
       const { ComponentDefaultConfig: currentDefaultConfig } = (window as any).VComponents;
-      allModuleDefaultConfigArr.push(currentDefaultConfig)
+      allModuleDefaultConfigArr.push(currentDefaultConfig);
     } catch(e: any) {
-      throw new Error(`${data.name}-${data.moduleName}-组件解析不出ComponentDefaultConfig` + JSON.stringify(e))
+      throw new Error(`${data.name}-${data.moduleName}-组件解析不出ComponentDefaultConfig` + JSON.stringify(e));
     } finally {
       if (count === contentLen) {
         // 初始化时需要一次性设置到全局状态中
@@ -251,9 +251,9 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           pageSize: 100,
         }
       }).catch(() => { });
-      contentLen = content.length
+      contentLen = content.length;
       content.forEach((item: any) => {
-        loadComp(item)
+        loadComp(item);
       });
     };
     getAllModulesConfig();
@@ -274,14 +274,14 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         y: event.clientY,
         id: dom.dataset.id.indexOf("group-") !== -1 ? dom.dataset.id : dom.dataset.id.replace("component-", ""),
         isFolder: false,
-      })
+      });
     }
-    event.preventDefault()
-  }
+    event.preventDefault();
+  };
 
   const hideMenu = () => {
-    setIsShowRightMenu(false)
-  }
+    setIsShowRightMenu(false);
+  };
 
   // useKeyPress([ 'ctrl', 'shift' ], (event) => {
   //   if(event.type === 'keydown' && bar.isSupportMultiple) {
@@ -306,17 +306,17 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
  */
   // 组件被移动
   const handleComponentDrag = (x: number, y: number) => {
-    console.log('bar.selectedComponentDOMs', bar.selectedComponentDOMs)
-    console.log('bar.selectedComponentOrGroup', bar.selectedComponentOrGroup)
+    console.log("bar.selectedComponentDOMs", bar.selectedComponentDOMs);
+    console.log("bar.selectedComponentOrGroup", bar.selectedComponentOrGroup);
     for (const key in bar.selectedComponentDOMs) {
       const translateArr = bar.selectedComponentDOMs[key].style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
-      console.log('translateArr', translateArr)
-      let translateX = Number(translateArr[0]) + x
-      let translateY = Number(translateArr[1]) + y
+      console.log("translateArr", translateArr);
+      const translateX = Number(translateArr[0]) + x;
+      const translateY = Number(translateArr[1]) + y;
       bar.selectedComponentDOMs[key].style.transform = `translate(${translateX}px,${translateY}px)`;
-      console.log('bar.selectedComponentDOMs[key].style.transform', bar.selectedComponentDOMs[key].style.transform)
+      console.log("bar.selectedComponentDOMs[key].style.transform", bar.selectedComponentDOMs[key].style.transform);
     }
-  }
+  };
   // 组件移动结束
   const handleComponentDragStop = () => {
     bar.selectedComponents = [
@@ -328,16 +328,16 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       const translateX = Number(translateArr[0]);
       const translateY = Number(translateArr[1]);
       if ("type" in item) {
-        item.config.left = translateX
-        item.config.top = translateY
+        item.config.left = translateX;
+        item.config.top = translateY;
       } else {
         const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION);
         if (styleDimensionConfig) {
           Object.values(styleDimensionConfig.value).forEach((obj: any) => {
-            if (obj.name === 'left') {
-              obj.value = translateX
-            } else if (obj.name === 'top') {
-              obj.value = translateY
+            if (obj.name === "left") {
+              obj.value = translateX;
+            } else if (obj.name === "top") {
+              obj.value = translateY;
             }
           });
         }
@@ -349,25 +349,25 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       payload: bar.selectedComponents,
     });
     // 辅助线消失
-    supportLinesRef.handleSetPosition(0, 0, 'none');
-  }
+    supportLinesRef.handleSetPosition(0, 0, "none");
+  };
 
   // 辅助线移动
   const handleSupportLineDrag = () => {
-    const { x, y } = bar.scaleDragCompRef.getPosition()
-    supportLinesRef.handleSetPosition(x, y, 'block');
-  }
+    const { x, y } = bar.scaleDragCompRef.getPosition();
+    supportLinesRef.handleSetPosition(x, y, "block");
+  };
   // 选中框移动
   const handleScaleDragComDrag = (xMoveLength: number, yMoveLength: number) => {
     bar.scaleDragCompRef.handleMovePosition(xMoveLength, yMoveLength);
-  }
+  };
 
 
   useKeyPress(["space"], (event) => {
     if (event.type === "keydown" && isCanvasDraggable) {
       return;
     }
-    setIsCanvasDraggable(event.type === "keydown")
+    setIsCanvasDraggable(event.type === "keydown");
   }, {
     events: ["keydown", "keyup"],
     exactMatch: true,
@@ -375,15 +375,15 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["leftarrow"], (event) => {
-    if (bar.key.length === 0) return
+    if (bar.key.length === 0) return;
     if (event.target === document.body) {
       if (event.type === "keydown") {
-        handleComponentDrag(-1, 0)
-        handleScaleDragComDrag(-1, 0)
-        handleSupportLineDrag()
+        handleComponentDrag(-1, 0);
+        handleScaleDragComDrag(-1, 0);
+        handleSupportLineDrag();
         // 重新给 transform 赋值
       } else {
-        handleComponentDragStop()
+        handleComponentDragStop();
       }
     }
 
@@ -394,14 +394,14 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["uparrow"], (event) => {
-    if (bar.key.length === 0) return
+    if (bar.key.length === 0) return;
     if (event.target === document.body) {
       if (event.type === "keydown") {
-        handleComponentDrag(0, -1)
-        handleScaleDragComDrag(0, -1)
-        handleSupportLineDrag()
+        handleComponentDrag(0, -1);
+        handleScaleDragComDrag(0, -1);
+        handleSupportLineDrag();
       } else {
-        handleComponentDragStop()
+        handleComponentDragStop();
       }
     }
 
@@ -412,14 +412,14 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["rightarrow"], (event) => {
-    if (bar.key.length === 0) return
+    if (bar.key.length === 0) return;
     if (event.target === document.body) {
       if (event.type === "keydown") {
-        handleComponentDrag(1, 0)
-        handleScaleDragComDrag(1, 0)
-        handleSupportLineDrag()
+        handleComponentDrag(1, 0);
+        handleScaleDragComDrag(1, 0);
+        handleSupportLineDrag();
       } else {
-        handleComponentDragStop()
+        handleComponentDragStop();
       }
     }
 
@@ -430,14 +430,14 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
 
   useKeyPress(["downarrow"], (event) => {
-    if (bar.key.length === 0) return
+    if (bar.key.length === 0) return;
     if (event.target === document.body) {
       if (event.type === "keydown") {
-        handleComponentDrag(0, 1)
-        handleScaleDragComDrag(0, 1)
-        handleSupportLineDrag()
+        handleComponentDrag(0, 1);
+        handleScaleDragComDrag(0, 1);
+        handleSupportLineDrag();
       } else {
-        handleComponentDragStop()
+        handleComponentDragStop();
       }
     }
   }, {
@@ -447,12 +447,12 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 删除
   useKeyPress(["Backspace"], (event) => {
-    if (bar.key.length === 0) return
+    if (bar.key.length === 0) return;
     if (event.type === "keydown") {
       if (!isKeyForDelete.current) {
         if (event.target === document.body) {
           dispatch({
-            type: 'bar/delete',
+            type: "bar/delete",
             payload: {
               dashboardId: bar.stateId || bar.dashboardId,
               layers: bar.key.map((item: string) => ({
@@ -460,12 +460,12 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                 children: []
               }))
             }
-          })
+          });
         }
-        isKeyForDelete.current = true
+        isKeyForDelete.current = true;
       }
     } else {
-      isKeyForDelete.current = false
+      isKeyForDelete.current = false;
     }
   }, {
     events: ["keydown", "keyup"],
@@ -474,7 +474,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
   // 复制
   useKeyPress(["ctrl.c"], (event) => {
-    if (bar.key.length === 0) return
+    if (bar.key.length === 0) return;
     if (event.type === "keydown") {
       if (!isKeyForCopy.current) {
         if (event.target === document.body) {
@@ -484,12 +484,12 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
               copyComponentConfigs: bar.selectedComponentOrGroup,
               copyComponentKey: bar.key
             }
-          })
+          });
         }
-        isKeyForCopy.current = true
+        isKeyForCopy.current = true;
       }
     } else {
-      isKeyForCopy.current = false
+      isKeyForCopy.current = false;
     }
   }, {
     events: ["keydown", "keyup"],
@@ -507,7 +507,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                     })*/
           if (bar.key[bar.key.length - 1] || bar.layers[bar.layers.length - 1]?.id) {
             dispatch({
-              type: 'bar/copy',
+              type: "bar/copy",
               payload: {
                 dashboardId: bar.stateId || bar.dashboardId,
                 children: [],
@@ -520,13 +520,13 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                 panels: [],
                 selected: bar.copyComponentKey
               }
-            })
+            });
           }
         }
-        isKeyForStick.current = true
+        isKeyForStick.current = true;
       }
     } else {
-      isKeyForStick.current = false
+      isKeyForStick.current = false;
     }
   }, {
     events: ["keydown", "keyup"],
@@ -535,20 +535,20 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 成组
   useKeyPress(["ctrl.g"], (event) => {
-    event.stopPropagation()
-    event.preventDefault()
-    if (bar.key.length === 0) return
+    event.stopPropagation();
+    event.preventDefault();
+    if (bar.key.length === 0) return;
     if (event.type === "keydown") {
       if (!isKeyForGroup.current) {
         if (event.target === document.body) {
           dispatch({
-            type: 'bar/group',
-          })
+            type: "bar/group",
+          });
         }
-        isKeyForGroup.current = true
+        isKeyForGroup.current = true;
       }
     } else {
-      isKeyForGroup.current = false
+      isKeyForGroup.current = false;
     }
   }, {
     events: ["keydown", "keyup"],
@@ -556,20 +556,20 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   });
   //
   useKeyPress(["ctrl.d"], (event) => {
-    event.stopPropagation()
-    event.preventDefault()
-    if (bar.key.length === 0) return
+    event.stopPropagation();
+    event.preventDefault();
+    if (bar.key.length === 0) return;
     if (event.type === "keydown") {
       if (!isKeyForCancelGroup.current) {
         if (event.target === document.body) {
           dispatch({
-            type: 'bar/cancelGroup',
-          })
+            type: "bar/cancelGroup",
+          });
         }
-        isKeyForCancelGroup.current = true
+        isKeyForCancelGroup.current = true;
       }
     } else {
-      isKeyForCancelGroup.current = false
+      isKeyForCancelGroup.current = false;
     }
   }, {
     events: ["keydown", "keyup"],
@@ -610,7 +610,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     { position: { x, y }, style: { width, height } }: IScaleDragData,
     { position: { x: lastX, y: lastY }, style: { width: lastWidth, height: lastHeight } }: IScaleDragData,
   ) => {
-    console.log("width", width, "height", height)
+    console.log("width", width, "height", height);
     dispatch({
       type: "bar/updateSelectedComponents"
     });
@@ -624,49 +624,49 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           top: y,
           width,
           height,
-        }
+        };
       } else {
         // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
-        const component = deepClone(panelOrComponent)
-        const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value
+        const component = deepClone(panelOrComponent);
+        const styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION).value;
         styleDimensionConfig.forEach((item: IStyleConfig) => {
           switch (item.name) {
             case LEFT:
-              item.value = x
-              break
+              item.value = x;
+              break;
             case TOP:
-              item.value = y
-              break
+              item.value = y;
+              break;
             case WIDTH:
-              item.value = width
-              break
+              item.value = width;
+              break;
             case HEIGHT:
-              item.value = height
+              item.value = height;
           }
-        })
-        console.log("component", component)
+        });
+        console.log("component", component);
         dispatch({
           type: "bar/setComponentConfig",
           payload: component,
-        })
+        });
       }
       dispatch({
         type: "bar/save",
         payload: {
           isCanClearAllStatus: false,
         },
-      })
+      });
     } else {
       bar.selectedComponents.forEach((panelOrComponent: IComponent | IPanel, cIndex: number) => {
         if ("type" in panelOrComponent) {
-          const panel = panelOrComponent
-          const data = panel.config
+          const panel = panelOrComponent;
+          const data = panel.config;
 
-          panel.config.width = panel.config.width / (lastWidth / width)
-          data[WIDTH] = panel.config.width
+          panel.config.width = panel.config.width / (lastWidth / width);
+          data[WIDTH] = panel.config.width;
 
-          panel.config.height = panel.config.height / (lastHeight / height)
-          data[HEIGHT] = panel.config.height
+          panel.config.height = panel.config.height / (lastHeight / height);
+          data[HEIGHT] = panel.config.height;
 
           if (x === lastX) {
             if (panel.config.left !== lastX) {
@@ -675,9 +675,9 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             }
           } else {
             if (panel.config.left === lastX) {
-              panel.config.left = x
+              panel.config.left = x;
             } else {
-              panel.config.left = x + ((data[LEFT] - lastX) / (lastWidth / width))
+              panel.config.left = x + ((data[LEFT] - lastX) / (lastWidth / width));
             }
           }
 
@@ -688,35 +688,35 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
             }
           } else {
             if (panel.config.top === lastY) {
-              panel.config.top = y
+              panel.config.top = y;
             } else {
-              panel.config.top = y + ((data[TOP] - lastY) / (lastHeight / height))
+              panel.config.top = y + ((data[TOP] - lastY) / (lastHeight / height));
             }
           }
         } else {
-          const dimensionConfig = panelOrComponent.config.find((config: any) => config.name === DIMENSION).value
+          const dimensionConfig = panelOrComponent.config.find((config: any) => config.name === DIMENSION).value;
           const data = dimensionConfig.reduce((pre: any, cur: any) => {
             if (Array.isArray(cur.value)) {
               const obj = cur.value.reduce((p: any, c: any) => {
-                p[c.name] = c.value
-                return p
-              }, {})
+                p[c.name] = c.value;
+                return p;
+              }, {});
               pre = {
                 ...pre,
                 ...obj,
-              }
+              };
             } else {
-              pre[cur.name] = cur.value
+              pre[cur.name] = cur.value;
             }
-            return pre
-          }, {})
+            return pre;
+          }, {});
           dimensionConfig.forEach((config: any) => {
             if (x === lastX) {
               if (config.name === LEFT) {
                 if (config.value !== lastX) {
                   // 因为是缩放右侧，所以缩放组件左侧的 lastX 值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
-                  config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width))
-                  data[LEFT] = config.value
+                  config.value = lastX + ((data[LEFT] - lastX) / (lastWidth / width));
+                  data[LEFT] = config.value;
                 }
               }
             } else {
@@ -725,7 +725,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                   config.value = x;
                 } else {
                   // 因为是缩放左侧，所以缩放组件右侧的 x + width 的值是不变的。然后再计算组件左侧 x 距离缩放组件左侧的 x 值的变化即可
-                  config.value = x + ((data[LEFT] - lastX) / (lastWidth / width))
+                  config.value = x + ((data[LEFT] - lastX) / (lastWidth / width));
                 }
               }
             }
@@ -742,7 +742,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                 if (config.value === lastY) {
                   config.value = y;
                 } else {
-                  config.value = y + ((data[TOP] - lastY) / (lastHeight / height))
+                  config.value = y + ((data[TOP] - lastY) / (lastHeight / height));
                 }
               }
             }
@@ -755,46 +755,46 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
               config.value = config.value / (lastHeight / height);
               data[HEIGHT] = config.value;
             }
-          })
+          });
         }
-      })
+      });
       dispatch({
         type: "bar/setGroupConfig",
         payload: {
           config: { position: { x, y }, style: { width, height } },
           isCanClearAllStatus: false,
         },
-      })
+      });
     }
     new Promise((resolve, reject) => {
       dispatch({
         type: "bar/updateSelectedComponents",
         cb: (selectedComponents: Array<IComponent | IPanel>) => {
-          resolve(selectedComponents)
+          resolve(selectedComponents);
         },
-      })
+      });
     }).then((selectedComponents) => {
       dispatch({
         type: "bar/updateComponent",
         payload: selectedComponents,
-      })
-    })
-  }
+      });
+    });
+  };
 
   const handleCanvasDrag = function (event: DraggableEvent, data: DraggableData) {
     handleCalcPosition({ x: data.x, y: data.y });
   };
 
   const handleCanvasDragStop = (event: DraggableEvent, data: DraggableData) => {
-    const { x, y } = data
-    handleCalcPosition({ x, y })
+    const { x, y } = data;
+    handleCalcPosition({ x, y });
     dispatch({
       type: "bar/save",
       payload: {
         canvasDraggablePosition: { x, y },
       },
-    })
-  }
+    });
+  };
 
   const handleCalcPosition = ({ x, y }: { x: number, y: number }) => {
     const canvasDraggableDOM: any = document.querySelector(".canvas-draggable");
@@ -913,8 +913,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       </div>
 
     </div>
-  )
-}
+  );
+};
 export default connect(({
   bar,
 }
@@ -923,4 +923,4 @@ export default connect(({
   {
     bar,
   }
-))(Center)
+))(Center);

@@ -24,7 +24,7 @@ class WordText extends Component<Props, State> {
   replaceThemeColor = (arr: any) => {
     const componentThemeConfig = this.props.themeConfig;
     arr.map((item: any) => {
-      let { name, value, type } = item;
+      const { name, value, type } = item;
       if (Object.prototype.hasOwnProperty.call(item, "value")) {
         if (Array.isArray(value)) {
           this.replaceThemeColor(value);
@@ -48,19 +48,19 @@ class WordText extends Component<Props, State> {
     return config.filter((item: any) => exclude.indexOf(item?.name) == -1).reduce((pre: any, cur: any) => {
         if(Array.isArray(cur.value)) {
           const obj = cur.value.reduce((p: any, c: any) => {
-            p[c.name] = c.value
-            return p
-          }, {})
+            p[c.name] = c.value;
+            return p;
+          }, {});
           pre = {
             ...pre,
             ...obj,
-          }
+          };
         } else {
-          pre[cur.name] = cur.value
+          pre[cur.name] = cur.value;
         }
-        return pre
-    }, {})
-  }
+        return pre;
+    }, {});
+  };
 
   componentDidMount() {
     this.initSwiper();
@@ -70,11 +70,11 @@ class WordText extends Component<Props, State> {
     const componentConfig = this.props.componentConfig || componentDefaultConfig;
     const { config } = componentConfig;
     const { swiperId }: any = this.state;
-    const configData:any = this.formatConfig(config, [])
-    let loopConfig = configData?.autoplay ? {
+    const configData:any = this.formatConfig(config, []);
+    const loopConfig = configData?.autoplay ? {
       stopOnLastSlide: true
     } : false;
-    var swiper = new Swiper(`.mySwiper${swiperId}`, {
+    const swiper = new Swiper(`.mySwiper${swiperId}`, {
       direction: "vertical",
       slidesPerView: "auto",
       freeMode: true,
@@ -110,9 +110,9 @@ class WordText extends Component<Props, State> {
         config: configOfTheme,
       });
     }
-    let copyConfig = themeConfig ? configOfTheme : config;
+    const copyConfig = themeConfig ? configOfTheme : config;
     originData = Array.isArray(originData) ? originData : [];
-    let style: CSSProperties = copyConfig
+    const style: CSSProperties = copyConfig
       .filter((item: any) => [""].indexOf(item.name) == -1)
       .reduce((pre: any, cur: any) => {
         if (Array.isArray(cur.value)) {
@@ -130,7 +130,7 @@ class WordText extends Component<Props, State> {
         return pre;
       }, {});
 
-    let textStyle = JSON.parse(JSON.stringify(style));
+    const textStyle = JSON.parse(JSON.stringify(style));
 
     const textRow = () => {
       let obj: any = {};
@@ -162,22 +162,22 @@ class WordText extends Component<Props, State> {
       lineHeight: "normal",
     };
     textStyleObj = { ...textStyleObj, ...textAlign };
-    let textNameObj: any = {
+    const textNameObj: any = {
       lineHeight: `${style.lineHeight}px`,
     };
 
     if(swiperDom && originData.length){
       // 切换是否自动轮播
       if(textStyle?.autoplay && originData.length > 1){
-        swiperDom.autoplay.start()
+        swiperDom.autoplay.start();
       }else{
-        swiperDom.autoplay.stop()
+        swiperDom.autoplay.stop();
       }
-      swiperDom.params.speed = textStyle?.speed || 500  // 更新轮播速度
+      swiperDom.params.speed = textStyle?.speed || 500;  // 更新轮播速度
       if(textStyle?.autoplay){
         swiperDom.el.onmouseout = function(){
           swiperDom.autoplay.start();
-        }
+        };
       }
       swiperDom.update();
     }
@@ -200,7 +200,7 @@ class WordText extends Component<Props, State> {
                         ? `drop-shadow(${textStyle.shadow.color} ${textStyle.shadow.vShadow}px ${textStyle.shadow.hShadow}px ${textStyle.shadow.blur}px)`
                         : "",
                     }}
-                    dangerouslySetInnerHTML={{ __html: item && item[fields[0]] || '' }}
+                    dangerouslySetInnerHTML={{ __html: item && item[fields[0]] || "" }}
                   ></p>
                 ))}
               </div>

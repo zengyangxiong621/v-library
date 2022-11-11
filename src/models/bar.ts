@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable import/no-anonymous-default-export */
-import { routerRedux } from "dva/router"
+import { routerRedux } from "dva/router";
 
 import {
   calcGroupPosition,
@@ -14,7 +14,7 @@ import {
   layersPanelsFlat,
   mergeComponentLayers,
   setComponentDimension,
-} from "../utils"
+} from "../utils";
 
 import {
   COMPONENTS,
@@ -26,7 +26,7 @@ import {
   OPACITY,
   TOP,
   WIDTH,
-} from "../constant/home"
+} from "../constant/home";
 
 import {
   IComponent,
@@ -35,7 +35,7 @@ import {
   ILayerPanel,
   IPanel,
   IPanelStateGroup,
-} from "@/routes/dashboard/center/components/CustomDraggable/type"
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
 
 import {
   cancelGroup,
@@ -49,16 +49,16 @@ import {
   reName,
   showInput,
   singleShowLayer,
-} from "../utils/sideBar"
-import { DIMENSION } from "../routes/dashboard/center/constant"
+} from "../utils/sideBar";
+import { DIMENSION } from "../routes/dashboard/center/constant";
 
-import { generateLayers } from "./utils/generateLayers"
-import { filterEmptyGroups } from "./utils/filterEmptyGroups"
-import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers"
-import { http } from "../services/request"
-import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve"
-import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar"
-import dashboard from "./dashboard"
+import { generateLayers } from "./utils/generateLayers";
+import { filterEmptyGroups } from "./utils/filterEmptyGroups";
+import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
+import { http } from "../services/request";
+import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve";
+import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
+import dashboard from "./dashboard";
 
 export default {
   namespace: "bar",
@@ -75,13 +75,13 @@ export default {
 
           // const dashboardId = pathName.split("dashboard/")[1] ;
           // afterDashboardUrl 是 截取路由/dashboard/到后面
-          let afterDashboardUrl = pathName.slice(pathName.indexOf('/dashboard/'))
-          const idList = afterDashboardUrl.split('/').map(item => {
-            return item.replace(/[^0-9]/ig, "")
-          }).filter(item => item)
-          let dashboardId = idList[0] || null
-          let panelId = idList[1] || null
-          let stateId = idList[2] || null
+          const afterDashboardUrl = pathName.slice(pathName.indexOf("/dashboard/"));
+          const idList = afterDashboardUrl.split("/").map(item => {
+            return item.replace(/[^0-9]/ig, "");
+          }).filter(item => item);
+          const dashboardId = idList[0] || null;
+          const panelId = idList[1] || null;
+          const stateId = idList[2] || null;
 /*          if(dashboardReg.test(pathName)) {
             dashboardId = (pathName.match(dashboardReg) as any)[0];
             dashboardId = dashboardId.replace(/[^\d|^\.|^\-]/g, "")
@@ -388,7 +388,7 @@ export default {
             delete layer.selected;
             delete layer.hover;
             delete (layer as any).notDeleted;
-          })
+          });
           return { ...data, id: panelStatus.id };
         } catch (e) {
           return null;
@@ -404,10 +404,10 @@ export default {
             res.push({ ...detail, parentId: item.id });
           });
           return res;
-        }, [])
+        }, []);
       };
       // 获取面板+状态详情
-      const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>, parentId = '') => {
+      const getDeepPanelAndStatusDetails = async (layerPanels: Array<ILayerPanel>, parentId = "") => {
         let panels: Array<IPanel> = await Promise.all(
           layerPanels.map((item: any) => getPanelConfigFunc(item))
         );
@@ -440,7 +440,7 @@ export default {
           })),
         })
       );
-      let fullAmountLayers = deepForEach(
+      const fullAmountLayers = deepForEach(
         deepClone(layers),
         (
           layer:
@@ -494,10 +494,10 @@ export default {
 
       const referencePanelStates: Array<{ id: string, name: string, parentId: string }> = fullAmountPanels.reduce((pre: any, cur: any) => {
         if (panelTypeEnum[cur.type] === "referencePanel") {
-          pre.push(...cur.states.map((item: { id: string, name: string }) => ({ ...item, parentId: cur.parentId })))
+          pre.push(...cur.states.map((item: { id: string, name: string }) => ({ ...item, parentId: cur.parentId })));
         }
-        return pre
-      }, [])
+        return pre;
+      }, []);
       const fullAmountRouteList = [
         {
           url: `/dashboard/${bar.dashboardId}`,
@@ -516,7 +516,7 @@ export default {
           parentId: item.parentId,
           type: "referencePanel"
         }))
-      ]
+      ];
       yield put({
         type: "save",
         payload: {
@@ -533,7 +533,7 @@ export default {
     },
     *getDashboardDetails({ cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      let { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
+      const { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
       const fullAmountDashboardDetails = bar.fullAmountDashboardDetails; // 这里是 空数组 []
       try {
         let { layers, components, dashboardConfig, dashboardName } = yield http({
@@ -670,10 +670,10 @@ export default {
     *changeName({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       // 需要改变当前画布中components中此次被重命名组件的name
-      const { fullAmountComponents } = bar
+      const { fullAmountComponents } = bar;
       const state = bar.state;
       const { value, id } = payload.configs[0];
-      fullAmountComponents.find(item => item.id === id).name = value
+      fullAmountComponents.find(item => item.id === id).name = value;
       yield put({
         type: "bar/change",
         payload,
@@ -683,7 +683,7 @@ export default {
     *group({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { layersCopy, newLayerId }: any = yield group(bar.layers, bar.key);
-      const groupLayer = findLayerById(layersCopy, newLayerId)
+      const groupLayer = findLayerById(layersCopy, newLayerId);
       yield put({
         type: "update",
         payload: layersCopy,
@@ -704,7 +704,7 @@ export default {
         payload: newTree,
       });
       yield put({
-        type: 'save',
+        type: "save",
         payload: {
           key: [],
           selectedComponentOrGroup: [],
@@ -720,7 +720,7 @@ export default {
             }
           }
         }
-      })
+      });
     },
     *moveUp({ payload }: any, { call, put, select }: any): any {
       const bar = yield select(({ bar }: any) => bar);
@@ -950,30 +950,30 @@ export default {
           dashboardId,
         };
         yield put({
-          type: 'save',
+          type: "save",
           payload: {
             fullAmountDashboardDetails
           }
-        })
+        });
       }
     },
     *updateDashboardOrStateConfig({ payload }: any, { call, put, select }: any): any {
-      const { config, id, layers, components } = payload
+      const { config, id, layers, components } = payload;
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar;
-      const currentPanelDetails = fullAmountDashboardDetails.find((item: any) => item.id === id)
+      const currentPanelDetails = fullAmountDashboardDetails.find((item: any) => item.id === id);
       if (currentPanelDetails) {
-        const saveConfig: { dashboardConfig?: any, layers?: any, components?: any } = {}
-        config && (currentPanelDetails.dashboardConfig = config, saveConfig.dashboardConfig = config)
-        layers && (currentPanelDetails.layers = layers, saveConfig.layers = layers)
-        components && (currentPanelDetails.components = components, saveConfig.components = components)
+        const saveConfig: { dashboardConfig?: any, layers?: any, components?: any } = {};
+        config && (currentPanelDetails.dashboardConfig = config, saveConfig.dashboardConfig = config);
+        layers && (currentPanelDetails.layers = layers, saveConfig.layers = layers);
+        components && (currentPanelDetails.components = components, saveConfig.components = components);
         yield put({
-          type: 'save',
+          type: "save",
           payload: {
             fullAmountDashboardDetails,
             ...saveConfig
           }
-        })
+        });
       }
     },
     *updateTree({ payload }: any, { call, put, select }: any): any {
@@ -1005,7 +1005,7 @@ export default {
           payload: {
             layers: noEmptyGroupLayers
           }
-        })
+        });
       } else {
         yield put({
           type: "save",
@@ -1021,51 +1021,51 @@ export default {
     },
     // 在每次操作图层后都需要去重新赋值 singleShowLayer
     *middlewareToSingleShowLayer({ payload }: any, { call, put, select }: any): any {
-      let { layers } = payload
+      let { layers } = payload;
       const bar: any = yield select(({ bar }: any) => bar);
-      let { singleShowLayers } = bar
-      const layersToLayerObj = {}
+      let { singleShowLayers } = bar;
+      const layersToLayerObj = {};
       singleShowLayers = deepForEach(singleShowLayers, (layer) => {
         if(layer.notDeleted) { // notDeleted 为 true, singleShowLayer 不一定为 true， 但是 singleShowLayer 为 true notDeleted 一定为 true
-          layersToLayerObj[layer.id] = layer
+          layersToLayerObj[layer.id] = layer;
         }
-      })
+      });
       layers = deepForEach(layers, (layer) => {
-        layer.notDeleted = layersToLayerObj.hasOwnProperty(layer.id)
-        layer.singleShowLayer = layersToLayerObj.hasOwnProperty(layer.id) && layersToLayerObj[layer.id].singleShowLayer
-      })
-      let singleShowLayerNums = 0
-      console.log('删除后的layers', layers)
+        layer.notDeleted = layersToLayerObj.hasOwnProperty(layer.id);
+        layer.singleShowLayer = layersToLayerObj.hasOwnProperty(layer.id) && layersToLayerObj[layer.id].singleShowLayer;
+      });
+      let singleShowLayerNums = 0;
+      console.log("删除后的layers", layers);
       singleShowLayers = deepForEachBeforeCallBackAndBreakForeach(deepClone(layers), (layer: any, index: number, layers: any, parent, cb) => {
         if (!layer?.notDeleted) { // 非
           // 单独显示的图层，则需要删除
           const realIndex = layers.findIndex((item: any) => item && item?.id === layer?.id);
           if (realIndex !== -1) {
             layers.splice(realIndex, 1);
-            cb && cb(true, -1) // 这里的 -1 指的是在 for 循环时删除数组中其中一个值后，下标需要 -1
+            cb && cb(true, -1); // 这里的 -1 指的是在 for 循环时删除数组中其中一个值后，下标需要 -1
           }
         } else { // 单独显示的图层
           if (layer.singleShowLayer) {
-            singleShowLayerNums++
+            singleShowLayerNums++;
           }
-          if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
-            cb && cb(false, 0) // false 为跳过循环
-          } else if ('modules' in layer && !layer.singleShowLayer) {
+          if ("modules" in layer && layer.singleShowLayer) { // 单独显示的组
+            cb && cb(false, 0); // false 为跳过循环
+          } else if ("modules" in layer && !layer.singleShowLayer) {
             // 组先要观察 modules 里的组件是 不是都能被删除，但凡有一个不能删除，那么组也不能被删除
-            layer.notDeleted = !!layer.modules.find(item => item.notDeleted)
+            layer.notDeleted = !!layer.modules.find(item => item.notDeleted);
           }
         }
-      })
-      console.log('singleShowLayerNums', singleShowLayerNums)
-      console.log('singleShowLayers', singleShowLayers)
+      });
+      console.log("singleShowLayerNums", singleShowLayerNums);
+      console.log("singleShowLayers", singleShowLayers);
       yield put({
-        type: 'save',
+        type: "save",
         payload: {
           layers,
           singleShowLayers,
           isSingleShowOpen: singleShowLayerNums > 0
         }
-      })
+      });
 
     },
     *fetch({ payload }: any, { call, put }: any): any {
@@ -1202,7 +1202,7 @@ export default {
         },
       });
       // todo 创建面板对 fullAmountRouteList 的影响
-      console.log("data", data)
+      console.log("data", data);
       if (data) {
         const { id, name, states, type }: {
           id: string,
@@ -1236,7 +1236,7 @@ export default {
           "drillDownPanel"
         }
 
-        console.log('states')
+        console.log("states");
         if (panelType === 0 || panelType === 2) {
           // 动态面板或者是下钻面板
           fullAmountRouteList.push({
@@ -1244,8 +1244,8 @@ export default {
             parentId: isPanel ? panelId : dashboardId,
             type: panelTypeEnum[type],
             url: `/dashboard/${dashboardId}/panel-${id}${states[0]?.id ? "/state-" + states[0].id : ""}`,
-          })
-          console.log('fullAmountRouteList', fullAmountRouteList)
+          });
+          console.log("fullAmountRouteList", fullAmountRouteList);
         }
         if (panelType === 1) {
           // 引用面板
@@ -1462,41 +1462,41 @@ export default {
     },
     *referencePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountComponents, fullAmountPanels } = bar
-      const { panelConfig } = payload
+      const { fullAmountDashboardDetails, fullAmountRouteList, fullAmountComponents, fullAmountPanels } = bar;
+      const { panelConfig } = payload;
 
       const filterPanelStates = panelConfig.states.reduce((pre: any[], cur: any) => {
         if (!pre.find(item => item.id === cur.id) && !!cur.id) {
-          pre.push(cur)
+          pre.push(cur);
         }
-        return pre
-      }, []).filter((state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id))
-      const panelParentId = fullAmountPanels.find((item: any) => item.id === panelConfig.id).parentId
+        return pre;
+      }, []).filter((state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id));
+      const panelParentId = fullAmountPanels.find((item: any) => item.id === panelConfig.id).parentId;
       if (filterPanelStates.length > 0) {
-        const data = yield Promise.all(filterPanelStates.map((item: any) => getPanelStatusDetails(item)))
-        fullAmountDashboardDetails.push(...data)
+        const data = yield Promise.all(filterPanelStates.map((item: any) => getPanelStatusDetails(item)));
+        fullAmountDashboardDetails.push(...data);
         // 重新获取全量组件
         fullAmountComponents.push(...data.reduce(
           (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
           []
-        ))
+        ));
         fullAmountRouteList.push(...filterPanelStates.map((item: any) => ({
           id: item.id,
           parentId: panelParentId,
-          type: 'referencePanel',
+          type: "referencePanel",
           url: `/dashboard/${item.id}`
-        })))
+        })));
       }
 
       yield put({
-        type: 'save',
+        type: "save",
         payload: {
           panelConfig,
           fullAmountDashboardDetails,
           fullAmountComponents,
           fullAmountRouteList,
         }
-      })
+      });
 
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
@@ -1513,7 +1513,7 @@ export default {
       const { id, name } = data;
 
       // 更新当前面板的状态列表
-      let newPanelStatesList = bar.panelStatesList.concat({
+      const newPanelStatesList = bar.panelStatesList.concat({
         name: data.name,
         id: data.id,
       });
@@ -1684,7 +1684,7 @@ export default {
         delete layer.selected;
         delete layer.hover;
         delete (layer as any).notDeleted;
-      })
+      });
       const newDashboardConfig = duplicateDashboardConfig(
         deepClone(bar.dashboardConfig),
         dashboardConfig
@@ -1715,7 +1715,7 @@ export default {
         delete layer.selected;
         delete layer.hover;
         delete (layer as any).notDeleted;
-      })
+      });
       const newDashboardConfig = duplicateDashboardConfig(
         deepClone(bar.dashboardConfig),
         dashboardConfig
@@ -1833,8 +1833,8 @@ export default {
       // fullInsertId 和 insertId 的区别就是:
       // 新增、复制组件（面板）的话只需要更新当前的 layers
       // 新增、复制组件（面板）。新增、复制状态的话需要更新整个 fullAmountLayers
-      let insertId: string = "",
-        fullInsertId: string = "",
+      let insertId = "",
+        fullInsertId = "",
         newLayers: Array<any> = [];
       const { layers } = state;
       // 新增组件
@@ -1904,7 +1904,7 @@ export default {
           .map((id: string) => {
             if (id.startsWith("group_")) {
               // 去layers中找到这个组下包含的各个组件
-              let res: any = [];
+              const res: any = [];
               const targetGroup = layers.find((item: any) => item.id === id);
               targetGroup.modules.forEach((x: any) => {
                 res.push(x.id);
@@ -2255,36 +2255,36 @@ export default {
 
     //单独显示图层
     singleShowLayer(state: IBarState, { payload }: any) {
-      const { keys, singleShowLayer } = payload
+      const { keys, singleShowLayer } = payload;
       // singleShowLayer: boolean, 是否单独显示图层
       // singleShowLayers: Array<ILayers>,
       // 要注意 一个是 singleShowLayer 一个是 singleShowLayers
       // const { fullAmountDashboardDetails, stateId, dashboardId } = state
       // const currentDetails: any = fullAmountDashboardDetails.find((item: any) => item.id === (stateId || dashboardId))
-      const currentLayers = state.layers
-      let singleShowLayers = []
+      const currentLayers = state.layers;
+      let singleShowLayers = [];
         const showLayers = deepForEach(currentLayers, (layer: any, index: number, layers: any, parent) => {
           if (keys.includes(layer.id)) { // 被操作的组件
-            layer.singleShowLayer = singleShowLayer
-            layer.notDeleted = singleShowLayer
+            layer.singleShowLayer = singleShowLayer;
+            layer.notDeleted = singleShowLayer;
             if (singleShowLayer) {
-              parent.notDeleted = true
+              parent.notDeleted = true;
             }
           } else {
-            if ('modules' in layer && layer.singleShowLayer) {
+            if ("modules" in layer && layer.singleShowLayer) {
               // 组是单独选中的，那么父组件也不能被删除
-              parent.notDeleted = true
+              parent.notDeleted = true;
             }
             if (layer.notDeleted) {
               // 组件是不能删除的，那么父组件也不能被删除
-              parent.notDeleted = true
+              parent.notDeleted = true;
             }
-            if ('modules' in layer && !layer.singleShowLayer) {
+            if ("modules" in layer && !layer.singleShowLayer) {
               // 组先要观察 modules 里的组件是不是都能被删除，但凡有一个不能删除，那么组也不能被删除
-              layer.notDeleted = !!layer.modules.find(item => item.notDeleted)
+              layer.notDeleted = !!layer.modules.find(item => item.notDeleted);
             }
           }
-        })
+        });
         /*
         + 组件显示
         + 单一组显示：组内的都需要显示出来
@@ -2292,7 +2292,7 @@ export default {
         组件的 singleShowLayer值赋值给 notDeleted 属性
         组的singleShowLayer 则跳过遍历组的 modules
        */
-      let singleShowLayerNums = 0
+      let singleShowLayerNums = 0;
 
       singleShowLayers = deepForEachBeforeCallBackAndBreakForeach(deepClone(showLayers), (layer: any, index: number, layers: any, parent, cb) => {
         if (!layer?.notDeleted) { // 非
@@ -2300,15 +2300,15 @@ export default {
           const realIndex = layers.findIndex((item: any) => item && item?.id === layer?.id);
           if (realIndex !== -1) {
             layers.splice(realIndex, 1);
-            cb && cb(true, -1)
+            cb && cb(true, -1);
           }
         } else { // 单独显示的图层
-          singleShowLayerNums++
-          if ('modules' in layer && layer.singleShowLayer) { // 单独显示的组
-            cb && cb(false, 0) // false 为跳过循环
+          singleShowLayerNums++;
+          if ("modules" in layer && layer.singleShowLayer) { // 单独显示的组
+            cb && cb(false, 0); // false 为跳过循环
           }
         }
-      })
+      });
       return { ...state, singleShowLayers, isSingleShowOpen: singleShowLayerNums > 0 };
     },
     // 隐藏
@@ -2407,7 +2407,7 @@ export default {
       state.selectedComponents.length = 0;
       state.selectedComponentRefs = {};
       state.isSupportMultiple = false;
-      state.isShowRightMenu = false
+      state.isShowRightMenu = false;
       // todo 选区的时候会点击到这里
       state.scaleDragData.style.display = "none";
       state.key = [];

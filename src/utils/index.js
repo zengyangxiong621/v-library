@@ -1,23 +1,23 @@
 import { COMPONENTS, DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from "../constant/home";
 
 export function findLayerById (layers, id) {
-  let temp = null
+  let temp = null;
   layers.forEach((item) => {
     if (item.id === id) {
-      temp = item
-      return temp
+      temp = item;
+      return temp;
     }
-    let t = null
+    let t = null;
     if (COMPONENTS in item) {
-      t = findLayerById(item[COMPONENTS], id)
+      t = findLayerById(item[COMPONENTS], id);
       if (t) {
-        temp = t
-        return temp
+        temp = t;
+        return temp;
       }
     }
 
-  })
-  return temp
+  });
+  return temp;
 }
 
 export function selectMultiple (arr, ids) {
@@ -346,10 +346,10 @@ export const layersPanelsFlat = (arr, panelTypeList = [0,1,2]) => {
     return pre.concat(
       cur.hasOwnProperty(COMPONENTS)
         ? layersPanelsFlat(cur[COMPONENTS], panelTypeList)
-        : (cur.hasOwnProperty('panelType') && panelTypeList.includes(cur.panelType) ? cur : []),
-    )
-  }, [])
-}
+        : (cur.hasOwnProperty("panelType") && panelTypeList.includes(cur.panelType) ? cur : []),
+    );
+  }, []);
+};
 
 export function throttle (fn, delay) {
   let timer;
@@ -420,11 +420,11 @@ export const calcGroupPosition = (arr, components, panels) => {
 };
 export const deepForEachBeforeCallBackAndBreakForeach = (layers, cb={}, parent={}) => {
   for(let i = 0, len = layers.length; i < len; i++) {
-    let layer = layers[i]
-    let isForeach = true
+    let layer = layers[i];
+    let isForeach = true;
     cb(layer, i, layers, parent, (value = true, index = 0) => {
-      isForeach = value
-      i += index
+      isForeach = value;
+      i += index;
     });
     if (isForeach && layer && COMPONENTS in layer) {
       deepForEachBeforeCallBackAndBreakForeach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb, layer);
@@ -682,11 +682,11 @@ export const styleTransformFunc = (textStyle, type=true) => {
     return pre;
   }, {});
   return Object.keys(textStyle).reduce((pre, cur) => {
-    if(cur==='themeColor'){
+    if(cur==="themeColor"){
       return {
         ...pre,
-        ...styleTransformFuncList['color'](textStyle[cur])
-      }
+        ...styleTransformFuncList["color"](textStyle[cur])
+      };
     }
     return {
       ...pre,
@@ -761,14 +761,14 @@ export const duplicateDashboardConfig = (preConfig, nowConfig) => {
 
 
 export const getQueryVariable = () => {
-  let href = window.location.href
-  let query = href.substring(href.indexOf('?')+1);
+  let href = window.location.href;
+  let query = href.substring(href.indexOf("?")+1);
   let vars = query.split("&");
-  let obj = {}
+  let obj = {};
   for (let i = 0; i < vars.length; i++) {
     let pair = vars[i].split("=");
-    obj[pair[0]] = pair[1]
+    obj[pair[0]] = pair[1];
   }
   return obj;
-}
+};
 

@@ -1,5 +1,5 @@
 const componentDefaultConfig = {
-  moduleType: 'chart',
+  moduleType: "chart",
   id: "",
   dashboardId: "",
   uniqueTag: "",

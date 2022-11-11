@@ -1,8 +1,8 @@
 import {
   IPanel,
   IComponent,
-} from "@/routes/dashboard/center/components/CustomDraggable/type"
-import { ILayerPanel, ILayerComponent, ILayerGroup } from "../../routes/dashboard/center/components/CustomDraggable/type"
+} from "@/routes/dashboard/center/components/CustomDraggable/type";
+import { ILayerPanel, ILayerComponent, ILayerGroup } from "../../routes/dashboard/center/components/CustomDraggable/type";
 type IFullAmountLayers = Array<ILayerPanel & { modules: IFullAmountLayers } | ILayerComponent | ILayerGroup | { name: string, id: string, modules: IFullAmountLayers }>
 type IFullAmountComponents = Array<IComponent>
 type IFullAmountPanels = Array<IPanel>
@@ -2833,7 +2833,7 @@ export const defaultData = {
   copyComponentConfigs: [],
   copyComponentKey: [],
   routeList: [], // 路由集合，只收集当前应用路由和面板路由
-}
+};
 
 export interface IBarState {
   moduleDefaultConfig: any[],
@@ -2906,13 +2906,13 @@ export interface IBarState {
   copyComponentConfigs: any
   copyComponentKey: any
   routeList: Array<{
-    type: 'state' | 'dashboard',
+    type: "state" | "dashboard",
     id: string,
     url: string
   }>,
   fullAmountRouteList: Array<{
     id: string,
     url: string,
-    type: 'dynamicPanel' | 'referencePanel' | 'drillDownPanel' | 'dashboard'
+    type: "dynamicPanel" | "referencePanel" | "drillDownPanel" | "dashboard"
   }>
 }
