@@ -41,6 +41,11 @@ module.exports = {
       '@typescript-eslint/no-empty-function': 'off',
       'no-undef': 0,
       'no-redeclare': 'off',
-      'react/no-unknown-property': 'off'
+      'react/no-unknown-property': 'off',
+      'no-case-declarations': 'off',
+      'jsx-a11y/alt-text': 0, // img 加 alt 属性
+      '@typescript-eslint/ban-types': 'off',
+      'no-irregular-whitespace': 'off', // 没有格式化
+      '@typescript-eslint/no-empty-interface': 'off' // 不能 interface {}
   }
 }

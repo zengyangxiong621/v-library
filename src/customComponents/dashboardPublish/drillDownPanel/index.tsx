@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, memo, useState, useCallback } from "react";
 import "./index.less";
 import { useSetState } from "ahooks";

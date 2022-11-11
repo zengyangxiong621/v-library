@@ -816,9 +816,7 @@ const CustomDraggable
                 nodeRef={nodeRef}
                 id={layer.id}
                 cRef={(ref: any) => {
-                  if (layer.id in allComponentRefs) {
-                  } else {
-                    // todo
+                  if (!(layer.id in allComponentRefs)) {
                     allComponentRefs[layer.id] = ref;
                   }
                 }}
@@ -832,8 +830,7 @@ const CustomDraggable
               >
                 <div
                   ref={(ref: any) => {
-                    if (layer.id in allComponentDOMs) {
-                    } else {
+                    if (!(layer.id in allComponentDOMs)) {
                       allComponentDOMs[layer.id] = ref;
                     }
                   }}                // onClickCapture={(ev) => handleClick(ev, layer, config)}

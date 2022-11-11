@@ -7,3 +7,4 @@
 !/src/customComponents/dashboardPublish
 /src/routes/dashboard/right/components/editTable/*
 .eslintrc.js
+/src/react-app-env.d.ts

@@ -49,8 +49,8 @@ function App({ bar, dispatch, location, history }: any) {
   const focus$ = useEventEmitter();
 
   const detectZoom = () => {
-    let ratio = 0,
-      screen: any = window.screen,
+    let ratio = 0;
+    const  screen: any = window.screen,
       ua = navigator.userAgent.toLowerCase();
 
     if (window.devicePixelRatio !== undefined) {

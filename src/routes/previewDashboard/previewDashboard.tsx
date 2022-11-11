@@ -165,7 +165,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
         type: "previewDashboard/clearCurrentDashboardData"
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (scaleMode === "0") {
@@ -176,7 +175,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
         window.addEventListener("resize", setCanvasSize);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardConfig]);
   const calcCanvasScale = (e: any) => {
     if (e.ctrlKey) {
@@ -202,7 +200,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     return () => {
       clearInterval(intervalId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
@@ -213,7 +210,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     setComponents(previewDashboard.fullAmountComponents);
     setPanels(previewDashboard.panels);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previewDashboard.layers]);
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置

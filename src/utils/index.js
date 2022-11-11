@@ -328,7 +328,7 @@ export function insertMultipleComponents (arr, sourceIds, targetId) {
 export const layerComponentsFlat = (arr, children=COMPONENTS) => {
   return arr.reduce((pre, cur) => {
     return pre.concat(
-      cur.hasOwnProperty(children)
+      Object.prototype.hasOwnProperty.call(cur, children)
         ? layerComponentsFlat(cur[children])
         : cur.id,
     );
@@ -344,9 +344,9 @@ export const layerComponentsFlat = (arr, children=COMPONENTS) => {
 export const layersPanelsFlat = (arr, panelTypeList = [0,1,2]) => {
   return arr.reduce((pre, cur) => {
     return pre.concat(
-      cur.hasOwnProperty(COMPONENTS)
+      Object.prototype.hasOwnProperty.call(cur, COMPONENTS)
         ? layersPanelsFlat(cur[COMPONENTS], panelTypeList)
-        : (cur.hasOwnProperty("panelType") && panelTypeList.includes(cur.panelType) ? cur : []),
+        : (Object.prototype.hasOwnProperty.call(cur, "panelType") && panelTypeList.includes(cur.panelType) ? cur : []),
     );
   }, []);
 };

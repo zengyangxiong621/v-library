@@ -170,7 +170,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         type: "publishDashboard/clearCurrentDashboardData"
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (scaleMode === "0") {
@@ -181,7 +180,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         window.addEventListener("resize", setCanvasSize);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardConfig]);
   const calcCanvasScale = (e: any) => {
     if (e.ctrlKey) {
@@ -207,7 +205,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     return () => {
       clearInterval(intervalId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 画布上的 Layer 渲染顺序 和此页面相反，所以先将layers里的顺序反转
@@ -218,7 +215,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     setComponents(publishDashboard.fullAmountComponents);
     setPanels(publishDashboard.panels);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishDashboard.layers]);
 
   const setChange = (value: any) => {

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { memo, useState, useRef } from "react";
 import "./index.less";
 
@@ -318,8 +317,7 @@ const AppCard = (props: any) => {
             </div>
           </div>
           <div className="img-wrap">
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            <img className="img-limit" src={picUrl} />
+            <img className="img-limit" src={picUrl}  alt={"图片报错"}/>
           </div>
         </header>
         <div className="foot">

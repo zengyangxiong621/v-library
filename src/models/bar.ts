@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable import/no-anonymous-default-export */
 import { routerRedux } from "dva/router";
 
 import {
@@ -363,8 +361,7 @@ export default {
     *getFullAmountDashboardDetails({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const layers = payload.layers;
-      // @ts-ignore
-      const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]); // 0 动态面板；1 引用面板；2 下钻面板
+      const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers); // 0 动态面板；1 引用面板；2 下钻面板
       // 获取面板详情
       const getPanelConfigFunc = async (layerPanel: any) => {
         try {
@@ -418,8 +415,7 @@ export default {
         bar.fullAmountDashboardDetails = bar.fullAmountDashboardDetails.concat(panelsStatusDetail);
         for (const detail of panelsStatusDetail) {
           const layers = detail.layers;
-          // @ts-ignore
-          const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers, [0, 1, 2]);
+          const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers);
           await getDeepPanelAndStatusDetails(layerPanels, detail.parentId);
         }
       };
@@ -537,10 +533,12 @@ export default {
       const { dashboardId, stateId, panelId, isPanel, panelStatesList } = bar;
       const fullAmountDashboardDetails = bar.fullAmountDashboardDetails; // 这里是 空数组 []
       try {
-        let { layers, components, dashboardConfig, dashboardName } = yield http({
+        const data = yield http({
           url: `/visual/application/dashboard/detail/${dashboardId}`,
           method: "get",
         });
+        let { layers } = data;
+        const { components, dashboardConfig, dashboardName } = data;
         const index = fullAmountDashboardDetails.find((item: any) => item.id === dashboardId);
         if (index !== -1) {
           fullAmountDashboardDetails.splice(index, 1, {
@@ -832,7 +830,9 @@ export default {
           //   payload: payload.layers
           // })
         }
-      } catch (error) { }
+      } catch (error) {
+        console.log("error", error);
+      }
     },
     // 复制图层
     *copy({ payload }: any, { select, call, put }: any): any {
@@ -1032,8 +1032,8 @@ export default {
         }
       });
       layers = deepForEach(layers, (layer) => {
-        layer.notDeleted = layersToLayerObj.hasOwnProperty(layer.id);
-        layer.singleShowLayer = layersToLayerObj.hasOwnProperty(layer.id) && layersToLayerObj[layer.id].singleShowLayer;
+        layer.notDeleted = Object.prototype.hasOwnProperty.call(layersToLayerObj, layer.id);
+        layer.singleShowLayer = Object.prototype.hasOwnProperty.call(layersToLayerObj, layer.id) && layersToLayerObj[layer.id].singleShowLayer;
       });
       let singleShowLayerNums = 0;
       console.log("删除后的layers", layers);
@@ -1620,13 +1620,14 @@ export default {
     },
     *copyPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      let {
+      const {
         panelId,
         dashboardId,
         panelStatesList,
-        fullAmountDashboardDetails,
         fullAmountComponents,
       } = bar;
+      let { fullAmountDashboardDetails } = bar;
+
       const { stateId } = payload;
       try {
         const data = yield http({
@@ -1694,9 +1695,11 @@ export default {
       const { config, states } = fullAmountDashboardDetails.find(
         (item: any) => item.id === panelId
       );
-      let { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
+      const currentDetails = fullAmountDashboardDetails.find(
         (item: any) => item.id === stateId
       );
+      const { dashboardConfig, dashboardName } = currentDetails;
+      let { layers } = currentDetails;
       layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
         layer.singleShowLayer = false;
         delete layer.selected;
@@ -1725,9 +1728,11 @@ export default {
     *selectDashboard({ payload: { dashboardId } }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar;
-      let { layers, dashboardConfig, dashboardName } = fullAmountDashboardDetails.find(
+      const currentDetails = fullAmountDashboardDetails.find(
         (item: any) => item.id === dashboardId
       );
+      const { dashboardConfig, dashboardName }  = currentDetails;
+      let { layers } = currentDetails;
       layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
         layer.singleShowLayer = false;
         delete layer.selected;
