@@ -1,4 +1,9 @@
 /node_modules
 /build
 /src/assets/*
+/src/customComponents/*
+!/src/customComponents/dashboardEdit
+!/src/customComponents/dashboardPreview
+!/src/customComponents/dashboardPublish
+/src/routes/dashboard/right/components/editTable/*
 .eslintrc.js
