@@ -328,11 +328,15 @@ const Left = ({ dispatch, bar }) => {
     item.style.backgroundColor = "red";
   };
   /*  useEffect(() => {
-      console.log('expandedKeys', expandedKeys)
-      setTimeout(() => {
-        [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
-          item.addEventListener('mouseover', (e) => treeLayerHoverFunc(item))
-        })
+    console.log('expandedKeys', expandedKeys)
+    setTimeout(() => {
+      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
+        item.addEventListener('mouseover', (e) => treeLayerHoverFunc(item))
+      })
+    })
+    return () => {
+      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
+        item.removeEventListener('mouseover', (e) => treeLayerHoverFunc(item))
       })
       return () => {
         [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {

@@ -11,17 +11,14 @@ import SelectDataSource from "./selectDataSource";
 import { http } from "../../../../../services/request";
 import cloneDeep from "lodash/cloneDeep";
 
-import {
-  Checkbox,
-  message
-} from "antd";
+import { Checkbox, message } from "antd";
 
 const _baseUrlDataConfig = {
   name: "xxx",
   displayName: "BaseURL",
   type: "input",
   value: "",
-  disabled: true
+  disabled: true,
 };
 
 const _requestMethodConfig = {
@@ -32,11 +29,11 @@ const _requestMethodConfig = {
   options: [
     {
       name: "GET",
-      value: "get"
+      value: "get",
     },
     {
       name: "POST",
-      value: "post"
+      value: "post",
     },
     // {
     //   name: 'PUT',
@@ -50,21 +47,21 @@ const _requestMethodConfig = {
     //   name: 'PATCH',
     //   value: 'patch'
     // },
-  ]
+  ],
 };
 
 const _requestHeaderDataConfig = {
   readOnly: false,
   language: "json",
   value: "",
-  showExpand: true
+  showExpand: true,
 };
 
 const _requestBodyDataConfig = {
   readOnly: false,
   language: "json",
   value: "",
-  showExpand: true
+  showExpand: true,
 };
 
 const _pathDataConfig = {
@@ -74,7 +71,6 @@ const _pathDataConfig = {
   value: "",
 };
 
-
 const _paramDataConfig = {
   name: "xxx",
   displayName: "参数",
@@ -83,7 +79,6 @@ const _paramDataConfig = {
 };
 
 let timeout = null;
-
 
 const APIDataSource = ({ bar, dispatch, ...props }) => {
   const _data = props.data;
@@ -127,8 +122,6 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
     }
   }, [_data.dataConfig]);
 
-
-
   const saveDataConfig = async (key, param) => {
     const dataConfig = cloneDeep(_data.dataConfig);
     if (dataConfig.api) {
@@ -139,15 +132,15 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
     } else {
       let data;
       data = {
-        [key]: param.value
+        [key]: param.value,
       };
       if (key === "data_id") {
         data = Object.assign({}, data, {
-          baseUrl: param.baseUrl
+          baseUrl: param.baseUrl,
         });
       }
       dataConfig.api = {
-        data
+        data,
       };
     }
     if (componentType !== "component") {
@@ -158,8 +151,8 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
           id: _data.id,
           data: dataConfig.api.data,
           dataType: "api",
-          fields: dataConfig["api"]?.fields || null
-        }
+          fields: dataConfig["api"]?.fields || null,
+        },
       });
     }
     props.onDataSourceChange(dataConfig);
@@ -168,23 +161,26 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
 
   const queryComponentData = async () => {
     if (componentType !== "component") {
-      const data = await http({
-        url: "/visual/module/getData",
-        method: "post",
-        body: {
-          moduleId: _data.id,
-          dataType: "api",
-          callBackParamValues: bar.callbackArgs
-        }
-      }, true);
+      const data = await http(
+        {
+          url: "/visual/module/getData",
+          method: "post",
+          body: {
+            moduleId: _data.id,
+            dataType: "api",
+            callBackParamValues: bar.callbackArgs,
+          },
+        },
+        true
+      );
       if (data.code === 10000 && data.data) {
         dispatch({
           type: "bar/save",
           payload: {
             componentData: {
               ...bar.componentData,
-              [_data.id]: data.data
-            }
+              [_data.id]: data.data,
+            },
           },
         });
       }
@@ -242,24 +238,22 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
   const reqFromBackChange = () => {
     setReqFromBack(!reqFromBack);
     saveDataConfig("reqFromBack", {
-      value: !reqFromBack
+      value: !reqFromBack,
     });
   };
-
 
   const needCookieChange = () => {
     setNeedCookie(!needCookie);
     saveDataConfig("needCookie", {
-      value: !needCookie
+      value: !needCookie,
     });
   };
-
 
   return (
     <div className="api-data-source-config">
       <SelectDataSource data={_data} type="api" onChange={dataSourceChange} />
       <div className="reuqest-baseurl">
-        <CusInput data={baseUrlData} onChange={() => { }} />
+        <CusInput data={baseUrlData} onChange={() => {}} />
       </div>
       <CusSelect data={requestMethods} onChange={requestMethodsChange} style={{ float: "right" }} />
       <div className="request-header">
@@ -270,25 +264,28 @@ const APIDataSource = ({ bar, dispatch, ...props }) => {
       </div>
       <CusInput data={pathData} onChange={pathDataChange} />
       <CusInput data={paramData} onChange={paramDataChange} />
-      {
-        isShowBody ?
-          <div className="request-body">
-            <label className="data-name">Body（JSON格式）</label>
-            <div style={{ width: "300px", height: "198px", marginTop: "16px" }}>
-              <CodeEditor data={requestBodyData} onChange={requestBodyDataChange} />
-            </div>
-          </div> : null
-      }
+      {isShowBody ? (
+        <div className="request-body">
+          <label className="data-name">Body（JSON格式）</label>
+          <div style={{ width: "300px", height: "198px", marginTop: "16px" }}>
+            <CodeEditor data={requestBodyData} onChange={requestBodyDataChange} />
+          </div>
+        </div>
+      ) : null}
       <div className="request-back">
-        <Checkbox checked={reqFromBack} onChange={reqFromBackChange}>后端发起请求</Checkbox>
+        <Checkbox checked={reqFromBack} onChange={reqFromBackChange}>
+          后端发起请求
+        </Checkbox>
       </div>
       <div className="request-cookie">
-        <Checkbox checked={needCookie} onChange={needCookieChange}>需要cookie</Checkbox>
+        <Checkbox checked={needCookie} onChange={needCookieChange}>
+          需要cookie
+        </Checkbox>
       </div>
     </div>
   );
 };
 
 export default connect(({ bar }) => ({
-  bar
+  bar,
 }))(APIDataSource);

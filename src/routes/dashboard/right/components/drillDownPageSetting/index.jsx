@@ -170,14 +170,14 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       },
     });
     /*    dispatch({
-          type: 'bar/getPanelDetails'
-        })
-        dispatch({
-          type: 'bar/selectPanelState',
-          payload: {
-            stateId: panel.states[0].id
-          }
-        })*/
+      type: 'bar/getPanelDetails'
+    })
+    dispatch({
+      type: 'bar/selectPanelState',
+      payload: {
+        stateId: panel.states[0].id
+      }
+    })*/
   };
   return (
     <div className="dynamic-wrap">

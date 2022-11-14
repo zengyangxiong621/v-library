@@ -3,15 +3,12 @@ import "./index.less";
 
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  Form,
-  Select,
-} from "antd";
+import { Form, Select } from "antd";
 
-const CusSelect = props => {
+const CusSelect = (props) => {
   const { Option } = Select;
   const formItemLayout = {
-    labelAlign: "left"
+    labelAlign: "left",
   };
   const [form] = Form.useForm();
   const _data = props.data;
@@ -31,10 +28,9 @@ const CusSelect = props => {
   const selectChange = (e) => {
     setSelect(e);
     _data.value = e;
-    _data.label = _data.options.find(item => item.value === e).name;
+    _data.label = _data.options.find((item) => item.value === e).name;
     props.onChange();
   };
-
 
   return (
     <Form
@@ -44,10 +40,7 @@ const CusSelect = props => {
       colon={false}
       style={props.formStyle}
     >
-      <Form.Item
-        name="select"
-        label={_data.displayName}
-      >
+      <Form.Item name="select" label={_data.displayName}>
         <Select
           key={key}
           className="custom-select"
@@ -58,7 +51,11 @@ const CusSelect = props => {
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           {_data.options.map((item) => {
-            return <Option value={item.value} key={item.value}>{item.name}</Option>;
+            return (
+              <Option value={item.value} key={item.value}>
+                {item.name}
+              </Option>
+            );
           })}
         </Select>
         {props.children}

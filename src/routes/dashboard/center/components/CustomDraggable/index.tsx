@@ -473,21 +473,21 @@ const CustomDraggable = ({
       });
     } else {
       /*        dispatch({
-                type: 'bar/save',
-                payload: {
-                  scaleDragData: {
-                    position: {
-                      x: data.x,
-                      y: data.y,
-                    },
-                    style: {
-                      display: 'block',
-                      width: 0,
-                      height: 0,
+                  type: 'bar/save',
+                  payload: {
+                    scaleDragData: {
+                      position: {
+                        x: data.x,
+                        y: data.y,
+                      },
+                      style: {
+                        display: 'block',
+                        width: 0,
+                        height: 0,
+                      },
                     },
                   },
-                },
-              })*/
+                })*/
     }
     console.log("bar.selectedComponentOrGroup", bar.selectedComponentOrGroup);
 
