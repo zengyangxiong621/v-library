@@ -32,7 +32,7 @@ import Media from "@/customComponents/media/v1.1.1";
 import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
 
 // import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
-import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
+// import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
 
 import Cascader from "@/customComponents/assist/cascader/v1.1.0";
@@ -1141,15 +1141,15 @@ const CustomDraggable
                                                                         //     comData={ getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs) }
                                                                         //   ></CardFlipper2>:
 
-                                                                        layer.moduleName === "instrumentPanel_3" ?
-                                                                          <InstrumentPanel3
-                                                                            themeConfig={bar.componentThemeConfig}
-                                                                            onThemeChange={onThemeChange}
-                                                                            onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                                                            componentConfig={component}
-                                                                            fields={getFields(component)}
-                                                                            comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                                          ></InstrumentPanel3> :
+                                                                        // layer.moduleName === "instrumentPanel_3" ?
+                                                                        //   <InstrumentPanel3
+                                                                        //     themeConfig={bar.componentThemeConfig}
+                                                                        //     onThemeChange={onThemeChange}
+                                                                        //     onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                                                                        //     componentConfig={component}
+                                                                        //     fields={getFields(component)}
+                                                                        //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                                                                        //   ></InstrumentPanel3> :
                                                                           // layer.moduleName === "instrumentPanel_1" ?
                                                                           //   <InstrumentPanel1
                                                                           //     themeConfig={bar.componentThemeConfig}

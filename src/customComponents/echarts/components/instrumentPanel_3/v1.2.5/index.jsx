@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import ComponentDefaultConfig from "./config";
 import "./index.less";
-import protectionLevel1 from "./protectionLevel1.png";
-import protectionLevel2 from "./protectionLevel2.png";
+import protectionLevel1 from "./protectionLevel1.js";
+import protectionLevel2 from "./protectionLevel2.js";
 import CountUp from "react-countup";
 
 
