@@ -10,10 +10,7 @@ import Checkbox from "../checkBox";
 import Range from "../range";
 import LoadAnimation from "../loadAnimation";
 
-import {
-  Form,
-  Collapse
-} from "antd";
+import { Form, Collapse } from "antd";
 
 import debounce from "lodash/debounce";
 import { http } from "../../../../../services/request";
@@ -31,28 +28,27 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
   const interactionConfig = find(groupConfig, "interaction").value;
 
   const formItemLayout = {
-    labelAlign: "left"
+    labelAlign: "left",
   };
 
   useEffect(() => {
     setKey(uuidv4());
   }, [bar.groupConfig]);
 
-
   const positionChange = debounce(() => {
     // 位置信息变化由中间画布保存
     dispatch({
       type: "bar/save",
       payload: {
-        groupConfig
-      }
+        groupConfig,
+      },
     });
   }, 300);
 
   const saveData = async (param) => {
     const params = {
       configs: [param],
-      dashboardId: bar.stateId || bar.dashboardId
+      dashboardId: bar.stateId || bar.dashboardId,
     };
     const layers = await http({
       url: "/visual/layer/group/update",
@@ -64,30 +60,29 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
         type: "bar/updateDashboardOrStateConfig",
         payload: {
           id: bar.stateId || bar.dashboardId,
-          layers
-        }
+          layers,
+        },
       });
       dispatch({
         type: "bar/save",
         payload: {
-          layers
-        }
+          layers,
+        },
       });
     }
-
   };
 
   const hideDefaultChange = debounce(() => {
     dispatch({
       type: "bar/save",
       payload: {
-        groupConfig
-      }
+        groupConfig,
+      },
     });
     saveData({
       id: bar.key[0],
       key: "hideDefault",
-      value: hideDefaultConfig.value
+      value: hideDefaultConfig.value,
     });
   }, 300);
 
@@ -95,13 +90,13 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     dispatch({
       type: "bar/save",
       payload: {
-        groupConfig
-      }
+        groupConfig,
+      },
     });
     saveData({
       id: bar.key[0],
       key: "opacity",
-      value: opacityConfig.value
+      value: opacityConfig.value,
     });
   }, 300);
 
@@ -109,28 +104,21 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
     dispatch({
       type: "bar/save",
       payload: {
-        groupConfig
-      }
+        groupConfig,
+      },
     });
     saveData({
       id: bar.key[0],
       key: "mountAnimation",
-      value: interactionConfig.mountAnimation
+      value: interactionConfig.mountAnimation,
     });
   }, 300);
 
   return (
     <div className="GroupConfig-wrap">
-      <h3 className="groupset-header">
-        组设置
-      </h3>
+      <h3 className="groupset-header">组设置</h3>
       <div className="content" key={key}>
-        <Form
-          className="custom-form"
-          form={form}
-          {...formItemLayout}
-          colon={false}
-        >
+        <Form className="custom-form" form={form} {...formItemLayout} colon={false}>
           <PositionSize data={dimensionConfig} onChange={positionChange} />
           <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
           <Range data={opacityConfig} onChange={opacityChange} />
@@ -142,5 +130,5 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
 };
 
 export default connect(({ bar }) => ({
-  bar
+  bar,
 }))(GroupConfig);

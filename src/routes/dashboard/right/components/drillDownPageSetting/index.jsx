@@ -28,48 +28,57 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   const currentLayer = bar.selectedComponentOrGroup[0];
   const hideDefault = currentLayer?.hideDefault || false;
   const panelConfig = bar.panelConfig;
-  const { left, top, width, height, isScroll, allowScroll, animationType, scrollTime, animationTime } = panelConfig.config;
+  const {
+    left,
+    top,
+    width,
+    height,
+    isScroll,
+    allowScroll,
+    animationType,
+    scrollTime,
+    animationTime,
+  } = panelConfig.config;
   const [key, setKey] = useState(uuidv4());
   const [form] = Form.useForm();
   const styleConfig = [
     {
-      "displayName": "位置尺寸",
-      "name": "dimension",
-      "type": "dimensionGroup",
-      "config": {
-        "lock": false,
+      displayName: "位置尺寸",
+      name: "dimension",
+      type: "dimensionGroup",
+      config: {
+        lock: false,
       },
-      "value": [
+      value: [
         {
-          "displayName": "X轴坐标",
-          "name": "left",
-          "value": left,
+          displayName: "X轴坐标",
+          name: "left",
+          value: left,
         },
         {
-          "displayName": "Y轴坐标",
-          "name": "top",
-          "value": top,
+          displayName: "Y轴坐标",
+          name: "top",
+          value: top,
         },
         {
-          "displayName": "宽度",
-          "name": "width",
-          "value": width,
+          displayName: "宽度",
+          name: "width",
+          value: width,
         },
         {
-          "displayName": "高度",
-          "name": "height",
-          "value": height,
+          displayName: "高度",
+          name: "height",
+          value: height,
         },
       ],
     },
     {
-      "displayName": "默认隐藏",
-      "name": "hideDefault",
-      "type": "checkBox",
-      "value": hideDefault,
-    }
+      displayName: "默认隐藏",
+      name: "hideDefault",
+      type: "checkBox",
+      value: hideDefault,
+    },
   ];
-
 
   useEffect(() => {
     if (!isSettingsChange) {
@@ -78,13 +87,15 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   }, [bar.panelConfig]);
 
   const styleChange = debounce(async () => {
-    const dimensionConfig = styleConfig.find(item => item.name === "dimension").value;
-    const hideDefault = styleConfig.find(item => item.name === "hideDefault").value;
-    dimensionConfig.forEach(item => {
+    const dimensionConfig = styleConfig.find((item) => item.name === "dimension").value;
+    const hideDefault = styleConfig.find((item) => item.name === "hideDefault").value;
+    dimensionConfig.forEach((item) => {
       panelConfig.config[item.name] = item.value;
     });
     panelConfig.config.hideDefault = hideDefault;
-    const { config: { left, top, width, height } } = panelConfig;
+    const {
+      config: { left, top, width, height },
+    } = panelConfig;
     dispatch({
       type: "bar/save",
       payload: {
@@ -107,9 +118,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       method: "post",
       body: {
         dashboardId: bar.dashboardId,
-        configs: [
-          panelConfig,
-        ],
+        configs: [panelConfig],
       },
     });
   }, 300);
@@ -157,48 +166,48 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       payload: {
         isPanel: true,
         panelId: panel.id,
-        curPanelType: 2
-      }
+        curPanelType: 2,
+      },
     });
-/*    dispatch({
-      type: 'bar/getPanelDetails'
-    })
-    dispatch({
-      type: 'bar/selectPanelState',
-      payload: {
-        stateId: panel.states[0].id
-      }
-    })*/
+    /*    dispatch({
+          type: 'bar/getPanelDetails'
+        })
+        dispatch({
+          type: 'bar/selectPanelState',
+          payload: {
+            stateId: panel.states[0].id
+          }
+        })*/
   };
   return (
     <div className="dynamic-wrap">
-      <h3 className="dynamic-set-header">
-        下钻面板设置
-      </h3>
+      <h3 className="dynamic-set-header">下钻面板设置</h3>
       <div className="content" key={key}>
-        <Form
-          className="custom-form"
-          form={form}
-          {...formItemLayout}
-          colon={false}
-        >
-          <ComponentCard data={panelConfig}
+        <Form className="custom-form" form={form} {...formItemLayout} colon={false}>
+          <ComponentCard
+            data={panelConfig}
             allModulesConfig={bar.moduleDefaultConfig}
-            dispatch={dispatch}>
+            dispatch={dispatch}
+          >
             {styleConfig.map((item, index) => {
               if (item.name === "hideDefault") {
-                return <Checkbox data={ item } onChange={ hideDefaultChange }/>;
+                return <Checkbox data={item} onChange={hideDefaultChange} />;
               }
               if (!(item.type && componentLib[item.type])) {
                 return null;
               }
               const TagName = componentLib[item.type];
-              return (
-                <TagName data={item} onChange={styleChange} key={index} />
-              );
+              return <TagName data={item} onChange={styleChange} key={index} />;
             })}
           </ComponentCard>
-          <Button onClick={handleEditDashboard} className="g-my-2" type="primary" style={{ width: "calc(100% - 24px)" }}>编辑下钻面板</Button>
+          <Button
+            onClick={handleEditDashboard}
+            className="g-my-2"
+            type="primary"
+            style={{ width: "calc(100% - 24px)" }}
+          >
+            编辑下钻面板
+          </Button>
         </Form>
       </div>
     </div>
@@ -208,4 +217,3 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
 export default connect(({ bar }) => ({
   bar,
 }))(withRouter(PageSetting));
-

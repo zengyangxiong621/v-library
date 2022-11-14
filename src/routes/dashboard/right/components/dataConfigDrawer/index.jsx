@@ -17,7 +17,7 @@ import {
   Checkbox,
   Tag,
   Popover,
-  message
+  message,
 } from "antd";
 
 import {
@@ -25,7 +25,7 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
   PlusOutlined,
-  CaretUpOutlined
+  CaretUpOutlined,
 } from "@ant-design/icons";
 import { findLayerById } from "@/utils";
 import { IconFont } from "@/utils/useIcon";
@@ -39,8 +39,8 @@ const cfilters = [
     content: "return data",
     callbackKeys: [],
     isAddKey: false, // 是否正在添加key
-    status: 0,// 0: 未编辑 1：编辑
-    moduleIds: [] // 使用该过滤器的组件ID的数组
+    status: 0, // 0: 未编辑 1：编辑
+    moduleIds: [], // 使用该过滤器的组件ID的数组
   },
 ];
 
@@ -75,18 +75,19 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   useEffect(() => {
     if (props.type === "component") {
       // bar.componentFilters 所有的 filter
-      const conFifters = _data?.filters?.map(item => {
-        const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id);
-        return {
-          ...filterDetail,
-          enable: item.enable,
-          isEditName: false,
-          isAddKey: false,
-          status: 0,
-        };
-      }) || [];
+      const conFifters =
+        _data?.filters?.map((item) => {
+          const filterDetail = bar.componentFilters.find((jtem) => jtem.id === item.id);
+          return {
+            ...filterDetail,
+            enable: item.enable,
+            isEditName: false,
+            isAddKey: false,
+            status: 0,
+          };
+        }) || [];
       setFilters(conFifters);
-      const options = bar.componentFilters.filter(v => {
+      const options = bar.componentFilters.filter((v) => {
         if (!_data) {
           return v;
         } else {
@@ -97,20 +98,20 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     }
   }, [_data.id, _data.filters]);
 
-
   const effectHandler = () => {
-    const conFifters = bar.componentConfig?.filters?.map(item => {
-      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id);
-      return {
-        ...filterDetail,
-        enable: item.enable,
-        isEditName: false,
-        isAddKey: false,
-        status: 0,
-      };
-    }) || [];
+    const conFifters =
+      bar.componentConfig?.filters?.map((item) => {
+        const filterDetail = bar.componentFilters.find((jtem) => jtem.id === item.id);
+        return {
+          ...filterDetail,
+          enable: item.enable,
+          isEditName: false,
+          isAddKey: false,
+          status: 0,
+        };
+      }) || [];
     setFilters(conFifters);
-    const options = bar.componentFilters.filter(v => {
+    const options = bar.componentFilters.filter((v) => {
       if (Object.keys(bar.componentConfig).length === 0) {
         return v;
       } else {
@@ -135,12 +136,12 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       method: "POST",
       body: {
         filterId: val,
-        id: bar.key[0]
-      }
+        id: bar.key[0],
+      },
     });
     // 更新过滤器信息
     const componentFilters = [...bar.componentFilters];
-    componentFilters.forEach(filter => {
+    componentFilters.forEach((filter) => {
       if (filter.id === val) {
         filter.moduleIds.push(bar.key[0]);
       }
@@ -148,22 +149,20 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     dispatch({
       type: "bar/save",
       payload: {
-        componentFilters
-      }
+        componentFilters,
+      },
     });
     // 跟新组件配置信息
     const componentConfig = { ...bar.componentConfig };
     const comFilters = [...componentConfig.filters];
-    comFilters.push(
-      {
-        enable: true,
-        id: val
-      }
-    );
+    comFilters.push({
+      enable: true,
+      id: val,
+    });
     componentConfig.filters = comFilters;
     dispatch({
       type: "bar/setComponentConfig",
-      payload: componentConfig
+      payload: componentConfig,
     });
   };
 
@@ -185,41 +184,46 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     setActiveCollapseKeys(activeCollapseKeysNew);
   };
 
-  const genHeader = filter => (
+  const genHeader = (filter) => (
     <div className="cus-fifter-pan-header">
       <div className="cus-fifter-pan-title">
         <span className="cus-fifter-name">
-          {
-            filter.isEditName ?
-              <Input
-                ref={inputNameRef}
-                defaultValue={filter.name}
-                onClick={e => { e.stopPropagation(); }}
-                onBlur={(e) => editName(e, filter)}
-                onPressEnter={(e) => editName(e, filter)} />
-              : <span title={filter.name}>{filter.name}</span>
-          }
+          {filter.isEditName ? (
+            <Input
+              ref={inputNameRef}
+              defaultValue={filter.name}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              onBlur={(e) => editName(e, filter)}
+              onPressEnter={(e) => editName(e, filter)}
+            />
+          ) : (
+            <span title={filter.name}>{filter.name}</span>
+          )}
         </span>
-        <EditOutlined onClick={event => editFilterName(event, filter)} />
-        {
-          filter.status === 1 ? <span className="cus-fifter-pan-add-status">
+        <EditOutlined onClick={(event) => editFilterName(event, filter)} />
+        {filter.status === 1 ? (
+          <span className="cus-fifter-pan-add-status">
             <i></i>未保存
-          </span> : null
-        }
+          </span>
+        ) : null}
       </div>
       <div className="cus-fifter-pan-opt">
-        {
-          !filter.isNewAdd ?
-            <span className="collapse-header-opt">
-              <Popover overlayClassName="cus-component-popover" content={useingComponent(filter)} title="">
-                <span className="collapse-header-num">{filter?.moduleIds?.length || 0}</span>
-                个组件正在调用
-              </Popover>
-            </span>
-            : null
-        }
+        {!filter.isNewAdd ? (
+          <span className="collapse-header-opt">
+            <Popover
+              overlayClassName="cus-component-popover"
+              content={useingComponent(filter)}
+              title=""
+            >
+              <span className="collapse-header-num">{filter?.moduleIds?.length || 0}</span>
+              个组件正在调用
+            </Popover>
+          </span>
+        ) : null}
         <DeleteOutlined
-          onClick={event => {
+          onClick={(event) => {
             deleteFilter(event, filter);
           }}
         />
@@ -254,12 +258,12 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           name,
           callbackKeys,
           content,
-          dashboardId: bar.dashboardId
-        }
+          dashboardId: bar.dashboardId,
+        },
       });
       // 更新bar里面的componentFilters
       const componentFilters = [...bar.componentFilters];
-      componentFilters.forEach(item => {
+      componentFilters.forEach((item) => {
         if (item.id === id) {
           item.name = e.target.value;
         }
@@ -273,7 +277,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     }
   };
 
-  const collapseChange = e => {
+  const collapseChange = (e) => {
     setActiveCollapseKeys(e);
   };
 
@@ -281,13 +285,13 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     const layer = findLayerById(bar.layers, id);
     dispatch({
       type: "bar/selectLayers",
-      payload: [layer]
+      payload: [layer],
     });
     dispatch({
       type: "bar/save",
       payload: {
-        key: [id]
-      }
+        key: [id],
+      },
     });
     e.preventDefault();
     e.stopPropagation();
@@ -295,21 +299,22 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
 
   const useingComponent = (filter) => (
     <React.Fragment>
-      {
-        filter?.moduleIds?.length ?
-          <ul className="component-pop-wraper">
-            {filter.moduleIds.map(item => {
-              return (
-                <li className="component-list">
-                  <i className="dot"></i>
-                  <span className="title" onClick={e => showComponentDetail(e, item)}>
-                    {bar.fullAmountComponents.find(jtem => jtem.id === item)?.name + "_" + item}
-                  </span>
-                </li>);
-            })}
-          </ul>
-          : "无正在使用的组件"
-      }
+      {filter?.moduleIds?.length ? (
+        <ul className="component-pop-wraper">
+          {filter.moduleIds.map((item) => {
+            return (
+              <li className="component-list">
+                <i className="dot"></i>
+                <span className="title" onClick={(e) => showComponentDetail(e, item)}>
+                  {bar.fullAmountComponents.find((jtem) => jtem.id === item)?.name + "_" + item}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        "无正在使用的组件"
+      )}
     </React.Fragment>
   );
 
@@ -330,28 +335,28 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         method: "POST",
         body: {
           moduleId: bar.key[0],
-          filterIds: [filter.id]
-        }
+          filterIds: [filter.id],
+        },
       });
       // 更新过滤器的moduleIds信息
       const componentFilters = [...bar.componentFilters];
-      componentFilters.forEach(item => {
+      componentFilters.forEach((item) => {
         if (item.id === filter.id) {
-          item.moduleIds = item.moduleIds.filter(jtem => jtem !== bar.key[0]);
+          item.moduleIds = item.moduleIds.filter((jtem) => jtem !== bar.key[0]);
         }
       });
       dispatch({
         type: "bar/save",
         payload: {
-          componentFilters
-        }
+          componentFilters,
+        },
       });
       // 跟新组件配置信息
       const componentConfig = { ...bar.componentConfig };
-      componentConfig.filters = componentConfig.filters.filter(item => item.id !== filter.id);
+      componentConfig.filters = componentConfig.filters.filter((item) => item.id !== filter.id);
       dispatch({
         type: "bar/setComponentConfig",
-        payload: componentConfig
+        payload: componentConfig,
       });
     }
   };
@@ -375,15 +380,14 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       method: "POST",
       body: {
         filterIds: [filter.id],
-        modules: [...filter.moduleIds]
-      }
+        modules: [...filter.moduleIds],
+      },
     });
   };
 
   const enableFifter = async (e, item) => {
     item.enable = e.target.checked;
     if (props.type === "component") {
-
       props.onBindFilters(item, e.target.checked);
       return;
     }
@@ -393,12 +397,12 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       body: {
         id: bar.key[0],
         filterId: item.id,
-        enable: e.target.checked
-      }
+        enable: e.target.checked,
+      },
     });
     const componentConfig = { ...bar.componentConfig };
     const comFilters = [...componentConfig.filters];
-    comFilters.forEach(filter => {
+    comFilters.forEach((filter) => {
       if (filter.id === item.id) {
         filter.enable = e.target.checked;
       }
@@ -406,13 +410,13 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     componentConfig.filters = comFilters;
     dispatch({
       type: "bar/setComponentConfig",
-      payload: componentConfig
+      payload: componentConfig,
     });
   };
 
   const handleCallbackKeyClose = (key, item) => {
     item.status = 1;
-    item.callbackKeys = item.callbackKeys.filter(tag => tag !== key);
+    item.callbackKeys = item.callbackKeys.filter((tag) => tag !== key);
     const all = [...filters];
     setFilters(all);
   };
@@ -449,7 +453,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     } else {
       effectHandler();
       const activeCollapseKeysNew = [...activeCollapseKeys];
-      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id));
+      setActiveCollapseKeys(activeCollapseKeysNew.filter((item) => item !== filter.id));
     }
   };
 
@@ -469,8 +473,8 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       method: "POST",
       body: {
         ...rest,
-        dashboardId: bar.dashboardId
-      }
+        dashboardId: bar.dashboardId,
+      },
     });
     if (data) {
       if (data && props.type === "component") {
@@ -480,13 +484,13 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           name: data.name,
           content: data.content,
           callbackKeys: data.callbackKeys,
-          moduleIds: []
+          moduleIds: [],
         });
         await dispatch({
           type: "bar/save",
           payload: {
-            componentFilters
-          }
+            componentFilters,
+          },
         });
         await props.onSelectedFiltersChange(data.id, componentFilters);
         message.success("保存成功");
@@ -497,8 +501,8 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           method: "POST",
           body: {
             filterId: data.id,
-            id: bar.key[0]
-          }
+            id: bar.key[0],
+          },
         });
         const componentFilters = [...bar.componentFilters];
         componentFilters.push({
@@ -506,20 +510,20 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           name: data.name,
           content: data.content,
           callbackKeys: data.callbackKeys,
-          moduleIds: [bar.key[0]]
+          moduleIds: [bar.key[0]],
         });
         dispatch({
           type: "bar/save",
           payload: {
-            componentFilters
-          }
+            componentFilters,
+          },
         });
         // 先更新数据过滤器再更新组件内的数据过滤器
         const componentConfig = { ...bar.componentConfig };
         componentConfig.filters = res.filters;
         dispatch({
           type: "bar/setComponentConfig",
-          payload: componentConfig
+          payload: componentConfig,
         });
         message.success("保存成功");
       }
@@ -541,13 +545,13 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         name,
         callbackKeys,
         content,
-        dashboardId: bar.dashboardId
-      }
+        dashboardId: bar.dashboardId,
+      },
     });
     // 更新过滤器信息
     if (data) {
       const componentFilters = [...bar.componentFilters];
-      componentFilters.forEach(item => {
+      componentFilters.forEach((item) => {
         if (item.id === filter.id) {
           item.id = id;
           item.name = name;
@@ -558,11 +562,11 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       dispatch({
         type: "bar/save",
         payload: {
-          componentFilters
-        }
+          componentFilters,
+        },
       });
       const activeCollapseKeysNew = [...activeCollapseKeys];
-      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id));
+      setActiveCollapseKeys(activeCollapseKeysNew.filter((item) => item !== filter.id));
       if (props.type === "component") {
         props.onUpdateFilters(data);
       }
@@ -581,10 +585,10 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     const all = [...filters];
     const newFifters = arrayMove(all, key, key - 1);
     setFilters(newFifters);
-    const comFilters = newFifters.map(item => {
+    const comFilters = newFifters.map((item) => {
       return {
         id: item.id,
-        enable: item.enable
+        enable: item.enable,
       };
     });
     await http({
@@ -592,33 +596,41 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       method: "POST",
       body: {
         moduleId: bar.key[0],
-        filters: comFilters
-      }
+        filters: comFilters,
+      },
     });
     // 跟新组件配置信息
     const componentConfig = { ...bar.componentConfig };
     componentConfig.filters = comFilters;
     dispatch({
       type: "bar/setComponentConfig",
-      payload: componentConfig
+      payload: componentConfig,
     });
   };
 
   const FilterItem = (item, key) => (
     <li className="cus-fifter-sort-item" key={item.id}>
-      {!item.isNewAdd ?
+      {!item.isNewAdd ? (
         <React.Fragment>
-          <span className={`${key === 0 ? "disable-span" : ""} cus-fifter-sort-dot`} title="上移" onClick={() => onSortEnd(item, key)}>
+          <span
+            className={`${key === 0 ? "disable-span" : ""} cus-fifter-sort-dot`}
+            title="上移"
+            onClick={() => onSortEnd(item, key)}
+          >
             <IconFont
-              type='icon-shangyi'
+              type="icon-shangyi"
               style={{
-                fontSize: "12px" //图标大小
+                fontSize: "12px", //图标大小
               }}
             />
           </span>
-          <Checkbox defaultChecked={item.enable} onChange={v => enableFifter(v, item)} className="sort-box" />
-        </React.Fragment> : null
-      }
+          <Checkbox
+            defaultChecked={item.enable}
+            onChange={(v) => enableFifter(v, item)}
+            className="sort-box"
+          />
+        </React.Fragment>
+      ) : null}
       <Collapse
         defaultActiveKey={activeCollapseKeys}
         onChange={collapseChange}
@@ -628,19 +640,17 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           <div className="cus-filter-content-wraper">
             <div className="cus-header">
               <span className="fif-title">回调字段</span>
-              {
-                item?.callbackKeys?.map(key => (
-                  <Tag
-                    closable
-                    onClose={e => {
-                      e.preventDefault();
-                      handleCallbackKeyClose(key, item);
-                    }}
-                  >
-                    {key}
-                  </Tag>
-                ))
-              }
+              {item?.callbackKeys?.map((key) => (
+                <Tag
+                  closable
+                  onClose={(e) => {
+                    e.preventDefault();
+                    handleCallbackKeyClose(key, item);
+                  }}
+                >
+                  {key}
+                </Tag>
+              ))}
               {item.isAddKey ? (
                 <Input
                   ref={inputFiledRef}
@@ -657,19 +667,38 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             </div>
             <div className="body">
               <div className="code-editor">
-                <div className="cus-code">{"function filter(data,callbackArgs,crossCallback){"}</div>
+                <div className="cus-code">
+                  {"function filter(data,callbackArgs,crossCallback){"}
+                </div>
                 <div className="code-wraper">
-                  <CodeEditor value={item.content} language="javascript" onChange={(e) => codeChange(e, item)}></CodeEditor>
+                  <CodeEditor
+                    value={item.content}
+                    language="javascript"
+                    onChange={(e) => codeChange(e, item)}
+                  ></CodeEditor>
                 </div>
                 <div className="cus-code">{"}"}</div>
               </div>
             </div>
             <div className="bottom">
               <div className="btn-group">
-                <Button ghost onClick={() => { resetFilter(item); }} style={{ marginRight: "8px" }}>取消</Button>
-                <Button type="primary" onClick={async () => {
-                  await confirmFilter(item);
-                }}>确认</Button>
+                <Button
+                  ghost
+                  onClick={() => {
+                    resetFilter(item);
+                  }}
+                  style={{ marginRight: "8px" }}
+                >
+                  取消
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={async () => {
+                    await confirmFilter(item);
+                  }}
+                >
+                  确认
+                </Button>
               </div>
             </div>
           </div>
@@ -681,11 +710,11 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
   return (
     <Drawer
       title="数据过滤器"
-      placement='right'
+      placement="right"
       closable={true}
       onClose={onClose}
       visible={visible}
-      className='data-config-drawer'
+      className="data-config-drawer"
       width="520"
     >
       <div className="drawer-tool">
@@ -697,34 +726,41 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           style={{ marginBottom: 0, width: "374px" }}
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
-          {selectFilterOprions.map(item => {
-            return (<Option value={item.id} key={item.id}>{item.name}</Option>);
+          {selectFilterOprions.map((item) => {
+            return (
+              <Option value={item.id} key={item.id}>
+                {item.name}
+              </Option>
+            );
           })}
         </Select>
-        <Button disabled={!!filterOfAdd} type="primary" onClick={addFilter}>新建过滤器</Button>
+        <Button disabled={!!filterOfAdd} type="primary" onClick={addFilter}>
+          新建过滤器
+        </Button>
       </div>
-      {
-        (filters.length || filterOfAdd) ?
-          <ul className="cus-sort-wraper">
-            {filters.map((item, index) => (
-              FilterItem(item, index)
-            ))}
-            {
-              filterOfAdd ?
-                FilterItem(filterOfAdd, "isAdd") : null
-            }
-          </ul> : null
-      }
-      {
-        props.type === "component"
-          ? <DataResult data={bar.componentConfig} resultData={resultData} type="component" style={{ width: "488px", height: "326px" }}></DataResult>
-          : <DataResult data={bar.componentConfig} style={{ width: "488px", height: "326px" }}></DataResult>
-      }
-
+      {filters.length || filterOfAdd ? (
+        <ul className="cus-sort-wraper">
+          {filters.map((item, index) => FilterItem(item, index))}
+          {filterOfAdd ? FilterItem(filterOfAdd, "isAdd") : null}
+        </ul>
+      ) : null}
+      {props.type === "component" ? (
+        <DataResult
+          data={bar.componentConfig}
+          resultData={resultData}
+          type="component"
+          style={{ width: "488px", height: "326px" }}
+        ></DataResult>
+      ) : (
+        <DataResult
+          data={bar.componentConfig}
+          style={{ width: "488px", height: "326px" }}
+        ></DataResult>
+      )}
     </Drawer>
   );
 };
 
 export default connect(({ bar }) => ({
-  bar
+  bar,
 }))(DataConfigDrawer);

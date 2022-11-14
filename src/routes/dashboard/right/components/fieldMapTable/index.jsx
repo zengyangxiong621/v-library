@@ -1,10 +1,8 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { Table, Input, Form, Select } from "antd";
-import {
-  CheckOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import "./index.less";
+
 const EditableContext = React.createContext(null);
 
 const EditableRow = ({ index, ...props }) => {
@@ -71,10 +69,19 @@ const EditableCell = ({
           },
         ]}
       >
-        <Select ref={inputRef} onChange={save} style={{ width: "145px" }} getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+        <Select
+          ref={inputRef}
+          onChange={save}
+          style={{ width: "145px" }}
+          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+        >
           {/* <Option value="text">text</Option> */}
           {fieldsKeys.map((option) => {
-            return (<Option key={option} value={option}>{option}</Option>);
+            return (
+              <Option key={option} value={option}>
+                {option}
+              </Option>
+            );
           })}
         </Select>
       </Form.Item>
@@ -112,18 +119,19 @@ export class EditableTable extends React.Component {
         title: "状态",
         dataIndex: "status",
         render: (text, record, index) => {
-          return (props.fieldsKeys && props.fieldsKeys.includes(record.value) ?
-            <CheckOutlined style={{ color: "green" }} /> :
-            <CloseOutlined style={{ color: "red" }} />);
-        }
+          return props.fieldsKeys && props.fieldsKeys.includes(record.value) ? (
+            <CheckOutlined style={{ color: "green" }} />
+          ) : (
+            <CloseOutlined style={{ color: "red" }} />
+          );
+        },
       },
     ];
     this.state = {
       dataSource: props.data || [],
-      fieldsKeys: props.fieldsKeys || []
+      fieldsKeys: props.fieldsKeys || [],
     };
   }
-
 
   handleSave = (row) => {
     const newData = [...this.state.dataSource];

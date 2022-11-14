@@ -12,9 +12,7 @@ import CallbackArgs from "../callbackArgs";
 import CrossCallback from "../crossCallback";
 import DrillDownSetting from "../drillDownSetting";
 
-import {
-  Tabs,
-} from "antd";
+import { Tabs } from "antd";
 import debounce from "lodash/debounce";
 import { http } from "../../../../../services/request";
 import { getCallbackParams } from "@/utils/data.js";
@@ -25,17 +23,17 @@ const SingleLayer = ({ bar, dispatch }) => {
   const currentLayer = bar.selectedComponentOrGroup[0];
   const componentConfig = deepClone(bar.componentConfig);
   componentConfig.interaction = componentConfig.interaction || {
-    mountAnimation: bar.layers.find(item => item.id === componentConfig.id)?.mountAnimation,
+    mountAnimation: bar.layers.find((item) => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events,
   };
   const styleConfig = componentConfig.config;
   const styleConfig1 = [styleConfig[0]]; // 位置信息
-  const styleConfig2 = styleConfig.slice(1).filter(item => item.name !== "hideDefault"); // 除了位置信息和默认隐藏
+  const styleConfig2 = styleConfig.slice(1).filter((item) => item.name !== "hideDefault"); // 除了位置信息和默认隐藏
 
   const hideDefaultConfig = {
     name: "hideDefault",
     displayName: "默认隐藏",
-    value: currentLayer?.hideDefault || false
+    value: currentLayer?.hideDefault || false,
   };
 
   const interactionConfig = componentConfig.interaction;
@@ -81,14 +79,14 @@ const SingleLayer = ({ bar, dispatch }) => {
     await saveLayerData({
       id: bar.key[0],
       key: "hideDefault",
-      value: hideDefaultConfig.value
+      value: hideDefaultConfig.value,
     });
   };
 
   const saveLayerData = async (param) => {
     const params = {
       configs: [param],
-      dashboardId: bar.stateId || bar.dashboardId
+      dashboardId: bar.stateId || bar.dashboardId,
     };
     const layers = await http({
       url: "/visual/layer/group/update",
@@ -101,14 +99,14 @@ const SingleLayer = ({ bar, dispatch }) => {
         type: "bar/updateDashboardOrStateConfig",
         payload: {
           id: bar.stateId || bar.dashboardId,
-          layers
-        }
+          layers,
+        },
       });
       dispatch({
         type: "bar/save",
         payload: {
-          layers
-        }
+          layers,
+        },
       });
     }
   };
@@ -170,7 +168,7 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const dataTypeChange = type => {
+  const dataTypeChange = (type) => {
     componentConfig.dataType = type;
     dispatch({
       type: "bar/setComponentConfig",
@@ -178,7 +176,7 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const dataSourceChange = dataSource => {
+  const dataSourceChange = (dataSource) => {
     componentConfig.dataConfig = dataSource;
     dispatch({
       type: "bar/setComponentConfig",
@@ -186,7 +184,7 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const autoUpdateChange = autoUpdate => {
+  const autoUpdateChange = (autoUpdate) => {
     componentConfig.autoUpdate = autoUpdate;
     dispatch({
       type: "bar/setComponentConfig",
@@ -194,7 +192,7 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const useFilterChange = flag => {
+  const useFilterChange = (flag) => {
     componentConfig.useFilter = flag;
     dispatch({
       type: "bar/setComponentConfig",
@@ -202,7 +200,7 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const dataFromChange = dataFrom => {
+  const dataFromChange = (dataFrom) => {
     componentConfig.dataFrom = dataFrom;
     dispatch({
       type: "bar/setComponentConfig",
@@ -289,7 +287,10 @@ const SingleLayer = ({ bar, dispatch }) => {
     // 把组件定义的回调参数键值对写入callbackArgs中
     if (componentConfig.callbackArgs.length) {
       const currentActiveCompoentData = bar.currentActiveCompoentData;
-      const callbackParams = getCallbackParams(componentConfig.callbackArgs, currentActiveCompoentData[componentConfig.id]);
+      const callbackParams = getCallbackParams(
+        componentConfig.callbackArgs,
+        currentActiveCompoentData[componentConfig.id]
+      );
       const callbackArgs = bar.callbackArgs;
       dispatch({
         type: "bar/save",
@@ -313,7 +314,7 @@ const SingleLayer = ({ bar, dispatch }) => {
   // 是否显示 下钻  选项
   const curPanelId = bar.panelId;
   const panelsList = bar.fullAmountPanels;
-  const targetPanelInfo = panelsList.find(item => item.id === curPanelId);
+  const targetPanelInfo = panelsList.find((item) => item.id === curPanelId);
   const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false;
 
   return (
@@ -321,63 +322,59 @@ const SingleLayer = ({ bar, dispatch }) => {
       <div className="content">
         <Tabs defaultActiveKey="1" type="card" className="custom-tabs">
           <TabPane tab="样式" key="1">
-            <ComponentCard data={ componentConfig }
-                           allModulesConfig={ bar.moduleDefaultConfig }
-                           bar={ bar }
-                           dispatch={ dispatch }>
-              { styleConfig1.map((item, index) => {
+            <ComponentCard
+              data={componentConfig}
+              allModulesConfig={bar.moduleDefaultConfig}
+              bar={bar}
+              dispatch={dispatch}
+            >
+              {styleConfig1.map((item, index) => {
                 if (!(item.type && componentLib[item.type])) {
                   return null;
                 }
                 const TagName = componentLib[item.type];
-                return (
-                  <TagName data={ item } onChange={ styleChange } key={ index }/>
-                );
-              }) }
-              <Checkbox data={ hideDefaultConfig } onChange={ hideDefaultChange }/>
-              { styleConfig2.map((item, index) => {
+                return <TagName data={item} onChange={styleChange} key={index} />;
+              })}
+              <Checkbox data={hideDefaultConfig} onChange={hideDefaultChange} />
+              {styleConfig2.map((item, index) => {
                 if (!(item.type && componentLib[item.type])) {
                   return null;
                 }
                 const TagName = componentLib[item.type];
-                return (
-                  <TagName data={ item } onChange={ styleChange } key={ index }/>
-                );
-              }) }
+                return <TagName data={item} onChange={styleChange} key={index} />;
+              })}
             </ComponentCard>
           </TabPane>
           <TabPane tab="数据" key="2">
-            <ComponentCard data={ componentConfig }>
+            <ComponentCard data={componentConfig}>
               <DataConfig
-                data={ componentConfig }
-                onDataContainerChange={ dataContainerChange }
-                onFiledsChange={ filedsChange }
-                onStaticDataChange={ staticDataChange }
-                onDataTypeChange={ dataTypeChange }
-                onDataSourceChange={ dataSourceChange }
-                onAutoUpdateChange={ autoUpdateChange }
-                onDataFromChange={ dataFromChange }
-                onUseFilterChange={ useFilterChange }
+                data={componentConfig}
+                onDataContainerChange={dataContainerChange}
+                onFiledsChange={filedsChange}
+                onStaticDataChange={staticDataChange}
+                onDataTypeChange={dataTypeChange}
+                onDataSourceChange={dataSourceChange}
+                onAutoUpdateChange={autoUpdateChange}
+                onDataFromChange={dataFromChange}
+                onUseFilterChange={useFilterChange}
               />
             </ComponentCard>
           </TabPane>
           <TabPane tab="交互" key="3">
-            <ComponentCard data={ componentConfig }>
-              <LoadAnimation data={ interactionConfig } onChange={ interactionChange }/>
-              <CallbackArgs data={ componentConfig } onChange={ callbackArgChange }/>
-              <CusEvent data={ interactionConfig } onChange={ eventChange }/>
+            <ComponentCard data={componentConfig}>
+              <LoadAnimation data={interactionConfig} onChange={interactionChange} />
+              <CallbackArgs data={componentConfig} onChange={callbackArgChange} />
+              <CusEvent data={interactionConfig} onChange={eventChange} />
             </ComponentCard>
           </TabPane>
-          {
-            isDrillDownPanel && <TabPane tab="下钻" key="4">
-              <DrillDownSetting
-                componentConfig={ componentConfig }
-              />
+          {isDrillDownPanel && (
+            <TabPane tab="下钻" key="4">
+              <DrillDownSetting componentConfig={componentConfig} />
             </TabPane>
-          }
+          )}
           <TabPane tab="跨屏" key="5">
-            <ComponentCard data={ componentConfig }>
-              <CrossCallback data={ componentConfig } onChange={ crossCallbackChange }/>
+            <ComponentCard data={componentConfig}>
+              <CrossCallback data={componentConfig} onChange={crossCallbackChange} />
             </ComponentCard>
           </TabPane>
         </Tabs>

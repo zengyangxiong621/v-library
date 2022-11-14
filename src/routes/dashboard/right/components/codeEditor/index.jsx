@@ -4,13 +4,11 @@ import debounce from "lodash/debounce";
 
 import MonacoEditor from "react-monaco-editor";
 import { Button, Modal } from "antd";
-import {
-  ArrowsAltOutlined
-} from "@ant-design/icons";
+import { ArrowsAltOutlined } from "@ant-design/icons";
 
 let hasEditFlag = false;
 
-const CodeEditor = props => {
+const CodeEditor = (props) => {
   const _data = props.data;
   const [content, setContent] = useState(_data.value);
   const [fullScreen, setFullScreen] = useState(false);
@@ -48,7 +46,7 @@ const CodeEditor = props => {
   };
 
   const editorDidMountHandle = (editor, monaco) => {
-    editor.getAction("editor.action.formatDocument").run();  //格式化
+    editor.getAction("editor.action.formatDocument").run(); //格式化
   };
 
   return (
@@ -59,28 +57,29 @@ const CodeEditor = props => {
         value={content}
         options={{
           contextmenu: false,
-          readOnly: _data.readOnly
+          readOnly: _data.readOnly,
         }}
         onChange={(e) => onChange(e)}
         editorDidMount={editorDidMountHandle}
       />
-      {_data.showExpand
-        ? <Button
+      {_data.showExpand ? (
+        <Button
           ghost
           className="fullscreen-btn"
           icon={<ArrowsAltOutlined />}
           onClick={expandHandle}
         />
-        : null}
+      ) : null}
       <Modal
-        className='code_edit'
+        className="code_edit"
         width="70%"
         title="修改数据"
         okText="确认"
         cancelText="取消"
         visible={fullScreen}
         onOk={handleOk}
-        onCancel={() => setFullScreen(false)}>
+        onCancel={() => setFullScreen(false)}
+      >
         <MonacoEditor
           height="500"
           language={_data.language}
@@ -88,7 +87,7 @@ const CodeEditor = props => {
           value={modalContent}
           options={{
             contextmenu: false,
-            readOnly: _data.readOnly
+            readOnly: _data.readOnly,
           }}
           onChange={(e) => setModalContent(e)}
           editorDidMount={editorDidMountHandle}
@@ -99,4 +98,3 @@ const CodeEditor = props => {
 };
 
 export default memo(CodeEditor);
-

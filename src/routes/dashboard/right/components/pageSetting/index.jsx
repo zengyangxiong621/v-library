@@ -15,7 +15,7 @@ import { http } from "../../../../../services/request";
 
 const PageSetting = ({ bar, dispatch, ...props }) => {
   const formItemLayout = {
-    labelAlign: "left"
+    labelAlign: "left",
   };
   const [pageConfig, setPageConfig] = useState(null);
   const [recommendConfig, setRecommendConfig] = useState(null);
@@ -48,7 +48,7 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
     const params = {
       config: pageConfig,
       thumb: thumbImg.value,
-      dashboardId: bar.dashboardId
+      dashboardId: bar.dashboardId,
     };
     const data = await http({
       url: "/visual/application/update",
@@ -62,37 +62,49 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
         payload: {
           id,
           config,
-        }
+        },
       });
     }
-
   };
 
   return (
     <div className="PageSetting-wrap">
-      <h3 className="pageset-header">
-        页面设置
-      </h3>
+      <h3 className="pageset-header">页面设置</h3>
       <div className="content">
-        <Form
-          className="custom-form"
-          form={form}
-          {...formItemLayout}
-          colon={false}
-        >
-          {
-            pageConfig ?
-              <React.Fragment>
-                <PageSize key={JSON.stringify(recommendConfig)} data={recommendConfig} onChange={settingsChange} />
-                <BackgroundColor key={JSON.stringify(styleColorConfig)} data={styleColorConfig} onChange={settingsChange} />
-                <UploadImg key={JSON.stringify(backgroundImg)} data={backgroundImg} onChange={settingsChange} />
-                <CusInputNumber key={JSON.stringify(gridSpacing)} data={gridSpacing} onChange={settingsChange} style={{ width: "100%" }} />
-                <RadioGroup key={JSON.stringify(zoomConfig)} data={zoomConfig} onChange={settingsChange} />
-                <UploadImg key={JSON.stringify(thumbImg)} data={thumbImg} onChange={settingsChange} />
-              </React.Fragment>
-              : "暂无数据"
-          }
-
+        <Form className="custom-form" form={form} {...formItemLayout} colon={false}>
+          {pageConfig ? (
+            <React.Fragment>
+              <PageSize
+                key={JSON.stringify(recommendConfig)}
+                data={recommendConfig}
+                onChange={settingsChange}
+              />
+              <BackgroundColor
+                key={JSON.stringify(styleColorConfig)}
+                data={styleColorConfig}
+                onChange={settingsChange}
+              />
+              <UploadImg
+                key={JSON.stringify(backgroundImg)}
+                data={backgroundImg}
+                onChange={settingsChange}
+              />
+              <CusInputNumber
+                key={JSON.stringify(gridSpacing)}
+                data={gridSpacing}
+                onChange={settingsChange}
+                style={{ width: "100%" }}
+              />
+              <RadioGroup
+                key={JSON.stringify(zoomConfig)}
+                data={zoomConfig}
+                onChange={settingsChange}
+              />
+              <UploadImg key={JSON.stringify(thumbImg)} data={thumbImg} onChange={settingsChange} />
+            </React.Fragment>
+          ) : (
+            "暂无数据"
+          )}
         </Form>
       </div>
     </div>
@@ -100,6 +112,5 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
 };
 
 export default connect(({ bar }) => ({
-  bar
+  bar,
 }))(PageSetting);
-
