@@ -6,17 +6,24 @@ import { http, BASEURL } from "@/services/request";
 import AppCard from "../appCard/index";
 import DarkModal from "../darkThemeModal/index";
 
-
 import {
-  Button, Spin, message, Form,
-  Switch, Input, Upload, Select, Typography, Tooltip, Empty
+  Button,
+  Spin,
+  message,
+  Form,
+  Switch,
+  Input,
+  Upload,
+  Select,
+  Typography,
+  Tooltip,
+  Empty,
 } from "antd";
 import type { UploadProps } from "antd";
 import { IconFont } from "../../../../utils/useIcon";
 
 const { Option } = Select;
 const { Paragraph } = Typography;
-
 
 const RightContent = (props: any) => {
   const { listData, dashboardManage, dispatch, spaceId } = props;
@@ -56,7 +63,7 @@ const RightContent = (props: any) => {
     open: false,
     title: "",
     description: "",
-    thumb: ""
+    thumb: "",
   });
   const [titleInputValue, setTitleInputValue] = useState<string>("");
   const [descriptionInputValue, setDescriptionInputValue] = useState<string>("");
@@ -64,12 +71,13 @@ const RightContent = (props: any) => {
   // ************** 可复用方法 ************
   /**  每个appCard 进行复制、删除等操作后都需要刷新内容列表 && 更新左侧分组树  */
   const refreshList = () => {
-    const transformId = dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
+    const transformId =
+      dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      groupId: transformId
+      groupId: transformId,
     };
     dispatch({
       type: "dashboardManage/getTemplateList",
@@ -78,8 +86,8 @@ const RightContent = (props: any) => {
     dispatch({
       type: "dashboardManage/getGroupTree",
       payload: {
-        spaceId
-      }
+        spaceId,
+      },
     });
   };
   /** 重置当前弹窗中所有的状态 */
@@ -90,7 +98,7 @@ const RightContent = (props: any) => {
       open: false,
       title: "",
       description: "",
-      thumb: ""
+      thumb: "",
     });
     setJmfxValue("");
     setFxljInputValue("");
@@ -127,7 +135,7 @@ const RightContent = (props: any) => {
         spaceId,
         appId: curAppId,
         newGroupId: newGroupId,
-      }
+      },
     });
     if (data) {
       message.success({ content: "移动分组成功", duration: 2 });
@@ -145,7 +153,6 @@ const RightContent = (props: any) => {
     setShowMoveGroupModal(false);
   };
 
-
   // TODO 点击发布的时候，怎么判断是否已经发布(easyv上有两个接口)
   // TODO 如果已经发布了，调用应用详情接口获取相关的发布详情
   // 打开发布Modal, 顺便获取当前应用的id 和 发布状态 0-未发布 1-已发布
@@ -155,7 +162,7 @@ const RightContent = (props: any) => {
       // 此处拿不到最新的id值，就直接传了
       const data = await http({
         url: `/visual/application/share/detail/${id}`,
-        method: "get"
+        method: "get",
       });
       const { ...filterShareUrl } = data;
       setFabuBody(filterShareUrl);
@@ -201,7 +208,7 @@ const RightContent = (props: any) => {
     const finalBody = {
       ...fabuBody,
       share: true,
-      id: curAppId
+      id: curAppId,
     };
     setFabuBody(finalBody);
     const result = await publishByDiffParams(finalBody);
@@ -231,7 +238,7 @@ const RightContent = (props: any) => {
     const data = await http({
       url: "/visual/application/share",
       method: "post",
-      body: body
+      body: body,
     });
     // {
     //   errHandleFn: (err: any) => {
@@ -249,7 +256,7 @@ const RightContent = (props: any) => {
       const finalBody = {
         ...fabuBody,
         share: false,
-        id: curAppId
+        id: curAppId,
       };
       setFabuBody(finalBody);
       const result = publishByDiffParams(finalBody);
@@ -273,7 +280,7 @@ const RightContent = (props: any) => {
     const finalBody = {
       ...fabuBody,
       needPassword: isCheck,
-      id: curAppId
+      id: curAppId,
     };
     setFabuBody(finalBody);
     const curUrl = fxljInputValue.split("?")[0];
@@ -297,7 +304,7 @@ const RightContent = (props: any) => {
     const finalBody = {
       ...fabuBody,
       open: isCheck,
-      id: curAppId
+      id: curAppId,
     };
     setFabuBody(finalBody);
     const result: any = await publishByDiffParams(finalBody);
@@ -325,7 +332,7 @@ const RightContent = (props: any) => {
     const finalBody = {
       ...fabuBody,
       id: curAppId,
-      [field]: newValue
+      [field]: newValue,
     };
     setFabuBody(finalBody);
     const result = await publishByDiffParams(finalBody);
@@ -373,7 +380,7 @@ const RightContent = (props: any) => {
     accept: "image/png, image/jpeg",
     action: `${BASEURL}/visual/file/upload`,
     headers: {
-      authorization: localStorage.getItem("token") || ""
+      authorization: localStorage.getItem("token") || "",
     },
     beforeUpload(file: any) {
       const { name }: { name: string } = file;
@@ -383,7 +390,7 @@ const RightContent = (props: any) => {
       if (["png", "jpg", "gif", "jpeg", "webp", "svg"].includes(nameSuffix)) {
         message.error({
           content: "请上传符合格式的图片",
-          duration: 2
+          duration: 2,
         });
         file.status = "error";
         return false;
@@ -405,7 +412,7 @@ const RightContent = (props: any) => {
       const finalBody = {
         ...fabuBody,
         id: curAppId,
-        thumb: ""
+        thumb: "",
       };
       setFabuBody(finalBody);
       const result = await publishByDiffParams(finalBody);
@@ -415,12 +422,12 @@ const RightContent = (props: any) => {
       } else {
         message.error({ content: "发布失败", duration: 2 });
       }
-    }
+    },
   };
-  return <div className="RightContent-wrap">
-    {/* <Row style={{ width: '100%' }} gutter={[26, 26]}> */}
-    {
-      listData.length ?
+  return (
+    <div className="RightContent-wrap">
+      {/* <Row style={{ width: '100%' }} gutter={[26, 26]}> */}
+      {listData.length ? (
         listData.map((item: any) => (
           // <Col span={6} key={index}>
           <AppCard
@@ -432,69 +439,75 @@ const RightContent = (props: any) => {
             refreshList={refreshList}
           />
           // </Col>
-        )
-        )
-        : <div className="right-empty-class"
-        ><Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="暂无应用"
-        ></Empty></div>
-    }
-    {/* 发布弹窗 */}
-    <DarkModal
-      className="fabu-dark-modal"
-      title='发布'
-      destroyOnClose={true}
-      getContainer={false}
-      visible={showFabuModal}
-      onCancel={cancelFabuModal}
-      footer={null}
-      style={{
-        top: "20%"
-      }}
-    >
-      <Spin tip="发布中…"
-        style={{ backgroundColor: "#2a2f3d", opacity: 0.8 }}
-        spinning={fabuSpinning} size="large">
-        <div className='fabu-modal'>
-          {
-            !isShared ?
+        ))
+      ) : (
+        <div className="right-empty-class">
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无应用"></Empty>
+        </div>
+      )}
+      {/* 发布弹窗 */}
+      <DarkModal
+        className="fabu-dark-modal"
+        title="发布"
+        destroyOnClose={true}
+        getContainer={false}
+        visible={showFabuModal}
+        onCancel={cancelFabuModal}
+        footer={null}
+        style={{
+          top: "20%",
+        }}
+      >
+        <Spin
+          tip="发布中…"
+          style={{ backgroundColor: "#2a2f3d", opacity: 0.8 }}
+          spinning={fabuSpinning}
+          size="large"
+        >
+          <div className="fabu-modal">
+            {!isShared ? (
               <>
                 <div className="img-wrap">
-                  <img src={require("../../../../assets/images/发布.png")} alt="图片正在赶来的路上…" />
+                  <img
+                    src={require("../../../../assets/images/发布.png")}
+                    alt="图片正在赶来的路上…"
+                  />
                 </div>
                 <p className="text">发布后，获得大屏分享链接</p>
-                <Button style={{ width: "106px" }} type="primary" onClickCapture={() => fabudaping()
-                }>发布大屏</Button>
+                <Button
+                  style={{ width: "106px" }}
+                  type="primary"
+                  onClickCapture={() => fabudaping()}
+                >
+                  发布大屏
+                </Button>
               </>
-              :
+            ) : (
               <div>
                 <Form
                   labelCol={{
                     span: 5,
                   }}
                   layout="horizontal"
-                  name='releaseForm'
+                  name="releaseForm"
                 >
-                  <Form.Item
-                    colon={false}
-                    label="发布"
-                    style={{ marginRight: "auto" }}
-                  ><div className="set-flex">
+                  <Form.Item colon={false} label="发布" style={{ marginRight: "auto" }}>
+                    <div className="set-flex">
                       <Switch checked={fabuChecked} onChange={releaseChange} />
                     </div>
                   </Form.Item>
-                  <Form.Item
-                    label="分享链接"
-                    colon={false}
-                    className="set-flex"
-                  >
+                  <Form.Item label="分享链接" colon={false} className="set-flex">
                     <div className="set-flex">
                       <Input
                         value={fxljInputValue}
                         disabled={true}
                         onChange={(e) => setFxljInputValue(e.target.value)}
-                        style={{ width: "310px", height: "32px", lineHeight: "32px", paddingRight: "8px" }}
+                        style={{
+                          width: "310px",
+                          height: "32px",
+                          lineHeight: "32px",
+                          paddingRight: "8px",
+                        }}
                       />
                       <Paragraph
                         copyable={{
@@ -502,25 +515,30 @@ const RightContent = (props: any) => {
                           onCopy: () => {
                             message.success({ content: "复制链接成功", duration: 1 });
                           },
-                          icon: [<Tooltip title="点此复制分享链接" placement="bottom">
-                            <Button type="primary" style={{ width: "60px", marginLeft: "16px", height: "30px" }} >复制</Button>
-                          </Tooltip>],
-                          tooltips: false
+                          icon: [
+                            <Tooltip title="点此复制分享链接" placement="bottom">
+                              <Button
+                                type="primary"
+                                style={{ width: "60px", marginLeft: "16px", height: "30px" }}
+                              >
+                                复制
+                              </Button>
+                            </Tooltip>,
+                          ],
+                          tooltips: false,
                         }}
                         style={{ marginBottom: 0 }}
                       ></Paragraph>
                     </div>
                   </Form.Item>
-                  <Form.Item
-                    label="加密分享"
-                    colon={false}
-                  ><div className="jiamifenxiang set-flex ">
+                  <Form.Item label="加密分享" colon={false}>
+                    <div className="jiamifenxiang set-flex ">
                       <Switch onChange={jmfxChange} checked={jmfxSwitchValue} />
-                      {
-                        isShowJmfxInput &&
+                      {isShowJmfxInput && (
                         <div className="set-flex">
                           <div style={{ width: "28px", margin: "0 20px 0 23px" }}>密码 </div>
-                          <Input style={{ width: "159px" }}
+                          <Input
+                            style={{ width: "159px" }}
                             value={jmfxValue}
                             disabled={true}
                             maxLength={20}
@@ -531,60 +549,59 @@ const RightContent = (props: any) => {
                               onCopy: () => {
                                 message.success({ content: "复制密码成功", duration: 1 });
                               },
-                              icon: [<Tooltip title="点此复制加密密码" placement="bottom">
-                                <Button type="primary" style={{ width: "60px", marginLeft: "16px", height: "30px" }} >复制</Button>
-                              </Tooltip>],
-                              tooltips: false
+                              icon: [
+                                <Tooltip title="点此复制加密密码" placement="bottom">
+                                  <Button
+                                    type="primary"
+                                    style={{ width: "60px", marginLeft: "16px", height: "30px" }}
+                                  >
+                                    复制
+                                  </Button>
+                                </Tooltip>,
+                              ],
+                              tooltips: false,
                             }}
                             style={{ marginBottom: 0 }}
                           ></Paragraph>
                         </div>
-                      }
+                      )}
                     </div>
                   </Form.Item>
-                  <Form.Item
-                    label="应用到驾驶舱"
-                    colon={false}
-                  ><div className="set-flex">
+                  <Form.Item label="应用到驾驶舱" colon={false}>
+                    <div className="set-flex">
                       <Switch checked={toCockpitSwitchValue} onChange={toCockpit} />
                     </div>
                   </Form.Item>
-                  <Form.Item
-                    label="分享信息"
-                    colon={false}
-                  >
+                  <Form.Item label="分享信息" colon={false}>
                     <div onClickCapture={showRestInfo} className="icon-wrap set-flex">
                       <IconFont type="icon-fanhui" rotate={showRestIconAngle} />
                     </div>
                   </Form.Item>
-                  {
-                    notShowRest &&
+                  {notShowRest && (
                     <div>
-                      <Form.Item
-                        label="标题"
-                        colon={false}
-                      ><Input placeholder="请输入标题(不超过30字)"
-                        value={titleInputValue}
-                        maxLength={30}
-                        onChange={(e) => setTitleInputValue(e.target.value)}
-                        onBlur={titleInputOnBlur}
-                        onFocus={getCurFocusInputValue}
+                      <Form.Item label="标题" colon={false}>
+                        <Input
+                          placeholder="请输入标题(不超过30字)"
+                          value={titleInputValue}
+                          maxLength={30}
+                          onChange={(e) => setTitleInputValue(e.target.value)}
+                          onBlur={titleInputOnBlur}
+                          onFocus={getCurFocusInputValue}
                         />
                       </Form.Item>
-                      <Form.Item label="描述"
-                        colon={false}
-                      ><Input placeholder="请输入描述(不超过40字)"
-                        value={descriptionInputValue}
-                        maxLength={40}
-                        onChange={(e) => setDescriptionInputValue(e.target.value)}
-                        onBlur={desInputOnBlur}
-                        onFocus={getCurFocusInputValue}
+                      <Form.Item label="描述" colon={false}>
+                        <Input
+                          placeholder="请输入描述(不超过40字)"
+                          value={descriptionInputValue}
+                          maxLength={40}
+                          onChange={(e) => setDescriptionInputValue(e.target.value)}
+                          onBlur={desInputOnBlur}
+                          onFocus={getCurFocusInputValue}
                         />
                       </Form.Item>
-                      <Form.Item label="图片地址"
-                        colon={false}
-                      >
-                        <Input placeholder="请输入图片地址"
+                      <Form.Item label="图片地址" colon={false}>
+                        <Input
+                          placeholder="请输入图片地址"
                           value={imgUrl}
                           maxLength={1000}
                           onChange={(e) => setImgUrl(e.target.value)}
@@ -593,67 +610,69 @@ const RightContent = (props: any) => {
                           style={{ paddingRight: "8px" }}
                         />
                       </Form.Item>
-                      <Form.Item label="上传图片"
-                        colon={false}
-                      >
-                        <Upload {...uploadImgProps} className="set-flex"
+                      <Form.Item label="上传图片" colon={false}>
+                        <Upload
+                          {...uploadImgProps}
+                          className="set-flex"
                           style={{ background: "red", maxWidth: "100%" }}
                         >
                           <Button type="primary">点击上传</Button>
                         </Upload>
                       </Form.Item>
                     </div>
-                  }
+                  )}
                 </Form>
               </div>
-          }
-        </div>
-      </Spin>
-    </DarkModal >
-    {/* 移入分组弹窗 */}
-    <DarkModal
-      title='移入分组'
-      className="move-dark-modal"
-      destroyOnClose={true}
-      getContainer={false}
-      visible={showMoveGroupModal}
-      onCancel={cancelmoveGroupModal}
-      footer={[
-        <div className='custom-btn-wrap'>
-          <Button className='my-btn cancel-btn' onClickCapture={cancelMoveGroup}>取消</Button>
-          <Button className='my-btn confirm-btn' onClickCapture={confirmMoveGroup}>确定</Button>
-        </div>
-      ]}
-      style={{
-        top: "25%"
-      }}
-    >
-      <Form
-        labelCol={{
-          span: 5,
+            )}
+          </div>
+        </Spin>
+      </DarkModal>
+      {/* 移入分组弹窗 */}
+      <DarkModal
+        title="移入分组"
+        className="move-dark-modal"
+        destroyOnClose={true}
+        getContainer={false}
+        visible={showMoveGroupModal}
+        onCancel={cancelmoveGroupModal}
+        footer={[
+          <div className="custom-btn-wrap">
+            <Button className="my-btn cancel-btn" onClickCapture={cancelMoveGroup}>
+              取消
+            </Button>
+            <Button className="my-btn confirm-btn" onClickCapture={confirmMoveGroup}>
+              确定
+            </Button>
+          </div>,
+        ]}
+        style={{
+          top: "25%",
         }}
-        layout="horizontal"
-        name='releaseForm'
       >
-        <Form.Item label='可选分组'
-          name="group"
-          rules={[{ required: true }]}
+        <Form
+          labelCol={{
+            span: 5,
+          }}
+          layout="horizontal"
+          name="releaseForm"
         >
-          <Select className="setBackColor" onSelect={selectGroup}>
-            {
-              // 将全部应用这一分组剔除
-              dashboardManage.groupList[0]?.children?.slice(1).map((item: any) =>
-              (<Option key={item.groupId} value={item.groupId}>      {item.name}
-              </Option>)
-              )
-            }
-          </Select>
-        </Form.Item>
-      </Form>
-    </DarkModal>
-  </div >;
+          <Form.Item label="可选分组" name="group" rules={[{ required: true }]}>
+            <Select className="setBackColor" onSelect={selectGroup}>
+              {
+                // 将全部应用这一分组剔除
+                dashboardManage.groupList[0]?.children?.slice(1).map((item: any) => (
+                  <Option key={item.groupId} value={item.groupId}>
+                    {" "}
+                    {item.name}
+                  </Option>
+                ))
+              }
+            </Select>
+          </Form.Item>
+        </Form>
+      </DarkModal>
+    </div>
+  );
 };
 
-export default memo(connect(
-  ({ dashboardManage }: any) => ({ dashboardManage })
-)(RightContent));
+export default memo(connect(({ dashboardManage }: any) => ({ dashboardManage }))(RightContent));

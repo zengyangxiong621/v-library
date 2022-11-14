@@ -5,21 +5,31 @@ import { deepClone } from "../../../../../utils";
 import { Button } from "antd";
 import * as React from "react";
 
-type DraggableEvent = React.MouseEvent<HTMLElement | SVGElement>
+type DraggableEvent =
+  | React.MouseEvent<HTMLElement | SVGElement>
   | React.TouchEvent<HTMLElement | SVGElement>
   | MouseEvent
-  | TouchEvent
+  | TouchEvent;
 
 type DraggableData = {
-  deltaX: number
-  deltaY: number
-  lastX: number
-  lastY: number
-  x: number
-  y: number
-  node: any
-}
-const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig, isPanel, ...props }: any) => {
+  deltaX: number;
+  deltaY: number;
+  lastX: number;
+  lastY: number;
+  x: number;
+  y: number;
+  node: any;
+};
+const SingleDraggable = ({
+  bar,
+  dispatch,
+  onStop,
+  cRef,
+  nodeRef,
+  dimensionConfig,
+  isPanel,
+  ...props
+}: any) => {
   const draggableRef: any = useRef(null);
 
   useImperativeHandle(cRef, () => ({
@@ -44,10 +54,7 @@ const SingleDraggable = ({ bar, dispatch, onStop, cRef, nodeRef, dimensionConfig
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
     onStop(ev, data);
   };
-  return (
-    <Draggable ref={ draggableRef } onStop={ handleStop } { ...props }>
-    </Draggable>
-  );
+  return <Draggable ref={draggableRef} onStop={handleStop} {...props}></Draggable>;
 };
 export default connect(({ bar }: any) => ({
   bar,

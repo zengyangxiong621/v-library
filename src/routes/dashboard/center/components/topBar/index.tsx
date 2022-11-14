@@ -1,4 +1,4 @@
-import React, { memo,useEffect,useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 /**
@@ -20,11 +20,9 @@ import MyCollection from "./components/myCollection";
 import { Menu } from "antd";
 const { SubMenu, Item } = Menu;
 
-
-
 const TopBar = (props: any) => {
   const { showTopBar, zujianORsucai, dispatch } = props;
-  const curWorkspace:any = localStorage.getItem("curWorkspace"); 
+  const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
   const [current, setCurrent] = useState<any>([]);
   const menuReflect: TMenuReflect<TComponentMenuItem[]> = {
@@ -32,9 +30,8 @@ const TopBar = (props: any) => {
     sucai: MaterialMenu,
   };
 
-
   useEffect(() => {
-    if(zujianORsucai === "sucai"){
+    if (zujianORsucai === "sucai") {
       getSystemMaterial();
     }
   }, [zujianORsucai]);
@@ -44,41 +41,49 @@ const TopBar = (props: any) => {
     dispatch({
       type: "bar/getSystemMaterialClass",
       payload: {
-        spaceId
-      }
+        spaceId,
+      },
     });
   };
 
-  const menuSelect = (data:any) => {
+  const menuSelect = (data: any) => {
     setCurrent(data);
   };
 
   return (
-  <div style={{ display: showTopBar ? "block" : "none" }}>
-    <Menu className='TopBar-wrap' mode="horizontal" onOpenChange={menuSelect}>
-      {
-        menuReflect[zujianORsucai].map((item: any) => {
+    <div style={{ display: showTopBar ? "block" : "none" }}>
+      <Menu className="TopBar-wrap" mode="horizontal" onOpenChange={menuSelect}>
+        {menuReflect[zujianORsucai].map((item: any) => {
           return (
-            (<SubMenu popupOffset={[0, 0]} className='TopBar-submenu' key={item.key} title={item.title} style={{ width: item.customWidth && "88px"}} >
+            <SubMenu
+              popupOffset={[0, 0]}
+              className="TopBar-submenu"
+              key={item.key}
+              title={item.title}
+              style={{ width: item.customWidth && "88px" }}
+            >
               <div
                 className={`${item.isSpecialDropMenu ? "hasList-self-tooltip" : "self-tooltip"}`}
               >
-              {
-                // React.createElement(item.component,{...item,index: item.key, current})
-                React.createElement(item.component,{...item,index:item.key,current,spaceId})
-              }
+                {
+                  // React.createElement(item.component,{...item,index: item.key, current})
+                  React.createElement(item.component, {
+                    ...item,
+                    index: item.key,
+                    current,
+                    spaceId,
+                  })
+                }
               </div>
-            </SubMenu>)
+            </SubMenu>
           );
-        })
-      }
-    </Menu>
-  </div>
-
+        })}
+      </Menu>
+    </div>
   );
 };
 
-  /**
+/**
  * description: 组件 、 素材 导航栏选项卡配置
  */
 const componentMenu = [
@@ -94,56 +99,56 @@ const componentMenu = [
     key: "text",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Text
+    component: Text,
   },
   {
     title: "指标",
     key: "indicator",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Text
+    component: Text,
   },
   {
     title: "表格",
     key: "table",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Text
+    component: Text,
   },
   {
     title: "地图",
     key: "map",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Map
+    component: Map,
   },
   {
     title: "交互",
     key: "interaction",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Interaction
+    component: Interaction,
   },
   {
     title: "辅助",
     key: "assist",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Assist
+    component: Assist,
   },
   {
     title: "其他",
     key: "other",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Other
+    component: Other,
   },
   {
     title: "我的",
     key: "my",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
-    component: Text
+    component: Text,
   },
 ];
 
@@ -155,7 +160,7 @@ const MaterialMenu = [
     isSpecialDropMenu: true,
     component: DesignMaterial,
     // customWidth: true,
-  }, 
+  },
   {
     title: "我的素材",
     key: "myMaterial",
@@ -163,7 +168,7 @@ const MaterialMenu = [
     isSpecialDropMenu: true,
     component: DesignMaterial,
     // customWidth: true,
-  }
+  },
   // {
   //   title: '主题资源',
   //   key: 'zhutiziyuan',
@@ -185,13 +190,13 @@ const MaterialMenu = [
  * description: 类型定义
  */
 type TMenuReflect<T> = {
-  [K: string]: T
-}
+  [K: string]: T;
+};
 type TComponentMenuItem = {
-  title: string,
-  key: string,
-  isSpecialDropMenu: boolean,
-  component: any
-}
+  title: string;
+  key: string;
+  isSpecialDropMenu: boolean;
+  component: any;
+};
 
-export default memo( connect(({ bar }: any) => ({ bar }))(TopBar));
+export default memo(connect(({ bar }: any) => ({ bar }))(TopBar));

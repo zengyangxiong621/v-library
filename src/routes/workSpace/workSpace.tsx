@@ -5,7 +5,7 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 import { TWorkSpaceParams } from "./type";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Input, Table, Space, Button, Form,Select, message, Modal } from "antd";
+import { ConfigProvider, Input, Table, Space, Button, Form, Select, message, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import LeftTree from "./components/LeftTree";
@@ -17,9 +17,9 @@ const mapStateToProps = (state: any) => {
 };
 // 功能
 const workSpace = (props: any) => {
-  const { workSpace, dispatch,global } = props;
+  const { workSpace, dispatch, global } = props;
   // 空间id
-  const [addMemberForm]:any = Form.useForm();
+  const [addMemberForm]: any = Form.useForm();
 
   // TODO 后端目前默认是倒排，后续可能需要更改
 
@@ -53,44 +53,42 @@ const workSpace = (props: any) => {
     });
   };
 
-/**
- * description: 更新表格数据
- */
+  /**
+   * description: 更新表格数据
+   */
   const getTableData = async (finalBody: any) => {
     setTableLoading(true);
-    const data = await http(
-      {
-        url: "/visual/workspace/userList",
-        method: "post",
-        body: finalBody
-      },
-    );
+    const data = await http({
+      url: "/visual/workspace/userList",
+      method: "post",
+      body: finalBody,
+    });
     setTableLoading(false);
     if (Array.isArray(data?.content)) {
       setMemberList(data.content);
       setPageInfo({
         pageNo: data.pageNo,
-        pageSize: data.pageSize
+        pageSize: data.pageSize,
       });
       setTotalElements(data.totalElements);
     }
   };
 
-    /**
-     * description: 获取用户列表名称
-     */
-    const getUserList = async() => {
-      const data = await http({
-        url: "/visual/user/queryUnjoinedUserList",
-        method: "post",
-        body: {
-          pageNo: 1,
-          pageSize: 1000,
-          spaceId: workSpace.curWorkSpace[0]
-        }
-      });
-      setUserInfoList(data.content);
-    };
+  /**
+   * description: 获取用户列表名称
+   */
+  const getUserList = async () => {
+    const data = await http({
+      url: "/visual/user/queryUnjoinedUserList",
+      method: "post",
+      body: {
+        pageNo: 1,
+        pageSize: 1000,
+        spaceId: workSpace.curWorkSpace[0],
+      },
+    });
+    setUserInfoList(data.content);
+  };
 
   // 页面初始化- 获取空间列表数据 & 获取表格数据
   useEffect(() => {
@@ -101,19 +99,17 @@ const workSpace = (props: any) => {
   // 设置项目配额
   useEffect(() => setProjectQuota(workSpace.projectQuota), [workSpace.projectQuota]);
 
-
-
   // 重新设置项目配额
   const resetQuota = async () => {
     const finalBody = {
       accountId: global.userInfo.id,
       spaceId: workSpace.curWorkSpace[0],
-      projectQuota: projectQuota
+      projectQuota: projectQuota,
     };
     const data = await http({
       url: "/visual/workspace/update",
       method: "post",
-      body: finalBody
+      body: finalBody,
     });
     if (data) {
       // 更改配额成功了, 刷新页面
@@ -164,12 +160,12 @@ const workSpace = (props: any) => {
           backgroundColor: "#e9535d",
           border: "none",
           // marginLeft: "8px",
-        }
+        },
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: "#3d404d"
-        }
+          backgroundColor: "#3d404d",
+        },
       },
       icon: <ExclamationCircleFilled />,
       content: "是否确认删除当前成员？",
@@ -184,8 +180,8 @@ const workSpace = (props: any) => {
           method: "DELETE",
           body: {
             spaceId: workSpace.curWorkSpace[0],
-            userIdList: [rowId]
-          }
+            userIdList: [rowId],
+          },
         });
         if (data) {
           refreshMemberList(workSpace.curWorkSpace[0]);
@@ -196,17 +192,12 @@ const workSpace = (props: any) => {
       },
       onCancel(close) {
         close();
-      }
+      },
     });
-   };
+  };
 
   // 表格排序 (分页事件在paginationProps中已经定义)
-  const tableOnChange = (
-    pagination: any,
-    filters: any,
-    sorter: any,
-    { action }: any
-  ) => {
+  const tableOnChange = (pagination: any, filters: any, sorter: any, { action }: any) => {
     // sorter 有两个默认值 ascend 和 descend 不排序时是undefined
     // 这里只处理排序，  分页已经在pagination的change事件种弄了，就不弄了
     // const { field, order } = sorter;
@@ -236,10 +227,10 @@ const workSpace = (props: any) => {
     setUserIdList([]);
   };
 
-  const confirmAddMember = async() => { 
-    if(!userIdList.length){
+  const confirmAddMember = async () => {
+    if (!userIdList.length) {
       message.warning("请选择用户名");
-    }else{
+    } else {
       setSubLoading(true);
       try {
         const data = await http({
@@ -247,10 +238,10 @@ const workSpace = (props: any) => {
           method: "post",
           body: {
             spaceId: workSpace.curWorkSpace[0],
-            userIdList
-          }
+            userIdList,
+          },
         });
-        console.log(data,"data");
+        console.log(data, "data");
         refreshMemberList(workSpace.curWorkSpace[0]);
         cancelAddMemberModal();
         setSubLoading(false);
@@ -258,9 +249,9 @@ const workSpace = (props: any) => {
         setSubLoading(false);
       }
     }
-   };
+  };
 
-  const handleChangeRole = (data:any) => {
+  const handleChangeRole = (data: any) => {
     setUserIdList(data);
   };
 
@@ -321,9 +312,9 @@ const workSpace = (props: any) => {
       key: "type",
       ellipsis: true,
       width: 250,
-      render:(type:any) => {
+      render: (type: any) => {
         return <>{ACCOUNTLIST[type]}</>;
-      }
+      },
     },
     {
       title: "添加时间",
@@ -334,7 +325,7 @@ const workSpace = (props: any) => {
       showSorterTooltip: false,
       dataIndex: "createdTime",
       render: (time: any, data: any) => {
-        console.log(data,"data");
+        console.log(data, "data");
         // const a = new Date(time)
         return <>{time}</>;
       },
@@ -347,10 +338,7 @@ const workSpace = (props: any) => {
       render: (text: any, record: any) => {
         return (
           <Space size="middle">
-            <span
-              className="textInOperationColumn"
-              onClickCapture={() => delClick(record.userId)}
-            >
+            <span className="textInOperationColumn" onClickCapture={() => delClick(record.userId)}>
               删除
             </span>
           </Space>
@@ -374,10 +362,10 @@ const workSpace = (props: any) => {
                 onChange={(e) => setProjectQuota(e.target.value)}
                 onPressEnter={resetQuota}
                 onBlur={resetQuota}
-                style={{ width: "80px", marginRight: "20px" }}>
-              </Input>
+                style={{ width: "80px", marginRight: "20px" }}
+              ></Input>
             </div>
-            <span>剩余项目配额  {workSpace.remainQuota}  个</span>
+            <span>剩余项目配额 {workSpace.remainQuota} 个</span>
           </div>
           <div className="right-two set-flex set-flex-sb">
             <p>成员管理</p>
@@ -409,10 +397,7 @@ const workSpace = (props: any) => {
           onCancel={cancelAddMemberModal}
           footer={[
             <div className="custom-btn-wrap">
-              <Button
-                className="my-btn cancel-btn"
-                onClickCapture={cancelAddMemberModal}
-              >
+              <Button className="my-btn cancel-btn" onClickCapture={cancelAddMemberModal}>
                 取消
               </Button>
               <Button
@@ -436,11 +421,8 @@ const workSpace = (props: any) => {
             layout="horizontal"
             name="releaseForm"
           >
-            <Form.Item
-              colon={false}
-              label="用户名"
-              name="userIdList"
-            ><div className="set-flex">
+            <Form.Item colon={false} label="用户名" name="userIdList">
+              <div className="set-flex">
                 {/* <Input /> */}
                 <Select
                   optionFilterProp="children"
@@ -449,13 +431,13 @@ const workSpace = (props: any) => {
                   placeholder="请选择用户名"
                   onChange={handleChangeRole}
                 >
-                  {
-                    userInfoList?.map((item:any) => {
-                      return (
-                        <Select.Option key={item.id} value={item.id}>{item.userName}-{item.name}</Select.Option>
-                      );
-                    })
-                  }
+                  {userInfoList?.map((item: any) => {
+                    return (
+                      <Select.Option key={item.id} value={item.id}>
+                        {item.userName}-{item.name}
+                      </Select.Option>
+                    );
+                  })}
                 </Select>
               </div>
             </Form.Item>
@@ -466,6 +448,4 @@ const workSpace = (props: any) => {
   );
 };
 
-export default memo(
-  connect(mapStateToProps)(workSpace)
-);
+export default memo(connect(mapStateToProps)(workSpace));

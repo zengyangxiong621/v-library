@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import { connect } from "dva";
 import "./index.less";
-import {
-  FullscreenOutlined,
-  MinusCircleOutlined,
-  PlusCircleOutlined,
-} from "@ant-design/icons";
+import { FullscreenOutlined, MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 
 import * as React from "react";
 
@@ -16,16 +12,15 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
     });
   };
   const recommendConfig = findItem("recommend");
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
   const handleFullScreen = () => {
     focus$.emit();
   };
   const handleScreen = (type: boolean) => {
     // type: true 为放大 false 缩小
-    if(bar.canvasScaleValue <= 0.1) {
-      if (type) { // 可以放大
+    if (bar.canvasScaleValue <= 0.1) {
+      if (type) {
+        // 可以放大
         dispatch({
           type: "bar/save",
           payload: {
@@ -34,7 +29,8 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
         });
       }
     } else if (bar.canvasScaleValue >= 4) {
-      if (!type) { // 可以缩小
+      if (!type) {
+        // 可以缩小
         dispatch({
           type: "bar/save",
           payload: {
@@ -43,7 +39,7 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
         });
       }
     } else {
-      let canvasScaleValue =  Number((bar.canvasScaleValue + (type ? 0.1 : -0.1)).toFixed(3));
+      let canvasScaleValue = Number((bar.canvasScaleValue + (type ? 0.1 : -0.1)).toFixed(3));
       if (canvasScaleValue <= 0.1) {
         canvasScaleValue = 0.1;
       }
@@ -53,18 +49,16 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
       dispatch({
         type: "bar/save",
         payload: {
-          canvasScaleValue
+          canvasScaleValue,
         },
       });
     }
   };
-  const handleMinusScreen = () => {
-
-  };
+  const handleMinusScreen = () => {};
 
   return (
     <div className="c-center-bottom-bar">
-{/*      <section style={ {
+      {/*      <section style={ {
         position: "absolute",
         bottom: "50px",
         right: "20px",
@@ -74,25 +68,22 @@ const BottomBar = ({ bar, dispatch, focus$, ...props }: any) => {
         按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
         { " " + Math.ceil(bar.canvasScaleValue * 100) + "%" }
       </section>*/}
-      <section className="left">
-      </section>
+      <section className="left"></section>
       <section className="right g-flex g-items-center g-h-full">
-        <div style={{ height: "100%", lineHeight: "32px" ,paddingRight: "22px", borderRight: "1px solid #000"}}>
-          按住空格可拖拽画布 { recommendConfig.width }*{ recommendConfig.height }
-          { " " + Math.ceil(bar.canvasScaleValue * 100) + "%" }
+        <div
+          style={{
+            height: "100%",
+            lineHeight: "32px",
+            paddingRight: "22px",
+            borderRight: "1px solid #000",
+          }}
+        >
+          按住空格可拖拽画布 {recommendConfig.width}*{recommendConfig.height}
+          {" " + Math.ceil(bar.canvasScaleValue * 100) + "%"}
         </div>
-        <MinusCircleOutlined
-          className="scale-icon"
-          onClick={ () => handleScreen(false) }
-        />
-        <PlusCircleOutlined
-          className="scale-icon"
-          onClick={ () => handleScreen(true) }
-        />
-        <FullscreenOutlined
-          className="scale-icon"
-          onClick={ handleFullScreen }
-        />
+        <MinusCircleOutlined className="scale-icon" onClick={() => handleScreen(false)} />
+        <PlusCircleOutlined className="scale-icon" onClick={() => handleScreen(true)} />
+        <FullscreenOutlined className="scale-icon" onClick={handleFullScreen} />
       </section>
     </div>
   );

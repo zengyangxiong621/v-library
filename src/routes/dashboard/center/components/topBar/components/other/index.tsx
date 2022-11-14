@@ -6,11 +6,11 @@ import { http } from "@/services/request";
 
 const Other = (props: any) => {
   // const { data } = props
-  const {current, index} = props;
+  const { current, index } = props;
   const [dataArr, setDataArr] = useState<any>([]);
   const [dataLoading, setDataLoading] = useState(false);
   useEffect(() => {
-    if(current.length && current[0] === index){
+    if (current.length && current[0] === index) {
       getData();
     }
   }, []);
@@ -24,8 +24,8 @@ const Other = (props: any) => {
         type: ["other"],
         status: 0,
         pageNo: 0,
-        pageSize: 100
-      }
+        pageSize: 100,
+      },
     }).catch(() => {
       setDataLoading(false);
     });
@@ -37,16 +37,15 @@ const Other = (props: any) => {
   };
   return (
     <>
-      <Spin className="other-loading" spinning={dataLoading}/>
-      <div className='Other-wrap'>
-        {
-          dataArr.length ? 
+      <Spin className="other-loading" spinning={dataLoading} />
+      <div className="Other-wrap">
+        {dataArr.length ? (
           dataArr.map((item: any, index: number) => {
-            return (
-              <EveryItem key={index} data={item} />
-            );
-          }): <div className='Other-wrap'>暂无数据</div>
-        }
+            return <EveryItem key={index} data={item} />;
+          })
+        ) : (
+          <div className="Other-wrap">暂无数据</div>
+        )}
       </div>
     </>
   );

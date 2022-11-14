@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import  React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
 
@@ -63,12 +63,15 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
   const mouseRightClick = (e) => {
     e.persist();
     e.preventDefault();
-    getCurrentMenuLocation({
-      x: e.clientX,
-      y: e.clientY,
-      id,
-      isFolder,
-    }, restProps);
+    getCurrentMenuLocation(
+      {
+        x: e.clientX,
+        y: e.clientY,
+        id,
+        isFolder,
+      },
+      restProps
+    );
   };
   const inputRef = useRef();
   // 鼠标双击事件
@@ -181,7 +184,7 @@ const EveryTreeNode = ({ dispatch, bar, ...restProps }) => {
     photoPath = `${window.CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/thumb-${moduleName}.${imgFormat}`;
   }
   // 处理组下已经没有图层的情况 //TODO 没有图层是否需要删除
-  const isEmptyGroup = id.startsWith("group") && (Array.isArray(modules) && !modules.length);
+  const isEmptyGroup = id.startsWith("group") && Array.isArray(modules) && !modules.length;
   return (
     <div>
       {

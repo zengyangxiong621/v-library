@@ -37,7 +37,7 @@ const Left = ({ dispatch, bar }) => {
   const bottomBarRef = useRef(null);
   const headerRef = useRef(null);
   const [single, setSingle] = useState(true);
-  const [toggleValue, setToggleValue] = useState(false)
+  const [toggleValue, setToggleValue] = useState(false);
   useKeyPress(
     ["ctrl", "shift"],
     (event) => {
@@ -64,7 +64,7 @@ const Left = ({ dispatch, bar }) => {
   // 收起 / 展开 菜单栏
   const [w, setW] = useState(188);
   const toggle = () => {
-    setToggleValue(!toggleValue)
+    setToggleValue(!toggleValue);
     const el = document.querySelector(".left-menu");
     w === 188 ? setW(250) : setW(188);
     el.style.width = `${w}px`;
@@ -275,8 +275,8 @@ const Left = ({ dispatch, bar }) => {
       },
     });
     dispatch({
-      type: "bar/calcDragScaleData"
-    })
+      type: "bar/calcDragScaleData",
+    });
   });
 
   /** 画布中选择组件，左侧展开  */
@@ -295,9 +295,6 @@ const Left = ({ dispatch, bar }) => {
     setPreSelected([...preSelectedSet]);
     setE([...preSelectedSet, ...bar.key]);
   }, [bar.key]);
-
-
-
 
   //******** 展开 / 收起 ********* */
   const onExpand = (keys, { expanded, node }) => {
@@ -328,10 +325,9 @@ const Left = ({ dispatch, bar }) => {
   };
 
   const treeLayerHoverFunc = (item) => {
-    item.style.backgroundColor = 'red'
-
-  }
-/*  useEffect(() => {
+    item.style.backgroundColor = "red";
+  };
+  /*  useEffect(() => {
     console.log('expandedKeys', expandedKeys)
     setTimeout(() => {
       [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
@@ -356,8 +352,8 @@ const Left = ({ dispatch, bar }) => {
             style={{
               cursor: "pointer",
               transition: "all 0.3s",
-              transformOrigin: '50% 50%',
-              transform: `rotate(${toggleValue ? 180 : 0}deg)`
+              transformOrigin: "50% 50%",
+              transform: `rotate(${toggleValue ? 180 : 0}deg)`,
             }}
           />
         </div>

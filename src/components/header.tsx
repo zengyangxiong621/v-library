@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 interface Props {
-  config?: any
+  config?: any;
 }
 
 interface State {}
@@ -10,13 +10,8 @@ class Header extends Component<Props, State> {
   constructor(Props: any) {
     super(Props);
   }
-  render () {
-    return (
-      <div>
-        
-      </div>
-    );
-
+  render() {
+    return <div></div>;
   }
 }
 

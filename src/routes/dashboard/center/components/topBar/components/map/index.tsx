@@ -6,16 +6,15 @@ import { http } from "@/services/request";
 
 const Map = (props: any) => {
   // const { data } = props
-  const {current, index} = props;
+  const { current, index } = props;
   const [dataArr, setDataArr] = useState<any>([]);
   const [dataLoading, setDataLoading] = useState(true);
   useEffect(() => {
-    if(current.length && current[0] === index){
+    if (current.length && current[0] === index) {
       getData();
     }
   }, []);
-  
-  
+
   // 获取地图组件数据
   const getData = async () => {
     setDataLoading(true);
@@ -26,8 +25,8 @@ const Map = (props: any) => {
         type: ["map"],
         status: 0,
         pageNo: 0,
-        pageSize: 100
-      }
+        pageSize: 100,
+      },
     }).catch(() => {
       setDataLoading(false);
     });
@@ -37,19 +36,18 @@ const Map = (props: any) => {
     setDataArr(data.content);
     setDataLoading(false);
   };
-  
+
   return (
     <>
-      <Spin className="map-loading" spinning={dataLoading}/>
-      <div className='Map-wrap'>
-        {
-          dataArr.length ? 
+      <Spin className="map-loading" spinning={dataLoading} />
+      <div className="Map-wrap">
+        {dataArr.length ? (
           dataArr.map((item: any, index: number) => {
-            return (
-              <EveryItem key={index} data={item} />
-            );
-          }): <div className='Map-wrap'>暂无数据</div>
-        }
+            return <EveryItem key={index} data={item} />;
+          })
+        ) : (
+          <div className="Map-wrap">暂无数据</div>
+        )}
       </div>
     </>
   );

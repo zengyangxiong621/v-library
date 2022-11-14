@@ -454,65 +454,78 @@ const ComponentEventContainer = ({
       {
         // props.componentConfig.moduleName === "counter" ? (
         //   <Counter onChange={handleValueChange} {...props}></Counter>
-        // ) : 
+        // ) :
         props.componentConfig.moduleName === "worldMap" ? (
           <WorldMap onChange={handleValueChange} {...props}></WorldMap>
         ) : // props.componentConfig.moduleName === 'chinaMap' ?
-          // <ChinaMap
-          //   onChange={handleValueChange}
-          //   {...props}
-          // >
-          // </ChinaMap>
-          // :
-          props.componentConfig.moduleName === "scrollTable" ? (
-            <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-          ) : props.componentConfig.moduleName === "tab" ? (
-            <Tab
-              onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+        // <ChinaMap
+        //   onChange={handleValueChange}
+        //   {...props}
+        // >
+        // </ChinaMap>
+        // :
+        props.componentConfig.moduleName === "scrollTable" ? (
+          <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
+        ) : props.componentConfig.moduleName === "tab" ? (
+          <Tab
+            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+            {...props}
+          ></Tab>
+        ) : props.componentConfig.moduleName === "scrollSelect" ? (
+          <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
+        ) : props.componentConfig.moduleName === "timeSelect" ? (
+          <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
+        ) : props.componentConfig.moduleName === "worldMap" ? (
+          <WorldMap {...props}></WorldMap>
+        ) : props.componentConfig.moduleName === "media" ? (
+          <Media {...props}></Media>
+        ) : props.componentConfig.moduleName === "normalTable" ? (
+          <NormalTable {...props}></NormalTable>
+        ) : props.componentConfig.moduleName === "paginationComp" ? (
+          <PaginationComp onChange={handleValueChange} {...props}></PaginationComp>
+        ) : props.componentConfig.moduleName === "instrumentPanel_1" ? (
+          <InstrumentPanel1
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          ></InstrumentPanel1>
+        ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
+          <InstrumentPanel3
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          ></InstrumentPanel3>
+        ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
+          <InstrumentPanel4
+            scale={scale}
+            onChange={handleValueChange}
+            {...props}
+          ></InstrumentPanel4>
+        ) : props.componentConfig.moduleName === "cascader" ? (
+          <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
+        ) : (
+          <ErrorCatch
+            app={componentConfig.name}
+            user=""
+            token=""
+            max={1}
+            errorRender={
+              <RemoteComponentErrorRender
+                errorComponent={componentConfig.name}
+              ></RemoteComponentErrorRender>
+            }
+            onCatch={(errors) => {
+              console.log("组件报错信息：", errors, "组件id", componentConfig.id);
+            }}
+          >
+            <RemoteBaseComponent
               {...props}
-            ></Tab>
-          ) : props.componentConfig.moduleName === "scrollSelect" ? (
-            <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-          ) : props.componentConfig.moduleName === "timeSelect" ? (
-            <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-          ) : props.componentConfig.moduleName === "worldMap" ? (
-            <WorldMap {...props}></WorldMap>
-          ) : props.componentConfig.moduleName === "media" ? (
-            <Media {...props}></Media>
-          ) : props.componentConfig.moduleName === "normalTable" ? (
-            <NormalTable {...props}></NormalTable>
-          ) : props.componentConfig.moduleName === "paginationComp" ? (
-            <PaginationComp onChange={handleValueChange} {...props}></PaginationComp>
-          ) : props.componentConfig.moduleName === "instrumentPanel_1" ? (
-            <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
-          ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
-            <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-          ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-            <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-          ) : props.componentConfig.moduleName === "cascader" ? (
-            <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
-          ) : (
-            <ErrorCatch
-              app={componentConfig.name}
-              user=""
-              token=""
-              max={1}
-              errorRender={
-                <RemoteComponentErrorRender
-                  errorComponent={componentConfig.name}
-                ></RemoteComponentErrorRender>
-              }
-              onCatch={(errors) => {
-                console.log("组件报错信息：", errors, "组件id", componentConfig.id);
-              }}
-            >
-              <RemoteBaseComponent
-                {...props}
-                scale={scale}
-                onChange={handleValueChange}
-              ></RemoteBaseComponent>
-            </ErrorCatch>
-          )}
+              scale={scale}
+              onChange={handleValueChange}
+            ></RemoteBaseComponent>
+          </ErrorCatch>
+        )
+      }
     </div>
   );
 };

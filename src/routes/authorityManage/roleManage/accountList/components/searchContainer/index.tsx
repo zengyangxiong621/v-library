@@ -12,7 +12,6 @@ const STATUSLIST = [
   { label: "锁定", value: 2 },
 ];
 
-
 const SearchContainer = (props: any) => {
   const { searchByType } = props;
   const [searchForm] = Form.useForm();
@@ -23,7 +22,7 @@ const SearchContainer = (props: any) => {
     const value = await searchForm.validateFields();
     searchByType({
       status: value.status,
-      userName
+      userName,
     });
     // setStatus(value.status);
   };
@@ -36,7 +35,7 @@ const SearchContainer = (props: any) => {
   const handleSearch = (val: any) => {
     searchByType({
       status: "",
-      userName: val
+      userName: val,
     });
     setUserName(val);
   };
@@ -57,30 +56,29 @@ const SearchContainer = (props: any) => {
           {/* <Form.Item label='用户' name='userName'>
           <Input  style={{ width: 200 }} placeholder='请输入用户名或账户' />
         </Form.Item> */}
-          <Form.Item label='状态' name='status'>
-            <Select
-              placeholder='请选择状态'
-              style={{ width: 200 }}
-            >
-              {
-                STATUSLIST.map((item: any) => {
-                  return (
-                    <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
-                  );
-                })
-              }
+          <Form.Item label="状态" name="status">
+            <Select placeholder="请选择状态" style={{ width: 200 }}>
+              {STATUSLIST.map((item: any) => {
+                return (
+                  <Select.Option key={item.value} value={item.value}>
+                    {item.label}
+                  </Select.Option>
+                );
+              })}
             </Select>
           </Form.Item>
           <Form.Item>
             <Space>
-              <Button type="primary" onClickCapture={() => searchClick()}>查询</Button>
+              <Button type="primary" onClickCapture={() => searchClick()}>
+                查询
+              </Button>
               <Button onClickCapture={() => resetClick()}>重置</Button>
             </Space>
           </Form.Item>
         </Form>
       </div>
 
-      <div className='search'>
+      <div className="search">
         <Search
           placeholder="请输入用户名或账户"
           allowClear

@@ -3,9 +3,7 @@ import { newDynamic, createRoute } from "@/utils/core";
 const routesConfig = (app: any) => ({
   path: "/authority-manage/user-manage",
   title: "用户管理",
-  component: newDynamic(app, [], () =>
-    import("./userManage")
-  )
+  component: newDynamic(app, [], () => import("./userManage")),
 });
 const Page = (app: any) => createRoute(app, routesConfig);
 export default Page;

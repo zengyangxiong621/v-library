@@ -1,17 +1,17 @@
 import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { connect } from "dva";
-import { Input, Row, Col, Modal, Form, Select, Button,message,Space } from "antd";
+import { Input, Row, Col, Modal, Form, Select, Button, message, Space } from "antd";
 import { STATUSLIST } from "@/constant/dvaModels/userManage";
 
 const SearchHeader = (props: any) => {
-  const {roleList, searchByType} = props;
+  const { roleList, searchByType } = props;
   const [searchForm] = Form.useForm();
-  const [name,setName] = useState("");
+  const [name, setName] = useState("");
   const [status, setStatus] = useState("");
   const [roleId, setRoleId] = useState("");
 
-  const searchClick = async() => {
+  const searchClick = async () => {
     const value = await searchForm.validateFields();
     searchByType(value);
   };
@@ -21,7 +21,7 @@ const SearchHeader = (props: any) => {
     searchByType();
   };
 
-  const changeInputValue = (value:any) => {
+  const changeInputValue = (value: any) => {
     setName(value);
   };
 
@@ -33,50 +33,46 @@ const SearchHeader = (props: any) => {
       initialValues={{ remember: true }}
       autoComplete="off"
     >
-     <Form.Item label='用户' name='name'>
-        <Input  style={{ width: 200 }}  onChange={(e) => changeInputValue(e.target.value)} placeholder='请输入用户名或账户' value={name} />
-     </Form.Item>
-     <Form.Item label='状态' name='status'>
-      <Select
-        placeholder='请选择状态'
-        value={status}
-        style={{ width: 200 }}
-      >
-        {
-          STATUSLIST.map((item:any) => {
-            return (
-              <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
-            );
-          })
-        }
-      </Select>
-     </Form.Item>
-     <Form.Item label='角色' name='roleId'>
-      <Select
-          placeholder='请选择角色'
-          value={roleId}
+      <Form.Item label="用户" name="name">
+        <Input
           style={{ width: 200 }}
-        >
-          {
-            roleList.map((item:any) => {
-              return (
-                <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
-              );
-            })
-          }
+          onChange={(e) => changeInputValue(e.target.value)}
+          placeholder="请输入用户名或账户"
+          value={name}
+        />
+      </Form.Item>
+      <Form.Item label="状态" name="status">
+        <Select placeholder="请选择状态" value={status} style={{ width: 200 }}>
+          {STATUSLIST.map((item: any) => {
+            return (
+              <Select.Option key={item.value} value={item.value}>
+                {item.label}
+              </Select.Option>
+            );
+          })}
         </Select>
-     </Form.Item>
-     <Form.Item>
+      </Form.Item>
+      <Form.Item label="角色" name="roleId">
+        <Select placeholder="请选择角色" value={roleId} style={{ width: 200 }}>
+          {roleList.map((item: any) => {
+            return (
+              <Select.Option key={item.id} value={item.id}>
+                {item.name}
+              </Select.Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
+      <Form.Item>
         <Space>
-          <Button type="primary" onClickCapture={() => searchClick()}>查询</Button>
-          <Button  onClickCapture={() => resetClick()}>重置</Button>
+          <Button type="primary" onClickCapture={() => searchClick()}>
+            查询
+          </Button>
+          <Button onClickCapture={() => resetClick()}>重置</Button>
         </Space>
-     </Form.Item>
-  </Form>
+      </Form.Item>
+    </Form>
   );
 };
 
-
-export default memo(
-  connect(({ userManage }: any) => ({ userManage }))(SearchHeader)
-);
+export default memo(connect(({ userManage }: any) => ({ userManage }))(SearchHeader));

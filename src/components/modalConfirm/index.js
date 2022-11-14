@@ -1,6 +1,14 @@
-import {CustomModal} from "./modal";
+import { CustomModal } from "./modal";
 import ReactDOM from "react-dom";
-export default function ({title, content, cancelText = "取消", okText = "确定", desc="" , onCancel, onOk}) {
+export default function ({
+  title,
+  content,
+  cancelText = "取消",
+  okText = "确定",
+  desc = "",
+  onCancel,
+  onOk,
+}) {
   const div = document.createElement("div");
   document.body.appendChild(div);
 
@@ -29,8 +37,7 @@ export default function ({title, content, cancelText = "取消", okText = "确�
       onClose={close}
       confirmLoading={false}
       footer={null}
-    >
-    </CustomModal>,
-    div,
+    ></CustomModal>,
+    div
   );
 }

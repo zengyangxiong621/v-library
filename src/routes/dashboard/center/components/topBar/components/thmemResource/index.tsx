@@ -3,7 +3,6 @@ import "./index.less";
 
 import EveryItem from "../everyItem/index";
 
-
 const Charts = (props: any) => {
   // const { data } = props
   const [active, setActive] = useState("jdl");
@@ -11,29 +10,24 @@ const Charts = (props: any) => {
     setActive(key);
   };
   return (
-    <div className='Charts-wrap'>
-      <ul className='text-list'>
-        {
-          chartType.map((item: any) => {
-            return (
-              <li
-                key={item.key}
-                className={`${active === item.key && "active-li"}`}
-                onMouseEnter={() => liHover(item.key)}>
-                {item.text}
-              </li>
-            );
-          })
-        }
+    <div className="Charts-wrap">
+      <ul className="text-list">
+        {chartType.map((item: any) => {
+          return (
+            <li
+              key={item.key}
+              className={`${active === item.key && "active-li"}`}
+              onMouseEnter={() => liHover(item.key)}
+            >
+              {item.text}
+            </li>
+          );
+        })}
       </ul>
-      <div className='charts-list'>
-        {
-          ChartDataMap[active].map((item: any, index: number) => {
-            return (
-              <EveryItem key={index} data={item} />
-            );
-          })
-        }
+      <div className="charts-list">
+        {ChartDataMap[active].map((item: any, index: number) => {
+          return <EveryItem key={index} data={item} />;
+        })}
       </div>
     </div>
   );
@@ -48,28 +42,28 @@ const ChartDataMap: any = {
   xxmb: [
     {
       name: "柱形图1",
-      key: "a"
+      key: "a",
     },
   ],
   dtl: [
     {
       name: "折线图3",
-      key: "c"
-    }
+      key: "c",
+    },
   ],
   anz: [
     {
       name: "饼图1",
-      key: "a"
+      key: "a",
     },
   ],
   zsxj: [
     {
       name: "散点图",
-      key: "a"
-    }
+      key: "a",
+    },
   ],
-  btzy: []
+  btzy: [],
 };
 
 const chartType = [

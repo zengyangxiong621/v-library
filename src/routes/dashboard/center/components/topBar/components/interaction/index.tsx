@@ -8,11 +8,11 @@ import { http } from "@/services/request";
 // const dataArr = []
 
 const Interaction = (props: any) => {
-  const {current, index} = props;
+  const { current, index } = props;
   const [dataArr, setDataArr] = useState<any>([]);
   const [dataLoading, setDataLoading] = useState(false);
   useEffect(() => {
-    if(current.length && current[0] === index){
+    if (current.length && current[0] === index) {
       getData();
     }
   }, []);
@@ -27,8 +27,8 @@ const Interaction = (props: any) => {
         type: ["interactive"],
         status: 0,
         pageNo: 0,
-        pageSize: 100
-      }
+        pageSize: 100,
+      },
     }).catch(() => {
       setDataLoading(false);
     });
@@ -39,17 +39,16 @@ const Interaction = (props: any) => {
     setDataLoading(false);
   };
   return (
-    <>    
-      <Spin className="Interaction-loading" spinning={dataLoading}/>
-      <div className='Interaction-wrap'>
-        {
-          dataArr.length ? 
+    <>
+      <Spin className="Interaction-loading" spinning={dataLoading} />
+      <div className="Interaction-wrap">
+        {dataArr.length ? (
           dataArr.map((item: any, index: number) => {
-            return (
-              <EveryItem key={index} data={item} />
-            );
-          }): <div className='Interaction-wrap'>暂无数据</div>
-        }
+            return <EveryItem key={index} data={item} />;
+          })
+        ) : (
+          <div className="Interaction-wrap">暂无数据</div>
+        )}
       </div>
     </>
   );

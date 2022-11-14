@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import "./index.less";
-import { Modal, Form,  Upload, message, Button } from "antd";
+import { Modal, Form, Upload, message, Button } from "antd";
 import type, { UploadProps } from "antd";
 import { http, BASEURL } from "@/services/request";
 
@@ -23,17 +23,18 @@ const importComponent = (props: any) => {
   /**
    * description: 上传组件
    */
-  const handleOk  = async () => {
+  const handleOk = async () => {
     try {
-      setLoading(true);    
+      setLoading(true);
       // const values: any = await addForm.validateFields()
-      if (fileList && fileList.length) { //检验是否有上传文件
+      if (fileList && fileList.length) {
+        //检验是否有上传文件
         const formData = new FormData();
         formData.append("file", fileList[0]["originFileObj"]);
         const data = await http({
           method: "post",
           url: "/visual/file/uploadModule",
-          body: formData
+          body: formData,
         });
         if (data) {
           setLoading(false);
@@ -42,21 +43,19 @@ const importComponent = (props: any) => {
           refreshTable();
         }
       } else {
-          setLoading(false);
-          message.error("上传文件格式错误或未上传文件!");
-          return;
+        setLoading(false);
+        message.error("上传文件格式错误或未上传文件!");
+        return;
       }
     } catch (error) {
-      setLoading(false);      
+      setLoading(false);
     }
-    
   };
   const handleCancel = () => {
     changeShowState("add");
     addForm.resetFields();
     clearModalState();
   };
-
 
   /**
    * description: 针对不同格式文件的上传 生成 相应的uploadProps
@@ -66,17 +65,17 @@ const importComponent = (props: any) => {
    */
   const generateUploadProps = (fileSuffix = "", customProps?: object) => {
     // 上传框配置
-    let uploadProps:UploadProps = {
+    let uploadProps: UploadProps = {
       name: "file",
       multiple: false,
       maxCount: 1,
       accept: fileSuffix || "",
-      action: `${BASEURL}/visual/file/uploadModule`, 
-      headers:{
-        authorization:localStorage.getItem("token") || ""
+      action: `${BASEURL}/visual/file/uploadModule`,
+      headers: {
+        authorization: localStorage.getItem("token") || "",
       },
       beforeUpload(file: any) {
-        const { name, size }: { name: string, size: number } = file;
+        const { name, size }: { name: string; size: number } = file;
         if (size > 1024 * 1024 * 20) {
           message.warning("文件大小超过限制");
           file.status = "error";
@@ -84,17 +83,17 @@ const importComponent = (props: any) => {
         }
         const fileSuffixArr = fileSuffix?.split(",");
         // 考虑 date.1.0.1.zip 这个文件名;
-        const lastPointIndex = name.lastIndexOf(".");        
+        const lastPointIndex = name.lastIndexOf(".");
         const nameSuffix = name.slice(lastPointIndex);
         if (!fileSuffixArr?.includes(nameSuffix)) {
           message.error({
             content: "请上传符合格式的文件",
-            duration: 2
+            duration: 2,
           });
           file.status = "error";
           return false;
-        }     
-        return false; // 上传时不调取接口        
+        }
+        return false; // 上传时不调取接口
       },
       onChange(info: any) {
         setFileList(info.fileList);
@@ -115,7 +114,7 @@ const importComponent = (props: any) => {
         if (!fileSuffixArr?.includes(nameSuffix)) {
           message.error({
             content: "文件格式不符",
-            duration: 2
+            duration: 2,
           });
           return;
         }
@@ -130,7 +129,7 @@ const importComponent = (props: any) => {
   // .zip 文件
   const tarUploadProps = generateUploadProps(".zip");
   return (
-    <div className='importComponent-wrap'>
+    <div className="importComponent-wrap">
       <Modal
         title="导入组件"
         destroyOnClose
@@ -142,10 +141,14 @@ const importComponent = (props: any) => {
         getContainer={false}
         // confirmLoading={loading}
         footer={[
-          <div key='footer'>
-            <Button type='primary' className='modalBtn cancelBtn' onClick={handleCancel}>取消</Button>
-            <Button type='primary' className='modalBtn okBtn' loading={loading} onClick={handleOk}>确定</Button>
-          </div>
+          <div key="footer">
+            <Button type="primary" className="modalBtn cancelBtn" onClick={handleCancel}>
+              取消
+            </Button>
+            <Button type="primary" className="modalBtn okBtn" loading={loading} onClick={handleOk}>
+              确定
+            </Button>
+          </div>,
         ]}
       >
         <Form
@@ -156,29 +159,27 @@ const importComponent = (props: any) => {
           form={addForm}
         >
           {
-             (
-              <>
-                <Form.Item
-                  label="上传组件"
-                  rules={generateSingleRules(true, "请选择要上传的组件")}
-                  required
-                >
-                  <div className="setBackColor"
-                    style={{ height: "120px" }}>
-                    <Dragger {...tarUploadProps}>
-                      <p className="ant-upload-hint">
-                        点击或拖放文件至此处进行上传<br/>
-                        大小不得超过20MB，且必须为.zip格式
-                      </p>
-                    </Dragger>
-                  </div>
-                </Form.Item>
-              </>
-            )
+            <>
+              <Form.Item
+                label="上传组件"
+                rules={generateSingleRules(true, "请选择要上传的组件")}
+                required
+              >
+                <div className="setBackColor" style={{ height: "120px" }}>
+                  <Dragger {...tarUploadProps}>
+                    <p className="ant-upload-hint">
+                      点击或拖放文件至此处进行上传
+                      <br />
+                      大小不得超过20MB，且必须为.zip格式
+                    </p>
+                  </Dragger>
+                </div>
+              </Form.Item>
+            </>
           }
-        </Form >
-      </Modal >
-    </div >
+        </Form>
+      </Modal>
+    </div>
   );
 };
 
@@ -189,9 +190,7 @@ const generateSingleRules = (required: boolean, message: string | number): any[]
   return [
     {
       required,
-      message
-    }
+      message,
+    },
   ];
 };
-
-

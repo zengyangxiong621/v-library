@@ -6,11 +6,9 @@ import { deepClone, layersReverse, getQueryVariable } from "@/utils";
 
 import { Spin, Input, Button, message } from "antd";
 
-
 import RecursiveComponent from "./components/recursiveComponent";
 import { calcCanvasSize } from "../../utils";
 import { http } from "../../services/request";
-
 
 function GetQueryString(name: any) {
   const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -38,8 +36,8 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   const [overflowStyle, setOverflowStyle] = useState({});
   const [scaleValue, setScaleValue] = useState(1);
   /**
-    * description: 获取屏幕大小、缩放设置等参数
-    */
+   * description: 获取屏幕大小、缩放设置等参数
+   */
   const [layers, setLayers] = useState([]);
   const [panels, setPanels] = useState([]);
   const [components, setComponents] = useState([]);
@@ -53,7 +51,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
    * description: 根据缩放模式来配置页面
    */
   const previewByScaleMode = async ({ dashboardConfig, dashboardName }: any) => {
-
     document.title = dashboardName;
     // 获取屏幕大小、背景等参数
     const configInfo: any = getScreenInfo(dashboardConfig);
@@ -95,7 +92,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         };
         setPreviewDashboardStyle(tempStyle);
         const originScale = {
-          transform: `scale(${scaleValue})`
+          transform: `scale(${scaleValue})`,
         };
         setScaleStyle(originScale);
         break;
@@ -104,7 +101,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         const wRatio = winW / width;
         const hRatio = winH / height;
         const forceCovered = {
-          transform: `scaleX(${wRatio}) scaleY(${hRatio})`
+          transform: `scaleX(${wRatio}) scaleY(${hRatio})`,
         };
         setScaleStyle(forceCovered);
 
@@ -167,7 +164,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     }
     return () => {
       dispatch({
-        type: "publishDashboard/clearCurrentDashboardData"
+        type: "publishDashboard/clearCurrentDashboardData",
       });
     };
   }, []);
@@ -195,7 +192,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     };
   }, [scaleValue]);
 
-
   // 定时刷新页面
   useEffect(() => {
     const intervalId = setInterval(async () => {
@@ -214,7 +210,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     setLayers(data);
     setComponents(publishDashboard.fullAmountComponents);
     setPanels(publishDashboard.panels);
-
   }, [publishDashboard.layers]);
 
   const setChange = (value: any) => {
@@ -222,19 +217,24 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
   };
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
-  const initDashboard = (cb = function () { }) => {
+  const initDashboard = (cb = function () {}) => {
     const pwd = localStorage.getItem(pageId);
     return new Promise((resolve, reject) => {
-      const afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf("/publishScreen/"));
-      const idList = afterDashboardUrl.split("/").map(item => {
-        return item.replace(/[^0-9]/ig, "");
-      }).filter(item => item);
+      const afterDashboardUrl = window.location.pathname.slice(
+        window.location.pathname.indexOf("/publishScreen/")
+      );
+      const idList = afterDashboardUrl
+        .split("/")
+        .map((item) => {
+          return item.replace(/[^0-9]/gi, "");
+        })
+        .filter((item) => item);
       const dashboardId = idList[0] || null;
       dispatch({
         type: "publishDashboard/initDashboard",
         payload: {
           dashboardId,
-          pass: pwd
+          pass: pwd,
         },
         cb: (data: any) => {
           if (data?.code === 500) {
@@ -244,7 +244,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
           } else {
             resolve(data);
           }
-        }
+        },
       });
     });
   };
@@ -274,7 +274,6 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     init();
   };
 
-
   const updateDataContainerDataFunc = async (container: any) => {
     const params: any = getQueryVariable();
     const callBackParamValues = {
@@ -291,10 +290,12 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
         id: container.id,
         callBackParamValues: callBackParamValues,
         dashboardId: publishDashboard.dashboardId,
-        pass: localStorage.getItem(publishDashboard.dashboardId)
+        pass: localStorage.getItem(publishDashboard.dashboardId),
       },
     });
-    const index = dataContainerDataListRef.current.findIndex((item: any) => item.id === container.id);
+    const index = dataContainerDataListRef.current.findIndex(
+      (item: any) => item.id === container.id
+    );
     if (container.dataType === "static") {
       data = data.data;
     }
@@ -314,7 +315,7 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
           dataType: component.dataType,
           callBackParamValues: publishDashboard.callbackArgs,
           dashboardId: publishDashboard.dashboardId,
-          pass: localStorage.getItem(publishDashboard.dashboardId)
+          pass: localStorage.getItem(publishDashboard.dashboardId),
         },
       });
 
@@ -334,16 +335,18 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     publishDashboard.dataContainerList.forEach(async (item: any) => {
       // 添加自动过呢更新
       if (item.autoUpdate?.isAuto) {
-        timerList.push(setInterval(async () => {
-          await updateDataContainerDataFunc(item);
-          dispatch({
-            type: "publishDashboard/save",
-          });
-        }, item.autoUpdate.interval * 1000));
+        timerList.push(
+          setInterval(async () => {
+            await updateDataContainerDataFunc(item);
+            dispatch({
+              type: "publishDashboard/save",
+            });
+          }, item.autoUpdate.interval * 1000)
+        );
       }
     });
     return () => {
-      timerList.forEach(item => {
+      timerList.forEach((item) => {
         clearInterval(item);
       });
       timerList = [];
@@ -354,84 +357,91 @@ const PublishedDashBoard = ({ dispatch, publishDashboard, history, location }: a
     publishDashboard.fullAmountComponents.forEach(async (item: any) => {
       // 添加自动更新功能
       if (item.autoUpdate?.isAuto) {
-        timerList.push(setInterval(async function () {
-          await updateComponentDataFunc(item);
-          dispatch({
-            type: "publishDashboard/save",
-          });
-        }, item.autoUpdate.interval * 1000));
+        timerList.push(
+          setInterval(async function () {
+            await updateComponentDataFunc(item);
+            dispatch({
+              type: "publishDashboard/save",
+            });
+          }, item.autoUpdate.interval * 1000)
+        );
       }
     });
     return () => {
-      timerList.forEach(item => {
+      timerList.forEach((item) => {
         clearInterval(item);
       });
       timerList = [];
-
     };
   }, [publishDashboard.fullAmountComponents, publishDashboard.dashboardId]);
 
   return (
-    <div id="gs-v-library-app"
-         style={{
-           width: "100vw",
-           height: "100vh",
-           backgroundColor: pageStyle.background
-         }}
+    <div
+      id="gs-v-library-app"
+      style={{
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: pageStyle.background,
+      }}
     >
-      {
-        inputPassword && <div className="input-password">
+      {inputPassword && (
+        <div className="input-password">
           <div className="center">
             <Input
               value={password}
               placeholder="请输入访问密码"
-              className='input-center'
+              className="input-center"
               onChange={(e) => setChange(e.target.value)}
             />
-            <Button type="primary" onClick={() => handleClick()}>确定</Button>
+            <Button type="primary" onClick={() => handleClick()}>
+              确定
+            </Button>
           </div>
         </div>
-      }
-      {
-        isLoaded ?
-          <div className='customScrollStyle' style={{ ...overflowStyle }}>
-            <div className='publishDashboard-wrap'
+      )}
+      {isLoaded ? (
+        <div className="customScrollStyle" style={{ ...overflowStyle }}>
+          <div
+            className="publishDashboard-wrap"
+            style={{
+              ...previewDashboardStyle,
+              ...absolutePosition,
+            }}
+          >
+            <div
+              id="scaleDiv"
               style={{
-                ...previewDashboardStyle,
-                ...absolutePosition,
+                ...pageStyle,
+                ...scaleStyle,
               }}
             >
-              <div id="scaleDiv"
-                style={{
-                  ...pageStyle,
-                  ...scaleStyle,
-                }}
-              >
-                {
-                  <RecursiveComponent
-                    layersArr={layers}
-                    componentLists={components}
-                    panels={panels}
-                    publishDashboard={publishDashboard}
-                    dispatch={dispatch}
-                    scaleValue={scaleValue}
-                    scaleMode={scaleMode}
-                  />
-                }
-              </div>
+              {
+                <RecursiveComponent
+                  layersArr={layers}
+                  componentLists={components}
+                  panels={panels}
+                  publishDashboard={publishDashboard}
+                  dispatch={dispatch}
+                  scaleValue={scaleValue}
+                  scaleMode={scaleMode}
+                />
+              }
             </div>
           </div>
-          :
-          <div style={{
-            width: "100vw", height: "100vh",
+        </div>
+      ) : (
+        <div
+          style={{
+            width: "100vw",
+            height: "100vh",
           }}
-            className="publish-loading-wrap"
-          ></div>
-      }
+          className="publish-loading-wrap"
+        ></div>
+      )}
     </div>
   );
 };
 
-export default memo(connect(
-  ({ publishDashboard }: any) => ({ publishDashboard })
-)(withRouter(PublishedDashBoard)));
+export default memo(
+  connect(({ publishDashboard }: any) => ({ publishDashboard }))(withRouter(PublishedDashBoard))
+);

@@ -13,24 +13,26 @@ const Text = (props: any) => {
     return pre;
   }, {});
 
-  const style = styleConfig.filter((item: any) => item.name !== "dimension").reduce((pre: any, cur: any) => {
-    if(Array.isArray(cur.value)) {
-      const obj = cur.value.reduce((p: any, c: any) => {
-        p[c.name] = c.value;
-        return p;
-      }, {});
-      pre = {
-        ...pre,
-        ...obj,
-      };
-    } else {
-      pre[cur.name] = cur.value;
-    }
-    return pre;
-  }, {});
+  const style = styleConfig
+    .filter((item: any) => item.name !== "dimension")
+    .reduce((pre: any, cur: any) => {
+      if (Array.isArray(cur.value)) {
+        const obj = cur.value.reduce((p: any, c: any) => {
+          p[c.name] = c.value;
+          return p;
+        }, {});
+        pre = {
+          ...pre,
+          ...obj,
+        };
+      } else {
+        pre[cur.name] = cur.value;
+      }
+      return pre;
+    }, {});
   return (
-    <div className="c-text" style={ { width: "100%", height: "100%", ...style } }>
-      { staticData?.data[0]?.text || "{}" }
+    <div className="c-text" style={{ width: "100%", height: "100%", ...style }}>
+      {staticData?.data[0]?.text || "{}"}
     </div>
   );
 };

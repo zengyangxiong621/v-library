@@ -16,7 +16,7 @@ const StateItem = (props: any) => {
     e.preventDefault();
     setTimeout(() => {
       inputRef.current.focus({
-        cursor: "all"
+        cursor: "all",
       });
     }, 0);
     setEditState(true);
@@ -28,16 +28,16 @@ const StateItem = (props: any) => {
       method: "post",
       body: {
         id: item.id,
-        name: inputValue
-      }
+        name: inputValue,
+      },
     });
     if (data) {
       item.name = inputValue;
       dispatch({
         type: "bar/save",
         payload: {
-          dashboardName: inputValue
-        }
+          dashboardName: inputValue,
+        },
       });
     }
     setEditState(false);
@@ -49,32 +49,28 @@ const StateItem = (props: any) => {
       onContextMenu={(e) => rightClick(e, item)}
       className={`panel-item ${activeItem === item.id ? "active-item" : ""}`}
     >
-      <IconFont style={{ marginRight: "8px" }} type='icon-fuzhi' />
+      <IconFont style={{ marginRight: "8px" }} type="icon-fuzhi" />
       <div>
-        {
-          editState ?
-            <div
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-
-              }}
-            >
-              <Input
-                style={{ background: "#232630" }}
-                value={inputValue}
-                ref={inputRef}
-                onChange={e => setInputValue(e.target.value)}
-                onBlur={changeStateName}
-                onPressEnter={changeStateName}
-              />
-            </div>
-            :
-            <div onDoubleClick={(e) => showEditInput(e)}>
-              {item.name}
-            </div>
-        }
+        {editState ? (
+          <div
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <Input
+              style={{ background: "#232630" }}
+              value={inputValue}
+              ref={inputRef}
+              onChange={(e) => setInputValue(e.target.value)}
+              onBlur={changeStateName}
+              onPressEnter={changeStateName}
+            />
+          </div>
+        ) : (
+          <div onDoubleClick={(e) => showEditInput(e)}>{item.name}</div>
+        )}
       </div>
     </div>
   );

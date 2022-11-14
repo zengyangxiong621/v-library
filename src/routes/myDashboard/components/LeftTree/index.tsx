@@ -7,7 +7,6 @@ import Node from "../node/index";
 import { Tree } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
-
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
 
@@ -24,8 +23,8 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
     dispatch({
       type: "dashboardManage/getGroupTree",
       payload: {
-        spaceId
-      }
+        spaceId,
+      },
     });
   };
   /**
@@ -36,18 +35,18 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      groupId: null
+      groupId: null,
     };
     dispatch({
       type: "dashboardManage/getTemplateList",
-      payload: finalBody
+      payload: finalBody,
     });
     dispatch({
       type: "dashboardManage/resetModel",
       payload: {
         curSelectedGroup: ["-1"],
-        curSelectedGroupName: "全部应用"
-      }
+        curSelectedGroupName: "全部应用",
+      },
     });
   };
   // 添加分组
@@ -64,7 +63,7 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
       const temp = JSON.parse(JSON.stringify(dashboardManage.groupList));
       dispatch({
         type: "dashboardManage/setGroupList",
-        payload: temp
+        payload: temp,
       });
       return;
     }
@@ -73,7 +72,7 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
     const temp = JSON.parse(JSON.stringify(dashboardManage.groupList));
     dispatch({
       type: "dashboardManage/setGroupList",
-      payload: temp
+      payload: temp,
     });
   };
 
@@ -81,12 +80,17 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
     // 如果是取消选择直接中止
     if (!e.selected) return;
     const { node } = e;
-    if (node.key === "aInput" || node.key === "wrap" || node.name === "占位的input" || node.name === "应用列表") {
+    if (
+      node.key === "aInput" ||
+      node.key === "wrap" ||
+      node.name === "占位的input" ||
+      node.name === "应用列表"
+    ) {
       return;
     }
     dispatch({
       type: "dashboardManage/setCurSelectedGroupName",
-      payload: node.name
+      payload: node.name,
     });
     // 应用列表作为分组树的最外层,后端数据中不存在，由前端构造的特殊id(wrap)
     const key = keys[0];
@@ -98,24 +102,23 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      groupId
+      groupId,
     };
     dispatch({
       type: "dashboardManage/getTemplateList",
-      payload: finalBody
+      payload: finalBody,
     });
     // 每次变更选中的分组时，将当前分组保存至models中
     dispatch({
       type: "dashboardManage/setCurSelectedGroup",
-      payload: keys
+      payload: keys,
     });
   };
   return (
-    <div className='dashboard-leftTree-wrap'>
-      {
-        dashboardManage.groupList.length > 0 &&
+    <div className="dashboard-leftTree-wrap">
+      {dashboardManage.groupList.length > 0 && (
         <Tree
-          className='my-dashboard-tree'
+          className="my-dashboard-tree"
           blockNode
           defaultExpandedKeys={["wrap"]}
           defaultSelectedKeys={["-1"]}
@@ -124,7 +127,7 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
           switcherIcon={<DownOutlined />}
           fieldNames={{
             title: "name",
-            key: "groupId"
+            key: "groupId",
           }}
           onSelect={selectTreeNode}
           titleRender={(nodeData: any) => (
@@ -133,15 +136,13 @@ const LeftTree = ({ dashboardManage, dispatch, clearSearchInputState, spaceId }:
               refreshRight={refreshRight}
               addGroup={addGroup}
               spaceId={spaceId}
-              {...nodeData}>
-            </Node>)}
-        >
-        </Tree>
-      }
+              {...nodeData}
+            ></Node>
+          )}
+        ></Tree>
+      )}
     </div>
   );
 };
 
-export default memo(connect(
-  ({ dashboardManage }: any) => ({ dashboardManage })
-)(LeftTree));
+export default memo(connect(({ dashboardManage }: any) => ({ dashboardManage }))(LeftTree));

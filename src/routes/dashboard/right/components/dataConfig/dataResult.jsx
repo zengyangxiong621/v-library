@@ -5,18 +5,14 @@ import { connect } from "dva";
 import CodeEditor from "../codeEditor";
 import { getComDataWithFilters } from "../../../../../utils/data";
 
-import {
-  Button,
-} from "antd";
-import {
-  RedoOutlined
-} from "@ant-design/icons";
+import { Button } from "antd";
+import { RedoOutlined } from "@ant-design/icons";
 
 const resultCodeData = {
   readOnly: true,
   language: "json",
   value: "",
-  showExpand: false
+  showExpand: false,
 };
 
 const DataResult = ({ bar, dispatch, ...props }) => {
@@ -28,7 +24,14 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     init();
-  }, [bar.componentData, bar.componentConfig.filters, bar.componentFilters, bar.componentConfig.useFilter, _data.dataFrom, _data.dataContainers]);
+  }, [
+    bar.componentData,
+    bar.componentConfig.filters,
+    bar.componentFilters,
+    bar.componentConfig.useFilter,
+    _data.dataFrom,
+    _data.dataContainers,
+  ]);
 
   useEffect(() => {
     if (type === "component") {
@@ -38,12 +41,19 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 
   const init = () => {
     if (!type && type !== "component") {
-      let resData = getComDataWithFilters(bar.componentData, bar.componentConfig, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs);
+      let resData = getComDataWithFilters(
+        bar.componentData,
+        bar.componentConfig,
+        bar.componentFilters,
+        bar.dataContainerDataList,
+        bar.dataContainerList,
+        bar.callbackArgs
+      );
       const newData = Object.assign({}, resultData, {
         value: resData ? JSON.stringify(resData, null, 2) : "",
         readOnly: true,
         language: "json",
-        showExpand: false
+        showExpand: false,
       });
       setResultData(newData);
     }
@@ -55,7 +65,7 @@ const DataResult = ({ bar, dispatch, ...props }) => {
         value: JSON.stringify(componentResultData, null, 2),
         readOnly: true,
         language: "json",
-        showExpand: false
+        showExpand: false,
       });
       setResultData(newData);
     }
@@ -74,11 +84,15 @@ const DataResult = ({ bar, dispatch, ...props }) => {
       <div className="data-config">
         <div className="data-header">
           <label className="data-name">数据响应结果（只读）</label>
-          <Button onClick={refresh} icon={<RedoOutlined />} style={{ border: 0, background: "transparent" }} />
+          <Button
+            onClick={refresh}
+            icon={<RedoOutlined />}
+            style={{ border: 0, background: "transparent" }}
+          />
         </div>
         <div className="data-content">
           <div className="data-code-wraper" style={props.style}>
-            <CodeEditor data={resultData} onChange={() => { }} />
+            <CodeEditor data={resultData} onChange={() => {}} />
           </div>
         </div>
       </div>
@@ -87,5 +101,5 @@ const DataResult = ({ bar, dispatch, ...props }) => {
 };
 
 export default connect(({ bar }) => ({
-  bar
+  bar,
 }))(DataResult);

@@ -5,25 +5,23 @@ import EveryItem from "../everyItem/index";
 import { http } from "@/services/request";
 import { Spin } from "antd";
 
-
 const Charts = (props: any) => {
   const [active, setActive] = useState("all");
-  const {current, index} = props;
+  const { current, index } = props;
   const [allModules, setAllModules] = useState<any>({});
   const [dataLoading, setDataLoading] = useState(false);
   const liHover = (key: string) => {
     setActive(key);
-    if(!allModules[key]){
+    if (!allModules[key]) {
       getData([key]);
     }
   };
 
   useEffect(() => {
-    if(current.length && current[0] === index){
+    if (current.length && current[0] === index) {
       getData([]);
     }
   }, []);
-
 
   // 获取组件数据
   const getData = async (subType: any) => {
@@ -36,8 +34,8 @@ const Charts = (props: any) => {
         status: 0,
         pageNo: 0,
         pageSize: 100,
-        subType: subType[0] === "all" ? [] : subType
-      }
+        subType: subType[0] === "all" ? [] : subType,
+      },
     }).catch(() => {
       setDataLoading(false);
     });
@@ -46,46 +44,41 @@ const Charts = (props: any) => {
     });
     const classType = subType.length ? subType[0] : "all";
     // 如果不存在就添加
-    if(!allModules[classType]){
-      const obj:any = {};
+    if (!allModules[classType]) {
+      const obj: any = {};
       obj[classType] = data.content;
-      const list = {...allModules, ...obj};
+      const list = { ...allModules, ...obj };
       setAllModules(list);
     }
     setDataLoading(false);
   };
 
   return (
-    <div className='Charts-wrap'>
-      <ul className='text-list'>
-        {
-          chartType?.map((item: any) => {
-            return (
-              <li
-                key={item.key}
-                className={`${active === item.key && "active-li"}`}
-                onMouseEnter={() => liHover(item.key)}>
-                {item.text}
-              </li>
-            );
-          })
-        }
+    <div className="Charts-wrap">
+      <ul className="text-list">
+        {chartType?.map((item: any) => {
+          return (
+            <li
+              key={item.key}
+              className={`${active === item.key && "active-li"}`}
+              onMouseEnter={() => liHover(item.key)}
+            >
+              {item.text}
+            </li>
+          );
+        })}
       </ul>
-      <Spin className="chart-loading" spinning={dataLoading}/>
-      {
-        allModules[active] && (
-          allModules[active].length ? 
-            <div className='charts-list'>
-            {
-              allModules[active]?.map((item: any, index: number) => {
-                return (
-                  <EveryItem data={item} key={index} />
-                );
-              })
-            }
-          </div>: <div className="charts-list">暂无内容</div>
-        )
-      }
+      <Spin className="chart-loading" spinning={dataLoading} />
+      {allModules[active] &&
+        (allModules[active].length ? (
+          <div className="charts-list">
+            {allModules[active]?.map((item: any, index: number) => {
+              return <EveryItem data={item} key={index} />;
+            })}
+          </div>
+        ) : (
+          <div className="charts-list">暂无内容</div>
+        ))}
     </div>
   );
 };

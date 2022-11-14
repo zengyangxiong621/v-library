@@ -1,6 +1,6 @@
 import { COMPONENTS, DIMENSION, HEIGHT, LEFT, TOP, WIDTH } from "../constant/home";
 
-export function findLayerById (layers, id) {
+export function findLayerById(layers, id) {
   let temp = null;
   layers.forEach((item) => {
     if (item.id === id) {
@@ -15,12 +15,11 @@ export function findLayerById (layers, id) {
         return temp;
       }
     }
-
   });
   return temp;
 }
 
-export function selectMultiple (arr, ids) {
+export function selectMultiple(arr, ids) {
   const copyIds = deepClone(ids);
   let temp = [];
   if (copyIds.length === 0) {
@@ -43,10 +42,10 @@ export function selectMultiple (arr, ids) {
   return temp;
 }
 
-export function groupMultipleComponents (arr, sourceIds, targetId) {
+export function groupMultipleComponents(arr, sourceIds, targetId) {
   targetId = targetId || sourceIds[sourceIds.length - 1];
   const group = {
-    id: `temp-${ new Date().getTime() }`,
+    id: `temp-${new Date().getTime()}`,
     parentId: "1-1-1",
     style: {
       width: 0,
@@ -88,7 +87,7 @@ export function groupMultipleComponents (arr, sourceIds, targetId) {
   group.style.height = style.height;
 }
 
-export function findNode (state, id) {
+export function findNode(state, id) {
   let temp = false;
   let node = state.find((item) => item.id === id);
   if (node) {
@@ -105,7 +104,7 @@ export function findNode (state, id) {
   return temp;
 }
 
-export function findParentNode (state, ids) {
+export function findParentNode(state, ids) {
   let arr = [];
   let id = ids.shift();
   let node = state.find((item) => item.id === id);
@@ -118,7 +117,7 @@ export function findParentNode (state, ids) {
 }
 
 // ['1-1', '1-1-1']
-export function calculateGroupPosition (state) {
+export function calculateGroupPosition(state) {
   state.reduce(
     (cur, next) => {
       if (next.parentId === "0") {
@@ -146,11 +145,11 @@ export function calculateGroupPosition (state) {
         [minY, maxY],
       ];
     },
-    [[], []],
+    [[], []]
   );
 }
 
-export function moveChildrenComponents (components, xMoveLength, yMoveLength) {
+export function moveChildrenComponents(components, xMoveLength, yMoveLength) {
   components.forEach((component) => {
     component.position.x = component.position.x + xMoveLength;
     component.position.y = component.position.y + yMoveLength;
@@ -160,14 +159,12 @@ export function moveChildrenComponents (components, xMoveLength, yMoveLength) {
   });
 }
 
-export function mergeComponentLayers (components, layers) {
-
-
+export function mergeComponentLayers(components, layers) {
   return [];
 }
 
 // 深拷贝
-export function deepClone (obj) {
+export function deepClone(obj) {
   if (obj === null || typeof obj !== "object") {
     return obj;
   }
@@ -185,7 +182,7 @@ export function deepClone (obj) {
 }
 
 // 计算
-export function calcScalePosition (arr) {
+export function calcScalePosition(arr) {
   let xPositionList = [];
   let yPositionList = [];
   arr.forEach((component) => {
@@ -213,7 +210,7 @@ export function calcScalePosition (arr) {
 }
 
 // 改变子组件的位置
-export function moveChildrenComponentsPosition (arr, xMoveLength, yMoveLength) {
+export function moveChildrenComponentsPosition(arr, xMoveLength, yMoveLength) {
   arr.forEach((item) => {
     item.position = {
       x: item.position.x + xMoveLength,
@@ -226,7 +223,7 @@ export function moveChildrenComponentsPosition (arr, xMoveLength, yMoveLength) {
 }
 
 // 通过id数组查找相对应的ref
-export function componentsFilter (componentRefList, ids) {
+export function componentsFilter(componentRefList, ids) {
   const arr = [];
   for (const refKeys in componentRefList) {
     if (ids.length === 0) {
@@ -246,7 +243,7 @@ export function componentsFilter (componentRefList, ids) {
 export const group = (layers, selectedNodes, lastRightClickKey) => {
   const layersCopy = deepClone(layers);
   const newGroup = {
-    id: `${ lastRightClickKey }-temp`,
+    id: `${lastRightClickKey}-temp`,
     parentId: "1-1-1",
     style: {
       width: 0,
@@ -293,14 +290,13 @@ export const group = (layers, selectedNodes, lastRightClickKey) => {
   return layersCopy;
 };
 
-export function deleteComponents (arr, ids) {
-}
+export function deleteComponents(arr, ids) {}
 
 // 插入
-export function insertMultipleComponents (arr, sourceIds, targetId) {
+export function insertMultipleComponents(arr, sourceIds, targetId) {
   let sourceComponents = [];
 
-  function insertFn (arr, ids) {
+  function insertFn(arr, ids) {
     let length = arr.length;
     for (let i = 0; i < length; i++) {
       if (ids.length === 0) {
@@ -325,12 +321,12 @@ export function insertMultipleComponents (arr, sourceIds, targetId) {
 }
 
 // 数组扁平化
-export const layerComponentsFlat = (arr, children=COMPONENTS) => {
+export const layerComponentsFlat = (arr, children = COMPONENTS) => {
   return arr.reduce((pre, cur) => {
     return pre.concat(
       Object.prototype.hasOwnProperty.call(cur, children)
         ? layerComponentsFlat(cur[children])
-        : cur.id,
+        : cur.id
     );
   }, []);
 };
@@ -341,17 +337,20 @@ export const layerComponentsFlat = (arr, children=COMPONENTS) => {
  * @default layers = []
  * @example layers = [{id: 1, panelType: 0}]
  */
-export const layersPanelsFlat = (arr, panelTypeList = [0,1,2]) => {
+export const layersPanelsFlat = (arr, panelTypeList = [0, 1, 2]) => {
   return arr.reduce((pre, cur) => {
     return pre.concat(
       Object.prototype.hasOwnProperty.call(cur, COMPONENTS)
         ? layersPanelsFlat(cur[COMPONENTS], panelTypeList)
-        : (Object.prototype.hasOwnProperty.call(cur, "panelType") && panelTypeList.includes(cur.panelType) ? cur : []),
+        : Object.prototype.hasOwnProperty.call(cur, "panelType") &&
+          panelTypeList.includes(cur.panelType)
+        ? cur
+        : []
     );
   }, []);
 };
 
-export function throttle (fn, delay) {
+export function throttle(fn, delay) {
   let timer;
   return function (...args) {
     if (!timer) {
@@ -362,7 +361,6 @@ export function throttle (fn, delay) {
     }
   };
 }
-
 
 const judgeIsGroup = (value) => {
   return value.id.indexOf("group") !== -1;
@@ -380,7 +378,9 @@ export const calcGroupPosition = (arr, components, panels) => {
       }
     } else {
       if ("panelType" in item) {
-        const { config: {left, top, width, height} } = panels.find(it => it.id === item.id);
+        const {
+          config: { left, top, width, height },
+        } = panels.find((it) => it.id === item.id);
         xPositionList.push(left, left + width);
         yPositionList.push(top, top + height);
       } else {
@@ -388,9 +388,7 @@ export const calcGroupPosition = (arr, components, panels) => {
         if (component) {
           // const style_config = component.config.find((item: any) => item.name === STYLE)
 
-          const style_dimension_config = component.config.find(
-            (item) => item.name === DIMENSION,
-          );
+          const style_dimension_config = component.config.find((item) => item.name === DIMENSION);
           if (style_dimension_config) {
             const config = {
               position: {
@@ -418,8 +416,8 @@ export const calcGroupPosition = (arr, components, panels) => {
   });
   return [xPositionList, yPositionList];
 };
-export const deepForEachBeforeCallBackAndBreakForeach = (layers, cb={}, parent={}) => {
-  for(let i = 0, len = layers.length; i < len; i++) {
+export const deepForEachBeforeCallBackAndBreakForeach = (layers, cb = {}, parent = {}) => {
+  for (let i = 0, len = layers.length; i < len; i++) {
     let layer = layers[i];
     let isForeach = true;
     cb(layer, i, layers, parent, (value = true, index = 0) => {
@@ -427,7 +425,11 @@ export const deepForEachBeforeCallBackAndBreakForeach = (layers, cb={}, parent={
       i += index;
     });
     if (isForeach && layer && COMPONENTS in layer) {
-      deepForEachBeforeCallBackAndBreakForeach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb, layer);
+      deepForEachBeforeCallBackAndBreakForeach(
+        layer[COMPONENTS] ? layer[COMPONENTS] : [],
+        cb,
+        layer
+      );
     }
   }
   return layers;
@@ -443,7 +445,7 @@ export const deepForEachBeforeCallBack = (layers, cb, parent) => {
   return layers;
 };
 
-export const deepForEach = (layers, cb, parent={}) => {
+export const deepForEach = (layers, cb, parent = {}) => {
   layers.forEach((layer, index) => {
     if (layer && COMPONENTS in layer) {
       layer.modules = deepForEach(layer[COMPONENTS] ? layer[COMPONENTS] : [], cb, layer);
@@ -454,21 +456,27 @@ export const deepForEach = (layers, cb, parent={}) => {
 };
 export const deepFilterAttrs = (layers, attrs) => {
   deepForEach(layers, (layer) => {
-    attrs.forEach(attr => {
+    attrs.forEach((attr) => {
       delete layer[attr];
     });
   });
   return layers;
 };
-export const setComponentDimension = (dimensionConfig, {
-  x = null,
-  y = null,
-  width = null,
-  height = null,
-}, type, cb) => {
+export const setComponentDimension = (
+  dimensionConfig,
+  { x = null, y = null, width = null, height = null },
+  type,
+  cb
+) => {
   const data = getDimensionData(dimensionConfig);
   if (type === "callback") {
-    const { x: configX, y: configY, width: configWidth, height: configHeight, type: configType } = cb(data);
+    const {
+      x: configX,
+      y: configY,
+      width: configWidth,
+      height: configHeight,
+      type: configType,
+    } = cb(data);
     configX && (x = configX);
     configY && (y = configY);
     configWidth && (width = configWidth);
@@ -513,7 +521,6 @@ export const setComponentDimension = (dimensionConfig, {
               config.value = config.value + (y - (data[TOP] + data[HEIGHT] / 2));
               break;
             default:
-
           }
         }
         break;
@@ -573,14 +580,21 @@ export const getDimensionData = (dimensionConfig) => {
 };
 
 export const getLayerDimensionByDomId = (id) => {
-  const layerDom = document.querySelector(`.react-draggable[data-id=${ id }]`);
-  const translateArr = layerDom.style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+  const layerDom = document.querySelector(`.react-draggable[data-id=${id}]`);
+  const translateArr = layerDom.style.transform
+    .replace("translate(", "")
+    .replace(")", "")
+    .replaceAll("px", "")
+    .split(", ");
   const x = Number(translateArr[0]);
   const y = Number(translateArr[1]);
   const width = Number(layerDom.style.width.replace("px", ""));
   const height = Number(layerDom.style.height.replace("px", ""));
   return {
-    x, y, width, height,
+    x,
+    y,
+    width,
+    height,
   };
 };
 // 找到最合适的currentIndex值
@@ -617,54 +631,54 @@ export const layersReverse = (layers) => {
 };
 
 // 计算画布的大小
-export const calcCanvasSize = function (recommendConfig, cb){
+export const calcCanvasSize = function (recommendConfig, cb) {
   let canvasScaleValue = 0;
-  let absolutePosition = {left: 0, top: 0};
+  let absolutePosition = { left: 0, top: 0 };
   let getCurrentDocumentWidth = document.documentElement.clientWidth;
   const getCurrentDocumentHeight = document.documentElement.clientHeight;
   // 先计算当前窗口的大小 document.documentElement.clientHeight/Width
   canvasScaleValue = Number((getCurrentDocumentWidth / recommendConfig.width).toFixed(3));
   const canvasHeight = canvasScaleValue * recommendConfig.height;
-  if(canvasHeight > getCurrentDocumentHeight) {
+  if (canvasHeight > getCurrentDocumentHeight) {
     canvasScaleValue = Number((getCurrentDocumentHeight / recommendConfig.height).toFixed(3));
-    absolutePosition.left = (getCurrentDocumentWidth - recommendConfig.width * canvasScaleValue) / 2;
+    absolutePosition.left =
+      (getCurrentDocumentWidth - recommendConfig.width * canvasScaleValue) / 2;
   } else {
-    absolutePosition.top = (getCurrentDocumentHeight - recommendConfig.height * canvasScaleValue) / 2;
+    absolutePosition.top =
+      (getCurrentDocumentHeight - recommendConfig.height * canvasScaleValue) / 2;
   }
   return { scaleValue: canvasScaleValue, absolutePosition };
 };
 
-
-export const styleTransformFunc = (textStyle, type=true) => {
+export const styleTransformFunc = (textStyle, type = true) => {
   const styleTransformFuncList = {
     fontFamily: (value) => ({
-      [type ? "fontFamily": "font-family"]: value
+      [type ? "fontFamily" : "font-family"]: value,
     }),
     fontSize: (value) => ({
-      [type ? "fontSize": "font-size"]: value + "px"
+      [type ? "fontSize" : "font-size"]: value + "px",
     }),
     color: (value) => ({
-      color: value
+      color: value,
     }),
     bold: (value) => ({
-      [type ? "fontWeight" : "font-weight"]: value ? "bold" : "unset"
+      [type ? "fontWeight" : "font-weight"]: value ? "bold" : "unset",
     }),
     italic: (value) => ({
-      [type ? "fontStyle" : "font-style"]: value ? "italic" : "unset"
+      [type ? "fontStyle" : "font-style"]: value ? "italic" : "unset",
     }),
     letterSpacing: (value) => ({
-      [type ? "letterSpacing" : "letter-spacing"]: value + "px"
+      [type ? "letterSpacing" : "letter-spacing"]: value + "px",
     }),
     lineHeight: (value) => ({
-      [type ? "lineHeight" : "line-height"]: value ? value + "px" : "unset"
+      [type ? "lineHeight" : "line-height"]: value ? value + "px" : "unset",
     }),
     shadow: ({ hShadow, vShadow, color, blur }) => ({
-      [type ? "boxShadow" : "box-shadow"]: `${hShadow}px ${vShadow}px ${blur}px ${color}`
+      [type ? "boxShadow" : "box-shadow"]: `${hShadow}px ${vShadow}px ${blur}px ${color}`,
     }),
     textShadow: ({ hShadow, vShadow, color, blur }) => ({
-      [type ? "textShadow" : "text-shadow"]: `${hShadow}px ${vShadow}px ${blur}px ${color}`
-    })
-    ,
+      [type ? "textShadow" : "text-shadow"]: `${hShadow}px ${vShadow}px ${blur}px ${color}`,
+    }),
   };
   textStyle = textStyle.reduce((pre, cur) => {
     if (Array.isArray(cur.value)) {
@@ -682,42 +696,43 @@ export const styleTransformFunc = (textStyle, type=true) => {
     return pre;
   }, {});
   return Object.keys(textStyle).reduce((pre, cur) => {
-    if(cur==="themeColor"){
+    if (cur === "themeColor") {
       return {
         ...pre,
-        ...styleTransformFuncList["color"](textStyle[cur])
+        ...styleTransformFuncList["color"](textStyle[cur]),
       };
     }
     return {
       ...pre,
-      ...styleTransformFuncList[cur](textStyle[cur])
+      ...styleTransformFuncList[cur](textStyle[cur]),
     };
   }, {});
 };
 // style 对象转成 style 字符串（dom内的）
 export const styleObjectToStr = (style) => {
   let s = [];
-  for(let i in style){
-    s.push(i+":"+style[i]);
+  for (let i in style) {
+    s.push(i + ":" + style[i]);
   }
   s = s.join(";");
-  return  s;
+  return s;
 };
 // 样式对象key值转驼峰
-export const transformStyleInObj=(style)=>{
-  return Object.entries(style).reduce((res,cur)=>{
-    let obj={};
-    const realKey=cur[0].replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ""));
-    obj[realKey]=cur[1];
+export const transformStyleInObj = (style) => {
+  return Object.entries(style).reduce((res, cur) => {
+    let obj = {};
+    const realKey = cur[0].replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ""));
+    obj[realKey] = cur[1];
     return {
       ...obj,
-      ...res
+      ...res,
     };
-  },{});
+  }, {});
 };
-export const getRandowString=(len)=>{
-  const _Len=len || 32;
-  var $chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678"; /** **默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+export const getRandowString = (len) => {
+  const _Len = len || 32;
+  var $chars =
+    "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678"; /** **默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
   var maxPos = $chars.length;
   var pwd = "";
   for (let i = 0; i < _Len; i++) {
@@ -726,32 +741,32 @@ export const getRandowString=(len)=>{
   return pwd;
 };
 
-export const handleToTree=(list)=>{
-  return list.reduce((res,cur)=>{
-    if(!cur.parentId){
-      cur.children=[];
+export const handleToTree = (list) => {
+  return list.reduce((res, cur) => {
+    if (!cur.parentId) {
+      cur.children = [];
       res.push(cur);
-    }else{
-      const parentNode=list.find((item)=>item.id===cur.parentId);
-      if(!parentNode.children){
-        parentNode.children=[];
+    } else {
+      const parentNode = list.find((item) => item.id === cur.parentId);
+      if (!parentNode.children) {
+        parentNode.children = [];
       }
       parentNode.children.push(cur);
     }
     return res;
-  },[]);
+  }, []);
 };
-export const handleAddChecked=(list)=>{
-  return list.map((item)=>{
-    item.checkedList=[];
+export const handleAddChecked = (list) => {
+  return list.map((item) => {
+    item.checkedList = [];
     return item;
   });
 };
 
 // dashboardConfig 去重
 export const duplicateDashboardConfig = (preConfig, nowConfig) => {
-  nowConfig.forEach((item)=> {
-    let index = preConfig.findIndex(it => it.name === item.name);
+  nowConfig.forEach((item) => {
+    let index = preConfig.findIndex((it) => it.name === item.name);
     if (index !== -1) {
       preConfig[index] = item;
     }
@@ -759,10 +774,9 @@ export const duplicateDashboardConfig = (preConfig, nowConfig) => {
   return preConfig;
 };
 
-
 export const getQueryVariable = () => {
   let href = window.location.href;
-  let query = href.substring(href.indexOf("?")+1);
+  let query = href.substring(href.indexOf("?") + 1);
   let vars = query.split("&");
   let obj = {};
   for (let i = 0; i < vars.length; i++) {
@@ -771,4 +785,3 @@ export const getQueryVariable = () => {
   }
   return obj;
 };
-

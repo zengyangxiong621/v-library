@@ -47,24 +47,26 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
     document.onmousemove = function (ev) {
       ev.stopPropagation();
       const oEv = ev;
-      let disY = (oldTop + (oEv.clientY - oldY)),
-        disX = (oldLeft + (oEv.clientX - oldX));
+      let disY = oldTop + (oEv.clientY - oldY),
+        disX = oldLeft + (oEv.clientX - oldX);
       if (disX > oldLeft + oldWidth) {
         disX = oldLeft + oldWidth;
       }
       if (disY > oldTop + oldHeight) {
         disY = oldTop + oldHeight;
       }
-      const translateArr = boxRef.current.style.transform.replace("translate(", "").replace(")", "").replaceAll("px", "").split(", ");
+      const translateArr = boxRef.current.style.transform
+        .replace("translate(", "")
+        .replace(")", "")
+        .replaceAll("px", "")
+        .split(", ");
       const currentPositionX = elementX / bar.canvasScaleValue;
       const currentPositionY = elementX / bar.canvasScaleValue;
-
 
       const xBoundary = oldX + oldWidth * bar.canvasScaleValue;
       const yBoundary = oldY + oldHeight * bar.canvasScaleValue;
       const xBoundaryNegative = oldX - oldWidth * bar.canvasScaleValue;
       const yBoundaryNegative = oldY - oldHeight * bar.canvasScaleValue;
-
 
       if (obj.className === "tl") {
         // boxRef.current.style.transform = `translate(${ elementX.current / bar.canvasScaleValue }px, ${ elementY.current / bar.canvasScaleValue }px)`
@@ -99,7 +101,6 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
             bar.scaleDragData.position.y = currentY + yMoveLength;
           }
         }
-
       } else if (obj.className === "bl") {
         if (clientX.current >= xBoundary) {
           clientX.current = xBoundary;
@@ -119,7 +120,8 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
             bar.scaleDragData.style.width = oldWidth - xMoveLength;
           }
         }
-        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue;
+        bar.scaleDragData.style.height =
+          oldHeight + (clientY.current - oldY) / bar.canvasScaleValue;
       } else if (obj.className === "tr") {
         if (clientY.current >= yBoundary) {
           clientY.current = yBoundary;
@@ -148,7 +150,8 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
           clientY.current = yBoundaryNegative;
         }
         bar.scaleDragData.style.width = oldWidth + (clientX.current - oldX) / bar.canvasScaleValue;
-        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue;
+        bar.scaleDragData.style.height =
+          oldHeight + (clientY.current - oldY) / bar.canvasScaleValue;
       } else if (obj.className === "t" || obj.className === "tc") {
         if (clientY.current >= yBoundary) {
           clientY.current = yBoundary;
@@ -168,7 +171,8 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
         if (clientY.current <= yBoundaryNegative) {
           clientY.current = yBoundaryNegative;
         }
-        bar.scaleDragData.style.height = oldHeight + (clientY.current - oldY) / bar.canvasScaleValue;
+        bar.scaleDragData.style.height =
+          oldHeight + (clientY.current - oldY) / bar.canvasScaleValue;
       } else if (obj.className === "l" || obj.className === "lc") {
         if (clientX.current >= xBoundary) {
           clientX.current = xBoundary;
@@ -194,91 +198,87 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
 
     document.onmouseup = function (e) {
       e.stopPropagation();
-      if (["tl", "r", "l", "b", "t", "br", "tr", "bl", "tl", "tc", "bc", "lc", "rc"].includes(obj.className)) {
+      if (
+        ["tl", "r", "l", "b", "t", "br", "tr", "bl", "tl", "tc", "bc", "lc", "rc"].includes(
+          obj.className
+        )
+      ) {
         // bar.scaleDragData.position.x = Math.ceil(bar.scaleDragData.position.x)
         // bar.scaleDragData.position.y = Math.ceil(bar.scaleDragData.position.y)
         // bar.scaleDragData.style.width = Math.ceil(bar.scaleDragData.style.width)
         // bar.scaleDragData.style.height = Math.ceil(bar.scaleDragData.style.height)
-        const {position: {x, y}, style: {width, height, display}} = bar.scaleDragData;
+        const {
+          position: { x, y },
+          style: { width, height, display },
+        } = bar.scaleDragData;
         bar.scaleDragData = {
           position: {
             x: Math.ceil(x),
-            y: Math.ceil(y)
+            y: Math.ceil(y),
           },
           style: {
             width: Math.ceil(width),
             height: Math.ceil(height),
-            display
-          }
+            display,
+          },
         };
         onScaleEnd(bar.scaleDragData, lastScaleDragData);
         // handleScaleEnd(boxRef.current.offsetLeft, boxRef.current.offsetTop, boxRef.current.offsetWidth, boxRef.current.offsetHeight)
       }
       document.onmousemove = null;
       document.onmouseup = null;
-
     };
     return false;
   };
   const borderRefs = useRef(null);
   const boxRef = useRef(null);
 
-  const borderArr = [
-    "r", "l", "t", "b", "br", "bl", "tr", "tl", "tc", "bc", "lc", "rc",
-  ];
+  const borderArr = ["r", "l", "t", "b", "br", "bl", "tr", "tl", "tc", "bc", "lc", "rc"];
   return (
-    <div { ...props } ref={ (ref) => {
-      boxRef.current = ref;
-      nodeRef.current = ref;
-    } }>
+    <div
+      {...props}
+      ref={(ref) => {
+        boxRef.current = ref;
+        nodeRef.current = ref;
+      }}
+    >
       <div className="box">
-        {
-          isActive ? borderArr.map((item, index) => {
-            if (["r", "l"].includes(item)) {
-              return (
-                <span
-                  onMouseDown={ handleMouseDown }
-                  className={ item }
-                  style={ { width: `${ 3 / bar.canvasScaleValue }px` } }
-                >
-                </span>
-              );
-            }
-            if (["t", "b"].includes(item)) {
-              return (
-                <span
-                  onMouseDown={ handleMouseDown }
-                  className={ item }
-                  style={ { height: `${ 3 / bar.canvasScaleValue }px` } }
-                >
-                </span>
-              );
-            }
-            if (["br", "bl", "tr", "tl", "tc", "bc", "lc", "rc"].includes(item)) {
-              return (
-                <span
-                  onMouseDown={ handleMouseDown }
-                  className={ item }
-                  style={ {
-                    width: `${ 7 / bar.canvasScaleValue }px`,
-                    height: `${ 7 / bar.canvasScaleValue }px`,
-                  } }
-                >
-                </span>
-              );
-            }
-            return (
-              <span
-                onMouseDown={ handleMouseDown }
-                className={ item }
-              >
-            </span>
-            );
-          }) : ""
-        }
-        <div className="inner">
-          { children }
-        </div>
+        {isActive
+          ? borderArr.map((item, index) => {
+              if (["r", "l"].includes(item)) {
+                return (
+                  <span
+                    onMouseDown={handleMouseDown}
+                    className={item}
+                    style={{ width: `${3 / bar.canvasScaleValue}px` }}
+                  ></span>
+                );
+              }
+              if (["t", "b"].includes(item)) {
+                return (
+                  <span
+                    onMouseDown={handleMouseDown}
+                    className={item}
+                    style={{ height: `${3 / bar.canvasScaleValue}px` }}
+                  ></span>
+                );
+              }
+              if (["br", "bl", "tr", "tl", "tc", "bc", "lc", "rc"].includes(item)) {
+                return (
+                  <span
+                    onMouseDown={handleMouseDown}
+                    className={item}
+                    style={{
+                      width: `${7 / bar.canvasScaleValue}px`,
+                      height: `${7 / bar.canvasScaleValue}px`,
+                    }}
+                  ></span>
+                );
+              }
+              return <span onMouseDown={handleMouseDown} className={item}></span>;
+            })
+          : ""}
+        <div className="inner">{children}</div>
       </div>
     </div>
   );

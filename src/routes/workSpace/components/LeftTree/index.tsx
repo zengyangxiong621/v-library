@@ -7,7 +7,6 @@ import Node from "../node/index";
 import { Tree } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
-
 // 全部应用 和 未分组两项应该固定
 // 后面自定义的组， 应该可以支持拖拽并且 选中右边任意一个card的拖拽图标的时候树这边的这些组应该处于被框选状态
 const mapStateToProps = (state: any) => {
@@ -18,7 +17,7 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
   const accountId = userInfo.id;
   // 获取应用分组列表
   useEffect(() => {
-    if(workSpace.curWorkSpace.length){
+    if (workSpace.curWorkSpace.length) {
       // 发送请求刷新右侧成员列表
       refreshMemberList(workSpace.curWorkSpace[0]);
     }
@@ -29,13 +28,13 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
     dispatch({
       type: "workSpace/getWorkSpaceList",
       payload: {
-        accountId
-      }
+        accountId,
+      },
     });
     console.log("更新处理");
     // 在这里调全局的方法
     dispatch({
-      type:"global/getWorkspaceList"
+      type: "global/getWorkspaceList",
     });
   };
   // 添加分组
@@ -52,7 +51,7 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList));
       dispatch({
         type: "workSpace/setWorkSpaceList",
-        payload: temp
+        payload: temp,
       });
       return;
     }
@@ -61,7 +60,7 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
     const temp = JSON.parse(JSON.stringify(workSpace.workSpaceList));
     dispatch({
       type: "workSpace/setWorkSpaceList",
-      payload: temp
+      payload: temp,
     });
   };
 
@@ -81,18 +80,17 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       payload: {
         projectQuota,
         remainQuota,
-      }
+      },
     });
     // 每次变更选中的分组时，将当前分组保存至models中
     dispatch({
       type: "workSpace/setCurWorkSpace",
-      payload: keys
+      payload: keys,
     });
   };
   return (
-    <div className='workspace-leftTree-wrap'>
-      {
-        workSpace.workSpaceList.length > 0 &&
+    <div className="workspace-leftTree-wrap">
+      {workSpace.workSpaceList.length > 0 && (
         <Tree
           blockNode
           defaultExpandedKeys={["wrap"]}
@@ -101,7 +99,7 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
           switcherIcon={<DownOutlined />}
           fieldNames={{
             title: "name",
-            key: "id"
+            key: "id",
           }}
           onSelect={selectTreeNode}
           titleRender={(nodeData: any) => (
@@ -109,15 +107,13 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
               refreshWorkSpaceLists={refreshWorkSpaceLists}
               accountId={accountId}
               addWorkSpace={addWorkSpace}
-              {...nodeData}>
-            </Node>)}
-        >
-        </Tree>
-      }
+              {...nodeData}
+            ></Node>
+          )}
+        ></Tree>
+      )}
     </div>
   );
 };
 
-export default memo(connect(
-  mapStateToProps
-)(LeftTree));
+export default memo(connect(mapStateToProps)(LeftTree));

@@ -7,29 +7,16 @@ const { SubMenu, Item } = Menu;
 
 const generateSubMenu = (arr) => {
   return arr.map((item) => {
-    return (
-      item.children
-        ?
-        <SubMenu
-          theme='dark'
-          icon={<IconFont type={`icon-${item.icon}`} />}
-          title={item.name}>
-          {
-            generateSubMenu(item.children)
-          }
-        </SubMenu>
-        :
-        <Item icon={<IconFont type={`icon-${item.icon}`} />}>{item.name}</Item>
+    return item.children ? (
+      <SubMenu theme="dark" icon={<IconFont type={`icon-${item.icon}`} />} title={item.name}>
+        {generateSubMenu(item.children)}
+      </SubMenu>
+    ) : (
+      <Item icon={<IconFont type={`icon-${item.icon}`} />}>{item.name}</Item>
     );
   });
 };
 
 export const getTargetMenu = (menuData) => {
-  return (
-    <Menu theme='dark'>
-      {
-        generateSubMenu(menuData)
-      }
-    </Menu>
-  );
+  return <Menu theme="dark">{generateSubMenu(menuData)}</Menu>;
 };

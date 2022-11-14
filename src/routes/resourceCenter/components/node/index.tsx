@@ -6,14 +6,21 @@ import { http } from "@/services/request";
 import { IconFont } from "../../../../utils/useIcon";
 import { Input, message, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import {
-  EXCLUDELIST
-} from "@/constant/dvaModels/resourceCenter";
+import { EXCLUDELIST } from "@/constant/dvaModels/resourceCenter";
 
 const EveryTreeNode = (props: any) => {
-  const { groupId, parentId, name, number,
-    systemDefined, customLevel,currentAdd,
-    addGroup, refreshGroupLists, spaceId } = props || {};
+  const {
+    groupId,
+    parentId,
+    name,
+    number,
+    systemDefined,
+    customLevel,
+    currentAdd,
+    addGroup,
+    refreshGroupLists,
+    spaceId,
+  } = props || {};
   const inputRef = useRef<any>();
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState("");
@@ -23,7 +30,7 @@ const EveryTreeNode = (props: any) => {
   const [newGroupName, setNewGroupName] = useState("");
   useEffect(() => {
     inputRef.current?.focus({
-      cursor: "all"
+      cursor: "all",
     });
   }, [showRenameInput]);
 
@@ -39,12 +46,12 @@ const EveryTreeNode = (props: any) => {
     const finalBody = {
       spaceId: ["myTemplate", "myMaterial"].indexOf(currentAdd) > -1 ? spaceId : null,
       name: newGroupName,
-      type: ["systemMaterial", "myMaterial"].indexOf(currentAdd) > -1 ? 1 : 0 // 1-素材，0-模板
+      type: ["systemMaterial", "myMaterial"].indexOf(currentAdd) > -1 ? 1 : 0, // 1-素材，0-模板
     };
     const data = await http({
       method: "post",
       url: "/visual/resource/addGroup",
-      body: finalBody
+      body: finalBody,
     });
     // 创建成功，改变父组件传入的变量通知父组件重新获取最新分组列表
     if (data) refreshGroupLists();
@@ -69,12 +76,12 @@ const EveryTreeNode = (props: any) => {
       id: groupId,
       name: inputValue,
       spaceId: spaceId,
-      type: "1"
+      type: "1",
     };
     const data = await http({
       method: "post",
       url: "/visual/resource/updateGroup",
-      body: finalBody
+      body: finalBody,
     });
     if (data) {
       inputRef.current.blur();
@@ -98,19 +105,19 @@ const EveryTreeNode = (props: any) => {
     Modal.confirm({
       title: "删除分组",
       style: {
-        top: "30%"
+        top: "30%",
       },
       okButtonProps: {
         style: {
           backgroundColor: "#e9535d",
           border: "none",
           // marginLeft: '8px',
-        }
+        },
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: "#3d404d"
-        }
+          backgroundColor: "#3d404d",
+        },
       },
       icon: <ExclamationCircleFilled />,
       content: "删除后不可恢复，确认删除此分组吗?",
@@ -122,7 +129,7 @@ const EveryTreeNode = (props: any) => {
       async onOk(close) {
         const data = await http({
           url: `/visual/resource/deleteGroup?groupId=${id}`,
-          method: "delete"
+          method: "delete",
         });
         if (data) {
           // 删除成功，需要刷新左侧树列表、和整个列表
@@ -135,7 +142,7 @@ const EveryTreeNode = (props: any) => {
       },
       onCancel(close) {
         close();
-      }
+      },
     });
   };
   const inputWrapClick = (e: any) => {
@@ -144,66 +151,66 @@ const EveryTreeNode = (props: any) => {
 
   return (
     <div className={"dashboard-node-wrap"}>
-      {
-        groupId === "aInput"
-          ?
-          <div onClick={(e) => inputWrapClick(e)}>
-            <Input
-              value={newGroupName}
-              maxLength={20}
-              onChange={(e) => createInputChange(e)}
-              onPressEnter={() => createGroup()}
-              onBlur={() => createGroup()}
-            /></div>
-          :
-          <>
-            <div className='title'>
-              {
-                showRenameInput
-                  ?
-                  <Input
-                    style={{ width: "120px" }}
-                    value={inputValue}
-                    ref={inputRef}
-                    maxLength={20}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => oInputContent(e)}
-                    onPressEnter={(e) => updateGroupName(e)}
-                    onBlur={(e) => updateGroupName(e)}
-                  />
-                  : <div className='text'>{name}</div>
-              }
-            </div>
-            {/* groupId === '-1' || name === '0' || (EXCLUDELIST.indexOf(groupId) > -1 ) */}
-            <div className='icons-wrap'>
-              {
-                customLevel === 1 ? <></> :
-                // 系统素材不允许添加，修改，删除分类
-                  customLevel === 2 && ["systemMaterial"].indexOf(groupId) === -1
-                    ? <IconFont type='icon-xinjianfenzu' onClickCapture={() => addGroup(groupId, parentId)} />
-                    :
-                    (systemDefined)
-                      ? <>{number}</>
-                      : 
-                      <>
-                        <div className='show-icon'>
-                          {
-                            <IconFont type='icon-bianji' style={{ marginRight: "16px" }} onClickCapture={(e) => editClick(e, groupId)} />
-                          }
-                          {
-                            <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(groupId)} />
-                          }
-                        </div>
-                        <span className='show-nums'>{number}</span>
-                      </>
-              }
-            </div>
-          </>
-      }
+      {groupId === "aInput" ? (
+        <div onClick={(e) => inputWrapClick(e)}>
+          <Input
+            value={newGroupName}
+            maxLength={20}
+            onChange={(e) => createInputChange(e)}
+            onPressEnter={() => createGroup()}
+            onBlur={() => createGroup()}
+          />
+        </div>
+      ) : (
+        <>
+          <div className="title">
+            {showRenameInput ? (
+              <Input
+                style={{ width: "120px" }}
+                value={inputValue}
+                ref={inputRef}
+                maxLength={20}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => oInputContent(e)}
+                onPressEnter={(e) => updateGroupName(e)}
+                onBlur={(e) => updateGroupName(e)}
+              />
+            ) : (
+              <div className="text">{name}</div>
+            )}
+          </div>
+          {/* groupId === '-1' || name === '0' || (EXCLUDELIST.indexOf(groupId) > -1 ) */}
+          <div className="icons-wrap">
+            {customLevel === 1 ? (
+              <></>
+            ) : // 系统素材不允许添加，修改，删除分类
+            customLevel === 2 && ["systemMaterial"].indexOf(groupId) === -1 ? (
+              <IconFont
+                type="icon-xinjianfenzu"
+                onClickCapture={() => addGroup(groupId, parentId)}
+              />
+            ) : systemDefined ? (
+              <>{number}</>
+            ) : (
+              <>
+                <div className="show-icon">
+                  {
+                    <IconFont
+                      type="icon-bianji"
+                      style={{ marginRight: "16px" }}
+                      onClickCapture={(e) => editClick(e, groupId)}
+                    />
+                  }
+                  {<IconFont type="icon-shanchuzu" onClickCapture={() => delClick(groupId)} />}
+                </div>
+                <span className="show-nums">{number}</span>
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
-export default memo(
-  EveryTreeNode
-);
+export default memo(EveryTreeNode);

@@ -22,7 +22,7 @@ const COMPONENTS = "modules";
 
 enum hh {
   name = "zyx",
-  value = "hh"
+  value = "hh",
 }
 
 enum constantList {

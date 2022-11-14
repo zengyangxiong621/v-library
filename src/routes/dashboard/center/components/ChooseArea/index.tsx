@@ -3,41 +3,50 @@ import { connect } from "dva";
 import * as React from "react";
 import { throttle } from "../../../../../utils";
 
-type Event = React.MouseEvent<HTMLElement | SVGElement>
+type Event =
+  | React.MouseEvent<HTMLElement | SVGElement>
   | React.TouchEvent<HTMLElement | SVGElement>
   | MouseEvent
-  | TouchEvent
+  | TouchEvent;
 
 const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: any) => {
   const areaRef: any = useRef(null);
-  const [ selectedItem, setSelectedItem ] = useState([]);
+  const [selectedItem, setSelectedItem] = useState([]);
   const selectedList: any = useRef([]);
 
-  const onChooseStart = (e: any) => {
-
-  };
-  const onChoose = () => {
-
-  };
+  const onChooseStart = (e: any) => {};
+  const onChoose = () => {};
 
   useEffect(() => {
     document.onmousedown = (e: any) => {
       const dom: any = (e.target as any) || null;
       let temp = false;
-      const awayList = [ "c-canvas", "draggable-wrapper", "canvas-draggable" ];
-      awayList.forEach(className => {
-        if (dom && dom.className && Object.prototype.toString.call(dom.className) === "[object String]" && dom.className?.indexOf(className) !== -1) {
+      const awayList = ["c-canvas", "draggable-wrapper", "canvas-draggable"];
+      awayList.forEach((className) => {
+        if (
+          dom &&
+          dom.className &&
+          Object.prototype.toString.call(dom.className) === "[object String]" &&
+          dom.className?.indexOf(className) !== -1
+        ) {
           temp = true;
         }
       });
-      if(!temp) {
+      if (!temp) {
         return;
       }
-      const reactDraggableDomList: any = document.querySelectorAll(".draggable-container>.c-custom-draggable>.react-draggable");
-      const reactDraggableDomPosition = [ ...reactDraggableDomList ].map(item => {
+      const reactDraggableDomList: any = document.querySelectorAll(
+        ".draggable-container>.c-custom-draggable>.react-draggable"
+      );
+      const reactDraggableDomPosition = [...reactDraggableDomList].map((item) => {
         const domInfo = item.getBoundingClientRect();
         return {
-          id: item.dataset.id.indexOf("group-") !== -1 ? item.dataset.id : item.dataset.id.indexOf("panel-") !== - 1 ? item.dataset.id.replace("panel-", "")  : item.dataset.id.replace("component-", ""),
+          id:
+            item.dataset.id.indexOf("group-") !== -1
+              ? item.dataset.id
+              : item.dataset.id.indexOf("panel-") !== -1
+              ? item.dataset.id.replace("panel-", "")
+              : item.dataset.id.replace("component-", ""),
           x: Math.ceil(domInfo.x),
           y: Math.ceil(domInfo.y),
           width: Math.ceil(domInfo.width),
@@ -55,7 +64,7 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
       let isMouseMove = false;
       selectedList.current = [];
       let areaPosition: {
-        [key: string]: number
+        [key: string]: number;
       } = {};
       document.onmousemove = (ev: Event) => {
         // 移动的时候让选区显示出来
@@ -66,35 +75,35 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
 
         // const pointCurX = ev.clientX
         // const pointCurY = ev.clientY
-        if(!("clientX" in ev && "clientY" in ev)) {
+        if (!("clientX" in ev && "clientY" in ev)) {
           return;
         }
         const pointCurY = ev.clientY;
         const pointCurX = ev.clientX;
-        const boxCurWidth = (pointCurX - pointPreX); // 当前盒子的大小
-        const boxCurHeight = (pointCurY - pointPreY);
-        if(boxCurWidth >= 0 && boxCurHeight >= 0) {
+        const boxCurWidth = pointCurX - pointPreX; // 当前盒子的大小
+        const boxCurHeight = pointCurY - pointPreY;
+        if (boxCurWidth >= 0 && boxCurHeight >= 0) {
           areaPosition = {
             x: pointPreX,
             y: pointPreY,
             width: boxCurWidth,
             height: boxCurHeight,
           };
-        } else if(boxCurWidth < 0 && boxCurHeight > 0) {
+        } else if (boxCurWidth < 0 && boxCurHeight > 0) {
           areaPosition = {
             x: pointCurX,
             y: pointPreY,
             width: ~boxCurWidth,
             height: boxCurHeight,
           };
-        } else if(boxCurWidth > 0 && boxCurHeight < 0) {
+        } else if (boxCurWidth > 0 && boxCurHeight < 0) {
           areaPosition = {
             x: pointPreX,
             y: pointCurY,
             width: boxCurWidth,
             height: ~boxCurHeight,
           };
-        } else if(boxCurWidth < 0 && boxCurHeight < 0) {
+        } else if (boxCurWidth < 0 && boxCurHeight < 0) {
           areaPosition = {
             x: pointCurX,
             y: pointCurY,
@@ -102,7 +111,9 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
             height: ~boxCurHeight,
           };
         }
-        const leftWrapWidth: any = (document.querySelector(".home-left-wrap") as any).getBoundingClientRect().width;
+        const leftWrapWidth: any = (
+          document.querySelector(".home-left-wrap") as any
+        ).getBoundingClientRect().width;
         areaRef.current.style.left = areaPosition.x - leftWrapWidth - 22 + "px";
         areaRef.current.style.top = areaPosition.y - 64 - 22 + "px";
         areaRef.current.style.width = areaPosition.width + "px";
@@ -113,21 +124,20 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
         const selectedIds: Array<string> = [];
         const b1 = areaPosition.y + areaPosition.height;
         const r1 = areaPosition.x + areaPosition.width;
-        if(Object.keys(areaPosition).length > 0) {
+        if (Object.keys(areaPosition).length > 0) {
           reactDraggableDomPosition.forEach((item) => {
             const b2 = item.y + item.height;
             const r2 = item.x + item.width;
-            if(!(b1 < item.y || areaPosition.y > b2 || r1 < item.x || areaPosition.x > r2)) {
+            if (!(b1 < item.y || areaPosition.y > b2 || r1 < item.x || areaPosition.x > r2)) {
               selectedIds.push(item.id);
             }
           });
-          if(selectedIds.length > 0) {
+          if (selectedIds.length > 0) {
             console.log("selectedIds", selectedIds);
             dispatch({
               type: "bar/chooseLayer",
               payload: selectedIds,
             });
-
           }
         }
         document.onmousemove = null;
@@ -147,17 +157,17 @@ const ChooseArea = ({ onChooseEnd, chooseItemClass, bar, dispatch, ...props }: a
   };
   return (
     <div
-      ref={ areaRef }
+      ref={areaRef}
       className="area"
-      style={ {
+      style={{
         position: "absolute",
         border: "1px dashed blue",
         background: "rgb(98 170 234)",
         userSelect: "none",
         opacity: 0.4,
         zIndex: 10000,
-      } }>
-    </div>
+      }}
+    ></div>
   );
 };
 export default connect(({ bar }: any) => ({

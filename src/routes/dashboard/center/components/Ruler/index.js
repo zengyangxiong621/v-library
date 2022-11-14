@@ -2,19 +2,13 @@ import { useState, useEffect, useRef, useImperativeHandle } from "react";
 import { findDOMNode } from "react-dom";
 import "./index.less";
 import { connect } from "dva";
-import {
-  EyeOutlined,
-  EyeInvisibleOutlined,
-
-} from "@ant-design/icons";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { throttle } from "../../../../../utils/common";
 
-
 const Ruler = ({ bar, dispatch, mouse, cRef }) => {
-
   const MARGIN_LENGTH = 22;
 
-  const recommendConfig = bar.dashboardConfig.find(item => item.name === "recommend");
+  const recommendConfig = bar.dashboardConfig.find((item) => item.name === "recommend");
   let [ruler, setRuler] = useState(null);
   const [isRulerLinesShow, setIsRulerLinesShow] = useState(true);
   // 横
@@ -26,13 +20,16 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
 
   const headerWrap = document.querySelector(".header-wrap");
 
-
   const painter = () => {
     if (ruler) {
       ruler.clear();
       const leftWrap = document.querySelector(".home-left-wrap");
-      const left = Math.ceil(canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width);
-      const right = Math.ceil(canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height);
+      const left = Math.ceil(
+        canvasContainer.getBoundingClientRect().left - leftWrap.getBoundingClientRect().width
+      );
+      const right = Math.ceil(
+        canvasContainer.getBoundingClientRect().top - headerWrap.getBoundingClientRect().height
+      );
       const centerWrap = document.querySelector(".center-wrap");
       ruler.painter(bar.canvasScaleValue, left, right);
       // 下面两个需要先执行，因为是异步的，需要在重新渲染画布之前
@@ -119,7 +116,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
         contextTop.fillStyle = "white";
 
         //顶部标尺线绘制, 比例尺
-        const y = (i % rulerScale === 0) ? 0 : 12;
+        const y = i % rulerScale === 0 ? 0 : 12;
         contextTop.moveTo(Math.ceil(i * canvasScaleValue) + left - MARGIN_LENGTH, y);
         contextTop.lineTo(Math.ceil(i * canvasScaleValue) + left - MARGIN_LENGTH, 20);
 
@@ -134,7 +131,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
         //左侧标尺线绘制
         contextLeft.strokeStyle = "white";
         contextLeft.fillStyle = "white";
-        const x = (i % rulerScale === 0) ? 0 : 12;
+        const x = i % rulerScale === 0 ? 0 : 12;
         contextLeft.moveTo(x, Math.ceil(i * canvasScaleValue) + top - MARGIN_LENGTH);
         contextLeft.lineTo(20, Math.ceil(i * canvasScaleValue) + top - MARGIN_LENGTH);
 
@@ -143,11 +140,10 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
           contextLeft.save();
           contextLeft.translate(10, Math.ceil(i * canvasScaleValue) + top - 25);
           contextLeft.font = "12px Arial";
-          contextLeft.rotate(-90 * Math.PI / 180);
+          contextLeft.rotate((-90 * Math.PI) / 180);
           contextLeft.fillText(i, 0, 0);
           contextLeft.restore();
         }
-
       }
       contextLeft.stroke();
       contextLeft.closePath();
@@ -156,13 +152,17 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
     };
   };
 
-
   const drawRuler = (dom, direction = "vertical", min = 0, max = 100) => {
     const canvas = dom.current;
     const context = canvas.getContext("2d");
     // ctx.fillStyle = '#151620'
     context.fillStyle = "white";
-    context.fillRect(0, 0, direction === "vertical" ? 10000 : 30, direction === "vertical" ? 10000 : 30);
+    context.fillRect(
+      0,
+      0,
+      direction === "vertical" ? 10000 : 30,
+      direction === "vertical" ? 10000 : 30
+    );
     context.beginPath();
     // context.moveTo(AXIS_ORIGIN.x, AXIS_MARGIN);
     // context.lineTo(AXIS_RIGHT,    AXIS_MARGIN)
@@ -198,7 +198,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
   };
   const handleRulerLinerShow = () => {
     setIsRulerLinesShow(!isRulerLinesShow);
-    bar.rulerLines.forEach(line => {
+    bar.rulerLines.forEach((line) => {
       line.display = !isRulerLinesShow ? "block" : "none";
     });
     dispatch({
@@ -206,56 +206,63 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
     });
   };
   return (
-    <div className="c-ruler-container" style={ { position: "absolute", inset: 0 } }>
-      <div className="h-container" style={ {
-        position: "absolute",
-        width: "100%",
-        height: MARGIN_LENGTH,
-        left: MARGIN_LENGTH,
-        top: 0,
-      } }>
+    <div className="c-ruler-container" style={{ position: "absolute", inset: 0 }}>
+      <div
+        className="h-container"
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: MARGIN_LENGTH,
+          left: MARGIN_LENGTH,
+          top: 0,
+        }}
+      >
         <canvas
-          onClick={ () => handleClick("horizon") }
+          onClick={() => handleClick("horizon")}
           id="h-ruler-canvas"
-          height={ MARGIN_LENGTH }
-          width={ horizonRulerWidth }
-          style={ {
+          height={MARGIN_LENGTH}
+          width={horizonRulerWidth}
+          style={{
             position: "absolute",
             left: 0,
             top: 0,
             background: "#151620",
             cursor: "e-resize",
-          } }>
+          }}
+        >
           <p>Your browser does not support the canvas element!</p>
         </canvas>
       </div>
-      <div className="v-container" style={ {
-        position: "absolute",
-        height: "100%",
-        width: MARGIN_LENGTH,
-        left: 0,
-        top: MARGIN_LENGTH,
-      } }>
+      <div
+        className="v-container"
+        style={{
+          position: "absolute",
+          height: "100%",
+          width: MARGIN_LENGTH,
+          left: 0,
+          top: MARGIN_LENGTH,
+        }}
+      >
         <canvas
-          onClick={ () => handleClick("vertical") }
+          onClick={() => handleClick("vertical")}
           id="v-ruler-canvas"
-          width={ MARGIN_LENGTH }
-          height={ verticalRulerHeight }
-          style={ {
+          width={MARGIN_LENGTH}
+          height={verticalRulerHeight}
+          style={{
             position: "absolute",
             left: 0,
             top: 0,
             right: 0,
             background: "#151620",
             cursor: "n-resize",
-          } }>
+          }}
+        >
           <p>Your browser does not support the canvas element!</p>
         </canvas>
       </div>
 
-
       <div
-        style={ {
+        style={{
           width: 20,
           height: 20,
           background: "#151620",
@@ -265,22 +272,18 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-        } }
-        onClick={ handleRulerLinerShow }
+        }}
+        onClick={handleRulerLinerShow}
       >
-        {
-          isRulerLinesShow ? <EyeOutlined style={ { fontSize: "16px", color: "#08c" } }/> :
-            <EyeInvisibleOutlined style={ { fontSize: "16px", color: "#08c" } }/>
-        }
+        {isRulerLinesShow ? (
+          <EyeOutlined style={{ fontSize: "16px", color: "#08c" }} />
+        ) : (
+          <EyeInvisibleOutlined style={{ fontSize: "16px", color: "#08c" }} />
+        )}
       </div>
     </div>
   );
 };
-export default connect(({
-                          bar,
-                        },
-) => (
-  {
-    bar,
-  }
-))(Ruler);
+export default connect(({ bar }) => ({
+  bar,
+}))(Ruler);

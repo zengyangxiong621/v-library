@@ -51,133 +51,132 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
 
   // 未发布且除去自身的应用集合
   const publishedAndExcludeSelfDashboardList = useMemo(() => {
-    return bar.allDashboardList.map(item => ({
-      name: item.name,
-      value: item.id,
-      status: item.status,
-    })).filter(item => item.value !== bar.dashboardId && item.status === 1);
+    return bar.allDashboardList
+      .map((item) => ({
+        name: item.name,
+        value: item.id,
+        status: item.status,
+      }))
+      .filter((item) => item.value !== bar.dashboardId && item.status === 1);
   }, [bar.dashboardId, bar.dashboardId]);
 
   const styleConfig = [
     {
-      "displayName": "位置尺寸",
-      "name": "dimension",
-      "type": "dimensionGroup",
-      "config": {
-        "lock": false,
+      displayName: "位置尺寸",
+      name: "dimension",
+      type: "dimensionGroup",
+      config: {
+        lock: false,
       },
-      "value": [
+      value: [
         {
-          "displayName": "X轴坐标",
-          "name": "left",
-          "value": left,
+          displayName: "X轴坐标",
+          name: "left",
+          value: left,
         },
         {
-          "displayName": "Y轴坐标",
-          "name": "top",
-          "value": top,
+          displayName: "Y轴坐标",
+          name: "top",
+          value: top,
         },
         {
-          "displayName": "宽度",
-          "name": "width",
-          "value": width,
+          displayName: "宽度",
+          name: "width",
+          value: width,
         },
         {
-          "displayName": "高度",
-          "name": "height",
-          "value": height,
-        },
-      ],
-    },
-    {
-      "displayName": "默认隐藏",
-      "name": "hideDefault",
-      "type": "checkBox",
-      "value": hideDefault,
-    },
-    {
-      "displayName": "启用滚轮",
-      "name": "isScroll",
-      "type": "checkBox",
-      "value": isScroll,
-    },
-    {
-      "displayName": "自动轮播",
-      "name": "allowScroll",
-      "type": "checkBox",
-      "value": allowScroll,
-    },
-    {
-      "displayName": "动画类型",
-      "name": "animationType",
-      "type": "select",
-      "value": animationType,
-      "options": [
-        {
-          "name": "渐隐渐现",
-          "value": "0",
+          displayName: "高度",
+          name: "height",
+          value: height,
         },
       ],
     },
     {
-      "displayName": "更新时间",
-      "name": "scrollTime",
-      "type": "number",
-      "value": scrollTime,
+      displayName: "默认隐藏",
+      name: "hideDefault",
+      type: "checkBox",
+      value: hideDefault,
     },
     {
-      "displayName": "动画时长",
-      "name": "animationTime",
-      "type": "number",
-      "value": animationTime,
+      displayName: "启用滚轮",
+      name: "isScroll",
+      type: "checkBox",
+      value: isScroll,
     },
     {
-      "displayName": "引用列表",
-      "name": "referenceList",
-      "type": "tabArray",
-      "defaultActiveKey": "1",
-      "activeKey": "1",
-      "defaultExpand": true,
-      "loading": true,
-      "config": {
-        "template": [
+      displayName: "自动轮播",
+      name: "allowScroll",
+      type: "checkBox",
+      value: allowScroll,
+    },
+    {
+      displayName: "动画类型",
+      name: "animationType",
+      type: "select",
+      value: animationType,
+      options: [
+        {
+          name: "渐隐渐现",
+          value: "0",
+        },
+      ],
+    },
+    {
+      displayName: "更新时间",
+      name: "scrollTime",
+      type: "number",
+      value: scrollTime,
+    },
+    {
+      displayName: "动画时长",
+      name: "animationTime",
+      type: "number",
+      value: animationTime,
+    },
+    {
+      displayName: "引用列表",
+      name: "referenceList",
+      type: "tabArray",
+      defaultActiveKey: "1",
+      activeKey: "1",
+      defaultExpand: true,
+      loading: true,
+      config: {
+        template: [
           {
-            "key": "1",
-            "displayName": "应用1",
-            "name": "tab",
-            "type": "object",
-            "value": [
+            key: "1",
+            displayName: "应用1",
+            name: "tab",
+            type: "object",
+            value: [
               {
-                "displayName": "应用选择",
-                "name": "dashboardSelect",
-                "type": "select",
-                "value": "",
-                "options": publishedAndExcludeSelfDashboardList,
+                displayName: "应用选择",
+                name: "dashboardSelect",
+                type: "select",
+                value: "",
+                options: publishedAndExcludeSelfDashboardList,
               },
             ],
           },
         ],
       },
-      "value": states.map((item, index) => (
-        {
-          "key": `${ index + 1 }`,
-          "displayName": `应用${ index + 1 }`,
-          "name": "tab",
-          "type": "object",
-          "value": [
-            {
-              "displayName": "应用选择",
-              "name": "dashboardSelect",
-              "type": "select",
-              "value": item.id,
-              "label": item.name,
-              "options": publishedAndExcludeSelfDashboardList,
-            },
-          ],
-        }
-      )),
+      value: states.map((item, index) => ({
+        key: `${index + 1}`,
+        displayName: `应用${index + 1}`,
+        name: "tab",
+        type: "object",
+        value: [
+          {
+            displayName: "应用选择",
+            name: "dashboardSelect",
+            type: "select",
+            value: item.id,
+            label: item.name,
+            options: publishedAndExcludeSelfDashboardList,
+          },
+        ],
+      })),
     },
-
 
     // {
     //   "displayName": "编辑引用应用",
@@ -192,15 +191,16 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ];
-  const styleChange = debounce(async (key = "1", init = false, cb = function () {
-  }) => {
+  const styleChange = debounce(async (key = "1", init = false, cb = function () {}) => {
     console.log("key", key);
     if (key !== "0" && init) {
       setActiveKey(key);
-      const referenceList = styleConfig.find(item => item.name === "referenceList").value;
+      const referenceList = styleConfig.find((item) => item.name === "referenceList").value;
       if (referenceList.length === 0) return;
-      const currentReference = referenceList.find(item => item.key === key).value;
-      const currentReferenceId = currentReference.find(item => item.name === "dashboardSelect").value;
+      const currentReference = referenceList.find((item) => item.key === key).value;
+      const currentReferenceId = currentReference.find(
+        (item) => item.name === "dashboardSelect"
+      ).value;
       if (currentReferenceId) {
         setIsEdit(true);
       } else {
@@ -208,9 +208,14 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       }
       return;
     }
-    let dimensionConfig, isScroll, allowScroll, animationType,
-      scrollTime, animationTime, referenceList;
-    styleConfig.forEach(item => {
+    let dimensionConfig,
+      isScroll,
+      allowScroll,
+      animationType,
+      scrollTime,
+      animationTime,
+      referenceList;
+    styleConfig.forEach((item) => {
       switch (item.name) {
         case "dimension":
           dimensionConfig = item.value;
@@ -243,8 +248,10 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     console.log("activeKey", activeKey);
     console.log("activeKey", key);
     if (referenceList.length > 0) {
-      const currentReference = referenceList.find(item => item.key === key).value;
-      const currentReferenceId = currentReference.find(item => item.name === "dashboardSelect").value;
+      const currentReference = referenceList.find((item) => item.key === key).value;
+      const currentReferenceId = currentReference.find(
+        (item) => item.name === "dashboardSelect"
+      ).value;
       if (currentReferenceId) {
         setIsEdit(true);
       } else {
@@ -252,7 +259,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       }
     }
 
-    dimensionConfig.forEach(item => {
+    dimensionConfig.forEach((item) => {
       panelConfig.config[item.name] = item.value;
     });
     panelConfig.config.isScroll = isScroll;
@@ -260,26 +267,26 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     panelConfig.config.animationType = animationType;
     panelConfig.config.scrollTime = scrollTime;
     panelConfig.config.animationTime = animationTime;
-    panelConfig.states = referenceList.map(item => {
-      const data = item.value.find(it => it.name === "dashboardSelect");
+    panelConfig.states = referenceList.map((item) => {
+      const data = item.value.find((it) => it.name === "dashboardSelect");
       return {
         id: data.value,
         name: data.label,
       };
     });
     const copyPanelConfig = deepClone(panelConfig);
-    copyPanelConfig.states = copyPanelConfig.states.filter(state => state.id);
+    copyPanelConfig.states = copyPanelConfig.states.filter((state) => state.id);
     console.log("copyPanelConfig", copyPanelConfig);
-    const { config: { left, top, width, height } } = panelConfig;
+    const {
+      config: { left, top, width, height },
+    } = panelConfig;
 
     const data = await http({
       url: "/visual/panel/update",
       method: "post",
       body: {
         dashboardId: bar.stateId || bar.dashboardId,
-        configs: [
-          copyPanelConfig,
-        ],
+        configs: [copyPanelConfig],
       },
     });
     console.log("bar.fullAmountPanels", bar.fullAmountPanels);
@@ -359,12 +366,14 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
   };
 
   const handleEditDashboard = () => {
-    const referenceList = styleConfig.find(item => item.name === "referenceList").value;
+    const referenceList = styleConfig.find((item) => item.name === "referenceList").value;
     if (referenceList.length === 0) return;
-    const currentReference = referenceList.find(item => item.key === activeKey).value;
-    const currentReferenceId = currentReference.find(item => item.name === "dashboardSelect").value;
+    const currentReference = referenceList.find((item) => item.key === activeKey).value;
+    const currentReferenceId = currentReference.find(
+      (item) => item.name === "dashboardSelect"
+    ).value;
     if (currentReferenceId) {
-      history.push(`/dashboard/${ currentReferenceId }`);
+      history.push(`/dashboard/${currentReferenceId}`);
       dispatch({
         type: "bar/save",
         payload: {
@@ -393,42 +402,45 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
 
   return (
     <div className="dynamic-wrap">
-      <h3 className="dynamic-set-header">
-        引用面板设置
-      </h3>
-      <div className="content" key={ key }>
-        <Form
-          className="custom-form"
-          form={ form }
-          { ...formItemLayout }
-          colon={ false }
-        >
-          <ComponentCard data={ panelConfig }
-                         allModulesConfig={ bar.moduleDefaultConfig }
-                         dispatch={ dispatch }>
-            { styleConfig.map((item, index) => {
+      <h3 className="dynamic-set-header">引用面板设置</h3>
+      <div className="content" key={key}>
+        <Form className="custom-form" form={form} {...formItemLayout} colon={false}>
+          <ComponentCard
+            data={panelConfig}
+            allModulesConfig={bar.moduleDefaultConfig}
+            dispatch={dispatch}
+          >
+            {styleConfig.map((item, index) => {
               if (item.name === "hideDefault") {
-                return <Checkbox data={ item } onChange={ hideDefaultChange }/>;
+                return <Checkbox data={item} onChange={hideDefaultChange} />;
               }
               if (!(item.type && componentLib[item.type])) {
                 return null;
               }
               const TagName = componentLib[item.type];
               return (
-                <TagName data={ item } onChange={ (key, cb) => styleChange(key, false, cb) } key={ index }/>
+                <TagName
+                  data={item}
+                  onChange={(key, cb) => styleChange(key, false, cb)}
+                  key={index}
+                />
               );
-            }) }
+            })}
           </ComponentCard>
-          <div className="g-text-left g-m-4">
-            提示：所选应用必须为已发布状态
-          </div>
-          {
-            statesLength > 0 ?
-              <Button disabled={ !isEdit } onClick={ handleEditDashboard } className="g-my-2" type="primary"
-                      style={ { width: "calc(100% - 24px)" } }>编辑引用应用</Button>
-              : <>  </>
-          }
-
+          <div className="g-text-left g-m-4">提示：所选应用必须为已发布状态</div>
+          {statesLength > 0 ? (
+            <Button
+              disabled={!isEdit}
+              onClick={handleEditDashboard}
+              className="g-my-2"
+              type="primary"
+              style={{ width: "calc(100% - 24px)" }}
+            >
+              编辑引用应用
+            </Button>
+          ) : (
+            <> </>
+          )}
         </Form>
       </div>
     </div>
@@ -438,4 +450,3 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
 export default connect(({ bar }) => ({
   bar,
 }))(withRouter(ReferenceSetting));
-

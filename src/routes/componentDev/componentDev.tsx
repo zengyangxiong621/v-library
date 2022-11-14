@@ -19,15 +19,15 @@ type TDataSourceParams = {
   pageNo: string | number;
   pageSize: string | number;
   map?: {
-    [x: string]: boolean
-  }
+    [x: string]: boolean;
+  };
 };
 
 // 初始化数据
 const ComponentDev = (props: any) => {
   const [inputValue, setInputValue] = useState("");
-  const [status, setStatus] = useState(null); 
-  const [isShowImportModal, setIsShowImportModal] = useState(false); 
+  const [status, setStatus] = useState(null);
+  const [isShowImportModal, setIsShowImportModal] = useState(false);
   const [pageInfo, setPageInfo] = useState({
     pageNo: 1,
     pageSize: 10,
@@ -38,10 +38,8 @@ const ComponentDev = (props: any) => {
   const [tableLoading, setTableLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const [delVisible,setDelVisible]=useState<boolean>(false);//删除框的visible
-  const [rowData,setRowData]=useState<any>(null);//选中删除的rowData
-
-
+  const [delVisible, setDelVisible] = useState<boolean>(false); //删除框的visible
+  const [rowData, setRowData] = useState<any>(null); //选中删除的rowData
 
   /****** 每次请求回数据后，一起设置数据和页数 *******/
   const resetTableInfo = (data: any) => {
@@ -70,12 +68,12 @@ const ComponentDev = (props: any) => {
       const data = await http({
         url: "/visual/module-manage/queryModuleList",
         method: "post",
-        body: differentParams
+        body: differentParams,
       });
-      data && await resetTableInfo(data);
+      data && (await resetTableInfo(data));
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setTableLoading(false);
     }
     // 请求完成，冲着表格的数据和页码信息
@@ -96,11 +94,11 @@ const ComponentDev = (props: any) => {
   // 按类型搜索
   const searchByType = async (e: any) => {
     const finalParams: TDataSourceParams = {
-      status: status, 
+      status: status,
       name: e === "" ? null : e,
       pageNo: 1,
       pageSize: pageInfo.pageSize,
-      map: tableMap
+      map: tableMap,
     };
     getTableData(finalParams);
   };
@@ -111,9 +109,7 @@ const ComponentDev = (props: any) => {
   };
   // 关闭数据源弹窗
   const changeShowState = (modalType: string) => {
-    modalType === "add" 
-    ? setIsShowImportModal(false)
-    : ""; // 无编辑
+    modalType === "add" ? setIsShowImportModal(false) : ""; // 无编辑
   };
   // 刷新表格数据
   const refreshTable = () => {
@@ -125,16 +121,16 @@ const ComponentDev = (props: any) => {
   const handleDelete = async (moduleId: string) => {
     // 点击删除 先调查询接口
     const appName = await http({
-      url: `/visual/module-manage/usedModuleAppList/${moduleId}`, 
-      method: "get"
+      url: `/visual/module-manage/usedModuleAppList/${moduleId}`,
+      method: "get",
     });
     if (appName.length > 0) {
       Modal.confirm({
         title: "删除组件",
         cancelButtonProps: {
           style: {
-            display: "none"
-          }
+            display: "none",
+          },
         },
         icon: <ExclamationCircleFilled />,
         content: `当前组件被 ${appName.join("、")} 应用使用，不能进行删除操作。`,
@@ -144,20 +140,19 @@ const ComponentDev = (props: any) => {
           background: "#232630",
         },
       });
-    
     } else {
       setDelVisible(true);
-      setRowData(moduleId);     
+      setRowData(moduleId);
     }
   };
   // 取消删除（关闭删除提示框）
-  const closeTipModal = ()=> {
+  const closeTipModal = () => {
     setDelVisible(false);
   };
   const handleDelOk = async () => {
     const data = await http({
-      url: `/visual/module-manage/deleteModule/${rowData}`, 
-      method: "delete"
+      url: `/visual/module-manage/deleteModule/${rowData}`,
+      method: "delete",
     });
     if (data) {
       close();
@@ -180,17 +175,17 @@ const ComponentDev = (props: any) => {
       const { field, order } = sorter;
       // sorter: true-asc, false-desc, 不排序-undefined
       if (order === undefined) return;
-      let sortKey:any;
+      let sortKey: any;
       if (field === "moduleVersion") {
         sortKey = "module_version";
-      } else if(field === "updatedAt"){
+      } else if (field === "updatedAt") {
         sortKey = "created_time";
       } else {
         sortKey = null;
       }
       // 更新 tableMap, 在别处发请求时会带上当前排序条件
       setTableMap({
-        [sortKey]: order === "ascend"
+        [sortKey]: order === "ascend",
       });
       // 发送请求
       const finalParams: TDataSourceParams = {
@@ -220,7 +215,7 @@ const ComponentDev = (props: any) => {
         name: inputValue === "" ? null : inputValue,
         pageNo: page,
         pageSize,
-        map: tableMap
+        map: tableMap,
       };
       getTableData(finalParams);
     },
@@ -272,11 +267,7 @@ const ComponentDev = (props: any) => {
       showSorterTooltip: false,
       dataIndex: "updatedAt",
       render: (time: any) => {
-        return (
-          <>
-            {time}
-          </>
-        );
+        return <>{time}</>;
       },
     },
     {
@@ -286,26 +277,30 @@ const ComponentDev = (props: any) => {
       width: 120,
       render: (text: any, record: any) => {
         return (
-          <Space size="middle" >
+          <Space size="middle">
             {/* {
               record.status===0 
               ? <Button type='text' className='buttonBlue' onClickCapture={() => handleOff(record)}>下架</Button>
               : <Button type='text' className='buttonBlue' onClickCapture={() => handleOn(record)}>上架</Button>
             } */}
-            <Button type='text' className='buttonBlue' onClickCapture={() => handldExport(text)}>导出</Button>
-            <Button type='text'  
-                    className='buttonBlue'  
-                    // onClickCapture={() => handleDelete(record.id,record.appName)}
-                    onClickCapture={() => handleDelete(record.id)}
-                    >删除</Button>      
+            <Button type="text" className="buttonBlue" onClickCapture={() => handldExport(text)}>
+              导出
+            </Button>
+            <Button
+              type="text"
+              className="buttonBlue"
+              // onClickCapture={() => handleDelete(record.id,record.appName)}
+              onClickCapture={() => handleDelete(record.id)}
+            >
+              删除
+            </Button>
             {/* <Button type='text' disabled={ record.appName?.length>0 } 
                 className={ record.appName?.length>0 ? 'buttonGray' : 'buttonBlue' }  
                 onClickCapture={() => handleDelete(record.id)}
                 >删除</Button> */}
           </Space>
         );
-      }
-
+      },
     },
   ];
   // 多选
@@ -320,16 +315,18 @@ const ComponentDev = (props: any) => {
 
   return (
     <ConfigProvider locale={zhCN}>
-      <div className='ComponentDev-wrap'>
-        <div className='title'>组件开发</div>
-        <header className='header' style={{ background: "#171a24" }}>
-          <div className='left-box'>
-            <Button type="primary" className='mr-16' onClickCapture={handldImport}>导入组件</Button>
+      <div className="ComponentDev-wrap">
+        <div className="title">组件开发</div>
+        <header className="header" style={{ background: "#171a24" }}>
+          <div className="left-box">
+            <Button type="primary" className="mr-16" onClickCapture={handldImport}>
+              导入组件
+            </Button>
             {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleExportList(selectedRowKeys)} disabled={!hasSelected}>导出</Button> */}
             {/* <Button type="primary" className='mr-16' onClickCapture={()=>handleOff(selectedRowKeys)} disabled={!hasSelected}>下架</Button>             */}
             {/* <span className='mr-16'>{hasSelected ? `已选 ${selectedRowKeys.length} 项` : ""}</span> */}
           </div>
-          <div className='search'>
+          <div className="search">
             {/* <Select style={{ minWidth: '140px' }} dropdownStyle={{ backgroundColor: '#232630' }} defaultValue="全部" onChange={selectChange}>
               {
                 selectOptions.map((item: any) => {
@@ -339,7 +336,8 @@ const ComponentDev = (props: any) => {
                 })
               }
             </Select> */}
-            <Input.Search placeholder="搜索"
+            <Input.Search
+              placeholder="搜索"
               className="myant-search"
               allowClear
               maxLength={40}
@@ -349,18 +347,18 @@ const ComponentDev = (props: any) => {
             />
           </div>
         </header>
-        <div className='table-wrap'>
+        <div className="table-wrap">
           <Table
             scroll={{ y: "calc(100vh - 300px)" }}
             sortDirections={["ascend", "descend"]}
-            rowClassName='customRowClass'
+            rowClassName="customRowClass"
             loading={tableLoading}
             // rowSelection={rowSelection}
             columns={columns}
             dataSource={tableData}
             pagination={paginationProps}
             onChange={tableOnChange}
-            rowKey={record=>record.id}
+            rowKey={(record) => record.id}
           />
         </div>
         {/* 导入组件的弹窗 */}
@@ -370,16 +368,15 @@ const ComponentDev = (props: any) => {
           refreshTable={refreshTable}
         />
       </div>
-      <TipModal 
+      <TipModal
         visible={delVisible}
         text="删除后不可恢复，确认删除此组件吗?"
-        onOk={handleDelOk} 
+        onOk={handleDelOk}
         onCancel={closeTipModal}
       />
     </ConfigProvider>
   );
 };
-
 
 // SelectOptions
 const selectOptions = [

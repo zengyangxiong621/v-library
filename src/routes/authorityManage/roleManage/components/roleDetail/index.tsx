@@ -1,92 +1,99 @@
 import * as React from "react";
-import { useState, useEffect,useContext,memo,useMemo } from "react";
-import { Modal,Form,Table,Checkbox } from "antd";
+import { useState, useEffect, useContext, memo, useMemo } from "react";
+import { Modal, Form, Table, Checkbox } from "antd";
 import { useForm } from "antd/es/form/Form";
-import {AuthContext} from "../../roleManage";
-import {authDataType,formData} from "../../interface";
-import type,{ CheckboxValueType,CheckboxOptionType } from "antd/es/checkbox/Group";
+import { AuthContext } from "../../roleManage";
+import { authDataType, formData } from "../../interface";
+import type, { CheckboxValueType, CheckboxOptionType } from "antd/es/checkbox/Group";
 import "./index.less";
 
 // 表格权限多选框
-const AuthCheckBox=memo((props:any)=>{
-  const {rowData,editPermission}=props;
+const AuthCheckBox = memo((props: any) => {
+  const { rowData, editPermission } = props;
   const [indeterminate, setIndeterminate] = useState(false);
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
   const [checkAll, setCheckAll] = useState(false);
 
-  const subAuth:Array<authDataType>=rowData.children;
-  const hasChild=!!(subAuth && subAuth.length);
+  const subAuth: Array<authDataType> = rowData.children;
+  const hasChild = !!(subAuth && subAuth.length);
 
-  const options:CheckboxOptionType[]=useMemo(()=>{
-    return hasChild?subAuth.map((item:authDataType)=>{
-      return {
-        label:item.name,
-        value:item.id
-      };
-    }):[{
-      label:rowData.name,
-      value:rowData.id
-    }];
-  },[rowData,subAuth,hasChild]);
+  const options: CheckboxOptionType[] = useMemo(() => {
+    return hasChild
+      ? subAuth.map((item: authDataType) => {
+          return {
+            label: item.name,
+            value: item.id,
+          };
+        })
+      : [
+          {
+            label: rowData.name,
+            value: rowData.id,
+          },
+        ];
+  }, [rowData, subAuth, hasChild]);
 
-  useEffect(()=>{
-    if(!editPermission){
+  useEffect(() => {
+    if (!editPermission) {
       setCheckedList([]);
       setCheckAll(false);
       setIndeterminate(false);
       return;
     }
-    const newCheckedList:CheckboxValueType[] = options
-      .filter((item:CheckboxOptionType)=>editPermission.includes(item.value))
-      .map((item:CheckboxOptionType)=>item.value);
+    const newCheckedList: CheckboxValueType[] = options
+      .filter((item: CheckboxOptionType) => editPermission.includes(item.value))
+      .map((item: CheckboxOptionType) => item.value);
     setCheckedList(newCheckedList);
 
-    if(hasChild){
-      if(newCheckedList.length===options.length){
+    if (hasChild) {
+      if (newCheckedList.length === options.length) {
         setCheckAll(true);
-      }else if(newCheckedList.length!==0){
+      } else if (newCheckedList.length !== 0) {
         setIndeterminate(true);
       }
     }
-  },[editPermission,options,rowData,hasChild]);
+  }, [editPermission, options, rowData, hasChild]);
   return (
     <>
-      {
-        !!hasChild && <Checkbox indeterminate={indeterminate} checked={checkAll} disabled>全部</Checkbox>
-      }
+      {!!hasChild && (
+        <Checkbox indeterminate={indeterminate} checked={checkAll} disabled>
+          全部
+        </Checkbox>
+      )}
       <Checkbox.Group options={options} value={checkedList} disabled />
     </>
   );
 });
 
 // 权限表格配置项
-const tableColumns=(permissionList:Array<string>)=>[{
-  title:"功能模块",
-  dataIndex: "name",
-  width:100,
-  key: "name",
-},{
-  title:"权限",
-  dataIndex: "children",
-  key: "children",
-  render:(text:string, record:authDataType, index:number)=>{
-    return (
-      <AuthCheckBox rowData={record} editPermission={permissionList}></AuthCheckBox>
-    );
-  }
-}];
+const tableColumns = (permissionList: Array<string>) => [
+  {
+    title: "功能模块",
+    dataIndex: "name",
+    width: 100,
+    key: "name",
+  },
+  {
+    title: "权限",
+    dataIndex: "children",
+    key: "children",
+    render: (text: string, record: authDataType, index: number) => {
+      return <AuthCheckBox rowData={record} editPermission={permissionList}></AuthCheckBox>;
+    },
+  },
+];
 
-export default memo(function RoleDetail(props:any) {
-  const {isModalVisible,hideModel,currentData,setCurrentData}=props;
-  const {state,dispatch}=React.useContext(AuthContext);
-  const [formContainer]= Form.useForm();
-  const {authList}=state;
+export default memo(function RoleDetail(props: any) {
+  const { isModalVisible, hideModel, currentData, setCurrentData } = props;
+  const { state, dispatch } = React.useContext(AuthContext);
+  const [formContainer] = Form.useForm();
+  const { authList } = state;
 
-  let permissionIds=[];
-  if(currentData){
-    permissionIds=currentData.permissionIds;
+  let permissionIds = [];
+  if (currentData) {
+    permissionIds = currentData.permissionIds;
   }
-  const handleCancel=()=>{
+  const handleCancel = () => {
     setCurrentData(null);
     hideModel();
   };
@@ -107,29 +114,18 @@ export default memo(function RoleDetail(props:any) {
         wrapperCol={{ span: 18 }}
         autoComplete="off"
       >
-        <Form.Item
-          label="名称"
-          name="name"
-        >
+        <Form.Item label="名称" name="name">
           <span>{currentData?.name || "-"}</span>
         </Form.Item>
-        <Form.Item
-          label="描述"
-          name="description"
-          style={{ marginTop: "20px" }}
-        >
+        <Form.Item label="描述" name="description" style={{ marginTop: "20px" }}>
           <span>{currentData?.description || "-"}</span>
         </Form.Item>
-        <Form.Item
-          label="权限"
-          name="permissionsId"
-          style={{ marginTop: "20px" }}
-        >
+        <Form.Item label="权限" name="permissionsId" style={{ marginTop: "20px" }}>
           <Table
             className="rolePermission"
             pagination={false}
             expandable={{
-              showExpandColumn:false
+              showExpandColumn: false,
             }}
             size="small"
             rowKey="id"

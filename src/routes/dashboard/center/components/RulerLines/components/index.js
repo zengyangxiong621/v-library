@@ -11,9 +11,7 @@ const SingleLine = (props) => {
     y: 0,
   });
   const [isShow, setIsShow] = useState(false);
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
   const handleDragStart = () => {
     setIsShow(true);
   };
@@ -43,67 +41,76 @@ const SingleLine = (props) => {
   };
   return (
     <Draggable
-      axis={ line.direction === "horizon" ? "x" : "y" }
-      scale={ scale }
-      position={ line.position }
-      onStart={ handleDragStart }
-      onDrag={ (event, data) => handleDrag(event, data, line) }
-      onStop={ (event, data) => handleDragStop(event, data, line) }
+      axis={line.direction === "horizon" ? "x" : "y"}
+      scale={scale}
+      position={line.position}
+      onStart={handleDragStart}
+      onDrag={(event, data) => handleDrag(event, data, line)}
+      onStop={(event, data) => handleDragStop(event, data, line)}
     >
-      {
-        line.direction === "horizon" ? <div
-            style={ {
-              borderLeft: `${ (1 / scale).toFixed(2) }px solid #EB5648`,
-              padding: "2px",
-              height: "1000000px",
-              position: "absolute",
-              top: "-50000px",
-              cursor: "ew-resize",
-              display: line.display,
-              zIndex: 10000000,
-              opacity: 1
-            } }>
-            {
-              isShow ? <div
-                style={ {
-                  position: "absolute",
-                  top: "50000px",
-                  width: 60,
-                  height: "30px",
-                  fontSize: Math.ceil(20 / scale),
-                  lineHeight: "30px",
-                } }>
-                X:{ Math.ceil(position.x) }
-              </div> : ""
-            }
-          </div> :
-          <div
-            style={ {
-              borderTop: `${ (1 / scale).toFixed(2) }px solid #EB5648`,
-              padding: "2px",
-              width: "1000000px",
-              position: "absolute",
-              left: "-50000px",
-              cursor: "n-resize",
-              display: line.display,
-              zIndex: 10000000,
-              opacity: 1
-            } }>
-            {
-              isShow ? <div
-                style={ {
-                  position: "absolute",
-                  left: "50000px",
-                  width: 60,
-                  height: "30px",
-                  fontSize: Math.ceil(20 / scale),
-                  lineHeight: "30px",
-                } }>
-                Y:{ Math.ceil(position.y) }
-              </div> : ""
-            }
-          </div>
-      }
+      {line.direction === "horizon" ? (
+        <div
+          style={{
+            borderLeft: `${(1 / scale).toFixed(2)}px solid #EB5648`,
+            padding: "2px",
+            height: "1000000px",
+            position: "absolute",
+            top: "-50000px",
+            cursor: "ew-resize",
+            display: line.display,
+            zIndex: 10000000,
+            opacity: 1,
+          }}
+        >
+          {isShow ? (
+            <div
+              style={{
+                position: "absolute",
+                top: "50000px",
+                width: 60,
+                height: "30px",
+                fontSize: Math.ceil(20 / scale),
+                lineHeight: "30px",
+              }}
+            >
+              X:{Math.ceil(position.x)}
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        <div
+          style={{
+            borderTop: `${(1 / scale).toFixed(2)}px solid #EB5648`,
+            padding: "2px",
+            width: "1000000px",
+            position: "absolute",
+            left: "-50000px",
+            cursor: "n-resize",
+            display: line.display,
+            zIndex: 10000000,
+            opacity: 1,
+          }}
+        >
+          {isShow ? (
+            <div
+              style={{
+                position: "absolute",
+                left: "50000px",
+                width: 60,
+                height: "30px",
+                fontSize: Math.ceil(20 / scale),
+                lineHeight: "30px",
+              }}
+            >
+              Y:{Math.ceil(position.y)}
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      )}
     </Draggable>
   );
 };

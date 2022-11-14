@@ -12,12 +12,17 @@ import { getFields } from "@/utils/data";
 // 1: {name: "强制铺满", value: "1"}
 // 2: {name: "原比例展示溢出滚动
 
-const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDrillDownLevel, changeBreadcrumbData }: any) => {
-
+const EveryComponent = ({
+  componentData,
+  comData,
+  scaleValue,
+  layerInfo,
+  addDrillDownLevel,
+  changeBreadcrumbData,
+}: any) => {
   const { moduleName, events, id, config } = componentData;
   const { mountAnimation } = layerInfo;
   const { delay, direction, duration, opacityOpen, timingFunction, type } = mountAnimation || {};
-
 
   // 将所有的组件配置(位置尺寸、默认隐藏、文本样式、对齐方式、阴影)整合进Map中
   const allConfigMap = new Map();
@@ -98,20 +103,28 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDril
         switch (direction) {
           // 从下至上
           case "up":
-            startKeyframe = { clipPath: `polygon(0 ${squareWidth}px, ${squareWidth}px ${squareWidth}px, ${squareWidth}px ${squareWidth}px, 0 ${squareWidth}px)` };
+            startKeyframe = {
+              clipPath: `polygon(0 ${squareWidth}px, ${squareWidth}px ${squareWidth}px, ${squareWidth}px ${squareWidth}px, 0 ${squareWidth}px)`,
+            };
             break;
           // 从上至下
           case "down":
             // alert('down')
-            startKeyframe = { clipPath: `polygon(0 0, ${squareWidth}px 0, ${squareWidth}px 0, 0 0)` };
+            startKeyframe = {
+              clipPath: `polygon(0 0, ${squareWidth}px 0, ${squareWidth}px 0, 0 0)`,
+            };
             break;
           // 从左至右
           case "left":
-            startKeyframe = { clipPath: `polygon(0 0, 0 0, 0 ${squareWidth}px, 0 ${squareWidth}px)` };
+            startKeyframe = {
+              clipPath: `polygon(0 0, 0 0, 0 ${squareWidth}px, 0 ${squareWidth}px)`,
+            };
             break;
           // 从右至左
           case "right":
-            startKeyframe = { clipPath: `polygon(${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px ${squareWidth}px, ${squareWidth}px ${squareWidth}px)` };
+            startKeyframe = {
+              clipPath: `polygon(${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px ${squareWidth}px, ${squareWidth}px ${squareWidth}px)`,
+            };
             break;
           // 左上->右下
           case "rightDown":
@@ -119,20 +132,27 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDril
             break;
           // 右上 -> 左下
           case "leftDown":
-            startKeyframe = { clipPath: `polygon(${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px 0)` };
+            startKeyframe = {
+              clipPath: `polygon(${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px 0, ${squareWidth}px 0)`,
+            };
             break;
           // 左下 -> 右上
           case "rightUp":
-            startKeyframe = { clipPath: `polygon(0 ${squareWidth}px, 0 ${squareWidth}px, 0 ${squareWidth}px, 0 ${squareWidth}px)` };
+            startKeyframe = {
+              clipPath: `polygon(0 ${squareWidth}px, 0 ${squareWidth}px, 0 ${squareWidth}px, 0 ${squareWidth}px)`,
+            };
             break;
           // 右下 -> 左上
           case "leftUp":
-            startKeyframe = { clipPath: `polygon(${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px)` };
+            startKeyframe = {
+              clipPath: `polygon(${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px,${squareWidth}px ${squareWidth}px)`,
+            };
             break;
         }
-        endKeyframe = { clipPath: `polygon(0 0, ${squareWidth}px 0, ${squareWidth}px ${squareWidth}px, 0 ${squareWidth}px)` };
+        endKeyframe = {
+          clipPath: `polygon(0 0, ${squareWidth}px 0, ${squareWidth}px ${squareWidth}px, 0 ${squareWidth}px)`,
+        };
       }
-
 
       // 页面渲染完成之时,组件也会一同挂载到页面中,但此时动画还未开始,所以要让组件不可见(为了营造组件是在用户设定的延迟时间后进入页面的错觉)
       curCmpContainerEl.style.opacity = 0;
@@ -143,26 +163,22 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDril
         endKeyframe.opacity = 1;
       } else {
         // 没有选择 “渐隐渐显”, 需要手动在延迟时间后把组件显现出来, 否则组件就一直是透明的状态
-        timeoutId = setTimeout(() => curCmpContainerEl.style.opacity = 1, delay);
+        timeoutId = setTimeout(() => (curCmpContainerEl.style.opacity = 1), delay);
       }
       // 最终应用的动画
-      curCmpContainerEl.animate(
-        [startKeyframe, endKeyframe],
-        {
-          duration: duration,
-          delay: delay,
-          fill: "both",
-          easing: timingFunction,
-          // easing: 'steps(8, end)',
-          iterations: 1
-        }
-      );
+      curCmpContainerEl.animate([startKeyframe, endKeyframe], {
+        duration: duration,
+        delay: delay,
+        fill: "both",
+        easing: timingFunction,
+        // easing: 'steps(8, end)',
+        iterations: 1,
+      });
       return () => {
         clearTimeout(timeoutId);
       };
     }
   }, []);
-
 
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
@@ -172,9 +188,7 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDril
   };
   return (
     <div>
-      <div className={`animation-id-${id}`}
-        style={{ ...componentStyle }}
-      >
+      <div className={`animation-id-${id}`} style={{ ...componentStyle }}>
         <ComponentEventContainer
           key={id}
           id={id}
@@ -186,11 +200,9 @@ const EveryComponent = ({ componentData, comData, scaleValue, layerInfo, addDril
           fields={getFields(componentData)}
           comData={comData}
           getDrillDownData={getDrillDownData}
-        >
-        </ComponentEventContainer>
+        ></ComponentEventContainer>
       </div>
     </div>
-
   );
 };
 
