@@ -63,7 +63,6 @@ import {
 } from "../../../../../constant/home";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
-// import SelectV2 from "@/customComponents/assist/select/v1.0.3/index";
 import ButtonGroup from "@/customComponents/assist/buttonGroup/v1.0.5/index";
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
 import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.2";
@@ -1025,17 +1024,6 @@ const CustomDraggable
                                                       comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                                     >
                                                     </CusImage> :
-                                                    // layer.moduleName === "select2" ?
-                                                    //   <SelectV2
-                                                    //     themeConfig={bar.componentThemeConfig}
-                                                    //     onThemeChange={onThemeChange}
-                                                    //     onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                                    //     scale={bar.canvasScaleValue}
-                                                    //     componentConfig={component}
-                                                    //     fields={getFields(component)}
-                                                    //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                                    //   >
-                                                    //   </SelectV2> :
                                                       layer.moduleName === "buttonGroup2" ?
                                                         <ButtonGroup
                                                           themeConfig={bar.componentThemeConfig}

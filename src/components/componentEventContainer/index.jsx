@@ -1,10 +1,10 @@
+/* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getFields } from "@/utils/data";
 import { useState, useRef } from "react";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import SelectV2 from "@/customComponents/assist/select/v1.0.3/index";
 import ButtonGroup from "@/customComponents/assist/buttonGroup/v1.0.5/index";
 import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
@@ -461,9 +461,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
       // >
       // </ChinaMap>
       // :
-      props.componentConfig.moduleName === "select2" ? (
-        <SelectV2 onChange={handleValueChange} {...props}></SelectV2>
-      ) : props.componentConfig.moduleName === "buttonGroup2" ? (
+     props.componentConfig.moduleName === "buttonGroup2" ? (
         <ButtonGroup onChange={handleValueChange} {...props}></ButtonGroup>
       ) : props.componentConfig.moduleName === "scrollTable" ? (
         <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
