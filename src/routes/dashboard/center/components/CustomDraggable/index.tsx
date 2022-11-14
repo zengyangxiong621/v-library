@@ -1165,23 +1165,25 @@ const CustomDraggable = ({
                             bar.callbackArgs
                           )}
                         ></WorldMap>
-                      ) : layer.moduleName === "indicatorcard" ? (
-                        <IndicatorCard
-                          themeConfig={bar.componentThemeConfig}
-                          onThemeChange={onThemeChange}
-                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          componentConfig={component}
-                          fields={getFields(component)}
-                          comData={getComDataWithFilters(
-                            bar.componentData,
-                            component,
-                            bar.componentFilters,
-                            bar.dataContainerDataList,
-                            bar.dataContainerList,
-                            bar.callbackArgs
-                          )}
-                        ></IndicatorCard>
-                      ) : layer.moduleName === "chinaMap" ? (
+                      ) 
+                      // : layer.moduleName === "indicatorcard" ? (
+                      //   <IndicatorCard
+                      //     themeConfig={bar.componentThemeConfig}
+                      //     onThemeChange={onThemeChange}
+                      //     onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                      //     componentConfig={component}
+                      //     fields={getFields(component)}
+                      //     comData={getComDataWithFilters(
+                      //       bar.componentData,
+                      //       component,
+                      //       bar.componentFilters,
+                      //       bar.dataContainerDataList,
+                      //       bar.dataContainerList,
+                      //       bar.callbackArgs
+                      //     )}
+                      //   ></IndicatorCard>
+                      // )
+                       : layer.moduleName === "chinaMap" ? (
                         <ChinaMap
                           themeConfig={bar.componentThemeConfig}
                           onThemeChange={onThemeChange}

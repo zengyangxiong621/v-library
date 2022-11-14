@@ -596,9 +596,9 @@ const ComponentEventContainer = ({
         <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
       ) : props.componentConfig.moduleName === "worldMap" ? (
         <WorldMap {...props}></WorldMap>
-      ) : props.componentConfig.moduleName === "indicatorcard" ? (
-        <IndicatorCard {...props}></IndicatorCard>
-      ) : // props.componentConfig.moduleName === "timeline" ? (
+      ) : // props.componentConfig.moduleName === "indicatorcard" ? (
+        // </div><IndicatorCard {...props}></IndicatorCard>
+      // ) : props.componentConfig.moduleName === "timeline" ? (
       //   <Timeline {...props}></Timeline>
       // ) :
       props.componentConfig.moduleName === "media" ? (
