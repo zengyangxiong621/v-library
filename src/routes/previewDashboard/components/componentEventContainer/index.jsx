@@ -6,7 +6,6 @@ import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import Bar from "@/customComponents/echarts/components/bar/index";
 import CusImage from "@/customComponents/assist/image/v1.0.2/index";
-import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
@@ -631,8 +630,6 @@ const ComponentEventContainer = ({
             <RankingBar onChange={handleValueChange} {...props}></RankingBar>
           ) : props.componentConfig.moduleName === "zebraColumn" ? (
             <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
-          ) : props.componentConfig.moduleName === "basicBar" ? (
-            <BasicBar onChange={handleValueChange} {...props}></BasicBar>
           ) : // props.componentConfig.moduleName === 'chinaMap' ?
             // <ChinaMap
             //   onChange={handleValueChange}
