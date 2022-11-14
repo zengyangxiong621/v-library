@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
@@ -618,9 +617,7 @@ const ComponentEventContainer = ({
             <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
           ) : props.componentConfig.moduleName === "cascader" ? (
             <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
-          ) : props.componentConfig.moduleName === "image2" ? (
-            <CusImage onChange={handleValueChange} {...props}></CusImage>
-          ) : 
+          ) :
             props.componentConfig.moduleName === "bar" ? (
               <Bar onChange={handleValueChange} {...props}></Bar>
             ) : props.componentConfig.moduleName === "scrollTable" ? (

@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
@@ -456,9 +455,7 @@ const ComponentEventContainer = ({
         // props.componentConfig.moduleName === "counter" ? (
         //   <Counter onChange={handleValueChange} {...props}></Counter>
         // ) : 
-        props.componentConfig.moduleName === "image2" ? (
-          <CusImage onChange={handleValueChange} {...props}></CusImage>
-        ) : props.componentConfig.moduleName === "worldMap" ? (
+        props.componentConfig.moduleName === "worldMap" ? (
           <WorldMap onChange={handleValueChange} {...props}></WorldMap>
         ) : // props.componentConfig.moduleName === 'chinaMap' ?
           // <ChinaMap
