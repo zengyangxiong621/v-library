@@ -26,7 +26,7 @@ import { connect } from "dva";
 // import './index.css'
 import { cloneDeep } from "lodash";
 import { debounce } from "@/utils/common";
-import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
+// import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
 import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
 import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
 import Cascader from "@/customComponents/assist/cascader/v1.1.0";
@@ -618,9 +618,11 @@ const ComponentEventContainer = ({
         <NormalTable {...props}></NormalTable>
       ) : props.componentConfig.moduleName === "paginationComp" ? (
         <PaginationComp onChange={handleValueChange} {...props}></PaginationComp>
-      ) : props.componentConfig.moduleName === "instrumentPanel_1" ? (
-        <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
-      ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
+      ) : 
+      // props.componentConfig.moduleName === "instrumentPanel_1" ? (
+      //   <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
+      // ) : 
+      props.componentConfig.moduleName === "instrumentPanel_3" ? (
         <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
       ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
         <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
