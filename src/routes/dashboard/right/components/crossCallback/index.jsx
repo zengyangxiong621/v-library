@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.less";
 import { connect } from "dva";
 
@@ -9,7 +9,7 @@ import { Form, Select, Tabs, Collapse, Input } from "antd";
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 // TODO 未完成
-const CallbackArgs = ({ bar, dispatch, ...props }) => {
+const CallbackArgs = ({ bar, ...props }) => {
   const { Panel } = Collapse;
   const { TabPane } = Tabs;
   const { Option } = Select;

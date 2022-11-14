@@ -18,7 +18,6 @@ import ToolBar from "./components/toolBar";
 // import RightClickMenu from "./components/rightClickMenu/rightClickMenu";
 
 /** 数据 || 方法 */
-import { menuOptions } from "./Data/menuOptions";
 // import { getTargetMenu } from "./components/rightClickMenu/getMenuNode";
 import { getFieldStates } from "../../../utils/sideBar";
 // import { filterEmptyGroups } from "../../../models/utils/filterEmptyGroups";
@@ -27,7 +26,6 @@ const Left = ({ dispatch, bar }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
 
   const [isExpand, setIsExpand] = useState([]);
-  const [customExpandKeys, setCustomExpandKeys] = useState([]);
   const [selected, setSelected] = useState([]);
   const activeIconRef = useRef();
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false);
@@ -200,6 +198,7 @@ const Left = ({ dispatch, bar }) => {
   };
   // 图层拖拽逻辑
   const onDrop = (info) => {
+    console.log("info~~~~~~~~~~~~~~~", info);
     const dropKey = info.node.key;
     const dragKey = info.dragNode.key;
     const dropPos = info.node.pos.split("-");
@@ -216,13 +215,6 @@ const Left = ({ dispatch, bar }) => {
       }
     };
     const data = [...bar.layers];
-    // Find dragObject
-    let dragObj;
-    loop(data, dragKey, (item, index, arr) => {
-      arr.splice(index, 1);
-      dragObj = item;
-    });
-
     const setLayerToTop = (data, key, callback) => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].id === key) {
@@ -230,21 +222,31 @@ const Left = ({ dispatch, bar }) => {
         }
       }
     };
-
-    if (!info.dropToGap) {
-      loop(data, dropKey, (item) => {
-        item.modules = item.modules || []; // where to insert 示例添加到头部，可以是随意位置
-        item.modules.unshift(dragObj);
-      });
-    } else if (
+    // if (!info.dropToGap) {
+    //   loop(data, dropKey, (item, index) => {
+    //     console.log("树data", data);
+    //     console.log("dropKey", dropKey);
+    //     console.log("item+++++++++++++++", item);
+    //   });
+    // }
+    let dragObj;
+    if (
       (info.node.modules || []).length > 0 &&
       info.node.props.expanded
-      // && dropPosition === 1 // On the bottom gap
+      // && dropPosition === 1
     ) {
+      loop(data, dragKey, (item, index, arr) => {
+        arr.splice(index, 1);
+        dragObj = item;
+      });
       setLayerToTop(data, dropKey, (item, index) => {
         item.splice(index, 0, dragObj);
       });
     } else {
+      loop(data, dragKey, (item, index, arr) => {
+        arr.splice(index, 1);
+        dragObj = item;
+      });
       let ar;
       let i;
       loop(data, dropKey, (item, index, arr) => {
@@ -324,9 +326,9 @@ const Left = ({ dispatch, bar }) => {
     setIsExpand(keys);
   };
 
-  const treeLayerHoverFunc = (item) => {
-    item.style.backgroundColor = "red";
-  };
+  // const treeLayerHoverFunc = (item) => {
+  //   item.style.backgroundColor = "red";
+  // };
   /*  useEffect(() => {
     console.log('expandedKeys', expandedKeys)
     setTimeout(() => {

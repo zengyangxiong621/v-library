@@ -49,21 +49,14 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const isKeyForStick = useRef(false);
 
   useEffect(() => {
-    console.log("-----------");
-    console.log("bar.isSingleShowOpen", bar.isSingleShowOpen);
-    console.log("bar.singleShowLayer", bar.singleShowLayers);
-    console.log("-----------");
-
     if (bar.isSingleShowOpen && bar.singleShowLayers.length > 0) {
       const layers = deepClone(bar.singleShowLayers);
-      console.log("layers Gigi思密达", layers);
       layersReverse(layers);
       setLayers(layers);
       setComponents(bar.fullAmountComponents);
       setPanels(bar.fullAmountPanels);
     } else {
       const layers = deepClone(bar.layers);
-      console.log("哈哈哈", layers);
       layersReverse(layers);
       setLayers(layers);
       setComponents(bar.fullAmountComponents);
