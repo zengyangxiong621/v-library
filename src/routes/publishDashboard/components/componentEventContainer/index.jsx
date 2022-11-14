@@ -464,18 +464,10 @@ const ComponentEventContainer = ({
         // >
         // </ChinaMap>
         // :
-        props.componentConfig.moduleName === "scrollTable" ? (
-          <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-        ) : props.componentConfig.moduleName === "tab" ? (
-          <Tab
-            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-            {...props}
-          ></Tab>
-        ) : props.componentConfig.moduleName === "scrollSelect" ? (
-          <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-        ) : props.componentConfig.moduleName === "timeSelect" ? (
-          <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-        ) : props.componentConfig.moduleName === "worldMap" ? (
+        // props.componentConfig.moduleName === "scrollTable" ? (
+        //   <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
+        // ) :
+        props.componentConfig.moduleName === "worldMap" ? (
           <WorldMap {...props}></WorldMap>
         ) : props.componentConfig.moduleName === "media" ? (
           <Media {...props}></Media>

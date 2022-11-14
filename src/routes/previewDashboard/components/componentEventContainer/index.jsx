@@ -638,21 +638,14 @@ const ComponentEventContainer = ({
       // :
       props.componentConfig.moduleName === "bar" ? (
         <Bar onChange={handleValueChange} {...props}></Bar>
-      ) : props.componentConfig.moduleName === "scrollTable" ? (
-        <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-      ) : props.componentConfig.moduleName === "tab" ? (
-        <Tab
-          onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-          onClick={handleClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          {...props}
-        ></Tab>
-      ) : props.componentConfig.moduleName === "scrollSelect" ? (
-        <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-      ) : props.componentConfig.moduleName === "timeSelect" ? (
-        <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-      ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
+      ) : //   props.componentConfig.moduleName === "scrollTable" ? (
+      //   <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
+      // ) :
+      //   props.componentConfig.moduleName === "scrollSelect" ? (
+      //   <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
+      // ) : props.componentConfig.moduleName === "timeSelect" ? (
+      //   <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
+      // ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
       // <CardFlipper1
       //   scale={scale}
       //   onChange={handleValueChange}

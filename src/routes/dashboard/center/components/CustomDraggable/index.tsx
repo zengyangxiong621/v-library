@@ -1052,22 +1052,7 @@ const CustomDraggable = ({
                       //     fields={getFields(component)}
                       //     comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                       //   ></Counter> :
-                      layer.moduleName === "scrollTable" ? (
-                        <ScrollTable
-                          themeConfig={bar.componentThemeConfig}
-                          onThemeChange={onThemeChange}
-                          componentConfig={component}
-                          fields={getFields(component)}
-                          comData={getComDataWithFilters(
-                            bar.componentData,
-                            component,
-                            bar.componentFilters,
-                            bar.dataContainerDataList,
-                            bar.dataContainerList,
-                            bar.callbackArgs
-                          )}
-                        ></ScrollTable>
-                      ) : layer.moduleName === "basicLine" ? (
+                      layer.moduleName === "basicLine" ? (
                         <BasicLine
                           themeConfig={bar.componentThemeConfig}
                           onThemeChange={onThemeChange}
@@ -1101,54 +1086,6 @@ const CustomDraggable = ({
                             bar.callbackArgs
                           )}
                         ></Bar>
-                      ) : layer.moduleName === "tab" ? (
-                        <Tab
-                          themeConfig={bar.componentThemeConfig}
-                          onThemeChange={onThemeChange}
-                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          componentConfig={component}
-                          fields={getFields(component)}
-                          comData={getComDataWithFilters(
-                            bar.componentData,
-                            component,
-                            bar.componentFilters,
-                            bar.dataContainerDataList,
-                            bar.dataContainerList,
-                            bar.callbackArgs
-                          )}
-                        ></Tab>
-                      ) : layer.moduleName === "scrollSelect" ? (
-                        <ScrollSelect
-                          themeConfig={bar.componentThemeConfig}
-                          onThemeChange={onThemeChange}
-                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          componentConfig={component}
-                          fields={getFields(component)}
-                          comData={getComDataWithFilters(
-                            bar.componentData,
-                            component,
-                            bar.componentFilters,
-                            bar.dataContainerDataList,
-                            bar.dataContainerList,
-                            bar.callbackArgs
-                          )}
-                        ></ScrollSelect>
-                      ) : layer.moduleName === "timeSelect" ? (
-                        <TimeSelect
-                          themeConfig={bar.componentThemeConfig}
-                          onThemeChange={onThemeChange}
-                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          componentConfig={component}
-                          fields={getFields(component)}
-                          comData={getComDataWithFilters(
-                            bar.componentData,
-                            component,
-                            bar.componentFilters,
-                            bar.dataContainerDataList,
-                            bar.dataContainerList,
-                            bar.callbackArgs
-                          )}
-                        ></TimeSelect>
                       ) : layer.moduleName === "worldMap" ? (
                         <WorldMap
                           themeConfig={bar.componentThemeConfig}
