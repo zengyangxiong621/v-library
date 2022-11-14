@@ -10,9 +10,14 @@ const RemoteBaseComponent = (props: any) => {
   const [Comp, setComponent] = useState<React.FC | null>(null);
 
   const importComponent = useCallback(() => {
-    return axios.get(`${(window as any).CONFIG.COMP_URL}/${moduleType}/${moduleName}/${moduleVersion}/${moduleName}.js`).then(res => res.data);
+    return axios
+      .get(
+        `${
+          (window as any).CONFIG.COMP_URL
+        }/${moduleType}/${moduleName}/${moduleVersion}/${moduleName}.js`
+      )
+      .then((res) => res.data);
   }, [moduleType, moduleName, moduleVersion]);
-
 
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`);
@@ -31,7 +36,6 @@ const RemoteBaseComponent = (props: any) => {
   }
 
   return null;
-
 };
 
 // class写法
@@ -73,8 +77,4 @@ const RemoteBaseComponent = (props: any) => {
 //   }
 // }
 
-
-export default connect(({ bar }: any) => (
-  { bar }
-))(RemoteBaseComponent);
-
+export default connect(({ bar }: any) => ({ bar }))(RemoteBaseComponent);

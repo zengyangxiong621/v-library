@@ -83,30 +83,30 @@ export const menuOptions = [
   },
   {
     key: "singleShowLayer",
-    name:"单独显示图层",
+    name: "单独显示图层",
     icon: "danduxianshi",
     anotherName: "取消单独显示",
     anotherIcon: "guanbidanchuang",
     disabled: false,
   },
   {
-    name:"删除",
+    name: "删除",
     key: "delete",
     icon: "huishouzhan1",
     disabled: false,
   },
   {
-    name:"重命名",
+    name: "重命名",
     key: "reName",
     icon: "bianji",
     mayDisabled: true,
   },
   {
     key: "hidden",
-    name:"隐藏",
+    name: "隐藏",
     icon: "guanbidanchuang",
     anotherName: "显示",
     anotherIcon: "guanbidanchuang",
     disabled: false,
-  }
+  },
 ];

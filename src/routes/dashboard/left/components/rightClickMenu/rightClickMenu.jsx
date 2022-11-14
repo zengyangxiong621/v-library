@@ -2,9 +2,7 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import "./rightClickMenu.less";
 
-import {
-  getFieldStates,
-} from "../../../../../utils/sideBar";
+import { getFieldStates } from "../../../../../utils/sideBar";
 import { IconFont } from "../../../../../utils/useIcon";
 import SecondMenu from "./secondMenu";
 import { http } from "@/services/request";
@@ -29,18 +27,18 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   useEffect(() => {
     // 判断所选中的各个节点是否是lock状态
     const lockInfo = getFieldStates(bar.layers, bar.key, "isLock");
-    const finalLockState = lockInfo.some(item => item === false);
+    const finalLockState = lockInfo.some((item) => item === false);
     setIsLock(!finalLockState);
 
     // 判断所选中的各个节点是否是单独显示状态
     const singleShowLayerInfo = getFieldStates(bar.layers, bar.key, "singleShowLayer");
-    const singleShowLayerState = singleShowLayerInfo.some(item => item === false);
+    const singleShowLayerState = singleShowLayerInfo.some((item) => item === false);
     setIsSingleShow(!singleShowLayerState);
 
     // 判断所选中的各个节点是否是显示状态
     // 只要有一个隐藏了就显示
     const showOrHiddenInfo = getFieldStates(bar.layers, bar.key, "isShow");
-    const showOrHiddenState = showOrHiddenInfo.some(item => item === false);
+    const showOrHiddenState = showOrHiddenInfo.some((item) => item === false);
     setIsShowOrHidden(!showOrHiddenState);
   }, [bar.layers, bar.key]);
 
@@ -60,10 +58,10 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     }
     switch (operateName) {
       case "lock":
-        const finalBody = bar.key.map(item => ({
+        const finalBody = bar.key.map((item) => ({
           id: item,
           key: "isLock",
-          value: !isLock
+          value: !isLock,
         }));
         customPayload.configs = finalBody;
         break;
@@ -76,17 +74,17 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
         customPayload.value = true;
         break;
       case "hidden":
-        const finalHiddenConfigs = bar.key.map(item => ({
+        const finalHiddenConfigs = bar.key.map((item) => ({
           id: item,
           key: "isShow",
-          value: !isShowOrHidden
+          value: !isShowOrHidden,
         }));
         customPayload.configs = finalHiddenConfigs;
         break;
       case "delete":
-        const l = bar.key?.map(item => ({
+        const l = bar.key?.map((item) => ({
           id: item,
-          children: []
+          children: [],
         }));
         customPayload.layers = l;
         break;
@@ -101,7 +99,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
           components: [...bar.key],
           // components: [...bar.key],
           panels: [],
-          selected: [...bar.key]
+          selected: [...bar.key],
         };
         break;
       case "corssCopy":
@@ -125,7 +123,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
           setComponentCopyConfig({
             moduleVersion: currentComponent.moduleVersion,
             moduleName: currentComponent.moduleName,
-            config: currentComponent.config
+            config: currentComponent.config,
           });
         }
         break;
@@ -147,19 +145,22 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
             } else if (targetComponent.moduleVersion !== sourceStyleConfig.moduleVersion) {
               message.warning("该组件与复制源组件的版本不同，不能粘贴样式");
             } else {
-              saveStyleData({
-                id: targetComponent.id,
-                name: targetComponent.name,
-                moduleName: targetComponent.moduleName,
-                moduleVersion: targetComponent.moduleVersion,
-                config: sourceStyleConfig.config.map(conf => {
-                  if (conf.name === "dimension") {
-                    return targetComponent.config.find(item => item.name === "dimension");
-                  } else {
-                    return conf;
-                  }
-                }),
-              }, targetComponent);
+              saveStyleData(
+                {
+                  id: targetComponent.id,
+                  name: targetComponent.name,
+                  moduleName: targetComponent.moduleName,
+                  moduleVersion: targetComponent.moduleVersion,
+                  config: sourceStyleConfig.config.map((conf) => {
+                    if (conf.name === "dimension") {
+                      return targetComponent.config.find((item) => item.name === "dimension");
+                    } else {
+                      return conf;
+                    }
+                  }),
+                },
+                targetComponent
+              );
             }
           }
         }
@@ -169,7 +170,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     }
     dispatch({
       type: `bar/${operateName}`,
-      payload: customPayload
+      payload: customPayload,
     });
     // setIsLock(!isLock)
     // 点击后隐藏菜单
@@ -180,34 +181,34 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   const saveStyleData = async (param, targetComponent) => {
     const params = {
       configs: [param],
-      dashboardId: bar.dashboardId
+      dashboardId: bar.dashboardId,
     };
     await http({
       url: "/visual/module/update",
       method: "post",
-      body: params
+      body: params,
     });
     message.success("样式粘贴成功");
     // 更新bar中组件样式
-    bar.fullAmountComponents.find(item => item.id === param.id).config = param.config;
+    bar.fullAmountComponents.find((item) => item.id === param.id).config = param.config;
     const componentConfig = cloneDeep(targetComponent);
     componentConfig.config = param.config;
     dispatch({
       type: "bar/setComponentConfigAndCalcDragScaleData",
-      payload: componentConfig
+      payload: componentConfig,
     });
     // 重新渲染右侧设置面板
     await dispatch({
       type: "bar/save",
       payload: {
-        key: ["copyStyle"]
-      }
+        key: ["copyStyle"],
+      },
     });
     dispatch({
       type: "bar/save",
       payload: {
-        key: [param.id]
-      }
+        key: [param.id],
+      },
     });
   };
   const { x, y } = bar.rightMenuInfo;
@@ -240,7 +241,9 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   // 获取当前空间下的所有大屏
   const getAllDashboards = () => {
     const allDashboardList = JSON.parse(JSON.stringify(bar.allDashboardList));
-    const dashboardListTmp = allDashboardList.filter(dashboard => dashboard.id !== bar.dashboardId);
+    const dashboardListTmp = allDashboardList.filter(
+      (dashboard) => dashboard.id !== bar.dashboardId
+    );
     setDashboardList(dashboardListTmp);
   };
   // 关闭复制到大屏弹窗
@@ -273,7 +276,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
       //TODO 改为modules后删除掉这行
       components: [...bar.key],
       panels: [],
-      selected: [...bar.key]
+      selected: [...bar.key],
     };
     await http({
       url: "/visual/layer/copyToNew",
@@ -291,71 +294,66 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   };
   return (
     <React.Fragment>
-      {
-        !bar.isCopyComponentToDashboard ?
-          <div className='RightClickMenu-wrap' ref={menuRef}>
-            {
-              menuOptions.map((item, index) => {
-                const hasLevel = item.children && item.children.length && Array.isArray(item.children);
-                return (
-                  <div
-                    key={index}
-                    className={
-                      `menu-item
+      {!bar.isCopyComponentToDashboard ? (
+        <div className="RightClickMenu-wrap" ref={menuRef}>
+          {menuOptions.map((item, index) => {
+            const hasLevel = item.children && item.children.length && Array.isArray(item.children);
+            return (
+              <div
+                key={index}
+                className={`menu-item
             ${item.disabled && "disabled-menu-item"}
-            ${hasLevel && "li-hover"}`
-                    }
-                    onClick={(e) => menuItemClick(e, item.key)}
-                  >
-                    {
-                      // TODO 目前是三种双重状态，如果后续双重状态的选项太多,再封装一个组件
-                      (item.key === "lock" && isLock) ||
-                        (item.key === "singleShowLayer" && isSingleShow) ||
-                        (item.key === "hidden" && !isShowOrHidden)
-                        ? <IconFont style={{ fontSize: "10px" }} type={`icon-${item.anotherIcon}`} />
-                        : <IconFont style={{ fontSize: "10px" }} type={`icon-${item.icon}`} />
-                    }
-                    <li className={"menu-item-li"}>
-                      {
-                        (item.key === "lock" && isLock) ||
-                          (item.key === "singleShowLayer" && isSingleShow) ||
-                          (item.key === "hidden" && !isShowOrHidden)
-                          ? item.anotherName
-                          : item.name
-                      }
-                      {
-                        hasLevel && <SecondMenu data={item.children} />
-                      }
-                    </li>
-                    {/* 右三角图标 */}
-                    {
-                      hasLevel && <span className='right-icon'>
-                        {
-                          React.createElement(Icons.CaretRightOutlined)
-                        }</span>
-                    }
-                  </div>
-                );
-              })
-            }
-          </div>
-          : null
-      }
+            ${hasLevel && "li-hover"}`}
+                onClick={(e) => menuItemClick(e, item.key)}
+              >
+                {
+                  // TODO 目前是三种双重状态，如果后续双重状态的选项太多,再封装一个组件
+                  (item.key === "lock" && isLock) ||
+                  (item.key === "singleShowLayer" && isSingleShow) ||
+                  (item.key === "hidden" && !isShowOrHidden) ? (
+                    <IconFont style={{ fontSize: "10px" }} type={`icon-${item.anotherIcon}`} />
+                  ) : (
+                    <IconFont style={{ fontSize: "10px" }} type={`icon-${item.icon}`} />
+                  )
+                }
+                <li className={"menu-item-li"}>
+                  {(item.key === "lock" && isLock) ||
+                  (item.key === "singleShowLayer" && isSingleShow) ||
+                  (item.key === "hidden" && !isShowOrHidden)
+                    ? item.anotherName
+                    : item.name}
+                  {hasLevel && <SecondMenu data={item.children} />}
+                </li>
+                {/* 右三角图标 */}
+                {hasLevel && (
+                  <span className="right-icon">
+                    {React.createElement(Icons.CaretRightOutlined)}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
       <Modal
-        title='复制到大屏'
+        title="复制到大屏"
         className="corss-copy-modal"
         destroyOnClose={true}
         visible={showCorssCopyModal}
         onCancel={cancelCorssCopyModal}
         footer={[
           // eslint-disable-next-line react/jsx-key
-          <div className='custom-btn-wrap'>
-            <Button className='my-btn cancel-btn' onClickCapture={cancelCorssCopyModal}>取消</Button>
-            <Button className='my-btn confirm-btn' type="primary" onClickCapture={confirmCorssCopy}>确定</Button>
-          </div>
+          <div className="custom-btn-wrap">
+            <Button className="my-btn cancel-btn" onClickCapture={cancelCorssCopyModal}>
+              取消
+            </Button>
+            <Button className="my-btn confirm-btn" type="primary" onClickCapture={confirmCorssCopy}>
+              确定
+            </Button>
+          </div>,
         ]}
         style={{
-          top: "30%"
+          top: "30%",
         }}
       >
         <Form
@@ -363,18 +361,17 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
             span: 5,
           }}
           layout="horizontal"
-          name='releaseForm'
+          name="releaseForm"
           className="move-from"
         >
-          <Form.Item
-          >
+          <Form.Item>
             <Select onSelect={selectDashboard} placeholder="请选择">
-              {
-                dashboardList.map((item) =>
-                (<Option key={item.id} value={item.id}>      {item.name}
-                </Option>)
-                )
-              }
+              {dashboardList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {" "}
+                  {item.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
         </Form>
@@ -383,6 +380,4 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   );
 };
 
-export default memo(connect(
-  ({ bar, operate }) => ({ bar, operate })
-)(RightClickMenu));
+export default memo(connect(({ bar, operate }) => ({ bar, operate }))(RightClickMenu));

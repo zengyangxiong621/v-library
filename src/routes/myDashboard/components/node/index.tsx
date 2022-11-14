@@ -8,8 +8,7 @@ import { Input, message, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 const EveryTreeNode = (props: any) => {
-  const { groupId, name, number,
-    addGroup, refreshGroupLists, refreshRight, spaceId } = props || {};
+  const { groupId, name, number, addGroup, refreshGroupLists, refreshRight, spaceId } = props || {};
   const inputRef = useRef<any>();
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState("");
@@ -19,7 +18,7 @@ const EveryTreeNode = (props: any) => {
   const [newGroupName, setNewGroupName] = useState("");
   useEffect(() => {
     inputRef.current?.focus({
-      cursor: "all"
+      cursor: "all",
     });
   }, [showRenameInput]);
 
@@ -34,12 +33,12 @@ const EveryTreeNode = (props: any) => {
     }
     const finalBody = {
       spaceId,
-      name: newGroupName
+      name: newGroupName,
     };
     const data = await http({
       method: "post",
       url: "/visual/application/addGroup",
-      body: finalBody
+      body: finalBody,
     });
     // 创建成功，改变父组件传入的变量通知父组件重新获取最新分组列表
     if (data) refreshGroupLists();
@@ -66,12 +65,12 @@ const EveryTreeNode = (props: any) => {
     const finalBody = {
       id: groupId,
       name: inputValue,
-      spaceId
+      spaceId,
     };
     const data = await http({
       method: "post",
       url: "/visual/application/updateGroup",
-      body: finalBody
+      body: finalBody,
     });
     if (data) {
       inputRef.current.blur();
@@ -95,7 +94,7 @@ const EveryTreeNode = (props: any) => {
     Modal.confirm({
       title: "删除分组",
       style: {
-        top: "30%"
+        top: "30%",
       },
       getContainer: document.getElementById("root") as any,
       okButtonProps: {
@@ -103,12 +102,12 @@ const EveryTreeNode = (props: any) => {
           backgroundColor: "#e9535d",
           border: "none",
           // marginLeft: '8px',
-        }
+        },
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: "#3d404d"
-        }
+          backgroundColor: "#3d404d",
+        },
       },
       icon: <ExclamationCircleFilled />,
       content: "删除后不可恢复，确认删除此分组吗?",
@@ -120,7 +119,7 @@ const EveryTreeNode = (props: any) => {
       async onOk(close) {
         const data = await http({
           url: `/visual/application/deleteGroup?groupId=${id}`,
-          method: "delete"
+          method: "delete",
         });
         if (data) {
           // 删除成功，需要刷新左侧树列表、和整个列表
@@ -134,68 +133,64 @@ const EveryTreeNode = (props: any) => {
       },
       onCancel(close) {
         close();
-      }
+      },
     });
   };
   return (
     <div className={"dashboard-node-wrap"}>
-      {
-        groupId === "aInput"
-          ?
-          <div>
-            <Input
-              value={newGroupName}
-              maxLength={20}
-              onChange={(e) => createInputChange(e)}
-              onPressEnter={() => createGroup()}
-              onBlur={() => createGroup()}
-            /></div>
-          :
-          <>
-            <div className='title'>
-              {
-                showRenameInput
-                  ?
-                  <Input
-                    style={{ width: "120px" }}
-                    value={inputValue}
-                    ref={inputRef}
-                    maxLength={20}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => oInputContent(e)}
-                    onPressEnter={(e) => updateGroupName(e)}
-                    onBlur={(e) => updateGroupName(e)}
-                  />
-                  : <div className='text'>{name}</div>
-              }
-            </div>
-            <div className='icons-wrap'>
-              {
-                name === "应用列表"
-                  ? <IconFont type='icon-xinjianfenzu' onClickCapture={addGroup} />
-                  :
-                  (name === "全部应用" || name === "未分组")
-                    ? <>{number}</>
-                    :
-                    <>
-                      <div className='show-icon'>
-                        {
-                          <IconFont type='icon-bianji' style={{ marginRight: "16px" }} onClickCapture={(e) => editClick(e)} />
-                        }
-                        {
-                          <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(groupId)} />
-                        }
-                      </div>
-                      <span className='show-nums'>{number}</span>
-                    </>
-              }
-            </div>
-          </>
-      }
+      {groupId === "aInput" ? (
+        <div>
+          <Input
+            value={newGroupName}
+            maxLength={20}
+            onChange={(e) => createInputChange(e)}
+            onPressEnter={() => createGroup()}
+            onBlur={() => createGroup()}
+          />
+        </div>
+      ) : (
+        <>
+          <div className="title">
+            {showRenameInput ? (
+              <Input
+                style={{ width: "120px" }}
+                value={inputValue}
+                ref={inputRef}
+                maxLength={20}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => oInputContent(e)}
+                onPressEnter={(e) => updateGroupName(e)}
+                onBlur={(e) => updateGroupName(e)}
+              />
+            ) : (
+              <div className="text">{name}</div>
+            )}
+          </div>
+          <div className="icons-wrap">
+            {name === "应用列表" ? (
+              <IconFont type="icon-xinjianfenzu" onClickCapture={addGroup} />
+            ) : name === "全部应用" || name === "未分组" ? (
+              <>{number}</>
+            ) : (
+              <>
+                <div className="show-icon">
+                  {
+                    <IconFont
+                      type="icon-bianji"
+                      style={{ marginRight: "16px" }}
+                      onClickCapture={(e) => editClick(e)}
+                    />
+                  }
+                  {<IconFont type="icon-shanchuzu" onClickCapture={() => delClick(groupId)} />}
+                </div>
+                <span className="show-nums">{number}</span>
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
-export default memo(
-  EveryTreeNode
-);
+export default memo(EveryTreeNode);

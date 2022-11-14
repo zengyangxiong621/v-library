@@ -19,9 +19,9 @@ import AlarmLog from "./routes/alarmLog";
 
 const routesConfig = (app: any) => [
   {
-    name:"登录",
-    path:"/login",
-    component:Login,
+    name: "登录",
+    path: "/login",
+    component: Login,
   },
   // {
   //   path: '/sign',
@@ -56,9 +56,9 @@ const routesConfig = (app: any) => [
       RoleManage(app),
       AlarmLog(app),
       AccountList(app),
-      NoFound()
-    ]
-  }
+      NoFound(),
+    ],
+  },
 ];
 
 export default routesConfig;

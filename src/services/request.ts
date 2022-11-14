@@ -117,7 +117,7 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
 /* 快捷方法 */
 
 ["GET", "HEAD", "DELETE", "OPTIONS"].forEach((item) => {
-  (http as any)[item.toLowerCase()] = function(url: string, config: any) {
+  (http as any)[item.toLowerCase()] = function (url: string, config: any) {
     if (!isPlainObject(config)) config = {};
     config["url"] = url;
     config["method"] = item;
@@ -126,7 +126,7 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
 });
 
 ["POST", "PUT", "PATCH"].forEach((item: string) => {
-  (http as any)[item.toLowerCase()] = function(url: string, body: any, config: any) {
+  (http as any)[item.toLowerCase()] = function (url: string, body: any, config: any) {
     if (!isPlainObject(config)) config = {};
     config["url"] = url;
     config["method"] = item;

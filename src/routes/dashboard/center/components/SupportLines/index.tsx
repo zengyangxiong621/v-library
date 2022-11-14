@@ -3,8 +3,8 @@ import { connect } from "dva";
 import "./index.less";
 
 interface SupportLineProperty {
-  bar?: any,
-  cRef?: any
+  bar?: any;
+  cRef?: any;
 }
 
 const SupportLines = ({ bar, cRef }: SupportLineProperty) => {
@@ -33,11 +33,10 @@ const SupportLines = ({ bar, cRef }: SupportLineProperty) => {
       setStyle({
         left: left + x,
         top: top + y,
-        display: "block"
+        display: "block",
       });
     },
   }));
-
 
   return (
     <div
@@ -49,8 +48,14 @@ const SupportLines = ({ bar, cRef }: SupportLineProperty) => {
         ...style,
       }}
     >
-      <div className="v-line" style={{ borderTop: `${1 / bar.canvasScaleValue}px dashed #b6b2b2` }} />
-      <div className="h-line" style={{ borderLeft: `${1 / bar.canvasScaleValue}px dashed #b6b2b2` }} />
+      <div
+        className="v-line"
+        style={{ borderTop: `${1 / bar.canvasScaleValue}px dashed #b6b2b2` }}
+      />
+      <div
+        className="h-line"
+        style={{ borderLeft: `${1 / bar.canvasScaleValue}px dashed #b6b2b2` }}
+      />
       <div
         className="position-info"
         style={{
@@ -61,9 +66,7 @@ const SupportLines = ({ bar, cRef }: SupportLineProperty) => {
           fontSize: 18 / bar.canvasScaleValue,
         }}
       >
-        {
-          Math.ceil(style.left) + "," + Math.ceil(style.top)
-        }
+        {Math.ceil(style.left) + "," + Math.ceil(style.top)}
       </div>
     </div>
   );

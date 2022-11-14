@@ -45,17 +45,16 @@ const ScaleDragCom = ({ bar, cRef, mouse, onScaleEnd }: any) => {
     getPosition() {
       return {
         x: scaleDragRef.current.style.left.replace("px", ""),
-        y: scaleDragRef.current.style.top.replace("px", "")
+        y: scaleDragRef.current.style.top.replace("px", ""),
       };
     },
     getSize() {
       return {
         width: scaleDragRef.current.style.width.replace("px", ""),
-        height: scaleDragRef.current.style.height.replace("px", "")
+        height: scaleDragRef.current.style.height.replace("px", ""),
       };
-    }
+    },
   }));
-
 
   /**
    *  scaleDrag 组件是可放大并且是能拖拽的组件，但是不具备主动拖拽的功能，只能通过设置 position / 真实 dom 的 transform 的数据去主动移动它
@@ -73,10 +72,10 @@ const ScaleDragCom = ({ bar, cRef, mouse, onScaleEnd }: any) => {
   // };
 
   // const handleDrag = (event: DraggableEvent, data: DraggableData) => {
-    // scaleDragData.position = {
-    //   x: data.x,
-    //   y: data.y,
-    // }
+  // scaleDragData.position = {
+  //   x: data.x,
+  //   y: data.y,
+  // }
   // };
   // const handleStop = (event: DraggableEvent, data: DraggableData) => {
   //   dispatch({
@@ -117,13 +116,10 @@ const ScaleDragCom = ({ bar, cRef, mouse, onScaleEnd }: any) => {
           // onScale={handleScale}
           mouse={mouse}
         >
-          <div>
-
-          </div>
+          <div></div>
         </ScaleContainer>
       </div>
     </div>
-
   );
 };
 export default connect(({ bar }: any) => ({

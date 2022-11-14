@@ -6,18 +6,14 @@ import { deepClone, layersReverse } from "@/utils";
 
 import { Spin } from "antd";
 
-
 import RecursiveComponent from "./components/recursiveComponent";
 import { calcCanvasSize } from "../../utils";
 import useWebsocket from "@/utils/useWebsocket";
 
-
 const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any) => {
-
-
   // 跨屏 接收跨屏回调
   // 建立socket连接，receiveData 接收数据，先打印出来，添加在回调参数后
-  const [ dealedData,setDealedData ] = useState({});
+  const [dealedData, setDealedData] = useState({});
   // const { receiveData, readyState, sendMessage, closeWebSocket, reconnect } = useWebsocket({
   //   url: `/visual/webSocket/shareParam/eventName1`
   //   // url: `ws://50423059pd.zicp.vip/visual/webSocket/shareParam/eventName`
@@ -38,8 +34,8 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   const [overflowStyle, setOverflowStyle] = useState({});
   const [scaleValue, setScaleValue] = useState(1);
   /**
-  * description: 获取屏幕大小、缩放设置等参数
-  */
+   * description: 获取屏幕大小、缩放设置等参数
+   */
   const [layers, setLayers] = useState([]);
   const [panels, setPanels] = useState([]);
   const [components, setComponents] = useState([]);
@@ -89,7 +85,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
         };
         setPreviewDashboardStyle(tempStyle);
         const originScale = {
-          transform: `scale(${scaleValue})`
+          transform: `scale(${scaleValue})`,
         };
         setScaleStyle(originScale);
         break;
@@ -98,7 +94,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
         const wRatio = winW / width;
         const hRatio = winH / height;
         const forceCovered = {
-          transform: `scaleX(${wRatio}) scaleY(${hRatio})`
+          transform: `scaleX(${wRatio}) scaleY(${hRatio})`,
         };
         setScaleStyle(forceCovered);
 
@@ -152,8 +148,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
         const { dashboardConfig, dashboardName }: any = await initDashboard();
         setDashboardConfig(dashboardConfig);
         await previewByScaleMode({ dashboardConfig, dashboardName });
-      }
-      finally {
+      } finally {
         setTimeout(() => {
           setIsLoaded(false);
         }, 500);
@@ -162,7 +157,7 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     init();
     return () => {
       dispatch({
-        type: "previewDashboard/clearCurrentDashboardData"
+        type: "previewDashboard/clearCurrentDashboardData",
       });
     };
   }, []);
@@ -190,7 +185,6 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     };
   }, [scaleValue]);
 
-
   // 定时刷新页面
   useEffect(() => {
     const intervalId = setInterval(async () => {
@@ -209,23 +203,27 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
     setLayers(data);
     setComponents(previewDashboard.fullAmountComponents);
     setPanels(previewDashboard.panels);
-
   }, [previewDashboard.layers]);
 
   // 调用 dispatch,完成数据的请求 以及 接口数据中各项 设置到指定位置
-  const initDashboard = (cb = function () { }) => {
+  const initDashboard = (cb = function () {}) => {
     return new Promise((resolve, reject) => {
-      const afterDashboardUrl = window.location.pathname.slice(window.location.pathname.indexOf("/bigscreen/"));
-      const idList = afterDashboardUrl.split("/").map(item => {
-        return item.replace(/[^0-9]/ig, "");
-      }).filter(item => item);
+      const afterDashboardUrl = window.location.pathname.slice(
+        window.location.pathname.indexOf("/bigscreen/")
+      );
+      const idList = afterDashboardUrl
+        .split("/")
+        .map((item) => {
+          return item.replace(/[^0-9]/gi, "");
+        })
+        .filter((item) => item);
       const dashboardId = idList[0] || null;
       dispatch({
         type: "previewDashboard/initDashboard",
         payload: { dashboardId },
         cb: (data: any) => {
           resolve(data);
-        }
+        },
       });
     });
   };
@@ -246,11 +244,11 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
 
   // 跨屏 获取订阅消息
   // useEffect(() => {
-    // if (readyState.key === 1 && receiveData !== ''){
+  // if (readyState.key === 1 && receiveData !== ''){
   //     console.log(receiveData,'#########websocket  get');
   //     // 订阅消息处理 receiveData：组件id、data
   //     // JSON.parse(receiveData)
-      // setDealedData(receiveData);
+  // setDealedData(receiveData);
 
   //     // 组件id 重新发布更新组件
   //     // const activeComponents = [activeId].reduce((pre, id) => pre.concat(previewDashboard.components.find(item => item.id === id)), [])
@@ -267,56 +265,60 @@ const PreViewDashboard = ({ dispatch, previewDashboard, history, location }: any
   // }, [receiveData, readyState])
 
   return (
-    <div id="gs-v-library-app"
-         style={{
-           width: "100vw",
-           height: "100vh",
-           backgroundColor: pageStyle.background
-         }}
+    <div
+      id="gs-v-library-app"
+      style={{
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: pageStyle.background,
+      }}
     >
-      {
-        !isLoaded ?
-          <div className='customScrollStyle' style={{ ...overflowStyle }}>
-            <div className='previewDashboard-wrap'
+      {!isLoaded ? (
+        <div className="customScrollStyle" style={{ ...overflowStyle }}>
+          <div
+            className="previewDashboard-wrap"
+            style={{
+              ...previewDashboardStyle,
+              ...absolutePosition,
+            }}
+          >
+            <div
+              id="scaleDiv"
               style={{
-                ...previewDashboardStyle,
-                ...absolutePosition,
+                ...pageStyle,
+                ...scaleStyle,
               }}
             >
-              <div id="scaleDiv"
-                style={{
-                  ...pageStyle,
-                  ...scaleStyle,
-                }}
-              >
-                {
-                  // 跨屏 用于递归展示 layers 的组件，大屏回调参数应该会传递给这个组件
-                  <RecursiveComponent
-                    layersArr={layers}
-                    componentLists={components}
-                    panels={panels}
-                    previewDashboard={previewDashboard}
-                    dispatch={dispatch}
-                    scaleValue={scaleValue}
-                    scaleMode={scaleMode}
-                    crossCallback={dealedData}
-                    // sendMessage={sendMessage}
-                  />
-                }
-              </div>
+              {
+                // 跨屏 用于递归展示 layers 的组件，大屏回调参数应该会传递给这个组件
+                <RecursiveComponent
+                  layersArr={layers}
+                  componentLists={components}
+                  panels={panels}
+                  previewDashboard={previewDashboard}
+                  dispatch={dispatch}
+                  scaleValue={scaleValue}
+                  scaleMode={scaleMode}
+                  crossCallback={dealedData}
+                  // sendMessage={sendMessage}
+                />
+              }
             </div>
           </div>
-          :
-          <div style={{
-            width: "100vw", height: "100vh",
+        </div>
+      ) : (
+        <div
+          style={{
+            width: "100vw",
+            height: "100vh",
           }}
-            className="preview-loading-wrap"
-          ></div>
-      }
+          className="preview-loading-wrap"
+        ></div>
+      )}
     </div>
   );
 };
 
-export default memo(connect(
-  ({ previewDashboard }: any) => ({ previewDashboard })
-)(withRouter(PreViewDashboard)));
+export default memo(
+  connect(({ previewDashboard }: any) => ({ previewDashboard }))(withRouter(PreViewDashboard))
+);

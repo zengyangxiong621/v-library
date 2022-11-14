@@ -8,7 +8,18 @@ import moment from "moment";
 import type { Moment } from "moment";
 
 import zhCN from "antd/es/locale/zh_CN";
-import { ConfigProvider, DatePicker, Select, Button, Input, message, Badge, Tooltip, Popconfirm, Table } from "antd";
+import {
+  ConfigProvider,
+  DatePicker,
+  Select,
+  Button,
+  Input,
+  message,
+  Badge,
+  Tooltip,
+  Popconfirm,
+  Table,
+} from "antd";
 import type { TimeRangePickerProps } from "antd";
 import type { TableProps } from "antd/es/table";
 import { FileDoneOutlined } from "@ant-design/icons";
@@ -17,13 +28,13 @@ const { Option } = Select;
 const { Search } = Input;
 const { Column } = Table;
 
-
 type RangeValue = [Moment | null, Moment | null] | null;
-
 
 const AlarmLog: React.FC = () => {
   const [momentDates, setMomentDates] = useState<RangeValue>([moment().add(-1, "M"), moment()]); //当前Moment时间
-  const [startDate, setStartDate] = useState(moment().add(-1, "M").format("YYYY-MM-DD") + " 00:00:00"); //开始日期
+  const [startDate, setStartDate] = useState(
+    moment().add(-1, "M").format("YYYY-MM-DD") + " 00:00:00"
+  ); //开始日期
   const [endDate, setEndDate] = useState(moment().format("YYYY-MM-DD") + " 23:59:59"); //结束日期
   const [stateRead, setStateRead] = useState<string | number>(""); //当前状态
   const [pageNo, setPageNo] = useState(1); //当前页码
@@ -35,8 +46,6 @@ const AlarmLog: React.FC = () => {
   const [loading, setLoading] = useState(false); //选择为空的标志
   const [dataSource, setDataSource] = useState<any>({}); //请求的数据
   const [visible, setVisible] = useState(false); //处置方案内容的抽屉
-
-
 
   // 转换stateRead
   const stateReadTransform = (state: string | number) => {
@@ -57,7 +66,7 @@ const AlarmLog: React.FC = () => {
       const data = await http({
         url: "/visual/alarmInfo/list",
         method: "post",
-        body: { ...allParams, ...obj }
+        body: { ...allParams, ...obj },
       });
       setDataSource(data);
     } catch (error) {
@@ -144,7 +153,12 @@ const AlarmLog: React.FC = () => {
     }
   };
   // 改变表格排序
-  const tableOnChange: TableProps<DataType>["onChange"] = (pagination: any, filters: any, sorter: any, { action }: any) => {
+  const tableOnChange: TableProps<DataType>["onChange"] = (
+    pagination: any,
+    filters: any,
+    sorter: any,
+    { action }: any
+  ) => {
     if (action === "sort") {
       const { order } = sorter;
       if (order) {
@@ -184,7 +198,6 @@ const AlarmLog: React.FC = () => {
     setVisible(true);
   };
 
-
   interface DataType {
     object: string;
     detail: string;
@@ -192,15 +205,15 @@ const AlarmLog: React.FC = () => {
     updatedTime: string;
     read: boolean;
     operate: string;
-    id: string
+    id: string;
   }
 
   return (
     <ConfigProvider locale={zhCN}>
-      <div className='alarmLog-warp'>
-        <div className='title'>告警管理</div>
-        <div className='condition'>
-          <div className='time-range'>
+      <div className="alarmLog-warp">
+        <div className="title">告警管理</div>
+        <div className="condition">
+          <div className="time-range">
             <span>时间范围</span>
             <RangePicker
               value={hackValue || momentDates}
@@ -208,20 +221,27 @@ const AlarmLog: React.FC = () => {
               onOpenChange={handerOpenChange}
             />
           </div>
-          <div className='state'>
+          <div className="state">
             <span>状态</span>
-            <Select value={stateRead} defaultValue="" style={{ width: 170 }} onChange={handleChangeState}>
+            <Select
+              value={stateRead}
+              defaultValue=""
+              style={{ width: 170 }}
+              onChange={handleChangeState}
+            >
               <Option value="">全部</Option>
               <Option value={0}>未读</Option>
               <Option value={1}>已读</Option>
             </Select>
           </div>
           <div>
-            <Button onClick={handleReset} type="primary">重置</Button>
+            <Button onClick={handleReset} type="primary">
+              重置
+            </Button>
           </div>
         </div>
-        <div className='search-read'>
-          <div className='search'>
+        <div className="search-read">
+          <div className="search">
             <Search
               placeholder="请输入异常对象搜索"
               allowClear
@@ -229,7 +249,7 @@ const AlarmLog: React.FC = () => {
               style={{ width: 300 }}
             />
           </div>
-          <div className='read'>
+          <div className="read">
             <Popconfirm
               placement="topRight"
               title="你确定要全部标记为已读吗？"
@@ -245,10 +265,10 @@ const AlarmLog: React.FC = () => {
             </Popconfirm>
           </div>
         </div>
-        <div className='table-list table-wrap'>
+        <div className="table-list table-wrap">
           <Table
             scroll={{ y: "calc(100vh - 350px)" }}
-            rowClassName='customRowClass'
+            rowClassName="customRowClass"
             dataSource={dataSource?.content || []}
             loading={loading}
             rowKey={(record: any) => record.id}
@@ -256,31 +276,58 @@ const AlarmLog: React.FC = () => {
             pagination={paginationProps}
             showSorterTooltip={false}
           >
-            <Column title="异常对象" dataIndex="object" key="object" ellipsis={true} width="150px" />
-            <Column title="异常详情" dataIndex="detail" key="detail" ellipsis={true} width="500px" />
-            <Column title="更新时间" dataIndex="updatedTime" key="updatedTime" ellipsis={true} width="200px"
+            <Column
+              title="异常对象"
+              dataIndex="object"
+              key="object"
+              ellipsis={true}
+              width="150px"
+            />
+            <Column
+              title="异常详情"
+              dataIndex="detail"
+              key="detail"
+              ellipsis={true}
+              width="500px"
+            />
+            <Column
+              title="更新时间"
+              dataIndex="updatedTime"
+              key="updatedTime"
+              ellipsis={true}
+              width="200px"
               sorter={true}
             />
-            <Column title="状态" dataIndex="read" key="read" ellipsis={true} width="100px"
+            <Column
+              title="状态"
+              dataIndex="read"
+              key="read"
+              ellipsis={true}
+              width="100px"
               render={(_: any, { read }: any) =>
-              (
-                read
-                  ?
+                read ? (
                   <>
-                    <span className='read'></span>
+                    <span className="read"></span>
                     <span>已读</span>
                   </>
-                  :
+                ) : (
                   <>
-                    <span className='unread'></span>
+                    <span className="unread"></span>
                     <span>未读</span>
-                  </>)}
+                  </>
+                )
+              }
             />
-            <Column title="操作" dataIndex="id" key="id" ellipsis={true} width="150px"
+            <Column
+              title="操作"
+              dataIndex="id"
+              key="id"
+              ellipsis={true}
+              width="150px"
               render={(_: any, { id, read }: any) => (
                 <Button
                   type="link"
-                  className='buttonBlue'
+                  className="buttonBlue"
                   disabled={read}
                   onClick={() => requestUpdateRead(id)}
                 >

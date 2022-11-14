@@ -8,10 +8,10 @@ import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/typ
 import { layersReverse, layersPanelsFlat, deepClone } from "@/utils/index.js";
 
 interface State {
-  overflow: "none" | "auto" | "hidden" // 面板隐藏的方式
+  overflow: "none" | "auto" | "hidden"; // 面板隐藏的方式
   allData: Array<{
-    layers: any[]
-    components: any[],
+    layers: any[];
+    components: any[];
     [key: string]: any;
   }>; // 面板内所有状态的集合
   activeIndex: number; // 当前展示的状态下标
@@ -22,7 +22,13 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
   const componentData = bar.componentData;
   // 获取面板想起接口
   const { states, config, name, type } = panel;
-  const { isScroll = false, allowScroll = false, animationType = "0", scrollTime = 0, animationTime = 0 } = config;
+  const {
+    isScroll = false,
+    allowScroll = false,
+    animationType = "0",
+    scrollTime = 0,
+    animationTime = 0,
+  } = config;
   const [state, setState] = useSetState<State>({
     overflow: "hidden",
     allData: [],
@@ -30,18 +36,22 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
     isLoading: false,
   });
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const { components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find((item: any) => item.id === id);
+    const { components, layers, dashboardConfig } = bar.fullAmountDashboardDetails.find(
+      (item: any) => item.id === id
+    );
     const layerPanels: any = layersPanelsFlat(layers);
-    const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
+    const panels: Array<IPanel> = await Promise.all(
+      layerPanels.map((item: any) => getStateDetails(item))
+    );
     // await Promise.all(components.map((item: any) => getComponentData(item)));
     dispatch({
       type: "save",
       payload: {
-        componentData
-      }
+        componentData,
+      },
     });
-    const backgroundColor = dashboardConfig.find(item => item.name === "styleColor").value;
-    const backgroundImage = dashboardConfig.find(item => item.name === "backgroundImg").value;
+    const backgroundColor = dashboardConfig.find((item) => item.name === "styleColor").value;
+    const backgroundImage = dashboardConfig.find((item) => item.name === "backgroundImg").value;
     const newLayers = deepClone(layers);
     layersReverse(newLayers);
     return {
@@ -52,7 +62,7 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
       name,
       panels,
       backgroundColor,
-      backgroundImage
+      backgroundImage,
     };
   };
   const getStateDetails = async ({ id }: any) => {
@@ -75,8 +85,7 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
       });
 
       if (data) {
-        componentData[component.id] =
-          component.dataType !== "static" ? data : data.data;
+        componentData[component.id] = component.dataType !== "static" ? data : data.data;
       } else {
         throw new Error("请求不到数据");
       }
@@ -89,39 +98,44 @@ const DrillDownPanel = ({ bar, id, dispatch, isDashboard = true, panel }: any) =
   useEffect(() => {
     (async function () {
       if (states.length === 0) return;
-      const data = await Promise.all(states.map((item: { name: string; id: string }) => getPanelDetails(item)));
+      const data = await Promise.all(
+        states.map((item: { name: string; id: string }) => getPanelDetails(item))
+      );
       setState({
         allData: data,
-        isLoading: true
+        isLoading: true,
       });
     })();
   }, []);
 
-
   return (
-    <div className={`drill-down-panel panel-${id}`} style={{ overflow: state.overflow, width: "100%", height: "100%" }}>
-      {
-        state.allData.map((item: any, index: number) =>
-          (
-            <div
-              className="status-wrap"
-              style={ {
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                display: state.activeIndex === index ? "block" : "none",
-                transition: `transform 600ms ease 0s, opacity ${ animationTime }ms ease 0s`,
-                backgroundImage: item.backgroundImage ? `url('${ item.backgroundImage }')` : "unset",
-                backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "100% 100%"
-              } }>
-              <CustomDraggable mouse={ 0 } layers={ item.layers } components={ item.components }
-                               panels={ item.panels }/>
-            </div>
-          ),
-        )
-      }
+    <div
+      className={`drill-down-panel panel-${id}`}
+      style={{ overflow: state.overflow, width: "100%", height: "100%" }}
+    >
+      {state.allData.map((item: any, index: number) => (
+        <div
+          className="status-wrap"
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            display: state.activeIndex === index ? "block" : "none",
+            transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
+            backgroundImage: item.backgroundImage ? `url('${item.backgroundImage}')` : "unset",
+            backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "100% 100%",
+          }}
+        >
+          <CustomDraggable
+            mouse={0}
+            layers={item.layers}
+            components={item.components}
+            panels={item.panels}
+          />
+        </div>
+      ))}
     </div>
   );
 };

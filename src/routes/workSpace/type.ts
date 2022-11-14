@@ -1,7 +1,7 @@
 enum MapParams {
   ascend,
   descend,
-  default
+  default,
 }
 export type TWorkSpaceParams = {
   spaceId: string | number;
@@ -9,6 +9,6 @@ export type TWorkSpaceParams = {
   pageNo: string | number;
   pageSize: string | number;
   map?: {
-    [key: string]: keyof typeof MapParams
-  }
+    [key: string]: keyof typeof MapParams;
+  };
 };

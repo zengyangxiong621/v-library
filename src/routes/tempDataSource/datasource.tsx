@@ -17,7 +17,6 @@ import TipModal from "@/components/tipModal";
 
 const { Option } = Select;
 
-
 const DataSource = (props: any) => {
   console.log(props);
   const curWorkspace: any = localStorage.getItem("curWorkspace");
@@ -39,9 +38,8 @@ const DataSource = (props: any) => {
   const [previewRecord, setPreviewRecord] = useState({ type: "", id: "" });
   const [tableLoading, setTableLoading] = useState(false);
 
-  const [delVisible, setDelVisible] = useState<boolean>(false);//删除框的visible
-  const [rowData, setRowData] = useState<any>(null);//选中删除的rowData
-
+  const [delVisible, setDelVisible] = useState<boolean>(false); //删除框的visible
+  const [rowData, setRowData] = useState<any>(null); //选中删除的rowData
 
   // 根据屏幕大小来决定表格的高度
   const [tableHeight, setTableHeight] = useState<any>(0);
@@ -73,7 +71,7 @@ const DataSource = (props: any) => {
       const data = await http({
         url: "/visual/datasource/list",
         method: "post",
-        body: differentParams
+        body: differentParams,
       });
       if (data) {
         await resetTableInfo(data);
@@ -123,7 +121,7 @@ const DataSource = (props: any) => {
       name: inputValue === "" ? null : inputValue,
       pageNo: 1,
       pageSize: pageInfo.pageSize,
-      map: tableMap
+      map: tableMap,
     };
     getTableData(finalParams);
   };
@@ -134,11 +132,7 @@ const DataSource = (props: any) => {
   };
   // 关闭数据源弹窗
   const changeShowState = (modalType: string) => {
-    modalType === "add"
-      ?
-      setIsShowAddModal(false)
-      :
-      setIsShowEditModal(false);
+    modalType === "add" ? setIsShowAddModal(false) : setIsShowEditModal(false);
   };
   // 刷新表格数据
   const refreshTable = () => {
@@ -197,7 +191,7 @@ const DataSource = (props: any) => {
     //TODO 发送删除数据源的请求
     const data = await http({
       url: `/visual/datasource/delete?dataSourceId=${rowData}`,
-      method: "post"
+      method: "post",
     });
     if (data) {
       close();
@@ -213,9 +207,12 @@ const DataSource = (props: any) => {
   };
   const previewClick = (record: any) => {
     setPreviewRecord(record);
-    const fileUrl = record.type === "EXCEL" ?
-      record.excelSourceConfig.fileUrl : record.type === "CSV" ?
-        record.csvSourceConfig.fileUrl : record.jsonSourceConfig.fileUrl;
+    const fileUrl =
+      record.type === "EXCEL"
+        ? record.excelSourceConfig.fileUrl
+        : record.type === "CSV"
+        ? record.csvSourceConfig.fileUrl
+        : record.jsonSourceConfig.fileUrl;
     setIsShowPreviewModal(true);
     setPreviewFileUrl(fileUrl);
   };
@@ -227,13 +224,13 @@ const DataSource = (props: any) => {
     const type = previewRecord.type.toLowerCase();
     const finalParams = Object.assign({}, previewRecord, {
       [`${type}SourceConfig`]: {
-        fileUrl
-      }
+        fileUrl,
+      },
     });
     const data = await http({
       url: "/visual/datasource/update",
       method: "post",
-      body: finalParams
+      body: finalParams,
     });
     if (data) {
       refreshTable();
@@ -252,7 +249,7 @@ const DataSource = (props: any) => {
       const sortKye: any = field === "updatedTime" ? "updated_time" : null;
       // 更新 tableMap, 在别处发请求时会带上当前排序条件
       setTableMap({
-        [sortKye]: order
+        [sortKye]: order,
       });
       // 发送请求
       const finalParams: TDataSourceParams = {
@@ -261,7 +258,7 @@ const DataSource = (props: any) => {
         name: inputValue === "" ? null : inputValue,
         ...pageInfo,
         map: {
-          [sortKye]: order === "ascend"
+          [sortKye]: order === "ascend",
         },
       };
       getTableData(finalParams);
@@ -286,7 +283,7 @@ const DataSource = (props: any) => {
         name: inputValue === "" ? null : inputValue,
         pageNo: page,
         pageSize,
-        map: tableMap
+        map: tableMap,
       };
       getTableData(finalParams);
     },
@@ -325,11 +322,7 @@ const DataSource = (props: any) => {
       dataIndex: "updatedTime",
       render: (time: any) => {
         // const a = new Date(time)
-        return (
-          <>
-            {time}
-          </>
-        );
+        return <>{time}</>;
       },
     },
     {
@@ -339,43 +332,56 @@ const DataSource = (props: any) => {
       width: 200,
       render: (text: any, record: any) => {
         return (
-          <Space size="middle" >
-            {
-              ["EXCEL", "CSV", "JSON"].includes(record.type) ?
-                <span className='textInOperationColumn' onClickCapture={() => previewClick(record)}>预览</span>
-                : null
-            }
-            <span className='textInOperationColumn' onClickCapture={() => editClick(text)}>编辑</span>
-            <span className='textInOperationColumn' onClickCapture={() => delClick(record.id)}>删除</span>
+          <Space size="middle">
+            {["EXCEL", "CSV", "JSON"].includes(record.type) ? (
+              <span className="textInOperationColumn" onClickCapture={() => previewClick(record)}>
+                预览
+              </span>
+            ) : null}
+            <span className="textInOperationColumn" onClickCapture={() => editClick(text)}>
+              编辑
+            </span>
+            <span className="textInOperationColumn" onClickCapture={() => delClick(record.id)}>
+              删除
+            </span>
           </Space>
         );
-      }
-
+      },
     },
   ];
 
   return (
     <ConfigProvider locale={zhCN}>
-      <div className='DataSource-wrap'>
-        <div className='title'>我的数据</div>
-        <header className='header' style={{
-          background: "#171a24"
-        }}>
-          <div className='custom-btn' onClick={addDataSource}>
+      <div className="DataSource-wrap">
+        <div className="title">我的数据</div>
+        <header
+          className="header"
+          style={{
+            background: "#171a24",
+          }}
+        >
+          <div className="custom-btn" onClick={addDataSource}>
             <PlusOutlined style={{ fontSize: "12px", marginRight: "2px" }} />
             <span>添加数据源</span>
           </div>
-          <div className='search'>
-            <Select style={{ minWidth: "140px" }} className='myant-search' dropdownStyle={{ backgroundColor: "#232630" }} defaultValue="全部类型" onChange={selectChange}>
-              {
-                selectOptions.map((item: any) => {
-                  return (
-                    <Option key={item.key} value={item.key}>{item.name}</Option>
-                  );
-                })
-              }
+          <div className="search">
+            <Select
+              style={{ minWidth: "140px" }}
+              className="myant-search"
+              dropdownStyle={{ backgroundColor: "#232630" }}
+              defaultValue="全部类型"
+              onChange={selectChange}
+            >
+              {selectOptions.map((item: any) => {
+                return (
+                  <Option key={item.key} value={item.key}>
+                    {item.name}
+                  </Option>
+                );
+              })}
             </Select>
-            <Input.Search placeholder="搜索"
+            <Input.Search
+              placeholder="搜索"
               className="myant-select"
               allowClear
               maxLength={40}
@@ -385,7 +391,7 @@ const DataSource = (props: any) => {
             />
           </div>
         </header>
-        <div className='table-wrap'>
+        <div className="table-wrap">
           {
             // tableData.length
             //   ?
@@ -393,7 +399,7 @@ const DataSource = (props: any) => {
               // scroll={{ y: "53vh" }}
               scroll={{ y: tableHeight }}
               sortDirections={["ascend", "descend"]}
-              rowClassName='customRowClass'
+              rowClassName="customRowClass"
               loading={tableLoading}
               columns={columns}
               dataSource={tableData}
@@ -414,34 +420,33 @@ const DataSource = (props: any) => {
           refreshTable={refreshTable}
         />
         {/* 编辑数据源的弹窗 */}
-        {
-          isShowEditModal && <EditDataSource
+        {isShowEditModal && (
+          <EditDataSource
             editDataSourceInfo={editDataSourceInfo}
             spaceId={spaceId}
             visible={isShowEditModal}
             changeShowState={changeShowState}
             refreshTable={refreshTable}
           />
-        }
-        {
-          ["EXCEL", "CSV"].includes(previewRecord.type) ?
-            // {/* 表格在线预览 */}
-            <PreviewTable
-              visible={isShowPreviewModal}
-              fileUrl={previewFileUrl}
-              changeShowState={changePreviewShowState}
-              changeRecordFileUrl={changeRecordFileUrl}
-            />
-            :
-            // {/* json在线预览 */}
-            <PreViewJson
-              visible={isShowPreviewModal}
-              fileUrl={previewFileUrl}
-              dataSourceId={previewRecord.id}
-              changeShowState={changePreviewShowState}
-              changeRecordFileUrl={changeRecordFileUrl}
-            />
-        }
+        )}
+        {["EXCEL", "CSV"].includes(previewRecord.type) ? (
+          // {/* 表格在线预览 */}
+          <PreviewTable
+            visible={isShowPreviewModal}
+            fileUrl={previewFileUrl}
+            changeShowState={changePreviewShowState}
+            changeRecordFileUrl={changeRecordFileUrl}
+          />
+        ) : (
+          // {/* json在线预览 */}
+          <PreViewJson
+            visible={isShowPreviewModal}
+            fileUrl={previewFileUrl}
+            dataSourceId={previewRecord.id}
+            changeShowState={changePreviewShowState}
+            changeRecordFileUrl={changeRecordFileUrl}
+          />
+        )}
       </div>
       <TipModal
         visible={delVisible}
@@ -452,7 +457,6 @@ const DataSource = (props: any) => {
     </ConfigProvider>
   );
 };
-
 
 // SelectOptions
 const selectOptions = [
@@ -470,7 +474,7 @@ const selectOptions = [
   },
   {
     name: "CSV",
-    key: "CSV"
+    key: "CSV",
   },
   {
     name: "EXCEL",
@@ -486,19 +490,19 @@ const selectOptions = [
   },
   {
     name: "ELASTIC_SEARCH",
-    key: "ELASTIC_SEARCH"
+    key: "ELASTIC_SEARCH",
   },
   {
     name: "ORACLE",
-    key: "ORACLE"
+    key: "ORACLE",
   },
   {
     name: "SQLSERVER",
-    key: "SQLSERVER"
+    key: "SQLSERVER",
   },
   {
     name: "CLICKHOUSE",
-    key: "CLICKHOUSE"
+    key: "CLICKHOUSE",
   },
 ];
 export default memo(DataSource);

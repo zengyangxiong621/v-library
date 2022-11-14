@@ -6,19 +6,28 @@ import MaterialCard from "../materialCard/index";
 import DarkModal from "../darkThemeModal/index";
 import PreviewModal from "../previewModal/index";
 
-
 import {
-  Row, Col, Button, Spin, message, Form,
-  Switch, Input, Upload, Select, Typography, Tooltip,Empty 
+  Row,
+  Col,
+  Button,
+  Spin,
+  message,
+  Form,
+  Switch,
+  Input,
+  Upload,
+  Select,
+  Typography,
+  Tooltip,
+  Empty,
 } from "antd";
 import { IconFont } from "../../../../utils/useIcon";
 
 const { Option } = Select;
 const { Paragraph } = Typography;
 
-
 const RightContent = (props: any) => {
-  const { listData, resourceCenter, dispatch,refreshList, spaceId } = props;
+  const { listData, resourceCenter, dispatch, refreshList, spaceId } = props;
   const [showMoveGroupModal, setShowMoveGroupModal] = useState(false);
   const [newGroupId, setNewGroupId] = useState("");
   const [currentItem, setCurrentItem] = useState<any>({});
@@ -26,7 +35,6 @@ const RightContent = (props: any) => {
 
   // 发布应用时的参数
   const [curAppId, setCurAppId] = useState("");
-
 
   // ************** 可复用方法 ************
   /**  每个appCard 进行复制、删除等操作后都需要刷新内容列表 && 更新左侧分组树  */
@@ -68,17 +76,23 @@ const RightContent = (props: any) => {
   };
   // 确认移动分组
   const confirmMoveGroup = async () => {
-    const url = ["myTemp", "systemTemp"].indexOf(currentItem.moduleType) > -1  ? "/visual/appTemplate/updateTemplateGroup" : "/visual/resource/changeGroup";
-    const obj = ["myTemp", "systemTemp"].indexOf(currentItem.moduleType) > -1 ? {id: curAppId} : {resourceId: curAppId};
+    const url =
+      ["myTemp", "systemTemp"].indexOf(currentItem.moduleType) > -1
+        ? "/visual/appTemplate/updateTemplateGroup"
+        : "/visual/resource/changeGroup";
+    const obj =
+      ["myTemp", "systemTemp"].indexOf(currentItem.moduleType) > -1
+        ? { id: curAppId }
+        : { resourceId: curAppId };
     const data = await http({
       url,
       method: "post",
       body: {
-        spaceId: ["systemTemp","design"].indexOf(currentItem.moduleType) > -1 ? null : spaceId ,
-        newGroupId:currentItem.moduleType === "design" ? null : newGroupId,
+        spaceId: ["systemTemp", "design"].indexOf(currentItem.moduleType) > -1 ? null : spaceId,
+        newGroupId: currentItem.moduleType === "design" ? null : newGroupId,
         type: currentItem.moduleType === "design" ? newGroupId : null,
-        ...obj
-      }
+        ...obj,
+      },
     });
     if (data) {
       message.success({ content: "移动分组成功", duration: 2 });
@@ -95,97 +109,107 @@ const RightContent = (props: any) => {
     setShowMoveGroupModal(false);
   };
 
-  const getCurrentItem = (data: any,type:any) => {
+  const getCurrentItem = (data: any, type: any) => {
     setCurrentItem(data);
-    if(type === "preview"){
+    if (type === "preview") {
       setIsPreviewVisible(true);
     }
   };
 
-  const changeVisible = (type:any) => {
+  const changeVisible = (type: any) => {
     setIsPreviewVisible(type);
   };
   let selectList = [];
-  if(showMoveGroupModal){
-    switch(currentItem.moduleType){
+  if (showMoveGroupModal) {
+    switch (currentItem.moduleType) {
       case "myTemp":
       case "systemTemp":
-        selectList = currentItem && currentItem.moduleType === "myTemp" ? resourceCenter.groupList[0].children[0].children : resourceCenter.groupList[0].children[1].children;
+        selectList =
+          currentItem && currentItem.moduleType === "myTemp"
+            ? resourceCenter.groupList[0].children[0].children
+            : resourceCenter.groupList[0].children[1].children;
         break;
       default:
-        selectList = currentItem && currentItem.moduleType === "myresource" ? resourceCenter.groupList[1].children[0].children : resourceCenter.groupList[1].children[1].children;
+        selectList =
+          currentItem && currentItem.moduleType === "myresource"
+            ? resourceCenter.groupList[1].children[0].children
+            : resourceCenter.groupList[1].children[1].children;
         break;
     }
   }
-  return <> 
-    {
-      listData.length ?
+  return (
+    <>
+      {listData.length ? (
         <div className="RightContent-wrap">
-          {
-            listData.map((item: any, index: number) => (
-              <MaterialCard
-                {...item}
-                key={index}
-                spaceId={spaceId}
-                openMoveGroupModal={openMoveGroupModal}
-                getCurrentItem = { getCurrentItem }
-                refreshList={refreshList}
-              />
-            )
-            ) 
-          }
-        </div >: <Empty className="empty" description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
-    } 
-    {/* 预览功能处理 */}
-    {
-      isPreviewVisible && 
-      <PreviewModal currentItem={currentItem} isPreviewVisible={isPreviewVisible} changeVisible={changeVisible} ></PreviewModal>
-    }
-    {/* 移入分组弹窗 */}
-     <DarkModal
-      title="移动分组"
-      className="move-right-modal"
-      destroyOnClose={true}
-      getContainer={false}
-      visible={showMoveGroupModal}
-      onCancel={cancelmoveGroupModal}
-      footer={[
-        <div className="custom-btn-wrap">
-          <Button className="my-btn cancel-btn" onClickCapture={cancelMoveGroup}>取消</Button>
-          <Button className="my-btn confirm-btn" type="primary" onClickCapture={confirmMoveGroup}>确定</Button>
+          {listData.map((item: any, index: number) => (
+            <MaterialCard
+              {...item}
+              key={index}
+              spaceId={spaceId}
+              openMoveGroupModal={openMoveGroupModal}
+              getCurrentItem={getCurrentItem}
+              refreshList={refreshList}
+            />
+          ))}
         </div>
-      ]}
-      style={{
-        top: "25%"
-      }}
-    >
-      <Form
-        labelCol={{
-          span: 5,
+      ) : (
+        <Empty className="empty" description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
+      {/* 预览功能处理 */}
+      {isPreviewVisible && (
+        <PreviewModal
+          currentItem={currentItem}
+          isPreviewVisible={isPreviewVisible}
+          changeVisible={changeVisible}
+        ></PreviewModal>
+      )}
+      {/* 移入分组弹窗 */}
+      <DarkModal
+        title="移动分组"
+        className="move-right-modal"
+        destroyOnClose={true}
+        getContainer={false}
+        visible={showMoveGroupModal}
+        onCancel={cancelmoveGroupModal}
+        footer={[
+          <div className="custom-btn-wrap">
+            <Button className="my-btn cancel-btn" onClickCapture={cancelMoveGroup}>
+              取消
+            </Button>
+            <Button className="my-btn confirm-btn" type="primary" onClickCapture={confirmMoveGroup}>
+              确定
+            </Button>
+          </div>,
+        ]}
+        style={{
+          top: "25%",
         }}
-        layout="horizontal"
-        name="releaseForm"
-        className="move-from"
       >
-        <Form.Item label="可选分类"
-          name="group"
-          rules={[{ required: true }]}
+        <Form
+          labelCol={{
+            span: 5,
+          }}
+          layout="horizontal"
+          name="releaseForm"
+          className="move-from"
         >
-          <Select onSelect={selectGroup} placeholder="请选择">
-            {
-              // 将全部应用这一分组剔除
-              selectList?.slice(1).map((item: any) =>
-              (<Option key={item.groupId} value={item.groupId}>      {item.name}
-              </Option>)
-              )
-            }
-          </Select>
-        </Form.Item>
-      </Form>
-    </DarkModal>
-  </>;
+          <Form.Item label="可选分类" name="group" rules={[{ required: true }]}>
+            <Select onSelect={selectGroup} placeholder="请选择">
+              {
+                // 将全部应用这一分组剔除
+                selectList?.slice(1).map((item: any) => (
+                  <Option key={item.groupId} value={item.groupId}>
+                    {" "}
+                    {item.name}
+                  </Option>
+                ))
+              }
+            </Select>
+          </Form.Item>
+        </Form>
+      </DarkModal>
+    </>
+  );
 };
 
-export default memo(connect(
-  ({ resourceCenter }: any) => ({ resourceCenter })
-)(RightContent));
+export default memo(connect(({ resourceCenter }: any) => ({ resourceCenter }))(RightContent));

@@ -8,8 +8,6 @@ import { useClickAway } from "ahooks";
 
 import StateItem from "./stateItem/stateItem";
 
-
-
 const DynamicPanel: React.FC = (props: any) => {
   const { bar, dispatch, history } = props;
   const [open, setOpen] = useState(true);
@@ -37,7 +35,6 @@ const DynamicPanel: React.FC = (props: any) => {
     }
   }, [() => document.getElementById("db-right-menu")]);
 
-
   // 展开/收起 状态面板
   const showCollapse = () => {
     setOpen(!open);
@@ -45,7 +42,7 @@ const DynamicPanel: React.FC = (props: any) => {
   /**
    * description: 点击每一项状态
    */
-  const selectItem = ({ name, id }: { name: string, id: string }) => {
+  const selectItem = ({ name, id }: { name: string; id: string }) => {
     if (id !== bar.stateId) {
       history.push(`/dashboard/${bar.dashboardId}/panel-${bar.panelId}/state-${id}`);
     }
@@ -61,16 +58,15 @@ const DynamicPanel: React.FC = (props: any) => {
     setRightClickTargetItem(item);
     setRMenuLocation({
       x: clientX,
-      y: clientY
+      y: clientY,
     });
-
   };
   /**
    * description: 在动态面板中添加一个状态
    */
   const addPanel = async () => {
     dispatch({
-      type: "bar/addPanelState"
+      type: "bar/addPanelState",
     });
   };
 
@@ -80,8 +76,8 @@ const DynamicPanel: React.FC = (props: any) => {
     dispatch({
       type: "bar/copyPanelState",
       payload: {
-        stateId: (rightClickTargetItem as { id: string, name: string }).id
-      }
+        stateId: (rightClickTargetItem as { id: string; name: string }).id,
+      },
     });
     setIsShowRMenu(false);
   };
@@ -89,8 +85,8 @@ const DynamicPanel: React.FC = (props: any) => {
     dispatch({
       type: "bar/deletePanelState",
       payload: {
-        stateId: (rightClickTargetItem as { id: string, name: string }).id
-      }
+        stateId: (rightClickTargetItem as { id: string; name: string }).id,
+      },
     });
     setIsShowRMenu(false);
   };
@@ -98,58 +94,41 @@ const DynamicPanel: React.FC = (props: any) => {
   // 判断当前面板类型是否是下钻面板
   const curPanelId = bar.panelId;
   const panelsList = bar.fullAmountPanels;
-  const targetPanelInfo = panelsList.find(item => item.id === curPanelId);
+  const targetPanelInfo = panelsList.find((item) => item.id === curPanelId);
   const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false;
 
   return (
-    <div className='dynamic-panel-wrap'>
-      <div className='panel-top'>
+    <div className="dynamic-panel-wrap">
+      <div className="panel-top">
         <div style={{ color: "#ccc" }}>{isDrillDownPanel ? "下钻层级" : "状态"}</div>
-        <div className='panel-icons'>
-          <IconFont className="db-icon" type='icon-xinjianfenzu'
-            onClick={() => addPanel()}
-          />
-          {
-            open ?
-              <IconFont className="db-icon" type='icon-zhankai'
-                onClick={showCollapse}
-              />
-              :
-              <IconFont className="db-icon" type='icon-shouqi'
-                onClick={showCollapse}
-              />
-          }
-
+        <div className="panel-icons">
+          <IconFont className="db-icon" type="icon-xinjianfenzu" onClick={() => addPanel()} />
+          {open ? (
+            <IconFont className="db-icon" type="icon-zhankai" onClick={showCollapse} />
+          ) : (
+            <IconFont className="db-icon" type="icon-shouqi" onClick={showCollapse} />
+          )}
         </div>
       </div>
-      <div className='panel-body' style={{ display: open ? "block" : "none" }}>
-        {
-          panelStatesList.map((item: { id: string, name: string }, index: number) => {
-            return (
-              <StateItem
-                key={item.id}
-                item={item}
-                activeItem={stateId}
-                rightClick={rightClick}
-                selectItem={selectItem}
-              />
-            );
-          })
-        }
+      <div className="panel-body" style={{ display: open ? "block" : "none" }}>
+        {panelStatesList.map((item: { id: string; name: string }, index: number) => {
+          return (
+            <StateItem
+              key={item.id}
+              item={item}
+              activeItem={stateId}
+              rightClick={rightClick}
+              selectItem={selectItem}
+            />
+          );
+        })}
       </div>
-      {
-        isShowRMenu && <RMenu
-          menuLocation={RMenuLocation}
-          copyClick={copyClick}
-          delClick={delClick}
-        />
-      }
+      {isShowRMenu && (
+        <RMenu menuLocation={RMenuLocation} copyClick={copyClick} delClick={delClick} />
+      )}
     </div>
   );
 };
-
-
-
 
 // 右键菜单
 const RMenu = ({ menuLocation, copyClick, delClick }: any) => {
@@ -163,30 +142,24 @@ const RMenu = ({ menuLocation, copyClick, delClick }: any) => {
 
   return (
     <div
-      className='RMenu-wrap' id='db-right-menu' style={{
+      className="RMenu-wrap"
+      id="db-right-menu"
+      style={{
         ...finalStyle,
         top: y,
-        left: x
-      }}>
-      <div className='panel-menu-item'
-        onClick={() => copyClick()}
-      >
-        <IconFont style={{ marginRight: "8px" }} type='icon-fuzhi' />
+        left: x,
+      }}
+    >
+      <div className="panel-menu-item" onClick={() => copyClick()}>
+        <IconFont style={{ marginRight: "8px" }} type="icon-fuzhi" />
         <span>复制</span>
       </div>
-      <div className='panel-menu-item'
-        onClickCapture={() => delClick()}
-      >
-        <IconFont style={{ marginRight: "8px" }} type='icon-shanchuzu' />
+      <div className="panel-menu-item" onClickCapture={() => delClick()}>
+        <IconFont style={{ marginRight: "8px" }} type="icon-shanchuzu" />
         <span>删除</span>
       </div>
     </div>
   );
 };
 
-
-
-
-export default memo(connect(
-  ({ bar }: any) => ({ bar }),
-)(withRouter(DynamicPanel)));
+export default memo(connect(({ bar }: any) => ({ bar }))(withRouter(DynamicPanel)));

@@ -19,7 +19,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   // TODO 后端目前默认是倒排，后续可能需要更改
   // UI图上默认是按照修改时间排
   const [sortMap, setSortMap] = useState<any>({
-    updated_time: false
+    updated_time: false,
   });
   const [inputValue, setInputValue] = useState("");
   // const [uploadFileUrl, setUploadFileUrl] = useState("");
@@ -28,7 +28,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   const getDataDispatch = (finalBody: any) => {
     dispatch({
       type: "dashboardManage/getTemplateList",
-      payload: finalBody
+      payload: finalBody,
     });
   };
 
@@ -41,16 +41,17 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       type: "dashboardManage/resetModel",
       payload: {
         curSelectedGroup,
-        curSelectedGroupName: "全部应用"
-      }
+        curSelectedGroupName: "全部应用",
+      },
     });
-    const groupId = dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
+    const groupId =
+      dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId: spaceId,
       map: sortMap,
-      groupId
+      groupId,
     };
     getDataDispatch(finalBody);
   }, [spaceId]);
@@ -70,7 +71,8 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   };
   // 搜索应用
   const search = (value: string) => {
-    const groupId = dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
+    const groupId =
+      dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
@@ -84,7 +86,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   // 选择排序的标准
   const selectSortType = (value: any) => {
     const newSortMap = {
-      [value]: false
+      [value]: false,
     };
     setSortMap(newSortMap);
     // 选择新标准后，需要发送一次请求
@@ -96,23 +98,24 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       pageSize: 1000,
       spaceId,
       map: newSortMap,
-      groupId
+      groupId,
     };
     dispatch({
       type: "dashboardManage/getTemplateList",
-      payload: finalBody
+      payload: finalBody,
     });
   };
   /**
    * description:  刷新左侧分组列表和右侧应用列表
    */
   const refreshList = () => {
-    const transformId = dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
+    const transformId =
+      dashboardManage.curSelectedGroup[0] === "-1" ? null : dashboardManage.curSelectedGroup[0];
     const finalBody = {
       pageNo: 1,
       pageSize: 1000,
       spaceId,
-      groupId: transformId
+      groupId: transformId,
     };
     dispatch({
       type: "dashboardManage/getTemplateList",
@@ -121,8 +124,8 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     dispatch({
       type: "dashboardManage/getGroupTree",
       payload: {
-        spaceId
-      }
+        spaceId,
+      },
     });
   };
   // 导入应用
@@ -134,7 +137,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     action: `${BASEURL}/visual/application/import/${spaceId}`,
     headers: {
       "Response-Type": "application/json",
-      "authorization": localStorage.getItem("token") || ""
+      authorization: localStorage.getItem("token") || "",
     },
     // data: {
     // },
@@ -146,7 +149,7 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
       if (![".zip"].includes(nameSuffix)) {
         message.error({
           content: "请上传符合格式的文件",
-          duration: 2
+          duration: 2,
         });
         file.status = "error";
         return false;
@@ -166,25 +169,23 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
     },
   };
   return (
-    <div className='MyApplication-wrap' id='myApplicationPage'>
+    <div className="MyApplication-wrap" id="myApplicationPage">
       <div className="left">
         {/* 左侧树 */}
         <LeftTree clearSearchInputState={clearSearchInputState} spaceId={spaceId} />
       </div>
       <div className="right">
         <div className="right-header">
-          <div className='set-flex'>
-            <p className='title'>{dashboardManage.curSelectedGroupName || "全部应用"}</p>
-            <Upload {...importAppUploadprops}
-              showUploadList={false}
-            >
-              <div className='custom-btn set-mr'>
+          <div className="set-flex">
+            <p className="title">{dashboardManage.curSelectedGroupName || "全部应用"}</p>
+            <Upload {...importAppUploadprops} showUploadList={false}>
+              <div className="custom-btn set-mr">
                 <span>导入应用</span>
               </div>
             </Upload>
           </div>
           <div className="add-search">
-            <div className='custom-btn' onClick={addDashboard}>
+            <div className="custom-btn" onClick={addDashboard}>
               <PlusOutlined style={{ fontSize: "12px", marginRight: "2px" }} />
               <span>新建应用</span>
             </div>
@@ -193,12 +194,12 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
                 value={inputValue}
                 onChange={changeSearchValue}
                 placeholder="搜索"
-                className='search'
+                className="search"
                 allowClear
                 maxLength={40}
                 onSearch={search}
               ></Input.Search>
-              <Select className='db-select' defaultValue="按修改时间排序" onChange={selectSortType}>
+              <Select className="db-select" defaultValue="按修改时间排序" onChange={selectSortType}>
                 <Option value="updated_time">按修改时间排序</Option>
                 <Option value="created_time">按新建时间排序</Option>
               </Select>
@@ -212,6 +213,4 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   );
 };
 
-export default memo(connect(
-  ({ dashboardManage }: any) => ({ dashboardManage })
-)(MyApplication));
+export default memo(connect(({ dashboardManage }: any) => ({ dashboardManage }))(MyApplication));

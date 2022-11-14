@@ -22,7 +22,7 @@ message.config({
 
 // -> 初始化
 const app = dva({
-  history: createBrowserHistory()
+  history: createBrowserHistory(),
 });
 // -> 初始化
 /*const app = dva({

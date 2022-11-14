@@ -8,7 +8,6 @@
 
 // export default (app: any) => createRoute(app, routesConfig);
 
-
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "../utils/connect";
@@ -23,16 +22,9 @@ class Components extends Component {
     super(props);
   }
 
-
   render() {
-
-    return (
-      <div className="">
-        0000000000000000
-      </div>
-    );
+    return <div className="">0000000000000000</div>;
   }
 }
 
 export default connect(mapStateToProps)(Components);
-

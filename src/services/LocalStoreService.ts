@@ -43,5 +43,5 @@ export const localStore = {
     for (const itemKey in localStorage) {
       localStorage.removeItem(itemKey);
     }
-  }
+  },
 };

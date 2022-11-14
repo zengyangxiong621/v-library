@@ -5,19 +5,17 @@ import { useSetState } from "ahooks";
 import RecursiveComponent from "@/routes/publishDashboard/components/recursiveComponent";
 import { http } from "@/services/request";
 import { connect } from "dva";
-import {
-  IPanel,
-} from "@/routes/dashboard/center/components/CustomDraggable/type";
+import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type";
 import { layersReverse, deepClone } from "@/utils/index.js";
 import { layersPanelsFlat } from "@/utils";
 
 import { Breadcrumb } from "antd";
 
 interface State {
-  overflow: "none" | "auto" | "hidden" // 面板隐藏的方式
+  overflow: "none" | "auto" | "hidden"; // 面板隐藏的方式
   allData: Array<{
-    layers: any[]
-    components: any[],
+    layers: any[];
+    components: any[];
     [key: string]: any;
   }>; // 面板内所有状态的集合
   activeIndex: number; // 当前展示的状态下标
@@ -31,7 +29,7 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
   // 获取面板详情接口
   const { states, config } = panel;
   const { animationTime = 0 } = config;
-  const [ state, setState ] = useSetState<State>({
+  const [state, setState] = useSetState<State>({
     overflow: "hidden",
     allData: [],
     activeIndex: 0,
@@ -39,12 +37,12 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
     breadcrumbData: [],
   });
 
-  const [ activeIndex, setActiveIndex ] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const getPanelDetails = async({ name, id }: { name: string; id: string }) => {
+  const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
     const pass = window.localStorage.getItem(panel.dashboardId);
     const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/show/${ id }`,
+      url: `/visual/application/dashboard/show/${id}`,
       method: "post",
       body: {
         pass,
@@ -52,10 +50,12 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
       },
     });
     const layerPanels: any = layersPanelsFlat(layers);
-    const panels: Array<IPanel> = await Promise.all(layerPanels.map((item: any) => getStateDetails(item)));
+    const panels: Array<IPanel> = await Promise.all(
+      layerPanels.map((item: any) => getStateDetails(item))
+    );
     await Promise.all(components.map((item: any) => getComponentData(item)));
-    const backgroundColor = dashboardConfig.find(item => item.name === "styleColor").value;
-    const backgroundImage = dashboardConfig.find(item => item.name === "backgroundImg").value;
+    const backgroundColor = dashboardConfig.find((item) => item.name === "styleColor").value;
+    const backgroundImage = dashboardConfig.find((item) => item.name === "backgroundImg").value;
     const newLayers = deepClone(layers);
     layersReverse(newLayers);
     return {
@@ -69,18 +69,18 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
       backgroundImage,
     };
   };
-  const getStateDetails = async(layerPanel: any) => {
+  const getStateDetails = async (layerPanel: any) => {
     try {
       const panelConfig = await http({
-        url: `/visual/panel/detail/${ layerPanel.id }`,
+        url: `/visual/panel/detail/${layerPanel.id}`,
         method: "get",
       });
       return panelConfig;
-    } catch(e) {
+    } catch (e) {
       return null;
     }
   };
-  const getComponentData = async(component: any) => {
+  const getComponentData = async (component: any) => {
     try {
       const data = await http({
         url: "/visual/module/getShowData",
@@ -94,21 +94,22 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
         },
       });
 
-      if(data) {
-        componentData[component.id] =
-          component.dataType !== "static" ? data : data.data;
+      if (data) {
+        componentData[component.id] = component.dataType !== "static" ? data : data.data;
       } else {
         throw new Error("请求不到数据");
       }
-    } catch(err) {
+    } catch (err) {
       componentData[component.id] = null;
     }
     return componentData[component.id];
   };
   useEffect(() => {
-    (async function() {
-      if(states.length === 0) return;
-      const data = await Promise.all(states.map((item: { name: string; id: string }) => getPanelDetails(item)));
+    (async function () {
+      if (states.length === 0) return;
+      const data = await Promise.all(
+        states.map((item: { name: string; id: string }) => getPanelDetails(item))
+      );
       setState({
         allData: data,
         isLoading: true,
@@ -125,13 +126,13 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
 
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
-    if(activeIndex < stateIndex) return;
+    if (activeIndex < stateIndex) return;
     setActiveIndex(stateIndex);
   };
 
   const addDrillDownLevel = () => {
     const newIndex = activeIndex + 1;
-    if(newIndex >= states.length || newIndex < 0) {
+    if (newIndex >= states.length || newIndex < 0) {
       return;
     }
     setActiveIndex(newIndex);
@@ -139,10 +140,10 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
   // 更改面包屑标题数据
   const changeBreadcrumbData = (newData: any) => {
     const { originalName } = newData;
-    if(originalName) {
+    if (originalName) {
       // TODO 这儿暂时先用和addDrillDownLevel中的重复逻辑
       const newIndex = activeIndex + 1;
-      if(newIndex >= states.length || newIndex < 0) {
+      if (newIndex >= states.length || newIndex < 0) {
         return;
       }
       const newArr = state.breadcrumbData;
@@ -151,53 +152,54 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
     }
   };
   return (
-    <div className={ `drill-down-panel panel-${ id } event-id-${ id }` } style={ { width: "100%", height: "100%" } }>
-      <div style={ { marginBottom: "20px", minWidth: "500px" } }>
-        <Breadcrumb
-        >
-          {
-            state.breadcrumbData.map((x: any, i: number) => {
-              return (<Breadcrumb.Item
-                className={ `custom-breadcrumb ${ activeIndex === i ? "active-breadcrumb-item" : "" } ` }
-                onClick={ () => breadcrumbClick(x, i) }
+    <div
+      className={`drill-down-panel panel-${id} event-id-${id}`}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <div style={{ marginBottom: "20px", minWidth: "500px" }}>
+        <Breadcrumb>
+          {state.breadcrumbData.map((x: any, i: number) => {
+            return (
+              <Breadcrumb.Item
+                className={`custom-breadcrumb ${
+                  activeIndex === i ? "active-breadcrumb-item" : ""
+                } `}
+                onClick={() => breadcrumbClick(x, i)}
               >
-                { x }
-              </Breadcrumb.Item>);
-            })
-          }
+                {x}
+              </Breadcrumb.Item>
+            );
+          })}
         </Breadcrumb>
       </div>
-      {
-        state.allData.map((item: any, index: number) =>
-          (
-            <div
-              className={ `status-wrap event-id-${ id }` }
-              style={ {
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                display: activeIndex == index ? "block" : "none",
-                // opacity: activeIndex == index ? 1 : 0,
-                transition: `transform 600ms ease 0s, opacity ${ animationTime }ms ease 0s`,
-                backgroundImage: item.backgroundImage ? `url('${ item.backgroundImage }')` : "unset",
-                backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "100% 100%"
-              } }>
-              <RecursiveComponent
-                isDrillDownPanel={ isDrillDownPanel }
-                layersArr={ item.layers }
-                publishDashboard={ publishDashboard }
-                dispatch={ dispatch }
-                componentLists={ item.components }
-                panels={ item.panels }
-                addDrillDownLevel={ addDrillDownLevel }
-                changeBreadcrumbData={ changeBreadcrumbData }
-              />
-            </div>
-          ),
-        )
-      }
+      {state.allData.map((item: any, index: number) => (
+        <div
+          className={`status-wrap event-id-${id}`}
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            display: activeIndex == index ? "block" : "none",
+            // opacity: activeIndex == index ? 1 : 0,
+            transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
+            backgroundImage: item.backgroundImage ? `url('${item.backgroundImage}')` : "unset",
+            backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "100% 100%",
+          }}
+        >
+          <RecursiveComponent
+            isDrillDownPanel={isDrillDownPanel}
+            layersArr={item.layers}
+            publishDashboard={publishDashboard}
+            dispatch={dispatch}
+            componentLists={item.components}
+            panels={item.panels}
+            addDrillDownLevel={addDrillDownLevel}
+            changeBreadcrumbData={changeBreadcrumbData}
+          />
+        </div>
+      ))}
     </div>
   );
 };

@@ -47,8 +47,8 @@ const DashboardTemplate = (props: any) => {
         pageSize: 10,
         groupId: null,
         spaceId: null,
-        name: value
-      }
+        name: value,
+      },
     });
     if (data) {
       setListData(data.content);
@@ -60,9 +60,11 @@ const DashboardTemplate = (props: any) => {
   const GetGroups = async () => {
     const data = await http({
       url: `/visual/application/queryGroupList?spaceId=${spaceId}`,
-      method: "get"
+      method: "get",
     });
-    const pickNameArr = data.slice(1).map((item: any) => ({ label: item.name, value: item.groupId }));
+    const pickNameArr = data
+      .slice(1)
+      .map((item: any) => ({ label: item.name, value: item.groupId }));
     setGroupOptions(pickNameArr);
   };
   // 搜索
@@ -90,13 +92,13 @@ const DashboardTemplate = (props: any) => {
     const finalBody = {
       spaceId,
       ...values,
-      groupId: selectedGroup
+      groupId: selectedGroup,
     };
     // templateId && (finalBody.templateId = templateId)
     const data = await http({
       url: "/visual/application/createBlankApp",
       method: "post",
-      body: finalBody
+      body: finalBody,
     });
     // 请求成功
     // 关闭弹窗 - 清除弹窗缓存 - 跳转至应用所属的画布
@@ -132,14 +134,15 @@ const DashboardTemplate = (props: any) => {
 
   return (
     <div key={props.location.pathname}>
-      <div className='DashboardTemplate-wrap'>
-        <header className='back-bar'>
-          <IconFont onClick={() => backClick()} className='back-icon' type='icon-fanhui' />
-          <span className='text'>取消创建</span>
+      <div className="DashboardTemplate-wrap">
+        <header className="back-bar">
+          <IconFont onClick={() => backClick()} className="back-icon" type="icon-fanhui" />
+          <span className="text">取消创建</span>
         </header>
         <div className="search-wrap">
-          <Input.Search placeholder="搜索"
-            className='search'
+          <Input.Search
+            placeholder="搜索"
+            className="search"
             allowClear
             maxLength={40}
             value={inputValue}
@@ -149,33 +152,31 @@ const DashboardTemplate = (props: any) => {
         </div>
         {/* 模板列表 */}
         <div className="list-wrap">
-          <Row gutter={[26, 25]} justify='start'>
+          <Row gutter={[26, 25]} justify="start">
             <Col span={6}>
               <div className="blank-template" onClickCapture={() => addTemplate()}>
-                <span className='text'>
-                  <IconFont className='tianjia-icon' type='icon-xinjianfenzu' />
+                <span className="text">
+                  <IconFont className="tianjia-icon" type="icon-xinjianfenzu" />
                   空白模板
                 </span>
               </div>
             </Col>
-            {
-              listData.map((item: any, index: number) => (
-                <Col span={6} >
-                  <TemplateCard {...item}
-                    spaceId={spaceId}
-                    curIndex={index}
-                    getCurImgIndex={getCurImgIndex}
-                    addTemplate={addTemplate}
-                  />
-                </Col>
-              ))
-            }
+            {listData.map((item: any, index: number) => (
+              <Col span={6}>
+                <TemplateCard
+                  {...item}
+                  spaceId={spaceId}
+                  curIndex={index}
+                  getCurImgIndex={getCurImgIndex}
+                  addTemplate={addTemplate}
+                />
+              </Col>
+            ))}
           </Row>
         </div>
       </div>
       {/* 预览模板 */}
-      {
-        curImgIndex > -1 &&
+      {curImgIndex > -1 && (
         <Modal
           visible={curImgIndex > -1}
           width="90vw"
@@ -183,29 +184,33 @@ const DashboardTemplate = (props: any) => {
           keyboard={true}
           closeIcon={() => <></>} // 除去关闭按钮
           style={{
-            top: "8vh"
+            top: "8vh",
           }}
           bodyStyle={{
-            padding: "0"
+            padding: "0",
           }}
           onCancel={() => modalCancel()}
         >
           <Preview srcUrlArr={urlArr} curIndex={curImgIndex} />
         </Modal>
-      }
+      )}
       {/* 创建应用弹窗 */}
       <DarkModal
-        title='创建应用'
+        title="创建应用"
         className="createApp-modal"
         destroyOnClose={true}
         getContainer={false}
         visible={showCreateAppModal}
         onCancel={cancelCreateApp}
         footer={[
-          <div className='custom-btn-wrap'>
-            <Button className='my-btn cancel-btn' onClickCapture={cancelCreateApp}>取消</Button>
-            <Button className='my-btn confirm-btn' onClickCapture={createApp}>确定</Button>
-          </div>
+          <div className="custom-btn-wrap">
+            <Button className="my-btn cancel-btn" onClickCapture={cancelCreateApp}>
+              取消
+            </Button>
+            <Button className="my-btn confirm-btn" onClickCapture={createApp}>
+              确定
+            </Button>
+          </div>,
         ]}
         style={{
           top: "25%",
@@ -215,7 +220,7 @@ const DashboardTemplate = (props: any) => {
           name="createForm"
           form={createForm}
           labelCol={{
-            span: 5
+            span: 5,
           }}
         >
           <Form.Item
@@ -225,29 +230,26 @@ const DashboardTemplate = (props: any) => {
             rules={[{ required: true, message: "请输入应用名称" }]}
           >
             <Input
-              placeholder='请输入应用名称'
-              className='setBackColor'
-              autoComplete='off'
+              placeholder="请输入应用名称"
+              className="setBackColor"
+              autoComplete="off"
               value={appName}
               maxLength={20}
               showCount={true}
               onChange={(e) => appNameChange(e.target.value)}
             />
           </Form.Item>
-          <Form.Item
-            label="所属分组"
-            colon={false}
-          >
+          <Form.Item label="所属分组" colon={false}>
             <Select
-              className='setBackColor'
-              defaultValue='未分组'
+              className="setBackColor"
+              defaultValue="未分组"
               onChange={(val) => groupSelectSelect(val)}
             >
-              {
-                groupOptions.map((item: any) => (
-                  <Option key={item.value} value={item.value}>{item.label}</Option>
-                ))
-              }
+              {groupOptions.map((item: any) => (
+                <Option key={item.value} value={item.value}>
+                  {item.label}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
         </Form>

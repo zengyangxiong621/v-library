@@ -3,14 +3,10 @@ import "./index.less";
 
 import { Modal } from "antd";
 
-
 const DarkThemeModal = (props: any) => {
-
   return (
-    <div className='DarkThemeModal-wrap'>
-      <Modal
-        {...props}
-      />
+    <div className="DarkThemeModal-wrap">
+      <Modal {...props} />
     </div>
   );
 };

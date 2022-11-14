@@ -7,7 +7,14 @@ import { connect } from "dva";
 import zhCN from "antd/es/locale/zh_CN";
 import { ConfigProvider, Button, Table, message } from "antd";
 import type { ColumnsType } from "antd/lib/table/interface";
-import { params, dataType, authStateType, authActionType, authContextType, dispatcher } from "./interface";
+import {
+  params,
+  dataType,
+  authStateType,
+  authActionType,
+  authContextType,
+  dispatcher,
+} from "./interface";
 import AddOrEdit from "./components/addOrEdit";
 import RoleDetail from "./components/roleDetail";
 import TipModal from "@/components/tipModal";
@@ -18,41 +25,60 @@ import TipModal from "@/components/tipModal";
  */
 const baseParams: params = {
   pageNo: 1,
-  pageSize: 10
+  pageSize: 10,
 };
-const columns = (handleEdit: any, handleDetail: any, handledelete: any, toAccountList: any): ColumnsType<dataType> => {
-  return [{
-    title: "角色名称",
-    dataIndex: "name",
-    key: "name",
-  }, {
-    title: "描述",
-    dataIndex: "description",
-    key: "description",
-  }, {
-    title: "更新时间",
-    dataIndex: "updatedTime",
-    key: "updatedTime",
-  }, {
-    title: "操作人",
-    dataIndex: "updatedUserAccount",
-    key: "updatedUserAccount",
-  }, {
-    title: "操作",
-    key: "action",
-    ellipsis: true,
-    width: 250,
-    render: (text: any, record: any) => {
-      return (
-        <>
-          <Button type="link" size='small' onClick={handleDetail(record)}>详情</Button>
-          <Button type="link" size='small' onClick={toAccountList(record)}>查看用户</Button>
-          <Button type="link" size='small' onClick={handleEdit(record)}>编辑</Button>
-          <Button type="link" size='small' onClick={handledelete(record)}>删除</Button>
-        </>
-      );
-    }
-  }];
+const columns = (
+  handleEdit: any,
+  handleDetail: any,
+  handledelete: any,
+  toAccountList: any
+): ColumnsType<dataType> => {
+  return [
+    {
+      title: "角色名称",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "描述",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "更新时间",
+      dataIndex: "updatedTime",
+      key: "updatedTime",
+    },
+    {
+      title: "操作人",
+      dataIndex: "updatedUserAccount",
+      key: "updatedUserAccount",
+    },
+    {
+      title: "操作",
+      key: "action",
+      ellipsis: true,
+      width: 250,
+      render: (text: any, record: any) => {
+        return (
+          <>
+            <Button type="link" size="small" onClick={handleDetail(record)}>
+              详情
+            </Button>
+            <Button type="link" size="small" onClick={toAccountList(record)}>
+              查看用户
+            </Button>
+            <Button type="link" size="small" onClick={handleEdit(record)}>
+              编辑
+            </Button>
+            <Button type="link" size="small" onClick={handledelete(record)}>
+              删除
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
 };
 const paginationProps = (totalElements: number, pageInfo: params, setPageInfo: any) => {
   return {
@@ -68,7 +94,7 @@ const paginationProps = (totalElements: number, pageInfo: params, setPageInfo: a
     onChange(page: number, pageSize: number) {
       const newPage = {
         pageNo: page,
-        pageSize
+        pageSize,
       };
       setPageInfo(newPage);
     },
@@ -85,7 +111,7 @@ const rowSelection = (selectedRowKeys: React.Key[], onSelectChange: any) => {
  * store局部数据共享
  */
 const authState: authStateType = {
-  authList: []
+  authList: [],
 };
 const authReducer = (state: authStateType, action: authActionType) => {
   switch (action.type) {
@@ -100,7 +126,7 @@ const dispatchMiddle = (next: Dispatch<authActionType>): dispatcher => {
     switch (action.type) {
       case "getAuthList":
         const headers = {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type": "application/x-www-form-urlencoded",
         };
         const [, data] = await useFetch("/visual/menu/listAll", headers);
         const treeData = handleToTree(data);
@@ -112,7 +138,12 @@ const dispatchMiddle = (next: Dispatch<authActionType>): dispatcher => {
     }
   };
 };
-const AuthContext = React.createContext<authContextType>({ state: authState, dispatch: (value) => { console.log("value", value); } });
+const AuthContext = React.createContext<authContextType>({
+  state: authState,
+  dispatch: (value) => {
+    console.log("value", value);
+  },
+});
 
 // 页面渲染
 const RoleManage = (prop: any) => {
@@ -133,19 +164,19 @@ const RoleManage = (prop: any) => {
   const [showDetailModel, setShowDetailModel] = useState<boolean>(false);
   const [detailFormData, setDetailFormData] = useState(null);
 
-  const [delVisible, setDelVisible] = useState<boolean>(false);//删除框的visible
-  const [rowData, setRowData] = useState<any>(null);//选中删除的rowData
-  const [batchFlag, setBatchFlag] = useState<boolean>(false);//是否批量删除标识
+  const [delVisible, setDelVisible] = useState<boolean>(false); //删除框的visible
+  const [rowData, setRowData] = useState<any>(null); //选中删除的rowData
+  const [batchFlag, setBatchFlag] = useState<boolean>(false); //是否批量删除标识
 
   // 获取表格数据
   const getTableData = useCallback(async (params?: object) => {
     setTableLoading(true);
     const getParams = {
       ...pageInfo,
-      ...params
+      ...params,
     };
     const header = {
-      body: JSON.stringify(getParams)
+      body: JSON.stringify(getParams),
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [err, data, code] = await useFetch("/visual/role/list", header).finally(() => {
@@ -230,7 +261,7 @@ const RoleManage = (prop: any) => {
       const { id } = rowData;
       const parmas = [id];
       const [, data] = await useFetch("/visual/role/remove", {
-        body: JSON.stringify(parmas)
+        body: JSON.stringify(parmas),
       });
       if (data) {
         message.success("删除成功");
@@ -238,7 +269,7 @@ const RoleManage = (prop: any) => {
       }
     } else {
       const [, data] = await useFetch("/visual/role/remove", {
-        body: JSON.stringify(selectedRowKeys)
+        body: JSON.stringify(selectedRowKeys),
       });
       if (data) {
         message.success("删除成功");
@@ -290,29 +321,34 @@ const RoleManage = (prop: any) => {
   }, [pageInfo]);
   return (
     <ConfigProvider locale={zhCN}>
-      <div className='roleManage'>
+      <div className="roleManage">
         <div className="title">角色管理</div>
-        <header className='header' style={{
-          background: "#171a24"
-        }}>
+        <header
+          className="header"
+          style={{
+            background: "#171a24",
+          }}
+        >
           <div className="topCondition">
             <div className="opt-btn">
-              <Button type="primary" className="btn" onClick={createRole}>新建角色</Button>
+              <Button type="primary" className="btn" onClick={createRole}>
+                新建角色
+              </Button>
               <Button onClick={deleteBatchRole}>批量删除</Button>
             </div>
           </div>
         </header>
-        <div className='table-wrap'>
+        <div className="table-wrap">
           <Table
             scroll={{ y: "calc(100vh - 300px)" }}
-            rowClassName='customRowClass'
+            rowClassName="customRowClass"
             rowSelection={rowSelection(selectedRowKeys, onSelectChange)}
             loading={tableLoading}
             columns={columns(handleEdit, handleShowDetailModel, deleteRole, toAccountList)}
             dataSource={tableData}
             pagination={paginationProps(totalElements, pageInfo, setPageInfo)}
             // onChange={tableOnChange}
-            rowKey={record => record.id}
+            rowKey={(record) => record.id}
           />
         </div>
         <AuthContext.Provider value={{ state, dispatch: middleDispatch }}>
@@ -324,8 +360,7 @@ const RoleManage = (prop: any) => {
             getRoleList={getTableData}
             setEditFormData={setEditFormData}
             editFormData={editFormData}
-          >
-          </AddOrEdit>
+          ></AddOrEdit>
           <RoleDetail
             isModalVisible={showDetailModel}
             hideModel={handleHideDetailModel}
@@ -345,6 +380,4 @@ const RoleManage = (prop: any) => {
 };
 
 export { AuthContext };
-export default memo(
-  connect(({ userManage }: any) => ({ userManage }))(RoleManage)
-);
+export default memo(connect(({ userManage }: any) => ({ userManage }))(RoleManage));

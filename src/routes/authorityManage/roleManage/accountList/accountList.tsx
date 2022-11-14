@@ -13,9 +13,14 @@ import { Link } from "dva/router";
 import TipModal from "@/components/tipModal";
 // const { confirm } = Modal;
 
-type TCustomFun = <T>(arg?: T) => Promise<void>
+type TCustomFun = <T>(arg?: T) => Promise<void>;
 
-const paginationProps = (totalElements: number, pageInfo: params, setPageInfo: any, getTableData: TCustomFun) => {
+const paginationProps = (
+  totalElements: number,
+  pageInfo: params,
+  setPageInfo: any,
+  getTableData: TCustomFun
+) => {
   return {
     total: totalElements,
     current: pageInfo.pageNo,
@@ -29,7 +34,7 @@ const paginationProps = (totalElements: number, pageInfo: params, setPageInfo: a
     onChange(page: number, pageSize: number) {
       const newPage = {
         pageNo: page,
-        pageSize
+        pageSize,
       };
       setPageInfo(newPage);
       getTableData(newPage);
@@ -37,96 +42,101 @@ const paginationProps = (totalElements: number, pageInfo: params, setPageInfo: a
   };
 };
 const tableColumns = (handleDel: any): ColumnsType<any> => {
-  return [{
-    title: "账号",
-    dataIndex: "username",
-    key: "username",
-    className: "customHeaderColor",
-    ellipsis: true,
-    render: (text: any) => <span>{text}</span>,
-  },
-  {
-    title: "姓名",
-    key: "name",
-    ellipsis: true,
-    dataIndex: "name",
-  },
-  {
-    title: "角色",
-    key: "roleName",
-    ellipsis: true,
-    dataIndex: "roleName",
-    width: 150,
-  },
-  {
-    title: "状态",
-    key: "status",
-    width: 100,
-    dataIndex: "status",
-    render: (status: any) => {
-      const itemData = STATUSLIST.filter((item: any) => item.value === status.toString());
-      const spotMap: {
-        [key: string]: string
-      } = {
-        "0": "openning",
-        "1": "closing",
-        "-1": "none",
-        "2": "locking"
-      };
-      return itemData ? (
-        <div className="tableStatus">
-          <span className={`${spotMap[itemData[0].value]} statusMark`}></span>
-          <span>{itemData[0].label}</span>
-        </div>
-      ) : "";
-    }
-  },
-  {
-    title: "用户类型",
-    key: "type",
-    dataIndex: "type",
-    ellipsis: true,
-    width: 100,
-    render: (type: any) => {
-      const index = type.toString();
-      return ACCOUNTLIST[index];
-    }
-  },
-  {
-    title: "工号",
-    dataIndex: "code",
-    key: "code",
-    ellipsis: true,
-  },
-  {
-    title: "邮箱",
-    dataIndex: "email",
-    key: "email",
-    width: 170,
-    ellipsis: true,
-  },
-  {
-    title: "联系方式",
-    dataIndex: "tel",
-    key: "tel",
-    width: 150,
-    ellipsis: true,
-  }, {
-    title: "操作",
-    key: "action",
-    ellipsis: true,
-    width: 100,
-    render: (text: any) => {
-      return (
-        <>
-          <Button type="link" size='small' onClickCapture={() => handleDel(text)}>删除</Button>
-        </>
-      );
-    }
-  }];
+  return [
+    {
+      title: "账号",
+      dataIndex: "username",
+      key: "username",
+      className: "customHeaderColor",
+      ellipsis: true,
+      render: (text: any) => <span>{text}</span>,
+    },
+    {
+      title: "姓名",
+      key: "name",
+      ellipsis: true,
+      dataIndex: "name",
+    },
+    {
+      title: "角色",
+      key: "roleName",
+      ellipsis: true,
+      dataIndex: "roleName",
+      width: 150,
+    },
+    {
+      title: "状态",
+      key: "status",
+      width: 100,
+      dataIndex: "status",
+      render: (status: any) => {
+        const itemData = STATUSLIST.filter((item: any) => item.value === status.toString());
+        const spotMap: {
+          [key: string]: string;
+        } = {
+          "0": "openning",
+          "1": "closing",
+          "-1": "none",
+          "2": "locking",
+        };
+        return itemData ? (
+          <div className="tableStatus">
+            <span className={`${spotMap[itemData[0].value]} statusMark`}></span>
+            <span>{itemData[0].label}</span>
+          </div>
+        ) : (
+          ""
+        );
+      },
+    },
+    {
+      title: "用户类型",
+      key: "type",
+      dataIndex: "type",
+      ellipsis: true,
+      width: 100,
+      render: (type: any) => {
+        const index = type.toString();
+        return ACCOUNTLIST[index];
+      },
+    },
+    {
+      title: "工号",
+      dataIndex: "code",
+      key: "code",
+      ellipsis: true,
+    },
+    {
+      title: "邮箱",
+      dataIndex: "email",
+      key: "email",
+      width: 170,
+      ellipsis: true,
+    },
+    {
+      title: "联系方式",
+      dataIndex: "tel",
+      key: "tel",
+      width: 150,
+      ellipsis: true,
+    },
+    {
+      title: "操作",
+      key: "action",
+      ellipsis: true,
+      width: 100,
+      render: (text: any) => {
+        return (
+          <>
+            <Button type="link" size="small" onClickCapture={() => handleDel(text)}>
+              删除
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
 };
-
-
 
 export default function AccountList(props: any) {
   const [tableData, setTableData] = useState([]);
@@ -137,10 +147,8 @@ export default function AccountList(props: any) {
     pageSize: 30,
   });
   const [searchParams, setSearchParams] = useState<any>(null);
-  const [delVisible, setDelVisible] = useState<boolean>(false);//删除框的visible
-  const [rowData, setRowData] = useState<any>(null);//选中删除的rowData
-
-
+  const [delVisible, setDelVisible] = useState<boolean>(false); //删除框的visible
+  const [rowData, setRowData] = useState<any>(null); //选中删除的rowData
 
   const resetPageInfo = () => {
     const newPageInfo = {
@@ -153,7 +161,7 @@ export default function AccountList(props: any) {
   const handleSearch = (value: any) => {
     const newSearchParams = {
       ...searchParams,
-      ...value
+      ...value,
     };
     setSearchParams(newSearchParams);
     const newPageInfo = resetPageInfo();
@@ -163,11 +171,11 @@ export default function AccountList(props: any) {
     const getParams = {
       ...pageInfo,
       ...searchParams,
-      ...params
+      ...params,
     };
     setTableLoading(true);
     const [, data] = await useFetch("/visual/role/viewUsers", {
-      body: JSON.stringify(getParams)
+      body: JSON.stringify(getParams),
     }).finally(() => {
       setTableLoading(false);
     });
@@ -207,7 +215,7 @@ export default function AccountList(props: any) {
   const handleDelOk = async () => {
     const { roleUserId } = rowData;
     const [, data] = await useFetch("/visual/role/removeRoleUsers", {
-      body: JSON.stringify([roleUserId])
+      body: JSON.stringify([roleUserId]),
     });
     if (data) {
       message.success("删除成功");
@@ -215,8 +223,6 @@ export default function AccountList(props: any) {
     }
     closeTipModal();
   };
-
-
 
   // 点击面包屑返回上一级
   // const goBack = () => {
@@ -228,7 +234,7 @@ export default function AccountList(props: any) {
     const searchParams = {
       roleId: query.roleId,
       userName: "",
-      status: null
+      status: null,
     };
     setSearchParams(searchParams);
     getTableData(searchParams);
@@ -236,29 +242,27 @@ export default function AccountList(props: any) {
 
   return (
     <ConfigProvider locale={zhCN}>
-      <div className='roleUser'>
+      <div className="roleUser">
         <div className="title">
           <Breadcrumb>
             <Breadcrumb.Item>
-              <Link to='/authority-manage/role-manage'>角色管理</Link>
+              <Link to="/authority-manage/role-manage">角色管理</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>账号列表</Breadcrumb.Item>
           </Breadcrumb>
         </div>
-        <header className='header' style={{
-
-        }}>
+        <header className="header" style={{}}>
           <SearchContainer searchByType={handleSearch}></SearchContainer>
         </header>
-        <div className='table-wrap'>
+        <div className="table-wrap">
           <Table
             scroll={{ y: "calc(100vh - 350px)" }}
-            rowClassName='customRowClass'
+            rowClassName="customRowClass"
             loading={tableLoading}
             columns={tableColumns(handleDel)}
             dataSource={tableData}
             pagination={paginationProps(totalElements, pageInfo, setPageInfo, getTableData)}
-            rowKey={record => record.id}
+            rowKey={(record) => record.id}
           />
         </div>
       </div>

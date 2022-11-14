@@ -1,4 +1,3 @@
-
 import { createRoutes } from "./utils/core";
 import RoutesConfig from "./routerConfig";
 

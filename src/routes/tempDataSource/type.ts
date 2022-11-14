@@ -12,7 +12,6 @@ enum dataSourceType {
 //   default
 // }
 
-
 export type TDataSourceParams = {
   spaceId: string | number;
   type?: keyof typeof dataSourceType | null;
@@ -20,7 +19,6 @@ export type TDataSourceParams = {
   pageNo: string | number;
   pageSize: string | number;
   map?: {
-    [x: string]: boolean
-  }
+    [x: string]: boolean;
+  };
 };
-

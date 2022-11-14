@@ -6,13 +6,13 @@ import { Select, Input } from "antd";
 import { Text } from "@/customComponents/text/text"; // TODO: @可用设置
 import RemoteBaseComponent from "../../../components/RemoteBaseComponent";
 interface Props {
-  dispatch?: any,
-  components?: any,
-  config?: any
+  dispatch?: any;
+  components?: any;
+  config?: any;
 }
 
 interface State {
-  text?: string
+  text?: string;
 }
 
 const mapStateToProps = (state: any) => {
@@ -24,9 +24,9 @@ class Dashboard extends Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      text: "新数据来源：对接代码编辑器或者SQL编辑器"
+      text: "新数据来源：对接代码编辑器或者SQL编辑器",
     };
-  }                                        
+  }
 
   handleChange = (value: any) => {
     console.log(`selected ${value}`);
@@ -35,19 +35,20 @@ class Dashboard extends Component<Props, State> {
   textChange = (event: any) => {
     const value = event.target.value;
     this.setState({
-      text: value
+      text: value,
     });
 
     const { dispatch } = this.props;
     dispatch({
       type: "components/change",
       payload: {
-        data: [{
-          text: value
-        }]
-      }
+        data: [
+          {
+            text: value,
+          },
+        ],
+      },
     });
-
   };
 
   render() {
@@ -61,14 +62,14 @@ class Dashboard extends Component<Props, State> {
       <div className="">
         <RemoteBaseComponent type="text" config={componentConfig}></RemoteBaseComponent>
         {/* <Text componentConfig={componentConfig} /> */}
-        { fields.map((item: any, i: any) => (
+        {fields.map((item: any, i: any) => (
           <div key={item.label}>
             <span>{item.label}</span>
             <Select defaultValue={item.value} style={{ width: 120 }} onChange={this.handleChange}>
               <Option value="content">content</Option>
               <Option value="icon">icon</Option>
             </Select>
-            <b> { item.desc } </b>
+            <b> {item.desc} </b>
           </div>
         ))}
         <Input value={this.state.text} onChange={this.textChange}></Input>
@@ -77,4 +78,4 @@ class Dashboard extends Component<Props, State> {
   }
 }
 
-export default connect(mapStateToProps)(Dashboard); 
+export default connect(mapStateToProps)(Dashboard);

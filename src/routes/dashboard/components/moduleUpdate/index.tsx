@@ -11,17 +11,16 @@ import ListItem from "./components/listItem";
 import { deepClone } from "@/utils/index";
 import importComponent from "./methods/fetchComponentJsFile";
 
-
-
 const ModuleUpdate = (props: any) => {
   const { bar, onChange, visible, dispatch } = props;
 
   const [updatableModuleLists, setUpdatableModuleLists] = useState<any>([]);
   const [selectedLists, setSelectedLists] = useState<any>([]);
   const [updateBtnLoading, setUpdateBtnLoading] = useState<boolean>(false);
-  const [moduleNameToConfigMap, setModuleNameToConfigMap] = useState<Record<string, any>>(new Map());
+  const [moduleNameToConfigMap, setModuleNameToConfigMap] = useState<Record<string, any>>(
+    new Map()
+  );
   const [componentsCopy, setComponentsCopy] = useState<any>([]);
-
 
   useEffect(() => {
     if (visible) {
@@ -93,7 +92,9 @@ const ModuleUpdate = (props: any) => {
         configs: hasNewConfigArr,
         dashboardId,
       },
-    }).catch((err: Error) => { console.log("组件更新接口错误", err); });
+    }).catch((err: Error) => {
+      console.log("组件更新接口错误", err);
+    });
     if (data) {
       // 刷新可更新组件列表
       getUpdatableModules();
@@ -106,17 +107,16 @@ const ModuleUpdate = (props: any) => {
         // const currentDefaultConfig = ComponentDefaultConfig
         const index = bar.fullAmountComponents.findIndex((x: any) => x.id === item.id);
         bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id: item.id });
-      }
-      );
+      });
     }
     // alert('batch update')
     dispatch({
-      type: "bar/save"
+      type: "bar/save",
     });
     // 刷新组件中的画布
     dispatch({
       type: "bar/getDashboardDetails",
-      payload: bar.dashboardId
+      payload: bar.dashboardId,
     });
     setUpdateBtnLoading(false);
   };
@@ -191,8 +191,7 @@ const ModuleUpdate = (props: any) => {
               <div className="card-title g-flex g-justify-between">
                 <Checkbox
                   indeterminate={
-                    selectedLists.length &&
-                    selectedLists.length !== updatableModuleLists.length
+                    selectedLists.length && selectedLists.length !== updatableModuleLists.length
                   }
                   onChange={onCheckAllChange}
                   checked={
@@ -201,8 +200,7 @@ const ModuleUpdate = (props: any) => {
                     selectedLists.length === updatableModuleLists.length
                   }
                 >
-                  可更新组件({selectedLists.length}/
-                  {updatableModuleLists.length})
+                  可更新组件({selectedLists.length}/{updatableModuleLists.length})
                 </Checkbox>
                 <Button
                   type="primary"
@@ -226,19 +224,11 @@ const ModuleUpdate = (props: any) => {
             <div className="card-body">
               {updatableModuleLists.length ? (
                 updatableModuleLists.map((item: any) => {
-                  return (
-                    <ListItem
-                      itemData={item}
-                      clickCheckbox={clickSingleCheckbox}
-                    ></ListItem>
-                  );
+                  return <ListItem itemData={item} clickCheckbox={clickSingleCheckbox}></ListItem>;
                 })
               ) : (
                 <>
-                  <Empty
-                    description="没有可更新的组件…"
-                    imageStyle={{ marginTop: "15px" }}
-                  ></Empty>
+                  <Empty description="没有可更新的组件…" imageStyle={{ marginTop: "15px" }}></Empty>
                 </>
               )}
             </div>

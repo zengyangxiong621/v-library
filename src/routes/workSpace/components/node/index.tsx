@@ -8,8 +8,7 @@ import { Input, message, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 const EveryTreeNode = (props: any) => {
-  const { id, spaceName, addWorkSpace,
-    refreshWorkSpaceLists, accountId, dispatch } = props || {};
+  const { id, spaceName, addWorkSpace, refreshWorkSpaceLists, accountId, dispatch } = props || {};
   const inputRef = useRef<any>();
   // 点击已有分组时 显现的输入框
   const [inputValue, setInputValue] = useState("");
@@ -19,7 +18,7 @@ const EveryTreeNode = (props: any) => {
   const [newSpacename, setNewSpacename] = useState("");
   useEffect(() => {
     inputRef.current?.focus({
-      cursor: "all"
+      cursor: "all",
     });
   }, [showRenameInput]);
 
@@ -36,12 +35,12 @@ const EveryTreeNode = (props: any) => {
       accountId,
       name: newSpacename,
       // 配额默认是50个
-      projectQuota: 50
+      projectQuota: 50,
     };
     const data = await http({
       url: "/visual/workspace/add",
       method: "post",
-      body: finalBody
+      body: finalBody,
     });
     // 创建成功，改变父组件传入的变量通知父组件重新获取最新分组列表
     if (data) refreshWorkSpaceLists();
@@ -75,7 +74,7 @@ const EveryTreeNode = (props: any) => {
     const data = await http({
       url: "/visual/workspace/update",
       method: "post",
-      body: finalBody
+      body: finalBody,
     });
     if (data) {
       inputRef.current.blur();
@@ -101,19 +100,19 @@ const EveryTreeNode = (props: any) => {
       // centered: true,
       style: {
         // 调整浮层位置
-        top: "30%"
+        top: "30%",
       },
       okButtonProps: {
         style: {
           backgroundColor: "#e9535d",
           border: "none",
           // marginLeft: '8px',
-        }
+        },
       },
       cancelButtonProps: {
         style: {
-          backgroundColor: "#3d404d"
-        }
+          backgroundColor: "#3d404d",
+        },
       },
       icon: <ExclamationCircleFilled />,
       content: "删除后不可恢复，确认删除此空间吗?",
@@ -122,15 +121,15 @@ const EveryTreeNode = (props: any) => {
       bodyStyle: {
         background: "#232630",
       },
-      async onOk(close:any) {
+      async onOk(close: any) {
         const data = await http({
           url: `/visual/workspace/delete/${id}`,
-          method: "delete"
+          method: "delete",
         });
         if (data) {
           dispatch({
             type: "workSpace/setCurWorkSpace",
-            payload: []
+            payload: [],
           });
           refreshWorkSpaceLists();
         } else {
@@ -138,9 +137,9 @@ const EveryTreeNode = (props: any) => {
         }
         close();
       },
-      onCancel(close:any) {
+      onCancel(close: any) {
         close();
-      }
+      },
     });
   };
   const inputWrapClick = (e: any) => {
@@ -148,56 +147,55 @@ const EveryTreeNode = (props: any) => {
     // e.stopPropagation()
   };
   return (
-    <div className={"workspace-node-wrap"} title=''>
-      {
-        id === "aInput"
-          ?
-          <div onClick={(e) => inputWrapClick(e)}><Input
+    <div className={"workspace-node-wrap"} title="">
+      {id === "aInput" ? (
+        <div onClick={(e) => inputWrapClick(e)}>
+          <Input
             value={newSpacename}
             onFocus={(e) => createInputFocus(e)}
             onChange={(e) => createInputChange(e)}
             onPressEnter={() => createGroup()}
             onBlur={() => createGroup()}
-          /></div>
-          :
-          <>
-            <div className='title'>
-              {
-                showRenameInput
-                  ?
-                  <Input
-                    style={{ width: "120px" }}
-                    value={inputValue}
-                    ref={inputRef}
-                    onChange={(e) => oInputContent(e)}
-                    onPressEnter={(e) => updateWorkSpaceName(e)}
-                    onBlur={(e) => updateWorkSpaceName(e)}
+          />
+        </div>
+      ) : (
+        <>
+          <div className="title">
+            {showRenameInput ? (
+              <Input
+                style={{ width: "120px" }}
+                value={inputValue}
+                ref={inputRef}
+                onChange={(e) => oInputContent(e)}
+                onPressEnter={(e) => updateWorkSpaceName(e)}
+                onBlur={(e) => updateWorkSpaceName(e)}
+              />
+            ) : (
+              <>{spaceName}</>
+            )}
+          </div>
+          <div className="icons-wrap">
+            {spaceName === "我的空间" ? (
+              <IconFont type="icon-xinjianfenzu" onClickCapture={addWorkSpace} />
+            ) : id === "1" ? (
+              <></>
+            ) : (
+              <div className="show-icon">
+                {
+                  <IconFont
+                    type="icon-bianji"
+                    style={{ marginRight: "16px" }}
+                    onClickCapture={(e) => editClick(e)}
                   />
-                  : <>{spaceName}</>
-              }
-            </div>
-            <div className='icons-wrap'>
-              {
-                spaceName === "我的空间"
-                  ? <IconFont type='icon-xinjianfenzu' onClickCapture={addWorkSpace} />
-                  : id === "1" ?
-                    <></> :
-                    <div className='show-icon'>
-                      {
-                        <IconFont type='icon-bianji' style={{ marginRight: "16px" }} onClickCapture={(e) => editClick(e)} />
-                      }
-                      {
-                        <IconFont type='icon-shanchuzu' onClickCapture={() => delClick(id)} />
-                      }
-                    </div>
-              }
-            </div>
-          </>
-      }
+                }
+                {<IconFont type="icon-shanchuzu" onClickCapture={() => delClick(id)} />}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
-export default memo(connect(
-  ({ workSpace }: any) => ({ workSpace })
-)(EveryTreeNode));
+export default memo(connect(({ workSpace }: any) => ({ workSpace }))(EveryTreeNode));

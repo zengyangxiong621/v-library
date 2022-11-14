@@ -12,27 +12,25 @@ import "./index.less";
 
 const { Content } = Layout;
 interface Props {
-  config?: any,
-  dispatch?: any,
-  routerData?: any,
-  component?: any,
-  location?: any,
-  global?: any,
-  history?: any
+  config?: any;
+  dispatch?: any;
+  routerData?: any;
+  component?: any;
+  location?: any;
+  global?: any;
+  history?: any;
 }
-
 
 const mapStateToProps = (state: any) => {
   return state;
 };
 class BasicLayout extends Component<Props> {
-
   constructor(Props: any) {
     super(Props);
     this.state = {
       loading: false,
       isPublishScreen: window.location.href.indexOf("publishScreen") > -1,
-      isPreviewScreen: window.location.href.indexOf("bigscreen") > -1
+      isPreviewScreen: window.location.href.indexOf("bigscreen") > -1,
     };
   }
 
@@ -43,7 +41,7 @@ class BasicLayout extends Component<Props> {
     const token = localStorage.getItem("token");
     if (token && !userInfo && !isPublishScreen) {
       dispatch({
-        type: "global/getCurUserInfo"
+        type: "global/getCurUserInfo",
       });
     }
   };
@@ -66,7 +64,7 @@ class BasicLayout extends Component<Props> {
     const { isPublishScreen }: any = this.state;
     if (!isPublishScreen) {
       dispatch({
-        type: "global/getWorkspaceList"
+        type: "global/getWorkspaceList",
       });
     }
   }
@@ -84,36 +82,53 @@ class BasicLayout extends Component<Props> {
       _menuData = this.filterMenu(menuData, menusNameArr) || [];
     }
 
-    const needHeader = pathname.indexOf("/dashboard/") !== -1 || pathname === "/template" || pathname.startsWith("/bigscreen") || pathname.startsWith("/publishScreen");
+    const needHeader =
+      pathname.indexOf("/dashboard/") !== -1 ||
+      pathname === "/template" ||
+      pathname.startsWith("/bigscreen") ||
+      pathname.startsWith("/publishScreen");
     const isPathRoot = pathname === "/";
     // const defaultPath =  '/dashboard-manage'
-    const defaultPath = _menuData.length ? _menuData[0].children ? _menuData[0].children[0].path : _menuData[0].path : "/";
+    const defaultPath = _menuData.length
+      ? _menuData[0].children
+        ? _menuData[0].children[0].path
+        : _menuData[0].path
+      : "/";
     return (
       <Fragment>
-        {
-          (!userInfo && !isPublishScreen && !isPreviewScreen) ?
-            <Spin size="large" className='full-spin' tip="Loading..."></Spin> :
-            <Layout>
-              {!needHeader && <CustomHeader {...this.props} menuData={_menuData} defaultPath={defaultPath}></CustomHeader>}
-              {
-                workspaceList.length || isWorkspace || isPublishScreen
-                  ?
-                  <Content>
-                    {
-                      _menuData && _menuData.length || isPublishScreen ?
-                        isPathRoot ? <Redirect to={defaultPath}></Redirect> : <Switch location={location}>{childRoutes}</Switch> :
-                        <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
-                    }
-                  </Content>
-                  :
-                  isPreviewScreen ? <></> : <Empty className="content-empty" description={<span>请为当前用户分配空间</span>} />
-              }
-            </Layout>
-        }
+        {!userInfo && !isPublishScreen && !isPreviewScreen ? (
+          <Spin size="large" className="full-spin" tip="Loading..."></Spin>
+        ) : (
+          <Layout>
+            {!needHeader && (
+              <CustomHeader
+                {...this.props}
+                menuData={_menuData}
+                defaultPath={defaultPath}
+              ></CustomHeader>
+            )}
+            {workspaceList.length || isWorkspace || isPublishScreen ? (
+              <Content>
+                {(_menuData && _menuData.length) || isPublishScreen ? (
+                  isPathRoot ? (
+                    <Redirect to={defaultPath}></Redirect>
+                  ) : (
+                    <Switch location={location}>{childRoutes}</Switch>
+                  )
+                ) : (
+                  <Empty className="content-empty" description={<span>请添加菜单权限</span>} />
+                )}
+              </Content>
+            ) : isPreviewScreen ? (
+              <></>
+            ) : (
+              <Empty className="content-empty" description={<span>请为当前用户分配空间</span>} />
+            )}
+          </Layout>
+        )}
       </Fragment>
     );
   }
 }
 
 export default connect(mapStateToProps)(BasicLayout);
-
