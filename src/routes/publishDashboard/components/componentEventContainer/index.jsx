@@ -27,7 +27,7 @@ import { debounce } from "@/utils/common";
 // import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
 // import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
 // import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
-import Cascader from "@/customComponents/assist/cascader/v1.1.0";
+// import Cascader from "@/customComponents/assist/cascader/v1.1.0";
 // import Timeline from "@/customComponents/assist/timeline/v1.1.6";
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -510,9 +510,10 @@ const ComponentEventContainer = ({
         // props.componentConfig.moduleName === "instrumentPanel_4" ? (
         //   <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
         // ) : 
-        props.componentConfig.moduleName === "cascader" ? (
-          <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
-        ) : (
+        // props.componentConfig.moduleName === "cascader" ? (
+        //   <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
+        // ) : 
+        (
           <ErrorCatch
             app={componentConfig.name}
             user=""
