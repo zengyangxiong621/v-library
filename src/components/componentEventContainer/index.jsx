@@ -8,7 +8,6 @@ import Bar from "@/customComponents/echarts/components/bar/index";
 import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.6";
-import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 import Tab from "@/customComponents/interactive/tab";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/index";
 // import Counter from "@/customComponents/assist/counter2/v1.0.8";
@@ -443,9 +442,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
       //   props.componentConfig.moduleName === "counter" ? (
       //   <Counter onChange={handleValueChange} {...props}></Counter>
       // ) : 
-      props.componentConfig.moduleName === "rankingBar" ? (
-        <RankingBar onChange={handleValueChange} {...props}></RankingBar>
-      ) : props.componentConfig.moduleName === "image2" ? (
+      props.componentConfig.moduleName === "image2" ? (
         <CusImage onChange={handleValueChange} {...props}></CusImage>
       ) : // props.componentConfig.moduleName === 'chinaMap' ?
       // <ChinaMap

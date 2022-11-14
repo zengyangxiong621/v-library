@@ -9,7 +9,6 @@ import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
-import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 // import Counter from '@/customComponents/assist/counter2/v1.0.8'
@@ -454,71 +453,69 @@ const ComponentEventContainer = ({
         {...props}
       ></RemoteBaseComponent>     */}
       {
-      // props.componentConfig.moduleName === "counter" ? (
-      //   <Counter onChange={handleValueChange} {...props}></Counter>
-      // ) : 
-      props.componentConfig.moduleName === "rankingBar" ? (
-        <RankingBar onChange={handleValueChange} {...props}></RankingBar>
-      ) : props.componentConfig.moduleName === "image2" ? (
-        <CusImage onChange={handleValueChange} {...props}></CusImage>
-      ) : props.componentConfig.moduleName === "worldMap" ? (
-        <WorldMap onChange={handleValueChange} {...props}></WorldMap>
-      ) : // props.componentConfig.moduleName === 'chinaMap' ?
-        // <ChinaMap
-        //   onChange={handleValueChange}
-        //   {...props}
-        // >
-        // </ChinaMap>
-        // :
-        props.componentConfig.moduleName === "scrollTable" ? (
-          <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-        ) : props.componentConfig.moduleName === "tab" ? (
-          <Tab
-            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-            {...props}
-          ></Tab>
-        ) : props.componentConfig.moduleName === "scrollSelect" ? (
-          <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-        ) : props.componentConfig.moduleName === "timeSelect" ? (
-          <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
+        // props.componentConfig.moduleName === "counter" ? (
+        //   <Counter onChange={handleValueChange} {...props}></Counter>
+        // ) : 
+        props.componentConfig.moduleName === "image2" ? (
+          <CusImage onChange={handleValueChange} {...props}></CusImage>
         ) : props.componentConfig.moduleName === "worldMap" ? (
-          <WorldMap {...props}></WorldMap>
-        ) : props.componentConfig.moduleName === "media" ? (
-          <Media {...props}></Media>
-        ) : props.componentConfig.moduleName === "normalTable" ? (
-          <NormalTable {...props}></NormalTable>
-        ) : props.componentConfig.moduleName === "paginationComp" ? (
-          <PaginationComp onChange={handleValueChange} {...props}></PaginationComp>
-        ) : props.componentConfig.moduleName === "instrumentPanel_1" ? (
-          <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
-        ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
-          <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-        ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-          <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-        ) : props.componentConfig.moduleName === "cascader" ? (
-          <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
-        ) : (
-          <ErrorCatch
-            app={componentConfig.name}
-            user=""
-            token=""
-            max={1}
-            errorRender={
-              <RemoteComponentErrorRender
-                errorComponent={componentConfig.name}
-              ></RemoteComponentErrorRender>
-            }
-            onCatch={(errors) => {
-              console.log("组件报错信息：", errors, "组件id", componentConfig.id);
-            }}
-          >
-            <RemoteBaseComponent
+          <WorldMap onChange={handleValueChange} {...props}></WorldMap>
+        ) : // props.componentConfig.moduleName === 'chinaMap' ?
+          // <ChinaMap
+          //   onChange={handleValueChange}
+          //   {...props}
+          // >
+          // </ChinaMap>
+          // :
+          props.componentConfig.moduleName === "scrollTable" ? (
+            <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
+          ) : props.componentConfig.moduleName === "tab" ? (
+            <Tab
+              onChange={handleValueChange} // 状态变化，当请求完成/数据变化
               {...props}
-              scale={scale}
-              onChange={handleValueChange}
-            ></RemoteBaseComponent>
-          </ErrorCatch>
-        )}
+            ></Tab>
+          ) : props.componentConfig.moduleName === "scrollSelect" ? (
+            <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
+          ) : props.componentConfig.moduleName === "timeSelect" ? (
+            <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
+          ) : props.componentConfig.moduleName === "worldMap" ? (
+            <WorldMap {...props}></WorldMap>
+          ) : props.componentConfig.moduleName === "media" ? (
+            <Media {...props}></Media>
+          ) : props.componentConfig.moduleName === "normalTable" ? (
+            <NormalTable {...props}></NormalTable>
+          ) : props.componentConfig.moduleName === "paginationComp" ? (
+            <PaginationComp onChange={handleValueChange} {...props}></PaginationComp>
+          ) : props.componentConfig.moduleName === "instrumentPanel_1" ? (
+            <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
+          ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
+            <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
+          ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
+            <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
+          ) : props.componentConfig.moduleName === "cascader" ? (
+            <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
+          ) : (
+            <ErrorCatch
+              app={componentConfig.name}
+              user=""
+              token=""
+              max={1}
+              errorRender={
+                <RemoteComponentErrorRender
+                  errorComponent={componentConfig.name}
+                ></RemoteComponentErrorRender>
+              }
+              onCatch={(errors) => {
+                console.log("组件报错信息：", errors, "组件id", componentConfig.id);
+              }}
+            >
+              <RemoteBaseComponent
+                {...props}
+                scale={scale}
+                onChange={handleValueChange}
+              ></RemoteBaseComponent>
+            </ErrorCatch>
+          )}
     </div>
   );
 };

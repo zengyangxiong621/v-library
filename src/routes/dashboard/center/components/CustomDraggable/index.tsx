@@ -66,7 +66,6 @@ import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.2";
 
 import CusImage from "@/customComponents/assist/image/v1.0.2/index";
-import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
@@ -966,17 +965,6 @@ const CustomDraggable
                                       fields={getFields(component)}
                                       comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
                                     ></ScrollTable> :
-                                    layer.moduleName === "rankingBar" ?
-                                      <RankingBar
-                                        themeConfig={bar.componentThemeConfig}
-                                        onThemeChange={onThemeChange}
-                                        onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                                        scale={bar.canvasScaleValue}
-                                        componentConfig={component}
-                                        fields={getFields(component)}
-                                        comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
-                                      >
-                                      </RankingBar> :
                                       layer.moduleName === "basicLine" ?
                                         <BasicLine
                                           themeConfig={bar.componentThemeConfig}

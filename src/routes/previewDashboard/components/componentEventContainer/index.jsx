@@ -9,7 +9,6 @@ import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
-import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 // import Counter from "@/customComponents/assist/counter2/v1.0.8";
@@ -276,10 +275,6 @@ const ComponentEventContainer = ({
     console.log(websocketConfig, "websocketConfig");
     // 跨屏  建立websocket连接，发送数据
     // TODO 点击组件发出什么就先直接传什么
-    // if (readyState.key === 1 && props.componentConfig.moduleName === 'rankingBar'){
-    //   console.log('rankingBar');
-    // setSendData(data);
-    // }
     // websocketConfig 组件内有消息且type为 0时发送
     if (websocketConfig.length > 0) {
       websocketConfig.map((item) => {
@@ -625,15 +620,7 @@ const ComponentEventContainer = ({
             <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
           ) : props.componentConfig.moduleName === "image2" ? (
             <CusImage onChange={handleValueChange} {...props}></CusImage>
-          ) : props.componentConfig.moduleName === "rankingBar" ? (
-            <RankingBar onChange={handleValueChange} {...props}></RankingBar>
-          ) : // props.componentConfig.moduleName === 'chinaMap' ?
-            // <ChinaMap
-            //   onChange={handleValueChange}
-            //   {...props}
-            // >
-            // </ChinaMap>
-            // :
+          ) : 
             props.componentConfig.moduleName === "bar" ? (
               <Bar onChange={handleValueChange} {...props}></Bar>
             ) : props.componentConfig.moduleName === "scrollTable" ? (
