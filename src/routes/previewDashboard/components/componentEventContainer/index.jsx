@@ -9,7 +9,6 @@ import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
-import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1";
 import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
@@ -628,8 +627,6 @@ const ComponentEventContainer = ({
             <CusImage onChange={handleValueChange} {...props}></CusImage>
           ) : props.componentConfig.moduleName === "rankingBar" ? (
             <RankingBar onChange={handleValueChange} {...props}></RankingBar>
-          ) : props.componentConfig.moduleName === "zebraColumn" ? (
-            <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
           ) : // props.componentConfig.moduleName === 'chinaMap' ?
             // <ChinaMap
             //   onChange={handleValueChange}

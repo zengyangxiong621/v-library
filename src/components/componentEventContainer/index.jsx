@@ -8,7 +8,6 @@ import Bar from "@/customComponents/echarts/components/bar/index";
 import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.6";
-import ZebraColumn from "@/customComponents/echarts/components/zebraColumn/v1.1.1";
 import RankingBar from "@/customComponents/echarts/components/rankingBar/v1.1.2";
 import Tab from "@/customComponents/interactive/tab";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/index";
@@ -448,8 +447,6 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
         <RankingBar onChange={handleValueChange} {...props}></RankingBar>
       ) : props.componentConfig.moduleName === "image2" ? (
         <CusImage onChange={handleValueChange} {...props}></CusImage>
-      ) : props.componentConfig.moduleName === "zebraColumn" ? (
-        <ZebraColumn onChange={handleValueChange} {...props}></ZebraColumn>
       ) : // props.componentConfig.moduleName === 'chinaMap' ?
       // <ChinaMap
       //   onChange={handleValueChange}
