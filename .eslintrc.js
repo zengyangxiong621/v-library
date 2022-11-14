@@ -23,11 +23,11 @@ module.exports = {
   },
   plugins: ["react", "@typescript-eslint", "prettier"],
   rules: {
-    "prettier/prettier": 2, // 这项配置 对于不符合prettier规范的写法，eslint会提示报错
+    //"prettier/prettier": 2, // 这项配置 对于不符合prettier规范的写法，eslint会提示报错
     semi: ["error", "always"],
     quotes: ["error", "double"],
     "@typescript-eslint/no-explicit-any": ["off"],
-    // 'prettier/prettier': 'off',
+    "prettier/prettier": "off",
     "@typescript-eslint/no-var-requires": "off",
     "react/prop-types": 0,
     "react/react-in-jsx-scope": "off",
