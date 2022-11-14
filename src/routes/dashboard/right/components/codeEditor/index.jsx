@@ -1,55 +1,55 @@
-import React, { memo, useState, useEffect } from 'react';
-import './index.less'
-import debounce from 'lodash/debounce';
+import React, { memo, useState, useEffect } from "react";
+import "./index.less";
+import debounce from "lodash/debounce";
 
-import MonacoEditor from 'react-monaco-editor';
-import { Button, Modal } from 'antd';
+import MonacoEditor from "react-monaco-editor";
+import { Button, Modal } from "antd";
 import {
   ArrowsAltOutlined
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 
-let hasEditFlag = false
+let hasEditFlag = false;
 
 const CodeEditor = props => {
-  const _data = props.data
-  const [content, setContent] = useState(_data.value)
-  const [fullScreen, setFullScreen] = useState(false)
-  const [modalContent, setModalContent] = useState(null)
+  const _data = props.data;
+  const [content, setContent] = useState(_data.value);
+  const [fullScreen, setFullScreen] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
 
   useEffect(() => {
-    setContent(_data.value)
-  }, [_data.value])
+    setContent(_data.value);
+  }, [_data.value]);
 
   const onChange = debounce((val) => {
-    hasEditFlag = true
-    setContent(val)
-    setModalContent(val)
-  }, 300)
+    hasEditFlag = true;
+    setContent(val);
+    setModalContent(val);
+  }, 300);
 
   const onBlur = (e) => {
     if (hasEditFlag) {
-      _data.value = content
-      props.onChange(_data)
+      _data.value = content;
+      props.onChange(_data);
     }
-  }
+  };
 
   const expandHandle = () => {
-    setFullScreen(true)
-    setModalContent(content)
-  }
+    setFullScreen(true);
+    setModalContent(content);
+  };
 
   const handleOk = () => {
     setTimeout(() => {
-      setContent(modalContent)
-      setFullScreen(false)
-      _data.value = modalContent
-      props.onChange(_data)
-    }, 300)
-  }
+      setContent(modalContent);
+      setFullScreen(false);
+      _data.value = modalContent;
+      props.onChange(_data);
+    }, 300);
+  };
 
   const editorDidMountHandle = (editor, monaco) => {
-    editor.getAction('editor.action.formatDocument').run()  //格式化
-  }
+    editor.getAction("editor.action.formatDocument").run();  //格式化
+  };
 
   return (
     <div className="code-wraper" onBlur={onBlur}>
@@ -95,8 +95,8 @@ const CodeEditor = props => {
         />
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-export default memo(CodeEditor)
+export default memo(CodeEditor);
 

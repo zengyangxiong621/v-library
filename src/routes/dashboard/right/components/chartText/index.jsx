@@ -1,7 +1,7 @@
-import React, { memo, useState } from 'react'
-import './index.less'
-import { SketchPicker } from 'react-color'
-import { isHex, rgbToHex, hexToRgb, getRgbaNum } from '../../../../../utils/color'
+import React, { memo, useState } from "react";
+import "./index.less";
+import { SketchPicker } from "react-color";
+import { isHex, rgbToHex, hexToRgb, getRgbaNum } from "../../../../../utils/color";
 
 import {
   Form,
@@ -9,14 +9,14 @@ import {
   InputNumber,
   Select,
   Row, Col
-} from 'antd';
+} from "antd";
 
 
 const TextStyle = props => {
   const { Option } = Select;
   const [form] = Form.useForm();
   const formItemLayout = {
-    labelAlign: 'left'
+    labelAlign: "left"
   };
 
   const _data = props.data;
@@ -31,43 +31,43 @@ const TextStyle = props => {
     } : {
       ...getRgbaNum(_data.value.color)
     },
-  })
-  const [popStyle, setPopStyle] = useState({})
+  });
+  const [popStyle, setPopStyle] = useState({});
 
   const selectColor = (e) => {
-    let style
+    let style;
     // 判断弹出的颜色选择器应该放在上面或者下面
     if (e.view.innerHeight - e.clientY < 350) {
       style = {
         left: `${e.clientX - 80}px`,
         bottom: `${(e.view.innerHeight - e.clientY) + 20}px`
-      }
+      };
     } else {
       style = {
         left: `${e.clientX - 80}px`,
         top: `${e.clientY + 20}px`
-      }
+      };
     }
-    setPopStyle(style)
-    setDisplayColorPicker(!displayColorPicker)
-  }
+    setPopStyle(style);
+    setDisplayColorPicker(!displayColorPicker);
+  };
 
   const fontChange = (str, e) => {
     setFont({
       ...font,
-      [str]: str === 'color' ? e.rgb : e,
-    })
-    if (str !== 'color') {
-      _data.value[str] = e
+      [str]: str === "color" ? e.rgb : e,
+    });
+    if (str !== "color") {
+      _data.value[str] = e;
     } else {
       if (e.rgb.a === 1) {
-        _data.value.color = e.hex
+        _data.value.color = e.hex;
       } else {
-        _data.value.color = `rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`
+        _data.value.color = `rgba(${e.rgb.r},${e.rgb.g},${e.rgb.b},${e.rgb.a})`;
       }
     }
-    props.onChange()
-  }
+    props.onChange();
+  };
 
   return (
     <Form
@@ -80,13 +80,13 @@ const TextStyle = props => {
         name="style"
         label={_data.displayName}
       >
-        <Input.Group compact style={{ marginBottom: '8px' }}>
+        <Input.Group compact style={{ marginBottom: "8px" }}>
           <Form.Item name="fontFamily" noStyle>
             <Select
               className="font-select"
               defaultValue={font.fontFamily}
-              style={{ width: '145px' }}
-              onChange={(e) => fontChange('fontFamily', e)}
+              style={{ width: "145px" }}
+              onChange={(e) => fontChange("fontFamily", e)}
               getPopupContainer={(triggerNode) => triggerNode.parentNode}
             >
               <Option value="Microsoft Yahei">微软雅黑</Option>
@@ -100,8 +100,8 @@ const TextStyle = props => {
               step={1}
               defaultValue={font.fontSize}
               className="po-size-input"
-              style={{ width: '68px' }}
-              onChange={(e) => fontChange('fontSize', e)}
+              style={{ width: "68px" }}
+              onChange={(e) => fontChange("fontSize", e)}
             />
           </Form.Item>
         </Input.Group>
@@ -110,8 +110,8 @@ const TextStyle = props => {
             <Select
               className="custom-select"
               defaultValue={font.fontWeight}
-              style={{ width: '181px', marginBottom: 0 }}
-              onChange={(e) => fontChange('fontWeight', e)}
+              style={{ width: "181px", marginBottom: 0 }}
+              onChange={(e) => fontChange("fontWeight", e)}
               getPopupContainer={(triggerNode) => triggerNode.parentNode}
             >
               <Option value="normal">normal</Option>
@@ -120,21 +120,21 @@ const TextStyle = props => {
               <Option value="lighter">lighter</Option>
             </Select>
           </Form.Item>
-          <div className="color-swatch" onClick={e => selectColor(e)} style={{ marginLeft: '8px', marginRight: 0 }}>
+          <div className="color-swatch" onClick={e => selectColor(e)} style={{ marginLeft: "8px", marginRight: 0 }}>
             <div className="color-dis" style={{ background: `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})` }} />
           </div>
           {displayColorPicker ? <div className="color-popover" style={{ ...popStyle }}>
-            <div className="color-cover" onClick={() => { setDisplayColorPicker(false) }} />
-            <SketchPicker color={font.color} onChange={(e) => fontChange('color', e)} />
+            <div className="color-cover" onClick={() => { setDisplayColorPicker(false); }} />
+            <SketchPicker color={font.color} onChange={(e) => fontChange("color", e)} />
           </div> : null}
         </Input.Group>
         <Row>
           <Col span={20} className="detail-txt">文字粗细</Col>
-          <Col span={4} className="detail-txt" style={{ textIndent: '8px' }}>颜色</Col>
+          <Col span={4} className="detail-txt" style={{ textIndent: "8px" }}>颜色</Col>
         </Row>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default memo(TextStyle)
+export default memo(TextStyle);

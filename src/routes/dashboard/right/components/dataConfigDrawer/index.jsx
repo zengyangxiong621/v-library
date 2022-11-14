@@ -1,11 +1,11 @@
-import React, { memo, useState, useEffect, useRef } from 'react';
-import './index.less';
-import { connect } from 'dva'
-import { v4 as uuidv4 } from 'uuid';
-import CodeEditor from '../codeEditor/editor'
-import DataResult from '../dataConfig/dataResult'
-import ModalConfirm from '@/components/modalConfirm'
-import { http } from '../../../../../services/request'
+import React, { memo, useState, useEffect, useRef } from "react";
+import "./index.less";
+import { connect } from "dva";
+import { v4 as uuidv4 } from "uuid";
+import CodeEditor from "../codeEditor/editor";
+import DataResult from "../dataConfig/dataResult";
+import ModalConfirm from "@/components/modalConfirm";
+import { http } from "../../../../../services/request";
 
 import {
   Drawer,
@@ -18,7 +18,7 @@ import {
   Tag,
   Popover,
   message
-} from 'antd';
+} from "antd";
 
 import {
   DeleteOutlined,
@@ -26,164 +26,164 @@ import {
   ExclamationCircleOutlined,
   PlusOutlined,
   CaretUpOutlined
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 import { findLayerById } from "@/utils";
-import { IconFont } from '@/utils/useIcon'
+import { IconFont } from "@/utils/useIcon";
 
 const cfilters = [
   {
     id: uuidv4(),
     enable: true,
-    name: '过滤器1',
+    name: "过滤器1",
     isEditName: false,
-    content: 'return data',
+    content: "return data",
     callbackKeys: [],
     isAddKey: false, // 是否正在添加key
     status: 0,// 0: 未编辑 1：编辑
     moduleIds: [] // 使用该过滤器的组件ID的数组
   },
-]
+];
 
 const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
-  const _data = props.data || { filters: [] }
-  const resultData = props.resultData || []
+  const _data = props.data || { filters: [] };
+  const resultData = props.resultData || [];
   const { Panel } = Collapse;
   const { Option } = Select;
   const { confirm } = Modal;
 
-  const [visible, setVisible] = useState(props.visible)
-  const [filters, setFilters] = useState([])
-  const [activeCollapseKeys, setActiveCollapseKeys] = useState([])
-  const [filterOfAdd, setFilterOfAdd] = useState(null)
-  const [selectFilterOprions, setSelectFilterOprions] = useState([])
+  const [visible, setVisible] = useState(props.visible);
+  const [filters, setFilters] = useState([]);
+  const [activeCollapseKeys, setActiveCollapseKeys] = useState([]);
+  const [filterOfAdd, setFilterOfAdd] = useState(null);
+  const [selectFilterOprions, setSelectFilterOprions] = useState([]);
 
-  const inputNameRef = useRef(null)
-  const inputFiledRef = useRef(null)
-
-  useEffect(() => {
-    setVisible(props.visible)
-  }, [props.visible])
+  const inputNameRef = useRef(null);
+  const inputFiledRef = useRef(null);
 
   useEffect(() => {
-    if (props.type === 'component') {
+    setVisible(props.visible);
+  }, [props.visible]);
 
+  useEffect(() => {
+    if (props.type === "component") {
+      // todo
     } else {
-      effectHandler()
+      effectHandler();
     }
-  }, [bar.componentConfig.filters, bar.componentFilters])
+  }, [bar.componentConfig.filters, bar.componentFilters]);
 
   useEffect(() => {
-    if (props.type === 'component') {
+    if (props.type === "component") {
       // bar.componentFilters 所有的 filter
       const conFifters = _data?.filters?.map(item => {
-        const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+        const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id);
         return {
           ...filterDetail,
           enable: item.enable,
           isEditName: false,
           isAddKey: false,
           status: 0,
-        }
+        };
       }) || [];
-      setFilters(conFifters)
+      setFilters(conFifters);
       const options = bar.componentFilters.filter(v => {
         if (!_data) {
-          return v
+          return v;
         } else {
-          return !_data.filters.some((item) => item.id === v.id)
+          return !_data.filters.some((item) => item.id === v.id);
         }
-      })
-      setSelectFilterOprions(options)
+      });
+      setSelectFilterOprions(options);
     }
-  }, [_data.id, _data.filters])
+  }, [_data.id, _data.filters]);
 
 
   const effectHandler = () => {
     const conFifters = bar.componentConfig?.filters?.map(item => {
-      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id)
+      const filterDetail = bar.componentFilters.find(jtem => jtem.id === item.id);
       return {
         ...filterDetail,
         enable: item.enable,
         isEditName: false,
         isAddKey: false,
         status: 0,
-      }
-    }) || []
-    setFilters(conFifters)
+      };
+    }) || [];
+    setFilters(conFifters);
     const options = bar.componentFilters.filter(v => {
       if (Object.keys(bar.componentConfig).length === 0) {
-        return v
+        return v;
       } else {
-        return !bar.componentConfig.filters.some((item) => item.id === v.id)
+        return !bar.componentConfig.filters.some((item) => item.id === v.id);
       }
-    })
-    setSelectFilterOprions(options)
-  }
+    });
+    setSelectFilterOprions(options);
+  };
 
   const onClose = () => {
-    setVisible(false)
-    props.onClose()
-  }
+    setVisible(false);
+    props.onClose();
+  };
 
   const selectedFiltersChange = async (val) => {
-    if (props.type === 'component') {
-      props.onSelectedFiltersChange(val)
-      return
+    if (props.type === "component") {
+      props.onSelectedFiltersChange(val);
+      return;
     }
     await http({
-      url: '/visual/module/filter/add',
-      method: 'POST',
+      url: "/visual/module/filter/add",
+      method: "POST",
       body: {
         filterId: val,
         id: bar.key[0]
       }
-    })
+    });
     // 更新过滤器信息
-    const componentFilters = [...bar.componentFilters]
+    const componentFilters = [...bar.componentFilters];
     componentFilters.forEach(filter => {
       if (filter.id === val) {
-        filter.moduleIds.push(bar.key[0])
+        filter.moduleIds.push(bar.key[0]);
       }
-    })
+    });
     dispatch({
-      type: 'bar/save',
+      type: "bar/save",
       payload: {
         componentFilters
       }
-    })
+    });
     // 跟新组件配置信息
-    const componentConfig = { ...bar.componentConfig }
-    const comFilters = [...componentConfig.filters]
+    const componentConfig = { ...bar.componentConfig };
+    const comFilters = [...componentConfig.filters];
     comFilters.push(
       {
         enable: true,
         id: val
       }
-    )
-    componentConfig.filters = comFilters
+    );
+    componentConfig.filters = comFilters;
     dispatch({
-      type: 'bar/setComponentConfig',
+      type: "bar/setComponentConfig",
       payload: componentConfig
-    })
-  }
+    });
+  };
 
   const addFilter = () => {
-    const id = uuidv4()
+    const id = uuidv4();
     setFilterOfAdd({
       id,
       enable: true,
-      name: '新增过滤器',
+      name: "新增过滤器",
       isEditName: false,
-      content: 'return data',
+      content: "return data",
       callbackKeys: [],
       isAddKey: false,
       status: 1, // 0: 未编辑 1：编辑
       isNewAdd: true,
-    })
-    const activeCollapseKeysNew = [...activeCollapseKeys]
-    activeCollapseKeysNew.push(id)
-    setActiveCollapseKeys(activeCollapseKeysNew)
-  }
+    });
+    const activeCollapseKeysNew = [...activeCollapseKeys];
+    activeCollapseKeysNew.push(id);
+    setActiveCollapseKeys(activeCollapseKeysNew);
+  };
 
   const genHeader = filter => (
     <div className="cus-fifter-pan-header">
@@ -194,7 +194,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
               <Input
                 ref={inputNameRef}
                 defaultValue={filter.name}
-                onClick={e => { e.stopPropagation() }}
+                onClick={e => { e.stopPropagation(); }}
                 onBlur={(e) => editName(e, filter)}
                 onPressEnter={(e) => editName(e, filter)} />
               : <span title={filter.name}>{filter.name}</span>
@@ -220,35 +220,35 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         }
         <DeleteOutlined
           onClick={event => {
-            deleteFilter(event, filter)
+            deleteFilter(event, filter);
           }}
         />
       </div>
     </div>
-  )
+  );
 
   const editFilterName = (e, filter) => {
-    e.stopPropagation()
-    filter.isEditName = true
-    const all = [...filters]
-    setFilters(all)
+    e.stopPropagation();
+    filter.isEditName = true;
+    const all = [...filters];
+    setFilters(all);
     setTimeout(() => {
-      inputNameRef.current.focus()
-    })
-  }
+      inputNameRef.current.focus();
+    });
+  };
 
   const editName = async (e, filter) => {
     e.stopPropagation();
-    filter.name = e.target.value
-    filter.isEditName = false
+    filter.name = e.target.value;
+    filter.isEditName = false;
     if (filter.isNewAdd) {
-      const filterOfAddNew = { ...filterOfAdd }
-      setFilterOfAdd(filterOfAddNew)
+      const filterOfAddNew = { ...filterOfAdd };
+      setFilterOfAdd(filterOfAddNew);
     } else {
-      const { id, name, callbackKeys, content } = filter
+      const { id, name, callbackKeys, content } = filter;
       await http({
-        url: '/visual/module/filter/update',
-        method: 'POST',
+        url: "/visual/module/filter/update",
+        method: "POST",
         body: {
           id,
           name,
@@ -256,42 +256,42 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
           content,
           dashboardId: bar.dashboardId
         }
-      })
+      });
       // 更新bar里面的componentFilters
-      const componentFilters = [...bar.componentFilters]
+      const componentFilters = [...bar.componentFilters];
       componentFilters.forEach(item => {
         if (item.id === id) {
-          item.name = e.target.value
+          item.name = e.target.value;
         }
-      })
+      });
       dispatch({
-        type: 'bar/save',
+        type: "bar/save",
         payload: {
           componentFilters,
         },
-      })
+      });
     }
-  }
+  };
 
   const collapseChange = e => {
-    setActiveCollapseKeys(e)
-  }
+    setActiveCollapseKeys(e);
+  };
 
   const showComponentDetail = (e, id) => {
-    const layer = findLayerById(bar.layers, id)
+    const layer = findLayerById(bar.layers, id);
     dispatch({
-      type: 'bar/selectLayers',
+      type: "bar/selectLayers",
       payload: [layer]
-    })
+    });
     dispatch({
-      type: 'bar/save',
+      type: "bar/save",
       payload: {
         key: [id]
       }
-    })
-    e.preventDefault()
-    e.stopPropagation()
-  }
+    });
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   const useingComponent = (filter) => (
     <React.Fragment>
@@ -305,237 +305,237 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
                   <span className="title" onClick={e => showComponentDetail(e, item)}>
                     {bar.fullAmountComponents.find(jtem => jtem.id === item)?.name + "_" + item}
                   </span>
-                </li>)
+                </li>);
             })}
           </ul>
-          : '无正在使用的组件'
+          : "无正在使用的组件"
       }
     </React.Fragment>
   );
 
   const deleteFilter = async (event, filter) => {
-    event.stopPropagation()
+    event.stopPropagation();
     if (filter.isNewAdd) {
-      setFilterOfAdd(null)
+      setFilterOfAdd(null);
     } else {
       // 如果是项目过滤器里面的删除，则需要提示
       // showConfirm(filter)
       // 组件里面的删除，只是解除关联关系
-      if (props.type === 'component') {
-        props.onDeleteFilters(filter)
-        return
+      if (props.type === "component") {
+        props.onDeleteFilters(filter);
+        return;
       }
       const data = await http({
-        url: '/visual/module/filter/remove',
-        method: 'POST',
+        url: "/visual/module/filter/remove",
+        method: "POST",
         body: {
           moduleId: bar.key[0],
           filterIds: [filter.id]
         }
-      })
+      });
       // 更新过滤器的moduleIds信息
-      const componentFilters = [...bar.componentFilters]
+      const componentFilters = [...bar.componentFilters];
       componentFilters.forEach(item => {
         if (item.id === filter.id) {
-          item.moduleIds = item.moduleIds.filter(jtem => jtem !== bar.key[0])
+          item.moduleIds = item.moduleIds.filter(jtem => jtem !== bar.key[0]);
         }
-      })
+      });
       dispatch({
-        type: 'bar/save',
+        type: "bar/save",
         payload: {
           componentFilters
         }
-      })
+      });
       // 跟新组件配置信息
-      const componentConfig = { ...bar.componentConfig }
-      componentConfig.filters = componentConfig.filters.filter(item => item.id !== filter.id)
+      const componentConfig = { ...bar.componentConfig };
+      componentConfig.filters = componentConfig.filters.filter(item => item.id !== filter.id);
       dispatch({
-        type: 'bar/setComponentConfig',
+        type: "bar/setComponentConfig",
         payload: componentConfig
-      })
+      });
     }
-  }
+  };
 
   const showConfirm = (filter) => {
     ModalConfirm({
-      title: '删除确认',
-      content: '删除后可能导致相关组件不可用，是否删除数据过滤器？',
+      title: "删除确认",
+      content: "删除后可能导致相关组件不可用，是否删除数据过滤器？",
       onOk() {
-        deleteFilterHandle(filter)
+        deleteFilterHandle(filter);
       },
       onCancel() {
         // do nothing
       },
     });
-  }
+  };
 
   const deleteFilterHandle = async (filter) => {
     const data = await http({
-      url: '/visual/module/filter/delete',
-      method: 'POST',
+      url: "/visual/module/filter/delete",
+      method: "POST",
       body: {
         filterIds: [filter.id],
         modules: [...filter.moduleIds]
       }
-    })
-  }
+    });
+  };
 
   const enableFifter = async (e, item) => {
-    item.enable = e.target.checked
-    if (props.type === 'component') {
+    item.enable = e.target.checked;
+    if (props.type === "component") {
 
-      props.onBindFilters(item, e.target.checked)
-      return
+      props.onBindFilters(item, e.target.checked);
+      return;
     }
     const data = await http({
-      url: '/visual/module/filter/trigger',
-      method: 'POST',
+      url: "/visual/module/filter/trigger",
+      method: "POST",
       body: {
         id: bar.key[0],
         filterId: item.id,
         enable: e.target.checked
       }
-    })
-    const componentConfig = { ...bar.componentConfig }
-    const comFilters = [...componentConfig.filters]
+    });
+    const componentConfig = { ...bar.componentConfig };
+    const comFilters = [...componentConfig.filters];
     comFilters.forEach(filter => {
       if (filter.id === item.id) {
-        filter.enable = e.target.checked
+        filter.enable = e.target.checked;
       }
-    })
-    componentConfig.filters = comFilters
+    });
+    componentConfig.filters = comFilters;
     dispatch({
-      type: 'bar/setComponentConfig',
+      type: "bar/setComponentConfig",
       payload: componentConfig
-    })
-  }
+    });
+  };
 
   const handleCallbackKeyClose = (key, item) => {
-    item.status = 1
-    item.callbackKeys = item.callbackKeys.filter(tag => tag !== key)
-    const all = [...filters]
-    setFilters(all)
-  }
+    item.status = 1;
+    item.callbackKeys = item.callbackKeys.filter(tag => tag !== key);
+    const all = [...filters];
+    setFilters(all);
+  };
 
   const addKeyHandle = (e, item) => {
     e.preventDefault();
-    item.isAddKey = true
-    const filtersNew = [...filters]
-    setFilters(filtersNew)
+    item.isAddKey = true;
+    const filtersNew = [...filters];
+    setFilters(filtersNew);
     setTimeout(() => {
-      inputFiledRef.current.focus()
-    })
-  }
+      inputFiledRef.current.focus();
+    });
+  };
 
   const handleKeyInputConfirm = (e, item) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value && !item.callbackKeys.includes(value)) {
-      item.callbackKeys.push(e.target.value)
-      item.status = 1
+      item.callbackKeys.push(e.target.value);
+      item.status = 1;
     }
-    item.isAddKey = false
-    const all = [...filters]
-    setFilters(all)
-  }
+    item.isAddKey = false;
+    const all = [...filters];
+    setFilters(all);
+  };
 
   const codeChange = (e, item) => {
-    item.content = e
-    item.status = 1
-  }
+    item.content = e;
+    item.status = 1;
+  };
 
   const resetFilter = (filter) => {
     if (filter.isNewAdd) {
-      setFilterOfAdd(null)
+      setFilterOfAdd(null);
     } else {
-      effectHandler()
-      const activeCollapseKeysNew = [...activeCollapseKeys]
-      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id))
+      effectHandler();
+      const activeCollapseKeysNew = [...activeCollapseKeys];
+      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id));
     }
-  }
+  };
 
   const confirmFilter = async (item) => {
     if (item.isNewAdd) {
-      await saveNewFifterHandle()
+      await saveNewFifterHandle();
     } else {
-      await updateFifterHandle(item)
+      await updateFifterHandle(item);
     }
-  }
+  };
 
   const saveNewFifterHandle = async () => {
     // 新增保存,创建过滤器，把过滤器添加到当前组件
-    const { id, enable, isEditName, isAddKey, status, isNewAdd, ...rest } = filterOfAdd
+    const { id, enable, isEditName, isAddKey, status, isNewAdd, ...rest } = filterOfAdd;
     const data = await http({
-      url: '/visual/module/filter/create',
-      method: 'POST',
+      url: "/visual/module/filter/create",
+      method: "POST",
       body: {
         ...rest,
         dashboardId: bar.dashboardId
       }
-    })
+    });
     if (data) {
-      if (data && props.type === 'component') {
-        const componentFilters = [...bar.componentFilters]
+      if (data && props.type === "component") {
+        const componentFilters = [...bar.componentFilters];
         componentFilters.push({
           id: data.id,
           name: data.name,
           content: data.content,
           callbackKeys: data.callbackKeys,
           moduleIds: []
-        })
+        });
         await dispatch({
-          type: 'bar/save',
+          type: "bar/save",
           payload: {
             componentFilters
           }
-        })
-        await props.onSelectedFiltersChange(data.id, componentFilters)
-        message.success('保存成功')
+        });
+        await props.onSelectedFiltersChange(data.id, componentFilters);
+        message.success("保存成功");
       } else {
         // 把过滤器添加到当前组件
         const res = await http({
-          url: '/visual/module/filter/add',
-          method: 'POST',
+          url: "/visual/module/filter/add",
+          method: "POST",
           body: {
             filterId: data.id,
             id: bar.key[0]
           }
-        })
-        const componentFilters = [...bar.componentFilters]
+        });
+        const componentFilters = [...bar.componentFilters];
         componentFilters.push({
           id: data.id,
           name: data.name,
           content: data.content,
           callbackKeys: data.callbackKeys,
           moduleIds: [bar.key[0]]
-        })
+        });
         dispatch({
-          type: 'bar/save',
+          type: "bar/save",
           payload: {
             componentFilters
           }
-        })
+        });
         // 先更新数据过滤器再更新组件内的数据过滤器
-        const componentConfig = { ...bar.componentConfig }
-        componentConfig.filters = res.filters
+        const componentConfig = { ...bar.componentConfig };
+        componentConfig.filters = res.filters;
         dispatch({
-          type: 'bar/setComponentConfig',
+          type: "bar/setComponentConfig",
           payload: componentConfig
-        })
-        message.success('保存成功')
+        });
+        message.success("保存成功");
       }
       // 更新过滤器信息
 
       // 跟新组件配置信息
 
-      setFilterOfAdd(null)
+      setFilterOfAdd(null);
     }
-  }
+  };
 
   const updateFifterHandle = async (filter) => {
-    const { id, name, callbackKeys, content } = filter
+    const { id, name, callbackKeys, content } = filter;
     const data = await http({
-      url: '/visual/module/filter/update',
-      method: 'POST',
+      url: "/visual/module/filter/update",
+      method: "POST",
       body: {
         id,
         name,
@@ -543,76 +543,76 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         content,
         dashboardId: bar.dashboardId
       }
-    })
+    });
     // 更新过滤器信息
     if (data) {
-      const componentFilters = [...bar.componentFilters]
+      const componentFilters = [...bar.componentFilters];
       componentFilters.forEach(item => {
         if (item.id === filter.id) {
-          item.id = id
-          item.name = name
-          item.callbackKeys = callbackKeys
-          item.content = content
+          item.id = id;
+          item.name = name;
+          item.callbackKeys = callbackKeys;
+          item.content = content;
         }
-      })
+      });
       dispatch({
-        type: 'bar/save',
+        type: "bar/save",
         payload: {
           componentFilters
         }
-      })
-      const activeCollapseKeysNew = [...activeCollapseKeys]
-      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id))
-      if (props.type === 'component') {
-        props.onUpdateFilters(data)
+      });
+      const activeCollapseKeysNew = [...activeCollapseKeys];
+      setActiveCollapseKeys(activeCollapseKeysNew.filter(item => item !== filter.id));
+      if (props.type === "component") {
+        props.onUpdateFilters(data);
       }
     }
-    message.success('保存成功')
-  }
+    message.success("保存成功");
+  };
 
   const arrayMove = (array, from, to) => {
     array = array.slice();
     array.splice(to < 0 ? array.length + to : to, 0, array.splice(from, 1)[0]);
     return array;
-  }
+  };
 
   const onSortEnd = async (item, key) => {
-    if (key === 0) return
-    const all = [...filters]
-    const newFifters = arrayMove(all, key, key - 1)
-    setFilters(newFifters)
+    if (key === 0) return;
+    const all = [...filters];
+    const newFifters = arrayMove(all, key, key - 1);
+    setFilters(newFifters);
     const comFilters = newFifters.map(item => {
       return {
         id: item.id,
         enable: item.enable
-      }
-    })
+      };
+    });
     await http({
-      url: '/visual/module/filter/order',
-      method: 'POST',
+      url: "/visual/module/filter/order",
+      method: "POST",
       body: {
         moduleId: bar.key[0],
         filters: comFilters
       }
-    })
+    });
     // 跟新组件配置信息
-    const componentConfig = { ...bar.componentConfig }
-    componentConfig.filters = comFilters
+    const componentConfig = { ...bar.componentConfig };
+    componentConfig.filters = comFilters;
     dispatch({
-      type: 'bar/setComponentConfig',
+      type: "bar/setComponentConfig",
       payload: componentConfig
-    })
+    });
   };
 
   const FilterItem = (item, key) => (
     <li className="cus-fifter-sort-item" key={item.id}>
       {!item.isNewAdd ?
         <React.Fragment>
-          <span className={`${key === 0 ? 'disable-span' : ''} cus-fifter-sort-dot`} title="上移" onClick={() => onSortEnd(item, key)}>
+          <span className={`${key === 0 ? "disable-span" : ""} cus-fifter-sort-dot`} title="上移" onClick={() => onSortEnd(item, key)}>
             <IconFont
               type='icon-shangyi'
               style={{
-                fontSize: '12px' //图标大小
+                fontSize: "12px" //图标大小
               }}
             />
           </span>
@@ -622,7 +622,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
       <Collapse
         defaultActiveKey={activeCollapseKeys}
         onChange={collapseChange}
-        className={['custom-collapse', item.isNewAdd ? 'collapse-add-filter' : null].join(' ')}
+        className={["custom-collapse", item.isNewAdd ? "collapse-add-filter" : null].join(" ")}
       >
         <Panel header={genHeader(item)} key={item.id}>
           <div className="cus-filter-content-wraper">
@@ -657,18 +657,18 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             </div>
             <div className="body">
               <div className="code-editor">
-                <div className="cus-code">{`function filter(data,callbackArgs,crossCallback){`}</div>
+                <div className="cus-code">{"function filter(data,callbackArgs,crossCallback){"}</div>
                 <div className="code-wraper">
                   <CodeEditor value={item.content} language="javascript" onChange={(e) => codeChange(e, item)}></CodeEditor>
                 </div>
-                <div className="cus-code">{`}`}</div>
+                <div className="cus-code">{"}"}</div>
               </div>
             </div>
             <div className="bottom">
               <div className="btn-group">
-                <Button ghost onClick={() => { resetFilter(item) }} style={{ marginRight: '8px' }}>取消</Button>
+                <Button ghost onClick={() => { resetFilter(item); }} style={{ marginRight: "8px" }}>取消</Button>
                 <Button type="primary" onClick={async () => {
-                  await confirmFilter(item)
+                  await confirmFilter(item);
                 }}>确认</Button>
               </div>
             </div>
@@ -676,7 +676,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         </Panel>
       </Collapse>
     </li>
-  )
+  );
 
   return (
     <Drawer
@@ -690,15 +690,15 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
     >
       <div className="drawer-tool">
         <Select
-          key={selectFilterOprions.length + 'key'}
+          key={selectFilterOprions.length + "key"}
           className="custom-select"
           placeholder="请选择过滤器"
           onChange={selectedFiltersChange}
-          style={{ marginBottom: 0, width: '374px' }}
+          style={{ marginBottom: 0, width: "374px" }}
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           {selectFilterOprions.map(item => {
-            return (<Option value={item.id} key={item.id}>{item.name}</Option>)
+            return (<Option value={item.id} key={item.id}>{item.name}</Option>);
           })}
         </Select>
         <Button disabled={!!filterOfAdd} type="primary" onClick={addFilter}>新建过滤器</Button>
@@ -711,20 +711,20 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
             ))}
             {
               filterOfAdd ?
-                FilterItem(filterOfAdd, 'isAdd') : null
+                FilterItem(filterOfAdd, "isAdd") : null
             }
           </ul> : null
       }
       {
-        props.type === 'component'
-          ? <DataResult data={bar.componentConfig} resultData={resultData} type="component" style={{ width: '488px', height: '326px' }}></DataResult>
-          : <DataResult data={bar.componentConfig} style={{ width: '488px', height: '326px' }}></DataResult>
+        props.type === "component"
+          ? <DataResult data={bar.componentConfig} resultData={resultData} type="component" style={{ width: "488px", height: "326px" }}></DataResult>
+          : <DataResult data={bar.componentConfig} style={{ width: "488px", height: "326px" }}></DataResult>
       }
 
     </Drawer>
-  )
-}
+  );
+};
 
 export default connect(({ bar }) => ({
   bar
-}))(DataConfigDrawer)
+}))(DataConfigDrawer);

@@ -1,39 +1,39 @@
-import React, { memo, useState, useEffect } from 'react';
-import './index.less'
+import React, { memo, useState, useEffect } from "react";
+import "./index.less";
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import {
   Form,
   Select,
-} from 'antd';
+} from "antd";
 
 const CusSelect = props => {
   const { Option } = Select;
   const formItemLayout = {
-    labelAlign: 'left'
+    labelAlign: "left"
   };
   const [form] = Form.useForm();
-  const _data = props.data
-  const [select, setSelect] = useState(_data.value)
-  const [key, setKey] = useState(uuidv4())
+  const _data = props.data;
+  const [select, setSelect] = useState(_data.value);
+  const [key, setKey] = useState(uuidv4());
 
   useEffect(() => {
-    setKey(uuidv4())
-  }, [_data.options])
+    setKey(uuidv4());
+  }, [_data.options]);
 
   useEffect(() => {
-    setKey(uuidv4())
-    setSelect(_data.value)
-  }, [_data.value])
+    setKey(uuidv4());
+    setSelect(_data.value);
+  }, [_data.value]);
 
   // 下拉框选择
   const selectChange = (e) => {
-    setSelect(e)
+    setSelect(e);
     _data.value = e;
     _data.label = _data.options.find(item => item.value === e).name;
-    props.onChange()
-  }
+    props.onChange();
+  };
 
 
   return (
@@ -58,13 +58,13 @@ const CusSelect = props => {
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           {_data.options.map((item) => {
-            return <Option value={item.value} key={item.value}>{item.name}</Option>
+            return <Option value={item.value} key={item.value}>{item.name}</Option>;
           })}
         </Select>
         {props.children}
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default memo(CusSelect)
+export default memo(CusSelect);

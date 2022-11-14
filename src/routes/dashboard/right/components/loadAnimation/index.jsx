@@ -1,5 +1,5 @@
-import React, { memo, useState } from 'react'
-import './index.less'
+import React, { memo, useState } from "react";
+import "./index.less";
 
 import {
   Form,
@@ -7,24 +7,24 @@ import {
   InputNumber,
   Checkbox,
   Collapse,
-} from 'antd';
+} from "antd";
 
 const LoadAnimation = props => {
   const { Panel } = Collapse;
   const { Option } = Select;
   const formItemLayout = {
-    labelAlign: 'left'
-  }
+    labelAlign: "left"
+  };
   const _data = props.data || {};
-  const [animationType, setAnimationType] = useState(_data?.mountAnimation?.type || 'none')
-  const [opacityOpen, setOpacityOpen] = useState(_data?.mountAnimation?.opacityOpen || false)
-  const [timingFunction, setTimingFunction] = useState(_data?.mountAnimation?.timingFunction || 'linear')
-  const [direction, setDirection] = useState(_data?.mountAnimation?.direction || 'left')
-  const [duration, setDuration] = useState(_data?.mountAnimation?.duration || 300)
-  const [delay, setDelay] = useState(_data?.mountAnimation?.delay || 0)
+  const [animationType, setAnimationType] = useState(_data?.mountAnimation?.type || "none");
+  const [opacityOpen, setOpacityOpen] = useState(_data?.mountAnimation?.opacityOpen || false);
+  const [timingFunction, setTimingFunction] = useState(_data?.mountAnimation?.timingFunction || "linear");
+  const [direction, setDirection] = useState(_data?.mountAnimation?.direction || "left");
+  const [duration, setDuration] = useState(_data?.mountAnimation?.duration || 300);
+  const [delay, setDelay] = useState(_data?.mountAnimation?.delay || 0);
 
   const animationTypeChange = (value) => {
-    if (animationType === 'none') {
+    if (animationType === "none") {
       _data.mountAnimation = {
         "delay": 0,
         "direction": "right",
@@ -32,49 +32,49 @@ const LoadAnimation = props => {
         "opacityOpen": true,
         "timingFunction": "ease",
         "type": value
-      }
+      };
     } else {
-      value === 'none' ? _data.mountAnimation = null : _data.mountAnimation.type = value
+      value === "none" ? _data.mountAnimation = null : _data.mountAnimation.type = value;
     }
-    setAnimationType(value)
-    props.onChange()
-  }
+    setAnimationType(value);
+    props.onChange();
+  };
 
   const opacityOpenChange = (e) => {
-    setOpacityOpen(e.target.checked)
-    _data.mountAnimation.opacityOpen = e.target.checked
-    props.onChange()
-  }
+    setOpacityOpen(e.target.checked);
+    _data.mountAnimation.opacityOpen = e.target.checked;
+    props.onChange();
+  };
 
   const timingFunctionChange = (value) => {
-    setTimingFunction(value)
-    _data.mountAnimation.timingFunction = value
-    props.onChange()
-  }
+    setTimingFunction(value);
+    _data.mountAnimation.timingFunction = value;
+    props.onChange();
+  };
 
   const directionChange = (value) => {
-    setDirection(value)
-    _data.mountAnimation.direction = value
-    props.onChange()
-  }
+    setDirection(value);
+    _data.mountAnimation.direction = value;
+    props.onChange();
+  };
 
   const durationChange = (e) => {
-    const value = parseInt(e.target.value)
-    setDuration(value)
-    _data.mountAnimation.duration = value
-    props.onChange()
-  }
+    const value = parseInt(e.target.value);
+    setDuration(value);
+    _data.mountAnimation.duration = value;
+    props.onChange();
+  };
 
   const delayChange = (e) => {
-    const value = parseInt(e.target.value)
-    setDuration(value)
-    _data.mountAnimation.delay = value
-    props.onChange()
-  }
+    const value = parseInt(e.target.value);
+    setDuration(value);
+    _data.mountAnimation.delay = value;
+    props.onChange();
+  };
 
   return (
     <Form className="custom-form" {...formItemLayout} colon={false}>
-      <Collapse accordion className="custom-collapse" defaultActiveKey={['1']} >
+      <Collapse accordion className="custom-collapse" defaultActiveKey={["1"]} >
         <Panel header="载入动画" key="1">
           <Form.Item label="动画类型" name="animationType">
             <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={animationType} onChange={animationTypeChange}>
@@ -84,9 +84,9 @@ const LoadAnimation = props => {
               <Option value="wipe">划变</Option>
             </Select>
           </Form.Item>
-          {animationType !== 'none' ? <React.Fragment>
+          {animationType !== "none" ? <React.Fragment>
             <Form.Item name="opacityOpen" label="渐隐渐现">
-              <Checkbox style={{ float: 'left' }} checked={opacityOpen} onChange={opacityOpenChange}></Checkbox>
+              <Checkbox style={{ float: "left" }} checked={opacityOpen} onChange={opacityOpenChange}></Checkbox>
             </Form.Item>
             <Form.Item label="速率" name="timingFunction">
               <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} className="custom-select" style={{ marginBottom: 0 }} placeholder="请选择" defaultValue={timingFunction} onChange={timingFunctionChange}>
@@ -110,16 +110,16 @@ const LoadAnimation = props => {
               </Select>
             </Form.Item>
             <Form.Item label="持续时间(ms)" name="duration">
-              <InputNumber className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={duration} onBlur={durationChange} />
+              <InputNumber className="po-size-input" min={0} style={{ width: "100%" }} defaultValue={duration} onBlur={durationChange} />
             </Form.Item>
             <Form.Item label="延时(ms)" name="delay">
-              <InputNumber className="po-size-input" min={0} style={{ width: '100%' }} defaultValue={delay} onBlur={delayChange} />
+              <InputNumber className="po-size-input" min={0} style={{ width: "100%" }} defaultValue={delay} onBlur={delayChange} />
             </Form.Item>
           </React.Fragment> : null}
         </Panel>
       </Collapse>
     </Form>
-  )
-}
+  );
+};
 
-export default memo(LoadAnimation)
+export default memo(LoadAnimation);
