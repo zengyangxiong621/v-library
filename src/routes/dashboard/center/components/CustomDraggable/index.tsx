@@ -1102,8 +1102,7 @@ const CustomDraggable = ({
                             bar.callbackArgs
                           )}
                         ></WorldMap>
-                      ) 
-                      // : layer.moduleName === "indicatorcard" ? (
+                      ) : // : layer.moduleName === "indicatorcard" ? (
                       //   <IndicatorCard
                       //     themeConfig={bar.componentThemeConfig}
                       //     onThemeChange={onThemeChange}
@@ -1120,7 +1119,7 @@ const CustomDraggable = ({
                       //     )}
                       //   ></IndicatorCard>
                       // )
-                       : layer.moduleName === "chinaMap" ? (
+                      layer.moduleName === "chinaMap" ? (
                         <ChinaMap
                           themeConfig={bar.componentThemeConfig}
                           onThemeChange={onThemeChange}
@@ -1208,7 +1207,7 @@ const CustomDraggable = ({
                       //       bar.callbackArgs
                       //     )}
                       //   ></InstrumentPanel4>
-                      // ) : 
+                      // ) :
                       layer.moduleName === "normalTable" ? (
                         <NormalTable
                           themeConfig={bar.componentThemeConfig}
@@ -1224,8 +1223,7 @@ const CustomDraggable = ({
                             bar.callbackArgs
                           )}
                         ></NormalTable>
-                      ) : 
-                      // layer.moduleName === "cascader" ? (
+                      ) : // layer.moduleName === "cascader" ? (
                       //   <Cascader
                       //     onChange={(val: any) => handleValueChange(val, component, layer.id)}
                       //     componentConfig={component}
@@ -1239,7 +1237,7 @@ const CustomDraggable = ({
                       //       bar.callbackArgs
                       //     )}
                       //   ></Cascader>
-                      // ) : 
+                      // ) :
                       layer.moduleName === "media" ? (
                         <Media
                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
