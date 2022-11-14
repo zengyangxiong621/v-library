@@ -5,7 +5,6 @@ import { useState, useRef } from "react";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import ButtonGroup from "@/customComponents/assist/buttonGroup/v1.0.5/index";
 import CusImage from "@/customComponents/assist/image/v1.0.2/index";
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.1";
 import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
@@ -461,9 +460,7 @@ const ComponentEventContainer = ({ bar, dispatch, events = [], id = 0, scale = 1
       // >
       // </ChinaMap>
       // :
-     props.componentConfig.moduleName === "buttonGroup2" ? (
-        <ButtonGroup onChange={handleValueChange} {...props}></ButtonGroup>
-      ) : props.componentConfig.moduleName === "scrollTable" ? (
+      props.componentConfig.moduleName === "scrollTable" ? (
         <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
       ) : props.componentConfig.moduleName === "tab" ? (
         <Tab
