@@ -36,8 +36,10 @@ const ComponentEventContainer = ({
   id = 0,
   scale = 1,
   getDrillDownData,
+  isHideDefault,
   ...props
 }) => {
+  console.log("isHideDefault", isHideDefault);
   const callbackArgs = previewDashboard.callbackArgs;
   const callbackParamsList = previewDashboard.callbackParamsList;
   const { componentConfig } = props;
@@ -438,6 +440,11 @@ const ComponentEventContainer = ({
       // } else {
       //   opacityTimeIds.current.push(componentId)
       // }
+      console.log("选项卡", dom.style.display);
+      if (dom.style.display === "none" && actionType === "show") {
+        dom.style.display = "block";
+        dom.style.opacity = 0;
+      }
       timer = setInterval(() => {
         // 在一个时间段内，只存在一种事件
         if (actionType === "show") {
@@ -572,7 +579,13 @@ const ComponentEventContainer = ({
       // onClick={handleClick}
       // onMouseEnter={handleMouseEnter}
       // onMouseLeave={handleMouseLeave}
-      style={{ width: "100%", height: "100%", ...animationConfig, ...opacityStyle }}
+      style={{
+        width: "100%",
+        height: "100%",
+        ...animationConfig,
+        ...opacityStyle,
+        display: isHideDefault ? "none" : "block",
+      }}
     >
       {props.componentConfig.moduleName === "swiperText" ? (
         <SwiperText {...props}></SwiperText>

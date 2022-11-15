@@ -804,7 +804,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                     .map((item) => {
                                       return (
                                         <Option value={item.value} key={item.value}>
-                                          {item.name};
+                                          {item.name}
                                         </Option>
                                       );
                                     })}
@@ -1101,13 +1101,11 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                     onChange={(e) => animationTypeChange(e, action)}
                                     getPopupContainer={(triggerNode) => triggerNode.parentNode}
                                   >
-                                    {animationType.map((item) => {
-                                      return (
-                                        <Option value={item.value} key={item.value}>
-                                          {item.name}
-                                        </Option>
-                                      );
-                                    })}
+                                    {animationType.map((item) => (
+                                      <Option value={item.value} key={item.value}>
+                                        {item.name}
+                                      </Option>
+                                    ))}
                                   </Select>
                                 </Form.Item>
                               )}

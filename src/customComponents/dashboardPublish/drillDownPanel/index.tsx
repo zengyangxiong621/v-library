@@ -23,7 +23,14 @@ interface State {
   [key: string]: any;
 }
 
-const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPanel }: any) => {
+const DrillDownPanel = ({
+  publishDashboard,
+  id,
+  dispatch,
+  panels,
+  isDrillDownPanel,
+  isHideDefault,
+}: any) => {
   const componentData = publishDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id);
   // 获取面板详情接口
@@ -154,7 +161,7 @@ const DrillDownPanel = ({ publishDashboard, id, dispatch, panels, isDrillDownPan
   return (
     <div
       className={`drill-down-panel panel-${id} event-id-${id}`}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "100%", display: isHideDefault ? "none" : "block" }}
     >
       <div style={{ marginBottom: "20px", minWidth: "500px" }}>
         <Breadcrumb>

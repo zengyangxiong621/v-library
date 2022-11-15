@@ -43,7 +43,18 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       painter();
     },
   }));
+  const getPixelRatio = function (context) {
+    const backingStore =
+      context.backingStorePixelRatio ||
+      context.webkitBackingStorePixelRatio ||
+      context.mozBackingStorePixelRatio ||
+      context.msBackingStorePixelRatio ||
+      context.oBackingStorePixelRatio ||
+      context.backingStorePixelRatio ||
+      1;
 
+    return (window.devicePixelRatio || 1) / backingStore;
+  };
   useEffect(() => {
     const temp = new rulerCanvas();
     temp.painter(bar.canvasScaleValue);
@@ -79,7 +90,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
       // console.log('offsetLeft', draggableWrapper.offsetLeft)
       const contextTop = this.canvasTop.getContext("2d");
       const contextLeft = this.canvasLeft.getContext("2d");
-
+      const ratio = getPixelRatio(contextTop);
       contextTop.beginPath();
       contextLeft.beginPath();
 
@@ -122,8 +133,10 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
 
         //顶部标尺数字绘制
         if (y === 0) {
+          contextTop.save();
           contextTop.font = "12px Arial";
           contextTop.fillText(i, Math.ceil(i * canvasScaleValue) + left - 18, 10);
+          contextTop.restore();
         }
       }
 

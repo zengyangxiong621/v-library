@@ -23,7 +23,7 @@ interface State {
 
 import { layersPanelsFlat } from "@/utils";
 
-const DynamicPanel = ({ publishDashboard, id, dispatch, panels }: any) => {
+const DynamicPanel = ({ publishDashboard, id, dispatch, panels, isHideDefault }: any) => {
   const componentData = publishDashboard.componentData;
   const panel = panels.find((item: IPanel) => item.id === id);
   const pass = window.localStorage.getItem(panel.dashboard);
@@ -182,7 +182,7 @@ const DynamicPanel = ({ publishDashboard, id, dispatch, panels }: any) => {
   return (
     <div
       className={`dynamic-panel panel-${id} event-id-${id}`}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "100%", display: isHideDefault ? "none" : "block" }}
     >
       {state.allData.map((item: any, index: number) => (
         <div
