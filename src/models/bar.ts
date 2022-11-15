@@ -1212,6 +1212,16 @@ export default {
           fullAmountPayload: "brother",
           isComponent: true,
         });
+        yield put({
+          type: "selectLayers",
+          payload: [
+            {
+              ...itemData,
+              id,
+              selected: true,
+            },
+          ],
+        });
       }
     },
     *createPanel(
