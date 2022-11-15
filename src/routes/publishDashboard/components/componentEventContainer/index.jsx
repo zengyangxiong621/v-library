@@ -11,9 +11,6 @@ import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 // import Counter from '@/customComponents/assist/counter2/v1.0.8'
-import Media from "@/customComponents/media/v1.1.1";
-import NormalTable from "@/customComponents/table/normalTable/v1.0.5";
-import PaginationComp from "@/customComponents/paginationComp/v1.1.7";
 import { connect } from "dva";
 
 // import './index.css'
@@ -469,35 +466,28 @@ const ComponentEventContainer = ({
         // ) :
         props.componentConfig.moduleName === "worldMap" ? (
           <WorldMap {...props}></WorldMap>
-        ) : props.componentConfig.moduleName === "media" ? (
-          <Media {...props}></Media>
-        ) : props.componentConfig.moduleName === "normalTable" ? (
-          <NormalTable {...props}></NormalTable>
-        ) : props.componentConfig.moduleName === "paginationComp" ? (
-          <PaginationComp onChange={handleValueChange} {...props}></PaginationComp>
-        ) : 
-        // props.componentConfig.moduleName === "instrumentPanel_1" ? (
-        //   <InstrumentPanel1
-        //     scale={scale}
-        //     onChange={handleValueChange}
-        //     {...props}
-        //   ></InstrumentPanel1>
-        // ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
-        //   <InstrumentPanel3
-        //     scale={scale}
-        //     onChange={handleValueChange}
-        //     {...props}
-        //   ></InstrumentPanel3>
-        // ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-        //   <InstrumentPanel4
-        //     scale={scale}
-        //     onChange={handleValueChange}
-        //     {...props}
-        //   ></InstrumentPanel4>
-        // ) : props.componentConfig.moduleName === "cascader" ? (
-        //   <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
-        // ) : 
-        (
+        ) : (
+          // props.componentConfig.moduleName === "instrumentPanel_1" ? (
+          //   <InstrumentPanel1
+          //     scale={scale}
+          //     onChange={handleValueChange}
+          //     {...props}
+          //   ></InstrumentPanel1>
+          // ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
+          //   <InstrumentPanel3
+          //     scale={scale}
+          //     onChange={handleValueChange}
+          //     {...props}
+          //   ></InstrumentPanel3>
+          // ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
+          //   <InstrumentPanel4
+          //     scale={scale}
+          //     onChange={handleValueChange}
+          //     {...props}
+          //   ></InstrumentPanel4>
+          // ) : props.componentConfig.moduleName === "cascader" ? (
+          //   <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
+          // ) :
           <ErrorCatch
             app={componentConfig.name}
             user=""
