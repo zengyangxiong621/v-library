@@ -22,6 +22,7 @@ const TextStyle = (props) => {
   const _letterSpacing = find(_data, "letterSpacing");
   const _lineHeight = find(_data, "lineHeight");
   const _colorConfig = find(_data, "color", "type");
+  const _hideLetterSpacing = _letterSpacing.disabled;
 
   const [fontSetting, setFontSetting] = useState({
     fontFamily: _fontFamily.value,
@@ -111,6 +112,7 @@ const TextStyle = (props) => {
           </Form.Item>
           <Form.Item name="letterSpacing" noStyle>
             <InputNumber
+              disabled={_hideLetterSpacing}
               defaultValue={fontSetting.letterSpacing}
               style={{ marginRight: "8px" }}
               className="po-size-input unit-input"
