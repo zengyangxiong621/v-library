@@ -30,7 +30,6 @@ const AddDataSource = (props: any) => {
   const [fileUrl, setFileUrl] = useState("");
   // 数据库连接是否测试成功
   const [isConnect, setIsConnect] = useState(false);
-  const [loading, setLoading] = useState();
   const [btnDisabled, setBtnDisabled] = useState(true);
   const [testConnectLoading, setTestConnectLoading] = useState(false);
 
@@ -47,6 +46,7 @@ const AddDataSource = (props: any) => {
     setBtnDisabled(true);
     setTestConnectLoading(false);
     setIndexName("");
+    setGetDBListLoading(false);
   };
 
   // 获取到最新的curDataType
@@ -412,7 +412,6 @@ const AddDataSource = (props: any) => {
         cancelText="取消"
         onCancel={handleCancel}
         getContainer={false}
-        confirmLoading={loading}
         footer={[
           <Button type="primary" className="modalBtn cancelBtn" onClick={handleCancel}>
             取消

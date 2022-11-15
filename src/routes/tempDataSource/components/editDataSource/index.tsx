@@ -161,7 +161,6 @@ const EditDataSource = (props: any) => {
       setGetDBListLoading(false);
     }
   };
-  console.log("?????????", esSourceConfig);
   /**
    * description: 获取可选择的索引列表
    */
@@ -329,6 +328,10 @@ const EditDataSource = (props: any) => {
     setIndexList([]);
     setIsConnect(false);
     editForm.resetFields();
+    setGetDBListLoading(false);
+    setGetIndexListLoading(false);
+    setTestConnectLoading(false);
+    setLoading(false);
   };
   const handleCancel = () => {
     clearModalState();
