@@ -45,6 +45,8 @@ const ComponentEventContainer = ({
   const [clickTimes, setClickTimes] = useState(0);
   // 点击
   const handleClick = debounce((e, data) => {
+    e.stopPropagation();
+    e.preventDefault();
     const clickEvents = events.filter((item) => item.trigger === "click");
     const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (clickActions.length === 0) {
@@ -54,8 +56,21 @@ const ComponentEventContainer = ({
     console.log("点击事件", data);
     customEventsFunction(clickEvents, data);
   }, 300);
+  const handleInteractiveClick = (e, data) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const clickEvents = events.filter((item) => item.trigger === "click");
+    const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
+    if (clickActions.length === 0) {
+      return;
+    }
+    setClickTimes(1);
+    customEventsFunction(clickEvents, data);
+  };
   // 移入
   const handleMouseEnter = debounce((e, data) => {
+    e.stopPropagation();
+    e.preventDefault();
     const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -66,6 +81,8 @@ const ComponentEventContainer = ({
   });
   // 移出
   const handleMouseLeave = debounce((e, data) => {
+    e.stopPropagation();
+    e.preventDefault();
     const mouseOutEvents = events.filter((item) => item.trigger === "mouseLeave");
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseOutActions.length === 0) {
@@ -525,6 +542,17 @@ const ComponentEventContainer = ({
         // ) :
         props.componentConfig.moduleName === "worldMap" ? (
           <WorldMap {...props}></WorldMap>
+        ) : props.componentConfig.moduleName === "tab" ? (
+          <Tab
+            onClick={handleInteractiveClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+            dashboardId={publishDashboard.dashboardId}
+            cRef={componentRef}
+            isPreview={true}
+            {...props}
+          ></Tab>
         ) : (
           // props.componentConfig.moduleName === "instrumentPanel_1" ? (
           //   <InstrumentPanel1

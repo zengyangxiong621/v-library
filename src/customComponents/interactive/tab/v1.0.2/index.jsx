@@ -410,10 +410,11 @@ const Tab = (props) => {
     console.log("datadatadatadata", data);
     setActiveKey(index);
     props.onChange && props.onChange(data);
+    handleClick(window.event, data)
   };
 
-  const handleClick = (e) => {
-    props.onClick && props.onClick(e, tabList[activeKey]);
+  const handleClick = (e, data) => {
+    props.onClick && props.onClick(e, data);
   };
   const handleMouseEnter = (e) => {
     props.onMouseEnter && props.onMouseEnter(e, tabList[activeKey]);
@@ -441,7 +442,7 @@ const Tab = (props) => {
         ...allGlobalContainerStyle,
         ...tabsProportionStyle,
       }}
-      onClick={handleClick}
+      // onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
