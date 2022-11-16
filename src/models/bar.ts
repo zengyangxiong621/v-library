@@ -242,33 +242,36 @@ export default {
           },
         });
         bar = yield select(({ bar }: any) => bar);
-        if (!stateId && panelId) {
+        if (panelId) {
           const { states } = bar.fullAmountDashboardDetails.find(
             (item: any) => item.id === panelId
           );
-          if (states.length > 0) {
-            const stateId = states[0].id;
-            yield put(
-              routerRedux.push(`/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`)
-            );
-          } else {
+          let isIncludeStateId = states.find((item) => item.id === stateId);
+          // stateId 为空 或者 不存在这个面板内
+          if (!stateId || !isIncludeStateId) {
+            if (states.length > 0) {
+              const stateId = states[0].id;
+              yield put(
+                routerRedux.push(`/dashboard/${dashboardId}/panel-${panelId}/state-${stateId}`)
+              );
+            } else {
+              yield put({
+                type: "save",
+                payload: {
+                  layers: [],
+                  dashboardName: "",
+                },
+              });
+            }
+          } else if (stateId && panelId) {
             yield put({
-              type: "save",
+              type: "selectPanelState",
               payload: {
-                layers: [],
-                dashboardName: "",
+                stateId,
+                panelId,
               },
             });
           }
-        } else if (stateId && panelId) {
-          console.log("到这不");
-          yield put({
-            type: "selectPanelState",
-            payload: {
-              stateId,
-              panelId,
-            },
-          });
         }
       } else {
         // 已初始化后，就是判断是不是在同一个 stateId
