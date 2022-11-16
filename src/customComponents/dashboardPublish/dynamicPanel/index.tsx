@@ -187,6 +187,7 @@ const DynamicPanel = ({ publishDashboard, id, dispatch, panels, isHideDefault }:
       {state.allData.map((item: any, index: number) => (
         <div
           className={`status-wrap event-id-${id}`}
+          data-id={item.id}
           style={{
             position: "absolute",
             width: "100%",

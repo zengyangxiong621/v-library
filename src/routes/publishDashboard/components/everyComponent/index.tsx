@@ -19,6 +19,7 @@ const EveryComponent = ({
   layerInfo,
   addDrillDownLevel,
   changeBreadcrumbData,
+  ...props
 }: any) => {
   const { moduleName, events, id, config } = componentData;
   const { mountAnimation } = layerInfo;
@@ -200,6 +201,7 @@ const EveryComponent = ({
           fields={getFields(componentData)}
           comData={comData}
           getDrillDownData={getDrillDownData}
+          {...props}
         ></ComponentEventContainer>
       </div>
     </div>

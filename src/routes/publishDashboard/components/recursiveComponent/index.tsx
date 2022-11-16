@@ -27,14 +27,11 @@ const RecursiveComponent = (props: any) => {
         const isGroup: boolean = MODULES in layer;
         const isPanel: boolean = "panelType" in layer;
         let targetComponent, targetPanel;
-        let isHideDefault = false;
         if (!isGroup) {
           if (isPanel) {
             targetPanel = panels.find((item: any) => item.id === layer.id);
           } else {
             targetComponent = componentLists.find((item: any) => item.id === layer.id);
-            isHideDefault =
-              targetComponent.config.find((item) => item.name === "hideDefault").value || false;
           }
         }
         return layer.isShow ? (
@@ -54,7 +51,7 @@ const RecursiveComponent = (props: any) => {
                 {layer.panelType === 0 ? (
                   <DynamicPanel
                     id={layer.id}
-                    isHideDefault={isHideDefault}
+                    isHideDefault={layer.hideDefault}
                     panels={panels}
                     publishDashboard={publishDashboard}
                     dispatch={dispatch}
@@ -62,7 +59,7 @@ const RecursiveComponent = (props: any) => {
                 ) : layer.panelType === 1 ? (
                   <ReferencePanel
                     id={layer.id}
-                    isHideDefault={isHideDefault}
+                    isHideDefault={layer.hideDefault}
                     panels={panels}
                     publishDashboard={publishDashboard}
                     dispatch={dispatch}
@@ -70,7 +67,7 @@ const RecursiveComponent = (props: any) => {
                 ) : (
                   <DrillDownPanel
                     id={layer.id}
-                    isHideDefault={isHideDefault}
+                    isHideDefault={layer.hideDefault}
                     panels={panels}
                     isDrillDownPanel={true}
                     publishDashboard={publishDashboard}
@@ -82,10 +79,10 @@ const RecursiveComponent = (props: any) => {
               </div>
             ) : isGroup ? (
               <div
-                className="no-cancel"
+                className={`event-id-${layer.id}`}
                 style={{
                   opacity: (layer[OPACITY] || 100) / 100,
-                  display: isHideDefault ? "none" : "block",
+                  display: layer.hideDefault ? "none" : "block",
                 }}
               >
                 {(layer as any)[MODULES]?.length > 0 && (
@@ -121,6 +118,8 @@ const RecursiveComponent = (props: any) => {
                       layerInfo={layer}
                       addDrillDownLevel={addDrillDownLevel}
                       changeBreadcrumbData={changeBreadcrumbData}
+                      isHideDefault={layer.hideDefault}
+                      {...props}
                     />
                   }
                 </div>

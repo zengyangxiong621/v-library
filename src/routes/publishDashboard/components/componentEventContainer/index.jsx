@@ -30,6 +30,7 @@ const ComponentEventContainer = ({
   events = [],
   id = 0,
   scale = 1,
+  isHideDefault,
   ...props
 }) => {
   const callbackArgs = publishDashboard.callbackArgs;
@@ -322,17 +323,23 @@ const ComponentEventContainer = ({
       if (translateX.test(dom.style.transform)) {
         let value = dom.style.transform.match(translateX)[0];
         // 取出数字包括 - 和 . 号
-        let xLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
-        xLength = xLength + translate.x;
-        dom.style.transform = dom.style.transform.replace(translateX, `translateX(${xLength}px)`);
+        // let xLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
+        // xLength = xLength + translate.x;
+        dom.style.transform = dom.style.transform.replace(
+          translateX,
+          `translateX(${translate.x}px)`
+        );
       } else {
         dom.style.transform += `translateX(${translate.x}px)`;
       }
       if (translateY.test(dom.style.transform)) {
-        let value = dom.style.transform.match(translateY)[0];
-        let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
-        yLength = yLength + translate.y;
-        dom.style.transform = dom.style.transform.replace(translateY, `translateY(${yLength}px)`);
+        // let value = dom.style.transform.match(translateY)[0];
+        // let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
+        // yLength = yLength + translate.y;
+        dom.style.transform = dom.style.transform.replace(
+          translateY,
+          `translateY(${translate.y}px)`
+        );
       } else {
         dom.style.transform += `translateY(${translate.y}px)`;
       }
@@ -346,6 +353,21 @@ const ComponentEventContainer = ({
       // } else {
       //   opacityTimeIds.current.push(componentId)
       // }
+      console.log("选项卡", dom.style.display);
+      // 如果本来就是显示的，并且还设置成显示，那就不执行
+      // 如果本来就是隐藏的，并且还设置成隐藏，那就不执行
+
+      if (
+        (dom.style.display === "block" && actionType === "show") ||
+        (dom.style.display === "none" && actionType === "hide")
+      ) {
+        return;
+      }
+      if (dom.style.display === "none" && actionType === "show") {
+        dom.style.display = "block";
+        dom.style.opacity = 0;
+      }
+      // 渐隐渐现
       timer = setInterval(() => {
         // 在一个时间段内，只存在一种事件
         if (actionType === "show") {
@@ -428,11 +450,42 @@ const ComponentEventContainer = ({
     }
   };
 
+  const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
+    if (actionType === "updateStatus") {
+      [...dom.children].forEach((item) => {
+        if (item.dataset.id === stateId) {
+          item.style.display = "block";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    }
+  };
+
+  const componentConfigFunc = (config, actionType, dom, actionId, action, componentId) => {
+    if (actionType === "updateConfig") {
+      const component = publishDashboard.fullAmountComponents.find(
+        (item) => item.id === componentId
+      );
+      if (component) {
+        component.config = [
+          ...component.config.filter((item) => ["dimension", "hideDefault"].includes(item.name)),
+          ...config,
+        ];
+        dispatch({
+          type: "publishDashboard/save",
+        });
+      }
+    }
+  };
+
   const actionConfigFuncList = {
     animation,
     rotate,
     scale: scaleFunc,
     translate,
+    state: stateFunc,
+    componentConfig: componentConfigFunc,
   };
 
   return (
@@ -443,7 +496,13 @@ const ComponentEventContainer = ({
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ width: "100%", height: "100%", ...animationConfig, ...opacityStyle }}
+      style={{
+        width: "100%",
+        height: "100%",
+        ...animationConfig,
+        ...opacityStyle,
+        display: isHideDefault ? "none" : "block",
+      }}
     >
       {/*      <RemoteBaseComponent
         {...props}
