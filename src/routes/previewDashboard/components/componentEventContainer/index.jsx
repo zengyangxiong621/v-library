@@ -605,6 +605,9 @@ const ComponentEventContainer = ({
         <SwiperText {...props}></SwiperText>
       ) : props.componentConfig.moduleName === "tab" ? (
         <Tab
+          onClick={handleClick}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           onChange={handleValueChange} // 状态变化，当请求完成/数据变化
           dashboardId={previewDashboard.dashboardId}
           cRef={componentRef}

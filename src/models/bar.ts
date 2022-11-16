@@ -1565,7 +1565,7 @@ export default {
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const { fullAmountDashboardDetails, panelId, dashboardId } = bar;
+      const { fullAmountDashboardDetails, fullAmountPanels, panelId, dashboardId } = bar;
       const data = yield http({
         url: "/visual/panel/state/create",
         method: "post",
@@ -1574,6 +1574,7 @@ export default {
           panelId: panelId,
         },
       });
+      console.log("fullAmountPanels", fullAmountPanels);
       const { id, name } = data;
 
       // 更新当前面板的状态列表
