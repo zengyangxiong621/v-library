@@ -611,14 +611,16 @@ const ComponentEventContainer = ({
           isPreview={true}
           {...props}
         ></Tab>
-      ) : props.componentConfig.moduleName === "scrollSelect" ? (
-        <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-      ) : // props.componentConfig.moduleName === "counter" ? (
+      ) : //   : props.componentConfig.moduleName === "scrollSelect" ? (
+      //   <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
+      // ) :
+      // props.componentConfig.moduleName === "counter" ? (
       //   <Counter onChange={handleValueChange} {...props}></Counter>
       // ) :
-      props.componentConfig.moduleName === "timeSelect" ? (
-        <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-      ) : props.componentConfig.moduleName === "worldMap" ? (
+      // props.componentConfig.moduleName === "timeSelect" ? (
+      //   <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
+      // )
+      props.componentConfig.moduleName === "worldMap" ? (
         <WorldMap {...props}></WorldMap>
       ) : // props.componentConfig.moduleName === "indicatorcard" ? (
       // </div><IndicatorCard {...props}></IndicatorCard>
