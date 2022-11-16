@@ -54,6 +54,18 @@ const selectData = {
       name: "ES数据",
       value: "elasticSearch",
     },
+    {
+      name: "ORACLE数据",
+      value: "oracle",
+    },
+    {
+      name: "SQLSERVER数据",
+      value: "sqlserver",
+    },
+    {
+      name: "CLICKHOUSE数据",
+      value: "clickhouse",
+    },
   ],
 };
 
@@ -84,7 +96,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
     const newDataSourceTypes = { ...dataSourceTypes };
     newDataSourceTypes.value = _data.dataType || "static";
     setDataSourceTypes(newDataSourceTypes);
-    if (["mysql", "postgresql"].includes(_data.dataType)) {
+    if (["mysql", "postgresql", "oracle", "sqlserver", "clickhouse"].includes(_data.dataType)) {
       const newSqlData = { ...sqlData };
       if (_data.dataConfig[_data.dataType]) {
         const sql = _data.dataConfig[_data.dataType].data.sql;
@@ -122,7 +134,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
     props.onDataTypeChange(dataSourceTypes.value);
 
     const type = dataSourceTypes.value;
-    if (["mysql", "postgresql"].includes(type)) {
+    if (["mysql", "postgresql", "oracle", "sqlserver", "clickhouse"].includes(type)) {
       const newSqlData = { ...sqlData };
       if (_data.dataConfig[type]) {
         const sql = _data.dataConfig[type].data.sql;
@@ -280,14 +292,23 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
               data={_data}
               onDataSourceChange={props.onDataSourceChange}
             />
-          ) : ["postgresql", "mysql", "elasticSearch"].includes(dataSourceTypes.value) ? (
+          ) : [
+              "postgresql",
+              "mysql",
+              "elasticSearch",
+              "oracle",
+              "sqlserver",
+              "clickhouse",
+            ].includes(dataSourceTypes.value) ? (
             <React.Fragment key={dataSourceTypes.value}>
               <SelectDataSource
                 data={_data}
                 type={dataSourceTypes.value}
                 onChange={dataSourceChange}
               />
-              {["postgresql", "mysql"].includes(dataSourceTypes.value) ? (
+              {["postgresql", "mysql", "oracle", "sqlserver", "clickhouse"].includes(
+                dataSourceTypes.value
+              ) ? (
                 <div style={{ width: "300px", height: "198px", marginTop: "16px" }}>
                   <CodeEditor data={sqlData} onChange={sqlDataChange} />
                 </div>
