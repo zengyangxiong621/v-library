@@ -90,19 +90,18 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
   };
 
   const componentClick = (id) => {
-    // todo 画布上高亮显示当前的组件
-    // console.log('source', id);
-    // const layer = findLayerById(bar.layers, id)
-    // dispatch({
-    //   type: 'bar/selectLayers',
-    //   payload: [layer]
-    // })
-    // dispatch({
-    //   type: 'bar/save',
-    //   payload: {
-    //     key: [id]
-    //   }
-    // })
+    // 画布上高亮显示当前的组件
+    const layer = findLayerById(bar.layers, id);
+    dispatch({
+      type: "bar/selectLayers",
+      payload: [layer]
+    });
+    dispatch({
+      type: "bar/save",
+      payload: {
+        key: [id]
+      }
+    });
   };
 
   return (
@@ -191,7 +190,6 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
                             })
                             : "无对应组件"}
                         </td>
-                        ;
                       </tr>
                     );
                   })}
