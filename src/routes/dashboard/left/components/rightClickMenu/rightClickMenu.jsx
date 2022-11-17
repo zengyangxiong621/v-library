@@ -92,7 +92,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
         customPayload = {
           dashboardId: bar.stateId || bar.dashboardId,
           children: [],
-          targetDashboardId: bar.dashboardId,
+          targetDashboardId: bar.stateId || bar.dashboardId,
           insertId: bar.key[0],
           originLayers: bar.layers,
           //TODO 改为modules后删除掉这行
