@@ -41,13 +41,13 @@ const CallbackArgs = ({ bar, ...props }) => {
 
   const addCallback = async (e) => {
     e.stopPropagation();
-    const callbackId = uuidv4();
+    // const callbackId = uuidv4();
     const panes = tabpanes;
     const data = await http({
       method: "post",
       url: "/visual/websocket-module/add",
       body: {
-        websocketUrl: `ws://${callbackId}`,
+        websocketUrl: `ws://10.201.83.166:31088`,
         moduleId: _data.id,
         type: 0,
         dashboardId: bar.dashboardId,
@@ -57,7 +57,8 @@ const CallbackArgs = ({ bar, ...props }) => {
     if (data) {
       panes.push({
         id: data,
-        websocketUrl: `ws://${callbackId}`,
+        websocketUrl: `ws://10.201.83.166:31088`,
+        // websocketUrl: `ws://${callbackId}`,
         moduleId: _data.id,
         type: 0,
         dashboardId: bar.dashboardId,
