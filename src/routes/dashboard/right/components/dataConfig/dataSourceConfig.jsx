@@ -69,6 +69,19 @@ const selectData = {
   ],
 };
 
+const selectDataWithNoPermission = {
+  name: "xxx",
+  displayName: "",
+  type: "select",
+  value: "",
+  options: [
+    {
+      name: "静态数据",
+      value: "static",
+    },
+  ],
+};
+
 const _sqlDataConfig = {
   readOnly: false,
   language: "mysql",
@@ -83,11 +96,16 @@ const _esDataConfig = {
   showExpand: true,
 };
 
-const DataSourceConfig = ({ bar, dispatch, ...props }) => {
+const DataSourceConfig = ({ bar, global, dispatch, ...props }) => {
+  // 判断是否有我的数据模块权限，如果没有，则只提供静态数据选项
+  const hasMyDataFlag =
+    global?.userInfo?.menus?.some((menu) => menu.perms === "datasource:data") || false;
   // 判断是内置组件还是公共组件，如果 type 为 component 则是 公共组件
   const componentType = props.type;
   const _data = props.data;
-  const [dataSourceTypes, setDataSourceTypes] = useState(selectData);
+  const [dataSourceTypes, setDataSourceTypes] = useState(
+    hasMyDataFlag ? selectData : selectDataWithNoPermission
+  );
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [sqlData, setSqlData] = useState(_sqlDataConfig);
   const [esData, setEsData] = useState(_esDataConfig);
@@ -340,6 +358,7 @@ const DataSourceConfig = ({ bar, dispatch, ...props }) => {
   );
 };
 
-export default connect(({ bar }) => ({
+export default connect(({ bar, global }) => ({
   bar,
+  global,
 }))(DataSourceConfig);
