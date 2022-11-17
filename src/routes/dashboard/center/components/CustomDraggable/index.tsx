@@ -834,6 +834,7 @@ const CustomDraggable = ({
         // 群组
         if ("panelType" in layer) {
           panel = panels.find((panel: IPanel) => panel.id === layer.id);
+          console.log("panel", panel);
           if (panel) {
             recommendConfig = panel.config;
             const { left, top, width, height } = recommendConfig;

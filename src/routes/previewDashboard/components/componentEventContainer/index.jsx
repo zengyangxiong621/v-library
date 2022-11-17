@@ -607,9 +607,6 @@ const ComponentEventContainer = ({
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      // onClick={handleClick}
-      // onMouseEnter={handleMouseEnter}
-      // onMouseLeave={handleMouseLeave}
       style={{
         width: "100%",
         height: "100%",
@@ -723,6 +720,7 @@ const ComponentEventContainer = ({
             {...props}
             scale={scale}
             onChange={handleValueChange}
+            onClick={handleInteractiveClick}
           ></RemoteBaseComponent>
         </ErrorCatch>
       )}
