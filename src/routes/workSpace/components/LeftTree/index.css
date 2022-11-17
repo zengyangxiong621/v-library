@@ -1,0 +1,21 @@
+.workspace-leftTree-wrap {
+  width: 256px;
+  height: 100vh;
+  background-color: #151820;
+  padding: 16px 0 0 16px;
+  box-shadow: 4px 0 2px #262836;
+  background-image: url("../../../../assets//images/背景图装饰.png");
+  background-repeat: no-repeat;
+  background-position: 50% 85%;
+}
+.workspace-leftTree-wrap .ant-tree-treenode-selected {
+  background-image: linear-gradient(90deg, #4083ff 0%, rgba(44, 78, 145, 0.62) 55%, rgba(23, 26, 36, 0) 100%);
+}
+.workspace-leftTree-wrap .workspace-tree {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 164px);
+}
+.workspace-leftTree-wrap .workspace-tree::-webkit-scrollbar {
+  display: none;
+}

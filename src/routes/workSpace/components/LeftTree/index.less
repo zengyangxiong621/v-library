@@ -18,4 +18,12 @@
       rgba(23, 26, 36, 0) 100%
     );
   }
+  .workspace-tree{
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 164px);
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }

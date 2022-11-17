@@ -93,6 +93,7 @@ const LeftTree = ({ workSpace, dispatch, refreshMemberList, userInfo }: any) => 
       {workSpace.workSpaceList.length > 0 && (
         <Tree
           blockNode
+          className="workspace-tree"
           defaultExpandedKeys={["wrap"]}
           treeData={workSpace.workSpaceList}
           selectedKeys={workSpace.curWorkSpace}
