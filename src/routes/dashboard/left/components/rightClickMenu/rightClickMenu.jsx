@@ -20,6 +20,7 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
   const [isLock, setIsLock] = useState(false);
   const [isSingleShow, setIsSingleShow] = useState(false);
   const [isShowOrHidden, setIsShowOrHidden] = useState(true);
+  const [isGroupOrPanel, setIsGroupOrPanel] = useState(false);
   const [showCorssCopyModal, setShowCorssCopyModal] = useState(false);
   const [copyDashboardId, setCopyDashboardId] = useState(null);
   const [dashboardList, setDashboardList] = useState([]);
@@ -40,6 +41,14 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     const showOrHiddenInfo = getFieldStates(bar.layers, bar.key, "isShow");
     const showOrHiddenState = showOrHiddenInfo.some((item) => item === false);
     setIsShowOrHidden(!showOrHiddenState);
+
+    setIsGroupOrPanel(false);
+    if (bar.key.length === 1) {
+      const firstLayer = bar.selectedComponentOrGroup[0];
+      if ("modules" in firstLayer || "panelType" in firstLayer) {
+        setIsGroupOrPanel(true);
+      }
+    }
   }, [bar.layers, bar.key]);
 
   // 后端返回的数据里应该有 show、lock 属性
@@ -296,7 +305,10 @@ const RightClickMenu = ({ dispatch, bar, operate, menuOptions, hideMenu }) => {
     <React.Fragment>
       {!bar.isCopyComponentToDashboard ? (
         <div className="RightClickMenu-wrap" ref={menuRef}>
-          {menuOptions.map((item, index) => {
+          {(!isGroupOrPanel
+            ? menuOptions
+            : menuOptions.filter((item) => !["styleCopy", "stylePaste"].includes(item.key))
+          ).map((item, index) => {
             const hasLevel = item.children && item.children.length && Array.isArray(item.children);
             return (
               <div
