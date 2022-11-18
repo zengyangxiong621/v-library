@@ -2,6 +2,7 @@ import { routerRedux } from "dva/router";
 
 import {
   calcGroupPosition,
+  changeComponentDimension,
   deepClone,
   deepForEach,
   deepForEachBeforeCallBackAndBreakForeach,
@@ -1148,6 +1149,7 @@ export default {
       { payload, itemData, createType = "component" }: any,
       { call, put, select }: any
     ): any {
+      const componentConfig = payload;
       // payload: componentConfig
       // itemData: {
       //     "id": "1572837580021534721",
@@ -1163,6 +1165,11 @@ export default {
       //     "updatedBy": "admin",
       //     "status": 0
       // }
+      const dimensionConfig = componentConfig.config.find(
+        (item) => item.name === "dimension"
+      ).value;
+      console.log("dimensionConfig", dimensionConfig);
+      changeComponentDimension(dimensionConfig);
       const state: any = yield select((state: any) => state);
       const { isPanel, stateId, dashboardId, panelId } = state.bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
@@ -1182,7 +1189,7 @@ export default {
         method: "post",
         body: {
           dashboardId: isPanel ? stateId : dashboardId,
-          component: { moduleType: itemData?.moduleType || "", ...payload },
+          component: { moduleType: itemData?.moduleType || "", ...componentConfig },
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
@@ -1200,7 +1207,7 @@ export default {
           type: "updateComponents",
           payload: [
             {
-              ...deepClone(payload),
+              ...deepClone(componentConfig),
               id,
               moduleType: itemData.moduleType,
               children,
