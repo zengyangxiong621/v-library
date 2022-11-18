@@ -56,6 +56,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       setComponents(bar.fullAmountComponents);
       setPanels(bar.fullAmountPanels);
     } else {
+      console.log("怎么说");
       const layers = deepClone(bar.layers);
       layersReverse(layers);
       setLayers(layers);

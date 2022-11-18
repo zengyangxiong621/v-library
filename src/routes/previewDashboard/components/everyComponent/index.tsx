@@ -184,6 +184,8 @@ const EveryComponent = ({
   }, []);
 
   const getDrillDownData = (chartData: any) => {
+    console.log("getDrillDownData", chartData);
+
     if (addDrillDownLevel) {
       addDrillDownLevel();
       changeBreadcrumbData(chartData);

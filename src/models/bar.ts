@@ -1574,7 +1574,6 @@ export default {
           panelId: panelId,
         },
       });
-      console.log("fullAmountPanels", fullAmountPanels);
       const { id, name } = data;
 
       // 更新当前面板的状态列表
@@ -1595,11 +1594,14 @@ export default {
         id,
       });
 
+      fullAmountPanels.find((item) => item.id === panelId).states = newPanelStatesList;
+
       yield put({
         type: "save",
         payload: {
           panelStatesList: newPanelStatesList,
           fullAmountDashboardDetails,
+          fullAmountPanels,
         },
       });
       // 将状态添加到全量图层树种 0 - fullAmountLayers，也就是当前面板 panelId 下的 modules中

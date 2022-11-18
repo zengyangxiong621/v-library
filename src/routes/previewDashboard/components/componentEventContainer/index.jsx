@@ -1,21 +1,17 @@
 /* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-import { getFields } from "@/utils/data";
+// import { getFields } from "@/utils/data";
 import { useState, useRef, useEffect } from "react";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
+// import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
 import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
-import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
+// import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
-// import Counter from "@/customComponents/assist/counter2/v1.0.8";
-import FlowChart from "@/customComponents/echarts/components/flowChart/v1.0.0";
-import Pie from "@/customComponents/echarts/components/basicPie/v1.1.5";
 import { connect } from "dva";
 
-// import './index.css'
 import { cloneDeep } from "lodash";
 import { debounce } from "@/utils/common";
 // import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
@@ -46,50 +42,21 @@ const ComponentEventContainer = ({
   const { websocketConfig } = componentConfig;
   // 拿到每个组件的websocketConfig，判断有无，则批量发起请求
   // 拿到type 0: 需sendMessage;  1: setSendData
-  const { dashboardId } = componentConfig;
-  const [animationConfig, setAnimationConfig] = useState({
+  const [animationConfig] = useState({
     transition: "transform 600ms ease 0s",
   });
   const componentRef = useRef(null);
-  const timesRef = useRef(0);
-  const [times, setTimes] = useState(0);
-  const [sendData, setSendData] = useState("");
-  const [opacityStyle, setOpacityStyle] = useState({ opacity: 1 });
+  const [opacityStyle] = useState({ opacity: 1 });
   const opacityTimeIds = useRef([]);
-  const [clickTimes, setClickTimes] = useState(0);
-  const [websocketObj, setwebsocketObj] = useState({});
+  const [websocketObj] = useState({});
 
   // 跨屏
-  console.log(websocketConfig, "--------websocketConfig");
   // 组件有关联过websocket，全部都发起连接
   if (websocketConfig.length > 0) {
     websocketConfig.map((item) => {
       websocketObj[item.id] = useWebsocket({ url: item.websocketUrl });
     });
   }
-
-  // 添加websocket组件关联
-  // const addWebsocket = async () => {
-  //   if(componentConfig.moduleName === 'tab'){
-  //     const data = await http({
-  //       method: 'post',
-  //       url: '/visual/websocket-module/add',
-  //       body: {
-  //         websocketUrl: '/visual/webSocket/shareParam/test1',
-  //         moduleId: componentConfig.id, // 组件ID
-  //         type: 1, // 0-发送方  1-接收方
-  //         dashboardId: dashboardId, // 大屏ID
-  //       }
-  //     })
-  //     console.log(data,'-----------data'); // 报错 data返回null
-  //     // if (data) {
-  //     //     webSocketInit();
-  //     // }
-  //   }
-  // }
-  // useEffect(() => {
-  //   addWebsocket();
-  // },[])
 
   // 点击
   const handleClick = debounce((e, data) => {
@@ -101,7 +68,7 @@ const ComponentEventContainer = ({
     if (clickActions.length === 0) {
       return;
     }
-    setClickTimes(1);
+    console.log("点击事件", data);
     customEventsFunction(clickEvents, data);
   }, 300);
   const handleInteractiveClick = (e, data) => {
@@ -607,9 +574,6 @@ const ComponentEventContainer = ({
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      // onClick={handleClick}
-      // onMouseEnter={handleMouseEnter}
-      // onMouseLeave={handleMouseLeave}
       style={{
         width: "100%",
         height: "100%",
@@ -723,6 +687,7 @@ const ComponentEventContainer = ({
             {...props}
             scale={scale}
             onChange={handleValueChange}
+            onClick={handleInteractiveClick}
           ></RemoteBaseComponent>
         </ErrorCatch>
       )}

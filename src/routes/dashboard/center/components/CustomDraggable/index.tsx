@@ -29,7 +29,7 @@ import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v
 
 // import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.7/config'
 // import Counter from "@/customComponents/assist/counter2/v1.0.8";
-import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1";
+// import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1";
 // import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
 // import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
 
@@ -72,7 +72,7 @@ import {
 } from "../../../../../constant/home";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
-import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.2";
+// import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.3";
 
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
@@ -703,7 +703,6 @@ const CustomDraggable = ({
     componentId: string
   ) => {
     // console.log('handleValueChange')
-    // console.log('value', data)
     // 编辑时回调参数生效逻辑
     const currentActiveCompoentData = bar.currentActiveCompoentData;
     currentActiveCompoentData[componentId] = data;
@@ -834,6 +833,7 @@ const CustomDraggable = ({
         // 群组
         if ("panelType" in layer) {
           panel = panels.find((panel: IPanel) => panel.id === layer.id);
+          console.log("panel", panel);
           if (panel) {
             recommendConfig = panel.config;
             const { left, top, width, height } = recommendConfig;
@@ -998,39 +998,7 @@ const CustomDraggable = ({
                     style={{ width: "100%", height: "100%", pointerEvents: "none" }}
                     className="custom-draggable-component"
                   >
-                    {layer.moduleName === "chartLegend" ? (
-                      <ChartLegend
-                        themeConfig={bar.componentThemeConfig}
-                        onThemeChange={onThemeChange}
-                        componentConfig={component}
-                        fields={getFields(component)}
-                        comData={getComDataWithFilters(
-                          bar.componentData,
-                          component,
-                          bar.componentFilters,
-                          bar.dataContainerDataList,
-                          bar.dataContainerList,
-                          bar.callbackArgs
-                        )}
-                      ></ChartLegend>
-                    ) : layer.moduleName === "basicLine" ? (
-                      <BasicLine
-                        themeConfig={bar.componentThemeConfig}
-                        onThemeChange={onThemeChange}
-                        onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                        scale={bar.canvasScaleValue}
-                        componentConfig={component}
-                        fields={getFields(component)}
-                        comData={getComDataWithFilters(
-                          bar.componentData,
-                          component,
-                          bar.componentFilters,
-                          bar.dataContainerDataList,
-                          bar.dataContainerList,
-                          bar.callbackArgs
-                        )}
-                      ></BasicLine>
-                    ) : layer.moduleName === "bar" ? (
+                    {layer.moduleName === "bar" ? (
                       <Bar
                         themeConfig={bar.componentThemeConfig}
                         onThemeChange={onThemeChange}

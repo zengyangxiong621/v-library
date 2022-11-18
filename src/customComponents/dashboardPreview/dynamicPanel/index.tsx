@@ -116,6 +116,7 @@ const DynamicPanel = ({ previewDashboard, id, dispatch, panels, isHideDefault }:
   //
   useEffect(() => {
     let timer: any = null;
+    console.log("怎么说", state.isLoading, allowScroll, state.allData);
     if (state.isLoading && allowScroll && state.allData.length > 1) {
       timer = setInterval(() => {
         let currentIndex = state.activeIndex + 1;
@@ -164,8 +165,8 @@ const DynamicPanel = ({ previewDashboard, id, dispatch, panels, isHideDefault }:
         clearInterval(timer);
       }
     };
-  }, [state.isLoading, state.activeIndex, state.allData.length]);
-
+  }, [state.isLoading, state.activeIndex, state.allData]);
+  console.log("state.allData", state.allData);
   return (
     <div
       className={`dynamic-panel panel-${id} event-id-${id}`}
