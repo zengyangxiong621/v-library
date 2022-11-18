@@ -7,6 +7,7 @@ import { BASEURL, http, downLoad } from "@/services/request";
 import { IconFont } from "../../../../utils/useIcon";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { Input, Tooltip, Dropdown, Menu, message, Modal } from "antd";
+import ModalConfirm from "../../../../components/modalConfirm";
 
 // import M from '@/components/modalConfirm/index'
 
@@ -112,7 +113,31 @@ const AppCard = (props: any) => {
   };
   // 删除应用
   const deleteApp = async (appIds: string[]) => {
-    Modal.confirm({
+    ModalConfirm({
+      title: "删除应用",
+      content: `确认删除 "${name}" 应用吗?`,
+      desc: "", // 选填
+      onCancel: () => {
+        close();
+      },
+      onOk: async () => {
+        const data = await http({
+          url: "/visual/application/deleteApp",
+          method: "delete",
+          body: {
+            appIdList: appIds,
+            spaceId,
+          },
+        });
+        if (data) {
+          refreshList();
+          message.success({ content: "删除成功", duration: 2 });
+        } else {
+          message.error({ content: "删除失败", duration: 2 });
+        }
+      },
+    });
+    /*    Modal.confirm({
       title: "删除应用",
       style: {
         top: "40%",
@@ -156,7 +181,7 @@ const AppCard = (props: any) => {
       onCancel(close) {
         close();
       },
-    });
+    });*/
   };
 
   // 导出应用
