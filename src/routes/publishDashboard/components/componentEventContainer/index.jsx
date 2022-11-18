@@ -67,6 +67,28 @@ const ComponentEventContainer = ({
     setClickTimes(1);
     customEventsFunction(clickEvents, data);
   };
+  const handleInteractiveMouseEnter = (e, data) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
+    const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
+    if (mouseEnterActions.length === 0) {
+      return;
+    }
+    console.log("鼠标移入", data);
+    customEventsFunction(mouseEnterEvents, data);
+  };
+  const handleInteractiveMouseLeave = (e, data) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const mouseOutEvents = events.filter((item) => item.trigger === "mouseLeave");
+    const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
+    if (mouseOutActions.length === 0) {
+      return;
+    }
+    console.log("鼠标移出", data);
+    customEventsFunction(mouseOutEvents, data);
+  };
   // 移入
   const handleMouseEnter = debounce((e, data) => {
     e.stopPropagation();
@@ -543,19 +565,19 @@ const ComponentEventContainer = ({
         // ) :
         // props.componentConfig.moduleName === "worldMap" ? (
         //   <WorldMap {...props}></WorldMap>
-        // ) : 
-        props.componentConfig.moduleName === "tab" ? (
-          <Tab
-            onClick={handleInteractiveClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
-            dashboardId={publishDashboard.dashboardId}
-            cRef={componentRef}
-            isPreview={true}
-            {...props}
-          ></Tab>
-        ) : (
+        // ) : (
+          //   : props.componentConfig.moduleName === "tab" ? (
+          //   <Tab
+          //     onClick={handleInteractiveClick}
+          //     onMouseEnter={handleMouseEnter}
+          //     onMouseLeave={handleMouseLeave}
+          //     onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+          //     dashboardId={publishDashboard.dashboardId}
+          //     cRef={componentRef}
+          //     isPreview={true}
+          //     {...props}
+          //   ></Tab>
+          // )
           // props.componentConfig.moduleName === "instrumentPanel_1" ? (
           //   <InstrumentPanel1
           //     scale={scale}
@@ -595,6 +617,13 @@ const ComponentEventContainer = ({
               {...props}
               scale={scale}
               onChange={handleValueChange}
+              onClick={handleInteractiveClick}
+              onMouseEnter={handleInteractiveMouseEnter}
+              onMouseLeave={handleInteractiveMouseLeave}
+              onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+              dashboardId={publishDashboard.dashboardId}
+              cRef={componentRef}
+              isPreview={true}
             ></RemoteBaseComponent>
           </ErrorCatch>
         )
