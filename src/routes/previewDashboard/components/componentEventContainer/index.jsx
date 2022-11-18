@@ -6,7 +6,7 @@ import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
 import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import Bar from "@/customComponents/echarts/components/bar/index";
 // import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
-import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
+// import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
 // import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
 import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
@@ -604,9 +604,10 @@ const ComponentEventContainer = ({
       // props.componentConfig.moduleName === "timeSelect" ? (
       //   <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
       // )
-      props.componentConfig.moduleName === "worldMap" ? (
-        <WorldMap {...props}></WorldMap>
-      ) : // props.componentConfig.moduleName === "indicatorcard" ? (
+      // props.componentConfig.moduleName === "worldMap" ? (
+      //   <WorldMap {...props}></WorldMap>
+      // ) : 
+      // props.componentConfig.moduleName === "indicatorcard" ? (
       // </div><IndicatorCard {...props}></IndicatorCard>
       // ) : props.componentConfig.moduleName === "timeline" ? (
       //   <Timeline {...props}></Timeline>

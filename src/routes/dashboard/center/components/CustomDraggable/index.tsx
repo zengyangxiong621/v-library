@@ -23,9 +23,6 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
-import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
-import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
 
 // import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.7/config'
 // import Counter from "@/customComponents/assist/counter2/v1.0.8";
@@ -1015,38 +1012,6 @@ const CustomDraggable = ({
                           bar.callbackArgs
                         )}
                       ></Bar>
-                    ) : layer.moduleName === "worldMap" ? (
-                      <WorldMap
-                        themeConfig={bar.componentThemeConfig}
-                        onThemeChange={onThemeChange}
-                        onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                        componentConfig={component}
-                        fields={getFields(component)}
-                        comData={getComDataWithFilters(
-                          bar.componentData,
-                          component,
-                          bar.componentFilters,
-                          bar.dataContainerDataList,
-                          bar.dataContainerList,
-                          bar.callbackArgs
-                        )}
-                      ></WorldMap>
-                    ) : layer.moduleName === "chinaMap" ? (
-                      <ChinaMap
-                        themeConfig={bar.componentThemeConfig}
-                        onThemeChange={onThemeChange}
-                        onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                        componentConfig={component}
-                        fields={getFields(component)}
-                        comData={getComDataWithFilters(
-                          bar.componentData,
-                          component,
-                          bar.componentFilters,
-                          bar.dataContainerDataList,
-                          bar.dataContainerList,
-                          bar.callbackArgs
-                        )}
-                      ></ChinaMap>
                     ) : (
                       <ErrorCatch
                         app={component.name}
