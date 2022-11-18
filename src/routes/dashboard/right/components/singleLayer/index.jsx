@@ -372,11 +372,11 @@ const SingleLayer = ({ bar, dispatch }) => {
               <DrillDownSetting componentConfig={componentConfig} />
             </TabPane>
           )}
-          <TabPane tab="跨屏" key="5">
+          {/* <TabPane tab="跨屏" key="5">
             <ComponentCard data={componentConfig}>
               <CrossCallback data={componentConfig} onChange={crossCallbackChange} />
             </ComponentCard>
-          </TabPane>
+          </TabPane> */}
         </Tabs>
       </div>
     </div>

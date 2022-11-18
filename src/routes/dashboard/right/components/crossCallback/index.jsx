@@ -8,7 +8,6 @@ import { Form, Select, Tabs, Collapse, Input } from "antd";
 
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
-// TODO 未完成
 const CallbackArgs = ({ bar, ...props }) => {
   const { Panel } = Collapse;
   const { TabPane } = Tabs;
