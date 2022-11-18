@@ -407,10 +407,8 @@ const Tab = (props) => {
   }, [dataSeriesConfig, tabList, rowNums, colNums]);
 
   const handleChange = (data, index) => {
-    console.log("datadatadatadata", data);
     setActiveKey(index);
     props.onChange && props.onChange(data);
-    handleClick(window.event, data)
   };
 
   const handleClick = (e, data) => {
@@ -422,14 +420,15 @@ const Tab = (props) => {
   const handleMouseLeave = (e) => {
     props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey]);
   };
-  const handleItemClick = (item, index) => {
+  const handleItemClick = (e, item, index) => {
     if (scrollState.clickStayTime > 0) {
       setScrollState({ ...scrollState, isStay: true });
     }
     if (locationParams?.param) {
-      history.push(`/bigscreen/${dashboardId}?param=${item.name}`);
+      history && history.push(`/bigscreen/${dashboardId}?param=${item.name}`);
     }
     handleChange(item, index);
+    handleClick(e, item);
   };
   return (
     <div
@@ -464,7 +463,7 @@ const Tab = (props) => {
               cursor: "pointer",
             }}
             className="tab-item"
-            onClick={() => handleItemClick(item, index + 1)}
+            onClick={(e) => handleItemClick(e, item, index + 1)}
             key={index}
           >
             <div style={{ ...(dataSeriesStyleList[item[_fields[0]]]?.text || {}) }}>
