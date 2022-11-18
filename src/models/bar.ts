@@ -1617,6 +1617,10 @@ export default {
       const bar: any = yield select(({ bar }: any) => bar);
       const { panelId, dashboardId, panelStatesList } = bar;
       const { stateId } = payload;
+      if (panelStatesList.length === 1) {
+        message.error("必须保留一个状态");
+        return;
+      }
       try {
         // todo 如果删除的是自身的话才需要默认选择第一个状态
         const data = yield http({
