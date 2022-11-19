@@ -440,6 +440,9 @@ const EditDataSource = (props: any) => {
   // description: 选择es的认证方式
   const authMethodChange = (e: any) => {
     setAuthMethodType(e.target.value);
+    editForm.setFieldsValue({
+      authMethod: e.target.value
+    })
   };
 
   const [initVal, setInitVal] = useState({
