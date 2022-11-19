@@ -470,7 +470,9 @@ const EditDataSource = (props: any) => {
   });
   useEffect(() => {
     setInitVal({ ...initVal, type });
-    setFileUrl(initVal.keytab)
+    if(type === "ELASTIC_SEARCH"){
+      setFileUrl(initVal.keytab)
+    }
   }, [visible, type]);
   return (
     <div className="EditDataSource-wrap">
