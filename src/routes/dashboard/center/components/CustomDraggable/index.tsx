@@ -23,8 +23,9 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
+import Earth from "@/customComponents/echarts/components/3DEarth/v1.0.0/index.jsx"
 
-// import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.7/config'
+import textConfig from '@/customComponents/echarts/components/3DEarth/v1.0.0/config'
 // import Counter from "@/customComponents/assist/counter2/v1.0.8";
 // import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1";
 // import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
@@ -866,10 +867,15 @@ const CustomDraggable = ({
           };
         } else {
           // 组件
-          component = components.find((item) => item.id === layer.id);
+          // component = components.find((item) => item.id === layer.id);
+          component = textConfig;
           if (component) {
-            staticData = component.staticData;
-            style_config = component.config;
+            staticData = textConfig.staticData;
+            // staticData = component.staticData;
+            style_config = textConfig.config;
+            // style_config = component.config;
+            console.log(staticData,'$$$$$$');
+            
             styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION);
             if (styleDimensionConfig) {
               Object.values(styleDimensionConfig.value).forEach((obj: any) => {
@@ -1012,6 +1018,22 @@ const CustomDraggable = ({
                           bar.callbackArgs
                         )}
                       ></Bar>
+                      ) : layer.moduleName === "3DEarth" ? (
+                        <Earth
+                          themeConfig={bar.componentThemeConfig}
+                          onThemeChange={onThemeChange}
+                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                          componentConfig={component}
+                          fields={getFields(component)}
+                          comData={getComDataWithFilters(
+                            bar.componentData,
+                            component,
+                            bar.componentFilters,
+                            bar.dataContainerDataList,
+                            bar.dataContainerList,
+                            bar.callbackArgs
+                          )}
+                        ></Earth>
                     ) : (
                       <ErrorCatch
                         app={component.name}
