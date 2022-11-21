@@ -1523,14 +1523,12 @@ export default {
     },
     *referencePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
-      const {
-        fullAmountDashboardDetails,
-        fullAmountRouteList,
-        fullAmountComponents,
-        fullAmountPanels,
-      } = bar;
+      const { fullAmountRouteList } = bar;
+      let { fullAmountDashboardDetails, fullAmountComponents, fullAmountPanels } = bar;
       const { panelConfig } = payload;
-
+      // 先过滤出重复的引用、再过滤出已经存在于fullAmountDashboardDetails的引用
+      fullAmountDashboardDetails.find((item: any) => item.id === panelConfig.id).states =
+        panelConfig.states;
       const filterPanelStates = panelConfig.states
         .reduce((pre: any[], cur: any) => {
           if (!pre.find((item) => item.id === cur.id) && !!cur.id) {
@@ -1541,18 +1539,39 @@ export default {
         .filter(
           (state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id)
         );
+      // 找出父节点的id，为跳转做准备
       const panelParentId = fullAmountPanels.find(
         (item: any) => item.id === panelConfig.id
       ).parentId;
+      // 每次引用也只是最多只有 1 个状态，filterPanelStates 的长度是 1 和 0
       if (filterPanelStates.length > 0) {
         const data = yield Promise.all(
           filterPanelStates.map((item: any) => getPanelStatusDetails(item))
         );
-        fullAmountDashboardDetails.push(...data);
-        // 重新获取全量组件
-        fullAmountComponents.push(
-          ...data.reduce((pre: Array<any>, cur: any) => pre.concat(cur?.components || []), [])
+        const stateDetails = data[0];
+        fullAmountDashboardDetails.push(stateDetails);
+
+        const { layers } = stateDetails;
+
+        // 获取这个状态下的面板集合
+        const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers);
+        // 查询所有面板的详情
+        fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(
+          layerPanels,
+          fullAmountDashboardDetails
         );
+        // 重新获取全量面板
+        fullAmountPanels = fullAmountDashboardDetails.reduce(
+          (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
+          []
+        );
+        console.log("被选中的面板", fullAmountPanels);
+        // 重新获取全量组件
+        fullAmountComponents = fullAmountDashboardDetails.reduce(
+          (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
+          []
+        );
+        // 添加全量路由
         fullAmountRouteList.push(
           ...filterPanelStates.map((item: any) => ({
             id: item.id,
@@ -1562,7 +1581,6 @@ export default {
           }))
         );
       }
-
       yield put({
         type: "save",
         payload: {
@@ -1735,6 +1753,7 @@ export default {
           layerPanels,
           fullAmountDashboardDetails
         );
+        // todo 需要写一个方法去加入 panel 和 component
         // 重新获取全量面板
         const fullAmountPanels = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),

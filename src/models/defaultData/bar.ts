@@ -41,7 +41,7 @@ export interface IFullAmountDashboardDetail {
 type IFullAmountDashboardDetails = Array<IFullAmountDashboardDetail>;
 export const defaultData = {
   moduleDefaultConfig: [
-    {
+    /*    {
       id: "121",
       uniqueTag: "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b",
       name: "轮播表格",
@@ -2900,7 +2900,7 @@ export const defaultData = {
       dataContainers: [],
       dataFrom: 0,
       callbackArgs: [],
-    },
+    },*/
   ],
   dashboardId: "",
   dashboardName: "",

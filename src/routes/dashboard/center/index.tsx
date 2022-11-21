@@ -692,6 +692,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       const panelOrComponent: IComponent | IPanel = bar.selectedComponents[0];
       if ("type" in panelOrComponent) {
         const panel = panelOrComponent;
+        console.log("被选中的面板", panel);
+        console.log("panel", panel);
         panel.config = {
           ...panel.config,
           left: x,

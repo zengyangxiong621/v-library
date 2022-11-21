@@ -15,7 +15,7 @@ export const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<
 };
 // 获取面板+状态详情
 export const getDeepPanelAndStatusDetails = async (
-  layerPanels: Array<{ id: string;[key: string]: any }>,
+  layerPanels: Array<{ id: string; [key: string]: any }>,
   fullAmountDashboardDetails: any[]
 ) => {
   let panels: Array<IPanel> = await Promise.all(
