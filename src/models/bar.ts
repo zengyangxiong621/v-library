@@ -3028,7 +3028,6 @@ export default {
           })),
         })
       );
-      console.log("fullAmountDashboardDetails", fullAmountDashboardDetails);
       const fullAmountLayers = deepForEach(
         deepClone(fullAmountDashboardDetails[0].layers),
         (

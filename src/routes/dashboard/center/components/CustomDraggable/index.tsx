@@ -825,17 +825,10 @@ const CustomDraggable = ({
         let component: IComponent | undefined;
         let panel: IPanel | undefined;
         let events: any;
-        const hideDefault = false;
         let style_config, staticData, styleDimensionConfig, recommendConfig;
         // 群组
         if ("panelType" in layer) {
-          console.log("----------------");
-          console.log("panels", panels);
           panel = panels.find((panel: IPanel) => panel.id === layer.id);
-          console.log("panel", panel);
-          console.log("layer", layer);
-          console.log("----------------");
-
           if (panel) {
             recommendConfig = panel.config;
             const { left, top, width, height } = recommendConfig;

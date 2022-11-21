@@ -1,31 +1,20 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { memo, useEffect, useRef, useState } from "react";
 import "./index.less";
 import { withRouter } from "dva/router";
 import { connect } from "dva";
 
 import { http, BASEURL } from "@/services/request";
-import {
-  Input,
-  message,
-  Tooltip,
-  Spin,
-  Button,
-  Form,
-  Switch,
-  Typography,
-  Select,
-  Upload,
-} from "antd";
+import { Input, message, Tooltip, Spin, Button, Form, Switch, Typography, Upload } from "antd";
 import type { UploadProps } from "antd";
 import { IconFont } from "../../../../utils/useIcon";
 
 import NavigationItem from "../navigationItem/index";
 import DarkModal from "@/routes/myDashboard/components/darkThemeModal/index";
 
-const { Option } = Select;
 const { Paragraph } = Typography;
 
-const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveIcon }: any) => {
+const Header = ({ bar, dispatch, history, showWhichBar, isResetActiveIcon }: any) => {
   const [appName, setAppName] = useState(bar.dashboardName);
   const [isRename, setIsRename] = useState(false);
   const [activeIcon, setActiveIcon] = useState("");
@@ -37,7 +26,6 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
 
   // 返回首页
   const toBack = () => {
-    console.log("bar.fullAmountRouteList", bar.fullAmountRouteList);
     /*
       动态面板和引用面板的 url 上是有 panelId 和 stateId
       引用面板和应用的 url 只有 dashboardId
@@ -71,13 +59,18 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       0,
       window.location.href.indexOf("/dashboard/")
     );
+
     const pageReflect: any = {
       yulan: `/bigscreen/${bar.dashboardId}`,
       fabu: `/publishScreen/${bar.dashboardId}`,
     };
-    const newTab = window.open("_blank");
-    newTab!.location.href = beforeDashboardUrl + pageReflect[targetPage];
-    newTab?.history.replaceState(null, "");
+    if (bar.dashboardId) {
+      const newTab = window.open("_blank");
+      newTab!.location.href = beforeDashboardUrl + pageReflect[targetPage];
+      newTab?.history.replaceState(null, "");
+    } else {
+      message.warning("请在画布加载完成后再点击预览按钮", 2.5);
+    }
   };
   // 修改应用名称
   const reNameApp = async (e: any) => {
@@ -199,6 +192,7 @@ const Header = ({ bar, dispatch, history, location, showWhichBar, isResetActiveI
       url: `/visual/application/share/detail/${id}`,
       method: "get",
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { shareUrl, ...filterShareUrl } = data;
     const isPublished = data.share;
     setFabuBody(filterShareUrl);

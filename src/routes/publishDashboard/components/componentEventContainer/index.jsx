@@ -616,7 +616,6 @@ const ComponentEventContainer = ({
           <RemoteBaseComponent
             {...props}
             scale={scale}
-            onChange={handleValueChange}
             onClick={handleInteractiveClick}
             onMouseEnter={handleInteractiveMouseEnter}
             onMouseLeave={handleInteractiveMouseLeave}
