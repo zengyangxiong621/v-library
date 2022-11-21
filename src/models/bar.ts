@@ -1171,7 +1171,6 @@ export default {
       const dimensionConfig = componentConfig.config.find(
         (item) => item.name === "dimension"
       ).value;
-      console.log("dimensionConfig", dimensionConfig);
       changeComponentDimension(dimensionConfig);
       const state: any = yield select((state: any) => state);
       const { isPanel, stateId, dashboardId, panelId } = state.bar;
@@ -1539,10 +1538,7 @@ export default {
         .filter(
           (state: any) => !fullAmountDashboardDetails.find((item: any) => item.id === state.id)
         );
-      // 找出父节点的id，为跳转做准备
-      const panelParentId = fullAmountPanels.find(
-        (item: any) => item.id === panelConfig.id
-      ).parentId;
+
       // 每次引用也只是最多只有 1 个状态，filterPanelStates 的长度是 1 和 0
       if (filterPanelStates.length > 0) {
         const data = yield Promise.all(
@@ -1565,6 +1561,10 @@ export default {
           (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
           []
         );
+        // debugger;
+        // 找出父节点的id，为跳转做准备
+        const panelParentId = bar.stateId || bar.dashboardId;
+
         console.log("被选中的面板", fullAmountPanels);
         // 重新获取全量组件
         fullAmountComponents = fullAmountDashboardDetails.reduce(

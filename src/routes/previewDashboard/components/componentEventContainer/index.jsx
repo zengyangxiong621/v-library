@@ -454,9 +454,8 @@ const ComponentEventContainer = ({
       console.log("选项卡", dom.style.display);
       // 如果本来就是显示的，并且还设置成显示，那就不执行
       // 如果本来就是隐藏的，并且还设置成隐藏，那就不执行
-
       if (
-        (dom.style.display === "block" && actionType === "show") ||
+        (dom.style.display === "block" && actionType === "show" && dom.style.opacity !== "0") ||
         (dom.style.display === "none" && actionType === "hide")
       ) {
         return;
