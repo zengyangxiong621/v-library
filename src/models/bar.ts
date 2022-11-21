@@ -686,13 +686,16 @@ export default {
       });
     },
     // 重命名
-    *changeName({ payload }: any, { call, put, select }: any): any {
+    *changeName({ payload }: any, { put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       // 需要改变当前画布中components中此次被重命名组件的name
       const { fullAmountComponents } = bar;
       const state = bar.state;
       const { value, id } = payload.configs[0];
-      fullAmountComponents.find((item) => item.id === id).name = value;
+      const maybeEmpty = fullAmountComponents.find((item) => item.id === id);
+      if (maybeEmpty) {
+        maybeEmpty.name = value;
+      }
       yield put({
         type: "bar/change",
         payload,
