@@ -25,6 +25,8 @@ import useWebsocket from "@/utils/useWebsocket";
 
 import SwiperText from "@/customComponents/text/swiperText/v1.0.4";
 
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4";
+
 const ComponentEventContainer = ({
   previewDashboard,
   dispatch,
@@ -641,8 +643,8 @@ const ComponentEventContainer = ({
       // >
       // </ChinaMap>
       // :
-      props.componentConfig.moduleName === "bar" ? (
-        <Bar onChange={handleValueChange} {...props}></Bar>
+      props.componentConfig.moduleName === "basicBar" ? (
+        <BasicBar onChange={handleValueChange} onClick={handleInteractiveClick} {...props}></BasicBar>
       ) : (
         //   props.componentConfig.moduleName === "scrollTable" ? (
         //   <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>

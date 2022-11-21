@@ -39,6 +39,10 @@ import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender"
 // import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
 // import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
 
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4";
+import BasicPie from "@/customComponents/echarts/components/basicPie/v1.1.5";
+
+
 // import Cascader from "@/customComponents/assist/cascader/v1.1.0";
 
 import {
@@ -809,6 +813,7 @@ const CustomDraggable = ({
   return (
     <div className="c-custom-draggable">
       {layers.map((layer: ILayerGroup | ILayerComponent | any) => {
+        console.log(layer.moduleName, 'layer.moduleName------------------------------------')
         let config: IConfig = {
           position: {
             x: 0,
@@ -995,8 +1000,27 @@ const CustomDraggable = ({
                     style={{ width: "100%", height: "100%", pointerEvents: "none" }}
                     className="custom-draggable-component"
                   >
-                    {layer.moduleName === "bar" ? (
-                      <Bar
+                    {
+                      // layer.moduleName === "basicPie" ? (
+                      //   <BasicPie
+                      //     themeConfig={bar.componentThemeConfig}
+                      //     onThemeChange={onThemeChange}
+                      //     onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                      //     scale={bar.canvasScaleValue}
+                      //     componentConfig={component}
+                      //     fields={getFields(component)}
+                      //     comData={getComDataWithFilters(
+                      //       bar.componentData,
+                      //       component,
+                      //       bar.componentFilters,
+                      //       bar.dataContainerDataList,
+                      //       bar.dataContainerList,
+                      //       bar.callbackArgs
+                      //     )}
+                      //   ></BasicPie>
+                      // ) :
+                    layer.moduleName === "basicBar" ? (
+                      <BasicBar
                         themeConfig={bar.componentThemeConfig}
                         onThemeChange={onThemeChange}
                         onChange={(val: any) => handleValueChange(val, component, layer.id)}
@@ -1011,7 +1035,7 @@ const CustomDraggable = ({
                           bar.dataContainerList,
                           bar.callbackArgs
                         )}
-                      ></Bar>
+                      ></BasicBar>
                     ) : (
                       <ErrorCatch
                         app={component.name}
