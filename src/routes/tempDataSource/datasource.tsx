@@ -18,7 +18,6 @@ import TipModal from "@/components/tipModal";
 const { Option } = Select;
 
 const DataSource = (props: any) => {
-  console.log(props);
   const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
   const [inputValue, setInputValue] = useState("");

@@ -129,7 +129,7 @@ class Counter extends Component {
     const reg = /^[-,+]?[0-9]+\.?[0-9]*$/;
     if (reg.test(num)) {
       if (splitCount) {
-        let value = decimalCount > 0 ? Number(num).toFixed(decimalCount) : num.split(".")[0]; // 小数位长度处理
+        let value = decimalCount > 0 ? Number(num).toFixed(decimalCount) : Math.trunc(num); // 小数位长度处理
         value = this.momenyFormat(value);
         return value;
       } else {

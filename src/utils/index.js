@@ -785,3 +785,14 @@ export const getQueryVariable = () => {
   }
   return obj;
 };
+
+export const changeComponentDimension = (dimensionConfig) => {
+  dimensionConfig.forEach((item) => {
+    {
+      if (["left", "top"].includes(item.name)) {
+        item.value = 100;
+      }
+    }
+  });
+  return dimensionConfig;
+};

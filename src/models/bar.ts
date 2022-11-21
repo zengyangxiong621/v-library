@@ -2,6 +2,7 @@ import { routerRedux } from "dva/router";
 
 import {
   calcGroupPosition,
+  changeComponentDimension,
   deepClone,
   deepForEach,
   deepForEachBeforeCallBackAndBreakForeach,
@@ -685,13 +686,16 @@ export default {
       });
     },
     // 重命名
-    *changeName({ payload }: any, { call, put, select }: any): any {
+    *changeName({ payload }: any, { put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       // 需要改变当前画布中components中此次被重命名组件的name
       const { fullAmountComponents } = bar;
       const state = bar.state;
       const { value, id } = payload.configs[0];
-      fullAmountComponents.find((item) => item.id === id).name = value;
+      const maybeEmpty = fullAmountComponents.find((item) => item.id === id);
+      if (maybeEmpty) {
+        maybeEmpty.name = value;
+      }
       yield put({
         type: "bar/change",
         payload,
@@ -1148,6 +1152,7 @@ export default {
       { payload, itemData, createType = "component" }: any,
       { call, put, select }: any
     ): any {
+      const componentConfig = payload;
       // payload: componentConfig
       // itemData: {
       //     "id": "1572837580021534721",
@@ -1163,6 +1168,11 @@ export default {
       //     "updatedBy": "admin",
       //     "status": 0
       // }
+      const dimensionConfig = componentConfig.config.find(
+        (item) => item.name === "dimension"
+      ).value;
+      console.log("dimensionConfig", dimensionConfig);
+      changeComponentDimension(dimensionConfig);
       const state: any = yield select((state: any) => state);
       const { isPanel, stateId, dashboardId, panelId } = state.bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
@@ -1182,7 +1192,7 @@ export default {
         method: "post",
         body: {
           dashboardId: isPanel ? stateId : dashboardId,
-          component: { moduleType: itemData?.moduleType || "", ...payload },
+          component: { moduleType: itemData?.moduleType || "", ...componentConfig },
           insertId: insertId,
           children: [], // TODO: 需要确定children从哪里来
         },
@@ -1200,7 +1210,7 @@ export default {
           type: "updateComponents",
           payload: [
             {
-              ...deepClone(payload),
+              ...deepClone(componentConfig),
               id,
               moduleType: itemData.moduleType,
               children,
@@ -1617,6 +1627,10 @@ export default {
       const bar: any = yield select(({ bar }: any) => bar);
       const { panelId, dashboardId, panelStatesList } = bar;
       const { stateId } = payload;
+      if (panelStatesList.length === 1) {
+        message.error("必须保留一个状态");
+        return;
+      }
       try {
         // todo 如果删除的是自身的话才需要默认选择第一个状态
         const data = yield http({
