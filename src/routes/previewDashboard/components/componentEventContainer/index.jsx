@@ -79,7 +79,6 @@ const ComponentEventContainer = ({
     if (clickActions.length === 0) {
       return;
     }
-    setClickTimes(1);
     customEventsFunction(clickEvents, data);
   };
   const handleInteractiveMouseEnter = (e, data) => {
@@ -622,7 +621,7 @@ const ComponentEventContainer = ({
       // )
       // props.componentConfig.moduleName === "worldMap" ? (
       //   <WorldMap {...props}></WorldMap>
-      // ) : 
+      // ) :
       // props.componentConfig.moduleName === "indicatorcard" ? (
       // </div><IndicatorCard {...props}></IndicatorCard>
       // ) : props.componentConfig.moduleName === "timeline" ? (
