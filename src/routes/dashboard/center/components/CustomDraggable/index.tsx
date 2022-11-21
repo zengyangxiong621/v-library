@@ -23,24 +23,8 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
-
-// import textConfig from '@/customComponents/echarts/components/worldMap/v1.1.7/config'
-// import Counter from "@/customComponents/assist/counter2/v1.0.8";
-// import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1";
-// import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
-// import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
-
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
-
-// import Timeline from "@/customComponents/assist/timeline/v1.1.8";
-
-// import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
-// import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
-// import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
-
-// import Cascader from "@/customComponents/assist/cascader/v1.1.0";
-
 import {
   STYLE,
   DIMENSION,
