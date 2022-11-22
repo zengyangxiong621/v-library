@@ -62,7 +62,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       setComponents(bar.fullAmountComponents);
       setPanels(bar.fullAmountPanels);
     }
-  }, [bar.layers, bar.isSingleShowOpen, bar.singleShowLayers]);
+  }, [bar.layers, bar.isSingleShowOpen, bar.singleShowLayers, bar.fullAmountPanels]);
 
   /*  useEffect(() => {
       window.addEventListener("",)

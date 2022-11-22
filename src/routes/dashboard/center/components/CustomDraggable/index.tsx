@@ -483,7 +483,7 @@ const CustomDraggable = ({
                   },
                 })*/
     }
-    console.log("bar.selectedComponentOrGroup", bar.selectedComponentOrGroup);
+    console.log("bar.selectedComponentOrGroup", bar.selectedComponents);
 
     dispatch({
       type: "bar/updateComponent",
@@ -550,6 +550,27 @@ const CustomDraggable = ({
         }
       } else if (layer.panelType === 1) {
         if (panel.states.length > 0) {
+          dispatch({
+            type: "bar/save",
+            payload: {
+              panelId: layer.id,
+              layers: [],
+              selectedComponents: [],
+              selectedComponentOrGroup: [],
+              selectedComponentIds: [],
+              scaleDragData: {
+                position: {
+                  x: 0,
+                  y: 0,
+                },
+                style: {
+                  width: 0,
+                  height: 0,
+                  display: "none",
+                },
+              },
+            },
+          });
           url = `/dashboard/${panel.states[0].id}`;
         }
       }

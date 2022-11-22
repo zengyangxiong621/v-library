@@ -304,23 +304,6 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
           panelConfig,
         },
       });
-      /*      dispatch({
-              type: 'bar/save',
-              payload: {
-                panelConfig,
-                scaleDragData: {
-                  position: {
-                    x: left,
-                    y: top,
-                  },
-                  style: {
-                    width,
-                    height,
-                    display: 'block',
-                  },
-                },
-              },
-            })*/
     } else {
       copyPanelConfig.states.pop();
       panelConfig.states.pop();

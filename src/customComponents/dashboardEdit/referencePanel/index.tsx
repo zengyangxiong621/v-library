@@ -23,7 +23,6 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
   const componentData = bar.componentData;
   // console.log('panel', panel)
   const { states, config: recommendConfig, name, type } = panel;
-  console.log("panelpanelpanel", panel);
   const {
     isScroll = false,
     allowScroll = false,

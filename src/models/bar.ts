@@ -1528,6 +1528,7 @@ export default {
       // 先过滤出重复的引用、再过滤出已经存在于fullAmountDashboardDetails的引用
       fullAmountDashboardDetails.find((item: any) => item.id === panelConfig.id).states =
         panelConfig.states;
+      fullAmountPanels.find((item) => item.id === panelConfig.id).states = panelConfig.states;
       const filterPanelStates = panelConfig.states
         .reduce((pre: any[], cur: any) => {
           if (!pre.find((item) => item.id === cur.id) && !!cur.id) {
@@ -1551,21 +1552,25 @@ export default {
 
         // 获取这个状态下的面板集合
         const layerPanels: Array<ILayerPanel> = layersPanelsFlat(layers);
+        console.log("layerPanels", layerPanels);
         // 查询所有面板的详情
         fullAmountDashboardDetails = yield getDeepPanelAndStatusDetails(
           layerPanels,
           fullAmountDashboardDetails
         );
-        // 重新获取全量面板
-        fullAmountPanels = fullAmountDashboardDetails.reduce(
-          (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
-          []
+        // // 重新获取全量面板
+        fullAmountPanels.push(
+          ...fullAmountDashboardDetails.reduce(
+            (pre: Array<any>, cur: any) =>
+              pre.concat(
+                "type" in cur && !fullAmountPanels.find((item) => item.id === cur.id) ? cur : []
+              ),
+            []
+          )
         );
-        // debugger;
         // 找出父节点的id，为跳转做准备
         const panelParentId = bar.stateId || bar.dashboardId;
 
-        console.log("被选中的面板", fullAmountPanels);
         // 重新获取全量组件
         fullAmountComponents = fullAmountDashboardDetails.reduce(
           (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
@@ -1581,6 +1586,7 @@ export default {
           }))
         );
       }
+
       yield put({
         type: "save",
         payload: {
@@ -1590,6 +1596,16 @@ export default {
           fullAmountRouteList,
         },
       });
+      // yield put({
+      //   type: "selectLayers",
+      //   payload: [
+      //     {
+      //       ...panelConfig,
+      //       type: panelConfig.panelType,
+      //       selected: true,
+      //     },
+      //   ],
+      // });
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -2504,6 +2520,8 @@ export default {
         ),
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
+      console.log("呵呵");
+      console.log("state.selectedComponents", state.selectedComponents);
       return {
         ...state,
       };
