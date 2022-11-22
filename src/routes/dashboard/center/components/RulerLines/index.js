@@ -44,6 +44,7 @@ const RulerLines = ({ bar, dispatch }) => {
             index={index}
             scale={bar.canvasScaleValue}
             line={line}
+            key={index}
           />
         );
       })}
