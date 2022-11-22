@@ -865,6 +865,15 @@ export default {
         method: "post",
         body: payload,
       });
+      yield put({
+        type: "updateDetails",
+        payload: {
+          layers,
+          components,
+          dashboardId,
+          panels,
+        },
+      });
       if (components.length > 0) {
         yield put({
           type: "updateComponents",
@@ -883,15 +892,7 @@ export default {
           },
         });
       }
-      yield put({
-        type: "updateDetails",
-        payload: {
-          layers,
-          components,
-          dashboardId,
-          panels,
-        },
-      });
+
       // layers 永远是最后再保存的
       yield put({
         type: "updateTree",
@@ -963,16 +964,18 @@ export default {
       const { dashboardId, layers, components, panels } = payload;
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar;
-      let currentDetails: any = fullAmountDashboardDetails.find(
+      let currentDetailsIndex: any = fullAmountDashboardDetails.findIndex(
         (item: any) => item.id === bar.dashboardId || bar.stateId
       );
-      if (currentDetails) {
-        currentDetails = {
+      if (currentDetailsIndex !== -1) {
+        let currentDetails = fullAmountDashboardDetails[currentDetailsIndex];
+        fullAmountDashboardDetails[currentDetailsIndex] = {
           ...currentDetails,
           layers,
-          components,
+          components: components.concat(currentDetails.components), // 这里的 components 至少被复制的 components,并不是该详情下所有的 components
           dashboardId,
         };
+
         yield put({
           type: "save",
           payload: {
@@ -2046,6 +2049,8 @@ export default {
           state.componentData[id] = state.componentData[allSelectedCompIds[index]];
         });
       }
+      console.log("1");
+      console.log("state.fullAmountComponents", state.fullAmountComponents);
       return { ...state };
     },
     clearLayersSelectedStatus(state: IBarState, { payload }: any) {

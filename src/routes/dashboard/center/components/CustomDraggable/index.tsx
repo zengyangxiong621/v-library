@@ -267,8 +267,6 @@ const CustomDraggable = ({
     });
     if ("panelType" in layer && panel) {
       // 说明是面板,且一定是单个
-      // console.log('111111111111111111111111')
-      // const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
       panel.config.left = Math.ceil(data.x);
       panel.config.top = Math.ceil(data.y);
       dispatch({
@@ -827,6 +825,7 @@ const CustomDraggable = ({
   const onThemeChange = (val: any) => {
     setComponentThemeConfigs(val.id, val);
   };
+
   return (
     <div className="c-custom-draggable">
       {layers.map((layer: ILayerGroup | ILayerComponent | any) => {
@@ -902,6 +901,11 @@ const CustomDraggable = ({
             events = component.events;
           }
         }
+        console.log("---------------");
+        console.log("layer", layer);
+        console.log("component", component);
+        console.log("panel", panel);
+        console.log("---------------");
         return (
           <SingleDraggable
             dimensionConfig={isPanel ? recommendConfig : styleDimensionConfig}
