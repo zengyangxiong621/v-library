@@ -51,20 +51,12 @@ import {
   INTERACTION,
   MOUNT_ANIMATION,
 } from "../../../../../constant/home";
-import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
-import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
-// import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.3";
-
-import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
-import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 import ReferencePanel from "@/customComponents/dashboardEdit/referencePanel";
 import DynamicPanel from "@/customComponents/dashboardEdit/dynamicPanel";
 import { cloneDeep } from "lodash";
 
 import { setComponentThemeConfigs } from "@/utils/syncJitStorage";
 import DrillDownPanel from "@/customComponents/dashboardEdit/drillDownPanel";
-
-// import Tab from "@/components/tab";
 
 enum STYLE_ENUM {
   BOLD = "fontBold",

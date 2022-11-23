@@ -1,29 +1,14 @@
 /* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-// import { getFields } from "@/utils/data";
 import { useState, useRef, useEffect } from "react";
-import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
-import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
 import Bar from "@/customComponents/echarts/components/bar/index";
-// import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.4";
-// import WorldMap from "@/customComponents/echarts/components/worldMap/v1.1.9";
-// import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.5";
-import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
-import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 import { connect } from "dva";
 
 import { cloneDeep } from "lodash";
 import { debounce } from "@/utils/common";
-// import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
-// import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
-// import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
-// import Cascader from "@/customComponents/assist/cascader/v1.1.0";
-// import Timeline from "@/customComponents/assist/timeline/v1.1.8";
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 import useWebsocket from "@/utils/useWebsocket";
-
-import SwiperText from "@/customComponents/text/swiperText/v1.0.4";
 
 const ComponentEventContainer = ({
   previewDashboard,
@@ -602,89 +587,10 @@ const ComponentEventContainer = ({
         display: isHideDefault ? "none" : "block",
       }}
     >
-      {props.componentConfig.moduleName === "swiperText" ? (
-        <SwiperText {...props}></SwiperText>
-      ) : //   props.componentConfig.moduleName === "tab" ? (
-      //   <Tab
-      //
-      //   ></Tab>
-      // ) :
-      //   : props.componentConfig.moduleName === "scrollSelect" ? (
-      //   <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-      // ) :
-      // props.componentConfig.moduleName === "counter" ? (
-      //   <Counter onChange={handleValueChange} {...props}></Counter>
-      // ) :
-      // props.componentConfig.moduleName === "timeSelect" ? (
-      //   <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-      // )
-      // props.componentConfig.moduleName === "worldMap" ? (
-      //   <WorldMap {...props}></WorldMap>
-      // ) :
-      // props.componentConfig.moduleName === "indicatorcard" ? (
-      // </div><IndicatorCard {...props}></IndicatorCard>
-      // ) : props.componentConfig.moduleName === "timeline" ? (
-      //   <Timeline {...props}></Timeline>
-      // ) :
-
-      // props.componentConfig.moduleName === "instrumentPanel_1" ? (
-      //   <InstrumentPanel1 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel1>
-      // ) : props.componentConfig.moduleName === "instrumentPanel_3" ? (
-      //   <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-      // ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-      //   <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-      // ) : props.componentConfig.moduleName === "cascader" ? (
-      //   <Cascader scale={scale} onChange={handleValueChange} {...props}></Cascader>
-      // ) :
-      props.componentConfig.moduleName === "bar" ? (
-        <Bar onChange={handleValueChange} {...props}></Bar>
-      ) : //   props.componentConfig.moduleName === "scrollTable" ? (
-      //   <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-      // ) : props.componentConfig.moduleName === "scrollSelect" ? (
-      //   <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-      // ) : props.componentConfig.moduleName === "timeSelect" ? (
-      //   <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-      // ) :
-      // props.componentConfig.moduleName === "timeline" ? (
-      //   <Timeline {...props}></Timeline>
-      // ) :
-      // : props.componentConfig.moduleName === 'CardFlipper_1' ?
-      // <CardFlipper1
-      //   scale={scale}
-      //   onChange={handleValueChange}
-      //   {...props}
-      // >
-      // </ChinaMap>
-      // :
+      { 
       props.componentConfig.moduleName === "bar" ? (
         <Bar onChange={handleValueChange} {...props}></Bar>
       ) : (
-        //   props.componentConfig.moduleName === "scrollTable" ? (
-        //   <ScrollTable scale={scale} onChange={handleValueChange} {...props}></ScrollTable>
-        // ) :
-        //   props.componentConfig.moduleName === "scrollSelect" ? (
-        //   <ScrollSelect onChange={handleValueChange} {...props}></ScrollSelect>
-        // ) : props.componentConfig.moduleName === "timeSelect" ? (
-        //   <TimeSelect scale={scale} onChange={handleValueChange} {...props}></TimeSelect>
-        // ) : // : props.componentConfig.moduleName === 'CardFlipper_1' ?
-        // <CardFlipper1
-        //   scale={scale}
-        //   onChange={handleValueChange}
-        //   {...props}
-        // >
-        // </CardFlipper1>
-        // : props.componentConfig.moduleName === 'CardFlipper_2' ?
-        // <CardFlipper2
-        //   scale={scale}
-        //   onChange={handleValueChange}
-        //   {...props}
-        // >
-        // </CardFlipper2>
-        // props.componentConfig.moduleName === "instrumentPanel_3" ? (
-        //   <InstrumentPanel3 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel3>
-        // ) : props.componentConfig.moduleName === "instrumentPanel_4" ? (
-        //   <InstrumentPanel4 scale={scale} onChange={handleValueChange} {...props}></InstrumentPanel4>
-        // ) :
         <ErrorCatch
           app={componentConfig.name}
           user=""
