@@ -56,3 +56,7 @@ textStyle.underline = false;
 处理定制标题和标准标题样式相互影响的问题
 将定制标题的'iconText'类名改为'titleText'
 标准标题保持原来的'iconText'
+
+**11月23号（v1.1.5）**
+
+给定制标题和标准标题增加自定义事件功能
