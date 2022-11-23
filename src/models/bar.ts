@@ -1208,6 +1208,9 @@ export default {
             dataType: "static",
           },
         });
+        if(["design", "myresource"].indexOf(itemData.moduleType) > -1){
+          itemData.moduleType = "assist"
+        }
         yield put({
           type: "updateComponents",
           payload: [
