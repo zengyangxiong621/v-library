@@ -78,8 +78,52 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
       type: "checkBox",
       value: hideDefault,
     },
+    {
+      hasSwitch: true,
+      defaultExpand: true,
+      displayName: "面包屑设置",
+      name: "breadcrumbSettings",
+      type: "collapse",
+      value: [
+        {
+          displayName: "",
+          name: "breadcrumbPositionShow",
+          type: "switch",
+          value: false,
+        },
+        {
+          displayName: "位置",
+          name: "breadcrumbPosition",
+          type: "inputNumber2",
+          showDetail: true,
+          value: [
+            {
+              displayName: "X",
+              name: "breadcrumbPositionX",
+              type: "number",
+              value: 0,
+              config: {
+                min: -10000,
+                max: 10000,
+                suffix: "px",
+              },
+            },
+            {
+              displayName: "Y",
+              name: "breadcrumbPositionY",
+              type: "number",
+              value: 0,
+              config: {
+                min: -10000,
+                max: 10000,
+                suffix: "px",
+              },
+            },
+          ],
+        },
+      ],
+    },
   ];
-
   useEffect(() => {
     if (!isSettingsChange) {
       setKey(uuidv4());
@@ -89,6 +133,18 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
   const styleChange = debounce(async () => {
     const dimensionConfig = styleConfig.find((item) => item.name === "dimension").value;
     const hideDefault = styleConfig.find((item) => item.name === "hideDefault").value;
+    const breadcrumbConfig = styleConfig.find((item) => item.name === "breadcrumbSettings").value;
+    breadcrumbConfig.forEach((item) => {
+      // 固定的配置就不用递归处理了
+      if (Array.isArray(item.value)) {
+        item.value.forEach((x) => {
+          panelConfig.config[x.name] = x.value;
+        });
+      } else {
+        panelConfig.config[item.name] = item.value;
+      }
+    });
+
     dimensionConfig.forEach((item) => {
       panelConfig.config[item.name] = item.value;
     });

@@ -1,13 +1,13 @@
 const ComponentDefaultConfig = {
   id: "", //组件ID
   uniqueTag: "", // =========
-  name: "饼图", //图层名称
+  name: "玫瑰图", //图层名称
   parentId: "", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
-
-  moduleName: "pie", //组件标识
-  moduleVersion: "1.1.5", //组件版本号
   moduleType: "chart",
+
+  moduleName: "nightingale", //组件标识
+  moduleVersion: "1.2.5", //组件版本号
 
   createdAt: "2022-04-02T07:22:31.290Z", // =========
   updatedAt: "2022-04-02T07:22:39.798Z", // =========
@@ -22,28 +22,24 @@ const ComponentDefaultConfig = {
     //静态数据
     data: [
       {
-        s: "系列1",
-        y: 20,
+        s: "非信任路径搜索",
+        y: 6,
       },
       {
-        s: "系列2",
-        y: 20,
+        s: "恶意代码",
+        y: 9,
       },
       {
-        s: "系列3",
-        y: 20,
+        s: "攻击入侵",
+        y: 46,
       },
       {
-        s: "系列4",
-        y: 20,
+        s: "安全预警",
+        y: 34,
       },
       {
-        s: "系列5",
-        y: 20,
-      },
-      {
-        s: "系列6",
-        y: 20,
+        s: "信息刺探",
+        y: 18,
       },
     ],
     fields: [
@@ -406,6 +402,8 @@ const ComponentDefaultConfig = {
                   type: "number",
                   value: 2,
                   config: {
+                    min: -1000,
+                    max: 1000,
                     step: 1,
                     suffix: "",
                   },
@@ -748,8 +746,8 @@ const ComponentDefaultConfig = {
                 {
                   displayName: "    ",
                   name: "labelSeriesNameTextStyle",
-                  themeColor:"themeTextColor",
                   type: "chartText",
+                  themeColor:"themeTextColor",
                   value: {
                     fontFamily: "微软雅黑",
                     color: "#fff",
@@ -758,8 +756,8 @@ const ComponentDefaultConfig = {
                   },
                 },
                 {
-                  displayName: "跟随系列",
                   name: "seriesNameUseSeriesColor",
+                  displayName: "跟随系列",
                   type: "checkBox",
                   value: true,
                 },
@@ -782,8 +780,8 @@ const ComponentDefaultConfig = {
                   },
                 },
                 {
-                  displayName: "跟随系列",
                   name: "dataNameUseSeriesColor",
+                  displayName: "跟随系列",
                   type: "checkBox",
                   value: true,
                 },
@@ -806,8 +804,8 @@ const ComponentDefaultConfig = {
                   },
                 },
                 {
-                  displayName: "跟随系列",
                   name: "dataValueUseSeriesColor",
+                  displayName: "跟随系列",
                   type: "checkBox",
                   value: true,
                 },
@@ -830,8 +828,8 @@ const ComponentDefaultConfig = {
                   },
                 },
                 {
-                  displayName: "跟随系列",
                   name: "percentageUseSeriesColor",
+                  displayName: "跟随系列",
                   type: "checkBox",
                   value: true,
                 },

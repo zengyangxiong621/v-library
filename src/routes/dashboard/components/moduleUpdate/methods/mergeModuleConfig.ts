@@ -58,15 +58,24 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
       if (Array.isArray(options)) {
         optionMap.set(name, options);
       }
+      if (name === "sortedBy") {
+        console.log("valueMap", valueMap);
+        console.log("optionsMap", optionMap);
+        console.log("otherMap", otherMap);
+      }
       // }
     });
     newConfig.forEach((item: TConfigItem) => {
       const { name, value, options } = item;
-      const type: TMayChangeFlag = Array.isArray(value)
-        ? "value"
-        : Array.isArray(options)
-        ? "options"
-        : "other";
+
+      // @Mark 选择器类型组件的配置信息中同时包含 options 和 value 两个选项,当这两项都存在的时候,直接走type为value时的逻辑
+      let type: TMayChangeFlag = "other";
+      if (Array.isArray(value)) {
+        type = "value";
+      } else if (Array.isArray(options)) {
+        type = value ? "other" : "options";
+      }
+
       switch (type) {
         case "value":
           if (valueMap.has(name)) {
@@ -102,6 +111,8 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
 
   // @Mark 此处必须返回一个 "新"对象, 否则,单个升级没问题,批量升级时会出问题
   const independentConfig = deepClone(newConfig);
+  console.log("应该改过来了啊", independentConfig);
+
   return independentConfig;
 };
 
