@@ -891,10 +891,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   return (
     <div className="c-canvas">
       <Ruler cRef={rulerRef} mouse={mouse} />
-      {/*      {
-        isShowRightMenu &&
-        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }*/}
       <div
+        className="ajust-canvas-wh"
         style={{
           width: "calc(100% - 22px)",
           height: "calc(100% - 54px)",
