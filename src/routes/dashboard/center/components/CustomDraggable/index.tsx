@@ -864,6 +864,7 @@ const CustomDraggable = ({
           if (component) {
             staticData = component.staticData;
             style_config = component.config;
+            
             styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION);
             if (styleDimensionConfig) {
               Object.values(styleDimensionConfig.value).forEach((obj: any) => {
