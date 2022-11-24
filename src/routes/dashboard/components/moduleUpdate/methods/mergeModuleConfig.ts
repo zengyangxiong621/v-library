@@ -43,8 +43,8 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
   console.log("旧的config", oldConfig);
   console.log("新的config~~~~~~~~", newConfig);
   const recursive = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
-    const valueMap = new Map(); // value 为 (string、number) || {}
-    const otherMap = new Map();
+    const valueMap = new Map();
+    const otherMap = new Map(); // value 为 (string、number) || {}
     const optionMap = new Map();
     oldConfig.forEach((x: TConfigItem) => {
       const { name, value, options } = x;
@@ -81,11 +81,14 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
           }
           break;
         case "other":
-          //<1> 如果旧config中有此配置项,让其覆盖新config中的此项
-          //<2> 但也有可能此项对于旧config来讲是新增的,那么map中必然查无此项,所以直接使用新config中的配置
-          if (otherMap.has(name)) {
-            const oldConstant = otherMap.get(name);
-            item.value = oldConstant;
+          // @Mark 因为有些组件的某些选项中会有value数组中不是对象的情况（value用来记录值而不是记录组件配置项信息）比如：常规表格组件中“排序方式”项中的value:['descend'],那么最终递归到这个value时，item为字符串'descend',此时使用一般的逻辑item.value = xxx 就会报错，所以此处针对item类型加一个判断
+          if (typeof item === "object") {
+            //<1> 如果旧config中有此配置项,让其覆盖新config中的此项
+            //<2> 但也有可能此项对于旧config来讲是新增的,那么map中必然查无此项,所以直接使用新config中的配置
+            if (otherMap.has(name)) {
+              const oldConstant = otherMap.get(name);
+              item.value = oldConstant;
+            }
           }
           break;
         default:

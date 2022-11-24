@@ -23,25 +23,8 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
-import Earth from "@/customComponents/echarts/components/3DEarth/v1.0.0/index.jsx"
-
-import textConfig from '@/customComponents/echarts/components/3DEarth/v1.0.0/config'
-// import Counter from "@/customComponents/assist/counter2/v1.0.8";
-// import ChartLegend from "@/customComponents/assist/chartLegend/chartLegend-1.0.1";
-// import Hydrograph from "@/customComponents/echarts/components/hydrograph/hydrograph-1.0.2/index.jsx"
-// import StereoscopicBar from "@/customComponents/echarts/components/stereoscopicBar/stereoscopicBar-1.0.1"
-
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
-
-// import Timeline from "@/customComponents/assist/timeline/v1.1.8";
-
-// import InstrumentPanel1 from "@/customComponents/echarts/components/instrumentPanel_1/v1.3.3";
-// import InstrumentPanel3 from "@/customComponents/echarts/components/instrumentPanel_3/v1.2.5";
-// import InstrumentPanel4 from "@/customComponents/echarts/components/instrumentPanel_4/v1.2.2";
-
-// import Cascader from "@/customComponents/assist/cascader/v1.1.0";
-
 import {
   STYLE,
   DIMENSION,
@@ -68,20 +51,12 @@ import {
   INTERACTION,
   MOUNT_ANIMATION,
 } from "../../../../../constant/home";
-import ScrollTable from "@/customComponents/table/scrollTable/v1.0.2";
-import TimeSelect from "@/customComponents/interactive/timeSelect/v1.0.2";
-// import BasicLine from "@/customComponents/echarts/components/basicLine/basicLine-1.2.3";
-
-import Tab from "@/customComponents/interactive/tab/v1.0.2/index";
-import ScrollSelect from "@/customComponents/interactive/scrollSelect/v1.0.2/index";
 import ReferencePanel from "@/customComponents/dashboardEdit/referencePanel";
 import DynamicPanel from "@/customComponents/dashboardEdit/dynamicPanel";
 import { cloneDeep } from "lodash";
 
 import { setComponentThemeConfigs } from "@/utils/syncJitStorage";
 import DrillDownPanel from "@/customComponents/dashboardEdit/drillDownPanel";
-
-// import Tab from "@/components/tab";
 
 enum STYLE_ENUM {
   BOLD = "fontBold",
@@ -268,8 +243,6 @@ const CustomDraggable = ({
     });
     if ("panelType" in layer && panel) {
       // 说明是面板,且一定是单个
-      // console.log('111111111111111111111111')
-      // const panel: any = panels.find((panel: IPanel) => panel.id === layer.id);
       panel.config.left = Math.ceil(data.x);
       panel.config.top = Math.ceil(data.y);
       dispatch({
@@ -484,7 +457,7 @@ const CustomDraggable = ({
                   },
                 })*/
     }
-    console.log("bar.selectedComponentOrGroup", bar.selectedComponentOrGroup);
+    console.log("bar.selectedComponentOrGroup", bar.selectedComponents);
 
     dispatch({
       type: "bar/updateComponent",
@@ -551,6 +524,27 @@ const CustomDraggable = ({
         }
       } else if (layer.panelType === 1) {
         if (panel.states.length > 0) {
+          dispatch({
+            type: "bar/save",
+            payload: {
+              panelId: layer.id,
+              layers: [],
+              selectedComponents: [],
+              selectedComponentOrGroup: [],
+              selectedComponentIds: [],
+              scaleDragData: {
+                position: {
+                  x: 0,
+                  y: 0,
+                },
+                style: {
+                  width: 0,
+                  height: 0,
+                  display: "none",
+                },
+              },
+            },
+          });
           url = `/dashboard/${panel.states[0].id}`;
         }
       }
@@ -807,6 +801,7 @@ const CustomDraggable = ({
   const onThemeChange = (val: any) => {
     setComponentThemeConfigs(val.id, val);
   };
+
   return (
     <div className="c-custom-draggable">
       {layers.map((layer: ILayerGroup | ILayerComponent | any) => {
@@ -826,12 +821,10 @@ const CustomDraggable = ({
         let component: IComponent | undefined;
         let panel: IPanel | undefined;
         let events: any;
-        const hideDefault = false;
         let style_config, staticData, styleDimensionConfig, recommendConfig;
         // 群组
         if ("panelType" in layer) {
           panel = panels.find((panel: IPanel) => panel.id === layer.id);
-          console.log("panel", panel);
           if (panel) {
             recommendConfig = panel.config;
             const { left, top, width, height } = recommendConfig;
@@ -867,14 +860,10 @@ const CustomDraggable = ({
           };
         } else {
           // 组件
-          // component = components.find((item) => item.id === layer.id);
-          component = textConfig;
+          component = components.find((item) => item.id === layer.id);
           if (component) {
-            staticData = textConfig.staticData;
-            // staticData = component.staticData;
-            style_config = textConfig.config;
-            // style_config = component.config;
-            console.log(staticData,'$$$$$$');
+            staticData = component.staticData;
+            style_config = component.config;
             
             styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION);
             if (styleDimensionConfig) {
@@ -889,140 +878,132 @@ const CustomDraggable = ({
             events = component.events;
           }
         }
+        console.log("---------------");
+        console.log("layer", layer);
+        console.log("component", component);
+        console.log("panel", panel);
+        console.log("---------------");
         return (
-          <SingleDraggable
-            dimensionConfig={isPanel ? recommendConfig : styleDimensionConfig}
-            isPanel={isPanel}
-            scale={bar.canvasScaleValue}
-            nodeRef={nodeRef}
-            id={layer.id}
-            cRef={(ref: any) => {
-              if (!(layer.id in allComponentRefs)) {
-                allComponentRefs[layer.id] = ref;
-              }
-            }}
-            disabled={layer.isLock}
-            cancel=".no-cancel"
-            key={layer.id}
-            position={config.position}
-            onStart={(ev: DraggableEvent, data: DraggableData) =>
-              handleStart(ev, data, layer, component, config)
-            }
-            onDrag={(ev: DraggableEvent, data: DraggableData) =>
-              handleDrag(ev, data, layer, component, config)
-            }
-            onStop={(ev: DraggableEvent, data: DraggableData) =>
-              handleStop(ev, data, layer, component, config, panel)
-            }
-          >
-            <div
-              ref={(ref: any) => {
-                if (!(layer.id in allComponentDOMs)) {
-                  allComponentDOMs[layer.id] = ref;
+          <>
+            <SingleDraggable
+              dimensionConfig={isPanel ? recommendConfig : styleDimensionConfig}
+              isPanel={isPanel}
+              scale={bar.canvasScaleValue}
+              nodeRef={nodeRef}
+              id={layer.id}
+              cRef={(ref: any) => {
+                if (!(layer.id in allComponentRefs)) {
+                  allComponentRefs[layer.id] = ref;
                 }
-              }} // onClickCapture={(ev) => handleClick(ev, layer, config)}
-              data-id={isPanel ? `panel-${layer.id}` : isGroup ? layer.id : `component-${layer.id}`}
-              key={layer.id}
-              onClick={(ev) => handleClick(ev, layer, config)}
-              onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
-              onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
-              onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
-              onContextMenu={(ev) => mouseRightClick(ev, layer, component, config, panel)}
-              className={["box", `${layer.selected ? "selected" : ""}`]
-                .filter((item) => item)
-                .join(" ")}
-              style={{
-                ...config.style,
-                transition: "width, height 0.3s",
-                // border: '1px solid gray',
-                visibility: !layer.isShow ? "hidden" : "unset",
-                // display: bar.isSingleShowOpen ? (layer.singleShowLayer ? "block" : "none") : "block",
-                cursor: "move",
               }}
+              disabled={layer.isLock}
+              cancel=".no-cancel"
+              key={layer.id}
+              position={config.position}
+              onStart={(ev: DraggableEvent, data: DraggableData) =>
+                handleStart(ev, data, layer, component, config)
+              }
+              onDrag={(ev: DraggableEvent, data: DraggableData) =>
+                handleDrag(ev, data, layer, component, config)
+              }
+              onStop={(ev: DraggableEvent, data: DraggableData) =>
+                handleStop(ev, data, layer, component, config, panel)
+              }
             >
-              {layer[HIDE_DEFAULT] ? (
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "rgba(76, 255, 231, 0.15)",
-                  }}
-                />
-              ) : isPanel ? (
-                layer.panelType === 0 ? (
-                  <div className="panel-container">
-                    <DynamicPanel history={history} id={layer.id} panel={panel} />
-                    <div className="hovered">双击编辑动态面板</div>
-                  </div>
-                ) : layer.panelType === 1 ? (
-                  <div className="panel-container">
-                    <ReferencePanel history={history} id={layer.id} panel={panel} />
-                    <div className="hovered">双击编辑引用面板</div>
-                  </div>
-                ) : (
-                  <div className="panel-container">
-                    <DrillDownPanel history={history} id={layer.id} panel={panel} />
-                    <div className="hovered">双击编辑下钻面板</div>
-                  </div>
-                )
-              ) : isGroup ? (
-                <div
-                  className="no-cancel"
-                  style={{
-                    opacity: (layer[OPACITY] || 100) / 100,
-                  }}
-                >
-                  {(layer as any)[COMPONENTS]?.length > 0 ? (
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: -config.position.x,
-                        top: -config.position.y,
-                      }}
-                    >
-                      <CustomDraggable
-                        mouse={layer.selected ? mouse : 0}
-                        bar={bar}
-                        dispatch={dispatch}
-                        history={history}
-                        layers={(layer as any)[COMPONENTS]}
-                        components={components}
-                        panels={panels}
-                      />
+              <div
+                ref={(ref: any) => {
+                  if (!(layer.id in allComponentDOMs)) {
+                    allComponentDOMs[layer.id] = ref;
+                  }
+                }} // onClickCapture={(ev) => handleClick(ev, layer, config)}
+                data-id={
+                  isPanel ? `panel-${layer.id}` : isGroup ? layer.id : `component-${layer.id}`
+                }
+                key={layer.id}
+                onClick={(ev) => handleClick(ev, layer, config)}
+                onDoubleClickCapture={(ev) => handleDblClick(ev, layer, config)}
+                onMouseOverCapture={(ev) => handleMouseOver(ev, layer)}
+                onMouseOutCapture={(ev) => handleMouseOut(ev, layer)}
+                onContextMenu={(ev) => mouseRightClick(ev, layer, component, config, panel)}
+                className={["box", `${layer.selected ? "selected" : ""}`]
+                  .filter((item) => item)
+                  .join(" ")}
+                style={{
+                  ...config.style,
+                  transition: "width, height 0.3s",
+                  // border: '1px solid gray',
+                  visibility: !layer.isShow ? "hidden" : "unset",
+                  // display: bar.isSingleShowOpen ? (layer.singleShowLayer ? "block" : "none") : "block",
+                  cursor: "move",
+                }}
+              >
+                {layer[HIDE_DEFAULT] ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(76, 255, 231, 0.15)",
+                    }}
+                  />
+                ) : isPanel ? (
+                  layer.panelType === 0 ? (
+                    <div className="panel-container">
+                      <DynamicPanel history={history} id={layer.id} panel={panel} />
+                      <div className="hovered">双击编辑动态面板</div>
+                    </div>
+                  ) : layer.panelType === 1 ? (
+                    <div className="panel-container">
+                      <ReferencePanel history={history} id={layer.id} panel={panel} />
+                      <div className="hovered">双击编辑引用面板</div>
                     </div>
                   ) : (
-                    ""
-                  )}
-                </div>
-              ) : (
-                <>
+                    <div className="panel-container">
+                      <DrillDownPanel history={history} id={layer.id} panel={panel} />
+                      <div className="hovered">双击编辑下钻面板</div>
+                    </div>
+                  )
+                ) : isGroup ? (
                   <div
-                    data-id={layer.id}
-                    style={{ width: "100%", height: "100%", pointerEvents: "none" }}
-                    className="custom-draggable-component"
+                    className="no-cancel"
+                    style={{
+                      opacity: (layer[OPACITY] || 100) / 100,
+                    }}
                   >
-                    {layer.moduleName === "bar" ? (
-                      <Bar
-                        themeConfig={bar.componentThemeConfig}
-                        onThemeChange={onThemeChange}
-                        onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                        scale={bar.canvasScaleValue}
-                        componentConfig={component}
-                        fields={getFields(component)}
-                        comData={getComDataWithFilters(
-                          bar.componentData,
-                          component,
-                          bar.componentFilters,
-                          bar.dataContainerDataList,
-                          bar.dataContainerList,
-                          bar.callbackArgs
-                        )}
-                      ></Bar>
-                      ) : layer.moduleName === "3DEarth" ? (
-                        <Earth
+                    {(layer as any)[COMPONENTS]?.length > 0 ? (
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: -config.position.x,
+                          top: -config.position.y,
+                        }}
+                      >
+                        <CustomDraggable
+                          mouse={layer.selected ? mouse : 0}
+                          bar={bar}
+                          dispatch={dispatch}
+                          history={history}
+                          layers={(layer as any)[COMPONENTS]}
+                          components={components}
+                          panels={panels}
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <div
+                      data-id={layer.id}
+                      style={{ width: "100%", height: "100%", pointerEvents: "none" }}
+                      className="custom-draggable-component"
+                    >
+                      {layer.moduleName === "bar" ? (
+                        <Bar
                           themeConfig={bar.componentThemeConfig}
                           onThemeChange={onThemeChange}
                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                          scale={bar.canvasScaleValue}
                           componentConfig={component}
                           fields={getFields(component)}
                           comData={getComDataWithFilters(
@@ -1033,90 +1014,105 @@ const CustomDraggable = ({
                             bar.dataContainerList,
                             bar.callbackArgs
                           )}
-                        ></Earth>
-                    ) : (
-                      <ErrorCatch
-                        app={component.name}
-                        user=""
-                        token=""
-                        max={1}
-                        errorRender={
-                          <RemoteComponentErrorRender
-                            errorComponent={component.name}
-                          ></RemoteComponentErrorRender>
-                        }
-                        onCatch={(errors) => {
-                          console.log("组件报错信息：", errors, "组件id", layer.id);
-                        }}
-                      >
-                        <RemoteBaseComponent
-                          themeConfig={bar.componentThemeConfig}
-                          onThemeChange={onThemeChange}
-                          key={layer.id}
-                          componentConfig={component}
-                          fields={getFields(component)}
-                          comData={getComDataWithFilters(
-                            bar.componentData,
-                            component,
-                            bar.componentFilters,
-                            bar.dataContainerDataList,
-                            bar.dataContainerList,
-                            bar.callbackArgs,
-                            layer
-                          )}
-                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                        ></RemoteBaseComponent>
-                      </ErrorCatch>
-                    )}
-                  </div>
-                </>
-              )}
-              {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
-              {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
-              <div className="component-border">
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: 1,
-                    height: "100%",
-                    transform: `translate(-50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
-                  }}
-                />
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    width: 1,
-                    height: "100%",
-                    transform: `translate(50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
-                  }}
-                />
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: 1,
-                    transform: `translate(0px, -50%) scaleY(${1 / bar.canvasScaleValue})`,
-                  }}
-                />
-                <span
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: "100%",
-                    height: 1,
-                    transform: `translate(0px, 50%) scaleY(${1 / bar.canvasScaleValue})`,
-                  }}
-                />
+                        ></Bar>
+                      ) : (
+                        <ErrorCatch
+                          app={component.name}
+                          user=""
+                          token=""
+                          max={1}
+                          errorRender={
+                            <RemoteComponentErrorRender
+                              errorComponent={component.name}
+                            ></RemoteComponentErrorRender>
+                          }
+                          onCatch={(errors) => {
+                            console.log("组件报错信息：", errors, "组件id", layer.id);
+                          }}
+                        >
+                          <RemoteBaseComponent
+                            themeConfig={bar.componentThemeConfig}
+                            onThemeChange={onThemeChange}
+                            key={layer.id}
+                            componentConfig={component}
+                            fields={getFields(component)}
+                            comData={getComDataWithFilters(
+                              bar.componentData,
+                              component,
+                              bar.componentFilters,
+                              bar.dataContainerDataList,
+                              bar.dataContainerList,
+                              bar.callbackArgs,
+                              layer
+                            )}
+                            onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                          ></RemoteBaseComponent>
+                        </ErrorCatch>
+                      )}
+                    </div>
+                  </>
+                )}
+                {/* <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, right: 0 }} /> */}
+                {/*增加一个类似透明蒙版的div，防止 echarts 图表误触、img 标签拖拽问题*/}
+                <div className="component-border">
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: 1,
+                      height: "100%",
+                      transform: `translate(-50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
+                    }}
+                  />
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      width: 1,
+                      height: "100%",
+                      transform: `translate(50%, 0px) scaleX(${1 / bar.canvasScaleValue})`,
+                    }}
+                  />
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: 1,
+                      transform: `translate(0px, -50%) scaleY(${1 / bar.canvasScaleValue})`,
+                    }}
+                  />
+                  <span
+                    style={{
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      width: "100%",
+                      height: 1,
+                      transform: `translate(0px, 50%) scaleY(${1 / bar.canvasScaleValue})`,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          </SingleDraggable>
+            </SingleDraggable>
+            {layer.isLock ? (
+              <div
+                className="lock-wrapper"
+                style={{
+                  position: "absolute",
+                  left: config.position.x,
+                  top: config.position.y,
+                  width: config.style.width,
+                  height: config.style.height,
+                }}
+              />
+            ) : (
+              <></>
+            )}
+          </>
         );
       })}
     </div>

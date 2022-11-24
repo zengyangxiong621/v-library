@@ -177,37 +177,38 @@ const ReferencePanel = ({ bar, id, dispatch, panel, isDashboard = true }: any) =
         });
       }
     })();
-  }, [panel.states[0]?.id || ""]);
-
+  }, [panel.states]);
   return (
     <div
       className={`reference-panel panel-${id}`}
       style={{ pointerEvents: "none", overflow: state.overflow, width: "100%", height: "100%" }}
     >
-      {state.allData.map((item: any, index: number) => (
-        <div
-          className="status-wrap"
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            display: state.activeIndex === index ? "block" : "none",
-            transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
-            backgroundImage: item.backgroundImage ? `url('${item.backgroundImage}')` : "unset",
-            backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
-            backgroundRepeat: "no-repeat",
-            // backgroundSize: "contain",
-            // backgroundPosition: "center center",
-          }}
-        >
-          <CustomDraggable
-            mouse={0}
-            layers={item.layers}
-            components={item.components}
-            panels={item.panels}
-          />
-        </div>
-      ))}
+      {state.allData.map((item: any, index: number) => {
+        return (
+          <div
+            className="status-wrap"
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              display: state.activeIndex === index ? "block" : "none",
+              transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
+              backgroundImage: item.backgroundImage ? `url('${item.backgroundImage}')` : "unset",
+              backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
+              backgroundRepeat: "no-repeat",
+              // backgroundSize: "contain",
+              // backgroundPosition: "center center",
+            }}
+          >
+            <CustomDraggable
+              mouse={0}
+              layers={item.layers}
+              components={item.components}
+              panels={item.panels}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };

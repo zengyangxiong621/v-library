@@ -6,22 +6,14 @@ import "./index.less";
 const EveryItem = (props: any) => {
   const { data, dispatch, bar, type } = props;
 
-  const importComponent = (data: any) => {
-    return axios
-      .get(
-        `${(window as any).CONFIG.COMP_URL}/${data.moduleType}/${data.moduleName}/${
-          data.moduleVersion
-        }/${data.moduleName}.js`
-      )
-      .then((res) => res.data);
-  };
-
   const componentCreate = async () => {
+    const { moduleDefaultConfig } = bar;
+    const ComponentDefaultConfig = moduleDefaultConfig.find((item: any) => {
+      return item.moduleName === data.moduleName;
+    });
     if (type === "design") {
       const dataCopy = JSON.parse(JSON.stringify(data));
       dataCopy.moduleType = "assist";
-      window.eval(`${await importComponent(dataCopy)}`);
-      const { ComponentDefaultConfig } = (window as any).VComponents;
       // 对素材的图片和视频数据做特殊处理
       if (ComponentDefaultConfig.moduleName === "image2") {
         ComponentDefaultConfig.config[2].value = dataCopy.downloadUrl;
@@ -37,13 +29,9 @@ const EveryItem = (props: any) => {
         itemData: data,
       });
     } else {
-      const { moduleDefaultConfig } = bar;
-      const currentDefaultConfig = moduleDefaultConfig.find((item: any) => {
-        return item.moduleName === data.moduleName;
-      });
       dispatch({
         type: "bar/createComponent",
-        payload: currentDefaultConfig,
+        payload: ComponentDefaultConfig,
         itemData: data,
       });
     }

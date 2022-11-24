@@ -198,7 +198,6 @@ const Left = ({ dispatch, bar }) => {
   };
   // 图层拖拽逻辑
   const onDrop = (info) => {
-    console.log("info~~~~~~~~~~~~~~~", info);
     const dropKey = info.node.key;
     const dragKey = info.dragNode.key;
     const dropPos = info.node.pos.split("-");
@@ -218,7 +217,20 @@ const Left = ({ dispatch, bar }) => {
     const setLayerToTop = (data, key, callback) => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].id === key) {
+          return callback(data[i].modules, i);
+        }
+        if (data[i].modules) {
+          setLayerToTop(data[i].modules, key, callback);
+        }
+      }
+    };
+    const setLayerToParentLevel = (data, dropKey, callback) => {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === dropKey) {
           return callback(data, i);
+        }
+        if (data[i].modules) {
+          setLayerToTop(data[i].modules, dropKey, callback);
         }
       }
     };
@@ -239,10 +251,18 @@ const Left = ({ dispatch, bar }) => {
         arr.splice(index, 1);
         dragObj = item;
       });
-      setLayerToTop(data, dropKey, (item, index) => {
-        item.splice(index, 0, dragObj);
-      });
+      if (dropPosition === -1) {
+        setLayerToParentLevel(data, dropKey, (dropKeyParentArr) => {
+          dropKeyParentArr.unshift(dragObj);
+        });
+      } else {
+        setLayerToTop(data, dropKey, (item) => {
+          // item.splice(index, 0, dragObj);
+          item.unshift(dragObj);
+        });
+      }
     } else {
+      alert(2);
       loop(data, dragKey, (item, index, arr) => {
         arr.splice(index, 1);
         dragObj = item;
