@@ -134,7 +134,7 @@ const Left = ({ dispatch, bar }) => {
     const isSelected = e.selected;
     const { key } = e.node;
     let selectedNodes = e.selectedNodes;
-    if (!e.nativeEvent.ctrlKey && !bar.key.includes(key)) {
+    if (!e.nativeEvent.ctrlKey) {
       dispatch({
         type: "bar/save",
         payload: {
@@ -143,7 +143,7 @@ const Left = ({ dispatch, bar }) => {
       });
       setIsCtrlKeyPressing(false);
       temp = [key];
-      selectedNodes = [selectedNodes.find((item) => item.id === key)];
+      selectedNodes = [e.node];
     }
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     dispatch({
