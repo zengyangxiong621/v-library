@@ -72,6 +72,8 @@
 
 **v1.1.0(20221119)**：处理数据取整报错问题
 
+**v1.1.1(20221124)**：版本名称统一问题处理
+
 ```js
  let value = decimalCount > 0 ? Number(num).toFixed(decimalCount) : num.split(".")[0]; // 小数位长度处理
 ```
