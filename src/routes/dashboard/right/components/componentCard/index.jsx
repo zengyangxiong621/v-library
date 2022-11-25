@@ -57,8 +57,8 @@ const ComponentCard = (props) => {
         configs: [finalBody],
         dashboardId,
       },
-    }).catch(() => {
-      console.log("单个组件升级, Error");
+    }).catch((e) => {
+      console.log("单个组件升级, Error", e);
     });
     if (data) {
       const newComponentConfig = {

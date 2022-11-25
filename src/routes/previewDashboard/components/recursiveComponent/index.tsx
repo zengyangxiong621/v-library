@@ -41,7 +41,6 @@ const RecursiveComponent = (props: any) => {
             targetComponent = componentLists.find((item: any) => item.id === layer.id);
           }
         }
-        console.log("layer", layer);
         return layer.isShow ? (
           <div data-id={isGroup ? layer.id : "component-" + layer.id} key={layer.id}>
             {isPanel ? (
