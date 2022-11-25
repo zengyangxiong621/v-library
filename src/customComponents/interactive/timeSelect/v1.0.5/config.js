@@ -1,8 +1,9 @@
 const ComponentDefaultConfig = {
   "name": "时间选择器",
   "moduleName": "timeSelect",
-  "moduleType": "interactive",
   "moduleVersion": "1.0.5",
+  "lastModuleVersion": "1.0.4",
+  "moduleType": "interactive",
   "config": [
     {
       "displayName": "位置尺寸",
@@ -15,22 +16,22 @@ const ComponentDefaultConfig = {
         {
           "displayName": "X轴坐标",
           "name": "left",
-          "value": 970
+          "value": 100
         },
         {
           "displayName": "Y轴坐标",
           "name": "top",
-          "value": 147
+          "value": 100
         },
         {
           "displayName": "宽度",
           "name": "width",
-          "value": 531.2420091324201
+          "value": 300
         },
         {
           "displayName": "高度",
           "name": "height",
-          "value": 88.26027397260275
+          "value": 50
         }
       ]
     },
@@ -41,17 +42,17 @@ const ComponentDefaultConfig = {
       "value": false
     },
     {
-      "name": "allGlobal",
-      "displayName": "全局",
-      "type": "collapse",
       "hasSwitch": false,
-      "defaultExpand": true,
+      "defaultExpand": false,
+      "displayName": "全局",
+      "name": "allGlobal",
+      "type": "collapse",
       "value": [
         {
-          "name": "show",
           "displayName": "",
-          "value": false,
-          "type": "switch"
+          "name": "show",
+          "type": "switch",
+          "value": false
         },
         {
           "displayName": "选择器类型",
@@ -132,17 +133,17 @@ const ComponentDefaultConfig = {
       ]
     },
     {
-      "name": "selector",
-      "displayName": "选择器",
-      "type": "collapse",
       "hasSwitch": false,
-      "defaultExpand": true,
+      "defaultExpand": false,
+      "displayName": "选择器",
+      "name": "selector",
+      "type": "collapse",
       "value": [
         {
-          "name": "show",
           "displayName": "",
-          "value": false,
-          "type": "switch"
+          "name": "show",
+          "type": "switch",
+          "value": false
         },
         {
           "displayName": "文本样式",
@@ -157,7 +158,7 @@ const ComponentDefaultConfig = {
             {
               "displayName": "",
               "name": "fontSize",
-              "value": 25
+              "value": 14
             },
             {
               "displayName": "",
@@ -200,70 +201,6 @@ const ComponentDefaultConfig = {
           "value": "#fff"
         }
       ]
-    },
-    {
-      "name": "calendarBox",
-      "displayName": "日历框",
-      "type": "collapse",
-      "hasSwitch": true,
-      "defaultExpand": true,
-      "value": [
-        {
-          "name": "show",
-          "displayName": "",
-          "value": true,
-          "type": "switch"
-        },
-        {
-          "displayName": "背景色",
-          "name": "bgColor",
-          "type": "color",
-          "value": "#fef"
-        },
-        {
-          "displayName": "文本样式",
-          "name": "textStyle",
-          "type": "textFullStyleGroup",
-          "value": [
-            {
-              "displayName": "",
-              "name": "fontFamily",
-              "value": "Microsoft Yahei"
-            },
-            {
-              "displayName": "",
-              "name": "fontSize",
-              "value": 14
-            },
-            {
-              "displayName": "",
-              "name": "color",
-              "type": "color",
-              "value": "#000"
-            },
-            {
-              "displayName": "",
-              "name": "bold",
-              "value": false
-            },
-            {
-              "displayName": "",
-              "name": "italic",
-              "value": false
-            },
-            {
-              "displayName": "字距",
-              "name": "letterSpacing",
-              "value": 0
-            },
-            {
-              "displayName": "行距",
-              "name": "lineHeight",
-              "value": 0
-            }
-          ]
-        }
-      ]
     }
   ],
   "dataConfig": {},
@@ -296,8 +233,11 @@ const ComponentDefaultConfig = {
   "useFilter": false,
   "filters": [],
   "actions": [],
+  "parent": null,
   "dataContainers": [],
   "dataFrom": 0,
-  "callbackArgs": []
+  "callbackArgs": [],
+  "drillDownArr": [],
+  "websocketConfig": []
 }
 export default ComponentDefaultConfig

@@ -85,10 +85,10 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       name: "隐藏",
       value: "hide",
     },
-    {
-      name: "显隐切换",
-      value: "show/hide",
-    },
+    // {
+    //   name: "显隐切换",
+    //   value: "show/hide",
+    // },
     {
       name: "移动",
       value: "translate",
