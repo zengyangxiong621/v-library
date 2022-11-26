@@ -23,12 +23,9 @@
     "echarts-gl": "^2.0.9",
     "echarts-liquidfill": "^3.1.0",
     "env-cmd": "^10.1.0",
-    "eslint-config-react-app": "7.0.0",
     "fs-extra": "^10.0.0",
     "history": "4.10.1",
     "identity-obj-proxy": "^3.0.0",
-    "less": "^4.1.2",
-    "less-loader": "^10.2.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "monaco-editor": "0.33",
@@ -178,6 +175,7 @@
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.4.5",
     "monaco-editor-webpack-plugin": "^7.0.1",
+    "eslint-config-react-app": "7.0.0",
     "postcss": "^8.4.13",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^6.2.1",
@@ -190,12 +188,7 @@
     "sass-loader": "^12.3.0",
     "source-map-loader": "^3.0.0",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.0.24",
-    "terser-webpack-plugin": "^5.2.5",
-    "typescript": "^4.8.4",
-    "webpack": "^5.64.4",
-    "webpack-dev-server": "^4.6.0",
-    "webpack-manifest-plugin": "^4.0.2",
-    "workbox-webpack-plugin": "^6.4.1"
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0"
   }
 }
