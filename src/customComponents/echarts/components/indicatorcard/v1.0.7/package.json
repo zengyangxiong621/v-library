@@ -1,0 +1,11 @@
+{
+    "name": "indicatorcard",
+    "version": "1.0.7",
+    "private": true,
+    "dependencies": {
+      "react": "17.0.2",
+      "echarts": "5.2.2"
+    },
+    "devDependencies": {}
+  }
+  
