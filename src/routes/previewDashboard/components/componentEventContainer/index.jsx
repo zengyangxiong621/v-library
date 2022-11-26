@@ -62,6 +62,7 @@ const ComponentEventContainer = ({
 
   // 点击
   const handleClick = debounce((e, data) => {
+    console.log('preview handleClick================================')
     // e.stopPropagation();
     // e.preventDefault();
     if (!data) return;
@@ -74,14 +75,17 @@ const ComponentEventContainer = ({
     customEventsFunction(clickEvents, data);
   }, 300);
   const handleInteractiveClick = (e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    console.log('preview handleInteractiveClick================================')
+    // e.stopPropagation();
+    // e.preventDefault();
     const clickEvents = events.filter((item) => item.trigger === "click");
     const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (clickActions.length === 0) {
       return;
     }
-    setClickTimes(1);
+
+    console.log(clickEvents, 'clickEvents------------------------------')
+    // setClickTimes(1);
     customEventsFunction(clickEvents, data);
   };
   const handleInteractiveMouseEnter = (e, data) => {
@@ -132,6 +136,7 @@ const ComponentEventContainer = ({
   });
 
   const customEventsFunction = (events, data) => {
+    console.log(events, data, 'preview customEventsFunction-----------------------------------')
     events.forEach((item) => {
       const conditions = item.conditions;
       const conditionType = item.conditionType;

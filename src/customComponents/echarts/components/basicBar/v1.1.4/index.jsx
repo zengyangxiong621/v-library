@@ -429,7 +429,17 @@ const BasicBar = (props) => {
     return res;
   };
 
+  const handleClick = (e, data) => {
+    props.onClick && props.onClick(e, data);
+  };
+
   const onChartClick = (param, echarts) => {
+    console.log(param, props, 'onChartClick ===================================')
+      // TODO: 统一校验componentConfig中的数据类型
+    if(componentConfig?.events?.length) {
+      handleClick(param.event, param)
+    }
+    
     if (Array.isArray(componentConfig.drillDownArr) && componentConfig.drillDownArr.length) {
       const _data = componentData.find(item => item[fieldKey[0]] === param.name)
       
