@@ -15,19 +15,25 @@ export const allPanelStatusDetailsFunc = async (panels: Array<IPanel>): Promise<
 };
 // 获取面板+状态详情
 export const getDeepPanelAndStatusDetails = async (
-  layerPanels: Array<{ id: string;[key: string]: any }>,
+  layerPanels: Array<{ id: string; [key: string]: any }>,
   fullAmountDashboardDetails: any[]
 ) => {
   let panels: Array<IPanel> = await Promise.all(
     layerPanels.map((item: any) => getPanelConfigFunc(item))
   );
   panels = panels.filter((item) => item);
-  console.log("panels", panels);
-  fullAmountDashboardDetails = fullAmountDashboardDetails.concat(panels);
+  panels.forEach((item) => {
+    let panelIndex = fullAmountDashboardDetails.findIndex((it) => it.id === item.id);
+    if (panelIndex !== -1) {
+      fullAmountDashboardDetails[panelIndex] = item;
+      // fullAmountDashboardDetails.splice(panelIndex, 1, item);
+    } else {
+      fullAmountDashboardDetails.push(item);
+    }
+  });
+  // fullAmountDashboardDetails = fullAmountDashboardDetails.concat(panels);
   const panelsStatusDetail = await allPanelStatusDetailsFunc(panels);
   fullAmountDashboardDetails = fullAmountDashboardDetails.concat(panelsStatusDetail);
-  console.log("这里看看");
-  console.log("panelsStatusDetail", panelsStatusDetail);
   for (const detail of panelsStatusDetail) {
     const layers = detail.layers;
     // @ts-ignore

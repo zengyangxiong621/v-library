@@ -289,34 +289,21 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
         configs: [copyPanelConfig],
       },
     });
-    console.log("bar.fullAmountPanels", bar.fullAmountPanels);
-    console.log("bar.fullAmountDashboardDetails", bar.fullAmountDashboardDetails);
-    console.log("bar.fullAmountComponents", bar.fullAmountComponents);
+
     if (data) {
       cb(false);
+      dispatch({
+        type: "bar/updatePanels",
+        payload: {
+          panels: [panelConfig],
+        },
+      });
       dispatch({
         type: "bar/referencePanelState",
         payload: {
           panelConfig,
         },
       });
-      /*      dispatch({
-              type: 'bar/save',
-              payload: {
-                panelConfig,
-                scaleDragData: {
-                  position: {
-                    x: left,
-                    y: top,
-                  },
-                  style: {
-                    width,
-                    height,
-                    display: 'block',
-                  },
-                },
-              },
-            })*/
     } else {
       copyPanelConfig.states.pop();
       panelConfig.states.pop();

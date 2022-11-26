@@ -157,6 +157,7 @@ const importComponent = (props: any) => {
             span: 5,
           }}
           form={addForm}
+          style={{ paddingBottom: 14 }}
         >
           {
             <>

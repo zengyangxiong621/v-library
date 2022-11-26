@@ -56,14 +56,13 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       setComponents(bar.fullAmountComponents);
       setPanels(bar.fullAmountPanels);
     } else {
-      console.log("怎么说");
       const layers = deepClone(bar.layers);
       layersReverse(layers);
       setLayers(layers);
       setComponents(bar.fullAmountComponents);
       setPanels(bar.fullAmountPanels);
     }
-  }, [bar.layers, bar.isSingleShowOpen, bar.singleShowLayers]);
+  }, [bar.layers, bar.isSingleShowOpen, bar.singleShowLayers, bar.fullAmountPanels]);
 
   /*  useEffect(() => {
       window.addEventListener("",)
@@ -692,6 +691,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       const panelOrComponent: IComponent | IPanel = bar.selectedComponents[0];
       if ("type" in panelOrComponent) {
         const panel = panelOrComponent;
+        console.log("被选中的面板", panel);
+        console.log("panel", panel);
         panel.config = {
           ...panel.config,
           left: x,
@@ -890,10 +891,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   return (
     <div className="c-canvas">
       <Ruler cRef={rulerRef} mouse={mouse} />
-      {/*      {
-        isShowRightMenu &&
-        <RightClickMenu menuInfo={ menuInfo } menuOptions={ customMenuOptions } hideMenu={ hideMenu }/> }*/}
       <div
+        className="ajust-canvas-wh"
         style={{
           width: "calc(100% - 22px)",
           height: "calc(100% - 54px)",

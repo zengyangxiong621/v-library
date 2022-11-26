@@ -128,9 +128,23 @@ const Left = ({ dispatch, bar }) => {
   };
   //选择的树节点
   const onSelect = (curKey, e) => {
+    console.log("e", e);
+    console.log("curKey", curKey);
     let temp = curKey;
     const isSelected = e.selected;
     const { key } = e.node;
+    let selectedNodes = e.selectedNodes;
+    if (!e.nativeEvent.ctrlKey) {
+      dispatch({
+        type: "bar/save",
+        payload: {
+          isMultipleTree: false,
+        },
+      });
+      setIsCtrlKeyPressing(false);
+      temp = [key];
+      selectedNodes = [e.node];
+    }
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     dispatch({
       type: "bar/setIsShowRightMenu",
@@ -156,9 +170,10 @@ const Left = ({ dispatch, bar }) => {
         },
       });
     }
+    // debugger;
     dispatch({
       type: "bar/selectLayers",
-      payload: e.selectedNodes,
+      payload: selectedNodes,
     });
   };
   // 响应右键点击
@@ -198,7 +213,6 @@ const Left = ({ dispatch, bar }) => {
   };
   // 图层拖拽逻辑
   const onDrop = (info) => {
-    console.log("info~~~~~~~~~~~~~~~", info);
     const dropKey = info.node.key;
     const dragKey = info.dragNode.key;
     const dropPos = info.node.pos.split("-");
@@ -218,7 +232,20 @@ const Left = ({ dispatch, bar }) => {
     const setLayerToTop = (data, key, callback) => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].id === key) {
+          return callback(data[i].modules, i);
+        }
+        if (data[i].modules) {
+          setLayerToTop(data[i].modules, key, callback);
+        }
+      }
+    };
+    const setLayerToParentLevel = (data, dropKey, callback) => {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === dropKey) {
           return callback(data, i);
+        }
+        if (data[i].modules) {
+          setLayerToTop(data[i].modules, dropKey, callback);
         }
       }
     };
@@ -230,18 +257,21 @@ const Left = ({ dispatch, bar }) => {
     //   });
     // }
     let dragObj;
-    if (
-      (info.node.modules || []).length > 0 &&
-      info.node.props.expanded
-      // && dropPosition === 1
-    ) {
+    if ((info.node.modules || []).length > 0 && info.node.props.expanded) {
       loop(data, dragKey, (item, index, arr) => {
         arr.splice(index, 1);
         dragObj = item;
       });
-      setLayerToTop(data, dropKey, (item, index) => {
-        item.splice(index, 0, dragObj);
-      });
+      if (dropPosition === -1) {
+        setLayerToParentLevel(data, dropKey, (dropKeyParentArr) => {
+          dropKeyParentArr.unshift(dragObj);
+        });
+      } else {
+        setLayerToTop(data, dropKey, (item) => {
+          // item.splice(index, 0, dragObj);
+          item.unshift(dragObj);
+        });
+      }
     } else {
       loop(data, dragKey, (item, index, arr) => {
         arr.splice(index, 1);

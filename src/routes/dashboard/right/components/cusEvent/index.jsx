@@ -85,10 +85,10 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       name: "隐藏",
       value: "hide",
     },
-    {
-      name: "显隐切换",
-      value: "show/hide",
-    },
+    // {
+    //   name: "显隐切换",
+    //   value: "show/hide",
+    // },
     {
       name: "移动",
       value: "translate",
@@ -159,7 +159,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
 
   useEffect(() => {
     setTabpanes(_data.events || []);
-    if (_data?.events.length) {
+    if (_data?.events?.length) {
       setActiveTab(_data.events[0].id);
       setActivePane(_data.events[0]);
       if (_data.events[0].actions.length) {
@@ -431,7 +431,6 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     }
     if (action.component.length === 1) {
       const layerId = action.component[0];
-      console.log("layerId", layerId);
       const layer = findLayerById(
         action.componentScope === "global" ? bar.fullAmountLayers : bar.layers,
         layerId
@@ -439,6 +438,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       if ("panelType" in layer) {
         if (layer.panelType === 0) {
           action.layerType = "dynamicPanel";
+        } else {
+          action.layerType = "group";
         }
       } else if ("modules" in layer) {
         action.layerType = "group";
@@ -448,6 +449,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     } else {
       action.layerType = "group";
     }
+    console.log("action", action);
     props.onChange();
   };
   const selectComponentSelect = (val, option, action) => {

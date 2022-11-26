@@ -35,6 +35,7 @@ const DrillDownPanel = ({
   // 获取面板详情接口
   const { states, config } = panel;
   const { animationTime = 0 } = config;
+  console.log("ccccccccccccccccccccc", config);
   const [state, setState] = useSetState<State>({
     overflow: "hidden",
     allData: [],
@@ -148,6 +149,16 @@ const DrillDownPanel = ({
       setState({ breadcrumbData: newArr });
     }
   };
+  const breadcrumbStyle: any = {
+    marginBottom: "20px",
+    minWidth: "500px",
+  };
+  if (config.breadcrumbPositionShow) {
+    breadcrumbStyle.position = "absolute";
+    breadcrumbStyle.top = config.breadcrumbPositionY || 0;
+    breadcrumbStyle.left = config.breadcrumbPositionX || 0;
+  }
+
   return (
     <div
       className={`drill-down-panel panel-${id} event-id-${id}`}
@@ -155,24 +166,28 @@ const DrillDownPanel = ({
         width: "100%",
         height: "100%",
         display: isHideDefault ? "none" : "block",
+        position: "relative",
       }}
     >
-      <div style={{ marginBottom: "20px", minWidth: "500px" }}>
-        <Breadcrumb>
-          {state.breadcrumbData.map((x: any, i: number) => {
-            return (
-              <Breadcrumb.Item
-                className={`custom-breadcrumb ${
-                  activeIndex === i ? "active-breadcrumb-item" : ""
-                } `}
-                onClick={() => breadcrumbClick(x, i)}
-              >
-                {x}
-              </Breadcrumb.Item>
-            );
-          })}
-        </Breadcrumb>
-      </div>
+      {config.breadcrumbPositionShow && (
+        <div style={{ ...breadcrumbStyle }}>
+          <Breadcrumb>
+            {state.breadcrumbData.map((x: any, i: number) => {
+              return (
+                <Breadcrumb.Item
+                  className={`custom-breadcrumb ${
+                    activeIndex === i ? "active-breadcrumb-item" : ""
+                  } `}
+                  onClick={() => breadcrumbClick(x, i)}
+                >
+                  {x}
+                </Breadcrumb.Item>
+              );
+            })}
+          </Breadcrumb>
+        </div>
+      )}
+
       {state.allData.map((item: any, index: number) => (
         <div
           className={`status-wrap event-id-${id}`}

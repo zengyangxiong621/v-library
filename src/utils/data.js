@@ -163,7 +163,6 @@ const setDataContainerResult = (
   callbackArgs
 ) => {
   if (componentConfig.dataContainers) {
-    console.log("componentConfig.dataContainers", componentConfig.dataContainers);
     if (componentConfig.dataContainers.length === 1) {
       const id = componentConfig.dataContainers[0].id;
       const container = dataContainerList.find((item) => item.id === id);

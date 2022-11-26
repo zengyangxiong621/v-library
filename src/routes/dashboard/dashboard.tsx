@@ -76,17 +76,18 @@ function App({ bar, dispatch, location, history }: any) {
     187: true, // +
     189: true, // -
   };
-
   const documentRightClick = (event: any) => {
     const dom: any = (event.target as any) || null;
     let temp = true;
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
     const awayList = [
+      "ajust-canvas-wh",
       "ant-layout",
       "draggable-wrapper",
       "left-wrap",
       "use-away",
       "canvas-draggable",
+      "p-home",
     ];
     awayList.forEach((className) => {
       if (
@@ -108,6 +109,7 @@ function App({ bar, dispatch, location, history }: any) {
     let temp = true;
     // 如果点击的 dom 的 className 在这个 className 数组中，那就清空
     const awayList = [
+      "ajust-canvas-wh",
       "ant-layout",
       "draggable-wrapper",
       "left-wrap",

@@ -405,18 +405,20 @@ const Tab = (props) => {
   useEffect(() => {
     dataSeriesConfigLoadFunc();
   }, [dataSeriesConfig, tabList, rowNums, colNums]);
-
+  // 状态改变
   const handleChange = (data, index) => {
     setActiveKey(index);
     props.onChange && props.onChange(data);
   };
-
+  // 点击
   const handleClick = (e, data) => {
     props.onClick && props.onClick(e, data);
   };
+  // 移入
   const handleMouseEnter = (e) => {
     props.onMouseEnter && props.onMouseEnter(e, tabList[activeKey]);
   };
+  // 移出
   const handleMouseLeave = (e) => {
     props.onMouseLeave && props.onMouseLeave(e, tabList[activeKey]);
   };
@@ -427,7 +429,9 @@ const Tab = (props) => {
     if (locationParams?.param) {
       history && history.push(`/bigscreen/${dashboardId}?param=${item.name}`);
     }
-    handleChange(item, index);
+    if (index !== activeKey) {
+      handleChange(item, index);
+    }
     handleClick(e, item);
   };
   return (
