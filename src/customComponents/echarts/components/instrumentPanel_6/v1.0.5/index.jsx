@@ -9,13 +9,13 @@ const InstrumentPanel6 = (props) => {
   const { data } = componentConfig.staticData;
   // 最新字段
   const finalFieldsArr = props.fields || ["title", "value", "unit"];
-
+  
   const componentThemeConfig = props.themeConfig;
   const originData = props.comData || data;
   const firstData = originData[0];
-  const titleText = firstData[finalFieldsArr[0]] ?? "";
-  const numberValue = firstData[finalFieldsArr[1]] ?? "";
-  const unitValue = firstData[finalFieldsArr[2]] ?? "";
+  const titleText = firstData ? firstData[finalFieldsArr[0]] : "";
+  const numberValue = firstData ? firstData[finalFieldsArr[1]] : 0;
+  const unitValue = firstData ? firstData[finalFieldsArr[2]] : "";
 
   const allSettingConfig = config.find(item => item.name === "allSettings")?.options;
 
