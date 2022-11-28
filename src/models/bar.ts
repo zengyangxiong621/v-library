@@ -247,7 +247,7 @@ export default {
           const { states } = bar.fullAmountDashboardDetails.find(
             (item: any) => item.id === panelId
           );
-          let isIncludeStateId = states.find((item) => item.id === stateId);
+          const isIncludeStateId = states.find((item) => item.id === stateId);
           // stateId 为空 或者 不存在这个面板内
           if (!stateId || !isIncludeStateId) {
             if (states.length > 0) {
@@ -493,6 +493,7 @@ export default {
       const panels = bar.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
+
       enum panelTypeEnum {
         "dynamicPanel",
         "referencePanel",
@@ -964,11 +965,11 @@ export default {
       const { dashboardId, layers, components, panels } = payload;
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountDashboardDetails } = bar;
-      let currentDetailsIndex: any = fullAmountDashboardDetails.findIndex(
+      const currentDetailsIndex: any = fullAmountDashboardDetails.findIndex(
         (item: any) => item.id === bar.dashboardId || bar.stateId
       );
       if (currentDetailsIndex !== -1) {
-        let currentDetails = fullAmountDashboardDetails[currentDetailsIndex];
+        const currentDetails = fullAmountDashboardDetails[currentDetailsIndex];
         fullAmountDashboardDetails[currentDetailsIndex] = {
           ...currentDetails,
           layers,
@@ -1330,6 +1331,15 @@ export default {
           fullAmountPayload: "brother",
           isComponent: true,
         });
+        yield put({
+          type: "selectLayers",
+          payload: [
+            {
+              ...layerPanel,
+              selected: true,
+            },
+          ],
+        });
       }
     },
     *updateComponent(
@@ -1529,7 +1539,8 @@ export default {
     *referencePanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
       const { fullAmountRouteList } = bar;
-      let { fullAmountDashboardDetails, fullAmountComponents, fullAmountPanels } = bar;
+      let { fullAmountDashboardDetails, fullAmountComponents } = bar;
+      const { fullAmountPanels } = bar;
       const { panelConfig } = payload;
       // 先过滤出重复的引用、再过滤出已经存在于fullAmountDashboardDetails的引用
       fullAmountDashboardDetails.find((item: any) => item.id === panelConfig.id).states =

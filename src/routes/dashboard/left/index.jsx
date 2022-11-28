@@ -128,9 +128,23 @@ const Left = ({ dispatch, bar }) => {
   };
   //选择的树节点
   const onSelect = (curKey, e) => {
+    console.log("e", e);
+    console.log("curKey", curKey);
     let temp = curKey;
     const isSelected = e.selected;
     const { key } = e.node;
+    let selectedNodes = e.selectedNodes;
+    if (!e.nativeEvent.ctrlKey) {
+      dispatch({
+        type: "bar/save",
+        payload: {
+          isMultipleTree: false,
+        },
+      });
+      setIsCtrlKeyPressing(false);
+      temp = [key];
+      selectedNodes = [e.node];
+    }
     // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
     dispatch({
       type: "bar/setIsShowRightMenu",
@@ -156,9 +170,10 @@ const Left = ({ dispatch, bar }) => {
         },
       });
     }
+    // debugger;
     dispatch({
       type: "bar/selectLayers",
-      payload: e.selectedNodes,
+      payload: selectedNodes,
     });
   };
   // 响应右键点击
@@ -242,11 +257,7 @@ const Left = ({ dispatch, bar }) => {
     //   });
     // }
     let dragObj;
-    if (
-      (info.node.modules || []).length > 0 &&
-      info.node.props.expanded
-      // && dropPosition === 1
-    ) {
+    if ((info.node.modules || []).length > 0 && info.node.props.expanded) {
       loop(data, dragKey, (item, index, arr) => {
         arr.splice(index, 1);
         dragObj = item;
@@ -262,7 +273,6 @@ const Left = ({ dispatch, bar }) => {
         });
       }
     } else {
-      alert(2);
       loop(data, dragKey, (item, index, arr) => {
         arr.splice(index, 1);
         dragObj = item;

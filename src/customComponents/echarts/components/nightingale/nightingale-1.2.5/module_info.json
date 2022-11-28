@@ -1,0 +1,12 @@
+{
+	"name": "玫瑰图",
+	"moduleName": "nightingale",
+	"moduleVersion": "1.2.5",
+	"type": "chart",
+	"subType": "pie",
+	"photoPath": "/chart/nightingale/1.2.5/thumb-nightingale.png",
+	"configUrl": "\\config.js",
+	"author": "chendibo@gridsum.com",
+  "createTime": "2022-11-24 11:49",
+  "updateTime": "2022-11-24 11:49"
+}

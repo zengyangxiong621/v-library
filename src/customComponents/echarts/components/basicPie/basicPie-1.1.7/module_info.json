@@ -1,0 +1,12 @@
+{
+  "name": "饼图",
+  "moduleName": "basicPie",
+  "moduleVersion": "1.1.7",
+  "type": "chart",
+  "subType": "pie",
+  "photoPath": "/chart/basicPie/1.1.7/thumb-basicPie.png",
+  "configUrl": "\\config.js",
+  "author": "chendibo@gridsum.com",
+  "createTime": "2022-11-24 11:49",
+  "updateTime": "2022-11-24 11:49"
+}
