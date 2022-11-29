@@ -174,11 +174,11 @@ const IndicatorCard = (props) => {
   }
 
   useEffect(() => {
-    props.onDataChange({value, ...originData[0]})
+    props.onDataChange && props.onDataChange({value, ...originData[0]})
   }, [originData])
   
   const handleClick = (e) => {
-    props.onClick && props.onClick(e, {value, ...originData[0]})
+    props.onClick && props.onClick({value, ...originData[0]})
   }
   const handleMouseEnter = (e) => {
     props.onMouseEnter && props.onMouseEnter(e, {value, ...originData[0]})
