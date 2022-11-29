@@ -188,7 +188,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     const eventId = uuidv4();
     const actionId = uuidv4();
     panes.push({
-      trigger: "dataChange",
+      trigger: _data?.triggers[0]?.value || null,
       name: `事件${panes.length + 1}`,
       id: eventId,
       conditions: [],
@@ -670,7 +670,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                       onChange={(e) => eventTypeChange(e, pane)}
                       getPopupContainer={(triggerNode) => triggerNode.parentNode}
                     >
-                      {eventTypes.map((item) => {
+                      {(_data.triggers.length > 0 ? _data.triggers : eventTypes).map((item) => {
                         return (
                           <Option value={item.value} key={item.value}>
                             {item.name}
