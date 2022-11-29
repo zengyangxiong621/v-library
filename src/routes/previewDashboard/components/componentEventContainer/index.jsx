@@ -587,8 +587,7 @@ const ComponentEventContainer = ({
         display: isHideDefault ? "none" : "block",
       }}
     >
-      { 
-      props.componentConfig.moduleName === "bar" ? (
+      {props.componentConfig.moduleName === "bar" ? (
         <Bar onChange={handleValueChange} {...props}></Bar>
       ) : (
         <ErrorCatch
