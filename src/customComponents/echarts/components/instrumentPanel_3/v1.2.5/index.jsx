@@ -20,7 +20,7 @@ class ProtectionLevel extends Component {
     // 组件静态或者传入组件的数据
     const originData = this.props.comData || data;
     // originData中有多项数据，只取第一项
-    const firstData = originData[0];
+    const firstData = originData[0] || {};
     const textValue = firstData[finalFieldsArr[0]];
     const numberValue = firstData[finalFieldsArr[1]];
     const titleValue = firstData[finalFieldsArr[2]];
