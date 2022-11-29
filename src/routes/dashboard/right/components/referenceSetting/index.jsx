@@ -191,6 +191,9 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ];
+  const tabActiveChange = (key) => {
+    setActiveKey(key);
+  };
   const styleChange = debounce(async (key = "1", init = false, cb = function () {}) => {
     console.log("key", key);
     if (key !== "0" && init) {
@@ -405,6 +408,16 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
                 return null;
               }
               const TagName = componentLib[item.type];
+              if (item.type === "tabArray") {
+                return (
+                  <TagName
+                    data={item}
+                    onChange={(key, cb) => styleChange(key, false, cb)}
+                    onTabClick={tabActiveChange}
+                    key={index}
+                  />
+                );
+              }
               return (
                 <TagName
                   data={item}
