@@ -66,6 +66,17 @@ const ComponentEventContainer = ({
     }
     customEventsFunction(clickEvents, data);
   };
+
+  const handleDataChange = (data) => {
+    const mouseEnterEvents = events.filter((item) => item.trigger === "dataChange");
+    const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
+    if (mouseEnterActions.length === 0) {
+      return;
+    }
+    console.log("数据改变", data);
+    customEventsFunction(mouseEnterEvents, data);
+  };
+
   const handleInteractiveMouseEnter = (e, data) => {
     e.stopPropagation();
     e.preventDefault();
@@ -256,7 +267,7 @@ const ComponentEventContainer = ({
   //   type: 'publishDashboard/getComponentsData',
   //   payload: activeComponents
   // })
-  const handleValueChange = debounce((data) => {
+  const handleStatusChange = debounce((data) => {
     // 下钻流程
     getDrillDownData(data);
 
@@ -610,7 +621,8 @@ const ComponentEventContainer = ({
             onClick={handleInteractiveClick}
             onMouseEnter={handleInteractiveMouseEnter}
             onMouseLeave={handleInteractiveMouseLeave}
-            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+            onChange={handleStatusChange} // 状态变化
+            onDataChange={handleDataChange} // 当请求完成/数据变化
             dashboardId={previewDashboard.dashboardId}
             cRef={componentRef}
             isPreview={true}
