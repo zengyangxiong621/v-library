@@ -25,6 +25,7 @@ const SingleLayer = ({ bar, dispatch }) => {
   componentConfig.interaction = componentConfig.interaction || {
     mountAnimation: bar.layers.find((item) => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events,
+    triggers: componentConfig.triggers,
   };
   const styleConfig = componentConfig.config;
   const styleConfig1 = [styleConfig[0]]; // 位置信息

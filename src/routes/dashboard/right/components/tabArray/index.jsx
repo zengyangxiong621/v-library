@@ -102,7 +102,7 @@ const TabArray = (props) => {
     if (key !== activeKey) {
       setActiveKey(key);
       _data.activeKey = key;
-      // props.onChange(key)
+      props.onTabClick && props.onTabClick(key);
     }
   };
 

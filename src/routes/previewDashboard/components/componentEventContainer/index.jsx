@@ -599,7 +599,7 @@ const ComponentEventContainer = ({
       }}
     >
       {props.componentConfig.moduleName === "bar" ? (
-        <Bar onChange={handleValueChange} {...props}></Bar>
+        <Bar onChange={handleStatusChange} {...props}></Bar>
       ) : (
         <ErrorCatch
           app={componentConfig.name}
