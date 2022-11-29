@@ -177,7 +177,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
 
   return (
     <div className="DrillDownSetting-wrap">
-      {state.parentDataSample && (
+      {/* {state.parentDataSample && (
         <>
           <div className="tip-text">父级数据示例：</div>
           <div className="data-code-wraper">
@@ -189,7 +189,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
             />
           </div>
         </>
-      )}
+      )} */}
       {!state.isLastState && (
         <div className="level">
           <div className="level-title">下层组件：</div>

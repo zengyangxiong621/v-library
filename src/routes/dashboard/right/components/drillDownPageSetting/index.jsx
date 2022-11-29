@@ -33,11 +33,9 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
     top,
     width,
     height,
-    isScroll,
-    allowScroll,
-    animationType,
-    scrollTime,
-    animationTime,
+    breadcrumbPositionShow,
+    breadcrumbPositionX,
+    breadcrumbPositionY,
   } = panelConfig.config;
   const [key, setKey] = useState(uuidv4());
   const [form] = Form.useForm();
@@ -89,7 +87,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
           displayName: "",
           name: "breadcrumbPositionShow",
           type: "switch",
-          value: false,
+          value: breadcrumbPositionShow,
         },
         {
           displayName: "位置",
@@ -101,7 +99,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
               displayName: "X",
               name: "breadcrumbPositionX",
               type: "number",
-              value: 0,
+              value: breadcrumbPositionX,
               config: {
                 min: -10000,
                 max: 10000,
@@ -112,7 +110,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
               displayName: "Y",
               name: "breadcrumbPositionY",
               type: "number",
-              value: 0,
+              value: breadcrumbPositionY,
               config: {
                 min: -10000,
                 max: 10000,
