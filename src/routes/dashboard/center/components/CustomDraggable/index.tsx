@@ -23,6 +23,8 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
+import ChinaMap from "@/customComponents/echarts/components/chinaMap/v1.6.6";
+
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
 import {
@@ -993,7 +995,7 @@ const CustomDraggable = ({
                       style={{ width: "100%", height: "100%", pointerEvents: "none" }}
                       className="custom-draggable-component"
                     >
-                      {layer.moduleName === "bar" ? (
+                      {/* {layer.moduleName === "bar" ? (
                         <Bar
                           themeConfig={bar.componentThemeConfig}
                           onThemeChange={onThemeChange}
@@ -1009,7 +1011,16 @@ const CustomDraggable = ({
                             bar.dataContainerList,
                             bar.callbackArgs
                           )}
-                        ></Bar>
+                        ></Bar> */}
+                        { layer.moduleName === "chinaMap" ? (
+                            <ChinaMap
+                              themeConfig={bar.componentThemeConfig}
+                              onThemeChange={onThemeChange}
+                              onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                              componentConfig={component}
+                              fields={getFields(component)}
+                              comData={getComDataWithFilters(bar.componentData, component, bar.componentFilters, bar.dataContainerDataList, bar.dataContainerList, bar.callbackArgs)}
+                            ></ChinaMap> 
                       ) : (
                         <ErrorCatch
                           app={component.name}
