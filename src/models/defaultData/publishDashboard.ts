@@ -93,4 +93,6 @@ export const defaultData = {
   fullAmountDashboardDetails: [],
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: [],
+  drillDownComponentIdForCurClickComponent: [],
+  willSaveComponentInEveryDrillDownState: {},
 };

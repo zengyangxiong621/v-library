@@ -1,6 +1,5 @@
 /* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-import { getFields } from "@/utils/data";
 import { useState, useRef, useEffect } from "react";
 import { connect } from "dva";
 
@@ -211,7 +210,14 @@ const ComponentEventContainer = ({
   };
 
   const handleValueChange = debounce((data) => {
-    console.log("datadatadata", data);
+    // 保存当前点击的组件的下级组件
+    const targetIdArr = componentConfig.drillDownArr.map((item) => item.id);
+    dispatch({
+      type: "publishDashboard/save",
+      payload: {
+        drillDownComponentIdForCurClickComponent: targetIdArr,
+      },
+    });
     // 下钻流程
     getDrillDownData(data);
     const componentId = props.componentConfig.id;

@@ -18,6 +18,7 @@ const RecursiveComponent = (props: any) => {
     dispatch,
     scaleValue,
     panels,
+    stateId,
     addDrillDownLevel,
     changeBreadcrumbData,
   } = props;
@@ -69,6 +70,7 @@ const RecursiveComponent = (props: any) => {
                     id={layer.id}
                     isHideDefault={layer.hideDefault}
                     panels={panels}
+                    stateId={stateId}
                     isDrillDownPanel={true}
                     publishDashboard={publishDashboard}
                     dispatch={dispatch}
@@ -116,6 +118,7 @@ const RecursiveComponent = (props: any) => {
                       )}
                       scaleValue={scaleValue}
                       layerInfo={layer}
+                      stateId={stateId}
                       addDrillDownLevel={addDrillDownLevel}
                       changeBreadcrumbData={changeBreadcrumbData}
                       isHideDefault={layer.hideDefault}
