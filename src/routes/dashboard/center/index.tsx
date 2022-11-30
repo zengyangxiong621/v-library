@@ -691,8 +691,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
       const panelOrComponent: IComponent | IPanel = bar.selectedComponents[0];
       if ("type" in panelOrComponent) {
         const panel = panelOrComponent;
-        console.log("被选中的面板", panel);
-        console.log("panel", panel);
         panel.config = {
           ...panel.config,
           left: x,
@@ -700,6 +698,10 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
           width,
           height,
         };
+        dispatch({
+          type: "bar/setPanelConfig",
+          payload: panel,
+        });
       } else {
         // 这里深拷贝（因为componentConfig 也是深拷贝的）并且在缩放后 setComponentConfig，为了解决在缩放完成，立马更新到components、componentConfig，及时同步最新数据
         const component = deepClone(panelOrComponent);
@@ -721,7 +723,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
               item.value = height;
           }
         });
-        console.log("component", component);
         dispatch({
           type: "bar/setComponentConfig",
           payload: component,
