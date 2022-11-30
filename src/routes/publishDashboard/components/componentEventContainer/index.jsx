@@ -209,7 +209,17 @@ const ComponentEventContainer = ({
     return [...map.values()];
   };
 
-  const handleValueChange = debounce((data) => {
+  const handleDataChange = (data) => {
+    const mouseEnterEvents = events.filter((item) => item.trigger === "dataChange");
+    const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
+    if (mouseEnterActions.length === 0) {
+      return;
+    }
+    console.log("数据改变", data);
+    customEventsFunction(mouseEnterEvents, data);
+  };
+
+  const handleStatusChange = debounce((data) => {
     // 保存当前点击的组件的下级组件
     const targetIdArr = componentConfig.drillDownArr.map((item) => item.id);
     dispatch({
@@ -556,7 +566,8 @@ const ComponentEventContainer = ({
             onClick={handleInteractiveClick}
             onMouseEnter={handleInteractiveMouseEnter}
             onMouseLeave={handleInteractiveMouseLeave}
-            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+            onChange={handleStatusChange} // 状态变化
+            onDataChange={handleDataChange} // 当请求完成/数据变化
             dashboardId={publishDashboard.dashboardId}
             cRef={componentRef}
             isPreview={true}
