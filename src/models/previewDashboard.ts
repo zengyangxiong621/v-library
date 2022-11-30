@@ -236,6 +236,10 @@ export default {
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
+      const fullAmountPanels = previewDashboard.fullAmountDashboardDetails.reduce(
+        (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
+        []
+      );
       const panels = previewDashboard.fullAmountDashboardDetails.filter((item: any) =>
         layerPanels.find((panel: any) => panel.id === item.id)
       );
@@ -247,6 +251,7 @@ export default {
           fullAmountDashboardDetails: previewDashboard.fullAmountDashboardDetails,
           fullAmountLayers,
           panels,
+          fullAmountPanels,
           fullAmountComponents,
           fullAmountDynamicAndDrillDownPanels,
         },
@@ -268,19 +273,6 @@ export default {
           dashboardId,
           id: dashboardId,
         });
-        const layerPanels: any = layersPanelsFlat(layers);
-        const func = async (layerPanel: any) => {
-          try {
-            const panelConfig = await http({
-              url: `/visual/panel/detail/${layerPanel.id}`,
-              method: "get",
-            });
-            return panelConfig;
-          } catch (e) {
-            return null;
-          }
-        };
-        const panels: Array<IPanel> = yield Promise.all(layerPanels.map((item: any) => func(item)));
         yield (layers = deepForEach(layers, (layer: ILayerGroup | ILayerComponent) => {
           layer.singleShowLayer = false;
           delete layer.selected;

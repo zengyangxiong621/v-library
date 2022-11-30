@@ -430,13 +430,7 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
                   />
                 );
               }
-              return (
-                <TagName
-                  data={item}
-                  onChange={(key, cb) => styleChange(key, false, cb)}
-                  key={index}
-                />
-              );
+              return <TagName data={item} onChange={() => styleChange("1")} key={index} />;
             })}
           </ComponentCard>
           <div className="g-text-left g-m-4">提示：所选应用必须为已发布状态</div>

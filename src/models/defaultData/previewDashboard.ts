@@ -90,6 +90,7 @@ export const defaultData = {
   fullAmountLayers: [],
   fullAmountComponents: [],
   fullAmountDashboardDetails: [],
+  fullAmountPanels: [],
   isDashboardInit: false,
   fullAmountDynamicAndDrillDownPanels: [],
   drillDownComponentIdForCurClickComponent: [],
