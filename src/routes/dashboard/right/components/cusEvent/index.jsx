@@ -670,7 +670,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                       onChange={(e) => eventTypeChange(e, pane)}
                       getPopupContainer={(triggerNode) => triggerNode.parentNode}
                     >
-                      {(_data.triggers.length > 0 ? _data.triggers : eventTypes).map((item) => {
+                      {_data.triggers.map((item) => {
                         return (
                           <Option value={item.value} key={item.value}>
                             {item.name}
