@@ -101,6 +101,7 @@ const ComponentEventContainer = ({
   };
   // 移入
   const handleMouseEnter = debounce((e, data) => {
+    console.log(e,data, '3333333333333333333');
     e.stopPropagation();
     e.preventDefault();
     const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
