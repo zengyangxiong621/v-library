@@ -267,6 +267,14 @@ const ComponentEventContainer = ({
   //   payload: activeComponents
   // })
   const handleStatusChange = debounce((data) => {
+    // 保存当前点击的组件的下级组件
+    const targetIdArr = componentConfig.drillDownArr.map((item) => item.id);
+    dispatch({
+      type: "previewDashboard/save",
+      payload: {
+        drillDownComponentIdForCurClickComponent: targetIdArr,
+      },
+    });
     // 下钻流程
     getDrillDownData(data);
 
