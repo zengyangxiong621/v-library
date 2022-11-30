@@ -229,6 +229,15 @@ class RadarChart extends React.PureComponent {
   initChart() {
     this.canvasDom = document.getElementById(this.props.componentConfig.id);
     const radarChart = echarts.init(this.canvasDom);
+    radarChart.on('click',(params) => {
+      this.props.onClick && this.props.onClick(params.event.event,params)
+    })
+    radarChart.on('mouseover',(params) => {
+      this.props.onMouseEnter && this.props.onMouseEnter(params.event.event,params);
+    })
+    radarChart.on('mouseout',(params) => {
+      this.props.onMouseEnter && this.props.onMouseLeave(params.event.event,params);
+    })
     this.setState({
       chartDom: radarChart
     });
@@ -288,15 +297,6 @@ class RadarChart extends React.PureComponent {
       }
     });
   };
-  handleClick = (e) => {
-    this.props.onClick && this.props.onClick(e, this.props.comData);
-  };
-  handleMouseEnter = (e) => {
-    this.props.onMouseEnter && this.props.onMouseEnter(e, this.props.comData);
-  };
-  handleMouseLeave = (e) => {
-    this.props.onMouseEnter && this.props.onMouseLeave(e, this.props.comData);
-  };
 
   render() {
     const { comData, fields, themeConfig } = this.props;
@@ -335,9 +335,6 @@ class RadarChart extends React.PureComponent {
     return (
       <div
         id={this.props.componentConfig.id}
-        onClick={this.handleClick}
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
         style={{
           width: dimension.width,
           height: dimension.height
