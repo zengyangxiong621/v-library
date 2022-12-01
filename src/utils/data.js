@@ -174,7 +174,6 @@ const setDataContainerResult = (
     }
     if (componentConfig.dataContainers.length > 1) {
       const dataContainerIds = componentConfig.dataContainers.map((item) => item.id);
-      console.log("dataContainerIds", dataContainerIds);
       let data = dataContainerIds.reduce((pre, id) => {
         const container = dataContainerList.find((item) => item.id === id);
         let containerData = dataContainerDataList.find((item) => item.id === id).data;
@@ -200,7 +199,6 @@ const setDataContainerResult = (
       //   }
       //   return pre;
       // }, []);
-      console.log("data", data);
       return data;
     }
   }
@@ -263,7 +261,6 @@ const getCallbackParams = (componentCallbackArgs, currnetData) => {
   let comCallbackArgs = JSON.parse(JSON.stringify(filteredParams));
   // 给comCallbackArgs拥有相同变量的去重
   comCallbackArgs = duplicateFn(comCallbackArgs); // 后面覆盖前面
-  console.log(comCallbackArgs);
   componentCallbackArgs.forEach((item) => {
     result[item.target] = currnetData[item.origin];
   });
