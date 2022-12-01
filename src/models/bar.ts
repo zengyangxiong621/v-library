@@ -2539,8 +2539,6 @@ export default {
         ),
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
-      console.log("呵呵");
-      console.log("state.selectedComponents", state.selectedComponents);
       return {
         ...state,
       };

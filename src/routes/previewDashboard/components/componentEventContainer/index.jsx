@@ -20,7 +20,6 @@ const ComponentEventContainer = ({
   isHideDefault,
   ...props
 }) => {
-  console.log("isHideDefault", isHideDefault);
   const callbackArgs = previewDashboard.callbackArgs;
   const callbackParamsList = previewDashboard.callbackParamsList;
   const { componentConfig } = props;

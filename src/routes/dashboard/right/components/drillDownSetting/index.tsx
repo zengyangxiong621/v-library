@@ -151,7 +151,6 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     localStorageCopy.setItem("allHasParentReflect", JSON.stringify(finalReflect));
 
     // 需要改变 全局状态中的 componentConfig, 不然其它触发module/update接口时(比如移动一下组件),会覆盖这个带有drillDownArr的componentConfig
-    console.log("cccccccccccc", componentConfig);
     dispatch({
       type: "bar/setComponentConfig",
       payload: componentConfig,

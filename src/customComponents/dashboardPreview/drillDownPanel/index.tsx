@@ -35,7 +35,6 @@ const DrillDownPanel = ({
   // 获取面板详情接口
   const { states, config } = panel;
   const { animationTime = 0 } = config;
-  console.log("ccccccccccccccccccccc", config);
   const [state, setState] = useSetState<State>({
     overflow: "hidden",
     allData: [],
