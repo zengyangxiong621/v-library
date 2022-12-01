@@ -188,7 +188,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     const eventId = uuidv4();
     const actionId = uuidv4();
     panes.push({
-      trigger: _data?.triggers[0]?.value || null,
+      // trigger: _data?.triggers[0]?.value || null,
+      trigger: null,
       name: `事件${panes.length + 1}`,
       id: eventId,
       conditions: [],
@@ -436,8 +437,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
         layerId
       );
       if ("panelType" in layer) {
-        if (layer.panelType === 0) {
-          action.layerType = "dynamicPanel";
+        if ([0, 1, 2].includes(layer.panelType)) {
+          action.layerType = "panel";
         } else {
           action.layerType = "group";
         }
@@ -472,7 +473,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     action.action = val;
     if (action.action === "updateStatus") {
       const panel = findLayerById(bar.fullAmountLayers, action.component[0]);
-      action.panelStates = panel.modules.map((item) => ({ name: item.name, id: item.id }));
+      action.panelStates = [];
+      // action.panelStates = panel.modules.map((item) => ({ name: item.name, id: item.id }));
       console.log("action", action);
     } else {
       action.panelStates = [];
@@ -792,7 +794,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                       if (action.component.length === 0) {
                                         return true;
                                       }
-                                      if (action.layerType === "dynamicPanel") {
+                                      if (action.layerType === "panel") {
                                         return !["updateConfig"].includes(item.value);
                                       }
                                       if (action.layerType === "component") {
