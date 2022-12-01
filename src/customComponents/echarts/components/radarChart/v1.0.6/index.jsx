@@ -201,7 +201,7 @@ class RadarChart extends React.PureComponent {
     const axisLabel = this.formatConfig([this.getStyleData(config, "axisLabel")], []);
     let list = [];
     if (data.length) {
-      list = data[0][fields[0]] || [];
+      list = Array.isArray(data[0][fields[0]]) ? data[0][fields[0]] : [];
       list.map((item, index) => {
         if (!index && axisLabel.show) {
           item.axisLabel = {
