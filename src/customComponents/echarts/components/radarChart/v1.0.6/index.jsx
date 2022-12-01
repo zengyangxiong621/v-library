@@ -61,7 +61,7 @@ class RadarChart extends React.PureComponent {
   formatDataSeries(dataSeries, data) {
     const { componentThemeConfig } = this.props;
     let arr = [];
-    if (data && data.length) {
+    if (data && Array.isArray(data) && data.length) {
       // 默认设置
       let defaultData = {
         name: "名称",
