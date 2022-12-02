@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { useState, useRef, useEffect } from "react";
-import Bar from "@/customComponents/echarts/components/bar/index";
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4/index";
 import { connect } from "dva";
 
 import { cloneDeep } from "lodash";
@@ -57,8 +57,8 @@ const ComponentEventContainer = ({
     customEventsFunction(clickEvents, data);
   }, 300);
   const handleInteractiveClick = (e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const clickEvents = events.filter((item) => item.trigger === "click");
     const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (clickActions.length === 0) {
@@ -68,6 +68,7 @@ const ComponentEventContainer = ({
   };
 
   const handleDataChange = (data) => {
+    console.log(data, 'handleDataChange data------------------------------')
     const mouseEnterEvents = events.filter((item) => item.trigger === "dataChange");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -78,8 +79,9 @@ const ComponentEventContainer = ({
   };
 
   const handleInteractiveMouseEnter = (e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    console.log('handleInteractiveMouseEnter------------------------------------')
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -89,8 +91,8 @@ const ComponentEventContainer = ({
     customEventsFunction(mouseEnterEvents, data);
   };
   const handleInteractiveMouseLeave = (e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseOutEvents = events.filter((item) => item.trigger === "mouseLeave");
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseOutActions.length === 0) {
@@ -101,8 +103,8 @@ const ComponentEventContainer = ({
   };
   // 移入
   const handleMouseEnter = debounce((e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -113,8 +115,8 @@ const ComponentEventContainer = ({
   });
   // 移出
   const handleMouseLeave = debounce((e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseOutEvents = events.filter((item) => item.trigger === "mouseLeave");
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseOutActions.length === 0) {
@@ -598,8 +600,17 @@ const ComponentEventContainer = ({
         display: isHideDefault ? "none" : "block",
       }}
     >
-      {props.componentConfig.moduleName === "bar" ? (
-        <Bar onChange={handleStatusChange} {...props}></Bar>
+      {props.componentConfig.moduleName === "basicBar" ? (
+        <BasicBar {...props}
+        scale={scale}
+        onClick={handleInteractiveClick}
+        onMouseEnter={handleInteractiveMouseEnter}
+        onMouseLeave={handleInteractiveMouseLeave}
+        onChange={handleStatusChange} // 状态变化
+        onDataChange={handleDataChange} // 当请求完成/数据变化
+        dashboardId={previewDashboard.dashboardId}
+        cRef={componentRef}
+        isPreview={true}></BasicBar>
       ) : (
         <ErrorCatch
           app={componentConfig.name}

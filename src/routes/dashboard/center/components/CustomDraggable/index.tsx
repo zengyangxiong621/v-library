@@ -23,6 +23,7 @@ import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4";
 
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -995,7 +996,7 @@ const CustomDraggable = ({
                       className="custom-draggable-component"
                     >
                       {layer.moduleName === "bar" ? (
-                        <Bar
+                        <BasicBar
                           themeConfig={bar.componentThemeConfig}
                           onThemeChange={onThemeChange}
                           onChange={(val: any) => handleValueChange(val, component, layer.id)}
@@ -1010,7 +1011,7 @@ const CustomDraggable = ({
                             bar.dataContainerList,
                             bar.callbackArgs
                           )}
-                        ></Bar>             
+                        ></BasicBar>             
                       ) : (
                         <ErrorCatch
                           app={component.name}
