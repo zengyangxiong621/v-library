@@ -69,7 +69,6 @@ const EventDrawer = ({ bar, dispatch, ...props }) => {
     let table = [];
     const dataType = bar.componentConfig.dataType;
     if (dataType === "static") {
-      console.log(bar.componentConfig.staticData,'###########');
       table = bar.componentConfig.staticData.fields.map(item => {
         return {
           field: item.value,

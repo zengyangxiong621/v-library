@@ -20,11 +20,10 @@ const ComponentEventContainer = ({
   isHideDefault,
   ...props
 }) => {
-  console.log("isHideDefault", isHideDefault);
   const callbackArgs = previewDashboard.callbackArgs;
   const callbackParamsList = previewDashboard.callbackParamsList;
   const { componentConfig } = props;
-  const { websocketConfig } = componentConfig;
+  const { websocketConfig, drillDownArr } = componentConfig;
   // 拿到每个组件的websocketConfig，判断有无，则批量发起请求
   // 拿到type 0: 需sendMessage;  1: setSendData
   const [animationConfig] = useState({
@@ -268,10 +267,17 @@ const ComponentEventContainer = ({
   //   payload: activeComponents
   // })
   const handleStatusChange = debounce((data) => {
+    // 保存当前点击的组件的下级组件
+    const targetIdArr = componentConfig.drillDownArr.map((item) => item.id);
+    dispatch({
+      type: "previewDashboard/save",
+      payload: {
+        drillDownComponentIdForCurClickComponent: targetIdArr,
+      },
+    });
     // 下钻流程
     getDrillDownData(data);
 
-    console.log(websocketConfig, "websocketConfig");
     // 跨屏  建立websocket连接，发送数据
     // TODO 点击组件发出什么就先直接传什么
     // websocketConfig 组件内有消息且type为 0时发送
