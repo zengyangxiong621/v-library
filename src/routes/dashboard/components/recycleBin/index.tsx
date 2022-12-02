@@ -11,6 +11,7 @@ import { Drawer, Button, Card, Checkbox, Empty, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 import ListItem from "./components/listItem";
+import { Spin } from "antd";
 // import { deepClone } from "@/utils/index";
 
 const RecycleBin = (props: any) => {
@@ -19,6 +20,7 @@ const RecycleBin = (props: any) => {
   const [recycleLists, setRecycleLists] = useState<any>([]);
   const [selectedLists, setSelectedLists] = useState<any>([]);
   const [updateBtnLoading] = useState<boolean>(false);
+  const [recycleBinLoading, setRecycleBinLoading] = useState<boolean>(false);
 
   // 后端返回的回收站组件列表如果想要展示需要 处理一下
   const getTargetData = (data: any) => {
@@ -36,13 +38,19 @@ const RecycleBin = (props: any) => {
 
   // 获取可回收的组件列表
   const getRecycleModuleLists = async () => {
-    const data = await http({
-      url: `/visual/layer/recycle/list/${bar.dashboardId}`,
-      method: "get",
-    });
-    const formatArr = getTargetData(data);
-    setRecycleLists(formatArr);
-    // setRecycleLists([])
+    try {
+      setRecycleBinLoading(true);
+      const data = await http({
+        url: `/visual/layer/recycle/list/${bar.dashboardId}`,
+        method: "get",
+      });
+      setRecycleBinLoading(false);
+      const formatArr = getTargetData(data);
+      setRecycleLists(formatArr);
+      // setRecycleLists([])
+    } catch (error) {
+      setRecycleBinLoading(false);
+    }
   };
   useEffect(() => {
     if (visible) {
@@ -55,19 +63,24 @@ const RecycleBin = (props: any) => {
     const idArrs = selectedLists.map((x: any) => {
       return x.id;
     });
-    const data = await http({
-      url: "/visual/layer/recycle/delete",
-      method: "DELETE",
-      body: {
-        dashboardId: bar.dashboardId,
-        recycleItems: idArrs,
-      },
-    });
-    console.log("删除某些组件后，回收站中剩余的组件列表数据", data);
-    const { recycleItems } = data;
-    const hadFormatArr = getTargetData(recycleItems);
-    setRecycleLists(hadFormatArr);
-    setSelectedLists([]);
+    try {
+      setRecycleBinLoading(true);
+      const data = await http({
+        url: "/visual/layer/recycle/delete",
+        method: "DELETE",
+        body: {
+          dashboardId: bar.dashboardId,
+          recycleItems: idArrs,
+        },
+      });
+      setRecycleBinLoading(false);
+      const { recycleItems } = data;
+      const hadFormatArr = getTargetData(recycleItems);
+      setRecycleLists(hadFormatArr);
+      setSelectedLists([]);
+    } catch (error) {
+      setRecycleBinLoading(false);
+    }
   };
   // 删除回收站中的组件
   const deleteModule = () => {
@@ -110,6 +123,7 @@ const RecycleBin = (props: any) => {
       const idArrs = selectedLists.map((x: any) => {
         return x.id;
       });
+      setRecycleBinLoading(true);
       const { layers, components, recycleItems } = await http({
         url: "/visual/layer/recover",
         method: "post",
@@ -118,13 +132,10 @@ const RecycleBin = (props: any) => {
           recycleItems: idArrs,
         },
       });
+      setRecycleBinLoading(false);
       const hadFormatArr = getTargetData(recycleItems);
       setRecycleLists(hadFormatArr);
       setSelectedLists([]);
-      dispatch({
-        type: "bar/updateTree",
-        payload: layers,
-      });
       dispatch({
         type: "bar/updateComponents",
         payload: {
@@ -138,12 +149,18 @@ const RecycleBin = (props: any) => {
         type: "bar/getDashboardDetails",
         payload: bar.dashboardId,
       });
+      //@Mark 需要最后更新layers,否则恢复组件的时候会白屏
+      dispatch({
+        type: "bar/updateTree",
+        payload: layers,
+      });
       dispatch({
         type: "bar/save",
         payload: {},
       });
     } catch (error) {
       console.log("恢复回收组件出错", error);
+      setRecycleBinLoading(false);
     }
   };
 
@@ -210,74 +227,76 @@ const RecycleBin = (props: any) => {
         style={{ position: "absolute" }}
         maskStyle={{ animation: "unset" }}
       >
-        <div className="card-wrap">
-          <Card
-            title={
-              <div className="card-title g-flex g-justify-between">
-                <Checkbox
-                  indeterminate={
-                    selectedLists.length && selectedLists.length !== recycleLists.length
-                  }
-                  onChange={onCheckAllChange}
-                  checked={
-                    selectedLists.length &&
-                    recycleLists.length &&
-                    selectedLists.length === recycleLists.length
-                  }
-                >
-                  全选 ({selectedLists.length}/{recycleLists.length})
-                </Checkbox>
-                <div>
-                  <Button
-                    style={{ marginRight: 10 }}
-                    type="primary"
-                    ghost
-                    size="small"
-                    // loading={updateBtnLoading}
-                    disabled={selectedLists.length === 0}
-                    onClick={() => deleteModule()}
+        <Spin tip="Loading..." spinning={recycleBinLoading}>
+          <div className="card-wrap">
+            <Card
+              title={
+                <div className="g-flex g-justify-between">
+                  <Checkbox
+                    indeterminate={
+                      selectedLists.length && selectedLists.length !== recycleLists.length
+                    }
+                    onChange={onCheckAllChange}
+                    checked={
+                      selectedLists.length &&
+                      recycleLists.length &&
+                      selectedLists.length === recycleLists.length
+                    }
                   >
-                    删除
-                  </Button>
-                  <Button
-                    type="primary"
-                    size="small"
-                    loading={updateBtnLoading}
-                    disabled={selectedLists.length === 0}
-                    onClick={() => recoverModule()}
-                  >
-                    恢复
-                  </Button>
+                    全选 ({selectedLists.length}/{recycleLists.length})
+                  </Checkbox>
+                  <div>
+                    <Button
+                      style={{ marginRight: 10 }}
+                      type="primary"
+                      ghost
+                      size="small"
+                      // loading={updateBtnLoading}
+                      disabled={selectedLists.length === 0}
+                      onClick={() => deleteModule()}
+                    >
+                      删除
+                    </Button>
+                    <Button
+                      type="primary"
+                      size="small"
+                      loading={updateBtnLoading}
+                      disabled={selectedLists.length === 0}
+                      onClick={() => recoverModule()}
+                    >
+                      恢复
+                    </Button>
+                  </div>
                 </div>
+              }
+              size="small"
+              headStyle={{ background: "#333641" }}
+              bodyStyle={{
+                background: "#171b24",
+                minHeight: "165px",
+                padding: 0,
+              }}
+            >
+              <div className="card-body">
+                {recycleLists.length ? (
+                  recycleLists.map((item: any, index: number) => {
+                    return (
+                      <ListItem
+                        key={index}
+                        itemData={item}
+                        clickCheckbox={clickSingleCheckbox}
+                      ></ListItem>
+                    );
+                  })
+                ) : (
+                  <>
+                    <Empty description="暂无组件" imageStyle={{ marginTop: "15px" }}></Empty>
+                  </>
+                )}
               </div>
-            }
-            size="small"
-            headStyle={{ background: "#333641" }}
-            bodyStyle={{
-              background: "#171b24",
-              minHeight: "165px",
-              padding: 0,
-            }}
-          >
-            <div className="card-body">
-              {recycleLists.length ? (
-                recycleLists.map((item: any, index: number) => {
-                  return (
-                    <ListItem
-                      key={index}
-                      itemData={item}
-                      clickCheckbox={clickSingleCheckbox}
-                    ></ListItem>
-                  );
-                })
-              ) : (
-                <>
-                  <Empty description="暂无组件" imageStyle={{ marginTop: "15px" }}></Empty>
-                </>
-              )}
-            </div>
-          </Card>
-        </div>
+            </Card>
+          </div>
+        </Spin>
       </Drawer>
     </div>
   );
