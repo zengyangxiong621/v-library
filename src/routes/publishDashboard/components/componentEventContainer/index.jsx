@@ -1,6 +1,5 @@
 /* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
-import { getFields } from "@/utils/data";
 import { useState, useRef, useEffect } from "react";
 import { connect } from "dva";
 
@@ -210,8 +209,25 @@ const ComponentEventContainer = ({
     return [...map.values()];
   };
 
-  const handleValueChange = debounce((data) => {
-    console.log("datadatadata", data);
+  const handleDataChange = (data) => {
+    const mouseEnterEvents = events.filter((item) => item.trigger === "dataChange");
+    const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
+    if (mouseEnterActions.length === 0) {
+      return;
+    }
+    console.log("数据改变", data);
+    customEventsFunction(mouseEnterEvents, data);
+  };
+
+  const handleStatusChange = debounce((data) => {
+    // 保存当前点击的组件的下级组件
+    const targetIdArr = componentConfig.drillDownArr.map((item) => item.id);
+    dispatch({
+      type: "publishDashboard/save",
+      payload: {
+        drillDownComponentIdForCurClickComponent: targetIdArr,
+      },
+    });
     // 下钻流程
     getDrillDownData(data);
     const componentId = props.componentConfig.id;
@@ -476,12 +492,15 @@ const ComponentEventContainer = ({
   };
 
   const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
+    console.log("状态变化dom", dom);
     if (actionType === "updateStatus") {
       [...dom.children].forEach((item) => {
         if (item.dataset.id === stateId) {
-          item.style.display = "block";
+          // item.style.display = "block";
+          item.style.visibility = "visible";
         } else {
-          item.style.display = "none";
+          item.style.visibility = "hidden";
+          // item.style.display = "none";
         }
       });
     }
@@ -550,7 +569,8 @@ const ComponentEventContainer = ({
             onClick={handleInteractiveClick}
             onMouseEnter={handleInteractiveMouseEnter}
             onMouseLeave={handleInteractiveMouseLeave}
-            onChange={handleValueChange} // 状态变化，当请求完成/数据变化
+            onChange={handleStatusChange} // 状态变化
+            onDataChange={handleDataChange} // 当请求完成/数据变化
             dashboardId={publishDashboard.dashboardId}
             cRef={componentRef}
             isPreview={true}

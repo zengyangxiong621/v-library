@@ -1,0 +1,96 @@
+.component-select {
+  width: 100%;
+  height: 100%;
+}
+
+.component-select .ant-select-selector {
+  height: 100% !important;
+}
+
+.component-select .ant-select-selector .ant-select-selection-item {
+  align-self: center;
+}
+
+.component-select .ant-select-selector .ant-select-selection-placeholder {
+  align-self: center;
+  color: var(--inputColor);
+}
+
+.component-select .ant-select-selector {
+  background: var(--inputBg) !important;
+  background-position: center center;
+  /* 背景图不平铺 */
+  background-repeat: no-repeat;
+  /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+  background-attachment: fixed;
+  /* 让背景图基于容器大小伸缩 */
+  background-size: cover;
+  border: var(--borderWidth) var(--borderType) var(--borderColor) !important;
+  border-radius: var(--borderRadius) !important;
+}
+
+.component-select:hover .ant-select-selector {
+  border: var(--borderHoverWidth) var(--borderHoverType) var(--borderHoverColor) !important;
+  border-radius: var(--borderHoverRadius) !important;
+}
+
+.component-select .ant-select-arrow {
+  color: var(--inputColor);
+}
+
+.component-select.ant-select-focused .ant-select-selector {
+  border-color: var(--borderFocusColor) !important;
+  box-shadow: unset;
+}
+
+.component-select .ant-select-selector .ant-select-selection-item {
+  text-align: var(--inputAlign);
+  font-size: var(--inputFontSize);
+  color: var(--inputColor);
+  font-family: var(--inputFontFamily);
+  font-weight: var(--inputFontWeight);
+}
+
+.component-select-dropdown {
+  min-width: var(--width) !important;
+  width: var(--width) !important;
+  max-height: var(--optionsHeight);
+  overflow-y: auto;
+  top: var(--top) !important;
+}
+
+.component-select-dropdown .ant-select-item {
+  min-height: var(--itemHeight);
+  line-height: var(--itemHeight);
+  text-indent: var(--itemTextIndent);
+  margin-bottom: var(--itemMarginBottom);
+  font-size: var(--itemFontSize);
+  color: var(--itemColor);
+  font-family: var(--itemFontFamily);
+  font-weight: var(--itemFontWeight);
+  background-color: var(--itemBgc)
+}
+
+.component-select-dropdown .ant-select-item:last-child {
+  margin-bottom: 0;
+}
+
+.component-select-dropdown .ant-select-item.ant-select-item-option-active {
+  font-size: var(--itemActiveFontSize);
+  color: var(--itemActiveColor);
+  font-family: var(--itemActiveFontFamily);
+  font-weight: var(--itemActiveFontWeight);
+  background-color: var(--itemActiveBgc)
+}
+
+.component-select-dropdown .ant-select-item.ant-select-item-option-selected {
+  font-size: var(--itemSelectedFontSize);
+  color: var(--itemSelectedColor);
+  font-family: var(--itemSelectedFontFamily);
+  font-weight: var(--itemSelectedFontWeight);
+  background-color: var(--itemSelectedBgc);
+}
+
+.component-select-dropdown .ant-select-item-option-content {
+  transform: scale(var(--scale));
+}

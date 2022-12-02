@@ -121,10 +121,19 @@ const DrillDownPanel = ({
     });
   }, []);
 
+  console.log("state.allData", state.allData);
+
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
     if (activeIndex < stateIndex) return;
     setActiveIndex(stateIndex);
+    dispatch({
+      type: "previewDashboard/save",
+      payload: {
+        drillDownComponentIdForCurClickComponent: [],
+        // willSaveComponentInEveryDrillDownState: {},
+      },
+    });
   };
 
   const addDrillDownLevel = () => {
@@ -148,6 +157,8 @@ const DrillDownPanel = ({
       setState({ breadcrumbData: newArr });
     }
   };
+
+  // 下钻面板状态栏位置
   const breadcrumbStyle: any = {
     marginBottom: "20px",
     minWidth: "500px",
@@ -210,6 +221,7 @@ const DrillDownPanel = ({
             dispatch={dispatch}
             componentLists={item.components}
             panels={item.panels}
+            stateId={item.id}
             addDrillDownLevel={addDrillDownLevel}
             changeBreadcrumbData={changeBreadcrumbData}
           />

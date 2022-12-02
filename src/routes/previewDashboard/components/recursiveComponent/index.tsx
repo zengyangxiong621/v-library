@@ -19,14 +19,13 @@ const RecursiveComponent = (props: any) => {
     dispatch,
     scaleValue,
     panels,
+    stateId,
     addDrillDownLevel,
     changeBreadcrumbData,
     changeReflect,
     crossCallback,
     sendMessage,
   } = props;
-
-  // console.log('layersArr', layersArr);
 
   return (
     <div className="recursive-component-wrap">
@@ -76,6 +75,7 @@ const RecursiveComponent = (props: any) => {
                     id={layer.id}
                     isHideDefault={layer.hideDefault}
                     panels={panels}
+                    stateId={stateId}
                     isDrillDownPanel={true}
                     previewDashboard={previewDashboard}
                     dispatch={dispatch}
@@ -128,6 +128,7 @@ const RecursiveComponent = (props: any) => {
                       // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
                       scaleValue={scaleValue}
                       layerInfo={layer}
+                      stateId={stateId}
                       addDrillDownLevel={addDrillDownLevel}
                       changeBreadcrumbData={changeBreadcrumbData}
                       changeReflect={changeReflect}

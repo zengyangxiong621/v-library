@@ -307,6 +307,7 @@ const Tab = (props) => {
       };
     });
     setTabList(tabList);
+    props.onDataChange && props.onDataChange(tabList[activeKey] || {})
   }, [_fields, _data]);
 
   useEffect(() => {

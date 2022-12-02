@@ -43,14 +43,8 @@ const DynamicPanel = ({ publishDashboard, id, dispatch, panels, isHideDefault }:
     isLoading: false,
   });
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/show/${id}`,
-      method: "post",
-      body: {
-        pass,
-        dashboardId: panel.dashboardId,
-      },
-    });
+    const { components, layers, dashboardConfig } =
+      publishDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(
       layerPanels.map((item: any) => getStateDetails(item))
@@ -71,13 +65,9 @@ const DynamicPanel = ({ publishDashboard, id, dispatch, panels, isHideDefault }:
       backgroundImage,
     };
   };
-  const getStateDetails = async (layerPanel: any) => {
+  const getStateDetails = async ({ id }: any) => {
     try {
-      const panelConfig = await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
-        method: "get",
-      });
-      return panelConfig;
+      return publishDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch (e) {
       return null;
     }
@@ -192,7 +182,8 @@ const DynamicPanel = ({ publishDashboard, id, dispatch, panels, isHideDefault }:
             position: "absolute",
             width: "100%",
             height: "100%",
-            display: state.activeIndex === index ? "block" : "none",
+            // display: state.activeIndex === index ? "block" : "none",
+            visibility: state.activeIndex === index ? "visible" : "hidden",
             transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
             backgroundImage: item.backgroundImage ? `url('${item.backgroundImage}')` : "unset",
             backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",

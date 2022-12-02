@@ -78,3 +78,5 @@
  let value = decimalCount > 0 ? Number(num).toFixed(decimalCount) : num.split(".")[0]; // 小数位长度处理
 ```
 
+**v1.1.2(20221129)**：翻牌器组件自定义事件增加
+
