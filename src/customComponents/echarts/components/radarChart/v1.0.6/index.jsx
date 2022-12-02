@@ -220,9 +220,24 @@ class RadarChart extends React.PureComponent {
     this.initChart();
   }
 
+  componentDidUpdate(prevProps){
+    if(JSON.stringify(prevProps.comData) !== JSON.stringify(this.props.comData)){
+      this.props.onChange && this.props.onChange(this.props.comData)
+    }
+  }
+
   initChart() {
     this.canvasDom = document.getElementById(this.props.componentConfig.id);
     const radarChart = echarts.init(this.canvasDom);
+    radarChart.on('click',(params) => {
+      this.props.onClick && this.props.onClick(params.event.event,params)
+    })
+    radarChart.on('mouseover',(params) => {
+      this.props.onMouseEnter && this.props.onMouseEnter(params.event.event,params);
+    })
+    radarChart.on('mouseout',(params) => {
+      this.props.onMouseEnter && this.props.onMouseLeave(params.event.event,params);
+    })
     this.setState({
       chartDom: radarChart
     });
@@ -282,6 +297,7 @@ class RadarChart extends React.PureComponent {
       }
     });
   };
+
   render() {
     const { comData, fields, themeConfig } = this.props;
     const componentConfig = this.props.componentConfig || ComponentDefaultConfig;

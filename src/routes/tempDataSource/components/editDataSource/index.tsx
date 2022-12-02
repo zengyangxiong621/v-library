@@ -181,8 +181,6 @@ const EditDataSource = (props: any) => {
       "password",
       "username",
     ]);
-    console.log("fil", fileUrl);
-    console.log("vvvvvvvvvvvvvvvv", values);
     const finalBody = {
       authMethod: values.authMethod,
       kerberos: {

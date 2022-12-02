@@ -1,0 +1,9 @@
+{
+  "name": "wordText",
+  "version": "1.0.8",
+  "private": true,
+  "dependencies": {
+    "react": "17.0.2"
+  },
+  "devDependencies": {}
+}

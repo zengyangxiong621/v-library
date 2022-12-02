@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "", //画布id
   "moduleType": "chart",
   "moduleName": "radarChart", //组件标识
-  "moduleVersion": "1.0.3", //组件版本号
+  "moduleVersion": "1.0.6", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========

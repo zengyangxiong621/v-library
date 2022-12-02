@@ -1,6 +1,6 @@
 {
-  "name": "radarChart",
-  "version": "1.0.4",
+  "name": "zebraColumn",
+  "version": "1.1.4",
   "private": true,
   "dependencies": {
     "react": "17.0.2",
