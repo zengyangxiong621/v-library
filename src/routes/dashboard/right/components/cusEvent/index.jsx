@@ -173,6 +173,20 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     } else {
       setScaleProportion(1);
     }
+    //
+    tabpanes.forEach((item) => {
+      item.actions.forEach((action) => {
+        if (action.action === "updateStatus") {
+          // const panel = findLayerById(bar.fullAmountLayers, action.component[0]);
+          // action.panelStates = panel.modules.map((item) => ({ name: item.name, id: item.id }));
+          action.panelStates = bar.fullAmountDashboardDetails
+            .find((item) => item.id === action.component[0])
+            .states.map((item) => ({ name: item.name, id: item.id }));
+        } else {
+          action.panelStates = [];
+        }
+      });
+    });
   }, []);
 
   const eventExtra = () => (
@@ -472,10 +486,11 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   const actionTypeChange = (val, action) => {
     action.action = val;
     if (action.action === "updateStatus") {
-      const panel = findLayerById(bar.fullAmountLayers, action.component[0]);
-      action.panelStates = [];
+      // const panel = findLayerById(bar.fullAmountLayers, action.component[0]);
       // action.panelStates = panel.modules.map((item) => ({ name: item.name, id: item.id }));
-      console.log("action", action);
+      action.panelStates = bar.fullAmountDashboardDetails
+        .find((item) => item.id === action.component[0])
+        .states.map((item) => ({ name: item.name, id: item.id }));
     } else {
       action.panelStates = [];
     }

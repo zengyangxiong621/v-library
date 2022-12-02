@@ -492,12 +492,15 @@ const ComponentEventContainer = ({
   };
 
   const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
+    console.log("状态变化dom", dom);
     if (actionType === "updateStatus") {
       [...dom.children].forEach((item) => {
         if (item.dataset.id === stateId) {
-          item.style.display = "block";
+          // item.style.display = "block";
+          item.style.visibility = "visible";
         } else {
-          item.style.display = "none";
+          item.style.visibility = "hidden";
+          // item.style.display = "none";
         }
       });
     }
