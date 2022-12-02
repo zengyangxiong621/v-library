@@ -99,7 +99,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
               displayName: "X",
               name: "breadcrumbPositionX",
               type: "number",
-              value: breadcrumbPositionX,
+              value: breadcrumbPositionX || 0,
               config: {
                 min: -10000,
                 max: 10000,
@@ -110,7 +110,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
               displayName: "Y",
               name: "breadcrumbPositionY",
               type: "number",
-              value: breadcrumbPositionY,
+              value: breadcrumbPositionY || 0,
               config: {
                 min: -10000,
                 max: 10000,
