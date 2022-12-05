@@ -20,6 +20,7 @@ const EveryComponent = ({
   addDrillDownLevel,
   changeBreadcrumbData,
   publishDashboard,
+  isDrillDownPanel,
   dispatch,
   stateId,
   ...props
@@ -187,36 +188,39 @@ const EveryComponent = ({
   const [isRenderWhileDrill, setIsRenderWhileDrill] = useState(true);
   const [isRenderWhileBack, setIsRenderWhileBack] = useState(true);
   useEffect(() => {
-    const targetIdArr = publishDashboard.drillDownComponentIdForCurClickComponent;
-    const tempObj = publishDashboard.willSaveComponentInEveryDrillDownState;
-    if (targetIdArr.length) {
-      const temp = targetIdArr.includes(id);
-      setIsRenderWhileDrill(temp);
-      if (temp) {
-        tempObj[stateId] = [];
-        tempObj[stateId].push(id);
+    //@Prevent Bug: 这里应该只对下钻面板中的组件做处理，否则在大屏中任意一个下钻面板下钻的时候，其它的除该面板之外的组件会被屏蔽
+    if (isDrillDownPanel) {
+      const targetIdArr = publishDashboard.drillDownComponentIdForCurClickComponent;
+      const tempObj = publishDashboard.willSaveComponentInEveryDrillDownState;
+      if (targetIdArr.length) {
+        const temp = targetIdArr.includes(id);
+        setIsRenderWhileDrill(temp);
+        if (temp) {
+          tempObj[stateId] = [];
+          tempObj[stateId].push(id);
 
-        dispatch({
-          type: "publishDashboard/save",
-          payload: {
-            willSaveComponentInEveryDrillDownState: tempObj,
-          },
-        });
-      }
-      const preRenderCompInCurState = tempObj[stateId];
-      if (preRenderCompInCurState) {
-        const tempRes = preRenderCompInCurState.includes(id);
-        setIsRenderWhileBack(tempRes);
-      }
-    } else {
-      const preRenderCompInCurState = tempObj[stateId];
-      if (preRenderCompInCurState) {
-        const tempRes = preRenderCompInCurState.includes(id);
-        setIsRenderWhileBack(tempRes);
+          dispatch({
+            type: "publishDashboard/save",
+            payload: {
+              willSaveComponentInEveryDrillDownState: tempObj,
+            },
+          });
+        }
+        const preRenderCompInCurState = tempObj[stateId];
+        if (preRenderCompInCurState) {
+          const tempRes = preRenderCompInCurState.includes(id);
+          setIsRenderWhileBack(tempRes);
+        }
       } else {
-        setIsRenderWhileBack(true);
+        const preRenderCompInCurState = tempObj[stateId];
+        if (preRenderCompInCurState) {
+          const tempRes = preRenderCompInCurState.includes(id);
+          setIsRenderWhileBack(tempRes);
+        } else {
+          setIsRenderWhileBack(true);
+        }
+        setIsRenderWhileDrill(true);
       }
-      setIsRenderWhileDrill(true);
     }
   }, [publishDashboard.drillDownComponentIdForCurClickComponent]);
 

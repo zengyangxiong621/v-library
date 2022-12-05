@@ -24,6 +24,7 @@ const RecursiveComponent = (props: any) => {
     changeBreadcrumbData,
     changeReflect,
     crossCallback,
+    isDrillDownPanel,
     sendMessage,
   } = props;
 
@@ -113,6 +114,7 @@ const RecursiveComponent = (props: any) => {
                   {
                     <EveryComponent
                       key={ind}
+                      isDrillDownPanel={isDrillDownPanel}
                       componentData={targetComponent}
                       comData={getComDataWithFilters(
                         previewDashboard.componentData,

@@ -87,7 +87,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
           displayName: "",
           name: "breadcrumbPositionShow",
           type: "switch",
-          value: breadcrumbPositionShow,
+          value: breadcrumbPositionShow === undefined ? true : false,
         },
         {
           displayName: "位置",
