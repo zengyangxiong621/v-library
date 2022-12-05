@@ -124,7 +124,7 @@ const RecycleBin = (props: any) => {
         return x.id;
       });
       setRecycleBinLoading(true);
-      const { layers, components, recycleItems } = await http({
+      const { layers, components, recycleItems, panels } = await http({
         url: "/visual/layer/recover",
         method: "post",
         body: {
@@ -136,6 +136,21 @@ const RecycleBin = (props: any) => {
       const hadFormatArr = getTargetData(recycleItems);
       setRecycleLists(hadFormatArr);
       setSelectedLists([]);
+
+      if (panels.length) {
+        await dispatch({
+          type: "bar/getFullAmountDashboardDetails",
+          payload: {
+            layers,
+          },
+        });
+      }
+
+      // 刷新组件中的画布
+      dispatch({
+        type: "bar/getDashboardDetails",
+        payload: bar.dashboardId,
+      });
       dispatch({
         type: "bar/updateComponents",
         payload: {
@@ -144,20 +159,16 @@ const RecycleBin = (props: any) => {
           selected: [],
         },
       });
-      // 刷新组件中的画布
-      dispatch({
-        type: "bar/getDashboardDetails",
-        payload: bar.dashboardId,
-      });
       //@Mark 需要最后更新layers,否则恢复组件的时候会白屏
       dispatch({
         type: "bar/updateTree",
         payload: layers,
       });
-      dispatch({
-        type: "bar/save",
-        payload: {},
-      });
+
+      // dispatch({
+      //   type: "bar/save",
+      //   payload: {},
+      // });
     } catch (error) {
       console.log("恢复回收组件出错", error);
       setRecycleBinLoading(false);
