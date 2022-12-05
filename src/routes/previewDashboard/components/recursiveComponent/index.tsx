@@ -45,7 +45,7 @@ const RecursiveComponent = (props: any) => {
           <div data-id={isGroup ? layer.id : "component-" + layer.id} key={layer.id}>
             {isPanel ? (
               <div
-                className={"panel-container"}
+                className={`panel-container event-id-${layer.id}`}
                 style={{
                   position: "absolute",
                   left: targetPanel.config.left + "px",

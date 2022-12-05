@@ -178,7 +178,7 @@ const DrillDownPanel = ({
   }
   return (
     <div
-      className={`drill-down-panel panel-${id} event-id-${id}`}
+      className={`drill-down-panel panel-${id}`}
       style={{
         width: "100%",
         height: "100%",
@@ -206,7 +206,7 @@ const DrillDownPanel = ({
       )}
       {state.allData.map((item: any, index: number) => (
         <div
-          className={`status-wrap event-id-${id}`}
+          className={`status-wrap event-id-${item.id}`}
           style={{
             position: "absolute",
             width: "100%",

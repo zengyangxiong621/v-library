@@ -437,10 +437,10 @@ const ComponentEventContainer = ({
 
   const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
     if (action === "rotate") {
-      console.log("dom", dom);
       const rotateRegX = /rotateX\((.+?)\)/g;
       const rotateRegY = /rotateY\((.+?)\)/g;
       const rotateRegZ = /rotateZ\((.+?)\)/g;
+      const perspectiveReg = /perspective\((.+?)\)/g;
       if (rotateRegX.test(dom.style.transform)) {
         dom.style.transform = dom.style.transform.replace(rotateRegX, `rotateX(${rotateX}deg)`);
       } else {
@@ -455,6 +455,20 @@ const ComponentEventContainer = ({
         dom.style.transform = dom.style.transform.replace(rotateRegZ, `rotateZ(${rotateZ}deg)`);
       } else {
         dom.style.transform += `rotateZ(${rotateZ}deg)`;
+      }
+      if (perspective) {
+        if (perspectiveReg.test(dom.style.transform)) {
+          dom.style.transform = dom.style.transform.replace(
+            perspectiveReg,
+            `perspective(${500}px)`
+          );
+        } else {
+          dom.style.transform += `perspective(${500}px)`;
+        }
+      } else {
+        if (perspectiveReg.test(dom.style.transform)) {
+          dom.style.transform = dom.style.transform.replace(perspectiveReg, "");
+        }
       }
     }
   };
