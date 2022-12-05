@@ -234,9 +234,12 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
   const boxRef = useRef(null);
 
   const borderArr = ["r", "l", "t", "b", "br", "bl", "tr", "tl", "tc", "bc", "lc", "rc"];
+  const dataObj = {
+    style: props.style
+  }
   return (
     <div
-      {...props}
+      {...dataObj}
       ref={(ref) => {
         boxRef.current = ref;
         nodeRef.current = ref;
@@ -248,6 +251,7 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
               if (["r", "l"].includes(item)) {
                 return (
                   <span
+                    key={index}
                     onMouseDown={handleMouseDown}
                     className={item}
                     style={{ width: `${3 / bar.canvasScaleValue}px` }}
@@ -257,6 +261,7 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
               if (["t", "b"].includes(item)) {
                 return (
                   <span
+                    key={index}
                     onMouseDown={handleMouseDown}
                     className={item}
                     style={{ height: `${3 / bar.canvasScaleValue}px` }}
@@ -266,6 +271,7 @@ const ScaleContainer = ({ children, onScaleEnd, nodeRef, bar, isActive, mouse, .
               if (["br", "bl", "tr", "tl", "tc", "bc", "lc", "rc"].includes(item)) {
                 return (
                   <span
+                    key={index}
                     onMouseDown={handleMouseDown}
                     className={item}
                     style={{
