@@ -127,7 +127,7 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
       >
         <div className="data-container-body-wrapper">
           <div className="data-container-handle">
-            <Input
+            <Input.Search
               placeholder="请输入"
               maxLength={30}
               suffix={

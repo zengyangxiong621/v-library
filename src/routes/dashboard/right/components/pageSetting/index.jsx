@@ -66,11 +66,11 @@ const PageSetting = ({ bar, dispatch, ...props }) => {
       });
     }
   };
-
   return (
     <div className="PageSetting-wrap">
       <h3 className="pageset-header">页面设置</h3>
       <div className="content">
+      {/* form表单下的组件中又存在form表单，导致报 validateDOMNesting(...): <form> cannot appear as a descendant of <form>.错误 */}
         <Form className="custom-form" form={form} {...formItemLayout} colon={false}>
           {pageConfig ? (
             <React.Fragment>

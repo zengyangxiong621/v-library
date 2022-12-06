@@ -137,18 +137,18 @@ const Color = (props) => {
             />
           </div>
         ) : null}
-        <Form.Item noStyle name="hex">
+        <Form.Item noStyle name="hex" initialValue={color.hex}>
           <Input
-            defaultValue={color.hex}
+            // defaultValue={color.hex}
             className="input-hex"
             onBlur={(e) => {
               handleHexChange(e);
             }}
           />
         </Form.Item>
-        <Form.Item noStyle name="opacity">
+        <Form.Item noStyle name="opacity" initialValue={color.opacity}>
           <InputNumber
-            defaultValue={color.opacity}
+            // defaultValue={color.opacity}
             className="size-input input-opacity"
             onChange={(e) => {
               handleOpacityChange(e);
