@@ -37,7 +37,7 @@ type TConfigArr = THasTargetKeyConfigItem[];
 
 // 目前 粒度更细(多层级)的配置项 只能放在 value数组或者options数组中, 简单配置(一层对象)直接将value归为“other类型”,
 //@Mark 以后随着组件多样性以及丰富性可能扩展出其它key名 用来实现<value|options>一样的功能,那么相应的 mergeSameAndAddDiff 中的逻辑也需要进行对应的扩展, TMayChangeFlag 用于枚举出这些key,并确保coder 会在mergeSameAndAddDiff中加上<新key>对应的处理逻辑
-type TMayChangeFlag = "value" | "options" | "other";
+type TMayChangeFlag = "special" | "value" | "options" | "other";
 
 const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
   console.log("旧的config", oldConfig);
@@ -46,10 +46,14 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
     const valueMap = new Map();
     const otherMap = new Map(); // value 为 (string、number) || {}
     const optionMap = new Map();
+    // 处理  表格自定义列 这类特殊的配置项
+    const specialMap = new Map();
     oldConfig.forEach((x: TConfigItem) => {
       const { name, value, options } = x;
-      // if(name !== "customColumn") {
-      if (Array.isArray(value)) {
+      // 表格自定义列
+      if (name === "customColumn") {
+        specialMap.set(name, value);
+      } else if (Array.isArray(value)) {
         //@Mark 开发者配置组件时，应该保证同一层级(value || options)下 每项配置名(name)的唯一性，如果不小心copy多了一份，在map中重复set相同的key也仅仅只是覆盖，所以此处不判断map中是否已经有key为 name 的项
         valueMap.set(name, value);
       } else {
@@ -58,25 +62,36 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
       if (Array.isArray(options)) {
         optionMap.set(name, options);
       }
-      if (name === "sortedBy") {
-        console.log("valueMap", valueMap);
-        console.log("optionsMap", optionMap);
-        console.log("otherMap", otherMap);
-      }
-      // }
     });
     newConfig.forEach((item: TConfigItem) => {
       const { name, value, options } = item;
 
       // @Mark 选择器类型组件的配置信息中同时包含 options 和 value 两个选项,当这两项都存在的时候,直接走type为value时的逻辑
       let type: TMayChangeFlag = "other";
-      if (Array.isArray(value)) {
+      if (name === "customColumn") {
+        type = "special";
+      } else if (Array.isArray(value)) {
         type = "value";
       } else if (Array.isArray(options)) {
         type = value ? "other" : "options";
       }
 
       switch (type) {
+        case "special":
+          if (specialMap.has(name)) {
+            if (name === "customColumn") {
+              console.log("special Map", specialMap);
+              // // 对自定义列的配置采取合并而非覆盖
+              // const newTableValue = item.value;
+              // const oldTableValue = specialMap.get(name);
+              // const hadMergeTableValue = oldTableValue.concat(newTableValue);
+              const oldTableValue = specialMap.get(name);
+              item.value = oldTableValue;
+            }
+            // TODO 留待其它特殊的组件
+            // else{}
+          }
+          break;
         case "value":
           if (valueMap.has(name)) {
             const oldValue = valueMap.get(name);
