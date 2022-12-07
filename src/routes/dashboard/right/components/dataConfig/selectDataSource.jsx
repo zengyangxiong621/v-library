@@ -36,7 +36,7 @@ const SelectDataSource = (props) => {
       setSelectDatas(newData);
       setKey(uuidv4());
     });
-  }, [props.type]);
+  }, [props.type, _data.id]);
 
   const queryDataSource = async () => {
     let { content } = await http({
