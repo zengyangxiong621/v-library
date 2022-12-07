@@ -1,69 +1,43 @@
 const componentDefaultConfig = {
-  "id": "121", //组件ID
-  "uniqueTag": "24e1b3a2-60e0-4cef-8a5d-f04fd645f14b", // =========
-  "name": "超链接文本", //图层名称
+  "id": "", //组件ID
+  "uniqueTag": "", // ========= 24e1b3a2-60e0-4cef-8a5d-f04fd645f14b
+  "name": "时间器", //图层名称
   "parentId": "0", // 父组件 像是2D地图、3D地图 =================
-  "dashboardId": "11", //画布id
-  "moduleType": "text",
-  "moduleName": "hyperlinks", //组件标识
-  "moduleVersion": "1.0.4", //组件版本号
+  "dashboardId": "", //画布id
+
+  "moduleType": "assist",
+  "moduleName": "date1", //组件标识
+  "moduleVersion": "1.1.9", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
 
-  "autoUpdate": { "isAuto": false, "interval": 10 }, // =========
+  "autoUpdate": {"isAuto": false, "interval": 10}, // =========
   "thumb": "", // 缩略图 // =========
 
+  "dataFrom": 0,
   "dataConfig": {}, //数据源配置
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
-  "dataFrom": 0,
-  "dataContainers": [], // 默认选中容器
-  "triggers": [ // 下面是合集
-    {
-      "name": "当请求完成或数据变化时",
-      "value": "dataChange",
-    },
-    {
-      "name": "鼠标点击",
-      "value": "click",
-    },
-    {
-      "name": "鼠标移入",
-      "value": "mouseEnter",
-    },
-    {
-      "name": "鼠标移出",
-      "value": "mouseLeave",
-    }
-  ],
+  "dataContainers": [],
+  "isHideData": true,
   "staticData": {
     //静态数据
     "data": [
       {
-        "text": "超链接文本",
-        "url": "http://10.201.83.191:31005/dashboard-manage"
+        "date":"14:10:59 2022.05.24 星期二",
       }
     ],
     "fields": [
       {
-        "name": "text",
-        "value": "text",
-        "desc": "文本",
-        "status": true // 状态
+        "name": "date",
+        "value": "date",
       },
-      {
-        "name": "url",
-        "value": "url",
-        "desc": "地址",
-        "status": true // 状态
-      }
-    ]
+    ],
   },
 
   "useFilter": false,// =========
   "filters": [],
-
-  "events": [],
+  "events":[],
   "config": [
     // 样式配置
     {
@@ -87,12 +61,12 @@ const componentDefaultConfig = {
         {
           "name": "width",
           "displayName": "宽度",
-          "value": 500
+          "value": 600
         },
         {
           "name": "height",
           "displayName": "高度",
-          "value": 200
+          "value": 100
         }
       ]
     },
@@ -118,7 +92,7 @@ const componentDefaultConfig = {
           "value": 32
         },
         {
-          "name": "color",
+          "name": "themeTextColor",
           "displayName": "",
           "type": "color",
           "value": "#fff" // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -141,9 +115,19 @@ const componentDefaultConfig = {
         {
           "name": "lineHeight",
           "displayName": "行距",
-          "value": "48"
+          "value": 32
         }
       ]
+    },
+    {
+      "name": "spacing",
+      "displayName": "间距",
+      "value": 20,
+      type:"number",
+      "config": {
+          "step": 1,
+          suffix:"px",  // 输入框后缀
+      }
     },
     {
       "name": "align",
@@ -154,33 +138,16 @@ const componentDefaultConfig = {
           "name": "textAlign",
           "displayName": "水平对齐",
           "type": "align",
-          "value": "bothEnds" // left , center, right,bothEnds
+          "value": "left" // left , center, right,bothEnds
         },
         {
           "name": "textVertical",
           "displayName": "垂直对齐",
           "type": "vertical",
           "value": "top" // top bottom vertical
-        }
+        },
       ]
     },
-    // {
-    //   'name':"underline",
-    //   'displayName':'标题下划线',
-    //   'type':'radioGroup',
-    //   'direction':'horizontal', // 方向
-    //   'value': false,
-    //   'options': [
-    //     {
-    //       'name': '显示',
-    //       'value': true
-    //     },
-    //     {
-    //       'name': '隐藏',
-    //       'value': false
-    //     }
-    //   ]
-    // },
     {
       "name": "shadow",
       "displayName": "阴影",
@@ -196,7 +163,7 @@ const componentDefaultConfig = {
         },
         {
           "name": "shadow",
-          "displayName": "文本阴影",
+          "displayName": "外阴影",
           "type": "boxShadow",
           "value": {
             "color": "#0075FF", // 这里如果设置了透明度，则需要返回 rgba(0,0,0,0.9)
@@ -206,7 +173,7 @@ const componentDefaultConfig = {
           }
         }
       ]
-    }
+    },
   ],
   themes: [{
     id: "theme-default",

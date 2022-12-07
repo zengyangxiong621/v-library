@@ -179,9 +179,17 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
         if (action.action === "updateStatus") {
           // const panel = findLayerById(bar.fullAmountLayers, action.component[0]);
           // action.panelStates = panel.modules.map((item) => ({ name: item.name, id: item.id }));
-          action.panelStates = bar.fullAmountDashboardDetails
-            .find((item) => item.id === action.component[0])
-            .states.map((item) => ({ name: item.name, id: item.id }));
+          const currentDetails = bar.fullAmountDashboardDetails.find(
+            (item) => item.id === action.component[0]
+          );
+          if (currentDetails) {
+            action.panelStates = currentDetails.states.map((item) => ({
+              name: item.name,
+              id: item.id,
+            }));
+          } else {
+            action.panelStates = [];
+          }
         } else {
           action.panelStates = [];
         }
@@ -649,16 +657,17 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     currentAction.componentConfig = deepClone(data);
     let component = bar.fullAmountComponents.find((item) => item.id === currentAction.component[0]);
     component.config = deepClone([
-      ...copyComponentConfig.config.filter((item) =>
-        ["dimension", "hideDefault"].includes(item.name)
-      ),
-      ...data,
+      ...component.config.filter((item) => ["dimension", "hideDefault"].includes(item.name)),
+      ...currentAction.componentConfig,
     ]);
+    _data.events = tabpanes;
+    props.onChange(componentConfig);
     dispatch({
       type: "bar/save",
+      payload: {
+        componentConfig: component,
+      },
     });
-    _data.events = tabpanes;
-    props.onChange();
   };
 
   const handleComponentClose = () => {
@@ -1129,45 +1138,65 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   </Select>
                                 </Form.Item>
                               )}
-                              <Form.Item label="速率">
-                                <Select
-                                  className="custom-select"
-                                  placeholder="请选择"
-                                  defaultValue={action.animation.timingFunction}
-                                  style={{ marginBottom: 0 }}
-                                  onChange={(e) => timingFunctionChange(e, action)}
-                                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                                >
-                                  {timingFunctionType.map((item) => {
-                                    return (
-                                      <Option value={item.value} key={item.value}>
-                                        {item.name}
-                                      </Option>
-                                    );
-                                  })}
-                                </Select>
-                              </Form.Item>
-                              <Form.Item label="动画时长">
-                                <InputNumber
-                                  className="po-size-input sc-input"
-                                  min={0}
-                                  max={1000000}
-                                  step={1}
-                                  style={{ width: "100%" }}
-                                  defaultValue={action.animation.duration}
-                                  onBlur={(e) => durationChange(e, action)}
-                                />
-                              </Form.Item>
+
+                              {action.action !== "updateStatus" ? (
+                                <>
+                                  <Form.Item label="速率">
+                                    <Select
+                                      className="custom-select"
+                                      placeholder="请选择"
+                                      defaultValue={action.animation.timingFunction}
+                                      style={{ marginBottom: 0 }}
+                                      onChange={(e) => timingFunctionChange(e, action)}
+                                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                    >
+                                      {timingFunctionType.map((item) => {
+                                        return (
+                                          <Option value={item.value} key={item.value}>
+                                            {item.name}
+                                          </Option>
+                                        );
+                                      })}
+                                    </Select>
+                                  </Form.Item>
+                                  <Form.Item label="动画时长">
+                                    <InputNumber
+                                      className="po-size-input sc-input"
+                                      min={0}
+                                      max={1000000}
+                                      step={100}
+                                      style={{ width: "100%" }}
+                                      defaultValue={action.animation.duration}
+                                      onBlur={(e) => durationChange(e, action)}
+                                    />
+                                    <div
+                                      className="ant-input-group-addon input-num-suffix"
+                                      style={{ fontSize: 12 }}
+                                    >
+                                      ms
+                                    </div>
+                                  </Form.Item>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+
                               <Form.Item label="延时">
                                 <InputNumber
                                   className="po-size-input  sc-input"
                                   min={0}
-                                  max={10000}
-                                  step={1}
+                                  max={1000000}
+                                  step={100}
                                   style={{ width: "100%" }}
                                   defaultValue={action.animation.delay}
                                   onBlur={(e) => delayChange(e, action)}
                                 />
+                                <div
+                                  className="ant-input-group-addon input-num-suffix"
+                                  style={{ fontSize: 12 }}
+                                >
+                                  ms
+                                </div>
                               </Form.Item>
                               {["show", "hide", "show/hide"].includes(action.action) ? (
                                 <Form.Item label="隐藏卸载">

@@ -75,18 +75,24 @@ const ComponentCard = (props) => {
       const fetchComponentOptions = {
         moduleLastType: moduleType,
         moduleName,
-        moduleVersion: lastModuleVersion,
+        moduleLastVersion: lastModuleVersion,
       };
       window.eval(`${await importComponent(fetchComponentOptions)}`);
       const { ComponentDefaultConfig } = window.VComponents;
       const index = bar.fullAmountComponents.findIndex((item) => item.id === id);
       bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id });
-      dispatch({
-        type: "bar/save",
-      });
-      dispatch({
+      await dispatch({
         type: "bar/getDashboardDetails",
         payload: dashboardId,
+      });
+      await dispatch({
+        type: "bar/getFullAmountDashboardDetails",
+        payload: {
+          layers: bar.layers,
+        },
+      });
+      await dispatch({
+        type: "bar/save",
       });
     }
   };

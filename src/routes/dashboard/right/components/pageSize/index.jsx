@@ -66,48 +66,50 @@ const PageSize = (props) => {
   return (
     <Form className="custom-form" form={form} {...formItemLayout} colon={false}>
       <Form.Item name="recommend" label={_data.displayName}>
-        <Select
-          getPopupContainer={(triggerNode) => triggerNode.parentNode}
-          className="custom-select"
-          placeholder="请选择"
-          value={recommend}
-          onChange={recommendChange}
-        >
-          {_data.options.map((item) => {
-            return (
-              <Option value={item.value} key={item.value}>
-                {item.name}
-              </Option>
-            );
-          })}
-        </Select>
-        <Input.Group compact>
-          <Form.Item noStyle name="width">
-            <InputNumber
-              max={15000}
-              defaultValue={width}
-              className="size-input"
-              style={{ marginRight: "16px" }}
-              onChange={(value) => sizeChange("width", value)}
-            />
-          </Form.Item>
-          <Form.Item noStyle name="height">
-            <InputNumber
-              max={10000}
-              defaultValue={height}
-              className="size-input"
-              onChange={(value) => sizeChange("height", value)}
-            />
-          </Form.Item>
-        </Input.Group>
-        <Row>
-          <Col span={12} className="detail-txt">
-            宽度
-          </Col>
-          <Col span={12} className="detail-txt" style={{ textIndent: "8px" }}>
-            高度
-          </Col>
-        </Row>
+        <div>
+          <Select
+            getPopupContainer={(triggerNode) => triggerNode.parentNode}
+            className="custom-select"
+            placeholder="请选择"
+            value={recommend}
+            onChange={recommendChange}
+          >
+            {_data.options.map((item) => {
+              return (
+                <Option value={item.value} key={item.value}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </Select>
+          <Input.Group compact>
+            <Form.Item noStyle name="width" initialValue={width}>
+              <InputNumber
+                max={15000}
+                // defaultValue={width}
+                className="size-input"
+                style={{ marginRight: "16px" }}
+                onChange={(value) => sizeChange("width", value)}
+              />
+            </Form.Item>
+            <Form.Item noStyle name="height" initialValue={height}>
+              <InputNumber
+                max={10000}
+                // defaultValue={height}
+                className="size-input"
+                onChange={(value) => sizeChange("height", value)}
+              />
+            </Form.Item>
+          </Input.Group>
+          <Row>
+            <Col span={12} className="detail-txt">
+              宽度
+            </Col>
+            <Col span={12} className="detail-txt" style={{ textIndent: "8px" }}>
+              高度
+            </Col>
+          </Row>
+        </div>
       </Form.Item>
     </Form>
   );

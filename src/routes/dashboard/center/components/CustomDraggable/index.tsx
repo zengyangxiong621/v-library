@@ -81,6 +81,7 @@ const CustomDraggable = ({
   components: Array<IComponent>;
   panels: Array<IPanel>;
 }) => {
+  components = bar.fullAmountComponents;
   const callbackParamsList = bar.callbackParamsList;
   const callbackArgs = bar.callbackArgs;
   const scaleDragData = bar.scaleDragData;
@@ -866,7 +867,7 @@ const CustomDraggable = ({
           if (component) {
             staticData = component.staticData;
             style_config = component.config;
-            
+
             styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION);
             if (styleDimensionConfig) {
               Object.values(styleDimensionConfig.value).forEach((obj: any) => {
@@ -1011,7 +1012,7 @@ const CustomDraggable = ({
                             bar.dataContainerList,
                             bar.callbackArgs
                           )}
-                        ></BasicBar>             
+                        ></BasicBar>
                       ) : (
                         <ErrorCatch
                           app={component.name}

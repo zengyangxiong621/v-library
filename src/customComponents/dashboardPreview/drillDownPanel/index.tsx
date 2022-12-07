@@ -45,10 +45,8 @@ const DrillDownPanel = ({
   const [activeIndex, setActiveIndex] = useState(0);
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
-    });
+    const { components, layers, dashboardConfig } =
+      previewDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(
       layerPanels.map((item: any) => getStateDetails(item))
@@ -69,12 +67,9 @@ const DrillDownPanel = ({
       backgroundImage,
     };
   };
-  const getStateDetails = async (layerPanel: any) => {
+  const getStateDetails = async ({ id }: any) => {
     try {
-      return await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
-        method: "get",
-      });
+      return previewDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch (e) {
       return null;
     }
@@ -172,7 +167,7 @@ const DrillDownPanel = ({
 
   return (
     <div
-      className={`drill-down-panel panel-${id} event-id-${id}`}
+      className={`drill-down-panel panel-${id}`}
       style={{
         width: "100%",
         height: "100%",
@@ -201,7 +196,7 @@ const DrillDownPanel = ({
 
       {state.allData.map((item: any, index: number) => (
         <div
-          className={`status-wrap event-id-${id}`}
+          className={`status-wrap event-id-${item.id}`}
           style={{
             position: "absolute",
             width: "100%",
