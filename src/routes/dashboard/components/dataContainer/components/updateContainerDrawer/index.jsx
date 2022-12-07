@@ -192,7 +192,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   };
 
   // 数据接口刷新
-  const getData = async (dataConfig = {}) => {
+  const getData = async (containerData) => {
     try {
       const data = await http({
         method: "post",
@@ -207,7 +207,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
         dispatch({
           type: "bar/updateDataContainer",
           payload: {
-            containerData: { ...copyData, dataConfig },
+            containerData,
             data,
           },
         });
@@ -229,13 +229,17 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   const handleAutoUpdateChange = async (autoUpdate) => {
     setCopyData({ ...copyData, autoUpdate });
     await updateDataContainer({ ...copyData, autoUpdate });
-    await getData();
+    await getData({ ...copyData, autoUpdate });
   };
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
     setCopyData({ ...copyData, dataConfig });
-    await updateDataContainer({ ...copyData, data: dataConfig[copyData.dataType].data });
-    await getData();
+    await updateDataContainer({
+      ...copyData,
+      dataConfig,
+      data: dataConfig[copyData.dataType].data,
+    });
+    await getData({ ...copyData, dataConfig });
   };
 
   // 数据过滤器开关
