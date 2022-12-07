@@ -46,15 +46,9 @@ const DrillDownPanel = ({
   const [activeIndex, setActiveIndex] = useState(0);
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const pass = window.localStorage.getItem(panel.dashboardId);
-    const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/show/${id}`,
-      method: "post",
-      body: {
-        pass,
-        dashboardId: panel.dashboardId,
-      },
-    });
+    // const pass = window.localStorage.getItem(panel.dashboardId);
+    const { components, layers, dashboardConfig } =
+      publishDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(
       layerPanels.map((item: any) => getStateDetails(item))
@@ -75,13 +69,9 @@ const DrillDownPanel = ({
       backgroundImage,
     };
   };
-  const getStateDetails = async (layerPanel: any) => {
+  const getStateDetails = async ({ id }: any) => {
     try {
-      const panelConfig = await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
-        method: "get",
-      });
-      return panelConfig;
+      return publishDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch (e) {
       return null;
     }

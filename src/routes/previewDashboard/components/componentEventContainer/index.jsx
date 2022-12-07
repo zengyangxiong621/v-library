@@ -625,8 +625,21 @@ const ComponentEventContainer = ({
         display: isHideDefault ? "none" : "block",
       }}
     >
-      {props.componentConfig.moduleName === "basicBar" ? (
-        <BasicBar
+      <ErrorCatch
+        app={componentConfig.name}
+        user=""
+        token=""
+        max={1}
+        errorRender={
+          <RemoteComponentErrorRender
+            errorComponent={componentConfig.name}
+          ></RemoteComponentErrorRender>
+        }
+        onCatch={(errors) => {
+          console.log("组件报错信息：", errors, "组件id", componentConfig.id);
+        }}
+      >
+        <RemoteBaseComponent
           {...props}
           scale={scale}
           onClick={handleInteractiveClick}
@@ -637,36 +650,8 @@ const ComponentEventContainer = ({
           dashboardId={previewDashboard.dashboardId}
           cRef={componentRef}
           isPreview={true}
-        ></BasicBar>
-      ) : (
-        <ErrorCatch
-          app={componentConfig.name}
-          user=""
-          token=""
-          max={1}
-          errorRender={
-            <RemoteComponentErrorRender
-              errorComponent={componentConfig.name}
-            ></RemoteComponentErrorRender>
-          }
-          onCatch={(errors) => {
-            console.log("组件报错信息：", errors, "组件id", componentConfig.id);
-          }}
-        >
-          <RemoteBaseComponent
-            {...props}
-            scale={scale}
-            onClick={handleInteractiveClick}
-            onMouseEnter={handleInteractiveMouseEnter}
-            onMouseLeave={handleInteractiveMouseLeave}
-            onChange={handleStatusChange} // 状态变化
-            onDataChange={handleDataChange} // 当请求完成/数据变化
-            dashboardId={previewDashboard.dashboardId}
-            cRef={componentRef}
-            isPreview={true}
-          ></RemoteBaseComponent>
-        </ErrorCatch>
-      )}
+        ></RemoteBaseComponent>
+      </ErrorCatch>
     </div>
   );
 };
