@@ -108,16 +108,35 @@ const ModuleUpdate = (props: any) => {
         const index = bar.fullAmountComponents.findIndex((x: any) => x.id === item.id);
         bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id: item.id });
       });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
+      // const data = await http({
+      //   url: `/visual/application/dashboard/detail/${dashboardId}`,
+      //   method: "get",
+      // });
+      // const { layers, components } = data;
+      // 刷新组件中的画布
+      // await dispatch({
+      //   type: "bar/getDashboardDetails",
+      //   payload: {
+      //     cb: (args) => {
+      //       console.log(args);
+      //     },
+      //   },
+      // });
+      // await dispatch({
+      //   type: "bar/getFullAmountDashboardDetails",
+      //   payload: {
+      //     layers: bar.layers,
+      //   },
+      // });
+      // await dispatch({
+      //   type: "bar/save",
+      //   payload: {},
+      // });
     }
-    // alert('batch update')
-    dispatch({
-      type: "bar/save",
-    });
-    // 刷新组件中的画布
-    dispatch({
-      type: "bar/getDashboardDetails",
-      payload: bar.dashboardId,
-    });
     setUpdateBtnLoading(false);
   };
   const onCheckAllChange = (e: any) => {
