@@ -657,16 +657,17 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     currentAction.componentConfig = deepClone(data);
     let component = bar.fullAmountComponents.find((item) => item.id === currentAction.component[0]);
     component.config = deepClone([
-      ...copyComponentConfig.config.filter((item) =>
-        ["dimension", "hideDefault"].includes(item.name)
-      ),
-      ...data,
+      ...component.config.filter((item) => ["dimension", "hideDefault"].includes(item.name)),
+      ...currentAction.componentConfig,
     ]);
+    _data.events = tabpanes;
+    props.onChange(componentConfig);
     dispatch({
       type: "bar/save",
+      payload: {
+        componentConfig: component,
+      },
     });
-    _data.events = tabpanes;
-    props.onChange();
   };
 
   const handleComponentClose = () => {

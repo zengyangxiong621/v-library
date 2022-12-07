@@ -22,6 +22,7 @@ const SingleLayer = ({ bar, dispatch }) => {
   const { TabPane } = Tabs;
   const currentLayer = bar.selectedComponentOrGroup[0];
   const componentConfig = deepClone(bar.componentConfig);
+  console.log("哈哈哈", componentConfig);
   componentConfig.interaction = componentConfig.interaction || {
     mountAnimation: bar.layers.find((item) => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events,
@@ -242,16 +243,24 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const eventChange = debounce(() => {
+  const eventChange = debounce(async (isThemeUpdate = false) => {
     componentConfig.interaction.events = interactionConfig.events;
     dispatch({
-      type: "bar/setComponentConfig",
-      payload: componentConfig,
+      type: "bar/updateComponentThemeConfig",
+      payload: {
+        componentConfig,
+        interactionConfig,
+        isThemeUpdate,
+      },
     });
-    saveEventsData({
-      id: componentConfig.id,
-      events: interactionConfig.events,
-    });
+    // dispatch({
+    //   type: "bar/setComponentConfig",
+    //   payload: componentConfig,
+    // });
+    // await saveEventsData({
+    //   id: componentConfig.id,
+    //   events: interactionConfig.events,
+    // });
   }, 300);
 
   const saveEventsData = async (param) => {

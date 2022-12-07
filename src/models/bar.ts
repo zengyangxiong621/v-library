@@ -1881,6 +1881,33 @@ export default {
       });
     },
     *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {},
+    *updateComponentThemeConfig(
+      { payload: { componentConfig, interactionConfig, isThemeUpdate } }: any,
+      { call, put, select }: any
+    ): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const params = {
+        configs: [
+          {
+            id: componentConfig.id,
+            events: interactionConfig.events,
+          },
+        ],
+        dashboardId: bar.stateId || bar.dashboardId,
+      };
+      yield http({
+        url: "/visual/module/defineEvent",
+        method: "post",
+        body: params,
+      });
+      console.log("componentConfig componentConfig", deepClone(componentConfig));
+      if (!isThemeUpdate) {
+        yield put({
+          type: "setComponentConfig",
+          payload: componentConfig,
+        });
+      }
+    },
   },
 
   reducers: {
