@@ -1,10 +1,10 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import "./index.less";
 import { WEIZHICHICUN } from "./type";
 
 import { getTargetStyle } from "./type";
 import ComponentEventContainer from "@/routes/publishDashboard/components/componentEventContainer";
-
+import { connect } from "dva";
 // import RemoteBaseComponent from '@/components/RemoteBaseComponent';
 import { getFields } from "@/utils/data";
 
@@ -19,6 +19,10 @@ const EveryComponent = ({
   layerInfo,
   addDrillDownLevel,
   changeBreadcrumbData,
+  publishDashboard,
+  isDrillDownPanel,
+  dispatch,
+  stateId,
   ...props
 }: any) => {
   const { moduleName, events, id, config } = componentData;
@@ -180,6 +184,45 @@ const EveryComponent = ({
       };
     }
   }, []);
+  //@Mark (状态A -> 状态B)点击状态A中某个组件下钻到状态B的时候，只需要在状态B中渲染点击组件的下一层级的组件，并保留当前状态(A)中存在的所有组件id；点击面包屑返回上一级状态(A)时需要根据上一次下钻时保存的组件id来决定渲染哪些组件至状态A中
+  const [isRenderWhileDrill, setIsRenderWhileDrill] = useState(true);
+  const [isRenderWhileBack, setIsRenderWhileBack] = useState(true);
+  useEffect(() => {
+    //@Prevent Bug: 这里应该只对下钻面板中的组件做处理，否则在大屏中任意一个下钻面板下钻的时候，其它的除该面板之外的组件会被屏蔽
+    if (isDrillDownPanel) {
+      const targetIdArr = publishDashboard.drillDownComponentIdForCurClickComponent;
+      const tempObj = publishDashboard.willSaveComponentInEveryDrillDownState;
+      if (targetIdArr.length) {
+        const temp = targetIdArr.includes(id);
+        setIsRenderWhileDrill(temp);
+        if (temp) {
+          tempObj[stateId] = [];
+          tempObj[stateId].push(id);
+
+          dispatch({
+            type: "publishDashboard/save",
+            payload: {
+              willSaveComponentInEveryDrillDownState: tempObj,
+            },
+          });
+        }
+        const preRenderCompInCurState = tempObj[stateId];
+        if (preRenderCompInCurState) {
+          const tempRes = preRenderCompInCurState.includes(id);
+          setIsRenderWhileBack(tempRes);
+        }
+      } else {
+        const preRenderCompInCurState = tempObj[stateId];
+        if (preRenderCompInCurState) {
+          const tempRes = preRenderCompInCurState.includes(id);
+          setIsRenderWhileBack(tempRes);
+        } else {
+          setIsRenderWhileBack(true);
+        }
+        setIsRenderWhileDrill(true);
+      }
+    }
+  }, [publishDashboard.drillDownComponentIdForCurClickComponent]);
 
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
@@ -189,23 +232,33 @@ const EveryComponent = ({
   };
   return (
     <div>
-      <div className={`animation-id-${id}`} style={{ ...componentStyle }}>
-        <ComponentEventContainer
-          key={id}
-          id={id}
-          events={events}
-          version={"1.0.0"}
-          scale={scaleValue}
-          name={moduleName}
-          componentConfig={componentData}
-          fields={getFields(componentData)}
-          comData={comData}
-          getDrillDownData={getDrillDownData}
-          {...props}
-        ></ComponentEventContainer>
-      </div>
+      {isRenderWhileDrill && isRenderWhileBack ? (
+        <div
+          className={`preview-component-wrap animation-id-${id}`}
+          style={{
+            ...componentStyle,
+          }}
+        >
+          <ComponentEventContainer
+            {...props}
+            key={id}
+            id={id}
+            events={events}
+            version={"1.0.0"}
+            scale={scaleValue}
+            name={moduleName}
+            componentConfig={componentData}
+            fields={getFields(componentData)}
+            // comData={moduleData}
+            comData={comData}
+            getDrillDownData={getDrillDownData}
+          ></ComponentEventContainer>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
 
-export default memo(EveryComponent);
+export default memo(connect(({ publishDashboard }: any) => ({ publishDashboard }))(EveryComponent));

@@ -3,7 +3,7 @@ import "./index.less";
 import { BASEURL } from "@/services/request";
 import { connect } from "dva";
 
-import { Input, Select, Upload, message } from "antd";
+import { Input, Select, Upload, message, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 
@@ -23,7 +23,6 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   });
   const [inputValue, setInputValue] = useState("");
   // const [uploadFileUrl, setUploadFileUrl] = useState("");
-
   // 获取模板列表数据的方法
   const getDataDispatch = (finalBody: any) => {
     dispatch({
@@ -171,8 +170,10 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
   return (
     <div className="MyApplication-wrap" id="myApplicationPage">
       <div className="left">
-        {/* 左侧树 */}
-        <LeftTree clearSearchInputState={clearSearchInputState} spaceId={spaceId} />
+        <Spin spinning={dashboardManage.groupTreeLoading}>
+          {/* 左侧树 */}
+          <LeftTree clearSearchInputState={clearSearchInputState} spaceId={spaceId} />
+        </Spin>
       </div>
       <div className="right">
         <div className="right-header">
@@ -207,7 +208,9 @@ const MyApplication = ({ dashboardManage, dispatch, history }: any) => {
           </div>
         </div>
         {/* 右侧 */}
-        <RightContent spaceId={spaceId} listData={dashboardManage.templateList} />
+        <Spin spinning={dashboardManage.appListLoading}>
+          <RightContent spaceId={spaceId} listData={dashboardManage.templateList} />
+        </Spin>
       </div>
     </div>
   );

@@ -19,14 +19,14 @@ const RecursiveComponent = (props: any) => {
     dispatch,
     scaleValue,
     panels,
+    stateId,
     addDrillDownLevel,
     changeBreadcrumbData,
     changeReflect,
     crossCallback,
+    isDrillDownPanel,
     sendMessage,
   } = props;
-
-  // console.log('layersArr', layersArr);
 
   return (
     <div className="recursive-component-wrap">
@@ -45,7 +45,7 @@ const RecursiveComponent = (props: any) => {
           <div data-id={isGroup ? layer.id : "component-" + layer.id} key={layer.id}>
             {isPanel ? (
               <div
-                className={"panel-container"}
+                className={`panel-container event-id-${layer.id}`}
                 style={{
                   position: "absolute",
                   left: targetPanel.config.left + "px",
@@ -76,6 +76,7 @@ const RecursiveComponent = (props: any) => {
                     id={layer.id}
                     isHideDefault={layer.hideDefault}
                     panels={panels}
+                    stateId={stateId}
                     isDrillDownPanel={true}
                     previewDashboard={previewDashboard}
                     dispatch={dispatch}
@@ -113,6 +114,7 @@ const RecursiveComponent = (props: any) => {
                   {
                     <EveryComponent
                       key={ind}
+                      isDrillDownPanel={isDrillDownPanel}
                       componentData={targetComponent}
                       comData={getComDataWithFilters(
                         previewDashboard.componentData,
@@ -128,6 +130,7 @@ const RecursiveComponent = (props: any) => {
                       // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
                       scaleValue={scaleValue}
                       layerInfo={layer}
+                      stateId={stateId}
                       addDrillDownLevel={addDrillDownLevel}
                       changeBreadcrumbData={changeBreadcrumbData}
                       changeReflect={changeReflect}

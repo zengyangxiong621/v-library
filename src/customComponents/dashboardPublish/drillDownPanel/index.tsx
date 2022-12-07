@@ -1,10 +1,9 @@
-import React, { useEffect, memo, useState, useCallback } from "react";
+import React, { useEffect, memo, useState } from "react";
 import "./index.less";
 import { useSetState } from "ahooks";
 // import CustomDraggable from '../../../routes/dashboard/center/components/CustomDraggable'
 import RecursiveComponent from "@/routes/publishDashboard/components/recursiveComponent";
 import { http } from "@/services/request";
-import { connect } from "dva";
 import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type";
 import { layersReverse, deepClone } from "@/utils/index.js";
 import { layersPanelsFlat } from "@/utils";
@@ -47,15 +46,9 @@ const DrillDownPanel = ({
   const [activeIndex, setActiveIndex] = useState(0);
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const pass = window.localStorage.getItem(panel.dashboardId);
-    const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/show/${id}`,
-      method: "post",
-      body: {
-        pass,
-        dashboardId: panel.dashboardId,
-      },
-    });
+    // const pass = window.localStorage.getItem(panel.dashboardId);
+    const { components, layers, dashboardConfig } =
+      publishDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(
       layerPanels.map((item: any) => getStateDetails(item))
@@ -76,13 +69,9 @@ const DrillDownPanel = ({
       backgroundImage,
     };
   };
-  const getStateDetails = async (layerPanel: any) => {
+  const getStateDetails = async ({ id }: any) => {
     try {
-      const panelConfig = await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
-        method: "get",
-      });
-      return panelConfig;
+      return publishDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch (e) {
       return null;
     }
@@ -135,6 +124,13 @@ const DrillDownPanel = ({
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
     if (activeIndex < stateIndex) return;
     setActiveIndex(stateIndex);
+    dispatch({
+      type: "publishDashboard/save",
+      payload: {
+        drillDownComponentIdForCurClickComponent: [],
+        // willSaveComponentInEveryDrillDownState: {},
+      },
+    });
   };
 
   const addDrillDownLevel = () => {
@@ -158,30 +154,49 @@ const DrillDownPanel = ({
       setState({ breadcrumbData: newArr });
     }
   };
+
+  // 下钻面板状态栏位置
+  const breadcrumbStyle: any = {
+    marginBottom: "20px",
+    minWidth: "500px",
+  };
+  if (config.breadcrumbPositionShow) {
+    breadcrumbStyle.position = "absolute";
+    breadcrumbStyle.top = config.breadcrumbPositionY || 0;
+    breadcrumbStyle.left = config.breadcrumbPositionX || 0;
+    breadcrumbStyle.zIndex = 99999;
+  }
   return (
     <div
-      className={`drill-down-panel panel-${id} event-id-${id}`}
-      style={{ width: "100%", height: "100%", display: isHideDefault ? "none" : "block" }}
+      className={`drill-down-panel panel-${id}`}
+      style={{
+        width: "100%",
+        height: "100%",
+        display: isHideDefault ? "none" : "block",
+        position: "relative",
+      }}
     >
-      <div style={{ marginBottom: "20px", minWidth: "500px" }}>
-        <Breadcrumb>
-          {state.breadcrumbData.map((x: any, i: number) => {
-            return (
-              <Breadcrumb.Item
-                className={`custom-breadcrumb ${
-                  activeIndex === i ? "active-breadcrumb-item" : ""
-                } `}
-                onClick={() => breadcrumbClick(x, i)}
-              >
-                {x}
-              </Breadcrumb.Item>
-            );
-          })}
-        </Breadcrumb>
-      </div>
+      {config.breadcrumbPositionShow && (
+        <div style={{ ...breadcrumbStyle }}>
+          <Breadcrumb>
+            {state.breadcrumbData.map((x: any, i: number) => {
+              return (
+                <Breadcrumb.Item
+                  className={`custom-breadcrumb ${
+                    activeIndex === i ? "active-breadcrumb-item" : ""
+                  } `}
+                  onClick={() => breadcrumbClick(x, i)}
+                >
+                  {x}
+                </Breadcrumb.Item>
+              );
+            })}
+          </Breadcrumb>
+        </div>
+      )}
       {state.allData.map((item: any, index: number) => (
         <div
-          className={`status-wrap event-id-${id}`}
+          className={`status-wrap event-id-${item.id}`}
           style={{
             position: "absolute",
             width: "100%",
@@ -202,6 +217,7 @@ const DrillDownPanel = ({
             dispatch={dispatch}
             componentLists={item.components}
             panels={item.panels}
+            stateId={item.id}
             addDrillDownLevel={addDrillDownLevel}
             changeBreadcrumbData={changeBreadcrumbData}
           />

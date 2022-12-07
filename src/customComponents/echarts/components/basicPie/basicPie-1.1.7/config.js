@@ -5,7 +5,7 @@ const ComponentDefaultConfig = {
   parentId: "", // 父组件 像是2D地图、3D地图 =================
   dashboardId: "", //画布id
 
-  moduleName: "basicPie", //组件标识
+  moduleName: "pie", //组件标识
   moduleVersion: "1.1.7", //组件版本号
   moduleType: "chart",
 

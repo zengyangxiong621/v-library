@@ -126,12 +126,24 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
       name: "scrollTime",
       type: "number",
       value: scrollTime,
+      config: {
+        suffix: "ms",
+        max: 100000000,
+        min: 0,
+        step: 1000,
+      },
     },
     {
       displayName: "动画时长",
       name: "animationTime",
       type: "number",
       value: animationTime,
+      config: {
+        suffix: "ms",
+        max: 24000,
+        min: 0,
+        step: 1000,
+      },
     },
     {
       displayName: "引用列表",
@@ -191,6 +203,9 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
     //   }
     // }
   ];
+  const tabActiveChange = (key) => {
+    setActiveKey(key);
+  };
   const styleChange = debounce(async (key = "1", init = false, cb = function () {}) => {
     console.log("key", key);
     if (key !== "0" && init) {
@@ -405,13 +420,17 @@ const ReferenceSetting = ({ bar, dispatch, history, ...props }) => {
                 return null;
               }
               const TagName = componentLib[item.type];
-              return (
-                <TagName
-                  data={item}
-                  onChange={(key, cb) => styleChange(key, false, cb)}
-                  key={index}
-                />
-              );
+              if (item.type === "tabArray") {
+                return (
+                  <TagName
+                    data={item}
+                    onChange={(key, cb) => styleChange(key, false, cb)}
+                    onTabClick={tabActiveChange}
+                    key={index}
+                  />
+                );
+              }
+              return <TagName data={item} onChange={() => styleChange("1")} key={index} />;
             })}
           </ComponentCard>
           <div className="g-text-left g-m-4">提示：所选应用必须为已发布状态</div>

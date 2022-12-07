@@ -1209,8 +1209,8 @@ export default {
             dataType: "static",
           },
         });
-        if(["design", "myresource"].indexOf(itemData.moduleType) > -1){
-          itemData.moduleType = "assist"
+        if (["design", "myresource"].indexOf(itemData.moduleType) > -1) {
+          itemData.moduleType = "assist";
         }
         yield put({
           type: "updateComponents",
@@ -2609,6 +2609,14 @@ export default {
         return item.id === payload.id;
       });
       state.fullAmountComponents.splice(index, 1, state.componentConfig);
+      return { ...state };
+    },
+    setPanelConfig(state: IBarState, { payload }: any) {
+      state.panelConfig = payload;
+      const index = state.fullAmountPanels.findIndex((item: any) => {
+        return item.id === payload.id;
+      });
+      state.fullAmountPanels.splice(index, 1, state.panelConfig as any);
       return { ...state };
     },
     setGroupConfig(state: IBarState, { payload }: any) {

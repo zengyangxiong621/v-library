@@ -64,22 +64,16 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels, isHideDefault 
     }
     return componentData[component.id];
   };
-  const getStateDetails = async (layerPanel: any) => {
+  const getStateDetails = async ({ id }: any) => {
     try {
-      const panelConfig = await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
-        method: "get",
-      });
-      return panelConfig;
+      return previewDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch (e) {
       return null;
     }
   };
   const getReferenceDetails = async ({ name, id }: { name: string; id: string }) => {
-    const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
-    });
+    const { components, layers, dashboardConfig } =
+      previewDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(
       layerPanels.map((item: any) => getStateDetails(item))
@@ -107,6 +101,7 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels, isHideDefault 
       const data = await Promise.all(
         states.map((item: { name: string; id: string }) => getReferenceDetails(item))
       );
+      console.log("lipu", data);
       setState({
         allData: data,
         isLoading: true,
@@ -116,6 +111,7 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels, isHideDefault 
 
   useEffect(() => {
     let timer: any = null;
+    console.log("怎么说2", state.isLoading, allowScroll, state.allData);
     if (state.isLoading && allowScroll && state.allData.length > 1) {
       timer = setInterval(() => {
         let currentIndex = state.activeIndex + 1;
@@ -164,26 +160,13 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels, isHideDefault 
         clearInterval(timer);
       }
     };
-  }, [state.isLoading, state.activeIndex, state.allData.length]);
+  }, [state.isLoading, state.activeIndex, state.allData]);
 
-  useEffect(() => {
-    (async function () {
-      if (panel?.states[0]?.id) {
-        const data = await getReferenceDetails(panel.states[0]);
-        setState({
-          allData: [data],
-        });
-      } else {
-        setState({
-          allData: [],
-        });
-      }
-    })();
-  }, [panel.states[0]?.id || ""]);
+  console.log("state.allData", state.allData);
 
   return (
     <div
-      className={`reference-panel panel-${id} event-id-${id}`}
+      className={`reference-panel panel-${id}`}
       style={{
         width: "100%",
         height: "100%",
@@ -192,13 +175,14 @@ const ReferencePanel = ({ previewDashboard, id, dispatch, panels, isHideDefault 
     >
       {state.allData.map((item: any, index: number) => (
         <div
-          className={`status-wrap event-id-${id}`}
+          className={`status-wrap event-id-${item.id}`}
           data-id={item.id}
           style={{
             position: "absolute",
             width: "100%",
             height: "100%",
-            display: state.activeIndex === index ? "block" : "none",
+            // display: state.activeIndex === index ? "block" : "none",
+            visibility: state.activeIndex === index ? "visible" : "hidden",
             transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
             backgroundImage: item.backgroundImage ? `url('${item.backgroundImage}')` : "unset",
             backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",

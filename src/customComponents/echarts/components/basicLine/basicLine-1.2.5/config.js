@@ -1624,7 +1624,7 @@ const ComponentDefaultConfig = {
   filters: [],
   events: [],
   callbackArgs: [],
-  drillDownArray: [],
+  drillDownArr: [],
   themes: [
     {
       id: "theme-default",
