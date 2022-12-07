@@ -2636,7 +2636,7 @@ export default {
         return item.id === payload.id;
       });
       state.fullAmountComponents.splice(index, 1, state.componentConfig);
-      return { ...state };
+      return { ...state, fullAmountComponents: state.fullAmountComponents };
     },
     setPanelConfig(state: IBarState, { payload }: any) {
       state.panelConfig = payload;

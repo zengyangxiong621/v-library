@@ -124,7 +124,6 @@ const ModuleUpdate = (props: any) => {
           type: "bar/getDashboardDetails",
           payload: dashboardId,
         });
-
         await dispatch({
           type: "bar/getFullAmountDashboardDetails",
           payload: {
@@ -133,7 +132,6 @@ const ModuleUpdate = (props: any) => {
         });
         await dispatch({
           type: "bar/save",
-          payload: {},
         });
       }
 

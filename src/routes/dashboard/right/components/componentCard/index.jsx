@@ -81,17 +81,17 @@ const ComponentCard = (props) => {
       const { ComponentDefaultConfig } = window.VComponents;
       const index = bar.fullAmountComponents.findIndex((item) => item.id === id);
       bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id });
-      dispatch({
+      await dispatch({
         type: "bar/getDashboardDetails",
         payload: dashboardId,
       });
-      dispatch({
+      await dispatch({
         type: "bar/getFullAmountDashboardDetails",
         payload: {
           layers: bar.layers,
         },
       });
-      dispatch({
+      await dispatch({
         type: "bar/save",
       });
     }
