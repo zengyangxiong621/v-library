@@ -256,6 +256,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
 
   // 数据过滤器开关
   const filterBoxChange = async (e) => {
+    console.log("e", e);
     setCopyData({ ...copyData, useFilter: e.target.checked });
     await updateDataContainer({ ...copyData, useFilter: e.target.checked });
     dispatch({
@@ -268,7 +269,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
     if (e.target.checked) {
       data = handleDataFilter(data, copyData.filters);
     }
-    setResultData(data);
+    setResultData(data || []);
   };
   // 数据过滤器变化
   const selectedFiltersChange = async (filterId, componentFilters) => {

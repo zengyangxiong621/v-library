@@ -189,14 +189,18 @@ export default {
           if (item.dataType === "static") {
             data = item.staticData.data;
           } else {
-            data = await http({
-              method: "post",
-              url: "/visual/container/data/get",
-              body: {
-                id: item.id,
-                callBackParamValues: bar.callbackArgs,
-              },
-            });
+            try {
+              data = await http({
+                method: "post",
+                url: "/visual/container/data/get",
+                body: {
+                  id: item.id,
+                  callBackParamValues: bar.callbackArgs,
+                },
+              });
+            } catch (err) {
+              data = [];
+            }
           }
           bar.dataContainerDataList.push({ id: item.id, data });
         });
@@ -1965,7 +1969,9 @@ export default {
       // if (data) {
       if (container) {
         // container 存在，说明是修改
-        container.data = data;
+        if (data) {
+          container.data = data;
+        }
       } else {
         // 不存在则新增
         state.dataContainerDataList.unshift({ id: containerData.id, data });
