@@ -21,10 +21,6 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
   const [manageVisible, setManageVisible] = useState(false);
   const [itemData, setItemData] = useState(null);
   const [inputValue, setInputValue] = useState("");
-  const [filterDataList, setFilterDataList] = useState(bar.dataContainerList);
-  useEffect(() => {
-    setFilterDataList(bar.dataContainerList);
-  }, [bar.dataContainerList.length, bar.dataContainerList]);
   const showDrawer = () => {
     props.onChange(true);
   };
@@ -176,7 +172,7 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
                 <span>管理</span>
               </Button>
             </div>
-            {filterDataList.map((container) => (
+            {bar.dataContainerList.map((container) => (
               <DataContainerItem
                 onChoose={handleContainerClick}
                 onDelete={handleContainerDelete}

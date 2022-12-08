@@ -1962,20 +1962,25 @@ export default {
         (item: any) => item.id === containerData.id
       );
       const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
-      if (data) {
-        if (container) {
-          // container 存在，说明是修改
-          container.data = data;
-        } else {
-          // 不存在则新增
-          state.dataContainerDataList.unshift({ id: containerData.id, data });
-        }
+      // if (data) {
+      if (container) {
+        // container 存在，说明是修改
+        container.data = data;
+      } else {
+        // 不存在则新增
+        state.dataContainerDataList.unshift({ id: containerData.id, data });
       }
+      // }
       if (index !== -1) {
         state.dataContainerList[index] = containerData;
       } else {
         state.dataContainerList.unshift(containerData);
       }
+      console.log("--------");
+      console.log("state.dataContainerList", state.dataContainerList);
+      console.log("state.dataContainerDataList", state.dataContainerDataList);
+      console.log("-------");
+
       return {
         ...state,
         dataContainerList: state.dataContainerList,

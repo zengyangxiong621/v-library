@@ -354,8 +354,7 @@ const SingleLayer = ({ bar, dispatch }) => {
               })}
             </ComponentCard>
           </TabPane>
-          {
-            !componentConfig.isHideData &&
+          {!componentConfig.isHideData && (
             <TabPane tab="数据" key="2">
               <ComponentCard data={componentConfig}>
                 <DataConfig
@@ -371,7 +370,7 @@ const SingleLayer = ({ bar, dispatch }) => {
                 />
               </ComponentCard>
             </TabPane>
-          }
+          )}
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
               <LoadAnimation data={interactionConfig} onChange={interactionChange} />

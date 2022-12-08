@@ -472,7 +472,6 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     } else {
       action.layerType = "group";
     }
-    console.log("action", action);
     props.onChange();
   };
   const selectComponentSelect = (val, option, action) => {
@@ -661,7 +660,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       ...currentAction.componentConfig,
     ]);
     _data.events = tabpanes;
-    props.onChange(componentConfig);
+    props.onChange(true);
     dispatch({
       type: "bar/save",
       payload: {
