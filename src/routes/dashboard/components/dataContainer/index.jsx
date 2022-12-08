@@ -21,6 +21,7 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
   const [manageVisible, setManageVisible] = useState(false);
   const [itemData, setItemData] = useState(null);
   const [inputValue, setInputValue] = useState("");
+  const [filterCondition, setFilterCondition] = useState("");
   const showDrawer = () => {
     props.onChange(true);
   };
@@ -34,11 +35,12 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
     // todo
   };
   const handleSearch = (value) => {
-    setFilterDataList(
-      bar.dataContainerList.filter((item) => {
-        return item.name.indexOf(value) !== -1;
-      })
-    );
+    setFilterCondition(value);
+    // setFilterDataList(
+    //   bar.dataContainerList.filter((item) => {
+    //     return item.name.indexOf(value) !== -1;
+    //   })
+    // );
   };
   const handleContainerClick = (containerData) => {
     // Modal.success()
@@ -172,16 +174,20 @@ const DataContainer = ({ bar, dispatch, ...props }) => {
                 <span>管理</span>
               </Button>
             </div>
-            {bar.dataContainerList.map((container) => (
-              <DataContainerItem
-                onChoose={handleContainerClick}
-                onDelete={handleContainerDelete}
-                onCopy={handleContainerCopy}
-                onChange={handleContainerChange}
-                key={container.id}
-                data={container}
-              />
-            ))}
+            {bar.dataContainerList
+              .filter((item) => {
+                return item.name.indexOf(filterCondition) !== -1;
+              })
+              .map((container) => (
+                <DataContainerItem
+                  onChoose={handleContainerClick}
+                  onDelete={handleContainerDelete}
+                  onCopy={handleContainerCopy}
+                  onChange={handleContainerChange}
+                  key={container.id}
+                  data={container}
+                />
+              ))}
           </div>
         </Drawer>
         <ManageContainerDrawer
