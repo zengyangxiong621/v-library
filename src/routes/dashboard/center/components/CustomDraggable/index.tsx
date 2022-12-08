@@ -21,8 +21,6 @@ import { deepClone, layerComponentsFlat, calcGroupPosition } from "../../../../.
 import { generateTreeData } from "../../../../../utils/sideBar";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
-import Bar from "@/customComponents/echarts/components/bar/index";
-import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4";
 
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -995,24 +993,7 @@ const CustomDraggable = ({
                       style={{ width: "100%", height: "100%", pointerEvents: "none" }}
                       className="custom-draggable-component"
                     >
-                      {layer.moduleName === "bar" ? (
-                        <BasicBar
-                          themeConfig={bar.componentThemeConfig}
-                          onThemeChange={onThemeChange}
-                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          scale={bar.canvasScaleValue}
-                          componentConfig={component}
-                          fields={getFields(component)}
-                          comData={getComDataWithFilters(
-                            bar.componentData,
-                            component,
-                            bar.componentFilters,
-                            bar.dataContainerDataList,
-                            bar.dataContainerList,
-                            bar.callbackArgs
-                          )}
-                        ></BasicBar>
-                      ) : (
+                     (
                         <ErrorCatch
                           app={component.name}
                           user=""
