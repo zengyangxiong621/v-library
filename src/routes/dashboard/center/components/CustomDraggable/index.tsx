@@ -19,7 +19,6 @@ import {
 } from "./type";
 import { deepClone, layerComponentsFlat, calcGroupPosition } from "../../../../../utils";
 import { generateTreeData } from "../../../../../utils/sideBar";
-import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
 import Bar from "@/customComponents/echarts/components/bar/index";
