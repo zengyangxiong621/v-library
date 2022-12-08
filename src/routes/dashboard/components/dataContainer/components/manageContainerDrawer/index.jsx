@@ -103,6 +103,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
       })
     );
   };
+  console.log("filterDataList", filterDataList);
   return (
     <Drawer
       title={

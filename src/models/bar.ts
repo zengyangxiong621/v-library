@@ -189,14 +189,18 @@ export default {
           if (item.dataType === "static") {
             data = item.staticData.data;
           } else {
-            data = await http({
-              method: "post",
-              url: "/visual/container/data/get",
-              body: {
-                id: item.id,
-                callBackParamValues: bar.callbackArgs,
-              },
-            });
+            try {
+              data = await http({
+                method: "post",
+                url: "/visual/container/data/get",
+                body: {
+                  id: item.id,
+                  callBackParamValues: bar.callbackArgs,
+                },
+              });
+            } catch (err) {
+              data = [];
+            }
           }
           bar.dataContainerDataList.push({ id: item.id, data });
         });
@@ -1962,20 +1966,27 @@ export default {
         (item: any) => item.id === containerData.id
       );
       const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
-      if (data) {
-        if (container) {
-          // container 存在，说明是修改
+      // if (data) {
+      if (container) {
+        // container 存在，说明是修改
+        if (data) {
           container.data = data;
-        } else {
-          // 不存在则新增
-          state.dataContainerDataList.unshift({ id: containerData.id, data });
         }
+      } else {
+        // 不存在则新增
+        state.dataContainerDataList.unshift({ id: containerData.id, data });
       }
+      // }
       if (index !== -1) {
         state.dataContainerList[index] = containerData;
       } else {
         state.dataContainerList.unshift(containerData);
       }
+      console.log("--------");
+      console.log("state.dataContainerList", state.dataContainerList);
+      console.log("state.dataContainerDataList", state.dataContainerDataList);
+      console.log("-------");
+
       return {
         ...state,
         dataContainerList: state.dataContainerList,
