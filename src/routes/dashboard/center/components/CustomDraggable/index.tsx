@@ -1026,7 +1026,7 @@ const CustomDraggable = ({
                             onChange={(val: any) => handleValueChange(val, component, layer.id)}
                           ></RemoteBaseComponent>
                         </ErrorCatch>
-                      )}
+                      )
                     </div>
                   </>
                 )}
