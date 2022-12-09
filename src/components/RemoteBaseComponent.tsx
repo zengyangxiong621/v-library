@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { connect } from "dva";
 import { http } from "@/services/request";
+import { Spin } from "antd";
 
 const RemoteBaseComponent = (props: any) => {
   const { componentConfig, bar } = props;
@@ -10,7 +11,7 @@ const RemoteBaseComponent = (props: any) => {
   const isExit = typeof moduleType === "undefined";
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
-  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const importComponent = useCallback(() => {
     return axios
@@ -49,6 +50,7 @@ const RemoteBaseComponent = (props: any) => {
     const { default: component } = (window as any).VComponents;
     await getComponentData(componentConfig);
     setComponent(() => component);
+    setLoading(false);
   }, [importComponent, setComponent]);
 
   useEffect(() => {
@@ -56,6 +58,19 @@ const RemoteBaseComponent = (props: any) => {
       loadComp();
     }
   }, [loadComp]);
+
+  if (loading) {
+    return (
+      <Spin
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
+      />
+    );
+  }
 
   if (Comp) {
     return <Comp {...props} />;

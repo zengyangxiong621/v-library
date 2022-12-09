@@ -993,40 +993,38 @@ const CustomDraggable = ({
                       style={{ width: "100%", height: "100%", pointerEvents: "none" }}
                       className="custom-draggable-component"
                     >
-                     (
-                        <ErrorCatch
-                          app={component.name}
-                          user=""
-                          token=""
-                          max={1}
-                          errorRender={
-                            <RemoteComponentErrorRender
-                              errorComponent={component.name}
-                            ></RemoteComponentErrorRender>
-                          }
-                          onCatch={(errors) => {
-                            console.log("组件报错信息：", errors, "组件id", layer.id);
-                          }}
-                        >
-                          <RemoteBaseComponent
-                            themeConfig={bar.componentThemeConfig}
-                            onThemeChange={onThemeChange}
-                            key={layer.id}
-                            componentConfig={component}
-                            fields={getFields(component)}
-                            comData={getComDataWithFilters(
-                              bar.componentData,
-                              component,
-                              bar.componentFilters,
-                              bar.dataContainerDataList,
-                              bar.dataContainerList,
-                              bar.callbackArgs,
-                              layer
-                            )}
-                            onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          ></RemoteBaseComponent>
-                        </ErrorCatch>
-                      )
+                      <ErrorCatch
+                        app={component.name}
+                        user=""
+                        token=""
+                        max={1}
+                        errorRender={
+                          <RemoteComponentErrorRender
+                            errorComponent={component.name}
+                          ></RemoteComponentErrorRender>
+                        }
+                        onCatch={(errors) => {
+                          console.log("组件报错信息：", errors, "组件id", layer.id);
+                        }}
+                      >
+                        <RemoteBaseComponent
+                          themeConfig={bar.componentThemeConfig}
+                          onThemeChange={onThemeChange}
+                          key={layer.id}
+                          componentConfig={component}
+                          fields={getFields(component)}
+                          comData={getComDataWithFilters(
+                            bar.componentData,
+                            component,
+                            bar.componentFilters,
+                            bar.dataContainerDataList,
+                            bar.dataContainerList,
+                            bar.callbackArgs,
+                            layer
+                          )}
+                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                        ></RemoteBaseComponent>
+                      </ErrorCatch>
                     </div>
                   </>
                 )}
