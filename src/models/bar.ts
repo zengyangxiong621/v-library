@@ -54,7 +54,7 @@ import { DIMENSION } from "../routes/dashboard/center/constant";
 import { generateLayers } from "./utils/generateLayers";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
 import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
-import { http } from "../services/request";
+import { http } from "@/services/request";
 import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve";
 import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
 import dashboard from "./dashboard";
@@ -485,10 +485,10 @@ export default {
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
-      yield yield put({
-        type: "getComponentsData",
-        payload: fullAmountComponents,
-      });
+      // yield yield put({
+      //   type: "getComponentsData",
+      //   payload: fullAmountComponents,
+      // });
       // 全量面板
       const fullAmountPanels = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),

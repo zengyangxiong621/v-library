@@ -1,13 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { connect } from "dva";
+import { http } from "@/services/request";
 
 const RemoteBaseComponent = (props: any) => {
-  const { componentConfig } = props;
+  const { componentConfig, bar } = props;
+  const componentData = bar.componentData;
   const { moduleType, moduleName, moduleVersion } = componentConfig;
   const isExit = typeof moduleType === "undefined";
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
+  const [data, setData] = useState([]);
 
   const importComponent = useCallback(() => {
     return axios
@@ -19,9 +22,32 @@ const RemoteBaseComponent = (props: any) => {
       .then((res) => res.data);
   }, [moduleType, moduleName, moduleVersion]);
 
+  const getComponentData = async (component) => {
+    try {
+      const data = await http({
+        url: "/visual/module/getData",
+        method: "post",
+        body: {
+          moduleId: component.id,
+          dataType: component.dataType,
+          callBackParamValues: bar.callbackArgs,
+        },
+      });
+      if (data) {
+        componentData[component.id] = component.dataType !== "static" ? data : data.data;
+      } else {
+        throw new Error("请求不到数据");
+      }
+    } catch (err) {
+      componentData[component.id] = null;
+    }
+    return componentData[component.id];
+  };
+
   const loadComp = useCallback(async () => {
     window.eval(`${await importComponent()}`);
     const { default: component } = (window as any).VComponents;
+    await getComponentData(componentConfig);
     setComponent(() => component);
   }, [importComponent, setComponent]);
 
