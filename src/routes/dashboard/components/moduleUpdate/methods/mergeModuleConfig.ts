@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { deepClone } from "@/utils/index";
+/******** @ToTop newConfig/oldConfig中 <同层级> 的 <任意一项> 中的name不可以重复 **********/
 
 type TIndexSignature = {
   [k: string]: string | number;
@@ -40,9 +40,9 @@ type TConfigArr = THasTargetKeyConfigItem[];
 type TMayChangeFlag = "special" | "value" | "options" | "other";
 
 const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
-  console.log("旧的config", oldConfig);
-  console.log("新的config~~~~~~~~", newConfig);
-  const recursive = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
+  // console.log("旧的config", oldConfig);
+  // console.log("新的config~~~~~~~~", newConfig);
+  const recursiveFn = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
     const valueMap = new Map();
     const otherMap = new Map(); // value 为 (string、number) || {}
     const optionMap = new Map();
@@ -80,28 +80,28 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
         case "special":
           if (specialMap.has(name)) {
             if (name === "customColumn") {
-              console.log("special Map", specialMap);
-              // // 对自定义列的配置采取合并而非覆盖
-              // const newTableValue = item.value;
-              // const oldTableValue = specialMap.get(name);
-              // const hadMergeTableValue = oldTableValue.concat(newTableValue);
+              const newTableValue = item.value;
+              const newTableValueLength = newTableValue.length;
               const oldTableValue = specialMap.get(name);
-              item.value = oldTableValue;
+              const oldTableRestValue = oldTableValue.slice(newTableValueLength);
+              const hadMergeTableValue = mergeSameAndAddDiff(oldTableValue, newTableValue);
+              item.value = hadMergeTableValue.concat(oldTableRestValue);
             }
             // TODO 留待其它特殊的组件
             // else{}
           }
+          // specialMap.clear();
           break;
         case "value":
           if (valueMap.has(name)) {
             const oldValue = valueMap.get(name);
-            recursive(oldValue, item.value);
+            recursiveFn(oldValue, item.value);
           }
           break;
         case "options":
           if (optionMap.has(name)) {
             const oldOptions = optionMap.get(name);
-            recursive(oldOptions, item.options);
+            recursiveFn(oldOptions, item.options);
           }
           break;
         case "other":
@@ -122,13 +122,8 @@ const mergeSameAndAddDiff = (oldConfig: TConfigArr, newConfig: TConfigArr) => {
       }
     });
   };
-  recursive(oldConfig, newConfig); // 也可直接用addDiffAndMergeSame自身进行递归调用
-
-  // @Mark 此处必须返回一个 "新"对象, 否则,单个升级没问题,批量升级时会出问题
-  const independentConfig = deepClone(newConfig);
-  console.log("应该改过来了啊", independentConfig);
-
-  return independentConfig;
+  recursiveFn(oldConfig, newConfig);
+  return newConfig;
 };
 
 export { mergeSameAndAddDiff };
