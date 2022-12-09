@@ -22,7 +22,6 @@ const SingleLayer = ({ bar, dispatch }) => {
   const { TabPane } = Tabs;
   const currentLayer = bar.selectedComponentOrGroup[0];
   const componentConfig = deepClone(bar.componentConfig);
-  console.log("哈哈哈", componentConfig);
   componentConfig.interaction = componentConfig.interaction || {
     mountAnimation: bar.layers.find((item) => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events,

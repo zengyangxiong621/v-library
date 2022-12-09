@@ -128,8 +128,6 @@ const Left = ({ dispatch, bar }) => {
   };
   //选择的树节点
   const onSelect = (curKey, e) => {
-    console.log("e", e);
-    console.log("curKey", curKey);
     let temp = curKey;
     const isSelected = e.selected;
     const { key } = e.node;

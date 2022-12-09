@@ -165,8 +165,6 @@ const CustomDraggable = ({
       ...components.filter((component) => bar.selectedComponentIds.includes(component.id)),
       ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id)),
     ];
-    console.log("拖拽开始", bar.dragStatus);
-    console.log("拖拽开始", dragStatus.current);
   };
   const handleDrag = (
     ev: DraggableEvent | any,
@@ -175,7 +173,6 @@ const CustomDraggable = ({
     component: IComponent | undefined,
     config: IConfig
   ) => {
-    console.log("拖拽中");
     ev.stopPropagation();
     bar.scaleDragData.style.display = "block";
 
@@ -457,7 +454,6 @@ const CustomDraggable = ({
                   },
                 })*/
     }
-    console.log("bar.selectedComponentOrGroup", bar.selectedComponents);
 
     dispatch({
       type: "bar/updateComponent",

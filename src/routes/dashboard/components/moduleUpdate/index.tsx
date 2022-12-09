@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from "react";
+import lodash from "lodash";
 import "./index.less";
 import { mergeSameAndAddDiff } from "./methods/mergeModuleConfig";
 
@@ -85,9 +86,12 @@ const ModuleUpdate = (props: any) => {
       targetOptions.moduleVersion = moduleLastVersion;
       // 拿到组件新版本的config
       const newModuleConfig = moduleNameToConfigMap.get(item.moduleName);
+      // @Mark 需要做一层深拷贝，不然会影响到allModulesConfig中的原对象，导致后续更新同一类似组件时出bug
+      const deepNewModuleConfig = lodash.cloneDeep(newModuleConfig);
+
       // 拿到组件旧版本的config
       const oldModuleConfig = oldComponentConfig[index];
-      targetOptions.config = mergeSameAndAddDiff(oldModuleConfig, newModuleConfig);
+      targetOptions.config = mergeSameAndAddDiff(oldModuleConfig, deepNewModuleConfig);
       return targetOptions;
     });
     const dashboardId = bar.dashboardId;
@@ -111,7 +115,6 @@ const ModuleUpdate = (props: any) => {
       selectedLists.forEach(async (item: any) => {
         window.eval(`${await importComponent(item)}`);
         const { ComponentDefaultConfig } = (window as any).VComponents;
-        // const currentDefaultConfig = ComponentDefaultConfig
         const index = bar.fullAmountComponents.findIndex((x: any) => x.id === item.id);
         bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id: item.id });
       });
