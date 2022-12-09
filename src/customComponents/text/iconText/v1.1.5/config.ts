@@ -18,6 +18,24 @@ const componentDefaultConfig = {
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
   "dataFrom": 0,
   "dataContainers": [], // 默认选中容器
+  "triggers": [ // 下面是合集
+    {
+      "name": "当请求完成或数据变化时",
+      "value": "dataChange",
+    },
+    {
+      "name": "鼠标点击",
+      "value": "click",
+    },
+    {
+      "name": "鼠标移入",
+      "value": "mouseEnter",
+    },
+    {
+      "name": "鼠标移出",
+      "value": "mouseLeave",
+    }
+  ],
   "staticData": {
     //静态数据
     "data": [

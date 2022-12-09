@@ -164,7 +164,7 @@ const DynamicPanel = ({ previewDashboard, id, dispatch, panels, isHideDefault }:
 
   return (
     <div
-      className={`dynamic-panel panel-${id} event-id-${id}`}
+      className={`dynamic-panel panel-${id} `}
       style={{
         width: "100%",
         height: "100%",
@@ -173,7 +173,7 @@ const DynamicPanel = ({ previewDashboard, id, dispatch, panels, isHideDefault }:
     >
       {state.allData.map((item: any, index: number) => (
         <div
-          className={`status-wrap event-id-${id}`}
+          className={`status-wrap event-id-${item.id}`}
           data-id={item.id}
           style={{
             position: "absolute",

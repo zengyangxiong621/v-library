@@ -11,8 +11,6 @@ const componentDefaultConfig = {
 
   createdAt: "2022-04-02T07:22:31.290Z", // =========
   updatedAt: "2022-04-02T07:22:39.798Z", // =========
-  createTime: "2022-04-02T07:22:31.290Z", // =========
-  updateTime: "2022-04-02T07:22:39.798Z", // =========
 
   autoUpdate: { isAuto: false, interval: 10 }, // =========
   thumb: "", // 缩略图 // =========
@@ -21,6 +19,7 @@ const componentDefaultConfig = {
   dataConfig: {}, //数据源配置
   dataType: "static", //数据类型：static;mysql;api;clickhouse
   dataContainers: [],
+  isHideData: true, // 隐藏data类型
   staticData: {
     //静态数据
     data: [

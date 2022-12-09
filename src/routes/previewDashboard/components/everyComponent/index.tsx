@@ -22,6 +22,7 @@ const EveryComponent = ({
   previewDashboard,
   dispatch,
   stateId,
+  isDrillDownPanel,
   ...props
 }: any) => {
   const { moduleName, events, id, config } = componentData;
@@ -189,41 +190,43 @@ const EveryComponent = ({
   const [isRenderWhileDrill, setIsRenderWhileDrill] = useState(true);
   const [isRenderWhileBack, setIsRenderWhileBack] = useState(true);
   useEffect(() => {
-    const targetIdArr = previewDashboard.drillDownComponentIdForCurClickComponent;
-    const tempObj = previewDashboard.willSaveComponentInEveryDrillDownState;
-    if (targetIdArr.length) {
-      const temp = targetIdArr.includes(id);
-      setIsRenderWhileDrill(temp);
-      if (temp) {
-        tempObj[stateId] = [];
-        tempObj[stateId].push(id);
+    //@Prevent Bug: 这里应该只对下钻面板中的组件做处理，否则在大屏中任意一个下钻面板下钻的时候，其它的除该面板之外的组件会被屏蔽
+    if (isDrillDownPanel) {
+      const targetIdArr = previewDashboard.drillDownComponentIdForCurClickComponent;
+      const tempObj = previewDashboard.willSaveComponentInEveryDrillDownState;
+      if (targetIdArr.length) {
+        const temp = targetIdArr.includes(id);
+        setIsRenderWhileDrill(temp);
+        if (temp) {
+          tempObj[stateId] = [];
+          tempObj[stateId].push(id);
 
-        dispatch({
-          type: "previewDashboard/save",
-          payload: {
-            willSaveComponentInEveryDrillDownState: tempObj,
-          },
-        });
-      }
-      const preRenderCompInCurState = tempObj[stateId];
-      if (preRenderCompInCurState) {
-        const tempRes = preRenderCompInCurState.includes(id);
-        setIsRenderWhileBack(tempRes);
-      }
-    } else {
-      const preRenderCompInCurState = tempObj[stateId];
-      if (preRenderCompInCurState) {
-        const tempRes = preRenderCompInCurState.includes(id);
-        setIsRenderWhileBack(tempRes);
+          dispatch({
+            type: "previewDashboard/save",
+            payload: {
+              willSaveComponentInEveryDrillDownState: tempObj,
+            },
+          });
+        }
+        const preRenderCompInCurState = tempObj[stateId];
+        if (preRenderCompInCurState) {
+          const tempRes = preRenderCompInCurState.includes(id);
+          setIsRenderWhileBack(tempRes);
+        }
       } else {
-        setIsRenderWhileBack(true);
+        const preRenderCompInCurState = tempObj[stateId];
+        if (preRenderCompInCurState) {
+          const tempRes = preRenderCompInCurState.includes(id);
+          setIsRenderWhileBack(tempRes);
+        } else {
+          setIsRenderWhileBack(true);
+        }
+        setIsRenderWhileDrill(true);
       }
-      setIsRenderWhileDrill(true);
     }
   }, [previewDashboard.drillDownComponentIdForCurClickComponent]);
 
   const getDrillDownData = (chartData: any) => {
-
     if (addDrillDownLevel) {
       addDrillDownLevel();
       changeBreadcrumbData(chartData);

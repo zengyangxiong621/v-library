@@ -24,8 +24,8 @@ const RadioGroup = (props) => {
 
   return (
     <Form className="custom-form" form={form} {...formItemLayout} colon={false}>
-      <Form.Item name={_data.name} label={_data.displayName}>
-        <Radio.Group defaultValue={_data.value} className="zoom-set" onChange={selectChange}>
+      <Form.Item name={_data.name} label={_data.displayName} initialValue={_data.value}>
+        <Radio.Group className="zoom-set" onChange={selectChange}>
           <Space direction={_data.direction || "vertical"}>
             {_data.options.map((item) => {
               return (

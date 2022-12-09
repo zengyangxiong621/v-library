@@ -21,6 +21,7 @@ const RecursiveComponent = (props: any) => {
     stateId,
     addDrillDownLevel,
     changeBreadcrumbData,
+    isDrillDownPanel,
   } = props;
   return (
     <div className="recursive-component-wrap">
@@ -39,7 +40,7 @@ const RecursiveComponent = (props: any) => {
           <div data-id={isGroup ? layer.id : "component-" + layer.id} key={layer.id}>
             {isPanel ? (
               <div
-                className={"panel-container"}
+                className={`panel-container event-id-${layer.id}`}
                 style={{
                   position: "absolute",
                   left: targetPanel.config.left + "px",
@@ -106,6 +107,7 @@ const RecursiveComponent = (props: any) => {
                   {
                     <EveryComponent
                       key={ind}
+                      isDrillDownPanel={isDrillDownPanel}
                       componentData={targetComponent}
                       comData={getComDataWithFilters(
                         publishDashboard.componentData,

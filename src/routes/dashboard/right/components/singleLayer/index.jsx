@@ -22,6 +22,7 @@ const SingleLayer = ({ bar, dispatch }) => {
   const { TabPane } = Tabs;
   const currentLayer = bar.selectedComponentOrGroup[0];
   const componentConfig = deepClone(bar.componentConfig);
+  console.log("哈哈哈", componentConfig);
   componentConfig.interaction = componentConfig.interaction || {
     mountAnimation: bar.layers.find((item) => item.id === componentConfig.id)?.mountAnimation,
     events: componentConfig.events,
@@ -242,16 +243,24 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const eventChange = debounce(() => {
+  const eventChange = debounce(async (isThemeUpdate = false) => {
     componentConfig.interaction.events = interactionConfig.events;
     dispatch({
-      type: "bar/setComponentConfig",
-      payload: componentConfig,
+      type: "bar/updateComponentThemeConfig",
+      payload: {
+        componentConfig,
+        interactionConfig,
+        isThemeUpdate,
+      },
     });
-    saveEventsData({
-      id: componentConfig.id,
-      events: interactionConfig.events,
-    });
+    // dispatch({
+    //   type: "bar/setComponentConfig",
+    //   payload: componentConfig,
+    // });
+    // await saveEventsData({
+    //   id: componentConfig.id,
+    //   events: interactionConfig.events,
+    // });
   }, 300);
 
   const saveEventsData = async (param) => {
@@ -317,7 +326,6 @@ const SingleLayer = ({ bar, dispatch }) => {
   const panelsList = bar.fullAmountPanels;
   const targetPanelInfo = panelsList.find((item) => item.id === curPanelId);
   const isDrillDownPanel = targetPanelInfo ? targetPanelInfo.type == 2 : false;
-
   return (
     <div className="SingleLayer-wrap">
       <div className="content">
@@ -346,21 +354,23 @@ const SingleLayer = ({ bar, dispatch }) => {
               })}
             </ComponentCard>
           </TabPane>
-          <TabPane tab="数据" key="2">
-            <ComponentCard data={componentConfig}>
-              <DataConfig
-                data={componentConfig}
-                onDataContainerChange={dataContainerChange}
-                onFiledsChange={filedsChange}
-                onStaticDataChange={staticDataChange}
-                onDataTypeChange={dataTypeChange}
-                onDataSourceChange={dataSourceChange}
-                onAutoUpdateChange={autoUpdateChange}
-                onDataFromChange={dataFromChange}
-                onUseFilterChange={useFilterChange}
-              />
-            </ComponentCard>
-          </TabPane>
+          {!componentConfig.isHideData && (
+            <TabPane tab="数据" key="2">
+              <ComponentCard data={componentConfig}>
+                <DataConfig
+                  data={componentConfig}
+                  onDataContainerChange={dataContainerChange}
+                  onFiledsChange={filedsChange}
+                  onStaticDataChange={staticDataChange}
+                  onDataTypeChange={dataTypeChange}
+                  onDataSourceChange={dataSourceChange}
+                  onAutoUpdateChange={autoUpdateChange}
+                  onDataFromChange={dataFromChange}
+                  onUseFilterChange={useFilterChange}
+                />
+              </ComponentCard>
+            </TabPane>
+          )}
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
               <LoadAnimation data={interactionConfig} onChange={interactionChange} />
