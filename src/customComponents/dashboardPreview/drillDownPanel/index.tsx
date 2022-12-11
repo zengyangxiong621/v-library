@@ -116,8 +116,6 @@ const DrillDownPanel = ({
     });
   }, []);
 
-  console.log("state.allData", state.allData);
-
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
     if (activeIndex < stateIndex) return;
@@ -158,7 +156,7 @@ const DrillDownPanel = ({
     marginBottom: "20px",
     minWidth: "500px",
   };
-  if (config.breadcrumbPositionShow) {
+  if (config.breadcrumbPositionShow === undefined || config.breadcrumbPositionShow) {
     breadcrumbStyle.position = "absolute";
     breadcrumbStyle.top = config.breadcrumbPositionY || 0;
     breadcrumbStyle.left = config.breadcrumbPositionX || 0;
@@ -175,7 +173,7 @@ const DrillDownPanel = ({
         position: "relative",
       }}
     >
-      {config.breadcrumbPositionShow && (
+      {(config.breadcrumbPositionShow === undefined || config.breadcrumbPositionShow) && (
         <div style={{ ...breadcrumbStyle }}>
           <Breadcrumb>
             {state.breadcrumbData.map((x: any, i: number) => {
