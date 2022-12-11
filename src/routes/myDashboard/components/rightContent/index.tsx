@@ -426,10 +426,8 @@ const RightContent = (props: any) => {
   };
   return (
     <div className="RightContent-wrap">
-      {/* <Row style={{ width: '100%' }} gutter={[26, 26]}> */}
-      {listData.length ? (
+      {listData.length &&
         listData.map((item: any) => (
-          // <Col span={6} key={index}>
           <AppCard
             {...item}
             key={item.id}
@@ -438,9 +436,8 @@ const RightContent = (props: any) => {
             openMoveGroupModal={openMoveGroupModal}
             refreshList={refreshList}
           />
-          // </Col>
-        ))
-      ) : (
+        ))}
+      {dashboardManage.isNullAppList && (
         <div className="right-empty-class">
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无应用"></Empty>
         </div>

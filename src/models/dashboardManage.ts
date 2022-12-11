@@ -7,6 +7,7 @@ export default {
     groupList: [],
     curSelectedGroup: [],
     curSelectedGroupName: "",
+    isNullAppList: false,
     appListLoading: false,
     groupTreeLoading: false,
   },
@@ -39,6 +40,10 @@ export default {
     setGroupTreeLoading(state: any, { payload }: any) {
       return { ...state, groupTreeLoading: payload };
     },
+    // 当应用列表为空时
+    setIsNullAppList(state: any, { payload }: any) {
+      return { ...state, isNullAppList: payload };
+    },
   },
   effects: {
     *getTemplateList({ payload }: any, { put }: any): any {
@@ -56,9 +61,16 @@ export default {
           type: "setAppListLoading",
           payload: false,
         });
+        const appList = data?.content || [];
+        if (!appList.length) {
+          yield put({
+            type: "setIsNullAppList",
+            payload: true,
+          });
+        }
         yield put({
           type: "updateTemplateList",
-          payload: data?.content || [],
+          payload: appList,
         });
       } catch (error) {
         console.log("获取应用列表失败", error);
