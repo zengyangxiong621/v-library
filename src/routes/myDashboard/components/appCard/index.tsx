@@ -117,9 +117,7 @@ const AppCard = (props: any) => {
       title: "删除应用",
       content: `确认删除 "${name}" 应用吗?`,
       desc: "", // 选填
-      onCancel: () => {
-        close();
-      },
+      onCancel: () => {},
       onOk: async () => {
         const data = await http({
           url: "/visual/application/deleteApp",
