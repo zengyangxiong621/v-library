@@ -426,7 +426,7 @@ const RightContent = (props: any) => {
   };
   return (
     <div className="RightContent-wrap">
-      {listData.length &&
+      {listData.length ? (
         listData.map((item: any) => (
           <AppCard
             {...item}
@@ -436,7 +436,10 @@ const RightContent = (props: any) => {
             openMoveGroupModal={openMoveGroupModal}
             refreshList={refreshList}
           />
-        ))}
+        ))
+      ) : (
+        <></>
+      )}
       {dashboardManage.isNullAppList && (
         <div className="right-empty-class">
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无应用"></Empty>
