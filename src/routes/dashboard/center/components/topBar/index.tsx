@@ -159,7 +159,7 @@ const MaterialMenu = [
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: true,
     component: DesignMaterial,
-    // customWidth: true,
+    customWidth: true,
   },
   {
     title: "我的素材",
@@ -167,19 +167,17 @@ const MaterialMenu = [
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: true,
     component: DesignMaterial,
-    // customWidth: true,
+    customWidth: true,
   },
   // {
   //   title: '主题资源',
   //   key: 'zhutiziyuan',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
   //   isSpecialDropMenu: true,
   //   component: ThmemResource,
   //   customWidth: true,
   // }, {
   //   title: '我的收藏',
   //   key: 'wodeshoucang',
-  //   // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
   //   isSpecialDropMenu: true,
   //   component: MyCollection,
   //   customWidth: true,
