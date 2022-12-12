@@ -5,7 +5,7 @@ const routesConfig = (app: any) => {
     path: "/dashboard/:id?/:panelId?/:stateId?",
     title: "dashboard",
     component: Dashboard,
-    // component： newDynamic(
+    // component: newDynamic(
     //   app,
     //   [
     //     import("../../models/dashboard"),
