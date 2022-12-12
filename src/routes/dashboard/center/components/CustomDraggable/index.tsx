@@ -19,10 +19,8 @@ import {
 } from "./type";
 import { deepClone, layerComponentsFlat, calcGroupPosition } from "../../../../../utils";
 import { generateTreeData } from "../../../../../utils/sideBar";
-import SingleComponent from "../singleComponent";
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { getComDataWithFilters, getFields } from "@/utils/data";
-import Bar from "@/customComponents/echarts/components/bar/index";
 
 import ErrorCatch from "react-error-catch";
 import RemoteComponentErrorRender from "@/components/RemoteComponentErrorRender";
@@ -80,6 +78,7 @@ const CustomDraggable = ({
   components: Array<IComponent>;
   panels: Array<IPanel>;
 }) => {
+  components = bar.fullAmountComponents;
   const callbackParamsList = bar.callbackParamsList;
   const callbackArgs = bar.callbackArgs;
   const scaleDragData = bar.scaleDragData;
@@ -166,8 +165,6 @@ const CustomDraggable = ({
       ...components.filter((component) => bar.selectedComponentIds.includes(component.id)),
       ...panels.filter((panel: IPanel) => bar.selectedComponentIds.includes(panel.id)),
     ];
-    console.log("拖拽开始", bar.dragStatus);
-    console.log("拖拽开始", dragStatus.current);
   };
   const handleDrag = (
     ev: DraggableEvent | any,
@@ -176,7 +173,6 @@ const CustomDraggable = ({
     component: IComponent | undefined,
     config: IConfig
   ) => {
-    console.log("拖拽中");
     ev.stopPropagation();
     bar.scaleDragData.style.display = "block";
 
@@ -458,7 +454,6 @@ const CustomDraggable = ({
                   },
                 })*/
     }
-    console.log("bar.selectedComponentOrGroup", bar.selectedComponents);
 
     dispatch({
       type: "bar/updateComponent",
@@ -865,7 +860,7 @@ const CustomDraggable = ({
           if (component) {
             staticData = component.staticData;
             style_config = component.config;
-            
+
             styleDimensionConfig = component.config.find((item: any) => item.name === DIMENSION);
             if (styleDimensionConfig) {
               Object.values(styleDimensionConfig.value).forEach((obj: any) => {
@@ -994,12 +989,24 @@ const CustomDraggable = ({
                       style={{ width: "100%", height: "100%", pointerEvents: "none" }}
                       className="custom-draggable-component"
                     >
-                      {layer.moduleName === "bar" ? (
-                        <Bar
+                      <ErrorCatch
+                        app={component.name}
+                        user=""
+                        token=""
+                        max={1}
+                        errorRender={
+                          <RemoteComponentErrorRender
+                            errorComponent={component.name}
+                          ></RemoteComponentErrorRender>
+                        }
+                        onCatch={(errors) => {
+                          console.log("组件报错信息：", errors, "组件id", layer.id);
+                        }}
+                      >
+                        <RemoteBaseComponent
                           themeConfig={bar.componentThemeConfig}
                           onThemeChange={onThemeChange}
-                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          scale={bar.canvasScaleValue}
+                          key={layer.id}
                           componentConfig={component}
                           fields={getFields(component)}
                           comData={getComDataWithFilters(
@@ -1008,43 +1015,12 @@ const CustomDraggable = ({
                             bar.componentFilters,
                             bar.dataContainerDataList,
                             bar.dataContainerList,
-                            bar.callbackArgs
+                            bar.callbackArgs,
+                            layer
                           )}
-                        ></Bar>             
-                      ) : (
-                        <ErrorCatch
-                          app={component.name}
-                          user=""
-                          token=""
-                          max={1}
-                          errorRender={
-                            <RemoteComponentErrorRender
-                              errorComponent={component.name}
-                            ></RemoteComponentErrorRender>
-                          }
-                          onCatch={(errors) => {
-                            console.log("组件报错信息：", errors, "组件id", layer.id);
-                          }}
-                        >
-                          <RemoteBaseComponent
-                            themeConfig={bar.componentThemeConfig}
-                            onThemeChange={onThemeChange}
-                            key={layer.id}
-                            componentConfig={component}
-                            fields={getFields(component)}
-                            comData={getComDataWithFilters(
-                              bar.componentData,
-                              component,
-                              bar.componentFilters,
-                              bar.dataContainerDataList,
-                              bar.dataContainerList,
-                              bar.callbackArgs,
-                              layer
-                            )}
-                            onChange={(val: any) => handleValueChange(val, component, layer.id)}
-                          ></RemoteBaseComponent>
-                        </ErrorCatch>
-                      )}
+                          onChange={(val: any) => handleValueChange(val, component, layer.id)}
+                        ></RemoteBaseComponent>
+                      </ErrorCatch>
                     </div>
                   </>
                 )}

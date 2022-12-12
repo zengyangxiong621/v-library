@@ -63,7 +63,7 @@ const SupportLines = ({ bar, cRef }: SupportLineProperty) => {
           bottom: 20,
           right: 20,
           color: "#b6b2b2",
-          fontSize: 18 / bar.canvasScaleValue,
+          fontSize: 18 / (bar.canvasScaleValue || 1),
         }}
       >
         {Math.ceil(style.left) + "," + Math.ceil(style.top)}

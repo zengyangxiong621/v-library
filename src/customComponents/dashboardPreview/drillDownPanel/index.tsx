@@ -45,10 +45,8 @@ const DrillDownPanel = ({
   const [activeIndex, setActiveIndex] = useState(0);
 
   const getPanelDetails = async ({ name, id }: { name: string; id: string }) => {
-    const { components, layers, dashboardConfig } = await http({
-      url: `/visual/application/dashboard/detail/${id}`,
-      method: "get",
-    });
+    const { components, layers, dashboardConfig } =
+      previewDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     const layerPanels: any = layersPanelsFlat(layers);
     const panels: Array<IPanel> = await Promise.all(
       layerPanels.map((item: any) => getStateDetails(item))
@@ -69,12 +67,9 @@ const DrillDownPanel = ({
       backgroundImage,
     };
   };
-  const getStateDetails = async (layerPanel: any) => {
+  const getStateDetails = async ({ id }: any) => {
     try {
-      return await http({
-        url: `/visual/panel/detail/${layerPanel.id}`,
-        method: "get",
-      });
+      return previewDashboard.fullAmountDashboardDetails.find((item: any) => item.id === id);
     } catch (e) {
       return null;
     }
@@ -121,8 +116,6 @@ const DrillDownPanel = ({
     });
   }, []);
 
-  console.log("state.allData", state.allData);
-
   const breadcrumbClick = (itemData: any, stateIndex: number) => {
     // 防止 点击面包屑中的下一层级 就能直接跳转到下一层级的组件
     if (activeIndex < stateIndex) return;
@@ -163,7 +156,7 @@ const DrillDownPanel = ({
     marginBottom: "20px",
     minWidth: "500px",
   };
-  if (config.breadcrumbPositionShow) {
+  if (config.breadcrumbPositionShow === undefined || config.breadcrumbPositionShow) {
     breadcrumbStyle.position = "absolute";
     breadcrumbStyle.top = config.breadcrumbPositionY || 0;
     breadcrumbStyle.left = config.breadcrumbPositionX || 0;
@@ -172,7 +165,7 @@ const DrillDownPanel = ({
 
   return (
     <div
-      className={`drill-down-panel panel-${id} event-id-${id}`}
+      className={`drill-down-panel panel-${id}`}
       style={{
         width: "100%",
         height: "100%",
@@ -180,7 +173,7 @@ const DrillDownPanel = ({
         position: "relative",
       }}
     >
-      {config.breadcrumbPositionShow && (
+      {(config.breadcrumbPositionShow === undefined || config.breadcrumbPositionShow) && (
         <div style={{ ...breadcrumbStyle }}>
           <Breadcrumb>
             {state.breadcrumbData.map((x: any, i: number) => {
@@ -201,7 +194,7 @@ const DrillDownPanel = ({
 
       {state.allData.map((item: any, index: number) => (
         <div
-          className={`status-wrap event-id-${id}`}
+          className={`status-wrap event-id-${item.id}`}
           style={{
             position: "absolute",
             width: "100%",

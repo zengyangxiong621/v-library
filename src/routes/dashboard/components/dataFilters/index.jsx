@@ -371,7 +371,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
           {filter.isEditName ? (
             <Input
               ref={inputNameRef}
-              defaultValue={filter.name}
+              // defaultValue={filter.name}
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -675,7 +675,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
       >
         <div className="data-filters-body-wrapper">
           <div className="data-filters-handle">
-            <Input
+            <Input.Search
               placeholder="请输入"
               maxLength={30}
               suffix={

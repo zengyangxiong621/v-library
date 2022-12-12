@@ -166,12 +166,12 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels, isHideDefault 
 
   return (
     <div
-      className={`reference-panel panel-${id} event-id-${id}`}
+      className={`reference-panel panel-${id}`}
       style={{ width: "100%", height: "100%", display: isHideDefault ? "none" : "block" }}
     >
       {state.allData.map((item: any, index: number) => (
         <div
-          className={`status-wrap event-id-${id}`}
+          className={`status-wrap event-id-${item.id}`}
           style={{
             position: "absolute",
             width: "100%",

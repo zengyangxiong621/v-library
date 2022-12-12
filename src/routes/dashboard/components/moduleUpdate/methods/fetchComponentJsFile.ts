@@ -4,7 +4,7 @@ const fetchComponentJsFile = (data: any) => {
   return axios
     .get(
       `${(window as any).CONFIG.COMP_URL}/${data.moduleLastType}/${data.moduleName}/${
-        data.moduleVersion
+        data.moduleLastVersion
       }/${data.moduleName}.js`
     )
     .then((res) => res.data);

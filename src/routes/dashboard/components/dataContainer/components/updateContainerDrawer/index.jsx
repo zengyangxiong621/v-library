@@ -102,9 +102,9 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
     });
   };
 
-  // 更新输入容器
+  // 更新数据容器
   const updateDataContainer = async (body) => {
-    await http({
+    return await http({
       url: "/visual/container/source",
       method: "post",
       body,
@@ -113,7 +113,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   // 数据类型切换
   const handleDataTypeChange = async (value) => {
     setCopyData({ ...copyData, dataType: value });
-    await updateDataContainer({ ...copyData, dataType: value });
+    const containerData = await updateDataContainer({ ...copyData, dataType: value });
     if (value === "static") {
       const data = copyData.staticData.data;
       if (copyData.useFilter) {
@@ -122,10 +122,18 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
       } else {
         setResultData(data);
       }
+      dispatch({
+        type: "bar/updateDataContainer",
+        payload: {
+          containerData: { ...copyData, dataType: value },
+          data,
+        },
+      });
       return;
     }
+    let data = [];
     try {
-      const data = await http({
+      data = await http({
         method: "post",
         url: "/visual/container/data/get",
         body: {
@@ -134,13 +142,6 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
         },
       });
       if (data) {
-        message.success("操作成功");
-        dispatch({
-          type: "bar/updateDataContainer",
-          payload: {
-            containerData: { ...copyData, dataType: value },
-          },
-        });
         if (copyData.useFilter) {
           let filterData = handleDataFilter(data, copyData.filters);
           setResultData(filterData);
@@ -151,7 +152,16 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
         setResultData([]);
       }
     } catch (err) {
+      data = [];
       setResultData([]);
+    } finally {
+      dispatch({
+        type: "bar/updateDataContainer",
+        payload: {
+          containerData: { ...copyData, dataType: value },
+          data,
+        },
+      });
     }
   };
   // 静态数据变化
@@ -192,9 +202,10 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   };
 
   // 数据接口刷新
-  const getData = async (dataConfig = {}) => {
+  const getData = async (containerData) => {
+    let data = [];
     try {
-      const data = await http({
+      data = await http({
         method: "post",
         url: "/visual/container/data/get",
         body: {
@@ -203,14 +214,6 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
         },
       });
       if (data) {
-        message.success("操作成功");
-        dispatch({
-          type: "bar/updateDataContainer",
-          payload: {
-            containerData: { ...copyData, dataConfig },
-            data,
-          },
-        });
         if (copyData.useFilter) {
           let filterData = handleDataFilter(data, copyData.filters);
           setResultData(filterData);
@@ -221,7 +224,16 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
         setResultData([]);
       }
     } catch (err) {
+      data = [];
       setResultData([]);
+    } finally {
+      dispatch({
+        type: "bar/updateDataContainer",
+        payload: {
+          containerData,
+          data,
+        },
+      });
     }
   };
 
@@ -229,17 +241,22 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
   const handleAutoUpdateChange = async (autoUpdate) => {
     setCopyData({ ...copyData, autoUpdate });
     await updateDataContainer({ ...copyData, autoUpdate });
-    await getData();
+    await getData({ ...copyData, autoUpdate });
   };
   // 数据源变化
   const handleDataSourceChange = async (dataConfig) => {
     setCopyData({ ...copyData, dataConfig });
-    await updateDataContainer({ ...copyData, data: dataConfig[copyData.dataType].data });
-    await getData();
+    const dataContainer = await updateDataContainer({
+      ...copyData,
+      dataConfig,
+      data: dataConfig[copyData.dataType].data,
+    });
+    await getData(dataContainer);
   };
 
   // 数据过滤器开关
   const filterBoxChange = async (e) => {
+    console.log("e", e);
     setCopyData({ ...copyData, useFilter: e.target.checked });
     await updateDataContainer({ ...copyData, useFilter: e.target.checked });
     dispatch({
@@ -252,7 +269,7 @@ const UpdateContainerDrawer = ({ bar, dispatch, ...props }) => {
     if (e.target.checked) {
       data = handleDataFilter(data, copyData.filters);
     }
-    setResultData(data);
+    setResultData(data || []);
   };
   // 数据过滤器变化
   const selectedFiltersChange = async (filterId, componentFilters) => {

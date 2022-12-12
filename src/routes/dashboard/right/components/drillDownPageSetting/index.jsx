@@ -9,7 +9,7 @@ import UploadImg from "../uploadImg";
 import CusInputNumber from "../cusInputNumber";
 import RadioGroup from "../radioGroup";
 import { deepClone } from "../../../../../utils";
-import { Button, Form } from "antd";
+import { Button, Form, message } from "antd";
 import debounce from "lodash/debounce";
 import { http } from "../../../../../services/request";
 import { v4 as uuidv4 } from "uuid";
@@ -99,7 +99,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
               displayName: "X",
               name: "breadcrumbPositionX",
               type: "number",
-              value: breadcrumbPositionX,
+              value: breadcrumbPositionX || 0,
               config: {
                 min: -10000,
                 max: 10000,
@@ -110,7 +110,7 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
               displayName: "Y",
               name: "breadcrumbPositionY",
               type: "number",
-              value: breadcrumbPositionY,
+              value: breadcrumbPositionY || 0,
               config: {
                 min: -10000,
                 max: 10000,
@@ -167,14 +167,18 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
         },
       },
     });
-    await http({
-      url: "/visual/panel/update",
-      method: "post",
-      body: {
-        dashboardId: bar.dashboardId,
-        configs: [panelConfig],
-      },
-    });
+    try {
+      await http({
+        url: "/visual/panel/update",
+        method: "post",
+        body: {
+          dashboardId: bar.dashboardId,
+          configs: [panelConfig],
+        },
+      });
+    } catch (error) {
+      message.error("获取下钻面板请求出错--" + error.message, 2.5);
+    }
   }, 300);
   const hideDefaultChange = async (value) => {
     await saveLayerData({

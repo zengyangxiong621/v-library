@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { useState, useRef, useEffect } from "react";
-import Bar from "@/customComponents/echarts/components/bar/index";
+import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4/index";
 import { connect } from "dva";
 
 import { cloneDeep } from "lodash";
@@ -56,8 +56,8 @@ const ComponentEventContainer = ({
     customEventsFunction(clickEvents, data);
   }, 300);
   const handleInteractiveClick = (e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const clickEvents = events.filter((item) => item.trigger === "click");
     const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (clickActions.length === 0) {
@@ -67,6 +67,7 @@ const ComponentEventContainer = ({
   };
 
   const handleDataChange = (data) => {
+    console.log(data, "handleDataChange data------------------------------");
     const mouseEnterEvents = events.filter((item) => item.trigger === "dataChange");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -77,8 +78,9 @@ const ComponentEventContainer = ({
   };
 
   const handleInteractiveMouseEnter = (e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    console.log("handleInteractiveMouseEnter------------------------------------");
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -88,8 +90,8 @@ const ComponentEventContainer = ({
     customEventsFunction(mouseEnterEvents, data);
   };
   const handleInteractiveMouseLeave = (e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseOutEvents = events.filter((item) => item.trigger === "mouseLeave");
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseOutActions.length === 0) {
@@ -100,8 +102,8 @@ const ComponentEventContainer = ({
   };
   // 移入
   const handleMouseEnter = debounce((e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -112,8 +114,8 @@ const ComponentEventContainer = ({
   });
   // 移出
   const handleMouseLeave = debounce((e, data) => {
-    e.stopPropagation();
-    e.preventDefault();
+    // e.stopPropagation();
+    // e.preventDefault();
     const mouseOutEvents = events.filter((item) => item.trigger === "mouseLeave");
     const mouseOutActions = mouseOutEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseOutActions.length === 0) {
@@ -495,10 +497,10 @@ const ComponentEventContainer = ({
 
   const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
     if (action === "rotate") {
-      console.log("dom", dom);
       const rotateRegX = /rotateX\((.+?)\)/g;
       const rotateRegY = /rotateY\((.+?)\)/g;
       const rotateRegZ = /rotateZ\((.+?)\)/g;
+      const perspectiveReg = /perspective\((.+?)\)/g;
       if (rotateRegX.test(dom.style.transform)) {
         dom.style.transform = dom.style.transform.replace(rotateRegX, `rotateX(${rotateX}deg)`);
       } else {
@@ -513,6 +515,20 @@ const ComponentEventContainer = ({
         dom.style.transform = dom.style.transform.replace(rotateRegZ, `rotateZ(${rotateZ}deg)`);
       } else {
         dom.style.transform += `rotateZ(${rotateZ}deg)`;
+      }
+      if (perspective) {
+        if (perspectiveReg.test(dom.style.transform)) {
+          dom.style.transform = dom.style.transform.replace(
+            perspectiveReg,
+            `perspective(${500}px)`
+          );
+        } else {
+          dom.style.transform += `perspective(${500}px)`;
+        }
+      } else {
+        if (perspectiveReg.test(dom.style.transform)) {
+          dom.style.transform = dom.style.transform.replace(perspectiveReg, "");
+        }
       }
     }
   };
@@ -553,11 +569,16 @@ const ComponentEventContainer = ({
 
   const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
     if (actionType === "updateStatus") {
+      console.log("改变状态");
+      console.log("dom", dom);
+      console.log("stateId", stateId);
       [...dom.children].forEach((item) => {
         if (item.dataset.id === stateId) {
-          item.style.display = "block";
+          // item.style.display = "block";
+          item.style.visibility = "visible";
         } else {
-          item.style.display = "none";
+          // item.style.display = "none";
+          item.style.visibility = "hidden";
         }
       });
     }
@@ -604,37 +625,33 @@ const ComponentEventContainer = ({
         display: isHideDefault ? "none" : "block",
       }}
     >
-      {props.componentConfig.moduleName === "bar" ? (
-        <Bar onChange={handleStatusChange} {...props}></Bar>
-      ) : (
-        <ErrorCatch
-          app={componentConfig.name}
-          user=""
-          token=""
-          max={1}
-          errorRender={
-            <RemoteComponentErrorRender
-              errorComponent={componentConfig.name}
-            ></RemoteComponentErrorRender>
-          }
-          onCatch={(errors) => {
-            console.log("组件报错信息：", errors, "组件id", componentConfig.id);
-          }}
-        >
-          <RemoteBaseComponent
-            {...props}
-            scale={scale}
-            onClick={handleInteractiveClick}
-            onMouseEnter={handleInteractiveMouseEnter}
-            onMouseLeave={handleInteractiveMouseLeave}
-            onChange={handleStatusChange} // 状态变化
-            onDataChange={handleDataChange} // 当请求完成/数据变化
-            dashboardId={previewDashboard.dashboardId}
-            cRef={componentRef}
-            isPreview={true}
-          ></RemoteBaseComponent>
-        </ErrorCatch>
-      )}
+      <ErrorCatch
+        app={componentConfig.name}
+        user=""
+        token=""
+        max={1}
+        errorRender={
+          <RemoteComponentErrorRender
+            errorComponent={componentConfig.name}
+          ></RemoteComponentErrorRender>
+        }
+        onCatch={(errors) => {
+          console.log("组件报错信息：", errors, "组件id", componentConfig.id);
+        }}
+      >
+        <RemoteBaseComponent
+          {...props}
+          scale={scale}
+          onClick={handleInteractiveClick}
+          onMouseEnter={handleInteractiveMouseEnter}
+          onMouseLeave={handleInteractiveMouseLeave}
+          onChange={handleStatusChange} // 状态变化
+          onDataChange={handleDataChange} // 当请求完成/数据变化
+          dashboardId={previewDashboard.dashboardId}
+          cRef={componentRef}
+          isPreview={true}
+        ></RemoteBaseComponent>
+      </ErrorCatch>
     </div>
   );
 };

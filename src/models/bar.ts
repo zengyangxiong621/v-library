@@ -54,7 +54,7 @@ import { DIMENSION } from "../routes/dashboard/center/constant";
 import { generateLayers } from "./utils/generateLayers";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
 import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
-import { http } from "../services/request";
+import { http } from "@/services/request";
 import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve";
 import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
 import dashboard from "./dashboard";
@@ -189,14 +189,18 @@ export default {
           if (item.dataType === "static") {
             data = item.staticData.data;
           } else {
-            data = await http({
-              method: "post",
-              url: "/visual/container/data/get",
-              body: {
-                id: item.id,
-                callBackParamValues: bar.callbackArgs,
-              },
-            });
+            try {
+              data = await http({
+                method: "post",
+                url: "/visual/container/data/get",
+                body: {
+                  id: item.id,
+                  callBackParamValues: bar.callbackArgs,
+                },
+              });
+            } catch (err) {
+              data = [];
+            }
           }
           bar.dataContainerDataList.push({ id: item.id, data });
         });
@@ -481,10 +485,10 @@ export default {
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
-      yield yield put({
-        type: "getComponentsData",
-        payload: fullAmountComponents,
-      });
+      // yield yield put({
+      //   type: "getComponentsData",
+      //   payload: fullAmountComponents,
+      // });
       // 全量面板
       const fullAmountPanels = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
@@ -1881,6 +1885,33 @@ export default {
       });
     },
     *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {},
+    *updateComponentThemeConfig(
+      { payload: { componentConfig, interactionConfig, isThemeUpdate } }: any,
+      { call, put, select }: any
+    ): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const params = {
+        configs: [
+          {
+            id: componentConfig.id,
+            events: interactionConfig.events,
+          },
+        ],
+        dashboardId: bar.stateId || bar.dashboardId,
+      };
+      yield http({
+        url: "/visual/module/defineEvent",
+        method: "post",
+        body: params,
+      });
+      console.log("componentConfig componentConfig", deepClone(componentConfig));
+      if (!isThemeUpdate) {
+        yield put({
+          type: "setComponentConfig",
+          payload: componentConfig,
+        });
+      }
+    },
   },
 
   reducers: {
@@ -1935,20 +1966,27 @@ export default {
         (item: any) => item.id === containerData.id
       );
       const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
-      if (data) {
-        if (container) {
-          // container 存在，说明是修改
+      // if (data) {
+      if (container) {
+        // container 存在，说明是修改
+        if (data) {
           container.data = data;
-        } else {
-          // 不存在则新增
-          state.dataContainerDataList.unshift({ id: containerData.id, data });
         }
+      } else {
+        // 不存在则新增
+        state.dataContainerDataList.unshift({ id: containerData.id, data });
       }
+      // }
       if (index !== -1) {
         state.dataContainerList[index] = containerData;
       } else {
         state.dataContainerList.unshift(containerData);
       }
+      console.log("--------");
+      console.log("state.dataContainerList", state.dataContainerList);
+      console.log("state.dataContainerDataList", state.dataContainerDataList);
+      console.log("-------");
+
       return {
         ...state,
         dataContainerList: state.dataContainerList,
@@ -2609,7 +2647,7 @@ export default {
         return item.id === payload.id;
       });
       state.fullAmountComponents.splice(index, 1, state.componentConfig);
-      return { ...state };
+      return { ...state, fullAmountComponents: state.fullAmountComponents };
     },
     setPanelConfig(state: IBarState, { payload }: any) {
       state.panelConfig = payload;

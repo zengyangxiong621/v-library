@@ -4,7 +4,7 @@
 import ComponentDefaultConfig from "./config";
 import * as echarts from "echarts";
 import EC from "../../../EC";
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 const BasicBar = (props) => {
   const componentConfig = props.componentConfig || ComponentDefaultConfig;
@@ -429,12 +429,13 @@ const BasicBar = (props) => {
     return res;
   };
 
+  const onChartReady = (echarts) => {};
+
   const handleClick = (e, data) => {
     props.onClick && props.onClick(e, data);
   };
 
   const onChartClick = (param, echarts) => {
-    console.log(param, props, 'onChartClick ===================================')
       // TODO: 统一校验componentConfig中的数据类型
     if(componentConfig?.events?.length) {
       handleClick(param.event, param)
@@ -451,14 +452,23 @@ const BasicBar = (props) => {
       // do something
     }
   }
-  
-  const onChartReady = (echarts) => {};
+
+  // const onMouseOver = (param, echarts) => { }
+
+  useEffect(() => {
+    props.onDataChange && props.onDataChange({...data})
+  }, [data])
 
   let onEvents = {
     click: onChartClick,
   };
 
-  return <EC option={getOption()} onChartReady={onChartReady} onEvents={onEvents} />;
+  return <EC 
+    option={getOption()} 
+    onChartReady={onChartReady} 
+    onEvents={onEvents} 
+  />;
+
 };
 
 export { BasicBar, ComponentDefaultConfig };

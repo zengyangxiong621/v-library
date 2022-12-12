@@ -437,10 +437,10 @@ const ComponentEventContainer = ({
 
   const rotate = ({ perspective, rotateX, rotateY, rotateZ }, action, dom) => {
     if (action === "rotate") {
-      console.log("dom", dom);
       const rotateRegX = /rotateX\((.+?)\)/g;
       const rotateRegY = /rotateY\((.+?)\)/g;
       const rotateRegZ = /rotateZ\((.+?)\)/g;
+      const perspectiveReg = /perspective\((.+?)\)/g;
       if (rotateRegX.test(dom.style.transform)) {
         dom.style.transform = dom.style.transform.replace(rotateRegX, `rotateX(${rotateX}deg)`);
       } else {
@@ -455,6 +455,20 @@ const ComponentEventContainer = ({
         dom.style.transform = dom.style.transform.replace(rotateRegZ, `rotateZ(${rotateZ}deg)`);
       } else {
         dom.style.transform += `rotateZ(${rotateZ}deg)`;
+      }
+      if (perspective) {
+        if (perspectiveReg.test(dom.style.transform)) {
+          dom.style.transform = dom.style.transform.replace(
+            perspectiveReg,
+            `perspective(${500}px)`
+          );
+        } else {
+          dom.style.transform += `perspective(${500}px)`;
+        }
+      } else {
+        if (perspectiveReg.test(dom.style.transform)) {
+          dom.style.transform = dom.style.transform.replace(perspectiveReg, "");
+        }
       }
     }
   };
@@ -492,12 +506,15 @@ const ComponentEventContainer = ({
   };
 
   const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
+    console.log("状态变化dom", dom);
     if (actionType === "updateStatus") {
       [...dom.children].forEach((item) => {
         if (item.dataset.id === stateId) {
-          item.style.display = "block";
+          // item.style.display = "block";
+          item.style.visibility = "visible";
         } else {
-          item.style.display = "none";
+          item.style.visibility = "hidden";
+          // item.style.display = "none";
         }
       });
     }

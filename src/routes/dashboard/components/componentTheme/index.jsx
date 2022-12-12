@@ -251,6 +251,19 @@ const ComponentTheme = ({ bar, dispatch, ...props }) => {
       type: "bar/save",
       payload: {
         dashboardConfig: config,
+        key: [],
+        selectedComponentOrGroup: [],
+        scaleDragData: {
+          style: {
+            display: "none",
+            width: 0,
+            height: 0,
+          },
+          position: {
+            x: 0,
+            y: 0,
+          },
+        },
       },
     });
 

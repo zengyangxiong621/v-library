@@ -1,11 +1,12 @@
 import { memo, useEffect, useState } from "react";
+import lodash from "lodash";
 import "./index.less";
 import { mergeSameAndAddDiff } from "./methods/mergeModuleConfig";
 
 import { connect } from "dva";
 import { http } from "@/services/request";
 
-import { Drawer, Button, Card, Checkbox, Empty } from "antd";
+import { Drawer, Button, Card, Checkbox, Empty, Spin } from "antd";
 
 import ListItem from "./components/listItem";
 import { deepClone } from "@/utils/index";
@@ -21,6 +22,7 @@ const ModuleUpdate = (props: any) => {
     new Map()
   );
   const [componentsCopy, setComponentsCopy] = useState<any>([]);
+  const [moduleUpdateLoading, setModuleUpdateLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (visible) {
@@ -44,20 +46,26 @@ const ModuleUpdate = (props: any) => {
   }, [visible]);
   // 获取可更新的组件列表
   const getUpdatableModules = async () => {
-    const data = await http({
-      url: "/visual/module/queryCanUpdateModuleList",
-      method: "get",
-      params: {
-        screenId: bar.dashboardId,
-      },
-    });
-    const addCheckStateArr = data.map((item: any) => {
-      return {
-        ...item,
-        checked: false,
-      };
-    });
-    setUpdatableModuleLists(addCheckStateArr);
+    try {
+      setModuleUpdateLoading(true);
+      const data = await http({
+        url: "/visual/module/queryCanUpdateModuleList",
+        method: "get",
+        params: {
+          screenId: bar.dashboardId,
+        },
+      });
+      setModuleUpdateLoading(false);
+      const addCheckStateArr = data.map((item: any) => {
+        return {
+          ...item,
+          checked: false,
+        };
+      });
+      setUpdatableModuleLists(addCheckStateArr);
+    } catch (error) {
+      throw Error("获取可更新的组件列表出错");
+    }
   };
   // 升级所选中的组件
   const updateSelectedModules = async () => {
@@ -78,9 +86,12 @@ const ModuleUpdate = (props: any) => {
       targetOptions.moduleVersion = moduleLastVersion;
       // 拿到组件新版本的config
       const newModuleConfig = moduleNameToConfigMap.get(item.moduleName);
+      // @Mark 需要做一层深拷贝，不然会影响到allModulesConfig中的原对象，导致后续更新同一类似组件时出bug
+      const deepNewModuleConfig = lodash.cloneDeep(newModuleConfig);
+
       // 拿到组件旧版本的config
       const oldModuleConfig = oldComponentConfig[index];
-      targetOptions.config = mergeSameAndAddDiff(oldModuleConfig, newModuleConfig);
+      targetOptions.config = mergeSameAndAddDiff(oldModuleConfig, deepNewModuleConfig);
       return targetOptions;
     });
     const dashboardId = bar.dashboardId;
@@ -104,20 +115,54 @@ const ModuleUpdate = (props: any) => {
       selectedLists.forEach(async (item: any) => {
         window.eval(`${await importComponent(item)}`);
         const { ComponentDefaultConfig } = (window as any).VComponents;
-        // const currentDefaultConfig = ComponentDefaultConfig
         const index = bar.fullAmountComponents.findIndex((x: any) => x.id === item.id);
         bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id: item.id });
       });
+      if (selectedLists.length > 1) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        await dispatch({
+          type: "bar/getDashboardDetails",
+          payload: dashboardId,
+        });
+        await dispatch({
+          type: "bar/getFullAmountDashboardDetails",
+          payload: {
+            layers: bar.layers,
+          },
+        });
+        await dispatch({
+          type: "bar/save",
+        });
+      }
+
+      // const data = await http({
+      //   url: `/visual/application/dashboard/detail/${dashboardId}`,
+      //   method: "get",
+      // });
+      // const { layers, components } = data;
+      // 刷新组件中的画布
+      // await dispatch({
+      //   type: "bar/getDashboardDetails",
+      //   payload: {
+      //     cb: (args) => {
+      //       console.log(args);
+      //     },
+      //   },
+      // });
+      // await dispatch({
+      //   type: "bar/getFullAmountDashboardDetails",
+      //   payload: {
+      //     layers: bar.layers,
+      //   },
+      // });
+      // await dispatch({
+      //   type: "bar/save",
+      //   payload: {},
+      // });
     }
-    // alert('batch update')
-    dispatch({
-      type: "bar/save",
-    });
-    // 刷新组件中的画布
-    dispatch({
-      type: "bar/getDashboardDetails",
-      payload: bar.dashboardId,
-    });
     setUpdateBtnLoading(false);
   };
   const onCheckAllChange = (e: any) => {
@@ -185,55 +230,62 @@ const ModuleUpdate = (props: any) => {
         style={{ position: "absolute" }}
         maskStyle={{ animation: "unset" }}
       >
-        <div className="card-wrap">
-          <Card
-            title={
-              <div className="card-title g-flex g-justify-between">
-                <Checkbox
-                  indeterminate={
-                    selectedLists.length && selectedLists.length !== updatableModuleLists.length
-                  }
-                  onChange={onCheckAllChange}
-                  checked={
-                    selectedLists.length &&
-                    updatableModuleLists.length &&
-                    selectedLists.length === updatableModuleLists.length
-                  }
-                >
-                  可更新组件({selectedLists.length}/{updatableModuleLists.length})
-                </Checkbox>
-                <Button
-                  type="primary"
-                  size="small"
-                  loading={updateBtnLoading}
-                  disabled={selectedLists.length === 0}
-                  onClick={() => updateSelectedModules()}
-                >
-                  更新
-                </Button>
+        <Spin tip="Loading..." spinning={moduleUpdateLoading}>
+          <div className="card-wrap">
+            <Card
+              title={
+                <div className="card-title g-flex g-justify-between">
+                  <Checkbox
+                    indeterminate={
+                      selectedLists.length && selectedLists.length !== updatableModuleLists.length
+                    }
+                    onChange={onCheckAllChange}
+                    checked={
+                      selectedLists.length &&
+                      updatableModuleLists.length &&
+                      selectedLists.length === updatableModuleLists.length
+                    }
+                  >
+                    可更新组件({selectedLists.length}/{updatableModuleLists.length})
+                  </Checkbox>
+                  <Button
+                    type="primary"
+                    size="small"
+                    loading={updateBtnLoading}
+                    disabled={selectedLists.length === 0}
+                    onClick={() => updateSelectedModules()}
+                  >
+                    更新
+                  </Button>
+                </div>
+              }
+              size="small"
+              headStyle={{ background: "#333641" }}
+              bodyStyle={{
+                background: "#171b24",
+                minHeight: "165px",
+                padding: 0,
+              }}
+            >
+              <div className="card-body">
+                {updatableModuleLists.length ? (
+                  updatableModuleLists.map((item: any) => {
+                    return (
+                      <ListItem itemData={item} clickCheckbox={clickSingleCheckbox}></ListItem>
+                    );
+                  })
+                ) : (
+                  <>
+                    <Empty
+                      description="没有可更新的组件…"
+                      imageStyle={{ marginTop: "15px" }}
+                    ></Empty>
+                  </>
+                )}
               </div>
-            }
-            size="small"
-            headStyle={{ background: "#333641" }}
-            bodyStyle={{
-              background: "#171b24",
-              minHeight: "165px",
-              padding: 0,
-            }}
-          >
-            <div className="card-body">
-              {updatableModuleLists.length ? (
-                updatableModuleLists.map((item: any) => {
-                  return <ListItem itemData={item} clickCheckbox={clickSingleCheckbox}></ListItem>;
-                })
-              ) : (
-                <>
-                  <Empty description="没有可更新的组件…" imageStyle={{ marginTop: "15px" }}></Empty>
-                </>
-              )}
-            </div>
-          </Card>
-        </div>
+            </Card>
+          </div>
+        </Spin>
       </Drawer>
     </div>
   );

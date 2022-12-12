@@ -6,7 +6,7 @@ class BgBorder extends Component {
     super(Props)
   }
   render() {
-    const componentConfig = this.props.componentConfig || componentDefaultConfig
+    const componentConfig = this.props.componentConfig || ComponentDefaultConfig
     const { config } = componentConfig
 
     const style = config.filter((item) => item.name !== 'dimension').reduce((pre, cur) => {
