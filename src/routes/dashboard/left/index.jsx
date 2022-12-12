@@ -125,7 +125,7 @@ const Left = ({ dispatch, bar }) => {
     });
   };
   //选择的树节点
-  const onSelect = async (curKey, e) => {
+  const onSelect = (curKey, e) => {
     let temp = curKey;
     const isSelected = e.selected;
     const { key } = e.node;
@@ -168,6 +168,7 @@ const Left = ({ dispatch, bar }) => {
       });
     }
   };
+  const finalSelectFn = useCallback(debounce(onSelect, 500), []);
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
     event.stopPropagation();
@@ -377,7 +378,7 @@ const Left = ({ dispatch, bar }) => {
             switcherIcon={<DownOutlined />}
             onDrop={onDrop}
             onExpand={onExpand}
-            onSelect={debounce(onSelect, 400)}
+            onSelect={finalSelectFn}
             onRightClick={onRightClick}
             autoExpandParent={true}
             treeData={bar.layers}

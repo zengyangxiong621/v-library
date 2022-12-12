@@ -2333,6 +2333,10 @@ export default {
     selectOperate(state: IBarState, { payload }: any) {
       return { ...state, ...payload };
     },
+    // 控制右键菜单的显示和隐藏
+    setIsShowRightMenu(state: IBarState, { payload }: any) {
+      return { ...state, isShowRightMenu: payload };
+    },
     findNode(state: IBarState, { payload: { id, callback } }: any) {
       callback(id);
       return { ...state };
