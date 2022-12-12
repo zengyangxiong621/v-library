@@ -126,7 +126,7 @@ const ManageContainerDrawer = ({ bar, dispatch, ...props }) => {
       maskStyle={{ animation: "unset" }}
     >
       <div>
-        <Input.Search
+        <Input
           placeholder="请输入"
           suffix={
             <SearchOutlined

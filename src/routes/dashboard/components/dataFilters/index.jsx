@@ -675,7 +675,7 @@ const DataFilters = ({ bar, dispatch, ...props }) => {
       >
         <div className="data-filters-body-wrapper">
           <div className="data-filters-handle">
-            <Input.Search
+            <Input
               placeholder="请输入"
               maxLength={30}
               suffix={
