@@ -59,7 +59,6 @@ const DataContainerItem = (props) => {
       props.onDelete(data.id, data.modules);
     }
   };
-  console.log("data", data);
   return (
     <div className="data-container-item">
       <span className={["status-light", data.modules.length > 0 ? "starting" : "stop"].join(" ")}>

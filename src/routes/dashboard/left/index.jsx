@@ -15,12 +15,10 @@ import { useKeyPress } from "ahooks";
 /** 自定义组件 **/
 import EveryTreeNode from "./components/everyTreeNode";
 import ToolBar from "./components/toolBar";
-// import RightClickMenu from "./components/rightClickMenu/rightClickMenu";
 
 /** 数据 || 方法 */
-// import { getTargetMenu } from "./components/rightClickMenu/getMenuNode";
 import { getFieldStates } from "../../../utils/sideBar";
-// import { filterEmptyGroups } from "../../../models/utils/filterEmptyGroups";
+import debounce from "lodash/debounce";
 
 const Left = ({ dispatch, bar }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
@@ -127,7 +125,7 @@ const Left = ({ dispatch, bar }) => {
     });
   };
   //选择的树节点
-  const onSelect = (curKey, e) => {
+  const onSelect = async (curKey, e) => {
     let temp = curKey;
     const isSelected = e.selected;
     const { key } = e.node;
@@ -142,18 +140,19 @@ const Left = ({ dispatch, bar }) => {
       setIsCtrlKeyPressing(false);
       temp = [key];
       selectedNodes = [e.node];
+      dispatch({
+        type: "bar/selectLayers",
+        payload: selectedNodes,
+      });
     }
-    // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
-    dispatch({
-      type: "bar/setIsShowRightMenu",
-      payload: false,
-    });
     // 多选情况下，点击那个剩哪个
     if (isSelected) {
+      // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
       dispatch({
         type: "bar/save",
         payload: {
           key: temp,
+          isShowRightMenu: false,
         },
       });
     } else {
@@ -168,11 +167,6 @@ const Left = ({ dispatch, bar }) => {
         },
       });
     }
-    // debugger;
-    dispatch({
-      type: "bar/selectLayers",
-      payload: selectedNodes,
-    });
   };
   // 响应右键点击
   const onRightClick = ({ event, node }) => {
@@ -209,6 +203,22 @@ const Left = ({ dispatch, bar }) => {
       payload: { isMultipleTree: event.nativeEvent.ctrlKey || event.nativeEvent.shiftKey },
     });
   };
+
+  // 获取子组件传过来的X，Y值
+  const getCurrentMenuLocation = useCallback((menuInfo, layer) => {
+    dispatch({
+      type: "bar/save",
+      payload: {
+        rightMenuInfo: menuInfo,
+        isShowRightMenu: true,
+        key: [menuInfo.id],
+        selectedComponentOrGroup: [layer],
+      },
+    });
+    dispatch({
+      type: "bar/calcDragScaleData",
+    });
+  });
   // 图层拖拽逻辑
   const onDrop = (info) => {
     const dropKey = info.node.key;
@@ -293,22 +303,6 @@ const Left = ({ dispatch, bar }) => {
     });
   };
 
-  // 获取子组件传过来的X，Y值
-  const getCurrentMenuLocation = useCallback((menuInfo, layer) => {
-    dispatch({
-      type: "bar/save",
-      payload: {
-        rightMenuInfo: menuInfo,
-        isShowRightMenu: true,
-        key: [menuInfo.id],
-        selectedComponentOrGroup: [layer],
-      },
-    });
-    dispatch({
-      type: "bar/calcDragScaleData",
-    });
-  });
-
   /** 画布中选择组件，左侧展开  */
   const [preSelected, setPreSelected] = useState([]);
   const [expandedKeys, setE] = useState([]);
@@ -354,27 +348,6 @@ const Left = ({ dispatch, bar }) => {
     setIsExpand(keys);
   };
 
-  // const treeLayerHoverFunc = (item) => {
-  //   item.style.backgroundColor = "red";
-  // };
-  /*  useEffect(() => {
-    console.log('expandedKeys', expandedKeys)
-    setTimeout(() => {
-      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
-        item.addEventListener('mouseover', (e) => treeLayerHoverFunc(item))
-      })
-    })
-    return () => {
-      [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
-        item.removeEventListener('mouseover', (e) => treeLayerHoverFunc(item))
-      })
-      return () => {
-        [...document.querySelectorAll('.ant-tree .ant-tree-list .ant-tree-treenode')].forEach(item => {
-          item.removeEventListener('mouseover', (e) => treeLayerHoverFunc(item))
-        })
-      }
-    }, [bar.layers, expandedKeys])*/
-
   return (
     <div className="left-menu">
       <div className="left-wrap">
@@ -404,7 +377,7 @@ const Left = ({ dispatch, bar }) => {
             switcherIcon={<DownOutlined />}
             onDrop={onDrop}
             onExpand={onExpand}
-            onSelect={onSelect}
+            onSelect={debounce(onSelect, 400)}
             onRightClick={onRightClick}
             autoExpandParent={true}
             treeData={bar.layers}
