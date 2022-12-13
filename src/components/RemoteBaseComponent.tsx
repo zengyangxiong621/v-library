@@ -11,7 +11,7 @@ const RemoteBaseComponent = (props: any) => {
   const isExit = typeof moduleType === "undefined";
 
   const [Comp, setComponent] = useState<React.FC | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const importComponent = useCallback(() => {
     return axios
@@ -50,7 +50,7 @@ const RemoteBaseComponent = (props: any) => {
     const { default: component } = (window as any).VComponents;
     await getComponentData(componentConfig);
     setComponent(() => component);
-    setLoading(false);
+    // setLoading(false);
   }, [importComponent, setComponent]);
 
   useEffect(() => {
