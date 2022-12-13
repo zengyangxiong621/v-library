@@ -23,7 +23,7 @@ import debounce from "lodash/debounce";
 const Left = ({ dispatch, bar }) => {
   //通过右键菜单的配置项生成antD dropDown组件所需要的menu配置
 
-  const [isExpand, setIsExpand] = useState([]);
+  const [hadExpandArr, setHadExpandArr] = useState([]);
   const [selected, setSelected] = useState([]);
   const activeIconRef = useRef();
   const [isCtrlKeyPressing, setIsCtrlKeyPressing] = useState(false);
@@ -306,11 +306,14 @@ const Left = ({ dispatch, bar }) => {
 
   /** 画布中选择组件，左侧展开  */
   const [preSelected, setPreSelected] = useState([]);
-  const [expandedKeys, setE] = useState([]);
+  const [expandedKeys, setExpandedKeys] = useState([]);
+  const [autoExpandParent, setAutoExpandParent] = useState(true);
 
   useEffect(() => {
-    // 这个setSelected和 在画布中选中组件，左侧分组展开没有逻辑联系，单独的是
+    // 这个setSelected和 <在画布中选中组件，左侧分组展开> 没有逻辑联系
     setSelected(bar.key);
+
+    setAutoExpandParent(true);
     preSelected.push(...bar.key);
     // 把选中的 “组” 图层给过滤掉
     const filterGroupsPreSelected = preSelected.filter((id) => !id.startsWith("group"));
@@ -318,35 +321,48 @@ const Left = ({ dispatch, bar }) => {
     const preSelectedSet = new Set(filterGroupsPreSelected);
     // 保存本次已经选中的图层
     setPreSelected([...preSelectedSet]);
-    setE([...preSelectedSet, ...bar.key]);
+    setExpandedKeys([...preSelectedSet, ...bar.key]);
   }, [bar.key]);
 
   //******** 展开 / 收起 ********* */
   const onExpand = (keys, { expanded, node }) => {
     const { modules } = node;
+    setAutoExpandParent(false);
+    setExpandedKeys(keys);
+    setHadExpandArr(keys);
+    // 分组中可能还包含多层分组，而这些子级分组不一定是展开状态的，所以用tempExpandedGroupReflect来记录keys中展开状态的子级分组, 以便在getAllIdByPath中作为递归的判断条件
+    const tempExpandedGroupReflect = {};
+    keys.forEach((id) => {
+      if (id.startsWith("group")) {
+        tempExpandedGroupReflect[id] = true;
+      }
+    });
+    const allIds = [];
+    const getAllIdByPath = (arr) => {
+      for (let i = 0, len = arr.length; i < len; i++) {
+        const itemId = arr[i].id;
+        // 组id 就不添加了，防止最终allIds数组的长度过大导致下方循环耗时过长
+        if (!itemId.startsWith("group")) {
+          allIds.push(arr[i].id);
+        }
+        if (tempExpandedGroupReflect[itemId] && arr[i].modules) {
+          getAllIdByPath(arr[i].modules);
+        }
+      }
+    };
+    getAllIdByPath(modules);
     // 收起
     if (!expanded) {
-      const allIds = [];
-      const getAllIdByPath = (arr) => {
-        for (let i = 0, len = arr.length; i < len; i++) {
-          const itemId = arr[i].id;
-          // 组id 就不添加了，防止最终allIds数组的长度过大导致下方循环耗时过长
-          if (!itemId.startsWith("group")) {
-            allIds.push(arr[i].id);
-          }
-          if (arr[i].modules) {
-            getAllIdByPath(arr[i].modules);
-          }
-        }
-      };
-      getAllIdByPath(modules);
-      const finalNeedExpandKeys = preSelected.filter((id) => !allIds.includes(id));
-      setPreSelected(finalNeedExpandKeys);
-      setE(finalNeedExpandKeys);
-      return;
+      // 用一个对象保存id, 避免双循环
+      const tempObj = {};
+      allIds.forEach((id) => {
+        tempObj[id] = true;
+      });
+      const newPreSelected = preSelected.filter((id) => !tempObj[id]);
+      setPreSelected(newPreSelected);
+    } else {
+      setPreSelected([...new Set(allIds), ...preSelected]);
     }
-    setE(keys);
-    setIsExpand(keys);
   };
 
   return (
@@ -380,7 +396,7 @@ const Left = ({ dispatch, bar }) => {
             onExpand={onExpand}
             onSelect={finalSelectFn}
             onRightClick={onRightClick}
-            autoExpandParent={true}
+            autoExpandParent={autoExpandParent}
             treeData={bar.layers}
             selectedKeys={bar.key}
             expandedKeys={expandedKeys}
@@ -390,7 +406,7 @@ const Left = ({ dispatch, bar }) => {
                 <div title="">
                   <EveryTreeNode
                     {...nodeData}
-                    isExpand={isExpand}
+                    hadExpandArr={hadExpandArr}
                     getCurrentMenuLocation={getCurrentMenuLocation}
                   />
                 </div>
