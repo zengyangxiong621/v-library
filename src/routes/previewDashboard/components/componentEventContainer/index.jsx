@@ -322,7 +322,7 @@ const ComponentEventContainer = ({
                 } else if (
                   ["cascader", "select2"].includes(component.moduleName) ||
                   (data &&
-                    (data[callback.origin] === 0 ? true : data[callback.origin]) &&
+                    ([0, false].includes(data[callback.origin]) ? true : data[callback.origin]) &&
                     callbackArgs[callback.target] !== data[callback.origin])
                 ) {
                   temp = true;
