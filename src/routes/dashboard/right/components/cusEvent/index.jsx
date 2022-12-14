@@ -472,7 +472,6 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     } else {
       action.layerType = "group";
     }
-    console.log("action", action);
     props.onChange();
   };
   const selectComponentSelect = (val, option, action) => {
@@ -657,16 +656,17 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     currentAction.componentConfig = deepClone(data);
     let component = bar.fullAmountComponents.find((item) => item.id === currentAction.component[0]);
     component.config = deepClone([
-      ...copyComponentConfig.config.filter((item) =>
-        ["dimension", "hideDefault"].includes(item.name)
-      ),
-      ...data,
+      ...component.config.filter((item) => ["dimension", "hideDefault"].includes(item.name)),
+      ...currentAction.componentConfig,
     ]);
+    _data.events = tabpanes;
+    props.onChange(true);
     dispatch({
       type: "bar/save",
+      payload: {
+        componentConfig: component,
+      },
     });
-    _data.events = tabpanes;
-    props.onChange();
   };
 
   const handleComponentClose = () => {

@@ -632,7 +632,7 @@ const DataConfigDrawer = ({ bar, dispatch, ...props }) => {
         </React.Fragment>
       ) : null}
       <Collapse
-        defaultActiveKey={activeCollapseKeys}
+        activeKey={activeCollapseKeys}
         onChange={collapseChange}
         className={["custom-collapse", item.isNewAdd ? "collapse-add-filter" : null].join(" ")}
       >

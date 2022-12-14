@@ -134,7 +134,7 @@ const DataSourceConfig = ({ bar, global, dispatch, ...props }) => {
         }
       }
     }
-  }, [_data.dataType]);
+  }, [_data.dataType, _data.id]);
 
   const dataSourceTypeChange = async () => {
     const newDataSourceTypes = Object.assign({}, dataSourceTypes);

@@ -54,7 +54,7 @@ import { DIMENSION } from "../routes/dashboard/center/constant";
 import { generateLayers } from "./utils/generateLayers";
 import { filterEmptyGroups } from "./utils/filterEmptyGroups";
 import { addSomeAttrInLayers, clearNullGroup } from "./utils/addSomeAttrInLayers";
-import { http } from "../services/request";
+import { http } from "@/services/request";
 import { getDeepPanelAndStatusDetails, getPanelStatusDetails } from "./utils/requestResolve";
 import { defaultData, IBarState, IFullAmountDashboardDetail, IPanelState } from "./defaultData/bar";
 import dashboard from "./dashboard";
@@ -189,14 +189,18 @@ export default {
           if (item.dataType === "static") {
             data = item.staticData.data;
           } else {
-            data = await http({
-              method: "post",
-              url: "/visual/container/data/get",
-              body: {
-                id: item.id,
-                callBackParamValues: bar.callbackArgs,
-              },
-            });
+            try {
+              data = await http({
+                method: "post",
+                url: "/visual/container/data/get",
+                body: {
+                  id: item.id,
+                  callBackParamValues: bar.callbackArgs,
+                },
+              });
+            } catch (err) {
+              data = [];
+            }
           }
           bar.dataContainerDataList.push({ id: item.id, data });
         });
@@ -481,10 +485,10 @@ export default {
         (pre: Array<any>, cur: any) => pre.concat(cur?.components || []),
         []
       );
-      yield yield put({
-        type: "getComponentsData",
-        payload: fullAmountComponents,
-      });
+      // yield yield put({
+      //   type: "getComponentsData",
+      //   payload: fullAmountComponents,
+      // });
       // 全量面板
       const fullAmountPanels = bar.fullAmountDashboardDetails.reduce(
         (pre: Array<any>, cur: any) => pre.concat("type" in cur ? cur : []),
@@ -1135,11 +1139,10 @@ export default {
         },
       });
     },
-    *selectLayers({ payload }: any, { call, put, select }: any): any {
+    *selectLayers({ payload }: any, { put }: any): any {
       yield put({
         type: "clearLayersSelectedStatus",
       });
-
       yield put({
         type: "setLayers",
         payload,
@@ -1154,7 +1157,7 @@ export default {
     },
     *createComponent(
       { payload, itemData, createType = "component" }: any,
-      { call, put, select }: any
+      { put, select }: any
     ): any {
       const componentConfig = payload;
       // payload: componentConfig
@@ -1224,7 +1227,6 @@ export default {
           ],
           id: isPanel ? stateId : dashboardId,
         });
-        console.log("参数", { ...itemData, id });
         yield put({
           type: "addComponent",
           payload: { final: { ...itemData, id }, insertId },
@@ -1262,7 +1264,6 @@ export default {
         },
       });
       // todo 创建面板对 fullAmountRouteList 的影响
-      console.log("data", data);
       if (data) {
         const {
           id,
@@ -1301,7 +1302,6 @@ export default {
           "drillDownPanel",
         }
 
-        console.log("states");
         if (panelType === 0 || panelType === 2) {
           // 动态面板或者是下钻面板
           fullAmountRouteList.push({
@@ -1398,7 +1398,6 @@ export default {
         },
       });
       return data;
-      // console.log('data', data)
     },
     *addDataContainer({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1485,7 +1484,6 @@ export default {
       //     parent.splice(index, 1)
       //   }
       // })
-      console.log("bar.fullAmountLayers", bar.fullAmountLayers);
     },
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
@@ -1613,16 +1611,6 @@ export default {
           fullAmountRouteList,
         },
       });
-      // yield put({
-      //   type: "selectLayers",
-      //   payload: [
-      //     {
-      //       ...panelConfig,
-      //       type: panelConfig.panelType,
-      //       selected: true,
-      //     },
-      //   ],
-      // });
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1881,6 +1869,33 @@ export default {
       });
     },
     *createDynamicPanel({ payload: { stateId } }: any, { call, put, select }: any): any {},
+    *updateComponentThemeConfig(
+      { payload: { componentConfig, interactionConfig, isThemeUpdate } }: any,
+      { call, put, select }: any
+    ): any {
+      const bar: any = yield select(({ bar }: any) => bar);
+      const params = {
+        configs: [
+          {
+            id: componentConfig.id,
+            events: interactionConfig.events,
+          },
+        ],
+        dashboardId: bar.stateId || bar.dashboardId,
+      };
+      yield http({
+        url: "/visual/module/defineEvent",
+        method: "post",
+        body: params,
+      });
+      console.log("componentConfig componentConfig", deepClone(componentConfig));
+      if (!isThemeUpdate) {
+        yield put({
+          type: "setComponentConfig",
+          payload: componentConfig,
+        });
+      }
+    },
   },
 
   reducers: {
@@ -1935,20 +1950,27 @@ export default {
         (item: any) => item.id === containerData.id
       );
       const index = state.dataContainerList.findIndex((item: any) => item.id === containerData.id);
-      if (data) {
-        if (container) {
-          // container 存在，说明是修改
+      // if (data) {
+      if (container) {
+        // container 存在，说明是修改
+        if (data) {
           container.data = data;
-        } else {
-          // 不存在则新增
-          state.dataContainerDataList.unshift({ id: containerData.id, data });
         }
+      } else {
+        // 不存在则新增
+        state.dataContainerDataList.unshift({ id: containerData.id, data });
       }
+      // }
       if (index !== -1) {
         state.dataContainerList[index] = containerData;
       } else {
         state.dataContainerList.unshift(containerData);
       }
+      console.log("--------");
+      console.log("state.dataContainerList", state.dataContainerList);
+      console.log("state.dataContainerDataList", state.dataContainerDataList);
+      console.log("-------");
+
       return {
         ...state,
         dataContainerList: state.dataContainerList,
@@ -2609,7 +2631,7 @@ export default {
         return item.id === payload.id;
       });
       state.fullAmountComponents.splice(index, 1, state.componentConfig);
-      return { ...state };
+      return { ...state, fullAmountComponents: state.fullAmountComponents };
     },
     setPanelConfig(state: IBarState, { payload }: any) {
       state.panelConfig = payload;

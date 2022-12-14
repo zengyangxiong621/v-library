@@ -127,10 +127,10 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
       >
         <div className="data-container-body-wrapper">
           <div className="data-container-handle">
-            <Input.Search
+            <Input
               placeholder="请输入"
               maxLength={30}
-              suffix={
+              suffix={  
                 <SearchOutlined
                   className="input-search-icon"
                   onClick={() => handleSearch(inputValue)}

@@ -280,7 +280,7 @@ const Ruler = ({ bar, dispatch, mouse, cRef }) => {
           height: 20,
           background: "#151620",
           position: "absolute",
-          zIndex: 10000,
+          zIndex: 1000,
           cursor: "pointer",
           display: "flex",
           justifyContent: "center",

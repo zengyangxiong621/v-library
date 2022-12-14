@@ -6,7 +6,7 @@ import { http } from "@/services/request";
 import { mergeSameAndAddDiff } from "@/routes/dashboard/components/moduleUpdate/methods/mergeModuleConfig";
 import importComponent from "@/routes/dashboard/components/moduleUpdate/methods/fetchComponentJsFile";
 
-// import { deepClone } from '@/utils/index'
+import lodash from "lodash"
 
 const ComponentCard = (props) => {
   const [targetConfig, setTargetConfig] = useState({});
@@ -26,19 +26,15 @@ const ComponentCard = (props) => {
       ? allModulesConfig.find((item) => item.moduleName === moduleName)
       : {};
     if (targetObj) {
-      // // TODO  这儿目前用if是为了兼容那些组件config.js文件中还没加上moduleType字段的组件。
-      // 从原子组件信息中获取该组件目前最新的moduleType
-      // if (targetObj.moduleType) {
-      //   moduleType = targetObj.moduleType
-      // }
-      setTargetConfig(targetObj.config);
+      // @Mark 需要做一层深拷贝，不然会影响到allModulesConfig中的原对象，导致后续更新同一类似组件时出bug
+      const deepTargetObj = lodash.cloneDeep(targetObj);
+      setTargetConfig(deepTargetObj.config);
     } else {
       setTargetConfig({});
     }
   }, []);
 
   const updateVersion = async () => {
-    // debugger
     const hadMergeConfig = mergeSameAndAddDiff(oldConfig, targetConfig);
     // Temp：暂时为了兼容那些还没有在config.js中添加moduleType的组件
     const finalBody = {
@@ -75,18 +71,24 @@ const ComponentCard = (props) => {
       const fetchComponentOptions = {
         moduleLastType: moduleType,
         moduleName,
-        moduleVersion: lastModuleVersion,
+        moduleLastVersion: lastModuleVersion,
       };
       window.eval(`${await importComponent(fetchComponentOptions)}`);
       const { ComponentDefaultConfig } = window.VComponents;
       const index = bar.fullAmountComponents.findIndex((item) => item.id === id);
       bar.fullAmountComponents.splice(index, 1, { ...ComponentDefaultConfig, id });
-      dispatch({
-        type: "bar/save",
-      });
-      dispatch({
+      await dispatch({
         type: "bar/getDashboardDetails",
         payload: dashboardId,
+      });
+      await dispatch({
+        type: "bar/getFullAmountDashboardDetails",
+        payload: {
+          layers: bar.layers,
+        },
+      });
+      await dispatch({
+        type: "bar/save",
       });
     }
   };

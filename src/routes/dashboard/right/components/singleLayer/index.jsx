@@ -242,16 +242,24 @@ const SingleLayer = ({ bar, dispatch }) => {
     });
   };
 
-  const eventChange = debounce(() => {
+  const eventChange = debounce(async (isThemeUpdate = false) => {
     componentConfig.interaction.events = interactionConfig.events;
     dispatch({
-      type: "bar/setComponentConfig",
-      payload: componentConfig,
+      type: "bar/updateComponentThemeConfig",
+      payload: {
+        componentConfig,
+        interactionConfig,
+        isThemeUpdate,
+      },
     });
-    saveEventsData({
-      id: componentConfig.id,
-      events: interactionConfig.events,
-    });
+    // dispatch({
+    //   type: "bar/setComponentConfig",
+    //   payload: componentConfig,
+    // });
+    // await saveEventsData({
+    //   id: componentConfig.id,
+    //   events: interactionConfig.events,
+    // });
   }, 300);
 
   const saveEventsData = async (param) => {
@@ -345,8 +353,7 @@ const SingleLayer = ({ bar, dispatch }) => {
               })}
             </ComponentCard>
           </TabPane>
-          {
-            !componentConfig.isHideData &&
+          {!componentConfig.isHideData && (
             <TabPane tab="数据" key="2">
               <ComponentCard data={componentConfig}>
                 <DataConfig
@@ -362,7 +369,7 @@ const SingleLayer = ({ bar, dispatch }) => {
                 />
               </ComponentCard>
             </TabPane>
-          }
+          )}
           <TabPane tab="交互" key="3">
             <ComponentCard data={componentConfig}>
               <LoadAnimation data={interactionConfig} onChange={interactionChange} />

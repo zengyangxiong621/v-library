@@ -61,7 +61,9 @@ const DataContainerItem = (props) => {
   };
   return (
     <div className="data-container-item">
-      <span className={["status-light", data.enable ? "starting" : "stop"].join(" ")}>⬤</span>
+      <span className={["status-light", data.modules.length > 0 ? "starting" : "stop"].join(" ")}>
+        ⬤
+      </span>
       <div className="edit-area">
         {isEdit ? (
           <Input

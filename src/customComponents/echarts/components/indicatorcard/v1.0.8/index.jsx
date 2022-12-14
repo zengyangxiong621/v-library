@@ -178,7 +178,7 @@ const IndicatorCard = (props) => {
   }, [originData])
   
   const handleClick = (e) => {
-    props.onClick && props.onClick({value, ...originData[0]})
+    props.onClick && props.onClick(e, {value, ...originData[0]})
   }
   const handleMouseEnter = (e) => {
     props.onMouseEnter && props.onMouseEnter(e, {value, ...originData[0]})
@@ -198,7 +198,6 @@ const IndicatorCard = (props) => {
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-
     />
   );
 };
