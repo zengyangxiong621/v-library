@@ -5,11 +5,7 @@ const routesConfig = (app: any) => ({
   title: "preview-dashboard",
   component: newDynamic(
     app,
-    [
-      import("../../models/previewDashboard"),
-      import("../../models/bar"),
-      import("../../models/drillDown"),
-    ],
+    [import("../../models/previewDashboard")],
     () => import("./previewDashboard")
   ),
 });

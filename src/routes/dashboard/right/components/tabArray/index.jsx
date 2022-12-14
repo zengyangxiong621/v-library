@@ -47,6 +47,7 @@ const TabArray = (props) => {
           const unit = copyValue.displayName.replace(/\d/, "");
           copyValue.displayName = unit + (tabs.length + 1);
           copyValue.key = String(tabs.length + 1);
+          copyValue.name = "tab" + String(tabs.length + 1);
           setActiveKey(copyValue.key);
           _data.activeKey = copyValue.key;
           tabs.push(copyValue);
@@ -57,15 +58,14 @@ const TabArray = (props) => {
         tabs.splice(index, 1);
         setActiveKey(String(index - 1 > 1 ? index - 1 : 1));
         _data.activeKey = String(index - 1 > 1 ? index - 1 : 1);
-        console.log("_data.activeKey", _data.activeKey);
       }
       tabs.forEach((tab, index) => {
         const unit = tab.displayName.replace(/\d/, "");
         setUnit(unit);
         tab.displayName = unit + (index + 1);
         tab.key = String(index + 1);
+        tab.name = "tab" + String(index + 1);
       });
-      console.log("_data.activeKey", _data.activeKey);
       if (_loading) {
         setIsLoading(true);
         props.onChange(_data.activeKey, (isLoading) => {

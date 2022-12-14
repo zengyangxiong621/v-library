@@ -603,7 +603,9 @@ const CustomDraggable = ({
     config: IConfig,
     panel: IPanel | undefined
   ) => {
-    console.log("selectedComponentRefs", bar.selectedComponentRefs);
+    e.persist();
+    e.preventDefault();
+    e.stopPropagation();
     if (
       Object.keys(bar.selectedComponentRefs).length > 1 &&
       layer.id in bar.selectedComponentRefs

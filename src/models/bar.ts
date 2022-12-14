@@ -1139,11 +1139,10 @@ export default {
         },
       });
     },
-    *selectLayers({ payload }: any, { call, put, select }: any): any {
+    *selectLayers({ payload }: any, { put }: any): any {
       yield put({
         type: "clearLayersSelectedStatus",
       });
-
       yield put({
         type: "setLayers",
         payload,
@@ -1158,7 +1157,7 @@ export default {
     },
     *createComponent(
       { payload, itemData, createType = "component" }: any,
-      { call, put, select }: any
+      { put, select }: any
     ): any {
       const componentConfig = payload;
       // payload: componentConfig
@@ -1228,7 +1227,6 @@ export default {
           ],
           id: isPanel ? stateId : dashboardId,
         });
-        console.log("参数", { ...itemData, id });
         yield put({
           type: "addComponent",
           payload: { final: { ...itemData, id }, insertId },
@@ -1266,7 +1264,6 @@ export default {
         },
       });
       // todo 创建面板对 fullAmountRouteList 的影响
-      console.log("data", data);
       if (data) {
         const {
           id,
@@ -1305,7 +1302,6 @@ export default {
           "drillDownPanel",
         }
 
-        console.log("states");
         if (panelType === 0 || panelType === 2) {
           // 动态面板或者是下钻面板
           fullAmountRouteList.push({
@@ -1402,7 +1398,6 @@ export default {
         },
       });
       return data;
-      // console.log('data', data)
     },
     *addDataContainer({ payload }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
@@ -1489,7 +1484,6 @@ export default {
       //     parent.splice(index, 1)
       //   }
       // })
-      console.log("bar.fullAmountLayers", bar.fullAmountLayers);
     },
     // 获取系统素材分类的数据
     *getSystemMaterialClass({ payload }: any, { call, put }: any): any {
@@ -1617,16 +1611,6 @@ export default {
           fullAmountRouteList,
         },
       });
-      // yield put({
-      //   type: "selectLayers",
-      //   payload: [
-      //     {
-      //       ...panelConfig,
-      //       type: panelConfig.panelType,
-      //       selected: true,
-      //     },
-      //   ],
-      // });
     },
     *addPanelState({ payload, cb }: any, { call, put, select }: any): any {
       const bar: any = yield select(({ bar }: any) => bar);
