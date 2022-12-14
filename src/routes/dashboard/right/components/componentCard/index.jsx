@@ -23,7 +23,7 @@ const ComponentCard = (props) => {
   let { moduleType } = props.data;
   useEffect(() => {
     const targetObj = Array.isArray(allModulesConfig)
-      ? allModulesConfig.find((item) => item.moduleName === moduleName)
+      ? allModulesConfig.find((item) => item?.moduleName === moduleName)
       : {};
     if (targetObj) {
       // @Mark 需要做一层深拷贝，不然会影响到allModulesConfig中的原对象，导致后续更新同一类似组件时出bug
