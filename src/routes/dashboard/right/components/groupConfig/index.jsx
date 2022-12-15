@@ -14,6 +14,7 @@ import { Form, Collapse } from "antd";
 
 import debounce from "lodash/debounce";
 import { http } from "../../../../../services/request";
+import { clearNullGroup } from "@/models/utils/addSomeAttrInLayers";
 
 const dashboardId = window.location.pathname.split("/")[2];
 
@@ -55,18 +56,19 @@ const GroupConfig = ({ bar, dispatch, ...props }) => {
       method: "post",
       body: params,
     });
+    const filterNullLayers = clearNullGroup(layers);
     if (layers) {
       dispatch({
         type: "bar/updateDashboardOrStateConfig",
         payload: {
           id: bar.stateId || bar.dashboardId,
-          layers,
+          layers: filterNullLayers,
         },
       });
       dispatch({
         type: "bar/save",
         payload: {
-          layers,
+          layers: filterNullLayers,
         },
       });
     }

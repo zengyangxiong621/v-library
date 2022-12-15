@@ -17,6 +17,7 @@ import ComponentCard from "../componentCard";
 import componentLib from "../index";
 import { IPanel } from "@/routes/dashboard/center/components/CustomDraggable/type";
 import Checkbox from "../checkBox";
+import { clearNullGroup } from "@/models/utils/addSomeAttrInLayers";
 
 const dashboardId = window.location.pathname.split("/")[2];
 
@@ -200,17 +201,19 @@ const PageSetting = ({ bar, dispatch, history, ...props }) => {
     });
     if (layers) {
       currentLayer.hideDefault = param.value;
+      const filterNullLayers = clearNullGroup(layers);
+
       dispatch({
         type: "bar/updateDashboardOrStateConfig",
         payload: {
           id: bar.stateId || bar.dashboardId,
-          layers,
+          layers: filterNullLayers,
         },
       });
       dispatch({
         type: "bar/save",
         payload: {
-          layers,
+          layers: filterNullLayers,
         },
       });
     }
