@@ -2118,6 +2118,7 @@ export default {
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       state.selectedComponentRefs = {};
+      state.selectedComponentDOMs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key];
@@ -2314,6 +2315,7 @@ export default {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
       });
+      // 左侧树多选
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       state.selectedComponents = [
         ...state.fullAmountComponents.filter((component) =>
@@ -2321,6 +2323,14 @@ export default {
         ),
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
+      state.selectedComponentRefs = {};
+      state.selectedComponentDOMs = {};
+      Object.keys(state.allComponentRefs).forEach((key) => {
+        if (state.selectedComponentIds.includes(key)) {
+          state.selectedComponentRefs[key] = state.allComponentRefs[key];
+          state.selectedComponentDOMs[key] = state.allComponentDOMs[key];
+        }
+      });
       return { ...state };
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换
