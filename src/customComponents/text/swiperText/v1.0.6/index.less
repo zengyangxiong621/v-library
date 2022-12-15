@@ -1,0 +1,79 @@
+@includes "./swiper.min.css";
+.swipwe-box {
+  width: 600px;
+  height: 400px;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.swipwe-box .swiper-container {
+  width: 100%;
+  height: 100%;
+  /* 取消鼠标复制功能 */
+  -moz-user-select: none;
+  /* Firefox私有属性 */
+  -webkit-user-select: none;
+  /* WebKit内核私有属性 */
+  -ms-user-select: none;
+  /* IE私有属性(IE10及以后) */
+  -khtml-user-select: none;
+  /* KHTML内核私有属性 */
+  -o-user-select: none;
+  /* Opera私有属性 */
+  user-select: none;
+  /* CSS3属性 */
+}
+
+.swipwe-box .swiper-slide {
+  // text-align: center;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  /* Center slide text vertically */
+}
+.swiper-slide span{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.swiper-type{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  transition: 300ms;
+  /* 非高亮颜色 */
+  transform: scale(0.8);
+  opacity: 0.4
+}
+
+
+
+.swipwe-box .swiper-slide-active,
+.swipwe-box .swiper-slide-duplicate-active {
+  /* 高亮颜色 */
+  color: #fafbfc;
+  transform: scale(1);
+  opacity: 1 !important;
+}
+
+.special-type .swiper-slide-next,.special-type .swiper-slide-prev{
+  opacity: 0.6 !important;
+}
+.swipwe-box .hide{
+  background: rgba(76, 255, 231, 0.15);
+}
+
+.swipwe-box .no-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

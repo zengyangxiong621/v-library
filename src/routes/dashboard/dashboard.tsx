@@ -39,6 +39,9 @@ function App({ bar, dispatch, location, history }: any) {
   const [moduleUpdateVisible, setModuleUpdateVisible] = useState(false);
   const [componentThemeVisible, setComponentThemeVisible] = useState(false);
   const [recycleBinVisible, setRecycleBinVisible] = useState(false);
+  
+  // 获取所有组件
+  const [allComponents, setAllComponents] = useState({})
 
   const [customMenuOptions, setCustomMenuOptions] = useState(menuOptions);
   // 关闭右侧抽屉后,头部导航栏上相应的activeIcon需要取消active的状态
@@ -175,10 +178,26 @@ function App({ bar, dispatch, location, history }: any) {
     };
   }, []);
 
+  // 格式化组件数据
+  const formatComponentClass = (list: []) => {
+    let classList = {}
+    if(list.length){
+      list.map((item:any) => {
+        if(classList.hasOwnProperty(item.moduleType)){
+          classList[item.moduleType].push(item)
+        }else{
+          classList[item.moduleType] = []
+          classList[item.moduleType].push(item)
+        }
+      })
+    }
+    return classList
+  }
+
   /**
    * description:  是否显示中心画布上方的导航栏
    */
-  const showWhichBar = (whichBar: string) => {
+  const showWhichBar = async (whichBar: string) => {
     const visibleReflect = {
       dataContainer: false,
       callbackArgs: false,
@@ -189,6 +208,23 @@ function App({ bar, dispatch, location, history }: any) {
     };
     setIsResetActiveIcon(false);
     if (["zujian", "sucai"].includes(whichBar)) {
+      // 点击组件并且所有组件为空数组时
+      if(whichBar === 'zujian' && JSON.stringify(allComponents) == "{}"){
+        const data: any = await http({
+          url: "/visual/module-manage/queryModuleList",
+          method: "post",
+          body: {
+            status: 0,
+            pageNo: 0,
+            pageSize: 100
+          },
+        })
+        data.content.forEach((item: any) => {
+          item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`;
+        });
+        let contentList = formatComponentClass(data.content)
+        setAllComponents(contentList)
+      }
       setZujianORsucai(whichBar);
       setShowTopBar(true);
       return;
@@ -270,7 +306,7 @@ function App({ bar, dispatch, location, history }: any) {
           <Left />
         </div>
         <div className="center-wrap">
-          {showTopBar && <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} />}
+          {showTopBar && <CenterHeaderBar showTopBar={showTopBar} zujianORsucai={zujianORsucai} allComponents={allComponents} />}
           <CenterCanvas focus$={focus$} />
           <CenterBottomBar focus$={focus$} />
         </div>

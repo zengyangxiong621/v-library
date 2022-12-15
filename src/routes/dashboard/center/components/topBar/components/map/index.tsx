@@ -8,34 +8,12 @@ const Map = (props: any) => {
   // const { data } = props
   const { current, index } = props;
   const [dataArr, setDataArr] = useState<any>([]);
-  const [dataLoading, setDataLoading] = useState(true);
-  useEffect(() => {
-    if (current.length && current[0] === index) {
-      getData();
-    }
-  }, []);
+  const [dataLoading, setDataLoading] = useState(false);
 
-  // 获取地图组件数据
-  const getData = async () => {
-    setDataLoading(true);
-    const data: any = await http({
-      url: "/visual/module-manage/queryModuleList",
-      method: "post",
-      body: {
-        type: ["map"],
-        status: 0,
-        pageNo: 0,
-        pageSize: 100,
-      },
-    }).catch(() => {
-      setDataLoading(false);
-    });
-    data.content.forEach((item: any) => {
-      item.photoPath = `${(window as any).CONFIG.COMP_URL}${item.photoPath}`;
-    });
-    setDataArr(data.content);
-    setDataLoading(false);
-  };
+  useEffect(() => {
+    setDataArr(props.data || [])
+  }, [props.data]);
+
 
   return (
     <>
