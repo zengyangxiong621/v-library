@@ -1,8 +1,7 @@
 import React from "react";
 import * as echarts from "echarts";
 import ComponentDefaultConfig from "./config";
-import panel from '@/assets/images/背景.png'
-import { nodes, labelNodes, linesData, dashedLinesData } from "./dataConfig.js";
+import { nodes, labelNodes, linesData, dashedLinesData, bgImage } from "./dataConfig.js";
 class FlowChart extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -140,7 +139,6 @@ class FlowChart extends React.PureComponent {
         matchNode && matchNode[fields[2]]
           ? JSON.parse(JSON.stringify(matchNode[fields[2]]))
           : customData;
-      console.log(customData,'customData')
       var node = {
         nodeName: name,
         value: [x, y],
@@ -247,11 +245,9 @@ class FlowChart extends React.PureComponent {
             lineHeight: 20,
             width: labelSize.labelWidth,
             height: labelSize.labelHeight,
-            // backgroundColor: {  // 处理标签背景图
-            //   image: panel,
-            //   width: labelSize.labelWidth,
-            //   height: labelSize.labelHeight
-            // },
+            backgroundColor: {  // 处理标签背景图
+              image: bgImage
+            },
             formatter(item) {
               const { count, rate, type, count_unit, rate_unit } = item.data.itemStyle;
               if (type === "send") {
@@ -354,7 +350,6 @@ class FlowChart extends React.PureComponent {
       myChart.resize();
       myChart.setOption(this.getOptions());
     }
-
     return (
       <div
         className="flow-chart"
