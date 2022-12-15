@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import "./index.less";
 import EveryItem from "../everyItem/index";
 
-import { http } from "@/services/request";
+// import { http } from "@/services/request";
 import { Spin } from "antd";
 
 const Charts = (props: any) => {
@@ -12,46 +12,26 @@ const Charts = (props: any) => {
   const [dataLoading, setDataLoading] = useState(false);
   const liHover = (key: string) => {
     setActive(key);
-    if (!allModules[key]) {
-      getData([key]);
-    }
   };
+
+  const formatSubModule = (data=[]) => {
+    let classList = {
+      'all': data
+    }
+    data.map((item:any) => {
+      if(classList.hasOwnProperty(item.subModuleType)){
+        classList[item.subModuleType].push(item)
+      }else{
+        classList[item.subModuleType] = []
+        classList[item.subModuleType].push(item)
+      }
+    })
+    setAllModules(classList);
+  }
 
   useEffect(() => {
-    if (current.length && current[0] === index) {
-      getData([]);
-    }
-  }, []);
-
-  // 获取组件数据
-  const getData = async (subType: any) => {
-    setDataLoading(true);
-    const data: any = await http({
-      url: "/visual/module-manage/queryModuleList",
-      method: "post",
-      body: {
-        type: ["chart"],
-        status: 0,
-        pageNo: 0,
-        pageSize: 100,
-        subType: subType[0] === "all" ? [] : subType,
-      },
-    }).catch(() => {
-      setDataLoading(false);
-    });
-    data.content.forEach((item: any) => {
-      item.photoPath = `${(window as any).CONFIG.COMP_URL}/${item.photoPath}`;
-    });
-    const classType = subType.length ? subType[0] : "all";
-    // 如果不存在就添加
-    if (!allModules[classType]) {
-      const obj: any = {};
-      obj[classType] = data.content;
-      const list = { ...allModules, ...obj };
-      setAllModules(list);
-    }
-    setDataLoading(false);
-  };
+    formatSubModule(props.data)
+  }, [props.data]);
 
   return (
     <div className="Charts-wrap">
@@ -69,8 +49,8 @@ const Charts = (props: any) => {
         })}
       </ul>
       <Spin className="chart-loading" spinning={dataLoading} />
-      {allModules[active] &&
-        (allModules[active].length ? (
+      {
+        allModules[active] && allModules[active].length ? (
           <div className="charts-list">
             {allModules[active]?.map((item: any, index: number) => {
               return <EveryItem data={item} key={index} />;
@@ -78,7 +58,7 @@ const Charts = (props: any) => {
           </div>
         ) : (
           <div className="charts-list">暂无内容</div>
-        ))}
+        )}
     </div>
   );
 };
