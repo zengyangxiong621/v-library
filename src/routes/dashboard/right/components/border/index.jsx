@@ -33,14 +33,16 @@ const Border = (props) => {
   const selectBgc = (e) => {
     let style;
     // 判断弹出的颜色选择器应该放在上面或者下面
+    let _left = e.view.innerWidth - e.clientX > 270 ? e.clientX - 80 : e.clientX - 260;
     if (e.view.innerHeight - e.clientY < 350) {
+      console.log("_left", _left);
       style = {
-        left: `${e.clientX - 80}px`,
+        left: `${_left}px`,
         bottom: `${e.view.innerHeight - e.clientY + 20}px`,
       };
     } else {
       style = {
-        left: `${e.clientX - 80}px`,
+        left: `${_left}px`,
         top: `${e.clientY + 20}px`,
       };
     }
