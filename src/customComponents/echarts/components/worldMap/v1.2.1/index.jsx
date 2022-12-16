@@ -140,7 +140,6 @@ class WorldMap extends Component {
               name: dataItem[1]?.name,
               value: coordData[dataItem[1]?.name]?.concat([dataItem[1]?.value]),
             }
-            // }
           }),
         },
       )
@@ -296,7 +295,15 @@ class WorldMap extends Component {
     const options = {
       radius: '100%',
       tooltip: {
+        show: true,
         trigger: 'item',
+        formatter: function (params) {
+          let name = params.name;
+          let longitude = params.value[0];
+          let latitude = params.value[1];
+          let text = `<div style="font-weight:600"><span style="width:10px;height:10px;background:${flyColor};border-radius:50%;display:inline-block"></span> &nbsp ${name} &nbsp&nbsp [${longitude}, ${latitude}]</div>`;
+          return text;
+        }
       },
       legend: {
         orient: 'horizontal', //图例的排列方向
