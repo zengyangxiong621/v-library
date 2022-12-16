@@ -2197,6 +2197,7 @@ export default {
       let xPositionList: number[] = [];
       let yPositionList: number[] = [];
       let status: "分组" | "多组件" = "分组";
+      console.log("selectedComponentOrGroup", state.selectedComponentOrGroup);
       if (state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in firstLayer) {
@@ -2256,16 +2257,15 @@ export default {
         }
       } else if (state.selectedComponentOrGroup.length > 1) {
         status = "多组件";
-        state.selectedComponentOrGroup.forEach((layer: any) => {
-          const positionArr = calcGroupPosition(
-            state.selectedComponentOrGroup,
-            state.fullAmountComponents,
-            state.fullAmountPanels
-          );
-          xPositionList = positionArr[0];
-          yPositionList = positionArr[1];
-        });
+        const positionArr = calcGroupPosition(
+          state.selectedComponentOrGroup,
+          state.fullAmountComponents,
+          state.fullAmountPanels
+        );
+        xPositionList = positionArr[0];
+        yPositionList = positionArr[1];
       }
+
       xPositionList.sort((a, b) => a - b);
       yPositionList.sort((a, b) => a - b);
       const width = xPositionList[xPositionList.length - 1] - xPositionList[0] || 0;
@@ -2305,6 +2305,7 @@ export default {
           }
         });
       }
+      console.log("calcDragScaleData", state.scaleDragData);
       return {
         ...state,
       };
