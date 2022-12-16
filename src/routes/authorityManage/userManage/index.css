@@ -1,0 +1,88 @@
+@import '~antd/dist/antd.dark.css';
+.userManage {
+  background-color: #171a24;
+  width: 100%;
+  height: 100vh;
+  padding: 24px 32px;
+}
+.userManage .title {
+  width: 64px;
+  height: 22px;
+  font-family: PingFangSC-Semibold;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.userManage .header {
+  margin-bottom: 16px;
+}
+.userManage .header .opt-btn {
+  margin-top: 15px;
+}
+.userManage .header .btn {
+  margin-right: 20px;
+}
+.userManage .header .search {
+  display: flex;
+  min-width: 400px;
+}
+.userManage .table-wrap {
+  background-color: #171a24;
+}
+.userManage .table-wrap .textInOperationColumn {
+  cursor: pointer;
+  color: #4d99ff;
+  font-size: 14px;
+  font-weight: 400px;
+}
+.userManage .table-wrap .ant-table-thead > tr > th {
+  background: #353b4e !important;
+}
+.userManage .table-wrap .ant-table-thead > tr > th.ant-table-cell::before {
+  display: none;
+}
+.userManage .table-wrap .customRowClass:nth-child(odd) {
+  background-color: rgba(53, 59, 78, 0.5);
+}
+.userManage .table-wrap .customRowClass:nth-child(even) {
+  background-color: #171a24;
+}
+.userManage .table-wrap .tableStatus {
+  display: flex;
+  align-items: center;
+}
+.userManage .table-wrap .tableStatus .statusMark {
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+.userManage .table-wrap .tableStatus .statusMark.openning {
+  background-color: #00FF53;
+}
+.userManage .table-wrap .tableStatus .statusMark.locking {
+  background-color: #FF0000;
+}
+.userManage .table-wrap .tableStatus .statusMark.closing {
+  background-color: #8C8C8C;
+}
+.userManage .table-wrap .tableStatus .statusMark.none {
+  display: none;
+}
+.userManage .table-wrap .ant-pagination-total-text {
+  margin-right: auto;
+}
+.userManage .table-wrap .ant-pagination-item-active {
+  background-color: #2482ff;
+}
+.userManage .table-wrap .ant-pagination-item-active a {
+  color: #fff;
+}
+.userManage .table-wrap .ant-table-body::-webkit-scrollbar {
+  display: none;
+}
+.userManage .table-wrap .ant-table-body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
