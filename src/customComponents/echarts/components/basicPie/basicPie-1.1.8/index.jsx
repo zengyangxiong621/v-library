@@ -19,6 +19,22 @@ const Pie = (props) => {
   const { config } = componentConfig
   const { data } = componentConfig.staticData
   const componentData = props.comData || data // 过滤后的数据
+  // const componentData = [
+  //   {
+  //     "name": "gongangaojing",
+  //     "value": "",
+  //     "count": "0.04GB",
+  //     "count_unit": "GB",
+  //     "click": false
+  //   },
+  //   {
+  //     "name": "其他",
+  //     "value": "",
+  //     "count": "0.48GB",
+  //     "count_unit": "GB",
+  //     "click": false
+  //   }
+  // ]
   const fieldKey = props.fields || ['s', 'y']
   const componentThemeConfig = props.themeConfig
 
@@ -154,22 +170,61 @@ const Pie = (props) => {
   const { line1Length, line2Length, lineWidth, showLabel, } = labelSetting
   // 标签显示字段
   const { labelSeriesName, labelSeriesNameTextStyle, seriesNameUseSeriesColor, labelDataName, labelDataNameTextStyle, dataNameUseSeriesColor, labelDataValue, labelDataValueTextStyle, dataValueUseSeriesColor, labelPercentage, labelPercentageTextStyle, percentageUseSeriesColor, } = labelShowFields
-
+  // tooltip
+  const {pieTooltipSettings: { tooltipShow, tooltipDataName, tooltipDataValue, tooltipPercentage, tooltipSeriesName, tooltipDataValueText, tooltipPercentageText}} = pieSetting ? pieSetting['辅助'] : {pieTooltipSettings: {}}
 
   // 根据 映射字段处理后的 图表数据, 后续还需进一步加工数据
   let originalPieData = []
   if (componentData && componentData.length) {
+    // 匹配文本字符串中第一个不为数字或者.的字符的 正则表达式
+    const findFirstNoNumberRegex = /[^(\d)|(.)]/
     originalPieData = componentData.map(item => {
+      // 传进来的数据可能时 {s: '系列一', y: '0.4GB'},此时，y的值无法作为数字直接进行计算
+      let finalValue = item[fieldKey[1]]
+      let unit = ''
+      const isNumberType = typeof finalValue === 'number';
+      if (!isNumberType) {
+        // 如果不是number类型，那么还可能是其它类型，这儿只对字符串类型做处理，因为作为一个需要参与运算的值来讲的话其它类型没有意义，如果是对象类型，不知道对象层级，所以在外头借助数据过滤器处理好后传进来最好
+        if (typeof finalValue === 'string') {
+          // +'0.4gb' === NaN  +'0.4' !== NaN
+          const isNeedHandle =  Number.isNaN(+finalValue)
+          // 空字符串走下面的else逻辑
+          if(isNeedHandle) {
+            const tempResArr = findFirstNoNumberRegex.exec(finalValue)
+            if(tempResArr.length) {
+              // 如果 firstNoNumberIndex 为 0,说明这个是个纯字符串， 那就让其单位不变，将值设为0
+              const firstNoNumberIndex = tempResArr['index']
+              const finalValue2Arr = finalValue.split('')
+              const unitArr = finalValue2Arr.splice(firstNoNumberIndex)
+              if(firstNoNumberIndex > 0) {
+                // 转成number类型返回出去
+                finalValue = +finalValue2Arr.join('')
+              } else {
+                finalValue = 0
+              }
+              unit = unitArr.join('')
+            }
+          } else {
+            // 直接转成数字就ok 为空字符串的话，这儿就是直接转成 0
+            finalValue = +finalValue
+          }
+        } else {
+          console.error('Invalid value, value必须是纯数字或者字符串')
+        }
+      }
       return {
         name: item[fieldKey[0]],
-        value: item[fieldKey[1]]
+        value: finalValue,
+        unit,
       }
     })
   }
-  const total = componentData && componentData.length ? componentData.reduce((pre, item) => {
-    return pre + item[fieldKey[1]]
+  // 当切换数据过滤器的时，这儿的originalPieData走完上面的逻辑后会变成[undefined,undefined,undefined,...]的数组，会导致组件渲染错误，所以这儿过滤下非true元素
+  originalPieData = originalPieData.filter(Boolean)
+  const total = Array.isArray(originalPieData) && originalPieData.length ? originalPieData.reduce((pre, item) => {
+    return pre + item.value
   }, 0) : 0
-  // 处理 主标题 显示的数字格式，也可以用toLocalString, 但是在某些情况下可能会出错
+    // 处理 主标题 显示的数字格式，也可以用toLocalString, 但是在某些情况下可能会出错
   const hadFormatTotal = formatNumber(total, 0)
 
   /** +++++++++++++++++ ↓↓ 饼图自定义区块间距 ↓↓ ++++++++++++++++++ */
@@ -193,7 +248,7 @@ const Pie = (props) => {
     // 开启了区块样式后，才能设置区块间距
     if (showBlockStyle && len > 1) {
       //加了这个对象后，是能够添加上 区块间距, 但是点击“区块样式” 开关时会改变图例布局的朝向, 为了解决这个问题，目前采用的方法是：
-      // @o_O Mark-1  把下方我们push进canSetGapPieData中的对象(没错，说的就是下面这个name为空字符串的{}) 从canSetGapPieData里过滤掉后得到一个数组, 把它作为 legend.data 的值, 具体见getOption方法中 @o_O for Mark-1处
+      // @o_O Mark-1  把下方我们push进canSetGapPieData中的对象(没错，说的就是下面这个name为空字符串的{}) 从canSetGapPieData里过滤掉后得到一个数组, 把它作为 legend.data 的值, 具体见getOption方法中 code for @o_O Mark-1处
       canSetGapPieData.push({
         name: '',
         // 我只是一个制造区块间隔的工具data,我的value不配在标签中显示出来
@@ -332,7 +387,6 @@ const Pie = (props) => {
     seriesName2number[name] = index
   })
 
-
   /** ++++++++++++++++++++++ ↓↓ 标签相关 ↓↓++++++++++++++++++++++ */
   /** =========================================================== */
   // 整合标签富文本样式
@@ -381,8 +435,6 @@ const Pie = (props) => {
     }
     // labelTextColorRich[index] = finalFollowSeriesStyle
   })
-  // console.log('转换后的labelTextColorRich', labelTextColorRich);
-
   const getOption = () => {
     // code for @o_O Mark-1
     const filterEmptyNameArr = canSetGapPieData.filter(
@@ -427,7 +479,14 @@ const Pie = (props) => {
         },
       ],
       tooltip: {
-        show: false
+        show: tooltipShow,
+        trigger: 'item',
+        // position: ['50%', '50%'],
+        formatter: (params) => {
+          const {seriesName, data, percent} = params;
+          const {name, value, unit} = data
+            return `${tooltipSeriesName ? seriesName: ''} ${tooltipDataName ? name : ''} ${tooltipDataValue ? tooltipDataValueText : ''}${tooltipDataValue ? value+unit : ''} ${tooltipPercentage ? tooltipPercentageText : ''} ${tooltipPercentage ? percent+'%' : ''}`
+        },
       },
       legend: {
         show: showLegend,
@@ -468,9 +527,10 @@ const Pie = (props) => {
           },
           colorBy: 'data',
           label: {
-            show: showLabel,
-            formatter: (params) => {
-              const { placeholderFlag } = params.data
+            normal: {
+              show: showLabel,
+              formatter: (params) => {
+              const { placeholderFlag, unit } = params.data
               const { seriesName, name, value, percent } = params
               // placeholderFlag 是在添加区块间隔占位数据时自定义的 占位标识
               if (placeholderFlag === 'placeholderFlag') {
@@ -479,7 +539,7 @@ const Pie = (props) => {
               // 如果没有选择“跟随系列”, 那么就用自定义的样式(即默认rich)
               let seriesNameStr = `{a|${labelSeriesName ? seriesName : ''}}`
               let dataNameStr = `{b|${labelDataName ? name : ''}}`
-              let dataValueStr = `{c|${labelDataValue ? value : ''}}`
+              let dataValueStr = `{c|${labelDataValue ? value : ''}${unit}}`
               let percentageStr = `{d|${labelPercentage ? percent + '%' : ''}}`
               //@Mark** echarts标签能展示的共有四个字段: 系列名、数据名、数据值、百分比。 <<每个字段都有被用户勾选上 ”跟随系列“ 的可能>>
               // 因为echarts  rich对象中的key不能有汉字,所以用'0','1'来作一层转换, 即通过 seriesName2number 将<系列1> 映射成了'0',
@@ -491,7 +551,7 @@ const Pie = (props) => {
                 dataNameStr = `{${seriesName2number[name] + 'dataName'}|${labelDataName ? name : ''}}`
               }
               if (dataValueUseSeriesColor) {
-                dataValueStr = `{${seriesName2number[name] + 'dataValue'}|${labelDataValue ? value : ''}}`
+                dataValueStr = `{${seriesName2number[name] + 'dataValue'}|${labelDataValue ? value : ''}${unit}}`
               }
               if (percentageUseSeriesColor) {
                 percentageStr = `{${seriesName2number[name] + 'percentage'}|${labelPercentage ? percent + '%' : ''}}`
@@ -499,6 +559,7 @@ const Pie = (props) => {
               return `${seriesNameStr}  ${dataNameStr}   ${dataValueStr}   ${percentageStr}`
             },
             rich: labelTextColorRich
+            }
           },
           labelLine: {
             length: line1Length,
