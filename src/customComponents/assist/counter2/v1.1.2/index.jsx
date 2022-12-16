@@ -10,7 +10,7 @@ class Counter extends Component {
 
   componentDidUpdate(prevProps){
     if(JSON.stringify(prevProps.comData) !== JSON.stringify(this.props.comData)){
-      this.props.onChange && this.props.onChange(this.props.comData)
+      this.props.onDataChange && this.props.onDataChange(this.props.comData)
     }
   }
 
@@ -376,5 +376,5 @@ class Counter extends Component {
   }
 }
 
-export { Counter };
+export { Counter, ComponentDefaultConfig };
 export default Counter;
