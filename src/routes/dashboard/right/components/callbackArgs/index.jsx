@@ -34,7 +34,6 @@ const CallbackArgs = ({ bar, dispatch, ...props }) => {
     labelAlign: "left",
   };
 
-  console.log("bar.componentConfig", bar.componentConfig);
 
   const _data = props.data || {};
   const [activeTab, setActiveTab] = useState(null);

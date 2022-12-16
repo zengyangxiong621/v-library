@@ -14,7 +14,6 @@ const UpdateComponentConfigDrawer = ({ bar, dispatch, componentConfig, ...props 
   componentConfig.config = (componentConfig?.config || []).filter(
     (item) => !["dimension", "hideDefault"].includes(item.name)
   );
-  console.log("componentConfig", componentConfig);
   componentConfig.interaction =
     componentConfig?.interaction || {
       mountAnimation: bar.layers.find((item) => item.id === componentConfig?.id)?.mountAnimation,

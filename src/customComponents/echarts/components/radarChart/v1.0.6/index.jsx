@@ -222,7 +222,7 @@ class RadarChart extends React.PureComponent {
 
   componentDidUpdate(prevProps){
     if(JSON.stringify(prevProps.comData) !== JSON.stringify(this.props.comData)){
-      this.props.onChange && this.props.onChange(this.props.comData)
+      this.props.onDataChange && this.props.onDataChange(this.props.comData)
     }
   }
 

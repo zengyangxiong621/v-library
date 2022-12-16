@@ -1888,7 +1888,6 @@ export default {
         method: "post",
         body: params,
       });
-      console.log("componentConfig componentConfig", deepClone(componentConfig));
       if (!isThemeUpdate) {
         yield put({
           type: "setComponentConfig",
