@@ -21,7 +21,8 @@ import { Menu } from "antd";
 const { SubMenu, Item } = Menu;
 
 const TopBar = (props: any) => {
-  const { showTopBar, zujianORsucai, dispatch } = props;
+  const { showTopBar, zujianORsucai, dispatch, allComponents } = props;
+  
   const curWorkspace: any = localStorage.getItem("curWorkspace");
   const spaceId = JSON.parse(curWorkspace)?.id;
   const [current, setCurrent] = useState<any>([]);
@@ -72,6 +73,7 @@ const TopBar = (props: any) => {
                     index: item.key,
                     current,
                     spaceId,
+                    data: allComponents[item.key]
                   })
                 }
               </div>
@@ -86,7 +88,7 @@ const TopBar = (props: any) => {
 /**
  * description: 组件 、 素材 导航栏选项卡配置
  */
-const componentMenu = [
+let componentMenu = [
   {
     title: "图表",
     key: "chart",
@@ -124,7 +126,7 @@ const componentMenu = [
   },
   {
     title: "交互",
-    key: "interaction",
+    key: "interactive",
     // 当hover该选项卡时，显示的是带有侧边栏的下拉菜单
     isSpecialDropMenu: false,
     component: Interaction,

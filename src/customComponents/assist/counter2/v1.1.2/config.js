@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   "dashboardId": "11", //画布id
 
   "moduleName": "counter", //组件标识
-  "moduleVersion": "1.1.2", //组件版本号
+  "moduleVersion": "1.1.3", //组件版本号
 
   "createdAt": "2022-04-02T07:22:31.290Z", // =========
   "updatedAt": "2022-04-02T07:22:39.798Z", // =========
@@ -21,6 +21,24 @@ const componentDefaultConfig = {
   "dataType": "static", //数据类型：static;mysql;api;clickhouse
   "dataFrom": 0,
   "dataContainers": [],
+  triggers: [ // 下面是合集
+    {
+      name: "当请求完成或数据变化时",
+      value: "dataChange",
+    },
+    {
+      name: "鼠标点击",
+      value: "click",
+    },
+    {
+      name: "鼠标移入",
+      value: "mouseEnter",
+    },
+    {
+      name: "鼠标移出",
+      value: "mouseLeave",
+    },
+  ],
   "staticData": {
     //静态数据
     "data": [{

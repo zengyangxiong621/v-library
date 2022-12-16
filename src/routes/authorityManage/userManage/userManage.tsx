@@ -361,7 +361,6 @@ const UserManage = (props: any) => {
       },
     });
     if (result) {
-      close();
       getUserList();
       message.success({ content: "删除成功", duration: 2 });
     } else {

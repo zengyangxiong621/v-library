@@ -172,7 +172,6 @@ class WorldMap extends Component {
       tooltip: {
         backgroundColor: "rgba(0,0,0,0)",
         trigger: "axis",
-        show: false,
       },
       legend: {
         show: false,
@@ -201,6 +200,15 @@ class WorldMap extends Component {
           emphasis: {
             areaColor: selectColor, //悬浮背景
           },
+        },
+        tooltip: {
+          formatter:function (params) {
+            if(params.componentType === "geo"){
+              return ""
+            }else{
+              return params.name
+            }
+          }
         },
         data: [],
       },
@@ -343,10 +351,21 @@ class WorldMap extends Component {
             borderColor: borderColor, //省市边界线00fcff 516a89
             borderWidth: 1,
             textStyle: '#fff',
+            label: { show: false } 
           },
           emphasis: {
             areaColor: selectColor, //悬浮背景
+            label: { show: false } 
           },
+        },
+        tooltip: {
+          formatter:function (params) {
+            if(params.componentType === "geo"){
+              return ""
+            }else{
+              return params.name
+            }
+          }
         },
         data: [],
       },

@@ -333,8 +333,9 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
  */
   // 组件被移动
   const handleComponentDrag = (x: number, y: number) => {
-    console.log("bar.selectedComponentDOMs", bar.selectedComponentDOMs);
-    console.log("bar.selectedComponentOrGroup", bar.selectedComponentOrGroup);
+    console.log("哈哈哈", bar.selectedComponentDOMs);
+    console.log("怎么说", bar.selectedComponents);
+
     for (const key in bar.selectedComponentDOMs) {
       const translateArr = bar.selectedComponentDOMs[key].style.transform
         .replace("translate(", "")
@@ -372,6 +373,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
         item.config.top = translateY;
       } else {
         const styleDimensionConfig = item.config.find((item: any) => item.name === DIMENSION);
+
         if (styleDimensionConfig) {
           Object.values(styleDimensionConfig.value).forEach((obj: any) => {
             if (obj.name === "left") {
@@ -420,6 +422,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     ["leftarrow"],
     (event) => {
       if (bar.key.length === 0) return;
+      event.stopPropagation();
+      event.preventDefault();
       if (event.target === document.body) {
         if (event.type === "keydown") {
           handleComponentDrag(-1, 0);
@@ -441,6 +445,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     ["uparrow"],
     (event) => {
       if (bar.key.length === 0) return;
+      event.stopPropagation();
+      event.preventDefault();
       if (event.target === document.body) {
         if (event.type === "keydown") {
           handleComponentDrag(0, -1);
@@ -461,6 +467,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     ["rightarrow"],
     (event) => {
       if (bar.key.length === 0) return;
+      event.stopPropagation();
+      event.preventDefault();
       if (event.target === document.body) {
         if (event.type === "keydown") {
           handleComponentDrag(1, 0);
@@ -481,6 +489,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     ["downarrow"],
     (event) => {
       if (bar.key.length === 0) return;
+      event.stopPropagation();
+      event.preventDefault();
       if (event.target === document.body) {
         if (event.type === "keydown") {
           handleComponentDrag(0, 1);
@@ -499,7 +509,7 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 删除
   useKeyPress(
-    ["Backspace"],
+    ["Backspace", "Delete"],
     (event) => {
       if (bar.key.length === 0) return;
       if (event.type === "keydown") {
@@ -515,8 +525,10 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
                 })),
               },
             });
+            isKeyForDelete.current = false;
+          } else {
+            isKeyForDelete.current = true;
           }
-          isKeyForDelete.current = true;
         }
       } else {
         isKeyForDelete.current = false;

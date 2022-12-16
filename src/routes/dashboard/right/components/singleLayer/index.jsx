@@ -17,7 +17,7 @@ import debounce from "lodash/debounce";
 import { http } from "../../../../../services/request";
 import { getCallbackParams } from "@/utils/data.js";
 import Checkbox from "../checkBox";
-
+import { clearNullGroup } from "@/models/utils/addSomeAttrInLayers";
 const SingleLayer = ({ bar, dispatch }) => {
   const { TabPane } = Tabs;
   const currentLayer = bar.selectedComponentOrGroup[0];
@@ -94,19 +94,21 @@ const SingleLayer = ({ bar, dispatch }) => {
       method: "post",
       body: params,
     });
+    const filterNullLayers = clearNullGroup(layers);
+    console.log("filterNullLayers", filterNullLayers);
     if (layers) {
       currentLayer.hideDefault = hideDefaultConfig.value;
       dispatch({
         type: "bar/updateDashboardOrStateConfig",
         payload: {
           id: bar.stateId || bar.dashboardId,
-          layers,
+          layers: filterNullLayers,
         },
       });
       dispatch({
         type: "bar/save",
         payload: {
-          layers,
+          layers: filterNullLayers,
         },
       });
     }
