@@ -40,7 +40,7 @@ const componentDefaultConfig = {
     //静态数据
     "data": [
       {
-        "text": "文字组件",
+        "text": "标准标题",
       }
     ],
     "fields": [

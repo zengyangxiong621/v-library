@@ -9,7 +9,7 @@ interface Props {
   comData?: any;
   themeConfig?: any;
   onThemeChange?: any;
-  onChange?:any,
+  onDataChange?:any,
   scale?:any,
   onClick?:any,
   onMouseEnter?:any,
@@ -28,7 +28,7 @@ class WordText extends Component<Props, State> {
   }
   componentDidUpdate(prevProps: any){
     if(JSON.stringify(prevProps.comData) !== JSON.stringify(this.props.comData)){
-      this.props.onChange && this.props.onChange(this.props.comData)
+      this.props.onDataChange && this.props.onDataChange(this.props.comData)
     }
   }
   replaceThemeColor = (arr: any) => {
