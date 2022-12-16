@@ -60,9 +60,11 @@ const ComponentEventContainer = ({
     // e.preventDefault();
     const clickEvents = events.filter((item) => item.trigger === "click");
     const clickActions = clickEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
+    console.log("clickActions", clickActions);
     if (clickActions.length === 0) {
       return;
     }
+    console.log("clickEvents", clickEvents);
     customEventsFunction(clickEvents, data);
   };
 
@@ -126,6 +128,7 @@ const ComponentEventContainer = ({
   });
 
   const customEventsFunction = (events, data) => {
+    console.log("events", events);
     events.forEach((item) => {
       const conditions = item.conditions;
       const conditionType = item.conditionType;
@@ -215,6 +218,7 @@ const ComponentEventContainer = ({
                   ].includes(key)
               )
               .forEach((key) => {
+                console.log("key", key);
                 actionConfigFuncList[key] &&
                   actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id);
               });
@@ -568,11 +572,13 @@ const ComponentEventContainer = ({
   };
 
   const stateFunc = (stateId, actionType, dom, actionId, action, componentId) => {
+    console.log("actionType", actionType);
     if (actionType === "updateStatus") {
       console.log("改变状态");
       console.log("dom", dom);
       console.log("stateId", stateId);
-      [...dom.children].forEach((item) => {
+      console.log("集合", [...dom.children]);
+      dom.querySelectorAll(".status-wrap").forEach((item) => {
         if (item.dataset.id === stateId) {
           // item.style.display = "block";
           item.style.visibility = "visible";
