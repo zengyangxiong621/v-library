@@ -2117,6 +2117,7 @@ export default {
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
       state.selectedComponentRefs = {};
+      state.selectedComponentDOMs = {};
       Object.keys(state.allComponentRefs).forEach((key) => {
         if (state.selectedComponentIds.includes(key)) {
           state.selectedComponentRefs[key] = state.allComponentRefs[key];
@@ -2195,6 +2196,7 @@ export default {
       let xPositionList: number[] = [];
       let yPositionList: number[] = [];
       let status: "分组" | "多组件" = "分组";
+      console.log("selectedComponentOrGroup", state.selectedComponentOrGroup);
       if (state.selectedComponentOrGroup.length === 1) {
         const firstLayer = state.selectedComponentOrGroup[0];
         if (COMPONENTS in firstLayer) {
@@ -2254,16 +2256,15 @@ export default {
         }
       } else if (state.selectedComponentOrGroup.length > 1) {
         status = "多组件";
-        state.selectedComponentOrGroup.forEach((layer: any) => {
-          const positionArr = calcGroupPosition(
-            state.selectedComponentOrGroup,
-            state.fullAmountComponents,
-            state.fullAmountPanels
-          );
-          xPositionList = positionArr[0];
-          yPositionList = positionArr[1];
-        });
+        const positionArr = calcGroupPosition(
+          state.selectedComponentOrGroup,
+          state.fullAmountComponents,
+          state.fullAmountPanels
+        );
+        xPositionList = positionArr[0];
+        yPositionList = positionArr[1];
       }
+
       xPositionList.sort((a, b) => a - b);
       yPositionList.sort((a, b) => a - b);
       const width = xPositionList[xPositionList.length - 1] - xPositionList[0] || 0;
@@ -2303,6 +2304,7 @@ export default {
           }
         });
       }
+      console.log("calcDragScaleData", state.scaleDragData);
       return {
         ...state,
       };
@@ -2313,6 +2315,7 @@ export default {
       state.selectedComponentOrGroup.forEach((item) => {
         item.selected = true;
       });
+      // 左侧树多选
       state.selectedComponentIds = layerComponentsFlat(state.selectedComponentOrGroup);
       state.selectedComponents = [
         ...state.fullAmountComponents.filter((component) =>
@@ -2320,6 +2323,14 @@ export default {
         ),
         ...state.fullAmountPanels.filter((panel) => state.selectedComponentIds.includes(panel.id)),
       ];
+      state.selectedComponentRefs = {};
+      state.selectedComponentDOMs = {};
+      Object.keys(state.allComponentRefs).forEach((key) => {
+        if (state.selectedComponentIds.includes(key)) {
+          state.selectedComponentRefs[key] = state.allComponentRefs[key];
+          state.selectedComponentDOMs[key] = state.allComponentDOMs[key];
+        }
+      });
       return { ...state };
     },
     // 在已经多选的情况下，点击右键时应该是往已选择节点[]里添加，而不是上面那种替换

@@ -137,10 +137,15 @@ const DrillDownPanel = ({
     setActiveIndex(newIndex);
   };
   // 更改面包屑标题数据
-  const changeBreadcrumbData = (newData: any) => {
-    const { originalName } = newData;
+  const changeBreadcrumbData = (
+    itemDataForCurrentClick: any,
+    fieldWillShowInBreadcrumbs: string | undefined = undefined
+  ) => {
+    console.log("fieldWillShowInBreadcrumbs", fieldWillShowInBreadcrumbs);
+    const { originalName } = itemDataForCurrentClick;
+    // console.log("itemDataForCurrentClick", itemDataForCurrentClick);
+    // TODEL originalName是地图组件才会传出来的，这儿暂时先兼容一下地图组件，等后续各个组件抛出的数据格式统一后，直接删掉下面的if(originalName){...}即可
     if (originalName) {
-      // TODO 这儿暂时先用和addDrillDownLevel中的重复逻辑
       const newIndex = activeIndex + 1;
       if (newIndex >= states.length || newIndex < 0) {
         return;
@@ -148,6 +153,17 @@ const DrillDownPanel = ({
       const newArr = state.breadcrumbData;
       newArr[newIndex] = originalName;
       setState({ breadcrumbData: newArr });
+    } else {
+      if (fieldWillShowInBreadcrumbs) {
+        const valueWillShowInBreadcrumbs = itemDataForCurrentClick[fieldWillShowInBreadcrumbs];
+        const newIndex = activeIndex + 1;
+        if (newIndex >= states.length || newIndex < 0) {
+          return;
+        }
+        const newArr = state.breadcrumbData;
+        newArr[newIndex] = valueWillShowInBreadcrumbs;
+        setState({ breadcrumbData: newArr });
+      }
     }
   };
 

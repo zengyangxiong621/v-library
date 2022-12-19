@@ -9,8 +9,8 @@ const ComponentDefaultConfig = {
   moduleVersion: "1.1.8", //组件版本号
   moduleType: "chart",
 
-  createdAt: "2022-04-02T07:22:31.290Z", // =========
-  updatedAt: "2022-04-02T07:22:39.798Z", // =========
+  createdAt: "2022-12-15 13:00",
+  updatedAt: "2022-12-15 13:00",
 
   autoUpdate: { isAuto: false, interval: 10 }, // =========
   thumb: "", // 缩略图 // =========
@@ -368,7 +368,7 @@ const ComponentDefaultConfig = {
                   displayName: "",
                   name: "showBlockStyle",
                   type: "switch",
-                  value: true,
+                  value: false,
                 },
                 {
                   displayName: "圆角弧度",
@@ -748,7 +748,7 @@ const ComponentDefaultConfig = {
                 {
                   displayName: "    ",
                   name: "labelSeriesNameTextStyle",
-                  themeColor:"themeTextColor",
+                  themeColor: "themeTextColor",
                   type: "chartText",
                   value: {
                     fontFamily: "微软雅黑",
@@ -773,7 +773,7 @@ const ComponentDefaultConfig = {
                   displayName: "    ",
                   name: "labelDataNameTextStyle",
                   type: "chartText",
-                  themeColor:"themeTextColor",
+                  themeColor: "themeTextColor",
                   value: {
                     fontFamily: "微软雅黑",
                     color: "#fff",
@@ -797,7 +797,7 @@ const ComponentDefaultConfig = {
                   displayName: "    ",
                   name: "labelDataValueTextStyle",
                   type: "chartText",
-                  themeColor:"themeTextColor",
+                  themeColor: "themeTextColor",
                   value: {
                     fontFamily: "微软雅黑",
                     color: "#fff",
@@ -821,7 +821,7 @@ const ComponentDefaultConfig = {
                   displayName: "    ",
                   name: "labelPercentageTextStyle",
                   type: "chartText",
-                  themeColor:"themeTextColor",
+                  themeColor: "themeTextColor",
                   value: {
                     fontFamily: "微软雅黑",
                     color: "#fff",
@@ -944,7 +944,7 @@ const ComponentDefaultConfig = {
               displayName: "文本样式",
               name: "legendTextStyle",
               type: "chartText",
-              themeColor:"themeTextColor",
+              themeColor: "themeTextColor",
               value: {
                 fontFamily: "微软雅黑",
                 color: "#fff",
@@ -1019,6 +1019,63 @@ const ComponentDefaultConfig = {
           ],
           key: "4",
         },
+        {
+          name: "辅助",
+          value: [
+            {
+              hasSwitch: true,
+              defaultExpand: true,
+              displayName: "提示器",
+              name: "pieTooltipSettings",
+              type: "collapse",
+              value: [
+                {
+                  displayName: "",
+                  name: "tooltipShow",
+                  type: "switch",
+                  value: true,
+                },
+                {
+                  displayName: "系列名",
+                  name: "tooltipSeriesName",
+                  type: "switch",
+                  value: false,
+                },
+                {
+                  displayName: "数据名",
+                  name: "tooltipDataName",
+                  type: "switch",
+                  value: true,
+                },
+                {
+                  displayName: "数据值",
+                  name: "tooltipDataValue",
+                  type: "switch",
+                  value: true,
+                },
+                {
+                  displayName: "数据值前缀",
+                  name: "tooltipDataValueText",
+                  type: "input",
+                  value: "存储量：",
+                },
+                {
+                  displayName: "百分比",
+                  name: "tooltipPercentage",
+                  type: "switch",
+                  value: false,
+                },
+                {
+                  displayName: "数据值前缀",
+                  name: "tooltipPercentageText",
+                  type: "input",
+                  value: "",
+                },
+              ],
+            },
+          ],
+          key: "5",
+        },
       ],
       activeKey: "1",
       type: "tabs",
@@ -1028,8 +1085,10 @@ const ComponentDefaultConfig = {
   filters: [],
   events: [],
   callbackArgs: [],
-  drillDownArr: [],
-  triggers: [ // 下面是合集
+  drillDownArr: [], // 下钻面板中用以保存下层组件的相关信息
+  showFieldInBreadcrumbs: "", // 点击该组件时，通过该字段去取对应的值展示到面包屑上
+  triggers: [
+    // 下面是合集
     {
       name: "当请求完成或数据变化时",
       value: "dataChange",

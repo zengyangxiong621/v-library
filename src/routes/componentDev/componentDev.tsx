@@ -155,7 +155,6 @@ const ComponentDev = (props: any) => {
       method: "delete",
     });
     if (data) {
-      close();
       refreshTable();
     } else {
       message.error({ content: "删除失败", duration: 2 });

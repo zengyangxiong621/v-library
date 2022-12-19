@@ -6,7 +6,7 @@ import ComponentEventContainer from "@/routes/previewDashboard/components/compon
 
 import { connect } from "dva";
 // import RemoteBaseComponent from '@/components/RemoteBaseComponent';
-import { getFields } from "@/utils/data";
+import { getFields, getComDataWithFilters } from "@/utils/data";
 
 // 按屏幕比例适配", value: "0"}
 // 1: {name: "强制铺满", value: "1"}
@@ -229,7 +229,8 @@ const EveryComponent = ({
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
       addDrillDownLevel();
-      changeBreadcrumbData(chartData);
+      // componentData.showFieldInBreadcrumbs = "name";
+      changeBreadcrumbData(chartData, componentData.showFieldInBreadcrumbs);
       // const { seriesType, data } = chartData;
       // let hadFilterChartData = [];
       // if (typeof chartData === "object") {

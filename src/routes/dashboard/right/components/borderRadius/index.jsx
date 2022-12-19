@@ -217,14 +217,14 @@ const BorderRadius = (props) => {
             <Col span={10} className="detail-txt" style={{ textIndent: "6px" }}>
               Hex
             </Col>
-          </Row>
-          {_range[0] === "all" ? (
+            {_range[0] === "all" ? (
             <Col span={10} className="detail-txt" style={{ textIndent: "16px" }}>
               圆角
             </Col>
           ) : (
             <></>
           )}
+          </Row>
         </Form.Item>
         {_range[0] !== "all" ? (
           <>
