@@ -52,22 +52,22 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
       console.log("err", err);
     }
     showHadSelectComp();
-    showParentDataSample();
+    // showParentDataSample();
   }, []);
 
   const localStorageCopy: any = localStorage;
-  let finalCompData = componentConfig.staticData.data;
-  if (componentConfig.dataFrom == 1) {
-    const dataContainerIds = componentConfig.dataContainers.map((x: any) => x.id);
-    const dataFromDataContainer = bar.dataContainerDataList.filter((item: any) =>
-      dataContainerIds.includes(item.id)
-    );
-    finalCompData = dataFromDataContainer
-      .map((o: any) => {
-        return o.data;
-      })
-      .flat();
-  }
+  // let finalCompData = componentConfig.staticData.data;
+  // if (componentConfig.dataFrom == 1) {
+  //   const dataContainerIds = componentConfig.dataContainers.map((x: any) => x.id);
+  //   const dataFromDataContainer = bar.dataContainerDataList.filter((item: any) =>
+  //     dataContainerIds.includes(item.id)
+  //   );
+  //   finalCompData = dataFromDataContainer
+  //     .map((o: any) => {
+  //       return o.data;
+  //     })
+  //     .flat();
+  // }
   // console.log('finalCompDatafinalCompData', finalCompData);
   // console.log('barbar', bar);
   // console.log('当前组件数据', componentConfig)
@@ -81,7 +81,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
       componentConfig.drillDownArr.forEach((item: any) => {
         const o = {
           parentId: id,
-          parentData: item.parentData,
+          // parentData: item.parentData,
         };
         temp[item.id] = o;
       });
@@ -96,29 +96,29 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     localStorageCopy.setItem("allHasParentReflect", JSON.stringify(finalReflect));
   };
 
-  const showParentDataSample = () => {
-    try {
-      const allParentComps = JSON.parse(localStorageCopy.getItem("allHasParentReflect"));
-      if (allParentComps) {
-        const targetParentComp = allParentComps[id];
-        const parentDataSample = targetParentComp?.parentData[0];
-        setState({
-          parentDataSample: parentDataSample,
-        });
-      }
-    } catch (error) {
-      console.log("err", error);
-    }
-  };
+  // const showParentDataSample = () => {
+  //   try {
+  //     const allParentComps = JSON.parse(localStorageCopy.getItem("allHasParentReflect"));
+  //     if (allParentComps) {
+  //       const targetParentComp = allParentComps[id];
+  //       const parentDataSample = targetParentComp?.parentData[0];
+  //       setState({
+  //         parentDataSample: parentDataSample,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log("err", error);
+  //   }
+  // };
 
   // 添加下钻组件
-  const selectNextLevelComponent = (val: any, label: any, extra: any) => {
+  const selectNextLevelComponent = (val: any, label: any) => {
     setEchoDrillDownComponents(val);
     const extendVal = val.map((item: string, index: number) => {
       return {
         id: item,
         name: label[index],
-        parentData: finalCompData,
+        // parentData: finalCompData,
         // parent:
       };
     });
@@ -139,7 +139,7 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     const curComps: any = {};
     val.forEach((valId: string) => {
       curComps[valId] = {
-        parentData: finalCompData,
+        // parentData: finalCompData,
         parentId: id,
       };
     });
