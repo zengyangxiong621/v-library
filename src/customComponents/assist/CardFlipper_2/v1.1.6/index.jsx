@@ -30,14 +30,14 @@ class ChMap extends Component {
 
   componentDidUpdate(prevProps){
     if(JSON.stringify(prevProps.comData) !== JSON.stringify(this.props.comData)){
-      this.props.onChange && this.props.onChange(this.props.comData)
+      this.props.onDataChange && this.props.onDataChange(this.props.comData)
     }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { comData, fields } = nextProps;
-    let originData = comData?.length ? comData[0] : [];
-    if (originData[fields[0]] !== prevState.numValue && prevState.numValue != 0) {
+    let originData = comData?.length ? comData[0] : null;
+    if (originData && originData[fields[0]] !== prevState.numValue && prevState.numValue != 0) {
       return {
         numValue: originData[fields[0]],
       };
