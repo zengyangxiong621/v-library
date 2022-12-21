@@ -312,17 +312,25 @@ const Left = ({ dispatch, bar }) => {
   useEffect(() => {
     // 这个setSelected和 <在画布中选中组件，左侧分组展开> 没有逻辑联系
     setSelected(bar.key);
-
     setAutoExpandParent(true);
-    preSelected.push(...bar.key);
-    // 把选中的 “组” 图层给过滤掉
+    // 将重复选中的图层过滤一遍
+    const preSelectedSet = new Set(preSelected);
+    // 保存本次已经选中的图层
+    setPreSelected([...preSelectedSet, ...bar.key]);
+    setExpandedKeys([...preSelectedSet, ...bar.key]);
+  }, [bar.key]);
+
+  // 成组时自动展开新增的组
+  useEffect(() => {
+    setAutoExpandParent(true);
+    // 把选中的 “组” 图层给过滤掉, 否则当expandedKeys中包含最外层的组id时，组件会默认展开至最深的一级
     const filterGroupsPreSelected = preSelected.filter((id) => !id.startsWith("group"));
     // 将重复选中的图层过滤一遍
     const preSelectedSet = new Set(filterGroupsPreSelected);
     // 保存本次已经选中的图层
-    setPreSelected([...preSelectedSet]);
+    setPreSelected([...preSelectedSet, ...bar.key]);
     setExpandedKeys([...preSelectedSet, ...bar.key]);
-  }, [bar.key]);
+  }, [bar.layers]);
 
   //******** 展开 / 收起 ********* */
   const onExpand = (keys, { expanded, node }) => {
@@ -342,9 +350,9 @@ const Left = ({ dispatch, bar }) => {
       for (let i = 0, len = arr.length; i < len; i++) {
         const itemId = arr[i].id;
         // 组id 就不添加了，防止最终allIds数组的长度过大导致下方循环耗时过长
-        if (!itemId.startsWith("group")) {
-          allIds.push(arr[i].id);
-        }
+        // if (!itemId.startsWith("group")) {
+        allIds.push(arr[i].id);
+        // }
         if (tempExpandedGroupReflect[itemId] && arr[i].modules) {
           getAllIdByPath(arr[i].modules);
         }
@@ -397,9 +405,9 @@ const Left = ({ dispatch, bar }) => {
             onSelect={finalSelectFn}
             onRightClick={onRightClick}
             autoExpandParent={autoExpandParent}
-            treeData={bar.layers}
             selectedKeys={bar.key}
             expandedKeys={expandedKeys}
+            treeData={bar.layers}
             titleRender={(nodeData) => {
               // title 置为空，覆盖antTree 默认的title
               return (

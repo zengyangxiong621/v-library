@@ -2028,7 +2028,10 @@ export default {
         fullAmountPayload === "children"
       );
       if (isComponent) {
+        console.log("11111111111111111111111", deepClone(state.layers));
         newLayers = generateLayers(deepClone(state.layers), insertId, finalConfig);
+        console.log("2222222222222222222222", deepClone(newLayers));
+
         const currentDetails: any = state.fullAmountDashboardDetails.find(
           (item: any) => item.id === (state.stateId || state.dashboardId)
         );
