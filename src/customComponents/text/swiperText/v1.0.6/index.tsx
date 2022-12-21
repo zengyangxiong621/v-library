@@ -152,7 +152,7 @@ class SwipterText extends Component<Props, State> {
     this.props.onMouseEnter && this.props.onMouseEnter(e, this.props.comData);
   };
   handleMouseLeave = (e) => {
-    this.props.onMouseEnter && this.props.onMouseLeave(e, this.props.comData);
+    this.props.onMouseLeave && this.props.onMouseLeave(e, this.props.comData);
   };
 
   render() {
