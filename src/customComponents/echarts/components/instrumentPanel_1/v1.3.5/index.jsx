@@ -482,7 +482,7 @@ const InstrumentPanel = (props) => {
     props.onMouseEnter && props.onMouseEnter(e, props.comData);
   };
   const handleMouseLeave = (e) => {
-    props.onMouseEnter && props.onMouseLeave(e, props.comData);
+    props.onMouseLeave && props.onMouseLeave(e, props.comData);
   };
 
   let onEvents = {
