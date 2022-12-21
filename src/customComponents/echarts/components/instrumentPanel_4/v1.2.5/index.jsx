@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import ComponentDefaultConfig from "./config";
+// import DigitalFlop from '@jiaminghi/data-view-react/es/digitalFlop'
 import "./index.less";
-import protectionLevel1 from "./protectionLevel1.js";
-import protectionLevel2 from "./protectionLevel2.js";
+import ComponentDefaultConfig from "./config";
 import CountUp from "react-countup";
 
-
-class ProtectionLevel extends Component {
+class ThreatWarning extends Component {
   constructor(Props) {
     super(Props);
   }
@@ -26,22 +24,19 @@ class ProtectionLevel extends Component {
     this.props.onMouseLeave && this.props.onMouseLeave(e, this.props.comData);
   };
 
-
   render() {
     const componentConfig = this.props.componentConfig || ComponentDefaultConfig;
     const { config } = componentConfig;
     const { data } = componentConfig.staticData;
     // 最新字段
-    const finalFieldsArr = this.props.fields || ["text", "value", "title", "level"];
-
+    const finalFieldsArr = this.props.fields || ["value", "unit", "title"];
     // 组件静态或者传入组件的数据
     const originData = this.props.comData || data;
     // originData中有多项数据，只取第一项
     const firstData = originData[0] || {};
-    const textValue = firstData[finalFieldsArr[0]];
-    const numberValue = firstData[finalFieldsArr[1]];
+    const numberValue = firstData[finalFieldsArr[0]];
+    const unitValue = firstData[finalFieldsArr[1]];
     const titleValue = firstData[finalFieldsArr[2]];
-    const levelValue = firstData[finalFieldsArr[3]];
 
     const componentThemeConfig = this.props.themeConfig;
     const replaceThemeColor = (arr, colorIndex = 0) => {
@@ -105,7 +100,6 @@ class ProtectionLevel extends Component {
       });
     }
 
-
     // 获取config中的配置
     const getTargetConfig = (Arr) => {
       let targetConfig = {};
@@ -128,89 +122,71 @@ class ProtectionLevel extends Component {
       return targetConfig;
     };
     const hadFilterArr = config.filter((item) => item.name !== "dimension");
-    const { allSettings } = getTargetConfig(hadFilterArr);
-    const { innerSpeed, outerSpeed } = allSettings ? allSettings["表盘"] : {};
-    const {
-      numberStyles: { textStylerNumber, offsetNumber },
-      unitStyles: { textStylerUnit, offsetUnit },
-    } = allSettings ? allSettings["指标"] : {};
-    const { textStyleTitle, levelStyleTitle, offsetTitle } = allSettings ? allSettings["标题"] : {};
-
+    const { numberStyles, unitStyles, titleStyles } = getTargetConfig(hadFilterArr);
+    const { showNumberStyles, textNumberStyle, offsetNumber } = numberStyles;
+    const { showUnitStyles, textUnitStyle, offsetUnit } = unitStyles;
+    const { showTitlerStyles, textTitleStyle, offsetTitle } = titleStyles;
 
     return (
-      <div className='protection-level' 
+      <div className="threat-warning1" 
         onClick={this.handleClick}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
       >
-        <div className="bg">
-          <img className='circle1' src={protectionLevel1} alt="bg1" style={{ animation: `circle1 ${1 / outerSpeed}s linear infinite` }} />
-          <img className='circle2' src={protectionLevel2} alt="bg2" style={{ animation: `circle2 ${1 / innerSpeed}s linear infinite` }} />
-          <div className='bottom'></div>
-        </div>
-        <div className='score'>
-          <div className='number' style={{
-            color: componentThemeConfig
-              ? componentThemeConfig.pureColors[0]
-              : textStylerNumber.themePureColors,
-            fontSize: textStylerNumber.fontSize,
-            fontFamily: textStylerNumber.fontFamily,
-            fontWeight: textStylerNumber.bold ? "bold" : "normal",
-            fontStyle: textStylerNumber.italic ? "italic" : "normal",
-            letterSpacing: textStylerNumber.letterSpacing + "px",
-            lineHeight: textStylerNumber.lineHeight + "px",
-            top: offsetNumber.vertical + "px",
-            left: offsetNumber.horizontal + "px",
-          }}>
-            {/* {numberValue} */}
-            <CountUp start={0} end={numberValue} duration={1}></CountUp>
-          </div>
-          <div className='title' style={{
-            color: componentThemeConfig
-              ? componentThemeConfig.textColor
-              : textStylerUnit.themeTextColor,
-            fontSize: textStylerUnit.fontSize,
-            fontFamily: textStylerUnit.fontFamily,
-            fontWeight: textStylerUnit.bold ? "bold" : "normal",
-            fontStyle: textStylerUnit.italic ? "italic" : "normal",
-            letterSpacing: textStylerUnit.letterSpacing + "px",
-            lineHeight: textStylerUnit.lineHeight + "px",
-            top: offsetUnit.vertical + "px",
-            left: offsetUnit.horizontal + "px",
-          }}>{textValue}</div>
-        </div>
-        <div className='result'>
-          <div className='result1' style={{
-            top: offsetTitle.vertical + "px",
-            left: offsetTitle.horizontal + "px",
-          }}>
-            <div className='label' style={{
+        <div className="left">
+          <div className="l-num">
+            <div className="number" style={{
+              color: componentThemeConfig
+                ? componentThemeConfig.pureColors[0]
+                : textNumberStyle.themePureColors,
+              fontSize: textNumberStyle.fontSize,
+              fontFamily: textNumberStyle.fontFamily,
+              fontWeight: textNumberStyle.bold ? "bold" : "normal",
+              fontStyle: textNumberStyle.italic ? "italic" : "normal",
+              letterSpacing: textNumberStyle.letterSpacing + "px",
+              lineHeight: textNumberStyle.lineHeight + "px",
+              top: offsetNumber.vertical + "px",
+              left: offsetNumber.horizontal + "px",
+            }}>
+              {/* {numberValue} */}
+              <CountUp start={0} end={numberValue} separator={","} duration={1}></CountUp>
+            </div>
+            <div className="unit" style={{
+              color: componentThemeConfig
+                ? componentThemeConfig.pureColors[0]
+                : textUnitStyle.themePureColors,
+              fontSize: textUnitStyle.fontSize,
+              fontFamily: textUnitStyle.fontFamily,
+              fontWeight: textUnitStyle.bold ? "bold" : "normal",
+              fontStyle: textUnitStyle.italic ? "italic" : "normal",
+              letterSpacing: textUnitStyle.letterSpacing + "px",
+              lineHeight: textUnitStyle.lineHeight + "px",
+              top: offsetUnit.vertical + "px",
+              left: offsetUnit.horizontal + "px",
+            }}>{unitValue}</div>
+            <div className="title" style={{
               color: componentThemeConfig
                 ? componentThemeConfig.textColor
-                : textStyleTitle.themeTextColor,
-              fontSize: textStyleTitle.fontSize,
-              fontFamily: textStyleTitle.fontFamily,
-              fontWeight: textStyleTitle.bold ? "bold" : "normal",
-              fontStyle: textStyleTitle.italic ? "italic" : "normal",
-              letterSpacing: textStyleTitle.letterSpacing + "px",
-              lineHeight: textStyleTitle.lineHeight + "px",
-            }}>{titleValue}：</div>
-            <div className='value' style={{
-              color: levelStyleTitle.color,
-              fontSize: levelStyleTitle.fontSize,
-              fontFamily: levelStyleTitle.fontFamily,
-              fontWeight: levelStyleTitle.fontWeight,
-              fontStyle: textStyleTitle.italic ? "italic" : "normal",
-              letterSpacing: textStyleTitle.letterSpacing + "px",
-              lineHeight: textStyleTitle.lineHeight + "px",
-            }}>{levelValue}</div>
+                : textTitleStyle.themeTextColor,
+              fontSize: textTitleStyle.fontSize,
+              fontFamily: textTitleStyle.fontFamily,
+              fontWeight: textTitleStyle.bold ? "bold" : "normal",
+              fontStyle: textTitleStyle.italic ? "italic" : "normal",
+              letterSpacing: textTitleStyle.letterSpacing + "px",
+              lineHeight: textTitleStyle.lineHeight + "px",
+              top: offsetTitle.vertical + "px",
+              left: offsetTitle.horizontal + "px",
+            }}>{titleValue}</div>
           </div>
         </div>
       </div>
     );
   }
-}
+};
 
-export { ComponentDefaultConfig, ProtectionLevel };
+export {
+  ComponentDefaultConfig,
+  ThreatWarning
+};
 
-export default ProtectionLevel;
+export default ThreatWarning;
