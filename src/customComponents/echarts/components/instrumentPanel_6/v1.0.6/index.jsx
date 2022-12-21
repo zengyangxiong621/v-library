@@ -269,7 +269,7 @@ const InstrumentPanel6 = (props) => {
   };
 
   const onChartMouseout = (params, echarts) => {
-    props.onMouseEnter && props.onMouseLeave(params.event.event,params);
+    props.onMouseLeave && props.onMouseLeave(params.event.event,params);
   };
   
   let onEvents = {
