@@ -1,11 +1,9 @@
 import ComponentDefaultConfig from "./config";
-import * as echarts from "echarts";
 import EC from "../../../EC";
 import React from "react";
 import "echarts-gl";
 import earth from "./earth.jpg";
 import bathymetry from "./bathymetry.jpg";
-import starfield from "./starfield.jpg";
 
 const Earth = (props) => {
   const getOption = () => ({
@@ -28,7 +26,8 @@ const Earth = (props) => {
   const onChartReady = (echarts) => {};
 
   const onChartClick = (params, echarts) => {
-    props.onClick && props.onClick(params.event.event,params)
+    console.log('点击事件', params)
+    // props.onClick && props.onClick(params.event.event,params)
   };
 
   const onChartMouseover = (params, echarts) => {
