@@ -631,13 +631,6 @@ const ComponentEventContainer = ({
         display: isHideDefault ? "none" : "block",
       }}
     >
-     {  props.componentConfig.moduleName === "indicatorcard" ? (
-        <IndicatorCard 
-          onClick={handleInteractiveClick}
-          onMouseEnter={handleInteractiveMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        {...props}></IndicatorCard>
-       ):(
       <ErrorCatch
         app={componentConfig.name}
         user=""
@@ -665,7 +658,6 @@ const ComponentEventContainer = ({
           isPreview={true}
         ></RemoteBaseComponent>
       </ErrorCatch>
-      )}
     </div>
   );
 };
