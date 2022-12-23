@@ -20,7 +20,7 @@ const ComponentEventContainer = ({
 }) => {
   const callbackArgs = publishDashboard.callbackArgs;
   const callbackParamsList = publishDashboard.callbackParamsList;
-  const { componentConfig, getDrillDownData } = props;
+  const { componentConfig, getDrillDownData, componentStyle } = props;
   const [animationConfig, setAnimationConfig] = useState({
     transition: "transform 600ms ease 0s",
   });
@@ -414,6 +414,7 @@ const ComponentEventContainer = ({
         if (actionType === "show") {
           if (dom.style.opacity >= 1) {
             dom.style.opacity = 1;
+            dom.style.display = "block";
             clearInterval(timer);
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
@@ -424,6 +425,7 @@ const ComponentEventContainer = ({
         if (actionType === "hide") {
           if (dom.style.opacity <= 0) {
             dom.style.opacity = 0;
+            dom.style.display = "none";
             clearInterval(timer);
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
@@ -550,13 +552,12 @@ const ComponentEventContainer = ({
     <div
       key={id}
       ref={componentRef}
-      className={`single-component event-id-${id}`}
+      className={`single-component event-id-${id} animation-id-${id}`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
-        width: "100%",
-        height: "100%",
+        ...componentStyle,
         ...animationConfig,
         ...opacityStyle,
         display: isHideDefault ? "none" : "block",

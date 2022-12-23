@@ -29,7 +29,7 @@ const RecursiveComponent = (props: any) => {
   } = props;
 
   return (
-    <div className="recursive-component-wrap">
+    <>
       {layersArr?.map((layer: any, ind: any) => {
         const isGroup: boolean = MODULES in layer;
         const isPanel: boolean = "panelType" in layer;
@@ -42,7 +42,7 @@ const RecursiveComponent = (props: any) => {
           }
         }
         return layer.isShow ? (
-          <div data-id={isGroup ? layer.id : "component-" + layer.id} key={layer.id}>
+          <>
             {isPanel ? (
               <div
                 className={`panel-container event-id-${layer.id}`}
@@ -94,59 +94,51 @@ const RecursiveComponent = (props: any) => {
                 }}
               >
                 {(layer as any)[MODULES]?.length > 0 && (
-                  <div>
-                    <RecursiveComponent
-                      layersArr={layer[MODULES]}
-                      componentLists={componentLists}
-                      previewDashboard={previewDashboard}
-                      dispatch={dispatch}
-                      scaleValue={scaleValue}
-                      panels={panels}
-                      crossCallback={crossCallback}
-                      // sendMessage={sendMessage}
-                    />
-                  </div>
+                  <RecursiveComponent
+                    layersArr={layer[MODULES]}
+                    componentLists={componentLists}
+                    previewDashboard={previewDashboard}
+                    dispatch={dispatch}
+                    scaleValue={scaleValue}
+                    panels={panels}
+                    crossCallback={crossCallback}
+                    // sendMessage={sendMessage}
+                  />
                 )}
               </div>
             ) : (
-              <>
-                <div data-id={layer.id} style={{ width: "100%", height: "100%" }}>
-                  {
-                    <EveryComponent
-                      key={ind}
-                      isDrillDownPanel={isDrillDownPanel}
-                      componentData={targetComponent}
-                      comData={getComDataWithFilters(
-                        previewDashboard.componentData,
-                        targetComponent,
-                        previewDashboard.componentFilters,
-                        previewDashboard.dataContainerDataList,
-                        previewDashboard.dataContainerList,
-                        previewDashboard.callbackArgs,
-                        layer,
-                        crossCallback
-                      )}
-                      // sendMessage={sendMessage}
-                      // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
-                      scaleValue={scaleValue}
-                      layerInfo={layer}
-                      stateId={stateId}
-                      addDrillDownLevel={addDrillDownLevel}
-                      changeBreadcrumbData={changeBreadcrumbData}
-                      changeReflect={changeReflect}
-                      isHideDefault={layer.hideDefault}
-                      {...props}
-                    />
-                  }
-                </div>
-              </>
+              <EveryComponent
+                key={ind}
+                isDrillDownPanel={isDrillDownPanel}
+                componentData={targetComponent}
+                comData={getComDataWithFilters(
+                  previewDashboard.componentData,
+                  targetComponent,
+                  previewDashboard.componentFilters,
+                  previewDashboard.dataContainerDataList,
+                  previewDashboard.dataContainerList,
+                  previewDashboard.callbackArgs,
+                  layer,
+                  crossCallback
+                )}
+                // sendMessage={sendMessage}
+                // 跨屏 组件绑定数据操作，选择器数据容器或者数据源后，再进行过滤
+                scaleValue={scaleValue}
+                layerInfo={layer}
+                stateId={stateId}
+                addDrillDownLevel={addDrillDownLevel}
+                changeBreadcrumbData={changeBreadcrumbData}
+                changeReflect={changeReflect}
+                isHideDefault={layer.hideDefault}
+                {...props}
+              />
             )}
-          </div>
+          </>
         ) : (
           <></>
         );
       })}
-    </div>
+    </>
   );
 };
 
