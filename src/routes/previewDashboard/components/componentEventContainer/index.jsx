@@ -24,7 +24,7 @@ const ComponentEventContainer = ({
 }) => {
   const callbackArgs = previewDashboard.callbackArgs;
   const callbackParamsList = previewDashboard.callbackParamsList;
-  const { componentConfig } = props;
+  const { componentConfig, componentStyle } = props;
   const { websocketConfig, drillDownArr } = componentConfig;
   // 拿到每个组件的websocketConfig，判断有无，则批量发起请求
   // 拿到type 0: 需sendMessage;  1: setSendData
@@ -480,6 +480,7 @@ const ComponentEventContainer = ({
         if (actionType === "show") {
           if (dom.style.opacity >= 1) {
             dom.style.opacity = 1;
+            dom.style.display = "block";
             clearInterval(timer);
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
@@ -490,6 +491,7 @@ const ComponentEventContainer = ({
         if (actionType === "hide") {
           if (dom.style.opacity <= 0) {
             dom.style.opacity = 0;
+            dom.style.display = "none";
             clearInterval(timer);
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
@@ -621,13 +623,9 @@ const ComponentEventContainer = ({
   return (
     <div
       key={id}
-      className={`single-component event-id-${id}`}
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className={`single-component event-id-${id}  animation-id-${id}`}
       style={{
-        width: "100%",
-        height: "100%",
+        ...componentStyle,
         ...animationConfig,
         ...opacityStyle,
         display: isHideDefault ? "none" : "block",

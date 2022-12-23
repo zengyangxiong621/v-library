@@ -1110,7 +1110,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                       </Row>
                                     </div>
                                   </Form.Item>
-                                  <Form.Item label="透视">
+                                  {/*                                  <Form.Item label="透视">
                                     <Checkbox
                                       style={{ float: "left" }}
                                       defaultChecked={action.rotate.perspective}

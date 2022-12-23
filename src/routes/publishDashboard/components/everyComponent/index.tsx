@@ -231,16 +231,12 @@ const EveryComponent = ({
     }
   };
   return (
-    <div>
+    <>
       {isRenderWhileDrill && isRenderWhileBack ? (
-        <div
-          className={`preview-component-wrap animation-id-${id}`}
-          style={{
-            ...componentStyle,
-          }}
-        >
+        <div className={"preview-component-wrap"}>
           <ComponentEventContainer
             {...props}
+            componentStyle={componentStyle}
             key={id}
             id={id}
             events={events}
@@ -257,7 +253,7 @@ const EveryComponent = ({
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 };
 

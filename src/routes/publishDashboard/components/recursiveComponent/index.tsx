@@ -24,7 +24,7 @@ const RecursiveComponent = (props: any) => {
     isDrillDownPanel,
   } = props;
   return (
-    <div className="recursive-component-wrap">
+    <>
       {layersArr?.map((layer: any, ind: any) => {
         const isGroup: boolean = MODULES in layer;
         const isPanel: boolean = "panelType" in layer;
@@ -37,7 +37,7 @@ const RecursiveComponent = (props: any) => {
           }
         }
         return layer.isShow ? (
-          <div data-id={isGroup ? layer.id : "component-" + layer.id} key={layer.id}>
+          <>
             {isPanel ? (
               <div
                 className={`panel-container event-id-${layer.id}`}
@@ -89,53 +89,49 @@ const RecursiveComponent = (props: any) => {
                 }}
               >
                 {(layer as any)[MODULES]?.length > 0 && (
-                  <div>
-                    <RecursiveComponent
-                      layersArr={layer[MODULES]}
-                      componentLists={componentLists}
-                      publishDashboard={publishDashboard}
-                      dispatch={dispatch}
-                      scaleValue={scaleValue}
-                      panels={panels}
-                    />
-                  </div>
+                  <RecursiveComponent
+                    layersArr={layer[MODULES]}
+                    componentLists={componentLists}
+                    publishDashboard={publishDashboard}
+                    dispatch={dispatch}
+                    scaleValue={scaleValue}
+                    panels={panels}
+                  />
                 )}
               </div>
             ) : (
               <>
-                <div data-id={layer.id} style={{ width: "100%", height: "100%" }}>
-                  {
-                    <EveryComponent
-                      key={ind}
-                      isDrillDownPanel={isDrillDownPanel}
-                      componentData={targetComponent}
-                      comData={getComDataWithFilters(
-                        publishDashboard.componentData,
-                        targetComponent,
-                        publishDashboard.componentFilters,
-                        publishDashboard.dataContainerDataList,
-                        publishDashboard.dataContainerList,
-                        publishDashboard.callbackArgs,
-                        layer
-                      )}
-                      scaleValue={scaleValue}
-                      layerInfo={layer}
-                      stateId={stateId}
-                      addDrillDownLevel={addDrillDownLevel}
-                      changeBreadcrumbData={changeBreadcrumbData}
-                      isHideDefault={layer.hideDefault}
-                      {...props}
-                    />
-                  }
-                </div>
+                {
+                  <EveryComponent
+                    key={ind}
+                    isDrillDownPanel={isDrillDownPanel}
+                    componentData={targetComponent}
+                    comData={getComDataWithFilters(
+                      publishDashboard.componentData,
+                      targetComponent,
+                      publishDashboard.componentFilters,
+                      publishDashboard.dataContainerDataList,
+                      publishDashboard.dataContainerList,
+                      publishDashboard.callbackArgs,
+                      layer
+                    )}
+                    scaleValue={scaleValue}
+                    layerInfo={layer}
+                    stateId={stateId}
+                    addDrillDownLevel={addDrillDownLevel}
+                    changeBreadcrumbData={changeBreadcrumbData}
+                    isHideDefault={layer.hideDefault}
+                    {...props}
+                  />
+                }
               </>
             )}
-          </div>
+          </>
         ) : (
           <></>
         );
       })}
-    </div>
+    </>
   );
 };
 
