@@ -553,9 +553,6 @@ const ComponentEventContainer = ({
       key={id}
       ref={componentRef}
       className={`single-component event-id-${id} animation-id-${id}`}
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       style={{
         ...componentStyle,
         ...animationConfig,

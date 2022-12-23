@@ -622,9 +622,6 @@ const ComponentEventContainer = ({
     <div
       key={id}
       className={`single-component event-id-${id}  animation-id-${id}`}
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       style={{
         ...componentStyle,
         ...animationConfig,
