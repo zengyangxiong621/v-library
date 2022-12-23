@@ -3,6 +3,8 @@ import RemoteBaseComponent from "@/components/RemoteBaseComponent";
 import { useState, useRef, useEffect } from "react";
 import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4/index";
 import { connect } from "dva";
+import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.8";
+
 
 import { cloneDeep } from "lodash";
 import { debounce } from "@/utils/common";
@@ -631,6 +633,13 @@ const ComponentEventContainer = ({
         display: isHideDefault ? "none" : "block",
       }}
     >
+     {  props.componentConfig.moduleName === "indicatorcard" ? (
+        <IndicatorCard 
+          onClick={handleInteractiveClick}
+          onMouseEnter={handleInteractiveMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        {...props}></IndicatorCard>
+       ):(
       <ErrorCatch
         app={componentConfig.name}
         user=""
@@ -658,6 +667,7 @@ const ComponentEventContainer = ({
           isPreview={true}
         ></RemoteBaseComponent>
       </ErrorCatch>
+      )}
     </div>
   );
 };

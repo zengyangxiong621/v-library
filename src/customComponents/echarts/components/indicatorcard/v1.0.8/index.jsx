@@ -186,6 +186,11 @@ const IndicatorCard = (props) => {
   const handleMouseLeave = (e) => {
     props.onMouseLeave && props.onMouseLeave(e, {value, ...originData[0]})
   }
+  let onEvents = {
+    click: handleClick,
+    mouseover: handleMouseEnter,
+    mouseout: handleMouseLeave
+  };
 
   let size = {
     width: "100%",
@@ -195,9 +200,7 @@ const IndicatorCard = (props) => {
     <EC
       size={size}
       option={getOption()}
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onEvents={onEvents}
     />
   );
 };
