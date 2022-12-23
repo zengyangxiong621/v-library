@@ -1119,6 +1119,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                       }}
                                     />
                                   </Form.Item>
+                                  */}
                                 </React.Fragment>
                               ) : (
                                 <Form.Item label="动画类型">
