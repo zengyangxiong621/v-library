@@ -1082,6 +1082,16 @@ const ComponentDefaultConfig = {
   events: [],
   callbackArgs: [],
   drillDownArr: [],
+  triggers: [
+    {
+      name: "当请求完成或数据变化时",
+      value: "dataChange",
+    },
+    {
+      name: "鼠标点击",
+      value: "click",
+    },
+  ],
   themes: [
     {
       id: "theme-default",

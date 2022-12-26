@@ -131,6 +131,7 @@ const Left = ({ dispatch, bar }) => {
     const { key } = e.node;
     let selectedNodes = e.selectedNodes;
     if (!e.nativeEvent.ctrlKey) {
+      console.log('bushi  Ctrl');
       dispatch({
         type: "bar/save",
         payload: {
@@ -145,6 +146,7 @@ const Left = ({ dispatch, bar }) => {
         payload: selectedNodes,
       });
     }
+    console.log('111111111111');
     // 多选情况下，点击那个剩哪个
     if (isSelected) {
       // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
