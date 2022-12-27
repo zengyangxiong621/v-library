@@ -243,6 +243,20 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
     window.eval(`${await importComponent(data)}`);
     try {
       const { ComponentDefaultConfig: currentDefaultConfig } = (window as any).VComponents;
+      if (data.moduleType === "chart") {
+        if (!currentDefaultConfig.triggers) {
+          currentDefaultConfig.triggers = [
+            {
+              name: "当请求完成或数据变化时",
+              value: "dataChange",
+            },
+            {
+              name: "鼠标点击",
+              value: "click",
+            },
+          ];
+        }
+      }
       allModuleDefaultConfigArr.push(currentDefaultConfig);
     } catch (e: any) {
       throw new Error(
@@ -335,7 +349,6 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
   const handleComponentDrag = (x: number, y: number) => {
     console.log("哈哈哈", bar.selectedComponentDOMs);
     console.log("怎么说", bar.selectedComponents);
-
     for (const key in bar.selectedComponentDOMs) {
       const translateArr = bar.selectedComponentDOMs[key].style.transform
         .replace("translate(", "")
@@ -509,7 +522,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 删除
   useKeyPress(
-    ["Backspace", "Delete"],
+    // ["Backspace", "Delete"],
+    ["Delete"],
     (event) => {
       if (bar.key.length === 0) return;
       if (event.type === "keydown") {

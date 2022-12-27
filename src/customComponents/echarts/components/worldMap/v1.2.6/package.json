@@ -1,6 +1,6 @@
 {
   "name": "worldMap",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "private": true,
   "dependencies": {
     "react": "17.0.2",
