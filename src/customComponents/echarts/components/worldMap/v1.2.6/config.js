@@ -6,7 +6,7 @@ const componentDefaultConfig = {
   dashboardId: "", //画布id
   moduleType: "map",
   moduleName: "worldMap", //组件标识
-  moduleVersion: "1.2.5", //组件版本号
+  moduleVersion: "1.2.6", //组件版本号
 
   createdAt: "2022-04-02 07:22:31", 
   updatedAt: "2022-11-30 07:22:39", 
