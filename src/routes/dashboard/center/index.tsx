@@ -522,7 +522,8 @@ const Center = ({ bar, dispatch, focus$, ...props }: any) => {
 
   // 删除
   useKeyPress(
-    ["Backspace", "Delete"],
+    // ["Backspace", "Delete"],
+    ["Delete"],
     (event) => {
       if (bar.key.length === 0) return;
       if (event.type === "keydown") {
