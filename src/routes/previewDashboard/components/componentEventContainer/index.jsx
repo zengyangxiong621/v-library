@@ -5,7 +5,6 @@ import BasicBar from "@/customComponents/echarts/components/basicBar/v1.1.4/inde
 import { connect } from "dva";
 import IndicatorCard from "@/customComponents/echarts/components/indicatorcard/v1.0.8";
 
-
 import { cloneDeep } from "lodash";
 import { debounce } from "@/utils/common";
 import ErrorCatch from "react-error-catch";
@@ -220,7 +219,6 @@ const ComponentEventContainer = ({
                   ].includes(key)
               )
               .forEach((key) => {
-                console.log("key", key);
                 actionConfigFuncList[key] &&
                   actionConfigFuncList[key](action[key], action.action, dom, action.id, action, id);
               });
@@ -428,15 +426,21 @@ const ComponentEventContainer = ({
       }
       const translateX = /translateX\((.+?)\)/g;
       const translateY = /translateY\((.+?)\)/g;
+      console.log("前前前前", dom.style.transform);
       if (translateX.test(dom.style.transform)) {
-        let value = dom.style.transform.match(translateX)[0];
+        // let value = dom.style.transform.match(translateX);
         // 取出数字包括 - 和 . 号
         // let xLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
         // xLength = xLength + translate.x;
-        dom.style.transform = dom.style.transform.replace(
-          translateX,
-          `translateX(${translate.x}px)`
-        );
+        const curY = +dom.style.transform.match(/translateY\((.+?)px\)/)[1];
+        console.log("curY", curY);
+        dom.style.transform = `translateX(0px)  translateY(${curY}px)`;
+        setTimeout(() => {
+          dom.style.transform = dom.style.transform.replace(
+            translateX,
+            `translateX(${translate.x}px)`
+          );
+        }, 500);
       } else {
         dom.style.transform += `translateX(${translate.x}px)`;
       }
@@ -444,13 +448,19 @@ const ComponentEventContainer = ({
         // let value = dom.style.transform.match(translateY)[0];
         // let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
         // yLength = yLength + translate.y;
-        dom.style.transform = dom.style.transform.replace(
-          translateY,
-          `translateY(${translate.y}px)`
-        );
+        const curX = +dom.style.transform.match(/translateX\((.+?)px\)/)[1];
+        console.log("curX", curX);
+        dom.style.transform = `translateX(${curX}px)  translateY(0px)`;
+        setTimeout(() => {
+          dom.style.transform = dom.style.transform.replace(
+            translateY,
+            `translateY(${translate.y}px)`
+          );
+        }, 500);
       } else {
         dom.style.transform += `translateY(${translate.y}px)`;
       }
+      console.log("后后候", dom.style.transform);
       let timer = null;
       const index = opacityTimeIds.current.indexOf(componentId);
       // if (index !== -1) {

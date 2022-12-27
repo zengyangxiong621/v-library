@@ -158,7 +158,8 @@ const Left = ({ dispatch, bar }) => {
     } else {
       // 多选情况下，按住ctrl键时，应该是取消选中所点击的那项
       //           没有按住ctrl键时，应该只保留所点击的那项
-      isCtrlKeyPressing ? (temp = curKey) : (temp = [key]);
+      // isCtrlKeyPressing ? (temp = curKey) : (temp = [key]);
+      temp = curKey;
       setSelected(temp);
       dispatch({
         type: "bar/save",
