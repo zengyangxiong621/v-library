@@ -55,27 +55,29 @@ const CodeEditor = (props) => {
         icon={<ArrowsAltOutlined />}
         onClick={expandHandle}
       />
-      <Modal
-        width="70%"
-        title="编辑"
-        okText="确认"
-        cancelText="取消"
-        visible={fullScreen}
-        onOk={handleOk}
-        onCancel={() => setFullScreen(false)}
-      >
-        <MonacoEditor
-          height="500"
-          language={props.language}
-          theme="vs-dark"
-          value={modalContent}
-          options={{
-            contextmenu: false,
-          }}
-          onChange={(e) => setModalContent(e)}
-          editorDidMount={editorDidMountHandle}
-        />
-      </Modal>
+      {fullScreen ? (
+        <Modal
+          width="70%"
+          title="编辑"
+          okText="确认"
+          cancelText="取消"
+          visible={fullScreen}
+          onOk={handleOk}
+          onCancel={() => setFullScreen(false)}
+        >
+          <MonacoEditor
+            height="500"
+            language={props.language}
+            theme="vs-dark"
+            value={modalContent}
+            options={{
+              contextmenu: false,
+            }}
+            onChange={(e) => setModalContent(e)}
+            editorDidMount={editorDidMountHandle}
+          />
+        </Modal>
+      ) : null}
     </div>
   );
 };

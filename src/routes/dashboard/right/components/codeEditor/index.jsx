@@ -70,29 +70,31 @@ const CodeEditor = (props) => {
           onClick={expandHandle}
         />
       ) : null}
-      <Modal
-        className="code_edit"
-        width="70%"
-        title="修改数据"
-        okText="确认"
-        cancelText="取消"
-        visible={fullScreen}
-        onOk={handleOk}
-        onCancel={() => setFullScreen(false)}
-      >
-        <MonacoEditor
-          height="500"
-          language={_data.language}
-          theme="vs-dark"
-          value={modalContent}
-          options={{
-            contextmenu: false,
-            readOnly: _data.readOnly,
-          }}
-          onChange={(e) => setModalContent(e)}
-          editorDidMount={editorDidMountHandle}
-        />
-      </Modal>
+      {fullScreen ? (
+        <Modal
+          className="code_edit"
+          width="70%"
+          title="修改数据"
+          okText="确认"
+          cancelText="取消"
+          visible={fullScreen}
+          onOk={handleOk}
+          onCancel={() => setFullScreen(false)}
+        >
+          <MonacoEditor
+            height="500"
+            language={_data.language}
+            theme="vs-dark"
+            value={modalContent}
+            options={{
+              contextmenu: false,
+              readOnly: _data.readOnly,
+            }}
+            onChange={(e) => setModalContent(e)}
+            editorDidMount={editorDidMountHandle}
+          />
+        </Modal>
+      ) : null}
     </div>
   );
 };
