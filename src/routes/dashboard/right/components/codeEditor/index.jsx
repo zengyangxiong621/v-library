@@ -45,10 +45,6 @@ const CodeEditor = (props) => {
     }, 300);
   };
 
-  const editorDidMountHandle = (editor, monaco) => {
-    editor.getAction("editor.action.formatDocument").run(); //格式化
-  };
-
   return (
     <div className="code-wraper" onBlur={onBlur}>
       <MonacoEditor
@@ -60,7 +56,6 @@ const CodeEditor = (props) => {
           readOnly: _data.readOnly,
         }}
         onChange={(e) => onChange(e)}
-        editorDidMount={editorDidMountHandle}
       />
       {_data.showExpand ? (
         <Button
@@ -70,31 +65,28 @@ const CodeEditor = (props) => {
           onClick={expandHandle}
         />
       ) : null}
-      {fullScreen ? (
-        <Modal
-          className="code_edit"
-          width="70%"
-          title="修改数据"
-          okText="确认"
-          cancelText="取消"
-          visible={fullScreen}
-          onOk={handleOk}
-          onCancel={() => setFullScreen(false)}
-        >
-          <MonacoEditor
-            height="500"
-            language={_data.language}
-            theme="vs-dark"
-            value={modalContent}
-            options={{
-              contextmenu: false,
-              readOnly: _data.readOnly,
-            }}
-            onChange={(e) => setModalContent(e)}
-            editorDidMount={editorDidMountHandle}
-          />
-        </Modal>
-      ) : null}
+      <Modal
+        className="code_edit"
+        width="70%"
+        title="修改数据"
+        okText="确认"
+        cancelText="取消"
+        visible={fullScreen}
+        onOk={handleOk}
+        onCancel={() => setFullScreen(false)}
+      >
+        <MonacoEditor
+          height="500"
+          language={_data.language}
+          theme="vs-dark"
+          value={modalContent}
+          options={{
+            contextmenu: false,
+            readOnly: _data.readOnly,
+          }}
+          onChange={(e) => setModalContent(e)}
+        />
+      </Modal>
     </div>
   );
 };

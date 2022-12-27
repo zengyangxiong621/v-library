@@ -49,10 +49,6 @@ const PreViewJson = (props) => {
     setHasEdit(true);
   }, 300);
 
-  const editorDidMountHandle = (editor, monaco) => {
-    editor.getAction("editor.action.formatDocument").run(); //格式化
-  };
-
   const handleCancel = () => {
     changeShowState(false);
     setIsEdit(false);
@@ -144,7 +140,6 @@ const PreViewJson = (props) => {
             readOnly: !isEdit,
           }}
           onChange={(e) => onChange(e)}
-          editorDidMount={editorDidMountHandle}
         />
       ) : (
         <Spin tip="加载中..." />

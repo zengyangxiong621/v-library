@@ -33,10 +33,6 @@ const CodeEditor = (props) => {
     props.onChange(modalContent);
   };
 
-  const editorDidMountHandle = (editor, monaco) => {
-    editor.getAction("editor.action.formatDocument").run(); //格式化
-  };
-
   return (
     <div className="code-wraper">
       <MonacoEditor
@@ -47,7 +43,6 @@ const CodeEditor = (props) => {
           contextmenu: false,
         }}
         onChange={(e) => onChange(e)}
-        editorDidMount={editorDidMountHandle}
       />
       <Button
         ghost
@@ -55,29 +50,26 @@ const CodeEditor = (props) => {
         icon={<ArrowsAltOutlined />}
         onClick={expandHandle}
       />
-      {fullScreen ? (
-        <Modal
-          width="70%"
-          title="编辑"
-          okText="确认"
-          cancelText="取消"
-          visible={fullScreen}
-          onOk={handleOk}
-          onCancel={() => setFullScreen(false)}
-        >
-          <MonacoEditor
-            height="500"
-            language={props.language}
-            theme="vs-dark"
-            value={modalContent}
-            options={{
-              contextmenu: false,
-            }}
-            onChange={(e) => setModalContent(e)}
-            editorDidMount={editorDidMountHandle}
-          />
-        </Modal>
-      ) : null}
+      <Modal
+        width="70%"
+        title="编辑"
+        okText="确认"
+        cancelText="取消"
+        visible={fullScreen}
+        onOk={handleOk}
+        onCancel={() => setFullScreen(false)}
+      >
+        <MonacoEditor
+          height="500"
+          language={props.language}
+          theme="vs-dark"
+          value={modalContent}
+          options={{
+            contextmenu: false,
+          }}
+          onChange={(e) => setModalContent(e)}
+        />
+      </Modal>
     </div>
   );
 };
