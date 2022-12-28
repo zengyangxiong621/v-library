@@ -70,7 +70,7 @@ const ComponentEventContainer = ({
   };
 
   const handleDataChange = (data) => {
-    console.log(data, "handleDataChange data------------------------------");
+    // console.log(data, "handleDataChange data------------------------------");
     const mouseEnterEvents = events.filter((item) => item.trigger === "dataChange");
     const mouseEnterActions = mouseEnterEvents.reduce((pre, cur) => pre.concat(cur.actions), []);
     if (mouseEnterActions.length === 0) {
@@ -81,7 +81,7 @@ const ComponentEventContainer = ({
   };
 
   const handleInteractiveMouseEnter = (e, data) => {
-    console.log("handleInteractiveMouseEnter------------------------------------");
+    // console.log("handleInteractiveMouseEnter------------------------------------");
     // e.stopPropagation();
     // e.preventDefault();
     const mouseEnterEvents = events.filter((item) => item.trigger === "mouseEnter");
@@ -394,6 +394,12 @@ const ComponentEventContainer = ({
     customEventsFunction(dataChangeEvents, data);
   }, 300);
 
+  // 这个工具对象被下方animation函数中引用, 主要用来实现<用户多次点击的情况下，让组件只触发第一次过渡效果>的功能
+  // 不将其作为animation的参数传入是因为使用闭包引用的方式更利于和animation函数解耦以及animation函数入参数量的扩展
+  const toolObj = {
+    y: 0,
+    x: 0,
+  };
   const animation = (
     { duration, timingFunction, type },
     actionType,
@@ -401,6 +407,7 @@ const ComponentEventContainer = ({
     actionId,
     action,
     componentId
+    // toolObj = { y: 0, x: 0 }
   ) => {
     if (["show", "hide"].includes(actionType)) {
       // transform = 'translateY(200px)'
@@ -426,19 +433,30 @@ const ComponentEventContainer = ({
       }
       const translateX = /translateX\((.+?)\)/g;
       const translateY = /translateY\((.+?)\)/g;
-      console.log("前前前前", dom.style.transform);
+
       if (translateX.test(dom.style.transform)) {
         // let value = dom.style.transform.match(translateX);
         // 取出数字包括 - 和 . 号
         // let xLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
-        // xLength = xLength + translate.x;
+        const curX = +dom.style.transform.match(/translateX\((.+?)px\)/)[1];
+
+        // 通过toolObj来实现即使用户点击组件多次，但只改变一次curX
+        //@Mark toolObj.x初始值为0, curX也为0时，会执行多次，但是赋的值始终为0,所以不影响逻辑
+        if (!toolObj.x) {
+          toolObj.x = curX;
+        }
+        // 针对 隐藏时有移动组件动作的情况（比如隐藏时向上下移动，需获取组件最新的Y值并更新）
         const curY = +dom.style.transform.match(/translateY\((.+?)px\)/)[1];
-        console.log("curY", curY);
-        dom.style.transform = `translateX(0px)  translateY(${curY}px)`;
+        dom.style.transform = dom.style.transform.replace(
+          /translateY\((.+?)\)/g,
+          `translateY(${curY}px)`
+        );
+        // 使用定时器将过渡效果延迟至组件显示之后，否则过渡过程无法呈现
         setTimeout(() => {
           dom.style.transform = dom.style.transform.replace(
             translateX,
-            `translateX(${translate.x}px)`
+            // `translateX(${translate.x}px)`
+            `translateX(${toolObj.x + translate.x}px)`
           );
         }, 500);
       } else {
@@ -447,22 +465,32 @@ const ComponentEventContainer = ({
       if (translateY.test(dom.style.transform)) {
         // let value = dom.style.transform.match(translateY)[0];
         // let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
-        // yLength = yLength + translate.y;
+        const curY = +dom.style.transform.match(/translateY\((.+?)px\)/)[1];
+
+        // 通过toolObj来实现即使用户点击组件多次，但只改变一次curY
+        //@Mark toolObj.x初始值为0, curX也为0时，会执行多次，但是赋的值始终为0,所以不影响逻辑
+        if (!toolObj.y) {
+          toolObj.y = curY;
+        }
+        // 针对 隐藏时有移动组件动作的情况（比如隐藏时向左右移动，需获取组件最新的X值并更新）
         const curX = +dom.style.transform.match(/translateX\((.+?)px\)/)[1];
-        console.log("curX", curX);
-        dom.style.transform = `translateX(${curX}px)  translateY(0px)`;
+        dom.style.transform = dom.style.transform.replace(
+          /translateX\((.+?)\)/g,
+          `translateX(${curX}px)`
+        );
+        // 使用定时器将过渡效果延迟至组件显示之后,否则过渡过程无法呈现
         setTimeout(() => {
           dom.style.transform = dom.style.transform.replace(
             translateY,
-            `translateY(${translate.y}px)`
+            `translateY(${toolObj.y + translate.y}px)`
+            // `translateY(${translate.y}px)`
           );
         }, 500);
       } else {
         dom.style.transform += `translateY(${translate.y}px)`;
       }
-      console.log("后后候", dom.style.transform);
       let timer = null;
-      const index = opacityTimeIds.current.indexOf(componentId);
+      // const index = opacityTimeIds.current.indexOf(componentId);
       // if (index !== -1) {
       //   // 说明存在
       //   clearInterval(timer)
@@ -471,7 +499,7 @@ const ComponentEventContainer = ({
       // } else {
       //   opacityTimeIds.current.push(componentId)
       // }
-      console.log("选项卡", dom.style.display);
+      // console.log("选项卡", dom.style.display);
       // 如果本来就是显示的，并且还设置成显示，那就不执行
       // 如果本来就是隐藏的，并且还设置成隐藏，那就不执行
       if (
@@ -495,7 +523,7 @@ const ComponentEventContainer = ({
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
           } else {
-            dom.style.opacity = Number(dom.style.opacity) + 0.01;
+            dom.style.opacity = Number(dom.style.opacity) + 0.02;
           }
         }
         if (actionType === "hide") {
@@ -506,10 +534,10 @@ const ComponentEventContainer = ({
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
           } else {
-            dom.style.opacity = Number(dom.style.opacity) - 0.01;
+            dom.style.opacity = Number(dom.style.opacity) - 0.02;
           }
         }
-      }, duration / 100);
+      }, duration / 50);
     }
   };
 

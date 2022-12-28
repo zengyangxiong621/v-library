@@ -95,4 +95,5 @@ export const defaultData = {
   fullAmountDynamicAndDrillDownPanels: [],
   drillDownComponentIdForCurClickComponent: [],
   willSaveComponentInEveryDrillDownState: {},
+  toolObj: {},
 };
