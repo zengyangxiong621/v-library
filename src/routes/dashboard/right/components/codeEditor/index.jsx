@@ -51,6 +51,7 @@ const CodeEditor = (props) => {
   return (
     <div className="code-wraper" onBlur={onBlur}>
       <MonacoEditor
+        key="normal"
         language={_data.language}
         theme="vs-dark"
         value={content}
@@ -79,6 +80,7 @@ const CodeEditor = (props) => {
         onCancel={() => setFullScreen(false)}
       >
         <MonacoEditor
+          key="expand"
           height="500"
           language={_data.language}
           theme="vs-dark"
