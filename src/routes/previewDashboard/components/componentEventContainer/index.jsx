@@ -468,7 +468,7 @@ const ComponentEventContainer = ({
         const curY = +dom.style.transform.match(/translateY\((.+?)px\)/)[1];
 
         // 通过toolObj来实现即使用户点击组件多次，但只改变一次curY
-        //@Mark toolObj.x初始值为0, curX也为0时，会执行多次，但是赋的值始终为0,所以不影响逻辑
+        //@Mark toolObj.y初始值为0, curY也为0时，会执行多次，但是赋的值始终为0,所以不影响逻辑
         if (!toolObj.y) {
           toolObj.y = curY;
         }
