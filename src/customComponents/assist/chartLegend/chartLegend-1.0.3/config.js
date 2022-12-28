@@ -224,6 +224,24 @@ const componentDefaultConfig = {
   useFilter: false, // =========
   filters: [],
   events: [],
+  triggers: [ // 下面是合集
+    {
+      name: "当请求完成或数据变化时",
+      value: "dataChange",
+    },
+    {
+      name: "鼠标点击",
+      value: "click",
+    },
+    {
+      name: "鼠标移入",
+      value: "mouseEnter",
+    },
+    {
+      name: "鼠标移出",
+      value: "mouseLeave",
+    },
+  ],
   themes: [
     {
       id: "theme-default",

@@ -1,4 +1,4 @@
-import React, { Component, CSSProperties } from 'react';
+import React, { useEffect } from 'react';
 import ComponentDefaultConfig from './config'
 
 const ChartLegend = (props) => {
@@ -115,8 +115,33 @@ const ChartLegend = (props) => {
     margin: `0 ${textGap2}px`,
     letterSpacing: `${letterSpacing}px`
   }
+
+  // 举例, 鼠标发出事件 第一个参数为 MouseEvent, 第二个为 data
+  const handleClick = (e) => {
+    props.onClick && props.onClick(e, finalData)
+  }
+  const handleMouseEnter = (e) => {
+    props.onMouseEnter && props.onMouseEnter(e, finalData)
+  }
+  const handleMouseLeave = (e) => {
+    props.onMouseLeave && props.onMouseLeave(e, finalData)
+  }
+
+
+  // 自定义事件部分
+  useEffect(() => {
+    if (typeof props.onDataChange === 'function') {
+      props.onDataChange(finalData)
+    }
+  }, [finalData])
+
+
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100%' }}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div style={{ height: lineHeight ? `${lineHeight}px` : '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginLeft: '14px' }}>
         {/* 此处必须套一层div,不然设置字距的时候会影响图例的大小 */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={legendStyle}></span></div>
