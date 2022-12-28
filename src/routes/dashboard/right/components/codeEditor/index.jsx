@@ -32,7 +32,6 @@ const CodeEditor = (props) => {
   };
 
   const expandHandle = () => {
-    console.log("ccccccccontent", content);
     setModalContent(content);
     setTimeout(() => {
       setFullScreen(true);
