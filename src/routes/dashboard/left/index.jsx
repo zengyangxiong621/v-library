@@ -139,27 +139,9 @@ const Left = ({ dispatch, bar }) => {
       });
       setIsCtrlKeyPressing(false);
       temp = [key];
+      console.log("ttttttttt", temp);
       selectedNodes = [e.node];
-      dispatch({
-        type: "bar/selectLayers",
-        payload: selectedNodes,
-      });
-    }
-    // 多选情况下，点击那个剩哪个
-    if (isSelected) {
-      // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
-      dispatch({
-        type: "bar/save",
-        payload: {
-          key: temp,
-          isShowRightMenu: false,
-        },
-      });
-    } else {
-      // 多选情况下，按住ctrl键时，应该是取消选中所点击的那项
-      //           没有按住ctrl键时，应该只保留所点击的那项
-      // isCtrlKeyPressing ? (temp = curKey) : (temp = [key]);
-      temp = curKey;
+      console.log("selectedNodes", selectedNodes);
       setSelected(temp);
       dispatch({
         type: "bar/save",
@@ -167,6 +149,34 @@ const Left = ({ dispatch, bar }) => {
           key: temp,
         },
       });
+      dispatch({
+        type: "bar/selectLayers",
+        payload: selectedNodes,
+      });
+    } else {
+      // 多选情况下，点击那个剩哪个
+      if (isSelected) {
+        // 当右键菜单显示时，如果用左键某个图层或者分组，需要隐藏右键菜单
+        dispatch({
+          type: "bar/save",
+          payload: {
+            key: temp,
+            isShowRightMenu: false,
+          },
+        });
+      } else {
+        // 多选情况下，按住ctrl键时，应该是取消选中所点击的那项
+        //           没有按住ctrl键时，应该只保留所点击的那项
+        // isCtrlKeyPressing ? (temp = curKey) : (temp = [key]);
+        temp = curKey;
+        setSelected(temp);
+        dispatch({
+          type: "bar/save",
+          payload: {
+            key: temp,
+          },
+        });
+      }
     }
   };
   const finalSelectFn = useCallback(debounce(onSelect, 500), []);
