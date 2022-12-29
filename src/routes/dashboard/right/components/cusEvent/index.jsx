@@ -712,7 +712,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     });
     setComponentVisible(false);
   };
-
+  console.log("_data.triggers", _data.triggers);
+  console.log("tabpanes", tabpanes);
   return (
     <Form className="custom-form event-form" form={form} {...formItemLayout} colon={false}>
       <Collapse activeKey={activeCollapseKey} onChange={collapseChange} className="custom-collapse">
@@ -725,20 +726,18 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                     <Select
                       className="custom-select"
                       placeholder="请选择"
-                      defaultValue={pane.trigger}
+                      value={pane.trigger}
+                      // defaultValue="statusChange"
                       style={{ marginBottom: 0 }}
                       onChange={(e) => eventTypeChange(e, pane)}
                       getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                      options={_data.triggers.map((item) => ({
+                        label: item.name,
+                        value: item.value,
+                      }))}
                     >
                       {/*{_data.triggers.map((item) => {*/}
                       {/*{eventTypes.map((item) => {*/}
-                      {_data.triggers.map((item) => {
-                        return (
-                          <Option value={item.value} key={item.value}>
-                            {item.name}
-                          </Option>
-                        );
-                      })}
                     </Select>
                   </Form.Item>
                   <Form.Item name="conditions" label="条件">
