@@ -1199,7 +1199,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   ms
                                 </div>
                               </Form.Item>
-                              {["show", "hide", "show/hide"].includes(action.action) ? (
+                              {/* 隐藏卸载且先注释掉 */}
+                              {/* {["show", "hide", "show/hide"].includes(action.action) ? (
                                 <Form.Item label="隐藏卸载">
                                   <Checkbox
                                     style={{ float: "left" }}
@@ -1209,7 +1210,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                     }}
                                   />
                                 </Form.Item>
-                              ) : null}
+                              ) : null} */}
                             </TabPane>
                           ))}
                         </Tabs>

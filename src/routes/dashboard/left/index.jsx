@@ -139,9 +139,7 @@ const Left = ({ dispatch, bar }) => {
       });
       setIsCtrlKeyPressing(false);
       temp = [key];
-      console.log("ttttttttt", temp);
       selectedNodes = [e.node];
-      console.log("selectedNodes", selectedNodes);
       setSelected(temp);
       dispatch({
         type: "bar/save",
