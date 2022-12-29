@@ -1,19 +1,16 @@
-export const filterEmptyGroups = (tree: any) => {
-  const recursiveFn = (tree: any, par: any) => {
-    tree.forEach((x: any, i: any) => {
-      if (x.modules && x.modules.length) {
-        recursiveFn(x.modules, x);
+export const filterEmptyGroups = (tree) => {
+  const recursiveFn = (tree) => {
+    for (let i = 0; i < tree.length; i++) {
+      const item = tree[i];
+      if (item.modules && Array.isArray(item.modules) && item.modules.length) {
+        recursiveFn(item.modules);
       }
-      if (x.id.startsWith("group") && x.modules.length === 0) {
-        if (par.modules && par.modules.length) {
-          par.modules.splice(i, 1);
-        }
+      if (item.id.startsWith("group") && item.modules.length === 0) {
+        tree.splice(i, 1);
+        i--;
       }
-    });
+    }
   };
-  recursiveFn(tree, []);
-  const finalTree = tree.filter((item: any) =>
-    item.id.startsWith("group") ? Array.isArray(item.modules) && item.modules.length : true
-  );
-  return finalTree;
+  recursiveFn(tree);
+  return tree;
 };
