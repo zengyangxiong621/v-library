@@ -1179,6 +1179,31 @@ export default {
         (item) => item.name === "dimension"
       ).value;
       changeComponentDimension(dimensionConfig);
+      if (!componentConfig.triggers) {
+        componentConfig.triggers = [];
+        // componentConfig.triggers = [
+        //   {
+        //     name: "当请求完成或数据变化时",
+        //     value: "dataChange",
+        //   },
+        //   {
+        //     name: "鼠标点击",
+        //     value: "click",
+        //   },
+        //   {
+        //     name: "鼠标移入",
+        //     value: "mouseEnter",
+        //   },
+        //   {
+        //     name: "鼠标移出",
+        //     value: "mouseLeave",
+        //   },
+        //   {
+        //     name: "状态变化",
+        //     value: "statusChange",
+        //   },
+        // ];
+      }
       const state: any = yield select((state: any) => state);
       const { isPanel, stateId, dashboardId, panelId } = state.bar;
       // 图层会插入到最后选中的图层或者Group上面，如果没有选中的图层，会默认添加到第一个
