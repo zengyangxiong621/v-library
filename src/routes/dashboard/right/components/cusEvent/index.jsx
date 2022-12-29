@@ -6,6 +6,7 @@ import debounce from "lodash/debounce";
 import { deepClone, findLayerById } from "@/utils";
 import EventDrawer from "../eventDrawer";
 import OriginSelect from "../originSelect";
+import { cloneDeep } from "lodash";
 
 import {
   Form,
@@ -53,6 +54,9 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
   const [scaleProportion, setScaleProportion] = useState(1);
   const [isUpdateConfig, setIsUpdateConfig] = useState(false);
   const [layerType, setLayerType] = useState("component");
+  const [layersForHadFilterEmptyStateInPanel, setLayersForHadFilterEmptyStateInPanel] = useState(
+    []
+  );
   const eventTypes = [
     {
       name: "当请求完成或数据变化时",
@@ -196,6 +200,36 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       });
     });
   }, []);
+
+  /**
+   * description: 动态面板的状态中可能没有添加组件(即空状态)，当在全局组件树中选择组件时，空状态下没有可选择的组件，所以要将这些没有叶子节点的空状态节点从树中移除
+   * @params: tree <Array>
+   * @return: tree <Array>
+   */
+  const filterEmptyStateInPanel = (tree) => {
+    const recursiveFn = (targetArr) => {
+      for (let i = 0; i < targetArr.length; i++) {
+        const item = targetArr[i];
+        if (Array.isArray(item.modules)) {
+          if (item.modules.length) {
+            recursiveFn(item.modules);
+          } else {
+            targetArr.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    };
+    recursiveFn(tree);
+    return tree;
+  };
+  // 过滤掉面板中的空状态
+  useEffect(() => {
+    // 深拷贝一份儿，因为filterEmptyStateInPanel中会对原数组进行删除操作
+    const fullAmountLayersCopy = cloneDeep(bar.fullAmountLayers);
+    const tempRes = filterEmptyStateInPanel(fullAmountLayersCopy);
+    setLayersForHadFilterEmptyStateInPanel(tempRes);
+  }, [bar.fullAmountLayers]);
 
   const eventExtra = () => (
     <React.Fragment>
@@ -455,7 +489,8 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
     if (action.component.length === 1) {
       const layerId = action.component[0];
       const layer = findLayerById(
-        action.componentScope === "global" ? bar.fullAmountLayers : bar.layers,
+        // action.componentScope === "global" ? bar.fullAmountLayers : bar.layers,
+        action.componentScope === "global" ? layersForHadFilterEmptyStateInPanel : bar.layers,
         layerId
       );
       if ("panelType" in layer) {
@@ -781,7 +816,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
                                   <TreeSelect
                                     treeData={
                                       action.componentScope === "global"
-                                        ? bar.fullAmountLayers
+                                        ? layersForHadFilterEmptyStateInPanel
                                         : bar.layers
                                     }
                                     fieldNames={{
