@@ -397,8 +397,8 @@ const ComponentEventContainer = ({
   // 这个工具对象被下方animation函数中引用, 主要用来实现<用户多次点击的情况下，让组件只触发第一次过渡效果>的功能
   // 不将其作为animation的参数传入是因为使用闭包引用的方式更利于和animation函数解耦以及animation函数入参数量的扩展
   const toolObj = {
-    y: 0,
-    x: 0,
+    y: null,
+    x: null,
   };
   const animation = (
     { duration, timingFunction, type },
@@ -433,7 +433,6 @@ const ComponentEventContainer = ({
       }
       const translateX = /translateX\((.+?)\)/g;
       const translateY = /translateY\((.+?)\)/g;
-
       if (translateX.test(dom.style.transform)) {
         // let value = dom.style.transform.match(translateX);
         // 取出数字包括 - 和 . 号
@@ -441,8 +440,7 @@ const ComponentEventContainer = ({
         const curX = +dom.style.transform.match(/translateX\((.+?)px\)/)[1];
 
         // 通过toolObj来实现即使用户点击组件多次，但只改变一次curX
-        //@Mark toolObj.x初始值为0, curX也为0时，会执行多次，但是赋的值始终为0,所以不影响逻辑
-        if (!toolObj.x) {
+        if (toolObj.x !== 0 && !toolObj.x) {
           toolObj.x = curX;
         }
         // 针对 隐藏时有移动组件动作的情况（比如隐藏时向上下移动，需获取组件最新的Y值并更新）
@@ -456,7 +454,7 @@ const ComponentEventContainer = ({
           dom.style.transform = dom.style.transform.replace(
             translateX,
             // `translateX(${translate.x}px)`
-            `translateX(${toolObj.x + translate.x}px)`
+            `translateX(${(toolObj.x || 0) + translate.x}px)`
           );
         }, 500);
       } else {
@@ -466,10 +464,8 @@ const ComponentEventContainer = ({
         // let value = dom.style.transform.match(translateY)[0];
         // let yLength = Number(value.replace(/[^\d|^\.|^\-]/g, ""));
         const curY = +dom.style.transform.match(/translateY\((.+?)px\)/)[1];
-
         // 通过toolObj来实现即使用户点击组件多次，但只改变一次curY
-        //@Mark toolObj.y初始值为0, curY也为0时，会执行多次，但是赋的值始终为0,所以不影响逻辑
-        if (!toolObj.y) {
+        if (toolObj.y !== 0 && !toolObj.y) {
           toolObj.y = curY;
         }
         // 针对 隐藏时有移动组件动作的情况（比如隐藏时向左右移动，需获取组件最新的X值并更新）
@@ -482,7 +478,7 @@ const ComponentEventContainer = ({
         setTimeout(() => {
           dom.style.transform = dom.style.transform.replace(
             translateY,
-            `translateY(${toolObj.y + translate.y}px)`
+            `translateY(${(toolObj.y || 0) + translate.y}px)`
             // `translateY(${translate.y}px)`
           );
         }, 500);
