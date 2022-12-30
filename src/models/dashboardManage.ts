@@ -86,6 +86,7 @@ export default {
         const data = yield http({
           url: `/visual/application/queryGroupList?spaceId=${payload.spaceId}`,
           method: "get",
+          hideErrorMsg: true,
         });
         yield put({
           type: "setGroupTreeLoading",

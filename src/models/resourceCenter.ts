@@ -110,6 +110,7 @@ export default {
         const tempData: any = yield http({
           url: `/visual/appTemplate/queryGroupList?spaceId=${payload.spaceId}`,
           method: "get",
+          hideErrorMsg: true,
         });
         yield put({
           type: "setTreeLoading",

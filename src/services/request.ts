@@ -10,6 +10,7 @@ export const BASEURL = (window as any).CONFIG.BASE_URL;
 /* 核心方法 */
 export const http = (config: any, isDownload = false, isAllurl = false): any => {
   // init config & validate
+  const hideErrorMsg = config?.hideErrorMsg;
   if (!isPlainObject(config)) config = {};
   config = Object.assign(
     {
@@ -97,7 +98,7 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
     })
     .catch((err) => {
       const { code, message: errMessage } = err;
-      if (!config.hideErrorMsg) {
+      if (!hideErrorMsg) {
         message.error(errMessage || "请求数据失败");
       }
       if (code === 401) {

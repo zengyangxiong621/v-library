@@ -61,6 +61,7 @@ const DashboardTemplate = (props: any) => {
     const data = await http({
       url: `/visual/application/queryGroupList?spaceId=${spaceId}`,
       method: "get",
+      hideErrorMsg: true,
     });
     const pickNameArr = data
       .slice(1)
