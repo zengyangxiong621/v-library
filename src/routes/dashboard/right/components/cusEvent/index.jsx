@@ -493,6 +493,10 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
         action.componentScope === "global" ? layersForHadFilterEmptyStateInPanel : bar.layers,
         layerId
       );
+      if (!layer) {
+        props.onChange();
+        return;
+      }
       if ("panelType" in layer) {
         if ([0, 1, 2].includes(layer.panelType)) {
           action.layerType = "panel";
