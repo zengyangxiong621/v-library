@@ -97,7 +97,9 @@ export const http = (config: any, isDownload = false, isAllurl = false): any => 
     })
     .catch((err) => {
       const { code, message: errMessage } = err;
-      message.error(errMessage || "请求数据失败");
+      if (!config.hideErrorMsg) {
+        message.error(errMessage || "请求数据失败");
+      }
       if (code === 401) {
         if (token && token.endsWith("x-gridsumdissector")) {
           forwardLogin();

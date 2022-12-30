@@ -350,6 +350,7 @@ export default {
           },
           groupId: null,
         },
+        hideErrorMsg: true,
       });
       yield put({
         type: "save",

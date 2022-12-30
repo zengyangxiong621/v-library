@@ -56,6 +56,7 @@ export default {
           url: "/visual/application/queryAppList",
           method: "post",
           body: payload,
+          hideErrorMsg: true,
         });
         yield put({
           type: "setAppListLoading",
