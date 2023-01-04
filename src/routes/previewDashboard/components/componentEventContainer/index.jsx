@@ -157,6 +157,9 @@ const ComponentEventContainer = ({
           return new Function("data", code)(data);
         }
         if (condition.compare === "==") {
+          if (!data[field] && condition.expected === "null") {
+            return true;
+          }
           return data[field] == condition.expected;
         }
         if (condition.compare === "!=") {
