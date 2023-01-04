@@ -406,7 +406,7 @@ const CusEvent = ({ bar, dispatch, ...props }) => {
       action: "show",
       componentScope: "current",
       animation: {
-        type: "slideLeft",
+        type: "opacity",
         timingFunction: "ease",
         duration: 1000,
         delay: 0,

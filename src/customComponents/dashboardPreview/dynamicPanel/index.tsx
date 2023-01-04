@@ -105,55 +105,59 @@ const DynamicPanel = ({ previewDashboard, id, dispatch, panels, isHideDefault }:
     setState({ overflow: isScroll ? "auto" : "none" });
   }, [isScroll]);
 
-  // 0
-  // length 2
-  // 0 1
-  //
+  const scrollFunc = (cb = function () {}) => {
+    let currentIndex = state.activeIndex + 1;
+    if (currentIndex === state.allData.length) {
+      currentIndex = 0;
+    }
+    if (animationTime === 0) {
+      setState({ activeIndex: currentIndex });
+    } else if (animationTime > 0) {
+      const statusWrapDOMs: any = document.querySelectorAll(`.panel-${id} .status-wrap`);
+      if (statusWrapDOMs.length === 0) return;
+      statusWrapDOMs.forEach((dom) => {
+        dom.style.transition = `opacity ${animationTime}ms ease 0s`;
+      });
+      const opacityTimer = setInterval(() => {
+        if (!statusWrapDOMs[0].style.opacity) {
+          statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
+            if (index === currentIndex) {
+              dom.style.opacity = "0";
+            } else {
+              dom.style.opacity = "1";
+            }
+          });
+          cb();
+        } else {
+          statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
+            if (index === currentIndex) {
+              dom.style.opacity = `${Number(dom.style.opacity) + 0.2}`;
+              dom.style.display = "block";
+              if (Number(dom.style.opacity) >= 1) {
+                dom.style.opacity = "";
+              }
+            } else {
+              dom.style.opacity = `${Number(dom.style.opacity) - 0.2}`;
+              dom.style.display = "block";
+              if (Number(dom.style.opacity) <= 0) {
+                dom.style.opacity = "";
+                setState({ activeIndex: currentIndex });
+                clearInterval(opacityTimer);
+                cb();
+              }
+            }
+          });
+        }
+      }, 20);
+    }
+  };
+
   useEffect(() => {
     let timer: any = null;
-    console.log("怎么说", state.isLoading, allowScroll, state.allData);
     if (state.isLoading && allowScroll && state.allData.length > 1) {
       timer = setInterval(() => {
-        let currentIndex = state.activeIndex + 1;
-        if (currentIndex === state.allData.length) {
-          currentIndex = 0;
-        }
-        if (animationTime === 0) {
-          setState({ activeIndex: currentIndex });
-        } else if (animationTime > 0) {
-          const opacityTimer = setInterval(() => {
-            const statusWrapDOMs: any = document.querySelectorAll(`.panel-${id} .status-wrap`);
-            if (statusWrapDOMs.length === 0) return;
-            if (!statusWrapDOMs[0].style.opacity) {
-              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
-                if (index === currentIndex) {
-                  dom.style.opacity = "0";
-                } else {
-                  dom.style.opacity = "1";
-                }
-              });
-            } else {
-              statusWrapDOMs.forEach((dom: HTMLElement, index: number) => {
-                if (index === currentIndex) {
-                  dom.style.opacity = `${Number(dom.style.opacity) + 0.5}`;
-                  dom.style.display = "block";
-                  if (Number(dom.style.opacity) >= 1) {
-                    dom.style.opacity = "";
-                  }
-                } else {
-                  dom.style.opacity = `${Number(dom.style.opacity) - 0.5}`;
-                  dom.style.display = "block";
-                  if (Number(dom.style.opacity) <= 0) {
-                    dom.style.opacity = "";
-                    setState({ activeIndex: currentIndex });
-                    clearInterval(opacityTimer);
-                  }
-                }
-              });
-            }
-          }, 500);
-        }
-      }, scrollTime);
+        scrollFunc();
+      }, scrollTime + animationTime);
     }
     return () => {
       if (timer) {
@@ -179,8 +183,8 @@ const DynamicPanel = ({ previewDashboard, id, dispatch, panels, isHideDefault }:
             position: "absolute",
             width: "100%",
             height: "100%",
-            // display: state.activeIndex === index ? "block" : "none",
-            visibility: state.activeIndex === index ? "visible" : "hidden",
+            display: state.activeIndex === index ? "block" : "none",
+            // visibility: state.activeIndex === index ? "visible" : "hidden",
             transition: `transform 600ms ease 0s, opacity ${animationTime}ms ease 0s`,
             backgroundImage: item.backgroundImage ? `url('${item.backgroundImage}')` : "unset",
             backgroundColor: item.backgroundColor ? item.backgroundColor : "unset",
