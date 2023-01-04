@@ -1,0 +1,9 @@
+{
+  "name": "buttonGroup2",
+  "version": "1.0.9",
+  "private": true,
+  "dependencies": {
+    "react": "17.0.2"
+  },
+  "devDependencies": {}
+}
