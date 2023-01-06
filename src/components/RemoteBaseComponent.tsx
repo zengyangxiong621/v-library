@@ -5,7 +5,7 @@ import { http } from "@/services/request";
 import { Spin } from "antd";
 
 const RemoteBaseComponent = (props: any) => {
-  const { componentConfig, bar } = props;
+  const { componentConfig, bar, mode } = props;
   const componentData = bar.componentData;
   const { moduleType, moduleName, moduleVersion } = componentConfig;
   const isExit = typeof moduleType === "undefined";
@@ -49,10 +49,12 @@ const RemoteBaseComponent = (props: any) => {
     try {
       window.eval(`${await importComponent()}`);
       const { default: component } = (window as any).VComponents;
-      await getComponentData(componentConfig);
+      // 预览和发布页面中不需要调用getData接口
+      if (mode !== "publish" && mode !== "preview") {
+        await getComponentData(componentConfig);
+      }
       setComponent(() => component);
     } catch (e) {
-      console.log("3333333333333333333333", e);
       setComponent(() => <></>);
     }
 

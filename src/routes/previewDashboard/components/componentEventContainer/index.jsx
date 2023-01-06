@@ -685,6 +685,7 @@ const ComponentEventContainer = ({
         <RemoteBaseComponent
           {...props}
           scale={scale}
+          mode="preview"
           onClick={handleInteractiveClick}
           onMouseEnter={handleInteractiveMouseEnter}
           onMouseLeave={handleInteractiveMouseLeave}
