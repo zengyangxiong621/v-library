@@ -141,7 +141,8 @@ const DrillDownPanel = ({
     itemDataForCurrentClick: any,
     fieldWillShowInBreadcrumbs: string | undefined = undefined
   ) => {
-    console.log("fieldWillShowInBreadcrumbs", fieldWillShowInBreadcrumbs);
+    // console.log("fieldWillShowInBreadcrumbs", fieldWillShowInBreadcrumbs);
+    // console.log('itemDataForCurrentClick', itemDataForCurrentClick);
     const { originalName } = itemDataForCurrentClick;
     // console.log("itemDataForCurrentClick", itemDataForCurrentClick);
     // TODEL originalName是地图组件才会传出来的，这儿暂时先兼容一下地图组件，等后续各个组件抛出的数据格式统一后，直接删掉下面的if(originalName){...}即可
@@ -154,8 +155,9 @@ const DrillDownPanel = ({
       newArr[newIndex] = originalName;
       setState({ breadcrumbData: newArr });
     } else {
-      if (fieldWillShowInBreadcrumbs) {
+      if (fieldWillShowInBreadcrumbs && itemDataForCurrentClick[fieldWillShowInBreadcrumbs]) {
         const valueWillShowInBreadcrumbs = itemDataForCurrentClick[fieldWillShowInBreadcrumbs];
+        // console.log('valueWillShowInBreadcrumbs', valueWillShowInBreadcrumbs);
         const newIndex = activeIndex + 1;
         if (newIndex >= states.length || newIndex < 0) {
           return;

@@ -5,18 +5,24 @@ import "./index.less";
 import { connect } from "dva";
 import { http } from "@/services/request";
 
-import { TreeSelect } from "antd";
+import { TreeSelect, Select } from "antd";
 import { useSetState } from "ahooks";
 
-import CodeEditor from "../codeEditor";
+import { getComDataWithFilters } from "../.../../../../../../utils/data";
+
+// import CodeEditor from "../codeEditor";
 
 const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig }: any) => {
   const { panelStatesList, stateId } = bar;
-  const { id, name } = componentConfig;
+  const { id, showFieldInBreadcrumbs } = componentConfig;
+  console.log("cccccccccccomponentConfig", componentConfig);
+  console.log("showFieldInBreadcrumbs", showFieldInBreadcrumbs);
+
   const [state, setState] = useSetState({
     layersInNextState: [],
-    parentDataSample: null, // 父级组件的结构示例
+    // parentDataSample: null, // 父级组件的结构示例
     isLastState: false, // 最后一个状态不用选择下层组件
+    allFieldInData: [],
   });
   // 已选中的组件
   const [echoDrillDownComponents, setEchoDrillDownComponents] = useState([]);
@@ -54,6 +60,49 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     showHadSelectComp();
     // showParentDataSample();
   }, []);
+
+  useEffect(() => {
+    const currentData = getComDataWithFilters(
+      bar.componentData,
+      bar.componentConfig,
+      bar.componentFilters,
+      bar.dataContainerDataList,
+      bar.dataContainerList,
+      bar.callbackArgs
+    );
+    if (currentData) {
+      const keys = getKeys(currentData).map((item) => ({
+        label: item,
+        value: item,
+      }));
+      setState({ allFieldInData: keys });
+    }
+  }, [
+    bar.componentData,
+    bar.componentConfig.filters,
+    bar.componentFilters,
+    bar.componentConfig.useFilter,
+    bar.componentConfig.dataFrom,
+    bar.componentConfig.dataContainers,
+  ]);
+
+  const getKeys = (data) => {
+    if (Object.prototype.toString.call(data) === "[object Object]") {
+      return Object.keys(data);
+    } else if (Object.prototype.toString.call(data) === "[object Array]") {
+      if (data.length) {
+        if (Object.prototype.toString.call(data[0]) === "[object Object]") {
+          return Object.keys(data[0]);
+        } else if (Object.prototype.toString.call(data[0]) === "[object Array]") {
+          return getKeys(data[0]);
+        }
+      } else {
+        return [];
+      }
+    } else {
+      return [];
+    }
+  };
 
   const localStorageCopy: any = localStorage;
   // let finalCompData = componentConfig.staticData.data;
@@ -167,12 +216,27 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
     });
   };
 
-  const resultData = Object.assign(
-    {},
-    {
-      value: JSON.stringify([state.parentDataSample], null, 2),
-    }
-  );
+  // 选择组件数据中的字段用于动态面包屑中去获取最终的展示值
+  const selectFieldFromData = (val: any) => {
+    console.log("vvvvvvvvvvvvv", val);
+
+    componentConfig.showFieldInBreadcrumbs = val ?? "";
+    console.log("?????", componentConfig.showFieldInBreadcrumbs);
+    dispatch({
+      type: "bar/setComponentConfig",
+      payload: componentConfig,
+    });
+    // 更改后端存储的 componentConfig
+    http({
+      url: "/visual/module/update",
+      method: "post",
+      body: {
+        dashboardId: bar.dashboardId,
+        // dashboardId: bar.stateId,
+        configs: [componentConfig],
+      },
+    });
+  };
 
   return (
     <div className="DrillDownSetting-wrap">
@@ -207,6 +271,18 @@ const DrillDownSetting = ({ bar, drillDownGlobalState, dispatch, componentConfig
           </div>
         </div>
       )}
+      <div className="level">
+        <div className="level-title">面包屑字段：</div>
+        <div className="treeSelect-wrap">
+          <Select
+            defaultValue={showFieldInBreadcrumbs}
+            allowClear
+            options={state.allFieldInData}
+            onChange={selectFieldFromData}
+            style={{ width: "100%" }}
+          />
+        </div>
+      </div>
     </div>
   );
 };

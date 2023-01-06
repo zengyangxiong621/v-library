@@ -198,7 +198,9 @@ const EveryComponent = ({
         const temp = targetIdArr.includes(id);
         setIsRenderWhileDrill(temp);
         if (temp) {
-          tempObj[stateId] = [];
+          if (!tempObj[stateId]) {
+            tempObj[stateId] = [];
+          }
           tempObj[stateId].push(id);
 
           dispatch({
@@ -229,7 +231,7 @@ const EveryComponent = ({
   const getDrillDownData = (chartData: any) => {
     if (addDrillDownLevel) {
       addDrillDownLevel();
-      // componentData.showFieldInBreadcrumbs = "name";
+      // componentData.showFieldInBreadcrumbs = Math.random() > 0.5 ? "s" : "y";
       changeBreadcrumbData(chartData, componentData.showFieldInBreadcrumbs);
       // const { seriesType, data } = chartData;
       // let hadFilterChartData = [];
@@ -260,6 +262,7 @@ const EveryComponent = ({
       // });
     }
   };
+  // console.log('是否渲染isRenderWhileDrill', id, isRenderWhileDrill, isRenderWhileBack);
   return (
     <>
       {isRenderWhileDrill && isRenderWhileBack ? (
