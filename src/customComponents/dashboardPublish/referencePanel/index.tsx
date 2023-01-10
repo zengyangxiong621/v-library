@@ -176,7 +176,12 @@ const ReferencePanel = ({ publishDashboard, id, dispatch, panels, isHideDefault 
   return (
     <div
       className={`reference-panel panel-${id}`}
-      style={{ width: "100%", height: "100%", display: isHideDefault ? "none" : "block" }}
+      style={{
+        width: "100%",
+        height: "100%",
+        // display: isHideDefault ? "none" : "block"
+        visibility: isHideDefault ? "hidden" : "visible",
+      }}
     >
       {state.allData.map((item: any, index: number) => (
         <div

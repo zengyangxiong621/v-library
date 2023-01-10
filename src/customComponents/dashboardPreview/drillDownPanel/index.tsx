@@ -187,7 +187,8 @@ const DrillDownPanel = ({
       style={{
         width: "100%",
         height: "100%",
-        display: isHideDefault ? "none" : "block",
+        // display: isHideDefault ? "none" : "block",
+        visibility: isHideDefault ? "hidden" : "visible",
         position: "relative",
       }}
     >

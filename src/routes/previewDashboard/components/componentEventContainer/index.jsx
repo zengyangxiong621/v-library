@@ -501,14 +501,18 @@ const ComponentEventContainer = ({
       // console.log("选项卡", dom.style.display);
       // 如果本来就是显示的，并且还设置成显示，那就不执行
       // 如果本来就是隐藏的，并且还设置成隐藏，那就不执行
+      // visibility: isHideDefault ? "hidden" : "visible",
+
       if (
-        (dom.style.display === "block" && actionType === "show" && dom.style.opacity !== "0") ||
-        (dom.style.display === "none" && actionType === "hide")
+        (dom.style.visibility === "visible" &&
+          actionType === "show" &&
+          dom.style.opacity !== "0") ||
+        (dom.style.visibility === "hidden" && actionType === "hide")
       ) {
         return;
       }
-      if (dom.style.display === "none" && actionType === "show") {
-        dom.style.display = "block";
+      if (dom.style.visibility === "hidden" && actionType === "show") {
+        dom.style.visibility = "visible";
         dom.style.opacity = 0;
       }
       // 渐隐渐现
@@ -517,7 +521,7 @@ const ComponentEventContainer = ({
         if (actionType === "show") {
           if (dom.style.opacity >= 1) {
             dom.style.opacity = 1;
-            dom.style.display = "block";
+            dom.style.visibility = "visible";
             clearInterval(timer);
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
@@ -528,7 +532,7 @@ const ComponentEventContainer = ({
         if (actionType === "hide") {
           if (dom.style.opacity <= 0) {
             dom.style.opacity = 0;
-            dom.style.display = "none";
+            dom.style.visibility = "hidden";
             clearInterval(timer);
             const index = opacityTimeIds.current.indexOf(componentId);
             opacityTimeIds.current.splice(index, 1);
@@ -665,7 +669,8 @@ const ComponentEventContainer = ({
         ...componentStyle,
         ...animationConfig,
         ...opacityStyle,
-        display: isHideDefault ? "none" : "block",
+        // display: isHideDefault ? "none" : "block",
+        visibility: isHideDefault ? "hidden" : "visible",
       }}
     >
       <ErrorCatch

@@ -90,7 +90,8 @@ const RecursiveComponent = (props: any) => {
                 className={`event-id-${layer.id}`}
                 style={{
                   opacity: (layer[OPACITY] || 100) / 100,
-                  display: layer.hideDefault ? "none" : "block",
+                  // display: layer.hideDefault ? "none" : "block",
+                  visibility: layer.hideDefault ? "hidden" : "visible",
                 }}
               >
                 {(layer as any)[MODULES]?.length > 0 && (
